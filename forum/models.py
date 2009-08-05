@@ -173,10 +173,11 @@ class Question(models.Model):
             attr = CONST['deleted']
         else:
             attr = None
+
         if (attr is not None):
             return u'%s %s' % (self.title, attr) 
         else:
-            self.title
+            return self.title
 
     def get_revision_url(self):
         return reverse('question_revisions', args=[self.id])
