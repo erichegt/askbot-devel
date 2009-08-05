@@ -23,7 +23,7 @@
     	 <a id="latest" href="?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
         <a id="hottest" href="?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
         <a id="mostvoted" href="?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
-        <a id="all" href="/questions/" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
+        <a id="all" href="/preguntas/" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
     </div>
 </div>
 <!-- 问题列表 -->
@@ -79,7 +79,7 @@
 	<h3>{% trans "welcome to website" %}</h3>
 	<div class="body">
       {{ APP_INTRO|safe }}
-	  <div class="more"><a href="/about">{% trans "about" %} »</a></div>
+	  <div class="more"><a href="/sobre">{% trans "about" %} »</a></div>
 	  <div class="more"><a href="/faq">{% trans "faq" %} »</a></div>
 	</div>
 </div>
@@ -117,6 +117,6 @@
 {% endblock %}
 {% block tail %}
 <div style="padding:5px 0 5px 5px;">
-<span class="evenMore">{% trans "Still looking for more? See" %} <a href="/questions/">{% trans "complete list of quesionts" %}</a>, {% trans "or" %} <a href="/tags/">{% trans "popular tags" %}</a>{% trans "." %} {% trans "Please help us answer" %} <a href="/questions/unanswered">{% trans "unanswered questions" %}</a>{% trans "." %}</span>
+<span class="evenMore">{% trans "Still looking for more? See" %} <a href="/preguntas/">{% trans "complete list of quesionts" %}</a>, {% trans "or" %} <a href="/etiquetas/">{% trans "popular tags" %}</a>{% trans "." %} {% trans "Please help us answer" %} <a href="/preguntas/sin-responder">{% trans "unanswered questions" %}</a>{% trans "." %}</span>
 </div>
 {% endblock %}

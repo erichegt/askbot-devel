@@ -1882,9 +1882,9 @@ def search(request):
         if keywords is None:
             return HttpResponseRedirect('/')
         if search_type == 'tag':
-            return HttpResponseRedirect('/tags/?q=%s&page=%s' % (keywords.strip(), page))
+            return HttpResponseRedirect('/etiquetas/?q=%s&page=%s' % (keywords.strip(), page))
         elif search_type == "user":
-            return HttpResponseRedirect('/users/?q=%s&page=%s' % (keywords.strip(), page))
+            return HttpResponseRedirect('/usuarios/?q=%s&page=%s' % (keywords.strip(), page))
         elif search_type == "question":
             
             template_file = "questions.html"
