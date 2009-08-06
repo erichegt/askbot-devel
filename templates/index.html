@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+<!-- index.html -->
 {% load i18n %}
 {% load extra_tags %}
 {% load humanize %}
 {% load extra_filters %}
 {% block title %}{% spaceless %}{% trans "Home" %}{% endspaceless %}{% endblock %}
-{% block meta %}<meta name="keywords" content="{{ APP_KEYWORDS }}" />
-        <meta name="description" content="{{ APP_DESCRIPTION }}" />{% endblock %}
+{% block meta %}<meta name="keywords" content="{{ settings.APP_KEYWORDS }}" />
+        <meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
         $().ready(function(){
@@ -120,3 +121,4 @@
 <span class="evenMore">{% trans "Still looking for more? See" %} <a href="/preguntas/">{% trans "complete list of quesionts" %}</a>, {% trans "or" %} <a href="/etiquetas/">{% trans "popular tags" %}</a>{% trans "." %} {% trans "Please help us answer" %} <a href="/preguntas/sin-responder">{% trans "unanswered questions" %}</a>{% trans "." %}</span>
 </div>
 {% endblock %}
+<!-- index.html -->

@@ -1,7 +1,9 @@
-﻿{% load extra_tags %}
+<!-- template footer.html -->
+{% load extra_tags %}
 {% load i18n %}
+<!-- 页面底部开始： -->
     <div id="ground">
-        <div class="footerLinks" >
+       <div class="footerLinks" >
             <a href="/sobre">{% trans "About us" %}</a><span class="link-separator"> |</span>
             <a href="/faq">{% trans "faq" %}</a><span class="link-separator"> |</span>
             <a href="http://blog.cnprog.com">Blog</a><span class="link-separator"> |</span>
@@ -13,16 +15,19 @@
          <a href="http://code.google.com/p/cnprog/" target="_blank">
             <img src="/content/images/djangomade124x25_grey.gif" border="0" alt="Made with Django." title="Made with Django." >
          </a>
-         </p>-->
-	  <p style="margin-top:-30px; margin-right:15px;" class="fright"><img src="/content/images/cc-wiki.png" title="Creative Commons: Attribution - Share Alike" alt="cc-wiki" width="50" height="68" /></p>
+         <!--<div style="font-size:90%;color:#333">{% trans "current revision" %}: R-0120-20090406</div>-->
+      </p>-->
+	  <p id="licenseLogo"><img src="/content/images/cc-wiki.png" title="Creative Commons: Attribution - Share Alike" alt="cc-wiki" width="50" height="68" /></p>
 	</div>
-        <!--<script type="text/javascript">
+	<!-- 页面底部结束： -->
+        <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
             </script>
             <script type="text/javascript">
             try {
-            var pageTracker = _gat._getTracker("UA-248512-5");
+            var pageTracker = _gat._getTracker({{ settings.GOOGLE_ANALYTICS_KEY }});
             pageTracker._trackPageview();
             } catch(err) {}
-        </script>-->
+        </script>
+<!-- end template footer.html -->
