@@ -92,12 +92,12 @@ blockquote
 #navBar .nav {margin:20px 0px 0px 16px;letter-spacing:1px; }
 #navBar .nav a {color:#333; background-color:#F9F7ED; padding:0px 12px 3px 12px; height:25px; line-height:30px;margin-left:10px; font-size:15px; font-weight:400; text-decoration:none;display: block;float: left;}
 #navBar .nav a:hover {text-decoration:underline}
-#navBar .nav a.on {height:24px;line-height:28px;border:1px solid #B02B2C; background:#B02B2C; color:#FFF; font-weight:600; text-decoration:none}
-#navBar .nav a.special {font-size:15px; color:#B02B2C; font-weight:bold; text-decoration:none; }
+#navBar .nav a.on {height:24px;line-height:28px;border:1px solid green; background:green; color:#FFF; font-weight:600; text-decoration:none}
+#navBar .nav a.special {font-size:15px; color:green; font-weight:bold; text-decoration:none; }
 #navBar .nav a.special:hover {text-decoration:underline;}
 #navBar .nav div.focus {float:right; padding-right:0px;}
 /*搜索栏*/
-#searchBar {background-color:#B02B2C;padding:5px;}
+#searchBar {background-color:green;padding:5px;}
 #searchBar .content { }
 #searchBar .searchInput {font-size:13px; height:18px; width:400px;}
 #searchBar .searchBtn {font-size:14px; height:26px; width:80px;}
@@ -524,7 +524,7 @@ a.comment-user:hover {
 /*标签列表*/
 .tagsbox {}
 .tagsbox a {color:#000;line-height:30px;margin-right:10px;font-size:100%;background-color:#F9F7ED;padding:3px;}
-.tagsbox a:hover {text-decoration:none;background-color:#F9F7CD;color:#B02B2C;}
+.tagsbox a:hover {text-decoration:none;background-color:#F9F7CD;color:green;}
 .tagsList {margin:0; list-style-type:none;padding:0px;min-height:360px;}
 .tagsList li {width:235px; float:left;}
 .badge-list{margin:0; list-style-type:none;}
