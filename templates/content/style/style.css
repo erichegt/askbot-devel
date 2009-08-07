@@ -93,9 +93,9 @@ blockquote
 #navBar .nav a {color:#333; background-color:#F9F7ED; padding:0px 12px 3px 12px; height:25px; line-height:30px;margin-left:10px; font-size:15px; font-weight:400; text-decoration:none;display: block;float: left;}
 #navBar .nav a:hover {text-decoration:underline}
 #navBar .nav a.on {height:24px;line-height:28px;border:1px solid green; background:green; color:#FFF; font-weight:600; text-decoration:none}
-#navBar .nav a.special {font-size:15px; color:green; font-weight:bold; text-decoration:none; }
+#navBar .nav a.special {font-size:15px; color:white;background:grey; font-weight:bold; text-decoration:none;}
 #navBar .nav a.special:hover {text-decoration:underline;}
-#navBar .nav div.focus {float:right; padding-right:0px;}
+#navBar .nav div.focus {position:absolute; top:4px; padding-right:0px;}
 /*搜索栏*/
 #searchBar {background-color:green;padding:5px;}
 #searchBar .content { }
