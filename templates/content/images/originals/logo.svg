@@ -47,7 +47,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="150.41956"
+     inkscape:cx="130.73959"
      inkscape:cy="39.353001"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -74,9 +74,9 @@
      transform="translate(-154.28572,-485.2193)">
     <text
        xml:space="preserve"
-       style="font-size:33.33963776px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Semi-Condensed"
-       x="155.40102"
-       y="531.18579"
+       style="font-size:35.70877075px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold Semi-Condensed"
+       x="154.2048"
+       y="530.07758"
        id="text2396"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/bruno/repos/preguntalo/templates/content/images/text2424.png"
@@ -84,13 +84,13 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan2398"
-         x="155.40102"
-         y="531.18579">Preguntalo</tspan></text>
+         x="154.2048"
+         y="530.07758">Preguntalo</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:9.08581543px;font-style:normal;font-weight:normal;line-height:125%;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="317.18158"
-       y="531.38446"
+       style="font-size:12.09910297px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold Semi-Condensed"
+       x="303.99615"
+       y="540.42242"
        id="text2400"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/bruno/repos/preguntalo/templates/content/images/text2424.png"
@@ -98,21 +98,22 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan2402"
-         x="317.18158"
-         y="531.38446"
-         style="font-size:9.08581543px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#808080;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Semi-Condensed">.com.uy</tspan></text>
+         x="303.99615"
+         y="540.42242"
+         style="font-size:12.09910297px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#808080;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold Semi-Condensed">.com.uy</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:11.2402153px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="158.26514"
-       y="501.74814"
+       style="font-size:10.5875988px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:semi-condensed;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold Semi-Condensed"
+       x="157.2961"
+       y="500.24216"
        id="text2424"
        inkscape:export-filename="/home/bruno/repos/preguntalo/templates/content/images/text2424.png"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
+       inkscape:export-ydpi="90"
+       sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2426"
-         x="158.26514"
-         y="501.74814">Si no lo sabes ¿?#*!</tspan></text>
+         x="157.2961"
+         y="500.24216">Si no lo sabes ¿?#*!...</tspan></text>
   </g>
 </svg>
