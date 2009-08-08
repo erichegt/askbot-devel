@@ -2,4 +2,5 @@ settings_local.py
 *.pyc
 *.swp
 *.log
+settings_local.py
 nbproject
