@@ -22,8 +22,6 @@ class Category(models.Model):
 
     def __unicode__(self):
         return self.name
-    
-    #TODO: url
 
 class EmailFeed(models.Model):
     #subscription key for unsubscribe by visiting emailed link

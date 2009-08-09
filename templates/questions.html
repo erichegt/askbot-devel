@@ -84,6 +84,7 @@
         <a href="{% url forum.views.tag tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
         {% endfor %}
         </div>
+	{%trans "Category: "%}<a href="{% url forum.views.category question.category|urlencode %}">{{ question.category}}</a>
     </div>
     {% endfor %}
 </div>

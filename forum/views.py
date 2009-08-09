@@ -224,7 +224,7 @@ def create_new_answer( question=None, author=None,\
 
 def create_new_question(title=None,author=None,added_at=None,
                         wiki=False,tagnames=None,summary=None,
-                        text=None):
+                        text=None, category=None):
     """this is not a view
     and maybe should become one of the methods on Question object?
     """
@@ -238,7 +238,8 @@ def create_new_question(title=None,author=None,added_at=None,
         wiki             = wiki,
         tagnames         = tagnames,
         html             = html,
-        summary          = summary 
+        summary          = summary,
+        category         = category
     )
     if question.wiki:
         question.last_edited_by = question.author
@@ -274,6 +275,7 @@ def ask(request):
             text = form.cleaned_data['text']
             html = sanitize_html(markdowner.convert(text))
             summary = strip_tags(html)[:120]
+            category = form.cleaned_data['categories']
 
             if request.user.is_authenticated():
                 author = request.user 
@@ -285,7 +287,8 @@ def ask(request):
                     wiki             = wiki,
                     tagnames         = tagnames,
                     summary          = summary,
-                    text = text
+                    text = text,
+                    category = category
                 )
 
                 return HttpResponseRedirect(question.get_absolute_url())
@@ -514,6 +517,7 @@ def _edit_question(request, question):
                         'tagnames': form.cleaned_data['tags'],
                         'summary': strip_tags(html)[:120],
                         'html': html,
+                        'category': form.cleaned_data['categories']
                     }
 
                     # only save when it's checked

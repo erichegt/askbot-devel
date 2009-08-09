@@ -111,6 +111,13 @@
 			<p class="title-desc">
 				{{ form.tags.help_text }}
 			</p>
+	     <p class="form-item">
+                <strong>{{ form.categories.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br>
+                {{ form.categories }}  {{ form.categories.errors }}
+            </p>
+			<p class="title-desc">
+				{{ form.categories.help_text }}
+			</p>
             {% if not request.user.is_authenticated %}
             <input type="submit" value="{% trans "Login/signup to post your question" %}" class="submit" />
 			{% else %}

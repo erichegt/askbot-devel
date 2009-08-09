@@ -115,7 +115,7 @@
 										title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
                                 {% endfor %}
                             </div>
-			    {% trans "Category: " %} <a href="{% url forum.views.category question.category|urlencode %}">{{question.category}}</a>
+			    {% trans "Category: "} <a href="{% url forum.views.category question.category|urlencode %}">{{question.category}}</a>
                             <div id="question-controls" style="clear:both;">
                                 <table width="100%">
                                     <tr>
