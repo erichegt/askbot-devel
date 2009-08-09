@@ -18,6 +18,10 @@ class QuestionManager(models.Manager):
     def get_questions_by_tag(self, tagname, orderby):
         questions = self.filter(deleted=False, tags__name = unquote(tagname)).order_by(orderby)
         return questions
+
+    def get_questions_by_category(self, categoryname, orderby):
+        questions = self.filter(category__name = categoryname).order_by(orderby)
+        return questions
     
     def get_unanswered_questions(self, orderby):
         questions = self.filter(deleted=False, answer_count=0).order_by(orderby)

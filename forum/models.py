@@ -17,6 +17,14 @@ import settings
 from forum.managers import *
 from const import *
 
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique = True)
+
+    def __unicode__(self):
+        return self.name
+    
+    #TODO: url
+
 class EmailFeed(models.Model):
     #subscription key for unsubscribe by visiting emailed link
     key = models.CharField(max_length=32)
@@ -122,6 +130,7 @@ class Question(models.Model):
     author   = models.ForeignKey(User, related_name='questions')
     added_at = models.DateTimeField(default=datetime.datetime.now)
     tags     = models.ManyToManyField(Tag, related_name='questions')
+    category = models.ForeignKey(Category, related_name='questions')
     # Status
     wiki            = models.BooleanField(default=False)
     wikified_at     = models.DateTimeField(null=True, blank=True)

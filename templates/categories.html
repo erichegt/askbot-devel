@@ -1,0 +1,56 @@
+{% extends "base_content.html" %}
+<!-- tags.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load humanize %}
+{% block title %}{% spaceless %}{% trans "Category list" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+       <script type="text/javascript">
+        $().ready(function(){
+            $("#nav_tags").attr('className',"on");
+            $("#ipSearchTag").focus();
+
+            var orderby = "{{ tab_id }}";
+            if(orderby != "used" && orderby != "name")
+                orderby = "used";
+            $("#sort_" + orderby).attr('className',"on");
+            $("#type-tag").attr('checked',true);
+
+            Hilite.exact = false;
+            Hilite.elementid = "searchtags";
+            Hilite.debug_referrer = location.href;
+        });
+
+        </script>
+{% endblock %}
+{% block content %}
+<!-- Tabs -->
+<div class="tabBar">
+    <div class="headQuestions">{% trans "Category list" %}</div>
+</div>
+<div id="searchtags">
+<p>
+{% if not categories.object_list %}
+    <span>{% trans "Nothing found" %}</span>
+{% endif %}
+</p>
+<ul class="tagsList tags">
+{% for category in categories.object_list %}
+   <li>
+    <a href="{% url forum.views.category category|urlencode %}" title="{% trans "see questions that matches" %}'{{ category }}'{% trans "category " %}" rel="tag">
+        {{ category }}
+    </a>&nbsp;
+    <br>
+
+    </li>
+{% endfor %}
+</ul>
+</div>
+
+{% endblock %}
+{% block tail %}
+<div class="pager">
+    {% cnprog_paginator context %}
+</div>              
+{% endblock %}
+<!-- end tags.html -->
