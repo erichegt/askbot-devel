@@ -64,6 +64,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'context.auth_processor',
     'context.application_settings',
     #'django.core.context_processors.i18n',
+    'django.core.context_processors.auth' #this is required for admin
 )
 
 ROOT_URLCONF = 'urls'
