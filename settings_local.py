@@ -6,7 +6,7 @@ LOG_FILENAME = 'django.lanai.log'
 
 #for logging
 import logging
-logging.basicConfig(filename=SITE_SRC_ROOT + '/log/' + LOG_FILENAME, level=logging.DEBUG,)
+logging.basicConfig(filename=os.path.join(SITE_SRC_ROOT, 'log', LOG_FILENAME), level=logging.DEBUG,)
 
 DATABASE_NAME = 'cnprog.sqlite3'             # Or path to database file if using sqlite3.
 DATABASE_USER = ''               # Not used with sqlite3.
