@@ -26,6 +26,10 @@
             	</td>
 				<td width="77%" valign="bottom">
                 <div class="nav">
+                    <div class="focus">
+                    <a id="nav_ask" href="/questions/ask/" class="special">{% trans "ask a question" %}</a>
+                    </div>
+
                     <a id="nav_questions" href="/questions/" >{% trans "questions" %}</a>
                     <a id="nav_tags" href="/tags/">{% trans "tags" %}</a>
                     <a id="nav_users" href="/users/">{% trans "users" %}</a>
@@ -38,9 +42,6 @@
                     <a id="nav_profile" href="/users/{{ request.user.id }}/{{ request.user.username }}/">{% trans "my profile" %}</a>
                     {% endif %}
 					{% endcomment %}
-                    <div class="focus">
-                    <a id="nav_ask" href="/questions/ask/" class="special">{% trans "ask a question" %}</a>
-                    </div>
                 </div>
 
               </td>
