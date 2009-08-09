@@ -1,4 +1,4 @@
-﻿"""
+"""
 Authorisation related functions.
 
 The actions a User is authorised to perform are dependent on their reputation
