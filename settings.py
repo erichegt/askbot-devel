@@ -96,12 +96,3 @@ INSTALLED_APPS = (
 
 # User settings
 from settings_local import *
-
-USE_I18N = True
-LANGUAGE_CODE = 'en'
-EMAIL_VALIDATION = 'off'
-MIN_USERNAME_LENGTH = 1
-EMAIL_UNIQUE = False
-APP_URL = 'http://server.com' #used by email notif system and RSS
-GOOGLE_SITEMAP_CODE = '55uGNnQVJW8p1bbXeF/Xbh9I7nZBM/wLhRz6N/I1kkA='
-GOOGLE_ANALYTICS_KEY = ''
