@@ -332,7 +332,10 @@ def question(request, id):
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)
-    question_vote = question.votes.select_related().filter(user=request.user)
+    if not request.user.is_anonymous():
+        question_vote = question.votes.select_related().filter(user=request.user)
+    else:
+        question_vote = None #is this correct?
     if question_vote is not None and question_vote.count() > 0:
         question_vote = question_vote[0]
 
