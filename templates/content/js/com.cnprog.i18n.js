@@ -100,7 +100,7 @@ var i18nEs = {
 	'anonymous users cannot flag offensive posts':'usuarios anónimos no pueden marcar publicaciones como ofensivas',
 	'cannot flag message as offensive twice':'no puede marcar mensaje como ofensivo dos veces',
 	'flag offensive cap exhausted':'cuota para marcar ofensivas ha sido excedida',
-	'need >15 points to report spam':"necesita >15 puntos para reportar spam,
+	'need >15 points to report spam':"necesita >15 puntos para reportar spam",
 	'confirm delete':"¿Está seguro que desea borrar esto?",
 	'anonymous users cannot delete/undelete':"usuarios anónimos no pueden borrar o recuperar publicaciones",
 	'post recovered':"publicación recuperada",
