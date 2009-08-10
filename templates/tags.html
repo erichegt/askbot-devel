@@ -28,8 +28,8 @@
 <div class="tabBar">
     <div class="headQuestions">{% trans "Tag list" %}</div>
     <div class="tabsA">
-        <a id="sort_name" href="/tags/?sort=name" class="off" title="{% trans "sorted alphabetically" %}">{% trans "by name" %}</a>
-        <a id="sort_used" href="/tags/?sort=used" class="off" title="{% trans "sorted by frequency of tag use" %}">{% trans "by popularity" %}</a>
+        <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans "sorted alphabetically" %}">{% trans "by name" %}</a>
+        <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans "sorted by frequency of tag use" %}">{% trans "by popularity" %}</a>
     </div>
 </div>
 <div id="searchtags">

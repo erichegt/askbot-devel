@@ -115,7 +115,7 @@
         <div>
             <h3 class="subtitle">{% trans "To register, do I need to create new password?" %}</h3>
             <p>{% trans "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc." %}
-            <strong><a href="/account/signin">{% trans "Login now!" %}</a> »</strong> 
+            <strong><a href="{% url user_signin %}">{% trans "Login now!" %}</a> »</strong> 
             </p>
         </div>
     
@@ -129,7 +129,7 @@
             <h3 class="subtitle">{% trans "Still have questions?" %}</h3>
             <p>{% trans "Please ask your question, help make our community better!" %} 
             <!--
-            <a href="/tags/faq" class="big">{% trans "site title" %} {% trans "questions" %}</a>{% trans "." %}
+            <a href="{% url tags %}faq" class="big">{% trans "site title" %} {% trans "questions" %}</a>{% trans "." %}
             -->
             </p>
         </div>
