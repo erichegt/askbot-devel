@@ -1693,7 +1693,7 @@ msgstr "las preguntas más votadas serán mostradas primero"
 
 #: templates/question.html:263
 msgid "popular answers"
-msgstr "respuestas populares serán mostradas primero"
+msgstr "respuestas populares"
 
 #: templates/question.html:275
 msgid "i like this answer (click again to cancel)"
