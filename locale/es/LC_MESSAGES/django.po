@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-09 01:12-0300\n"
+"POT-Creation-Date: 2009-08-09 22:45-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Bruno Sarlo <bsarlo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10,15 +10,148 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:12
+#: settings.py:12 urls.py:25 forum/views.py:304 forum/views.py:695
 msgid "account/"
 msgstr "cuenta/"
 
-#: settings.py:12 django_authopenid/urls.py:9 django_authopenid/urls.py:10
-#: django_authopenid/urls.py:11 django_authopenid/urls.py:13
-#: forum/views.py:304
+#: settings.py:12 urls.py:26 django_authopenid/urls.py:9
+#: django_authopenid/urls.py:10 django_authopenid/urls.py:11
+#: django_authopenid/urls.py:13 forum/views.py:304 forum/views.py:696
 msgid "signin/"
 msgstr "ingresar/"
+
+#: urls.py:22
+msgid "upfiles/"
+msgstr "archivossubidos/"
+
+#: urls.py:27 urls.py:28 urls.py:29 django_authopenid/urls.py:26
+#: django_authopenid/urls.py:27
+msgid "email/"
+msgstr "email/"
+
+#: urls.py:27
+msgid "change/"
+msgstr "cambiar/"
+
+#: urls.py:28
+msgid "sendkey/"
+msgstr "enviarclave/"
+
+#: urls.py:29
+msgid "verify/"
+msgstr "verificar/"
+
+#: urls.py:30
+msgid "about/"
+msgstr "acercadenosotros/"
+
+#: urls.py:31
+msgid "faq/"
+msgstr "preguntasfrecuentes/"
+
+#: urls.py:32
+msgid "privacy/"
+msgstr "códigodeprivacidad/"
+
+#: urls.py:33
+msgid "logout/"
+msgstr "cerrarsesion/"
+
+#: urls.py:34 urls.py:35 urls.py:36 urls.py:48
+msgid "answers/"
+msgstr "respuestas/"
+
+#: urls.py:34 urls.py:46
+msgid "comments/"
+msgstr "comentarios/"
+
+#: urls.py:35 urls.py:40 urls.py:54
+msgid "edit/"
+msgstr "editar/"
+
+#: urls.py:36 urls.py:45
+msgid "revisions/"
+msgstr "revisiones/"
+
+#: urls.py:37 urls.py:38 urls.py:39 urls.py:40 urls.py:41 urls.py:42
+#: urls.py:43 urls.py:44 urls.py:45 urls.py:46 urls.py:47 forum/feed.py:19
+#: forum/views.py:1170 forum/views.py:1171 forum/views.py:1410
+msgid "questions/"
+msgstr "preguntas/"
+
+#: urls.py:38 urls.py:64
+msgid "ask/"
+msgstr "preguntar/"
+
+#: urls.py:39
+msgid "unanswered/"
+msgstr "sinrespuesta/"
+
+#: urls.py:41
+msgid "close/"
+msgstr "cerrar/"
+
+#: urls.py:42
+msgid "reopen/"
+msgstr "reabrir/"
+
+#: urls.py:43
+msgid "answer/"
+msgstr "respuesta/"
+
+#: urls.py:44
+msgid "vote/"
+msgstr "votar/"
+
+#: urls.py:47 urls.py:48 django_authopenid/urls.py:29
+msgid "delete/"
+msgstr "borrar/"
+
+#: urls.py:50
+#, fuzzy
+msgid "question/"
+msgstr "preguntas/"
+
+#: urls.py:51 urls.py:52 forum/views.py:737 forum/views.py:2007
+msgid "tags/"
+msgstr "etiquetas/"
+
+#: urls.py:53 urls.py:54 urls.py:55 forum/views.py:990 forum/views.py:994
+#: forum/views.py:1412 forum/views.py:2009
+msgid "users/"
+msgstr "usuarios/"
+
+#: urls.py:56 urls.py:57
+msgid "badges/"
+msgstr "distinciones/"
+
+#: urls.py:58
+msgid "messages/"
+msgstr "mensajes/"
+
+#: urls.py:58
+msgid "markread/"
+msgstr "marcarleido/"
+
+#: urls.py:60
+msgid "nimda/"
+msgstr "administrador/"
+
+#: urls.py:61
+msgid "feeds/"
+msgstr ""
+
+#: urls.py:62
+msgid "upload/"
+msgstr "subir/"
+
+#: urls.py:63 urls.py:64 urls.py:65
+msgid "books/"
+msgstr "libros/"
+
+#: urls.py:66
+msgid "search/"
+msgstr "buscar/"
 
 #: django_authopenid/forms.py:67 django_authopenid/views.py:102
 msgid "i-names are not supported"
@@ -111,10 +244,9 @@ msgstr "la nueva contraseña no coincide"
 msgid "Incorrect username."
 msgstr "Nombre de usuario incorrecto"
 
-#: django_authopenid/urls.py:10
-#, fuzzy
+#: django_authopenid/urls.py:10 forum/views.py:304 forum/views.py:696
 msgid "newquestion/"
-msgstr "preguntas/"
+msgstr "nuevapregunta/"
 
 #: django_authopenid/urls.py:11
 msgid "newanswer/"
@@ -140,14 +272,15 @@ msgstr "registrarse/"
 msgid "sendpw/"
 msgstr "enviarcontrasena/"
 
-#: django_authopenid/urls.py:29
-msgid "delete/"
-msgstr "borrar/"
+#: django_authopenid/urls.py:27
+#, fuzzy
+msgid "validate/"
+msgstr "Cambiar dirección email"
 
 #: django_authopenid/views.py:108
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr ""
+msgstr "El OpenID %(openid_url)s no es valido"
 
 #: django_authopenid/views.py:417 django_authopenid/views.py:544
 msgid "Welcome"
@@ -256,7 +389,7 @@ msgstr "pregunta"
 
 #: forum/const.py:57 templates/book.html:110
 msgid "answer"
-msgstr "resputa"
+msgstr "respuesta"
 
 #: forum/const.py:58
 msgid "commented question"
@@ -341,10 +474,6 @@ msgstr " - "
 #: forum/feed.py:18
 msgid "latest questions"
 msgstr "últimas preguntas"
-
-#: forum/feed.py:19
-msgid "questions/"
-msgstr "preguntas/"
 
 #: forum/forms.py:14 templates/answer_edit_tips.html:34
 #: templates/answer_edit_tips.html.py:38 templates/question_edit_tips.html:31
@@ -580,31 +709,27 @@ msgstr "preferencias del usuario"
 msgid "profile - user preferences"
 msgstr "perfil - preferencia de "
 
-#: forum/views.py:304
-msgid "/account/"
-msgstr "/cuenta/"
-
-#: forum/views.py:943
+#: forum/views.py:944
 #, python-format
 msgid "subscription saved, %(email)s needs validation"
 msgstr "subscripción guardada, %(email)s necesita validación"
 
-#: forum/views.py:1853
+#: forum/views.py:1854
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "para subir imagenes debes tener más de 60 puntos de reputación"
 
-#: forum/views.py:1855
+#: forum/views.py:1856
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 "los tipos de archivos permitidos son 'jpg', 'jpeg', 'gif', 'bmp', 'png', "
 "'tiff'"
 
-#: forum/views.py:1857
+#: forum/views.py:1858
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr "tamaño máximo permitido es archivo %sK"
 
-#: forum/views.py:1859
+#: forum/views.py:1860
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
@@ -1317,7 +1442,6 @@ msgstr "respuestas"
 #: templates/questions.html.py:156 templates/tags.html:47
 #: templates/unanswered.html:75 templates/unanswered.html.py:109
 #: templates/users_questions.html:52
-#, fuzzy
 msgid "see questions tagged"
 msgstr "ver preguntas etiquetadas"
 
@@ -1682,7 +1806,7 @@ msgstr "¿Porqué usar y modificar etiquetas?"
 
 #: templates/question_retag.html:89
 msgid "tags help us keep Questions organized"
-msgstr ""
+msgstr "las etiquetas nos permiten mantener las Preguntas organizadas"
 
 #: templates/question_retag.html:95
 msgid "tag editors receive special awards from the community"
@@ -2199,11 +2323,11 @@ msgstr "Ups, parece que hay errores:"
 
 #: templates/authopenid/complete.html:47
 msgid "Screen name label"
-msgstr ""
+msgstr "Nombre de Usuario"
 
 #: templates/authopenid/complete.html:48
 msgid "Email address label"
-msgstr "su email (correo electrónico)"
+msgstr "Su email (correo electrónico)"
 
 #: templates/authopenid/complete.html:49
 msgid "create account"
@@ -2238,6 +2362,8 @@ msgid ""
 "Note: After deleting your account, anyone will be able to register this "
 "username."
 msgstr ""
+"Nota: Luego de borrar tu cuenta, cualquiera va a poder registrarse con este "
+"nombre de usuario."
 
 #: templates/authopenid/delete.html:17
 msgid "Check confirm box, if you want delete your account."
@@ -2353,11 +2479,11 @@ msgstr ""
 
 #: templates/authopenid/signin.html:40
 msgid "Click to sign in through any of these services."
-msgstr ""
+msgstr "Clickea para entrar por cualquiera de estos servicios."
 
 #: templates/authopenid/signin.html:103
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
-msgstr ""
+msgstr "Ingresa tu <span id=\"enter_your_what\">nombre de usuario</span>"
 
 #: templates/authopenid/signin.html:110
 msgid ""
@@ -2459,3 +2585,9 @@ msgstr "Registrate con tu OpenID"
 #: templates/authopenid/signup.html:51
 msgid "Login with your OpenID"
 msgstr "Ingresar con tu OpenID"
+
+#~ msgid "/account/"
+#~ msgstr "/cuenta/"
+
+#~ msgid "content/"
+#~ msgstr "contenido/"

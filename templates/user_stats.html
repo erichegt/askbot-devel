@@ -32,14 +32,14 @@
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}
             <div class="answer-summary">
-                <a title="{{answered_question.summary}}" href="/questions/{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">
+                <a title="{{answered_question.summary}}" href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">
                     <div class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
 						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %}&#13;{% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
                         {{ answered_question.vote_count }}
                     </div>
                 </a>
                 <div class="answer-link">
-                    <a href="/questions/{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> {% if answered_question.comment_count %}<span 
+                    <a href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> {% if answered_question.comment_count %}<span 
 					title="{% blocktrans %}the answer has been commented {{ answered_question.comment_count }} times{% endblocktrans %}">({{answered_question.comment_count}})</span>{% endif %}
                 </div>
             </div>

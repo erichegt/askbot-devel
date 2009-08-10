@@ -23,7 +23,7 @@
             <div class="favorites-empty"> </div>
         {% endif %}
     <div id="question-summary-{{question.id}}" class="question-summary narrow">
-        <a style="text-decoration: none;" href="/questions/{{question.id}}/{{question.get_question_title}}">
+        <a style="text-decoration: none;" href="{% url questions %}{{question.id}}/{{question.get_question_title}}">
             <div class="stats">
                 <div class="votes">
                     <div class="vote-count-post">{{question.vote_count|intcomma}}</div> 
@@ -43,7 +43,7 @@
         </a>
         <div class="summary">
             <h3>
-                <a title="{{question.summary}}" href="/questions/{{question.id}}/{{question.title}}">{{question.title}}</a>
+                <a title="{{question.summary}}" href="{% url questions %}{{question.id}}/{{question.title}}">{{question.title}}</a>
             </h3>
             <div class="tags">
                 {% convert2tagname_list question %}
@@ -55,7 +55,7 @@
             <div class="started">
                 <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
                 {% if question.la_username %}
-                    <a href="/users/{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
+                    <a href="{% url users %}{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
                 {% endif %}
             </div>
         </div>
