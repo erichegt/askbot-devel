@@ -14,7 +14,8 @@ register = template.Library()
 
 GRAVATAR_TEMPLATE = ('<img width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
-                     '?s=%(size)s&d=identicon&r=PG">')
+                     '?s=%(size)s&amp;d=identicon&amp;r=PG" '
+                     'alt="%(username)s\'s gravatar image" />')
 
 @register.simple_tag
 def gravatar(user, size):
@@ -26,11 +27,14 @@ def gravatar(user, size):
     """
     try:
         gravatar = user['gravatar']
+        username = user['username']
     except (TypeError, AttributeError, KeyError):
         gravatar = user.gravatar
+        username = user.username
     return mark_safe(GRAVATAR_TEMPLATE % {
         'size': size,
         'gravatar_hash': gravatar,
+        'username': template.defaultfilters.urlencode(username),
     })
 
 MAX_FONTSIZE = 18

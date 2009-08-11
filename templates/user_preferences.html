@@ -8,13 +8,14 @@
         <div style="padding:5px;">
         <fieldset>
             <legend><b>{% trans "Connect with Twitter" %}</b></legend>
-            <form>
+            <!-- todo: form action needs to be fixed -->
+            <form name="twittersync" action="/sdfgsdlgjkhsdfljh">
                 <label for="name">{% trans "Twitter account name:" %}</label>
-                <input id="name" /><br>
+                <input id="name" /><br/>
                 <label for="password">{% trans "Twitter password:" %}</label>
-                <input id="password" type="password"/><br>
-                <input id="cbMessage" type="checkbox" />{% trans "Send my Questions to Twitter" %}<br>
-                <input id="cbReply" type="checkbox" />{% trans "Send my Answers to Twitter" %}<br>
+                <input id="password" type="password"/><br/>
+                <input id="cbMessage" type="checkbox" />{% trans "Send my Questions to Twitter" %}<br/>
+                <input id="cbReply" type="checkbox" />{% trans "Send my Answers to Twitter" %}<br/>
                 <input type="submit" value="{% trans "Save" %}" />
             </form>
         </fieldset>

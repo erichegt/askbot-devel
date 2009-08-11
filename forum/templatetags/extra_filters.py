@@ -1,7 +1,12 @@
-﻿from django import template
+from django import template
 from forum import auth
 
 register = template.Library()
+
+@template.defaultfilters.stringfilter
+@register.filter
+def collapse(input):
+    return ' '.join(input.split())
 
 @register.filter
 def can_vote_up(user):

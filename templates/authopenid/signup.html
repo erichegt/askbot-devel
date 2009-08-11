@@ -14,7 +14,7 @@
     {% if form.errors %}
     
     <p class="errors">
-        <span class="big">{% trans "Sorry, looks like we have some errors" %}</span><br>
+        <span class="big">{% trans "Sorry, looks like we have some errors" %}</span><br/>
         <ul class="error-list">
         {% if form.username.errors %} 
         <li><span class="error">{{ form.username.errors|join:", " }}</span></li>
@@ -33,17 +33,15 @@
     <form action="{% url user_signup %}" method="post" accept-charset="utf-8">
         <fieldset class="fieldset">
         <legend class="big">{% trans "Conventional registration" %}</legend>	
-            <div class="form-row"><label for="id_username">{% trans "choose a user name" %}:</label><br>{{ form.username }}</div>
+            <div class="form-row"><label for="id_username">{% trans "choose a user name" %}:</label><br/>{{ form.username }}</div>
 
-            <div class="form-row"><label for="id_email">{% trans "your email address" %}:</label><br>{{ form.email }}</div>
+            <div class="form-row"><label for="id_email">{% trans "your email address" %}:</label><br/>{{ form.email }}</div>
             <div class="form-row"><label for="id_password1">{% trans "choose password" %}:</label><br />{{ form.password1 }}</div>
-            <div class="form-row"><label for="id_password2">{% trans "retype password" %}:</label><br>{{ form.password2 }}</div>
+            <div class="form-row"><label for="id_password2">{% trans "retype password" %}:</label><br/>{{ form.password2 }}</div>
             <div class="submit-row"><input type="submit" class="submit" value="{% trans "login" %}" > 
 			<a href="{% url user_signin %}">{% trans "back to login" %}</a></div>
         </fieldset>
-            <br >
     </form>
-    <br >
     <div style="display:none">
     <h2 class="signup">{% trans "Register with your OpenID" %}</h2>
     <form name="fopenid" action="{% url user_signin %}" method="post">

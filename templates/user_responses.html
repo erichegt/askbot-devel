@@ -11,7 +11,7 @@
                 <div style="width:100px;float:left"><a href="{{ response.userlink }}">{{ response.username }}</a></div>
                 <div style="float:left;overflow:hidden;width:680px">
                     <strong {% ifequal response.type "question_answered" %}class="user-action-2"{% endifequal %}{% ifequal response.type "answer_accepted" %}class="user-action-8"{% endifequal %}>{{ response.type }}</strong>：
-                    <a href="{{ response.titlelink }}">{{ response.title }}</a><br>
+                    <a href="{{ response.titlelink }}">{{ response.title }}</a><br/>
                     {{ response.content|safe }}
                     <div style="height:10px"></div>
                 </div>
