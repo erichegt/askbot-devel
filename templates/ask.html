@@ -75,15 +75,15 @@
                     {% endif %}
                 {% endifequal %}
 			{% endif %}
-            <p class="form-item">
-                <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> <span class="form-error"></span><br>
+            <div class="form-item">
+                <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> <span class="form-error"></span><br/>
                 {{ form.title }} {{ form.title.errors }}
                 <div class="title-desc">
                     {{ form.title.help_text }}
                 </div>
-            </p>
+            </div>
 
-            <p class="form-item">
+            <div class="form-item">
                 <div id="wmd-button-bar" class="wmd-panel"></div>
                 {{ form.text }}
 
@@ -102,12 +102,11 @@
                 </div>
                 <div id="previewer" class="wmd-preview"></div>
                 <span class="form-error"></span>
-                <br>
-            </p>
-            <p class="form-item">
-                <strong>{{ form.tags.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br>
+            </div>
+            <div class="form-item">
+                <strong>{{ form.tags.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br/>
                 {{ form.tags }}  {{ form.tags.errors }}
-            </p>
+            </div>
 			<p class="title-desc">
 				{{ form.tags.help_text }}
 			</p>

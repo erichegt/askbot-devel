@@ -62,39 +62,39 @@
 				</div>
 			  </li>
 			  <li class="username first_tiny_li" title="MyOpenID user name"> 
-					<img src="/content/jquery-openid/images/myopenid.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/myopenid-2.png" alt="icon" />
 					<span>http://<strong>username</strong>.myopenid.com/</span>
 		      </li> 
 			  <li class="username" title="Flickr user name"> 
-					<img src="/content/jquery-openid/images/flickr.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/flickr.png" alt="icon" />
 					<span>http://flickr.com/<strong>username</strong>/</span>
 			  </li> 
 			  <li class="username" title="Technorati user name"> 
-					<img src="/content/jquery-openid/images/technorati.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/technorati-1.png" alt="icon" />
 					<span>http://technorati.com/people/technorati/<strong>username</strong>/</span>
 			  </li> 
 			  <li class="username" title="Wordpress blog name"> 
-					<img src="/content/jquery-openid/images/wordpress.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/wordpress.png" alt="icon" />
 					<span>http://<strong>username</strong>.wordpress.com</span>
               </li> 
 			  <li class="username" title="Blogger blog name"> 
-					<img src="/content/jquery-openid/images/blogger.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/blogger-1.png" alt="icon" />
 					<span>http://<strong>username</strong>.blogspot.com/</span>
 			  </li> 
 			  <li class="username" title="LiveJournal blog name"> 
-					<img src="/content/jquery-openid/images/livejournal.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/livejournal-1.png" alt="icon" />
 					<span>http://<strong>username</strong>.livejournal.com</span>
 			  </li> 
 			  <li class="username" title="ClaimID user name"> 
-					<img src="/content/jquery-openid/images/claimid.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/claimid-0.png" alt="icon" />
 					<span>http://claimid.com/<strong>username</strong></span>
 			  </li> 
 			  <li class="username" title="Vidoop user name"> 
-					<img src="/content/jquery-openid/images/vidoop.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/vidoop.png" alt="icon" />
 					<span>http://<strong>username</strong>.myvidoop.com/</span>
 			  </li> 
 			  <li class="username" title="Verisign user name"> 
-					<img src="/content/jquery-openid/images/verisign.ico" alt="icon" />
+					<img src="/content/jquery-openid/images/verisign-2.png" alt="icon" />
 					<span>http://<strong>username</strong>.pip.verisignlabs.com/</span>
 			  </li> 
 			  </ul>
@@ -115,10 +115,9 @@
 <div class="login">
         <p style="display:none">{% trans "we support two login modes" %}</p>
     <div style="display:none">
-        <br>
         {% if form1.errors %}
         <p class="errors">
-            <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br>
+            <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
             <ul class="error-list">
                 {% if form1.username.errors %} 
                 <li><span class="error">{{ form1.username.errors|join:", " }}</span></li>
@@ -129,14 +128,13 @@
             </ul>
         </p>
         {% endif %}
-        <br>
         <form name="fauth" action="{% url user_signin %}" method="post">
             {{ form1.next }}
         	<fieldset class="fieldset" >
         		<legend class="big">{% trans "Use login name and password" %}</legend>
         		<div class="form-row"><label for="id_username">{% trans "Login name" %}:</label><br />{{ form1.username }}</div>
         		<div class="form-row"><label for="id_password">{% trans "Password" %}:</label><br />{{ form1.password }}</div>
-               <div class="submit-row"><input type="submit" class="submit" name="blogin" value="{% trans "Login" %}"> 
+               <div class="submit-row"><input type="submit" class="submit" name="blogin" value="{% trans "Login" %}"/> 
 			   <a href="">{% trans "Forgot your password?" %}</a> 
 			   <a href="">{% trans "Create new account" %}</a></div>
         	</fieldset>	
@@ -148,7 +146,6 @@
 {% block sidebar %}
 <div class="boxC">
     <h3 class="subtitle">{% trans "Why use OpenID?" %}</h3>
-    <p>
     <ul class="list-item">
         <li>
 		{% trans "with openid it is easier" %}
@@ -164,10 +161,10 @@
         </li>
         
     </ul>
-    <a href="http://openid.net/what/" target="_blank" style="float:right;position:relative">{% trans "Find out more" %} »</a><br>
+    <p>
+    <a href="http://openid.net/what/" target="_blank" style="float:right;position:relative">{% trans "Find out more" %} »</a><br/>
     <a href="http://openid.net/get/" target="_blank" style="float:right;position:relative">{% trans "Get OpenID" %} »</a>
     </p>
-    <br>  
 </div>
 {% endblock%}
 

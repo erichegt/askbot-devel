@@ -1,7 +1,7 @@
 fieldset {border-style:none;}
 img {border-style:none;}
 
-.logo_box {width:90px;height:40px;background:white;border:1px solid #dddddd;}
+.logo_box {display:inline-block;width:90px;height:40px;background:white;border:1px solid #dddddd;}
 .openid_box img {margin-top:6px;}
 .aol_box img {margin-top:6px;}
 .yahoo_box img {margin-top:13px;}

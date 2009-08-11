@@ -332,7 +332,10 @@ def question(request, id):
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)
-    question_vote = question.votes.select_related().filter(user=request.user)
+    if not request.user.is_anonymous():
+        question_vote = question.votes.select_related().filter(user=request.user)
+    else:
+        question_vote = None #is this correct?
     if question_vote is not None and question_vote.count() > 0:
         question_vote = question_vote[0]
 
@@ -1167,8 +1170,11 @@ def user_recent(request, user_id, user_view):
             self.type_id = type
             self.title = title
             self.summary = summary
-            self.title_link = u'/%s%s/%s#%s' %(_('questions/'),question_id, title, answer_id)\
-                if int(answer_id) > 0 else u'/%s%s/%s' %(_('questions/'), question_id, title)
+            if int(answer_id) > 0:
+                self.title_link = u'/questions/%s/%s#%s' %(question_id, title, answer_id)
+            else:
+                self.title_link = u'/questions/%s/%s' %(question_id, title)
+
     class AwardEvent:
         def __init__(self, time, type, id):
             self.time = time
