@@ -223,7 +223,7 @@ def signin(request,newquestion=False,newanswer=False):
         'form1': form_auth,
         'form2': form_signin,
         'msg':  request.GET.get('msg',''),
-        'sendpw_url': reverse('user_sendpw'),
+        'sendpw_url': reverse('sendpw'),
     }, context_instance=RequestContext(request))
 
 def complete_signin(request):

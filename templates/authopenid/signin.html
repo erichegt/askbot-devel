@@ -113,8 +113,8 @@
 			  </fieldset> 
 			</form>
 <div class="login">
-        <p style="display:none">{% trans "we support two login modes" %}</p>
-    <div style="display:none">
+        <p>{% trans "we support two login modes" %}</p>
+    <div >
         <br>
         {% if form1.errors %}
         <p class="errors">
@@ -137,8 +137,8 @@
         		<div class="form-row"><label for="id_username">{% trans "Login name" %}:</label><br />{{ form1.username }}</div>
         		<div class="form-row"><label for="id_password">{% trans "Password" %}:</label><br />{{ form1.password }}</div>
                <div class="submit-row"><input type="submit" class="submit" name="blogin" value="{% trans "Login" %}"> 
-			   <a href="">{% trans "Forgot your password?" %}</a> 
-			   <a href="">{% trans "Create new account" %}</a></div>
+                   <a href="{%url sendpw%}">{% trans "Forgot your password?" %}</a> 
+			   <a href="/registrarse">{% trans "Create new account" %}</a></div>
         	</fieldset>	
         </form>
     </div>

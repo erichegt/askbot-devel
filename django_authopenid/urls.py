@@ -15,10 +15,10 @@ urlpatterns = patterns('django_authopenid.views',
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
     url(r'^%s$' % _('signup/'), 'signup', name='user_signup'),
     #disable current sendpw function
-    url(r'^%s$' % _('sendpw/'), 'signin', name='user_sendpw'),
-    #url(r'^%s$' % _('sendpw/'), 'sendpw', name='user_sendpw'),
-    #url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', 
-    #    name='user_confirmchangepw'),
+    #url(r'^%s$' % _('sendpw/'), 'signin', name='user_sendpw'),
+    url(r'^%s$' % _('sendpw/'), 'sendpw', name='sendpw'),
+    url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', 
+        name='user_confirmchangepw'),
 
     # manage account settings
     #url(r'^$', 'account_settings', name='user_account_settings'),
