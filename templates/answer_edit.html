@@ -49,31 +49,27 @@
 <div id="main-body" class="ask-body">
     <div id="askform">
         <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >
-            <label for="id_revision" ><strong>{% trans "revision" %}:</strong></label> <br> 
+            <label for="id_revision" ><strong>{% trans "revision" %}:</strong></label> <br/> 
             {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul }}{% endif %}
             <div style="vertical-align:middle">
             {{ revision_form.revision }} <input type="submit" style="display:none" id="select_revision" name="select_revision" value="{% trans "select revision" %}">
-            </div><br>
+            </div>
             <div class="form-item">
                 <div id="wmd-button-bar" class="wmd-panel"></div>
                 {{ form.text }}
                 <span class="form-error"></span>
                 <div class="preview-toggle"><span id="pre-collapse" 
-					title="{% trans "Toggle the real time Markdown editor preview" %}打">{% trans "toggle preview" %}</span></div>
+					title="{% trans "Toggle the real time Markdown editor preview" %}">{% trans "toggle preview" %}</span></div>
                 <div id="previewer" class="wmd-preview"></div>
-                <br>
             </div>
             
-            <strong>{{ form.summary.label_tag }}</strong> <br>
+            <strong>{{ form.summary.label_tag }}</strong> <br/>
             {{ form.summary }}  {{ form.summary.errors }}
             <div class="title-desc">
                 {{ form.summary.help_text }}
             </div>
-            <br>
             <input type="submit" value="{% trans "Save edit" %}" class="submit" />
             <input type="button" value="{% trans "Cancel" %}" class="submit" onclick="history.back(-1);" />
-            <br>
-            <br>
         </form>
     </div>
 </div>
