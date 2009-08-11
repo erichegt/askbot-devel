@@ -7,16 +7,16 @@
     <div id="main-bar" class="headNormal">
 		{% trans "Connect your OpenID with your account on this site" %}
     </div>      
-	<p id="completetxt" >
+	<div id="completetxt" >
         <div class="message">
             {% blocktrans %}register new {{provider}} account info{% endblocktrans %}
         </div>
     	<p style="display:none">{% trans "This account already exists, please use another." %}</p>
-	</p>
+	</div>
 
 	{% if form1.errors %}
-	<p class="errors">
-        <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br>
+	<div class="errors">
+        <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
         <ul class="error-list">
 		{% if form1.username.errors %} 
 			<li><span class="error">{{ form1.username.errors|join:", " }}</span></li>
@@ -25,11 +25,11 @@
 			<li><span class="error">{{ form1.email.errors|join:", " }}</span></li>
 		{% endif %}
         </ul>
-	</p>
+	</div>
 	{% endif %}
 	{% if form2.errors %}
-	<p class="errors">
-        <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br>
+	<div class="errors">
+        <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
         <ul class="error-list">
 		{% if form2.username.errors %} 
 			<li><span class="error">{{ form2.username.errors|join:", " }}</span></li>
@@ -38,15 +38,15 @@
 			<li><span class="error">{{ form2.password.errors|join:", " }}</span></li>
 		{% endif %}
        </ul>
-	</p>
+	</div>
 	{% endif %}
 
 	<div class="login">
         <form name="fregister" action="{% url user_register %}" method="POST">
             {{ form.next }}
-            <div class="form-row"><label for="id_username">{% trans "Screen name label" %}</label><br />{{ form1.username }}</div>
-            <div class="form-row"><label for="id_email">{% trans "Email address label" %}</label><br />{{ form1.email }}</div>
-            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"></div>
+            <div class="form-row"><label for="id_username">{% trans "Screen name label" %}</label><br/>{{ form1.username }}</div>
+            <div class="form-row"><label for="id_email">{% trans "Email address label" %}</label><br/>{{ form1.email }}</div>
+            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"/></div>
 		</form>
 	</div>
 	<div class="login" style="display:none">
@@ -54,11 +54,11 @@
             {{ form.next }}
 			<fieldset style="padding:10px">
 				<legend class="big">{% trans "Existing account" %}</legend>
-				<div class="form-row"><label for="id_username">{% trans "user name" %}</label><br />{{ form2.username }}</div>
-				<div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br />{{ form2.password }}</div>
+				<div class="form-row"><label for="id_username">{% trans "user name" %}</label><br/>{{ form2.username }}</div>
+				<div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br/>{{ form2.password }}</div>
 				<!--todo double check translation from chinese 确认 = "Register" -->
 				<div class="submit-row">
-					<input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"> 
+					<input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"/> 
 					<a href="">{% trans "Forgot your password?" %}</a>
 				</div>
 			</fieldset>

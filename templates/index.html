@@ -32,7 +32,7 @@
     {% for question in questions %}
     <div class="qstA">
         <h2>
-            <a href="{{ question.get_absolute_url }}" title="{{ question.summary }}...">
+            <a href="{{ question.get_absolute_url }}" title="{{ question.summary|collapse }}...">
             {{ question.get_question_title }}
             </a>
         </h2>
@@ -51,7 +51,7 @@
             </table>
         </div>
         <div class="summary">
-            {{ question.summary }}...
+            {{ question.summary}}...
         </div>
         {% if question.wiki %}
         <span class="from wiki">{% trans "community wiki" %}</span>
@@ -79,7 +79,7 @@
 <div class="boxA">
 	<h3>{% trans "welcome to website" %}</h3>
 	<div class="body">
-      {{ settings.APP_INTRO|safe }}
+      {{settings.APP_INTRO|safe}}
 	  <div class="more"><a href="/about">{% trans "about" %} »</a></div>
 	  <div class="more"><a href="/faq">{% trans "faq" %} »</a></div>
 	</div>
@@ -88,15 +88,16 @@
 <div class="boxB">
 	<h3>{% trans "Recent tags" %}</h3>
 	<div class="body">
-         <p class="tagsbox">
+         <div class="tags">
         {% for tag in tags %}
             <a rel="tag" 
 				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
         {% endfor %}
-        </p>
+        </div>
         <div class="more"><a href="/tags">{% trans "popular tags" %} »</a> </div>
     </div>
 </div>
+{% if awards %}
 <div class="boxB">
     <h3>{% trans "Recent awards" %}</h3>
         <div class="body">
@@ -112,6 +113,7 @@
         	<div class="more"><a href="/badges/">{% trans "all awards" %} »</a> </div>
          </div>
 </div>
+{% endif %}
 <div id="feeds">
 <a href="/feeds/rss" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
