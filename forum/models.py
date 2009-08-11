@@ -180,7 +180,7 @@ class Question(models.Model):
         return [name for name in self.tagnames.split(u' ')]
 
     def tagname_meta_generator(self):
-        return u','.join([str(tag) for tag in self.tagname_list()])
+        return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
         return '%s%s' % (reverse('question', args=[self.id]), self.title.replace(' ', '-'))
