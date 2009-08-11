@@ -358,7 +358,7 @@ def register(request):
                 'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
                 'google':'Google&trade;',
                 'aol':'<font color="#31658e">AOL</font>',
-                'myopenid':'OpenID',
+                'myopenid':'MyOpenID',
                 }
     if provider_name not in providers:
         provider_logo = provider_name
