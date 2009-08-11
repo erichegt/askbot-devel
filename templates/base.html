@@ -8,12 +8,14 @@
         {% spaceless %}
         {% block meta %}{% endblock %}
         {% endspaceless %}
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="verify-v1" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
-        <link rel="shortcut icon" href="/content/images/favicon.ico" >
+        {% endif %}
+        <link rel="shortcut icon" href="/content/images/favicon.ico" />
         <link href="/content/style/style.css" rel="stylesheet" type="text/css" />
-        <script src="http://www.google.com/jsapi"></script>
-        <script>google.load("jquery", "1.2.6");</script>
+        <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+        <script type="text/javascript">google.load("jquery", "1.2.6");</script>
 		<script type="text/javascript">
 			var i18nLang = '{{settings.LANGUAGE_CODE}}';
 		</script>

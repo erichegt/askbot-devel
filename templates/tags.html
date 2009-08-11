@@ -6,6 +6,7 @@
 {% block title %}{% spaceless %}{% trans "Tag list" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
+       /*<![CDATA[*/
         $().ready(function(){
             $("#nav_tags").attr('className',"on");
             $("#ipSearchTag").focus();
@@ -20,7 +21,7 @@
             Hilite.elementid = "searchtags";
             Hilite.debug_referrer = location.href;
         });
-
+        /*]]>*/
         </script>
 {% endblock %}
 {% block content %}
@@ -41,6 +42,7 @@
     <span>{% trans "Nothing found" %}</span>
 {% endif %}
 </p>
+{% if tags.object_list %}
 <ul class="tagsList tags">
 {% for tag in tags.object_list %}
    <li>
@@ -48,11 +50,12 @@
         {{ tag }}
     </a>&nbsp;
     <span class="tag-number">× {{ tag.used_count|intcomma }}</span>
-    <br>
+    <br/>
 
     </li>
 {% endfor %}
 </ul>
+{% endif %}
 </div>
 
 {% endblock %}

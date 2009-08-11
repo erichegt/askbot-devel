@@ -179,6 +179,9 @@ class Question(models.Model):
         """Creates a list of Tag names from the ``tagnames`` attribute."""
         return [name for name in self.tagnames.split(u' ')]
 
+    def tagname_meta_generator(self):
+        return ','.join([str(tag) for tag in self.tagname_list()])
+
     def get_absolute_url(self):
         return '%s%s' % (reverse('question', args=[self.id]), self.title.replace(' ', '-'))
 
@@ -270,6 +273,16 @@ class Question(models.Model):
 
     class Meta:
         db_table = u'question'
+
+class FavoriteQuestion(models.Model):
+    """A favorite Question of a User."""
+    question      = models.ForeignKey(Question)
+    user          = models.ForeignKey(User, related_name='user_favorite_questions')
+    added_at = models.DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        db_table = u'favorite_question'
+    def __unicode__(self):
+        return '[%s] favorited at %s' %(self.user, self.added_at)
 
 class QuestionRevision(models.Model):
     """A revision of a Question."""
@@ -418,16 +431,6 @@ class AnswerRevision(models.Model):
                 answer=self.answer).values_list('revision',
                                                 flat=True)[0] + 1
         super(AnswerRevision, self).save(**kwargs)
-
-class FavoriteQuestion(models.Model):
-    """A favorite Question of a User."""
-    question      = models.ForeignKey(Question)
-    user          = models.ForeignKey(User, related_name='user_favorite_questions')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
-    class Meta:
-        db_table = u'favorite_question'
-    def __unicode__(self):
-        return '[%s] favorited at %s' %(self.user, self.added_at)
 
 class Badge(models.Model):
     """Awarded for notable actions performed on the site by Users."""
@@ -652,7 +655,10 @@ def record_comment_event(instance, created, **kwargs):
         from django.contrib.contenttypes.models import ContentType
         question_type = ContentType.objects.get_for_model(Question)
         question_type_id = question_type.id
-        type = TYPE_ACTIVITY_COMMENT_QUESTION if instance.content_type_id == question_type_id else TYPE_ACTIVITY_COMMENT_ANSWER
+        if (instance.content_type_id == question_type_id): 
+            type = TYPE_ACTIVITY_COMMENT_QUESTION 
+        else:
+            type = TYPE_ACTIVITY_COMMENT_ANSWER
         activity = Activity(user=instance.user, active_at=instance.added_at, content_object=instance, activity_type=type)
         activity.save()
 

@@ -6,6 +6,9 @@
 {% load i18n %}
 {% block title %}{% spaceless %}{{ question.get_question_title }}{% endspaceless %}{% endblock %}
 {% block forejs %}
+        <meta name="description" content="{{question.summary}}" />
+        <meta name="keywords" content="{{question.tagname_meta_generator}}" />
+        <link rel="canonical" href="{{question.get_absolute_url}}"/>
         {% if not question.closed and request.user.is_authenticated %}
         <script type='text/javascript' src='/content/js/com.cnprog.editor.js'></script>
         <script type='text/javascript' src='/content/js/wmd/showdown.js'></script>
@@ -66,38 +69,45 @@
                             {% if question_vote %}
                             <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
 								src="/content/images/vote-arrow-up{% if question_vote.is_upvote %}-on{% endif %}.png" 
-								title="{% trans "i like this post (click again to cancel)" %}" >
+                                alt="{% trans "i like this post (click again to cancel)" %}"
+								title="{% trans "i like this post (click again to cancel)" %}" />
                             <div id="question-vote-number-{{ question.id }}" class="vote-number" 
 								title="{% trans "current number of votes" %}">
                                 {{ question.score }}
                             </div>
                             <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
 								src="/content/images/vote-arrow-down{% if question_vote.is_downvote %}-on{% endif %}.png" 
-								title="{% trans "i dont like this post (click again to cancel)" %}" >
+                                alt="{% trans "i dont like this post (click again to cancel)" %}"
+								title="{% trans "i dont like this post (click again to cancel)" %}" />
                            
                             {% else %}
                             <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
+                                alt="{% trans "i like this post (click again to cancel)" %}"
 								src="/content/images/vote-arrow-up.png" 
-								title="{% trans "i like this post (click again to cancel)" %}" >
+								title="{% trans "i like this post (click again to cancel)" %}" />
                             <div id="question-vote-number-{{ question.id }}" class="vote-number" 
 								title="{% trans "current number of votes" %}">
                                 {{ question.score }}
                             </div>
                             <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-								src="/content/images/vote-arrow-down.png" title="{% trans "i dont like this post (click again to cancel)" %}" >    
+								src="/content/images/vote-arrow-down.png" 
+                                alt="{% trans "i dont like this post (click again to cancel)" %}"
+                                title="{% trans "i dont like this post (click again to cancel)" %}" />
           
                             {% endif %}
-                            <br><br>
                             {% if favorited %}
                             <img class="question-img-favorite" src="/content/images/vote-favorite-on.png" 
-								title="{% trans "mark this question as favorite (click again to cancel)" %}" >
+								alt="{% trans "mark this question as favorite (click again to cancel)" %}"
+								title="{% trans "mark this question as favorite (click again to cancel)" %}" />
                             <div id="favorite-number" class="favorite-number my-favorite-number">
                                 {{ question.favourite_count }}
                             </div>
                             {% else %}
                             <img class="question-img-favorite" src="/content/images/vote-favorite-off.png" 
-								title="{% trans "remove favorite mark from this question (click again to restore mark)" %}" >   
-                            <div id="favorite-number" class="favorite-number">{% ifnotequal question.favourite_count 0 %}{{ question.favourite_count }}{% endifnotequal %}
+								alt="{% trans "remove favorite mark from this question (click again to restore mark)" %}"
+								title="{% trans "remove favorite mark from this question (click again to restore mark)" %}" />
+                            <div id="favorite-number" class="favorite-number">
+                               {% ifnotequal question.favourite_count 0 %}{{ question.favourite_count }}{% endifnotequal %}
                             </div>
                         
                             {% endif %}
@@ -272,24 +282,29 @@
                             <tr>
                                 <td style="width:30px;vertical-align:top">
                                     <div class="vote-buttons">
-                                        <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" src="/content/images/vote-arrow-up{% get_user_vote_image user_answer_votes answer.id 1 %}.png" title="{% trans "i like this answer (click again to cancel)" %}">
+                                        <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
+                                                src="/content/images/vote-arrow-up{% get_user_vote_image user_answer_votes answer.id 1 %}.png" 
+                                                alt="{% trans "i like this answer (click again to cancel)" %}"
+                                                title="{% trans "i like this answer (click again to cancel)" %}"/>
                                         <div id="answer-vote-number-{{ answer.id }}" class="vote-number" title="{% trans "current number of votes" %}">
                                             {{ answer.score }}
                                         </div>
                                         <img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
 											src="/content/images/vote-arrow-down{% get_user_vote_image user_answer_votes answer.id -1 %}.png" 
-											title="{% trans "i dont like this answer (click again to cancel)" %}" >
+											alt="{% trans "i dont like this answer (click again to cancel)" %}"
+											title="{% trans "i dont like this answer (click again to cancel)" %}" />
                                      
-                                        <br><br>
                                         {% ifequal request.user question.author  %}
                                         <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
 											src="/content/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png" 
-											title="{% trans "mark this answer as favorite (click again to undo)" %}" >
+											alt="{% trans "mark this answer as favorite (click again to undo)" %}"
+											title="{% trans "mark this answer as favorite (click again to undo)" %}" />
                                         {% else %}
                                             {% if answer.accepted %}
                                             <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
 												src="/content/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png" 
-												title="{% trans "the author of the question has selected this answer as correct" %}" >
+												alt="{% trans "the author of the question has selected this answer as correct" %}"
+												title="{% trans "the author of the question has selected this answer as correct" %}" />
                                             {% endif %}
                                         {% endifequal %}
                                     </div>
@@ -461,15 +476,13 @@
                 <div id="previewer" class="wmd-preview"></div>
                 {{ answer.text.errors }}
             </div>
-            <br>
-            <input type="submit" value="{% trans "Answer the question" %}" class="submit"><span class="form-error"></span>
+            <input type="submit" value="{% trans "Answer the question" %}" class="submit"/><span class="form-error"></span>
                 {% if request.user.is_authenticated %}
                     {{ answer.email_notify }} <label for="question-subscribe-updates">{% trans "Notify me daily if there are any new answers." %}</label>
                 {% else %}
-                    <input type="checkbox" disabled><label>{% trans "once you sign in you will be able to subscribe for any updates here" %}</label>
+                    <input type="checkbox" disabled="disabled" /><label>{% trans "once you sign in you will be able to subscribe for any updates here" %}</label>
                 {% endif %}
             {% endif %}
-            <br><br>
         </form>
     </div>
 </div>
@@ -484,7 +497,7 @@
         {% for tag in tags %}
         	<a href="{% url forum.views.tag tag.name|urlencode %}" 
 			title="{% trans "see questions tagged"%}'{{tag.name}}'{% trans "using tags" %}" 
-			rel="tag">{{ tag.name }}</a> <span class="tag-number">× {{ tag.used_count|intcomma }}</span><br>
+			rel="tag">{{ tag.name }}</a> <span class="tag-number">&#x2715;{{ tag.used_count|intcomma }}</span><br/>
         {% endfor %}
     </p>
     <p>
@@ -507,7 +520,6 @@
         </p>
         {% endfor %}
     </div>
-    <br>  
 </div>
 
 {% endblock %}

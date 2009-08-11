@@ -95,9 +95,6 @@
 <div class="boxC">
     <p>
 		{% blocktrans with questions_count|intcomma as num_q %}have {{num_q}} unanswered questions{% endblocktrans %}
-		{% comment %}
-		{% trans "Have a total of" %}<br><div class="questions-count">{{ questions_count|intcomma }}</div>
-		{% endcomment %}
         <!---<p>问题按 <strong>问题创建时间</strong> 排序。最新加入的问题将显示在最前面。</p>-->
     </p>
 </div>
@@ -107,14 +104,13 @@
     <div class="tags">
         {% for tag in tags %}
             <a rel="tag" title="{% trans "see questions tagged"%}'{{ tag.name }}'{% trans "using tags" %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
-            <span class="tag-number">× {{ tag.used_count|intcomma }}</span>
-            <br>
+            <span class="tag-number"> &#x2715; {{ tag.used_count|intcomma }}</span>
+            <br/>
         {% endfor %}
-        <br>
+        <br/>
     </div>
     </div>
 </div>
 
 {% endblock %}
-
 <!-- end unanswered.html -->
