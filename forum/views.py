@@ -332,7 +332,7 @@ def question(request, id):
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)
-    if not request.user.is_anonymous():
+    if request.user.is_authenticated():
         question_vote = question.votes.select_related().filter(user=request.user)
     else:
         question_vote = None #is this correct?

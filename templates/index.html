@@ -21,9 +21,9 @@
 <div class="tabBar">
     <div class="headQuestions">{% trans "Questions" %}</div>
     <div class="tabsA">
-    	 <a id="latest" href="?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
-        <a id="hottest" href="?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
-        <a id="mostvoted" href="?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
+    	 <a id="latest" href="{% url questions %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
+        <a id="hottest" href="{% url questions %}?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
+        <a id="mostvoted" href="{% url questions %}?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
         <a id="all" href="{% url questions %}" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
     </div>
 </div>
@@ -93,7 +93,7 @@
             <a rel="tag" 
 				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
         {% endfor %}
-        </p>
+        </div>
         <div class="more"><a href="{% url tags %}">{% trans "popular tags" %} »</a> </div>
     </div>
 </div>
