@@ -67,14 +67,14 @@
 <div id="main-body" class="ask-body">
     <div id="askform">
         <form id="fmedit" action="{% url edit_question question.id %}" method="post" >
-            <label for="id_revision" ><strong>{% trans "revision" %}:</strong></label> <br> 
+            <label for="id_revision" ><strong>{% trans "revision" %}:</strong></label> <br/> 
             {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul }}{% endif %}
             <div style="vertical-align:middle">
             {{ revision_form.revision }} <input type="submit" style="display:none" id="select_revision" name="select_revision" 
 											value="{% trans "select revision"%}">
-            </div><br> 
+            </div> 
             <div class="form-item">
-                <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> <span class="form-error"></span><br> 
+                <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> <span class="form-error"></span><br/> 
                 {{ form.title }} {{ form.title.errors }}  
                 <div class="title-desc">
                     {{ form.title.help_text }}
@@ -98,17 +98,15 @@
                     </table>   
                 </div>
                 <div id="previewer" class="wmd-preview"></div>
-                <br>
             </div>
             <div class="form-item">
-                <strong>{{ form.tags.label_tag }}:</strong> <span class="form-error"></span><br>
+                <strong>{{ form.tags.label_tag }}:</strong> <span class="form-error"></span><br/>
                 {{ form.tags }}  {{ form.tags.errors }}
                 <div class="title-desc">
                     {{ form.tags.help_text }}
                 </div>
             </div>
-            <br>
-            <strong>{{ form.summary.label_tag }}</strong> <br>
+            <strong>{{ form.summary.label_tag }}</strong> <br/>
             {{ form.summary }}  {{ form.summary.errors }}
             <div class="title-desc">
                 {{ form.summary.help_text }}
@@ -119,12 +117,9 @@
                 <strong>{{ form.categories.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br>
                 {{ form.categories }}  {{ form.categories.errors }}
             </p>
-
             <div class="error" ></div>
             <input type="submit" value="{% trans "Save edit" %}" class="submit" />
             <input type="button" value="{% trans "Cancel" %}" class="submit" onclick="history.back(-1);" />
-            <br>
-            <br>
         </form>
     </div>
 </div>

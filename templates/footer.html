@@ -13,13 +13,14 @@
         </div>
 	  <!--<p style="margin-top:10px;">
          <a href="http://code.google.com/p/cnprog/" target="_blank">
-            <img src="/content/images/djangomade124x25_grey.gif" border="0" alt="Made with Django." title="Made with Django." >
+            <img src="/content/images/djangomade124x25_grey.gif" border="0" alt="Made with Django." title="Made with Django." />
          </a>
          <div style="font-size:90%;color:#333">{% trans "current revision" %}: R-0120-20090406</div>
          </p>-->
 	  <p id="licenseLogo"><img src="/content/images/cc-wiki.png" title="Creative Commons: Attribution - Share Alike" alt="cc-wiki" width="50" height="68" /></p>
 	</div>
 	<!-- 页面底部结束： -->
+    {% if settings.GOOGLE_ANALYTICS_KEY %}
         <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -30,4 +31,5 @@
             pageTracker._trackPageview();
             } catch(err) {}
         </script>
-<!-- end template footer.html -->
+    {% endif %}
+<!-- end footer.html -->

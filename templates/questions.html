@@ -127,24 +127,24 @@
 				{% endblocktrans %}
 			{% endif %}
 		{% endif %}
-
+        <br/>
         {% ifequal tab_id "latest" %}
-			<p>{% trans "latest questions info" %}</p>
+			{% trans "latest questions info" %}
         {% endifequal %}
         
         {% ifequal tab_id "active" %}
-            <p>{% trans "Questions are sorted by the <strong>time of last update</strong>." %} 
-			{% trans "Most recently answered ones are shown first." %}</p>
+            {% trans "Questions are sorted by the <strong>time of last update</strong>." %} 
+			{% trans "Most recently answered ones are shown first." %}
         {% endifequal %}
         
         {% ifequal tab_id "hottest" %}
-			<p>{% trans "Questions sorted by <strong>number of responses</strong>." %}
-            {% trans "Most answered questions are shown first." %}</p>
+			{% trans "Questions sorted by <strong>number of responses</strong>." %}
+            {% trans "Most answered questions are shown first." %}
         {% endifequal %}
         
         {% ifequal tab_id "mostvoted" %}
-			<p>{% trans "Questions are sorted by the <strong>number of votes</strong>." %}
-            {% trans "Most voted questions are shown first." %}</p>
+			{% trans "Questions are sorted by the <strong>number of votes</strong>." %}
+            {% trans "Most voted questions are shown first." %}
         {% endifequal %}
         
         
@@ -155,10 +155,10 @@
     <div class="tags">
         {% for tag in tags %}
             <a rel="tag" title="{% trans "see questions tagged" %}'{{ tag.name }}'{% trans "using tags" %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
-            <span class="tag-number">× {{ tag.used_count|intcomma }}</span>
-            <br>
+            <span class="tag-number">&#x2715; {{ tag.used_count|intcomma }}</span>
+            <br />
         {% endfor %}
-        <br>
+        <br />
     </div>
 </div>
 
