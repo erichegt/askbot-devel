@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-05 22:28-0400\n"
-"PO-Revision-Date: 2009-08-12 10:39-0600\n"
+"PO-Revision-Date: 2009-08-12 11:03-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1638,7 +1638,7 @@ msgstr "Responde la pregunta"
 
 #: templates/question.html:468
 msgid "Notify me daily if there are any new answers."
-msgstr "Notifiquema diariamente si hay nuevas respuestas"
+msgstr "Notificarme diariamente si hay nuevas respuestas"
 
 #: templates/question.html:470
 msgid "once you sign in you will be able to subscribe for any updates here"
