@@ -555,8 +555,6 @@ def send_new_email_key(user,nomessage=False):
     import random
     random.seed()
     user.email_key = '%032x' % random.getrandbits(128) 
-    print len(user.email_key)
-    print user.email_key
     user.save()
     _send_email_key(user)
     if nomessage==False:
