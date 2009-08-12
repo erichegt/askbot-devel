@@ -122,7 +122,7 @@
                             <div id="question-tags" class="tags" >
                                 {% for tag in question.tagname_list %}
                                     <a href="{% url forum.views.tag tag|urlencode %}" class="post-tag" 
-										title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
+										title="{% blocktrans with tag as tagname %}see questions tagged '{{ tagname }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
                                 {% endfor %}
                             </div>
                             <div id="question-controls" style="clear:both;">

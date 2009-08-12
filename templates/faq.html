@@ -25,7 +25,7 @@
     
         <div>
             <h3 class="subtitle">{% trans "What should I avoid in my answers?" %}</h3>
-            <p>{% trans "site title" %} {% trans "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions." %}</p>
+            <p>{{ settings.APP_TITLE }} {% trans "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions." %}</p>
         </div>
     
         <div>
@@ -123,7 +123,7 @@
             <h3 class="subtitle">{% trans "Still have questions?" %}</h3>
             <p>{% trans "Please ask your question, help make our community better!" %} 
             <!--
-            <a href="{% url tags %}faq" class="big">{% trans "site title" %} {% trans "questions" %}</a>{% trans "." %}
+            <a href="{% url tags %}faq" class="big">{{ settings.APP_TITLE }} {% trans "questions" %}</a>{% trans "." %}
             -->
             </p>
         </div>

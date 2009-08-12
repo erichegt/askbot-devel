@@ -183,7 +183,7 @@ class Question(models.Model):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        return '%s%s' % (reverse('question', args=[self.id]), self.title.replace(' ', '-'))
+        return '%s%s' % (reverse('question', args=[self.id]), slugify(self.title))
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -303,7 +303,7 @@ class QuestionRevision(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        return '/questions/%s/revisions' % (self.question.id)
+        return '/%s%s/%s' % (_('questions/'),self.question.id,_('revisions'))
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""
@@ -415,7 +415,7 @@ class AnswerRevision(models.Model):
     text       = models.TextField()
 
     def get_absolute_url(self):
-        return '/answers/%s/revisions' % (self.answer.id)
+        return '/%s%s/%s' % (_('answers/'),self.answer.id,_('revisions'))
 
     def get_question_title(self):
         return self.answer.question.title
@@ -587,7 +587,7 @@ QUESTIONS_PER_PAGE_CHOICES = (
 )
 
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
-User.add_to_class('email_key', models.CharField(max_length=16, null=True))
+User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 User.add_to_class('reputation', models.PositiveIntegerField(default=1))
 User.add_to_class('gravatar', models.CharField(max_length=32))
 User.add_to_class('email_feeds', generic.GenericRelation(EmailFeed))
@@ -629,7 +629,7 @@ def delete_messages(self):
 
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
-    return '%s%s/' % (reverse('user', args=[self.id]), self.username)
+    return '%s%s/' % (reverse('user', args=[self.id]), slugify(self.username))
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
