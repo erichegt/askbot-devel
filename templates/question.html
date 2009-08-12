@@ -8,7 +8,7 @@
 {% block forejs %}
         <meta name="description" content="{{question.summary}}" />
         <meta name="keywords" content="{{question.tagname_meta_generator}}" />
-        <link rel="canonical" href="{{question.get_absolute_url}}"/>
+        <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url}}"/>
         {% if not question.closed and request.user.is_authenticated %}
         <script type='text/javascript' src='/content/js/com.cnprog.editor.js'></script>
         <script type='text/javascript' src='/content/js/wmd/showdown.js'></script>
