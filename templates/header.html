@@ -26,14 +26,12 @@
             	</td>
 				<td width="77%" valign="bottom">
                 <div class="nav">
-                    <div class="focus">
-                    <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
-                    </div>
-
                     <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
                     <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
                     <a id="nav_users" href="{% url users %}">{% trans "users" %}</a>
-                    <!--<a id="nav_books" href="{% url books %}">{% trans "books" %}</a>-->
+                    {% if settings.BOOKS_ON %}
+                    <a id="nav_books" href="{% url books %}">{% trans "books" %}</a>
+                    {% endif %}
                     <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
                     <a id="nav_unanswered" href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
                     
@@ -42,6 +40,9 @@
                     <a id="nav_profile" href="{% url user %}{{ request.user.id }}/{{ request.user.username }}/">{% trans "my profile" %}</a>
                     {% endif %}
 					{% endcomment %}
+                    <div class="focus">
+                    <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
+                    </div>
                 </div>
 
               </td>
@@ -52,7 +53,7 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="content">
             <tr>
                 <td align="center" valign="middle">
-                    <form action="{% url search %}" method="GET">
+                    <form action="{% url search %}" method="get">
                         <div>
                             <input type="text" class="searchInput" value="{{ keywords }}" name="q" id="keywords" />
                             <input type="submit" name="Submit" value="{% trans "search" %}" class="searchBtn" />
