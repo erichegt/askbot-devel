@@ -281,6 +281,16 @@ class Question(models.Model):
     class Meta:
         db_table = u'question'
 
+class FavoriteQuestion(models.Model):
+    """A favorite Question of a User."""
+    question      = models.ForeignKey(Question)
+    user          = models.ForeignKey(User, related_name='user_favorite_questions')
+    added_at = models.DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        db_table = u'favorite_question'
+    def __unicode__(self):
+        return '[%s] favorited at %s' %(self.user, self.added_at)
+
 class QuestionRevision(models.Model):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -428,16 +438,6 @@ class AnswerRevision(models.Model):
                 answer=self.answer).values_list('revision',
                                                 flat=True)[0] + 1
         super(AnswerRevision, self).save(**kwargs)
-
-class FavoriteQuestion(models.Model):
-    """A favorite Question of a User."""
-    question      = models.ForeignKey(Question)
-    user          = models.ForeignKey(User, related_name='user_favorite_questions')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
-    class Meta:
-        db_table = u'favorite_question'
-    def __unicode__(self):
-        return '[%s] favorited at %s' %(self.user, self.added_at)
 
 class Badge(models.Model):
     """Awarded for notable actions performed on the site by Users."""

@@ -148,7 +148,7 @@ msgstr ""
 
 #: django_authopenid/views.py:417 django_authopenid/views.py:544
 msgid "Welcome"
-msgstr "Verification Email from Q&A forum"
+msgstr "Verification Email from Q&amp;A forum"
 
 #: django_authopenid/views.py:507
 msgid "Password changed."
@@ -812,7 +812,7 @@ msgid "must have valid %(email)s to post"
 msgstr ""
 "<span class='strong big'>Looks like your email address, %(email)s has not "
 "yet been validated.</span> To post messages you must verify your email, "
-"please see <a href='/faq#validate'>more details here</a>.<br>You can submit "
+"please see <a href='/faq#validate'>more details here</a>.<br/>You can submit "
 "your question now and validate email after that. Your question will saved as "
 "pending meanwhile. "
 
@@ -1135,12 +1135,12 @@ msgstr ""
 "<form style='margin:0;padding:0;' action='/email/sendkey/'><p><span class="
 "\"bigger strong\">How?</span> If you have just set or changed your email "
 "address - <strong>check your email and click the included link</strong>."
-"<br>The link contains a key generated specifically for you. You can also "
+"<br/>The link contains a key generated specifically for you. You can also "
 "<button style='display:inline' type='submit'><strong>get a new key</strong></"
 "button> and check your email again.</p></form><span class=\"bigger strong"
 "\">Why?</span> Email validation is required to make sure that <strong>only "
 "you can post messages</strong> on your behalf and to <strong>minimize spam</"
-"strong> posts.<br>With email you can <strong>subscribe for updates</strong> "
+"strong> posts.<br/>With email you can <strong>subscribe for updates</strong> "
 "on the most interesting questions. Also, when you sign up for the first time "
 "- create a unique <a href='/faq#gravatar'><strong>gravatar</strong></a> "
 "personal image.</p>"
@@ -1716,12 +1716,12 @@ msgid_plural ""
 "\t\t\t"
 msgstr[0] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>question tagged</p><p><span "
-"class=\"tag\">%(tagname)s</span></p>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>question tagged <span "
+"class=\"tag\">%(tagname)s</span>"
 msgstr[1] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>questions tagged</p><div "
-"class=\"tags\"><span class=\"tag\">%(tagname)s</span></div>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>questions tagged "
+"<span class=\"tag\">%(tagname)s</span>"
 
 #: templates/questions.html:116
 #, python-format
@@ -1735,14 +1735,12 @@ msgid_plural ""
 "\t\t\t\t"
 msgstr[0] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>question with title "
-"containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></"
-"p>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>question with title "
+"containing <span class=\"darkred strong\">%(searchtitle)s</span>"
 msgstr[1] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>questions with title "
-"containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></"
-"p>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>questions with title "
+"containing <span class=\"darkred strong\">%(searchtitle)s</span></strong>"
 
 #: templates/questions.html:122
 #, python-format
@@ -1756,10 +1754,10 @@ msgid_plural ""
 "\t\t\t\t"
 msgstr[0] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>question</p>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>question"
 msgstr[1] ""
 "\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>questions</p>"
+"<span class=\"questions-count\">%(q_num)s</span><br/>questions"
 
 #: templates/questions.html:131
 msgid "latest questions info"
@@ -1866,7 +1864,7 @@ msgstr ""
 #, python-format
 msgid "have %(num_q)s unanswered questions"
 msgstr ""
-"<div class=\"questions-count\">%(num_q)s</div><strong>unanswered</strong> "
+"<span class=\"questions-count\">%(num_q)s</span><br/><strong>unanswered</strong> "
 "questions"
 
 #: templates/unanswered.html:99
@@ -2197,7 +2195,7 @@ msgstr "New user signup"
 #, python-format
 msgid "register new %(provider)s account info"
 msgstr ""
-"<p><span class=\"big strong\">You are here for the first time with your %"
+"<span class=\"big strong\">You are here for the first time with your %"
 "(provider)s login.</span> Please create your <strong>screen name</strong> "
 "and save your <strong>email</strong> address. Saved email address will let "
 "you <strong>subscribe for the updates</strong> on the most interesting "
@@ -2249,7 +2247,7 @@ msgstr ""
 
 #: templates/authopenid/confirm_email.txt:2
 msgid "Thank you for registering at our Q&A forum!"
-msgstr ""
+msgstr "Thank you for registering at our Q&amp;A forum!"
 
 #: templates/authopenid/confirm_email.txt:4
 msgid "Your account details are:"
@@ -2309,7 +2307,7 @@ msgstr ""
 
 #: templates/authopenid/email_validation.txt:2
 msgid "Greetings from the Q&A forum"
-msgstr ""
+msgstr "Greetings from the Q&amp;A forum"
 
 #: templates/authopenid/email_validation.txt:4
 msgid "To make use of the Forum, please follow the link below:"
@@ -2434,14 +2432,14 @@ msgid "Click to sign in through any of these services."
 msgstr ""
 "<p><span class=\"big strong\">We accept <a href=\"http://openid.net"
 "\">OpenID</a> login.</span> <font color=\"gray\">Instead of creating a new "
-"password - log in through any of the services below.<p><span class=\"big "
+"password - log in through any of the services below.</font></p><p><span class=\"big "
 "strong\">1. Select the login service by clicking one of the icons</span></p>"
 
 #: templates/authopenid/signin.html:103
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr ""
 "<span class=\"big strong\">2. Enter your <span id=\"enter_your_what"
-"\">Provider user name</span></span><br>(or select another OpenID provider "
+"\">Provider user name</span></span><br/>(or select another OpenID provider "
 "above)"
 
 #: templates/authopenid/signin.html:110
@@ -2450,7 +2448,7 @@ msgid ""
 "web address"
 msgstr ""
 "<span class=\"big strong\">2. Enter your <a class=\"openid_logo\" href="
-"\"http://openid.net\">OpenID</a> web address</span><br>(or choose specific "
+"\"http://openid.net\">OpenID</a> web address</span><br/>(or choose specific "
 "provider by clicking on one of the icons above)"
 
 #: templates/authopenid/signin.html:112 templates/authopenid/signin.html:139
