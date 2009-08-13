@@ -16,6 +16,7 @@ from django.core import serializers
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
+from django.template.defaultfilters import slugify
 
 from utils.html import sanitize_html
 from markdown2 import Markdown
@@ -1129,15 +1130,27 @@ def user_stats(request, user_id, user_view):
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
     votes_total = VOTE_RULES['scope_votes_per_user_per_day']
     tags = user.created_tags.all().order_by('-used_count')[:50]
-    awards = Award.objects.extra(
-        select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
-        tables=['award', 'badge'],
-        order_by=['-awarded_at'],
-        where=['user_id=%s AND badge_id=badge.id'],
-        params=[user.id]
-    ).values('id', 'count', 'name', 'description', 'type')
-    total_awards = awards.count()
-    awards.query.group_by = ['badge_id']
+    if settings.DJANGO_VERSION < 1.1:
+        awards = Award.objects.extra(
+            select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
+            tables=['award', 'badge'],
+            order_by=['-awarded_at'],
+            where=['user_id=%s AND badge_id=badge.id'],
+            params=[user.id]
+        ).values('id', 'count', 'name', 'description', 'type')
+        total_awards = awards.count()
+        awards.query.group_by = ['badge_id']
+    else:
+        awards = Award.objects.extra(
+            select={'id': 'badge.id', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
+            tables=['award', 'badge'],
+            order_by=['-awarded_at'],
+            where=['user_id=%s AND badge_id=badge.id'],
+            params=[user.id]
+        ).values('id', 'name', 'description', 'type')
+        total_awards = awards.count()
+        from django.db.models import Count
+        awards = awards.annotate(count = Count('badge__id'))
 
     return render_to_response(user_view.template_file,{
         "tab_name" : user_view.id,
@@ -1170,10 +1183,11 @@ def user_recent(request, user_id, user_view):
             self.type_id = type
             self.title = title
             self.summary = summary
+            slug_title = slugify(title)
             if int(answer_id) > 0:
-                self.title_link = u'/questions/%s/%s#%s' %(question_id, title, answer_id)
+                self.title_link = u'/%s%s/%s#%s' %(_('questions/'),question_id, slug_title, answer_id)
             else:
-                self.title_link = u'/questions/%s/%s' %(question_id, title)
+                self.title_link = u'/%s%s/%s' %(_('questions/'),question_id, slug_title)
 
     class AwardEvent:
         def __init__(self, time, type, id):
