@@ -140,6 +140,8 @@ var i18nEs = {
 	'enter image url':'introduzca la URL de la imagen, por ejemplo：<br />http://www.example.com/image.jpg   \"titulo de imagen\"',
 	'enter url':'introduzca direcciones web, ejemplo：<br />http://www.cnprog.com/   \"titulo del enlace\"</p>"',
 	'upload image':'cargar imagen：',
+	'questions/' : 'preguntas/',
+	'vote/' : 'votar/',
 };
 
 var i18n = {

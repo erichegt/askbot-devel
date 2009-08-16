@@ -745,7 +745,7 @@ background-color: #97ff97;
 }
 
 /*用户资料页面*/
-.count {font-family:Arial;font-size:200%;font-weight:700;color:#777}
+.count {font-family:Arial;font-size:24px;font-weight:700;color:#777}
 .scoreNumber{font-family:Arial;font-size:35px;font-weight:800;color:#777;line-height:40px;
 	/*letter-spacing:0px*/
 	}

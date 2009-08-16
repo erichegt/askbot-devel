@@ -7,85 +7,51 @@
 		{% block usercontent %}
 	
         <a name="questions"></a>
-        <table>
-            <tr>
-                <td>
-                    <div style="text-align: right;" class="count">{{questions|length}}</div>
-                </td>
-                <td>
-                    <h2>{% trans "User questions" %}</h2>
-                </td>
-            </tr>
-        </table>
+        <h2><span class="count">{{questions|length}}</span> {% trans "User questions" %}</h2>
 		{% include "users_questions.html" %}
-        <p>&nbsp;</p>
         <a name="answers"></a>
-        <table>
-            <tr>
-                <td>
-                    <div style="text-align: right;" class="count">{{answered_questions|length}}</div>
-                </td>
-                <td >
-                    <h2>{% trans "Answers" %}</h2>
-                </td>
-            </tr>
-        </table>
+        <h2><span class="count">{{answered_questions|length}}</span> {% trans "Answers" %}</h2>
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}
             <div class="answer-summary">
-                <a title="{{answered_question.summary|collapse}}" href="/questions/{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">
-                    <div class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
-						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %}&#13;{% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
+                <a title="{{answered_question.summary|collapse}}" 
+                    href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">
+                    <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
+						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
                         {{ answered_question.vote_count }}
-                    </div>
+                    </span>
                 </a>
                 <div class="answer-link">
-                    <a href="/questions/{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> {% if answered_question.comment_count %}<span 
-					title="{% blocktrans with answered_question.comment_count as comment_count %}the answer has been commented {{ comment_count }} times{% endblocktrans %}">({{answered_question.comment_count}})</span>{% endif %}
+                    <a href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    {% if answered_question.comment_count %}
+                    <span>
+				    {% blocktrans with answered_question.comment_count as comment_count %}the answer has been commented {{ comment_count }} times{% endblocktrans %}
+                    </span> 
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
-        <p>&nbsp;</p>
         <a name="votes"></a>
-        <table>
-            <tr>
-                <td>
-                    <div style="text-align: right;" class="count">{{total_votes}}</div>
-                </td>
-                <td >
-                    <h2>{% trans "votes total" %}</h2>                    
-                </td>
-            </tr>
-        </table>
+        <h2><span class="count">{{total_votes}}</span> {% trans "Votes" %}</h2>
         <div class="user-stats-table">
-            <table height="50px">
+            <table>
                 <tr>
                     <td width="60">
-                        <img style="cursor: default;" align="absmiddle" src="/content/images/vote-arrow-up-on.png"/>
+                        <img style="cursor: default;" src="/content/images/vote-arrow-up-on.png" alt="{% trans "thumb up" %}" />
                             <span title="{% trans "user has voted up this many times" %}" class="vote-count">{{up_votes}}</span>
 
                     </td>
                     <td width="60">
-                        <img style="cursor: default;" align="absmiddle" src="/content/images/vote-arrow-down-on.png"/>
+                        <img style="cursor: default;" src="/content/images/vote-arrow-down-on.png" alt="{% trans "thumb down" %}" />
                             <span title="{% trans "user voted down this many times" %}" class="vote-count">{{down_votes}}</span>
 
                     </td>
                 </tr>
             </table>
         </div>
-        <p>&nbsp;</p>
         <a name="tags"></a>
-        <table>
-            <tr>
-                <td>
-                    <div style="text-align: right;" class="count">{{tags|length}}</div>
-                </td>
-                <td >
-                    <h2>{% trans "Tags" %}</h2>
-                </td>
-            </tr>
-        </table>
+        <h2><span class="count">{{tags|length}}</span> {% trans "Tags" %}</h2>
         <div class="user-stats-table">
             <table class="tags">
                 <tr>
@@ -103,24 +69,14 @@
                 </tr>
             </table>
         </div>
-        <p>&nbsp;</p>
         <a name="badges"></a>
-        <table>
-            <tr>
-                <td>
-                    <div style="text-align: right;" class="count">{{total_awards}}</div>
-                </td>
-                <td >
-                    <h2>{% trans "Badges" %}</h2>
-                </td>
-            </tr>
-        </table>
+        <h2><span class="count">{{total_awards}}</span> {% trans "Badges" %}</h2>
         <div class="user-stats-table">
             <table>
                 <tr>
                     <td width="180" style="line-height:35px">
                         {% for award in awards %}
-                            <a href="/badges/{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> × {{ award.count|intcomma }}</span><br/>
+                            <a href="{% url badges %}{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> &#x2715; {{ award.count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"6" %}
                                 </td>
                                 <td width="180" style="line-height:35px">

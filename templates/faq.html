@@ -25,7 +25,7 @@
     
         <div>
             <h3 class="subtitle">{% trans "What should I avoid in my answers?" %}</h3>
-            <p>{% trans "site title" %} {% trans "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions." %}</p>
+            <p>{{ settings.APP_TITLE }} {% trans "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions." %}</p>
         </div>
     
         <div>
@@ -39,13 +39,7 @@
         <div>
             <h3 class="subtitle">{% trans "How does reputation system work?" %}</h3>
             <p>{% trans "Rep system summary" %}</p>
-            <p>
-                For example, if you ask an interesting question or give a helpful answer, your input will be upvoted.
-                On the other hand if the answer is misleading - it will be downvoted.
-                Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points.
-                There is a limit of <strong>200</strong> points that can be accumulated per question or answer.
-
-                The table below explains reputation point requirements for each type of moderation task.
+            <p>{% blocktrans %}For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task.{% endblocktrans %}
             </p>
 
             <table style="font-family:arial;" cellspacing="3" cellpadding="3">
@@ -115,7 +109,7 @@
         <div>
             <h3 class="subtitle">{% trans "To register, do I need to create new password?" %}</h3>
             <p>{% trans "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc." %}
-            <strong><a href="/account/signin">{% trans "Login now!" %}</a> »</strong> 
+            <strong><a href="{% url user_signin %}">{% trans "Login now!" %}</a> »</strong> 
             </p>
         </div>
     
@@ -129,7 +123,7 @@
             <h3 class="subtitle">{% trans "Still have questions?" %}</h3>
             <p>{% trans "Please ask your question, help make our community better!" %} 
             <!--
-            <a href="/tags/faq" class="big">{% trans "site title" %} {% trans "questions" %}</a>{% trans "." %}
+            <a href="{% url tags %}faq" class="big">{{ settings.APP_TITLE }} {% trans "questions" %}</a>{% trans "." %}
             -->
             </p>
         </div>
