@@ -21,10 +21,10 @@ urlpatterns = patterns('django_authopenid.views',
     #    name='user_confirmchangepw'),
 
     # manage account settings
-    #url(r'^$', 'account_settings', name='user_account_settings'),
+    #url(r'^$', _('account_settings'), name='user_account_settings'),
     #url(r'^%s$' % _('password/'), 'changepw', name='user_changepw'),
-    url(r'^%s$' % 'email/', 'changeemail', name='user_changeemail',kwargs = {'action':'change'}),
-    url(r'^%s%s$' % ('email/','validate/'), 'changeemail', name='user_changeemail',kwargs = {'action':'validate'}),
+    url(r'^%s$' % _('email/'), 'changeemail', name='user_changeemail',kwargs = {'action':'change'}),
+    url(r'^%s%s$' % (_('email/'),_('validate/')), 'changeemail', name='user_changeemail',kwargs = {'action':'validate'}),
     #url(r'^%s$' % _('openid/'), 'changeopenid', name='user_changeopenid'),
     url(r'^%s$' % _('delete/'), 'delete', name='user_delete'),
 )

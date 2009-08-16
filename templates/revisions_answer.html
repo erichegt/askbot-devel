@@ -73,7 +73,7 @@
                                     </td>
                                     <td style="width:120px; vertical-align:top">
                                         <div style="height:18px">
-                                            <a href="/users/{{ revision.author.id }}/{{ revision.author.username }}">{{ revision.author.username }}</a></div>
+                                            <a href="{% url users %}{{ revision.author.id }}/{{ revision.author.username }}">{{ revision.author.username }}</a></div>
                                         <div>
                                         {% get_score_badge revision.author %}
                                         </div>

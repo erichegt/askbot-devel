@@ -25,8 +25,8 @@
 		{% trans "please report the error to the site administrators if you wish" %}
         <ul>
             <li><a href="#" id="linkPrevious">{% trans "back to previous page" %}</li>
-            <li><a href="/questions">{% trans "see latest questions" %}</a></li>
-            <li><a href="/tags/">{% trans "see tags" %}</a></li>
+            <li><a href="{% url questions %}">{% trans "see latest questions" %}</a></li>
+            <li><a href="{% url tags %}">{% trans "see tags" %}</a></li>
         </u>
     </div>
 
