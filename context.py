@@ -10,6 +10,7 @@ def application_settings(context):
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
         'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
+        'BOOKS_ON':settings.BOOKS_ON,
         }
     return {'settings':my_settings}
 

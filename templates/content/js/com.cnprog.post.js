@@ -243,7 +243,7 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
-            url: "/questions/" + questionId + "/vote/",
+            url: "/" + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data){callback(object, voteType, data)}});
