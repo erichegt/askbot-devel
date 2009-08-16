@@ -44,4 +44,4 @@ EMAIL_UNIQUE = False
 APP_URL = 'http://server.com' #used by email notif system and RSS
 GOOGLE_SITEMAP_CODE = '55uGNnQVJW8p1bbXeF/Xbh9I7nZBM/wLhRz6N/I1kkA='
 GOOGLE_ANALYTICS_KEY = ''
-
+BOOKS_ON = True 

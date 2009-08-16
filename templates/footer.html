@@ -4,12 +4,12 @@
 <!-- 页面底部开始： -->
     <div id="ground">
        <div class="footerLinks" >
-            <a href="/sobre">{% trans "About us" %}</a><span class="link-separator"> |</span>
-            <a href="/faq">{% trans "faq" %}</a><span class="link-separator"> |</span>
-            <a href="http://blog.cnprog.com">Blog</a><span class="link-separator"> |</span>
-            <a href="mailto:team@cnprog.com">{% trans "Contact" %}</a><span class="link-separator"> |</span>
-            <a href="/privacidad">{% trans "Privacy" %}</a><span class="link-separator"> |</span>
-            <a href="http://cnprog.uservoice.com" target="_blank">{% trans "Feedback" %}</a>
+            <a href="{% url about %}">{% trans "about" %}</a><span class="link-separator"> |</span>
+            <a href="{% url faq %}">{% trans "faq" %}</a><span class="link-separator"> |</span>
+            <a href="{{ blog_url }}">{% trans "blog" %}</a><span class="link-separator"> |</span>
+            <a href="{{ webmaster_email }}">{% trans "contact us" %}</a><span class="link-separator"> |</span>
+            <a href="{% url privacy %}">{% trans "privacy policy" %}</a><span class="link-separator"> |</span>
+            <a href="{{ feedback_url }}" target="_blank">{% trans "give feedback" %}</a>
         </div>
 	  <!--<p style="margin-top:10px;">
          <a href="http://code.google.com/p/cnprog/" target="_blank">
@@ -27,7 +27,7 @@
             </script>
             <script type="text/javascript">
             try {
-            var pageTracker = _gat._getTracker({{ settings.GOOGLE_ANALYTICS_KEY }});
+            var pageTracker = _gat._getTracker("{{ settings.GOOGLE_ANALYTICS_KEY }}");
             pageTracker._trackPageview();
             } catch(err) {}
         </script>

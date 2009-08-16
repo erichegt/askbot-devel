@@ -16,6 +16,7 @@ from django.core import serializers
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
+from django.template.defaultfilters import slugify
 
 from utils.html import sanitize_html
 from markdown2 import Markdown
@@ -306,7 +307,7 @@ def ask(request):
 					ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
-                return HttpResponseRedirect('%s%s%s' % ( _('/account/'),_('signin/'),('newquestion/')))
+                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),_('signin/'),_('newquestion/')))
     else:
         form = AskForm()
 
@@ -337,7 +338,7 @@ def question(request, id):
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)
-    if not request.user.is_anonymous():
+    if request.user.is_authenticated():
         question_vote = question.votes.select_related().filter(user=request.user)
     else:
         question_vote = None #is this correct?
@@ -701,7 +702,8 @@ def answer(request, id):
                     ip_addr = request.META['REMOTE_ADDR'],
                     )
                 anon.save()
-                return HttpResponseRedirect('/account/signin/newanswer')
+                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),
+                    _('signin/'),_('newquestion/')))
 
     return HttpResponseRedirect(question.get_absolute_url())
 
@@ -742,7 +744,7 @@ def tags(request):
             'has_next': tags.has_next(),
             'previous': tags.previous_page_number(),
             'next': tags.next_page_number(),
-            'base_url' : '/tags/?sort=%s&' % sortby
+            'base_url' : '/%s?sort=%s&' % (_('tags/'), sortby)
         }
 
         }, context_instance=RequestContext(request))
@@ -1029,11 +1031,11 @@ def users(request):
         # default
         else:
             objects_list = Paginator(User.objects.all().order_by('-reputation'), USERS_PAGE_SIZE)
-        base_url = '/users/?sort=%s&' % sortby
+        base_url = '/%s?sort=%s&' % (_('users/'), sortby)
     else:
         sortby = "reputation"
         objects_list = Paginator(User.objects.extra(where=['username like %s'], params=['%' + suser + '%']).order_by('-reputation'), USERS_PAGE_SIZE)
-        base_url = '/users/?name=%s&sort=%s&' % (suser, sortby)
+        base_url = '/%s?name=%s&sort=%s&' % (_('users/'), suser, sortby)
 
     try:
         users = objects_list.page(page)
@@ -1168,15 +1170,27 @@ def user_stats(request, user_id, user_view):
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
     votes_total = VOTE_RULES['scope_votes_per_user_per_day']
     tags = user.created_tags.all().order_by('-used_count')[:50]
-    awards = Award.objects.extra(
-        select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
-        tables=['award', 'badge'],
-        order_by=['-awarded_at'],
-        where=['user_id=%s AND badge_id=badge.id'],
-        params=[user.id]
-    ).values('id', 'count', 'name', 'description', 'type')
-    total_awards = awards.count()
-    awards.query.group_by = ['badge_id']
+    if settings.DJANGO_VERSION < 1.1:
+        awards = Award.objects.extra(
+            select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
+            tables=['award', 'badge'],
+            order_by=['-awarded_at'],
+            where=['user_id=%s AND badge_id=badge.id'],
+            params=[user.id]
+        ).values('id', 'count', 'name', 'description', 'type')
+        total_awards = awards.count()
+        awards.query.group_by = ['badge_id']
+    else:
+        awards = Award.objects.extra(
+            select={'id': 'badge.id', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
+            tables=['award', 'badge'],
+            order_by=['-awarded_at'],
+            where=['user_id=%s AND badge_id=badge.id'],
+            params=[user.id]
+        ).values('id', 'name', 'description', 'type')
+        total_awards = awards.count()
+        from django.db.models import Count
+        awards = awards.annotate(count = Count('badge__id'))
 
     return render_to_response(user_view.template_file,{
         "tab_name" : user_view.id,
@@ -1209,10 +1223,11 @@ def user_recent(request, user_id, user_view):
             self.type_id = type
             self.title = title
             self.summary = summary
+            slug_title = slugify(title)
             if int(answer_id) > 0:
-                self.title_link = u'/questions/%s/%s#%s' %(question_id, title, answer_id)
+                self.title_link = u'/%s%s/%s#%s' %(_('questions/'),question_id, slug_title, answer_id)
             else:
-                self.title_link = u'/questions/%s/%s' %(question_id, title)
+                self.title_link = u'/%s%s/%s' %(_('questions/'),question_id, slug_title)
 
     class AwardEvent:
         def __init__(self, time, type, id):
@@ -1452,9 +1467,9 @@ def user_responses(request, user_id, user_view):
         def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
             self.type = type
             self.title = title
-            self.titlelink = u'/questions/%s/%s#%s' % (question_id, title, answer_id)
+            self.titlelink = u'/%s%s/%s#%s' % (_('questions/'), question_id, title, answer_id)
             self.time = time
-            self.userlink = u'/users/%s/%s/' % (user_id, username)
+            self.userlink = u'/%s%s/%s/' % (_('users/'), user_id, username)
             self.username = username
             self.content = u'%s ...' % strip_tags(content)[:300]
 
@@ -1787,7 +1802,7 @@ def __generate_comments_json(obj, type, user):
             "add_date" : comment.added_at.strftime('%Y-%m-%d'),
             "text" : comment.comment,
             "user_display_name" : comment_user.username,
-            "user_url" : "/users/%s/%s" % (comment_user.id, comment_user.username),
+            "user_url" : "/%s%s/%s" % (_('users/'), comment_user.id, comment_user.username),
             "delete_url" : delete_url
         })
 
@@ -2049,9 +2064,9 @@ def search(request):
         if keywords is None:
             return HttpResponseRedirect('/')
         if search_type == 'tag':
-            return HttpResponseRedirect('/tags/?q=%s&page=%s' % (keywords.strip(), page))
+            return HttpResponseRedirect('/%s?q=%s&page=%s' % (_('tags/'), keywords.strip(), page))
         elif search_type == "user":
-            return HttpResponseRedirect('/users/?q=%s&page=%s' % (keywords.strip(), page))
+            return HttpResponseRedirect('/%s?q=%s&page=%s' % (_('users/'), keywords.strip(), page))
         elif search_type == "question":
             
             template_file = "questions.html"

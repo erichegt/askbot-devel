@@ -3,18 +3,18 @@
 {% load i18n %}
 	<div id="roof">
 		<div id="navBar">
-    <div id="top">
-        <!--<div id="header">-->
-            {% if request.user.is_authenticated %}
-                <a href="/usuarios/{{ request.user.id }}/{{ request.user.username }}/">{{ request.user.username }}</a> {% get_score_badge request.user %} 
-				<a href="{% url user_signout %}">{% trans "logout" %}</a>
-            {% else %}
-                <a href="{% url user_signin %}">{% trans "login" %}</a>
-            {% endif %}
-            <a href="/sobre">{% trans "about" %}</a>
-            <a href="/faq">{% trans "faq" %}</a>
-        <!--</div>-->
-    </div>
+			<div id="top">
+				<!--<div id="header">-->
+					{% if request.user.is_authenticated %}
+						<a href="{% url users %}{{ request.user.id }}/{{ request.user.username }}/">{{ request.user.username }}</a> {% get_score_badge request.user %} 
+						<a href="{% url logout %}">{% trans "logout" %}</a>
+					{% else %}
+						<a href="{% url user_signin %}">{% trans "login" %}</a>
+					{% endif %}
+					<a href="{% url about %}">{% trans "about" %}</a>
+					<a href="{% url faq %}">{% trans "faq" %}</a>
+				<!--</div>-->
+			</div>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td width="23%">
@@ -26,20 +26,22 @@
             	</td>
 				<td width="77%" valign="bottom">
                 <div class="nav">
-                    <a id="nav_questions" href="/preguntas/" >{% trans "questions" %}</a>
-                    <a id="nav_tags" href="/etiquetas/">{% trans "tags" %}</a>
-                    <a id="nav_users" href="/usuarios/">{% trans "users" %}</a>
-                    <!--<a id="nav_books" href="/books/">{% trans "books" %}</a>-->
-                    <a id="nav_badges" href="/distinciones/">{% trans "badges" %}</a>
-                    <a id="nav_unanswered" href="/preguntas/sin-responder/">{% trans "unanswered questions" %}</a>
+                    <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
+                    <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
+                    <a id="nav_users" href="{% url users %}">{% trans "users" %}</a>
+                    {% if settings.BOOKS_ON %}
+                    <a id="nav_books" href="{% url books %}">{% trans "books" %}</a>
+                    {% endif %}
+                    <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
+                    <a id="nav_unanswered" href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
                     
 					{% comment %}<!-- i think this needs to be removed -e.f. -->
                     {% if request.user.is_authenticated %}
-                    <a id="nav_profile" href="/usuarios/{{ request.user.id }}/{{ request.user.username }}/">{% trans "my profile" %}</a>
+                    <a id="nav_profile" href="{% url user %}{{ request.user.id }}/{{ request.user.username }}/">{% trans "my profile" %}</a>
                     {% endif %}
 					{% endcomment %}
                     <div class="focus">
-                    <a id="nav_ask" href="/preguntas/preguntar/" class="special">{% trans "ask a question" %}</a>
+                    <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
                     </div>
                 </div>
 
@@ -51,7 +53,7 @@
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="content">
             <tr>
                 <td align="center" valign="middle">
-                    <form action="/buscar/" method="GET">
+                    <form action="{% url search %}" method="get">
                         <div>
                             <input type="text" class="searchInput" value="{{ keywords }}" name="q" id="keywords" />
                             <input type="submit" name="Submit" value="{% trans "search" %}" class="searchBtn" />
