@@ -2,22 +2,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-12 15:53+0000\n"
-"PO-Revision-Date: 2009-08-16 17:05-0600\n"
+"POT-Creation-Date: 2009-08-17 15:55+0000\n"
+"PO-Revision-Date: 2009-08-17 09:55-0600\n"
 "Last-Translator: Bruno Sarlo <bsarlo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:12 urls.py:25 forum/views.py:304 forum/views.py:698
+#: settings.py:12 urls.py:25 forum/views.py:305 forum/views.py:699
 msgid "account/"
 msgstr "cuenta/"
 
 #: settings.py:12 urls.py:26 django_authopenid/urls.py:9
 #: django_authopenid/urls.py:10 django_authopenid/urls.py:11
-#: django_authopenid/urls.py:13 forum/views.py:304 forum/views.py:699
-#: templates/authopenid/confirm_email.txt:10
+#: django_authopenid/urls.py:13 forum/views.py:305 forum/views.py:700
 msgid "signin/"
 msgstr "ingresar/"
 
@@ -76,7 +75,8 @@ msgstr "revisiones/"
 
 #: urls.py:37 urls.py:38 urls.py:39 urls.py:40 urls.py:41 urls.py:42
 #: urls.py:43 urls.py:44 urls.py:45 urls.py:46 urls.py:47 forum/feed.py:19
-#: forum/models.py:306 forum/views.py:1416
+#: forum/models.py:306 forum/views.py:1192 forum/views.py:1194
+#: forum/views.py:1434
 msgid "questions/"
 msgstr "preguntas/"
 
@@ -112,12 +112,12 @@ msgstr "borrar/"
 msgid "question/"
 msgstr "pregunta/"
 
-#: urls.py:51 urls.py:52 forum/views.py:740 forum/views.py:2013
+#: urls.py:51 urls.py:52 forum/views.py:741 forum/views.py:2031
 msgid "tags/"
 msgstr "etiquetas/"
 
-#: urls.py:53 urls.py:54 urls.py:55 forum/views.py:993 forum/views.py:997
-#: forum/views.py:1418 forum/views.py:1751 forum/views.py:2015
+#: urls.py:53 urls.py:54 urls.py:55 forum/views.py:994 forum/views.py:998
+#: forum/views.py:1436 forum/views.py:1769 forum/views.py:2033
 msgid "users/"
 msgstr "usuarios/"
 
@@ -240,7 +240,7 @@ msgstr "la nueva contraseña no coincide"
 msgid "Incorrect username."
 msgstr "Nombre de usuario incorrecto"
 
-#: django_authopenid/urls.py:10 forum/views.py:304 forum/views.py:699
+#: django_authopenid/urls.py:10 forum/views.py:305 forum/views.py:700
 msgid "newquestion/"
 msgstr "nuevapregunta/"
 
@@ -583,6 +583,7 @@ msgid "this email has already been registered, please use another one"
 msgstr "este email ya ha sido registrado, por favor use otro"
 
 #: forum/models.py:246
+#, python-format
 msgid "%(author)s modified the question"
 msgstr "%(author)s modificó la pregunta"
 
@@ -706,27 +707,27 @@ msgstr "preferencias del usuario"
 msgid "profile - user preferences"
 msgstr "perfil - preferencia de "
 
-#: forum/views.py:947
+#: forum/views.py:948
 #, python-format
 msgid "subscription saved, %(email)s needs validation"
 msgstr "subscripción guardada, %(email)s necesita validación"
 
-#: forum/views.py:1860
+#: forum/views.py:1878
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "para subir imagenes debes tener más de 60 puntos de reputación"
 
-#: forum/views.py:1862
+#: forum/views.py:1880
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 "los tipos de archivos permitidos son 'jpg', 'jpeg', 'gif', 'bmp', 'png', "
 "'tiff'"
 
-#: forum/views.py:1864
+#: forum/views.py:1882
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr "tamaño máximo permitido es archivo %sK"
 
-#: forum/views.py:1866
+#: forum/views.py:1884
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
@@ -980,7 +981,7 @@ msgstr "Usuarios han sido galardonados con distinciones:"
 msgid "Badges summary"
 msgstr "Resumen de distinciones"
 
-#: templates/badges.html:17 templates/user_stats.html:115
+#: templates/badges.html:17 templates/user_stats.html:73
 msgid "Badges"
 msgstr "Distinciones"
 
@@ -1081,17 +1082,17 @@ msgid "ask the author"
 msgstr "preguntar al autor"
 
 #: templates/book.html:88 templates/book.html.py:93
-#: templates/users_questions.html:17
+#: templates/users_questions.html:18
 msgid "this question was selected as favorite"
 msgstr "esta pregunta ha sido seleccionada como favorita"
 
 #: templates/book.html:88 templates/book.html.py:93
-#: templates/users_questions.html:11 templates/users_questions.html.py:17
+#: templates/users_questions.html:11 templates/users_questions.html.py:18
 msgid "number of times"
 msgstr "numero de veces"
 
 #: templates/book.html:105 templates/index.html:48 templates/questions.html:46
-#: templates/unanswered.html:37 templates/users_questions.html:30
+#: templates/unanswered.html:37 templates/users_questions.html:32
 msgid "votes"
 msgstr "votos"
 
@@ -1100,14 +1101,14 @@ msgid "the answer has been accepted to be correct"
 msgstr "la respuesta ha sido aceptada como correcta"
 
 #: templates/book.html:115 templates/index.html:49 templates/questions.html:47
-#: templates/unanswered.html:38 templates/users_questions.html:40
+#: templates/unanswered.html:38 templates/users_questions.html:42
 msgid "views"
 msgstr "vistas"
 
 #: templates/book.html:125 templates/index.html:69 templates/question.html:499
 #: templates/questions.html:84 templates/questions.html.py:156
 #: templates/tags.html:49 templates/unanswered.html:75
-#: templates/unanswered.html.py:106 templates/users_questions.html:52
+#: templates/unanswered.html.py:106 templates/users_questions.html:54
 msgid "using tags"
 msgstr "usando etiquetas"
 
@@ -1478,14 +1479,14 @@ msgid "all questions"
 msgstr "todas las preguntas"
 
 #: templates/index.html:47 templates/questions.html:45
-#: templates/unanswered.html:36 templates/users_questions.html:35
+#: templates/unanswered.html:36 templates/users_questions.html:37
 msgid "answers"
 msgstr "respuestas"
 
 #: templates/index.html:69 templates/question.html:499
 #: templates/questions.html:84 templates/questions.html.py:156
 #: templates/tags.html:49 templates/unanswered.html:75
-#: templates/unanswered.html.py:106 templates/users_questions.html:52
+#: templates/unanswered.html.py:106 templates/users_questions.html:54
 msgid "see questions tagged"
 msgstr "ver preguntas etiquetadas"
 
@@ -1697,20 +1698,19 @@ msgid "add comment"
 msgstr "agregar comentario"
 
 #: templates/question.html:260
-#, python-format
-msgid ""
-"The question has been closed for the following reason \"%(question."
-"get_close_reason_display)s\" by"
-msgstr ""
-"La pregunta ha sido cerrada por el siguiente motivo \"%(question."
-"get_close_reason_display)s\" por"
+msgid "The question has been closed for the following reason"
+msgstr "La pregunta fue cerrada por el siguiente motivo "
+
+#: templates/question.html:260
+msgid "by"
+msgstr "por"
 
 #: templates/question.html:262
-#, python-format
-msgid "close date %(question.closed_at)s"
-msgstr "fecha de cerrada %(question.closed_at)s"
+#, fuzzy
+msgid "close date "
+msgstr "[cerrada]"
 
-#: templates/question.html:269 templates/user_stats.html:28
+#: templates/question.html:269 templates/user_stats.html:13
 msgid "Answers"
 msgstr "Respuestas"
 
@@ -2126,41 +2126,50 @@ msgstr "Enviar mis respuestas a Twitter"
 msgid "Save"
 msgstr "Guardar"
 
-#: templates/user_stats.html:16
+#: templates/user_stats.html:10
 msgid "User questions"
 msgstr "Preguntas del usuario"
 
-#: templates/user_stats.html:38
+#: templates/user_stats.html:20
 #, python-format
 msgid "the answer has been voted for %(vote_count)s times"
 msgstr "la respuesta ha sido votada %(vote_count)s veces"
 
-#: templates/user_stats.html:38
+#: templates/user_stats.html:20
 msgid "this answer has been selected as correct"
 msgstr "esta respuesta ha sido seleccionada como correcta"
 
-#: templates/user_stats.html:46
+#: templates/user_stats.html:28
 #, python-format
 msgid "the answer has been commented %(comment_count)s times"
 msgstr "la respuesta ha sido comentada %(comment_count)s veces"
 
-#: templates/user_stats.html:60
-msgid "votes total"
-msgstr "votos totales"
+#: templates/user_stats.html:36
+#, fuzzy
+msgid "Votes"
+msgstr "votos"
 
-#: templates/user_stats.html:69
+#: templates/user_stats.html:41
+msgid "thumb up"
+msgstr ""
+
+#: templates/user_stats.html:42
 msgid "user has voted up this many times"
 msgstr "el usuario ha votado positivo esta cantidad de veces"
 
-#: templates/user_stats.html:74
+#: templates/user_stats.html:46
+msgid "thumb down"
+msgstr ""
+
+#: templates/user_stats.html:47
 msgid "user voted down this many times"
 msgstr "el usuario voto negativo esta cantidad de veces"
 
-#: templates/user_stats.html:87
+#: templates/user_stats.html:54
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: templates/user_stats.html:97
+#: templates/user_stats.html:61
 #, python-format
 msgid "see other questions tagged '%(tag)s' "
 msgstr "ver otras preguntas etiqueteadas '%(tag)s'"
@@ -2176,6 +2185,11 @@ msgstr "gráfica de la reputación del usuario"
 #: templates/user_tabs.html:17
 msgid "reputation history"
 msgstr "historial de reputación"
+
+#: templates/user_tabs.html:23
+#, fuzzy
+msgid "questions that user selected as his/her favorite"
+msgstr "esta pregunta ha sido seleccionada como favorita"
 
 #: templates/user_tabs.html:24
 msgid "favorites"
@@ -2214,7 +2228,15 @@ msgstr "Nada encontrado."
 msgid "this questions was selected as favorite"
 msgstr "esta pregunta ha sido seleccionada como favorita"
 
-#: templates/users_questions.html:33
+#: templates/users_questions.html:12
+msgid "thumb-up on"
+msgstr ""
+
+#: templates/users_questions.html:19
+msgid "thumb-up off"
+msgstr ""
+
+#: templates/users_questions.html:35
 msgid "this answer has been accepted to be correct"
 msgstr "esta respuesta ha sido aceptada como correcta"
 
@@ -2384,36 +2406,6 @@ msgstr "Registrarse"
 msgid "Forgot your password?"
 msgstr "¿Olvidaste tu contraseña?"
 
-#: templates/authopenid/confirm_email.txt:2
-msgid "Thank you for registering at our Q&A forum!"
-msgstr ""
-
-#: templates/authopenid/confirm_email.txt:4
-msgid "Your account details are:"
-msgstr ""
-
-#: templates/authopenid/confirm_email.txt:6
-#: templates/authopenid/sendpw_email.txt:7
-msgid "Username:"
-msgstr "Nombre de usuario:"
-
-#: templates/authopenid/confirm_email.txt:7
-#: templates/authopenid/delete.html:20
-msgid "Password:"
-msgstr "Contraseña"
-
-#: templates/authopenid/confirm_email.txt:9
-msgid "Please sign in here:"
-msgstr ""
-
-#: templates/authopenid/confirm_email.txt:12
-#: templates/authopenid/email_validation.txt:14
-#: templates/authopenid/sendpw_email.txt:13
-msgid ""
-"Sincerely,\n"
-"Forum Administrator"
-msgstr ""
-
 #: templates/authopenid/delete.html:9
 msgid "Account: delete account"
 msgstr "Cuenta: borrar cuenta"
@@ -2430,6 +2422,10 @@ msgstr ""
 msgid "Check confirm box, if you want delete your account."
 msgstr "Marca caja de confirmación, si deseas borrar tu cuenta."
 
+#: templates/authopenid/delete.html:20
+msgid "Password:"
+msgstr "Contraseña"
+
 #: templates/authopenid/delete.html:32
 msgid "I am sure I want to delete my account."
 msgstr "Estoy seguro que quiero borrar mi cuenta."
@@ -2445,25 +2441,6 @@ msgstr "(requerido por tu seguridad)"
 #: templates/authopenid/delete.html:35
 msgid "Delete account permanently"
 msgstr "Borrar la cuenta de forma permanente"
-
-#: templates/authopenid/email_validation.txt:2
-msgid "Greetings from the Q&A forum"
-msgstr ""
-
-#: templates/authopenid/email_validation.txt:4
-msgid "To make use of the Forum, please follow the link below:"
-msgstr ""
-
-#: templates/authopenid/email_validation.txt:8
-msgid "Following the link above will help us verify your email address."
-msgstr ""
-
-#: templates/authopenid/email_validation.txt:10
-msgid ""
-"If you beleive that this message was sent in mistake - \n"
-"no further action is needed. Just ingore this email, we apologize\n"
-"for any inconvenience"
-msgstr ""
 
 #: templates/authopenid/sendpw.html:4 templates/authopenid/sendpw.html.py:8
 msgid "Send new password"
@@ -2500,26 +2477,6 @@ msgid ""
 msgstr ""
 "Nota: tu nueva contraseña solo será activada luego de que hagas click en el "
 "link de activación en el email enviado."
-
-#: templates/authopenid/sendpw_email.txt:2
-#, python-format
-msgid ""
-"Someone has requested to reset your password on %(site_url)s.\n"
-"If it were not you, it is safe to ignore this email."
-msgstr ""
-
-#: templates/authopenid/sendpw_email.txt:5
-msgid "Your new account details are:"
-msgstr ""
-
-#: templates/authopenid/sendpw_email.txt:8
-#, fuzzy
-msgid "New password:"
-msgstr "Nueva contraseña:"
-
-#: templates/authopenid/sendpw_email.txt:10
-msgid "To confirm that you wanted to reset your password please visit:"
-msgstr ""
 
 #: templates/authopenid/settings.html:30
 msgid "Give your  account a new password."
@@ -2681,6 +2638,26 @@ msgstr "Registrate con tu OpenID"
 #: templates/authopenid/signup.html:49
 msgid "Login with your OpenID"
 msgstr "Ingresar con tu OpenID"
+
+#~ msgid ""
+#~ "The question has been closed for the following reason \"%(question."
+#~ "get_close_reason_display)s\" by"
+#~ msgstr ""
+#~ "La pregunta ha sido cerrada por el siguiente motivo \"%(question."
+#~ "get_close_reason_display)s\" por"
+
+#~ msgid "close date %(question.closed_at)s"
+#~ msgstr "fecha de cerrada %(question.closed_at)s"
+
+#~ msgid "votes total"
+#~ msgstr "votos totales"
+
+#~ msgid "Username:"
+#~ msgstr "Nombre de usuario:"
+
+#, fuzzy
+#~ msgid "New password:"
+#~ msgstr "Nueva contraseña:"
 
 #~ msgid "site title"
 #~ msgstr "Preguntalo.com.uy"
