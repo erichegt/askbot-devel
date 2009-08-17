@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-16 23:31+0000\n"
-"PO-Revision-Date: 2009-08-16 17:32-0600\n"
+"POT-Creation-Date: 2009-08-17 15:55+0000\n"
+"PO-Revision-Date: 2009-08-17 10:04-0600\n"
 "Last-Translator: Bruno Sarlo <bsarlo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -739,7 +739,7 @@ msgstr ""
 "los tipos de archivos permitidos son 'jpg', 'jpeg', 'gif', 'bmp', 'png', "
 "'tiff'"
 
-#: forum/views.py:1918
+#: forum/views.py:1882
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr "tamaño máximo permitido es archivo %sK"
@@ -1747,21 +1747,19 @@ msgstr "comentarios"
 msgid "add comment"
 msgstr "agregar comentario"
 
-#: templates/question.html:261
-#, python-format
-msgid ""
-"The question has been closed for the following reason \"%(question."
-"get_close_reason_display)s\" by"
-msgstr ""
-"La pregunta ha sido cerrada por el siguiente motivo \"%(question."
-"get_close_reason_display)s\" por"
+#: templates/question.html:260
+msgid "The question has been closed for the following reason"
+msgstr "La pregunta fue cerrada por el siguiente motivo "
 
-#: templates/question.html:263
-#, python-format
-msgid "close date %(question.closed_at)s"
-msgstr "fecha de cerrada %(question.closed_at)s"
+#: templates/question.html:260
+msgid "by"
+msgstr "por"
 
-#: templates/question.html:270 templates/user_stats.html:13
+#: templates/question.html:262
+msgid "close date "
+msgstr "fecha de cierre"
+
+#: templates/question.html:269 templates/user_stats.html:13
 msgid "Answers"
 msgstr "Respuestas"
 

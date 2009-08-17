@@ -258,9 +258,9 @@
             </table>
             {% if question.closed %}
             <div class="question-status" style="margin-bottom:15px">
-            <h3>{% blocktrans %}The question has been closed for the following reason "{{ question.get_close_reason_display }}" by{% endblocktrans %} 
+                <h3>{% trans "The question has been closed for the following reason" %} "{{ question.get_close_reason_display }}" {% trans "by"%} 
 			<a href="{{ question.closed_by.get_profile_url }}">{{ question.closed_by.username }}</a> 
-			{% blocktrans %}close date {{question.closed_at}}{% endblocktrans %}</h3>
+			{% blocktrans %}close date {% endblocktrans %} {{question.closed_at|date:"d-m-Y H:i"}}</h3>
             </div>
             {% endif %}
             
