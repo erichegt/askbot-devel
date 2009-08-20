@@ -20,7 +20,7 @@ class QuestionManager(models.Manager):
         return questions
     
     def get_unanswered_questions(self, orderby):
-        questions = self.filter(deleted=False, answer_count=0).order_by(orderby)
+        questions = self.filter(deleted=False, answer_accepted=False).order_by(orderby)
         return questions
     
     def get_questions(self, orderby):

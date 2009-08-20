@@ -175,9 +175,18 @@ def signin(request,newquestion=False,newanswer=False):
     form_auth = OpenidAuthForm(initial={'next':next})
     
     if request.POST:   
-        
-        if 'bsignin' in request.POST.keys() or 'openid_username' in request.POST.keys():
 
+        if 'blogin' in request.POST.keys():
+            # perform normal django authentification
+            form_auth = OpenidAuthForm(request.POST)
+            if form_auth.is_valid():
+                user_ = form_auth.get_user()
+                login(request, user_)
+                next = clean_next(form_auth.cleaned_data.get('next'))
+                print 'next stop is "%s"' % next
+                return HttpResponseRedirect(next)
+
+        elif 'bsignin' in request.POST.keys() or 'openid_username' in request.POST.keys():
             form_signin = OpenidSigninForm(request.POST)
             if form_signin.is_valid():
                 next = clean_next(form_signin.cleaned_data.get('next'))
@@ -193,14 +202,6 @@ def signin(request,newquestion=False,newanswer=False):
                         on_failure=signin_failure, 
                         sreg_request=sreg_req)
 
-        elif 'blogin' in request.POST.keys():
-            # perform normal django authentification
-            form_auth = OpenidAuthForm(request.POST)
-            if form_auth.is_valid():
-                user_ = form_auth.get_user()
-                login(request, user_)
-                next = clean_next(form_auth.cleaned_data.get('next'))
-                return HttpResponseRedirect(next)
 
     question = None
     if newquestion == True:
@@ -368,7 +369,7 @@ def register(request):
     return render('authopenid/complete.html', {
         'form1': form1,
         'form2': form2,
-        'provider':providers[provider_name],
+        'provider':provider_logo,
         'nickname': nickname,
         'email': email
     }, context_instance=RequestContext(request))
