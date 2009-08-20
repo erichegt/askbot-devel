@@ -9,7 +9,7 @@
         <meta name="description" content="{{question.summary}}" />
         <meta name="keywords" content="{{question.tagname_meta_generator}}" />
         <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url}}"/>
-        {% if not question.closed and request.user.is_authenticated %}
+        {% if not question.closed %}
         <script type='text/javascript' src='/content/js/com.cnprog.editor.js'></script>
         <script type='text/javascript' src='/content/js/wmd/showdown.js'></script>
         <script type='text/javascript' src='/content/js/wmd/wmd.js'></script>
@@ -259,7 +259,7 @@
             <div class="question-status" style="margin-bottom:15px">
                 <h3>{% trans "The question has been closed for the following reason" %} "{{ question.get_close_reason_display }}" {% trans "by"%} 
 			<a href="{{ question.closed_by.get_profile_url }}">{{ question.closed_by.username }}</a> 
-			{% blocktrans %}close date {% endblocktrans %}{{question.closed_at|date:"d-m-Y H:i"}}</h3>
+			{% blocktrans %}close date {% endblocktrans %} {{question.closed_at|date:"d-m-Y H:i"}}</h3>
             </div>
             {% endif %}
             
