@@ -1189,8 +1189,11 @@ def user_stats(request, user_id, user_view):
             params=[user.id]
         ).values('id', 'name', 'description', 'type')
         total_awards = awards.count()
-        from django.db.models import Count
-        awards = awards.annotate(count = Count('badge__id'))
+        try:
+            from django.db.models import Count
+            awards = awards.annotate(count = Count('badge__id'))
+        except:
+            pass
 
     return render_to_response(user_view.template_file,{
         "tab_name" : user_view.id,
