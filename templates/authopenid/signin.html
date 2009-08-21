@@ -37,14 +37,16 @@
                 {% endblocktrans %}
             </div>
         {% endif %}
-		<div style="width:600px;float:left;margin-bottom:5px;">{% trans "Click to sign in through any of these services." %}</div>
 			<form id="openid_form" name="openid_form" class="openid" method="post" action="{% url user_signin %}"> 
+		      <div style="width:600px;float:left;margin-bottom:5px;">
+                {% trans "Click to sign in through any of these services." %}
+              </div>
 			  <ul class="providers"> 
-			  <li class="openid" title="OpenID">
-				  <div class="logo_box openid_box">
-						<img src="/content/jquery-openid/images/openid.gif" alt="icon" /> 
+			  <li class="local" title="Local login">
+				  <div class="logo_box local_login_box">
+						<img src="/content/jquery-openid/images/local-login.png" alt="icon" /> 
 				  </div>
-			  <span><strong>http://{your-openid-url}</strong></span>
+			  <span></span>
 			  </li> 
 			  <li class="direct" title="Google"> 
 			  	<div class="logo_box google_box">
@@ -61,7 +63,17 @@
 					<img src="/content/jquery-openid/images/aol.gif" alt="icon" /><span>http://openid.aol.com/<strong>username</strong></span>
 				</div>
 			  </li>
-			  <li class="username first_tiny_li" title="MyOpenID user name"> 
+			  <!--<li class="openid" title="OpenID">
+				  <div class="logo_box openid_box">
+						<img src="/content/jquery-openid/images/openid.gif" alt="icon" /> 
+				  </div>
+			  <span><strong>http://{your-openid-url}</strong></span>
+			  </li>-->
+			  <li class="openid first_tiny_li" title="OpenID URL"> 
+					<img src="/content/jquery-openid/images/openidico16.png" alt="icon" />
+					<span>http://{your-openid-url}</span>
+		      </li> 
+			  <li class="username" title="MyOpenID user name"> 
 					<img src="/content/jquery-openid/images/myopenid-2.png" alt="icon" />
 					<span>http://<strong>username</strong>.myopenid.com/</span>
 		      </li> 
@@ -111,37 +123,33 @@
 				  <div><p><input id="openid_url" type="text" value="http://" name="openid_url" /> 
 				  <input id="bsignin" name="bsignin" type="submit" value="{% trans "Login" %}" /></p></div> 
 			  </fieldset> 
+              <fieldset id='local_login_fs'>
+				  <p>{% trans 'Enter your login name and password' %}</p> 
+                        {% if form1.errors %}
+                        <p class="errors">
+                            <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
+                            <ul class="error-list">
+                                {% if form1.username.errors %} 
+                                <li><span class="error">{{ form1.username.errors|join:", " }}</span></li>
+                                {% endif %}
+                                {% if form1.password.errors %} 
+                                <li><span class="error">{{ form1.password.errors|join:", " }}</span></li>
+                                {% endif %}
+                            </ul>
+                        </p>
+                        {% endif %}
+				  <div><label for="username">{% trans "Login name" %}</label>
+                            {{form1.username}}<br/>
+                  <label for="password">{% trans "Password" %}</label>
+                            {{form1.password}}<br/>
+                  <p id="local_login_buttons">
+				  <input id="blogin" name="blogin" type="submit" value="{% trans "Login" %}" />
+                  <a href="{% url user_signup %}">{% trans "Create account" %}</a><br/>
+                  <a href="{% url user_sendpw %}">{% trans "I forgot my password" %}</a>
+                  </p>
+                  </div>
+              </fieldset>
 			</form>
-<div class="login">
-        <p>{% trans "we support two login modes" %}</p>
-    <div >
-        <br>
-        {% if form1.errors %}
-        <p class="errors">
-            <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
-            <ul class="error-list">
-                {% if form1.username.errors %} 
-                <li><span class="error">{{ form1.username.errors|join:", " }}</span></li>
-                {% endif %}
-                {% if form1.password.errors %} 
-                <li><span class="error">{{ form1.password.errors|join:", " }}</span></li>
-                {% endif %}
-            </ul>
-        </p>
-        {% endif %}
-        <form name="fauth" action="{% url user_signin %}" method="post">
-            {{ form1.next }}
-        	<fieldset class="fieldset" >
-        		<legend class="big">{% trans "Use login name and password" %}</legend>
-        		<div class="form-row"><label for="id_username">{% trans "Login name" %}:</label><br />{{ form1.username }}</div>
-        		<div class="form-row"><label for="id_password">{% trans "Password" %}:</label><br />{{ form1.password }}</div>
-               <div class="submit-row"><input type="submit" class="submit" name="blogin" value="{% trans "Login" %}"> 
-                   <a href="{%url sendpw%}">{% trans "Forgot your password?" %}</a> 
-                   <a href="{%url user_signup%}">{% trans "Create new account" %}</a></div>
-        	</fieldset>	
-        </form>
-    </div>
-</div>	
 {% endblock %}
 
 {% block sidebar %}

@@ -1093,7 +1093,9 @@ ul.bulleta li {background:url(/content/images/bullet_green.gif) no-repeat 0px 2p
 	color:#d64000;
 	font-weight:bold;
 }
-
+.grey {
+    color:#808080;
+}
 .about div {
     padding:10px 5px 10px 5px;
     border-top:1px dashed #aaaaaa;

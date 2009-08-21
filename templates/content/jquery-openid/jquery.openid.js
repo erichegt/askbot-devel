@@ -13,6 +13,7 @@ $.fn.openid = function() {
   var $end = $this.find('p:has(input[name=openid_username])>span:eq(1)');
 
   //needed for special effects only
+  var $localfs = $this.find('fieldset:has(input[name=username])');
   var $usrfs = $this.find('fieldset:has(input[name=openid_username])');
   var $idfs = $this.find('fieldset:has(input[name=openid_url])');
 
@@ -33,11 +34,23 @@ $.fn.openid = function() {
     return true;
 
   };
+  var local = function() {
+    var $li = $(this);
+    $li.parent().find('li').removeClass('highlight');
+    $li.addClass('highlight');
+    $usrfs.hide();
+    $idfs.hide();
+    $localfs.show();
+    $this.unbind('submit').submit(submitid);
+    return false;
+  };
+
   var direct = function() {
     var $li = $(this);
     $li.parent().find('li').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.fadeOut('slow');
+    $localfs.fadeOut('slow');
     $idfs.fadeOut('slow');
     $id.val($this.find("li.highlight span").text());
     setTimeout(function(){$('#bsignin').click()},1000);
@@ -49,6 +62,7 @@ $.fn.openid = function() {
     $li.parent().find('li').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.hide();
+    $localfs.hide();
     $idfs.show();
     $id.focus();
     $this.unbind('submit').submit(submitid);
@@ -60,6 +74,7 @@ $.fn.openid = function() {
     $li.parent().find('li').removeClass('highlight');
     $li.addClass('highlight');
     $idfs.hide();
+    $localfs.hide();
     $usrfs.show();
     $this.find('#enter_your_what').text($li.attr("title"));
     $front.text($li.find("span").text().split("username")[0]);
@@ -69,6 +84,7 @@ $.fn.openid = function() {
     return false;
   };
 
+  $this.find('li.local').click(local);
   $this.find('li.direct').click(direct);
   $this.find('li.openid').click(openid);
   $this.find('li.username').click(username);
@@ -84,6 +100,9 @@ $.fn.openid = function() {
   });
   $this.find('li span').hide();
   $this.find('li').css('line-height', 0).css('cursor', 'pointer');
+  $usrfs.hide();
+  $idfs.hide();
+  $localfs.hide();
   $this.find('li:eq(0)').click();
 
   return this;

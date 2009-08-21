@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-17 16:44+0000\n"
-"PO-Revision-Date: 2009-08-17 10:04-0600\n"
+"POT-Creation-Date: 2009-08-21 17:28+0000\n"
+"PO-Revision-Date: 2009-08-21 11:29-0600\n"
 "Last-Translator: Bruno Sarlo <bsarlo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -28,8 +28,8 @@ msgstr "archivossubidos/"
 msgid "signup/"
 msgstr "registrarse/"
 
-#: urls.py:28 urls.py:29 urls.py:30 django_authopenid/urls.py:26
-#: django_authopenid/urls.py:27
+#: urls.py:28 urls.py:29 urls.py:30 django_authopenid/urls.py:24
+#: django_authopenid/urls.py:25
 msgid "email/"
 msgstr "email/"
 
@@ -79,8 +79,8 @@ msgstr "revisiones/"
 
 #: urls.py:38 urls.py:39 urls.py:40 urls.py:41 urls.py:42 urls.py:43
 #: urls.py:44 urls.py:45 urls.py:46 urls.py:47 urls.py:48 forum/feed.py:19
-#: forum/models.py:313 forum/views.py:1232 forum/views.py:1234
-#: forum/views.py:1474
+#: forum/models.py:313 forum/views.py:1228 forum/views.py:1230
+#: forum/views.py:1470
 msgid "questions/"
 msgstr "preguntas/"
 
@@ -108,7 +108,7 @@ msgstr "respuesta/"
 msgid "vote/"
 msgstr "votar/"
 
-#: urls.py:48 urls.py:49 django_authopenid/urls.py:29
+#: urls.py:48 urls.py:49 django_authopenid/urls.py:27
 msgid "delete/"
 msgstr "borrar/"
 
@@ -116,12 +116,12 @@ msgstr "borrar/"
 msgid "question/"
 msgstr "pregunta/"
 
-#: urls.py:52 urls.py:53 forum/views.py:747 forum/views.py:2071
+#: urls.py:52 urls.py:53 forum/views.py:747 forum/views.py:2067
 msgid "tags/"
 msgstr "etiquetas/"
 
 #: urls.py:54 urls.py:55 urls.py:56 forum/views.py:1034 forum/views.py:1038
-#: forum/views.py:1476 forum/views.py:1809 forum/views.py:2073
+#: forum/views.py:1472 forum/views.py:1805 forum/views.py:2069
 msgid "users/"
 msgstr "usuarios/"
 
@@ -260,24 +260,25 @@ msgstr "salir/"
 msgid "complete/"
 msgstr "completado/"
 
-#: django_authopenid/urls.py:15
-msgid "register/"
-msgstr "registrarse/"
-
-#: django_authopenid/urls.py:19
+#: django_authopenid/urls.py:18
 msgid "sendpw/"
 msgstr "enviarcontrasena/"
 
-#: django_authopenid/urls.py:20
+#: django_authopenid/urls.py:19 django_authopenid/urls.py:23
 #, fuzzy
 msgid "password/"
 msgstr "contraseña"
 
-#: django_authopenid/urls.py:20
+#: django_authopenid/urls.py:19
 msgid "confirm/"
 msgstr ""
 
-#: django_authopenid/urls.py:27
+#: django_authopenid/urls.py:22
+#, fuzzy
+msgid "account_settings"
+msgstr "preferencias"
+
+#: django_authopenid/urls.py:25
 msgid "validate/"
 msgstr ""
 
@@ -286,54 +287,54 @@ msgstr ""
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "El OpenID %(openid_url)s no es valido"
 
-#: django_authopenid/views.py:418 django_authopenid/views.py:545
+#: django_authopenid/views.py:419 django_authopenid/views.py:546
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: django_authopenid/views.py:508
+#: django_authopenid/views.py:509
 msgid "Password changed."
 msgstr "Contraseña modificada"
 
-#: django_authopenid/views.py:520 django_authopenid/views.py:525
+#: django_authopenid/views.py:521 django_authopenid/views.py:526
 msgid "your email needs to be validated"
 msgstr "su correo electrónico necesita ser validado"
 
-#: django_authopenid/views.py:682 django_authopenid/views.py:834
+#: django_authopenid/views.py:683 django_authopenid/views.py:835
 #, python-format
 msgid "No OpenID %s found associated in our database"
 msgstr "El OpenID %s no esta asociada en nuestra base de datos"
 
-#: django_authopenid/views.py:686 django_authopenid/views.py:841
+#: django_authopenid/views.py:687 django_authopenid/views.py:842
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
 msgstr "El OpenID %s no esta asociada al usuario actualmente autenticado"
 
-#: django_authopenid/views.py:694
+#: django_authopenid/views.py:695
 msgid "Email Changed."
 msgstr "Email modificado"
 
-#: django_authopenid/views.py:769
+#: django_authopenid/views.py:770
 msgid "This OpenID is already associated with another account."
 msgstr "Este OpenID ya está asociada a otra cuenta."
 
-#: django_authopenid/views.py:774
+#: django_authopenid/views.py:775
 #, python-format
 msgid "OpenID %s is now associated with your account."
 msgstr "El OpenID %s está ahora asociada con tu cuenta."
 
-#: django_authopenid/views.py:844
+#: django_authopenid/views.py:845
 msgid "Account deleted."
 msgstr "Cuenta borrada."
 
-#: django_authopenid/views.py:884
+#: django_authopenid/views.py:885
 msgid "Request for new password"
 msgstr "Pedir nueva contraseña"
 
-#: django_authopenid/views.py:897
+#: django_authopenid/views.py:898
 msgid "A new password has been sent to your email address."
 msgstr "Una nueva contraseña ha sido enviada a tu cuenta de Email."
 
-#: django_authopenid/views.py:927
+#: django_authopenid/views.py:928
 #, python-format
 msgid ""
 "Could not change password. Confirmation key '%s'                is not "
@@ -342,7 +343,7 @@ msgstr ""
 "No se ha podido modificar la contraseña. La clave de confirmación '%s' no "
 "está registrada"
 
-#: django_authopenid/views.py:936
+#: django_authopenid/views.py:937
 msgid ""
 "Can not change password. User don't exist anymore                 in our "
 "database."
@@ -350,7 +351,7 @@ msgstr ""
 "No se puede cambiar la contraseña. El usuario no existe más en nuestra base "
 "de datos."
 
-#: django_authopenid/views.py:945
+#: django_authopenid/views.py:946
 #, python-format
 msgid "Password changed for %s. You may now sign in."
 msgstr "Contraseña cambiada por %s. Ahora puedes ingresar."
@@ -729,22 +730,22 @@ msgstr "perfil - preferencia de "
 msgid "subscription saved, %(email)s needs validation"
 msgstr "subscripción guardada, %(email)s necesita validación"
 
-#: forum/views.py:1918
+#: forum/views.py:1914
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "para subir imagenes debes tener más de 60 puntos de reputación"
 
-#: forum/views.py:1920
+#: forum/views.py:1916
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 "los tipos de archivos permitidos son 'jpg', 'jpeg', 'gif', 'bmp', 'png', "
 "'tiff'"
 
-#: forum/views.py:1922
+#: forum/views.py:1918
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr "tamaño máximo permitido es archivo %sK"
 
-#: forum/views.py:1924
+#: forum/views.py:1920
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
@@ -2296,7 +2297,7 @@ msgid "Your new Email"
 msgstr "Tu nuevo Email"
 
 #: templates/authopenid/changeemail.html:31
-#: templates/authopenid/signin.html:137
+#: templates/authopenid/signin.html:143
 msgid "Password"
 msgstr "Contraseña"
 
@@ -2359,6 +2360,7 @@ msgid "OpenID URL:"
 msgstr "URL de OpenID:"
 
 #: templates/authopenid/changeopenid.html:30
+#: templates/authopenid/settings.html:34
 msgid "Change OpenID"
 msgstr "Cambiar OpenID"
 
@@ -2404,7 +2406,7 @@ msgid "This account already exists, please use another."
 msgstr "Esta cuenta ya existe, por favor usar otra."
 
 #: templates/authopenid/complete.html:19 templates/authopenid/complete.html:32
-#: templates/authopenid/sendpw.html:16 templates/authopenid/signin.html:121
+#: templates/authopenid/sendpw.html:16 templates/authopenid/signin.html:130
 msgid "Sorry, looks like we have some errors:"
 msgstr "Ups, parece que hay errores:"
 
@@ -2436,7 +2438,7 @@ msgstr "contraseña"
 msgid "Register"
 msgstr "Registrarse"
 
-#: templates/authopenid/complete.html:62 templates/authopenid/signin.html:139
+#: templates/authopenid/complete.html:62
 msgid "Forgot your password?"
 msgstr "¿Olvidaste tu contraseña?"
 
@@ -2564,15 +2566,15 @@ msgstr ""
 "                %(title)s %(summary)s será publicada una vez que ingreses\n"
 "                "
 
-#: templates/authopenid/signin.html:40
+#: templates/authopenid/signin.html:42
 msgid "Click to sign in through any of these services."
 msgstr "Clickea para entrar por cualquiera de estos servicios."
 
-#: templates/authopenid/signin.html:103
+#: templates/authopenid/signin.html:115
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr "Ingresa tu <span id=\"enter_your_what\">nombre de usuario</span>"
 
-#: templates/authopenid/signin.html:110
+#: templates/authopenid/signin.html:122
 msgid ""
 "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
 "web address"
@@ -2580,56 +2582,56 @@ msgstr ""
 "Ingresa tu dirección (URL) de <a class=\"openid_logo\" href=\"http://openid."
 "net\">OpenID</a>"
 
-#: templates/authopenid/signin.html:112 templates/authopenid/signin.html:138
+#: templates/authopenid/signin.html:124 templates/authopenid/signin.html:146
 msgid "Login"
 msgstr "Ingresar"
 
-#: templates/authopenid/signin.html:116
-msgid "we support two login modes"
-msgstr "soportamos dos tipos de ingreso"
+#: templates/authopenid/signin.html:127
+msgid "Enter your login name and password"
+msgstr "Introdusca su nombre de usuario y contraseña"
 
-#: templates/authopenid/signin.html:135
-msgid "Use login name and password"
-msgstr "Nombre de usuario y contraseña"
-
-#: templates/authopenid/signin.html:136
+#: templates/authopenid/signin.html:141
 msgid "Login name"
 msgstr "Nombre de usuario"
 
-#: templates/authopenid/signin.html:140
-msgid "Create new account"
-msgstr "Crear cuenta nueva"
+#: templates/authopenid/signin.html:147
+msgid "Create account"
+msgstr "Crear cuenta"
 
-#: templates/authopenid/signin.html:149
+#: templates/authopenid/signin.html:148
+msgid "I forgot my password"
+msgstr "¿Olvidaste tu contraseña?"
+
+#: templates/authopenid/signin.html:157
 msgid "Why use OpenID?"
 msgstr "¿Porqué usar OpenID?"
 
-#: templates/authopenid/signin.html:152
+#: templates/authopenid/signin.html:160
 msgid "with openid it is easier"
 msgstr "Con OpenID no necesitas crear un nuevo nombre de usuario y contraseña."
 
-#: templates/authopenid/signin.html:155
+#: templates/authopenid/signin.html:163
 msgid "reuse openid"
 msgstr ""
 "Puedes de forma segura re-usar el mismo nombre de usuario para todos los "
 "sitios que acepten OpenID."
 
-#: templates/authopenid/signin.html:158
+#: templates/authopenid/signin.html:166
 msgid "openid is widely adopted"
 msgstr ""
 "OpenID es extensamente usado. Hay más de 160,000,000 cuentas de OpenID en "
 "uso en el mundo. Mas de 10,000 sitios aceptan OpenID."
 
-#: templates/authopenid/signin.html:161
+#: templates/authopenid/signin.html:169
 msgid "openid is supported open standard"
 msgstr ""
 "OpenID es basado en un standard abierto, apoyado por muchas organizaciones."
 
-#: templates/authopenid/signin.html:166
+#: templates/authopenid/signin.html:174
 msgid "Find out more"
 msgstr "Averigua más"
 
-#: templates/authopenid/signin.html:167
+#: templates/authopenid/signin.html:175
 msgid "Get OpenID"
 msgstr "Adquiere una OpenID"
 
@@ -2672,6 +2674,15 @@ msgstr "Registrate con tu OpenID"
 #: templates/authopenid/signup.html:49
 msgid "Login with your OpenID"
 msgstr "Ingresar con tu OpenID"
+
+#~ msgid "register/"
+#~ msgstr "registrarse/"
+
+#~ msgid "we support two login modes"
+#~ msgstr "soportamos dos tipos de ingreso"
+
+#~ msgid "Create new account"
+#~ msgstr "Crear cuenta nueva"
 
 #, fuzzy
 #~ msgid "complete list of quesionts"

@@ -6,6 +6,7 @@ img {border-style:none;}
 .aol_box img {margin-top:6px;}
 .yahoo_box img {margin-top:13px;}
 .google_box img {margin-top:6px;}
+.local_login_box img {margin-top:9px;}
 
 form.openid ul{ margin:0;padding:0;text-align:center; list-style-type:none; display:block;}
 form.openid ul li {float:left; padding:4px;} 
@@ -20,7 +21,22 @@ form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px;
 form.openid fieldset div {-moz-border-radius:4px; -webkit-border-radius:4px; 
                           background: #DCDCDC;
 						  padding:10px;display:inline-block}
+form.openid p {margin-bottom:4px;}
 form.openid fieldset div p {padding:0px;margin:0px;}
+form.openid label {
+    display:inline-block;
+    font-weight:normal;
+    width:6em;
+    text-align:right;
+}
+#local_login_fs div {
+    padding-bottom:4px;
+}
+#local_login_buttons {
+    text-align:center;
+    line-height:1.8em;
+    margin-top:3px;
+}
 /*form.openid input[type='submit'] {margin-left:1em;}*/
 #openid_username {background:#ffffa0;}
 #openid_url {background:#ffffa0;}

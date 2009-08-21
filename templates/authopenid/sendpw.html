@@ -13,7 +13,7 @@
 {% trans "Please enter your username below and new password will be sent to your registered e-mail" %}
 </div>
 {% if form.errors %}
-<p class="errors"><span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br>
+<p class="errors"><span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
 	{% if form.username.errors %} 
 		<span class="error">{{ form.username.errors|join:", " }}</span>
 	{% endif %}
