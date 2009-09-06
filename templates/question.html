@@ -241,16 +241,7 @@
                                 
                             </div>
                             
-                            <div class="post-comments" style="margin-bottom:20px">
-                                <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_add_comments }}"/>
-                                <a id="comments-link-question-{{question.id}}" class="comments-link">
-								{% if question.comment_count %}{% trans "comments" %} <strong>({{question.comment_count}})</strong>
-								{% else %}{% trans "add comment" %}
-								{% endif %}</a>
-                                <div id="comments-question-{{question.id}}" class="comments-container">
-                                <div class="comments"/></div>
-                            </div>
-                            
+                                                        
                         </div>
                         
                     </td>
