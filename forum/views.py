@@ -1470,7 +1470,7 @@ def user_responses(request, user_id, user_view):
         def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
             self.type = type
             self.title = title
-            self.titlelink = u'/%s%s/%s#%s' % (_('questions/'), question_id, title, answer_id)
+            self.titlelink = u'/%s%s/%s#%s' % (_('questions/'), question_id, slugify(title), answer_id)
             self.time = time
             self.userlink = u'/%s%s/%s/' % (_('users/'), user_id, username)
             self.username = username

@@ -97,11 +97,11 @@ class QuestionManager(models.Manager):
         """
         #print datetime.datetime.now()
         from forum.models import Question
-        questions = list(Question.objects.filter(tagnames = question.tagnames).all())
+        questions = list(Question.objects.filter(tagnames = question.tagnames).exclude(id=question.id).all())
 
         tags_list = question.tags.all()
         for tag in tags_list:
-            extend_questions = Question.objects.filter(tags__id = tag.id)[:50]
+            extend_questions = Question.objects.filter(tags__id = tag.id).exclude(id=question.id)[:50]
             for item in extend_questions:
                 if item not in questions and len(questions) < 10:
                     questions.append(item)
