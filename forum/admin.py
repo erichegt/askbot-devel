@@ -49,15 +49,6 @@ class ReputeAdmin(admin.ModelAdmin):
 class ActivityAdmin(admin.ModelAdmin):
     """  admin class"""
     
-class BookAdmin(admin.ModelAdmin):
-    """  admin class"""
-    
-class BookAuthorInfoAdmin(admin.ModelAdmin):
-    """  admin class"""
-    
-class BookAuthorRssAdmin(admin.ModelAdmin):
-    """  admin class"""    
-    
     
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Tag, TagAdmin)
@@ -73,6 +64,3 @@ admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Award, AwardAdmin)
 admin.site.register(Repute, ReputeAdmin)
 admin.site.register(Activity, ActivityAdmin)
-admin.site.register(Book, BookAdmin)
-admin.site.register(BookAuthorInfo, BookAuthorInfoAdmin)
-admin.site.register(BookAuthorRss, BookAuthorRssAdmin)
