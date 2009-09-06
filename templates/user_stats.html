@@ -22,7 +22,7 @@
                     </span>
                 </a>
                 <div class="answer-link">
-                    <a href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    <a href="{% url question answered_question.id %}/{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
                     {% if answered_question.comment_count %}
                     <span>
 				    {% blocktrans with answered_question.comment_count as comment_count %}the answer has been commented {{ comment_count }} times{% endblocktrans %}
