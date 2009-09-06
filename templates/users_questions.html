@@ -45,7 +45,7 @@
         </a>
         <div class="summary">
             <h3>
-                <a title="{{question.summary}}" href="{{question.get_absolute_url}}">{{question.title}}</a>
+                <a title="{{question.summary}}" href="{% url question question.id%}{{question.title|slugify}}">{{question.title}}</a>
             </h3>
             <div class="tags">
                 {% convert2tagname_list question %}
