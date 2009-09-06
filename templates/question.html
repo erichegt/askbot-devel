@@ -248,7 +248,7 @@
 								{% endif %}</a>
                                 <div id="comments-question-{{question.id}}" class="comments-container">
                                 <div class="comments"/></div>
-                            </div>
+                            </div>>
                             
                         </div>
                         
@@ -516,7 +516,7 @@
     <div class="questions-related">
         {% for question in similar_questions %}
         <p>
-            <a href="{% url questions %}{{question.id}}/{{ question.get_question_title }}">{{ question.get_question_title }}</a>
+        <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>
         </p>
         {% endfor %}
     </div>
