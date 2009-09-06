@@ -28,7 +28,7 @@ def clean_next(next):
         return DEFAULT_NEXT
     next = str_to_unicode(urllib.unquote(next), 'utf-8')
     next = next.strip()
-    if next.startswith('/'):
+    if next.startswith('/') and len(next)>1:
         return next
     return DEFAULT_NEXT
 
