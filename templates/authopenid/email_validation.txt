@@ -1,15 +1,13 @@
-{% load i18n %}
-{% trans "Greetings from the Q&A forum" %},
+Saludos de Hasked.com,
 
-{% trans "To make use of the Forum, please follow the link below:" %}
+Para poder usar Hasked haga click en el siguiente link:
 
 {{validation_link}}
 
-{% trans "Following the link above will help us verify your email address." %}
+Seguir el link de arriba nos ayuda a verificar su correo electrónico.
 
-{% blocktrans %}If you beleive that this message was sent in mistake - 
-no further action is needed. Just ingore this email, we apologize
-for any inconvenience{% endblocktrans %}
+Si cree que este mensaje se mandó por error no se requiere de mas acciones.
+Solo ignore este correo, pedimos disculpas por cualquier incoveniente
 
-{% blocktrans %}Sincerely,
-Forum Administrator{% endblocktrans %}
+Saludos,
+Equipo de administración de Hasked.com

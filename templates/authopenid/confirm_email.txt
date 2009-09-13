@@ -1,13 +1,13 @@
-{% load i18n %}
-{% trans "Thank you for registering at our Q&A forum!" %}
+Gracias por registrarse en Hasked.com
 
-{% trans "Your account details are:" %}
+Los detalles de su cuenta son:
 
-{% trans "Username:" %} {{ username }}
-{% trans "Password:" %} {{ password }}
+Nombre de usuario: {{ username }}
+Contraseña: {{ password }}
 
-{% trans "Please sign in here:" %}
+Favor inicie sesión aquí: 
 {{ site_url }}{% trans "signin/" %}
 
-{% blocktrans %}Sincerely,
-Forum Administrator{% endblocktrans %}
+Saludos,
+El equipo administrador de Hasked.com
+
