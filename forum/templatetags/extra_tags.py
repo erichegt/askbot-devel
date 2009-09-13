@@ -216,11 +216,12 @@ def convert2tagname_list(question):
 
 @register.simple_tag
 def diff_date(date, limen=2):
+    meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic']
     current_time = datetime.datetime(*time.localtime()[0:6])
     diff = current_time - date
     diff_days = diff.days
     if diff_days > limen:
-        return date
+        return "%s %s - %s @ %s:%s" % (meses[date.month-1], date.day, date.year, date.hour, date.minute)
     else:
         return timesince(date) + _(' ago')
         
