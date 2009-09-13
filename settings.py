@@ -1,6 +1,7 @@
 # encoding:utf-8
 # Django settings for lanai project.
 import os.path
+from django.utils.translation import ugettext as _
 
 #DEBUG SETTINGS
 DEBUG = True
@@ -9,7 +10,9 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 #for OpenID auth
 ugettext = lambda s: s
-LOGIN_URL = '/%s%s' % (ugettext('account/'), ugettext('signin/'))
+#LOGIN_URL = '/%s%s' % (ugettext('account/'), ugettext('signin/'))
+LOGIN_URL = '/%s%s' % (_('account/'), _('signin/'))
+#LOGIN_URL = '/cuenta/ingresar/'
 
 #EMAIL AND ADMINS
 ADMINS = (

@@ -263,7 +263,7 @@ def create_new_question(title=None,author=None,added_at=None,
     return question
 
 #TODO: allow anynomus user to ask question by providing email and username.
-#@login_required
+@login_required
 def ask(request):
     if request.method == "POST":
         form = AskForm(request.POST)
@@ -671,6 +671,7 @@ def answer_revisions(request, id):
         'revisions': revisions,
     }, context_instance=RequestContext(request))
 
+@login_required
 def answer(request, id):
     question = get_object_or_404(Question, id=id)
     if request.method == "POST":
@@ -702,8 +703,8 @@ def answer(request, id):
                     ip_addr = request.META['REMOTE_ADDR'],
                     )
                 anon.save()
-                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),
-                    _('signin/'),_('newquestion/')))
+                return HttpResponseRedirect('/%s%s%s%s' % ( _('account/'),
+                    _('signin/'),'?next=', question.get_absolute_url()))
 
     return HttpResponseRedirect(question.get_absolute_url())
 
