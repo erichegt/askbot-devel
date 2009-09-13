@@ -314,7 +314,6 @@ def register(request):
                 tmp_pwd = User.objects.make_random_password()
                 user_ = User.objects.create_user(form1.cleaned_data['username'],
                          form1.cleaned_data['email'], tmp_pwd)
-                
                 # make association with openid
                 uassoc = UserAssociation(openid_url=str(openid_),
                         user_id=user_.id)
@@ -344,10 +343,8 @@ def register(request):
             output = validation_email_sent(request)
             set_email_validation_message(user_) #message set after generating view
             return output
-        elif user_.is_authenticated():
+        elif user_ != None and user_.is_authenticated():
             return HttpResponseRedirect('/')
-        else:
-            raise server_error('')
     
     openid_str = str(openid_)
     bits = openid_str.split('/')
