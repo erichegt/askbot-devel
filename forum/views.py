@@ -66,16 +66,16 @@ def _get_tags_cache_json():
 def index(request):
     view_id = request.GET.get('sort', None)
     view_dic = {
-             "latest":"-last_activity_at",
+             "latest":"-added_at",
              "hottest":"-answer_count",
              "mostvoted":"-score",
-             "trans": "-last_activity_at"
+             "active": "-last_activity_at"
              }
     try:
         orderby = view_dic[view_id]
     except KeyError:
         view_id = "latest"
-        orderby = "-last_activity_at"
+        orderby = "-added_at"
     # group questions by author_id of 28,29
     if view_id == 'trans':
         questions = Question.objects.get_translation_questions(orderby, INDEX_PAGE_SIZE)

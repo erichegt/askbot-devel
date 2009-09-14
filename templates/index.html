@@ -21,10 +21,11 @@
 <div class="tabBar">
     <div class="headQuestions">{% trans "Questions" %}</div>
     <div class="tabsA">
-    	 <a id="latest" href="{% url questions %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
+    	<a id="latest" href="{% url questions %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
+        <a id="active" href="{% url questions %}?sort=active" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
         <a id="hottest" href="{% url questions %}?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
         <a id="mostvoted" href="{% url questions %}?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
-        <a id="all" href="{% url questions %}" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
+        <!--<a id="all" href="{% url questions %}" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>-->
     </div>
 </div>
 <!-- 问题列表 -->
