@@ -240,6 +240,15 @@
                                 </table>
                                 
                             </div>
+                            <div class="post-comments" style="margin-bottom:20px">
+                                <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_add_comments }}"/>
+                                <a id="comments-link-question-{{question.id}}" class="comments-link">
+                                {% if question.comment_count %}{% trans "comments" %} <strong>({{question.comment_count}})</strong>
+                                {% else %}{% trans "add comment" %}
+                                {% endif %}</a>
+                                <div id="comments-question-{{question.id}}" class="comments-container">
+                                <div class="comments"/></div>
+                            </div>
                         </div>
                         
                     </td>
@@ -415,6 +424,13 @@
                                         </div>
                                         
                                     </div>
+                                    <div id="comment-{{ answer.id }}" class="post-comments" >
+                                    <input id="can-post-comments-answer-{{answer.id}}" type="hidden" value="{{ request.user|can_add_comments }}"/>
+                                    <a id="comments-link-answer-{{answer.id}}" class="comments-link">
+                                    {% if answer.comment_count %}{% trans "comments" %}
+                                    <strong>({{answer.comment_count}})</strong>{% else %}{% trans "add comment" %}{% endif %}</a>
+                                    <div id="comments-answer-{{answer.id}}" class="comments-container">
+                                    <div class="comments"/></div>
                                     
                                 </td>
                             </tr>
