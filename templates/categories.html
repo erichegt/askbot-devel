@@ -37,7 +37,7 @@
 <ul class="tagsList tags">
 {% for category in categories.object_list %}
    <li>
-    <a href="{% url forum.views.category category|urlencode %}" title="{% trans "see questions that matches" %}'{{ category }}'{% trans "category " %}" rel="tag">
+    <a href="{% url forum.views.category category|slugify %}" title="{% trans "see questions that matches" %}'{{ category }}'{% trans "category " %}" rel="tag">
         {{ category }}
     </a>&nbsp;
     <br>

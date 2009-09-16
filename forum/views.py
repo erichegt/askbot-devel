@@ -785,7 +785,7 @@ def categories(request):
         }, context_instance=RequestContext(request))
 
 def category(request, category):
-    return questions(request, categoryname=category)
+    return questions(request, categoryname=category.replace('-', ' '))
 
 def vote(request, id):
     """
