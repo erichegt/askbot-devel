@@ -33,7 +33,6 @@ class EmailFeed(models.Model):
     feed_content_type = models.ForeignKey(ContentType,related_name='content_emailfeed')
     feed_id = models.PositiveIntegerField()
     content = generic.GenericForeignKey('feed_content_type','feed_id')
-    content_type = models.ForeignKey(ContentType)
     #generic relation with owner - either nameless email or User
     subscriber_content_type = models.ForeignKey(ContentType,related_name='subscriber_emailfeed')
     subscriber_id = models.PositiveIntegerField()
