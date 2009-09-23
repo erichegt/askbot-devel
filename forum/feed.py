@@ -22,7 +22,7 @@ class RssLastestQuestionsFeed(Feed):
     copyright = settings.APP_COPYRIGHT
 
     def item_link(self, item):
-        return self.link + '%s' % item.get_absolute_url()
+        return settings.APP_URL + '%s' % item.get_absolute_url()
 
     def item_author_name(self, item):
         return item.author.username
