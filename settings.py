@@ -39,7 +39,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     #'django.middleware.sqlprint.SqlPrintingMiddleware',
-    #'middleware.pagesize.QuestionsPageSizeMiddleware',
+    'middleware.pagesize.QuestionsPageSizeMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -76,8 +76,9 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'forum',
     'django_authopenid',
-    'debug_toolbar' ,
+    #'debug_toolbar' ,
 )
-
+import django
+DJANGO_VERSION = django.get_version()
 # User settings
 from settings_local import *
