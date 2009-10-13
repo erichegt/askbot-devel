@@ -108,7 +108,7 @@ def privacy(request):
 def unanswered(request):
     return questions(request, unanswered=True)
 
-def questions(request, tagname=None, categoryname=None, unanswered=False):
+def questions(request, tagname=None, unanswered=False):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     """
@@ -137,8 +137,6 @@ def questions(request, tagname=None, categoryname=None, unanswered=False):
         #check if request is from unanswered questions
         template_file = "unanswered.html"
         objects = Question.objects.get_unanswered_questions(orderby)
-    elif categoryname:
-        objects = Question.objects.get_questions_by_category(categoryname, orderby)
     else:
         objects = Question.objects.get_questions(orderby)
 
@@ -275,7 +273,6 @@ def ask(request):
             text = form.cleaned_data['text']
             html = sanitize_html(markdowner.convert(text))
             summary = strip_tags(html)[:120]
-            category = form.cleaned_data['categories']
 
             if request.user.is_authenticated():
                 author = request.user 
@@ -510,7 +507,6 @@ def _edit_question(request, question):
                         'tagnames': form.cleaned_data['tags'],
                         'summary': strip_tags(html)[:120],
                         'html': html,
-                        'category': form.cleaned_data['categories']
                     }
 
                     # only save when it's checked
@@ -744,40 +740,6 @@ def tags(request):
 
 def tag(request, tag):
     return questions(request, tagname=tag)
-
-def categories(request):
-    is_paginated = True
-    sortby = request.GET.get('sort', 'used')
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    if request.method == "GET":
-        objects_list = Paginator(Category.objects.all(), DEFAULT_PAGE_SIZE)
-
-    try:
-        categories = objects_list.page(page)
-    except (EmptyPage, InvalidPage):
-        categories = objects_list.page(objects_list.num_pages)
-
-    return render_to_response('categories.html', {
-        "categories" : categories,
-        "context" : {
-            'is_paginated' : is_paginated,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': categories.has_previous(),
-            'has_next': categories.has_next(),
-            'previous': categories.previous_page_number(),
-            'next': categories.next_page_number(),
-            'base_url': '/categorias/'
-        }
-
-        }, context_instance=RequestContext(request))
-
-def category(request, category):
-    return questions(request, categoryname=category.replace('-', ' '))
 
 def vote(request, id):
     """

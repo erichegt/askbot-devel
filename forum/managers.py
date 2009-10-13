@@ -19,10 +19,6 @@ class QuestionManager(models.Manager):
         questions = self.filter(deleted=False, tags__name = unquote(tagname)).order_by(orderby)
         return questions
 
-    def get_questions_by_category(self, categoryname, orderby):
-        questions = self.filter(category__name = categoryname).order_by(orderby)
-        return questions
-    
     def get_unanswered_questions(self, orderby):
         questions = self.filter(deleted=False, answer_accepted=False).order_by(orderby)
         return questions

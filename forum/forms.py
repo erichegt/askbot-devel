@@ -95,8 +95,6 @@ class AskForm(forms.Form):
     tags   = TagNamesField()
     wiki = WikiField()
 
-    categories = forms.ModelChoiceField(help_text=_('please choice a category'), 
-                      queryset=Category.objects.all(), label=_('Category'))
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     email  = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -156,8 +154,6 @@ class EditQuestionForm(forms.Form):
     tags   = TagNamesField()
     summary = SummaryField()
 
-    categories = forms.ModelChoiceField(help_text=_('please choice a category'), 
-                      queryset=Category.objects.all(), label=_('Category'))
 
     def __init__(self, question, revision, *args, **kwargs):
         super(EditQuestionForm, self).__init__(*args, **kwargs)

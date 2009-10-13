@@ -67,6 +67,4 @@ urlpatterns = patterns('',
     url(r'^%s%s(?P<short_name>[^/]+)/$' % (_('books/'), _('ask/')), app.ask_book, name='ask_book'),
     url(r'^%s(?P<short_name>[^/]+)/$' % _('books/'), app.book, name='book'),
     url(r'^%s$' % _('search/'), app.search, name='search'),
-    (r'^categorias/$', app.categories),
-    (r'^categorias/(?P<category>[^/]+)/$', app.category),
 )

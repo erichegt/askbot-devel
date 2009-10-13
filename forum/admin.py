@@ -13,9 +13,6 @@ class QuestionAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     """Tag admin class"""
 
-class CategoryAdmin(admin.ModelAdmin):
-    """Category admin class"""
-
 class Answerdmin(admin.ModelAdmin):
     """Answer admin class"""
 
@@ -52,7 +49,6 @@ class ActivityAdmin(admin.ModelAdmin):
     
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Category, CategoryAdmin)
 admin.site.register(Answer, Answerdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Vote, VoteAdmin)
