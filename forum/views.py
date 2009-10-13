@@ -68,19 +68,11 @@ def _get_tags_cache_json():
 def index(request):
     view_id = request.GET.get('sort', None)
     view_dic = {
-<<<<<<< HEAD:forum/views.py
-             "latest":"-added_at",
-             "hottest":"-answer_count",
-             "mostvoted":"-score",
-             "active": "-last_activity_at"
-             }
-=======
         "latest":"-last_activity_at",
         "hottest":"-answer_count",
         "mostvoted":"-score",
         "trans": "-last_activity_at"
         }
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
     try:
         orderby = view_dic[view_id]
     except KeyError:
@@ -231,33 +223,14 @@ def create_new_answer(question=None, author=None, \
         except:
             pass
 
-<<<<<<< HEAD:forum/views.py
-def create_new_question(title=None,author=None,added_at=None,
-                        wiki=False,tagnames=None,summary=None,
-                        text=None, category=None):
-=======
 def create_new_question(title=None, author=None, added_at=None,
                         wiki=False, tagnames=None, summary=None,
                         text=None):
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
     """this is not a view
     and maybe should become one of the methods on Question object?
     """
     html = sanitize_html(markdowner.convert(text))
     question = Question(
-<<<<<<< HEAD:forum/views.py
-        title            = title,
-        author           = author, 
-        added_at         = added_at,
-        last_activity_at = added_at,
-        last_activity_by = author,
-        wiki             = wiki,
-        tagnames         = tagnames,
-        html             = html,
-        summary          = summary,
-        category         = category
-    )
-=======
                         title=title,
                         author=author,
                         added_at=added_at,
@@ -268,7 +241,6 @@ def create_new_question(title=None, author=None, added_at=None,
                         html=html,
                         summary=summary
                         )
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
     if question.wiki:
         question.last_edited_by = question.author
         question.last_edited_at = added_at
@@ -309,17 +281,6 @@ def ask(request):
                 author = request.user 
 
                 question = create_new_question(
-<<<<<<< HEAD:forum/views.py
-                    title            = title,
-                    author           = author, 
-                    added_at         = added_at,
-                    wiki             = wiki,
-                    tagnames         = tagnames,
-                    summary          = summary,
-                    text = text,
-                    category = category
-                )
-=======
                                                title=title,
                                                author=author,
                                                added_at=added_at,
@@ -328,8 +289,6 @@ def ask(request):
                                                summary=summary,
                                                text=text
                                                )
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
-
                 return HttpResponseRedirect(question.get_absolute_url())
             else:
                 request.session.flush()
@@ -345,11 +304,7 @@ def ask(request):
                                              ip_addr=request.META['REMOTE_ADDR'],
                                              )
                 question.save()
-<<<<<<< HEAD:forum/views.py
-                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),_('signin/'),_('newquestion/')))
-=======
                 return HttpResponseRedirect('%s%s%s' % (_('/account/'), _('signin/'), ('newquestion/')))
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
     else:
         form = AskForm()
 
@@ -770,24 +725,6 @@ def tags(request):
         tags = objects_list.page(objects_list.num_pages)
 
     return render_to_response('tags.html', {
-<<<<<<< HEAD:forum/views.py
-        "tags" : tags,
-        "stag" : stag,
-        "tab_id" : sortby,
-        "keywords" : stag,
-        "context" : {
-            'is_paginated' : is_paginated,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': tags.has_previous(),
-            'has_next': tags.has_next(),
-            'previous': tags.previous_page_number(),
-            'next': tags.next_page_number(),
-            'base_url' : '/%s?sort=%s&' % (_('tags/'), sortby)
-        }
-
-        }, context_instance=RequestContext(request))
-=======
                               "tags": tags,
                               "stag": stag,
                               "tab_id": sortby,
@@ -804,7 +741,6 @@ def tags(request):
                               }
 
                               }, context_instance=RequestContext(request))
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
 
 def tag(request, tag):
     return questions(request, tagname=tag)
@@ -1227,49 +1163,7 @@ def user_stats(request, user_id, user_view):
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
     votes_total = VOTE_RULES['scope_votes_per_user_per_day']
     tags = user.created_tags.all().order_by('-used_count')[:50]
-<<<<<<< HEAD:forum/views.py
-    if settings.DJANGO_VERSION < 1.1:
-        awards = Award.objects.extra(
-            select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
-            tables=['award', 'badge'],
-            order_by=['-awarded_at'],
-            where=['user_id=%s AND badge_id=badge.id'],
-            params=[user.id]
-        ).values('id', 'count', 'name', 'description', 'type')
-        total_awards = awards.count()
-        awards.query.group_by = ['badge_id']
-    else:
-        awards = Award.objects.extra(
-            select={'id': 'badge.id', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
-            tables=['award', 'badge'],
-            order_by=['-awarded_at'],
-            where=['user_id=%s AND badge_id=badge.id'],
-            params=[user.id]
-        ).values('id', 'name', 'description', 'type')
-        total_awards = awards.count()
-        try:
-            from django.db.models import Count
-            awards = awards.annotate(count = Count('badge__id'))
-        except:
-            pass
 
-    return render_to_response(user_view.template_file,{
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "view_user" : user,
-        "questions" : questions,
-        "answered_questions" : answered_questions,
-        "up_votes" : up_votes,
-        "down_votes" : down_votes,
-        "total_votes": up_votes + down_votes,
-        "votes_today_left": votes_total-votes_today,
-        "votes_total_per_day": votes_total,
-        "tags" : tags,
-        "awards": awards,
-        "total_awards" : total_awards,
-    }, context_instance=RequestContext(request))
-=======
     try:
         from django.db.models import Count
         awards = Award.objects.extra(
@@ -1309,7 +1203,6 @@ def user_stats(request, user_id, user_view):
                               "awards": awards,
                               "total_awards": total_awards,
                               }, context_instance=RequestContext(request))
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
 
 def user_recent(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
@@ -1325,17 +1218,9 @@ def user_recent(request, user_id, user_view):
             self.type_id = type
             self.title = title
             self.summary = summary
-<<<<<<< HEAD:forum/views.py
-            slug_title = slugify(title)
-            if int(answer_id) > 0:
-                self.title_link = u'/%s%s/%s#%s' %(_('questions/'),question_id, slug_title, answer_id)
-            else:
-                self.title_link = u'/%s%s/%s' %(_('questions/'),question_id, slug_title)
-
-=======
             self.title_link = u'/questions/%s/%s#%s' % (question_id, title, answer_id)\
                 if int(answer_id) > 0 else u'/questions/%s/%s' % (question_id, title)
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
+
     class AwardEvent:
         def __init__(self, time, type, id):
             self.time = time
@@ -1915,16 +1800,6 @@ def __generate_comments_json(obj, type, user):
         if user != None and auth.can_delete_comment(user, comment):
             #/posts/392845/comments/219852/delete
             delete_url = "/" + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
-<<<<<<< HEAD:forum/views.py
-        json_comments.append({"id" : comment.id,
-            "object_id" : obj.id,
-            "add_date" : comment.added_at.strftime('%Y-%m-%d'),
-            "text" : comment.comment,
-            "user_display_name" : comment_user.username,
-            "user_url" : "/%s%s/%s" % (_('users/'), comment_user.id, comment_user.username),
-            "delete_url" : delete_url
-        })
-=======
         json_comments.append({"id": comment.id,
                              "object_id": obj.id,
                              "add_date": comment.added_at.strftime('%Y-%m-%d'),
@@ -1933,7 +1808,6 @@ def __generate_comments_json(obj, type, user):
                              "user_url": "/users/%s/%s" % (comment_user.id, comment_user.username),
                              "delete_url": delete_url
                              })
->>>>>>> 6214863f362fd0702af79abaade0de6736d12e96:forum/views.py
 
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
