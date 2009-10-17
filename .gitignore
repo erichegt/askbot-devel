@@ -4,3 +4,5 @@
 settings_local.py
 nbproject
 settings_local.py
+log
+*.log
