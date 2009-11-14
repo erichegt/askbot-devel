@@ -3,8 +3,8 @@
 {% load extra_tags %}
 {% load humanize %}
 {% block userjs %}
-       <script type='text/javascript' src='/content/js/excanvas.pack.js'></script>
-       <script type='text/javascript' src='/content/js/jquery.flot.pack.js'></script>
+       <script type='text/javascript' src='{% href "/content/js/excanvas.pack.js" %}'></script>
+       <script type='text/javascript' src='{% href "/content/js/jquery.flot.pack.js" %}'></script>
        
        <script type="text/javascript">
         $().ready(function(){

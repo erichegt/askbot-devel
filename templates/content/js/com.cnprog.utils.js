@@ -23,7 +23,8 @@ var notify = function() {
         },       
         close: function(doPostback) {
             if (doPostback) {
-               $.post("/messages/markread/", { formdata: "required" });
+               $.post($.i18n._("/") + $.i18n._("messages/") + 
+                $.i18n._("markread/"), { formdata: "required" });
             }
             $(".notify").fadeOut("fast");
             $("body").css("margin-top", "0");
@@ -35,7 +36,7 @@ var notify = function() {
 
 function appendLoader(containerSelector) {
     $(containerSelector).append('<img class="ajax-loader" '
-		+'src="/content/images/indicator.gif" title="'
+		+'src="' + $.i18n._('/') + 'content/images/indicator.gif" title="'
 		+$.i18n._('loading...')
 		+'" alt="'
 		+$.i18n._('loading...')
@@ -103,7 +104,7 @@ var CPValidator = function(){
             return {
                 tags: {
                     required: " " + $.i18n._('tags cannot be empty'),
-                    maxlength: " " + $.i18n._('tablimits info'),
+                    maxlength: " " + $.i18n._('tablimits info')
                 },
                 text: {
                     required: " " + $.i18n._('content cannot be empty'),

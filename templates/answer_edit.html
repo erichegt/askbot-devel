@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 <!-- template answer_edit.html -->
 {% load i18n %}
+{% load extra_tags %}
 {% block title %}{% spaceless %}{% trans "Edit answer" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='/content/js/com.cnprog.editor.js'></script>
-        <script type='text/javascript' src='/content/js/com.cnprog.post.js'></script>
-        <script type='text/javascript' src='/content/js/jquery.validate.pack.js'></script>
-        <script type='text/javascript' src='/content/js/wmd/showdown.js'></script>
-        <script type='text/javascript' src='/content/js/wmd/wmd.js'></script>
-        <link rel="stylesheet" type="text/css" href="/content/js/wmd/wmd.css" />
+        <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/com.cnprog.post.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/jquery.validate.pack.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/wmd/showdown.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/wmd/wmd.js" %}'></script>
+        <link rel="stylesheet" type="text/css" href="{% href "/content/js/wmd/wmd.css" %}" />
         <script type="text/javascript">
         
         $().ready(function(){
