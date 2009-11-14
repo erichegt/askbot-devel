@@ -7,7 +7,7 @@
 {% trans "Password:" %} {{ password }}
 
 {% trans "Please sign in here:" %}
-{{ site_url }}{% trans "signin/" %}
+{{signup_url}}
 
 {% blocktrans %}Sincerely,
 Forum Administrator{% endblocktrans %}

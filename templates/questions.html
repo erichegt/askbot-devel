@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load extra_filters %}
+{% load smart_if %}
 {% block title %}{% spaceless %}{% trans "Questions" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
@@ -36,16 +37,16 @@
         </h2>
         <div class="stat">
             <table>
-	            <tr>
+                <tr>
                     <td><span class="num">{{ question.answer_count|intcomma }}</span> </td>
                     <td><span class="num">{{ question.score|intcomma }}</span> </td>
                     <td><span class="num">{{ question.view_count|cnprog_intword|safe }}</span> </td>
-	            </tr>  
+                </tr>  
                 <tr>
                     <td><span class="unit">{% trans "answers" %}</span></td>
                     <td><span class="unit">{% trans "votes" %}</span></td>
                     <td><span class="unit">{% trans "views" %}</span></td>
-	            </tr> 
+                </tr> 
             </table>
         </div>
         
@@ -54,7 +55,7 @@
         </div>
         
         {% ifequal tab_id 'active'%}
-        {% if question.wiki %}
+        {% if question.wiki and settings.WIKI_ON %}
         <span class="from wiki">{% trans "community wiki" %}</span>
         <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
         {% else %}
@@ -66,15 +67,33 @@
         </div>
         {% endif %}
         {% else %}
-        {% if question.wiki %}
+        {% if question.wiki and settings.WIKI_ON %}
         <span class="from wiki">{% trans "community wiki" %}</span>
         <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
         {% else %}
         <div class="from">
             {% comment %}{% gravatar question.author 24 %}{% endcomment %}
-            <span class="author"><a href="{{ question.author.get_profile_url }}">{{ question.author }}</a></span>
-            <span class="score">{% get_score_badge question.author %} </span>
-            <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
+            {% if question.last_activity_at != question.added_at %}
+                {% if question.author.id != question.last_activity_by.id %}
+                    {% trans "Posted:" %}
+                    <span class="author"><a href="{{ question.author.get_profile_url }}">{{ question.author }}</a></span>
+                    <span class="score">{% get_score_badge question.author %} </span>
+                    / {% trans "Updated:" %}
+                    <span class="author"><a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a></span>
+                    <span class="score">{% get_score_badge question.last_activity_by %} </span>
+                    <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
+                {% else %}
+                    {% trans "Updated:" %}
+                    <span class="author"><a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a></span>
+                    <span class="score">{% get_score_badge question.last_activity_by %} </span>
+                    <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
+                {% endif %}
+            {% else %}
+                {% trans "Posted:" %}
+                <span class="author"><a href="{{ question.author.get_profile_url }}">{{ question.author }}</a></span>
+                <span class="score">{% get_score_badge question.author %} </span>
+                <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
+            {% endif %}
         </div>
         {% endif %}
         {% endifequal %}
@@ -87,7 +106,6 @@
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
 
 {% block tail %}
@@ -104,7 +122,6 @@
 
 {% block sidebar %}
 <div class="boxC">
-    <p>
 		{% if searchtag %}
 			{% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
 			have total {{q_num}} questions tagged {{tagname}}
@@ -126,7 +143,7 @@
 				{% endblocktrans %}
 			{% endif %}
 		{% endif %}
-        <br/>
+        <p>
         {% ifequal tab_id "latest" %}
 			{% trans "latest questions info" %}
         {% endifequal %}
@@ -145,16 +162,14 @@
 			{% trans "Questions are sorted by the <strong>number of votes</strong>." %}
             {% trans "Most voted questions are shown first." %}
         {% endifequal %}
-        
-        
-    </p>
+        </p>
 </div>
 <div class="boxC">
 	<h3 class="subtitle">{% trans "Related tags" %}</h3>
     <div class="tags">
         {% for tag in tags %}
             <a rel="tag" title="{% trans "see questions tagged" %}'{{ tag.name }}'{% trans "using tags" %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
-            <span class="tag-number">&#x2715; {{ tag.used_count|intcomma }}</span>
+            <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
             <br />
         {% endfor %}
         <br />

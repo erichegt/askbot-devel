@@ -23,10 +23,10 @@
 <div class="tabBar">
     <div class="headUsers">{% trans "Users" %}</div>
     <div class="tabsA">
-        <a id="sort_reputation" href="?sort=reputation" class="off" title="{% trans "reputation" %}">{% trans "reputation" %}</a>
-        <a id="sort_newest" href="?sort=newest" class="off" title="{% trans "recent" %}">{% trans "recent" %}</a>
-        <a id="sort_last" href="?sort=last" class="off" title="{% trans "oldest" %}">{% trans "oldest" %}</a>
-        <a id="sort_user" href="?sort=user" class="off" title="{% trans "by username" %}">{% trans "by username" %}</a>
+        <a id="sort_reputation" href="{% url users %}?sort=reputation" class="off" title="{% trans "reputation" %}">{% trans "reputation" %}</a>
+        <a id="sort_newest" href="{% url users %}?sort=newest" class="off" title="{% trans "recent" %}">{% trans "recent" %}</a>
+        <a id="sort_last" href="{% url users %}?sort=last" class="off" title="{% trans "oldest" %}">{% trans "oldest" %}</a>
+        <a id="sort_user" href="{% url users %}?sort=user" class="off" title="{% trans "by username" %}">{% trans "by username" %}</a>
     </div>
 </div>
 <div id="main-body" style="width:100%">

@@ -1,5 +1,6 @@
 from django import template
 from forum import auth
+import logging
 
 register = template.Library()
 
@@ -7,6 +8,10 @@ register = template.Library()
 @register.filter
 def collapse(input):
     return ' '.join(input.split())
+
+@register.filter
+def can_moderate_users(user):
+    return auth.can_moderate_users(user)
 
 @register.filter
 def can_vote_up(user):
@@ -17,8 +22,8 @@ def can_flag_offensive(user):
     return auth.can_flag_offensive(user)
 
 @register.filter
-def can_add_comments(user):
-    return auth.can_add_comments(user)
+def can_add_comments(user,subject):
+    return auth.can_add_comments(user,subject)
 
 @register.filter
 def can_vote_down(user):

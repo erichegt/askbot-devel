@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load smart_if %}
+{% load extra_tags %}
+<div class='post-update-info'>
+{% ifequal contributor_type "original_author" %}
+    {% if wiki %}
+        <p>{% trans "community wiki" %}</p>
+        <p>
+            {% blocktrans count post.revisions.all|length as rev_count %}
+                one revision
+            {% plural %}
+                {{rev_count}} revisions
+            {% endblocktrans %}
+        </p>
+        <p>{{post.author.get_profile_link}}</p>
+    {% else %}
+        <p style="line-height:12px;">
+            {% ifequal post_type "question" %}
+                {% trans "asked" %}
+            {% else %}
+                {% ifequal post_type "answer" %}
+                    {% trans "answered" %}
+                {% else %}
+                    {% trans "posted" %}
+                {% endifequal %}
+            {% endifequal %}
+            {% ifequal post_type "revision" %}
+                <strong>{% diff_date post.revised_at %}</strong>
+            {% else %}
+                <strong>{% diff_date post.added_at %}</strong>
+            {% endifequal %}
+        </p>
+        {% gravatar post.author 32 %}
+        <p>{{post.author.get_profile_link}}<br/>
+        {% get_score_badge post.author %}</p>
+    {% endif %}
+{% else %}
+    {% if post.last_edited_at %}
+        <p style="line-height:12px;">
+        {% ifequal post_type 'question' %}
+        <a href="{% url question_revisions post.id %}">
+        {% else %}
+        <a href="{% url answer_revisions post.id %}">
+        {% endifequal %}
+        {% trans "updated" %} <strong>{% diff_date post.last_edited_at %}</strong>
+        </a>
+        </p>
+        {% if post.author != post.last_edited_by or wiki %}
+            {% gravatar post.last_edited_by 32 %}
+            <p style="float:left">{{post.last_edited_by.get_profile_link}}<br/>
+            {% get_score_badge post.last_edited_by %}</p>
+        {% endif %}
+    {% endif %}
+{% endifequal %}
+</div>

@@ -6,18 +6,20 @@ and superuser status.
 """
 import datetime
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext as _
 from django.db import transaction
 from models import Repute
 from models import Question
 from models import Answer
 from const import TYPE_REPUTATION
+import logging
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
 
 VOTE_UP                   = 15
 FLAG_OFFENSIVE            = 15
 POST_IMAGES               = 15
-LEAVE_COMMENTS            = 50
+LEAVE_COMMENTS            = 50 
 UPLOAD_FILES              = 60
 VOTE_DOWN                 = 100
 CLOSE_OWN_QUESTIONS       = 250
@@ -58,6 +60,9 @@ REPUTATION_RULES = {
     'lose_by_upvote_canceled'             : -10,
 }
 
+def can_moderate_users(user):
+    return user.is_superuser
+
 def can_vote_up(user):
     """Determines if a User can vote Questions and Answers up."""
     return user.is_authenticated() and (
@@ -70,11 +75,18 @@ def can_flag_offensive(user):
         user.reputation >= FLAG_OFFENSIVE or
         user.is_superuser)
 
-def can_add_comments(user):
+def can_add_comments(user,subject):
     """Determines if a User can add comments to Questions and Answers."""
-    return user.is_authenticated() and (
-        user.reputation >= LEAVE_COMMENTS or
-        user.is_superuser)
+    if user.is_authenticated():
+        if user.id == subject.author.id:
+            return True
+        if user.reputation >= LEAVE_COMMENTS:
+            return True
+        if user.is_superuser:
+            return True
+        if isinstance(subject,Answer) and subject.question.author.id == user.id:
+            return True
+    return False
 
 def can_vote_down(user):
     """Determines if a User can vote Questions and Answers down."""
@@ -139,8 +151,21 @@ def can_reopen_question(user, question):
         user.reputation >= REOPEN_OWN_QUESTIONS) or user.is_superuser
 
 def can_delete_post(user, post):
-    return (user.is_authenticated() and
-        user.id == post.author_id) or user.is_superuser
+    if user.is_superuser:
+        return True
+    elif user.is_authenticated() and user == post.author:
+        if isinstance(post,Answer):
+            return True
+        elif isinstance(post,Question):
+            answers = post.answers.all()
+            for answer in answers:
+                if user != answer.author and answer.deleted == False:
+                    return False
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def can_view_deleted_post(user, post):
     return user.is_superuser
@@ -422,15 +447,20 @@ def onDownVotedCanceled(vote, post, user):
 
 def onDeleteCanceled(post, user):
     post.deleted = False
-    post.deleted_by = None
-    post.deleted_at = None
+    post.deleted_by = None 
+    post.deleted_at = None 
     post.save()
-    for tag in list(post.tags.all()):
-        if tag.used_count == 1 and tag.deleted:
-            tag.deleted = False
-            tag.deleted_by = None
-            tag.deleted_at = None
-            tag.save()
+    logging.debug('now restoring something')
+    if isinstance(post,Answer):
+        logging.debug('updated answer count on undelete, have %d' % post.question.answer_count)
+        Question.objects.update_answer_count(post.question)
+    elif isinstance(post,Question):
+        for tag in list(post.tags.all()):
+            if tag.used_count == 1 and tag.deleted:
+                tag.deleted = False
+                tag.deleted_by = None
+                tag.deleted_at = None 
+                tag.save()
 
 def onDeleted(post, user):
     post.deleted = True
@@ -438,9 +468,31 @@ def onDeleted(post, user):
     post.deleted_at = datetime.datetime.now()
     post.save()
 
-    for tag in list(post.tags.all()):
-        if tag.used_count == 1:
-            tag.deleted = True
-            tag.deleted_by = user
-            tag.deleted_at = datetime.datetime.now()
+    if isinstance(post, Question):
+        for tag in list(post.tags.all()):
+            if tag.used_count == 1:
+                tag.deleted = True
+                tag.deleted_by = user
+                tag.deleted_at = datetime.datetime.now()
+            else:
+                tag.used_count = tag.used_count - 1 
             tag.save()
+
+        answers = post.answers.all()
+        if user == post.author:
+            if len(answers) > 0:
+                msg = _('Your question and all of it\'s answers have been deleted')
+            else:
+                msg = _('Your question has been deleted')
+        else:
+            if len(answers) > 0:
+                msg = _('The question and all of it\'s answers have been deleted')
+            else:
+                msg = _('The question has been deleted')
+        user.message_set.create(message=msg)
+        logging.debug('posted a message %s' % msg)
+        for answer in answers:
+            onDeleted(answer, user)
+    elif isinstance(post, Answer):
+        Question.objects.update_answer_count(post.question)
+        logging.debug('updated answer count to %d' % post.question.answer_count)

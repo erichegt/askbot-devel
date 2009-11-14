@@ -7,16 +7,18 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse,Http404
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import RequestContext
+from django.template import RequestContext, loader
 from django.utils.html import *
 from django.utils import simplejson
 from django.core import serializers
+from django.core.mail import mail_admins
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
+from django.core.exceptions import PermissionDenied
 
 from utils.html import sanitize_html
 from markdown2 import Markdown
@@ -28,6 +30,7 @@ from forum.auth import *
 from forum.const import *
 from forum.user import *
 from forum import auth
+from django_authopenid.util import get_next_url
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -63,24 +66,28 @@ def _get_tags_cache_json():
     tags = simplejson.dumps(tags_list)
     return tags
 
+def _get_and_remember_questions_sort_method(request, view_dic, default):
+    if default not in view_dic:
+        raise Exception('default value must be in view_dic')
+
+    q_sort_method = request.REQUEST.get('sort', None)
+    if q_sort_method == None:
+        q_sort_method = request.session.get('questions_sort_method', default)
+
+    if q_sort_method not in view_dic:
+        q_sort_method = default
+    request.session['questions_sort_method'] = q_sort_method
+    return q_sort_method, view_dic[q_sort_method]
+
 def index(request):
-    view_id = request.GET.get('sort', None)
     view_dic = {
              "latest":"-last_activity_at",
              "hottest":"-answer_count",
              "mostvoted":"-score",
-             "trans": "-last_activity_at"
              }
-    try:
-        orderby = view_dic[view_id]
-    except KeyError:
-        view_id = "latest"
-        orderby = "-last_activity_at"
-    # group questions by author_id of 28,29
-    if view_id == 'trans':
-        questions = Question.objects.get_translation_questions(orderby, INDEX_PAGE_SIZE)
-    else:
-        questions = Question.objects.get_questions_by_pagesize(orderby, INDEX_PAGE_SIZE)
+    view_id, orderby = _get_and_remember_questions_sort_method(request, view_dic, 'latest')
+
+    questions = Question.objects.get_questions_by_pagesize(orderby, INDEX_PAGE_SIZE)
     # RISK - inner join queries
     questions = questions.select_related()
     tags = Tag.objects.get_valid_tags(INDEX_TAGS_SIZE)
@@ -98,7 +105,34 @@ def about(request):
     return render_to_response('about.html', context_instance=RequestContext(request))
 
 def faq(request):
-    return render_to_response('faq.html', context_instance=RequestContext(request))
+    data = {
+        'gravatar_faq_url': reverse('faq') + '#gravatar',
+        'send_email_key_url': reverse('send_email_key'),
+        'ask_question_url': reverse('ask'),
+    }
+    return render_to_response('faq.html', data, context_instance=RequestContext(request))
+
+def feedback(request):
+    data = {}
+    form = None
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            if not request.user.is_authenticated:
+                data['email'] = form.cleaned_data.get('email',None)
+            data['message'] = form.cleaned_data['message']
+            data['name'] = form.cleaned_data.get('name',None)
+            message = render_to_response('feedback_email.txt',data,context_instance=RequestContext(request))
+            mail_admins(_('Q&A forum feedback'), message)
+            msg = _('Thanks for the feedback!')
+            request.user.message_set.create(message=msg)
+            return HttpResponseRedirect(get_next_url(request))
+    else:
+        form = FeedbackForm(initial={'next':get_next_url(request)})
+
+    data['form'] = form
+    return render_to_response('feedback.html', data, context_instance=RequestContext(request))
+feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
     return render_to_response('privacy.html', context_instance=RequestContext(request))
@@ -122,13 +156,8 @@ def questions(request, tagname=None, unanswered=False):
     except ValueError:
         page = 1
 
-    view_id = request.GET.get('sort', None)
     view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
-    try:
-        orderby = view_dic[view_id]
-    except KeyError:
-        view_id = "latest"
-        orderby = "-added_at"
+    view_id, orderby = _get_and_remember_questions_sort_method(request,view_dic,'latest')
 
     # check if request is from tagged questions
     if tagname is not None:
@@ -208,16 +237,12 @@ def create_new_answer( question=None, author=None,\
 
     #set notification/delete
     if email_notify:
-        try:
-            EmailFeed.objects.get(feed_id = question.id, subscriber_id = author.id, feed_content_type=question_type)
-        except EmailFeed.DoesNotExist:
-            feed = EmailFeed(content = question, subscriber = author)
-            feed.save()
+        if author not in question.followed_by.all():
+            question.followed_by.add(author)
     else:
         #not sure if this is necessary. ajax should take care of this...
         try:
-            feed = Email.objects.get(feed_id = question.id, subscriber_id = author.id, feed_content_type=question_type)
-            feed.delete()
+            question.followed_by.remove(author)
         except:
             pass
 
@@ -267,7 +292,7 @@ def ask(request):
         if form.is_valid():
 
             added_at = datetime.datetime.now()
-            title = strip_tags(form.cleaned_data['title'])
+            title = strip_tags(form.cleaned_data['title'].strip())
             wiki = form.cleaned_data['wiki']
             tagnames = form.cleaned_data['tags'].strip()
             text = form.cleaned_data['text']
@@ -302,7 +327,7 @@ def ask(request):
 					ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
-                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),_('signin/'),_('newquestion/')))
+                return HttpResponseRedirect(reverse('user_signin_new_question'))
     else:
         form = AskForm()
 
@@ -310,6 +335,7 @@ def ask(request):
     return render_to_response('ask.html', {
         'form' : form,
         'tags' : tags,
+        'email_validation_faq_url':reverse('faq') + '#validate',
         }, context_instance=RequestContext(request))
 
 def question(request, id):
@@ -317,13 +343,26 @@ def question(request, id):
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
-    view_id = request.GET.get('sort', 'votes')
+
+    view_id = request.GET.get('sort', None)
     view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
     try:
         orderby = view_dic[view_id]
     except KeyError:
-        view_id = "votes"
-        orderby = "-score"
+        qsm = request.session.get('questions_sort_method',None)
+        if qsm in ('mostvoted','latest'):
+            logging.debug('loaded from session ' + qsm)
+            if qsm == 'mostvoted':
+                view_id = 'votes'
+                orderby = '-score'
+            else:
+                view_id = 'latest'
+                orderby = '-added_at'
+        else:
+            view_id = "votes"
+            orderby = "-score"
+
+    logging.debug('view_id=' + str(view_id))
 
     question = get_object_or_404(Question, id=id)
     if question.deleted and not can_view_deleted_post(request.user, question):
@@ -349,7 +388,6 @@ def question(request, id):
                 vote_value = 1
             user_answer_votes[answer.id] = vote_value
 
-
     if answers is not None:
         answers = answers.order_by("-accepted", orderby)
 
@@ -363,8 +401,38 @@ def question(request, id):
 
     objects_list = Paginator(filtered_answers, ANSWERS_PAGE_SIZE)
     page_objects = objects_list.page(page)
-    # update view count
-    Question.objects.update_view_count(question)
+
+    #todo: merge view counts per user and per session
+    #1) view count per session
+    update_view_count = False
+    if 'question_view_times' not in request.session:
+        request.session['question_view_times'] = {}
+
+    last_seen = request.session['question_view_times'].get(question.id,None)
+    updated_when, updated_who = question.get_last_update_info()
+
+    if updated_who != request.user:
+        if last_seen:
+            if last_seen < updated_when:
+                update_view_count = True 
+        else:
+            update_view_count = True
+
+    request.session['question_view_times'][question.id] = datetime.datetime.now()
+
+    if update_view_count:
+        question.view_count += 1
+        question.save()
+
+    #2) question view count per user
+    if request.user.is_authenticated():
+        try:
+            question_view = QuestionView.objects.get(who=request.user, question=question)
+        except QuestionView.DoesNotExist:
+            question_view = QuestionView(who=request.user, question=question)
+        question_view.when = datetime.datetime.now()
+        question_view.save()
+
     return render_to_response('question.html', {
         "question" : question,
         "question_vote" : question_vote,
@@ -623,6 +691,7 @@ QUESTION_REVISION_TEMPLATE = ('<h1>%(title)s</h1>\n'
 def question_revisions(request, id):
     post = get_object_or_404(Question, id=id)
     revisions = list(post.revisions.all())
+    revisions.reverse()
     for i, revision in enumerate(revisions):
         revision.html = QUESTION_REVISION_TEMPLATE % {
             'title': revision.title,
@@ -631,16 +700,15 @@ def question_revisions(request, id):
                               for tag in revision.tagnames.split(' ')]),
         }
         if i > 0:
-            revisions[i - 1].diff = htmldiff(revision.html,
-                                             revisions[i - 1].html)
+            revisions[i].diff = htmldiff(revisions[i-1].html, revision.html)
         else:
-            revisions[i - 1].diff = QUESTION_REVISION_TEMPLATE % {
+            revisions[i].diff = QUESTION_REVISION_TEMPLATE % {
                 'title': revisions[0].title,
                 'html': sanitize_html(markdowner.convert(revisions[0].text)),
                 'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
                                   for tag in revisions[0].tagnames.split(' ')]),
             }
-            revisions[i - 1].summary = None
+            revisions[i].summary = _('initial version') 
     return render_to_response('revisions_question.html', {
         'post': post,
         'revisions': revisions,
@@ -650,16 +718,16 @@ ANSWER_REVISION_TEMPLATE = ('<div class="text">%(html)s</div>')
 def answer_revisions(request, id):
     post = get_object_or_404(Answer, id=id)
     revisions = list(post.revisions.all())
+    revisions.reverse()
     for i, revision in enumerate(revisions):
         revision.html = ANSWER_REVISION_TEMPLATE % {
             'html': sanitize_html(markdowner.convert(revision.text))
         }
         if i > 0:
-            revisions[i - 1].diff = htmldiff(revision.html,
-                                             revisions[i - 1].html)
+            revisions[i].diff = htmldiff(revisions[i-1].html, revision.html)
         else:
-            revisions[i - 1].diff = revisions[i-1].text
-            revisions[i - 1].summary = None
+            revisions[i].diff = revisions[i].text
+            revisions[i].summary = _('initial version')
     return render_to_response('revisions_answer.html', {
         'post': post,
         'revisions': revisions,
@@ -696,8 +764,7 @@ def answer(request, id):
                     ip_addr = request.META['REMOTE_ADDR'],
                     )
                 anon.save()
-                return HttpResponseRedirect('/%s%s%s' % ( _('account/'),
-                    _('signin/'),_('newquestion/')))
+                return HttpResponseRedirect(reverse('user_signin_new_answer'))
 
     return HttpResponseRedirect(question.get_absolute_url())
 
@@ -712,7 +779,7 @@ def tags(request):
 
     if request.method == "GET":
         stag = request.GET.get("q", "").strip()
-        if stag is not None:
+        if stag != '':
             objects_list = Paginator(Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name like %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
         else:
             if sortby == "name":
@@ -738,7 +805,7 @@ def tags(request):
             'has_next': tags.has_next(),
             'previous': tags.previous_page_number(),
             'next': tags.next_page_number(),
-            'base_url' : '/%s?sort=%s&' % (_('tags/'), sortby)
+            'base_url' : reverse('tags') + '?sort=%s&' % sortby
         }
 
         }, context_instance=RequestContext(request))
@@ -930,7 +997,8 @@ def vote(request, id):
 
                 if not can_delete_post(request.user, post):
                     response_data['allowed'] = -2
-                elif post.deleted:
+                elif post.deleted == True:
+                    logging.debug('debug restoring post in view')
                     onDeleteCanceled(post, request.user)
                     response_data['status'] = 1
                 else:
@@ -939,13 +1007,19 @@ def vote(request, id):
             elif vote_type == '11':#subscribe q updates
                 user = request.user
                 if user.is_authenticated():
-                    try:
-                        EmailFeed.objects.get(feed_id=question.id,subscriber_id=user.id,feed_content_type=question_type)
-                    except EmailFeed.DoesNotExist:
-                        feed = EmailFeed(subscriber=user,content=question)
-                        feed.save()
+                    if user not in question.followed_by.all():
+                        question.followed_by.add(user)
                         if settings.EMAIL_VALIDATION == 'on' and user.email_isvalid == False:
-                            response_data['message'] = _('subscription saved, %(email)s needs validation') % {'email':user.email}
+                            response_data['message'] = \
+                                    _('subscription saved, %(email)s needs validation, see %(details_url)s') \
+                                    % {'email':user.email,'details_url':reverse('faq') + '#validate'}
+                    feed_setting = EmailFeedSetting.objects.get(subscriber=user,feed_type='q_sel')
+                    if feed_setting.frequency == 'n':
+                        feed_setting.frequency = 'd'
+                        feed_setting.save()
+                        if 'message' in response_data:
+                            response_data['message'] += '<br/>'
+                        response_data['message'] = _('email update frequency has been set to daily')
                     #response_data['status'] = 1
                     #responst_data['allowed'] = 1
                 else:
@@ -955,12 +1029,8 @@ def vote(request, id):
             elif vote_type == '12':#unsubscribe q updates
                 user = request.user
                 if user.is_authenticated():
-                    try:
-                        feed = EmailFeed.objects.get(feed_id=question.id,subscriber_id=user.id)
-                        feed.delete()
-                    except EmailFeed.DoesNotExist:
-                        pass
-                    
+                    if user in question.followed_by.all():
+                        question.followed_by.remove(user)
         else:
             response_data['success'] = 0
             response_data['message'] = u'Request mode is not supported. Please try again.'
@@ -991,11 +1061,11 @@ def users(request):
         # default
         else:
             objects_list = Paginator(User.objects.all().order_by('-reputation'), USERS_PAGE_SIZE)
-        base_url = '/%s?sort=%s&' % (_('users/'), sortby)
+        base_url = reverse('users') + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
         objects_list = Paginator(User.objects.extra(where=['username like %s'], params=['%' + suser + '%']).order_by('-reputation'), USERS_PAGE_SIZE)
-        base_url = '/%s?name=%s&sort=%s&' % (_('users/'), suser, sortby)
+        base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
 
     try:
         users = objects_list.page(page)
@@ -1028,6 +1098,26 @@ def user(request, id):
     return func(request, id, user_view)
 
 @login_required
+def moderate_user(request, id):
+    """ajax handler of user moderation
+    """
+    if not auth.can_moderate_users(request.user) or request.method != 'POST':
+        raise Http404
+    if not request.is_ajax():
+        return HttpResponseForbidden(mimetype="application/json")
+
+    user = get_object_or_404(User, id=id)
+    form = ModerateUserForm(request.POST, instance=user)
+
+    if form.is_valid():
+        form.save()
+        logging.debug('data saved')
+        response = HttpResponse(simplejson.dumps(''), mimetype="application/json")
+    else:
+        response = HttpResponseForbidden(mimetype="application/json")
+    return response
+
+@login_required
 def edit_user(request, id):
     user = get_object_or_404(User, id=id)
     if request.user != user:
@@ -1058,6 +1148,7 @@ def edit_user(request, id):
         form = EditUserForm(user)
     return render_to_response('user_edit.html', {
         'form' : form,
+        'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }, context_instance=RequestContext(request))
 
 def user_stats(request, user_id, user_view):
@@ -1111,7 +1202,7 @@ def user_stats(request, user_id, user_view):
             'comment_count' : 'answer.comment_count'
             },
         tables=['question', 'answer'],
-        where=['answer.deleted=0 AND answer.author_id=%s AND answer.question_id=question.id'],
+        where=['answer.deleted=0 AND question.deleted=0 AND answer.author_id=%s AND answer.question_id=question.id'],
         params=[user_id],
         order_by=['-vote_count', '-answer_id'],
         select_params=[user_id]
@@ -1152,7 +1243,13 @@ def user_stats(request, user_id, user_view):
         from django.db.models import Count
         awards = awards.annotate(count = Count('badge__id'))
 
+    if auth.can_moderate_users(request.user):
+        moderate_user_form = ModerateUserForm(instance=user)
+    else:
+        moderate_user_form = None
+
     return render_to_response(user_view.template_file,{
+        'moderate_user_form': moderate_user_form,
         "tab_name" : user_view.id,
         "tab_description" : user_view.tab_description,
         "page_title" : user_view.page_title,
@@ -1184,10 +1281,9 @@ def user_recent(request, user_id, user_view):
             self.title = title
             self.summary = summary
             slug_title = slugify(title)
+            self.title_link = reverse('question', kwargs={'id':question_id}) + u'%s' % slug_title
             if int(answer_id) > 0:
-                self.title_link = u'/%s%s/%s#%s' %(_('questions/'),question_id, slug_title, answer_id)
-            else:
-                self.title_link = u'/%s%s/%s' %(_('questions/'),question_id, slug_title)
+                self.title_link += '#%s' % answer_id
 
     class AwardEvent:
         def __init__(self, time, type, id):
@@ -1207,7 +1303,7 @@ def user_recent(request, user_id, user_view):
             },
         tables=['activity', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = ' +
-            'question.id AND activity.user_id = %s AND activity.activity_type = %s'],
+            'question.id AND question.deleted=0 AND activity.user_id = %s AND activity.activity_type = %s'],
         params=[question_type_id, user_id, TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
@@ -1232,7 +1328,8 @@ def user_recent(request, user_id, user_view):
             },
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
-            'answer.question_id=question.id AND activity.user_id=%s AND activity.activity_type=%s'],
+            'answer.question_id=question.id AND answer.deleted=0 AND activity.user_id=%s AND '+ 
+            'activity.activity_type=%s AND question.deleted=0'],
         params=[answer_type_id, user_id, TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
     ).values(
@@ -1259,7 +1356,8 @@ def user_recent(request, user_id, user_view):
 
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
             'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
-            'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s'],
+            'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
+            'question.deleted=0'],
         params=[comment_type_id, question_type_id, user_id, TYPE_ACTIVITY_COMMENT_QUESTION],
         order_by=['-comment.added_at']
     ).values(
@@ -1288,7 +1386,8 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
             'activity.user_id = comment.user_id AND comment.object_id=answer.id AND '+
             'comment.content_type_id=%s AND question.id = answer.question_id AND '+
-            'activity.user_id = %s AND activity.activity_type=%s'],
+            'activity.user_id = %s AND activity.activity_type=%s AND '+
+            'answer.deleted=0 AND question.deleted=0'],
         params=[comment_type_id, answer_type_id, user_id, TYPE_ACTIVITY_COMMENT_ANSWER],
         order_by=['-comment.added_at']
     ).values(
@@ -1313,8 +1412,9 @@ def user_recent(request, user_id, user_view):
             'activity_type' : 'activity.activity_type',
             'summary' : 'question_revision.summary'
             },
-        tables=['activity', 'question_revision'],
+        tables=['activity', 'question_revision', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = question_revision.id AND '+
+            'question_revision.id=question.id AND question.deleted=0 AND '+
             'activity.user_id = question_revision.author_id AND activity.user_id = %s AND '+
             'activity.activity_type=%s'],
         params=[question_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_QUESTION],
@@ -1347,6 +1447,7 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = answer_revision.id AND '+
             'activity.user_id = answer_revision.author_id AND activity.user_id = %s AND '+
             'answer_revision.answer_id=answer.id AND answer.question_id = question.id AND '+
+            'question.deleted=0 AND answer.deleted=0 AND '+
             'activity.activity_type=%s'],
         params=[answer_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_ANSWER],
         order_by=['-activity.active_at']
@@ -1375,6 +1476,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND '+
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
+            'answer.deleted=0 AND question.deleted=0 AND '+
             'answer.question_id=question.id AND activity.activity_type=%s'],
         params=[answer_type_id, user_id, TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
@@ -1427,9 +1529,9 @@ def user_responses(request, user_id, user_view):
         def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
             self.type = type
             self.title = title
-            self.titlelink = u'/%s%s/%s#%s' % (_('questions/'), question_id, title, answer_id)
+            self.titlelink = reverse('questions') + u'%s/%s#%s' % (question_id, title, answer_id)
             self.time = time
-            self.userlink = u'/%s%s/%s/' % (_('users/'), user_id, username)
+            self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
             self.username = username
             self.content = u'%s ...' % strip_tags(content)[:300]
 
@@ -1715,86 +1817,110 @@ def user_favorites(request, user_id, user_view):
     }, context_instance=RequestContext(request))
 
 
-def user_preferences(request, user_id, user_view):
+def user_email_subscriptions(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        form = EditUserEmailFeedsForm(request.POST)
+        if form.is_valid():
+            if 'save' in request.POST:
+                saved = form.save(user)
+                if saved:
+                    action_status = _('changes saved')
+            elif 'stop_email' in request.POST:
+                saved = form.reset().save(user)
+                initial_values = EditUserEmailFeedsForm.NO_EMAIL_INITIAL
+                form = EditUserEmailFeedsForm(initial=initial_values)
+                if saved:
+                    action_status = _('email updates canceled')
+            if not saved:
+                action_status = None
+    else:
+        form = EditUserEmailFeedsForm()
+        form.set_initial_values(user)
+        action_status = None
     return render_to_response(user_view.template_file,{
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "view_user" : user,
+        'tab_name':user_view.id,
+        'tab_description':user_view.tab_description,
+        'page_title':user_view.page_title,
+        'view_user':user,
+        'email_feeds_form':form,
+        'action_status':action_status,
     }, context_instance=RequestContext(request))
 
 def question_comments(request, id):
     question = get_object_or_404(Question, id=id)
     user = request.user
-    return __comments(request, question, 'question', user)
+    return __comments(request, question, 'question')
 
 def answer_comments(request, id):
     answer = get_object_or_404(Answer, id=id)
     user = request.user
-    return __comments(request, answer, 'answer', user)
+    return __comments(request, answer, 'answer')
 
-def __comments(request, obj, type, user):
+def __comments(request, obj, type):
     # only support get comments by ajax now
+    user = request.user
     if request.is_ajax():
         if request.method == "GET":
-            return __generate_comments_json(obj, type, user)
+            response = __generate_comments_json(obj, type, user)
         elif request.method == "POST":
-            comment_data = request.POST.get('comment')
-            comment = Comment(content_object=obj, comment=comment_data, user=request.user)
-            comment.save()
-            obj.comment_count = obj.comment_count + 1
-            obj.save()
-            return __generate_comments_json(obj, type, user)
+            if auth.can_add_comments(user,obj):
+                comment_data = request.POST.get('comment')
+                comment = Comment(content_object=obj, comment=comment_data, user=request.user)
+                comment.save()
+                obj.comment_count = obj.comment_count + 1
+                obj.save()
+                response = __generate_comments_json(obj, type, user)
+            else:
+                response = HttpResponseForbidden(mimetype="application/json")
+        return response
 
 def __generate_comments_json(obj, type, user):
-    comments = obj.comments.all().order_by('-id')
+    comments = obj.comments.all().order_by('id')
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
+    from forum.templatetags.extra_tags import diff_date
     for comment in comments:
         comment_user = comment.user
         delete_url = ""
         if user != None and auth.can_delete_comment(user, comment):
             #/posts/392845/comments/219852/delete
-            delete_url = "/" + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
+            #todo translate this url
+            delete_url = reverse(index) + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
         json_comments.append({"id" : comment.id,
             "object_id" : obj.id,
-            "add_date" : comment.added_at.strftime('%Y-%m-%d'),
+            "comment_age" : diff_date(comment.added_at),
             "text" : comment.comment,
             "user_display_name" : comment_user.username,
-            "user_url" : "/%s%s/%s" % (_('users/'), comment_user.id, comment_user.username),
+            "user_url" : comment_user.get_profile_url(),
             "delete_url" : delete_url
         })
 
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
-def delete_question_comment(request, question_id, comment_id):
+def delete_comment(request, object_id='', comment_id='', commented_object_type=None):
+    response = None
+    commented_object = None
+    if commented_object_type == 'question':
+        commented_object = Question
+    elif commented_object_type == 'answer':
+        commented_object = Answer
+
     if request.is_ajax():
-        question = get_object_or_404(Question, id=question_id)
         comment = get_object_or_404(Comment, id=comment_id)
-
-        question.comments.remove(comment)
-        question.comment_count = question.comment_count - 1
-        question.save()
-        user = request.user
-        return __generate_comments_json(question, 'question', user)
-
-def delete_answer_comment(request, answer_id, comment_id):
-    if request.is_ajax():
-        answer = get_object_or_404(Answer, id=answer_id)
-        comment = get_object_or_404(Comment, id=comment_id)
-
-        answer.comments.remove(comment)
-        answer.comment_count = answer.comment_count - 1
-        answer.save()
-        user = request.user
-        return __generate_comments_json(answer, 'answer', user)
+        if auth.can_delete_comment(request.user, comment):
+            obj = get_object_or_404(commented_object, id=object_id)
+            obj.comments.remove(comment)
+            obj.comment_count = obj.comment_count - 1
+            obj.save()
+            user = request.user
+            return __generate_comments_json(obj, commented_object_type, user)
+    raise PermissionDenied()
 
 def logout(request):
-    url = request.GET.get('next')
     return render_to_response('logout.html', {
-        'next' : url,
+        'next' : get_next_url(request),
     }, context_instance=RequestContext(request))
 
 def badges(request):
@@ -1807,6 +1933,7 @@ def badges(request):
     return render_to_response('badges.html', {
         'badges' : badges,
         'mybadges' : my_badges,
+        'feedback_faq_url' : reverse('feedback'),
     }, context_instance=RequestContext(request))
 
 def badge(request, id):
@@ -1882,7 +2009,7 @@ def upload(request):
     return HttpResponse(result, mimetype="application/xml")
 
 def books(request):
-    return HttpResponseRedirect("/books/mysql-zhaoyang")
+    return HttpResponseRedirect(reverse('books') + '/mysql-zhaoyang')
     
 def book(request, short_name, unanswered=False):
     """
@@ -2007,6 +2134,7 @@ def ask_book(request, short_name):
     return render_to_response('ask.html', {
         'form' : form,
         'tags' : tags,
+        'email_validation_faq_url': reverse('faq') + '#validate',
         }, context_instance=RequestContext(request))
 
 def search(request):
@@ -2022,11 +2150,11 @@ def search(request):
         except ValueError:
             page = 1
         if keywords is None:
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse(index))
         if search_type == 'tag':
-            return HttpResponseRedirect('/%s?q=%s&page=%s' % (_('tags/'), keywords.strip(), page))
+            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (keywords.strip(), page))
         elif search_type == "user":
-            return HttpResponseRedirect('/%s?q=%s&page=%s' % (_('users/'), keywords.strip(), page))
+            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (keywords.strip(), page))
         elif search_type == "question":
             
             template_file = "questions.html"

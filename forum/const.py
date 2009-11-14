@@ -6,7 +6,7 @@ For reasons that models, views can't have unicode text in this project, all unic
 """
 CLOSE_REASONS = (
     (1, _('duplicate question')),
-    (2, _('question if off-topic or not relevant')),
+    (2, _('question is off-topic or not relevant')),
     (3, _('too subjective and argumentative')),
     (4, _('is not an answer to the question')),
     (5, _('the question is answered, right answer was accepted')),

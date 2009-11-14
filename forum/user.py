@@ -64,11 +64,11 @@ USER_TEMPLATE_VIEWS = (
         data_size = 50
     ),
     UserView(
-        id = 'preferences',
-        tab_title = _('preferences'),
-        tab_description = _('user preference settings'),
-        page_title = _('profile - user preferences'),
-        view_name = 'user_preferences',
-        template_file = 'user_preferences.html'
+        id = 'email_subscriptions',
+        tab_title = _('email subscriptions'),
+        tab_description = _('email subscription settings'),
+        page_title = _('profile - email subscriptions'),
+        view_name = 'user_email_subscriptions',
+        template_file = 'user_email_subscriptions.html'
     )
 )

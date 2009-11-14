@@ -2,12 +2,11 @@
 {% load extra_tags %}
 {% load extra_filters %}
 {% load humanize %}
+{% load smart_if %}
 {% load i18n %}
 <div id="subheader" class="headUser">
     {{view_user.username}}
-    
 </div>
-
 <table class="user-info-table">
     <tr>
         <td width="180" style="vertical-align:middle;text-align:center;">
@@ -20,20 +19,41 @@
                 <tr>
                     <td align="center">
                         <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
-                        <p><b style="color:#777;">{% trans "reputation" %}</b></p>
+                        <p><b style="color:#777;">{% trans "karma" %}</b></p>
                     </td>
                 </tr>
             </table>
         </td>
         <td width="360" style="vertical-align: top;">
             <table class="user-details">
+                {% if view_user != request.user and request.user|can_moderate_users %}
                 <tr>
-                    <th width="130" align="left"><strong>{% trans "Registered user" %}</strong></th>
-                    <th width="230"  align="right">
-                        {% if request.user|can_view_user_edit:view_user %}
-                        <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
-                        {% endif %}
-                    </th>
+                    <td class="admin" align="left" colspan="2">
+                        <h3>{% trans "Moderate this user" %}</h3>
+                        <form id="moderate_user_form" method="post">
+                            {{moderate_user_form.as_p}}
+                        </form>
+                        <p id="action_status"></p>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if request.user|can_view_user_edit:view_user %}
+                <tr>
+                    <td class="user-profile-tool-links" align="left" colspan="2">
+                        {% joinitems using ' | ' %}
+                            {% if request.user|can_view_user_edit:view_user %}
+                            <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
+                            {% endif %}
+                        {% separator %}
+                            {% if request.user.has_usable_password %}
+                                <a href="{% url user_changepw %}">change password</a>
+                            {% endif %}
+                        {% endjoinitems %}
+                    </td>
+                </tr>  
+                {% endif %}
+                <tr>
+                    <th colspan="2" align="left"><h3>{% trans "Registered user" %}</h3></th>
                 </tr>
                 {% if view_user.real_name %}
                 <tr>
@@ -43,12 +63,12 @@
                 {% endif %}
                 <tr>
                     <td>{% trans "member for" %}</td>
-                    <td>{{ view_user.date_joined|timesince }}</td>
+                    <td><strong>{% diff_date view_user.date_joined %}</strong></td>
                 </tr>
                 {% if view_user.last_seen %}
                 <tr>
                     <td>{% trans "last seen" %}</td>
-                    <td><strong title="{{ view_user.last_seen }}">{{ view_user.last_seen|timesince }} {% trans "ago" %}</strong></td>
+                    <td><strong title="{{ view_user.last_seen }}">{% diff_date view_user.last_seen %}</strong></td>
                 </tr>
                 {% endif %}
                 {% if view_user.website %}
