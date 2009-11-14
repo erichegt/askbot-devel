@@ -4,6 +4,7 @@
 {% load extra_tags %}
 {% load humanize %}
 {% load extra_filters %}
+{% load smart_if %}
 {% block title %}{% spaceless %}{% trans "Home" %}{% endspaceless %}{% endblock %}
 {% block meta %}<meta name="keywords" content="{{ settings.APP_KEYWORDS }}" />
         <meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
@@ -32,30 +33,31 @@
     {% for question in questions %}
     <div class="qstA">
         <h2>
-            <a href="{{ question.get_absolute_url }}" title="{{ question.summary|collapse }}...">
-            {{ question.get_question_title }}
-            </a>
+            <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>
         </h2>
         <div class="stat">
             <table>
-	            <tr>
+                <tr>
                     <td><span class="num">{{ question.answer_count|intcomma }}</span> </td>
                     <td><span class="num">{{ question.score|intcomma }}</span> </td>
                     <td><span class="num">{{ question.view_count|cnprog_intword|safe }}</span> </td>
-	            </tr>  
+                </tr>  
                 <tr>
                     <td><span class="unit">{% trans "answers" %}</span></td>
                     <td><span class="unit">{% trans "votes" %}</span></td>
                     <td><span class="unit">{% trans "views" %}</span></td>
-	            </tr> 
+                </tr> 
             </table>
         </div>
+        
         <div class="summary">
-            {{ question.summary}}...
+            {{ question.summary }}...                
         </div>
-        {% if question.wiki %}
+        
+        {% ifequal tab_id 'active'%}
+        {% if question.wiki and settings.WIKI_ON %}
         <span class="from wiki">{% trans "community wiki" %}</span>
-        <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
+        <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
         {% else %}
         <div class="from">
             {% comment %}{% gravatar question.last_activity_by 24 %}{% endcomment %}
@@ -64,6 +66,38 @@
             <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
         </div>
         {% endif %}
+        {% else %}
+        {% if question.wiki and settings.WIKI_ON %}
+        <span class="from wiki">{% trans "community wiki" %}</span>
+        <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
+        {% else %}
+        <div class="from">
+            {% comment %}{% gravatar question.author 24 %}{% endcomment %}
+            {% if question.last_activity_at != question.added_at %}
+                {% if question.author.id != question.last_activity_by.id %}
+                    {% trans "Posted:" %}
+                    <span class="author"><a href="{{ question.author.get_profile_url }}">{{ question.author }}</a></span>
+                    <span class="score">{% get_score_badge question.author %} </span>
+                    / {% trans "Updated:" %}
+                    <span class="author"><a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a></span>
+                    <span class="score">{% get_score_badge question.last_activity_by %} </span>
+                    <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
+                {% else %}
+                    {% trans "Updated:" %}
+                    <span class="author"><a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a></span>
+                    <span class="score">{% get_score_badge question.last_activity_by %} </span>
+                    <span class="date" title="{{ question.last_activity_at }}">{% diff_date question.last_activity_at %}</span>
+                {% endif %}
+            {% else %}
+                {% trans "Posted:" %}
+                <span class="author"><a href="{{ question.author.get_profile_url }}">{{ question.author }}</a></span>
+                <span class="score">{% get_score_badge question.author %} </span>
+                <span class="date" title="{{ question.added_at }}">{% diff_date question.added_at %}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endifequal %}
+        
         <div class="tags">
         {% for tag in question.tagname_list %}
         <a href="{% url forum.views.tag tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
@@ -85,7 +119,7 @@
 	</div>
 </div>
 {% endif %}
-<div class="boxB">
+<div class="boxC">
 	<h3>{% trans "Recent tags" %}</h3>
 	<div class="body">
          <div class="tags">
@@ -98,7 +132,7 @@
     </div>
 </div>
 {% if awards %}
-<div class="boxB">
+<div class="boxC">
     <h3>{% trans "Recent awards" %}</h3>
         <div class="body">
              <ul class="badge-list">
@@ -115,12 +149,12 @@
 </div>
 {% endif %}
 <div id="feeds">
-<a href="/feeds/rss" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
+<a href="{% href "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
 {% endblock %}
 {% block tail %}
 <div style="padding:5px 0 5px 5px;">
-<span class="evenMore">{% trans "Still looking for more? See" %} <a href="{% url questions %}">{% trans "complete list of questions" %}</a> {% trans "or" %} <a href="/tags/">{% trans "popular tags" %}</a>{% trans "." %} {% trans "Please help us answer" %} <a href="{% url questions %}unanswered">{% trans "list of unanswered questions" %}</a>{% trans "." %}</span>
+<span class="evenMore">{% trans "Still looking for more? See" %} <a href="{% url questions %}">{% trans "complete list of questions" %}</a> {% trans "or" %} <a href="{% url tags %}">{% trans "popular tags" %}</a>{% trans "." %} {% trans "Please help us answer" %} <a href="{% url questions %}unanswered">{% trans "list of unanswered questions" %}</a>{% trans "." %}</span>
 </div>
 {% endblock %}
 <!-- index.html -->

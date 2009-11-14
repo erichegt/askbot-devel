@@ -70,7 +70,7 @@ class QuestionManager(models.Manager):
         # although we have imported all classes from models on top.
         from forum.models import Answer
         self.filter(id=question.id).update(
-            answer_count=Answer.objects.get_answers_from_question(question).count())
+            answer_count=Answer.objects.get_answers_from_question(question).filter(deleted=False).count())
     
     def update_view_count(self, question):
         """
@@ -93,11 +93,11 @@ class QuestionManager(models.Manager):
         """
         #print datetime.datetime.now()
         from forum.models import Question
-        questions = list(Question.objects.filter(tagnames = question.tagnames).all())
+        questions = list(Question.objects.filter(tagnames = question.tagnames, deleted=False).all())
 
         tags_list = question.tags.all()
         for tag in tags_list:
-            extend_questions = Question.objects.filter(tags__id = tag.id)[:50]
+            extend_questions = Question.objects.filter(tags__id = tag.id, deleted=False)[:50]
             for item in extend_questions:
                 if item not in questions and len(questions) < 10:
                     questions.append(item)
@@ -110,10 +110,11 @@ class TagManager(models.Manager):
         'UPDATE tag '
         'SET used_count = ('
             'SELECT COUNT(*) FROM question_tags '
-            'WHERE tag_id = tag.id'
+            'INNER JOIN question ON question_id=question.id '
+            'WHERE tag_id = tag.id AND question.deleted=0'
         ') '
         'WHERE id IN (%s)')
-    
+
     def get_valid_tags(self, page_size):
       from forum.models import Tag
       tags = Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-id")[:page_size]

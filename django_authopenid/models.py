@@ -69,3 +69,8 @@ class UserPasswordQueue(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class ExternalLoginData(models.Model):
+    external_username = models.CharField(max_length=40, unique=True, null=False)
+    external_session_data = models.TextField()
+    user = models.ForeignKey(User, null=True)

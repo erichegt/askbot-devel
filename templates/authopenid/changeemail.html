@@ -1,37 +1,44 @@
 {% extends "base_content.html" %}
 {% load i18n %}
+{% block title %}{% spaceless %}{% trans "Change email" %}{% endspaceless %}{% endblock %}
 {% block content %}
 <!-- changeemail.html action_type={{action_type}}-->
 {% ifequal action_type "change" %}
     <div id="main-bar" class="headNormal">
-        {% trans "Change email" %}
+        {% if user.email %}
+            {% trans "Change email" %}
+        {% else %}
+            {% trans "Save your email address" %}
+        {% endif %}
     </div>
     <p class="message">
-    {% blocktrans %}change {{email}} info{% endblocktrans %}
-    </p>
-    {% if form.errors %}
-    <p class="errors">{% trans "Please correct errors below:" %}<br />
-        {% if form.email.errors %} 
-            <span class="error">{{ form.email.errors|join:", " }}</span>
-        {% endif %}
-        {% if form.password.errors %} 
-            <span class="error">{{ form.password.errors|join:", " }}</span>
+        {% if user.email %}
+            {% blocktrans %}change {{email}} info{% endblocktrans %}
+        {% else %}
+            {% blocktrans %}here is why email is required, see {{gravatar_faq_url}}{% endblocktrans %}
         {% endif %}
     </p>
-    {% endif %}
-
     {% if msg %}
-    <p class="errors">{{ msg }}</p>
+    <p class="error">{{ msg }}</p>
     {% endif %}
 
     <div class="aligned">
         <form action="." method="post" accept-charset="utf-8">
-
-            <div class="form-row"><label for="id_email">{% trans "Your new Email" %}</label><br/>{{ form.email }}</div>
-            <!--<div class="form-row"><label for="id_password">{% trans "Password" %}</label>{{ form.password }}</div>-->
+            {% if next %}
+                <input type="hidden" name="next" value="{{next}}"/>
+            {% endif %}
+            <div class="form-row-vertical">
+                <label for="id_email">{% if user.email %}{% trans "Your new Email" %}{% else %}{% trans "Your Email" %}{% endif %}</label>
+                {% if form.email.errors %}
+                <p class="error">{{form.email.errors|join:", "}}</p>
+                {% endif %}
+                {{ form.email }}
+            </div>
             <div class="submit-row">
-                <input class="submit" type="submit" name="change_email" value="{% trans "Change email" %}">
+                <input class="submit" type="submit" name="change_email" value="{% if user.email %}{% trans "Change email" %}{% else %}{% trans "Save Email" %}{% endif %}">
+                {% if user.email %}
                 <input class="submit" type="submit" name="cancel" value="{% trans "Cancel" %}">
+                {% endif %}
             </div>
 
         </form>
@@ -42,7 +49,7 @@
         {% trans "Validate email" %}
     </div>
     <p class="message">
-        {% blocktrans %}validate {{email}} info{% endblocktrans %}
+        {% blocktrans %}validate {{email}} info or go to {{change_email_url}}{% endblocktrans %}
     </p>
 {% endifequal %}
 {% ifequal action_type "keep" %}
@@ -50,7 +57,7 @@
         {% trans "Email not changed" %}
     </div>
     <p class="message">
-        {% blocktrans %}old {{email}} kept{% endblocktrans %}
+        {% blocktrans %}old {{email}} kept, if you like go to {{change_email_url}}{% endblocktrans %}
     </p>
 {% endifequal %}
 {% ifequal action_type "done_novalidate" %}

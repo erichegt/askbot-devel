@@ -7,43 +7,74 @@
 		{% block usercontent %}
 	
         <a name="questions"></a>
-        <h2><span class="count">{{questions|length}}</span> {% trans "User questions" %}</h2>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count questions|length as counter %}
+                <span class="count">1</span> Question
+                {% plural %}
+                <span class="count">{{counter}}</span> Questions
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
 		{% include "users_questions.html" %}
         <a name="answers"></a>
-        <h2><span class="count">{{answered_questions|length}}</span> {% trans "Answers" %}</h2>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count answered_questions|length as counter %}
+                <span class="count">1</span> Answer
+                {% plural %}
+                <span class="count">{{counter}}</span> Answers
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}
             <div class="answer-summary">
                 <a title="{{answered_question.summary|collapse}}" 
-                    href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">
+                    href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
                     <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
 						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
                         {{ answered_question.vote_count }}
                     </span>
                 </a>
                 <div class="answer-link">
-                    <a href="{% url questions %}{{answered_question.id}}/{{answered_question.title}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    {% spaceless %}
+                    <a href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    {% endspaceless %}
                     {% if answered_question.comment_count %}
                     <span>
-				    {% blocktrans with answered_question.comment_count as comment_count %}the answer has been commented {{ comment_count }} times{% endblocktrans %}
+				    {% blocktrans count answered_question.comment_count as comment_count %}
+                    (one comment)
+                    {% plural %}
+                    the answer has been commented {{comment_count}} times
+                    {% endblocktrans %}
                     </span> 
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
+        <br/>
         <a name="votes"></a>
-        <h2><span class="count">{{total_votes}}</span> {% trans "Votes" %}</h2>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count total_votes as cnt %}
+                    <span class="count">1</span> Vote
+                {% plural %}
+                    <span class="count">{{cnt}}</span> Votes
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
         <div class="user-stats-table">
             <table>
                 <tr>
                     <td width="60">
-                        <img style="cursor: default;" src="/content/images/vote-arrow-up-on.png" alt="{% trans "thumb up" %}" />
+                        <img style="cursor: default;" src="{% href "/content/images/vote-arrow-up-on.png" %}" alt="{% trans "thumb up" %}" />
                             <span title="{% trans "user has voted up this many times" %}" class="vote-count">{{up_votes}}</span>
 
                     </td>
                     <td width="60">
-                        <img style="cursor: default;" src="/content/images/vote-arrow-down-on.png" alt="{% trans "thumb down" %}" />
+                        <img style="cursor: default;" src="{% href "/content/images/vote-arrow-down-on.png" %}" alt="{% trans "thumb down" %}" />
                             <span title="{% trans "user voted down this many times" %}" class="vote-count">{{down_votes}}</span>
 
                     </td>
@@ -51,7 +82,15 @@
             </table>
         </div>
         <a name="tags"></a>
-        <h2><span class="count">{{tags|length}}</span> {% trans "Tags" %}</h2>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count tags|length as counter %}
+                    <span class="count">1</span> Tag
+                {% plural %}
+                    <span class="count">{{counter}}</span> Tags
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
         <div class="user-stats-table">
             <table class="tags">
                 <tr>
@@ -59,7 +98,7 @@
                         {% for tag in tags%}
                         <a rel="tag" 
 							title="{% blocktrans %}see other questions tagged '{{ tag }}' {% endblocktrans %}" 
-							href="{% url forum.views.tag tag|urlencode %}">{{tag.name}}</a><span class="tag-number"> × {{ tag.used_count|intcomma }}</span><br/>
+							href="{% url forum.views.tag tag|urlencode %}">{{tag.name}}</a><span class="tag-number"> &#215; {{ tag.used_count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"10" %}
                                 </td>
                                 <td width="180"  valign="top">
@@ -70,7 +109,15 @@
             </table>
         </div>
         <a name="badges"></a>
-        <h2><span class="count">{{total_awards}}</span> {% trans "Badges" %}</h2>
+        {% spaceless %}
+        <h2>
+            {% blocktrans count total_awards as counter %}
+            <span class="count">1</span> Badge
+            {% plural %}
+            <span class="count">{{counter}}</span> Badges
+            {% endblocktrans %}
+        </h2>
+        {% endspaceless %}
         <div class="user-stats-table">
             <table>
                 <tr>
@@ -86,6 +133,5 @@
                 </tr>
             </table>
         </div>
-
 {% endblock %}
 <!-- end user_stats.html -->
