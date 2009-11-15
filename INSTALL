@@ -1,35 +1,231 @@
-PRE-REQUIREMENTS:
+CONTENTS
+------------------
+A. PREREQUISITES
+B. INSTALLATION
+   1. Settings file
+   2. Database
+   3. Running CNPROG in the development server
+   4. Installation under Apache/WSGI
+   5. Miscellaneous
+C. CONFIGURATION PARAMETERS (settings_local.py)
+
+
+A. PREREQUISITES
 -----------------------------------------------
-1. Python2.5, MySQL, Django v1.0+
+0. We recommend you to use python-setuptools to install pre-requirement libraries.
+If you haven't installed it, please try to install it first.
+e.g, sudo apt-get install python-setuptools
+
+1. Python2.5/2.6, MySQL, Django v1.0/1.1
+Note: email subscription sender job requires Django 1.1, everything else works with 1.0
+Make sure mysql for python provider has been installed.
+sudo easy_install mysql-python
 
 2. Python-openid v2.2
 http://openidenabled.com/python-openid/
-
-3. django-authopenid(Included in project already)
-http://code.google.com/p/django-authopenid/
+sudo easy_install python-openid
 
 4. html5lib
 http://code.google.com/p/html5lib/
 Used for HTML sanitizer
+sudo easy_install html5lib
 
 5. Markdown2
 http://code.google.com/p/python-markdown2/
+sudo easy_install markdown2
 
 6. Django Debug Toolbar
 http://github.com/robhudson/django-debug-toolbar/tree/master
 
-INSTALL STEPS:
+NOTES: django_authopenid is included into CNPROG code 
+and is significantly modified.  http://code.google.com/p/django-authopenid/
+no need to install this library
+
+B. INSTALLATION
 -----------------------------------------------
-1. Copy settings_local.py.dist to settings_local.py and 
+0. Make sure you have all above python libraries installed.
+
+   make cnprog installation server-readable on Linux command might be:
+   chown -R yourlogin:apache /path/to/CNPROG
+   
+   directories templates/upfiles and log must be server writable
+
+   on Linux type chmod
+   chmod -R g+w /path/to/CNPROG/upfiles
+   chmod -R g+w /path/to/log
+
+   above it is assumed that webserver runs under group named "apache"
+
+1. Settings file
+
+Copy settings_local.py.dist to settings_local.py and 
 update all your settings. Check settings.py and update 
 it as well if necessory.
+Section C explains configuration paramaters.
 
-2. Prepare your database by using the same database/account 
+2. Database
+
+Prepare your database by using the same database/account 
 configuration from above.
+e.g,
+create database cnprog DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
+grant all on cnprog.* to 'cnprog'@'localhost';
+And then run "python manage.py syncdb" to synchronize your database.
 
-3. Run "python manager.py runserver" to startup django 
+3. Running CNPROG on the development server 
+
+Run "python manage.py runserver" to startup django 
 development environment.
+(Under Linux you can use command "python manage.py runserver `hostname -i`:8000",
+where you can use any other available number for the port)
 
-4. There are some demo scripts under sql_scripts folder, 
+you might want to have DEBUG=True in the beginning of settings.py 
+when using the test server
+
+4. Installation under Apache/WSGI
+
+4.1 Prepare wsgi script
+
+Make a file readable by your webserver with the following content:
+
+---------
+import os
+import sys
+
+sys.path.insert(0,'/one/level/above') #insert to make sure that forum will be found
+sys.path.append('/one/level/above/CNPROG') #maybe this is not necessary
+os.environ['DJANGO_SETTINGS_MODULE'] = 'CNPROG.settings'
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
+-----------
+
+insert method is used for path because if the forum directory name 
+is by accident the same as some other python module
+you wull see strange errors - forum won't be found even though
+it's in the python path. for example using name "test" is
+not a good idea - as there is a module with such name
+
+
+4.2 Configure webserver
+Settings below are not perfect but may be a good starting point
+
+---------
+WSGISocketPrefix /path/to/socket/sock #must be readable and writable by apache
+WSGIPythonHome /usr/local #must be readable by apache
+WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
+
+#NOTE: all urs below will need to be adjusted if 
+#settings.FORUM_SCRIPT_ALIAS !='' (e.g. = 'forum/')
+#this allows "rooting" forum at http://example.com/forum, if you like
+<VirtualHost ...your ip...:80>
+    ServerAdmin forum@example.com
+    DocumentRoot /path/to/cnprog
+    ServerName example.com
+
+    #run mod_wsgi process for django in daemon mode
+    #this allows avoiding confused timezone settings when
+    #another application runs in the same virtual host
+    WSGIDaemonProcess CNPROG 
+    WSGIProcessGroup CNPROG 
+
+    #force all content to be served as static files
+    #otherwise django will be crunching images through itself wasting time
+    Alias /content/ /path/to/cnprog/templates/content/
+    AliasMatch /([^/]*\.css) /path/to/cnprog/templates/content/style/$1
+    <Directory /path/to/cnprog/templates/content>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    #this is your wsgi script described in the prev section
+    WSGIScriptAlias / /path/to/cnprog/cnprog.wsgi
+
+    #this will force admin interface to work only
+    #through https (optional)
+    #"nimda" is the secret spelling of "admin" ;)
+    <Location "/nimda">
+        RewriteEngine on
+        RewriteRule /nimda(.*)$ https://example.com/nimda$1 [L,R=301]
+    </Location>
+    CustomLog /var/log/httpd/CNPROG/access_log common
+    ErrorLog /var/log/httpd/CNPROG/error_log
+</VirtualHost>
+#(optional) run admin interface under https
+<VirtualHost ..your ip..:443>
+    ServerAdmin forum@example.com
+    DocumentRoot /path/to/cnrpog
+    ServerName example.com
+    SSLEngine on
+    SSLCertificateFile /path/to/ssl-certificate/server.crt
+    SSLCertificateKeyFile /path/to/ssl-certificate/server.key
+    WSGIScriptAlias / /path/to/cnprogcnprog.wsgi
+    CustomLog /var/log/httpd/CNPROG/access_log common
+    ErrorLog /var/log/httpd/CNPROG/error_log
+    DirectoryIndex index.html
+</VirtualHost>
+-------------
+
+5. Miscellaneous
+
+There are some demo scripts under sql_scripts folder, 
 including badges and test accounts for CNProg.com. You 
 don't need them to run your sample.
+
+C. CONFIGURATION PARAMETERS
+
+#the only parameter that needs to be touched in settings.py is 
+DEBUG=False #set to True to enable debug mode
+
+#all forum parameters are set in file settings_local.py
+
+LOG_FILENAME = 'cnprog.log' #where logging messages should go
+DATABASE_NAME = 'cnprog'    # Or path to database file if using sqlite3.
+DATABASE_USER = ''          # Not used with sqlite3.
+DATABASE_PASSWORD = ''      # Not used with sqlite3.
+DATABASE_ENGINE = 'mysql'   #mysql, etc
+SERVER_EMAIL = ''
+DEFAULT_FROM_EMAIL = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''    #not necessary if mailserver is run on local machine
+EMAIL_SUBJECT_PREFIX = '[CNPROG] '
+EMAIL_HOST='cnprog.com'
+EMAIL_PORT='25'
+EMAIL_USE_TLS=False
+TIME_ZONE = 'America/Tijuana'
+APP_TITLE = u'CNPROG Q&A Forum' #title of your forum
+APP_KEYWORDS = u'CNPROG,forum,community' #keywords for search engines
+APP_DESCRIPTION = u'Ask and answer questions.' #site description for searche engines 
+APP_INTRO = u'<p>Ask and answer questions, make the world better!</p>' #slogan that goes to front page in logged out mode
+APP_COPYRIGHT = '' #copyright message
+
+#if you set FORUM_SCRIPT_ALIAS= 'forum/'
+#then CNPROG will run at url http://example.com/forum
+#FORUM_SCRIPT_ALIAS cannot have leading slash, otherwise it can be set to anything
+FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
+#also remember to set '/':'/forum' in file templates/content/js/com.cnprog.i18n.js
+#this is because javascript also needs to know the correct url prefix
+#nothing needs to be changed in .css files, as all urls there are relative
+
+LANGUAGE_CODE = 'en' #forum language (see language instructions on the wiki)
+EMAIL_VALIDATION = 'off' #string - on|off
+MIN_USERNAME_LENGTH = 1
+EMAIL_UNIQUE = False    #if True, email addresses must be unique in all accounts
+APP_URL = 'http://cnprog.com' #used by email notif system and RSS
+GOOGLE_SITEMAP_CODE = '' #code for google site crawler (look up google webmaster tools)
+GOOGLE_ANALYTICS_KEY = '' #key to enable google analytics on this site
+BOOKS_ON = False  #if True - books tab will be on
+WIKI_ON = True  #if False - community wiki feature is disabled
+
+#experimental - allow password login through external site
+#must implement django_authopenid/external_login.py
+#included prototype external_login works with Mediawiki
+USE_EXTERNAL_LEGACY_LOGIN = True #if false CNPROG uses it's own login/password
+EXTERNAL_LEGACY_LOGIN_HOST = 'login.cnprog.com'
+EXTERNAL_LEGACY_LOGIN_PORT = 80
+EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">CNPROG</span>'
+
+FEEDBACK_SITE_URL = None #None or url
+LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
+
+DJANGO_VERSION = 1.1 #must be either 1.0 or 1.1
+RESOURCE_REVISION=4 #increment when you update media files - clients will be forced to load new version
