@@ -332,8 +332,8 @@ class BlockResourceNode(template.Node):
         for item in self.items:
             bit = item.render(context)
             out += bit
-        out = out.replace(' ','')
-        return os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+        out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+        return out.replace(' ','')
 
 @register.tag(name='blockresource')
 def blockresource(parser,token):

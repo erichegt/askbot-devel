@@ -2193,10 +2193,16 @@ def search(request):
                 view_id = "latest"
                 orderby = "-added_at"
                 
-            objects = Question.objects.filter(deleted=False).extra(where=['title like %s'], params=['%' + keywords + '%']).order_by(orderby)
+            if settings.USE_SPHINX_SEARCH == True:
+                #search index is now free of delete questions and answers
+                #so there is not "antideleted" filtering here
+                objects = Question.search.query(keywords)
+                #no related selection either because we're relying on full text search here
+            else:
+                objects = Question.objects.filter(deleted=False).extra(where=['title like %s'], params=['%' + keywords + '%']).order_by(orderby)
+                # RISK - inner join queries
+                objects = objects.select_related();
 
-            # RISK - inner join queries
-            objects = objects.select_related();
             objects_list = Paginator(objects, pagesize)
             questions = objects_list.page(page)
 

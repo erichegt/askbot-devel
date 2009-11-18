@@ -163,7 +163,7 @@ blockquote
     border-right:1px solid #b4b48e;
     border-bottom:1px solid #b4b48e;*/
     background: white;/* #f9f7ed;*/
-    margin:10px 0 10px 0;
+    margin:10px 0 0 0;
     /*background:url(../images/quest-bg.gif) repeat-x top;*/
 }
 #listA .qstA thumb {float:left; }
@@ -1143,6 +1143,9 @@ ul.bulleta li {background:url(../images/bullet_green.gif) no-repeat 0px 2px; pad
 }
 .message p {
     margin-bottom:0px;
+}
+.message p.space-above {
+    margin-top:10px;
 }
 
 .warning{color:red;}

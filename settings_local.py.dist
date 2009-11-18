@@ -29,13 +29,6 @@ EMAIL_USE_TLS=False
 #LOCALIZATIONS
 TIME_ZONE = 'America/Tijuana'
 
-#OTHER SETTINGS
-APP_TITLE = u'CNPROG Q&A Forum'
-APP_KEYWORDS = u'CNPROG,forum,community'
-APP_DESCRIPTION = u'Ask and answer questions.'
-APP_INTRO = u'<p>Ask and answer questions, make the world better!</p>'
-APP_COPYRIGHT = 'Copyright CNPROG, 2009. Some rights reserved under creative commons license.'
-
 ###########################
 #
 #   this will allow running your forum with url like http://site.com/forum
@@ -46,6 +39,16 @@ APP_COPYRIGHT = 'Copyright CNPROG, 2009. Some rights reserved under creative com
 #   this is necessary to make client scripts work in this configuration
 #
 FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
+
+
+#OTHER SETTINGS
+APP_TITLE = u'CNPROG Q&A Forum'
+APP_KEYWORDS = u'CNPROG,forum,community'
+APP_DESCRIPTION = u'Ask and answer questions.'
+APP_INTRO = u'<p>Ask and answer questions, make the world better!</p>'
+APP_COPYRIGHT = 'Copyright CNPROG, 2009. Some rights reserved under creative commons license.'
+LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
+GREETING_URL = LOGIN_URL #may be url of "faq" page or "about", etc
 
 USE_I18N = True
 LANGUAGE_CODE = 'en'
@@ -62,7 +65,15 @@ EXTERNAL_LEGACY_LOGIN_HOST = 'login.cnprog.com'
 EXTERNAL_LEGACY_LOGIN_PORT = 80
 EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">CNPROG</span>'
 FEEDBACK_SITE_URL = None #None or url
-LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
 
 DJANGO_VERSION = 1.1
 RESOURCE_REVISION=4
+
+USE_SPHINX_SEARCH = True #if True all SPHINX_* settings are required
+#also sphinx search engine and djangosphinxs app must be installed
+#sample sphinx configuration file is /sphinx/sphinx.conf
+SPHINX_API_VERSION = 0x113 #refer to djangosphinx documentation
+SPHINX_SEARCH_INDICES=('cnprog',) #a tuple of index names remember about a comma after the 
+#last item, especially if you have just one :)
+SPHINX_SERVER='localhost'
+SPHINX_PORT=3312
