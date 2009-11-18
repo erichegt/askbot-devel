@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'forum',
     'django_authopenid',
+    'djangosphinx',
     #'debug_toolbar' ,
     'user_messages',
 )

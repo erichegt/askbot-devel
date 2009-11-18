@@ -14,6 +14,7 @@ def application_settings(context):
         'WIKI_ON':settings.WIKI_ON,
         'USE_EXTERNAL_LEGACY_LOGIN':settings.USE_EXTERNAL_LEGACY_LOGIN,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
+        'USE_SPHINX_SEARCH':settings.USE_SPHINX_SEARCH,
         }
     return {'settings':my_settings}
 

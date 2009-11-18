@@ -14,6 +14,10 @@ from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 import django.dispatch
 import settings
+import logging
+
+if settings.USE_SPHINX_SEARCH == True:
+    from djangosphinx.models import SphinxSearch
 
 from forum.managers import *
 from const import *
@@ -183,6 +187,13 @@ class Question(models.Model):
     comments             = generic.GenericRelation(Comment)
     votes                = generic.GenericRelation(Vote)
     flagged_items        = generic.GenericRelation(FlaggedItem)
+
+    if settings.USE_SPHINX_SEARCH == True:
+        search = SphinxSearch(
+                           index=' '.join(settings.SPHINX_SEARCH_INDICES),
+                           mode='SPH_MATCH_ALL',
+                        )
+        logging.debug('have sphinx search')
 
     objects = QuestionManager()
 

@@ -6,7 +6,8 @@ B. INSTALLATION
    2. Database
    3. Running CNPROG in the development server
    4. Installation under Apache/WSGI
-   5. Miscellaneous
+   5. Full text search
+   6. Miscellaneous
 C. CONFIGURATION PARAMETERS (settings_local.py)
 
 
@@ -36,6 +37,12 @@ sudo easy_install markdown2
 
 6. Django Debug Toolbar
 http://github.com/robhudson/django-debug-toolbar/tree/master
+
+7. djangosphinx (optional - for full text questions+answer+tag)
+http://github.com/dcramer/django-sphinx/tree/master/djangosphinx
+
+8. sphinx search engine (optional, works together with djangosphinx)
+http://sphinxsearch.com/downloads.html
 
 NOTES: django_authopenid is included into CNPROG code 
 and is significantly modified.  http://code.google.com/p/django-authopenid/
@@ -165,7 +172,36 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
 </VirtualHost>
 -------------
 
-5. Miscellaneous
+5. Full text search (using sphinx search)
+   Currently full text search works only with sphinx search engine
+   Sphinx at this time supports only MySQL and PostgreSQL databases
+   to enable this, install sphinx search engine and djangosphinx
+
+   configure sphinx, sample configuration can be found in
+   sphinx/sphinx.conf file usually goes somewhere in /etc tree
+
+   build cnprog index first time manually
+
+   % indexer --config /path/to/sphinx.conf --index cnprog
+
+   setup cron job to rebuild index periodically with command
+   your crontab entry may be something like
+
+   0 9,15,21 * * * /usr/local/bin/indexer --config /etc/sphinx/sphinx.conf --all --rotate >/dev/null 2>&1
+   adjust it as necessary this one will reindex three times a day at 9am 3pm and 9pm
+
+   if your forum grows very big ( good luck with that :) you'll
+   need to two search indices one diff index and one main
+   please refer to online sphinx search documentation for the information
+   on the subject http://sphinxsearch.com/docs/
+
+   in settings_local.py set
+   USE_SPHINX_SEARCH=True
+   adjust other settings that have SPHINX_* prefix accordingly 
+   remember that there must be trailing comma in parentheses for
+   SHPINX_SEARCH_INDICES tuple - particlarly with just one item!
+
+6. Miscellaneous
 
 There are some demo scripts under sql_scripts folder, 
 including badges and test accounts for CNProg.com. You 

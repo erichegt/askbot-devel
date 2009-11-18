@@ -21,7 +21,21 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-    <div class="headQuestions">{% if searchtag %}{% trans "Found by tags" %}{% else %}{% if searchtitle %}{% trans "Found by title" %}{% else %}{% trans "All questions" %}{% endif %}{% endif %}</div>
+    <div class="headQuestions">
+        {% if searchtag %}
+            {% trans "Found by tags" %}
+        {% else %}
+            {% if searchtitle %}
+                {% if settings.USE_SPHINX_SEARCH %}
+                    {% trans "Search results" %}
+                {% else %}
+                    {% trans "Found by title" %}
+                {% endif %}
+            {% else %}
+                {% trans "All questions" %}
+            {% endif %}
+        {% endif %}
+    </div>
     <div class="tabsA">
         <a id="latest" href="?sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
         <a id="active" href="?sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
@@ -105,6 +119,17 @@
         </div>
     </div>
     {% endfor %}
+    {% if searchtitle %}
+        {% if questions_count == 0 %}
+        <p class="evenMore" style="padding-top:30px;text-align:center;">
+            {% trans "Did not find anything?" %}
+        {% else %}
+        <p class="evenMore" style="padding-left:9px">
+            {% trans "Did not find what you were looking for?" %} 
+        {% endif %}
+        <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
+        </p>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -130,11 +155,19 @@
 			{% endblocktrans %}
 		{% else %}
 			{% if searchtitle %}
-				{% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
-				have total {{q_num}} questions containing {{searchtitle}}
-				{% plural %}
-				have total {{q_num}} questions containing {{searchtitle}}
-				{% endblocktrans %}
+                {% if settings.USE_SPHINX_SEARCH %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} questions containing {{searchtitle}} in full text
+                    {% plural %}
+                    have total {{q_num}} questions containing {{searchtitle}} in full text
+                    {% endblocktrans %}
+                {% else %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} questions containing {{searchtitle}}
+                    {% plural %}
+                    have total {{q_num}} questions containing {{searchtitle}}
+                    {% endblocktrans %}
+                {% endif %}
 			{% else %}
 				{% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
 				have total {{q_num}} questions
