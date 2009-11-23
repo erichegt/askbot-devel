@@ -1,6 +1,7 @@
 {% extends "user.html" %}
 <!-- user_votes.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load humanize %}
 {% load i18n %}
 
@@ -18,9 +19,9 @@
                 </div>
                 <div style="float:left;overflow:hidden;width:750px">
                     {% ifequal vote.answer_id 0 %}
-                    <span class="question-title-link"><a href="{% url questions %}{{ vote.question_id }}/{{ vote.title }}">{{ vote.title }}</a></span>
+                    <span class="question-title-link"><a href="{% url question vote.question_id %}/{{ vote.title|slugify }}">{{ vote.title }}</a></span>
                     {% else %}
-                    <span class="answer-title-link" ><a href="{% url questions %}{{ vote.question_id }}/{{ vote.title }}#{{ vote.answer_id }}">{{ vote.title }}</a></span>
+                    <span class="answer-title-link" ><a href="{% url question vote.question_id %}/{{ vote.title|slugify }}#{{ vote.answer_id }}">{{ vote.title }}</a></span>
                     {% endifequal %}
                     <div style="height:5px"></div>
                 </div>          

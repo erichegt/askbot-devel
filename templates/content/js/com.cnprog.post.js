@@ -290,7 +290,7 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", $.i18n._("/") + "/content/images/vote-favorite-on.png");
+            object.attr("src", $.i18n._("/") + "content/images/vote-favorite-on.png");
             var fav = getFavoriteNumber();
             fav.text(data.count);
             fav.addClass("my-favorite-number");

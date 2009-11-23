@@ -1739,32 +1739,43 @@ def user_votes(request, user_id, user_view):
 
 def user_reputation(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
-    reputation = Repute.objects.extra(
-        select={'positive': 'sum(positive)', 'negative': 'sum(negative)', 'question_id':'question_id', 
-            'title': 'question.title'},
-        tables=['repute', 'question'],
-        order_by=['-reputed_at'],
-        where=['user_id=%s AND question_id=question.id'],
-        params=[user.id]
-    ).values('positive', 'negative', 'question_id', 'title', 'reputed_at', 'reputation')
-
-    reputation.query.group_by = ['question_id']
-
+    try:
+        from django.db.models import Sum
+        reputation = Repute.objects.extra(
+                                          select={'question_id':'question_id',
+                                          'title': 'question.title'},
+                                          tables=['repute', 'question'],
+                                          order_by=['-reputed_at'],
+                                          where=['user_id=%s AND question_id=question.id'],
+                                          params=[user.id]
+                                          ).values('question_id', 'title', 'reputed_at', 'reputation')
+        reputation = reputation.annotate(positive=Sum("positive"), negative=Sum("negative"))
+    except ImportError:
+        reputation = Repute.objects.extra(
+                                          select={'positive':'sum(positive)', 'negative':'sum(negative)', 'question_id':'question_id',
+                                          'title': 'question.title'},
+                                          tables=['repute', 'question'],
+                                          order_by=['-reputed_at'],
+                                          where=['user_id=%s AND question_id=question.id'],
+                                          params=[user.id]
+                                          ).values('positive', 'negative', 'question_id', 'title', 'reputed_at', 'reputation')
+        reputation.query.group_by = ['question_id']
+ 
     rep_list = []
     for rep in Repute.objects.filter(user=user).order_by('reputed_at'):
         dic = '[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation)
         rep_list.append(dic)
     reps = ','.join(rep_list)
     reps = '[%s]' % reps
-
-    return render_to_response(user_view.template_file,{
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "view_user" : user,
-        "reputation" : reputation,
-        "reps" : reps
-    }, context_instance=RequestContext(request))
+ 
+    return render_to_response(user_view.template_file, {
+                              "tab_name": user_view.id,
+                              "tab_description": user_view.tab_description,
+                              "page_title": user_view.page_title,
+                              "view_user": user,
+                              "reputation": reputation,
+                              "reps": reps
+                              }, context_instance=RequestContext(request))
 
 def user_favorites(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)

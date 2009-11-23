@@ -140,10 +140,6 @@
                                     <span class="action-link"><a href="{% url edit_question question.id %}">{% trans 'edit' %}</a></span>
                                     {% endif %}
                                 {% separator %}
-                                    {% if request.user|can_delete_post:question %}
-                                    <span class="action-link"><a id="question-delete-link-{{question.id}}">{% trans "delete" %}</a></span>
-                                    {% endif %}
-                                {% separator %}
                                     {% if question.closed %}
                                     {% if request.user|can_reopen_question:question %}
                                     <span class="action-link"><a href="{% url reopen question.id %}">{% trans "reopen" %}</a></span>
@@ -162,6 +158,10 @@
                                         <span class="darkred">({{ question.offensive_flag_count }})</span>
                                         {% endif %}
                                     </span>
+                                    {% endif %}
+                                {% separator %}
+                                    {% if request.user|can_delete_post:question %}
+                                    <span class="action-link"><a id="question-delete-link-{{question.id}}">{% trans "delete" %}</a></span>
                                     {% endif %}
                                 {% endjoinitems %}
                             </div>
@@ -294,15 +294,6 @@
                                                 <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans 'edit' %}</a></span>
                                                 {% endif %}
                                             {% separator %}
-                                                {% if request.user|can_delete_post:answer %}
-                                                    {% spaceless %}
-                                                    <span class="action-link">
-                                                        <a id="answer-delete-link-{{answer.id}}">
-                                                        {% if answer.deleted %}{% trans "undelete" %}{% else %}{% trans "delete" %}{% endif %}</a>
-                                                    </span>
-                                                    {% endspaceless %}
-                                                {% endif %}
-                                            {% separator %}
                                                 {% if request.user|can_flag_offensive %}
                                                 <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
                                                     title="{% trans "report as offensive (i.e containing spam, advertising, malicious text, etc.)" %}">
@@ -311,6 +302,15 @@
                                                     <span class="darkred">({{ answer.offensive_flag_count }})</span>
                                                     {% endif %}
                                                 </span>
+                                                {% endif %}
+                                            {% separator %}
+                                                {% if request.user|can_delete_post:answer %}
+                                                    {% spaceless %}
+                                                    <span class="action-link">
+                                                        <a id="answer-delete-link-{{answer.id}}">
+                                                        {% if answer.deleted %}{% trans "undelete" %}{% else %}{% trans "delete" %}{% endif %}</a>
+                                                    </span>
+                                                    {% endspaceless %}
                                                 {% endif %}
                                             {% endjoinitems %}
                                         </div>

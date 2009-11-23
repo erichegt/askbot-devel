@@ -7,8 +7,10 @@ B. INSTALLATION
    3. Running CNPROG in the development server
    4. Installation under Apache/WSGI
    5. Full text search
-   6. Miscellaneous
+   6. Email subscriptions
+   7. Miscellaneous
 C. CONFIGURATION PARAMETERS (settings_local.py)
+D. CUSTOMIZATION
 
 
 A. PREREQUISITES
@@ -201,7 +203,16 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    remember that there must be trailing comma in parentheses for
    SHPINX_SEARCH_INDICES tuple - particlarly with just one item!
 
-6. Miscellaneous
+6. Email subscriptions
+   
+   This function at the moment requires Django 1.1
+
+   edit paths in the file cron/send_email_alerts
+   set up a cron job to call cron/send_email_alerts once or twice a day
+   subscription sender may be tested manually in shell 
+   by calling cron/send_email_alerts
+
+7. Miscellaneous
 
 There are some demo scripts under sql_scripts folder, 
 including badges and test accounts for CNProg.com. You 
@@ -265,3 +276,14 @@ LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
 
 DJANGO_VERSION = 1.1 #must be either 1.0 or 1.1
 RESOURCE_REVISION=4 #increment when you update media files - clients will be forced to load new version
+
+D. Customization
+
+Other than settings_local.py the following will most likely need customization:
+* locale/*/django.po - language files that may also contain your site-specific messages
+  if you want to start with english messages file - look for words like "forum" and
+  "CNPROG" in the msgstr lines
+* templates/header.html and templates/footer.html may contain extra links
+* templates/about.html - a place to explain for is your forum for
+* templates/faq.html - put answers to users frequent questions
+* templates/content/style/style.css - modify style sheet to add disctinctive look to your forum

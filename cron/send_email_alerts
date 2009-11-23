@@ -1,0 +1,4 @@
+PYTHONPATH=/dir/just/above_forum
+export PYTHONPATH
+APP_ROOT=$PYTHONPATH/CNPROG
+/usr/local/bin/python $APP_ROOT/manage.py send_email_alerts >> $APP_ROOT/log/django.lanai.log
