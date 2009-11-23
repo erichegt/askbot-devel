@@ -1144,6 +1144,9 @@ ul.bulleta li {background:url(../images/bullet_green.gif) no-repeat 0px 2px; pad
 .message p {
     margin-bottom:0px;
 }
+.message p.space-above {
+    margin-top:10px;
+}
 
 .warning{color:red;}
 .darkred{color:darkred;}
