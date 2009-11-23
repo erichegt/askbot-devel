@@ -1,6 +1,7 @@
 {% extends "user.html" %}
 <!-- user_reputation.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load humanize %}
 {% block userjs %}
        <script type='text/javascript' src='{% href "/content/js/excanvas.pack.js" %}'></script>
@@ -33,7 +34,7 @@
                         <div style="float:left;width:20px;color:red">{{ rep.negative }}</div>
                         
                     </div>
-                    <a href="{% url questions %}{{ rep.question_id }}/{{ rep.title }}">{{ rep.title }}</a> <span class="small">({{ rep.reputed_at }})</span>                    
+                    <a href="{% url question rep.question_id %}{{ rep.title|slugify }}">{{ rep.title }}</a> <span class="small">({{ rep.reputed_at }})</span>                    
                 </p>
                 {% endfor %}
             </div>
