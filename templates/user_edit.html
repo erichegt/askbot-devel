@@ -39,6 +39,10 @@
                     <th width="100px"></th>
                     <th></th>
                 </tr>
+                <tr style="height:35px">
+	            	<td>{{ form.username.label_tag }}:</td>
+	            	<td>{{ form.username }} <span class="form-error"></span> {{ form.username.errors }} </td>
+	            </tr>
                 
 	            <tr style="height:35px">
 	            	<td>{{ form.email.label_tag }}:</td>

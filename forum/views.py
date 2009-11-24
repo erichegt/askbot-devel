@@ -1130,6 +1130,7 @@ def edit_user(request, id):
             from django_authopenid.views import set_new_email
             set_new_email(user, new_email)
 
+            user.username = sanitize_html(form.cleaned_data['username'])
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
@@ -1529,7 +1530,7 @@ def user_responses(request, user_id, user_view):
         def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
             self.type = type
             self.title = title
-            self.titlelink = reverse('questions') + u'%s/%s#%s' % (question_id, title, answer_id)
+            self.titlelink = reverse('question', args=[question_id]) + u'%s#%s' % (slugify(title), answer_id)
             self.time = time
             self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
             self.username = username
