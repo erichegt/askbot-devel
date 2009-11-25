@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(filename=os.path.join(SITE_SRC_ROOT, 'log', LOG_FILENAME), level=logging.DEBUG,)
 
 #ADMINS and MANAGERS
-ADMINS = (('Forum Admin', 'team@cnprog.com'),)
+ADMINS = (('Forum Admin', 'forum@example.com'),)
 MANAGERS = ADMINS
 
 #DEBUG SETTINGS
