@@ -84,7 +84,7 @@
         <a name="tags"></a>
         {% spaceless %}
             <h2>
-                {% blocktrans count tags|length as counter %}
+                {% blocktrans count user_tags|length as counter %}
                     <span class="count">1</span> Tag
                 {% plural %}
                     <span class="count">{{counter}}</span> Tags
@@ -95,10 +95,11 @@
             <table class="tags">
                 <tr>
                     <td width="180" valign="top">
-                        {% for tag in tags%}
+                        {% for tag in user_tags%}
                         <a rel="tag" 
-							title="{% blocktrans %}see other questions tagged '{{ tag }}' {% endblocktrans %}" 
-							href="{% url forum.views.tag tag|urlencode %}">{{tag.name}}</a><span class="tag-number"> &#215; {{ tag.used_count|intcomma }}</span><br/>
+							title="{% blocktrans with tag.name as tag_name %}see other questions tagged '{{ tag_name }}' {% endblocktrans %}" 
+							href="{% url forum.views.tag tag|urlencode %}?user={{view_user.username}}">{{tag.name}}</a>
+                        <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"10" %}
                                 </td>
                                 <td width="180"  valign="top">

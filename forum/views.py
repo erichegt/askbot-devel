@@ -169,6 +169,15 @@ def questions(request, tagname=None, unanswered=False):
     else:
         objects = Question.objects.get_questions(orderby)
 
+    author_name = None
+    if 'user' in request.GET:
+        try:
+            author_name = request.GET['user']
+            u = User.objects.get(username=author_name)
+            objects = objects.filter(Q(author=u) | Q(answers__author=u))
+        except User.DoesNotExist:
+            author_name = None
+
     # RISK - inner join queries
     objects = objects.select_related(depth=1);
     objects_list = Paginator(objects, pagesize)
@@ -181,6 +190,7 @@ def questions(request, tagname=None, unanswered=False):
         related_tags = None
     return render_to_response(template_file, {
         "questions" : questions,
+        "author_name" : author_name,
         "tab_id" : view_id,
         "questions_count" : objects_list.count,
         "tags" : related_tags,
@@ -1221,8 +1231,26 @@ def user_stats(request, user_id, user_view):
     down_votes = Vote.objects.get_down_vote_count_from_user(user)
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
     votes_total = VOTE_RULES['scope_votes_per_user_per_day']
-    tags = user.created_tags.all().order_by('-used_count')[:50]
-    if settings.DJANGO_VERSION < 1.1:
+
+    question_id_set = set(map(lambda v: v['id'], list(questions))) \
+                        | set(map(lambda v: v['id'], list(answered_questions)))
+
+    user_tags = Tag.objects.filter(questions__id__in = question_id_set)
+
+    try:
+        from django.db.models import Count
+        awards = Award.objects.extra(
+            select={'id': 'badge.id', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
+            tables=['award', 'badge'],
+            order_by=['-awarded_at'],
+            where=['user_id=%s AND badge_id=badge.id'],
+            params=[user.id]
+        ).values('id', 'name', 'description', 'type')
+        total_awards = awards.count()
+        awards = awards.annotate(count = Count('badge__id'))
+        user_tags = user_tags.annotate(user_tag_usage_count=Count('name'))
+
+    except ImportError:
         awards = Award.objects.extra(
             select={'id': 'badge.id', 'count': 'count(badge_id)', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
             tables=['award', 'badge'],
@@ -1232,17 +1260,11 @@ def user_stats(request, user_id, user_view):
         ).values('id', 'count', 'name', 'description', 'type')
         total_awards = awards.count()
         awards.query.group_by = ['badge_id']
-    else:
-        awards = Award.objects.extra(
-            select={'id': 'badge.id', 'name':'badge.name', 'description': 'badge.description', 'type': 'badge.type'},
-            tables=['award', 'badge'],
-            order_by=['-awarded_at'],
-            where=['user_id=%s AND badge_id=badge.id'],
-            params=[user.id]
-        ).values('id', 'name', 'description', 'type')
-        total_awards = awards.count()
-        from django.db.models import Count
-        awards = awards.annotate(count = Count('badge__id'))
+        user_tags = user_tags.extra(
+            select={'user_tag_usage_count': 'COUNT(1)',},
+            order_by=['-user_tag_usage_count'],
+        )
+        user_tags.query.group_by = ['name']
 
     if auth.can_moderate_users(request.user):
         moderate_user_form = ModerateUserForm(instance=user)
@@ -1262,6 +1284,7 @@ def user_stats(request, user_id, user_view):
         "total_votes": up_votes + down_votes,
         "votes_today_left": votes_total-votes_today,
         "votes_total_per_day": votes_total,
+        "user_tags" : user_tags[:50],
         "tags" : tags,
         "awards": awards,
         "total_awards" : total_awards,

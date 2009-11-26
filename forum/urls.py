@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     #place general question item in the end of other operations
     url(r'^%s(?P<id>\d+)//*' % _('question/'), app.question, name='question'),
     url(r'^%s$' % _('tags/'), app.tags, name='tags'),
-    url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.tag),
+    url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.tag, name='tag_questions'),
     url(r'^%s$' % _('users/'),app.users, name='users'),
     url(r'^%s(?P<id>\d+)/$' % _('moderate-user/'), app.moderate_user, name='moderate_user'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')), app.edit_user, name='edit_user'),
