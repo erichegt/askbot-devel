@@ -251,7 +251,7 @@ def diff_date(date, limen=2):
         return _('2 days ago')
     elif days == 1:
         return _('yesterday')
-    elif minutes > 60:
+    elif minutes >= 60:
         return ungettext('%(hr)d hour ago','%(hr)d hours ago',hours) % {'hr':hours}
     else:
         return ungettext('%(min)d min ago','%(min)d mins ago',minutes) % {'min':minutes}
