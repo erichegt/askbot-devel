@@ -249,9 +249,6 @@ APP_COPYRIGHT = '' #copyright message
 #then CNPROG will run at url http://example.com/forum
 #FORUM_SCRIPT_ALIAS cannot have leading slash, otherwise it can be set to anything
 FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
-#also remember to set '/':'/forum' in file templates/content/js/com.cnprog.i18n.js
-#this is because javascript also needs to know the correct url prefix
-#nothing needs to be changed in .css files, as all urls there are relative
 
 LANGUAGE_CODE = 'en' #forum language (see language instructions on the wiki)
 EMAIL_VALIDATION = 'off' #string - on|off

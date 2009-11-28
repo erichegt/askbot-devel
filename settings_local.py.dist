@@ -44,9 +44,6 @@ TIME_ZONE = 'America/Tijuana'
 #
 #   FORUM_SCRIPT_ALIAS = 'forum/'
 #
-#   also make sure to set '/':'/forum' in file templates/content/js/com.cnprog.i18n.js
-#   this is necessary to make client scripts work in this configuration
-#
 FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
 
 

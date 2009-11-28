@@ -23,7 +23,7 @@ var notify = function() {
         },       
         close: function(doPostback) {
             if (doPostback) {
-               $.post($.i18n._("/") + $.i18n._("messages/") + 
+               $.post(scriptUrl + $.i18n._("messages/") + 
                 $.i18n._("markread/"), { formdata: "required" });
             }
             $(".notify").fadeOut("fast");
