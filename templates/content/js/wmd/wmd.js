@@ -54,7 +54,7 @@ Attacklab.wmdBase = function(){
 	var uploadImageHTML ="<div>" + $.i18n._('upload image') + "</div>" + 
         "<input type=\"file\" name=\"file-upload\" id=\"file-upload\" size=\"26\" "+
         "onchange=\"return ajaxFileUpload($('#image-url'));\"/><br>" + 
-        "<img id=\"loading\" src=\"" + $.i18n._("/") + "content/images/indicator.gif\" style=\"display:none;\"/>";
+        "<img id=\"loading\" src=\"" + scriptUrl + "content/images/indicator.gif\" style=\"display:none;\"/>";
     
 	// The default text that appears in the dialog input box when entering
 	// links.

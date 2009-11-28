@@ -53,11 +53,11 @@ var Vote = function(){
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
-    var pleaseLogin = "<a href='" + $.i18n._("/") + $.i18n._("account/") + $.i18n._("signin/")
-                    + "?next=" + $.i18n._("/") + $.i18n._("questions/") + "{{QuestionID}}'>"
+    var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
+                    + "?next=" + scriptUrl + $.i18n._("questions/") + "{{QuestionID}}'>"
 					+ $.i18n._('please login') + "</a>";
 
-    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + $.i18n._("/") + $.i18n._("faq/") + "'>faq</a>";
+    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
 
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') 
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
@@ -151,17 +151,17 @@ var Vote = function(){
     var setVoteImage = function(voteType, undo, object){
         var flag = undo ? "" : "-on";
         var arrow = (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote) ? "up" : "down";
-        object.attr("src", $.i18n._("/") + "content/images/vote-arrow-"+ arrow + flag +".png");
+        object.attr("src", scriptUrl + "content/images/vote-arrow-"+ arrow + flag +".png");
         
         // if undo voting, then undo the pair of arrows.
         if(undo){
             if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote){
-                $(getQuestionVoteUpButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
-                $(getQuestionVoteDownButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
+                $(getQuestionVoteUpButton()).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getQuestionVoteDownButton()).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
             }
             else{
-                $(getAnswerVoteUpButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
-                $(getAnswerVoteDownButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
+                $(getAnswerVoteUpButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getAnswerVoteDownButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
             }
         }
     };
@@ -237,7 +237,7 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
-            url: $.i18n._("/") + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+            url: scriptUrl + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data){callback(object, voteType, data)}});
@@ -256,19 +256,23 @@ var Vote = function(){
             showMessage(object, acceptOwnAnswerMessage);
         }
         else if(data.status == "1"){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             object.attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-accepted.png");
+>>>>>>> private:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
         else if(data.success == "1"){
             var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
-            $(acceptedButtons).attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+            $(acceptedButtons).attr("src", scriptUrl + "content/images/vote-accepted.png");
             var answers = ("div[id^="+answerContainerIdPrefix +"]");
             $(answers).removeClass("accepted-answer");
             var commentLinks = ("div[id^="+answerContainerIdPrefix +"] div[id^="+ commentLinkIdPrefix +"]");
             $(commentLinks).removeClass("comment-link-accepted");
             
-            object.attr("src", $.i18n._("/") + "content/images/vote-accepted-on.png");
+            object.attr("src", scriptUrl + "content/images/vote-accepted-on.png");
             $("#"+answerContainerIdPrefix+postId).addClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).addClass("comment-link-accepted");
         }
@@ -282,7 +286,7 @@ var Vote = function(){
             showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
         else if(data.status == "1"){
-            object.attr("src", $.i18n._("/") + "content/images/vote-favorite-off.png");
+            object.attr("src", scriptUrl + "content/images/vote-favorite-off.png");
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count == 0)
@@ -290,7 +294,7 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", $.i18n._("/") + "content/images/vote-favorite-on.png");
+            object.attr("src", scriptUrl + "content/images/vote-favorite-on.png");
             var fav = getFavoriteNumber();
             fav.text(data.count);
             fav.addClass("my-favorite-number");
@@ -359,7 +363,7 @@ var Vote = function(){
         }
         else if (data.success == "1"){
             if (voteType == VoteType.removeQuestion){
-                window.location.href = $.i18n._("/") + $.i18n._("questions/");
+                window.location.href = scriptUrl + $.i18n._("questions/");
             }
             else {
                 if (removeActionType == 'delete'){
@@ -508,7 +512,7 @@ function createComments(type) {
 
     var getComments = function(id, jDiv) {
         //appendLoaderImg(id);
-        $.getJSON($.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/")
+        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/")
                 , function(json) { showComments(id, json); });
     };
 
@@ -529,8 +533,8 @@ function createComments(type) {
     var renderDeleteCommentIcon = function(post_id, delete_url){
         if (canPostComments(post_id)){
             var html = '';
-            var img = $.i18n._("/") + "content/images/close-small.png";
-            var imgHover = $.i18n._("/") + "content/images/close-small-hover.png";
+            var img = scriptUrl + "content/images/close-small.png";
+            var imgHover = scriptUrl + "content/images/close-small-hover.png";
             html += '<img class="delete-icon" onclick="' + objectType + 'Comments.deleteComment($(this), ' + post_id + ', \'' + delete_url + '\')" src="' + img;
             html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img
             html += '\')" title="' + $.i18n._('delete this comment') + '" />';
@@ -569,7 +573,11 @@ function createComments(type) {
         //todo fix url translations!!!
         $.ajax({
             type: "POST",
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             url: $.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+=======
+            url: scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+>>>>>>> private:templates/content/js/com.cnprog.post.js
             dataType: "json",
             data: { comment: textarea.val() },
             success: function(json) {

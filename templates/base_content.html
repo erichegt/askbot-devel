@@ -6,7 +6,9 @@
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="verify-v1" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />
+        {% endif %}
         <link rel="shortcut icon" href="{% href "/content/images/favicon.ico" %}" />
         <link href="{% href "/content/style/style.css" %}" rel="stylesheet" type="text/css" />
 		 {% spaceless %}
@@ -15,7 +17,8 @@
         <script src="http://www.google.com/jsapi" type="text/javascript"></script>
         <script type="text/javascript">google.load("jquery", "1.2.6");</script>
 		<script type="text/javascript">
-			var i18nLang = '{{ settings.LANGUAGE_CODE }}';
+            var i18nLang = '{{ settings.LANGUAGE_CODE }}';
+            var scriptUrl = '/{{settings.FORUM_SCRIPT_ALIAS}}'
 		</script>
         <script type='text/javascript' src='{% href "/content/js/com.cnprog.i18n.js" %}'></script>
 	    <script type='text/javascript' src='{% href "/content/js/jquery.i18n.js" %}'></script>

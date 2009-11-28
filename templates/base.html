@@ -18,7 +18,8 @@
         <script src="http://www.google.com/jsapi" type="text/javascript"></script>
         <script type="text/javascript">google.load("jquery", "1.2.6");</script>
 		<script type="text/javascript">
-			var i18nLang = '{{settings.LANGUAGE_CODE}}';
+            var i18nLang = '{{settings.LANGUAGE_CODE}}';
+            var scriptUrl = '/{{settings.FORUM_SCRIPT_ALIAS}}'
 		</script>
         <script type='text/javascript' src='{% href "/content/js/com.cnprog.i18n.js" %}'></script>
 		<script type='text/javascript' src='{% href "/content/js/jquery.i18n.js" %}'></script>
