@@ -57,7 +57,6 @@ var i18nZh = {
 };
 
 var i18nEn = {
-    '/':'/',
 	'need >15 points to report spam':'need >15 points to report spam ',
     '>15 points requried to upvote':'>15 points required to upvote ',
 	'tags cannot be empty':'please enter at least one tag',

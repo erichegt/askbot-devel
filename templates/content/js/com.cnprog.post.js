@@ -256,11 +256,7 @@ var Vote = function(){
             showMessage(object, acceptOwnAnswerMessage);
         }
         else if(data.status == "1"){
-<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
-            object.attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
-=======
             object.attr("src", scriptUrl + "content/images/vote-accepted.png");
->>>>>>> private:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
@@ -573,11 +569,7 @@ function createComments(type) {
         //todo fix url translations!!!
         $.ajax({
             type: "POST",
-<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
-            url: $.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/"),
-=======
             url: scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
->>>>>>> private:templates/content/js/com.cnprog.post.js
             dataType: "json",
             data: { comment: textarea.val() },
             success: function(json) {
