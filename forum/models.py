@@ -3,6 +3,7 @@ import datetime
 import hashlib
 from urllib import quote_plus, urlencode
 from django.db import models, IntegrityError
+from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -221,7 +222,7 @@ class Question(models.Model):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        return '%s%s' % (reverse('question', args=[self.id]), slugify(self.title))
+        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -266,6 +267,16 @@ class Question(models.Model):
 
         return when, who
 
+    def get_user_votes_in_answers(self, user):
+        content_type = ContentType.objects.get_for_model(Answer)
+        query_set = Vote.objects.extra(
+            tables = ['question', 'answer'],
+            where = ['question.id = answer.question_id AND question.id = %s AND vote.object_id = answer.id AND vote.content_type_id = %s AND vote.user_id = %s'],
+            params = [self.id, content_type.id, user.id]
+        )
+        
+        return query_set
+        
     def get_update_summary(self,last_reported_at=None,recipient_email=''):
         edited = False 
         if self.last_edited_at and self.last_edited_at > last_reported_at:
@@ -460,7 +471,7 @@ class Answer(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        return '%s%s#%s' % (reverse('question', args=[self.question.id]), slugify(self.question.title), self.id)
+        return '%s%s#%s' % (reverse('question', args=[self.question.id]), django_urlquote(slugify(self.question.title)), self.id)
 
     class Meta:
         db_table = u'answer'
@@ -601,7 +612,7 @@ class Book(models.Model):
     questions = models.ManyToManyField(Question, related_name='book', db_table='book_question')
     
     def get_absolute_url(self):
-        return reverse('book', args=[self.short_name])
+        return reverse('book', args=[django_urlquote(slugify(self.short_name))])
         
     def __unicode__(self):
         return self.title
