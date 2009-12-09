@@ -87,3 +87,6 @@ CONST = {
     'default_version'   : _('initial version'),
     'retagged'          : _('retagged'),
 }
+
+#how to filter questions by tags in email digests?
+TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only interesting tags')))

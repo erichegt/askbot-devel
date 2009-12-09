@@ -232,6 +232,15 @@ class EditUserForm(forms.Form):
                     raise forms.ValidationError(_('this email has already been registered, please use another one'))
         return self.cleaned_data['email']
 
+class TagFilterSelectionForm(forms.ModelForm):
+    tag_filter_setting = forms.ChoiceField(choices=TAG_EMAIL_FILTER_CHOICES, #imported from forum/const.py
+                                            initial='ignored',
+                                            label=_('Choose email tag filter'),
+                                            widget=forms.RadioSelect)
+    class Meta:
+        model = User
+        fields = ('tag_filter_setting',)
+
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))
     DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))
@@ -247,9 +256,6 @@ class EditUserEmailFeedsForm(forms.Form):
                 'answered_by_me':'n',
                 'individually_selected':'n',
                 }
-    all_questions = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Entire forum'),)
     asked_by_me = forms.ChoiceField(choices=DWN,initial='w',
                             widget=forms.RadioSelect,
                             label=_('Asked by me'))
@@ -259,6 +265,9 @@ class EditUserEmailFeedsForm(forms.Form):
     individually_selected = forms.ChoiceField(choices=DWN,initial='w',
                             widget=forms.RadioSelect,
                             label=_('Individually selected'))
+    all_questions = forms.ChoiceField(choices=DWN,initial='w',
+                            widget=forms.RadioSelect,
+                            label=_('Entire forum (tag filtered)'),)
 
     def set_initial_values(self,user=None):
         KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])

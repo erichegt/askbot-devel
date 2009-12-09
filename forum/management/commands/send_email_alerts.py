@@ -38,73 +38,84 @@ class Command(NoArgsCommand):
                                   ).exclude(
                                         closed=True
                                   )
-        user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
-        for feed in user_feeds:
-            cutoff_time = now - EmailFeedSetting.DELTA_TABLE[feed.frequency]
-            if feed.reported_at == None or feed.reported_at <= cutoff_time:
-                Q_set = Q_set1.exclude(last_activity_at__gt=cutoff_time)#report these excluded later
-                feed.reported_at = now
-                feed.save()#may not actually report anything, depending on filters below
-                if feed.feed_type == 'q_sel':
-                    q_sel = Q_set.filter(followed_by=user)
-                    q_sel.cutoff_time = cutoff_time #store cutoff time per query set
-                elif feed.feed_type == 'q_ask':
-                    q_ask = Q_set.filter(author=user)
-                    q_ask.cutoff_time = cutoff_time
-                elif feed.feed_type == 'q_ans':
-                    q_ans = Q_set.filter(answers__author=user)
-                    q_ans.cutoff_time = cutoff_time
-                elif feed.feed_type == 'q_all':
-                    q_all = Q_set
-                    q_all.cutoff_time = cutoff_time
-        #build list in this order
-        q_list = OrderedDict()
-        def extend_question_list(src, dst):
-            """src is a query set with questions
-               or an empty list
-                dst - is an ordered dictionary
-            """
-            if src is None:
-                return #will not do anything if subscription of this type is not used
-            cutoff_time = src.cutoff_time
-            for q in src:
-                if q in dst:
-                    if cutoff_time < dst[q]['cutoff_time']:
-                        dst[q]['cutoff_time'] = cutoff_time
-                else:
-                    #initialise a questions metadata dictionary to use for email reporting
-                    dst[q] = {'cutoff_time':cutoff_time}
+    #todo: still need to add back individually selected and other questions....
+    #these may be filtered out by tags
+    if user.tag_filter_setting == 'ignored':
+        ignored_tags = user.markedtag_set.filter(reason='bad').values_list('tag', flat=True).distinct()
+        Q_set1 = Q_set1.exclude( tags__in=ignored_tags )
+        logging.debug('removed ignored tags')
+    else:
+        selected_tags = user.markedtag_set.filter(reason='good').values_list('tag', flat=True).distinct()
+        Q_set1 = Q_set1.filter( tags__in=selected_tags )
+        logging.debug('filtered for only selected tags')
+        
+    user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
+    for feed in user_feeds:
+        cutoff_time = now - EmailFeedSetting.DELTA_TABLE[feed.frequency]
+        if feed.reported_at == None or feed.reported_at <= cutoff_time:
+            Q_set = Q_set1.exclude(last_activity_at__gt=cutoff_time)#report these excluded later
+            feed.reported_at = now
+            feed.save()#may not actually report anything, depending on filters below
+            if feed.feed_type == 'q_sel':
+                q_sel = Q_set.filter(followed_by=user)
+                q_sel.cutoff_time = cutoff_time #store cutoff time per query set
+            elif feed.feed_type == 'q_ask':
+                q_ask = Q_set.filter(author=user)
+                q_ask.cutoff_time = cutoff_time
+            elif feed.feed_type == 'q_ans':
+                q_ans = Q_set.filter(answers__author=user)
+                q_ans.cutoff_time = cutoff_time
+            elif feed.feed_type == 'q_all':
+                q_all = Q_set
+                q_all.cutoff_time = cutoff_time
+    #build list in this order
+    q_list = OrderedDict()
+    def extend_question_list(src, dst):
+        """src is a query set with questions
+           or an empty list
+            dst - is an ordered dictionary
+        """
+        if src is None:
+            return #will not do anything if subscription of this type is not used
+        cutoff_time = src.cutoff_time
+        for q in src:
+            if q in dst:
+                if cutoff_time < dst[q]['cutoff_time']:
+                    dst[q]['cutoff_time'] = cutoff_time
+            else:
+                #initialise a questions metadata dictionary to use for email reporting
+                dst[q] = {'cutoff_time':cutoff_time}
 
-        extend_question_list(q_sel, q_list)
-        extend_question_list(q_ask, q_list)
-        extend_question_list(q_ans, q_list)
-        extend_question_list(q_all, q_list)
+    extend_question_list(q_sel, q_list)
+    extend_question_list(q_ask, q_list)
+    extend_question_list(q_ans, q_list)
+    extend_question_list(q_all, q_list)
 
-        ctype = ContentType.objects.get_for_model(Question)
-        EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT
-        for q, meta_data in q_list.items():
-            #todo use Activity, but first start keeping more Activity records
-            #act = Activity.objects.filter(content_type=ctype, object_id=q.id)
-            #because currently activity is not fully recorded to through
-            #revision records to see what kind modifications were done on
-            #the questions and answers
-            try:
-                update_info = Activity.objects.get(content_type=ctype, 
-                                                    object_id=q.id,
-                                                    activity_type=EMAIL_UPDATE_ACTIVITY)
-                emailed_at = update_info.active_at
-            except Activity.DoesNotExist:
-                update_info = Activity(user=user, content_object=q, activity_type=EMAIL_UPDATE_ACTIVITY)
-                emailed_at = datetime.datetime(1970,1,1)#long time ago
-            except Activity.MultipleObjectsReturned:
-                raise Exception('server error - multiple question email activities found per user-question pair')
+    ctype = ContentType.objects.get_for_model(Question)
+    EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT
+    for q, meta_data in q_list.items():
+        #todo use Activity, but first start keeping more Activity records
+        #act = Activity.objects.filter(content_type=ctype, object_id=q.id)
+        #because currently activity is not fully recorded to through
+        #revision records to see what kind modifications were done on
+        #the questions and answers
+        try:
+            update_info = Activity.objects.get(content_type=ctype, 
+                                                object_id=q.id,
+                                                activity_type=EMAIL_UPDATE_ACTIVITY)
+            emailed_at = update_info.active_at
+        except Activity.DoesNotExist:
+            update_info = Activity(user=user, content_object=q, activity_type=EMAIL_UPDATE_ACTIVITY)
+            emailed_at = datetime.datetime(1970,1,1)#long time ago
+        except Activity.MultipleObjectsReturned:
+            raise Exception('server error - multiple question email activities found per user-question pair')
 
-            q_rev = QuestionRevision.objects.filter(question=q,\
-                                                    revised_at__lt=cutoff_time,\
-                                                    revised_at__gt=emailed_at)
-            q_rev = q_rev.exclude(author=user)
-            meta_data['q_rev'] = len(q_rev)
-            if len(q_rev) > 0 and q.added_at == q_rev[0].revised_at:
+        q_rev = QuestionRevision.objects.filter(question=q,\
+                                                revised_at__lt=cutoff_time,\
+                                                revised_at__gt=emailed_at)
+        q_rev = q_rev.exclude(author=user)
+        meta_data['q_rev'] = len(q_rev)
+        if len(q_rev) > 0 and q.added_at == q_rev[0].revised_at:
                 meta_data['q_rev'] = 0
                 meta_data['new_q'] = True
             else:

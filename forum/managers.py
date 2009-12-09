@@ -7,25 +7,6 @@ from forum.models import *
 from urllib import quote, unquote
 
 class QuestionManager(models.Manager):
-    def get_translation_questions(self, orderby, page_size):
-        questions = self.filter(deleted=False, author__id__in=[28,29]).order_by(orderby)[:page_size]
-        return questions
-    
-    def get_questions_by_pagesize(self, orderby, page_size):
-        questions = self.filter(deleted=False).order_by(orderby)[:page_size]
-        return questions
-    
-    def get_questions_by_tag(self, tagname, orderby):
-        questions = self.filter(deleted=False, tags__name = unquote(tagname)).order_by(orderby)
-        return questions
-    
-    def get_unanswered_questions(self, orderby):
-        questions = self.filter(deleted=False, answer_accepted=False).order_by(orderby)
-        return questions
-    
-    def get_questions(self, orderby):
-        questions = self.filter(deleted=False).order_by(orderby)
-        return questions
     
     def update_tags(self, question, tagnames, user):
         """
@@ -92,12 +73,11 @@ class QuestionManager(models.Manager):
         Questions with the individual tags will be added to list if above questions are not full.
         """
         #print datetime.datetime.now()
-        from forum.models import Question
-        questions = list(Question.objects.filter(tagnames = question.tagnames, deleted=False).all())
+        questions = list(self.filter(tagnames = question.tagnames, deleted=False).all())
 
         tags_list = question.tags.all()
         for tag in tags_list:
-            extend_questions = Question.objects.filter(tags__id = tag.id, deleted=False)[:50]
+            extend_questions = self.filter(tags__id = tag.id, deleted=False)[:50]
             for item in extend_questions:
                 if item not in questions and len(questions) < 10:
                     questions.append(item)
@@ -166,22 +146,17 @@ class TagManager(models.Manager):
 
 class AnswerManager(models.Manager):
     GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
-    def get_answers_from_question(self, question, user=None, other_orderby = None):
+    def get_answers_from_question(self, question, user=None):
         """
         Retrieves visibile answers for the given question. Delete answers
         are only visibile to the person who deleted them.
-        """   
+        """
+       
         if user is None or not user.is_authenticated():
-            q = self.filter(question=question, deleted=False)
+            return self.filter(question=question, deleted=False)
         else:
-            q = self.filter(Q(question=question),
-                            Q(deleted=False) | Q(deleted_by=user))
-        if other_orderby is None:
-            q = q.order_by("-accepted")
-        else:
-            q = q.order_by("-accepted", other_orderby)
-
-        return q
+            return self.filter(Q(question=question),
+                               Q(deleted=False) | Q(deleted_by=user))
                                
     def get_answers_from_questions(self, user_id):
         """

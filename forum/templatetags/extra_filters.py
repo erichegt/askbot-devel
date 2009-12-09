@@ -1,4 +1,5 @@
 from django import template
+from django.core import serializers
 from forum import auth
 import logging
 
@@ -91,3 +92,7 @@ def cnprog_intword(number):
             return number
     except:
         return number
+
+@register.filter
+def json_serialize(object):
+    return serializers.serialize('json',object)

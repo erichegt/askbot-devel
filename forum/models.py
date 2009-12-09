@@ -267,16 +267,6 @@ class Question(models.Model):
 
         return when, who
 
-    def get_user_votes_in_answers(self, user):
-        content_type = ContentType.objects.get_for_model(Answer)
-        query_set = Vote.objects.extra(
-            tables = ['question', 'answer'],
-            where = ['question.id = answer.question_id AND question.id = %s AND vote.object_id = answer.id AND vote.content_type_id = %s AND vote.user_id = %s'],
-            params = [self.id, content_type.id, user.id]
-        )
-        
-        return query_set
-        
     def get_update_summary(self,last_reported_at=None,recipient_email=''):
         edited = False 
         if self.last_edited_at and self.last_edited_at > last_reported_at:
@@ -353,6 +343,12 @@ class FavoriteQuestion(models.Model):
         db_table = u'favorite_question'
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
+
+class MarkedTag(models.Model):
+    TAG_MARK_REASONS = (('good',_('interesting')),('bad',_('ignored')))
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey(User)
+    reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)
 
 class QuestionRevision(models.Model):
     """A revision of a Question."""
@@ -702,6 +698,14 @@ User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
+User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
+User.add_to_class('tag_filter_setting', 
+                    models.CharField(
+                                        max_length=16, 
+                                        choices=TAG_EMAIL_FILTER_CHOICES, 
+                                        default='ignored'
+                                     )
+                 )
 
 # custom signal
 tags_updated = django.dispatch.Signal(providing_args=["question"])

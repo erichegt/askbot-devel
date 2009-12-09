@@ -25,7 +25,7 @@ MIDDLEWARE_CLASSES = (
     'middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'middleware.pagesize.QuestionsPageSizeMiddleware',
     'middleware.cancel.CancelActionMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -62,7 +62,7 @@ INSTALLED_APPS = (
     'forum',
     'django_authopenid',
     'djangosphinx',
-    #'debug_toolbar' ,
+    'debug_toolbar' ,
     'user_messages',
 )
 
