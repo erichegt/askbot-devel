@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), app.vote, name='vote'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), app.question_revisions, name='question_revisions'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('comments/')), app.question_comments, name='question_comments'),
+    url(r'^%s$' % _('command/'), app.ajax_command, name='call_ajax'),
 
     url(r'^%s(?P<object_id>\d+)/%s(?P<comment_id>\d+)/%s$' % (_('questions/'), _('comments/'),_('delete/')), \
                                                 app.delete_comment, kwargs={'commented_object_type':'question'},\
@@ -51,6 +52,19 @@ urlpatterns = patterns('',
     url(r'^%s(?P<id>\d+)//*' % _('question/'), app.question, name='question'),
     url(r'^%s$' % _('tags/'), app.tags, name='tags'),
     url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.tag, name='tag_questions'),
+
+    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')), app.mark_tag, \
+                                kwargs={'reason':'good','action':'add'}, \
+                                name='mark_interesting_tag'),
+
+    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')), app.mark_tag, \
+                                kwargs={'reason':'bad','action':'add'}, \
+                                name='mark_ignored_tag'),
+
+    url(r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'), app.mark_tag, \
+                                kwargs={'action':'remove'}, \
+                                name='mark_ignored_tag'),
+
     url(r'^%s$' % _('users/'),app.users, name='users'),
     url(r'^%s(?P<id>\d+)/$' % _('moderate-user/'), app.moderate_user, name='moderate_user'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')), app.edit_user, name='edit_user'),
