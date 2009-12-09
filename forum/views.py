@@ -205,6 +205,16 @@ def questions(request, tagname=None, unanswered=False):
                                   + 'AND forum_markedtag.reason = "good" '
                                   + 'AND question_tags.question_id = question.id'
                             ),
+                                ]),
+                        select_params = (uid_str,),
+                     )
+        if request.user.hide_ignored_questions:
+            ignored_tags = Tag.objects.filter(user_selections__reason='bad',
+                                            user_selections__user = request.user)
+            qs = qs.exclude(tags__in=ignored_tags)
+        else:
+            qs = qs.extra(
+                        select = SortedDict([
                             (
                                 'ignored_score', 
                                 'SELECT COUNT(1) FROM forum_markedtag, question_tags '
@@ -214,81 +224,13 @@ def questions(request, tagname=None, unanswered=False):
                                   + 'AND question_tags.question_id = question.id'
                             )
                                 ]),
-                        select_params = (uid_str, uid_str)
+                        select_params = (uid_str, )
                      )
-        #if request.user.hide_ignored_questions:
-        #    qs = qs.extra(where=['ignored_score=0']) #this doesn't work, 
-                                                      #no way to filter on ignored_score!
 
     qs = qs.select_related(depth=1).order_by(orderby)
 
-    #don't know how to get around this - maybe have to use raw sql?
-    #the probjem is that it seems to be impossible to exclude ingored questions
-    #from the query set - 'the django way'
-    #the erzatz paginator below compensates for the current lack of proper SQL statement
-    class DummyQuerySet(list):
-        def __init__(self,items):
-            super(DummyQuerySet, self).__init__(items)
-        def count(self):
-            return len(self)
-
-    class DummyPage(list):
-        def __init__(self,items,num=1,has_next=True):
-            self.object_list = DummyQuerySet(items)
-            self.num = num
-            self.has_next_page = has_next
-        def count(self):
-            return len(self.object_list)
-        def has_next(self):
-            return self.has_next_page
-        def has_previous(self):
-            return (self.num > 1)
-        def previous_page_number(self):
-            if self.has_previous():
-                return self.num - 1
-            return self.num
-        def next_page_number(self):
-            if self.has_next():
-                return self.num + 1
-            return self.num
-
-    class HidingIgnoredPaginator(object):
-        def __init__(self,query_set,page_size):
-            self.query_set = list(query_set)#force db hit
-            self.page_size = page_size
-            self.pages = []
-            self.count = 0
-            cpage = []
-            for q in self.query_set:
-                if self.count % page_size == 0:
-                    if len(cpage) > 0:
-                        self.pages.append(cpage)
-                        cpage = []
-                if q.ignored_score == 0:
-                    cpage.append(q) 
-                    self.count += 1
-            if cpage not in self.pages and len(cpage) > 0:
-                self.pages.append(cpage)
-            self.num_pages = len(self.pages)
-
-        def page(self,num):
-            if self.num_pages == 0:
-                return DummyPage([],num=1,has_next=False)
-            elif num >= self.num_pages:
-                page_content = self.pages[-1]
-                num = self.num_pages
-                has_next = False
-            else:
-                page_content = self.pages[num-1]
-                has_next = True
-            return DummyPage(page_content,num=num,has_next=has_next)
-
-    if request.user.is_authenticated() and request.user.hide_ignored_questions:
-        objects_list = HidingIgnoredPaginator(qs, pagesize)
-        questions = objects_list.page(page)
-    else: #otherwise just use the paginator
-        objects_list = Paginator(qs, pagesize)
-        questions = objects_list.page(page)
+    objects_list = Paginator(qs, pagesize)
+    questions = objects_list.page(page)
 
     # Get related tags from this page objects
     if questions.object_list.count() > 0:
