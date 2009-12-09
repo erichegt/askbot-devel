@@ -41,11 +41,11 @@ class Command(NoArgsCommand):
     #todo: still need to add back individually selected and other questions....
     #these may be filtered out by tags
     if user.tag_filter_setting == 'ignored':
-        ignored_tags = user.markedtag_set.filter(reason='bad').values_list('tag', flat=True).distinct()
+        ignored_tags = Tag.objects.filter(user_selections___reason='bad',user_selections__user=user)
         Q_set1 = Q_set1.exclude( tags__in=ignored_tags )
         logging.debug('removed ignored tags')
     else:
-        selected_tags = user.markedtag_set.filter(reason='good').values_list('tag', flat=True).distinct()
+        selected_tags = Tag.objects.filter(user_selections___reason='good',user_selections__user=user)
         Q_set1 = Q_set1.filter( tags__in=selected_tags )
         logging.debug('filtered for only selected tags')
         
