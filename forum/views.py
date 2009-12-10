@@ -876,7 +876,8 @@ def tags(request):
                                                 'previous': tags.previous_page_number(),
                                                 'next': tags.next_page_number(),
                                                 'base_url' : reverse('tags') + '?sort=%s&' % sortby
-                                            }})
+                                            }
+                                }, context_instance=RequestContext(request))
 
 def tag(request, tag):
     return questions(request, tagname=tag)
@@ -1886,12 +1887,14 @@ def user_reputation(request, user_id, user_view):
                                           params=[user.id]
                                           ).values('positive', 'negative', 'question_id', 'title', 'reputed_at', 'reputation')
         reputation.query.group_by = ['question_id']
+
     rep_list = []
     for rep in Repute.objects.filter(user=user).order_by('reputed_at'):
         dic = '[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation)
         rep_list.append(dic)
     reps = ','.join(rep_list)
     reps = '[%s]' % reps
+
     return render_to_response(user_view.template_file, {
                               "tab_name": user_view.id,
                               "tab_description": user_view.tab_description,
@@ -1957,19 +1960,21 @@ def user_email_subscriptions(request, user_id, user_view):
         email_feeds_form = EditUserEmailFeedsForm(request.POST)
         tag_filter_form = TagFilterSelectionForm(request.POST, instance=user)
         if email_feeds_form.is_valid() and tag_filter_form.is_valid():
-            tag_filter_form.save()
+
+            action_status = None
+            tag_filter_saved = tag_filter_form.save()
+            if tag_filter_saved:
+                action_status = _('changes saved')
             if 'save' in request.POST:
-                saved = email_feeds_form.save(user)
-                if saved:
+                feeds_saved = email_feeds_form.save(user)
+                if feeds_saved:
                     action_status = _('changes saved')
             elif 'stop_email' in request.POST:
-                saved = email_feeds_form.reset().save(user)
+                email_stopped = email_feeds_form.reset().save(user)
                 initial_values = EditUserEmailFeedsForm.NO_EMAIL_INITIAL
                 email_feeds_form = EditUserEmailFeedsForm(initial=initial_values)
-                if saved:
+                if email_stopped:
                     action_status = _('email updates canceled')
-            if not saved:
-                action_status = None
     else:
         email_feeds_form = EditUserEmailFeedsForm()
         email_feeds_form.set_initial_values(user)

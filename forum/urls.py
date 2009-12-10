@@ -3,16 +3,21 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 from forum import views as app
 from forum.feed import RssLastestQuestionsFeed
+from forum.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
 
 admin.autodiscover()
 feeds = {
     'rss': RssLastestQuestionsFeed
 }
+sitemaps = {
+    'questions': QuestionsSitemap
+}
 
 APP_PATH = os.path.dirname(os.path.dirname(__file__))
 urlpatterns = patterns('',
     url(r'^$', app.index, name='index'),
+    url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/content/images/favicon.ico'}),
     (r'^favicon\.gif$', 'django.views.generic.simple.redirect_to', {'url': '/content/images/favicon.gif'}),
     (r'^content/(?P<path>.*)$', 'django.views.static.serve',
