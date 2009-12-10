@@ -102,6 +102,14 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-added_at',)
         db_table = u'comment'
+
+    def save(self,**kwargs):
+        super(Comment,self).save(**kwargs)
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
     def __unicode__(self):
         return self.comment
 
@@ -198,6 +206,13 @@ class Question(models.Model):
         logging.debug('have sphinx search')
 
     objects = QuestionManager()
+
+    def delete(self):
+        super(Question, self).delete()
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
 
     def save(self, **kwargs):
         """
@@ -457,6 +472,13 @@ class Answer(models.Model):
 
     get_comments = get_object_comments
     get_last_update_info = post_get_last_update_info
+
+    def save(self,**kwargs):
+        super(Answer,self).save(**kwargs)
+        try: 
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
 
     def get_user_vote(self, user):
         votes = self.votes.filter(user=user)

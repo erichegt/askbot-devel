@@ -8,7 +8,8 @@ B. INSTALLATION
    4. Installation under Apache/WSGI
    5. Full text search
    6. Email subscriptions
-   7. Miscellaneous
+   7. Sitemap
+   8. Miscellaneous
 C. CONFIGURATION PARAMETERS (settings_local.py)
 D. CUSTOMIZATION
 
@@ -212,7 +213,17 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    subscription sender may be tested manually in shell 
    by calling cron/send_email_alerts
 
-7. Miscellaneous
+7. Sitemap
+Sitemap will be available at /<settings_local.FORUM_SCRIPT_ALIAS>sitemap.xml
+e.g yoursite.com/forum/sitemap.xml
+
+google will be pinged each time question, answer or 
+comment is saved or a question deleted
+
+for this to be useful - do register you sitemap with Google at 
+https://www.google.com/webmasters/tools/
+
+8. Miscellaneous
 
 There are some demo scripts under sql_scripts folder, 
 including badges and test accounts for CNProg.com. You 
