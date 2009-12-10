@@ -241,6 +241,14 @@ class TagFilterSelectionForm(forms.ModelForm):
         model = User
         fields = ('tag_filter_setting',)
 
+    def save(self):
+        before = self.instance.tag_filter_setting
+        super(TagFilterSelectionForm, self).save()
+        after = self.instance.tag_filter_setting #User.objects.get(pk=self.instance.id).tag_filter_setting
+        if before != after:
+            return True
+        return False
+
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))
     DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))

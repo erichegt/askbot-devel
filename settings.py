@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'forum',
     'django_authopenid',
     'djangosphinx',

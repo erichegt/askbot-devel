@@ -13,6 +13,7 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
+from django.contrib.sitemaps import ping_google
 import django.dispatch
 import settings
 import logging
@@ -208,6 +209,10 @@ class Question(models.Model):
         """
         initial_addition = (self.id is None)
         super(Question, self).save(**kwargs)
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
         if initial_addition:
             tags = Tag.objects.get_or_create_multiple(self.tagname_list(),
                                                       self.author)
