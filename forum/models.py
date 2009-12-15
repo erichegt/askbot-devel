@@ -3,6 +3,10 @@ import datetime
 import hashlib
 from urllib import quote_plus, urlencode
 from django.db import models, IntegrityError
+<<<<<<< HEAD:forum/models.py
+=======
+from django.utils.http import urlquote  as django_urlquote
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -12,8 +16,18 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
+<<<<<<< HEAD:forum/models.py
 import django.dispatch
 import settings
+=======
+from django.contrib.sitemaps import ping_google
+import django.dispatch
+import settings
+import logging
+
+if settings.USE_SPHINX_SEARCH == True:
+    from djangosphinx.models import SphinxSearch
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 
 from forum.managers import *
 from const import *
@@ -96,6 +110,17 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-added_at',)
         db_table = u'comment'
+<<<<<<< HEAD:forum/models.py
+=======
+
+    def save(self,**kwargs):
+        super(Comment,self).save(**kwargs)
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
     def __unicode__(self):
         return self.comment
 
@@ -184,8 +209,27 @@ class Question(models.Model):
     votes                = generic.GenericRelation(Vote)
     flagged_items        = generic.GenericRelation(FlaggedItem)
 
+<<<<<<< HEAD:forum/models.py
     objects = QuestionManager()
 
+=======
+    if settings.USE_SPHINX_SEARCH == True:
+        search = SphinxSearch(
+                           index=' '.join(settings.SPHINX_SEARCH_INDICES),
+                           mode='SPH_MATCH_ALL',
+                        )
+        logging.debug('have sphinx search')
+
+    objects = QuestionManager()
+
+    def delete(self):
+        super(Question, self).delete()
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
     def save(self, **kwargs):
         """
         Overridden to manually manage addition of tags when the object
@@ -196,6 +240,13 @@ class Question(models.Model):
         """
         initial_addition = (self.id is None)
         super(Question, self).save(**kwargs)
+<<<<<<< HEAD:forum/models.py
+=======
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
         if initial_addition:
             tags = Tag.objects.get_or_create_multiple(self.tagname_list(),
                                                       self.author)
@@ -210,7 +261,11 @@ class Question(models.Model):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
+<<<<<<< HEAD:forum/models.py
         return '%s%s' % (reverse('question', args=[self.id]), slugify(self.title))
+=======
+        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -332,6 +387,15 @@ class FavoriteQuestion(models.Model):
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
+<<<<<<< HEAD:forum/models.py
+=======
+class MarkedTag(models.Model):
+    TAG_MARK_REASONS = (('good',_('interesting')),('bad',_('ignored')))
+    tag = models.ForeignKey(Tag, related_name='user_selections')
+    user = models.ForeignKey(User, related_name='tag_selections')
+    reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)
+
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 class QuestionRevision(models.Model):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -435,6 +499,16 @@ class Answer(models.Model):
     get_comments = get_object_comments
     get_last_update_info = post_get_last_update_info
 
+<<<<<<< HEAD:forum/models.py
+=======
+    def save(self,**kwargs):
+        super(Answer,self).save(**kwargs)
+        try: 
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
     def get_user_vote(self, user):
         votes = self.votes.filter(user=user)
         if votes.count() > 0:
@@ -449,7 +523,11 @@ class Answer(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
+<<<<<<< HEAD:forum/models.py
         return '%s%s#%s' % (reverse('question', args=[self.question.id]), slugify(self.question.title), self.id)
+=======
+        return '%s%s#%s' % (reverse('question', args=[self.question.id]), django_urlquote(slugify(self.question.title)), self.id)
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 
     class Meta:
         db_table = u'answer'
@@ -590,7 +668,11 @@ class Book(models.Model):
     questions = models.ManyToManyField(Question, related_name='book', db_table='book_question')
     
     def get_absolute_url(self):
+<<<<<<< HEAD:forum/models.py
         return reverse('book', args=[self.short_name])
+=======
+        return reverse('book', args=[django_urlquote(slugify(self.short_name))])
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
         
     def __unicode__(self):
         return self.title
@@ -680,6 +762,17 @@ User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
+<<<<<<< HEAD:forum/models.py
+=======
+User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
+User.add_to_class('tag_filter_setting', 
+                    models.CharField(
+                                        max_length=16, 
+                                        choices=TAG_EMAIL_FILTER_CHOICES, 
+                                        default='ignored'
+                                     )
+                 )
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
 
 # custom signal
 tags_updated = django.dispatch.Signal(providing_args=["question"])

@@ -53,11 +53,19 @@ var Vote = function(){
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
     var pleaseLogin = "<a href='" + $.i18n._("/") + $.i18n._("account/") + $.i18n._("signin/")
                     + "?next=" + $.i18n._("/") + $.i18n._("questions/") + "{{QuestionID}}'>"
 					+ $.i18n._('please login') + "</a>";
 
     var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + $.i18n._("/") + $.i18n._("faq/") + "'>faq</a>";
+=======
+    var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
+                    + "?next=" + scriptUrl + $.i18n._("questions/") + "{{QuestionID}}'>"
+					+ $.i18n._('please login') + "</a>";
+
+    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
 
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') 
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
@@ -151,17 +159,30 @@ var Vote = function(){
     var setVoteImage = function(voteType, undo, object){
         var flag = undo ? "" : "-on";
         var arrow = (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote) ? "up" : "down";
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
         object.attr("src", $.i18n._("/") + "content/images/vote-arrow-"+ arrow + flag +".png");
+=======
+        object.attr("src", scriptUrl + "content/images/vote-arrow-"+ arrow + flag +".png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
         
         // if undo voting, then undo the pair of arrows.
         if(undo){
             if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
                 $(getQuestionVoteUpButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
                 $(getQuestionVoteDownButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
             }
             else{
                 $(getAnswerVoteUpButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
                 $(getAnswerVoteDownButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
+=======
+                $(getQuestionVoteUpButton()).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getQuestionVoteDownButton()).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
+            }
+            else{
+                $(getAnswerVoteUpButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getAnswerVoteDownButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             }
         }
     };
@@ -237,7 +258,11 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             url: $.i18n._("/") + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+=======
+            url: scriptUrl + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data){callback(object, voteType, data)}});
@@ -256,19 +281,31 @@ var Vote = function(){
             showMessage(object, acceptOwnAnswerMessage);
         }
         else if(data.status == "1"){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             object.attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-accepted.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
         else if(data.success == "1"){
             var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             $(acceptedButtons).attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+=======
+            $(acceptedButtons).attr("src", scriptUrl + "content/images/vote-accepted.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var answers = ("div[id^="+answerContainerIdPrefix +"]");
             $(answers).removeClass("accepted-answer");
             var commentLinks = ("div[id^="+answerContainerIdPrefix +"] div[id^="+ commentLinkIdPrefix +"]");
             $(commentLinks).removeClass("comment-link-accepted");
             
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             object.attr("src", $.i18n._("/") + "content/images/vote-accepted-on.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-accepted-on.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).addClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).addClass("comment-link-accepted");
         }
@@ -282,7 +319,11 @@ var Vote = function(){
             showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
         else if(data.status == "1"){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             object.attr("src", $.i18n._("/") + "content/images/vote-favorite-off.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-favorite-off.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count == 0)
@@ -290,7 +331,11 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             object.attr("src", $.i18n._("/") + "/content/images/vote-favorite-on.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-favorite-on.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var fav = getFavoriteNumber();
             fav.text(data.count);
             fav.addClass("my-favorite-number");
@@ -359,7 +404,11 @@ var Vote = function(){
         }
         else if (data.success == "1"){
             if (voteType == VoteType.removeQuestion){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
                 window.location.href = $.i18n._("/") + $.i18n._("questions/");
+=======
+                window.location.href = scriptUrl + $.i18n._("questions/");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             }
             else {
                 if (removeActionType == 'delete'){
@@ -500,7 +549,11 @@ function createComments(type) {
                 jDiv.append('<p id="' + divId + '" class="comment">'
 					+ $.i18n._('to comment, need') + ' ' +
 					+ repNeededForComments + ' ' + $.i18n._('community karma points') 
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
 					+ '<a href="' + $.i18n._('/') + $.i18n._('faq/') + '" class="comment-user">'
+=======
+					+ '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
                     + $.i18n._('please see') + 'faq</a></span></p>');
             }
         }
@@ -508,7 +561,11 @@ function createComments(type) {
 
     var getComments = function(id, jDiv) {
         //appendLoaderImg(id);
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
         $.getJSON($.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/")
+=======
+        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/")
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
                 , function(json) { showComments(id, json); });
     };
 
@@ -529,8 +586,13 @@ function createComments(type) {
     var renderDeleteCommentIcon = function(post_id, delete_url){
         if (canPostComments(post_id)){
             var html = '';
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             var img = $.i18n._("/") + "content/images/close-small.png";
             var imgHover = $.i18n._("/") + "content/images/close-small-hover.png";
+=======
+            var img = scriptUrl + "content/images/close-small.png";
+            var imgHover = scriptUrl + "content/images/close-small-hover.png";
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             html += '<img class="delete-icon" onclick="' + objectType + 'Comments.deleteComment($(this), ' + post_id + ', \'' + delete_url + '\')" src="' + img;
             html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img
             html += '\')" title="' + $.i18n._('delete this comment') + '" />';
@@ -569,7 +631,11 @@ function createComments(type) {
         //todo fix url translations!!!
         $.ajax({
             type: "POST",
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
             url: $.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+=======
+            url: scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             dataType: "json",
             data: { comment: textarea.val() },
             success: function(json) {
@@ -601,7 +667,11 @@ function createComments(type) {
                 $(this).children().each(
                     function(i){
                         var comment_id = $(this).attr('id').replace('comment-','');
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
                         var delete_url = $.i18n._('/') + objectType + 's/' + post_id + '/'
+=======
+                        var delete_url = scriptUrl + objectType + 's/' + post_id + '/'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
                                         + $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
                         var html = $(this).html();
                         var CommentsClass;
@@ -615,12 +685,20 @@ function createComments(type) {
                         delete_icon.click(function(){CommentsClass.deleteComment($(this),comment_id,delete_url);});
                         delete_icon.unbind('mouseover').bind('mouseover',
                             function(){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
                                 $(this).attr('src',$.i18n._('/') + 'content/images/close-small-hover.png');
+=======
+                                $(this).attr('src',scriptUrl + 'content/images/close-small-hover.png');
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
                             }
                         );
                         delete_icon.unbind('mouseout').bind('mouseout',
                             function(){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
                                 $(this).attr('src',$.i18n._('/') + 'content/images/close-small.png');
+=======
+                                $(this).attr('src',scriptUrl + 'content/images/close-small.png');
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
                             }
                         );
                     }

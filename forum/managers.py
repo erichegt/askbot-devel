@@ -7,6 +7,7 @@ from forum.models import *
 from urllib import quote, unquote
 
 class QuestionManager(models.Manager):
+<<<<<<< HEAD:forum/managers.py
     def get_translation_questions(self, orderby, page_size):
         questions = self.filter(deleted=False, author__id__in=[28,29]).order_by(orderby)[:page_size]
         return questions
@@ -26,6 +27,8 @@ class QuestionManager(models.Manager):
     def get_questions(self, orderby):
         questions = self.filter(deleted=False).order_by(orderby)
         return questions
+=======
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/managers.py
     
     def update_tags(self, question, tagnames, user):
         """
@@ -92,12 +95,20 @@ class QuestionManager(models.Manager):
         Questions with the individual tags will be added to list if above questions are not full.
         """
         #print datetime.datetime.now()
+<<<<<<< HEAD:forum/managers.py
         from forum.models import Question
         questions = list(Question.objects.filter(tagnames = question.tagnames, deleted=False).all())
 
         tags_list = question.tags.all()
         for tag in tags_list:
             extend_questions = Question.objects.filter(tags__id = tag.id, deleted=False)[:50]
+=======
+        questions = list(self.filter(tagnames = question.tagnames, deleted=False).all())
+
+        tags_list = question.tags.all()
+        for tag in tags_list:
+            extend_questions = self.filter(tags__id = tag.id, deleted=False)[:50]
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/managers.py
             for item in extend_questions:
                 if item not in questions and len(questions) < 10:
                     questions.append(item)

@@ -6,7 +6,13 @@
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<<<<<<< HEAD:templates/base_content.html
         <meta name="verify-v1" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />
+=======
+        {% if settings.GOOGLE_SITEMAP_CODE %}
+        <meta name="verify-v1" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />
+        {% endif %}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/base_content.html
         <link rel="shortcut icon" href="{% href "/content/images/favicon.ico" %}" />
         <link href="{% href "/content/style/style.css" %}" rel="stylesheet" type="text/css" />
 		 {% spaceless %}
@@ -15,7 +21,12 @@
         <script src="http://www.google.com/jsapi" type="text/javascript"></script>
         <script type="text/javascript">google.load("jquery", "1.2.6");</script>
 		<script type="text/javascript">
+<<<<<<< HEAD:templates/base_content.html
 			var i18nLang = '{{ settings.LANGUAGE_CODE }}';
+=======
+            var i18nLang = '{{ settings.LANGUAGE_CODE }}';
+            var scriptUrl = '/{{settings.FORUM_SCRIPT_ALIAS}}'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/base_content.html
 		</script>
         <script type='text/javascript' src='{% href "/content/js/com.cnprog.i18n.js" %}'></script>
 	    <script type='text/javascript' src='{% href "/content/js/jquery.i18n.js" %}'></script>

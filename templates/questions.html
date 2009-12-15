@@ -8,20 +8,45 @@
 {% block title %}{% spaceless %}{% trans "Questions" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
-        $().ready(function(){
-            var tab_id = "{{ tab_id }}";
-            $("#"+tab_id).attr('className',"on");
-            $("#nav_questions").attr('className',"on");
-            Hilite.exact = false;
-            Hilite.elementid = "listA";
-            Hilite.debug_referrer = location.href;
-        });
-         
-        </script>
+           var tags = {{ tags_autocomplete|safe }};
+           $().ready(function(){
+               var tab_id = "{{ tab_id }}";
+               $("#"+tab_id).attr('className',"on");
+               var on_tab = {% if is_unanswered %}'#nav_unanswered'{% else %}'#nav_questions'{% endif %};
+               $(on_tab).attr('className','on');
+               Hilite.exact = false;
+               Hilite.elementid = "listA";
+               Hilite.debug_referrer = location.href;
+           });
+       </script>
+       <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
+       <script type='text/javascript' src='{% href "/content/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 <div class="tabBar">
+<<<<<<< HEAD:templates/questions.html
     <div class="headQuestions">{% if searchtag %}{% trans "Found by tags" %}{% else %}{% if searchtitle %}{% trans "Found by title" %}{% else %}{% trans "All questions" %}{% endif %}{% endif %}</div>
+=======
+    <div class="headQuestions">
+        {% if searchtag %}
+            {% trans "Found by tags" %}
+        {% else %}
+            {% if searchtitle %}
+                {% if settings.USE_SPHINX_SEARCH %}
+                    {% trans "Search results" %}
+                {% else %}
+                    {% trans "Found by title" %}
+                {% endif %}
+            {% else %}
+                {% if is_unanswered %}
+                    {% trans "Unanswered questions" %}
+                {% else %}
+                    {% trans "All questions" %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
     <div class="tabsA">
         <a id="latest" href="?sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
         <a id="active" href="?sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
@@ -31,7 +56,19 @@
 </div>
 <div id="listA">
     {% for question in questions.object_list %}
-    <div class="qstA">
+    <div class="qstA"
+        {% if request.user.is_authenticated %}
+            {% if question.interesting_score > 0 %}
+                    style="background:#ffff99;"
+            {% else %}
+                {% if not request.user.hide_ignored_questions %}
+                    {% if question.ignored_score > 0 %}
+                    style="background:#f3f3f3;"
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    >
         <h2>
             <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>
         </h2>
@@ -105,24 +142,29 @@
         </div>
     </div>
     {% endfor %}
+    {% if searchtitle %}
+        {% if questions_count == 0 %}
+        <p class="evenMore" style="padding-top:30px;text-align:center;">
+            {% trans "Did not find anything?" %}
+        {% else %}
+        <p class="evenMore" style="padding-left:9px">
+            {% trans "Did not find what you were looking for?" %} 
+        {% endif %}
+        <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
+        </p>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block tail %}
-                            
-                        <div class="pager">
-                            {% cnprog_paginator context %}
-                            
-                        </div>
-                        <div class="pagesize">
-                            {% cnprog_pagesize context %}
-                        </div>
-                        
+    <div class="pager">{% cnprog_paginator context %}</div>
+    <div class="pagesize">{% cnprog_pagesize context %}</div>
 {% endblock %}
 
 {% block sidebar %}
 <div class="boxC">
 		{% if searchtag %}
+<<<<<<< HEAD:templates/questions.html
 			{% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
 			have total {{q_num}} questions tagged {{tagname}}
 			{% plural %}
@@ -144,6 +186,45 @@
 			{% endif %}
 		{% endif %}
         <p>
+=======
+            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
+            have total {{q_num}} questions tagged {{tagname}}
+            {% plural %}
+            have total {{q_num}} questions tagged {{tagname}}
+            {% endblocktrans %}
+		{% else %}
+			{% if searchtitle %}
+                {% if settings.USE_SPHINX_SEARCH %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} questions containing {{searchtitle}} in full text
+                    {% plural %}
+                    have total {{q_num}} questions containing {{searchtitle}} in full text
+                    {% endblocktrans %}
+                {% else %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} questions containing {{searchtitle}}
+                    {% plural %}
+                    have total {{q_num}} questions containing {{searchtitle}}
+                    {% endblocktrans %}
+                {% endif %}
+			{% else %}
+                {% if is_unanswered %}
+                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} unanswered questions
+                    {% plural %}
+                    have total {{q_num}} unanswered questions
+                    {% endblocktrans %}
+                {% else %}
+                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
+                    have total {{q_num}} questions
+                    {% plural %}
+                    have total {{q_num}} questions
+                    {% endblocktrans %}
+                {% endif %}
+			{% endif %}
+		{% endif %}
+        <p class="nomargin">
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
         {% ifequal tab_id "latest" %}
 			{% trans "latest questions info" %}
         {% endifequal %}
@@ -164,15 +245,25 @@
         {% endifequal %}
         </p>
 </div>
+{% if request.user.is_authenticated %} 
+{% include "tag_selector.html" %}
+{% endif %}
 <div class="boxC">
 	<h3 class="subtitle">{% trans "Related tags" %}</h3>
     <div class="tags">
         {% for tag in tags %}
+<<<<<<< HEAD:templates/questions.html
             <a rel="tag" title="{% trans "see questions tagged" %}'{{ tag.name }}'{% trans "using tags" %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
             <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
             <br />
         {% endfor %}
         <br />
+=======
+            <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
+            <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+            <br />
+        {% endfor %}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
     </div>
 </div>
 

@@ -1,5 +1,5 @@
 ==Aug 5, 2009 Evgeny==
-===Interface changes===
+====Interface changes===
 Merged in my code that:
 * allows anonymous posting of Q&A and then login
 * per-question email notifications via 'send_email_alerts' command

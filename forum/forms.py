@@ -4,7 +4,7 @@ from django import forms
 from models import *
 from const import *
 from django.utils.translation import ugettext as _
-from django_authopenid.forms import NextUrlField
+from django_authopenid.forms import NextUrlField, UserNameField
 import settings
 
 class TitleField(forms.CharField):
@@ -195,6 +195,7 @@ class EditAnswerForm(forms.Form):
 
 class EditUserForm(forms.Form):
     email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+    username = UserNameField(label=_('Screen name'))
     realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     city = forms.CharField(label=_('Location'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -203,6 +204,7 @@ class EditUserForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
+        self.fields['username'].initial = user.username
         self.fields['email'].initial = user.email
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website
@@ -230,6 +232,23 @@ class EditUserForm(forms.Form):
                     raise forms.ValidationError(_('this email has already been registered, please use another one'))
         return self.cleaned_data['email']
 
+class TagFilterSelectionForm(forms.ModelForm):
+    tag_filter_setting = forms.ChoiceField(choices=TAG_EMAIL_FILTER_CHOICES, #imported from forum/const.py
+                                            initial='ignored',
+                                            label=_('Choose email tag filter'),
+                                            widget=forms.RadioSelect)
+    class Meta:
+        model = User
+        fields = ('tag_filter_setting',)
+
+    def save(self):
+        before = self.instance.tag_filter_setting
+        super(TagFilterSelectionForm, self).save()
+        after = self.instance.tag_filter_setting #User.objects.get(pk=self.instance.id).tag_filter_setting
+        if before != after:
+            return True
+        return False
+
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))
     DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))
@@ -245,9 +264,6 @@ class EditUserEmailFeedsForm(forms.Form):
                 'answered_by_me':'n',
                 'individually_selected':'n',
                 }
-    all_questions = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Entire forum'),)
     asked_by_me = forms.ChoiceField(choices=DWN,initial='w',
                             widget=forms.RadioSelect,
                             label=_('Asked by me'))
@@ -257,6 +273,9 @@ class EditUserEmailFeedsForm(forms.Form):
     individually_selected = forms.ChoiceField(choices=DWN,initial='w',
                             widget=forms.RadioSelect,
                             label=_('Individually selected'))
+    all_questions = forms.ChoiceField(choices=DWN,initial='w',
+                            widget=forms.RadioSelect,
+                            label=_('Entire forum (tag filtered)'),)
 
     def set_initial_values(self,user=None):
         KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])

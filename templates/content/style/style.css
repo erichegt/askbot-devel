@@ -114,7 +114,10 @@ blockquote
 		margin-left:20px;text-decoration:underline; font-size:12px; color:#333333;}
 #logo {
 	padding: 5px 0px 0px 0px;
+<<<<<<< HEAD:templates/content/style/style.css
 	margin-bottom:-3px;
+=======
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 }
 #navBar {float:clear;position:relative;display:block;width:960px;}
 #navBar .nav {margin:20px 0px 0px 16px;
@@ -163,7 +166,11 @@ blockquote
     border-right:1px solid #b4b48e;
     border-bottom:1px solid #b4b48e;*/
     background: white;/* #f9f7ed;*/
+<<<<<<< HEAD:templates/content/style/style.css
     margin:10px 0 10px 0;
+=======
+    /*margin:10px 0 10px 0;*/
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
     /*background:url(../images/quest-bg.gif) repeat-x top;*/
 }
 #listA .qstA thumb {float:left; }
@@ -205,7 +212,18 @@ blockquote
     /*border-bottom:1px solid #888a85;*/
 }
 .evenMore {font-size:14px; font-weight:800;}
+<<<<<<< HEAD:templates/content/style/style.css
 .questions-count{font-size:32px;font-family:sans-serif;font-weight:600;padding:0 0 5px 7px;color:#a40000;}
+=======
+.questions-count{
+    font-size:32px;
+    font-family:sans-serif;
+    font-weight:600;
+    padding:0 0 5px 0px;
+    color:#a40000;
+    margin-top:3px;
+}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 
 /*内容块*/
 .boxA {background:#888a85; padding:6px; margin-bottom:8px;border 1px solid #babdb6;}
@@ -217,7 +235,11 @@ blockquote
 .boxB .body {border:1px solid #aaaaaa; padding:8px; background:#FFF; font-size:13px; line-height:160%;}
 .boxB .more {padding:1px; text-align:right; font-weight:800;}
 .boxC {
+<<<<<<< HEAD:templates/content/style/style.css
     background:#babdb6;/*f9f7ed;*/
+=======
+    background: #cacdc6;/*f9f7ed;*/
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
     padding:10px; 
     margin-bottom:8px;
     border-top:1px solid #eeeeec;
@@ -225,6 +247,15 @@ blockquote
     border-right:1px solid #a9aca5;
     border-bottom:1px solid #babdb6;
 }
+<<<<<<< HEAD:templates/content/style/style.css
+=======
+.boxC p {
+    margin-bottom:8px;
+}
+.boxC p.nomargin {
+    margin:0px;
+}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 .boxC p.info-box-follow-up-links {
     text-align:right;
     margin:0;
@@ -258,7 +289,11 @@ blockquote
 	border:1px solid #fff;
 	background-color:#fff;
 	color:#777;
+<<<<<<< HEAD:templates/content/style/style.css
 	padding:.3em;
+=======
+	padding:2px 4px 3px 4px;
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 	font:bold 100% sans-serif;
 }
 
@@ -309,12 +344,21 @@ blockquote
 /*标签*/
 .tag {font-size:13px; font-weight:normal; color:#333; text-decoration:none;background-color:#EEE; border-left:3px solid #777; border-top:1px solid #EEE; border-bottom:1px solid #CCC; border-right:1px solid #CCC; padding:1px 8px 1px 8px;}
 .tags {font-family:sans-serif; line-height:200%; display:block; margin-top:5px;}
+<<<<<<< HEAD:templates/content/style/style.css
 .tags a {font-size:13px; font-weight:normal; color:#333; text-decoration:none;background-color:#EEE; border-left:3px solid #777; border-top:1px solid #EEE; border-bottom:1px solid #CCC; border-right:1px solid #CCC; padding:1px 8px 1px 8px;}
+=======
+.tags a {white-space: nowrap; font-size:13px; font-weight:normal; color:#333; text-decoration:none;background-color:#EEE; border-left:3px solid #777; border-top:1px solid #EEE; border-bottom:1px solid #CCC; border-right:1px solid #CCC; padding:1px 8px 1px 8px;}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 .tags a:hover {background-color:#fFF;color:#333;}
 .tagsbox {line-height:200%;}
 .tagsbox a {font-size:13px; font-weight:normal; color:#333; text-decoration:none;background-color:#EEE; border-left:3px solid #777; border-top:1px solid #EEE; border-bottom:1px solid #CCC; border-right:1px solid #CCC; padding:1px 8px 1px 8px;}
 .tagsbox a:hover {background-color:#fFF;color:#333;}
 .tag-number {font-weight:700;font-family:sans-serif;}
+<<<<<<< HEAD:templates/content/style/style.css
+=======
+.marked-tags { margin-top: 0px;margin-bottom: 5px; }
+.deletable-tag { margin-right: 3px; white-space:nowrap; }
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 
 /*奖牌*/
 a.medal  { font-size:14px; line-height:250%; font-weight:800; color:#333; text-decoration:none; background:url(../images/medala.gif) no-repeat; border-left:1px solid #EEE; border-top:1px solid #EEE; border-bottom:1px solid #CCC; border-right:1px solid #CCC; padding:4px 12px 4px 6px;}
@@ -1144,6 +1188,12 @@ ul.bulleta li {background:url(../images/bullet_green.gif) no-repeat 0px 2px; pad
 .message p {
     margin-bottom:0px;
 }
+<<<<<<< HEAD:templates/content/style/style.css
+=======
+.message p.space-above {
+    margin-top:10px;
+}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css
 
 .warning{color:red;}
 .darkred{color:darkred;}
@@ -1420,3 +1470,15 @@ ul.form-horizontal-rows li input {
     text-align:center;
     font-weight:bold;
 }
+<<<<<<< HEAD:templates/content/style/style.css
+=======
+#tagSelector {
+    padding-bottom: 2px;
+}
+#hideIgnoredTagsControl {
+    margin: 5px 0 0 0;
+}
+#hideIgnoredTagsCb {
+    margin: 0 2px 0 1px;
+}
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/style/style.css

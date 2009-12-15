@@ -1,4 +1,8 @@
 from django import template
+<<<<<<< HEAD:forum/templatetags/extra_filters.py
+=======
+from django.core import serializers
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_filters.py
 from forum import auth
 import logging
 
@@ -91,3 +95,10 @@ def cnprog_intword(number):
             return number
     except:
         return number
+<<<<<<< HEAD:forum/templatetags/extra_filters.py
+=======
+
+@register.filter
+def json_serialize(object):
+    return serializers.serialize('json',object)
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_filters.py

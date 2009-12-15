@@ -2,19 +2,6 @@
 # Django settings for lanai project.
 import os.path
 import sys
-sys.path.insert(0,'/home/fadeev/incoming/Django-1.1.1')
-
-#DEBUG SETTINGS
-DEBUG = False 
-TEMPLATE_DEBUG = DEBUG
-INTERNAL_IPS = ('127.0.0.1','128.200.203.33')
-
-#EMAIL AND ADMINS
-ADMINS = (
-    ('Evgeny Fadeev', 'evgeny.fadeev@gmail.com'),
-)
-MANAGERS = ADMINS
-
 SITE_ID = 1
 
 ADMIN_MEDIA_PREFIX = '/forum/admin/media/'
@@ -71,8 +58,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'forum',
     'django_authopenid',
+    'djangosphinx',
     #'debug_toolbar' ,
     'user_messages',
 )

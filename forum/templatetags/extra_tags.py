@@ -251,7 +251,11 @@ def diff_date(date, limen=2):
         return _('2 days ago')
     elif days == 1:
         return _('yesterday')
+<<<<<<< HEAD:forum/templatetags/extra_tags.py
     elif minutes > 60:
+=======
+    elif minutes >= 60:
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_tags.py
         return ungettext('%(hr)d hour ago','%(hr)d hours ago',hours) % {'hr':hours}
     else:
         return ungettext('%(min)d min ago','%(min)d mins ago',minutes) % {'min':minutes}
@@ -332,8 +336,13 @@ class BlockResourceNode(template.Node):
         for item in self.items:
             bit = item.render(context)
             out += bit
+<<<<<<< HEAD:forum/templatetags/extra_tags.py
         out = out.replace(' ','')
         return os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+=======
+        out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+        return out.replace(' ','')
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_tags.py
 
 @register.tag(name='blockresource')
 def blockresource(parser,token):

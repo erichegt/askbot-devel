@@ -57,7 +57,10 @@ var i18nZh = {
 };
 
 var i18nEn = {
+<<<<<<< HEAD:templates/content/js/com.cnprog.i18n.js
     '/':'/',
+=======
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.i18n.js
 	'need >15 points to report spam':'need >15 points to report spam ',
     '>15 points requried to upvote':'>15 points required to upvote ',
 	'tags cannot be empty':'please enter at least one tag',

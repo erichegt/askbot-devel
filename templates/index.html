@@ -10,13 +10,15 @@
         <meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
-        $().ready(function(){
-            var tab_id = "{{ tab_id }}";
-            $("#"+tab_id).attr('className',"on");
-            $("#nav_questions").attr('className',"on");
-        });
-
-        </script>
+           var tags = {{ tags_autocomplete|safe }};
+           $().ready(function(){
+               var tab_id = "{{ tab_id }}";
+               $("#"+tab_id).attr('className',"on");
+               $("#nav_questions").attr('className',"on");
+           });
+       </script>
+       <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
+       <script type='text/javascript' src='{% href "/content/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 <div class="tabBar">
@@ -118,6 +120,8 @@
 	  <div class="more"><a href="{% url faq %}">{% trans "faq" %} »</a></div>
 	</div>
 </div>
+{% else %}
+{% include "tag_selector.html" %}
 {% endif %}
 <div class="boxC">
 	<h3>{% trans "Recent tags" %}</h3>

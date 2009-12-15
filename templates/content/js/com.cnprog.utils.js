@@ -23,7 +23,11 @@ var notify = function() {
         },       
         close: function(doPostback) {
             if (doPostback) {
+<<<<<<< HEAD:templates/content/js/com.cnprog.utils.js
                $.post($.i18n._("/") + $.i18n._("messages/") + 
+=======
+               $.post(scriptUrl + $.i18n._("messages/") + 
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.utils.js
                 $.i18n._("markread/"), { formdata: "required" });
             }
             $(".notify").fadeOut("fast");
@@ -36,7 +40,11 @@ var notify = function() {
 
 function appendLoader(containerSelector) {
     $(containerSelector).append('<img class="ajax-loader" '
+<<<<<<< HEAD:templates/content/js/com.cnprog.utils.js
 		+'src="' + $.i18n._('/') + 'content/images/indicator.gif" title="'
+=======
+		+'src="' + scriptUrl + 'content/images/indicator.gif" title="'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.utils.js
 		+$.i18n._('loading...')
 		+'" alt="'
 		+$.i18n._('loading...')

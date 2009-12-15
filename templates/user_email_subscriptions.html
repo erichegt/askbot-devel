@@ -13,6 +13,12 @@
     {% endif %}
     <form method="POST"> 
         {% include "edit_user_email_feeds_form.html" %}
+<<<<<<< HEAD:templates/user_email_subscriptions.html
+=======
+        <table class='form-as-table'>
+        {{tag_filter_selection_form}}
+        </table>
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/user_email_subscriptions.html
         <div class="submit-row text-align-right">
             <input type="submit" class="submit" name="save" value="{% trans "Update" %}"/>
             <input type="submit" class="submit" name="stop_email" value="{% trans "Stop sending email" %}"/>
