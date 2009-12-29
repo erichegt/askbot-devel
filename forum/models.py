@@ -482,7 +482,7 @@ class Answer(models.Model):
 
     def get_user_vote(self, user):
         votes = self.votes.filter(user=user)
-        if votes.count() > 0:
+        if votes and votes.count() > 0:
             return votes[0]
         else:
             return None
