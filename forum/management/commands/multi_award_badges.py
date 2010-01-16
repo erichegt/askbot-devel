@@ -82,27 +82,28 @@ TYPE_ACTIVITY_USER_FULL_UPDATED = 17
 class Command(BaseCommand):
     def handle_noargs(self, **options):
         try:
-            self.delete_question_be_voted_up_3()
-            self.delete_answer_be_voted_up_3()
-            self.delete_question_be_vote_down_3()
-            self.delete_answer_be_voted_down_3()
-            self.answer_be_voted_up_10()
-            self.question_be_voted_up_10()
-            self.question_view_1000()
-            self.answer_self_question_be_voted_up_3()
-            self.answer_be_voted_up_100()
-            self.question_be_voted_up_100()
-            self.question_be_favorited_100()
-            self.question_view_10000()
-            self.answer_be_voted_up_25()
-            self.question_be_voted_up_25()
-            self.question_be_favorited_25()
-            self.question_view_2500()
-            self.answer_be_accepted_and_voted_up_40()
-            self.question_be_answered_after_60_days_and_be_voted_up_5()
-            self.created_tag_be_used_in_question_50()
-        except Exception, e:
-            print e
+            try:
+                self.delete_question_be_voted_up_3()
+                self.delete_answer_be_voted_up_3()
+                self.delete_question_be_vote_down_3()
+                self.delete_answer_be_voted_down_3()
+                self.answer_be_voted_up_10()
+                self.question_be_voted_up_10()
+                self.question_view_1000()
+                self.answer_self_question_be_voted_up_3()
+                self.answer_be_voted_up_100()
+                self.question_be_voted_up_100()
+                self.question_be_favorited_100()
+                self.question_view_10000()
+                self.answer_be_voted_up_25()
+                self.question_be_voted_up_25()
+                self.question_be_favorited_25()
+                self.question_view_2500()
+                self.answer_be_accepted_and_voted_up_40()
+                self.question_be_answered_after_60_days_and_be_voted_up_5()
+                self.created_tag_be_used_in_question_50()
+            except Exception, e:
+                print e
         finally:
             connection.close()
     
@@ -317,7 +318,7 @@ class Command(BaseCommand):
                 object_id = row[2]
                 
                 user = get_object_or_404(User, id=user_id)
-                award = Award(user=user, badge=badge, content_type=content_type, object_id=objet_id)
+                award = Award(user=user, badge=badge, content_type=content_type, object_id=object_id)
                 award.save()
                 
                 if update_auditted:
