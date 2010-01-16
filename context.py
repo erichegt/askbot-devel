@@ -2,6 +2,7 @@ from django.conf import settings
 def application_settings(context):
     my_settings = {
         'APP_TITLE' : settings.APP_TITLE,
+        'APP_SHORT_NAME' : settings.APP_SHORT_NAME,
         'APP_URL'   : settings.APP_URL,
         'APP_KEYWORDS' : settings.APP_KEYWORDS,
         'APP_DESCRIPTION' : settings.APP_DESCRIPTION,
