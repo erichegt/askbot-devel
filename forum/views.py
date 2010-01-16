@@ -2091,7 +2091,7 @@ def badge(request, id):
         tables=['award', 'auth_user'],
         where=['badge_id=%s AND user_id=auth_user.id'],
         params=[id]
-    ).values('id').distinct()
+    ).distinct('id')
 
     return render_to_response('badge.html', {
         'awards' : awards,
