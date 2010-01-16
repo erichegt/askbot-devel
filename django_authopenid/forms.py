@@ -88,6 +88,9 @@ class UserNameField(forms.CharField):
         username = super(UserNameField,self).clean(username.strip())
         if self.skip_clean == True:
             return username
+        if hasattr(self, 'user_instance'):
+            if username == self.user_instance.username:
+                return username
         if not username_re.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:

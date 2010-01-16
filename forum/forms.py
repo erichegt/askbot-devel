@@ -205,6 +205,7 @@ class EditUserForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
         self.fields['username'].initial = user.username
+        self.fields['username'].user_instance = user
         self.fields['email'].initial = user.email
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website
