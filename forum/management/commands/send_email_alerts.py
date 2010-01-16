@@ -14,9 +14,10 @@ from utils.odict import OrderedDict
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):
         try:
-            self.send_email_alerts()
-        except Exception, e:
-            print e
+            try:
+                self.send_email_alerts()
+            except Exception, e:
+                print e
         finally:
             connection.close()
 

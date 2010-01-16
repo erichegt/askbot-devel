@@ -11,9 +11,10 @@ import settings
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):
         try:
-            self.subscribe_everyone()
-        except Exception, e:
-            print e
+            try:
+                self.subscribe_everyone()
+            except Exception, e:
+                print e
         finally:
             connection.close()
 
