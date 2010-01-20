@@ -1,4 +1,5 @@
 ﻿import datetime
+import time
 import logging
 from django.contrib.auth.models import User, UserManager
 from django.db import connection, models, transaction
@@ -169,7 +170,7 @@ class AnswerManager(models.Manager):
 class VoteManager(models.Manager):
     COUNT_UP_VOTE_BY_USER = "SELECT count(*) FROM vote WHERE user_id = %s AND vote = 1"
     COUNT_DOWN_VOTE_BY_USER = "SELECT count(*) FROM vote WHERE user_id = %s AND vote = -1"
-    COUNT_VOTES_PER_DAY_BY_USER = "SELECT COUNT(*) FROM vote WHERE user_id = %s AND DATE(voted_at) = DATE(NOW())"
+    COUNT_VOTES_PER_DAY_BY_USER = "SELECT COUNT(*) FROM vote WHERE user_id = %s AND DATE(voted_at) = %s"
     def get_up_vote_count_from_user(self, user):
         if user is not None:
             cursor = connection.cursor()
@@ -191,7 +192,7 @@ class VoteManager(models.Manager):
     def get_votes_count_today_from_user(self, user):
         if user is not None:
             cursor = connection.cursor()
-            cursor.execute(self.COUNT_VOTES_PER_DAY_BY_USER, [user.id])
+            cursor.execute(self.COUNT_VOTES_PER_DAY_BY_USER, [user.id,  time.strftime("%Y-%m-%d",  datetime.datetime.now().timetuple())])
             row = cursor.fetchone()
             return row[0]
 
