@@ -203,6 +203,10 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    adjust other settings that have SPHINX_* prefix accordingly 
    remember that there must be trailing comma in parentheses for
    SHPINX_SEARCH_INDICES tuple - particlarly with just one item!
+   
+   in settings.py look for INSTALLED_APPS
+   and uncomment #'djangosphinx',
+   
 
 6. Email subscriptions
    

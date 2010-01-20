@@ -62,7 +62,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'forum',
     'django_authopenid',
-    'djangosphinx',
+    #'djangosphinx',
     'debug_toolbar' ,
     'user_messages',
 )
