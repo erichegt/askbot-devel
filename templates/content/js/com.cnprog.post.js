@@ -27,6 +27,8 @@ var lanai =
 var Vote = function(){
     // All actions are related to a question
     var questionId;
+    //question slug to build redirect urls
+    var questionSlug;
     // The object we operate on actually. It can be a question or an answer.
     var postId;
     var questionAuthorId;
@@ -54,7 +56,7 @@ var Vote = function(){
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
     var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
-                    + "?next=" + scriptUrl + $.i18n._("questions/") + "{{QuestionID}}'>"
+                    + "?next=" + scriptUrl + $.i18n._("question/") + "{{QuestionID}}/{{questionSlug}}'>"
 					+ $.i18n._('please login') + "</a>";
 
     var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
@@ -377,8 +379,9 @@ var Vote = function(){
     };
         
     return {
-        init : function(qId, questionAuthor, userId){
+        init : function(qId, qSlug, questionAuthor, userId){
             questionId = qId;
+            questionSlug = qSlug;
             questionAuthorId = questionAuthor;
             currentUserId = userId;
             bindEvents();
@@ -400,7 +403,7 @@ var Vote = function(){
             
         vote: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId));
+                showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId).replace("{{questionSlug}}", questionSlug));
                 return false;   
             }
             if (voteType == VoteType.answerUpVote){
