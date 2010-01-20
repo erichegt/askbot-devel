@@ -1235,7 +1235,7 @@ def edit_user(request, id):
             from django_authopenid.views import set_new_email
             set_new_email(user, new_email)
 
-            user.username = sanitize_html(form.cleaned_data['username'])
+            #user.username = sanitize_html(form.cleaned_data['username'])
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
