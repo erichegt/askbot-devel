@@ -1,5 +1,6 @@
 import time
 import os
+import posixpath
 import datetime
 import math
 import re
@@ -277,7 +278,7 @@ def get_latest_changed_timestamp():
 @register.simple_tag
 def href(url):
     url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
-    return os.path.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+    return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
 
 class ItemSeparatorNode(template.Node):
     def __init__(self,separator):
