@@ -2357,6 +2357,9 @@ def search(request):
                     if tag not in related_tags:
                         related_tags.append(tag)
 
+            #if is_search is true in the context, prepend this string to soting tabs urls
+            search_uri = "?q=%s&page=%d&t=question" % ("+".join(keywords.split()),  page)
+
             return render_to_response(template_file, {
                 "questions" : questions,
                 "tab_id" : view_id,
@@ -2366,6 +2369,8 @@ def search(request):
                 "searchtitle" : keywords,
                 "keywords" : keywords,
                 "is_unanswered" : False,
+                "is_search": True, 
+                "search_uri":  search_uri, 
                 "context" : {
                     'is_paginated' : True,
                     'pages': objects_list.num_pages,

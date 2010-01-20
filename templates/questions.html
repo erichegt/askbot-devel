@@ -44,10 +44,10 @@
         {% endif %}
     </div>
     <div class="tabsA">
-        <a id="latest" href="?sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
-        <a id="active" href="?sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
-        <a id="hottest" href="?sort=hottest" class="off" title="{% trans "hottest questions" %}">{% trans "hottest" %}</a>
-        <a id="mostvoted" href="?sort=mostvoted" class="off" title="{% trans "most voted questions" %}">{% trans "most voted" %}</a>    
+        <a id="latest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
+        <a id="active" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
+        <a id="hottest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=hottest" class="off" title="{% trans "hottest questions" %}">{% trans "hottest" %}</a>
+        <a id="mostvoted" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=mostvoted" class="off" title="{% trans "most voted questions" %}">{% trans "most voted" %}</a>    
     </div>
 </div>
 <div id="listA">
