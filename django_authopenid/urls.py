@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import patterns, url
 from django.utils.translation import ugettext as _
+from django.views.generic.simple import direct_to_template
 
 urlpatterns = patterns('django_authopenid.views',
     # yadis rdf
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
     url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
+    url(r'^xd_receiver$',  direct_to_template,  {'template': 'xd_receiver.html'},  name='xd_receiver'), 
     url(r'^%s%s$' % (_('signin/'),_('newquestion/')), 'signin', kwargs = {'newquestion':True}, name='user_signin_new_question'),
     url(r'^%s%s$' % (_('signin/'),_('newanswer/')), 'signin', kwargs = {'newanswer':True}, name='user_signin_new_answer'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
