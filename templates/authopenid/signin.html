@@ -63,7 +63,10 @@
 					<img src="{% href "/content/jquery-openid/images/aol.gif" %}" alt="icon" /><span>http://openid.aol.com/<strong>username</strong></span>
 				</div>
 			  </li>
-              </ul>
+              <li title="Facebook Connect">
+                    <fb:login-button onlogin="window.location.reload(true)"></fb:login-button>
+              </li>
+              </ul>            
 			  <ul class="providers"> 
 			  <!--<li class="openid" title="OpenID">
 				  <div class="logo_box openid_box">
@@ -167,6 +170,8 @@
         <a href="http://openid.net/get/" target="_blank">{% trans "Get OpenID" %} »</a>
     </p>
 </div>
+<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script>
+<script type="text/javascript">  FB.init("{{ fb_api_key }}","{% url  xd_receiver %}");</script> 
 {% endblock%}
 
 		<script type="text/javascript">  $( function() { $("form.openid:eq(0)").openid(); })</script>
