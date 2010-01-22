@@ -72,7 +72,7 @@ parameters:
         <form name="fregister" action="{% url user_register %}" method="POST">
         {% else %}
             {% ifequal login_type 'facebook' %}
-            <form name="fregister" action="{% url fb_user_register %}" method="POST">
+            <form name="fregister" action="" method="POST">
             {% else %}
             <form name="fregister" action="{% url user_signin %}" method="POST">
             {% endifequal %}
