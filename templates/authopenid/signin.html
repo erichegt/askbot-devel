@@ -64,7 +64,7 @@
 				</div>
 			  </li>
               <li title="Facebook Connect">
-                    <fb:login-button onlogin="window.location.reload(true)"></fb:login-button>
+                    <fb:login-button onlogin="window.location = '{% url fb_signin %}'"></fb:login-button>
               </li>
               </ul>            
 			  <ul class="providers"> 

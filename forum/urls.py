@@ -86,6 +86,7 @@ urlpatterns = patterns('',
     url(r'^%s(?P<short_name>[^/]+)/$' % _('books/'), app.book, name='book'),
     url(r'^%s$' % _('search/'), app.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.feedback, name='feedback'),
+    (r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
     (r'^%s' % _('account/'), include('django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 )

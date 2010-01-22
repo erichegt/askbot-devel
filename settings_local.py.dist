@@ -89,3 +89,4 @@ SPHINX_PORT=3312
 
 #Facebook settings
 FB_API_KEY='' #your api key from facebook
+FB_SECRET='' #your application secret
