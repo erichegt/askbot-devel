@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login,  logout
 from models import FBAssociation
 from forum.forms import EditUserEmailFeedsForm
 from django.conf import settings
@@ -14,17 +14,30 @@ import forms
 
 import logging        
 
-def signin(request):
-    user_state = fb.get_user_state(request)
+def signin(request,  newquestion = False,  newanswer = False):
+    state,  context = fb.get_user_state(request)
     
-    if user_state == fb.STATES['FIRSTTIMER']:
-        return HttpResponseRedirect(reverse('fb_user_register'))
+    if state == fb.STATES['FIRSTTIMER']:
+        if newquestion:
+            register_url = 'fb_user_register_new_question'
+        elif newanswer:
+            register_url = 'fb_user_register_new_answer'
+        else:
+            register_url = 'fb_user_register'
+        return HttpResponseRedirect(reverse(register_url))
+    elif state == fb.STATES['RETURNINGUSER']:
+        return login_and_forward(request,  context,  newquestion,  newanswer)
+    elif state == fb.STATES['SESSIONEXPIRED']:
+        response = logout(request,  next_page=reverse('index'))
+        fb.delete_cookies(response)
+        return response
+        
+    return HttpResponseRedirect(reverse('index'))
     
-    return HttpResponseRedirect('/')
+def register(request,  newquestion = False,  newanswer = False):
+    state,  context = fb.get_user_state(request)
     
-def register(request):
-    if fb.get_user_state(request) == fb.STATES['FIRSTTIMER']:
-        user_data = fb.get_user_data(request.COOKIES)
+    if state == fb.STATES['FIRSTTIMER']:
         
         if 'bnewaccount' in request.POST.keys():
             form1 = forms.FBConnectRegisterForm(request.POST)
@@ -37,18 +50,16 @@ def register(request):
 
                 user_.set_unusable_password()
                 
-                uassoc = FBAssociation(user=user_,  fbuid=user_data['uid'])
+                uassoc = FBAssociation(user=user_,  fbuid=context['uid'])
                 uassoc.save()
                 
-                user_.backend = "django.contrib.auth.backends.ModelBackend"
-                login(request, user_)
                 email_feeds_form.save(user_)
                 
-                return HttpResponseRedirect('/')
+                return login_and_forward(request,  user_,  newquestion,  newanswer)
         else:            
             form1 = forms.FBConnectRegisterForm(initial={
                 'next': '/',
-                'username': user_data['name'],
+                'username': context['name'],
                 'email': '',
             }) 
             
@@ -61,3 +72,26 @@ def register(request):
             'login_type':'facebook',
             'gravatar_faq_url':reverse('faq') + '#gravatar',
         }, context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect(reverse('index'))
+        
+def login_and_forward(request,  user,  newquestion = False,  newanswer = False):
+    old_session = request.session.session_key
+    user.backend = "django.contrib.auth.backends.ModelBackend"
+    login(request,  user)
+    
+    from forum.models import user_logged_in
+    user_logged_in.send(user=user,session_key=old_session,sender=None)
+    
+    if (newquestion):
+        from forum.models import Question
+        question = Question.objects.filter(author=user).order_by('-added_at')[0]
+        return HttpResponseRedirect(question.get_absolute_url())
+        
+    if (newanswer):
+        from forum.models import Answer
+        answer = Answer.objects.filter(author=user).order_by('-added_at')[0]
+        return HttpResponseRedirect(answer.get_absolute_url())
+        
+    return HttpResponseRedirect('/')
+    

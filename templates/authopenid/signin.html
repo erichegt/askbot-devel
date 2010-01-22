@@ -64,7 +64,15 @@
 				</div>
 			  </li>
               <li title="Facebook Connect">
-                    <fb:login-button onlogin="window.location = '{% url fb_signin %}'"></fb:login-button>
+                    {% if question %}
+                        <fb:login-button onlogin="window.location = '{% url fb_signin_new_question %}'"></fb:login-button>
+                    {% else %}
+                        {% if answer %}
+                            <fb:login-button onlogin="window.location = '{% url fb_signin_new_answer %}'"></fb:login-button>
+                        {% else %}
+                            <fb:login-button onlogin="window.location = '{% url fb_signin %}'"></fb:login-button>
+                        {% endif %}
+                    {% endif %}                    
               </li>
               </ul>            
 			  <ul class="providers"> 

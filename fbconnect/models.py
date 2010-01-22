@@ -3,4 +3,4 @@ from django.contrib.auth.models import User
 
 class FBAssociation(models.Model):
     user = models.ForeignKey(User)
-    fbuid = models.TextField(max_length=12)
+    fbuid = models.CharField(max_length=12,  unique=True)
