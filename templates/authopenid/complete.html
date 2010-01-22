@@ -34,6 +34,8 @@ parameters:
                     {% else %}
                         {% blocktrans %}register new external {{provider}} account info, see {{gravatar_faq_url}}{% endblocktrans %}
                     {% endif %}
+                {% else %}
+                    {% blocktrans %}register new Facebook connect account info, see {{gravatar_faq_url}}{% endblocktrans %}
                 {% endifequal %}
             {% endifequal %}
         </div>
@@ -69,7 +71,11 @@ parameters:
         {% ifequal login_type 'openid' %}
         <form name="fregister" action="{% url user_register %}" method="POST">
         {% else %}
-        <form name="fregister" action="{% url user_signin %}" method="POST">
+            {% ifequal login_type 'facebook' %}
+            <form name="fregister" action="{% url fb_user_register %}" method="POST">
+            {% else %}
+            <form name="fregister" action="{% url user_signin %}" method="POST">
+            {% endifequal %}
         {% endifequal %}
             {{ form1.next }}
             <div class="form-row-vertical">

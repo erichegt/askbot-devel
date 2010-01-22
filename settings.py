@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     #'djangosphinx',
     'debug_toolbar' ,
     'user_messages',
+    'fbconnect', 
 )
 
 # User settings
