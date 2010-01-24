@@ -9,7 +9,7 @@ except:
     from pjson import fread as load_json
 
 from models import FBAssociation
-import md5
+import hashlib 
 import logging
 
 REST_SERVER = 'http://api.facebook.com/restserver.php'
@@ -21,7 +21,7 @@ def generate_sig(values):
         keys.append(key)
         
     signature = ''.join(['%s=%s' % (key,  values[key]) for key in keys]) + settings.FB_SECRET
-    return md5.new(signature).hexdigest()
+    return hashlib.md5(signature).hexdigest()
 
 def check_cookies_signature(cookies):
     API_KEY = settings.FB_API_KEY

@@ -67,3 +67,9 @@ form.openid ul.errorlist li {
     float: none;
     color:blue;
 }
+#openid_small_providers li {
+    margin-top:4px;
+}
+#openid_small_providers li.facebook {
+    margin-top:0px;
+}
