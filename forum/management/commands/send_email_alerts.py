@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 import datetime
-import settings
+from django.conf import settings
 import logging
 from utils.odict import OrderedDict
 
@@ -58,10 +58,10 @@ class Command(NoArgsCommand):
                     q_ans.cutoff_time = cutoff_time
                 elif feed.feed_type == 'q_all':
                     if user.tag_filter_setting == 'ignored':
-                        ignored_tags = Tag.objects.filter(user_selections___reason='bad',user_selections__user=user)
+                        ignored_tags = Tag.objects.filter(user_selections__reason='bad',user_selections__user=user)
                         q_all = Q_set.exclude( tags__in=ignored_tags )
                     else:
-                        selected_tags = Tag.objects.filter(user_selections___reason='good',user_selections__user=user)
+                        selected_tags = Tag.objects.filter(user_selections__reason='good',user_selections__user=user)
                         q_all = Q_set.filter( tags__in=selected_tags )
                     q_all.cutoff_time = cutoff_time
         #build list in this order
@@ -154,6 +154,7 @@ class Command(NoArgsCommand):
             if num_q > 0:
                 url_prefix = settings.APP_URL
                 subject = _('email update message subject')
+                print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for a question', 
                             '%(name)s, this is an update message header for %(num)d questions',num_q) \
                                 % {'num':num_q, 'name':user.username}

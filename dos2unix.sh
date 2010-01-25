@@ -1,3 +1,5 @@
+#please take care not to dos2unix anything in your .git directory
+#because that will probably break your repo
 dos2unix `find . -name '*.py'`
 dos2unix `find . -name '*.po'`
 dos2unix `find . -name '*.js'`

@@ -47,6 +47,15 @@ http://github.com/dcramer/django-sphinx/tree/master/djangosphinx
 8. sphinx search engine (optional, works together with djangosphinx)
 http://sphinxsearch.com/downloads.html
 
+9. recaptcha_django
+http://code.google.com/p/recaptcha-django/
+
+10. python recaptcha module
+http://code.google.com/p/recaptcha/
+Notice that you will need to register with recaptcha.net and receive
+recaptcha public and private keys that need to be saved in your
+settings_local.py file
+
 NOTES: django_authopenid is included into CNPROG code 
 and is significantly modified.  http://code.google.com/p/django-authopenid/
 no need to install this library

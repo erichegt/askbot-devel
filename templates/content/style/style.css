@@ -686,7 +686,12 @@ table.form-as-table th {
 /*.form-row li label {
     display: inline
 }*/
-.submit-row{line-height:30px;padding-top:10px;}
+.submit-row{
+    line-height:30px;
+    padding-top:10px;
+    display: block;
+    clear: both;
+}
 .errors{line-height:20px;color:red;}
 .error{
     color:darkred;
@@ -1158,7 +1163,7 @@ ul.bulleta li {background:url(../images/bullet_green.gif) no-repeat 0px 2px; pad
 .message p {
     margin-bottom:0px;
 }
-.message p.space-above {
+p.space-above {
     margin-top:10px;
 }
 
@@ -1445,4 +1450,17 @@ ul.form-horizontal-rows li input {
 }
 #hideIgnoredTagsCb {
     margin: 0 2px 0 1px;
+}
+#recaptcha_widget_div {
+    width:318px;
+    float:left;
+    clear:both;
+}
+p.signup_p {
+    margin: 20px 0px 0px 0px;
+}
+.simple-subscribe-options ul {
+    list-style:none;
+    list-style-position:outside;
+    margin:0;
 }

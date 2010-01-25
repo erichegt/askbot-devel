@@ -1,0 +1,106 @@
+This is a rough example of integrated mediawiki authentication
+originally written to work on a customized MW (some tables are different from standard)
+so to adapt this to your case you'll most likely need to tweak this 
+
+Also keep in mind that probably a better solution would be to create a single signon site.
+
+Author: evgeny.fadeev@gmail.com (Evgeny)
+
+==Minimal directions==
+
+1) Add the following to your settings_local.py (with relevant modifications):
+
+USE_EXTERNAL_LEGACY_LOGIN = True            #enable external legacy login
+EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND = 'mediawiki.auth.IncludeVirtualAuthenticationBackend'
+EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE = 'mediawiki.middleware.IncludeVirtualAuthenticationMiddleware'
+EXTERNAL_LEGACY_LOGIN_MODULE = 'mediawiki'   #current module
+EXTERNAL_LEGACY_LOGIN_HOST = 'yoursite.org'  #wiki domain
+EXTERNAL_LEGACY_LOGIN_PORT = 80              #port, probably 80
+EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = 'My Wiki' #html allowed
+MEDIAWIKI_URL="http://yoursite.org/wiki/index.php"
+MEDIAWIKI_SALT_PASSWORD=True #or False - depending on your LocalSettings.php
+MEDIAWIKI_INDEX_PHP_URL='/wiki/index.php'
+MEDIAWIKI_COOKIE_DOMAIN='.yoursite.org'  #for cross subdomain login
+MEDIAWIKI_SESSION_COOKIE_NAME = '' # probably '<dbname>_<dbtblprefix>_session'
+MEDIAWIKI_PHP_SESSION_PREFIX='sess_'  #depends on your setup
+MEDIAWIKI_PHP_SESSION_PATH='/var/lib/php/session'
+SESSION_COOKIE_DOMAIN = '.yoursite.org' #use this notation for cross-subdomain login
+
+2) Configure apache to access forum "backend" via the wiki domain.
+Example configuration is in the end of the doc.
+
+3) Install two wiki extensions WsgiInjectableSpecialPage, UserRegister -
+the usual MW way. You might want to disable traditional wiki registration.
+
+4) grep files for 'yourwiki' and change that to your own taste - there are some
+hardcoded urls
+
+5) Templates are in templates/mediawiki - you probably will want to customize them,
+form js media: templates/content/js/mediawiki-login.js
+form css media: templates/content/style/mediawiki-login.css
+
+==Requirements==
+wiki and forum must live in the same mysql database for registration to work,
+however login will work even if this is not the case
+
+you must own both wiki and forum or there must be good trust relationship 
+between the owners - because password is shared
+
+==Notes on how external login currently works.==
+password and login are entered in the login form.
+these are checked against mw api
+
+password is saved in the auth_user table (the django way)
+so if you at some point set USE_EXTERNAL_LEGACY_LOGIN = False
+wiki passwords and logins will still work on the forum
+
+login action is partially synchronized btw wiki and forum (from forum to wiki,
+but not the opposite way yet)
+
+when users first register - either on wiki or forum they are logged in on both
+
+on registration they receive a greeting email - you will want to customize messages
+
+technically, on the wiki registration form is injected via apache SSI
+- using include virtual call
+
+there is a possibility for cross-site scripting attack if wiki session is stolen
+
+==Apache setup example for the wiki==
+This assumes that wiki and forum facing the user are on different subdomains.
+Also this setup is just an example - you may do better :).
+Forum setup in apache is described in main osqa INSTALL document - that's extra.
+
+<VirtualHost your.ip:port>
+     ServerAdmin admin@yourwiki.org
+     DocumentRoot /path/to/wiki/root #dir containing wiki directory
+     ServerName yourwiki.org
+     AddOutputFilter INCLUDES .php
+     Alias /backend/content/ /path/to/forum/templates/content/
+     AliasMatch (content\/style\/[^/]*\.css) /path/to/forum/templates/$1
+     AliasMatch (content\/.*) /path/to/forum/templates/$1
+     <Directory /path/to/forum/templates/content>
+          Order deny,allow
+          Allow from all
+     </Directory>
+     WSGIDaemonProcess my-forum-wiki-side  #use daemon mode so to avoid potential timezone messups
+     WSGIProcessGroup my-forum-wiki-side
+     WSGIScriptAlias /backend /path/to/forum/cnprog.wsgi
+     CustomLog /var/log/httpd/yourwiki/access_log common
+     ErrorLog /var/log/httpd/yourwiki/error_log
+     LogLevel debug
+     DirectoryIndex index.php index.html
+</VirtualHost>
+<Directory /path/to/wiki/root>
+        Options Includes
+        <IfModule sapi_apache2.c>
+                php_admin_flag engine on
+                php_admin_flag safe_mode off
+        </IfModule>
+        <IfModule mod_php5.c>
+                php_admin_flag engine on
+                php_admin_flag safe_mode off
+                php_admin_value open_basedir "/path/to/wiki/root:.:/tmp" #tmp used for sessions
+        </IfModule>
+</Directory>
+

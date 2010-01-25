@@ -2,6 +2,13 @@
 import os.path
 from django.utils.translation import ugettext as _
 
+def check_local_setting(name, value):
+    local_vars = locals()
+    if name in local_vars and local_var[name] == value:
+        return True
+    else:
+        return False
+
 SITE_SRC_ROOT = os.path.dirname(__file__) 
 LOG_FILENAME = 'django.osqa.log'
 
@@ -87,6 +94,11 @@ SPHINX_SEARCH_INDICES=('osqa',) #a tuple of index names remember about a comma a
 SPHINX_SERVER='localhost'
 SPHINX_PORT=3312
 
+#please get these at recaptcha.net
+RECAPTCHA_PRIVATE_KEY='...'
+RECAPTCHA_PUBLIC_KEY='...'
+
 #Facebook settings
+USE_FB_CONNECT=True
 FB_API_KEY='' #your api key from facebook
 FB_SECRET='' #your application secret
