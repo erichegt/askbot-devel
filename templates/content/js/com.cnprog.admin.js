@@ -1,4 +1,4 @@
-$().ready( function(){
+$(document).ready( function(){
     var options = {
                    success: function(a,b){$('.admin #action_status').html($.i18n._('changes saved'));},
                    dataType:'json',

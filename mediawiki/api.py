@@ -1,6 +1,6 @@
 #this file contains stub functions that can be extended to support
 #connect legacy login with external site
-import settings
+from django.conf import settings
 from django_authopenid.models import ExternalLoginData
 import httplib
 import urllib
@@ -9,6 +9,7 @@ import cookielib
 from django import forms
 import xml.dom.minidom as xml
 import logging
+from models import User as MWUser
 
 def login(request,user):
     """performs the additional external login operation
@@ -35,11 +36,18 @@ def set_login_cookies(response,user):
         c[prefix + 'Token'] = token
         c[prefix + '_session'] = sessionid
 
+        logging.debug('have cookies ' + str(c))
+
         #custom code that copies cookies from external site
         #not sure how to set paths and domain of cookies here
+        domain = settings.MEDIAWIKI_COOKIE_DOMAIN
         for key in c:
             if c[key]:
-                response.set_cookie(str(key),value=str(c[key]))
+                response.set_cookie(str(key),\
+                                    value=str(c[key]),\
+                                    domain=domain)
+        for c in response.cookies.values():
+            logging.debug(c.output())
     except ExternalLoginData.DoesNotExist:
         #this must be an OpenID login
         pass
@@ -62,6 +70,8 @@ def check_password(username,password):
     port = settings.EXTERNAL_LEGACY_LOGIN_PORT
     ext_site = httplib.HTTPConnection(host,port)
 
+    print 'connected to %s:%s' % (str(host),str(port))
+
     #custom code. this one does authentication through
     #MediaWiki API
     params = urllib.urlencode({'action':'login','format':'xml',
@@ -75,6 +85,8 @@ def check_password(username,password):
         raise forms.ValidationError('error ' + response.status + ' ' + response.reason)
     data = response.read().strip()
     ext_site.close()
+
+    print data
 
     dom = xml.parseString(data)
     login = dom.getElementsByTagName('login')[0]
@@ -100,4 +112,27 @@ def createuser(username,email,password):
 
 #retrieve email address
 def get_email(username,password):
-    return ''
+    try:
+        u = MWUser.objects.get(user_name=username)
+        return u.user_email
+    except MWUser.DoesNotExist:
+        return ''
+
+#try to get full name from mediawiki
+def get_screen_name(username,password):
+    try:
+        u = MWUser.objects.get(user_name=username)
+        full_name = u' '.join((u.user_first_name, u.user_last_name)).strip()
+        if full_name != u'':
+            return full_name
+        else:
+            return username
+    except MWUser.DoesNotExist:
+        return username 
+
+def connect_local_user_to_external_user(user, login, password):
+    try:
+        u = MWUser.objects.get(user_name=login)
+        user.mediawiki_user = u
+    except MWUser.DoesNotExist:
+        pass

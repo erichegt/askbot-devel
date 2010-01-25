@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
-from django_authopenid.util import get_next_url
+from utils.forms import get_next_url
 from django.utils.translation import ugettext as _
 from user_messages import create_message, get_and_delete_messages
-import settings
+from django.conf import settings
 import logging
 
 class AnonymousMessageManager(object):

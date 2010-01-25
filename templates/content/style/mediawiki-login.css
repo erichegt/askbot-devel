@@ -1,0 +1,63 @@
+#mediawiki-login legend {
+    font-weight:bold;
+    font-size:14px;
+}
+
+#mediawiki-login fieldset {
+    border:none;
+}
+
+#mediawiki-login ul {
+    list-style: none;
+    list-style-position: outside;
+    padding: 0px;
+    margin: 10px 0 0 0;
+}
+
+#mediawiki-login p {
+    margin:0;
+}
+
+#mediawiki-login div.login-information label {
+    width: 180px;
+    display: inline-block;
+}
+
+#mediawiki-login legend {
+    padding: 0px;
+}
+
+#mediawiki-login h2 {
+    margin:10px 0 0 0;
+    padding:3px 0 3px 0;
+    border:none;
+    font-family:sans-serif;
+    font-size:16.8px;
+    font-weight:bold;
+}
+
+#mediawiki-login tr {
+    vertical-align: top;
+}
+
+#id_screen_name {
+    margin-left:25px;
+}
+
+#mediawiki-login input {
+    height: 20px;
+}
+
+#mediawiki-login input.submit {
+    margin-top:5px;
+    margin-left:5px;
+    display:block;
+    clear:both;
+    font-weight: bold;
+    font-size:14.4px;
+    height:33px;
+    /*padding: 4px 6px 4px 6px;*/
+    text-align: center;
+    border: 1px solid #777777;
+    background: #D4D0C8;
+}

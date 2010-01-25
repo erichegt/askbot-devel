@@ -1,0 +1,9 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+{% block forejs %}
+    {{form.media}}
+{% endblock %}
+{% block title %}{% spaceless %}{% trans "MediaWiki User Registration" %}{% endspaceless %}{% endblock %}
+{% block content %}
+{% include "mediawiki/mediawiki_signup_content.html" %}
+{% endblock %}

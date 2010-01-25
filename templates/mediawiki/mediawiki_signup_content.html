@@ -1,0 +1,110 @@
+{% load smart_if %}
+{% load i18n %}
+{% if request.is_include_virtual == False %}
+<div class="headNormal">
+    {% trans "MediaWiki User Registration" %}
+</div>
+{% endif %}
+<div id="mediawiki-login">
+{% if request.is_include_virtual %}
+<form name="fregister" action="/wiki/index.php" accept-charset="UTF-8" method="post">
+        <input type="hidden" name="command" value="/backend/account/yourwiki/signup/"/>
+        <input type="hidden" name="title" value="Special:UserRegister"/>
+{% else %}
+<form name="fregister" action="." accept-charset="UTF-8" method="post">
+{% endif %}
+    {% with form as f %}
+        {{ f.next }}
+        <h2>{% trans "Basic information" %}</h2>
+        <div class="login-information">
+        <p>
+            <label for="id_login_name">{{f.login_name.label}}</label>
+            {{f.login_name}}
+        </p>
+        {% if f.login_name.errors %}
+        <p class="error">{{ f.login_name.errors|join:", " }}</p>
+        {% endif %}
+        <p>
+            <label for="id_password1">{{f.password1.label}}</label>
+            {{f.password1}}
+            {% if f.password1.errors %}
+                <span class="error">{{ f.password1.errors|join:", " }}</span>
+            {% endif %}
+        </p>
+        <p>
+            <label for="id_password2">{{f.password2.label}}</label>
+            {{f.password2}}
+            {% if f.password2.errors %}
+                <span class="error">{{ f.password2.errors|join:", " }}</span>
+            {% endif %}
+        </p>
+        <p>
+            <label for="id_email">{{f.email.label}}</label>
+            {{f.email}}
+            {% if f.email.errors %}
+                <span class="error">{{ f.email.errors|join:", " }}</span>
+            {% endif %}
+        </p>
+        </div>
+        <h2>{% trans "Your Name" %}</h2>
+        <p>{% trans "<strong>1) Real name</strong> - required for the Wiki, but not shown on the forum by default" %}</p>
+        <table>
+            <tr>
+                <td><label for="id_first_name">{{f.first_name.label}}</label></td>
+                <td><label for="id_screen_name">{{f.last_name.label}}</label></td>
+                <td><label for="id_user_title">{{f.user_title.label}}</label></td>
+            </tr>
+            <tr>
+                <td>
+                    {{f.first_name}}
+                    {% if f.first_name.errors %}
+                        <p class="error">{{ f.first_name.errors|join:", " }}</p>
+                    {% endif %}
+                </td>
+                <td>
+                    {{f.last_name}}
+                    {% if f.last_name.errors %}
+                        <p class="error">{{ f.last_name.errors|join:", " }}</p>
+                    {% endif %}
+                </td>
+                <td>
+                    {{f.user_title}}
+                    {% if f.user_title.errors %}
+                        <p class="error">{{ f.user_title.errors|join:", " }}</p>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <p>{% trans "<strong>2) Forum screen name</strong>" %}</p>
+        <p>{% trans "Just skip this to use your full name at the forum, otherwise please check below" %}</p>
+        <p>
+                {{f.use_separate_screen_name}}
+                <label for="id_use_separate_screen_name">
+                    {{f.use_separate_screen_name.label}}
+                </label>
+        </p>
+        <p class="optional-screen-name">
+                {{f.screen_name}}
+        </p> 
+        {% if f.screen_name.errors %}
+        <p class="error screen-name-error">{{ f.screen_name.errors|join:", " }}</p>
+        {% endif %}
+        <p class="optional-screen-name">{% trans "Please remember that forum screen name is not your login name.<br/>Screen name allows you stay anonymous at the forum - you can change it at any time too. Login name cannot be changed." %}</p>
+        <h2>{% trans "Update subscription" %}</h2>
+        <p>{% trans "receive updates motivational blurb" %}</p> 
+        {{f.subscribe}}
+        {% if f.subscribe.errors %}
+            <p class="error">{{ f.subscribe.errors|join:", " }}</p>
+        {% endif %}
+    <h2>{% trans "Almost there..." %}</h2>
+    <p>{% trans "recaptcha explained" %}</p>
+    <p>{{f.recaptcha.errors|join:", "}}
+    <div style="clear:both; display:block;">{{f.recaptcha}}</div>
+    {% endwith %}
+    <input type="submit" value="{% trans "Create account" %}" class="submit"/>
+    {% comment %}<!-- this stuff was used for the wizard that fails with recaptcha so commented out-->
+    <input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+    {{ previous_fields|safe }}
+    {% endcomment %}
+    </form>
+</div>

@@ -14,19 +14,22 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-MIDDLEWARE_CLASSES = (
-    'django.middleware.gzip.GZipMiddleware',
+MIDDLEWARE_CLASSES = [
+    #'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.locale.LocaleMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     #'django.middleware.sqlprint.SqlPrintingMiddleware',
     'middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'middleware.pagesize.QuestionsPageSizeMiddleware',
     'middleware.cancel.CancelActionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-)
+    'recaptcha_django.middleware.ReCaptchaMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
@@ -52,7 +55,10 @@ ALLOW_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
 # unit byte
 ALLOW_MAX_FILE_SIZE = 1024 * 1024
 
-INSTALLED_APPS = (
+# User settings
+from settings_local import *
+
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -62,11 +68,27 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'forum',
     'django_authopenid',
-    #'djangosphinx',
     'debug_toolbar' ,
     'user_messages',
-    'fbconnect', 
-)
+]
 
-# User settings
-from settings_local import *
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
+
+if check_local_setting('USE_SPHINX_SEARCH',True):
+    INSTALLED_APPS.append('djangosphinx')
+
+if check_local_setting('USE_FB_CONNECT',True):
+    INSTALLED_APPS.append('fbconnect')
+
+#load optional plugin module for external password login
+if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
+    INSTALLED_APPS.append(EXTERNAL_LEGACY_LOGIN_MODULE)
+
+    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND' in locals():
+        AUTHENTICATION_BACKENDS.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND)
+    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE' in locals():
+        MIDDLEWARE_CLASSES.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE)
+    def LOAD_EXTERNAL_LOGIN_APP():
+        return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
+else:
+    LOAD_EXTERNAL_LOGIN_APP = lambda: None

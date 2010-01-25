@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 import datetime
-import settings
+from django.conf import settings
 
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):

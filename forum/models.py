@@ -15,7 +15,7 @@ from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.contrib.sitemaps import ping_google
 import django.dispatch
-import settings
+from django.conf import settings
 import logging
 
 if settings.USE_SPHINX_SEARCH == True:
@@ -831,7 +831,7 @@ def notify_award_message(instance, created, **kwargs):
     """
     if created:
         user = instance.user
-        user.message_set.create(message=u"%s" % instance.badge.name)
+        user.message_set.create(message=u"Congratulations, you have received a badge '%s'" % instance.badge.name)
 
 def record_answer_accepted(instance, created, **kwargs):
     """

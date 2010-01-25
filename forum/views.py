@@ -33,7 +33,7 @@ from forum.auth import *
 from forum.const import *
 from forum.user import *
 from forum import auth
-from django_authopenid.util import get_next_url
+from utils.forms import get_next_url
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -436,6 +436,21 @@ def question(request, id):
     logging.debug('view_id=' + str(view_id))
 
     question = get_object_or_404(Question, id=id)
+    try:
+        pattern = r'/%s%s%d/([\w-]+)' % (settings.FORUM_SCRIPT_ALIAS,_('question/'), question.id)
+        path_re = re.compile(pattern)
+        logging.debug(pattern)
+        logging.debug(request.path)
+        m = path_re.match(request.path)
+        if m:
+            slug = m.group(1)
+            logging.debug('have slug %s' % slug)
+            assert(slug == slugify(question.title))
+        else:
+            logging.debug('no match!')
+    except:
+        return HttpResponseRedirect(question.get_absolute_url())
+
     if question.deleted and not can_view_deleted_post(request.user, question):
         raise Http404
     answer_form = AnswerForm(question,request.user)

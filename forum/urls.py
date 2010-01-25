@@ -54,7 +54,7 @@ urlpatterns = patterns('',
                                                 app.delete_comment, kwargs={'commented_object_type':'answer'}, \
                                                 name='delete_answer_comment'), \
     #place general question item in the end of other operations
-    url(r'^%s(?P<id>\d+)//*' % _('question/'), app.question, name='question'),
+    url(r'^%s(?P<id>\d+)/' % _('question/'), app.question, name='question'),
     url(r'^%s$' % _('tags/'), app.tags, name='tags'),
     url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.tag, name='tag_questions'),
 

@@ -61,7 +61,7 @@ var Vote = function(){
 
     var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
 
-    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') 
+    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions');
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
     var upVoteRequiredScoreMessage = $.i18n._('>15 points requried to upvote') + pleaseSeeFAQ;
     var downVoteRequiredScoreMessage = $.i18n._('>100 points required to downvote') + pleaseSeeFAQ;
@@ -242,7 +242,8 @@ var Vote = function(){
             url: scriptUrl + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
             data: { "type": voteType, "postId": postId },
             error: handleFail,
-            success: function(data){callback(object, voteType, data)}});
+            success: function(data){callback(object, voteType, data);}
+            });
     };
     
     var handleFail = function(xhr, msg){
@@ -287,8 +288,9 @@ var Vote = function(){
             object.attr("src", scriptUrl + "content/images/vote-favorite-off.png");
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
-            if(data.count == 0)
+            if(data.count === 0){
                 data.count = '';
+            }
             fav.text(data.count);
         }
         else if(data.success == "1"){
@@ -456,9 +458,12 @@ var Vote = function(){
                 submit($(object), voteType, callback_remove);
             }
         }
-    }
+    };
 } ();
 
+var questionComments = createComments('question');
+var answerComments = createComments('answer');
+var commentsFactory = {'question' : questionComments, 'answer' : answerComments};
 
 // site comments
 function createComments(type) {
@@ -482,12 +487,12 @@ function createComments(type) {
         $(jDiv).css('background','none');
         $(jDiv).css('padding-left',0);
         if (canPostComments(id)) {
-            if (jDiv.find("#" + formId).length == 0) {
+            if (jDiv.find("#" + formId).length === 0) {
                 var form = '<form id="' + formId + '" class="post-comments"><div>';
                 form += '<textarea name="comment" cols="60" rows="5" maxlength="300" onblur="'+ objectType +'Comments.updateTextCounter(this)" ';
                 form += 'onfocus="' + objectType + 'Comments.updateTextCounter(this)" onkeyup="'+ objectType +'Comments.updateTextCounter(this)"></textarea>';
-                form += '<input type="submit" value="'
-						+ $.i18n._('add comment') + '" /><br><span class="text-counter"></span>';
+                form += '<input type="submit" value="' +
+						$.i18n._('add comment') + '" /><br><span class="text-counter"></span>';
                 form += '<span class="form-error"></span></div></form>';
 
                 jDiv.append(form);
@@ -499,20 +504,20 @@ function createComments(type) {
         }
         else {
             var divId = "comments-rep-needed-" + objectType + '-' + id;
-            if (jDiv.find("#" + divId).length == 0) {
-                jDiv.append('<p id="' + divId + '" class="comment">'
-					+ $.i18n._('to comment, need') + ' ' +
-					+ repNeededForComments + ' ' + $.i18n._('community karma points') 
-					+ '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">'
-                    + $.i18n._('please see') + 'faq</a></span></p>');
+            if (jDiv.find("#" + divId).length === 0) {
+                jDiv.append('<p id="' + divId + '" class="comment">' + 
+                    $.i18n._('to comment, need') + ' ' +
+					repNeededForComments + ' ' + $.i18n._('community karma points') + 
+                    '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
+                    $.i18n._('please see') + 'faq</a></span></p>');
             }
         }
     };
 
     var getComments = function(id, jDiv) {
         //appendLoaderImg(id);
-        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/")
-                , function(json) { showComments(id, json); });
+        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+                function(json) { showComments(id, json); });
     };
 
     var showComments = function(id, json) {
@@ -523,8 +528,9 @@ function createComments(type) {
         jDiv.children().remove();
         removeLoader();
         if (json && json.length > 0) {
-            for (var i = 0; i < json.length; i++)
+            for (var i = 0; i < json.length; i++){
                 renderComment(jDiv, json[i]);
+            }
             jDiv.children().show();
         }
     };
@@ -535,14 +541,14 @@ function createComments(type) {
             var img = scriptUrl + "content/images/close-small.png";
             var imgHover = scriptUrl + "content/images/close-small-hover.png";
             html += '<img class="delete-icon" onclick="' + objectType + 'Comments.deleteComment($(this), ' + post_id + ', \'' + delete_url + '\')" src="' + img;
-            html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img
+            html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img;
             html += '\')" title="' + $.i18n._('delete this comment') + '" />';
             return html;
         }
         else{
             return '';
         }
-    }
+    };
 
     // {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     var renderComment = function(jDiv, json) {
@@ -604,8 +610,8 @@ function createComments(type) {
                 $(this).children().each(
                     function(i){
                         var comment_id = $(this).attr('id').replace('comment-','');
-                        var delete_url = scriptUrl + objectType + 's/' + post_id + '/'
-                                        + $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
+                        var delete_url = scriptUrl + objectType + 's/' + post_id + '/' +
+                                        $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
                         var html = $(this).html();
                         var CommentsClass;
                         if (objectType == 'question'){
@@ -638,14 +644,14 @@ function createComments(type) {
             jDiv.show();
 
             var link = $('#comments-link-' + objectType + '-' + id);
-            if (canPostComments(id)) link.parent().find("textarea").get(0).focus();
+            if (canPostComments(id)) { link.parent().find("textarea").get(0).focus(); }
             link.remove();
         },
 
         hide: function(id) {
             var jDiv = jDivInit(id);
             var len = jDiv.children("div.comments").children().length;
-            var anchorText = len == 0 ? $.i18n._('add a comment') : $.i18n._('comments') + ' (<b>' + len + "</b>)";
+            var anchorText = len === 0 ? $.i18n._('add a comment') : $.i18n._('comments') + ' (<b>' + len + "</b>)";
 
             jDiv.hide();
             jDiv.siblings("a").unbind("click").click(function() { commentsFactory[objectType].show(id); }).html(anchorText);
@@ -666,22 +672,17 @@ function createComments(type) {
             var length = textarea.value ? textarea.value.length : 0;
             var color = length > 270 ? "#f00" : length > 200 ? "#f60" : "#999";
             var jSpan = $(textarea).siblings("span.text-counter");
-            jSpan.html($.i18n._('can write')
-					+ (300 - length) + ' ' 
-					+ $.i18n._('characters')).css("color", color);
+            jSpan.html($.i18n._('can write') +
+					(300 - length) + ' ' +
+					$.i18n._('characters')).css("color", color);
         }
     };
 }
 
-var questionComments = createComments('question');
-var answerComments = createComments('answer');
-
-$().ready(function() {
+$(document).ready(function() {
     questionComments.init();
     answerComments.init();
 });
-
-var commentsFactory = {'question' : questionComments, 'answer' : answerComments};
 
 /*
 Prettify

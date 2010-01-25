@@ -32,7 +32,7 @@
 
 from django.http import HttpResponseRedirect, get_host, Http404, \
                          HttpResponseServerError
-from django.shortcuts import render_to_response as render
+from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -61,23 +61,23 @@ import re
 import urllib
 
 
-from forum.forms import EditUserEmailFeedsForm
-from django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response, get_next_url 
+from forum.forms import SimpleEmailSubscribeForm 
+from django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response
 from django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
 from django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRegisterForm, \
         OpenidVerifyForm, ClassicRegisterForm, ChangePasswordForm, ChangeEmailForm, \
         ChangeopenidForm, DeleteForm, EmailPasswordForm
-import external_login
 import logging
+from utils.forms import get_next_url
+
+EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
 def login(request,user):
     from django.contrib.auth import login as _login
     from forum.models import user_logged_in #custom signal
 
-    print 'in login call'
-
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-        external_login.login(request,user)
+        EXTERNAL_LOGIN_APP.api.login(request,user)
 
     #1) get old session key
     session_key = request.session.session_key
@@ -90,7 +90,7 @@ def logout(request):
     from django.contrib.auth import logout as _logout#for login I've added wrapper below - called login
     _logout(request)
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-        external_login.logout(request)
+        EXTERNAL_LOGIN_APP.api.logout(request)
 
 def get_url_host(request):
     if request.is_secure():
@@ -158,7 +158,7 @@ def default_on_success(request, identity_url, openid_response):
 
 def default_on_failure(request, message):
     """ default failure action on signin """
-    return render('openid_failure.html', {
+    return render_to_response('openid_failure.html', {
         'message': message
     })
 
@@ -184,7 +184,7 @@ def signin(request,newquestion=False,newanswer=False):
     """
     request.encoding = 'UTF-8'
     on_failure = signin_failure
-    email_feeds_form = EditUserEmailFeedsForm()
+    email_feeds_form = SimpleEmailSubscribeForm()
     next = get_next_url(request)
     form_signin = OpenidSigninForm(initial={'next':next})
     form_auth = ClassicLoginForm(initial={'next':next})
@@ -206,35 +206,31 @@ def signin(request,newquestion=False,newanswer=False):
                         request.session['external_username'] = username
                         request.session['external_password'] = password
 
-                        #2) see if username clashes with some existing user
+                        #2) try to extract user email and nickname from external service
+                        email = EXTERNAL_LOGIN_APP.api.get_email(username,password)
+                        screen_name = EXTERNAL_LOGIN_APP.api.get_screen_name(username,password)
+
+                        #3) see if username clashes with some existing user
                         #if so, we have to prompt the user to pick a different name
-                        username_taken = User.is_username_taken(username)
-                        #try:
-                        #    User.objects.get(username=username)
-                        #    username_taken = True
-                        #except User.DoesNotExist:
-                        #    username_taken = False
+                        username_taken = User.is_username_taken(screen_name)
 
-                        #3) try to extract user email from external service
-                        email = external_login.get_email(username,password)
-
-                        email_feeds_form = EditUserEmailFeedsForm()
-                        form_data = {'username':username,'email':email,'next':next}
+                        email_feeds_form = SimpleEmailSubscribeForm()
+                        form_data = {'username':screen_name,'email':email,'next':next}
                         form = OpenidRegisterForm(initial=form_data)
-                        template_data = {'form1':form,'username':username,\
+                        template_data = {'form1':form,'username':screen_name,\
                                         'email_feeds_form':email_feeds_form,\
                                         'provider':mark_safe(settings.EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME),\
                                         'login_type':'legacy',\
                                         'gravatar_faq_url':reverse('faq') + '#gravatar',\
                                         'external_login_name_is_taken':username_taken}
-                        return render('authopenid/complete.html',template_data,\
+                        return render_to_response('authopenid/complete.html',template_data,\
                                 context_instance=RequestContext(request))
                     else:
                         #user existed, external password is ok
                         user = form_auth.get_user()
                         login(request,user)
                         response = HttpResponseRedirect(get_next_url(request))
-                        external_login.set_login_cookies(response,user)
+                        EXTERNAL_LOGIN_APP.api.set_login_cookies(response,user)
                         return response
                 else:
                     #regular password authentication
@@ -246,7 +242,7 @@ def signin(request,newquestion=False,newanswer=False):
             #register externally logged in password user with a new local account
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
                 form = OpenidRegisterForm(request.POST) 
-                email_feeds_form = EditUserEmailFeedsForm(request.POST)
+                email_feeds_form = SimpleEmailSubscribeForm(request.POST)
                 form1_is_valid = form.is_valid()
                 form2_is_valid = email_feeds_form.is_valid()
                 if form1_is_valid and form2_is_valid:
@@ -254,10 +250,10 @@ def signin(request,newquestion=False,newanswer=False):
                     username = form.cleaned_data['username']
                     password = request.session.get('external_password',None)
                     email = form.cleaned_data['email']
-                    print 'got email addr %s' % email
                     if password and username:
                         User.objects.create_user(username,email,password)
                         user = authenticate(username=username,password=password)
+                        EXTERNAL_LOGIN_APP.api.connect_local_user_to_external_user(user,username,password)
                         external_username = request.session['external_username']
                         eld = ExternalLoginData.objects.get(external_username=external_username)
                         eld.user = user
@@ -266,7 +262,9 @@ def signin(request,newquestion=False,newanswer=False):
                         email_feeds_form.save(user)
                         del request.session['external_username']
                         del request.session['external_password']
-                        return HttpResponseRedirect(reverse('index'))
+                        response = HttpResponseRedirect(reverse('index'))
+                        EXTERNAL_LOGIN_APP.api.set_login_cookies(response, user)
+                        return response
                     else:
                         if password:
                             del request.session['external_username']
@@ -281,7 +279,7 @@ def signin(request,newquestion=False,newanswer=False):
                         'email_feeds_form':email_feeds_form,'provider':provider,\
                         'gravatar_faq_url':reverse('faq') + '#gravatar',\
                         'external_login_name_is_taken':username_taken}
-                    return render('authopenid/complete.html',data,
+                    return render_to_response('authopenid/complete.html',data,
                             context_instance=RequestContext(request))
             else:
                 raise Http404
@@ -319,7 +317,7 @@ def signin(request,newquestion=False,newanswer=False):
         if len(alist) > 0:
             answer = alist[0]
 
-    return render('authopenid/signin.html', {
+    return render_to_response('authopenid/signin.html', {
         'question':question,
         'answer':answer,
         'form1': form_auth,
@@ -400,14 +398,14 @@ def register(request):
         'next': next,
         'username': nickname,
     })
-    email_feeds_form = EditUserEmailFeedsForm()
+    email_feeds_form = SimpleEmailSubscribeForm()
 
     user_ = None
     is_redirect = False
     if request.POST:
         if 'bnewaccount' in request.POST.keys():
             form1 = OpenidRegisterForm(request.POST)
-            email_feeds_form = EditUserEmailFeedsForm(request.POST)
+            email_feeds_form = SimpleEmailSubscribeForm(request.POST)
             if form1.is_valid() and email_feeds_form.is_valid():
                 next = form1.cleaned_data['next']
                 is_redirect = True
@@ -469,7 +467,7 @@ def register(request):
     else:
         provider_logo = providers[provider_name]
 
-    return render('authopenid/complete.html', {
+    return render_to_response('authopenid/complete.html', {
         'form1': form1,
         'form2': form2,
         'email_feeds_form': email_feeds_form,
@@ -490,7 +488,7 @@ def signin_failure(request, message):
     form_signin = OpenidSigninForm(initial={'next': next})
     form_auth = ClassicLoginForm(initial={'next': next})
 
-    return render('authopenid/signin.html', {
+    return render_to_response('authopenid/signin.html', {
         'msg': message,
         'form1': form_auth,
         'form2': form_signin,
@@ -506,11 +504,11 @@ def signup(request):
     templates: authopenid/signup.html, authopenid/confirm_email.txt
     """
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-        return HttpResponseRedirect(reverse('user_external_legacy_login_issues'))
+        return HttpResponseRedirect(reverse('user_external_legacy_login_signup'))
     next = get_next_url(request)
     if request.POST:
         form = ClassicRegisterForm(request.POST)
-        email_feeds_form = EditUserEmailFeedsForm(request.POST)
+        email_feeds_form = SimpleEmailSubscribeForm(request.POST)
 
         #validation outside if to remember form values
         form1_is_valid = form.is_valid()
@@ -523,7 +521,7 @@ def signup(request):
 
             user_ = User.objects.create_user( username,email,password )
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-                external_login.create_user(username,email,password)
+                EXTERNAL_LOGIN_APP.api.create_user(username,email,password)
            
             user_.backend = "django.contrib.auth.backends.ModelBackend"
             login(request, user_)
@@ -545,8 +543,8 @@ def signup(request):
             return HttpResponseRedirect(next)
     else:
         form = ClassicRegisterForm(initial={'next':next})
-        email_feeds_form = EditUserEmailFeedsForm()
-    return render('authopenid/signup.html', {
+        email_feeds_form = SimpleEmailSubscribeForm()
+    return render_to_response('authopenid/signup.html', {
         'form': form, 
         'email_feeds_form': email_feeds_form 
         }, context_instance=RequestContext(request))
@@ -571,7 +569,7 @@ def xrdf(request):
     return_to = [
         "%s%s" % (url_host, reverse('user_complete_signin'))
     ]
-    return render('authopenid/yadis.xrdf', { 
+    return render_to_response('authopenid/yadis.xrdf', { 
         'return_to': return_to 
         }, context_instance=RequestContext(request))
 
@@ -599,7 +597,7 @@ def account_settings(request):
         is_openid = False
 
 
-    return render('authopenid/settings.html', {
+    return render_to_response('authopenid/settings.html', {
         'msg': msg,
         'is_openid': is_openid
         }, context_instance=RequestContext(request))
@@ -633,7 +631,7 @@ def changepw(request):
     else:
         form = ChangePasswordForm(user=user_)
 
-    return render('authopenid/changepw.html', {'form': form },
+    return render_to_response('authopenid/changepw.html', {'form': form },
                                 context_instance=RequestContext(request))
 
 def find_email_validation_messages(user):
@@ -697,7 +695,7 @@ def send_email_key(request):
 
     if settings.EMAIL_VALIDATION != 'off':
         if request.user.email_isvalid:
-            return render('authopenid/changeemail.html',
+            return render_to_response('authopenid/changeemail.html',
                             { 'email': request.user.email, 
                               'action_type': 'key_not_sent', 
                               'change_link': reverse('user_changeemail')},
@@ -712,7 +710,7 @@ def send_email_key(request):
 
 #internal server view used as return value by other views
 def validation_email_sent(request):
-    return render('authopenid/changeemail.html',
+    return render_to_response('authopenid/changeemail.html',
                     { 'email': request.user.email, 
                     'change_email_url': reverse('user_changeemail'),
                     'action_type': 'validate', }, 
@@ -730,7 +728,7 @@ def verifyemail(request,id=None,key=None):
                 user.email_isvalid = True
                 clear_email_validation_message(user)
                 user.save()
-                return render('authopenid/changeemail.html', {
+                return render_to_response('authopenid/changeemail.html', {
                     'action_type': 'validation_complete',
                     }, context_instance=RequestContext(request))
     raise Http404
@@ -773,7 +771,7 @@ def changeemail(request, action='change'):
         form = ChangeEmailForm(initial={'email': user_.email},
                 user=user_)
     
-    output = render('authopenid/changeemail.html', {
+    output = render_to_response('authopenid/changeemail.html', {
         'form': form,
         'email': user_.email,
         'action_type': action,
@@ -857,7 +855,7 @@ def changeopenid(request):
                     changeopenid_failure, redirect_to)    
 
     form = ChangeopenidForm(initial={'openid_url': openid_url }, user=user_)
-    return render('authopenid/changeopenid.html', {
+    return render_to_response('authopenid/changeopenid.html', {
         'form': form,
         'has_openid': has_openid, 
         'msg': msg 
@@ -934,7 +932,7 @@ def delete(request):
     form = DeleteForm(user=user_)
 
     msg = request.GET.get('msg','')
-    return render('authopenid/delete.html', {
+    return render_to_response('authopenid/delete.html', {
         'form': form, 
         'msg': msg, 
         }, context_instance=RequestContext(request))
@@ -969,7 +967,10 @@ def deleteopenid_failure(request, message):
     return HttpResponseRedirect(redirect_to)
 
 def external_legacy_login_info(request):
-    return render('authopenid/external_legacy_login_info.html', context_instance=RequestContext(request))
+    feedback_url = reverse('feedback')
+    return render_to_response('authopenid/external_legacy_login_info.html', 
+                    {'feedback_url':feedback_url}, 
+                    context_instance=RequestContext(request))
 
 def sendpw(request):
     """
@@ -1019,7 +1020,7 @@ def sendpw(request):
     else:
         form = EmailPasswordForm()
         
-    return render('authopenid/sendpw.html', {
+    return render_to_response('authopenid/sendpw.html', {
         'form': form,
         'msg': msg 
         }, context_instance=RequestContext(request))

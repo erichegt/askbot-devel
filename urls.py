@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.utils.translation import ugettext as _
-import settings
+from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
