@@ -389,7 +389,7 @@ class QuestionRevision(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        print 'in QuestionRevision.get_absolute_url()'
+        #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
 
     def save(self, **kwargs):
@@ -416,7 +416,7 @@ class AnonymousAnswer(models.Model):
     def publish(self,user):
         from forum.views import create_new_answer
         added_at = datetime.datetime.now()
-        print user.id
+        #print user.id
         create_new_answer(question=self.question,wiki=self.wiki,
                             added_at=added_at,text=self.text,
                             author=user)
@@ -481,6 +481,9 @@ class Answer(models.Model):
             logging.debug('problem pinging google did you register you sitemap with google?')
 
     def get_user_vote(self, user):
+	if user.__class__.__name__ == "AnonymousUser":
+	    return None
+
         votes = self.votes.filter(user=user)
         if votes and votes.count() > 0:
             return votes[0]
@@ -692,13 +695,13 @@ def user_is_username_taken(cls,username):
         return False
 
 def user_get_q_sel_email_feed_frequency(self):
-    print 'looking for frequency for user %s' % self
+    #print 'looking for frequency for user %s' % self
     try:
         feed_setting = EmailFeedSetting.objects.get(subscriber=self,feed_type='q_sel')
     except Exception, e:
-        print 'have error %s' % e.message
+        #print 'have error %s' % e.message
         raise e
-    print 'have freq=%s' % feed_setting.frequency
+    #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
 
 User.add_to_class('is_approved', models.BooleanField(default=False))

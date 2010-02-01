@@ -92,7 +92,7 @@ class TagManager(models.Manager):
         'SET used_count = ('
             'SELECT COUNT(*) FROM question_tags '
             'INNER JOIN question ON question_id=question.id '
-            'WHERE tag_id = tag.id AND question.deleted=0'
+            'WHERE tag_id = tag.id AND question.deleted=False'
         ') '
         'WHERE id IN (%s)')
 
