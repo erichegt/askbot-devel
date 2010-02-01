@@ -74,10 +74,10 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
-if check_local_setting('USE_SPHINX_SEARCH',True):
+if USE_SPHINX_SEARCH:
     INSTALLED_APPS.append('djangosphinx')
 
-if check_local_setting('USE_FB_CONNECT',True):
+if USE_FB_CONNECT:
     INSTALLED_APPS.append('fbconnect')
 
 #load optional plugin module for external password login
