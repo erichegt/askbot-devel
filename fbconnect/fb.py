@@ -47,7 +47,7 @@ def get_user_data(cookies):
     
     request_data['sig'] = generate_sig(request_data)
     fb_response = urlopen(REST_SERVER, urlencode(request_data))
-    print(fb_response)
+    #print(fb_response)
     return load_json(fb_response)[0]
     
     
