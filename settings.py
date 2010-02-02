@@ -80,6 +80,12 @@ if USE_SPHINX_SEARCH:
 if USE_FB_CONNECT:
     INSTALLED_APPS.append('fbconnect')
 
+if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ):
+    USE_PG_FTS = True
+    INSTALLED_APPS.append('pgfulltext')
+else:
+    USE_PG_FTS = False
+
 #load optional plugin module for external password login
 if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
     INSTALLED_APPS.append(EXTERNAL_LEGACY_LOGIN_MODULE)
@@ -92,3 +98,6 @@ if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
         return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
 else:
     LOAD_EXTERNAL_LOGIN_APP = lambda: None
+
+
+    
