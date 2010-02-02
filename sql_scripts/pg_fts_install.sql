@@ -36,6 +36,3 @@ ON question FOR EACH ROW EXECUTE PROCEDURE set_question_tsv();
 CREATE INDEX blog_entry_tsv ON blog_entry USING gin(body_tsv);
 
 UPDATE question SET title = title;
-
-SELECT (ts_rank(p.factors, tsv, p.query)) AS "ranking", "question"."id", "question"."title",
-"question"."author_id", "question"."added_at", "question"."wiki", "question"."wikified_at", "question"."answer_accepted", "question"."closed", "question"."closed_by_id", "question"."closed_at", "question"."close_reason", "question"."deleted", "question"."deleted_at", "question"."deleted_by_id", "question"."locked", "question"."locked_by_id", "question"."locked_at", "question"."score", "question"."vote_up_count", "question"."vote_down_count", "question"."answer_count", "question"."comment_count", "question"."view_count", "question"."offensive_flag_count", "question"."favourite_count", "question"."last_edited_at", "question"."last_edited_by_id", "question"."last_activity_at", "question"."last_activity_by_id", "question"."tagnames", "question"."summary", "question"."html" FROM "question" , "(SELECT '{0.2, 0.5, 0.75, 1.0}'::float4[] AS factors, plainto_tsquery(false) AS query) p" WHERE "question"."deleted" = E'robots'  AND tsv @@ p.query ORDER BY "ranking" DESC LIMIT 21  
