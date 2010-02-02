@@ -2350,8 +2350,18 @@ def search(request):
             except KeyError:
                 view_id = "latest"
                 orderby = "-added_at"
-                
-            if settings.USE_SPHINX_SEARCH == True:
+
+            if settings.USE_PG_FTS:
+                objects = Question.objects.filter(deleted=False).extra(
+                    select={
+                        'ranking': "ts_rank_cd(tsv, plainto_tsquery(%s), 32)",
+                    },
+                    where=["tsv @@ plainto_tsquery(%s)"],
+                    params=[keywords],
+                    select_params=[keywords]
+                ).order_by('-ranking')
+
+            elif settings.USE_SPHINX_SEARCH == True:
                 #search index is now free of delete questions and answers
                 #so there is not "antideleted" filtering here
                 objects = Question.search.query(keywords)
