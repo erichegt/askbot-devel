@@ -98,6 +98,3 @@ if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
         return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
 else:
     LOAD_EXTERNAL_LOGIN_APP = lambda: None
-
-
-    

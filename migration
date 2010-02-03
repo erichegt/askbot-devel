@@ -1,7 +1,0 @@
-cp cnprog-current/templates/content/style/style.css  test/templates/content/style/
-cp cnprog-current/templates/footer.html  test/templates/
-cp cnprog-current/templates/content/images/logo.png test/templates/content/images
-cp cnprog-current/locale/en/LC_MESSAGES/django.po test/locale/en/LC_MESSAGES/
-python manage.py makemessages -l en -e html,py,txt
-#fix fuzzy messages
-python manage.py compilemessages
