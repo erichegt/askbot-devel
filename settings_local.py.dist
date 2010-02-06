@@ -14,7 +14,6 @@ LOG_FILENAME = 'django.osqa.log'
 
 #for logging
 import logging
-logging.basicConfig(filename=os.path.join(SITE_SRC_ROOT, 'log', LOG_FILENAME), level=logging.DEBUG,)
 logging.basicConfig(
     filename=os.path.join(SITE_SRC_ROOT, 'log', LOG_FILENAME),
     level=logging.DEBUG,
