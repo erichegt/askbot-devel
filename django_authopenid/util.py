@@ -14,7 +14,7 @@ try:
 except:
     from yadis import xri
 
-import time, base64, hashlib, operator
+import time, base64, hashlib, operator, logging
 from utils.forms import clean_next, get_next_url
 
 from models import Association, Nonce
@@ -23,6 +23,7 @@ __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
+        logging.debug('init janrain openid object')
         self.openid = openid_
         self.issued = issued
         self.attrs = attrs or {}

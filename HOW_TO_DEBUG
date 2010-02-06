@@ -1,0 +1,39 @@
+1) LOGGING
+Please remember that log files may contain plaintext passwords, etc.
+
+Please do not add print statements - at least do not commit them to git
+because in some environments printing to stdout causes errors
+
+Instead use python logging this way:
+--------------------------------
+#somewere on top of file
+import logging
+
+#anywhere below
+logging.debug('this maybe works')
+logging.error('have big error!')
+#or even
+logging.debug('') #this will add time, line number, function and file record 
+#sometimes useful record for call tracing on its own
+#etc - take a look at http://docs.python.org/library/logging.html
+-------------------------------
+
+in OSQA logging is currently set up in settings_local.py.dist
+please update it if you need - in older revs logging strings have less info
+
+messages of interest can be grepped out of the log file by module/file/function name
+e.g. to take out all django_authopenid logs run: 
+>grep 'osqa\/django_authopenid' log/django.osqa.log | sed 's/^.*MSG: //'
+in the example above 'sed' call truncates out a long prefix
+and makes output look more meaningful
+
+2) DJANGO DEBUG TOOLBAR
+osqa works with django debug toolbar
+if debugging under apache server, check 
+that debug toolbar media is loaded correctly
+if toolbar is enabled but you do not see it, possibly some Alias statement
+in apache config is wrong in your VirtualHost or elsewhere
+
+3) If you discover new debugging techniques, please add here.
+Possible areas to improve - at this point there is no SQL query logging,
+as well as request data and http header.

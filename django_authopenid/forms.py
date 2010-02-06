@@ -94,7 +94,6 @@ class ClassicLoginForm(forms.Form):
         self.cleaned_data[field] = value
         return value 
 
-
     def clean_username(self):
         return self._clean_nonempty_field('username')
 
@@ -103,7 +102,7 @@ class ClassicLoginForm(forms.Form):
 
     def clean(self):
         """ 
-        this clean function actuall cleans username and password
+        this clean function actually cleans username and password
 
         test if password is valid for this username 
         this is really the "authenticate" function
@@ -118,7 +117,6 @@ class ClassicLoginForm(forms.Form):
 
         self.user_cache = None
         if username and password: 
-
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
                 pw_ok = False
                 try:
