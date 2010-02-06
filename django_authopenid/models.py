@@ -71,6 +71,10 @@ class UserPasswordQueue(models.Model):
         return self.user.username
 
 class ExternalLoginData(models.Model):
+    """this class was added by Evgeny to associate
+    external authentication user with django user
+    probably it just does not belong here... (EF)
+    """
     external_username = models.CharField(max_length=40, unique=True, null=False)
     external_session_data = models.TextField()
     user = models.ForeignKey(User, null=True)
