@@ -35,7 +35,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'context.application_settings',
     #'django.core.context_processors.i18n',
-    'apps.user_messages.context_processors.user_messages',#must be before auth
+    'user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
 )
 
@@ -66,10 +66,10 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
-    'apps.forum',
-    'apps.django_authopenid',
+    'forum',
+    'django_authopenid',
     'debug_toolbar' ,
-    'apps.user_messages',
+    'user_messages',
 ]
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
@@ -78,11 +78,11 @@ if USE_SPHINX_SEARCH:
     INSTALLED_APPS.append('djangosphinx')
 
 if USE_FB_CONNECT:
-    INSTALLED_APPS.append('apps.fbconnect')
+    INSTALLED_APPS.append('fbconnect')
 
 if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ):
     USE_PG_FTS = True
-    INSTALLED_APPS.append('apps.pgfulltext')
+    INSTALLED_APPS.append('pgfulltext')
 else:
     USE_PG_FTS = False
 
