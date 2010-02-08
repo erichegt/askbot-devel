@@ -69,16 +69,25 @@ B. INSTALLATION
 -----------------------------------------------
 0. Make sure you have all above python libraries installed.
 
+   Choose a location for the site and log files outside of this source
+   code:
+        export CNPROG=/path/to/CNPROG
+        export CNLOG=/path/to/log
+   And make some locations:
+        mkdir -p $CNPROG/upfiles/
+        mkdir -p $CNLOG
+
    make cnprog installation server-readable on Linux command might be:
-   chown -R yourlogin:apache /path/to/CNPROG
+       sudo chown -R yourlogin:apache $CNPROG
+       sudo chown -R yourlogin:apache $CNLOG
+   It is assumed that webserver runs under group named "apache".
+   Perhaps on your system it is www-data.
    
    directories templates/upfiles and log must be server writable
 
    on Linux type chmod
-   chmod -R g+w /path/to/CNPROG/upfiles
-   chmod -R g+w /path/to/log
-
-   above it is assumed that webserver runs under group named "apache"
+       chmod -R g+w /path/to/CNPROG/upfiles
+       chmod -R g+w /path/to/log
 
 1. Settings file
 
