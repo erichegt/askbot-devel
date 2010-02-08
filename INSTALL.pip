@@ -2,14 +2,8 @@
     easy_install virtualenv
     easy_install pip
 
-* Install mysql-python system-wide, because we can't install it with pip
-    sudo easy_install mysql-python
-        or
-    sudo apt-get install python-mysqldb
-
-    For more information about why pip can't automatically install the
-    MySQL driver, see this message:
-        http://groups.google.com/group/python-virtualenv/msg/ea988085951c92b3
+* Install MySQL:
+    sudo apt-get install mysql-client mysql-server
 
 * Install sphinxsearch. See:
     [optional]
@@ -28,3 +22,10 @@ the source directory]
 
 * Start your environment:
     source ~/env/bin/activate
+
+* Install mysql-python into your virtualenv, because we can't
+automagically install it with pip:
+    easy_install --prefix ~/env/ mysql-python
+
+For more information about why pip can't automatically install the
+MySQL driver, see this message: http://groups.google.com/group/python-virtualenv/msg/ea988085951c92b3

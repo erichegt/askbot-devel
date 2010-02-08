@@ -27,21 +27,23 @@ e.g, sudo apt-get install python-setuptools
 
 1. Python2.5/2.6, MySQL, Django v1.0/1.1
 Note: email subscription sender job requires Django 1.1, everything else works with 1.0
+    sudo apt-get install mysql-client mysql-server
+
 Make sure mysql for python provider has been installed.
-sudo easy_install mysql-python
+    sudo easy_install mysql-python
 
 2. Python-openid v2.2
 http://openidenabled.com/python-openid/
-sudo easy_install python-openid
+    sudo easy_install python-openid
 
 4. html5lib
 http://code.google.com/p/html5lib/
 Used for HTML sanitizer
-sudo easy_install html5lib
+    sudo easy_install html5lib
 
 5. Markdown2
 http://code.google.com/p/python-markdown2/
-sudo easy_install markdown2
+    sudo easy_install markdown2
 
 6. Django Debug Toolbar
 http://github.com/robhudson/django-debug-toolbar/tree/master
@@ -97,18 +99,18 @@ Copy settings_local.py.dist to settings_local.py and
 update all your settings. Check settings.py and update 
 it as well if necessory.
 Section C explains configuration paramaters.
+I don't recommend sqlite3 because it doesn't seem to work on my system.
 
 2. Database
 
-    a) MySQL setup [optional]
-        Prepare your database by using the same database/account 
-        configuration from settings_local.py
-        e.g,
-        create database cnprog DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
-        grant all on cnprog.* to 'cnprog'@'localhost';
-    b) Keep sqlite3 database (simpler)
+    Prepare your database by using the same database/account 
+    configuration from settings_local.py, for example:
 
-    Regardless, run "python manage.py syncdb" to synchronize your database.
+        sudo mysql
+        create database osqa DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
+        grant all on osqa.* to 'osqa'@'localhost';
+
+    Run "python manage.py syncdb" to synchronize your database.
 
 3. Running CNPROG on the development server 
 
