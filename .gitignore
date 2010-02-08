@@ -1,5 +1,7 @@
 *.pyc
 *.swp
 *.log
+env
 nbproject
+pip-log.txt
 settings_local.py

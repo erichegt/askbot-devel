@@ -1,0 +1,25 @@
+* Install virtualenv and pip:
+    easy_install virtualenv
+    easy_install pip
+
+* Install mysql-python system-wide, because we can't install it with pip
+    sudo easy_install mysql-python
+        or
+    sudo apt-get install python-mysqldb
+
+    For more information about why pip can't automatically install the
+    MySQL driver, see this message:
+        http://groups.google.com/group/python-virtualenv/msg/ea988085951c92b3
+
+* Install sphinxsearch. See:
+    [optional]
+    http://sphinxsearch.com/downloads.html
+    http://www.hackido.com/2009/01/install-sphinx-search-on-ubuntu.html
+    git://github.com/johnl/deb-sphinx-search.git
+
+* Run pip installation:
+    pip install -E env -r osqa-requirements.txt 
+
+* Notice that you will need to register with recaptcha.net and receive
+    recaptcha public and private keys that need to be saved in your
+    settings_local.py file

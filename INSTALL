@@ -16,6 +16,11 @@ D. CUSTOMIZATION
 
 A. PREREQUISITES
 -----------------------------------------------
+
+You can either follow the directions in this section, or you can read
+INSTALL.pip, which is simpler and creates a sandbox for your Python
+environment.
+
 0. We recommend you to use python-setuptools to install pre-requirement libraries.
 If you haven't installed it, please try to install it first.
 e.g, sudo apt-get install python-setuptools
