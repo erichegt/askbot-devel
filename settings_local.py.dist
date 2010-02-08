@@ -29,10 +29,11 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 INTERNAL_IPS = ('127.0.0.1',)
 
-DATABASE_NAME = 'osqa'             # Or path to database file if using sqlite3.
+DATABASE_NAME = 'osqa.db'             # Or path to database file if using sqlite3.
 DATABASE_USER = ''               # Not used with sqlite3.
 DATABASE_PASSWORD = ''               # Not used with sqlite3.
-DATABASE_ENGINE = 'mysql'  #mysql, etc
+#DATABASE_ENGINE = 'mysql'  #mysql, etc
+DATABASE_ENGINE = 'sqlite3'  #mysql, etc
 DATABASE_HOST = ''
 DATABASE_PORT = ''
 

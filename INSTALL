@@ -69,25 +69,27 @@ B. INSTALLATION
 -----------------------------------------------
 0. Make sure you have all above python libraries installed.
 
-   Choose a location for the site and log files outside of this source
-   code:
-        export CNPROG=/path/to/CNPROG
-        export CNLOG=/path/to/log
+   Choose a location for the site and log files inside of this source
+   code directory:
+        export SOURCE=`pwd`
+        export CNPROG=$SOURCE/CNPROG
+        export CNLOG=$SOURCE/log
    And make some locations:
         mkdir -p $CNPROG/upfiles/
         mkdir -p $CNLOG
+   Although it might be better, according to the Pinax forums, to have
+   these locations somewhere else.
 
-   make cnprog installation server-readable on Linux command might be:
-       sudo chown -R yourlogin:apache $CNPROG
-       sudo chown -R yourlogin:apache $CNLOG
-   It is assumed that webserver runs under group named "apache".
-   Perhaps on your system it is www-data.
-   
-   directories templates/upfiles and log must be server writable
+   Make cnprog installation server-readable on Linux command might be:
+       sudo chown -R `whoami`:www-data $CNPROG
+       sudo chown -R `whoami`:www-data $CNLOG
+   It is assumed that webserver runs under group named "www-data".
+   Perhaps on your system it is "apache".
 
-   on Linux type chmod
-       chmod -R g+w /path/to/CNPROG/upfiles
-       chmod -R g+w /path/to/log
+   Directories $CNPROG/upfiles/ and $CNLOG must be server writable.
+   [What about templates/ ?]
+       chmod -R g+w $CNPROG/upfiles
+       chmod -R g+w $CNLOG
 
 1. Settings file
 
@@ -98,12 +100,15 @@ Section C explains configuration paramaters.
 
 2. Database
 
-Prepare your database by using the same database/account 
-configuration from above.
-e.g,
-create database cnprog DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
-grant all on cnprog.* to 'cnprog'@'localhost';
-And then run "python manage.py syncdb" to synchronize your database.
+    a) MySQL setup [optional]
+        Prepare your database by using the same database/account 
+        configuration from settings_local.py
+        e.g,
+        create database cnprog DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
+        grant all on cnprog.* to 'cnprog'@'localhost';
+    b) Keep sqlite3 database (simpler)
+
+    Regardless, run "python manage.py syncdb" to synchronize your database.
 
 3. Running CNPROG on the development server 
 
