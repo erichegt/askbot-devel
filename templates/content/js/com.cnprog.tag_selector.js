@@ -1,7 +1,8 @@
+//var scriptUrl, interestingTags, ignoredTags, tags, $;
 function pickedTags(){
 
     var sendAjax = function(tagname, reason, action, callback){
-        url = scriptUrl;
+        var url = scriptUrl;
         if (action == 'add'){
             url += $.i18n._('mark-tag/');
             if (reason == 'good'){
@@ -16,15 +17,15 @@ function pickedTags(){
         }
         url = url + tagname + '/';
 
-        call_settings = {
+        var call_settings = {
             type:'POST',
             url:url
-        }
-        if (callback != false){
-            call_settings['success'] = callback;
+        };
+        if (callback !== false){
+            call_settings.success = callback;
         }
         $.ajax(call_settings);
-    }
+    };
 
 
     var unpickTag = function(from_target ,tagname, reason, send_ajax){
@@ -32,7 +33,7 @@ function pickedTags(){
         var deleteTagLocally = function(){
             from_target[tagname].remove();
             delete from_target[tagname];
-        }
+        };
         if (send_ajax){
             sendAjax(tagname,reason,'remove',deleteTagLocally);
         }
@@ -40,7 +41,7 @@ function pickedTags(){
             deleteTagLocally();
         }
 
-    }
+    };
 
     var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){
         obj.unbind('mouseover').bind('mouseover', function(){
@@ -52,12 +53,13 @@ function pickedTags(){
         obj.click( function(){
             unpickTag(tag_store,tagname,reason,send_ajax);
         });
-    }
+    };
 
     var handlePickedTag = function(obj,reason){
         var tagname = $.trim($(obj).prev().attr('value'));
-        to_target = interestingTags;
-        from_target = ignoredTags;
+        var to_target = interestingTags;
+        var from_target = ignoredTags;
+        var to_tag_container;
         if (reason == 'bad'){
             to_target = ignoredTags;
             from_target = interestingTags;
@@ -78,13 +80,13 @@ function pickedTags(){
             //send ajax request to pick this tag
 
             sendAjax(tagname,reason,'add',function(){
-                new_tag = $('<span></span>');
+                var new_tag = $('<span></span>');
                 new_tag.addClass('deletable-tag');
-                tag_link = $('<a></a>');
+                var tag_link = $('<a></a>');
                 tag_link.attr('rel','tag');
                 tag_link.attr('href', scriptUrl + $.i18n._('tags/') + tagname);
                 tag_link.html(tagname);
-                del_link = $('<img></img>');
+                var del_link = $('<img></img>');
                 del_link.addClass('delete-icon');
                 del_link.attr('src', scriptUrl + 'content/images/close-small-dark.png');
 
@@ -97,7 +99,7 @@ function pickedTags(){
                 to_target[tagname] = new_tag;
             });
         }
-    }
+    };
 
     var collectPickedTags = function(){
         var good_prefix = 'interesting-tag-';
@@ -108,7 +110,8 @@ function pickedTags(){
         ignoredTags = {};
         $('.deletable-tag').each(
             function(i,item){
-                item_id = $(item).attr('id')
+                var item_id = $(item).attr('id');
+                var tag_name, tag_store;
                 if (good_re.test(item_id)){
                     tag_name = item_id.replace(good_prefix,'');
                     tag_store = interestingTags;
@@ -123,10 +126,10 @@ function pickedTags(){
                     return;
                 }
                 tag_store[tag_name] = $(item);
-                setupTagDeleteEvents($(item).find('img'),tag_store,tag_name,reason,true)
+                setupTagDeleteEvents($(item).find('img'),tag_store,tag_name,reason,true);
             }
         );
-    }
+    };
 
     var setupHideIgnoredQuestionsControl = function(){
         $('#hideIgnoredTagsCb').unbind('click').click(function(){
@@ -138,7 +141,7 @@ function pickedTags(){
                         data: {command:'toggle-ignored-questions'}
                     });
         });
-    }
+    };
     return {
         init: function(){
             collectPickedTags();
@@ -157,8 +160,8 @@ function pickedTags(){
                 }
 
             });
-            $("#interestingTagAdd").click(function(){handlePickedTag(this,'good')});
-            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'bad')});
+            $("#interestingTagAdd").click(function(){handlePickedTag(this,'good');});
+            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'bad');});
         }
     };
 }

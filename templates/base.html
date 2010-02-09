@@ -3,7 +3,7 @@
 {% load extra_filters %}
 {% load extra_tags %}
 {% load i18n %}
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"{% if fb_api_key %} xmlns:fb="http://www.facebook.com/2008/fbml"{% endif %}>
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE }}</title>
         {% spaceless %}
@@ -11,7 +11,7 @@
         {% endspaceless %}
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         {% if settings.GOOGLE_SITEMAP_CODE %}
-        <meta name="verify-v1" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
+        <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
         <link rel="shortcut icon" href="{% href "/content/images/favicon.ico" %}" />
         <link href="{% href "/content/style/style.css" %}" rel="stylesheet" type="text/css" />
@@ -50,7 +50,7 @@
             body { margin-top:2.4em; }
         </style>
         <script type="text/javascript">
-            $().ready(function() {
+            $(document).ready(function() {
                 $('#validate_email_alert').click(function(){notify.close(true)})
                 notify.show();
             });
@@ -65,7 +65,7 @@
             {% autoescape off %}
                 {% if user_messages %}
                     {% for message in user_messages %}
-                          <p class="darkred">{{ message }}<p>
+                          <p class="darkred">{{ message }}</p>
                     {% endfor %}
                 {% endif %}
             {% endautoescape %}

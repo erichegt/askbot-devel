@@ -11,7 +11,7 @@ parameters:
 * username (same as screen name or username in the models, and nickname in openid sreg)
 * form1 - OpenidRegisterForm
 * form2 - OpenidVerifyForm not clear what this form is supposed to do, not used for legacy
-* email_feeds_form forum.forms.EditUserEmailFeedsForm
+* email_feeds_form forum.forms.SimpleEmailSubscribeForm
 * openid_username_exists
 {% endcomment %}
 {% load i18n %}
@@ -34,6 +34,8 @@ parameters:
                     {% else %}
                         {% blocktrans %}register new external {{provider}} account info, see {{gravatar_faq_url}}{% endblocktrans %}
                     {% endif %}
+                {% else %}
+                    {% blocktrans %}register new Facebook connect account info, see {{gravatar_faq_url}}{% endblocktrans %}
                 {% endifequal %}
             {% endifequal %}
         </div>
@@ -69,7 +71,11 @@ parameters:
         {% ifequal login_type 'openid' %}
         <form name="fregister" action="{% url user_register %}" method="POST">
         {% else %}
-        <form name="fregister" action="{% url user_signin %}" method="POST">
+            {% ifequal login_type 'facebook' %}
+            <form name="fregister" action="" method="POST">
+            {% else %}
+            <form name="fregister" action="{% url user_signin %}" method="POST">
+            {% endifequal %}
         {% endifequal %}
             {{ form1.next }}
             <div class="form-row-vertical">
@@ -86,12 +92,12 @@ parameters:
                 {% endif %}
                 {{ form1.email }}
             </div>
-            <p class='nomargin'>{% trans "receive updates motivational blurb" %}</p>
-            {% include "edit_user_email_feeds_form.html" %}
-<<<<<<< HEAD:templates/authopenid/complete.html
-=======
             <p class='nomargin'>{% trans "Tag filter tool will be your right panel, once you log in." %}</p>
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/authopenid/complete.html
+            <p>{% trans "receive updates motivational blurb" %}</p>
+            <div class='simple-subscribe-options'>
+            {{email_feeds_form.subscribe}}
+            </div>
+            <p class='space-above'>{% trans "Tag filter tool will be your right panel, once you log in." %}</p>
             <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"/></div>
 		</form>
 	</div>
@@ -105,7 +111,9 @@ parameters:
 				<div class="form-row"><label for="id_username">{% trans "user name" %}</label><br/>{{ form2.username }}</div>
 				<div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br/>{{ form2.password }}</div>
                 <p><span class='big strong'>(Optional) receive updates by email</span> - only sent when there are any.</p>
-                {% include "edit_user_email_feeds_form.html" %}
+                <div class='simple-subscribe-options'>
+                {{email_feeds_form.subscribe}}
+                </div>
 				<!--todo double check translation from chinese 确认 = "Register" -->
 				<div class="submit-row">
 					<input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"/> 

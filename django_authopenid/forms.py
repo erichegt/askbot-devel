@@ -35,11 +35,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext as _
 from django.conf import settings
-import external_login
 import types
 import re
 from django.utils.safestring import mark_safe
-
+from recaptcha_django import ReCaptchaField
+from utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
 # needed for some linux distributions like debian
 try:
@@ -47,106 +48,13 @@ try:
 except ImportError:
     from yadis import xri
     
-from django_authopenid.util import clean_next
+from utils.forms import clean_next
 from django_authopenid.models import ExternalLoginData
 
 __all__ = ['OpenidSigninForm', 'ClassicLoginForm', 'OpenidVerifyForm',
         'OpenidRegisterForm', 'ClassicRegisterForm', 'ChangePasswordForm',
         'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
         'ChangeOpenidForm']
-
-class NextUrlField(forms.CharField):
-    def __init__(self):
-        super(NextUrlField,self).__init__(max_length = 255,widget = forms.HiddenInput(),required = False)
-    def clean(self,value):
-        return clean_next(value)
-
-attrs_dict = { 'class': 'required login' }
-
-class UserNameField(forms.CharField):
-    username_re = re.compile(r'^[\w ]+$')
-    RESERVED_NAMES = (u'fuck', u'shit', u'ass', u'sex', u'add',
-                       u'edit', u'save', u'delete', u'manage', u'update', 'remove', 'new')
-    def __init__(self,must_exist=False,skip_clean=False,label=_('choose a username'),**kw):
-        self.must_exist = must_exist
-        self.skip_clean = skip_clean
-        super(UserNameField,self).__init__(max_length=30,
-                widget=forms.TextInput(attrs=attrs_dict),
-                label=label,
-                error_messages={'required':_('user name is required'),
-                                'taken':_('sorry, this name is taken, please choose another'),
-                                'forbidden':_('sorry, this name is not allowed, please choose another'),
-                                'missing':_('sorry, there is no user with this name'),
-                                'multiple-taken':_('sorry, we have a serious error - user name is taken by several users'),
-                                'invalid':_('user name can only consist of letters, empty space and underscore'),
-                            },
-                **kw
-                )
-
-    def clean(self,username):
-        """ validate username """
-        username = super(UserNameField,self).clean(username.strip())
-        if self.skip_clean == True:
-            return username
-        if not username_re.search(username):
-            raise forms.ValidationError(self.error_messages['invalid'])
-        if username in self.RESERVED_NAMES:
-            raise forms.ValidationError(self.error_messages['forbidden'])
-        try:
-            user = User.objects.get(
-                    username__exact = username
-            )
-            if user:
-                if self.must_exist:
-                    return username
-                else:
-                    raise forms.ValidationError(self.error_messages['taken'])
-        except User.DoesNotExist:
-            if self.must_exist:
-                raise forms.ValidationError(self.error_messages['missing'])
-            else:
-                return username
-        except User.MultipleObjectsReturned:
-            raise forms.ValidationError(self.error_messages['multiple-taken'])
-
-class UserEmailField(forms.EmailField):
-    def __init__(self,skip_clean=False,**kw):
-        self.skip_clean = skip_clean
-        super(UserEmailField,self).__init__(widget=forms.TextInput(attrs=dict(attrs_dict,
-            maxlength=200)), label=mark_safe(_('your email address')),
-            error_messages={'required':_('email address is required'),
-                            'invalid':_('please enter a valid email address'),
-                            'taken':_('this email is already used by someone else, please choose another'),
-                            },
-            **kw
-            )
-
-    def clean(self,email):
-        """ validate if email exist in database
-        from legacy register
-        return: raise error if it exist """
-        email = super(UserEmailField,self).clean(email.strip())
-        if self.skip_clean:
-            return email
-        if settings.EMAIL_UNIQUE == True:
-            try:
-                user = User.objects.get(email = email)
-                raise forms.ValidationError(self.error_messsages['taken'])
-            except User.DoesNotExist:
-                return email
-            except User.MultipleObjectsReturned:
-                raise forms.ValidationError(self.error_messages['taken'])
-        else:
-            return email 
-
-def clean_nonempty_field_method(self,field):
-    value = None
-    if field in self.cleaned_data:
-        value = str(self.cleaned_data[field]).strip()
-        if value == '':
-            value = None
-    self.cleaned_data[field] = value
-    return value 
 
 class OpenidSigninForm(forms.Form):
     """ signin form """
@@ -168,7 +76,8 @@ class ClassicLoginForm(forms.Form):
     next = NextUrlField()
     username = UserNameField(required=False,skip_clean=True)
     password = forms.CharField(max_length=128, 
-            widget=forms.widgets.PasswordInput(attrs=attrs_dict), required=False)
+            widget=forms.widgets.PasswordInput(attrs={'class':'required login'}), 
+            required=False)
 
     def __init__(self, data=None, files=None, auto_id='id_%s',
             prefix=None, initial=None): 
@@ -176,17 +85,24 @@ class ClassicLoginForm(forms.Form):
                 prefix, initial)
         self.user_cache = None
 
-    clean_nonempty_field = clean_nonempty_field_method
+    def _clean_nonempty_field(self,field):
+        value = None
+        if field in self.cleaned_data:
+            value = str(self.cleaned_data[field]).strip()
+            if value == '':
+                value = None
+        self.cleaned_data[field] = value
+        return value 
 
     def clean_username(self):
-        return self.clean_nonempty_field('username')
+        return self._clean_nonempty_field('username')
 
     def clean_password(self):
-        return self.clean_nonempty_field('password')
+        return self._clean_nonempty_field('password')
 
     def clean(self):
         """ 
-        this clean function actuall cleans username and password
+        this clean function actually cleans username and password
 
         test if password is valid for this username 
         this is really the "authenticate" function
@@ -201,11 +117,10 @@ class ClassicLoginForm(forms.Form):
 
         self.user_cache = None
         if username and password: 
-
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
                 pw_ok = False
                 try:
-                    pw_ok = external_login.check_password(username,password)
+                    pw_ok = EXTERNAL_LOGIN_APP.api.check_password(username,password)
                 except forms.ValidationError, e:
                     error_list.extend(e.messages)
                 if pw_ok:
@@ -271,7 +186,7 @@ class OpenidVerifyForm(forms.Form):
     next = NextUrlField()
     username = UserNameField(must_exist=True)
     password = forms.CharField(max_length=128, 
-            widget=forms.widgets.PasswordInput(attrs=attrs_dict))
+            widget=forms.widgets.PasswordInput(attrs={'class':'required login'}))
     
     def __init__(self, data=None, files=None, auto_id='id_%s',
             prefix=None, initial=None): 
@@ -299,53 +214,19 @@ class OpenidVerifyForm(forms.Form):
         """ get authenticated user """
         return self.user_cache
 
-
-attrs_dict = { 'class': 'required' }
-username_re = re.compile(r'^[\w ]+$')
-
-class ClassicRegisterForm(forms.Form):
+class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
 
     next = NextUrlField()
     username = UserNameField()
     email = UserEmailField()
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict),
-            label=_('choose password'),
-            error_messages={'required':_('password is required')},
-            )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict),
-            label=mark_safe(_('retype password')),
-            error_messages={'required':_('please, retype your password'),
-                            'nomatch':_('sorry, entered passwords did not match, please try again')},
-            required=False
-            )
-    
-    def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-        
-        """
-        self.cleaned_data['password2'] = self.cleaned_data.get('password2','')
-        if self.cleaned_data['password2'] == '':
-            del self.cleaned_data['password2']
-            raise forms.ValidationError(self.fields['password2'].error_messages['required'])
-        if 'password1' in self.cleaned_data \
-                and self.cleaned_data['password1'] == \
-                self.cleaned_data['password2']:
-            return self.cleaned_data['password2']
-        else:
-            del self.cleaned_data['password2']
-            del self.cleaned_data['password1']
-            raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
+    #fields password1 and password2 are inherited
+    recaptcha = ReCaptchaField()
 
-class ChangePasswordForm(forms.Form):
+class ChangePasswordForm(SetPasswordForm):
     """ change password form """
-    oldpw = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict),
+    oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
                 label=mark_safe(_('Current password')))
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict),
-                label=mark_safe(_('New password')))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict),
-                label=mark_safe(_('Retype new password')))
 
     def __init__(self, data=None, user=None, *args, **kwargs):
         if user is None:
@@ -359,17 +240,6 @@ class ChangePasswordForm(forms.Form):
             raise forms.ValidationError(_("Old password is incorrect. \
                     Please enter the correct password."))
         return self.cleaned_data['oldpw']
-    
-    def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-        """
-        if 'password1' in self.cleaned_data and \
-                'password2' in self.cleaned_data and \
-           self.cleaned_data['password1'] == self.cleaned_data['password2']:
-            return self.cleaned_data['password2']
-        raise forms.ValidationError(_("new passwords do not match"))
-        
         
 class ChangeEmailForm(forms.Form):
     """ change email form """
@@ -413,8 +283,8 @@ class ChangeopenidForm(forms.Form):
 
 class DeleteForm(forms.Form):
     """ confirm form to delete an account """
-    confirm = forms.CharField(widget=forms.CheckboxInput(attrs=attrs_dict))
-    password = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict))
+    confirm = forms.CharField(widget=forms.CheckboxInput(attrs={'class':'required'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}))
 
     def __init__(self, data=None, files=None, auto_id='id_%s',
             prefix=None, initial=None, user=None):

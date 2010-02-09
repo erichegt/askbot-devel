@@ -53,7 +53,7 @@ $.fn.openid = function() {
     $localfs.fadeOut('slow');
     $idfs.fadeOut('slow');
     $id.val($this.find("li.highlight span").text());
-    setTimeout(function(){$('#bsignin').click()},1000);
+    setTimeout(function(){$('#bsignin').click();},1000);
     return false;
   };
 

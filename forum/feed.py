@@ -13,16 +13,16 @@
 from django.contrib.syndication.feeds import Feed, FeedDoesNotExist
 from django.utils.translation import ugettext as _
 from models import Question
-import settings
+from django.conf import settings
 class RssLastestQuestionsFeed(Feed):
     title = settings.APP_TITLE + _(' - ')+ _('latest questions')
-    link = settings.APP_URL + '/' + _('question/')
+    link = settings.APP_URL #+ '/' + _('question/')
     description = settings.APP_DESCRIPTION
     #ttl = 10
     copyright = settings.APP_COPYRIGHT
 
     def item_link(self, item):
-        return settings.APP_URL + '%s' % item.get_absolute_url()
+        return self.link + item.get_absolute_url()
 
     def item_author_name(self, item):
         return item.author.username

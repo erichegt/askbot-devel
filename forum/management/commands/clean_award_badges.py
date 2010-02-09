@@ -21,9 +21,10 @@ from forum.models import *
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         try:
-            self.clean_awards()
-        except Exception, e:
-            print e
+            try:
+                self.clean_awards()
+            except Exception, e:
+                print e
         finally:
             connection.close()
 

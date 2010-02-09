@@ -4,8 +4,10 @@ from django import forms
 from models import *
 from const import *
 from django.utils.translation import ugettext as _
-from django_authopenid.forms import NextUrlField, UserNameField
-import settings
+from utils.forms import NextUrlField, UserNameField
+from recaptcha_django import ReCaptchaField
+from django.conf import settings
+import logging
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -109,6 +111,9 @@ class ModerateUserForm(forms.ModelForm):
         model = User
         fields = ('is_approved',)
 
+class NotARobotForm(forms.Form):
+    recaptcha = ReCaptchaField()
+
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name:'), required=False)
     email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False)
@@ -195,8 +200,9 @@ class EditAnswerForm(forms.Form):
         self.fields['text'].initial = revision.text
 
 class EditUserForm(forms.Form):
-    email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    username = UserNameField(label=_('Screen name'))
+    email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=True, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+    if settings.EDITABLE_SCREEN_NAME:
+    	username = UserNameField(label=_('Screen name'))
     realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     city = forms.CharField(label=_('Location'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -205,7 +211,10 @@ class EditUserForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
-        self.fields['username'].initial = user.username
+        logging.debug('initializing the form')
+        if settings.EDITABLE_SCREEN_NAME:
+            self.fields['username'].initial = user.username
+            self.fields['username'].user_instance = user
         self.fields['email'].initial = user.email
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website
@@ -299,14 +308,24 @@ class EditUserEmailFeedsForm(forms.Form):
         self.initial = self.NO_EMAIL_INITIAL
         return self
 
-    def save(self,user):
+    def save(self,user,save_unbound=False):
+        """
+            with save_unbound==True will bypass form validation and save initial values
+        """
         changed = False
         for form_field, feed_type in self.FORM_TO_MODEL_MAP.items():
             s, created = EmailFeedSetting.objects.get_or_create(subscriber=user,\
                                                     feed_type=feed_type)
-            new_value = self.cleaned_data[form_field]
+            if save_unbound:
+                #just save initial values instead
+                if form_field in self.initial:
+                    new_value = self.initial[form_field]
+                else:
+                    new_value = self.fields[form_field].initial
+            else:
+                new_value = self.cleaned_data[form_field]
             if s.frequency != new_value:
-                s.frequency = self.cleaned_data[form_field]
+                s.frequency = new_value
                 s.save()
                 changed = True
             else:
@@ -316,3 +335,22 @@ class EditUserEmailFeedsForm(forms.Form):
                 feed_type = ContentType.objects.get_for_model(Question)
                 user.followed_questions.clear()
         return changed
+
+
+class SimpleEmailSubscribeForm(forms.Form):
+    SIMPLE_SUBSCRIBE_CHOICES = (
+        ('y',_('okay, let\'s try!')),
+        ('n',_('no OSQA community email please, thanks'))
+    )
+    subscribe = forms.ChoiceField(widget=forms.widgets.RadioSelect(), \
+                                error_messages={'required':_('please choose one of the options above')},
+                                choices=SIMPLE_SUBSCRIBE_CHOICES)
+
+    def save(self,user=None):
+        EFF = EditUserEmailFeedsForm
+        if self.cleaned_data['subscribe'] == 'y':
+            email_settings_form = EFF()
+            logging.debug('%s wants to subscribe' % user.username)
+        else:
+            email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
+        email_settings_form.save(user,save_unbound=True)

@@ -9,3 +9,6 @@ class QuestionsSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.last_activity_at
+
+    def location(self, obj):
+        return obj.get_absolute_url()

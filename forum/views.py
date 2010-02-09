@@ -33,7 +33,7 @@ from forum.forms import *
 from forum.models import *
 from forum.user import *
 from forum import auth
-from django_authopenid.util import get_next_url
+from utils.forms import get_next_url
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -200,7 +200,7 @@ def questions(request, tagname=None, unanswered=False):
                                 'SELECT COUNT(1) FROM forum_markedtag, question_tags '
                                   + 'WHERE forum_markedtag.user_id = %s '
                                   + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = "good" '
+                                  + 'AND forum_markedtag.reason = \'good\' '
                                   + 'AND question_tags.question_id = question.id'
                             ),
                                 ]),
@@ -218,7 +218,7 @@ def questions(request, tagname=None, unanswered=False):
                                 'SELECT COUNT(1) FROM forum_markedtag, question_tags '
                                   + 'WHERE forum_markedtag.user_id = %s '
                                   + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = "bad" '
+                                  + 'AND forum_markedtag.reason = \'bad\' '
                                   + 'AND question_tags.question_id = question.id'
                             )
                                 ]),
@@ -433,6 +433,21 @@ def question(request, id):
     logging.debug('view_id=' + str(view_id))
 
     question = get_object_or_404(Question, id=id)
+    try:
+        pattern = r'/%s%s%d/([\w-]+)' % (settings.FORUM_SCRIPT_ALIAS,_('question/'), question.id)
+        path_re = re.compile(pattern)
+        logging.debug(pattern)
+        logging.debug(request.path)
+        m = path_re.match(request.path)
+        if m:
+            slug = m.group(1)
+            logging.debug('have slug %s' % slug)
+            assert(slug == slugify(question.title))
+        else:
+            logging.debug('no match!')
+    except:
+        return HttpResponseRedirect(question.get_absolute_url())
+
     if question.deleted and not can_view_deleted_post(request.user, question):
         raise Http404
     answer_form = AnswerForm(question, request.user)
@@ -1232,7 +1247,7 @@ def edit_user(request, id):
             from django_authopenid.views import set_new_email
             set_new_email(user, new_email)
 
-            user.username = sanitize_html(form.cleaned_data['username'])
+            #user.username = sanitize_html(form.cleaned_data['username'])
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
@@ -1257,43 +1272,43 @@ def edit_user(request, id):
 def user_stats(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
     questions = Question.objects.extra(
-                                       select={
-                                       'vote_count': 'question.score',
-                                       'favorited_myself': 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s AND f.question_id = question.id',
-                                       'la_user_id': 'auth_user.id',
-                                       'la_username': 'auth_user.username',
-                                       'la_user_gold': 'auth_user.gold',
-                                       'la_user_silver': 'auth_user.silver',
-                                       'la_user_bronze': 'auth_user.bronze',
-                                       'la_user_reputation': 'auth_user.reputation'
-                                       },
-                                       select_params=[user_id],
-                                       tables=['question', 'auth_user'],
-                                       where=['question.deleted = 0 AND question.author_id=%s AND question.last_activity_by_id = auth_user.id'],
-                                       params=[user_id],
-                                       order_by=['-vote_count', '-last_activity_at']
-                                       ).values('vote_count',
-        'favorited_myself',
-        'id',
-        'title',
-        'author_id',
-        'added_at',
-        'answer_accepted',
-        'answer_count',
-        'comment_count',
-        'view_count',
-        'favourite_count',
-        'summary',
-        'tagnames',
-        'vote_up_count',
-        'vote_down_count',
-        'last_activity_at',
-        'la_user_id',
-        'la_username',
-        'la_user_gold',
-        'la_user_silver',
-        'la_user_bronze',
-        'la_user_reputation')[:100]
+        select={
+            'vote_count' : 'question.score',
+            'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s AND f.question_id = question.id',
+            'la_user_id' : 'auth_user.id',
+            'la_username' : 'auth_user.username',
+            'la_user_gold' : 'auth_user.gold',
+            'la_user_silver' : 'auth_user.silver',
+            'la_user_bronze' : 'auth_user.bronze',
+            'la_user_reputation' : 'auth_user.reputation'
+            },
+        select_params=[user_id],
+        tables=['question', 'auth_user'],
+        where=['question.deleted=False AND question.author_id=%s AND question.last_activity_by_id = auth_user.id'],
+        params=[user_id],
+        order_by=['-vote_count', '-last_activity_at']
+    ).values('vote_count',
+             'favorited_myself',
+             'id',
+             'title',
+             'author_id',
+             'added_at',
+             'answer_accepted',
+             'answer_count',
+             'comment_count',
+             'view_count',
+             'favourite_count',
+             'summary',
+             'tagnames',
+             'vote_up_count',
+             'vote_down_count',
+             'last_activity_at',
+             'la_user_id',
+             'la_username',
+             'la_user_gold',
+             'la_user_silver',
+             'la_user_bronze',
+             'la_user_reputation')[:100]
 
     answered_questions = Question.objects.extra(
         select={
@@ -1305,7 +1320,7 @@ def user_stats(request, user_id, user_view):
             'comment_count' : 'answer.comment_count'
             },
         tables=['question', 'answer'],
-        where=['answer.deleted=0 AND question.deleted=0 AND answer.author_id=%s AND answer.question_id=question.id'],
+        where=['answer.deleted=False AND question.deleted=False AND answer.author_id=%s AND answer.question_id=question.id'],
         params=[user_id],
         order_by=['-vote_count', '-answer_id'],
         select_params=[user_id]
@@ -1427,7 +1442,7 @@ def user_recent(request, user_id, user_view):
             },
         tables=['activity', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = ' +
-            'question.id AND question.deleted=0 AND activity.user_id = %s AND activity.activity_type = %s'],
+            'question.id AND question.deleted=False AND activity.user_id = %s AND activity.activity_type = %s'],
         params=[question_type_id, user_id, TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
@@ -1452,8 +1467,8 @@ def user_recent(request, user_id, user_view):
             },
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
-            'answer.question_id=question.id AND answer.deleted=0 AND activity.user_id=%s AND '+ 
-            'activity.activity_type=%s AND question.deleted=0'],
+            'answer.question_id=question.id AND answer.deleted=False AND activity.user_id=%s AND '+ 
+            'activity.activity_type=%s AND question.deleted=False'],
         params=[answer_type_id, user_id, TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
     ).values(
@@ -1481,7 +1496,7 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
             'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
             'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
-            'question.deleted=0'],
+            'question.deleted=False'],
         params=[comment_type_id, question_type_id, user_id, TYPE_ACTIVITY_COMMENT_QUESTION],
         order_by=['-comment.added_at']
     ).values(
@@ -1511,7 +1526,7 @@ def user_recent(request, user_id, user_view):
             'activity.user_id = comment.user_id AND comment.object_id=answer.id AND '+
             'comment.content_type_id=%s AND question.id = answer.question_id AND '+
             'activity.user_id = %s AND activity.activity_type=%s AND '+
-            'answer.deleted=0 AND question.deleted=0'],
+            'answer.deleted=False AND question.deleted=False'],
         params=[comment_type_id, answer_type_id, user_id, TYPE_ACTIVITY_COMMENT_ANSWER],
         order_by=['-comment.added_at']
     ).values(
@@ -1538,7 +1553,7 @@ def user_recent(request, user_id, user_view):
             },
         tables=['activity', 'question_revision', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = question_revision.id AND '+
-            'question_revision.id=question.id AND question.deleted=0 AND '+
+            'question_revision.id=question.id AND question.deleted=False AND '+
             'activity.user_id = question_revision.author_id AND activity.user_id = %s AND '+
             'activity.activity_type=%s'],
         params=[question_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_QUESTION],
@@ -1571,7 +1586,7 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = answer_revision.id AND '+
             'activity.user_id = answer_revision.author_id AND activity.user_id = %s AND '+
             'answer_revision.answer_id=answer.id AND answer.question_id = question.id AND '+
-            'question.deleted=0 AND answer.deleted=0 AND '+
+            'question.deleted=False AND answer.deleted=False AND '+
             'activity.activity_type=%s'],
         params=[answer_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_ANSWER],
         order_by=['-activity.active_at']
@@ -1600,7 +1615,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND '+
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
-            'answer.deleted=0 AND question.deleted=0 AND '+
+            'answer.deleted=False AND question.deleted=False AND '+
             'answer.question_id=question.id AND activity.activity_type=%s'],
         params=[answer_type_id, user_id, TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
@@ -1676,7 +1691,7 @@ def user_responses(request, user_id, user_view):
                                         },
                                     select_params=[user_id],
                                     tables=['answer', 'question', 'auth_user'],
-                                    where=['answer.question_id = question.id AND answer.deleted=0 AND question.deleted = 0 AND '+
+                                    where=['answer.question_id = question.id AND answer.deleted=False AND question.deleted=False AND '+
                                         'question.author_id = %s AND answer.author_id <> %s AND answer.author_id=auth_user.id'],
                                     params=[user_id, user_id],
                                     order_by=['-answer.id']
@@ -1707,7 +1722,7 @@ def user_responses(request, user_id, user_view):
                                     'user_id' : 'auth_user.id'
                                     },
                                 tables=['question', 'auth_user', 'comment'],
-                                where=['question.deleted = 0 AND question.author_id = %s AND comment.object_id=question.id AND '+
+                                where=['question.deleted=False AND question.author_id = %s AND comment.object_id=question.id AND '+
                                     'comment.content_type_id=%s AND comment.user_id <> %s AND comment.user_id = auth_user.id'],
                                 params=[user_id, question_type_id, user_id],
                                 order_by=['-comment.added_at']
@@ -1727,30 +1742,30 @@ def user_responses(request, user_id, user_view):
 
     # answer comments
     comments = Comment.objects.extra(
-                                     select={
-                                     'title': 'question.title',
-                                     'question_id': 'question.id',
-                                     'answer_id': 'answer.id',
-                                     'added_at': 'comment.added_at',
-                                     'comment': 'comment.comment',
-                                     'username': 'auth_user.username',
-                                     'user_id': 'auth_user.id'
-                                     },
-                                     tables=['answer', 'auth_user', 'comment', 'question'],
-                                     where=['answer.deleted = 0 AND answer.author_id = %s AND comment.object_id=answer.id AND ' +
-                                     'comment.content_type_id=%s AND comment.user_id <> %s AND comment.user_id = auth_user.id ' +
-                                     'AND question.id = answer.question_id'],
-                                     params=[user_id, answer_type_id, user_id],
-                                     order_by=['-comment.added_at']
-                                     ).values(
-        'title',
-        'question_id',
-        'answer_id',
-        'added_at',
-        'comment',
-        'username',
-        'user_id'
-        )
+        select={
+            'title' : 'question.title',
+            'question_id' : 'question.id',
+            'answer_id' : 'answer.id',
+            'added_at' : 'comment.added_at',
+            'comment' : 'comment.comment',
+            'username' : 'auth_user.username',
+            'user_id' : 'auth_user.id'
+            },
+        tables=['answer', 'auth_user', 'comment', 'question'],
+        where=['answer.deleted=False AND answer.author_id = %s AND comment.object_id=answer.id AND '+
+            'comment.content_type_id=%s AND comment.user_id <> %s AND comment.user_id = auth_user.id '+
+            'AND question.id = answer.question_id'],
+        params=[user_id, answer_type_id, user_id],
+        order_by=['-comment.added_at']
+    ).values(
+            'title',
+            'question_id',
+            'answer_id',
+            'added_at',
+            'comment',
+            'username',
+            'user_id'
+            )
 
     if len(comments) > 0:
         comments = [(Response(TYPE_RESPONSE['ANSWER_COMMENTED'], c['title'], c['question_id'],
@@ -1759,30 +1774,30 @@ def user_responses(request, user_id, user_view):
 
     # answer has been accepted
     answers = Answer.objects.extra(
-                                   select={
-                                   'title': 'question.title',
-                                   'question_id': 'question.id',
-                                   'answer_id': 'answer.id',
-                                   'added_at': 'answer.accepted_at',
-                                   'html': 'answer.html',
-                                   'username': 'auth_user.username',
-                                   'user_id': 'auth_user.id'
-                                   },
-                                   select_params=[user_id],
-                                   tables=['answer', 'question', 'auth_user'],
-                                   where=['answer.question_id = question.id AND answer.deleted=0 AND question.deleted = 0 AND ' +
-                                   'answer.author_id = %s AND answer.accepted=1 AND question.author_id=auth_user.id'],
-                                   params=[user_id],
-                                   order_by=['-answer.id']
-                                   ).values(
-        'title',
-        'question_id',
-        'answer_id',
-        'added_at',
-        'html',
-        'username',
-        'user_id'
-        )
+        select={
+            'title' : 'question.title',
+            'question_id' : 'question.id',
+            'answer_id' : 'answer.id',
+            'added_at' : 'answer.accepted_at',
+            'html' : 'answer.html',
+            'username' : 'auth_user.username',
+            'user_id' : 'auth_user.id'
+            },
+        select_params=[user_id],
+        tables=['answer', 'question', 'auth_user'],
+        where=['answer.question_id = question.id AND answer.deleted=False AND question.deleted=False AND '+
+            'answer.author_id = %s AND answer.accepted=True AND question.author_id=auth_user.id'],
+        params=[user_id],
+        order_by=['-answer.id']
+    ).values(
+            'title',
+            'question_id',
+            'answer_id',
+            'added_at',
+            'html',
+            'username',
+            'user_id'
+            )
     if len(answers) > 0:
         answers = [(Response(TYPE_RESPONSE['ANSWER_ACCEPTED'], a['title'], a['question_id'],
                     a['answer_id'], a['added_at'], a['username'], a['user_id'], a['html'])) for a in answers]
@@ -1905,52 +1920,52 @@ def user_reputation(request, user_id, user_view):
 def user_favorites(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
     questions = Question.objects.extra(
-                                       select={
-                                       'vote_count': 'question.vote_up_count + question.vote_down_count',
-                                       'favorited_myself': 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s ' +
-                                       'AND f.question_id = question.id',
-                                       'la_user_id': 'auth_user.id',
-                                       'la_username': 'auth_user.username',
-                                       'la_user_gold': 'auth_user.gold',
-                                       'la_user_silver': 'auth_user.silver',
-                                       'la_user_bronze': 'auth_user.bronze',
-                                       'la_user_reputation': 'auth_user.reputation'
-                                       },
-                                       select_params=[user_id],
-                                       tables=['question', 'auth_user', 'favorite_question'],
-                                       where=['question.deleted = 0 AND question.last_activity_by_id = auth_user.id ' +
-                                       'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
-                                       params=[user_id],
-                                       order_by=['-vote_count', '-question.id']
-                                       ).values('vote_count',
-        'favorited_myself',
-        'id',
-        'title',
-        'author_id',
-        'added_at',
-        'answer_accepted',
-        'answer_count',
-        'comment_count',
-        'view_count',
-        'favourite_count',
-        'summary',
-        'tagnames',
-        'vote_up_count',
-        'vote_down_count',
-        'last_activity_at',
-        'la_user_id',
-        'la_username',
-        'la_user_gold',
-        'la_user_silver',
-        'la_user_bronze',
-        'la_user_reputation')
-    return render_to_response(user_view.template_file, {
-                              "tab_name": user_view.id,
-                              "tab_description": user_view.tab_description,
-                              "page_title": user_view.page_title,
-                              "questions": questions[:user_view.data_size],
-                              "view_user": user
-                              }, context_instance=RequestContext(request))
+        select={
+            'vote_count' : 'question.vote_up_count + question.vote_down_count',
+            'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s '+
+                'AND f.question_id = question.id',
+            'la_user_id' : 'auth_user.id',
+            'la_username' : 'auth_user.username',
+            'la_user_gold' : 'auth_user.gold',
+            'la_user_silver' : 'auth_user.silver',
+            'la_user_bronze' : 'auth_user.bronze',
+            'la_user_reputation' : 'auth_user.reputation'
+            },
+        select_params=[user_id],
+        tables=['question', 'auth_user', 'favorite_question'],
+        where=['question.deleted=True AND question.last_activity_by_id = auth_user.id '+
+            'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
+        params=[user_id],
+        order_by=['-vote_count', '-question.id']
+    ).values('vote_count',
+             'favorited_myself',
+             'id',
+             'title',
+             'author_id',
+             'added_at',
+             'answer_accepted',
+             'answer_count',
+             'comment_count',
+             'view_count',
+             'favourite_count',
+             'summary',
+             'tagnames',
+             'vote_up_count',
+             'vote_down_count',
+             'last_activity_at',
+             'la_user_id',
+             'la_username',
+             'la_user_gold',
+             'la_user_silver',
+             'la_user_bronze',
+             'la_user_reputation')
+    return render_to_response(user_view.template_file,{
+        "tab_name" : user_view.id,
+        "tab_description" : user_view.tab_description,
+        "page_title" : user_view.page_title,
+        "questions" : questions[:user_view.data_size],
+        "view_user" : user
+    }, context_instance=RequestContext(request))
 
 def user_email_subscriptions(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
@@ -2080,16 +2095,16 @@ def badges(request):
 def badge(request, id):
     badge = get_object_or_404(Badge, id=id)
     awards = Award.objects.extra(
-                                 select={'id': 'auth_user.id',
-                                 'name': 'auth_user.username',
-                                 'rep':'auth_user.reputation',
-                                 'gold': 'auth_user.gold',
-                                 'silver': 'auth_user.silver',
-                                 'bronze': 'auth_user.bronze'},
-                                 tables=['award', 'auth_user'],
-                                 where=['badge_id=%s AND user_id=auth_user.id'],
-                                 params=[id]
-                                 ).values('id').distinct()
+        select={'id': 'auth_user.id', 
+                'name': 'auth_user.username', 
+                'rep':'auth_user.reputation', 
+                'gold': 'auth_user.gold', 
+                'silver': 'auth_user.silver', 
+                'bronze': 'auth_user.bronze'},
+        tables=['award', 'auth_user'],
+        where=['badge_id=%s AND user_id=auth_user.id'],
+        params=[id]
+    ).distinct('id')
 
     return render_to_response('badge.html', {
                               'awards': awards,
@@ -2333,8 +2348,18 @@ def search(request):
             except KeyError:
                 view_id = "latest"
                 orderby = "-added_at"
-                
-            if settings.USE_SPHINX_SEARCH == True:
+
+            if settings.USE_PG_FTS:
+                objects = Question.objects.filter(deleted=False).extra(
+                    select={
+                        'ranking': "ts_rank_cd(tsv, plainto_tsquery(%s), 32)",
+                    },
+                    where=["tsv @@ plainto_tsquery(%s)"],
+                    params=[keywords],
+                    select_params=[keywords]
+                ).order_by('-ranking')
+
+            elif settings.USE_SPHINX_SEARCH == True:
                 #search index is now free of delete questions and answers
                 #so there is not "antideleted" filtering here
                 objects = Question.search.query(keywords)
@@ -2355,26 +2380,31 @@ def search(request):
                     if tag not in related_tags:
                         related_tags.append(tag)
 
+            #if is_search is true in the context, prepend this string to soting tabs urls
+            search_uri = "?q=%s&page=%d&t=question" % ("+".join(keywords.split()),  page)
+
             return render_to_response(template_file, {
-                                      "questions": questions,
-                                      "tab_id": view_id,
-                                      "questions_count": objects_list.count,
-                                      "tags": related_tags,
-                                      "searchtag": None,
-                                      "searchtitle": keywords,
-                                      "keywords": keywords,
-                                      "is_unanswered": False,
-                                      "context": {
-                                      'is_paginated': True,
-                                      'pages': objects_list.num_pages,
-                                      'page': page,
-                                      'has_previous': questions.has_previous(),
-                                      'has_next': questions.has_next(),
-                                      'previous': questions.previous_page_number(),
-                                      'next': questions.next_page_number(),
-                                      'base_url': request.path + '?t=question&q=%s&sort=%s&' % (keywords, view_id),
-                                      'pagesize': pagesize
-                                      }}, context_instance=RequestContext(request))
+                "questions" : questions,
+                "tab_id" : view_id,
+                "questions_count" : objects_list.count,
+                "tags" : related_tags,
+                "searchtag" : None,
+                "searchtitle" : keywords,
+                "keywords" : keywords,
+                "is_unanswered" : False,
+                "is_search": True, 
+                "search_uri":  search_uri, 
+                "context" : {
+                    'is_paginated' : True,
+                    'pages': objects_list.num_pages,
+                    'page': page,
+                    'has_previous': questions.has_previous(),
+                    'has_next': questions.has_next(),
+                    'previous': questions.previous_page_number(),
+                    'next': questions.next_page_number(),
+                    'base_url' : request.path + '?t=question&q=%s&sort=%s&' % (keywords, view_id),
+                    'pagesize' : pagesize
+                }}, context_instance=RequestContext(request))
  
     else:
         raise Http404

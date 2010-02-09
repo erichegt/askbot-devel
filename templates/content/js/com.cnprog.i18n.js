@@ -1,3 +1,5 @@
+﻿
+//var i18nLang;
 var i18nZh = {
 	'insufficient privilege':'用户权限不在操作范围',
 	'cannot pick own answer as best':'不能设置自己的回答为最佳答案',

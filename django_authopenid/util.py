@@ -6,7 +6,6 @@ import openid.store
 
 from django.db.models.query import Q
 from django.conf import settings
-from django.http import str_to_unicode
 from django.core.urlresolvers import reverse
 
 # needed for some linux distributions like debian
@@ -15,28 +14,17 @@ try:
 except:
     from yadis import xri
 
-import time, base64, hashlib, operator
-import urllib
+import time, base64, hashlib, operator, logging
+from utils.forms import clean_next, get_next_url
 
 from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
-DEFAULT_NEXT = '/' + getattr(settings, 'FORUM_SCRIPT_ALIAS')
-def clean_next(next):
-    if next is None:
-        return DEFAULT_NEXT
-    next = str_to_unicode(urllib.unquote(next), 'utf-8')
-    next = next.strip()
-    if next.startswith('/') and len(next)>1:
-        return next
-    return DEFAULT_NEXT
-
-def get_next_url(request):
-    return clean_next(request.REQUEST.get('next'))
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
+        logging.debug('init janrain openid object')
         self.openid = openid_
         self.issued = issued
         self.attrs = attrs or {}

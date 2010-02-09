@@ -204,7 +204,6 @@ blockquote
     /*border-bottom:1px solid #888a85;*/
 }
 .evenMore {font-size:14px; font-weight:800;}
-
 .questions-count{
     font-size:32px;
     font-family:sans-serif;
@@ -687,7 +686,12 @@ table.form-as-table th {
 /*.form-row li label {
     display: inline
 }*/
-.submit-row{line-height:30px;padding-top:10px;}
+.submit-row{
+    line-height:30px;
+    padding-top:10px;
+    display: block;
+    clear: both;
+}
 .errors{line-height:20px;color:red;}
 .error{
     color:darkred;
@@ -1159,291 +1163,305 @@ ul.bulleta li {background:url(../images/bullet_green.gif) no-repeat 0px 2px; pad
 .message p {
     margin-bottom:0px;
 }
-.message p.space-above {
+
+p.space-above {
     margin-top:10px;
 }
 
-    .warning{color:red;}
-    .darkred{color:darkred;}
-    .submit{
-        cursor:pointer;
-        /*letter-spacing:1px;*/
-        background-color:#D4D0C8;
-        height:40px;
-        border:1px solid #777777;
-    /*	width:100px; */
-        font-weight:bold;
-        padding-bottom:4px;
-        font-size:120%;}
-    .submit:hover{text-decoration:underline;}
-    .ask-body{padding-right:10px;}
-    .thousand{color:orange;}
+.warning{color:red;}
+.darkred{color:darkred;}
+.submit{
+	cursor:pointer;
+	/*letter-spacing:1px;*/
+	background-color:#D4D0C8;
+	height:40px;
+	border:1px solid #777777;
+/*	width:100px; */
+	font-weight:bold;
+    padding-bottom:4px;
+	font-size:120%;}
+.submit:hover{text-decoration:underline;}
+.ask-body{padding-right:10px;}
+.thousand{color:orange;}
 
-    .notify
-    {
-        position: fixed;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        z-index: 100;
-        padding: 0;
-        text-align: center;
-        font-weight: Bold;
-        color: #444;
-        background-color: #F4A83D;
-    }
+.notify
+{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	z-index: 100;
+	padding: 0;
+	text-align: center;
+	font-weight: Bold;
+	color: #444;
+	background-color: #F4A83D;
+}
 
-    .notify p {
-        margin-top:5px;
-        margin-bottom:5px;
-        font-size:16px;
-    }
+.notify p {
+    margin-top:5px;
+    margin-bottom:5px;
+    font-size:16px;
+}
 
-    #close-notify
-    {
-        position:absolute;
-        right:5px;
-        top:5px;
-        padding:0 3px 0 3px;
-        color: #735005;
-        text-decoration: none;
-        font-size:14px;
-        line-height:18px;
-        background-color: #FAD163;
-        border: 2px #735005 solid;
-        cursor:pointer;
-    }
-    #close-notify:hover {
-        text-decoration:none;
-    }
+#close-notify
+{
+    position:absolute;
+    right:5px;
+    top:5px;
+    padding:0 3px 0 3px;
+	color: #735005;
+	text-decoration: none;
+    font-size:14px;
+    line-height:18px;
+	background-color: #FAD163;
+	border: 2px #735005 solid;
+    cursor:pointer;
+}
+#close-notify:hover {
+    text-decoration:none;
+}
 
-    .big {
-        font-size:15px;
-    }
-    .bigger {
-        font-size:14px;
-    }
-    .strong {
-        font-weight:bold;
-    }
-    .orange
-    {
-        color:#d64000;
-        font-weight:bold;
-    }
-    .grey {
-        color:#808080;
-    }
-    .about div {
-        padding:10px 5px 10px 5px;
-        border-top:1px dashed #aaaaaa;
-    }
-    .about div.first {
-        padding-top:0;
-        border-top:none;
-    }
-    .about p {
-        margin-bottom:10px;
-    }
-    .about a {color:#d64000;text-decoration:underline;}
-    .about h3{
-        line-height:30px;
-        font-size:15px; 
-        font-weight:700;
-        padding-top: 0px;
-    }
-    .highlight {
-        background-color:#FFF8C6;
-    }
-    .nomargin {
-        margin:0;
-    }
-    .margin-bottom {
-        margin-bottom: 10px;
-    }
-    .inline-block {
-        display:inline-block;
-    }
-    .action-status {
-        margin:0;
-        border:none;
-        text-align:center;
-        line-height:10px;
-        font-size:12px;
-        padding:0;
-    }
-    .action-status span {
-        padding:3px 5px 3px 5px;
-        background-color:#fff380;/* nice yellow */
-        font-weight:normal;
-        -moz-border-radius: 5px;
-        -khtml-border-radius: 5px;
-        -webkit-border-radius: 5px;
-    }
-    .tight {
-        margin:0;
-        padding:0;
-    }
+.big {
+    font-size:15px;
+}
+.bigger {
+    font-size:14px;
+}
+.strong {
+    font-weight:bold;
+}
+.orange
+{
+	color:#d64000;
+	font-weight:bold;
+}
+.grey {
+    color:#808080;
+}
+.about div {
+    padding:10px 5px 10px 5px;
+    border-top:1px dashed #aaaaaa;
+}
+.about div.first {
+    padding-top:0;
+    border-top:none;
+}
+.about p {
+    margin-bottom:10px;
+}
+.about a {color:#d64000;text-decoration:underline;}
+.about h3{
+    line-height:30px;
+    font-size:15px; 
+    font-weight:700;
+    padding-top: 0px;
+}
+.highlight {
+    background-color:#FFF8C6;
+}
+.nomargin {
+    margin:0;
+}
+.margin-bottom {
+    margin-bottom: 10px;
+}
+.inline-block {
+    display:inline-block;
+}
+.action-status {
+    margin:0;
+    border:none;
+    text-align:center;
+    line-height:10px;
+    font-size:12px;
+    padding:0;
+}
+.action-status span {
+    padding:3px 5px 3px 5px;
+    background-color:#fff380;/* nice yellow */
+    font-weight:normal;
+    -moz-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+.tight {
+    margin:0;
+    padding:0;
+}
 
-    .list-table td {
-        vertical-align:top;
-    }
+.list-table td {
+    vertical-align:top;
+}
 
-    p.comment {
-        border-top: 1px dotted #ccccce;
-        margin:0;
-        font-size:11px;
-        color: #444444;
-        padding:5px 0 5px 0;
-    }
+p.comment {
+    border-top: 1px dotted #ccccce;
+    margin:0;
+    font-size:11px;
+    color: #444444;
+    padding:5px 0 5px 0;
+}
 
-    .delete-icon {
-        vertical-align:middle;
-        padding-left:3px;
-    }
-    /* these need to go */
-    table.form-as-table .errorlist {
-        display: block;
-        margin:0;
-        padding:0 0 0 5px;
-        text-align:left;
-        font-size:10px;
-        color:darkred;
-    }
-    table.form-as-table input {
-        display: inline;
-        margin-left: 4px;
-    }
-    table.form-as-table th {
-        vertical-align:bottom; 
-        padding-bottom:4px;
-    }
-    .form-row-vertical {
-        margin-top: 8px;
-        display: block;
-    }
-    .form-row-vertical label {
-        margin-bottom:3px;
-        display:block;
-    }
-    /* above stuff needs to go */
-    .text-align-right {
-        text-align: center;
-    }
-    ul.form-horizontal-rows {
-        list-style:none;
-        margin:0;
-    }
-    ul.form-horizontal-rows li {
-        position:relative;
-        height:40px;
-    }
-    ul.form-horizontal-rows label {
-        display:inline-block;
-    }
-    ul.form-horizontal-rows ul.errorlist {
-        list-style:none;
-        color:darkred;
-        font-size:10px;
-        line-height:10px;
-        position:absolute;
-        top:2px;
-        left:180px;
-        text-align:left;
-        margin:0;
-    }
-    ul.form-horizontal-rows ul.errorlist li {
-        height:10px;
-    }
-    ul.form-horizontal-rows label {
-        position:absolute;
-        left:0px;
-        bottom:6px;
-        margin:0px;
-        line-height: 12px;
-        font-size: 12px;
-    }
-    ul.form-horizontal-rows li input {
-        position:absolute;
-        bottom:0px;
-        left:180px;
-        margin:0px;
-    }
-    #emailpw-form li input {
-        left:170px;
-    }
-    #emailpw-form ul.errorlist {
-        left:170px;
-    }
-    #changepw-form li input {
-        left:150px;
-    }
-    #changepw-form ul.errorlist {
-        left:150px;
-    }
-    .narrow .summary {
-        float: left;
-    }
-    .narrow .summary .question-title {
-        font-weight: bold;
-        font-size: 120%;
-    }
-    .user-profile-tool-links {
-        padding-bottom:10px;
-        font-weight: bold;
-    }
-    .post-controls {
-        float:left;
-        font-size:11px;
-        line-height:12px;
-        min-width:200px;
-        margin-bottom:5px;
-    }
-    #question-controls .tags {
-        margin:0 0 3px 0;
-    }
-    .post-update-info-container {
-        float: right;
-        min-width:190px;
-    }
-    .post-update-info {
-        display:inline-block;
-        float:right;
-        width:190px;
-        margin-bottom:5px;
-    }
-    .post-update-info p {
-        font-size:11px;
-        line-height:15px;
-        margin:0 0 4px 0;
-        padding:0;
-    }
-    .post-update-info img {
-        float: left;
-        width: 32px;
-        margin: 4px 8px 0 0;
-    }
-    .comments-container {
-        clear:both;
-    }
-    .admin {
-        background-color:#fff380;/* nice yellow */
-        border: 1px solid darkred;
-        padding: 0 5px 0 5px;
-    }
-    .admin p {
-        margin-bottom: 3px;
-    }
-    .admin #action_status {
-        text-align:center;
-        font-weight:bold;
-    }
-    #tagSelector {
-        padding-bottom: 2px;
-    }
-    #hideIgnoredTagsControl {
-        margin: 5px 0 0 0;
-    }
-    #hideIgnoredTagsCb {
-        margin: 0 2px 0 1px;
-    }
+.delete-icon {
+    vertical-align:middle;
+    padding-left:3px;
+}
+/* these need to go */
+table.form-as-table .errorlist {
+    display: block;
+    margin:0;
+    padding:0 0 0 5px;
+    text-align:left;
+    font-size:10px;
+    color:darkred;
+}
+table.form-as-table input {
+    display: inline;
+    margin-left: 4px;
+}
+table.form-as-table th {
+    vertical-align:bottom; 
+    padding-bottom:4px;
+}
+.form-row-vertical {
+    margin-top: 8px;
+    display: block;
+}
+.form-row-vertical label {
+    margin-bottom:3px;
+    display:block;
+}
+/* above stuff needs to go */
+.text-align-right {
+    text-align: center;
+}
+ul.form-horizontal-rows {
+    list-style:none;
+    margin:0;
+}
+ul.form-horizontal-rows li {
+    position:relative;
+    height:40px;
+}
+ul.form-horizontal-rows label {
+    display:inline-block;
+}
+ul.form-horizontal-rows ul.errorlist {
+    list-style:none;
+    color:darkred;
+    font-size:10px;
+    line-height:10px;
+    position:absolute;
+    top:2px;
+    left:180px;
+    text-align:left;
+    margin:0;
+}
+ul.form-horizontal-rows ul.errorlist li {
+    height:10px;
+}
+ul.form-horizontal-rows label {
+    position:absolute;
+    left:0px;
+    bottom:6px;
+    margin:0px;
+    line-height: 12px;
+    font-size: 12px;
+}
+ul.form-horizontal-rows li input {
+    position:absolute;
+    bottom:0px;
+    left:180px;
+    margin:0px;
+}
+#emailpw-form li input {
+    left:170px;
+}
+#emailpw-form ul.errorlist {
+    left:170px;
+}
+#changepw-form li input {
+    left:150px;
+}
+#changepw-form ul.errorlist {
+    left:150px;
+}
+.narrow .summary {
+    float: left;
+}
+.narrow .summary .question-title {
+    font-weight: bold;
+    font-size: 120%;
+}
+.user-profile-tool-links {
+    padding-bottom:10px;
+    font-weight: bold;
+}
+.post-controls {
+    float:left;
+    font-size:11px;
+    line-height:12px;
+    min-width:200px;
+    margin-bottom:5px;
+}
+#question-controls .tags {
+    margin:0 0 3px 0;
+}
+.post-update-info-container {
+    float: right;
+    min-width:190px;
+}
+.post-update-info {
+    display:inline-block;
+    float:right;
+    width:190px;
+    margin-bottom:5px;
+}
+.post-update-info p {
+    font-size:11px;
+    line-height:15px;
+    margin:0 0 4px 0;
+    padding:0;
+}
+.post-update-info img {
+    float: left;
+    width: 32px;
+    margin: 4px 8px 0 0;
+}
+.comments-container {
+    clear:both;
+}
+.admin {
+    background-color:#fff380;/* nice yellow */
+    border: 1px solid darkred;
+    padding: 0 5px 0 5px;
+}
+.admin p {
+    margin-bottom: 3px;
+}
+.admin #action_status {
+    text-align:center;
+    font-weight:bold;
+}
+#tagSelector {
+    padding-bottom: 2px;
+}
+#hideIgnoredTagsControl {
+    margin: 5px 0 0 0;
+}
+#hideIgnoredTagsCb {
+    margin: 0 2px 0 1px;
+}
+#recaptcha_widget_div {
+    width:318px;
+    float:left;
+    clear:both;
+}
+p.signup_p {
+    margin: 20px 0px 0px 0px;
+}
+.simple-subscribe-options ul {
+    list-style:none;
+    list-style-position:outside;
+    margin:0;
+}
