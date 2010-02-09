@@ -17,8 +17,8 @@
                $("#nav_questions").attr('className',"on");
            });
        </script>
-       <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
-       <script type='text/javascript' src='{% href "/content/js/com.cnprog.tag_selector.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/content/js/com.cnprog.editor.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/content/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 <div class="tabBar">
@@ -153,7 +153,7 @@
 </div>
 {% endif %}
 <div id="feeds">
-<a href="{% href "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
+<a href="{% media  "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
 {% endblock %}
 {% block tail %}

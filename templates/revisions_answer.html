@@ -6,8 +6,8 @@
 {% load humanize %}
 {% block title %}{% spaceless %}{% trans "Revision history" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
-        <script type='text/javascript' src='{% href "/content/js/com.cnprog.post.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.editor.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.post.js" %}'></script>
         <script type="text/javascript">
         //todo - take this out into .js file 
         $().ready(function(){
@@ -46,7 +46,7 @@
             <table width="100%">
                 <tr>
                     <td width="20" style="vertical-align:middle"><img id="rev-arrow-{{ revision.revision }}" 
-                                                                    src="{% href "/content/images/expander-arrow-show.gif" %}"
+                                                                    src="{% media  "/content/images/expander-arrow-show.gif" %}"
                                                                     alt="{% trans "click to hide/show revision" %}"/>
                     </td>
                     <td width="30px" style="vertical-align:middle"><span class="revision-number" title="{% trans "revision" %} {{ revision.revision }}">{{ revision.revision }}</span></td>

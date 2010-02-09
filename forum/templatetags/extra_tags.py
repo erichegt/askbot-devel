@@ -276,7 +276,7 @@ def get_latest_changed_timestamp():
     return timestr
 
 @register.simple_tag
-def href(url):
+def media(url):
     url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
     return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
 
@@ -323,7 +323,7 @@ def joinitems(parser,token):
 
     return JoinItemListNode(separator=sep_node,items=nodelist)
 
-class BlockResourceNode(template.Node):
+class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
@@ -336,16 +336,16 @@ class BlockResourceNode(template.Node):
         out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
         return out.replace(' ','')
 
-@register.tag(name='blockresource')
-def blockresource(parser,token):
+@register.tag(name='blockmedia')
+def blockmedia(parser,token):
     try:
         tagname = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError("blockresource tag does not use arguments")
+        raise template.TemplateSyntaxError("blockmedia tag does not use arguments")
     nodelist = []
     while True:
-        nodelist.append(parser.parse(('endblockresource')))
+        nodelist.append(parser.parse(('endblockmedia')))
         next = parser.next_token()
-        if next.contents == 'endblockresource':
+        if next.contents == 'endblockmedia':
             break
-    return BlockResourceNode(nodelist)
+    return BlockMediaUrlNode(nodelist)

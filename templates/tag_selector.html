@@ -10,7 +10,7 @@
                 title="{% blocktrans with tag as tagname %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"
                 href="{% url tag_questions tag_name|urlencode %}">{{tag_name}}</a>
             <img class="delete-icon" 
-                src="{% href "/content/images/close-small-dark.png" %}"
+                src="{% media  "/content/images/close-small-dark.png" %}"
                 title="{% blocktrans %}remove '{{tag_name}}' from the list of interesting tags{% endblocktrans %}"/>
         </span>
         {% endspaceless %}
@@ -27,7 +27,7 @@
                 title="{% blocktrans with tag as tagname %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"
                 href="{% url tag_questions tag_name|urlencode %}">{{tag_name}}</a>
             <img class="delete-icon" 
-                src="{% href "/content/images/close-small-dark.png" %}"
+                src="{% media  "/content/images/close-small-dark.png" %}"
                 title="{% blocktrans %}remove '{{tag_name}}' from the list of ignored tags{% endblocktrans %}"/>
         </span>
         {% endspaceless %}
