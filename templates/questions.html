@@ -24,9 +24,6 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-<<<<<<< HEAD:templates/questions.html
-    <div class="headQuestions">{% if searchtag %}{% trans "Found by tags" %}{% else %}{% if searchtitle %}{% trans "Found by title" %}{% else %}{% trans "All questions" %}{% endif %}{% endif %}</div>
-=======
     <div class="headQuestions">
         {% if searchtag %}
             {% trans "Found by tags" %}
@@ -46,12 +43,11 @@
             {% endif %}
         {% endif %}
     </div>
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
     <div class="tabsA">
-        <a id="latest" href="?sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
-        <a id="active" href="?sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
-        <a id="hottest" href="?sort=hottest" class="off" title="{% trans "hottest questions" %}">{% trans "hottest" %}</a>
-        <a id="mostvoted" href="?sort=mostvoted" class="off" title="{% trans "most voted questions" %}">{% trans "most voted" %}</a>    
+        <a id="latest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
+        <a id="active" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
+        <a id="hottest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=hottest" class="off" title="{% trans "hottest questions" %}">{% trans "hottest" %}</a>
+        <a id="mostvoted" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=mostvoted" class="off" title="{% trans "most voted questions" %}">{% trans "most voted" %}</a>    
     </div>
 </div>
 <div id="listA">
@@ -164,29 +160,6 @@
 {% block sidebar %}
 <div class="boxC">
 		{% if searchtag %}
-<<<<<<< HEAD:templates/questions.html
-			{% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
-			have total {{q_num}} questions tagged {{tagname}}
-			{% plural %}
-			have total {{q_num}} questions tagged {{tagname}}
-			{% endblocktrans %}
-		{% else %}
-			{% if searchtitle %}
-				{% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
-				have total {{q_num}} questions containing {{searchtitle}}
-				{% plural %}
-				have total {{q_num}} questions containing {{searchtitle}}
-				{% endblocktrans %}
-			{% else %}
-				{% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
-				have total {{q_num}} questions
-				{% plural %}
-				have total {{q_num}} questions
-				{% endblocktrans %}
-			{% endif %}
-		{% endif %}
-        <p>
-=======
             {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
             have total {{q_num}} questions tagged {{tagname}}
             {% plural %}
@@ -224,7 +197,6 @@
 			{% endif %}
 		{% endif %}
         <p class="nomargin">
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
         {% ifequal tab_id "latest" %}
 			{% trans "latest questions info" %}
         {% endifequal %}
@@ -252,18 +224,10 @@
 	<h3 class="subtitle">{% trans "Related tags" %}</h3>
     <div class="tags">
         {% for tag in tags %}
-<<<<<<< HEAD:templates/questions.html
-            <a rel="tag" title="{% trans "see questions tagged" %}'{{ tag.name }}'{% trans "using tags" %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
-            <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
-            <br />
-        {% endfor %}
-        <br />
-=======
             <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
             <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
             <br />
         {% endfor %}
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/questions.html
     </div>
 </div>
 

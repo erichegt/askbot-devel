@@ -2,42 +2,30 @@ from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
 from forum.models import *
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-=======
 from forum import const 
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 import datetime
-import settings
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-=======
+from django.conf import settings
 import logging
 from utils.odict import OrderedDict
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
 
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):
         try:
-            self.send_email_alerts()
-        except Exception, e:
-            print e
+            try:
+                self.send_email_alerts()
+            except Exception, e:
+                print e
         finally:
             connection.close()
 
     def get_updated_questions_for_user(self,user):
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-        q_sel = []
-        q_ask = []
-        q_ans = []
-        q_all = []
-=======
         q_sel = None 
         q_ask = None 
         q_ans = None 
         q_all = None 
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
         now = datetime.datetime.now()
         Q_set1 = Question.objects.exclude(
                                         last_activity_by=user,
@@ -51,28 +39,17 @@ class Command(NoArgsCommand):
                                   ).exclude(
                                         closed=True
                                   )
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-=======
             
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
         user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
         for feed in user_feeds:
             cutoff_time = now - EmailFeedSetting.DELTA_TABLE[feed.frequency]
             if feed.reported_at == None or feed.reported_at <= cutoff_time:
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-                Q_set = Q_set1.exclude(last_activity_at__gt=cutoff_time)
-=======
                 Q_set = Q_set1.exclude(last_activity_at__gt=cutoff_time)#report these excluded later
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
                 feed.reported_at = now
                 feed.save()#may not actually report anything, depending on filters below
                 if feed.feed_type == 'q_sel':
                     q_sel = Q_set.filter(followed_by=user)
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-                    q_sel.cutoff_time = cutoff_time
-=======
                     q_sel.cutoff_time = cutoff_time #store cutoff time per query set
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
                 elif feed.feed_type == 'q_ask':
                     q_ask = Q_set.filter(author=user)
                     q_ask.cutoff_time = cutoff_time
@@ -80,58 +57,12 @@ class Command(NoArgsCommand):
                     q_ans = Q_set.filter(answers__author=user)
                     q_ans.cutoff_time = cutoff_time
                 elif feed.feed_type == 'q_all':
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-                    q_all = Q_set
-                    q_all.cutoff_time = cutoff_time
-        #build list in this order
-        q_tbl = {} 
-        def extend_question_list(src, dst):
-            if isinstance(src,list):
-                return
-            cutoff_time = src.cutoff_time
-            for q in src:
-                if q in dst:
-                    if cutoff_time < dst[q]:
-                        dst[q] = cutoff_time
-                else:
-                    dst[q] = cutoff_time
 
-        extend_question_list(q_sel, q_tbl)
-        extend_question_list(q_ask, q_tbl)
-        extend_question_list(q_ans, q_tbl)
-        extend_question_list(q_all, q_tbl)
-
-        ctype = ContentType.objects.get_for_model(Question)
-        out = {}
-        for q, cutoff_time in q_tbl.items():
-            #todo use Activity, but first start keeping more Activity records
-            #act = Activity.objects.filter(content_type=ctype, object_id=q.id)
-            #get info on question edits, answer edits, comments
-            out[q] = {}
-            q_rev = QuestionRevision.objects.filter(question=q,revised_at__lt=cutoff_time)
-            q_rev = q_rev.exclude(author=user)
-            out[q]['q_rev'] = len(q_rev)
-            if len(q_rev) > 0 and q.added_at == q_rev[0].revised_at:
-                out[q]['q_rev'] = 0
-                out[q]['new_q'] = True
-            else:
-                out[q]['new_q'] = False
-                
-            new_ans = Answer.objects.filter(question=q,added_at__lt=cutoff_time)
-            new_ans = new_ans.exclude(author=user)
-            out[q]['new_ans'] = len(new_ans)
-            ans_rev = AnswerRevision.objects.filter(answer__question=q,revised_at__lt=cutoff_time)
-            ans_rev = ans_rev.exclude(author=user)
-            out[q]['ans_rev'] = len(ans_rev)
-        return out 
-
-    def __act_count(self,string,number,output):
-=======
                     if user.tag_filter_setting == 'ignored':
-                        ignored_tags = Tag.objects.filter(user_selections___reason='bad',user_selections__user=user)
+                        ignored_tags = Tag.objects.filter(user_selections__reason='bad',user_selections__user=user)
                         q_all = Q_set.exclude( tags__in=ignored_tags )
                     else:
-                        selected_tags = Tag.objects.filter(user_selections___reason='good',user_selections__user=user)
+                        selected_tags = Tag.objects.filter(user_selections__reason='good',user_selections__user=user)
                         q_all = Q_set.filter( tags__in=selected_tags )
                     q_all.cutoff_time = cutoff_time
         #build list in this order
@@ -206,17 +137,10 @@ class Command(NoArgsCommand):
         return q_list 
 
     def __action_count(self,string,number,output):
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
         if number > 0:
             output.append(_(string) % {'num':number})
 
     def send_email_alerts(self):
-
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-        for user in User.objects.all():
-            q_list = self.get_updated_questions_for_user(user)
-            num_q = len(q_list)
-=======
         #todo: move this to template
         for user in User.objects.all():
             q_list = self.get_updated_questions_for_user(user)
@@ -227,28 +151,15 @@ class Command(NoArgsCommand):
                     num_q += 1
                 else:
                     num_moot += 1
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
             if num_q > 0:
                 url_prefix = settings.APP_URL
                 subject = _('email update message subject')
+                print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for a question', 
                             '%(name)s, this is an update message header for %(num)d questions',num_q) \
                                 % {'num':num_q, 'name':user.username}
 
                 text += '<ul>'
-<<<<<<< HEAD:forum/management/commands/send_email_alerts.py
-                for q, act in q_list.items():
-                    act_list = []
-                    if act['new_q']:
-                        act_list.append(_('new question'))
-                    self.__act_count('%(num)d rev', act['q_rev'],act_list)
-                    self.__act_count('%(num)d ans', act['new_ans'],act_list)
-                    self.__act_count('%(num)d ans rev',act['ans_rev'],act_list)
-                    act_token = ', '.join(act_list)
-                    text += '<li><a href="%s?sort=latest">%s</a> <font color="#777777">(%s)</font></li>' \
-                                % (url_prefix + q.get_absolute_url(), q.title, act_token)
-                text += '</ul>'
-=======
                 for q, meta_data in q_list.items():
                     act_list = []
                     if meta_data['nothing_new']:
@@ -273,7 +184,6 @@ class Command(NoArgsCommand):
                     text += _('Perhaps you could look up previously sent forum reminders in your mailbox.')
                     text += '</p>'
 
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/management/commands/send_email_alerts.py
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
                 text += _('go to %(link)s to change frequency of email updates or %(email)s administrator') \
                                 % {'link':link, 'email':settings.ADMINS[0][1]}

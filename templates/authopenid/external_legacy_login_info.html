@@ -8,14 +8,8 @@
 </div>
 {% spaceless %}
 <div class="message">
-<<<<<<< HEAD:templates/authopenid/external_legacy_login_info.html
-fill in template templates/authopenid/external_legacy_login_info.html
-and explain how to change password, recover password, etc.
 <!--add info about your external login site here-->
-=======
-<!--add info about your external login site here-->
-{% trans "how to login with password through external login website" %}
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/authopenid/external_legacy_login_info.html
+{% blocktrans %}how to login with password through external login website or use {{feedback_url}}{% endblocktrans %}
 </div>
 {% endspaceless %}
 {% endblock %}

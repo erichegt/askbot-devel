@@ -1,5 +1,6 @@
 import time
 import os
+import posixpath
 import datetime
 import math
 import re
@@ -244,9 +245,9 @@ def diff_date(date, limen=2):
 
     if days > 2:
         if date.year == now.year:
-            return date.strftime(_("%b %d at %H:%M"))
+            return date.strftime("%b %d at %H:%M")
         else:
-            return date.strftime(_("%b %d '%y at %H:%M"))
+            return date.strftime("%b %d '%y at %H:%M")
     elif days == 2:
         return _('2 days ago')
     elif days == 1:
@@ -281,7 +282,7 @@ def get_latest_changed_timestamp():
 @register.simple_tag
 def href(url):
     url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
-    return os.path.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+    return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
 
 class ItemSeparatorNode(template.Node):
     def __init__(self,separator):

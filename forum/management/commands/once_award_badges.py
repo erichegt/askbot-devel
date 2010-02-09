@@ -94,17 +94,18 @@ BADGE_AWARD_TYPE_FIRST = {
 class Command(BaseCommand):
     def handle_noargs(self, **options):
         try:
-            self.alpha_user()
-            self.beta_user()
-            self.first_type_award()
-            self.first_ask_be_voted()
-            self.first_answer_be_voted()
-            self.first_answer_be_voted_10()
-            self.vote_count_300()
-            self.edit_count_100()
-            self.comment_count_10()
-        except Exception, e:
-            print e
+            try:
+                self.alpha_user()
+                self.beta_user()
+                self.first_type_award()
+                self.first_ask_be_voted()
+                self.first_answer_be_voted()
+                self.first_answer_be_voted_10()
+                self.vote_count_300()
+                self.edit_count_100()
+                self.comment_count_10()
+            except Exception, e:
+                print e
         finally:
             connection.close()
 

@@ -22,7 +22,7 @@ import settings
 =======
 from django.contrib.sitemaps import ping_google
 import django.dispatch
-import settings
+from django.conf import settings
 import logging
 
 if settings.USE_SPHINX_SEARCH == True:
@@ -415,7 +415,7 @@ class QuestionRevision(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        print 'in QuestionRevision.get_absolute_url()'
+        #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
 
     def save(self, **kwargs):
@@ -442,7 +442,7 @@ class AnonymousAnswer(models.Model):
     def publish(self,user):
         from forum.views import create_new_answer
         added_at = datetime.datetime.now()
-        print user.id
+        #print user.id
         create_new_answer(question=self.question,wiki=self.wiki,
                             added_at=added_at,text=self.text,
                             author=user)
@@ -510,8 +510,11 @@ class Answer(models.Model):
 
 >>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/models.py
     def get_user_vote(self, user):
+	if user.__class__.__name__ == "AnonymousUser":
+	    return None
+
         votes = self.votes.filter(user=user)
-        if votes.count() > 0:
+        if votes and votes.count() > 0:
             return votes[0]
         else:
             return None
@@ -729,13 +732,13 @@ def user_is_username_taken(cls,username):
         return False
 
 def user_get_q_sel_email_feed_frequency(self):
-    print 'looking for frequency for user %s' % self
+    #print 'looking for frequency for user %s' % self
     try:
         feed_setting = EmailFeedSetting.objects.get(subscriber=self,feed_type='q_sel')
     except Exception, e:
-        print 'have error %s' % e.message
+        #print 'have error %s' % e.message
         raise e
-    print 'have freq=%s' % feed_setting.frequency
+    #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
 
 User.add_to_class('is_approved', models.BooleanField(default=False))
@@ -871,7 +874,7 @@ def notify_award_message(instance, created, **kwargs):
     """
     if created:
         user = instance.user
-        user.message_set.create(message=u"%s" % instance.badge.name)
+        user.message_set.create(message=u"Congratulations, you have received a badge '%s'" % instance.badge.name)
 
 def record_answer_accepted(instance, created, **kwargs):
     """

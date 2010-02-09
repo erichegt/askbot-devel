@@ -1,6 +1,7 @@
+//var $, scriptUrl;
 var showMessage = function(object, msg) {
-    var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' 
-				+ $.i18n._('click to close') + ')</div>');
+    var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
+				$.i18n._('click to close') + ')</div>');
 
     div.click(function(event) {
         $(".vote-notification").fadeOut("fast", function() { $(this).remove(); });
@@ -23,11 +24,7 @@ var notify = function() {
         },       
         close: function(doPostback) {
             if (doPostback) {
-<<<<<<< HEAD:templates/content/js/com.cnprog.utils.js
-               $.post($.i18n._("/") + $.i18n._("messages/") + 
-=======
                $.post(scriptUrl + $.i18n._("messages/") + 
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.utils.js
                 $.i18n._("markread/"), { formdata: "required" });
             }
             $(".notify").fadeOut("fast");
@@ -39,20 +36,28 @@ var notify = function() {
 } ();
 
 function appendLoader(containerSelector) {
-    $(containerSelector).append('<img class="ajax-loader" '
-<<<<<<< HEAD:templates/content/js/com.cnprog.utils.js
-		+'src="' + $.i18n._('/') + 'content/images/indicator.gif" title="'
-=======
-		+'src="' + scriptUrl + 'content/images/indicator.gif" title="'
->>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.utils.js
-		+$.i18n._('loading...')
-		+'" alt="'
-		+$.i18n._('loading...')
-		+'" />');
+    $(containerSelector).append('<img class="ajax-loader" ' +
+		'src="' + scriptUrl + 'content/images/indicator.gif" title="' +
+		$.i18n._('loading...') +
+		'" alt="' +
+		$.i18n._('loading...') +
+		'" />');
 }
 
 function removeLoader() {
     $("img.ajax-loader").remove();
+}
+
+function setSubmitButtonDisabled(formSelector, isDisabled) { 
+    $(formSelector).find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
+}
+
+function enableSubmitButton(formSelector) {
+    setSubmitButtonDisabled(formSelector, false);
+}
+
+function disableSubmitButton(formSelector) {
+    setSubmitButtonDisabled(formSelector, true);
 }
 
 function setupFormValidation(formSelector, validationRules, validationMessages, onSubmitCallback) {
@@ -64,7 +69,7 @@ function setupFormValidation(formSelector, validationRules, validationMessages, 
         errorClass: "form-error",
         errorPlacement: function(error, element) {
             var span = element.next().find("span.form-error");
-            if (span.length == 0) {
+            if (span.length === 0) {
                 span = element.parent().find("span.form-error");
             }
             span.replaceWith(error);
@@ -72,22 +77,14 @@ function setupFormValidation(formSelector, validationRules, validationMessages, 
         submitHandler: function(form) {
             disableSubmitButton(formSelector);
             
-            if (onSubmitCallback)
+            if (onSubmitCallback){
                 onSubmitCallback();
-            else
+            } 
+            else{
                 form.submit();
+            }
         }
     });
-}
-
-function enableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, false);
-}
-function disableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, true);
-}
-function setSubmitButtonDisabled(formSelector, isDisabled) { 
-    $(formSelector).find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
 }
 
 var CPValidator = function(){
@@ -116,11 +113,11 @@ var CPValidator = function(){
                 },
                 text: {
                     required: " " + $.i18n._('content cannot be empty'),
-                    minlength: jQuery.format(' ' + $.i18n._('content minchars'))
+                    minlength: $.format(' ' + $.i18n._('content minchars'))
                 },
                 title: {
                     required: " " + $.i18n._('please enter title'),
-                    minlength: jQuery.format(' ' + $.i18n._('title minchars'))
+                    minlength: $.format(' ' + $.i18n._('title minchars'))
                 }
             };
         }

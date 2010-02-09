@@ -1,4 +1,5 @@
 ﻿import datetime
+import time
 import logging
 from django.contrib.auth.models import User, UserManager
 from django.db import connection, models, transaction
@@ -122,7 +123,7 @@ class TagManager(models.Manager):
         'SET used_count = ('
             'SELECT COUNT(*) FROM question_tags '
             'INNER JOIN question ON question_id=question.id '
-            'WHERE tag_id = tag.id AND question.deleted=0'
+            'WHERE tag_id = tag.id AND question.deleted=False'
         ') '
         'WHERE id IN (%s)')
 
@@ -200,7 +201,7 @@ class AnswerManager(models.Manager):
 class VoteManager(models.Manager):
     COUNT_UP_VOTE_BY_USER = "SELECT count(*) FROM vote WHERE user_id = %s AND vote = 1"
     COUNT_DOWN_VOTE_BY_USER = "SELECT count(*) FROM vote WHERE user_id = %s AND vote = -1"
-    COUNT_VOTES_PER_DAY_BY_USER = "SELECT COUNT(*) FROM vote WHERE user_id = %s AND DATE(voted_at) = DATE(NOW())"
+    COUNT_VOTES_PER_DAY_BY_USER = "SELECT COUNT(*) FROM vote WHERE user_id = %s AND DATE(voted_at) = %s"
     def get_up_vote_count_from_user(self, user):
         if user is not None:
             cursor = connection.cursor()
@@ -222,7 +223,7 @@ class VoteManager(models.Manager):
     def get_votes_count_today_from_user(self, user):
         if user is not None:
             cursor = connection.cursor()
-            cursor.execute(self.COUNT_VOTES_PER_DAY_BY_USER, [user.id])
+            cursor.execute(self.COUNT_VOTES_PER_DAY_BY_USER, [user.id,  time.strftime("%Y-%m-%d",  datetime.datetime.now().timetuple())])
             row = cursor.fetchone()
             return row[0]
 
@@ -230,11 +231,11 @@ class VoteManager(models.Manager):
             return 0
             
 class FlaggedItemManager(models.Manager):
-    COUNT_FLAGS_PER_DAY_BY_USER = "SELECT COUNT(*) FROM flagged_item WHERE user_id = %s AND DATE(flagged_at) = DATE(NOW())"
+    COUNT_FLAGS_PER_DAY_BY_USER = "SELECT COUNT(*) FROM flagged_item WHERE user_id = %s AND DATE(flagged_at) = %s"
     def get_flagged_items_count_today(self, user):
         if user is not None:
             cursor = connection.cursor()
-            cursor.execute(self.COUNT_FLAGS_PER_DAY_BY_USER, [user.id])
+            cursor.execute(self.COUNT_FLAGS_PER_DAY_BY_USER, [user.id, time.strftime("%Y-%m-%d",  datetime.datetime.now().timetuple())])
             row = cursor.fetchone()
             return row[0]
 
@@ -242,7 +243,7 @@ class FlaggedItemManager(models.Manager):
             return 0
 
 class ReputeManager(models.Manager):
-    COUNT_REPUTATION_PER_DAY_BY_USER = "SELECT SUM(positive)+SUM(negative) FROM repute WHERE user_id = %s AND (reputation_type=1 OR reputation_type=-8) AND DATE(reputed_at) = DATE(NOW())"
+    COUNT_REPUTATION_PER_DAY_BY_USER = "SELECT SUM(positive)+SUM(negative) FROM repute WHERE user_id = %s AND (reputation_type=1 OR reputation_type=-8) AND DATE(reputed_at) = %s"
     def get_reputation_by_upvoted_today(self, user):
         """
         For one user in one day, he can only earn rep till certain score (ep. +200) 
@@ -251,7 +252,7 @@ class ReputeManager(models.Manager):
         """
         if user is not None:
             cursor = connection.cursor()
-            cursor.execute(self.COUNT_REPUTATION_PER_DAY_BY_USER, [user.id])
+            cursor.execute(self.COUNT_REPUTATION_PER_DAY_BY_USER, [user.id, time.strftime("%Y-%m-%d",  datetime.datetime.now().timetuple())])
             row = cursor.fetchone()
             return row[0]
 

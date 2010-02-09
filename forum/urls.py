@@ -54,7 +54,7 @@ urlpatterns = patterns('',
                                                 app.delete_comment, kwargs={'commented_object_type':'answer'}, \
                                                 name='delete_answer_comment'), \
     #place general question item in the end of other operations
-    url(r'^%s(?P<id>\d+)//*' % _('question/'), app.question, name='question'),
+    url(r'^%s(?P<id>\d+)/' % _('question/'), app.question, name='question'),
     url(r'^%s$' % _('tags/'), app.tags, name='tags'),
     url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.tag, name='tag_questions'),
 
@@ -86,6 +86,7 @@ urlpatterns = patterns('',
     url(r'^%s(?P<short_name>[^/]+)/$' % _('books/'), app.book, name='book'),
     url(r'^%s$' % _('search/'), app.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.feedback, name='feedback'),
+    (r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
     (r'^%s' % _('account/'), include('django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 )

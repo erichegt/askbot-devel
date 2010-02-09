@@ -175,7 +175,7 @@ msgstr ""
 
 #: django_authopenid/urls.py:15
 msgid "external-login/"
-msgstr "using-nmr-wiki-login-and-password/"
+msgstr ""
 
 #: django_authopenid/urls.py:16
 msgid "register/"
