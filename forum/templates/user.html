@@ -12,8 +12,8 @@
 {% endblock %}
 {% block forejs %}
     {% if request.user|can_moderate_users %}
-        <script type='text/javascript' src='{% href "/content/js/com.cnprog.admin.js" %}'></script>
-        <script type='text/javascript' src='{% href "/content/js/jquery.form.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.admin.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/content/js/jquery.form.js" %}'></script>
     {% endif %}
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
