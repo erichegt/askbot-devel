@@ -95,6 +95,9 @@ parameters:
             <p>{% trans "receive updates motivational blurb" %}</p>
             <div class='simple-subscribe-options'>
             {{email_feeds_form.subscribe}}
+            {% if email_feeds_form.errors %}
+            <p class="error">{% trans "please select one of the options above" %}</p>
+            {% endif %}
             </div>
             <p class='space-above'>{% trans "Tag filter tool will be your right panel, once you log in." %}</p>
             <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"/></div>

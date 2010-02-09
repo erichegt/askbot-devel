@@ -15,10 +15,12 @@
     <li><label for="password1_id">{{form.password1.label}}</label>{{form.password1}}{{form.password1.errors}}</li>
     <li><label for="password2_id">{{form.password2.label}}</label>{{form.password2}}{{form.password2.errors}}</li>
     </ul>
-    <p class="signup_p">{% trans "receive updates motivational blurb" %}</p>
-    <p class="signup_p">{% trans "Please select your preferred email update schedule for the following groups of questions:" %}</p>
+    <p class="margin-top">{% trans "receive updates motivational blurb" %}</p>
     <div class='simple-subscribe-options'>
     {{email_feeds_form.subscribe}}
+    {% if email_feeds_form.errors %}
+    <p class="error">{% trans "please select one of the options above" %}</p>
+    {% endif %}
     </div>
     <p class="signup_p">{% trans "Please read and type in the two words below to help us prevent automated account creation." %}</p>
     {{form.recaptcha}}
