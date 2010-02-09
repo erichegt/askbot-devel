@@ -1,6 +1,7 @@
 {% extends "base_content.html" %}
 <!-- user.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load humanize %}
 {% block title %}{% spaceless %}{{ page_title }}{% endspaceless %}{% endblock %}
 {% block forestyle%}
@@ -10,17 +11,22 @@
 	</style>
 {% endblock %}
 {% block forejs %}
-        <script type="text/javascript">
-            $().ready(function(){
-                {% ifequal view_user request.user%}
-                    $("#nav_profile").attr('className',"on");
-                {% else %}
-                    $("#nav_users").attr('className',"on");
-                {% endifequal %}
-            }); 
-        </script>
-        {% block userjs %}
-        {% endblock %}
+    {% if request.user|can_moderate_users %}
+        <script type='text/javascript' src='{% href "/content/js/com.cnprog.admin.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/jquery.form.js" %}'></script>
+    {% endif %}
+    <script type="text/javascript">
+        var viewUserID = {{view_user.id}};
+        $().ready(function(){
+            {% ifequal view_user request.user%}
+                $("#nav_profile").attr('className',"on");
+            {% else %}
+                $("#nav_users").attr('className',"on");
+            {% endifequal %}
+        }); 
+    </script>
+    {% block userjs %}
+    {% endblock %}
 {% endblock %}
 {% block content %}
     <div id="mainbar-full">
@@ -28,6 +34,6 @@
         {% include "user_tabs.html" %}
         {% block usercontent %}
         {% endblock %}
-        {% include "user_footer.html" %}
+        {%comment%}{% include "user_footer.html" %}{%endcomment%}
 	</div>
 {% endblock %}<!-- end user.html -->

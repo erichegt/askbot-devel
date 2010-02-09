@@ -52,31 +52,33 @@ var Vote = function(){
     
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
+
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+    var pleaseLogin = "<a href='" + $.i18n._("/") + $.i18n._("account/") + $.i18n._("signin/")
+                    + "?next=" + $.i18n._("/") + $.i18n._("questions/") + "{{QuestionID}}'>"
+					+ $.i18n._('please login') + "</a>";
+
+    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + $.i18n._("/") + $.i18n._("faq/") + "'>faq</a>";
+=======
+    var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
+                    + "?next=" + scriptUrl + $.i18n._("questions/") + "{{QuestionID}}'>"
+					+ $.i18n._('please login') + "</a>";
+
+    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') 
-					+ "<a href='/account/signin/?next=/questions/{{QuestionID}}'>"
-					+ $.i18n._('please login') + "</a>";
-    var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') 
-					+ "<a href='/account/signin/?next=/questions/{{QuestionID}}'>"
-					+ $.i18n._('please login') + "</a>";
-    var upVoteRequiredScoreMessage = $.i18n._('>15 points requried to upvote') 
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
-    var downVoteRequiredScoreMessage = $.i18n._('>100 points requried to downvote')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
+    var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
+    var upVoteRequiredScoreMessage = $.i18n._('>15 points requried to upvote') + pleaseSeeFAQ;
+    var downVoteRequiredScoreMessage = $.i18n._('>100 points required to downvote') + pleaseSeeFAQ;
     var voteOwnDeniedMessage = $.i18n._('cannot vote for own posts');
-    var voteRequiredMoreVotes = $.i18n._('daily vote cap exhausted')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
-    var voteDenyCancelMessage = $.i18n._('cannot revoke old vote')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
+    var voteRequiredMoreVotes = $.i18n._('daily vote cap exhausted') + pleaseSeeFAQ;
+    var voteDenyCancelMessage = $.i18n._('cannot revoke old vote') + pleaseSeeFAQ;
     var offensiveConfirmation = $.i18n._('please confirm offensive');
-    var offensiveAnonymousMessage = $.i18n._('anonymous users cannot flag offensive posts')
-					+ "<a href='/account/signin/?next=/questions/{{QuestionID}}'>"
-					+ $.i18n._('please login') + "</a>";
-    var offensiveTwiceMessage = $.i18n._('cannot flag message as offensive twice')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
-    var offensiveNoFlagsLeftMessage = $.i18n._('flag offensive cap exhausted')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
-    var offensiveNoPermissionMessage = $.i18n._('need >15 points to report spam')
-					+ $.i18n._('please see') + "<a href='/faq'>faq</a>";
+    var offensiveAnonymousMessage = $.i18n._('anonymous users cannot flag offensive posts') + pleaseLogin;
+    var offensiveTwiceMessage = $.i18n._('cannot flag message as offensive twice') + pleaseSeeFAQ;
+    var offensiveNoFlagsLeftMessage = $.i18n._('flag offensive cap exhausted') + pleaseSeeFAQ;
+    var offensiveNoPermissionMessage = $.i18n._('need >15 points to report spam') + pleaseSeeFAQ;
     var removeConfirmation = $.i18n._('confirm delete');
     var removeAnonymousMessage = $.i18n._('anonymous users cannot delete/undelete');
     var recoveredMessage = $.i18n._('post recovered');
@@ -94,7 +96,7 @@ var Vote = function(){
         removeQuestion: 9,
         removeAnswer:10,
         questionSubscribeUpdates:11,
-        questionUnsubscribeUpdates:12,
+        questionUnsubscribeUpdates:12
     };
 
     var getFavoriteButton = function(){
@@ -131,7 +133,7 @@ var Vote = function(){
     };
     
     var getOffensiveQuestionFlag = function(){
-        var offensiveQuestionFlag = 'table[id=question-table] span[class='+ offensiveClassFlag +']';
+        var offensiveQuestionFlag = '#question-table span[class='+ offensiveClassFlag +']';
         return $(offensiveQuestionFlag);
     };
     
@@ -157,17 +159,30 @@ var Vote = function(){
     var setVoteImage = function(voteType, undo, object){
         var flag = undo ? "" : "-on";
         var arrow = (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote) ? "up" : "down";
-        object.attr("src", "/content/images/vote-arrow-"+ arrow + flag +".png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+        object.attr("src", $.i18n._("/") + "content/images/vote-arrow-"+ arrow + flag +".png");
+=======
+        object.attr("src", scriptUrl + "content/images/vote-arrow-"+ arrow + flag +".png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
         
         // if undo voting, then undo the pair of arrows.
         if(undo){
             if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote){
-                $(getQuestionVoteUpButton()).attr("src", "/content/images/vote-arrow-up.png");
-                $(getQuestionVoteDownButton()).attr("src", "/content/images/vote-arrow-down.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+                $(getQuestionVoteUpButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
+                $(getQuestionVoteDownButton()).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
             }
             else{
-                $(getAnswerVoteUpButton(postId)).attr("src", "/content/images/vote-arrow-up.png");
-                $(getAnswerVoteDownButton(postId)).attr("src", "/content/images/vote-arrow-down.png");
+                $(getAnswerVoteUpButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-up.png");
+                $(getAnswerVoteDownButton(postId)).attr("src", $.i18n._("/") + "content/images/vote-arrow-down.png");
+=======
+                $(getQuestionVoteUpButton()).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getQuestionVoteDownButton()).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
+            }
+            else{
+                $(getAnswerVoteUpButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-up.png");
+                $(getAnswerVoteDownButton(postId)).attr("src", scriptUrl + "content/images/vote-arrow-down.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             }
         }
     };
@@ -182,42 +197,42 @@ var Vote = function(){
         if(questionAuthorId == currentUserId){
             var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
             $(acceptedButtons).unbind('click').click(function(event){
-               Vote.accept($(event.target))
+               Vote.accept($(event.target));
             });
         }
         // set favorite question
         var favoriteButton = getFavoriteButton();
         favoriteButton.unbind('click').click(function(event){
-           Vote.favorite($(event.target))
+           Vote.favorite($(event.target));
         });
     
         // question vote up
         var questionVoteUpButton = getQuestionVoteUpButton();
         questionVoteUpButton.unbind('click').click(function(event){
-           Vote.vote($(event.target), VoteType.questionUpVote)
+           Vote.vote($(event.target), VoteType.questionUpVote);
         });
     
         var questionVoteDownButton = getQuestionVoteDownButton();
         questionVoteDownButton.unbind('click').click(function(event){
-           Vote.vote($(event.target), VoteType.questionDownVote)
+           Vote.vote($(event.target), VoteType.questionDownVote);
         });
     
         var answerVoteUpButton = getAnswerVoteUpButtons();
         answerVoteUpButton.unbind('click').click(function(event){
-           Vote.vote($(event.target), VoteType.answerUpVote)
+           Vote.vote($(event.target), VoteType.answerUpVote);
         });
         
         var answerVoteDownButton = getAnswerVoteDownButtons();
         answerVoteDownButton.unbind('click').click(function(event){
-           Vote.vote($(event.target), VoteType.answerDownVote)
+           Vote.vote($(event.target), VoteType.answerDownVote);
         });
     
         getOffensiveQuestionFlag().unbind('click').click(function(event){
-           Vote.offensive(this, VoteType.offensiveQuestion)
+           Vote.offensive(this, VoteType.offensiveQuestion);
         });
     
         getOffensiveAnswerFlags().unbind('click').click(function(event){
-           Vote.offensive(this, VoteType.offensiveAnswer)
+           Vote.offensive(this, VoteType.offensiveAnswer);
         });
     
         getremoveQuestionLink().unbind('click').click(function(event){
@@ -234,7 +249,7 @@ var Vote = function(){
         });
     
         getremoveAnswersLinks().unbind('click').click(function(event){
-            Vote.remove(this, VoteType.removeAnswer)
+            Vote.remove(this, VoteType.removeAnswer);
         });
     };
     
@@ -243,14 +258,18 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
-            url: "/" + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            url: $.i18n._("/") + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+=======
+            url: scriptUrl + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data){callback(object, voteType, data)}});
     };
     
     var handleFail = function(xhr, msg){
-        alert("Callback invoke error: " + msg)
+        alert("Callback invoke error: " + msg);
     };
 
     // callback function for Accept Answer action
@@ -262,19 +281,31 @@ var Vote = function(){
             showMessage(object, acceptOwnAnswerMessage);
         }
         else if(data.status == "1"){
-            object.attr("src", "/content/images/vote-accepted.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            object.attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-accepted.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
         else if(data.success == "1"){
             var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
-            $(acceptedButtons).attr("src", "/content/images/vote-accepted.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            $(acceptedButtons).attr("src", $.i18n._("/") + "content/images/vote-accepted.png");
+=======
+            $(acceptedButtons).attr("src", scriptUrl + "content/images/vote-accepted.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var answers = ("div[id^="+answerContainerIdPrefix +"]");
             $(answers).removeClass("accepted-answer");
             var commentLinks = ("div[id^="+answerContainerIdPrefix +"] div[id^="+ commentLinkIdPrefix +"]");
             $(commentLinks).removeClass("comment-link-accepted");
             
-            object.attr("src", "/content/images/vote-accepted-on.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            object.attr("src", $.i18n._("/") + "content/images/vote-accepted-on.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-accepted-on.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             $("#"+answerContainerIdPrefix+postId).addClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).addClass("comment-link-accepted");
         }
@@ -288,7 +319,11 @@ var Vote = function(){
             showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
         else if(data.status == "1"){
-            object.attr("src", "/content/images/vote-favorite-off.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            object.attr("src", $.i18n._("/") + "content/images/vote-favorite-off.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-favorite-off.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count == 0)
@@ -296,7 +331,11 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", "/content/images/vote-favorite-on.png");
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            object.attr("src", $.i18n._("/") + "/content/images/vote-favorite-on.png");
+=======
+            object.attr("src", scriptUrl + "content/images/vote-favorite-on.png");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             var fav = getFavoriteNumber();
             fav.text(data.count);
             fav.addClass("my-favorite-number");
@@ -310,69 +349,79 @@ var Vote = function(){
         if(data.allowed == "0" && data.success == "0"){
             showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
-        else if(data.allowed == "-3"){
+        else if (data.allowed == "-3"){
             showMessage(object, voteRequiredMoreVotes);
         }
-        else if(data.allowed == "-2"){
-            if(voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote){
+        else if (data.allowed == "-2"){
+            if (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote){
                 showMessage(object, upVoteRequiredScoreMessage);
             }
-            else if(voteType == VoteType.questionDownVote || voteType == VoteType.answerDownVote){
+            else if (voteType == VoteType.questionDownVote || voteType == VoteType.answerDownVote){
                 showMessage(object, downVoteRequiredScoreMessage);
             }
         }
-        else if(data.allowed == "-1"){
+        else if (data.allowed == "-1"){
             showMessage(object, voteOwnDeniedMessage);
         }
-        else if(data.status == "2"){
+        else if (data.status == "2"){
             showMessage(object, voteDenyCancelMessage);
         }
-        else if(data.status == "1"){
+        else if (data.status == "1"){
             setVoteImage(voteType, true, object);
             setVoteNumber(object, data.count);
         }     
-        else if(data.success == "1"){
+        else if (data.success == "1"){
             setVoteImage(voteType, false, object);
             setVoteNumber(object, data.count);
-            if(data.message.length > 0)
+            if (data.message.length > 0){
                 showMessage(object, data.message);
+            }
         }
     };
         
     var callback_offensive = function(object, voteType, data){
         object = $(object);
-        if(data.allowed == "0" && data.success == "0"){
+        if (data.allowed == "0" && data.success == "0"){
             showMessage(object, offensiveAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
-        else if(data.allowed == "-3"){
+        else if (data.allowed == "-3"){
             showMessage(object, offensiveNoFlagsLeftMessage);
         }  
-        else if(data.allowed == "-2"){
+        else if (data.allowed == "-2"){
             showMessage(object, offensiveNoPermissionMessage);
         }  
-        else if(data.status == "1"){
+        else if (data.status == "1"){
             showMessage(object, offensiveTwiceMessage);
         }  
-        else if(data.success == "1"){
+        else if (data.success == "1"){
             $(object).children('span[class=darkred]').text("("+ data.count +")");
         }
     };
         
     var callback_remove = function(object, voteType, data){
-        if(data.allowed == "0" && data.success == "0"){
+        if (data.allowed == "0" && data.success == "0"){
             showMessage(object, removeAnonymousMessage.replace("{{QuestionID}}", questionId));
         }
         else if (data.success == "1"){
-			if (removeActionType == 'delete'){
-				postNode.addClass('deleted');
-				postRemoveLink.innerHTML = $.i18n._('undelete');
-        		showMessage(object, deletedMessage);
-			}
-			else if (removeActionType == 'undelete') {
-				postNode.removeClass('deleted');
-				postRemoveLink.innerHTML = $.i18n._('delete');
-            	showMessage(object, recoveredMessage);
-			}
+            if (voteType == VoteType.removeQuestion){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+                window.location.href = $.i18n._("/") + $.i18n._("questions/");
+=======
+                window.location.href = scriptUrl + $.i18n._("questions/");
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+            }
+            else {
+                if (removeActionType == 'delete'){
+                    postNode.addClass('deleted');
+                    postRemoveLink.innerHTML = $.i18n._('undelete');
+                    showMessage(object, deletedMessage);
+                }
+                else if (removeActionType == 'undelete') {
+                    postNode.removeClass('deleted');
+                    postRemoveLink.innerHTML = $.i18n._('delete');
+                    showMessage(object, recoveredMessage);
+                }
+            }
 		}
     };
         
@@ -391,7 +440,7 @@ var Vote = function(){
         },
         
         favorite: function(object){
-            if(!currentUserId || currentUserId.toUpperCase() == "NONE"){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
                 return false;
             }
@@ -399,14 +448,14 @@ var Vote = function(){
         },
             
         vote: function(object, voteType){
-            if(!currentUserId || currentUserId.toUpperCase() == "NONE"){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId));
                 return false;   
             }
-            if(voteType == VoteType.answerUpVote){
+            if (voteType == VoteType.answerUpVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVoteup.length);
             }
-            else if(voteType == VoteType.answerDownVote){
+            else if (voteType == VoteType.answerDownVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVotedown.length);
             }
             
@@ -414,39 +463,43 @@ var Vote = function(){
         },
         
         offensive: function(object, voteType){
-            if(!currentUserId || currentUserId.toUpperCase() == "NONE"){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage($(object), offensiveAnonymousMessage.replace("{{QuestionID}}", questionId));
                 return false;   
             }
-            if(confirm(offensiveConfirmation)){
+            if (confirm(offensiveConfirmation)){
                 postId = object.id.substr(object.id.lastIndexOf('-') + 1);
                 submit(object, voteType, callback_offensive);
             }
         },
             
         remove: function(object, voteType){
-            if(!currentUserId || currentUserId.toUpperCase() == "NONE"){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage($(object), removeAnonymousMessage.replace("{{QuestionID}}", questionId));
                 return false;   
             }
-            if(confirm(removeConfirmation)){
-				bits = object.id.split('-');
-				postId = bits.pop();/* this seems to be used within submit! */
-				postType = bits.shift();
+            bits = object.id.split('-');
+            postId = bits.pop();/* this seems to be used within submit! */
+            postType = bits.shift();
 
-				if (postType == 'answer'){
-					postNode = $('#answer-container-' + postId);
-					postRemoveLink = object;
-					if (postNode.hasClass('deleted')){
-						removeActionType = 'undelete';
-					}
-					else {
-						removeActionType = 'delete';
-					}
-				}
+            var do_proceed = false; 
+            if (postType == 'answer'){
+                postNode = $('#answer-container-' + postId);
+                postRemoveLink = object;
+                if (postNode.hasClass('deleted')){
+                    removeActionType = 'undelete';
+                    do_proceed = true;
+                }
+                else {
+                    removeActionType = 'delete';
+                    do_proceed = confirm(removeConfirmation);
+                }
+            }
+            else {
+                do_proceed = confirm(removeConfirmation);
+            }
+            if (do_proceed) {
                 submit($(object), voteType, callback_remove);
-
-
             }
         }
     }
@@ -457,21 +510,24 @@ var Vote = function(){
 function createComments(type) {
     var objectType = type;
     var jDivInit = function(id) {
-        return $("#comments-" + objectType + '-' + id);
+        return $("#comments-container-" + objectType + '-' + id);
     };
 
     var appendLoaderImg = function(id) {
-        appendLoader("#comments-" + objectType + '-' + id + " div.comments");
+        appendLoader("#comments-container-" + objectType + '-' + id);
     };
 
-    var canPostComments = function(id, jDiv) {
-        var jHidden = jDiv.siblings("#can-post-comments-" + objectType + '-' + id);
+    var canPostComments = function(id) {
+        var jHidden = $("#can-post-comments-" + objectType + '-' + id);
         return jHidden.val().toLowerCase() == "true";
     };
 
-    var renderForm = function(id, jDiv) {
+    var renderForm = function(id) {
         var formId = "form-comments-" + objectType + "-" + id;
-        if (canPostComments(id, jDiv)) {
+        var jDiv = $('#comments-link-' + objectType + "-" + id).parent();
+        $(jDiv).css('background','none');
+        $(jDiv).css('padding-left',0);
+        if (canPostComments(id)) {
             if (jDiv.find("#" + formId).length == 0) {
                 var form = '<form id="' + formId + '" class="post-comments"><div>';
                 form += '<textarea name="comment" cols="60" rows="5" maxlength="300" onblur="'+ objectType +'Comments.updateTextCounter(this)" ';
@@ -490,64 +546,96 @@ function createComments(type) {
         else {
             var divId = "comments-rep-needed-" + objectType + '-' + id;
             if (jDiv.find("#" + divId).length == 0) {
-                jDiv.append('<div id="' + divId + '" style="color:red">'
+                jDiv.append('<p id="' + divId + '" class="comment">'
 					+ $.i18n._('to comment, need') + ' ' +
-					+ repNeededForComments + ' ' + $.i18n._('community reputation points')
-					+ '<a href="/faq" class="comment-user">' + $.i18n._('please see') + 'faq</a></span>');
+					+ repNeededForComments + ' ' + $.i18n._('community karma points') 
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+					+ '<a href="' + $.i18n._('/') + $.i18n._('faq/') + '" class="comment-user">'
+=======
+					+ '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+                    + $.i18n._('please see') + 'faq</a></span></p>');
             }
         }
     };
 
     var getComments = function(id, jDiv) {
-        appendLoaderImg(id);
-        $.getJSON("/" + objectType + "s/" + id + "/comments/", function(json) { showComments(id, json); });
+        //appendLoaderImg(id);
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+        $.getJSON($.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/")
+=======
+        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/")
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+                , function(json) { showComments(id, json); });
     };
 
     var showComments = function(id, json) {
         var jDiv = jDivInit(id);
 
-        jDiv = jDiv.find("div.comments");   // this div should contain any fetched comments..
-        jDiv.find("div[id^='comment-" + objectType + "-'" + "]").remove();  // clean previous calls..
-
+        //jDiv = jDiv.find("div.comments");   // this div should contain any fetched comments..
+        //jDiv.find("div[id^='comment-" + objectType + "-'" + "]").remove();  // clean previous calls..
+        jDiv.children().remove();
         removeLoader();
-
         if (json && json.length > 0) {
             for (var i = 0; i < json.length; i++)
                 renderComment(jDiv, json[i]);
-
             jDiv.children().show();
         }
     };
 
-    // {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
-    var renderComment = function(jDiv, json) {
-        var html = '<div id="comment-' + objectType + "-" + json.id + '" style="display:none">' + json.text;
-        html += json.user_url ? '&nbsp;&ndash;&nbsp;<a href="' + json.user_url + '"' : '<span';
-        html += ' class="comment-user">' + json.user_display_name + (json.user_url ? '</a>' : '</span>');
-        html += ' <span class="comment-date">(' + json.add_date + ')</span>';
-
-        if (json.delete_url) {
-            var img = "/content/images/close-small.png";
-            var imgHover = "/content/images/close-small-hover.png";
-            html += '<img onclick="' + objectType + 'Comments.deleteComment($(this), ' + json.object_id + ', \'' + json.delete_url + '\')" src="' + img;
+    var renderDeleteCommentIcon = function(post_id, delete_url){
+        if (canPostComments(post_id)){
+            var html = '';
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            var img = $.i18n._("/") + "content/images/close-small.png";
+            var imgHover = $.i18n._("/") + "content/images/close-small-hover.png";
+=======
+            var img = scriptUrl + "content/images/close-small.png";
+            var imgHover = scriptUrl + "content/images/close-small-hover.png";
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+            html += '<img class="delete-icon" onclick="' + objectType + 'Comments.deleteComment($(this), ' + post_id + ', \'' + delete_url + '\')" src="' + img;
             html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img
             html += '\')" title="' + $.i18n._('delete this comment') + '" />';
+            return html;
+        }
+        else{
+            return '';
+        }
+    }
+
+    // {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
+    var renderComment = function(jDiv, json) {
+        var html = '<p id="comment-' + json.id + '" class="comment" style="display:none">' + json.text;
+        html += json.user_url ? ' - <a href="' + json.user_url + '"' : '<span';
+        html += ' class="comment-user">' + json.user_display_name + (json.user_url ? '</a>' : '</span>');
+        html += ' (' + json.comment_age + ')';
+
+        if (json.delete_url){
+            html += renderDeleteCommentIcon(json.object_id, json.delete_url);
         }
 
-        html += '</div>';
+        if (json.delete_url) {
+        }
+
+        html += '</p>';
 
         jDiv.append(html);
     };
 
     var postComment = function(id, formId) {
-        appendLoaderImg(id);
+        //appendLoaderImg(id);
 
         var formSelector = "#" + formId;
         var textarea = $(formSelector + " textarea");
 
+        //todo fix url translations!!!
         $.ajax({
             type: "POST",
-            url: "/" + objectType + "s/" + id + "/comments/",
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+            url: $.i18n._("/") + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+=======
+            url: scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
             dataType: "json",
             data: { comment: textarea.val() },
             success: function(json) {
@@ -569,18 +657,64 @@ function createComments(type) {
 
         init: function() {
             // Setup "show comments" clicks..
-            $("a[id^='comments-link-" + objectType + "-" + "']").unbind("click").click(function() { commentsFactory[objectType].show($(this).attr("id").substr(("comments-link-" + objectType + "-").length)); });
+            $("a[id^='comments-link-" + objectType + "-" + "']").unbind("click").click(function() { 
+                commentsFactory[objectType].show($(this).attr("id").substr(("comments-link-" + objectType + "-").length)); 
+                });
+
+            var cBox = $("[id^='comments-container-" + objectType + "']");
+            cBox.each( function(i){
+                var post_id = $(this).attr('id').replace('comments-container-' + objectType + '-', '');
+                $(this).children().each(
+                    function(i){
+                        var comment_id = $(this).attr('id').replace('comment-','');
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+                        var delete_url = $.i18n._('/') + objectType + 's/' + post_id + '/'
+=======
+                        var delete_url = scriptUrl + objectType + 's/' + post_id + '/'
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+                                        + $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
+                        var html = $(this).html();
+                        var CommentsClass;
+                        if (objectType == 'question'){
+                            CommentsClass = questionComments;
+                        }
+                        else if (objectType == 'answer') {
+                            CommentsClass = answerComments;
+                        }
+                        var delete_icon = $(this).find('img.delete-icon');
+                        delete_icon.click(function(){CommentsClass.deleteComment($(this),comment_id,delete_url);});
+                        delete_icon.unbind('mouseover').bind('mouseover',
+                            function(){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+                                $(this).attr('src',$.i18n._('/') + 'content/images/close-small-hover.png');
+=======
+                                $(this).attr('src',scriptUrl + 'content/images/close-small-hover.png');
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+                            }
+                        );
+                        delete_icon.unbind('mouseout').bind('mouseout',
+                            function(){
+<<<<<<< HEAD:templates/content/js/com.cnprog.post.js
+                                $(this).attr('src',$.i18n._('/') + 'content/images/close-small.png');
+=======
+                                $(this).attr('src',scriptUrl + 'content/images/close-small.png');
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.post.js
+                            }
+                        );
+                    }
+                );
+            });
         },
 
         show: function(id) {
             var jDiv = jDivInit(id);
             getComments(id, jDiv);
-            renderForm(id, jDiv);
+            renderForm(id);
             jDiv.show();
-            if (canPostComments(id, jDiv)) jDiv.find("textarea").get(0).focus();
-            jDiv.siblings("a").unbind("click").click(function(){ 
-													commentsFactory[objectType].hide(id); 
-													}).text($.i18n._('hide comments'));
+
+            var link = $('#comments-link-' + objectType + '-' + id);
+            if (canPostComments(id)) link.parent().find("textarea").get(0).focus();
+            link.remove();
         },
 
         hide: function(id) {
@@ -596,9 +730,9 @@ function createComments(type) {
         deleteComment: function(jImg, id, deleteUrl) {
             if (confirm($.i18n._('confirm delete comment'))) {
                 jImg.hide();
-                appendLoaderImg(id);
                 $.post(deleteUrl, { dataNeeded: "forIIS7" }, function(json) {
-                    showComments(id, json);
+                    var par = jImg.parent();
+                    par.remove();
                 }, "json");
             }
         },

@@ -20,7 +20,7 @@ var i18nZh = {
 	'post recovered':"操作成功！该帖子已被恢复。",
 	'post deleted':"操作成功！该帖子已删除。",
 	'add comment':'添加评论',
-	'community reputation points':'社区积分',
+	'community karma points':'社区积分',
 	'to comment, need':'评论需要',
 	'delete this comment':'删除此评论',
 	'hide comments':"隐藏评论",
@@ -53,27 +53,32 @@ var i18nZh = {
 	'redo':'重做',
 	'enter image url':'<b>输入图片地址</b></p><p>示例：<br />http://www.example.com/image.jpg   \"我的截图\"',
 	'enter url':'<b>输入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的网站\"</p>"',
-	'upload image':'或者上传本地图片：',
+	'upload image':'或者上传本地图片：'
 };
 
 var i18nEn = {
-    '>15 points requried to upvote':'>15 points requried to upvote ',
+<<<<<<< HEAD:templates/content/js/com.cnprog.i18n.js
+    '/':'/',
+=======
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/content/js/com.cnprog.i18n.js
+	'need >15 points to report spam':'need >15 points to report spam ',
+    '>15 points requried to upvote':'>15 points required to upvote ',
 	'tags cannot be empty':'please enter at least one tag',
-	'anonymous users cannot vote':'anonymous users cannot vote ',
-	'anonymous users cannot select favorite questions':'anonymous users cannot select favorite questions ',
-	'to comment, need': 'to comment, need reputation ',
+	'anonymous users cannot vote':'sorry, anonymous users cannot vote ',
+	'anonymous users cannot select favorite questions':'sorry, anonymous users cannot select favorite questions ',
+	'to comment, need': '(to comment other people\'s posts, karma ',
 	'please see':'please see ',
-	'community reputation points':' ',
+	'community karma points':' or more is necessary) - ',
 	'upload image':'Upload image:',
 	'enter image url':'enter URL of the image, e.g. http://www.example.com/image.jpg \"image title\"',
 	'enter url':'enter Web address, e.g. http://www.example.com \"page title\"',
 	'daily vote cap exhausted':'sorry, you\'ve used up todays vote cap',
-	'cannot pick own answer as best':'cannot accept own answer',
-	'cannot revoke old vote':'older votes cannot be revoked',
+	'cannot pick own answer as best':'sorry, you cannot accept your own answer',
+	'cannot revoke old vote':'sorry, older votes cannot be revoked',
 	'please confirm offensive':'are you sure this post is offensive, contains spam, advertising, malicious remarks, etc.?',
-	'flag offensive cap exhausted':'sorry, you\'ve used up todays cap of flagging offensive messages',
+	'flag offensive cap exhausted':'sorry, you\'ve used up todays cap of flagging offensive messages ',
 	'confirm delete':'are you sure you want to delete this?',
-	'anonymous users cannot delete/undelete':'anonymous users cannot delete or undelete posts',
+	'anonymous users cannot delete/undelete':'sorry, anonymous users cannot delete or undelete posts',
 	'post recovered':'your post is now restored!',
 	'post deleted':'your post has been deleted',
 	'confirm delete comment':'do you really want to delete this comment?',
@@ -82,6 +87,9 @@ var i18nEn = {
 	'content minchars': 'please enter more than {0} characters',
 	'title minchars':"please enter at least {0} characters",
 	'characters':'characters left',
+    'cannot vote for own posts':'sorry, you cannot vote for your own posts',
+    'cannot flag message as offensive twice':'cannot flag message as offensive twice ',
+	'>100 points required to downvote':'>100 points required to downvote '
 };
 
 var i18nEs = {
@@ -106,7 +114,7 @@ var i18nEs = {
 	'post recovered':"publicación recuperada",
 	'post deleted':"publicación borrada。",
 	'add comment':'agregar comentario',
-	'community reputation points':'reputación comunitaria',
+	'community karma points':'reputación comunitaria',
 	'to comment, need':'para comentar, necesita reputación',
 	'delete this comment':'borrar este comentario',
 	'hide comments':"ocultar comentarios",
@@ -141,7 +149,7 @@ var i18nEs = {
 	'enter url':'introduzca direcciones web, ejemplo：<br />http://www.cnprog.com/   \"titulo del enlace\"</p>"',
 	'upload image':'cargar imagen：',
 	'questions/' : 'preguntas/',
-	'vote/' : 'votar/',
+	'vote/' : 'votar/'
 };
 
 var i18n = {

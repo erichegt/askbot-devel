@@ -5,8 +5,8 @@ Los detalles de su cuenta son:
 Nombre de usuario: {{ username }}
 Contraseña: {{ password }}
 
-Favor inicie sesión aquí: 
-{{ site_url }}{% trans "signin/" %}
+{% trans "Please sign in here:" %}
+{{signup_url}}
 
 Saludos,
 El equipo administrador de Hasked.com

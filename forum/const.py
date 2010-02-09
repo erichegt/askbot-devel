@@ -6,7 +6,7 @@ For reasons that models, views can't have unicode text in this project, all unic
 """
 CLOSE_REASONS = (
     (1, _('duplicate question')),
-    (2, _('question if off-topic or not relevant')),
+    (2, _('question is off-topic or not relevant')),
     (3, _('too subjective and argumentative')),
     (4, _('is not an answer to the question')),
     (5, _('the question is answered, right answer was accepted')),
@@ -49,6 +49,7 @@ TYPE_ACTIVITY_MARK_OFFENSIVE=14
 TYPE_ACTIVITY_UPDATE_TAGS=15
 TYPE_ACTIVITY_FAVORITE=16
 TYPE_ACTIVITY_USER_FULL_UPDATED = 17
+TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT = 18
 #TYPE_ACTIVITY_EDIT_QUESTION=17
 #TYPE_ACTIVITY_EDIT_ANSWER=18
 
@@ -70,6 +71,7 @@ TYPE_ACTIVITY = (
     (TYPE_ACTIVITY_UPDATE_TAGS, _('updated tags')),
     (TYPE_ACTIVITY_FAVORITE, _('selected favorite')),
     (TYPE_ACTIVITY_USER_FULL_UPDATED, _('completed user profile')),
+    (TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT, _('email update sent to user')),
 )
 
 TYPE_RESPONSE = {
@@ -85,3 +87,6 @@ CONST = {
     'default_version'   : _('initial version'),
     'retagged'          : _('retagged'),
 }
+
+#how to filter questions by tags in email digests?
+TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))

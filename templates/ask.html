@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 <!-- template ask.html -->
 {% load i18n %}
+{% load extra_tags %}
 {% block title %}{% spaceless %}{% trans "Ask a question" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='/content/js/com.cnprog.editor.js'></script>
-        <script type='text/javascript' src='/content/js/com.cnprog.post.js'></script>
-        <script type='text/javascript' src='/content/js/jquery.validate.pack.js'></script>
-        <script type='text/javascript' src='/content/js/wmd/showdown.js'></script>
-        <script type='text/javascript' src='/content/js/wmd/wmd.js'></script>
-        <link rel="stylesheet" type="text/css" href="/content/js/wmd/wmd.css" />
+        <script type='text/javascript' src='{% href "/content/js/com.cnprog.editor.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/com.cnprog.post.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/jquery.validate.pack.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/wmd/showdown.js" %}'></script>
+        <script type='text/javascript' src='{% href "/content/js/wmd/wmd.js" %}'></script>
+        <link rel="stylesheet" type="text/css" href="{% href "/content/js/wmd/wmd.css" %}" />
         <script type="text/javascript">
         $().ready(function(){
             //set current module button style
@@ -70,7 +71,9 @@
                 {% ifequal settings.EMAIL_VALIDATION 'on' %}
                     {% if not request.user.email_isvalid %}
                         <div class="message">
-                            {% blocktrans with request.user.email as email %}must have valid {{email}} to post{% endblocktrans %}
+                            {% blocktrans with request.user.email as email %}must have valid {{email}} to post, 
+                            see {{email_validation_faq_url}}
+                            {% endblocktrans %}
                         </div>
                     {% endif %}
                 {% endifequal %}
@@ -93,9 +96,11 @@
                             <td>
                                 <span id="pre-collapse" title="{% trans "Toggle the real time Markdown editor preview" %}">{% trans "toggle preview" %}</span>
                             </td>
+                            {% if settings.WIKI_ON %}
                             <td style="text-align:right;">
                                 {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag }} </span>
                             </td>
+                            {% endif %}
                         </tr>
 
                     </table>

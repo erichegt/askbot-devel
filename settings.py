@@ -1,28 +1,10 @@
 # encoding:utf-8
 # Django settings for lanai project.
 import os.path
-from django.utils.translation import ugettext as _
-
-#DEBUG SETTINGS
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-INTERNAL_IPS = ('127.0.0.1',)
-
-#for OpenID auth
-ugettext = lambda s: s
-#LOGIN_URL = '/%s%s' % (ugettext('account/'), ugettext('signin/'))
-LOGIN_URL = '/%s%s' % (_('account/'), _('signin/'))
-#LOGIN_URL = '/cuenta/ingresar/'
-
-#EMAIL AND ADMINS
-ADMINS = (
-    ('CNProg team', 'team@cnprog.com'),
-)
-MANAGERS = ADMINS
-
+import sys
 SITE_ID = 1
 
-ADMIN_MEDIA_PREFIX = '/admin/media/'
+ADMIN_MEDIA_PREFIX = '/forum/admin/media/'
 SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -39,16 +21,18 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     #'django.middleware.sqlprint.SqlPrintingMiddleware',
+    'middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'middleware.pagesize.QuestionsPageSizeMiddleware',
+    'middleware.cancel.CancelActionMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'context.auth_processor',
     'context.application_settings',
     #'django.core.context_processors.i18n',
-    'django.core.context_processors.auth' #this is required for admin
+    'user_messages.context_processors.user_messages',#must be before auth
+    'django.core.context_processors.auth', #this is required for admin
 )
 
 ROOT_URLCONF = 'urls'
@@ -74,9 +58,12 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'forum',
     'django_authopenid',
+    'djangosphinx',
     #'debug_toolbar' ,
+    'user_messages',
 )
 import django
 DJANGO_VERSION = django.get_version()

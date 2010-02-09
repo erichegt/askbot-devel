@@ -1,6 +1,7 @@
 {% extends "user.html" %}
 <!-- user_votes.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load humanize %}
 {% load i18n %}
 
@@ -11,16 +12,16 @@
                 <div style="width:150px;float:left">{% diff_date vote.voted_at 3 %}</div>
                 <div style="width:30px;float:left">
                 {% ifequal vote.vote 1 %}
-                    <img src="/content/images/vote-arrow-up-on.png" title="{% trans "upvote" %}">
+                    <img src="{% href "/content/images/vote-arrow-up-on.png" %}" title="{% trans "upvote" %}">
                 {% else %}
-                    <img src="/content/images/vote-arrow-down-on.png" title="{% trans "downvote" %}">
+                    <img src="{% href "/content/images/vote-arrow-down-on.png" %}" title="{% trans "downvote" %}">
                 {% endifequal %}
                 </div>
                 <div style="float:left;overflow:hidden;width:750px">
                     {% ifequal vote.answer_id 0 %}
-                    <span class="question-title-link"><a href="{% url questions %}{{ vote.question_id }}/{{ vote.title|slugify }}">{{ vote.title }}</a></span>
+                    <span class="question-title-link"><a href="{% url question vote.question_id %}{{ vote.title|slugify }}">{{ vote.title }}</a></span>
                     {% else %}
-                    <span class="answer-title-link" ><a href="{% url questions %}{{ vote.question_id }}/{{ vote.title|slugify }}#{{ vote.answer_id }}">{{ vote.title }}</a></span>
+                    <span class="answer-title-link" ><a href="{% url question vote.question_id %}{{ vote.title|slugify }}#{{ vote.answer_id }}">{{ vote.title }}</a></span>
                     {% endifequal %}
                     <div style="height:5px"></div>
                 </div>          

@@ -11,6 +11,10 @@ def application_settings(context):
         'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
         'BOOKS_ON':settings.BOOKS_ON,
+        'WIKI_ON':settings.WIKI_ON,
+        'USE_EXTERNAL_LEGACY_LOGIN':settings.USE_EXTERNAL_LEGACY_LOGIN,
+        'RESOURCE_REVISION':settings.RESOURCE_REVISION,
+        'USE_SPHINX_SEARCH':settings.USE_SPHINX_SEARCH,
         }
     return {'settings':my_settings}
 

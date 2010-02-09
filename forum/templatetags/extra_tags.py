@@ -1,4 +1,5 @@
 import time
+import os
 import datetime
 import math
 import re
@@ -6,13 +7,15 @@ import logging
 from django import template
 from django.utils.encoding import smart_unicode
 from django.utils.safestring import mark_safe
-from django.utils.timesince import timesince
 from forum.const import *
+from forum.models import Question, Answer, QuestionRevision, AnswerRevision
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
+from django.conf import settings
 
 register = template.Library()
 
-GRAVATAR_TEMPLATE = ('<img width="%(size)s" height="%(size)s" '
+GRAVATAR_TEMPLATE = ('<img class="gravatar" width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
                      '?s=%(size)s&amp;d=identicon&amp;r=PG" '
                      'alt="%(username)s\'s gravatar image" />')
@@ -115,6 +118,23 @@ def cnprog_pagesize(context):
             "pagesize" : context["pagesize"],
             "is_paginated": context["is_paginated"]
         }
+
+@register.inclusion_tag("post_contributor_info.html")
+def post_contributor_info(post,contributor_type='original_author'):
+    """contributor_type: original_author|last_updater
+    """
+    if isinstance(post,Question):
+        post_type = 'question'
+    elif isinstance(post,Answer):
+        post_type = 'answer'
+    elif isinstance(post,AnswerRevision) or isinstance(post,QuestionRevision):
+        post_type = 'revision'
+    return {
+        'post':post,
+        'post_type':post_type,
+        'wiki_on':settings.WIKI_ON,
+        'contributor_type':contributor_type
+    }
         
 @register.simple_tag
 def get_score_badge(user):
@@ -216,21 +236,31 @@ def convert2tagname_list(question):
 
 @register.simple_tag
 def diff_date(date, limen=2):
-    meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic']
-    current_time = datetime.datetime(*time.localtime()[0:6])
-    diff = current_time - date
-    diff_days = diff.days
-    if diff_days > limen:
-        return "%s %s - %s @ %s:%s" % (meses[date.month-1], date.day, date.year, date.hour, date.minute)
+    now = datetime.datetime.now()#datetime(*time.localtime()[0:6])#???
+    diff = now - date
+    days = diff.days
+    hours = int(diff.seconds/3600)
+    minutes = int(diff.seconds/60)
+
+    if days > 2:
+        if date.year == now.year:
+            return date.strftime(_("%b %d at %H:%M"))
+        else:
+            return date.strftime(_("%b %d '%y at %H:%M"))
+    elif days == 2:
+        return _('2 days ago')
+    elif days == 1:
+        return _('yesterday')
+    elif minutes >= 60:
+        return ungettext('%(hr)d hour ago','%(hr)d hours ago',hours) % {'hr':hours}
     else:
-        return timesince(date) + _(' ago')
-        
+        return ungettext('%(min)d min ago','%(min)d mins ago',minutes) % {'min':minutes}
+
 @register.simple_tag
 def get_latest_changed_timestamp():
     try:
         from time import localtime, strftime
         from os import path
-        from django.conf import settings
         root = settings.SITE_SRC_ROOT
         dir = (
             root,
@@ -243,3 +273,78 @@ def get_latest_changed_timestamp():
     except:
         timestr = ''
     return timestr
+
+@register.simple_tag
+def href(url):
+    url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
+    return os.path.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+
+class ItemSeparatorNode(template.Node):
+    def __init__(self,separator):
+        sep = separator.strip()
+        if sep[0] == sep[-1] and sep[0] in ('\'','"'):
+            sep = sep[1:-1]
+        else:
+            raise template.TemplateSyntaxError('separator in joinitems tag must be quoted')
+        self.content = sep
+    def render(self,context):
+        return self.content
+
+class JoinItemListNode(template.Node):
+    def __init__(self,separator=ItemSeparatorNode("''"), items=()):
+        self.separator = separator
+        self.items = items
+    def render(self,context):
+        out = []
+        empty_re = re.compile(r'^\s*$')
+        for item in self.items:
+            bit = item.render(context)
+            if not empty_re.search(bit):
+                out.append(bit)
+        return self.separator.render(context).join(out)
+
+@register.tag(name="joinitems")
+def joinitems(parser,token):
+    try:
+        tagname,junk,sep_token = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError("joinitems tag requires 'using \"separator html\"' parameters")
+    if junk == 'using':
+        sep_node = ItemSeparatorNode(sep_token)
+    else:
+        raise template.TemplateSyntaxError("joinitems tag requires 'using \"separator html\"' parameters")
+    nodelist = []
+    while True:
+        nodelist.append(parser.parse(('separator','endjoinitems')))
+        next = parser.next_token()
+        if next.contents == 'endjoinitems':
+            break
+
+    return JoinItemListNode(separator=sep_node,items=nodelist)
+
+class BlockResourceNode(template.Node):
+    def __init__(self,nodelist):
+        self.items = nodelist 
+    def render(self,context):
+        out = '///' + settings.FORUM_SCRIPT_ALIAS
+        if self.items:
+            out += '/'     
+        for item in self.items:
+            bit = item.render(context)
+            out += bit
+        out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+        return out.replace(' ','')
+
+@register.tag(name='blockresource')
+def blockresource(parser,token):
+    try:
+        tagname = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError("blockresource tag does not use arguments")
+    nodelist = []
+    while True:
+        nodelist.append(parser.parse(('endblockresource')))
+        next = parser.next_token()
+        if next.contents == 'endblockresource':
+            break
+    return BlockResourceNode(nodelist)

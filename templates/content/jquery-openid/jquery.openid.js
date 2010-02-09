@@ -36,7 +36,7 @@ $.fn.openid = function() {
   };
   var local = function() {
     var $li = $(this);
-    $li.parent().find('li').removeClass('highlight');
+    $('#openid_form .providers li').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.hide();
     $idfs.hide();
@@ -47,7 +47,7 @@ $.fn.openid = function() {
 
   var direct = function() {
     var $li = $(this);
-    $li.parent().find('li').removeClass('highlight');
+    $('#openid_form .providers li').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.fadeOut('slow');
     $localfs.fadeOut('slow');
@@ -59,7 +59,7 @@ $.fn.openid = function() {
 
   var openid = function() {
     var $li = $(this);
-    $li.parent().find('li').removeClass('highlight');
+    $('#openid_form .providers li').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.hide();
     $localfs.hide();
@@ -71,7 +71,7 @@ $.fn.openid = function() {
 
   var username = function() {
     var $li = $(this);
-    $li.parent().find('li').removeClass('highlight');
+    $('#openid_form .providers li').removeClass('highlight');
     $li.addClass('highlight');
     $idfs.hide();
     $localfs.hide();

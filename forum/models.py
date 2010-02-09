@@ -2,7 +2,7 @@
 import datetime
 import hashlib
 from urllib import quote_plus, urlencode
-from django.db import models
+from django.db import models, IntegrityError
 from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
@@ -12,33 +12,66 @@ from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.utils.translation import ugettext as _
+from django.utils.safestring import mark_safe
+from django.contrib.sitemaps import ping_google
 import django.dispatch
 import settings
+import logging
+
+if settings.USE_SPHINX_SEARCH == True:
+    from djangosphinx.models import SphinxSearch
 
 from forum.managers import *
 from const import *
 
-class EmailFeed(models.Model):
-    #subscription key for unsubscribe by visiting emailed link
-    key = models.CharField(max_length=32)
-    #generic relation with feed content (i.e. question or tags)
-    feed_content_type = models.ForeignKey(ContentType,related_name='content_emailfeed')
-    feed_id = models.PositiveIntegerField()
-    content = generic.GenericForeignKey('feed_content_type','feed_id')
-    #generic relation with owner - either nameless email or User
-    subscriber_content_type = models.ForeignKey(ContentType,related_name='subscriber_emailfeed')
-    subscriber_id = models.PositiveIntegerField()
-    subscriber = generic.GenericForeignKey('subscriber_content_type','subscriber_id')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
-    reported_at = models.DateTimeField(default=datetime.datetime.now)
+def get_object_comments(self):
+    comments = self.comments.all().order_by('id')
+    return comments
 
-    #getter functions rely on implementations of similar functions in content
-    #of subscriber objects
-    def get_update_summary(self):
-        return self.content.get_update_summary(last_reported_at = self.reported_at,recipient_email = self.get_email())
+def post_get_last_update_info(self):
+        when = self.added_at
+        who = self.author
+        if self.last_edited_at and self.last_edited_at > when:
+            when = self.last_edited_at
+            who = self.last_edited_by
+        comments = self.comments.all()
+        if len(comments) > 0:
+            for c in comments:
+                if c.added_at > when:
+                    when = c.added_at
+                    who = c.user
+        return when, who
 
-    def get_email(self):
-        return self.subscriber.email
+class EmailFeedSetting(models.Model):
+    DELTA_TABLE = {
+        'w':datetime.timedelta(7),
+        'd':datetime.timedelta(1),
+        'n':datetime.timedelta(-1),
+    }
+    FEED_TYPES = (
+                    ('q_all',_('Entire forum')),
+                    ('q_ask',_('Questions that I asked')),
+                    ('q_ans',_('Questions that I answered')),
+                    ('q_sel',_('Individually selected questions')),
+                    )
+    UPDATE_FREQUENCY = (
+                    ('w',_('Weekly')),
+                    ('d',_('Daily')),
+                    ('n',_('No email')),
+                   )
+    subscriber = models.ForeignKey(User)
+    feed_type = models.CharField(max_length=16,choices=FEED_TYPES)
+    frequency = models.CharField(max_length=8,choices=UPDATE_FREQUENCY,default='n')
+    added_at = models.DateTimeField(auto_now_add=True)
+    reported_at = models.DateTimeField(null=True)
+
+    def save(self,*args,**kwargs):
+        type = self.feed_type
+        subscriber = self.subscriber
+        similar = self.__class__.objects.filter(feed_type=type,subscriber=subscriber).exclude(pk=self.id)
+        if len(similar) > 0:
+            raise IntegrityError('email feed setting already exists')
+        super(EmailFeedSetting,self).save(*args,**kwargs)
 
 class Tag(models.Model):
     name       = models.CharField(max_length=255, unique=True)
@@ -46,7 +79,6 @@ class Tag(models.Model):
     deleted         = models.BooleanField(default=False)
     deleted_at      = models.DateTimeField(null=True, blank=True)
     deleted_by      = models.ForeignKey(User, null=True, blank=True, related_name='deleted_tags')
-    email_feeds     = generic.GenericRelation(EmailFeed)
     # Denormalised data
     used_count = models.PositiveIntegerField(default=0)
 
@@ -70,6 +102,14 @@ class Comment(models.Model):
     class Meta:
         ordering = ('-added_at',)
         db_table = u'comment'
+
+    def save(self,**kwargs):
+        super(Comment,self).save(**kwargs)
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
     def __unicode__(self):
         return self.comment
 
@@ -137,6 +177,7 @@ class Question(models.Model):
     locked          = models.BooleanField(default=False)
     locked_by       = models.ForeignKey(User, null=True, blank=True, related_name='locked_questions')
     locked_at       = models.DateTimeField(null=True, blank=True)
+    followed_by     = models.ManyToManyField(User, related_name='followed_questions')
     # Denormalised data
     score                = models.IntegerField(default=0)
     vote_up_count        = models.IntegerField(default=0)
@@ -156,9 +197,22 @@ class Question(models.Model):
     comments             = generic.GenericRelation(Comment)
     votes                = generic.GenericRelation(Vote)
     flagged_items        = generic.GenericRelation(FlaggedItem)
-    email_feeds          = generic.GenericRelation(EmailFeed)
+
+    if settings.USE_SPHINX_SEARCH == True:
+        search = SphinxSearch(
+                           index=' '.join(settings.SPHINX_SEARCH_INDICES),
+                           mode='SPH_MATCH_ALL',
+                        )
+        logging.debug('have sphinx search')
 
     objects = QuestionManager()
+
+    def delete(self):
+        super(Question, self).delete()
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
 
     def save(self, **kwargs):
         """
@@ -170,6 +224,10 @@ class Question(models.Model):
         """
         initial_addition = (self.id is None)
         super(Question, self).save(**kwargs)
+        try:
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
         if initial_addition:
             tags = Tag.objects.get_or_create_multiple(self.tagname_list(),
                                                       self.author)
@@ -184,7 +242,7 @@ class Question(models.Model):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(self.title.replace(' ', '-')))
+        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -212,17 +270,23 @@ class Question(models.Model):
 
     def get_latest_revision(self):
         return self.revisions.all()[0]
-    
-    def get_user_votes_in_answers(self, user):
-        content_type = ContentType.objects.get_for_model(Answer)
-        query_set = Vote.objects.extra(
-            tables = ['question', 'answer'],
-            where = ['question.id = answer.question_id AND question.id = %s AND vote.object_id = answer.id AND vote.content_type_id = %s AND vote.user_id = %s'],
-            params = [self.id, content_type.id, user.id]
-        )
-        
-        return query_set
-        
+
+    get_comments = get_object_comments
+
+    def get_last_update_info(self):
+
+        when, who = post_get_last_update_info(self)
+
+        answers = self.answers.all()
+        if len(answers) > 0:
+            for a in answers:
+                a_when, a_who = a.get_last_update_info()
+                if a_when > when:
+                    when = a_when
+                    who = a_who
+
+        return when, who
+
     def get_update_summary(self,last_reported_at=None,recipient_email=''):
         edited = False 
         if self.last_edited_at and self.last_edited_at > last_reported_at:
@@ -251,7 +315,7 @@ class Question(models.Model):
                     answer_comments.append(comment)
 
         #create the report
-        if edited or comments or new_answers or modified_answers or answer_comments:
+        if edited or new_answers or modified_answers or answer_comments:
             out = [] 
             if edited:
                 out.append(_('%(author)s modified the question') % {'author':self.last_edited_by.username})
@@ -285,6 +349,11 @@ class Question(models.Model):
     class Meta:
         db_table = u'question'
 
+class QuestionView(models.Model):
+    question = models.ForeignKey(Question, related_name='viewed')
+    who = models.ForeignKey(User, related_name='question_views')
+    when = models.DateTimeField()
+
 class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
     question      = models.ForeignKey(Question)
@@ -294,6 +363,12 @@ class FavoriteQuestion(models.Model):
         db_table = u'favorite_question'
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
+
+class MarkedTag(models.Model):
+    TAG_MARK_REASONS = (('good',_('interesting')),('bad',_('ignored')))
+    tag = models.ForeignKey(Tag, related_name='user_selections')
+    user = models.ForeignKey(User, related_name='tag_selections')
+    reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)
 
 class QuestionRevision(models.Model):
     """A revision of a Question."""
@@ -314,7 +389,8 @@ class QuestionRevision(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        return '/%s%s/%s' % (_('questions/'),self.question.id,_('revisions'))
+        print 'in QuestionRevision.get_absolute_url()'
+        return reverse('question_revisions', args=[self.question.id])
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""
@@ -394,6 +470,16 @@ class Answer(models.Model):
 
     objects = AnswerManager()
 
+    get_comments = get_object_comments
+    get_last_update_info = post_get_last_update_info
+
+    def save(self,**kwargs):
+        super(Answer,self).save(**kwargs)
+        try: 
+            ping_google()
+        except Exception:
+            logging.debug('problem pinging google did you register you sitemap with google?')
+
     def get_user_vote(self, user):
         votes = self.votes.filter(user=user)
         if votes.count() > 0:
@@ -408,7 +494,7 @@ class Answer(models.Model):
         return self.question.title
 
     def get_absolute_url(self):
-        return '%s%s#%s' % (reverse('question', args=[self.question.id]), django_urlquote(self.question.title), self.id)
+        return '%s%s#%s' % (reverse('question', args=[self.question.id]), django_urlquote(slugify(self.question.title)), self.id)
 
     class Meta:
         db_table = u'answer'
@@ -426,7 +512,7 @@ class AnswerRevision(models.Model):
     text       = models.TextField()
 
     def get_absolute_url(self):
-        return '/%s%s/%s' % (_('answers/'),self.answer.id,_('revisions'))
+        return reverse('answer_revisions', kwargs={'id':self.answer.id})
 
     def get_question_title(self):
         return self.answer.question.title
@@ -549,7 +635,7 @@ class Book(models.Model):
     questions = models.ManyToManyField(Question, related_name='book', db_table='book_question')
     
     def get_absolute_url(self):
-        return '%s' % reverse('book', args=[django_urlquote(self.short_name)])
+        return reverse('book', args=[django_urlquote(slugify(self.short_name))])
         
     def __unicode__(self):
         return self.title
@@ -588,7 +674,6 @@ class AnonymousEmail(models.Model):
     key = models.CharField(max_length=32)
     email = models.EmailField(null=False,unique=True)
     isvalid = models.BooleanField(default=False)
-    feeds = generic.GenericRelation(EmailFeed)
 
 # User extend properties
 QUESTIONS_PER_PAGE_CHOICES = (
@@ -597,11 +682,30 @@ QUESTIONS_PER_PAGE_CHOICES = (
    (50, u'50'),
 )
 
+def user_is_username_taken(cls,username):
+    try:
+        cls.objects.get(username=username)
+        return True
+    except cls.MultipleObjectsReturned:
+        return True
+    except cls.DoesNotExist:
+        return False
+
+def user_get_q_sel_email_feed_frequency(self):
+    print 'looking for frequency for user %s' % self
+    try:
+        feed_setting = EmailFeedSetting.objects.get(subscriber=self,feed_type='q_sel')
+    except Exception, e:
+        print 'have error %s' % e.message
+        raise e
+    print 'have freq=%s' % feed_setting.frequency
+    return feed_setting.frequency
+
+User.add_to_class('is_approved', models.BooleanField(default=False))
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 User.add_to_class('reputation', models.PositiveIntegerField(default=1))
 User.add_to_class('gravatar', models.CharField(max_length=32))
-User.add_to_class('email_feeds', generic.GenericRelation(EmailFeed))
 User.add_to_class('favorite_questions',
                   models.ManyToManyField(Question, through=FavoriteQuestion,
                                          related_name='favorited_by'))
@@ -619,6 +723,16 @@ User.add_to_class('website', models.URLField(max_length=200, blank=True))
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
+User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
+User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
+User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
+User.add_to_class('tag_filter_setting', 
+                    models.CharField(
+                                        max_length=16, 
+                                        choices=TAG_EMAIL_FILTER_CHOICES, 
+                                        default='ignored'
+                                     )
+                 )
 
 # custom signal
 tags_updated = django.dispatch.Signal(providing_args=["question"])
@@ -641,7 +755,14 @@ def delete_messages(self):
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
     return '%s%s/' % (reverse('user', args=[self.id]), slugify(self.username))
+
+def get_profile_link(self):
+    profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)
+    logging.debug('in get profile link %s' % profile_link)
+    return mark_safe(profile_link)
+
 User.add_to_class('get_profile_url', get_profile_url)
+User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 

@@ -1,5 +1,10 @@
 from django import template
+<<<<<<< HEAD:forum/templatetags/extra_filters.py
+=======
+from django.core import serializers
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_filters.py
 from forum import auth
+import logging
 
 register = template.Library()
 
@@ -7,6 +12,10 @@ register = template.Library()
 @register.filter
 def collapse(input):
     return ' '.join(input.split())
+
+@register.filter
+def can_moderate_users(user):
+    return auth.can_moderate_users(user)
 
 @register.filter
 def can_vote_up(user):
@@ -17,8 +26,8 @@ def can_flag_offensive(user):
     return auth.can_flag_offensive(user)
 
 @register.filter
-def can_add_comments(user):
-    return auth.can_add_comments(user)
+def can_add_comments(user,subject):
+    return auth.can_add_comments(user,subject)
 
 @register.filter
 def can_vote_down(user):
@@ -86,3 +95,10 @@ def cnprog_intword(number):
             return number
     except:
         return number
+<<<<<<< HEAD:forum/templatetags/extra_filters.py
+=======
+
+@register.filter
+def json_serialize(object):
+    return serializers.serialize('json',object)
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:forum/templatetags/extra_filters.py

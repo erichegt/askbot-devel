@@ -16,7 +16,9 @@
 				{% trans "be clear and concise" %}
             </li>
         </ul>
-         <a href="{% url faq %}" target="_blank" title="{% trans "see frequently asked questions" %}" style="float:right;position:relative">faq »</a>
+        <p class='info-box-follow-up-links'>
+            <a href="{% url faq %}" target="_blank" title="{% trans "see frequently asked questions" %}">faq »</a>
+        </p>
     </div>
 </div>
 
@@ -46,6 +48,8 @@
 			{% trans "basic HTML tags are also supported" %}
         </li>
     </ul>
-    <a href="http://en.wikipedia.org/wiki/Markdown" target="_blank" style="float:right;position:relative">{% trans "learn more about Markdown" %} »</a>
+    <p class='info-box-follow-up-links'>
+        <a href="http://en.wikipedia.org/wiki/Markdown" target="_blank">{% trans "learn more about Markdown" %} »</a>
+    </p>
 </div>
 <!-- end template answer_edit_tips.html -->

@@ -1,0 +1,29 @@
+{% extends "user.html" %}
+<!-- user_email_subscriptions.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load humanize %}
+
+{% block usercontent %}
+    <h2>{% trans "Email subscription settings" %}</h2>
+    <p class="message">{% trans "email subscription settings info" %}</p>
+    <div class='inline-block'>
+    {% if action_status %}
+    <p class="action-status"><span>{{action_status}}</span></p>
+    {% endif %}
+    <form method="POST"> 
+        {% include "edit_user_email_feeds_form.html" %}
+<<<<<<< HEAD:templates/user_email_subscriptions.html
+=======
+        <table class='form-as-table'>
+        {{tag_filter_selection_form}}
+        </table>
+>>>>>>> 82d35490db90878f013523c4d1a5ec3af2df8b23:templates/user_email_subscriptions.html
+        <div class="submit-row text-align-right">
+            <input type="submit" class="submit" name="save" value="{% trans "Update" %}"/>
+            <input type="submit" class="submit" name="stop_email" value="{% trans "Stop sending email" %}"/>
+        </div>
+    </form>
+    </div>
+{% endblock %}
+<!-- end user_email_subscriptions.html -->

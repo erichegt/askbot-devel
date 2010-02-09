@@ -16,7 +16,7 @@ from models import Question
 import settings
 class RssLastestQuestionsFeed(Feed):
     title = settings.APP_TITLE + _(' - ')+ _('latest questions')
-    link = settings.APP_URL + '/' + _('questions/')
+    link = settings.APP_URL + '/' + _('question/')
     description = settings.APP_DESCRIPTION
     #ttl = 10
     copyright = settings.APP_COPYRIGHT
@@ -34,7 +34,7 @@ class RssLastestQuestionsFeed(Feed):
         return item.added_at
 
     def items(self, item):
-       return Question.objects.filter(deleted=False).order_by('-added_at')[:30]
+       return Question.objects.filter(deleted=False).order_by('-last_activity_at')[:30]
 
 def main():
     pass

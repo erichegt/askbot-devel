@@ -1,13 +1,9 @@
-Alguien ha solicitado restablecer su contraseña en {{ site_url }}.
-Si no fué usted, ignore este correo
+{% load i18n %}
+{% blocktrans%}Someone has requested to reset your password on {{site_url}}.
+If it were not you, it is safe to ignore this email.{% endblocktrans %}
 
-Sus nuevo datos son:
-
-Nombre de usuario: {{ username }}
-Contraseña: {{ password }}
-
-Para hacer efectivo el cambio por favor visita:
-{{ site_url }}{{ url_confirm }}?key={{ confirm_key }}
+{% blocktrans %}email explanation how to use new {{password}} for {{username}}
+with the {{key_link}}{% endblocktrans %}
 
 Saludos, 
 El Equipo administrador de Hasked.com
