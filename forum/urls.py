@@ -18,13 +18,13 @@ APP_PATH = os.path.dirname(os.path.dirname(__file__))
 urlpatterns = patterns('',
     url(r'^$', app.index, name='index'),
     url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/content/images/favicon.ico'}),
-    (r'^favicon\.gif$', 'django.views.generic.simple.redirect_to', {'url': '/content/images/favicon.gif'}),
-    (r'^content/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': os.path.join(APP_PATH, 'templates/content').replace('\\','/')}
+    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.ico'}),
+    (r'^favicon\.gif$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.gif'}),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': os.path.join(APP_PATH, 'media').replace('\\','/')}
     ),
     (r'^%s(?P<path>.*)$' % _('upfiles/'), 'django.views.static.serve',
-        {'document_root': os.path.join(APP_PATH, 'templates/upfiles').replace('\\','/')}
+        {'document_root': os.path.join(APP_PATH, '/upfiles').replace('\\','/')}
     ),
     (r'^%s/$' % _('signin/'), 'django_authopenid.views.signin'),
     url(r'^%s$' % _('about/'), app.about, name='about'),

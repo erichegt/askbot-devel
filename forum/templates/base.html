@@ -13,17 +13,17 @@
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
-        <link rel="shortcut icon" href="{% media  "/content/images/favicon.ico" %}" />
-        <link href="{% media  "/content/style/style.css" %}" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="{% media  "/media/images/favicon.ico" %}" />
+        <link href="{% media  "/media/style/style.css" %}" rel="stylesheet" type="text/css" />
         <script src="http://www.google.com/jsapi" type="text/javascript"></script>
         <script type="text/javascript">google.load("jquery", "1.2.6");</script>
 		<script type="text/javascript">
             var i18nLang = '{{settings.LANGUAGE_CODE}}';
             var scriptUrl = '/{{settings.FORUM_SCRIPT_ALIAS}}'
 		</script>
-        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.i18n.js" %}'></script>
-		<script type='text/javascript' src='{% media  "/content/js/jquery.i18n.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.utils.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.i18n.js" %}'></script>
+		<script type='text/javascript' src='{% media  "/media/js/jquery.i18n.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.utils.js" %}'></script>
         <!--<script type="text/javascript">
         var uservoiceJsHost = ("https:" == document.location.protocol) ? "https://uservoice.com" : "http://cdn.uservoice.com";
         document.write(unescape("%3Cscript src='" + uservoiceJsHost + "/javascripts/widgets/tab.js' type='text/javascript'%3E%3C/script%3E"))

@@ -6,8 +6,8 @@
 {% load humanize %}
 {% block title %}{% spaceless %}{% trans "Revision history" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.editor.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/content/js/com.cnprog.post.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.post.js" %}'></script>
         <script type="text/javascript">
         //todo - take this out into .js file 
         $().ready(function(){
@@ -24,7 +24,7 @@
             var arrow = $("#rev-arrow-" + id);
             var visible = arrow.attr("src").indexOf("hide") > -1;
 
-            var path = $.i18n._('/') + "content/images/expander-arrow-" + 
+            var path = $.i18n._('/') + "media/images/expander-arrow-" + 
                         (visible ? "show" : "hide") + ".gif" + "?v={{settings.RESOURCE_REVISION}}";
             arrow.attr("src", path);
             $("#rev-body-" + id).slideToggle("fast");
@@ -46,7 +46,7 @@
             <table width="100%">
                 <tr>
                     <td width="20" style="vertical-align:middle"><img id="rev-arrow-{{ revision.revision }}" 
-                                                                    src="{% media  "/content/images/expander-arrow-show.gif" %}"
+                                                                    src="{% media  "/media/images/expander-arrow-show.gif" %}"
                                                                     alt="{% trans "click to hide/show revision" %}"/>
                     </td>
                     <td width="30px" style="vertical-align:middle"><span class="revision-number" title="{% trans "revision" %} {{ revision.revision }}">{{ revision.revision }}</span></td>
