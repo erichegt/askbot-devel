@@ -5,6 +5,7 @@ from forum import views as app
 from forum.feed import RssLastestQuestionsFeed
 from forum.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
+import logging
 
 admin.autodiscover()
 feeds = {
@@ -14,17 +15,17 @@ sitemaps = {
     'questions': QuestionsSitemap
 }
 
-APP_PATH = os.path.dirname(os.path.dirname(__file__))
+APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', app.index, name='index'),
     url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
-    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.ico'}),
-    (r'^favicon\.gif$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.gif'}),
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': os.path.join(APP_PATH, 'media').replace('\\','/')}
+    #(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.ico'}),
+    #(r'^favicon\.gif$', 'django.views.generic.simple.redirect_to', {'url': '/media/images/favicon.gif'}),
+    (r'^m/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': os.path.join(APP_PATH,'skins').replace('\\','/')}
     ),
     (r'^%s(?P<path>.*)$' % _('upfiles/'), 'django.views.static.serve',
-        {'document_root': os.path.join(APP_PATH, '/upfiles').replace('\\','/')}
+        {'document_root': os.path.join(APP_PATH,'upfiles').replace('\\','/')}
     ),
     (r'^%s/$' % _('signin/'), 'django_authopenid.views.signin'),
     url(r'^%s$' % _('about/'), app.about, name='about'),

@@ -102,6 +102,7 @@ SPHINX_PORT=3312
 #please get these at recaptcha.net
 RECAPTCHA_PRIVATE_KEY='...'
 RECAPTCHA_PUBLIC_KEY='...'
+OSQA_DEFAULT_SKIN = 'default'
 
 #Facebook settings
 USE_FB_CONNECT=True

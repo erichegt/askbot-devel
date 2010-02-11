@@ -11,6 +11,7 @@ SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
+    'forum.skins.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
 )
 
@@ -42,7 +43,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'templates').replace('\\','/'),
+    os.path.join(os.path.dirname(__file__),'forum','skins').replace('\\','/'),
 )
 
 #UPLOAD SETTINGS
