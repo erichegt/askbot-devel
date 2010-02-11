@@ -149,9 +149,9 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
 
     #force all content to be served as static files
     #otherwise django will be crunching images through itself wasting time
-    Alias /media/ /path/to/osqa-site/forum/media/
-    Alias /ufiles/ /path/to/osqa-site/forum/upfiles/
-    <Directory /path/to/osqa-site/forum/media>
+    Alias /m/ /path/to/osqa-site/forum/skins/
+    Alias /upfiles/ /path/to/osqa-site/forum/upfiles/
+    <Directory /path/to/osqa-site/forum/skins>
         Order deny,allow
         Allow from all
     </Directory>
