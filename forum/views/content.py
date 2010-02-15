@@ -1052,6 +1052,78 @@ def answer(request, id):#process a new answer
 
     return HttpResponseRedirect(question.get_absolute_url())
 
+def question_comments(request, id):#ajax handler for loading comments to question
+    question = get_object_or_404(Question, id=id)
+    user = request.user
+    return __comments(request, question, 'question')
+
+def answer_comments(request, id):#ajax handler for loading comments on answer
+    answer = get_object_or_404(Answer, id=id)
+    user = request.user
+    return __comments(request, answer, 'answer')
+
+def __comments(request, obj, type):#non-view generic ajax handler to load comments to an object
+    # only support get post comments by ajax now
+    user = request.user
+    if request.is_ajax():
+        if request.method == "GET":
+            response = __generate_comments_json(obj, type, user)
+        elif request.method == "POST":
+            if auth.can_add_comments(user,obj):
+                comment_data = request.POST.get('comment')
+                comment = Comment(content_object=obj, comment=comment_data, user=request.user)
+                comment.save()
+                obj.comment_count = obj.comment_count + 1
+                obj.save()
+                response = __generate_comments_json(obj, type, user)
+            else:
+                response = HttpResponseForbidden(mimetype="application/json")
+        return response
+
+def __generate_comments_json(obj, type, user):#non-view generates json data for the post comments
+    comments = obj.comments.all().order_by('id')
+    # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
+    json_comments = []
+    from forum.templatetags.extra_tags import diff_date
+    for comment in comments:
+        comment_user = comment.user
+        delete_url = ""
+        if user != None and auth.can_delete_comment(user, comment):
+            #/posts/392845/comments/219852/delete
+            #todo translate this url
+            delete_url = reverse(index) + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
+        json_comments.append({"id" : comment.id,
+            "object_id" : obj.id,
+            "comment_age" : diff_date(comment.added_at),
+            "text" : comment.comment,
+            "user_display_name" : comment_user.username,
+            "user_url" : comment_user.get_profile_url(),
+            "delete_url" : delete_url
+        })
+
+    data = simplejson.dumps(json_comments)
+    return HttpResponse(data, mimetype="application/json")
+
+def delete_comment(request, object_id='', comment_id='', commented_object_type=None):#ajax handler to delete comment
+    response = None
+    commented_object = None
+    if commented_object_type == 'question':
+        commented_object = Question
+    elif commented_object_type == 'answer':
+        commented_object = Answer
+
+    if request.is_ajax():
+        comment = get_object_or_404(Comment, id=comment_id)
+        if auth.can_delete_comment(request.user, comment):
+            obj = get_object_or_404(commented_object, id=object_id)
+            obj.comments.remove(comment)
+            obj.comment_count = obj.comment_count - 1
+            obj.save()
+            user = request.user
+            return __generate_comments_json(obj, commented_object_type, user)
+    raise PermissionDenied()
+
+
 def vote(request, id):#refactor - pretty incomprehensible view used by various ajax calls
 #issues: this subroutine is too long, contains many magic numbers and other issues
 #it's called "vote" but many actions processed here have nothing to do with voting
@@ -1319,75 +1391,4 @@ def ajax_command(request):#refactor? view processing ajax commands - note "vote"
         return HttpResponseForbidden(mimetype="application/json")
     if request.POST['command'] == 'toggle-ignored-questions':
         return ajax_toggle_ignored_questions(request)
-
-def question_comments(request, id):#ajax handler for loading comments to question
-    question = get_object_or_404(Question, id=id)
-    user = request.user
-    return __comments(request, question, 'question')
-
-def answer_comments(request, id):#ajax handler for loading comments on answer
-    answer = get_object_or_404(Answer, id=id)
-    user = request.user
-    return __comments(request, answer, 'answer')
-
-def __comments(request, obj, type):#non-view generic ajax handler to load comments to an object
-    # only support get post comments by ajax now
-    user = request.user
-    if request.is_ajax():
-        if request.method == "GET":
-            response = __generate_comments_json(obj, type, user)
-        elif request.method == "POST":
-            if auth.can_add_comments(user,obj):
-                comment_data = request.POST.get('comment')
-                comment = Comment(content_object=obj, comment=comment_data, user=request.user)
-                comment.save()
-                obj.comment_count = obj.comment_count + 1
-                obj.save()
-                response = __generate_comments_json(obj, type, user)
-            else:
-                response = HttpResponseForbidden(mimetype="application/json")
-        return response
-
-def __generate_comments_json(obj, type, user):#non-view generates json data for the post comments
-    comments = obj.comments.all().order_by('id')
-    # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
-    json_comments = []
-    from forum.templatetags.extra_tags import diff_date
-    for comment in comments:
-        comment_user = comment.user
-        delete_url = ""
-        if user != None and auth.can_delete_comment(user, comment):
-            #/posts/392845/comments/219852/delete
-            #todo translate this url
-            delete_url = reverse(index) + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
-        json_comments.append({"id" : comment.id,
-            "object_id" : obj.id,
-            "comment_age" : diff_date(comment.added_at),
-            "text" : comment.comment,
-            "user_display_name" : comment_user.username,
-            "user_url" : comment_user.get_profile_url(),
-            "delete_url" : delete_url
-        })
-
-    data = simplejson.dumps(json_comments)
-    return HttpResponse(data, mimetype="application/json")
-
-def delete_comment(request, object_id='', comment_id='', commented_object_type=None):#ajax handler to delete comment
-    response = None
-    commented_object = None
-    if commented_object_type == 'question':
-        commented_object = Question
-    elif commented_object_type == 'answer':
-        commented_object = Answer
-
-    if request.is_ajax():
-        comment = get_object_or_404(Comment, id=comment_id)
-        if auth.can_delete_comment(request.user, comment):
-            obj = get_object_or_404(commented_object, id=object_id)
-            obj.comments.remove(comment)
-            obj.comment_count = obj.comment_count - 1
-            obj.save()
-            user = request.user
-            return __generate_comments_json(obj, commented_object_type, user)
-    raise PermissionDenied()
 
