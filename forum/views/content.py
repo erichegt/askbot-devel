@@ -1111,7 +1111,7 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
             response_data['allowed'] = 0
             response_data['success'] = 0
 
-        elif request.is_ajax():
+        elif request.is_ajax() and request.method == 'POST':
             question = get_object_or_404(Question, id=id)
             vote_type = request.POST.get('type')
 
