@@ -133,7 +133,7 @@
         
         <div class="tags">
         {% for tag in question.tagname_list %}
-        <a href="{% url forum.views.tag tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
+        <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
         {% endfor %}
         </div>
     </div>
@@ -224,7 +224,7 @@
 	<h3 class="subtitle">{% trans "Related tags" %}</h3>
     <div class="tags">
         {% for tag in tags %}
-            <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url forum.views.tag tag.name|urlencode %}">{{ tag.name }}</a>
+            <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
             <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
             <br />
         {% endfor %}

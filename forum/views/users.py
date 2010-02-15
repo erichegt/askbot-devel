@@ -22,88 +22,6 @@ question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
 
-# used in users
-class UserView:
-    def __init__(self, id, tab_title, tab_description, page_title, view_name, template_file, data_size=0):
-        self.id = id
-        self.tab_title = tab_title
-        self.tab_description = tab_description
-        self.page_title = page_title
-        self.view_name = view_name
-        self.template_file = template_file
-        self.data_size = data_size
-        
-USER_TEMPLATE_VIEWS = (
-    UserView(
-        id = 'stats',
-        tab_title = _('overview'),
-        tab_description = _('user profile'),
-        page_title = _('user profile overview'),
-        view_name = 'user_stats',
-        template_file = 'user_stats.html'
-    ),
-    UserView(
-        id = 'recent',
-        tab_title = _('recent activity'),
-        tab_description = _('recent user activity'),
-        page_title = _('profile - recent activity'),
-        view_name = 'user_recent',
-        template_file = 'user_recent.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'responses',
-        tab_title = _('responses'),
-        tab_description = _('comments and answers to others questions'),
-        page_title = _('profile - responses'),
-        view_name = 'user_responses',
-        template_file = 'user_responses.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'reputation',
-        tab_title = _('reputation'),
-        tab_description = _('user reputation in the community'),
-        page_title = _('profile - user reputation'),
-        view_name = 'user_reputation',
-        template_file = 'user_reputation.html'
-    ),
-    UserView(
-        id = 'favorites',
-        tab_title = _('favorite questions'),
-        tab_description = _('users favorite questions'),
-        page_title = _('profile - favorite questions'),
-        view_name = 'user_favorites',
-        template_file = 'user_favorites.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'votes',
-        tab_title = _('casted votes'),
-        tab_description = _('user vote record'),
-        page_title = _('profile - votes'),
-        view_name = 'user_votes',
-        template_file = 'user_votes.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'email_subscriptions',
-        tab_title = _('email subscriptions'),
-        tab_description = _('email subscription settings'),
-        page_title = _('profile - email subscriptions'),
-        view_name = 'user_email_subscriptions',
-        template_file = 'user_email_subscriptions.html'
-    )
-)
-
-def user(request, id):
-    sort = request.GET.get('sort', 'stats')
-    user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
-    from forum import views
-    func = getattr(views, user_view.view_name)
-    return func(request, id, user_view)
-
-
 USERS_PAGE_SIZE = 35# refactor - move to some constants file
 
 def users(request):
@@ -941,3 +859,82 @@ def user_email_subscriptions(request, user_id, user_view):
         'action_status':action_status,
     }, context_instance=RequestContext(request))
 
+class UserView:
+    def __init__(self, id, tab_title, tab_description, page_title, view_func, template_file, data_size=0):
+        self.id = id
+        self.tab_title = tab_title
+        self.tab_description = tab_description
+        self.page_title = page_title
+        self.view_func = view_func 
+        self.template_file = template_file
+        self.data_size = data_size
+        
+USER_TEMPLATE_VIEWS = (
+    UserView(
+        id = 'stats',
+        tab_title = _('overview'),
+        tab_description = _('user profile'),
+        page_title = _('user profile overview'),
+        view_func = user_stats,
+        template_file = 'user_stats.html'
+    ),
+    UserView(
+        id = 'recent',
+        tab_title = _('recent activity'),
+        tab_description = _('recent user activity'),
+        page_title = _('profile - recent activity'),
+        view_func = user_recent,
+        template_file = 'user_recent.html',
+        data_size = 50
+    ),
+    UserView(
+        id = 'responses',
+        tab_title = _('responses'),
+        tab_description = _('comments and answers to others questions'),
+        page_title = _('profile - responses'),
+        view_func = user_responses,
+        template_file = 'user_responses.html',
+        data_size = 50
+    ),
+    UserView(
+        id = 'reputation',
+        tab_title = _('reputation'),
+        tab_description = _('user reputation in the community'),
+        page_title = _('profile - user reputation'),
+        view_func = user_reputation,
+        template_file = 'user_reputation.html'
+    ),
+    UserView(
+        id = 'favorites',
+        tab_title = _('favorite questions'),
+        tab_description = _('users favorite questions'),
+        page_title = _('profile - favorite questions'),
+        view_func = user_favorites,
+        template_file = 'user_favorites.html',
+        data_size = 50
+    ),
+    UserView(
+        id = 'votes',
+        tab_title = _('casted votes'),
+        tab_description = _('user vote record'),
+        page_title = _('profile - votes'),
+        view_func = user_votes,
+        template_file = 'user_votes.html',
+        data_size = 50
+    ),
+    UserView(
+        id = 'email_subscriptions',
+        tab_title = _('email subscriptions'),
+        tab_description = _('email subscription settings'),
+        page_title = _('profile - email subscriptions'),
+        view_func = user_email_subscriptions,
+        template_file = 'user_email_subscriptions.html'
+    )
+)
+
+def user(request, id):
+    sort = request.GET.get('sort', 'stats')
+    user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
+    from forum.views import users
+    func = user_view.view_func
+    return func(request, id, user_view)

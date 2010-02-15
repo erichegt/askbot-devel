@@ -46,7 +46,7 @@
 <ul class="tagsList tags">
 {% for tag in tags.object_list %}
    <li>
-    <a href="{% url forum.views.tag tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">
+    <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">
         {{ tag }}
     </a>&nbsp;
     <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
