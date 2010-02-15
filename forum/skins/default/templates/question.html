@@ -70,55 +70,53 @@
                             {% if question_vote %}
                             <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
                                 {% if question_vote.is_upvote %}
-								    src="{% media  "/media/images/vote-arrow-up-on.png" %}" 
+                                    src="{% media  "/media/images/vote-arrow-up-on.png" %}" 
                                 {% else %}
-								    src="{% media  "/media/images/vote-arrow-up.png" %}" 
+                                    src="{% media  "/media/images/vote-arrow-up.png" %}" 
                                 {% endif %}
                                 alt="{% trans "i like this post (click again to cancel)" %}"
-								title="{% trans "i like this post (click again to cancel)" %}" />
+                                title="{% trans "i like this post (click again to cancel)" %}" />
                             <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-								title="{% trans "current number of votes" %}">
+                                title="{% trans "current number of votes" %}">
                                 {{ question.score }}
                             </div>
                             <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
                                 {% if question_vote.is_downvote %}
-								    src="{% media  "/media/images/vote-arrow-down-on.png" %}" 
+                                    src="{% media  "/media/images/vote-arrow-down-on.png" %}" 
                                 {% else %}
-								    src="{% media  "/media/images/vote-arrow-down.png" %}" 
+                                    src="{% media  "/media/images/vote-arrow-down.png" %}" 
                                 {% endif %}
                                 alt="{% trans "i dont like this post (click again to cancel)" %}"
-								title="{% trans "i dont like this post (click again to cancel)" %}" />
+                                title="{% trans "i dont like this post (click again to cancel)" %}" />
                            
                             {% else %}
                             <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
                                 alt="{% trans "i like this post (click again to cancel)" %}"
-								src="{% media  "/media/images/vote-arrow-up.png" %}" 
-								title="{% trans "i like this post (click again to cancel)" %}" />
+                                src="{% media  "/media/images/vote-arrow-up.png" %}" 
+                                title="{% trans "i like this post (click again to cancel)" %}" />
                             <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-								title="{% trans "current number of votes" %}">
+                                title="{% trans "current number of votes" %}">
                                 {{ question.score }}
                             </div>
                             <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-								src="{% media  "/media/images/vote-arrow-down.png" %}"
+                                src="{% media  "/media/images/vote-arrow-down.png" %}"
                                 alt="{% trans "i dont like this post (click again to cancel)" %}"
                                 title="{% trans "i dont like this post (click again to cancel)" %}" />
-          
                             {% endif %}
                             {% if favorited %}
                             <img class="question-img-favorite" src="{% media  "/media/images/vote-favorite-on.png" %}"
-								alt="{% trans "mark this question as favorite (click again to cancel)" %}"
-								title="{% trans "mark this question as favorite (click again to cancel)" %}" />
+                                alt="{% trans "mark this question as favorite (click again to cancel)" %}"
+                                title="{% trans "mark this question as favorite (click again to cancel)" %}" />
                             <div id="favorite-number" class="favorite-number my-favorite-number">
                                 {{ question.favourite_count }}
                             </div>
                             {% else %}
                             <img class="question-img-favorite" src="{% media  "/media/images/vote-favorite-off.png" %}"
-								alt="{% trans "remove favorite mark from this question (click again to restore mark)" %}"
-								title="{% trans "remove favorite mark from this question (click again to restore mark)" %}" />
+                                alt="{% trans "remove favorite mark from this question (click again to restore mark)" %}"
+                                title="{% trans "remove favorite mark from this question (click again to restore mark)" %}" />
                             <div id="favorite-number" class="favorite-number">
                                {% ifnotequal question.favourite_count 0 %}{{ question.favourite_count }}{% endifnotequal %}
                             </div>
-                        
                             {% endif %}
                             
                         </div>
@@ -217,8 +215,8 @@
             {% if question.closed %}
             <div class="question-status" style="margin-bottom:15px">
             <h3>{% blocktrans with question.get_close_reason_display as close_reason %}The question has been closed for the following reason "{{ close_reason }}" by{% endblocktrans %} 
-			<a href="{{ question.closed_by.get_profile_url }}">{{ question.closed_by.username }}</a> 
-			{% blocktrans with question.closed_at as closed_at %}close date {{closed_at}}{% endblocktrans %}</h3>
+            <a href="{{ question.closed_by.get_profile_url }}">{{ question.closed_by.username }}</a> 
+            {% blocktrans with question.closed_at as closed_at %}close date {{closed_at}}{% endblocktrans %}</h3>
             </div>
             {% endif %}
             {% if answers %}
@@ -258,21 +256,21 @@
                                             {{ answer.score }}
                                         </div>
                                         <img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
-											src="{% blockmedia %}/media/images/vote-arrow-down{% get_user_vote_image user_answer_votes answer.id -1 %}.png{% endblockmedia %}" 
-											alt="{% trans "i dont like this answer (click again to cancel)" %}"
-											title="{% trans "i dont like this answer (click again to cancel)" %}" />
+                                            src="{% blockmedia %}/media/images/vote-arrow-down{% get_user_vote_image user_answer_votes answer.id -1 %}.png{% endblockmedia %}" 
+                                            alt="{% trans "i dont like this answer (click again to cancel)" %}"
+                                            title="{% trans "i dont like this answer (click again to cancel)" %}" />
                                      
                                         {% ifequal request.user question.author  %}
                                         <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
-											src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
-											alt="{% trans "mark this answer as favorite (click again to undo)" %}"
-											title="{% trans "mark this answer as favorite (click again to undo)" %}" />
+                                            src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
+                                            alt="{% trans "mark this answer as favorite (click again to undo)" %}"
+                                            title="{% trans "mark this answer as favorite (click again to undo)" %}" />
                                         {% else %}
                                             {% if answer.accepted %}
                                             <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
-												src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
-												alt="{% trans "the author of the question has selected this answer as correct" %}"
-												title="{% trans "the author of the question has selected this answer as correct" %}" />
+                                                src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
+                                                alt="{% trans "the author of the question has selected this answer as correct" %}"
+                                                title="{% trans "the author of the question has selected this answer as correct" %}" />
                                             {% endif %}
                                         {% endifequal %}
                                     </div>

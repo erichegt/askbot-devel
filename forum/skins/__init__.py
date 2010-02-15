@@ -4,7 +4,6 @@ from django.template.loaders import filesystem
 from django.http import HttpResponse
 import os.path
 import logging
-APP_NAME = os.path.basename(os.path.dirname(__file__))
 
 #module for skinning osqa
 #at this point skin can be changed only in settings file
@@ -36,7 +35,7 @@ def find_media_source(url):
     n = os.path.normpath
     j = os.path.join
     f = os.path.isfile
-    skins = n(j(d(__file__),'skins'))
+    skins = n(j(d(d(__file__)),'skins'))
     try:
         media = os.path.join(skins, settings.OSQA_DEFAULT_SKIN, url)
         assert(f(media))

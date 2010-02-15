@@ -1,7 +1,11 @@
-//var $, scriptUrl;
+//var $, scriptUrl, osqaSkin
+var mediaUrl = function(resource){
+    return scriptUrl + 'm/' + osqaSkin + '/' + resource;
+};
+
 var showMessage = function(object, msg) {
     var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
-				$.i18n._('click to close') + ')</div>');
+    $.i18n._('click to close') + ')</div>');
 
     div.click(function(event) {
         $(".vote-notification").fadeOut("fast", function() { $(this).remove(); });
@@ -37,11 +41,11 @@ var notify = function() {
 
 function appendLoader(containerSelector) {
     $(containerSelector).append('<img class="ajax-loader" ' +
-		'src="' + scriptUrl + 'media/images/indicator.gif" title="' +
-		$.i18n._('loading...') +
-		'" alt="' +
-		$.i18n._('loading...') +
-		'" />');
+        'src="mediaUrl("media/images/indicator.gif")" title="' +
+        $.i18n._('loading...') +
+        '" alt="' +
+        $.i18n._('loading...') +
+    '" />');
 }
 
 function removeLoader() {

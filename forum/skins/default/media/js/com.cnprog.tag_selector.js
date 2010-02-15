@@ -45,10 +45,10 @@ function pickedTags(){
 
     var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){
         obj.unbind('mouseover').bind('mouseover', function(){
-            $(this).attr('src', scriptUrl + 'media/images/close-small-hover.png');
+            $(this).attr('src', mediaUrl('media/images/close-small-hover.png'));
         });
         obj.unbind('mouseout').bind('mouseout', function(){
-            $(this).attr('src', scriptUrl + 'media/images/close-small-dark.png');
+            $(this).attr('src', mediaUrl('media/images/close-small-dark.png'));
         });
         obj.click( function(){
             unpickTag(tag_store,tagname,reason,send_ajax);
@@ -88,7 +88,7 @@ function pickedTags(){
                 tag_link.html(tagname);
                 var del_link = $('<img></img>');
                 del_link.addClass('delete-icon');
-                del_link.attr('src', scriptUrl + 'media/images/close-small-dark.png');
+                del_link.attr('src', mediaUrl('/media/images/close-small-dark.png'));
 
                 setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
 

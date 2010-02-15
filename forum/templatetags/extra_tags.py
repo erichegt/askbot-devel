@@ -330,7 +330,7 @@ class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
-        prefix = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/'
+        prefix = '///' + settings.FORUM_SCRIPT_ALIAS + 'm/'
         url = ''
         if self.items:
             url += '/'     
@@ -338,7 +338,7 @@ class BlockMediaUrlNode(template.Node):
             url += item.render(context)
 
         url = skins.find_media_source(url)
-        url += prefix + url
+        url = prefix + url
         out = posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
         return out.replace(' ','')
 
