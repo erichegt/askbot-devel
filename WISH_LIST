@@ -1,0 +1,10 @@
+* The wonder bar (integrated the search / ask functionality)
+* The authentication system ???
+* allow multiple logins to the same account
+* more advanced templating/skinning system
+* per-tag email  subscriptions
+* view for personalized news on the site
+* a little flag popping when there are news
+* drill-down mode for navigation by tags
+* improved admin console
+* sort out mess with profile - currently we patch django User

@@ -47,7 +47,7 @@ ANSWERS_PAGE_SIZE = 10
 markdowner = Markdown(html4tags=True)
 
 #system to display main content
-def _get_tags_cache_json():#service routine
+def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space
     """returns list of all tags in json format
     no caching yet, actually
     """
@@ -59,7 +59,7 @@ def _get_tags_cache_json():#service routine
     tags = simplejson.dumps(tags_list)
     return tags
 
-def _get_and_remember_questions_sort_method(request, view_dic, default):#service routine
+def _get_and_remember_questions_sort_method(request, view_dic, default):#service routine used by q listing views and question view
     """manages persistence of post sort order
     it is assumed that when user wants newest question - 
     then he/she wants newest answers as well, etc.
@@ -353,7 +353,7 @@ def search(request): #generates listing of questions matching a search query - i
     else:
         raise Http404
 
-def tag(request, tag):#generates listing of questions tagged with a single tag
+def tag(request, tag):#stub generates listing of questions tagged with a single tag
     return questions(request, tagname=tag)
 
 def tags(request):#view showing a listing of available tags - plain list
