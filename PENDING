@@ -4,7 +4,7 @@ new features (go to law school, get a job, do something real)
 Just a joke - pick yourself a task and work on it.
 
 ==Refactoring==
-* (see note 1) analyze and split /views/content.py
+* (see note 1) analyze and split /views/content.py - Evgeny
 * analyze and split models.py --> models/
 * create forum/modules directory
 * make modules load into the forum app like they
