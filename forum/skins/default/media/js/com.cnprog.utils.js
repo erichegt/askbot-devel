@@ -41,7 +41,7 @@ var notify = function() {
 
 function appendLoader(containerSelector) {
     $(containerSelector).append('<img class="ajax-loader" ' +
-        'src="mediaUrl("media/images/indicator.gif")" title="' +
+        'src="' + mediaUrl("media/images/indicator.gif") + '" title="' +
         $.i18n._('loading...') +
         '" alt="' +
         $.i18n._('loading...') +

@@ -938,3 +938,4 @@ def user(request, id):
     from forum.views import users
     func = user_view.view_func
     return func(request, id, user_view)
+

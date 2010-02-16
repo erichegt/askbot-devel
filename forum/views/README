@@ -1,0 +1,12 @@
+readers.py - views strictly reading main content: questions, answers, tags and comments
+
+writers.py - views that write main content, with possible reading
+             note: deletion counts as writing in this case
+
+commands.py - data status changing commands, votes, question close/reopen
+
+users.py - user views - user listing and profiles
+
+meta.py - privacy, about, faq, feedback, logout, badges
+
+books.py - book views - to be moved to a books extension

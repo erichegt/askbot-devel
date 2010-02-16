@@ -1,11 +1,14 @@
 import datetime
 from django.conf import settings
 from django.utils import simplejson
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
+from django.template import RequestContext
 from forum.models import *
+from forum.forms import CloseForm
 from forum import auth
+from django.contrib.auth.decorators import login_required
 from utils.decorators import ajax_method, ajax_login_required
 import logging
 
@@ -278,3 +281,54 @@ def ajax_command(request):#refactor? view processing ajax commands - note "vote"
     if request.POST['command'] == 'toggle-ignored-questions':
         return ajax_toggle_ignored_questions(request)
 
+@login_required
+def close(request, id):#close question
+    """view to initiate and process 
+    question close
+    """
+    question = get_object_or_404(Question, id=id)
+    if not auth.can_close_question(request.user, question):
+        return HttpResponse('Permission denied.')
+    if request.method == 'POST':
+        form = CloseForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            question.closed = True
+            question.closed_by = request.user
+            question.closed_at = datetime.datetime.now()
+            question.close_reason = reason
+            question.save()
+        return HttpResponseRedirect(question.get_absolute_url())
+    else:
+        form = CloseForm()
+        return render_to_response('close.html', {
+            'form' : form,
+            'question' : question,
+            }, context_instance=RequestContext(request))
+
+@login_required
+def reopen(request, id):#re-open question
+    """view to initiate and process 
+    question close
+    """
+    question = get_object_or_404(Question, id=id)
+    # open question
+    if not auth.can_reopen_question(request.user, question):
+        return HttpResponse('Permission denied.')
+    if request.method == 'POST' :
+        Question.objects.filter(id=question.id).update(closed=False,
+            closed_by=None, closed_at=None, close_reason=None)
+        return HttpResponseRedirect(question.get_absolute_url())
+    else:
+        return render_to_response('reopen.html', {
+            'question' : question,
+            }, context_instance=RequestContext(request))
+
+#osqa-user communication system
+def read_message(request):#marks message a read
+    if request.method == "POST":
+        if request.POST['formdata'] == 'required':
+            request.session['message_silent'] = 1
+            if request.user.is_authenticated():
+                request.user.delete_messages()
+    return HttpResponse('')
