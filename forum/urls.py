@@ -42,10 +42,10 @@ urlpatterns = patterns('',
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), app.content.close, name='close'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), app.content.reopen, name='reopen'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), app.content.answer, name='answer'),
-    url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), app.content.vote, name='vote'),
+    url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), app.commands.vote, name='vote'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), app.content.question_revisions, name='question_revisions'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('comments/')), app.content.question_comments, name='question_comments'),
-    url(r'^%s$' % _('command/'), app.content.ajax_command, name='call_ajax'),
+    url(r'^%s$' % _('command/'), app.commands.ajax_command, name='call_ajax'),
 
     url(r'^%s(?P<object_id>\d+)/%s(?P<comment_id>\d+)/%s$' % (_('questions/'), _('comments/'),_('delete/')), \
                                                 app.content.delete_comment, kwargs={'commented_object_type':'question'},\
@@ -59,15 +59,15 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('tags/'), app.content.tags, name='tags'),
     url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.content.tag, name='tag_questions'),
 
-    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')), app.content.mark_tag, \
+    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')), app.commands.mark_tag, \
                                 kwargs={'reason':'good','action':'add'}, \
                                 name='mark_interesting_tag'),
 
-    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')), app.content.mark_tag, \
+    url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')), app.commands.mark_tag, \
                                 kwargs={'reason':'bad','action':'add'}, \
                                 name='mark_ignored_tag'),
 
-    url(r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'), app.content.mark_tag, \
+    url(r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'), app.commands.mark_tag, \
                                 kwargs={'action':'remove'}, \
                                 name='mark_ignored_tag'),
 
