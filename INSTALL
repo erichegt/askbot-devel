@@ -4,7 +4,7 @@ A. PREREQUISITES
 B. INSTALLATION
    1. Settings file
    2. Database
-   3. Running CNPROG in the development server
+   3. Running OSQA in the development server
    4. Installation under Apache/WSGI
    5. Full text search
    6. Email subscriptions
@@ -56,7 +56,7 @@ Notice that you will need to register with recaptcha.net and receive
 recaptcha public and private keys that need to be saved in your
 settings_local.py file
 
-NOTES: django_authopenid is included into CNPROG code 
+NOTES: django_authopenid is included into OSQA code 
 and is significantly modified.  http://code.google.com/p/django-authopenid/
 no need to install this library
 
@@ -64,13 +64,13 @@ B. INSTALLATION
 -----------------------------------------------
 0. Make sure you have all above python libraries installed.
 
-   make cnprog installation server-readable on Linux command might be:
-   chown -R yourlogin:apache /path/to/CNPROG
+   make osqa installation server-readable on Linux command might be:
+   chown -R yourlogin:apache /path/to/OSQA
    
    directories templates/upfiles and log must be server writable
 
    on Linux type chmod
-   chmod -R g+w /path/to/CNPROG/upfiles
+   chmod -R g+w /path/to/OSQA/upfiles
    chmod -R g+w /path/to/log
 
    above it is assumed that webserver runs under group named "apache"
@@ -87,11 +87,11 @@ Section C explains configuration paramaters.
 Prepare your database by using the same database/account 
 configuration from above.
 e.g,
-create database cnprog DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
-grant all on cnprog.* to 'cnprog'@'localhost';
+create database osqa DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
+grant all on osqa.* to 'osqa'@'localhost';
 And then run "python manage.py syncdb" to synchronize your database.
 
-3. Running CNPROG on the development server 
+3. Running OSQA on the development server 
 
 Run "python manage.py runserver" to startup django 
 development environment.
@@ -112,8 +112,8 @@ import os
 import sys
 
 sys.path.insert(0,'/one/level/above') #insert to make sure that forum will be found
-sys.path.append('/one/level/above/CNPROG') #maybe this is not necessary
-os.environ['DJANGO_SETTINGS_MODULE'] = 'CNPROG.settings'
+sys.path.append('/one/level/above/OSQA') #maybe this is not necessary
+os.environ['DJANGO_SETTINGS_MODULE'] = 'OSQA.settings'
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
 -----------
@@ -138,26 +138,26 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
 #this allows "rooting" forum at http://example.com/forum, if you like
 <VirtualHost ...your ip...:80>
     ServerAdmin forum@example.com
-    DocumentRoot /path/to/cnprog
+    DocumentRoot /path/to/osqa-site
     ServerName example.com
 
     #run mod_wsgi process for django in daemon mode
     #this allows avoiding confused timezone settings when
     #another application runs in the same virtual host
-    WSGIDaemonProcess CNPROG 
-    WSGIProcessGroup CNPROG 
+    WSGIDaemonProcess OSQA 
+    WSGIProcessGroup OSQA 
 
     #force all content to be served as static files
     #otherwise django will be crunching images through itself wasting time
-    Alias /content/ /path/to/cnprog/templates/content/
-    AliasMatch /([^/]*\.css) /path/to/cnprog/templates/content/style/$1
-    <Directory /path/to/cnprog/templates/content>
+    Alias /m/ /path/to/osqa-site/forum/skins/
+    Alias /upfiles/ /path/to/osqa-site/forum/upfiles/
+    <Directory /path/to/osqa-site/forum/skins>
         Order deny,allow
         Allow from all
     </Directory>
 
     #this is your wsgi script described in the prev section
-    WSGIScriptAlias / /path/to/cnprog/cnprog.wsgi
+    WSGIScriptAlias / /path/to/osqa-site/osqa.wsgi
 
     #this will force admin interface to work only
     #through https (optional)
@@ -166,35 +166,39 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
         RewriteEngine on
         RewriteRule /nimda(.*)$ https://example.com/nimda$1 [L,R=301]
     </Location>
-    CustomLog /var/log/httpd/CNPROG/access_log common
-    ErrorLog /var/log/httpd/CNPROG/error_log
+    CustomLog /var/log/httpd/OSQA/access_log common
+    ErrorLog /var/log/httpd/OSQA/error_log
 </VirtualHost>
 #(optional) run admin interface under https
 <VirtualHost ..your ip..:443>
     ServerAdmin forum@example.com
-    DocumentRoot /path/to/cnrpog
+    DocumentRoot /path/to/osqa-site
     ServerName example.com
     SSLEngine on
     SSLCertificateFile /path/to/ssl-certificate/server.crt
     SSLCertificateKeyFile /path/to/ssl-certificate/server.key
-    WSGIScriptAlias / /path/to/cnprogcnprog.wsgi
-    CustomLog /var/log/httpd/CNPROG/access_log common
-    ErrorLog /var/log/httpd/CNPROG/error_log
+    WSGIScriptAlias / /path/to/osqa-site/osqa.wsgi
+    CustomLog /var/log/httpd/OSQA/access_log common
+    ErrorLog /var/log/httpd/OSQA/error_log
     DirectoryIndex index.html
 </VirtualHost>
 -------------
 
 5. Full text search (using sphinx search)
+
    Currently full text search works only with sphinx search engine
+   And builtin PostgreSQL (postgres only >= 8.3???)
+
+   5.1 Instructions for Sphinx search setup
    Sphinx at this time supports only MySQL and PostgreSQL databases
    to enable this, install sphinx search engine and djangosphinx
 
    configure sphinx, sample configuration can be found in
    sphinx/sphinx.conf file usually goes somewhere in /etc tree
 
-   build cnprog index first time manually
+   build osqa index first time manually
 
-   % indexer --config /path/to/sphinx.conf --index cnprog
+   % indexer --config /path/to/sphinx.conf --index osqa
 
    setup cron job to rebuild index periodically with command
    your crontab entry may be something like
@@ -249,8 +253,8 @@ DEBUG=False #set to True to enable debug mode
 
 #all forum parameters are set in file settings_local.py
 
-LOG_FILENAME = 'cnprog.log' #where logging messages should go
-DATABASE_NAME = 'cnprog'    # Or path to database file if using sqlite3.
+LOG_FILENAME = 'osqa.log' #where logging messages should go
+DATABASE_NAME = 'osqa'    # Or path to database file if using sqlite3.
 DATABASE_USER = ''          # Not used with sqlite3.
 DATABASE_PASSWORD = ''      # Not used with sqlite3.
 DATABASE_ENGINE = 'mysql'   #mysql, etc
@@ -258,19 +262,19 @@ SERVER_EMAIL = ''
 DEFAULT_FROM_EMAIL = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''    #not necessary if mailserver is run on local machine
-EMAIL_SUBJECT_PREFIX = '[CNPROG] '
-EMAIL_HOST='cnprog.com'
+EMAIL_SUBJECT_PREFIX = '[OSQA] '
+EMAIL_HOST='osqa.com'
 EMAIL_PORT='25'
 EMAIL_USE_TLS=False
 TIME_ZONE = 'America/Tijuana'
-APP_TITLE = u'CNPROG Q&A Forum' #title of your forum
-APP_KEYWORDS = u'CNPROG,forum,community' #keywords for search engines
+APP_TITLE = u'OSQA Q&A Forum' #title of your forum
+APP_KEYWORDS = u'OSQA,forum,community' #keywords for search engines
 APP_DESCRIPTION = u'Ask and answer questions.' #site description for searche engines 
 APP_INTRO = u'<p>Ask and answer questions, make the world better!</p>' #slogan that goes to front page in logged out mode
 APP_COPYRIGHT = '' #copyright message
 
 #if you set FORUM_SCRIPT_ALIAS= 'forum/'
-#then CNPROG will run at url http://example.com/forum
+#then OSQA will run at url http://example.com/forum
 #FORUM_SCRIPT_ALIAS cannot have leading slash, otherwise it can be set to anything
 FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
 
@@ -278,7 +282,7 @@ LANGUAGE_CODE = 'en' #forum language (see language instructions on the wiki)
 EMAIL_VALIDATION = 'off' #string - on|off
 MIN_USERNAME_LENGTH = 1
 EMAIL_UNIQUE = False    #if True, email addresses must be unique in all accounts
-APP_URL = 'http://cnprog.com' #used by email notif system and RSS
+APP_URL = 'http://osqa.com' #used by email notif system and RSS
 GOOGLE_SITEMAP_CODE = '' #code for google site crawler (look up google webmaster tools)
 GOOGLE_ANALYTICS_KEY = '' #key to enable google analytics on this site
 BOOKS_ON = False  #if True - books tab will be on
@@ -287,10 +291,10 @@ WIKI_ON = True  #if False - community wiki feature is disabled
 #experimental - allow password login through external site
 #must implement django_authopenid/external_login.py
 #included prototype external_login works with Mediawiki
-USE_EXTERNAL_LEGACY_LOGIN = True #if false CNPROG uses it's own login/password
-EXTERNAL_LEGACY_LOGIN_HOST = 'login.cnprog.com'
+USE_EXTERNAL_LEGACY_LOGIN = True #if false OSQA uses it's own login/password
+EXTERNAL_LEGACY_LOGIN_HOST = 'login.osqa.com'
 EXTERNAL_LEGACY_LOGIN_PORT = 80
-EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">CNPROG</span>'
+EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">OSQA</span>'
 
 FEEDBACK_SITE_URL = None #None or url
 LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
@@ -303,7 +307,7 @@ D. Customization
 Other than settings_local.py the following will most likely need customization:
 * locale/*/django.po - language files that may also contain your site-specific messages
   if you want to start with english messages file - look for words like "forum" and
-  "CNPROG" in the msgstr lines
+  "OSQA" in the msgstr lines
 * templates/header.html and templates/footer.html may contain extra links
 * templates/about.html - a place to explain for is your forum for
 * templates/faq.html - put answers to users frequent questions

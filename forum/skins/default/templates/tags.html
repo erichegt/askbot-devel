@@ -1,0 +1,67 @@
+{% extends "base_content.html" %}
+<!-- tags.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load humanize %}
+{% block title %}{% spaceless %}{% trans "Tag list" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+       <script type="text/javascript">
+       /*<![CDATA[*/
+        $().ready(function(){
+            $("#nav_tags").attr('className',"on");
+            $("#ipSearchTag").focus();
+
+            var orderby = "{{ tab_id }}";
+            if(orderby != "used" && orderby != "name")
+                orderby = "used";
+            $("#sort_" + orderby).attr('className',"on");
+            $("#type-tag").attr('checked',true);
+
+            Hilite.exact = false;
+            Hilite.elementid = "searchtags";
+            Hilite.debug_referrer = location.href;
+        });
+        /*]]>*/
+        </script>
+{% endblock %}
+{% block content %}
+<!-- Tabs -->
+<div class="tabBar">
+    <div class="headQuestions">{% trans "Tag list" %}</div>
+    <div class="tabsA">
+        <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans "sorted alphabetically" %}">{% trans "by name" %}</a>
+        <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans "sorted by frequency of tag use" %}">{% trans "by popularity" %}</a>
+    </div>
+</div>
+<div id="searchtags">
+<p>
+{% if stag %}
+    {% trans "All tags matching query" %} '<span class="darkred"><strong>{{ stag }}</strong></span>' {% trans "all tags - make this empty in english" %}:
+{% endif %}
+{% if not tags.object_list %}
+    <span>{% trans "Nothing found" %}</span>
+{% endif %}
+</p>
+{% if tags.object_list %}
+<ul class="tagsList tags">
+{% for tag in tags.object_list %}
+   <li>
+    <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">
+        {{ tag }}
+    </a>&nbsp;
+    <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+    <br/>
+
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+</div>
+
+{% endblock %}
+{% block tail %}
+<div class="pager">
+    {% cnprog_paginator context %}
+</div>              
+{% endblock %}
+<!-- end tags.html -->

@@ -73,17 +73,24 @@ STATES = {
 
 def get_user_state(request):
     API_KEY = settings.FB_API_KEY
+    logging.debug('')
     
     if API_KEY in request.COOKIES:
+        logging.debug('FB API key is in request cookies')
         if check_cookies_signature(request.COOKIES):
+            logging.debug('FB cookie signature is fine')
             if check_session_expiry(request.COOKIES):
+                logging.debug('FB session is not expired')
                 try:
                     uassoc = FBAssociation.objects.get(fbuid=request.COOKIES[API_KEY + '_user'])
+                    logging.debug('found existing FB user association')
                     return (STATES['RETURNINGUSER'],  uassoc.user)
                 except:
+                    logging.debug('dont have FB association for this user')
                     return (STATES['FIRSTTIMER'],  get_user_data(request.COOKIES))
             else:
+                logging.debug('FB session expired')
                 return (STATES['SESSIONEXPIRED'],  None)
+    logging.debug('FB state is INVALID')
     
     return (STATES['INVALIDSTATE'],  None)
-    

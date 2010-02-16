@@ -1,0 +1,138 @@
+{% extends "user.html" %}
+<!-- user_stats.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+		{% block usercontent %}
+	
+        <a name="questions"></a>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count questions|length as counter %}
+                <span class="count">1</span> Question
+                {% plural %}
+                <span class="count">{{counter}}</span> Questions
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
+		{% include "users_questions.html" %}
+        <a name="answers"></a>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count answered_questions|length as counter %}
+                <span class="count">1</span> Answer
+                {% plural %}
+                <span class="count">{{counter}}</span> Answers
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
+        <div class="user-stats-table">
+            {% for answered_question in answered_questions %}
+            <div class="answer-summary">
+                <a title="{{answered_question.summary|collapse}}" 
+                    href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
+                    <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
+						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
+                        {{ answered_question.vote_count }}
+                    </span>
+                </a>
+                <div class="answer-link">
+                    {% spaceless %}
+                    <a href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    {% endspaceless %}
+                    {% if answered_question.comment_count %}
+                    <span>
+				    {% blocktrans count answered_question.comment_count as comment_count %}
+                    (one comment)
+                    {% plural %}
+                    the answer has been commented {{comment_count}} times
+                    {% endblocktrans %}
+                    </span> 
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <br/>
+        <a name="votes"></a>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count total_votes as cnt %}
+                    <span class="count">1</span> Vote
+                {% plural %}
+                    <span class="count">{{cnt}}</span> Votes
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
+        <div class="user-stats-table">
+            <table>
+                <tr>
+                    <td width="60">
+                        <img style="cursor: default;" src="{% media  "/media/images/vote-arrow-up-on.png" %}" alt="{% trans "thumb up" %}" />
+                            <span title="{% trans "user has voted up this many times" %}" class="vote-count">{{up_votes}}</span>
+
+                    </td>
+                    <td width="60">
+                        <img style="cursor: default;" src="{% media  "/media/images/vote-arrow-down-on.png" %}" alt="{% trans "thumb down" %}" />
+                            <span title="{% trans "user voted down this many times" %}" class="vote-count">{{down_votes}}</span>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <a name="tags"></a>
+        {% spaceless %}
+            <h2>
+                {% blocktrans count user_tags|length as counter %}
+                    <span class="count">1</span> Tag
+                {% plural %}
+                    <span class="count">{{counter}}</span> Tags
+                {% endblocktrans %}
+            </h2>
+        {% endspaceless %}
+        <div class="user-stats-table">
+            <table class="tags">
+                <tr>
+                    <td width="180" valign="top">
+                        {% for tag in user_tags%}
+                        <a rel="tag" 
+							title="{% blocktrans with tag.name as tag_name %}see other questions with {{view_user}}'s contributions tagged '{{ tag_name }}' {% endblocktrans %}" 
+							href="{% url tag_questions tag|urlencode %}?user={{view_user.username}}">{{tag.name}}</a>
+                        <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
+                            {% if forloop.counter|divisibleby:"10" %}
+                                </td>
+                                <td width="180"  valign="top">
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <a name="badges"></a>
+        {% spaceless %}
+        <h2>
+            {% blocktrans count total_awards as counter %}
+            <span class="count">1</span> Badge
+            {% plural %}
+            <span class="count">{{counter}}</span> Badges
+            {% endblocktrans %}
+        </h2>
+        {% endspaceless %}
+        <div class="user-stats-table">
+            <table>
+                <tr>
+                    <td width="180" style="line-height:35px">
+                        {% for award in awards %}
+                            <a href="{% url badges %}{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> &#x2715; {{ award.count|intcomma }}</span><br/>
+                            {% if forloop.counter|divisibleby:"6" %}
+                                </td>
+                                <td width="180" style="line-height:35px">
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+{% endblock %}
+<!-- end user_stats.html -->

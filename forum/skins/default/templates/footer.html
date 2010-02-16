@@ -1,0 +1,48 @@
+<!-- template footer.html -->
+{% load extra_tags %}
+{% load i18n %}
+<!-- 页面底部开始： -->
+    <div id="ground">
+		<div>
+			<div class="footerLinks" >
+				<a href="{% url about %}">{% trans "about" %}</a><span class="link-separator"> |</span>
+				<a href="{% url faq %}">{% trans "faq" %}</a><span class="link-separator"> |</span>
+				<a href="{% url privacy %}">{% trans "privacy policy" %}</a><span class="link-separator"> |</span>
+                {% spaceless %}
+				<a href=
+                    {% if settings.FEEDBACK_SITE_URL %}
+                        "{{settings.FEEDBACK_SITE_URL}}"
+                        target="_blank">
+                    {% else %}
+                        "{% url feedback %}?next={{request.path}}">
+                    {% endif %}
+                    {% trans "give feedback" %}
+                </a>
+                {% endspaceless %}
+			</div>
+		  <p>
+			 <a href="http://github.com/cnprog/CNPROG/network" target="_blank">
+				powered by cnprog platform
+			 </a>
+		  </p>
+	   </div>
+		 <div id="licenseLogo">
+		  <a href="http://creativecommons.org/licenses/by/3.0/">
+					<img src="{% media  "/media/images/cc-wiki.png" %}" title="Creative Commons: Attribution - Share Alike" alt="cc-wiki" width="50" height="68" />
+		  </a>
+		 </div>
+	</div>
+	<!-- 页面底部结束： -->
+    {% if settings.GOOGLE_ANALYTICS_KEY %}
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+        try {
+        var pageTracker = _gat._getTracker('{{ settings.GOOGLE_ANALYTICS_KEY }}');
+        pageTracker._trackPageview();
+        } catch(err) {}
+    </script>
+    {% endif %}
+<!-- end template footer.html -->

@@ -1,0 +1,39 @@
+{% extends "base_content.html" %}
+<!-- user.html -->
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+{% block title %}{% spaceless %}{{ page_title }}{% endspaceless %}{% endblock %}
+{% block forestyle%}
+    <style type="text/css">
+ 		.history-table td { padding: 5px; }
+ 		.user-stats-table { margin-left:50px; }
+	</style>
+{% endblock %}
+{% block forejs %}
+    {% if request.user|can_moderate_users %}
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.admin.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/jquery.form.js" %}'></script>
+    {% endif %}
+    <script type="text/javascript">
+        var viewUserID = {{view_user.id}};
+        $().ready(function(){
+            {% ifequal view_user request.user%}
+                $("#nav_profile").attr('className',"on");
+            {% else %}
+                $("#nav_users").attr('className',"on");
+            {% endifequal %}
+        }); 
+    </script>
+    {% block userjs %}
+    {% endblock %}
+{% endblock %}
+{% block content %}
+    <div id="mainbar-full">
+        {% include "user_info.html" %}
+        {% include "user_tabs.html" %}
+        {% block usercontent %}
+        {% endblock %}
+        {%comment%}{% include "user_footer.html" %}{%endcomment%}
+	</div>
+{% endblock %}<!-- end user.html -->

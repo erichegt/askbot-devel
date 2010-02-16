@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+<!-- signin.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% block title %}{% spaceless %}{% trans "User login" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+    <script type='text/javascript' src='{% media  "/media/js/jquery.validate.pack.js" %}'></script>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="{% media  "/media/jquery-openid/openid.css" %}"/>
+	<script type="text/javascript" src="{% media  "/media/jquery-openid/jquery.openid.js" %}"></script>
+	<script type="text/javascript">  $().ready( function() { $("form.openid:eq(0)").openid(); })</script>
+	<!--<script type="text/javascript">
+	$().ready(function(){
+	    openid.init('id_openid_url');
+        setupFormValidation("#openid_form", {bsignin:{required: true}});
+	});
+	</script>-->
+{% endblock %}
+{% block content %}
+<div class="headNormal">
+	{% trans "User login" %}
+</div>
+        {% if msg %}
+            <p class="warning">{{ msg }}</p>
+        {% endif %}
+        {% if answer %}
+            <div class="message">
+                {% blocktrans with answer.question.title as title and answer.summary as summary %}
+                Your answer to {{title}} {{summary}} will be posted once you log in
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+        {% if question %}
+            <div class="message">
+                {% blocktrans with question.title as title and question.summary as summary %}Your question 
+                {{title}} {{summary}} will be posted once you log in
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+			<form id="openid_form" name="openid_form" class="openid" method="post" action="{% url user_signin %}"> 
+		      <div style="width:600px;float:left;margin-bottom:5px;">
+                {% trans "Click to sign in through any of these services." %}
+              </div>
+			  <ul class="providers"> 
+			  <li class="local" title="Local login">
+				  <div class="logo_box local_login_box">
+						<img src="{% media  "/media/jquery-openid/images/local-login.png" %}" alt="your icon here" /> 
+				  </div>
+			  <span></span>
+			  </li> 
+			  <li class="direct" title="Google"> 
+			  	<div class="logo_box google_box">
+					<img src="{% media  "/media/jquery-openid/images/google.gif" %}" alt="icon" /><span>https://www.google.com/accounts/o8/id</span>
+				</div>
+		 	  </li>
+			  <li class="direct" title="Yahoo"> 
+			  	<div class="logo_box yahoo_box">
+					<img src="{% media  "/media/jquery-openid/images/yahoo.gif" %}" alt="icon" /><span>http://yahoo.com/</span>
+				</div>
+			  </li>
+			  <li class="username" title="AOL screen name"> 
+			  	<div class="logo_box aol_box">
+					<img src="{% media  "/media/jquery-openid/images/aol.gif" %}" alt="icon" /><span>http://openid.aol.com/<strong>username</strong></span>
+				</div>
+			  </li>
+              </ul>            
+			  <ul id="openid_small_providers" class="providers"> 
+			  <!--<li class="openid" title="OpenID">
+				  <div class="logo_box openid_box">
+						<img src="/media/jquery-openid/images/openid.gif" alt="icon" /> 
+				  </div>
+			  <span><strong>http://{your-openid-url}</strong></span>
+			  </li>-->
+              <li class="first_tiny_li facebook" title="Facebook Connect">
+                    {% if question %}
+                        <fb:login-button onlogin="window.location = '{% url fb_signin_new_question %}'"></fb:login-button>
+                    {% else %}
+                        {% if answer %}
+                            <fb:login-button onlogin="window.location = '{% url fb_signin_new_answer %}'"></fb:login-button>
+                        {% else %}
+                            <fb:login-button onlogin="window.location = '{% url fb_signin %}'"></fb:login-button>
+                        {% endif %}
+                    {% endif %}                    
+              </li>
+			  <li class="openid" title="OpenID URL"> 
+					<img src="{% media  "/media/jquery-openid/images/openidico16.png" %}" alt="icon" />
+					<span>http://{your-openid-url}</span>
+		      </li> 
+			  <li class="username" title="MyOpenID user name"> 
+					<img src="{% media  "/media/jquery-openid/images/myopenid-2.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.myopenid.com/</span>
+		      </li> 
+			  <li class="username" title="Flickr user name"> 
+					<img src="{% media  "/media/jquery-openid/images/flickr.png" %}" alt="icon" />
+					<span>http://flickr.com/<strong>username</strong>/</span>
+			  </li> 
+			  <li class="username" title="Technorati user name"> 
+					<img src="{% media  "/media/jquery-openid/images/technorati-1.png" %}" alt="icon" />
+					<span>http://technorati.com/people/technorati/<strong>username</strong>/</span>
+			  </li> 
+			  <li class="username" title="Wordpress blog name"> 
+					<img src="{% media  "/media/jquery-openid/images/wordpress.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.wordpress.com</span>
+              </li> 
+			  <li class="username" title="Blogger blog name"> 
+					<img src="{% media  "/media/jquery-openid/images/blogger-1.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.blogspot.com/</span>
+			  </li> 
+			  <li class="username" title="LiveJournal blog name"> 
+					<img src="{% media  "/media/jquery-openid/images/livejournal-1.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.livejournal.com</span>
+			  </li> 
+			  <li class="username" title="ClaimID user name"> 
+					<img src="{% media  "/media/jquery-openid/images/claimid-0.png" %}" alt="icon" />
+					<span>http://claimid.com/<strong>username</strong></span>
+			  </li> 
+			  <li class="username" title="Vidoop user name"> 
+					<img src="{% media  "/media/jquery-openid/images/vidoop.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.myvidoop.com/</span>
+			  </li> 
+			  <li class="username" title="Verisign user name"> 
+					<img src="{% media  "/media/jquery-openid/images/verisign-2.png" %}" alt="icon" />
+					<span>http://<strong>username</strong>.pip.verisignlabs.com/</span>
+			  </li> 
+			  </ul>
+			  {{ form2.next }}
+			  <fieldset> 
+				  <p id="provider_name_slot">{% trans 'Enter your <span id="enter_your_what">Provider user name</span>' %}</p> 
+				  <div><p><span></span>
+				  		<input id="openid_username" type="text" name="openid_username" /><span></span> 
+			  			<input type="submit" value="Login" />
+				  </p></div>
+			  </fieldset> 
+			  <fieldset> 
+				  <p>{% trans 'Enter your <a class="openid_logo" href="http://openid.net">OpenID</a> web address' %}</p> 
+				  <div><p><input id="openid_url" type="text" value="http://" name="openid_url" /> 
+				  <input id="bsignin" name="bsignin" type="submit" value="{% trans "Login" %}" /></p></div> 
+			  </fieldset> 
+              <fieldset id='local_login_fs'>
+				  <p>{% trans 'Enter your login name and password' %}</p> 
+                  {% if form1.errors %}
+                    {{form1.non_field_errors.as_ul}}
+                  {% endif %}
+				  <div><p class="login"><label for="id_username">{% trans "Login name" %}</label>
+                            {{form1.username}}</p>
+                  <p class="login"><label for="id_password">{% trans "Password" %}</label>
+                            {{form1.password}}</p>
+                  <p id="local_login_buttons">
+				  <input id="blogin" name="blogin" type="submit" value="{% trans "Login" %}" />
+                  <a href="{% url user_signup %}">{% trans "Create account" %}</a><br/>
+                  <a href="{% url user_sendpw %}">{% trans "Forgot your password?" %}</a>
+                  </p>
+                  </div>
+              </fieldset>
+			</form>
+{% endblock %}
+
+{% block sidebar %}
+<div class="boxC">
+    <h3 class="subtitle">{% trans "Why use OpenID?" %}</h3>
+    <ul class="list-item">
+        <li>
+		{% trans "with openid it is easier" %}
+        </li>
+        <li>
+		{% trans "reuse openid" %}
+        </li>
+        <li>
+		{% trans "openid is widely adopted" %}
+        </li>
+        <li>
+		{% trans "openid is supported open standard" %}
+        </li>
+        
+    </ul>
+    <p class="info-box-follow-up-links">
+        <a href="http://openid.net/what/" target="_blank">{% trans "Find out more" %} »</a><br/>
+        <a href="http://openid.net/get/" target="_blank">{% trans "Get OpenID" %} »</a>
+    </p>
+</div>
+<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script>
+<script type="text/javascript">  FB.init("{{ fb_api_key }}","{% url  xd_receiver %}");</script> 
+{% endblock%}
+
+		<script type="text/javascript">  $( function() { $("form.openid:eq(0)").openid(); })</script>
+<!-- end signin.html -->

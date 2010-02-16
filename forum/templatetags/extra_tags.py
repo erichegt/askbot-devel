@@ -13,6 +13,7 @@ from forum.models import Question, Answer, QuestionRevision, AnswerRevision
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
+from forum import skins
 
 register = template.Library()
 
@@ -276,9 +277,11 @@ def get_latest_changed_timestamp():
     return timestr
 
 @register.simple_tag
-def href(url):
-    url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
-    return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+def media(url):
+    url = skins.find_media_source(url)
+    if url:
+        url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
+        return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
 
 class ItemSeparatorNode(template.Node):
     def __init__(self,separator):
@@ -323,29 +326,32 @@ def joinitems(parser,token):
 
     return JoinItemListNode(separator=sep_node,items=nodelist)
 
-class BlockResourceNode(template.Node):
+class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
-        out = '///' + settings.FORUM_SCRIPT_ALIAS
+        prefix = '///' + settings.FORUM_SCRIPT_ALIAS + 'm/'
+        url = ''
         if self.items:
-            out += '/'     
+            url += '/'     
         for item in self.items:
-            bit = item.render(context)
-            out += bit
-        out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+            url += item.render(context)
+
+        url = skins.find_media_source(url)
+        url = prefix + url
+        out = posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
         return out.replace(' ','')
 
-@register.tag(name='blockresource')
-def blockresource(parser,token):
+@register.tag(name='blockmedia')
+def blockmedia(parser,token):
     try:
         tagname = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError("blockresource tag does not use arguments")
+        raise template.TemplateSyntaxError("blockmedia tag does not use arguments")
     nodelist = []
     while True:
-        nodelist.append(parser.parse(('endblockresource')))
+        nodelist.append(parser.parse(('endblockmedia')))
         next = parser.next_token()
-        if next.contents == 'endblockresource':
+        if next.contents == 'endblockmedia':
             break
-    return BlockResourceNode(nodelist)
+    return BlockMediaUrlNode(nodelist)
