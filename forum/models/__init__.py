@@ -1,6 +1,5 @@
-from question import Question
-from answer import Answer
-from q_and_a import QuestionRevision, QuestionView, AnonymousAnswer, AnonymousQuestion, AnswerRevision, FavoriteQuestion
+from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion, FavoriteQuestion
+from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
 from user import Activity, AnonymousEmail, EmailFeedSetting

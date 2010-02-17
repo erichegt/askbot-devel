@@ -99,3 +99,36 @@ class Answer(Content, DeletableContent):
 
     def __unicode__(self):
         return self.html
+
+class AnswerRevision(ContentRevision):
+    """A revision of an Answer."""
+    answer     = models.ForeignKey('Answer', related_name='revisions')
+
+    def get_absolute_url(self):
+        return reverse('answer_revisions', kwargs={'id':self.answer.id})
+
+    def get_question_title(self):
+        return self.answer.question.title
+
+    class Meta(ContentRevision.Meta):
+        db_table = u'answer_revision'
+        ordering = ('-revision',)
+
+    def save(self, **kwargs):
+        """Looks up the next available revision number if not set."""
+        if not self.revision:
+            self.revision = AnswerRevision.objects.filter(
+                answer=self.answer).values_list('revision',
+                                                flat=True)[0] + 1
+        super(AnswerRevision, self).save(**kwargs)
+
+class AnonymousAnswer(AnonymousContent):
+    question = models.ForeignKey('Question', related_name='anonymous_answers')
+
+    def publish(self,user):
+        added_at = datetime.datetime.now()
+        #print user.id
+        AnswerManager.create_new(question=self.question,wiki=self.wiki,
+                            added_at=added_at,text=self.text,
+                            author=user)
+        self.delete()
