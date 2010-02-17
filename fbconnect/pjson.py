@@ -155,8 +155,8 @@ class JsonReader(object):
         except KeyError:
             try:
                 result = int(ch)
-        except ValueError:
-            raise ReadException, "The character %s is not a hex digit." % ch
+            except ValueError:
+                raise ReadException, "The character %s is not a hex digit." % ch
         return result
 
     def _readComment(self):
