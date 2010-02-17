@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.utils.translation import ugettext as _
 from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm, 
 from forum import auth
+from django.contrib.contenttypes.models import ContentType
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
@@ -99,8 +100,8 @@ USER_TEMPLATE_VIEWS = (
 def user(request, id):
     sort = request.GET.get('sort', 'stats')
     user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
-    from forum import views
-    func = getattr(views, user_view.view_name)
+    from forum.views import users
+    func = getattr(users, user_view.view_name)
     return func(request, id, user_view)
 
 

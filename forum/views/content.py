@@ -20,6 +20,7 @@ from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
 from django.template.defaultfilters import slugify
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 
 from utils.html import sanitize_html
 from utils.decorators import ajax_method, ajax_login_required

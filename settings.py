@@ -81,7 +81,7 @@ if USE_SPHINX_SEARCH:
 if USE_FB_CONNECT:
     INSTALLED_APPS.append('fbconnect')
 
-if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ):
+if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:
     USE_PG_FTS = True
     INSTALLED_APPS.append('pgfulltext')
 else:

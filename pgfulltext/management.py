@@ -9,7 +9,7 @@ if settings.USE_PG_FTS:
     from django.db.models.signals import post_syncdb
 
     def setup_pgfulltext(sender, **kwargs):
-        if sender == forum.models:
+        if sender == forum.models_:
            install_pg_fts()
 
     post_syncdb.connect(setup_pgfulltext)
