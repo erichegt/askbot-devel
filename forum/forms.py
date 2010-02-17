@@ -4,6 +4,7 @@ from django import forms
 from models import *
 from const import *
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import User
 from utils.forms import NextUrlField, UserNameField
 from recaptcha_django import ReCaptchaField
 from django.conf import settings

@@ -35,100 +35,6 @@ ANSWERS_PAGE_SIZE = 10
 
 markdowner = Markdown(html4tags=True)
 
-#system to collect user actions and change content and store in the database
-def create_new_answer( question=None, author=None, #service subroutine - refactor
-            added_at=None, wiki=False,\
-            text='', email_notify=False):
-    """refactor
-    non-view subroutine
-    initializes the answer and revision
-    and updates stuff in the corresponding question
-    probably there is more Django-ish way to do it
-    """
-
-    html = sanitize_html(markdowner.convert(text))
-
-    #create answer
-    answer = Answer(
-        question = question,
-        author = author,
-        added_at = added_at,
-        wiki = wiki,
-        html = html
-    )
-    if answer.wiki:
-        answer.last_edited_by = answer.author
-        answer.last_edited_at = added_at 
-        answer.wikified_at = added_at 
-
-    answer.save()
-
-    #update question data
-    question.last_activity_at = added_at 
-    question.last_activity_by = author 
-    question.save()
-    Question.objects.update_answer_count(question)
-
-    #update revision
-    AnswerRevision.objects.create(
-        answer     = answer,
-        revision   = 1,
-        author     = author,
-        revised_at = added_at,
-        summary    = CONST['default_version'],
-        text       = text
-    )
-
-    #set notification/delete
-    if email_notify:
-        if author not in question.followed_by.all():
-            question.followed_by.add(author)
-    else:
-        #not sure if this is necessary. ajax should take care of this...
-        try:
-            question.followed_by.remove(author)
-        except:
-            pass
-
-def create_new_question(title=None,author=None,added_at=None, #service subroutine - refactor
-                        wiki=False,tagnames=None,summary=None,
-                        text=None):
-    """refactor
-    this is not a view saves new question and revision
-    and maybe should become one of the methods on Question object?
-    """
-    html = sanitize_html(markdowner.convert(text))
-    question = Question(
-        title            = title,
-        author           = author, 
-        added_at         = added_at,
-        last_activity_at = added_at,
-        last_activity_by = author,
-        wiki             = wiki,
-        tagnames         = tagnames,
-        html             = html,
-        summary          = summary 
-    )
-    if question.wiki:
-        question.last_edited_by = question.author
-        question.last_edited_at = added_at
-        question.wikified_at = added_at
-
-    question.save()
-
-    # create the first revision
-    QuestionRevision.objects.create(
-        question   = question,
-        revision   = 1,
-        title      = question.title,
-        author     = author,
-        revised_at = added_at,
-        tagnames   = question.tagnames,
-        summary    = CONST['default_version'],
-        text       = text
-    )
-    return question
-
 def upload(request):#ajax upload file to a question or answer 
     class FileTypeNotAllow(Exception):
         pass
@@ -197,7 +103,7 @@ def ask(request):#view used to ask a new question
             if request.user.is_authenticated():
                 author = request.user 
 
-                question = create_new_question(
+                Question.objects.create_new(
                     title            = title,
                     author           = author, 
                     added_at         = added_at,
@@ -437,7 +343,7 @@ def answer(request, id):#process a new answer
             update_time = datetime.datetime.now()
 
             if request.user.is_authenticated():
-                create_new_answer(
+                Answer.objects.create_new(
                                   question=question,
                                   author=request.user,
                                   added_at=update_time,

@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.utils.translation import ugettext as _
 from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm, 
 from forum import auth
+from django.contrib.contenttypes.models import ContentType
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
