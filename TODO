@@ -1,3 +1,16 @@
 * per-tag email  subscriptions
 * make sorting tabs work in question search - done
 * allow multiple logins to the same account
+
+* Some functionality should be moved out of the forums app, in the case
+that the forum app is restricted only to authenticated users:
+    
+        (r'^%s/$' % _('signin/'), 'django_authopenid.views.signin'),
+        url(r'^%s$' % _('about/'), app.about, name='about'),
+        url(r'^%s$' % _('faq/'), app.faq, name='faq'),
+        url(r'^%s$' % _('privacy/'), app.privacy, name='privacy'),
+        url(r'^%s$' % _('logout/'), app.logout, name='logout'),
+        url(r'^%s$' % _('feedback/'), app.feedback, name='feedback'),
+        (r'^%sfb/' % _('account/'),  include('fbconnect.urls')),
+        (r'^%s' % _('account/'), include('django_authopenid.urls')),
+
