@@ -275,7 +275,8 @@ Configure Apache2
         #force all content to be served as static files
         #otherwise django will be crunching images through itself wasting time
         Alias /content/ /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/
-        AliasMatch /([^/]*\.css) /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/style/$1
+        Alias /forum/admin/media/ /home/turian/envs/osqa/lib/python2.5/site-packages/django/contrib/admin/media/
+        #AliasMatch /([^/]*\.css) /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/style/$1
         <Directory "/home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content">
         #    Order deny,allow
         #    Allow from all
