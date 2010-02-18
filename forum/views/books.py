@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from forum.models import BookAuthorInfo, BookAuthorRss, Book
 from forum.models import Question, QuestionRevision
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 def books(request):

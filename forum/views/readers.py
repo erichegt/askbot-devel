@@ -12,6 +12,7 @@ from django.utils import simplejson
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 
 from forum.utils.html import sanitize_html

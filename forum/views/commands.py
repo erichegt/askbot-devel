@@ -8,6 +8,7 @@ from django.template import RequestContext
 from forum.models import *
 from forum.forms import CloseForm
 from forum import auth
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from forum.utils.decorators import ajax_method, ajax_login_required
 import logging

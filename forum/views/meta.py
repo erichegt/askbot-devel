@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from forum.forms import FeedbackForm
+from django.core.urlresolvers import reverse
 from django.core.mail import mail_admins
 from django.utils.translation import ugettext as _
 from forum.utils.forms import get_next_url
