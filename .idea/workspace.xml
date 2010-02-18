@@ -17,64 +17,50 @@
   <component name="ChangeListManager" verified="true">
     <list default="true" readonly="true" id="df1b69cf-9c35-4a78-9890-c59b542399e8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/views.py" afterPath="$PROJECT_DIR$/fbconnect/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/urls.py" afterPath="$PROJECT_DIR$/django_authopenid/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.py" afterPath="$PROJECT_DIR$/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/tag.py" afterPath="$PROJECT_DIR$/forum/models/tag.py" />
+      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\user_messages\context_processors.py" afterPath="$PROJECT_DIR$/forum/user_messages/context_processors.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/tests.py" afterPath="$PROJECT_DIR$/fbconnect/tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/books.py" afterPath="$PROJECT_DIR$/forum/views/books.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WISH_LIST" afterPath="$PROJECT_DIR$/WISH_LIST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/urls.py" afterPath="$PROJECT_DIR$/fbconnect/urls.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\odict.py" afterPath="$PROJECT_DIR$/forum/utils/odict.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/question.py" afterPath="$PROJECT_DIR$/forum/models/question.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\html.py" afterPath="$PROJECT_DIR$/forum/utils/html.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/meta.py" afterPath="$PROJECT_DIR$/forum/models/meta.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/__init__.py" afterPath="$PROJECT_DIR$/forum/models/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/answer.py" afterPath="$PROJECT_DIR$/forum/models/answer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/meta.py" afterPath="$PROJECT_DIR$/forum/views/meta.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\forms.py" afterPath="$PROJECT_DIR$/forum/utils/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rmpyc" afterPath="$PROJECT_DIR$/rmpyc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/user.py" afterPath="$PROJECT_DIR$/forum/models/user.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/__init__.py" afterPath="$PROJECT_DIR$/fbconnect/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/base.py" afterPath="$PROJECT_DIR$/forum/models/base.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/views.py" afterPath="$PROJECT_DIR$/django_authopenid/views.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\lists.py" afterPath="$PROJECT_DIR$/forum/utils/lists.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/__init__.py" afterPath="$PROJECT_DIR$/forum/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/repute.py" afterPath="$PROJECT_DIR$/forum/models/repute.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/models.py" afterPath="$PROJECT_DIR$/fbconnect/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings_local.py.dist" afterPath="$PROJECT_DIR$/settings_local.py.dist" />
+      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\user_messages\__init__.py" afterPath="$PROJECT_DIR$/forum/user_messages/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/fb.py" afterPath="$PROJECT_DIR$/fbconnect/fb.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osqa.iml" afterPath="$PROJECT_DIR$/osqa.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester/models.py" afterPath="$PROJECT_DIR$/tester/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\__init__.py" afterPath="$PROJECT_DIR$/forum/utils/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" afterPath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/readers.py" afterPath="$PROJECT_DIR$/forum/views/readers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/forms.py" afterPath="$PROJECT_DIR$/fbconnect/forms.py" />
+      <change type="DELETED" beforePath="C:\osqadev\updated\osqa\user_messages\models.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/urls.py" afterPath="$PROJECT_DIR$/django_authopenid/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\decorators.py" afterPath="$PROJECT_DIR$/forum/utils/decorators.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/users.py" afterPath="$PROJECT_DIR$/forum/views/users.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/forms.py" afterPath="$PROJECT_DIR$/forum/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/meta.py" afterPath="$PROJECT_DIR$/forum/models/meta.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/util.py" afterPath="$PROJECT_DIR$/django_authopenid/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="DELETED" beforePath="C:\osqadev\updated\osqa\forum\views\content.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/__init__.py" afterPath="$PROJECT_DIR$/forum/models/__init__.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\middleware\pagesize.py" afterPath="$PROJECT_DIR$/forum/middleware/pagesize.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rmpyc" afterPath="$PROJECT_DIR$/rmpyc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/user.py" afterPath="$PROJECT_DIR$/forum/models/user.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/__init__.py" afterPath="$PROJECT_DIR$/fbconnect/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/forms.py" afterPath="$PROJECT_DIR$/django_authopenid/forms.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\middleware\anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/repute.py" afterPath="$PROJECT_DIR$/forum/models/repute.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/commands.py" afterPath="$PROJECT_DIR$/forum/views/commands.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\middleware\__init__.py" afterPath="$PROJECT_DIR$/forum/middleware/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/models.py" afterPath="$PROJECT_DIR$/fbconnect/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/fb.py" afterPath="$PROJECT_DIR$/fbconnect/fb.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\middleware\cancel.py" afterPath="$PROJECT_DIR$/forum/middleware/cancel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/send_email_alerts.py" afterPath="$PROJECT_DIR$/forum/management/commands/send_email_alerts.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/forms.py" afterPath="$PROJECT_DIR$/fbconnect/forms.py" />
+      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\forum\diff.py" afterPath="$PROJECT_DIR$/forum/utils/diff.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/pjson.py" afterPath="$PROJECT_DIR$/fbconnect/pjson.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\utils\cache.py" afterPath="$PROJECT_DIR$/forum/utils/cache.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester/__init__.py" afterPath="$PROJECT_DIR$/tester/__init__.py" />
     </list>
@@ -136,46 +122,73 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="writers.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/writers.py">
+      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="509" selection-end="553" vertical-scroll-proportion="-8.16">
+            <state line="71" column="20" selection-start="2573" selection-end="2573" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="users.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/users.py">
+      <file leaf-file-name="anon_user.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/middleware/anon_user.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="44" selection-start="539" selection-end="539" vertical-scroll-proportion="0.0">
+            <state line="3" column="35" selection-start="174" selection-end="174" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="meta.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/meta.py">
+      <file leaf-file-name="cancel.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/middleware/cancel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="44" selection-start="295" selection-end="295" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="books.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/books.py">
+      <file leaf-file-name="pagesize.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/middleware/pagesize.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="80" selection-start="867" selection-end="867" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/forum/urls.py">
+      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/middleware/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.738437">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/user_messages/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="context_processors.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/forum/user_messages/context_processors.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="27" selection-start="330" selection-end="330" vertical-scroll-proportion="0.3707165">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="34" selection-start="34" selection-end="34" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -184,43 +197,7 @@
       <file leaf-file-name="readers.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/views/readers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="0" selection-start="578" selection-end="622" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="commands.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/commands.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="44" selection-start="413" selection-end="413" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="answer.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/models/answer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="54" selection-start="758" selection-end="758" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/models/base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="69" selection-start="141" selection-end="141" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tag.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/models/tag.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="23" column="38" selection-start="913" selection-end="913" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -236,20 +213,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/settings_local.py" />
         <option value="$PROJECT_DIR$/settings_local.py.dist" />
-        <option value="$PROJECT_DIR$/settings.py" />
         <option value="$PROJECT_DIR$/forum/models/answer.py" />
         <option value="$PROJECT_DIR$/forum/models/question.py" />
         <option value="$PROJECT_DIR$/django_authopenid/forms.py" />
         <option value="$PROJECT_DIR$/forum/models/base.py" />
         <option value="$PROJECT_DIR$/forum/views/writers.py" />
-        <option value="$PROJECT_DIR$/forum/views/readers.py" />
         <option value="$PROJECT_DIR$/forum/views/commands.py" />
         <option value="$PROJECT_DIR$/forum/views/users.py" />
         <option value="$PROJECT_DIR$/forum/views/meta.py" />
         <option value="$PROJECT_DIR$/forum/views/books.py" />
+        <option value="$PROJECT_DIR$/forum/views/readers.py" />
+        <option value="$PROJECT_DIR$/forum/__init__.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/forum/middleware/anon_user.py" />
+        <option value="$PROJECT_DIR$/forum/user_messages/context_processors.py" />
       </list>
     </option>
   </component>
@@ -338,7 +317,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
+              <option name="myItemId" value="user_messages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="middleware" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -388,6 +385,25 @@
       <option name="METHOD_NAME" value="" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <module name="osqa" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
       <method>
         <option name="AntTarget" enabled="false" />
         <option name="BuildArtifacts" enabled="false" />
@@ -606,79 +622,16 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/settings_local.py.dist">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="40" selection-start="188" selection-end="188" vertical-scroll-proportion="0.15477997">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings_local.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="40" selection-start="188" selection-end="188" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="4" selection-start="1235" selection-end="1235" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/models/question.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="183" column="36" selection-start="7035" selection-end="7035" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/django_authopenid/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="9" selection-start="1847" selection-end="1847" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/models/tag.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/models/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="69" selection-start="141" selection-end="141" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/forum/models/answer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="54" selection-start="758" selection-end="758" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/readers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="0" selection-start="578" selection-end="622" vertical-scroll-proportion="0.0">
+        <state line="24" column="54" selection-start="758" selection-end="758" vertical-scroll-proportion="0.1863354">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/views/commands.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="44" selection-start="413" selection-end="413" vertical-scroll-proportion="0.0">
+        <state line="10" column="44" selection-start="413" selection-end="413" vertical-scroll-proportion="0.26397514">
           <folding />
         </state>
       </provider>
@@ -713,7 +666,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.738437">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.666149">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/views/readers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="38" selection-start="913" selection-end="913" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="34" selection-start="34" selection-end="34" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="20" selection-start="2573" selection-end="2573" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/middleware/anon_user.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="35" selection-start="174" selection-end="174" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/middleware/cancel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/middleware/pagesize.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/middleware/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/user_messages/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/user_messages/context_processors.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="27" selection-start="330" selection-end="330" vertical-scroll-proportion="0.3707165">
           <folding />
         </state>
       </provider>

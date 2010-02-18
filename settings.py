@@ -36,7 +36,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'context.application_settings',
     #'django.core.context_processors.i18n',
-    'user_messages.context_processors.user_messages',#must be before auth
+    'forum.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
 )
 
@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
-    'user_messages',
 ]
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]

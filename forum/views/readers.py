@@ -18,7 +18,7 @@ from django.utils.datastructures import SortedDict
 from forum.utils.html import sanitize_html
 from markdown2 import Markdown
 #from lxml.html.diff import htmldiff
-from forum.diff import textDiff as htmldiff
+from forum.utils.diff import textDiff as htmldiff
 from forum.forms import *
 from forum.models import *
 from forum.auth import *
