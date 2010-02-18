@@ -9,7 +9,7 @@ from django.utils.translation import ungettext
 import datetime
 from django.conf import settings
 import logging
-from utils.odict import OrderedDict
+from forum.utils.odict import OrderedDict
 
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):

@@ -1,7 +1,7 @@
 import datetime
 import hashlib
 from urllib import quote_plus, urlencode
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, connection, transaction
 from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
@@ -20,7 +20,6 @@ import logging
 if settings.USE_SPHINX_SEARCH == True:
     from djangosphinx.models import SphinxSearch
 
-from forum.managers import *
 from forum.const import *
 
 class MetaContent(models.Model):

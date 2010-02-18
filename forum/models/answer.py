@@ -24,9 +24,6 @@ class AnswerManager(models.Manager):
         question.save()
         Question.objects.update_answer_count(question)
 
-        #update revision
-        from models import AnswerRevision
-
         AnswerRevision.objects.create(
             answer     = answer,
             revision   = 1,
@@ -47,7 +44,7 @@ class AnswerManager(models.Manager):
             except:
                 pass
 
-    GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
+    #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
     def get_answers_from_question(self, question, user=None):
         """
         Retrieves visibile answers for the given question. Delete answers
@@ -57,16 +54,17 @@ class AnswerManager(models.Manager):
         if user is None or not user.is_authenticated():
             return self.filter(question=question, deleted=False)
         else:
-            return self.filter(Q(question=question),
-                               Q(deleted=False) | Q(deleted_by=user))
+            return self.filter(models.Q(question=question),
+                               models.Q(deleted=False) | models.Q(deleted_by=user))
 
-    def get_answers_from_questions(self, user_id):
-        """
-        Retrieves visibile answers for the given question. Which are not included own answers
-        """
-        cursor = connection.cursor()
-        cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
-        return cursor.fetchall()
+    #todo: I think this method is not being used anymore, I'll just comment it for now
+    #def get_answers_from_questions(self, user_id):
+    #    """
+    #    Retrieves visibile answers for the given question. Which are not included own answers
+    #    """
+    #    cursor = connection.cursor()
+    #    cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
+    #    return cursor.fetchall()
 
 class Answer(Content, DeletableContent):
     question = models.ForeignKey('Question', related_name='answers')
@@ -99,6 +97,7 @@ class Answer(Content, DeletableContent):
 
     def __unicode__(self):
         return self.html
+        
 
 class AnswerRevision(ContentRevision):
     """A revision of an Answer."""

@@ -14,7 +14,7 @@ from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.utils.datastructures import SortedDict
 
-from utils.html import sanitize_html
+from forum.utils.html import sanitize_html
 from markdown2 import Markdown
 #from lxml.html.diff import htmldiff
 from forum.diff import textDiff as htmldiff
@@ -23,7 +23,7 @@ from forum.models import *
 from forum.auth import *
 from forum.const import *
 from forum import auth
-from utils.forms import get_next_url
+from forum.utils.forms import get_next_url
 
 # used in index page
 #refactor - move these numbers somewhere?

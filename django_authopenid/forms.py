@@ -39,7 +39,7 @@ import types
 import re
 from django.utils.safestring import mark_safe
 from recaptcha_django import ReCaptchaField
-from utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from forum.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
 # needed for some linux distributions like debian
@@ -48,7 +48,7 @@ try:
 except ImportError:
     from yadis import xri
     
-from utils.forms import clean_next
+from forum.utils.forms import clean_next
 from django_authopenid.models import ExternalLoginData
 
 __all__ = ['OpenidSigninForm', 'ClassicLoginForm', 'OpenidVerifyForm',

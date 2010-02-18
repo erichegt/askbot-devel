@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from utils.forms import get_next_url
+from forum.utils.forms import get_next_url
 import logging
 class CancelActionMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):

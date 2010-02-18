@@ -22,8 +22,8 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 
-from utils.html import sanitize_html
-from utils.decorators import ajax_method, ajax_login_required
+from forum.utils.html import sanitize_html
+from forum.utils.decorators import ajax_method, ajax_login_required
 from markdown2 import Markdown
 #from lxml.html.diff import htmldiff
 from forum.diff import textDiff as htmldiff
@@ -32,7 +32,7 @@ from forum.models import *
 from forum.auth import *
 from forum.const import *
 from forum import auth
-from utils.forms import get_next_url
+from forum.utils.forms import get_next_url
 
 # used in index page
 INDEX_PAGE_SIZE = 20

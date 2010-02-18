@@ -21,8 +21,6 @@ class QuestionManager(models.Manager):
 
         question.save()
 
-        from models import QuestionRevision
-
         # create the first revision
         QuestionRevision.objects.create(
             question   = question,
@@ -77,7 +75,7 @@ class QuestionManager(models.Manager):
 
         # for some reasons, this Answer class failed to be imported,
         # although we have imported all classes from models on top.
-        from models import Answer
+        from answer import Answer
         self.filter(id=question.id).update(
             answer_count=Answer.objects.get_answers_from_question(question).filter(deleted=False).count())
 
@@ -91,7 +89,6 @@ class QuestionManager(models.Manager):
         """
         update favourite_count for given question
         """
-        from models import FavoriteQuestion
         self.filter(id=question.id).update(favourite_count = FavoriteQuestion.objects.filter(question=question).count())
 
     def get_similar_questions(self, question):
@@ -176,11 +173,10 @@ class Question(Content, DeletableContent):
         if not user.is_authenticated():
             return False
 
-        from models import FavoriteQuestion
         return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
 
     def get_answer_count_by_user(self, user_id):
-        from models import Answer
+        from answer import Answer
         query_set = Answer.objects.filter(author__id=user_id)
         return query_set.filter(question=self).count()
 
@@ -273,6 +269,8 @@ class Question(Content, DeletableContent):
 
     def __unicode__(self):
         return self.title
+
+        
 class QuestionView(models.Model):
     question = models.ForeignKey(Question, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')

@@ -10,16 +10,17 @@ from django.template import RequestContext
 from django.utils.html import *
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 
-from utils.html import sanitize_html
+from forum.utils.html import sanitize_html
 from markdown2 import Markdown
 from forum.forms import *
 from forum.models import *
 from forum.auth import *
 from forum.const import *
 from forum import auth
-from utils.forms import get_next_url
+from forum.utils.forms import get_next_url
 from forum.views.readers import _get_tags_cache_json
 
 # used in index page
@@ -103,14 +104,14 @@ def ask(request):#view used to ask a new question
             if request.user.is_authenticated():
                 author = request.user 
 
-                Question.objects.create_new(
+                question = Question.objects.create_new(
                     title            = title,
                     author           = author, 
                     added_at         = added_at,
                     wiki             = wiki,
                     tagnames         = tagnames,
                     summary          = summary,
-                    text = text
+                    text = sanitize_html(markdowner.convert(text))
                 )
 
                 return HttpResponseRedirect(question.get_absolute_url())
@@ -348,7 +349,7 @@ def answer(request, id):#process a new answer
                                   author=request.user,
                                   added_at=update_time,
                                   wiki=wiki,
-                                  text=text,
+                                  text=sanitize_html(markdowner.convert(text)),
                                   email_notify=form.cleaned_data['email_notify']
                                   )
             else:

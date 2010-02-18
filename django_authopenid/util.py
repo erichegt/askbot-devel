@@ -15,7 +15,7 @@ except:
     from yadis import xri
 
 import time, base64, hashlib, operator, logging
-from utils.forms import clean_next, get_next_url
+from forum.utils.forms import clean_next, get_next_url
 
 from models import Association, Nonce
 

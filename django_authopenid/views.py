@@ -67,7 +67,7 @@ from django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRe
         OpenidVerifyForm, ClassicRegisterForm, ChangePasswordForm, ChangeEmailForm, \
         ChangeopenidForm, DeleteForm, EmailPasswordForm
 import logging
-from utils.forms import get_next_url
+from forum.utils.forms import get_next_url
 
 EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 

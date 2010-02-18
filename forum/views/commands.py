@@ -9,7 +9,7 @@ from forum.models import *
 from forum.forms import CloseForm
 from forum import auth
 from django.contrib.auth.decorators import login_required
-from utils.decorators import ajax_method, ajax_login_required
+from forum.utils.decorators import ajax_method, ajax_login_required
 import logging
 
 def vote(request, id):#refactor - pretty incomprehensible view used by various ajax calls
