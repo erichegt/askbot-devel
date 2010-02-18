@@ -17,11 +17,10 @@
   <component name="ChangeListManager" verified="true">
     <list default="true" readonly="true" id="df1b69cf-9c35-4a78-9890-c59b542399e8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/views.py" afterPath="$PROJECT_DIR$/fbconnect/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/urls.py" afterPath="$PROJECT_DIR$/django_authopenid/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.py" afterPath="$PROJECT_DIR$/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/tag.py" afterPath="$PROJECT_DIR$/forum/models/tag.py" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\user_messages\context_processors.py" afterPath="$PROJECT_DIR$/forum/user_messages/context_processors.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/tests.py" afterPath="$PROJECT_DIR$/fbconnect/tests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WISH_LIST" afterPath="$PROJECT_DIR$/WISH_LIST" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
@@ -45,7 +44,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/models.py" afterPath="$PROJECT_DIR$/fbconnect/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings_local.py.dist" afterPath="$PROJECT_DIR$/settings_local.py.dist" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\user_messages\__init__.py" afterPath="$PROJECT_DIR$/forum/user_messages/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/fb.py" afterPath="$PROJECT_DIR$/fbconnect/fb.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osqa.iml" afterPath="$PROJECT_DIR$/osqa.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester/models.py" afterPath="$PROJECT_DIR$/tester/models.py" />
@@ -55,10 +53,10 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" afterPath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/readers.py" afterPath="$PROJECT_DIR$/forum/views/readers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/forms.py" afterPath="$PROJECT_DIR$/fbconnect/forms.py" />
       <change type="DELETED" beforePath="C:\osqadev\updated\osqa\user_messages\models.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MOVED" beforePath="C:\osqadev\updated\osqa\forum\diff.py" afterPath="$PROJECT_DIR$/forum/utils/diff.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/pjson.py" afterPath="$PROJECT_DIR$/fbconnect/pjson.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
@@ -286,56 +284,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="forum" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="forum" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="user_messages" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="osqa" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="forum" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="middleware" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -568,7 +516,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1277" y="-3" width="1286" height="806" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Archetypes" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -584,7 +532,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959481" sideWeight="0.659854" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959481" sideWeight="0.659854" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
