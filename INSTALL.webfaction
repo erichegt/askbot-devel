@@ -217,7 +217,7 @@ Create a Project
 
         Use command "crontab -e" to add this script to your cron file, to run twice a day::
 
-            * 0,12 * * * ~/webapps/osqa_server/projects/MYOSQA/cron/send_email_alerts
+            1 0,12 * * * ~/webapps/osqa_server/projects/MYOSQA/cron/send_email_alerts
 
     [Configure sphinx]
 
