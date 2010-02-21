@@ -7,4 +7,4 @@ PROJECT_ROOT=~/webapps/osqa_server/projects/osqa/
 . $WORKON_HOME/bin/activate
 
 cd $PROJECT_ROOT
-python manage.py send_email_alerts >> $PROJECT_ROOT/log/cron_mail.log 2>&1
+python manage.py once_award_badges >> $PROJECT_ROOT/log/cron_badges.log 2>&1

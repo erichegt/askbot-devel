@@ -242,7 +242,7 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    
    This function at the moment requires Django 1.1
 
-   edit paths in the file cron/send_email_alerts
+   edit paths in the file cron/send_email_alerts.
    set up a cron job to call cron/send_email_alerts once or twice a day
    subscription sender may be tested manually in shell 
    by calling cron/send_email_alerts
@@ -262,6 +262,28 @@ https://www.google.com/webmasters/tools/
 There are some demo scripts under sql_scripts folder, 
 including badges and test accounts for CNProg.com. You 
 don't need them to run your sample.
+
+9. Badges
+
+    1. You should run the SQL commands in:
+
+            sql_scripts/badges.sql
+
+    2. Edit paths in the file `cron/multi_award_badges`. (This
+    file doesn't yet exist in the git repositories, so just
+    copy `cron/send_email_alerts` and make sure the command
+    `multi_award_badges` is executed.)
+
+    3. Run `cron/multi_award_badges` to make sure it works okay.
+
+    4. Use `crontab -e` to call `cron/multi_award_badges` maybe four
+    times an hour.
+
+        4,19,34,49 * * * * ~/webapps/osqa_server/projects/MYOSQA/cron/multi_award_badges
+
+    5. Repeat steps 1-4 for `cron/once_award_badges`.
+
+
 
 C. CONFIGURATION PARAMETERS
 

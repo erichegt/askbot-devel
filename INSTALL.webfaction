@@ -233,6 +233,27 @@ Create a Project
         ln -sd ~/webapps/osqa_server/projects/MYOSQA/site_media ~/webapps/OSQA_STATIC/MYOSQA/site_media
 
 
+    Set up the badges:
+
+        1. You should run the SQL commands in:
+
+                 sql_scripts/badges.sql
+
+        2. Edit paths in the file `cron/multi_award_badges`. (This
+        file doesn't yet exist in the git repositories, so just
+        copy `cron/send_email_alerts` and make sure the command
+        `multi_award_badges` is executed.)
+
+        3. Run `cron/multi_award_badges` to make sure it works okay.
+
+        4. Use `crontab -e` to call `cron/multi_award_badges` maybe
+        four times an hour.
+
+            4,19,34,49 * * * * ~/webapps/osqa_server/projects/MYOSQA/cron/multi_award_badges
+
+        5. Repeat steps 1-4 for `cron/once_award_badges`.
+
+
 Configure Apache2
 ----------------
 
