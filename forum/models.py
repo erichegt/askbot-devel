@@ -787,7 +787,7 @@ def record_answer_event(instance, created, **kwargs):
         question_user = instance.question.author
         found_match = False
         for m in question_user.message_set.all():
-            match = new_responses_re.search(m.message)
+            match = record_answer_event_re.search(m.message)
             if match:
                 found_match = True
                 cnt = int(match.group(1))
