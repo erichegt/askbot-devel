@@ -834,7 +834,7 @@ def notify_award_message(instance, created, **kwargs):
     """
     if created:
         user = instance.user
-        user.message_set.create(message=u"Congratulations, you have received a badge '%s'" % instance.badge.name)
+        user.message_set.create(message=u"Congratulations, you have received a badge '%s'. Check out your profile <a href=\"%s\">here</a>." % (instance.badge.name, get_profile_url(user)))
 
 def record_answer_accepted(instance, created, **kwargs):
     """
