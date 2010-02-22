@@ -84,12 +84,19 @@ urlpatterns = patterns('',
     url(r'^%s(.*)' % _('nimda/'), admin.site.root, name='osqa_admin'),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}, name='feeds'),
     url(r'^%s$' % _('upload/'), app.writers.upload, name='upload'),
-    #url(r'^%s$' % _('books/'), app.books.books, name='books'),
-    #url(r'^%s%s(?P<short_name>[^/]+)/$' % (_('books/'), _('ask/')), app.books.ask_book, name='ask_book'),
-    #url(r'^%s(?P<short_name>[^/]+)/$' % _('books/'), app.books.book, name='book'),
     url(r'^%s$' % _('search/'), app.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.meta.feedback, name='feedback'),
     (r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
     (r'^%s' % _('account/'), include('django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 )
+
+from forum.modules import get_modules_script
+
+module_patterns = get_modules_script('urls')
+
+for pattern_file in module_patterns:
+    pattern = getattr(pattern_file, 'urlpatterns', None)
+    if pattern:
+        urlpatterns += pattern
+

@@ -28,13 +28,13 @@ from forum.utils.forms import get_next_url
 
 # used in index page
 #refactor - move these numbers somewhere?
-INDEX_PAGE_SIZE = 20
+INDEX_PAGE_SIZE = 30
 INDEX_AWARD_SIZE = 15
-INDEX_TAGS_SIZE = 100
+INDEX_TAGS_SIZE = 25
 # used in tags list
 DEFAULT_PAGE_SIZE = 60
 # used in questions
-QUESTIONS_PAGE_SIZE = 10
+QUESTIONS_PAGE_SIZE = 30
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
@@ -87,10 +87,19 @@ def index(request):#generates front page - shows listing of questions sorted in 
              }
     view_id, orderby = _get_and_remember_questions_sort_method(request, view_dic, 'latest')
 
-    page_size = request.session.get('pagesize', QUESTIONS_PAGE_SIZE)
-    questions = Question.objects.exclude(deleted=True).order_by(orderby)[:page_size] 
+    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    qs = Question.objects.exclude(deleted=True).order_by(orderby)
+
+    objects_list = Paginator(qs, pagesize)
+    questions = objects_list.page(page)
+
     # RISK - inner join queries
-    questions = questions.select_related()
+    #questions = questions.select_related()
     tags = Tag.objects.get_valid_tags(INDEX_TAGS_SIZE)
 
     awards = Award.objects.get_recent_awards()
@@ -111,7 +120,17 @@ def index(request):#generates front page - shows listing of questions sorted in 
         "tab_id" : view_id,
         "tags" : tags,
         "awards" : awards[:INDEX_AWARD_SIZE],
-        }, context_instance=RequestContext(request))
+        "context" : {
+            'is_paginated' : True,
+            'pages': objects_list.num_pages,
+            'page': page,
+            'has_previous': questions.has_previous(),
+            'has_next': questions.has_next(),
+            'previous': questions.previous_page_number(),
+            'next': questions.next_page_number(),
+            'base_url' : request.path + '?sort=%s&' % view_id,
+            'pagesize' : pagesize
+        }}, context_instance=RequestContext(request))
 
 def unanswered(request):#generates listing of unanswered questions
     return questions(request, unanswered=True)
@@ -126,7 +145,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
     # Set flag to False by default. If it is equal to True, then need to be saved.
     pagesize_changed = False
     # get pagesize from session, if failed then get default value
-    pagesize = request.session.get("pagesize",10)
+    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -287,25 +306,16 @@ def search(request): #generates listing of questions matching a search query - i
                 view_id = "latest"
                 orderby = "-added_at"
 
-            if settings.USE_PG_FTS:
-                objects = Question.objects.filter(deleted=False).extra(
-                    select={
-                        'ranking': "ts_rank_cd(tsv, plainto_tsquery(%s), 32)",
-                    },
-                    where=["tsv @@ plainto_tsquery(%s)"],
-                    params=[keywords],
-                    select_params=[keywords]
-                ).order_by('-ranking')
-
-            elif settings.USE_SPHINX_SEARCH == True:
-                #search index is now free of delete questions and answers
-                #so there is not "antideleted" filtering here
-                objects = Question.search.query(keywords)
-                #no related selection either because we're relying on full text search here
-            else:
+            def question_search(keywords, orderby):
                 objects = Question.objects.filter(deleted=False).extra(where=['title like %s'], params=['%' + keywords + '%']).order_by(orderby)
                 # RISK - inner join queries
-                objects = objects.select_related();
+                return objects.select_related();
+
+            from forum.modules import get_handler
+
+            question_search = get_handler('question_search', question_search)
+            
+            objects = question_search(keywords, orderby)
 
             objects_list = Paginator(objects, pagesize)
             questions = objects_list.page(page)

@@ -7,32 +7,32 @@
 {% load smart_if %}
 {% block title %}{% spaceless %}{% trans "Home" %}{% endspaceless %}{% endblock %}
 {% block meta %}<meta name="keywords" content="{{ settings.APP_KEYWORDS }}" />
-        <meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
+		<meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
 {% block forejs %}
-       <script type="text/javascript">
-           var tags = {{ tags_autocomplete|safe }};
-           $().ready(function(){
-               var tab_id = "{{ tab_id }}";
-               $("#"+tab_id).attr('className',"on");
-               $("#nav_questions").attr('className',"on");
-           });
-       </script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
+	<script type="text/javascript">
+		var tags = {{ tags_autocomplete|safe }};
+		$().ready(function(){
+			var tab_id = "{{ tab_id }}";
+			$("#"+tab_id).attr('className',"on");
+			$("#nav_questions").attr('className',"on");
+		});
+	</script>
+	<script type='text/javascript' src='{% media "/media/js/com.cnprog.editor.js" %}'></script>
+	<script type='text/javascript' src='{% media "/media/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-    <div class="headQuestions">{% trans "Questions" %}</div>
-    <div class="tabsA">
-    	 <a id="latest" href="{% url questions %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
-        <a id="hottest" href="{% url questions %}?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
-        <a id="mostvoted" href="{% url questions %}?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
-        <a id="all" href="{% url questions %}" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
-    </div>
+	<div class="headQuestions">{% trans "Questions" %}</div>
+	<div class="tabsA">
+		<a id="latest" href="{% url index %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
+		<a id="hottest" href="{% url index %}?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
+		<a id="mostvoted" href="{% url index %}?sort=mostvoted" title="{% trans "most voted questions" %}" >{% trans "most voted" %}</a>
+		<a id="all" href="{% url index %}" title="{% trans "all questions" %}" >{% trans "all questions" %}</a>
+	</div>
 </div>
-<!-- ???? -->
+
 <div id="listA">
-    	{% for question in questions.object_list %}
+	{% for question in questions.object_list %}
 	<div class="short-summary">
 		<div class="counts">
 			<div class="votes">
@@ -73,9 +73,9 @@
 <div class="boxA">
 	<h3>{% trans "welcome to website" %}</h3>
 	<div class="body">
-      {{ settings.APP_INTRO|safe }}
-	  <div class="more"><a href="{% url about %}">{% trans "about" %} </a></div>
-	  <div class="more"><a href="{% url faq %}">{% trans "faq" %} </a></div>
+		{{ settings.APP_INTRO|safe }}
+		<div class="more"><a href="{% url about %}">{% trans "about" %} »</a></div>
+		<div class="more"><a href="{% url faq %}">{% trans "faq" %} »</a></div>
 	</div>
 </div>
 {% else %}
@@ -84,34 +84,34 @@
 <div class="boxC">
 	<h3>{% trans "Recent tags" %}</h3>
 	<div class="body">
-         <div class="tags">
-        {% for tag in tags %}
-            <a rel="tag"
+		 <div class="tags">
+		{% for tag in tags %}
+			<a rel="tag"
 				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
-        {% endfor %}
-        </div>
-        <div class="more"><a href="{% url tags %}">{% trans "popular tags" %} </a> </div>
-    </div>
+		{% endfor %}
+		</div>
+		<div class="more"><a href="{% url tags %}">{% trans "popular tags" %} »</a> </div>
+	</div>
 </div>
 {% if awards %}
 <div class="boxC">
-    <h3>{% trans "Recent awards" %}</h3>
-        <div class="body">
-             <ul class="badge-list">
-             {% for award in awards %}
-                <li>
-                <a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
-                <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a> {% trans "given to" %}
-                <a href="{% url users %}{{award.user_id}}/{{award.user_name}}">{{ award.user_name }}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        	<div class="more"><a href="{% url badges %}">{% trans "all awards" %} </a> </div>
-         </div>
+	<h3>{% trans "Recent awards" %}</h3>
+		<div class="body">
+			 <ul class="badge-list">
+			 {% for award in awards %}
+				<li>
+				<a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
+				<span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a>
+				<a href="{% url users %}{{award.user_id}}/{{award.user_name}}">{{ award.user_name }}</a>
+				</li>
+			{% endfor %}
+			</ul>
+			<div class="more"><a href="{% url badges %}">{% trans "all awards" %} »</a> </div>
+		 </div>
 </div>
 {% endif %}
 <div id="feeds">
-<a href="{% media  "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
+<a href="{% media "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
 {% endblock %}
 {% block tail %}

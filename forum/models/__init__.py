@@ -38,11 +38,13 @@ User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 User.add_to_class('reputation', models.PositiveIntegerField(default=1))
 User.add_to_class('gravatar', models.CharField(max_length=32))
-User.add_to_class('favorite_questions',
-                  models.ManyToManyField(Question, through=FavoriteQuestion,
-                                         related_name='favorited_by'))
-User.add_to_class('badges', models.ManyToManyField(Badge, through=Award,
-                                                   related_name='awarded_to'))
+
+#User.add_to_class('favorite_questions',
+#                  models.ManyToManyField(Question, through=FavoriteQuestion,
+#                                         related_name='favorited_by'))
+
+#User.add_to_class('badges', models.ManyToManyField(Badge, through=Award,
+#                                                   related_name='awarded_to'))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -326,4 +328,14 @@ __all__ = [
         'Activity',
         'EmailFeedSetting',
         'AnonymousEmail',
+
+        'User'
         ]
+
+
+from forum.modules import get_modules_script_classes
+
+for k, v in get_modules_script_classes('models', models.Model).items():
+    if not k in __all__:
+        __all__.append(k)
+        exec "%s = v" % k

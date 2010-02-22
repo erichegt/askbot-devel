@@ -129,6 +129,8 @@ class Question(Content, DeletableContent):
     tagnames             = models.CharField(max_length=125)
     summary              = models.CharField(max_length=180)
 
+    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
+
     objects = QuestionManager()
 
     class Meta(Content.Meta):
@@ -283,7 +285,7 @@ class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
     question      = models.ForeignKey(Question)
     user          = models.ForeignKey(User, related_name='user_favorite_questions')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
+    added_at      = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         app_label = 'forum'

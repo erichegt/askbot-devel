@@ -21,6 +21,8 @@ class Badge(models.Model):
     # Denormalised data
     awarded_count = models.PositiveIntegerField(default=0)
 
+    awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
+
     class Meta:
         app_label = 'forum'
         db_table = u'badge'

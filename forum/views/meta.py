@@ -61,8 +61,8 @@ def badges(request):#user status/reputation system
     badges = Badge.objects.all().order_by('type')
     my_badges = []
     if request.user.is_authenticated():
-        my_badges = Award.objects.filter(user=request.user)
-        my_badges.query.group_by = ['badge_id']
+        my_badges = Award.objects.filter(user=request.user).values('badge_id')
+        #my_badges.query.group_by = ['badge_id']
 
     return render_to_response('badges.html', {
         'badges' : badges,
