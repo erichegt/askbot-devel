@@ -17,6 +17,7 @@ from django.contrib.sitemaps import ping_google
 import django.dispatch
 from django.conf import settings
 import logging
+import re
 
 if settings.USE_SPHINX_SEARCH == True:
     from djangosphinx.models import SphinxSearch
@@ -780,8 +781,22 @@ def record_ask_event(instance, created, **kwargs):
         activity = Activity(user=instance.author, active_at=instance.added_at, content_object=instance, activity_type=TYPE_ACTIVITY_ASK_QUESTION)
         activity.save()
 
+record_answer_event_re = re.compile("You have received (\d+) .*new response.*")
 def record_answer_event(instance, created, **kwargs):
     if created:
+        question_user = instance.question.author
+        found_match = False
+        for m in question_user.message_set.all():
+            match = new_responses_re.search(m.message)
+            if match:
+                found_match = True
+                cnt = int(match.group(1))
+                m.message = u"You have received %d <a href=\"%s?sort=responses\">new responses</a>." % (cnt+1, get_profile_url(question_user))
+                m.save()
+                break
+        if not found_match:
+            question_user.message_set.create(message=u"You have received %d <a href=\"%s?sort=responses\">new response</a>." % (1, get_profile_url(question_user)))
+
         activity = Activity(user=instance.author, active_at=instance.added_at, content_object=instance, activity_type=TYPE_ACTIVITY_ANSWER)
         activity.save()
 
