@@ -2,6 +2,7 @@
 # Django settings for lanai project.
 import os.path
 import sys
+
 SITE_ID = 1
 
 ADMIN_MEDIA_PREFIX = '/forum/admin/media/'
@@ -79,7 +80,7 @@ if USE_SPHINX_SEARCH:
 if USE_FB_CONNECT:
     INSTALLED_APPS.append('fbconnect')
 
-if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:
+if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:#todo - is this always false?
     USE_PG_FTS = True
     INSTALLED_APPS.append('pgfulltext')
 else:

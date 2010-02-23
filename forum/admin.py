@@ -3,7 +3,6 @@
 from django.contrib import admin
 from models import *
 
-
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
 

@@ -105,6 +105,6 @@ RECAPTCHA_PUBLIC_KEY='...'
 OSQA_DEFAULT_SKIN = 'default'
 
 #Facebook settings
-USE_FB_CONNECT=False
+USE_FB_CONNECT=False #make this True and fill out keys below
 FB_API_KEY='' #your api key from facebook
 FB_SECRET='' #your application secret

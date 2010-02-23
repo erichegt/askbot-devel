@@ -6,3 +6,6 @@ nbproject
 settings_local.py
 .idea
 *.iml
+env
+nbproject
+pip-log.txt

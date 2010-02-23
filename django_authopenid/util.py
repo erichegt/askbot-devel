@@ -21,7 +21,6 @@ from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
-
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
         logging.debug('init janrain openid object')

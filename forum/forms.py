@@ -182,7 +182,6 @@ class EditQuestionForm(forms.Form):
     tags   = TagNamesField()
     summary = SummaryField()
 
-
     def __init__(self, question, revision, *args, **kwargs):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title

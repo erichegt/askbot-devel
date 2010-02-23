@@ -1,0 +1,31 @@
+* Install virtualenv and pip:
+    easy_install virtualenv
+    easy_install pip
+
+* Install MySQL:
+    sudo apt-get install mysql-client mysql-server
+
+* Install sphinxsearch. See:
+    [optional]
+    http://sphinxsearch.com/downloads.html
+    http://www.hackido.com/2009/01/install-sphinx-search-on-ubuntu.html
+    git://github.com/johnl/deb-sphinx-search.git
+
+* Install a virtual environment OUTSIDE of this directory:
+    pip install -E ~/env -r osqa-requirements.txt 
+[there is discussion on the pinax forums about what it should be outside
+the source directory]
+
+* Notice that you will need to register with recaptcha.net and receive
+    recaptcha public and private keys that need to be saved in your
+    settings_local.py file
+
+* Start your environment:
+    source ~/env/bin/activate
+
+* Install mysql-python into your virtualenv, because we can't
+automagically install it with pip:
+    easy_install --prefix ~/env/ mysql-python
+
+For more information about why pip can't automatically install the
+MySQL driver, see this message: http://groups.google.com/group/python-virtualenv/msg/ea988085951c92b3

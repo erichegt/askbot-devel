@@ -1,6 +1,7 @@
 * The wonder bar (integrated the search / ask functionality)
 * The authentication system ???
 * allow multiple logins to the same account
+* allow multiple logins to the same account
 * more advanced templating/skinning system
 * per-tag email  subscriptions
 * view for personalized news on the site
@@ -8,3 +9,16 @@
 * drill-down mode for navigation by tags
 * improved admin console
 * sort out mess with profile - currently we patch django User
+
+* Some functionality should be moved out of the forums app, in the case
+that the forum app is restricted only to authenticated users:
+    
+        (r'^%s/$' % _('signin/'), 'django_authopenid.views.signin'),
+        url(r'^%s$' % _('about/'), app.about, name='about'),
+        url(r'^%s$' % _('faq/'), app.faq, name='faq'),
+        url(r'^%s$' % _('privacy/'), app.privacy, name='privacy'),
+        url(r'^%s$' % _('logout/'), app.logout, name='logout'),
+        url(r'^%s$' % _('feedback/'), app.feedback, name='feedback'),
+        (r'^%sfb/' % _('account/'),  include('fbconnect.urls')),
+        (r'^%s' % _('account/'), include('django_authopenid.urls')),
+

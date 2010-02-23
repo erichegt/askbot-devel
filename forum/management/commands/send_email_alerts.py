@@ -57,7 +57,6 @@ class Command(NoArgsCommand):
                     q_ans = Q_set.filter(answers__author=user)
                     q_ans.cutoff_time = cutoff_time
                 elif feed.feed_type == 'q_all':
-
                     if user.tag_filter_setting == 'ignored':
                         ignored_tags = Tag.objects.filter(user_selections__reason='bad',user_selections__user=user)
                         q_all = Q_set.exclude( tags__in=ignored_tags )
