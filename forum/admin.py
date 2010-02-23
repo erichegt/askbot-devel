@@ -55,7 +55,6 @@ class ActivityAdmin(admin.ModelAdmin):
 #class BookAuthorRssAdmin(admin.ModelAdmin):
 #    """  admin class"""
     
-    
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Answer, Answerdmin)

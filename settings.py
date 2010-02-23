@@ -2,7 +2,6 @@
 # Django settings for lanai project.
 import os.path
 import sys
-
 SITE_ID = 1
 
 ADMIN_MEDIA_PREFIX = '/forum/admin/media/'
