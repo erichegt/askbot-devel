@@ -4,10 +4,7 @@ new features (go to law school, get a job, do something real)
 Just a joke - pick yourself a task and work on it.
 
 ==Refactoring==
-* analyze and split models.py --> models/
-* create forum/modules directory
-* make modules load into the forum app like they
-  are the integral part of the forum
+* validate HTML
 * set up loading of default settings from inside the /forum dir
 * automatic dependency checking for modules
 * propose how to rename directory forum --> osqa
