@@ -21,11 +21,11 @@ Attacklab.wmdBase = function(){
 	
 	
 	// Used to work around some browser bugs where we can't use feature testing.
-	global.isIE 		= /msie/.test(nav.userAgent.toLowerCase());
-	global.isIE_5or6 	= /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase());
-	global.isIE_7plus 	= global.isIE && !global.isIE_5or6;
-	global.isOpera 		= /opera/.test(nav.userAgent.toLowerCase());
-	global.isKonqueror 	= /konqueror/.test(nav.userAgent.toLowerCase());
+	global.isIE = /msie/.test(nav.userAgent.toLowerCase());
+	global.isIE_5or6 = /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase());
+	global.isIE_7plus = global.isIE && !global.isIE_5or6;
+	global.isOpera = /opera/.test(nav.userAgent.toLowerCase());
+	global.isKonqueror = /konqueror/.test(nav.userAgent.toLowerCase());
 	
 	var toolbar_strong_label = $.i18n._('bold') + " <strong> Ctrl-B";
     var toolbar_emphasis_label = $.i18n._('italic') + " <em> Ctrl-I";
@@ -54,7 +54,7 @@ Attacklab.wmdBase = function(){
 	var uploadImageHTML ="<div>" + $.i18n._('upload image') + "</div>" + 
         '<input type="file" name="file-upload" id="file-upload" size="26" '+
         'onchange="return ajaxFileUpload($("#image-url"));"/><br>' + 
-        '<img id="loading" src="' + mediaUrl("media/images/indicator.gif") + '" style="display:none;"/>';
+        '<img id="loading" src="/m/default/media/images/indicator.gif" style="display:none;"/>';
     
 	// The default text that appears in the dialog input box when entering
 	// links.
@@ -115,7 +115,7 @@ Attacklab.wmdBase = function(){
 		}
 		else if (elem.currentStyle) {
 		    // IE
-			return elem.currentStyle["display"] !== "none";
+			return elem.currentStyle.display !== "none";
 		}
 	};
 	
@@ -185,7 +185,7 @@ Attacklab.wmdBase = function(){
 		pattern = pre + pattern + post;
 		
 		return new re(pattern, flags);
-	}
+	};
 
 	
 	// Sets the image for a button passed to the WMD editor.
@@ -218,8 +218,9 @@ Attacklab.wmdBase = function(){
 		var input;			// The text box where you enter the hyperlink.
         var type = 0;
         // The dialog box type(0: Link, 1: Image)
-        if(arguments.length == 4)
+        if(arguments.length == 4){
             type = arguments[3];
+        }
 
 		if (defaultInputText === undefined) {
 			defaultInputText = "";
@@ -334,8 +335,9 @@ Attacklab.wmdBase = function(){
 			
 			// The input text box
 			input = doc.createElement("input");
-            if(type == 1)
+            if(type == 1){
                 input.id = "image-url";
+            }
 			input.type = "text";
 			input.value = defaultInputText;
 			style = input.style;
@@ -347,9 +349,9 @@ Attacklab.wmdBase = function(){
             // The upload file input
             if(type == 1){
                 var upload = doc.createElement("div");
-    			upload.innerHTML = uploadImageHTML;
-    			upload.style.padding = "5px";
-    			form.appendChild(upload);   
+                upload.innerHTML = uploadImageHTML;
+                upload.style.padding = "5px";
+                form.appendChild(upload);   
             }
             
 			// The ok button
@@ -433,9 +435,10 @@ Attacklab.wmdBase = function(){
 	position.getTop = function(elem, isInner){
 		var result = elem.offsetTop;
 		if (!isInner) {
-			while (elem = elem.offsetParent) {
-				result += elem.offsetTop;
-			}
+        while (elem.offsetParent) {
+            elem = elem.offsetParent;
+            result += elem.offsetTop;
+        }
 		}
 		return result;
 	};
@@ -762,7 +765,7 @@ Attacklab.wmdBase = function(){
 			
 			var handlePaste = function(){
 				if (global.isIE || (inputStateObj && inputStateObj.text != wmd.panels.input.value)) {
-					if (timer == undefined) {
+					if (timer === undefined) {
 						mode = "paste";
 						saveState();
 						refreshState();
@@ -923,17 +926,16 @@ Attacklab.wmdBase = function(){
 						}
 						doClick(this);
 						return false;
-					}
+					};
 				}
 			}
 			else {
 				button.style.backgroundPosition = button.XShift + " " + disabledYShift;
 				button.onmouseover = button.onmouseout = button.onclick = function(){};
 			}
-		}
-	
+		};
+
 		var makeSpritedButtonRow = function(){
-		 	
 			var buttonBar = document.getElementById("wmd-button-bar");
 			var normalYShift = "0px";
 			var disabledYShift = "-20px";
@@ -1102,7 +1104,7 @@ Attacklab.wmdBase = function(){
 			buttonRow.appendChild(helpButton);
 			*/
 			setUndoRedoButtonStates();
-		}
+		};
 		
 		var setupEditor = function(){
 		
@@ -1298,7 +1300,7 @@ Attacklab.wmdBase = function(){
 				this.text = inputArea.value;
 			}
 			
-		}
+		};
 		
 		// Sets the selected text in the input box after we've performed an
 		// operation.
@@ -1384,7 +1386,7 @@ Attacklab.wmdBase = function(){
 		// Restore this state into the input area.
 		this.restore = function(){
 		
-			if (stateObj.text != undefined && stateObj.text != inputArea.value) {
+			if (stateObj.text !== undefined && stateObj.text != inputArea.value) {
 				inputArea.value = stateObj.text;
 			}
 			this.setInputAreaSelection();
@@ -1903,12 +1905,10 @@ Attacklab.wmdBase = function(){
 		
 			if (wmd.panels.preview) {
 				wmd.panels.preview.scrollTop = (wmd.panels.preview.scrollHeight - wmd.panels.preview.clientHeight) * getScaleFactor(wmd.panels.preview);
-				;
 			}
 			
 			if (wmd.panels.output) {
 				wmd.panels.output.scrollTop = (wmd.panels.output.scrollHeight - wmd.panels.output.clientHeight) * getScaleFactor(wmd.panels.output);
-				;
 			}
 		};
 		

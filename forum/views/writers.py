@@ -380,7 +380,7 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
         if user != None and auth.can_delete_comment(user, comment):
             #/posts/392845/comments/219852/delete
             #todo translate this url
-            delete_url = reverse(index) + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
+            delete_url = reverse('index') + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
         json_comments.append({"id" : comment.id,
             "object_id" : obj.id,
             "comment_age" : diff_date(comment.added_at),
