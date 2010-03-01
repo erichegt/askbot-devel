@@ -75,10 +75,10 @@ TYPE_ACTIVITY = (
 )
 
 TYPE_RESPONSE = {
-    'QUESTION_ANSWERED' : 'question_answered',
-    'QUESTION_COMMENTED': 'question_commented',
-    'ANSWER_COMMENTED'  : 'answer_commented',
-    'ANSWER_ACCEPTED'   : 'answer_accepted',
+    'QUESTION_ANSWERED' : _('question_answered'),
+    'QUESTION_COMMENTED': _('question_commented'),
+    'ANSWER_COMMENTED'  : _('answer_commented'),
+    'ANSWER_ACCEPTED'   : _('answer_accepted'),
 }
 
 CONST = {

@@ -4,6 +4,7 @@ from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
 from user import Activity, AnonymousEmail, EmailFeedSetting
 from repute import Badge, Award, Repute
+import re
 
 from base import *
 
@@ -111,9 +112,39 @@ def record_ask_event(instance, created, **kwargs):
         activity = Activity(user=instance.author, active_at=instance.added_at, content_object=instance, activity_type=TYPE_ACTIVITY_ASK_QUESTION)
         activity.save()
 
+#todo: translate this
+record_answer_event_re = re.compile("You have received (a|\d+) .*new response.*")
 def record_answer_event(instance, created, **kwargs):
     if created:
-        activity = Activity(user=instance.author, active_at=instance.added_at, content_object=instance, activity_type=TYPE_ACTIVITY_ANSWER)
+        q_author = instance.question.author
+        found_match = False
+        print 'going through %d messages' % q_author.message_set.all().count()
+        for m in q_author.message_set.all():
+            print m.message
+            match = record_answer_event_re.search(m.message)
+            if match:
+                found_match = True
+                try:
+                    cnt = int(match.group(1))
+                except:
+                    cnt = 1
+                m.message = u"You have received %d <a href=\"%s?sort=responses\">new responses</a>."\
+                            % (cnt+1, q_author.get_profile_url())
+                print 'updated message'
+                print m.message
+                m.save()
+                break
+        if not found_match:
+            msg = u"You have received a <a href=\"%s?sort=responses\">new response</a>."\
+                    % q_author.get_profile_url()
+            print 'new message'
+            print msg
+            q_author.message_set.create(message=msg)
+
+        activity = Activity(user=instance.author, \
+                            active_at=instance.added_at,\
+                            content_object=instance, \
+                            activity_type=TYPE_ACTIVITY_ANSWER)
         activity.save()
 
 def record_comment_event(instance, created, **kwargs):
@@ -165,7 +196,12 @@ def notify_award_message(instance, created, **kwargs):
     """
     if created:
         user = instance.user
-        user.message_set.create(message=u"Congratulations, you have received a badge '%s'" % instance.badge.name)
+
+        msg = (u"Congratulations, you have received a badge '%s'. " \
+                + u"Check out <a href=\"%s\">your profile</a>.") \
+                % (instance.badge.name, user.get_profile_url())
+
+        user.message_set.create(message=message)
 
 def record_answer_accepted(instance, created, **kwargs):
     """

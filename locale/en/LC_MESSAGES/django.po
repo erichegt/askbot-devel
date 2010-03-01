@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-22 22:59-0500\n"
+"POT-Creation-Date: 2010-02-28 21:53-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,6 +361,22 @@ msgstr ""
 #: forum/const.py:74
 msgid "email update sent to user"
 msgstr ""
+
+#: forum/const.py:78
+msgid "question_answered"
+msgstr "answer"
+
+#: forum/const.py:79
+msgid "question_commented"
+msgstr "question comment"
+
+#: forum/const.py:80
+msgid "answer_commented"
+msgstr "answer comment"
+
+#: forum/const.py:81
+msgid "answer_accepted"
+msgstr "answer accepted"
 
 #: forum/const.py:85
 msgid "[closed]"
@@ -749,7 +765,7 @@ msgstr ""
 #: forum/middleware/anon_user.py:33
 #, python-format
 msgid "first time greeting with %(url)s"
-msgstr ""
+msgstr "Hello and welcome to OSQA - <a href='%(url)s'>please join us</a>!"
 
 #: forum/models/question.py:247
 #, python-format
@@ -2401,7 +2417,7 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                    have total %(q_num)s questions\n"
+"                    have total %(q_num)s question\n"
 "                    "
 msgid_plural ""
 "\n"

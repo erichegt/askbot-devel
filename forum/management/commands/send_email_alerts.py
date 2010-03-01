@@ -10,6 +10,7 @@ import datetime
 from django.conf import settings
 import logging
 from forum.utils.odict import OrderedDict
+from django.contrib.contenttypes.models import ContentType
 
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):
