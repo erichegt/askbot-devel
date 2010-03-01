@@ -9,3 +9,5 @@ settings_local.py
 env
 nbproject
 pip-log.txt
+*.zip
+tmp/*
