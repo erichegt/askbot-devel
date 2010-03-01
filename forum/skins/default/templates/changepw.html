@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+<!-- changepw.html -->
+{% load i18n %}
+{% block head %}{% endblock %}
+{% block title %}{% spaceless %}{% trans "Change password" %}{% endspaceless %}{% endblock %}
+{% block content %}
+<div class="headNormal">{% trans "Account: change password" %}</div>
+<p class="message">{% blocktrans %}This is where you can change your password. Make sure you remember it!{% endblocktrans %}</p>
+<div class="aligned">
+	<form action="" method="post" accept-charset="utf-8">
+        <ul id="changepw-form" class="form-horizontal-rows">
+        {{form.as_ul}}
+        </ul>
+        <div class="submit-row"><input type="submit" class="submit" value="{% trans "Change password" %}" /></div>
+	</form>
+	</div>
+{% endblock %}
+<!-- end changepw.html -->

@@ -1,0 +1,32 @@
+{% extends "base_content.html" %}
+<!--signup.html-->
+{% load i18n %}
+{% block title %}{% spaceless %}{% trans "Signup" %}{% endspaceless %}{% endblock %}
+
+{% block content %}
+<div class="headNormal">
+    {% trans "Create login name and password" %}
+</div>
+<p class="message">{% trans "Traditional signup info" %}</p>
+<form action="" method="post" accept-charset="utf-8">
+    <ul class="form-horizontal-rows">
+    <li><label for="usename_id">{{form.username.label}}</label>{{form.username}}{{form.username.errors}}</li>
+    <li><label for="email_id">{{form.email.label}}</label>{{form.email}}{{form.email.errors}}</li>
+    <li><label for="password1_id">{{form.password1.label}}</label>{{form.password1}}{{form.password1.errors}}</li>
+    <li><label for="password2_id">{{form.password2.label}}</label>{{form.password2}}{{form.password2.errors}}</li>
+    </ul>
+    <p class="margin-top">{% trans "receive updates motivational blurb" %}</p>
+    <div class='simple-subscribe-options'>
+    {{ email_feeds_form.subscribe }}
+    {% if email_feeds_form.errors %}
+    <p class="error">{% trans "please select one of the options above" %}</p>
+    {% endif %}
+    </div>
+    {% comment %}<p class="signup_p">{% trans "Please read and type in the two words below to help us prevent automated account creation." %}</p>
+    {{form.recaptcha}}{% endcomment %}
+    <div class="submit-row"><input type="submit" class="submit" value="{% trans "Create Account" %}" /> 
+    <strong>{% trans "or" %}
+    <a href="{% url auth_signin %}">{% trans "return to login page" %}</a></strong></div>
+</form>
+{% endblock %}
+<!--end signup.html-->

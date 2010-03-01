@@ -5,7 +5,9 @@ from models import *
 from const import *
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
-from forum.utils.forms import NextUrlField, UserNameField
+from django.contrib.contenttypes.models import ContentType
+from django.utils.safestring import mark_safe
+from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
 from recaptcha_django import ReCaptchaField
 from django.conf import settings
 import logging
@@ -259,6 +261,25 @@ class TagFilterSelectionForm(forms.ModelForm):
             return True
         return False
 
+
+class ChangePasswordForm(SetPasswordForm):
+    """ change password form """
+    oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
+                label=mark_safe(_('Current password')))
+
+    def __init__(self, data=None, user=None, *args, **kwargs):
+        if user is None:
+            raise TypeError("Keyword argument 'user' must be supplied")
+        super(ChangePasswordForm, self).__init__(data, *args, **kwargs)
+        self.user = user
+
+    def clean_oldpw(self):
+        """ test old password """
+        if not self.user.check_password(self.cleaned_data['oldpw']):
+            raise forms.ValidationError(_("Old password is incorrect. \
+                    Please enter the correct password."))
+        return self.cleaned_data['oldpw']
+
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))
     DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))
@@ -290,7 +311,7 @@ class EditUserEmailFeedsForm(forms.Form):
     def set_initial_values(self,user=None):
         KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])
         if user != None:
-            settings = EmailFeedSetting.objects.filter(subscriber=user) 
+            settings = EmailFeedSetting.objects.filter(subscriber=user)
             initial_values = {}
             for setting in settings:
                 feed_type = setting.feed_type
@@ -336,21 +357,3 @@ class EditUserEmailFeedsForm(forms.Form):
                 user.followed_questions.clear()
         return changed
 
-
-class SimpleEmailSubscribeForm(forms.Form):
-    SIMPLE_SUBSCRIBE_CHOICES = (
-        ('y',_('okay, let\'s try!')),
-        ('n',_('no OSQA community email please, thanks'))
-    )
-    subscribe = forms.ChoiceField(widget=forms.widgets.RadioSelect(), \
-                                error_messages={'required':_('please choose one of the options above')},
-                                choices=SIMPLE_SUBSCRIBE_CHOICES)
-
-    def save(self,user=None):
-        EFF = EditUserEmailFeedsForm
-        if self.cleaned_data['subscribe'] == 'y':
-            email_settings_form = EFF()
-            logging.debug('%s wants to subscribe' % user.username)
-        else:
-            email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
-        email_settings_form.save(user,save_unbound=True)

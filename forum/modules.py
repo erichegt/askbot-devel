@@ -1,5 +1,8 @@
 import os
 import types
+import re
+
+from django.template import Template, TemplateDoesNotExist
 
 MODULES_PACKAGE = 'forum_modules'
 
@@ -19,7 +22,8 @@ def get_modules_script(script_name):
     for m in MODULE_LIST:
         try:
             all.append(__import__('%s.%s' % (m.__name__, script_name), globals(), locals(), [m.__name__]))
-        except:
+        except Exception, e:
+            #print script_name + ":" + str(e)
             pass
 
     return all
@@ -52,3 +56,24 @@ def get_handler(name, default):
     all = get_all_handlers(name)
     print(len(all))
     return len(all) and all[0] or default
+
+module_template_re = re.compile('^modules\/(\w+)\/(.*)$')
+
+def module_templates_loader(name, dirs=None):
+    result = module_template_re.search(name)
+
+    if result is not None:
+        file_name = os.path.join(MODULES_FOLDER, result.group(1), 'templates', result.group(2))
+
+        if os.path.exists(file_name):
+            try:
+                f = open(file_name, 'r')
+                source = f.read()
+                f.close()
+                return (source, file_name)
+            except:
+                pass
+
+    raise TemplateDoesNotExist, name 
+
+module_templates_loader.is_usable = True

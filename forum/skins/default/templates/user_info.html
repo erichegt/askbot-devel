@@ -45,6 +45,10 @@
                             <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
                             {% endif %}
                         {% separator %}
+                            {% ifequal request.user view_user %}
+                            <a href="{% url auth_signin %}">add authentication method</a>
+                            {% endifequal %}
+                        {% separator %}
                             {% if request.user.has_usable_password %}
                                 <a href="{% url user_changepw %}">change password</a>
                             {% endif %}

@@ -32,7 +32,7 @@
             {% if not question.closed and request.user.is_authenticated %}initEditor();{% endif %}
             
             lanai.highlightSyntax();
-            $('#btLogin').bind('click', function(){window.location.href='{% url user_signin %}'; } )
+            $('#btLogin').bind('click', function(){window.location.href='{% url auth_signin %}'; } )
         });
         
         function initEditor(){

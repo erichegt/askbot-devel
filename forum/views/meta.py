@@ -15,7 +15,7 @@ def about(request):
 def faq(request):
     data = {
         'gravatar_faq_url': reverse('faq') + '#gravatar',
-        'send_email_key_url': reverse('send_email_key'),
+        #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
     }
     return render_to_response('faq.html', data, context_instance=RequestContext(request))
@@ -58,7 +58,7 @@ def logout(request):#refactor/change behavior?
     }, context_instance=RequestContext(request))
 
 def badges(request):#user status/reputation system
-    badges = Badge.objects.all().order_by('type')
+    badges = Badge.objects.all().order_by('name')
     my_badges = []
     if request.user.is_authenticated():
         my_badges = Award.objects.filter(user=request.user).values('badge_id')

@@ -2,7 +2,7 @@ from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion
 from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
-from user import Activity, AnonymousEmail, EmailFeedSetting
+from user import Activity, AnonymousEmail, EmailFeedSetting, AuthKeyUserAssociation
 from repute import Badge, Award, Repute
 
 from base import *
@@ -303,6 +303,7 @@ Repute = Repute
 Activity = Activity
 EmailFeedSetting = EmailFeedSetting
 AnonymousEmail = AnonymousEmail
+AuthKeyUserAssociation = AuthKeyUserAssociation
 
 __all__ = [
         'Question',
@@ -328,6 +329,7 @@ __all__ = [
         'Activity',
         'EmailFeedSetting',
         'AnonymousEmail',
+        'AuthKeyUserAssociation',
 
         'User'
         ]
