@@ -8,7 +8,7 @@
                     <a href="{% url users %}{{ request.user.id }}/{{ request.user.username }}/">{{ request.user.username }}</a> {% get_score_badge request.user %} 
                     <a href="{% url logout %}">{% trans "logout" %}</a>
                 {% else %}
-                    <a href="{% url user_signin %}">{% trans "login" %}</a>
+                    <a href="{% url auth_signin %}">{% trans "login" %}</a>
                 {% endif %}
                 <a href="{% url about %}">{% trans "about" %}</a>
                 <a href="{% url faq %}">{% trans "faq" %}</a>

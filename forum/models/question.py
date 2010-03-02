@@ -2,7 +2,8 @@ from base import *
 from tag import Tag
 
 class QuestionManager(models.Manager):
-    def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
+    @staticmethod
+    def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
         question = Question(
             title            = title,
             author           = author,

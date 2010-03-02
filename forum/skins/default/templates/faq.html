@@ -97,6 +97,7 @@
 
             </table>
         </div>
+        {% comment %}
         {% ifequal settings.EMAIL_VALIDATION 'on' %}
         <div>
             <a id='validate'></a><h3 class="subtitle">{% trans "how to validate email title" %}</h3>
@@ -104,6 +105,7 @@
             {% blocktrans %}how to validate email info with {{send_email_key_url}} {{gravatar_faq_url}}{% endblocktrans %}
         </div>
         {% endifequal %}
+        {% endcomment %}
         <div>
             <a id='gravatar'></a><h3 class="subtitle">{% trans "what is gravatar" %}</h3>
             <p>{% trans "gravatar faq info" %}</p>
@@ -111,7 +113,7 @@
         <div>
             <h3 class="subtitle">{% trans "To register, do I need to create new password?" %}</h3>
             <p>{% trans "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc." %}
-            <strong><a href="{% url user_signin %}">{% trans "Login now!" %}</a> »</strong> 
+            <strong><a href="{% url auth_signin %}">{% trans "Login now!" %}</a> »</strong> 
             </p>
         </div>
     

@@ -11,6 +11,7 @@ SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
+    'forum.modules.module_templates_loader',
     'forum.skins.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
 )
@@ -68,7 +69,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'forum',
-    'django_authopenid',
     'debug_toolbar' ,
 ]
 
@@ -76,9 +76,6 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
 if USE_SPHINX_SEARCH:
     INSTALLED_APPS.append('djangosphinx')
-
-if USE_FB_CONNECT:
-    INSTALLED_APPS.append('fbconnect')
 
 if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:
     USE_PG_FTS = True

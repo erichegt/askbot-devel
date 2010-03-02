@@ -64,4 +64,11 @@ class AnonymousEmail(models.Model):
     class Meta:
         app_label = 'forum'
 
+class AuthKeyUserAssociation(models.Model):
+    key = models.CharField(max_length=255,null=False,unique=True)
+    provider = models.CharField(max_length=64)
+    user = models.ForeignKey(User)
+    added_at = models.DateTimeField(default=datetime.datetime.now)
 
+    class Meta:
+        app_label = 'forum'

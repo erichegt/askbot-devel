@@ -129,7 +129,7 @@ def ask(request):#view used to ask a new question
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
-                return HttpResponseRedirect(reverse('user_signin_new_question'))
+                return HttpResponseRedirect(reverse('auth_action_signin', kwargs={'action': 'newquestion'}))
     else:
         form = AskForm()
 
@@ -365,7 +365,7 @@ def answer(request, id):#process a new answer
                                        ip_addr=request.META['REMOTE_ADDR'],
                                        )
                 anon.save()
-                return HttpResponseRedirect(reverse('user_signin_new_answer'))
+                return HttpResponseRedirect(reverse('auth_action_signin', kwargs={'action': 'newanswer'}))
 
     return HttpResponseRedirect(question.get_absolute_url())
 
