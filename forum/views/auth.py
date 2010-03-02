@@ -107,6 +107,9 @@ def process_provider_signin(request, provider):
                     uassoc.save()
                     request.session['auth_error'] = _("These new credentials are now associated with your account.")                    
             return HttpResponseRedirect(reverse('auth_signin'))
+        else:
+            if isinstance(assoc_key, (type, User)):
+                return login_and_forward(request, assoc_key) 
 
         try:
             assoc = AuthKeyUserAssociation.objects.get(key=assoc_key)
