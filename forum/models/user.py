@@ -66,7 +66,7 @@ class AnonymousEmail(models.Model):
 
 
 class AuthKeyUserAssociation(models.Model):
-    key = models.CharField(max_length=256,null=False,unique=True)
+    key = models.CharField(max_length=255,null=False,unique=True)
     provider = models.CharField(max_length=64)
     user = models.ForeignKey(User)
     added_at = models.DateTimeField(default=datetime.datetime.now)
