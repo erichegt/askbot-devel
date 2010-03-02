@@ -3,7 +3,6 @@ from base import *
 from question import Question
 
 class AnswerManager(models.Manager):
-    @staticmethod
     def create_new(cls, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
         answer = Answer(
             question = question,
