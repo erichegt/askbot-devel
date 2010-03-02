@@ -77,7 +77,7 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 if USE_SPHINX_SEARCH:
     INSTALLED_APPS.append('djangosphinx')
 
-if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:
+if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:#todo - is this always false?
     USE_PG_FTS = True
     INSTALLED_APPS.append('pgfulltext')
 else:

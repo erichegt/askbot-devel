@@ -3,7 +3,7 @@ import itertools
 
 from django.contrib.contenttypes.models import ContentType
 
-from lanai.utils.lists import flatten
+from forum.utils.lists import flatten
 
 def fetch_model_dict(model, ids, fields=None):
     """

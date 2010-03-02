@@ -1,0 +1,346 @@
+Detailed instructions for installing OSQA on WebFaction
+
+Adapted from http://code.pinaxproject.com/wiki/DetailedPinaxWebfaction/
+
+Please email turian at gmail with any updates or corrections.
+
+
+Installing OSQA on Webfaction
+------------------------------------
+
+Details the steps for setting up OSQA on a Webfaction shared-hosting
+account, including email setup, using Apache2, mod_wsgi, psycopg2.
+
+If you want to search-and-replace through this file, you will need to replace:
+    osqa_server         [name of Webfaction application, which will be in ~/webapps/]
+    osqa_static         [name of Webfaction application for static media serving]
+    DOMAIN.com          [domain name for OSQA site]
+    PORT                [port number assigned by WebFaction to your mod_wsgi application]
+    SITENAME            [name you give the OSQA site, which will contain the apache logs]
+    MYOSQA              [name of the OSQA project]
+    MAILBOX_USERNAME    [username you give the email address]
+    MAILBOX_PASSWORD    [password that webfaction gives to this email username]
+    OSQADATABASE_NAME   [username you give the database]
+    OSQADATABASE_PASSWORD   [password that webfaction gives to this database]
+    ~/envs/osqa         [directory for the OSQA python environment, grep for 'env']
+    USERNAME            [your WebFaction username]
+
+Some things I'm not sure about:
+
+Here's what I don't know how to do:
+    * Set up a nginx server for static media.
+    * Configure sphinx search
+    * Use PostgreSQL, not MySQL: http://osqa.net/question/13/can-i-use-osqa-with-postgresql
+
+
+Webfaction Control Panel
+--------------------------
+
+(Note: if you sign up and pick django it will create the application
+for you, website/subdomain and associate the two for you.)
+
+    If necessary, add or create any domains or subdomains you may need.
+
+        https://panel.webfaction.com/domain/list/
+
+    Let's call the domain DOMAIN.com.
+
+    Create a new Webfaction application with a "Type:" of "mod_wsgi
+    2.5/Python2.5", naming it "osqa_server". (These instructions
+    might also work with mod_wsgi 2.0, if you like.)
+
+        https://panel.webfaction.com/app_/list
+
+    Note the port number assigned to the mod_wsgi application. Call
+    it PORT.
+
+    Create a new Webfaction website which will associate the subdomain
+    with the new osqa_server application. Give it name SITENAME, at least one
+    domain, and set it to use the osqa_server application for the site's
+    root location, "/".
+
+        https://panel.webfaction.com/site/list
+
+    You will need to create a database, typically one for each project
+    you create. Change the type to PostgreSql and modify the name (it
+    defaults to your webfaction account name) by adding an underscore
+    and a project-specific identifier such as "_osqa". Before
+    leaving this section of the control panel, you may wish to change
+    the password.
+
+        https://panel.webfaction.com/database/create
+
+    Call these OSQADATABASE_NAME and OSQADATABASE_PASSWORD.
+
+    Save the database password for later.
+
+    [The following I haven't figured out yet]
+    You will probably want to add a static media server. This is a
+    Webfaction application. I created one of type "Static only (no
+    .htaccess)" and with the name of "osqa_static".
+
+        https://panel.webfaction.com/app_/create
+
+    To configure email, you need an email mailbox. Add one here. Note
+    that your mailbox password shouldn't be the same password you use
+    to SSH to webfaction.
+
+        https://panel.webfaction.com/mailbox/list
+
+    Save the mail password for later.
+    We will call the username and password MAILBOX_USERNAME and
+    MAILBOX_PASSWORD, respectively.
+    You might also consider adding an email address like admin@DOMAIN.com,
+    here:
+
+        https://panel.webfaction.com/email/list
+
+
+OSQA Software
+--------------
+
+    Log onto webfaction and get the code. I use my fork because I have
+    a simple pip installation:
+        git://github.com/turian/osqa.git
+    In my situation, I keep source code in ~/utils/src, create
+    virtual environments in ~/envs/osqa, and create Pinax projects in
+    ~/webapps/osqa_server/projects.
+
+    You will need pip + virtualenv installed:
+
+        easy_install --prefix=~/utils/ pip
+        easy_install --prefix=~/utils/ virtualenv
+
+        cd ~/utils/src/
+        git clone git://github.com/turian/osqa.git
+        cd osqa
+
+        # We need python2.5 to be compatible with WSGI
+        python2.5 ~/utils/bin/pip install -E ~/envs/osqa -r osqa-requirements.txt 
+        source ~/envs/osqa/bin/activate
+
+        # [Optional] If you want a MySQL database
+        easy_install-2.5 --prefix ~/envs/osqa/ mysql-python
+
+Additional Software
+-------------------
+
+    [Note that PostgreSQL installation doesn't work for me.]
+
+    You will need to install psycopg2 separately for PostgreSQL.
+    Psycopg2 requires a little fiddling. Continuing to
+    work in the ~/utils/src/ directory:
+
+        cd ~/utils/src/
+        wget http://initd.org/pub/software/psycopg/psycopg2-2.0.13.tar.gz
+        tar zxf psycopg2-2.0.13.tar.gz
+        cd psycopg2-2.0.13
+        nano setup.cfg
+
+        # edit the line reading "#pg_config=" so that it reads:
+            "pg_config=/usr/local/pgsql/bin/pg_config"
+
+        python2.5 setup.py build
+        python2.5 setup.py install
+
+
+Create a Project
+----------------
+
+    In Pinax, you clone a project from OSQA.
+    However, OSQA we just copy it.
+
+        cd ~/webapps/osqa_server
+        mkdir projects
+        cd projects
+        cp -R ~/utils/src/osqa MYOSQA
+        cd MYOSQA
+        export OSQAPROJECT=`pwd`
+
+    Make some directories, as described in the OSQA INSTALL file:
+    [okay I haven't actually done this yet]
+
+#        mkdir -p $OSQASITE/upfiles/
+#        mkdir -p $OSQALOG
+#        sudo chown -R `whoami`:www-data $OSQASITE
+#        sudo chown -R `whoami`:www-data $OSQALOG
+#        chmod -R g+w $OSQASITE/upfiles
+#        chmod -R g+w $OSQALOG
+
+
+    Edit the settings files:
+
+        cd $OSQAPROJECT
+        cp settings_local.py.dist settings_local.py
+        vi settings_local.py settings.py 
+
+        Pay attention to the following settings:
+
+            DATABASE_ENGINE = 'mysql'
+            DATABASE_NAME = 'OSQADATABASE_NAME'
+            DATABASE_USER = 'OSQADATABASE_NAME'
+            DATABASE_PASSWORD = 'OSQADATABASE_PASSWORD'
+
+            EMAIL_HOST='smtp.webfaction.com'
+            EMAIL_HOST_USER='MAILBOX_USERNAME'
+            EMAIL_HOST_PASSWORD='MAILBOX_PASSWORD'
+            EMAIL_PORT='25'
+            DEFAULT_FROM_EMAIL = 'MAILBOX_USERNAME@DOMAIN.com'
+            SERVER_EMAIL = 'MAILBOX_USERNAME@DOMAIN.com'
+            # The following setting might not be necessary, it's used in Pinax tho
+            CONTACT_EMAIL = "MAILBOX_USERNAME@DOMAIN.com"
+
+            APP_URL = 'http://DOMAIN.com' #used by email notif system and RSS
+
+        [Later on, the install instructions should talk about]
+            SERVE_MEDIA = False     # [Not present, not ready yet]
+
+    Create a directory for logs:
+
+        cd $OSQAPROJECT
+        mkdir log
+
+    Modify mail cron scripts "cron/send_email_alerts" as follows:
+    [Pinax has cron/emit_notices.sh, cron/retry_deferred.sh,
+    cron/send_mail.sh, are these also necessary?]
+
+            #!/bin/sh
+
+            WORKON_HOME=~/envs/osqa
+            PROJECT_ROOT=~/webapps/osqa_server/projects/MYOSQA/
+
+            # activate virtual environment
+            . $WORKON_HOME/bin/activate
+
+            cd $PROJECT_ROOT
+            python manage.py send_email_alerts >> $PROJECT_ROOT/log/cron_mail.log 2>&1
+
+        Use command "crontab -e" to add this script to your cron file, to run twice a day::
+
+            1 0,12 * * * ~/webapps/osqa_server/projects/MYOSQA/cron/send_email_alerts
+
+    [Configure sphinx]
+
+    Create the database tables, indices, and so forth:
+
+        python manage.py syncdb
+
+    [Ignore the following static media steps, I haven't tried them]
+    Build media directory links within the project and create symbolic
+    links on the static media server.
+        python manage.py build_media -all
+        mkdir ~/webapps/OSQA_STATIC/MYOSQA
+        ln -sd ~/webapps/osqa_server/projects/MYOSQA/site_media ~/webapps/OSQA_STATIC/MYOSQA/site_media
+
+
+    Set up the badges:
+
+        1. You should run the SQL commands in:
+
+                 sql_scripts/badges.sql
+
+        2. Edit paths in the file `cron/multi_award_badges`. (This
+        file doesn't yet exist in the git repositories, so just
+        copy `cron/send_email_alerts` and make sure the command
+        `multi_award_badges` is executed.)
+
+        3. Run `cron/multi_award_badges` to make sure it works okay.
+
+        4. Use `crontab -e` to call `cron/multi_award_badges` maybe
+        four times an hour.
+
+            4,19,34,49 * * * * ~/webapps/osqa_server/projects/MYOSQA/cron/multi_award_badges
+
+        5. Repeat steps 1-4 for `cron/once_award_badges`.
+
+
+Configure Apache2
+----------------
+
+    Edit  ~/webapps/osqa_server/apache2/conf/httpd.conf as follows::
+
+        ServerAdmin "MAILBOX_USERNAME@DOMAIN.com"
+        ServerRoot "/home/USERNAME/webapps/osqa_server/apache2"
+        ServerName DOMAIN.com
+
+        LoadModule dir_module modules/mod_dir.so
+        LoadModule env_module modules/mod_env.so
+        #LoadModule setenvif_module modules/mod_setenvif.so
+        LoadModule log_config_module modules/mod_log_config.so
+        LoadModule mime_module modules/mod_mime.so
+        LoadModule rewrite_module modules/mod_rewrite.so
+        LoadModule wsgi_module modules/mod_wsgi.so
+
+        KeepAlive Off
+        Listen PORT
+        LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+        CustomLog /home/USERNAME/logs/user/access_osqa_server_log combined
+        ErrorLog /home/USERNAME/logs/user/error_osqa_server_log
+        ServerLimit 2
+
+        #SetEnvIf X-Forwarded-SSL on HTTPS=1
+
+        WSGIPythonPath /home/USERNAME/envs/osqa/lib/python2.5/site-packages/
+        WSGIScriptAlias / /home/USERNAME/webapps/osqa_server/projects/MYOSQA/osqa.wsgi
+
+        LoadModule alias_module modules/mod_alias.so
+        WSGIDaemonProcess osqaWSGI user=USERNAME group=USERNAME threads=25 python-path=/home/USERNAME/envs/osqa/lib/python2.5/site-packages
+        WSGIProcessGroup osqaWSGI
+
+        NameVirtualHost 127.0.0.1:PORT
+
+        #ErrorLog "logs/MYOSQA_2009_05_06.log"
+        SetHandler none
+        #Alias /site_media /home/USERNAME/webapps/static/MYOSQA/site_media
+
+        #force all content to be served as static files
+        #otherwise django will be crunching images through itself wasting time
+        Alias /content/ /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/
+        Alias /forum/admin/media/ /home/turian/envs/osqa/lib/python2.5/site-packages/django/contrib/admin/media/
+        #AliasMatch /([^/]*\.css) /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/style/$1
+        <Directory "/home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content">
+        #    Order deny,allow
+        #    Allow from all
+        </Directory>
+
+    If you want virtual hosts of the admin interface under HTTPS, please
+    look at OSQA's install file.
+
+    Create osqa.wsgi and edit it:
+        cp osqa.wsgi.dist osqa.wsgi
+
+    Edit  ~/webapps/osqa_server/projects/MYOSQA/deploy/osqa.wsgi as follows::
+        
+        import os
+        import sys
+        
+        # redirect sys.stdout to sys.stderr for bad libraries like geopy that uses
+        # print statements for optional import exceptions.
+        sys.stdout = sys.stderr
+        
+        from os.path import abspath, dirname, join
+        from site import addsitedir
+        
+        # add the virtual environment site-packages to the path
+        from site import addsitedir
+        addsitedir('/home/USERNAME/envs/osqa/lib/python2.5/site-packages')
+        
+        sys.path.insert(0, abspath(join(dirname(__file__), "../")))
+        sys.path.append(abspath(dirname(__file__)))
+        
+        from django.conf import settings
+        os.environ["DJANGO_SETTINGS_MODULE"] = "MYOSQA.settings"
+
+        #print sys.path
+
+        from django.core.handlers.wsgi import WSGIHandler
+        application = WSGIHandler()
+
+And then you're up and running with:
+
+    ~/webapps/osqa_server/apache2/bin/stop
+    ~/webapps/osqa_server/apache2/bin/start
+
+You should log in to the admin interface (http://DOMAIN.com/admin/),
+and go to "Sites > Sites", and change the domain name that is used in
+all emails.

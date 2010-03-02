@@ -10,6 +10,7 @@ import datetime
 from django.conf import settings
 import logging
 from forum.utils.odict import OrderedDict
+from django.contrib.contenttypes.models import ContentType
 
 class Command(NoArgsCommand):
     def handle_noargs(self,**options):
@@ -140,7 +141,6 @@ class Command(NoArgsCommand):
             output.append(_(string) % {'num':number})
 
     def send_email_alerts(self):
-
         #todo: move this to template
         for user in User.objects.all():
             q_list = self.get_updated_questions_for_user(user)

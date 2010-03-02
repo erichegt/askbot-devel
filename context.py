@@ -8,6 +8,8 @@ def application_settings(context):
         'APP_DESCRIPTION' : settings.APP_DESCRIPTION,
         'APP_INTRO' : settings.APP_INTRO,
         'EMAIL_VALIDATION': settings.EMAIL_VALIDATION,
+        'FEEDBACK_SITE_URL': settings.FEEDBACK_SITE_URL,
+        'FORUM_SCRIPT_ALIAS': settings.FORUM_SCRIPT_ALIAS,
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
         'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,

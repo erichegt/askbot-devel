@@ -1,0 +1,9 @@
+django>=1.1         # Note: email subscription sender job requires Django 1.1, everything else works with 1.0
+#mysql-python       # Can't use with pip, see http://groups.google.com/group/python-virtualenv/msg/ea988085951c92b3
+python-openid
+html5lib
+markdown2
+git+git://github.com/robhudson/django-debug-toolbar.git
+git+git://github.com/dcramer/django-sphinx.git
+svn+http://recaptcha-django.googlecode.com/svn/trunk/
+svn+http://recaptcha.googlecode.com/svn/trunk/recaptcha-plugins/python/

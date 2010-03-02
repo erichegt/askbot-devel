@@ -10,6 +10,7 @@ from django.utils.safestring import mark_safe
 from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
 from recaptcha_django import ReCaptchaField
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 import logging
 
 class TitleField(forms.CharField):
