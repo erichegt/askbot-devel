@@ -1,4 +1,5 @@
-PYTHONPATH=/path/to/dir/above/forum
+#!/bin/sh
+PYTHONPATH=/path/to/dir_above_osqa_site
 export PYTHONPATH
-APP_ROOT=$PYTHONPATH/nmr-forum2
-/path/to/python $APP_ROOT/manage.py send_email_alerts
+PROJECT_ROOT=$PYTHONPATH/osqa_site
+/path/to/python $PROJECT_ROOT/manage.py send_email_alerts
