@@ -74,24 +74,3 @@ INSTALLED_APPS = [
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
-if USE_SPHINX_SEARCH:
-    INSTALLED_APPS.append('djangosphinx')
-
-if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:#todo - is this always false?
-    USE_PG_FTS = True
-    INSTALLED_APPS.append('pgfulltext')
-else:
-    USE_PG_FTS = False
-
-#load optional plugin module for external password login
-if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
-    INSTALLED_APPS.append(EXTERNAL_LEGACY_LOGIN_MODULE)
-
-    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND' in locals():
-        AUTHENTICATION_BACKENDS.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND)
-    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE' in locals():
-        MIDDLEWARE_CLASSES.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE)
-    def LOAD_EXTERNAL_LOGIN_APP():
-        return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
-else:
-    LOAD_EXTERNAL_LOGIN_APP = lambda: None

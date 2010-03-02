@@ -23,6 +23,7 @@ def signin_page(request, action=None):
         request.session['on_signin_url'] = request.META.get('HTTP_REFERER', '/')
     else:
         request.session['on_signin_action'] = action
+        request.session['on_signin_url'] = reverse('auth_action_signin', kwargs={'action': action})
 
     all_providers = [provider.context for provider in AUTH_PROVIDERS.values()]
 
@@ -130,6 +131,13 @@ def external_register(request):
 
             user_.set_unusable_password()
 
+            try:
+                assoc_key = request.session['assoc_key']
+                auth_provider = request.session['auth_provider']
+            except:
+                request.session['auth_error'] = _("Oops, something went wrong in the middle of this process. Please try again.")
+                return HttpResponseRedirect(request.session.get('on_signin_url', reverse('auth_signin'))) 
+
             uassoc = AuthKeyUserAssociation(user=user_, key=request.session['assoc_key'], provider=request.session['auth_provider'])
             uassoc.save()
 
@@ -186,17 +194,17 @@ def login_and_forward(request,  user):
     from forum.models import user_logged_in
     user_logged_in.send(user=user,session_key=old_session,sender=None)
 
-    redirect = request.session.get('on_signin_url', None)
+    signin_action = request.session.get('on_signin_action', None)
+    if not signin_action:
+        redirect = request.session.get('on_signin_url', None)
 
-    if not redirect:
-        signin_action = request.session.get('on_signin_action', None)
-        if not signin_action:
+        if not redirect:
             redirect = reverse('index')
-        else:
-            try:
-                redirect = POST_SIGNIN_ACTIONS[signin_action](user)
-            except:
-                redirect = reverse('index')
+    else:
+        try:
+            redirect = POST_SIGNIN_ACTIONS[signin_action](user)
+        except:
+            redirect = reverse('index')
 
     return HttpResponseRedirect(redirect)
 

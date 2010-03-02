@@ -3,7 +3,7 @@ from base import *
 from question import Question
 
 class AnswerManager(models.Manager):
-    def create_new(cls, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
+    def create_new(self, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
         answer = Answer(
             question = question,
             author = author,
@@ -127,7 +127,7 @@ class AnonymousAnswer(AnonymousContent):
     def publish(self,user):
         added_at = datetime.datetime.now()
         #print user.id
-        AnswerManager.create_new(question=self.question,wiki=self.wiki,
+        Answer.objects.create_new(question=self.question,wiki=self.wiki,
                             added_at=added_at,text=self.text,
                             author=user)
         self.delete()

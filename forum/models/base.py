@@ -17,9 +17,6 @@ import django.dispatch
 from django.conf import settings
 import logging
 
-if settings.USE_SPHINX_SEARCH == True:
-    from djangosphinx.models import SphinxSearch
-
 from forum.const import *
 
 class MetaContent(models.Model):

@@ -2,7 +2,7 @@ from base import *
 from tag import Tag
 
 class QuestionManager(models.Manager):
-    def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
+    def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
         question = Question(
             title            = title,
             author           = author,
@@ -327,7 +327,7 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        QuestionManager.create_new(title=self.title, author=user, added_at=added_at,
+        Question.objects.create_new(title=self.title, author=user, added_at=added_at,
                                 wiki=self.wiki, tagnames=self.tagnames,
                                 summary=self.summary, text=self.text)
         self.delete()
