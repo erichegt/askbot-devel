@@ -1,0 +1,16 @@
+this app's function will be to:
+
+* install it's own tables
+* read SE xml dump into DjangoDB
+* populate osqa database
+* remove SE tables
+
+So far models are automatically created via:
+
+1) add 'stackexchange' to the list of installed apps
+2) type commands
+
+    cd stackexchange
+    python parse_models.py SE_DUMP/xsd/*.xsd > models.py
+    cd ..
+    python manage.py syncdb

@@ -69,7 +69,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'forum',
-    'debug_toolbar' ,
+    'debug_toolbar',
+    'stackexchange',#SE loader
 ]
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
