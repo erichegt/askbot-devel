@@ -81,7 +81,7 @@
     {% endfor %}
     <h3 class="or_label">{% trans 'Or...' %}</h3>
     <fieldset>
-        {% trans 'Click' %} <a href="{% url auth_local_register %}">here</a> {% trans "if you're having troubles signing in." %}
+        {% trans 'Click' %} <a href="{% url auth_request_tempsignin %}">here</a> {% trans "if you're having troubles signing in." %}
     </fieldset>
     <script type="text/html" id="simple_form_template">
         <fieldset id="slot_form">
