@@ -115,7 +115,7 @@ def process_provider_signin(request, provider):
             return HttpResponseRedirect(reverse('auth_signin'))
         else:
             if isinstance(assoc_key, (type, User)):
-                return login_and_forward(request, assoc_key)    
+                return login_and_forward(request, assoc_key) 
 
         try:
             assoc = AuthKeyUserAssociation.objects.get(key=assoc_key)
