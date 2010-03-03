@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.utils.translation import ugettext as _
 
 from forms import ClassicRegisterForm
 from forum.authentication.forms import SimpleEmailSubscribeForm
@@ -19,7 +20,7 @@ def register(request):
             user_ = User.objects.create_user( username,email,password )
             send_validation_email(user_)
             email_feeds_form.save(user_)
-            return login_and_forward(request, user_)
+            return login_and_forward(request, user_, None, _("A validation email has been sent to your email address. "))
     else:
         form = ClassicRegisterForm(initial={'next':'/'})
         email_feeds_form = SimpleEmailSubscribeForm()

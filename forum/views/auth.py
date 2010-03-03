@@ -212,6 +212,8 @@ def request_temp_login(request):
                 'user': user
             })
 
+            request.user.message_set.create(message=_("An email has been sent with your temporary login key"))
+
             return HttpResponseRedirect(reverse('index'))
     else:
         form = TemporaryLoginRequestForm()
@@ -224,7 +226,6 @@ def temp_signin(request, user, code):
     user = get_object_or_404(User, id=user)
 
     if (ValidationHash.objects.validate(code, user, 'templogin', [user.id])):
-        print user.get_absolute_url()
         return login_and_forward(request,  user, reverse('user_authsettings'),
                 _("You are logged in with a temporary access key, please take the time to fix your issue with authentication."))
     else:

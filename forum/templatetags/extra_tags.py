@@ -363,9 +363,9 @@ class FullUrlNode(template.Node):
 
     def render(self, context):
         domain = settings.APP_URL
-        protocol = getattr(settings, "PROTOCOL", "http")
+        #protocol = getattr(settings, "PROTOCOL", "http")
         path = self.default_node.render(context)
-        return "%s://%s%s" % (protocol, domain, path)
+        return "%s%s" % (domain, path)
 
 @register.tag(name='fullurl')
 def fullurl(parser, token):
@@ -375,8 +375,8 @@ def fullurl(parser, token):
 @register.simple_tag
 def fullmedia(url):
     domain = settings.APP_URL
-    protocol = getattr(settings, "PROTOCOL", "http")
+    #protocol = getattr(settings, "PROTOCOL", "http")
     path = media(url)
-    return "%s://%s%s" % (protocol, domain, path)
+    return "%s%s" % (domain, path)
 
 
