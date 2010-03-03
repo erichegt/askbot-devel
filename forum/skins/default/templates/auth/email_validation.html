@@ -1,0 +1,20 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+{% load extra_tags %}
+
+{% block content %}
+    <p>{% trans "Greetings from the Q&A forum" %},</p>
+
+    <p>{% trans "To make use of the Forum, please follow the link below:" %}</p>
+
+    <a href="{% fullurl auth_validate_email user=user.id,code=validation_code %}">{% fullurl auth_validate_email user=user.id,code=validation_code %}</a>
+
+    <p>{% trans "Following the link above will help us verify your email address." %}</p>
+
+    <p>{% blocktrans %}If you beleive that this message was sent in mistake -
+    no further action is needed. Just ingore this email, we apologize
+    for any inconvenience{% endblocktrans %}</p>
+
+    <p>{% blocktrans %}Sincerely,<br />
+    Forum Administrator{% endblocktrans %}</p>
+{% endblock %}

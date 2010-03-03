@@ -4,7 +4,7 @@ from django.template import RequestContext
 
 from forms import ClassicRegisterForm
 from forum.authentication.forms import SimpleEmailSubscribeForm
-from forum.views.auth import login_and_forward
+from forum.views.auth import login_and_forward, send_validation_email
 
 def register(request):
     if request.method == 'POST':
@@ -17,8 +17,8 @@ def register(request):
             email = form.cleaned_data['email']
 
             user_ = User.objects.create_user( username,email,password )
+            send_validation_email(user_)
             email_feeds_form.save(user_)
-            #todo: email validation
             return login_and_forward(request, user_)
     else:
         form = ClassicRegisterForm(initial={'next':'/'})

@@ -46,12 +46,8 @@
                             {% endif %}
                         {% separator %}
                             {% ifequal request.user view_user %}
-                            <a href="{% url auth_signin %}">add authentication method</a>
+                            <a href="{% url user_authsettings %}">authentication settings</a>
                             {% endifequal %}
-                        {% separator %}
-                            {% if request.user.has_usable_password %}
-                                <a href="{% url user_changepw %}">change password</a>
-                            {% endif %}
                         {% endjoinitems %}
                     </td>
                 </tr>  

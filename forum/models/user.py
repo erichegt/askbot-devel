@@ -1,6 +1,9 @@
 from base import *
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from hashlib import md5
+import string
+from random import Random
 
 from django.utils.translation import ugettext as _
 
@@ -57,19 +60,72 @@ class EmailFeedSetting(models.Model):
     class Meta:
         app_label = 'forum'
 
-class AnonymousEmail(models.Model):
-    #validation key, if used
-    key = models.CharField(max_length=32)
-    email = models.EmailField(null=False,unique=True)
-    isvalid = models.BooleanField(default=False)
+from forum.utils.time import one_day_from_now
+
+class ValidationHashManager(models.Manager):
+    def _generate_md5_hash(self, user, type, hash_data, seed):
+        return md5("%s%s%s%s" % (seed, "".join(map(str, hash_data)), user.id, type)).hexdigest()
+
+    def create_new(self, user, type, hash_data=[], expiration=None):
+        seed = ''.join(Random().sample(string.letters+string.digits, 12))
+        hash = self._generate_md5_hash(user, type, hash_data, seed)
+
+        obj = ValidationHash(hash_code=hash, seed=seed, user=user, type=type)
+
+        if expiration is not None:
+            obj.expiration = expiration
+
+        try:
+            obj.save()
+        except:
+            return None
+            
+        return obj
+
+    def validate(self, hash, user, type, hash_data=[]):
+        try:
+            obj = self.get(hash_code=hash)
+        except:
+            return False
+
+        if obj.type != type:
+            return False
+
+        if obj.user != user:
+            return False
+
+        valid = (obj.hash_code == self._generate_md5_hash(obj.user, type, hash_data, obj.seed))
+
+        if valid:
+            if obj.expiration < datetime.datetime.now():
+                obj.delete()
+                return False
+            else:
+                obj.delete()
+                return True
+
+        return False
+
+class ValidationHash(models.Model):
+    hash_code = models.CharField(max_length=256,unique=True)
+    seed = models.CharField(max_length=12)
+    expiration = models.DateTimeField(default=one_day_from_now)
+    type = models.CharField(max_length=12)
+    user = models.ForeignKey(User)
+
+    objects = ValidationHashManager()
 
     class Meta:
+        unique_together = ('user', 'type')
         app_label = 'forum'
+
+    def __str__(self):
+        return self.hash_code
 
 class AuthKeyUserAssociation(models.Model):
     key = models.CharField(max_length=255,null=False,unique=True)
     provider = models.CharField(max_length=64)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="auth_keys")
     added_at = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:

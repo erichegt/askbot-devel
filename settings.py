@@ -28,14 +28,14 @@ MIDDLEWARE_CLASSES = [
     'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'forum.middleware.pagesize.QuestionsPageSizeMiddleware',
     'forum.middleware.cancel.CancelActionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'recaptcha_django.middleware.ReCaptchaMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'context.application_settings',
+    'forum.context.application_settings',
     #'django.core.context_processors.i18n',
     'forum.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin

@@ -73,12 +73,16 @@
         <input type="hidden" class="validate_email" name="validate_email" value="yes" />
     </form>
     {% for provider in stackitem_providers %}
-        <h3 class="or_label">Or...</h3>
+        <h3 class="or_label">{% trans 'Or...' %}</h3>
         <form class="signin_form" method="POST" action="{% url auth_provider_signin provider=provider.id %}">
             {% include provider.stack_item_template %}
             <input type="hidden" class="validate_email" name="validate_email" value="yes" />
         </form>
     {% endfor %}
+    <h3 class="or_label">{% trans 'Or...' %}</h3>
+    <fieldset>
+        {% trans 'Click' %} <a href="{% url auth_local_register %}">here</a> {% trans "if you're having troubles signing in." %}
+    </fieldset>
     <script type="text/html" id="simple_form_template">
         <fieldset id="slot_form">
               <p id="provider_name_slot">{% trans 'Enter your ' %}%%YOUR_WHAT%%</p>

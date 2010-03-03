@@ -947,43 +947,12 @@ USER_TEMPLATE_VIEWS = (
     )
 )
 
-def user(request, id):
+def user(request, id, slug=None):
     sort = request.GET.get('sort', 'stats')
     user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
     from forum.views import users
     func = user_view.view_func
     return func(request, id, user_view)
-
-
-@login_required
-def changepw(request):
-    """
-    change password view.
-
-    url : /changepw/
-    template: authopenid/changepw.html
-    """
-    logging.debug('')
-    user_ = request.user
-
-    if not user_.has_usable_password():
-        raise Http404
-
-    if request.POST:
-        form = ChangePasswordForm(request.POST, user=user_)
-        if form.is_valid():
-            user_.set_password(form.cleaned_data['password1'])
-            user_.save()
-            msg = _("Password changed.")
-            redirect = "%s?msg=%s" % (
-                    reverse('user_account_settings'),
-                    urlquote_plus(msg))
-            return HttpResponseRedirect(redirect)
-    else:
-        form = ChangePasswordForm(user=user_)
-
-    return render_to_response('changepw.html', {'form': form },
-                                context_instance=RequestContext(request))
 
 @login_required
 def account_settings(request):

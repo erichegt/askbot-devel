@@ -13,6 +13,7 @@ from forum.models import Question, Answer, QuestionRevision, AnswerRevision
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
+from django.template.defaulttags import url as default_url
 from forum import skins
 
 register = template.Library()
@@ -355,3 +356,27 @@ def blockmedia(parser,token):
         if next.contents == 'endblockmedia':
             break
     return BlockMediaUrlNode(nodelist)
+
+class FullUrlNode(template.Node):
+    def __init__(self, default_node):
+        self.default_node = default_node
+
+    def render(self, context):
+        domain = settings.APP_URL
+        protocol = getattr(settings, "PROTOCOL", "http")
+        path = self.default_node.render(context)
+        return "%s://%s%s" % (protocol, domain, path)
+
+@register.tag(name='fullurl')
+def fullurl(parser, token):
+    default_node = default_url(parser, token)
+    return FullUrlNode(default_node)
+
+@register.simple_tag
+def fullmedia(url):
+    domain = settings.APP_URL
+    protocol = getattr(settings, "PROTOCOL", "http")
+    path = media(url)
+    return "%s://%s%s" % (protocol, domain, path)
+
+

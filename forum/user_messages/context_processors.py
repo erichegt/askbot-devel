@@ -17,6 +17,9 @@ def user_messages (request):
     #if request.user.is_authenticated():
     #else:
     #    messages = LazyMessages(request)
+    #import inspect
+    #print inspect.stack()[1]
+    #print messages
     return { 'user_messages': messages }
 
 class LazyMessages (StrAndUnicode):
