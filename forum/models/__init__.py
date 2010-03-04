@@ -205,7 +205,7 @@ def notify_award_message(instance, created, **kwargs):
                 + u"Check out <a href=\"%s\">your profile</a>.") \
                 % (instance.badge.name, user.get_profile_url())
 
-        user.message_set.create(message=message)
+        user.message_set.create(message=msg)
 
 def record_answer_accepted(instance, created, **kwargs):
     """
