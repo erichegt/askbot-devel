@@ -85,9 +85,18 @@ class ReputeManager(models.Manager):
             today = datetime.date.today()
             sums = self.filter(models.Q(reputation_type=1) | models.Q(reputation_type=-8),
                                 user=user, reputed_at__range=(today, today + datetime.timedelta(1))). \
-                               agregate(models.Sum('positive'), models.Sum('negative'))            
+                               aggregate(models.Sum('positive'), models.Sum('negative'))            
 
-            return sums['positive__sum'] + sums['negative__sum']
+            positive = sums['positive__sum']
+            negative = sums['negative__sum']
+
+            if positive is None:
+                positive = 0
+
+            if negative is None:
+                negative = 0
+                
+            return positive + negative
         else:
             return 0
 

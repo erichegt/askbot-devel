@@ -111,7 +111,7 @@
 </div>
 {% endif %}
 <div id="feeds">
-<a href="{% media  "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
+<a href="{% url  latest_questions_feed %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
 {% endblock %}
 {% block tail %}

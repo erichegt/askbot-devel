@@ -58,7 +58,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/revisions_answer.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/revisions_answer.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up-on.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up-on.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/INSTALL" afterPath="$PROJECT_DIR$/INSTALL" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/authentication.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/authentication.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/__init__.py" afterPath="$PROJECT_DIR$/forum/skins/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up.png" />
@@ -97,8 +96,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/__init__.py" afterPath="$PROJECT_DIR$/forum/middleware/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/yahoo.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/yahoo.gif" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/forms.py" afterPath="$PROJECT_DIR$/forum/utils/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/answer.py" afterPath="$PROJECT_DIR$/forum/models/answer.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/sample_command.py" afterPath="$PROJECT_DIR$/forum/management/commands/sample_command.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/answer.py" afterPath="$PROJECT_DIR$/forum/models/answer.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/openid.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/openid.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo.png" />
@@ -143,8 +142,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/google.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/google.gif" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/authentication/__init__.py" afterPath="$PROJECT_DIR$/forum/authentication/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/base.py" afterPath="$PROJECT_DIR$/forum/models/base.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/lib/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/lib/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/base.py" afterPath="$PROJECT_DIR$/forum/models/base.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/templatetags/extra_tags.py" afterPath="$PROJECT_DIR$/forum/templatetags/extra_tags.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/models.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/style.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/style.css" />
@@ -159,8 +158,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_edit_tips.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_edit_tips.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/const.py" afterPath="$PROJECT_DIR$/forum/const.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/question.py" afterPath="$PROJECT_DIR$/forum/models/question.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cron/once_award_badges_virtualenv" afterPath="$PROJECT_DIR$/cron/once_award_badges_virtualenv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/question.py" afterPath="$PROJECT_DIR$/forum/models/question.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal-1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal-1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.min.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.min.js" />
@@ -224,6 +223,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/blogger.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/blogger.ico" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/handlers.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/handlers.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" afterPath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/settings.py" afterPath="$PROJECT_DIR$/forum/settings.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/meta.py" afterPath="$PROJECT_DIR$/forum/models/meta.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/google.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/google.gif" />
@@ -376,10 +376,28 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings.py">
+      <file leaf-file-name="repute.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/models/repute.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="1" selection-start="2690" selection-end="2690" vertical-scroll-proportion="0.0">
+            <state line="97" column="16" selection-start="3777" selection-end="3777" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="113" column="38" selection-start="4999" selection-end="4999" vertical-scroll-proportion="0.5612903">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/skins/default/media/style/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1013" column="1" selection-start="17211" selection-end="17218" vertical-scroll-proportion="-21.36">
               <folding />
             </state>
           </provider>
@@ -388,43 +406,16 @@
       <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="35" selection-start="4847" selection-end="4847" vertical-scroll-proportion="0.0">
+            <state line="109" column="77" selection-start="7604" selection-end="7625" vertical-scroll-proportion="-17.2">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="header.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/header.html">
+      <file leaf-file-name="feed.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/feed.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="29" selection-start="207" selection-end="283" vertical-scroll-proportion="-4.9583335">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/users.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="94" selection-start="2171" selection-end="2171" vertical-scroll-proportion="-14.875">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="questions.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/questions.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="16" selection-start="4128" selection-end="4128" vertical-scroll-proportion="0.8308458">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="8" selection-start="1653" selection-end="3273" vertical-scroll-proportion="-0.7083333">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -433,23 +424,14 @@
       <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/models/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="95" column="88" selection-start="4150" selection-end="4150" vertical-scroll-proportion="-15.24">
+            <state line="95" column="61" selection-start="4124" selection-end="4124" vertical-scroll-proportion="-20.68">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings_local.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings_local.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="32" selection-start="747" selection-end="747" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings_local.py.dist" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings_local.py.dist">
+      <file leaf-file-name="base.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/models/base.py">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -458,9 +440,18 @@
         </entry>
       </file>
       <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="5" selection-start="985" selection-end="985" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forum/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="59" selection-start="122" selection-end="122" vertical-scroll-proportion="0.0">
+            <state line="38" column="49" selection-start="1218" selection-end="1233" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -476,22 +467,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/forum/skins/default/templates/base_content.html" />
-        <option value="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
-        <option value="$PROJECT_DIR$/forum/skins/default/templates/auth/signin.html" />
         <option value="$PROJECT_DIR$/forum/views/auth.py" />
         <option value="$PROJECT_DIR$/forum_modules/localauth/views.py" />
         <option value="$PROJECT_DIR$/forum/templatetags/extra_tags.py" />
         <option value="$PROJECT_DIR$/forum/settings_builder.py" />
         <option value="$PROJECT_DIR$/INSTALL" />
         <option value="$PROJECT_DIR$/forum/settings.py" />
-        <option value="$PROJECT_DIR$/settings.py" />
         <option value="$PROJECT_DIR$/forum/skins/default/templates/header.html" />
-        <option value="$PROJECT_DIR$/forum/models/__init__.py" />
-        <option value="$PROJECT_DIR$/forum/skins/default/templates/index.html" />
-        <option value="$PROJECT_DIR$/forum/urls.py" />
         <option value="$PROJECT_DIR$/forum/skins/default/templates/users.html" />
         <option value="$PROJECT_DIR$/forum/skins/default/templates/questions.html" />
+        <option value="$PROJECT_DIR$/forum/skins/default/templates/user_stats.html" />
+        <option value="$PROJECT_DIR$/forum/skins/default/templates/user_tabs.html" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/forum/models/repute.py" />
+        <option value="$PROJECT_DIR$/forum/urls.py" />
+        <option value="$PROJECT_DIR$/forum/models/__init__.py" />
+        <option value="$PROJECT_DIR$/forum/skins/default/templates/index.html" />
       </list>
     </option>
   </component>
@@ -578,6 +569,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="skins" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -603,8 +612,34 @@
               <option name="myItemId" value="default" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="skins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="style" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -627,6 +662,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="default" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="media" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -956,114 +995,114 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/osqa-requirements.txt">
+    <entry file="file://$PROJECT_DIR$/forum/views/writers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/osqa.wsgi.dist">
+    <entry file="file://$PROJECT_DIR$/forum/views/commands.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="36" selection-start="102" selection-end="138" vertical-scroll-proportion="0.0">
+        <state line="65" column="38" selection-start="2466" selection-end="2468" vertical-scroll-proportion="-3.96">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/modules.py">
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/about.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings_local.py.dist">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings_local.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="32" selection-start="747" selection-end="747" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/INSTALL">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="24" selection-start="905" selection-end="905" vertical-scroll-proportion="0.81832296">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="59" selection-start="122" selection-end="122" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="1" selection-start="2690" selection-end="2690" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/models/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="88" selection-start="4150" selection-end="4150" vertical-scroll-proportion="-15.24">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/question.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.16915423">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.056384742">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/header.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="29" selection-start="207" selection-end="283" vertical-scroll-proportion="-4.9583335">
+        <state line="20" column="87" selection-start="912" selection-end="912" vertical-scroll-proportion="-7.7916665">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/user.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/user_stats.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="111" column="113" selection-start="5031" selection-end="5031" vertical-scroll-proportion="-4.0416665">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/user_tabs.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="76" selection-start="2050" selection-end="2050" vertical-scroll-proportion="-19.125">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="49" selection-start="1218" selection-end="1233" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="5" selection-start="985" selection-end="985" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/repute.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="97" column="16" selection-start="3777" selection-end="3777" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/feed.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="61" selection-start="4124" selection-end="4124" vertical-scroll-proportion="-20.68">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/media/style/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1013" column="1" selection-start="17211" selection-end="17218" vertical-scroll-proportion="-21.36">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="35" selection-start="4847" selection-end="4847" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/users.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="94" selection-start="2171" selection-end="2171" vertical-scroll-proportion="-14.875">
+        <state line="109" column="77" selection-start="7604" selection-end="7625" vertical-scroll-proportion="-17.2">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="8" selection-start="1653" selection-end="3273" vertical-scroll-proportion="-0.7083333">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/questions.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="16" selection-start="4128" selection-end="4128" vertical-scroll-proportion="0.8308458">
+        <state line="113" column="38" selection-start="4999" selection-end="4999" vertical-scroll-proportion="0.5612903">
           <folding />
         </state>
       </provider>

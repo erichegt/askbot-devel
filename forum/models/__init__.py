@@ -93,7 +93,7 @@ def delete_messages(self):
 
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
-    return reverse('user_prof', kwargs={'id': self.id, 'slug': slugify(self.username)})
+    return "/users/%d/%s" % (self.id, slugify(self.username))
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)

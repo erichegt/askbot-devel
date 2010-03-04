@@ -105,7 +105,9 @@ urlpatterns = patterns('',
 
     #url(r'^%s%s%s$' % (_('accounts/'), _('password/'), _('confirm/')), app.user.confirmchangepw, name='user_confirmchangepw'),
     #url(r'^%s$' % _('account/'), app.users.account_settings, name='user_account_settings'),
-    #url(r'^%s$' % _('delete/'), app.users.delete, name='user_delete'),    
+    #url(r'^%s$' % _('delete/'), app.users.delete, name='user_delete'),
+
+    url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
 )
 
 from forum.modules import get_modules_script
