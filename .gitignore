@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 *.log
+cache/??
 osqa.wsgi
 nbproject
 settings_local.py

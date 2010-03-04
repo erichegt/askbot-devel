@@ -1,6 +1,8 @@
 from base import *
 from tag import Tag
 
+from forum.utils.lists import LazyList
+
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
         question = Question(
@@ -98,17 +100,25 @@ class QuestionManager(models.Manager):
         Questions with the individual tags will be added to list if above questions are not full.
         """
         #print datetime.datetime.now()
-        questions = list(self.filter(tagnames = question.tagnames, deleted=False).all())
 
-        tags_list = question.tags.all()
-        for tag in tags_list:
-            extend_questions = self.filter(tags__id = tag.id, deleted=False)[:50]
-            for item in extend_questions:
-                if item not in questions and len(questions) < 10:
-                    questions.append(item)
+        manager = self
 
-        #print datetime.datetime.now()
-        return questions
+        def get_data():
+            questions = list(manager.filter(tagnames = question.tagnames, deleted=False).all())
+
+            tags_list = question.tags.all()
+            for tag in tags_list:
+                extend_questions = manager.filter(tags__id = tag.id, deleted=False)[:50]
+                for item in extend_questions:
+                    if item not in questions and len(questions) < 10:
+                        questions.append(item)
+
+            #print datetime.datetime.now()
+            return questions
+
+        return LazyList(get_data)
+
+
 
 class Question(Content, DeletableContent):
     title    = models.CharField(max_length=300)

@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
+from django.views.decorators.cache import cache_page
 
 from forum.utils.html import sanitize_html
 from markdown2 import Markdown
