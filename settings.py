@@ -28,7 +28,6 @@ MIDDLEWARE_CLASSES = [
     'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'forum.middleware.pagesize.QuestionsPageSizeMiddleware',
     'forum.middleware.cancel.CancelActionMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     #'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 ]
@@ -69,8 +68,13 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'forum',
-    'debug_toolbar' ,
 ]
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
+
+#from forum.settings import setup_settings
+#import settings
+#setup_settings(settings)
+
+#print INSTALLED_APPS
 

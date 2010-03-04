@@ -54,7 +54,7 @@
 		<div class="userinfo">
 			<span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
 			{% if question.last_activity_by %}
-			<a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
+			<a href="/users/{{ question.last_activity_by.id }}/{{ question.last_activity_by.username|slugify }}/">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
 			{% endif %}
 		</div>
 
@@ -102,7 +102,7 @@
                 <li>
                 <a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
                 <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a> {% trans "given to" %}
-                <a href="{% url users %}{{award.user_id}}/{{award.user_name}}">{{ award.user_name }}</a>
+                <a href="/users/{{ award.user_id }}/{{ award.user_name|slugify }}/">{{ award.user_name }}</a>
                 </li>
             {% endfor %}
             </ul>
