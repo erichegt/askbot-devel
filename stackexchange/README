@@ -1,14 +1,14 @@
 this app's function will be to:
 
 * install it's own tables    <--- done 
-* read SE xml dump into DjangoDB
+* read SE xml dump into DjangoDB  <--- done
 * populate osqa database
 * remove SE tables
 
 So far models are automatically created via:
 
 1) add 'stackexchange' to the list of installed apps
-2) type commands
+2) run: 
 
     #in-place removal of xml namspace prefix to make parsing easier
     perl -pi -w -e 's/xs://g' $SE_DUMP_PATH/xsd/*.xsd 
@@ -17,3 +17,9 @@ So far models are automatically created via:
     python parse_models.py $SE_DUMP_PATH/xsd/*.xsd > models.py
     cd ..
     python manage.py syncdb
+
+3) run:
+
+    python manage.py load_stackexchange
+
+    does not yet populate final data
