@@ -18,8 +18,12 @@ So far models are automatically created via:
     cd ..
     python manage.py syncdb
 
+3) unzip SE dump into dump_dir (any directory name)
+   you may want to make sure that your dump directory in .gitignore file
+   so that you don't publish it by mistake
+
 3) run:
 
-    python manage.py load_stackexchange
+    python manage.py load_stackexchange dump_dir
 
     does not yet populate final data
