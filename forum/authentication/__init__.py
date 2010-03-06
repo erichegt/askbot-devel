@@ -7,7 +7,7 @@ class ConsumerAndContext():
         self.id = id
         self.consumer = consumer()
 
-        context.id = id
+        context.id = id #add extra field to context
         self.context = context
 
 consumers = dict([

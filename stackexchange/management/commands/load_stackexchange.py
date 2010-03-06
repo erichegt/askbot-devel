@@ -1,9 +1,13 @@
 from django.core.management.base import BaseCommand
 import os
+import re
 import sys
 import stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models
+import forum.models as osqa
+import stackexchange.models as se
+from forum.forms import EditUserEmailFeedsForm
 
 xml_read_order = (
         'VoteTypes','UserTypes','Users','Users2Votes',
@@ -16,6 +20,78 @@ xml_read_order = (
         'ModeratorMessages','Messages','Comments2Votes',
         )
 
+#association tables SE item id --> OSQA item id
+#table associations are implied
+USER = {}#SE User.id --> django(OSQA) User.id
+NAMESAKE_COUNT = {}# number of times user name was used - for X.get_screen_name
+
+class X(object):#
+    """class with methods for handling some details
+    of SE --> OSQA mapping
+    """
+    osqa_supported_id_providers = (
+            'google','yahoo','aol','myopenid',
+            'flickr','technorati',#todo: typo in code openidauth/authentication.py !
+            'wordpress','blogger','livejournal',
+            'claimid','vidoop','verisign',
+            'openidurl','facebook','local',
+            'twitter' #oauth is not on this list, b/c it has no own url
+            )
+    badge_type_map = {'1':'gold','2':'silver','3':'bronze'}
+
+    @classmethod
+    def get_screen_name(cls, se_display_name):
+    """always returns unique screen name
+    even if there are multiple users in SE 
+    with the same exact screen name
+    """
+        name = se_display_name.strip()
+        name = re.subn(r'\s+',' ',name)#remove repeating spaces
+        
+        try:
+            osqa.User.objects.get(username = name)
+            try:
+                name += ', %' % u.location
+                if name in NAMESAKE_COUNT:
+                    NAMESAKE_COUNT[name] += 1
+                    name += ' %d' % NAMESAKE_COUNT[name]
+                except osqa.User.DoesNotExist:
+                    NAMESAKE_COUNT[name] = 1
+                    return name
+            except osqa.User.DoesNotExist:
+                return name
+        except osqa.User.DoesNotExist:
+            return name
+
+    #crude method of getting id provider name from the url
+    @classmethod
+    def get_openid_provider_name(cls, openid_url):
+        openid_str = str(openid_url)
+        bits = openid_str.split('/')
+        base_url = bits[2] #assume this is base url
+        url_bits = base_url.split('.')
+        provider_name = url_bits[-2].lower()
+        if provider_name not in cls.osqa_supported_id_providers:
+            raise Exception('could not determine login provider for %s' % openid_url)
+        return provider_name
+
+    @classmethod
+    def parse_badge_summary(cls, badge_summary):
+        (gold,silver,bronze) = (0,0,0)
+        if len(badge_summary) > 3:
+            print 'warning: guessing that badge summary is comma separated'
+            print 'have %s' % badge_summary
+            bits = badge_summary.split(',')
+        else:
+            bits = [badge_summary]
+        for bit in bits:
+            m = re.search(r'^(?P<type>[1-3])=(?P<count>\d+)$', bit)
+            if not m:
+                raise Exception('could not parse badge summary: %s' % badge_summary)
+            else:
+                badge_type = cls.badge_type_map[m.groupdict['type']]
+                locals()[badge_type] = int(m.groupdict['count'])
+        return (gold,silver,bronze)
 
 class Command(BaseCommand):
     help = 'Loads StackExchange data from unzipped directory of XML files into the OSQA database'
@@ -27,10 +103,14 @@ class Command(BaseCommand):
             sys.exit(1)
 
         self.dump_path = arg[0]
+        #read the data into SE tables
         for xml in xml_read_order:
             xml_path = self.get_xml_path(xml)
             table_name = self.get_table_name(xml)
             self.load_xml_file(xml_path, table_name)
+
+        #transfer data into OSQA tables
+        self.transfer_users()
 
     def load_xml_file(self, xml_path, table_name):
         tree = et.parse(xml_path)
@@ -57,3 +137,78 @@ class Command(BaseCommand):
             print 'Error: file %s not found' % xml_path
             sys.exit(1)
         return xml_path
+
+    def transfer_users(self):
+        for se_u in se.User.objects.all():
+            if se_u.id < 1:#skip the Community user
+                continue
+            u = osqa.User()
+            u_type = se_u.user_type.name
+            if u_type == 'Administrator':
+                u.is_superuser = True
+            elif u_type == 'Moderator':
+                u.is_staff = True
+            elif u_type == 'Registered':
+                assert(se_u.open_id)#this must be true by definition of Registered user
+                u_auth = osqa.AuthKeyUserAssociation()
+                u_auth.key = se_u.open_id
+                u_auth.provider = X.get_openid_provider_name(se.open_id)
+                u_auth.added_at = se_u.creation_date
+
+            elif u_type == 'Unregistered':
+                raise Exception('dont know what to do with unregistered users')
+            else:
+                raise Exception('unknown SE user type %s' % u_type)
+            u.reputation = se_u.reputation
+            u.last_seen = se_u.last_access_date
+            u.email = se_u.email
+            u.location = se_u.location
+            u.date_of_birth = se_u.birthday #dattime -> date
+            u.website = se_u.website_url
+            u.about = se_u.about_me
+            u.last_login = se_u.last_login_date
+            u.date_joined = se_u.creation_date
+            u.is_active = True #todo: this may not be the case
+
+            u.username = X.get_screen_name(se_u.display_name)
+            u.real_name = se_u.real_name
+
+            (gold,silver,bronze) = X.parse_badge_summary(se_u.badge_summary)
+            u.gold = gold
+            u.silver = silver
+            u.bronze = bronze
+
+            #todo: we don't have these fields
+            #views - number of profile views?
+            #has_replies
+            #has_message
+            #opt_in_recruit
+            #last_login_ip
+            #open_id_alt - ??
+            #preferences_raw - not clear how to use
+            #display_name_cleaned - lowercased, srtipped name
+            #timed_penalty_date
+            #phone
+
+            #don't know how to handle these - there was no usage example
+            #password_id
+            #guid
+
+            #ignored
+            #last_email_date - this translates directly to EmailFeedSetting.reported_at
+
+            #save the data
+            u.save()
+            form = EditUserEmailFeedsForm()
+            form.reset()
+            if se_u.opt_in_email == True:#set up daily subscription on "own" items
+                form.cleaned_data['individually_selected'] = 'd'
+                form.cleaned_data['asked_by_me'] = 'd'
+                form.cleaned_data['answered_by_me'] = 'd'
+            #
+            form.save(user=u, save_unbound=True)
+
+            if 'u_auth' in locals():
+                u_auth.user = u
+                u_auth.save()
+            USER[se_u.id] = u.id
