@@ -1,0 +1,5 @@
+* several user accounts with same email
+* users with no openid
+* users with no email (hack: gravatar set to settings.ANONYMOUS_USER_EMAIL)
+* users with no screen name
+* users with no email and no screen name (25% in homeschool)

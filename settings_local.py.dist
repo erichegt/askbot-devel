@@ -48,6 +48,9 @@ EMAIL_HOST='osqa.net'
 EMAIL_PORT='25'
 EMAIL_USE_TLS=False
 
+#HACK - anonymous user email - for email-less users
+ANONYMOUS_USER_EMAIL = 'anonymous@osqa.net'
+
 #LOCALIZATIONS
 TIME_ZONE = 'America/New_York'
 

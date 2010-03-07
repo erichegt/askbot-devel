@@ -323,10 +323,11 @@ class EditUserEmailFeedsForm(forms.Form):
         return self
 
     def reset(self):
-        self.cleaned_data['all_questions'] = 'n'
-        self.cleaned_data['asked_by_me'] = 'n'
-        self.cleaned_data['answered_by_me'] = 'n'
-        self.cleaned_data['individually_selected'] = 'n'
+        if self.is_bound:
+            self.cleaned_data['all_questions'] = 'n'
+            self.cleaned_data['asked_by_me'] = 'n'
+            self.cleaned_data['answered_by_me'] = 'n'
+            self.cleaned_data['individually_selected'] = 'n'
         self.initial = self.NO_EMAIL_INITIAL
         return self
 

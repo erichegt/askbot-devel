@@ -8,6 +8,7 @@ from django.db import models
 import forum.models as osqa
 import stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
+from django.conf import settings
 
 xml_read_order = (
         'VoteTypes','UserTypes','Users','Users2Votes',
@@ -29,6 +30,8 @@ class X(object):#
     """class with methods for handling some details
     of SE --> OSQA mapping
     """
+    badge_type_map = {'1':'gold','2':'silver','3':'bronze'}
+
     osqa_supported_id_providers = (
             'google','yahoo','aol','myopenid',
             'flickr','technorati',#todo: typo in code openidauth/authentication.py !
@@ -37,31 +40,41 @@ class X(object):#
             'openidurl','facebook','local',
             'twitter' #oauth is not on this list, b/c it has no own url
             )
-    badge_type_map = {'1':'gold','2':'silver','3':'bronze'}
 
     @classmethod
-    def get_screen_name(cls, se_display_name):
-    """always returns unique screen name
-    even if there are multiple users in SE 
-    with the same exact screen name
-    """
-        name = se_display_name.strip()
-        name = re.subn(r'\s+',' ',name)#remove repeating spaces
+    def get_screen_name(cls, name):
+        """always returns unique screen name
+        even if there are multiple users in SE 
+        with the same exact screen name
+        """
+        if name is None:
+            name = 'anonymous'
+        name = name.strip()
+        name = re.subn(r'\s+',' ',name)[0]#remove repeating spaces
         
         try:
-            osqa.User.objects.get(username = name)
+            u = osqa.User.objects.get(username = name)
             try:
-                name += ', %' % u.location
+                if u.location:
+                    name += ', %s' % u.location
                 if name in NAMESAKE_COUNT:
                     NAMESAKE_COUNT[name] += 1
                     name += ' %d' % NAMESAKE_COUNT[name]
-                except osqa.User.DoesNotExist:
+                else:
                     NAMESAKE_COUNT[name] = 1
-                    return name
             except osqa.User.DoesNotExist:
-                return name
+                pass
         except osqa.User.DoesNotExist:
-            return name
+            NAMESAKE_COUNT[name] = 1
+        return name
+
+    @classmethod
+    def get_email(cls, email):#todo: fix fringe case - user did not give email!
+        if email is None:
+            return settings.ANONYMOUS_USER_EMAIL
+        else:
+            assert(email != '')
+            return email
 
     #crude method of getting id provider name from the url
     @classmethod
@@ -75,22 +88,30 @@ class X(object):#
             raise Exception('could not determine login provider for %s' % openid_url)
         return provider_name
 
+    @staticmethod
+    def blankable(input):
+        if input is None:
+            return ''
+        else:
+            return input
+
     @classmethod
     def parse_badge_summary(cls, badge_summary):
         (gold,silver,bronze) = (0,0,0)
-        if len(badge_summary) > 3:
-            print 'warning: guessing that badge summary is comma separated'
-            print 'have %s' % badge_summary
-            bits = badge_summary.split(',')
-        else:
-            bits = [badge_summary]
-        for bit in bits:
-            m = re.search(r'^(?P<type>[1-3])=(?P<count>\d+)$', bit)
-            if not m:
-                raise Exception('could not parse badge summary: %s' % badge_summary)
+        if badge_summary: 
+            if len(badge_summary) > 3:
+                print 'warning: guessing that badge summary is comma separated'
+                print 'have %s' % badge_summary
+                bits = badge_summary.split(',')
             else:
-                badge_type = cls.badge_type_map[m.groupdict['type']]
-                locals()[badge_type] = int(m.groupdict['count'])
+                bits = [badge_summary]
+            for bit in bits:
+                m = re.search(r'^(?P<type>[1-3])=(?P<count>\d+)$', bit)
+                if not m:
+                    raise Exception('could not parse badge summary: %s' % badge_summary)
+                else:
+                    badge_type = cls.badge_type_map[m.groupdict()['type']]
+                    locals()[badge_type] = int(m.groupdict()['count'])
         return (gold,silver,bronze)
 
 class Command(BaseCommand):
@@ -148,30 +169,35 @@ class Command(BaseCommand):
                 u.is_superuser = True
             elif u_type == 'Moderator':
                 u.is_staff = True
-            elif u_type == 'Registered':
-                assert(se_u.open_id)#this must be true by definition of Registered user
+            elif u_type not in ('Unregistered', 'Registered'):
+                raise Exception('unknown user type %s' % u_type)
+
+            #if user is not registered, no association record created
+            #we do not allow posting by users who are not authenticated
+            #probably they'll just have to "recover" their account by email
+            if u_type != 'Unregistered':
+                assert(se_u.open_id)#everybody must have open_id
                 u_auth = osqa.AuthKeyUserAssociation()
                 u_auth.key = se_u.open_id
-                u_auth.provider = X.get_openid_provider_name(se.open_id)
+                u_auth.provider = X.get_openid_provider_name(se_u.open_id)
                 u_auth.added_at = se_u.creation_date
 
-            elif u_type == 'Unregistered':
-                raise Exception('dont know what to do with unregistered users')
-            else:
-                raise Exception('unknown SE user type %s' % u_type)
+            if se_u.open_id is None and se_u.email is None:
+                print 'Warning: SE user %d is not recoverable (no email or openid)'
+
             u.reputation = se_u.reputation
             u.last_seen = se_u.last_access_date
-            u.email = se_u.email
-            u.location = se_u.location
+            u.email = X.get_email(se_u.email)
+            u.location = X.blankable(se_u.location)
             u.date_of_birth = se_u.birthday #dattime -> date
-            u.website = se_u.website_url
-            u.about = se_u.about_me
+            u.website = X.blankable(se_u.website_url)
+            u.about = X.blankable(se_u.about_me)
             u.last_login = se_u.last_login_date
             u.date_joined = se_u.creation_date
             u.is_active = True #todo: this may not be the case
 
             u.username = X.get_screen_name(se_u.display_name)
-            u.real_name = se_u.real_name
+            u.real_name = X.blankable(se_u.real_name)
 
             (gold,silver,bronze) = X.parse_badge_summary(se_u.badge_summary)
             u.gold = gold
@@ -202,9 +228,9 @@ class Command(BaseCommand):
             form = EditUserEmailFeedsForm()
             form.reset()
             if se_u.opt_in_email == True:#set up daily subscription on "own" items
-                form.cleaned_data['individually_selected'] = 'd'
-                form.cleaned_data['asked_by_me'] = 'd'
-                form.cleaned_data['answered_by_me'] = 'd'
+                form.initial['individually_selected'] = 'd'
+                form.initial['asked_by_me'] = 'd'
+                form.initial['answered_by_me'] = 'd'
             #
             form.save(user=u, save_unbound=True)
 
