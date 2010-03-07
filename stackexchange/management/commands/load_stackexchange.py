@@ -8,7 +8,10 @@ from django.db import models
 import forum.models as osqa
 import stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
+from forum.utils.html import sanitize_html
 from django.conf import settings
+#from markdown2 import Markdown
+#markdowner = Markdown(html4tags=True)
 
 xml_read_order = (
         'VoteTypes','UserTypes','Users','Users2Votes',
@@ -40,6 +43,58 @@ class X(object):#
             'openidurl','facebook','local',
             'twitter' #oauth is not on this list, b/c it has no own url
             )
+
+    #these modes cannot be mixed
+    exclusive_revision_modes = (
+        'initial','edit','lock','unlock',
+        'migrate','close','reopen','merge',
+    )
+
+    revision_type_map = {
+        'Initial Title':'initial',
+        'Initial Body':'initial',
+        'Initial Tags':'initial',
+        'Edit Title':'edit',
+        'Edit Body':'edit',
+        'Edit Tags':'edit',
+        'Rollback Title':'rollback',
+        'Rollback Body':'rollback',
+        'Rollback Tags':'rollback',
+        'Post Closed':'close',
+        'Post Reopened':'reopen',
+        'Post Deleted':'delete',
+        'Post Undeleted':'undelete',
+        'Post Locked':'lock',
+        'Post Unlocked':'unlock',
+        'Community Owned':'wiki',
+        'Post Migrated':'migrate',
+        'Question Merged':'merge',
+    }
+
+    @classmethod
+    def get_post_revision_group_types(cls, rev_group):
+        rev_types = {} 
+        for rev in rev_group:
+            rev_type = cls.get_post_revision_type(rev)
+            rev_types[rev_type] = 1
+        rev_types = rev_types.keys()
+
+        #make sure that exclusive rev modes are not mixed
+        exclusive = cls.exclusive_revision_modes
+        if len(rev_types) > 1 and all([t in exclusive for t in rev_types]):
+            tstr = ','.join(rev_types)
+            gstr = ','.join([str(rev.id) for rev in rev_group])
+            msg = 'incompatible revision types %s in PostHistory %s' % (tstr,gstr)
+            raise Exception(msg)
+        return rev_types
+
+    @classmethod
+    def clean_tags(cls, tags):
+        tags = re.subn(r'\s+',' ',tags.strip())[0]
+        bits = tags.split(' ')
+        tags = ' '.join([bit[1:-1] for bit in bits])
+        tags = re.subn(r'\xf6','-',tags)[0]
+        return tags
 
     @classmethod
     def get_screen_name(cls, name):
@@ -75,6 +130,14 @@ class X(object):#
         else:
             assert(email != '')
             return email
+
+    @classmethod
+    def get_post_revision_type(cls, rev):
+        rev_name = rev.post_history_type.name
+        rev_type = cls.revision_type_map.get(rev_name, None)
+        if rev_type is None:
+            raise Exception('dont understand revision type %s' % rev)
+        return rev_type
 
     #crude method of getting id provider name from the url
     @classmethod
@@ -132,6 +195,113 @@ class Command(BaseCommand):
 
         #transfer data into OSQA tables
         self.transfer_users()
+        self.transfer_questions()
+        self.transfer_answers()
+        self.transfer_close_decisions()
+        self.transfer_comments()
+        self.transfer_badges()
+        self.transfer_votes()
+        self.transfer_favorites()
+        self.transfer_update_subscriptions()
+        self.transfer_flags()
+        self.transfer_meta_pages()
+
+    def _process_post_initial_revision_group(self, rev_group):
+
+        title = None
+        text = None
+        tags = None
+        wiki = False
+        author = USER[rev_group[0].user.id]
+        added_at = rev_group[0].creation_date
+
+        for rev in rev_group:
+            rev_type = rev.post_history_type.name
+            if rev_type == 'Initial Title':
+                title = rev.text
+            elif rev_type == 'Initial Body':
+                text = rev.text
+            elif rev_type == 'Initial Tags':
+                tags = X.clean_tags(rev.text)
+            elif rev_type == 'Community Owned':
+                wiki = True
+
+        if rev_group[0].post.post_type.name == 'Question':
+            osqa.Question.objects.create_new(
+                title            = title,
+                author           = author,
+                added_at         = added_at,
+                wiki             = wiki,
+                tagnames         = tags,
+                summary          = text[:120],
+                text = text
+            )
+
+    def _process_post_edit_revision_group(self, rev_group):
+        pass
+
+    def _process_post_action_revision_group(self, rev_group):
+        pass
+
+    def _process_post_revision_group(self, rev_group):
+        #determine revision type
+        rev_types = X.get_post_revision_group_types(rev_group) 
+        #initial,edit,lock,unlock,
+        #migrate,close,reopen,merge,wiki
+        if 'initial' in rev_types:
+            self._process_post_initial_revision_group(rev_group)
+        elif 'edit' in rev_types:
+            self._process_post_edit_revision_group(rev_group)
+        else:
+            self._process_post_action_revision_group(rev_group)
+
+    def transfer_questions(self):
+        se_revs = se.PostHistory.objects.filter(post__post_type__name='Question')
+        se_revs = se_revs.order_by('creation_date','revision_guid')
+        #todo: ignored fringe case - no revisions
+        c_guid = se_revs[0].revision_guid
+        c_group = []
+        #this loop groups revisions by revision id, then calls process function
+        #for the revision grup (elementary revisions posted at once)
+        for se_rev in se_revs:
+            if se_rev.revision_guid == c_guid:
+                c_group.append(se_rev)
+            else:
+                self._process_post_revision_group(c_group)
+                c_group = []
+                c_group.append(se_rev)
+                c_guid = se_rev.revision_guid
+
+    def transfer_answers(self):
+        pass
+
+    def transfer_close_decisions(self):
+        #this is not necessary, b/c close/reopen decisions
+        #are parts of revisions so this will stay noop
+        pass
+
+    def transfer_comments(self):
+        pass
+
+    def transfer_badges(self):
+        pass
+
+    def transfer_votes(self):
+        pass
+
+    def transfer_favorites(self):
+        pass
+
+    def transfer_update_subscriptions(self):
+        pass
+
+    def transfer_flags(self):
+        pass
+
+    def transfer_meta_pages(self):
+        #here we actually don't have anything in the database yet
+        #so we can't do this
+        pass
 
     def load_xml_file(self, xml_path, table_name):
         tree = et.parse(xml_path)
@@ -237,4 +407,4 @@ class Command(BaseCommand):
             if 'u_auth' in locals():
                 u_auth.user = u
                 u_auth.save()
-            USER[se_u.id] = u.id
+            USER[se_u.id] = u
