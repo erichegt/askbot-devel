@@ -271,6 +271,7 @@ def auth_settings(request):
                 request.user.message_set.create(message=_("Your password was changed"))
             else:
                 request.user.message_set.create(message=_("New password set"))
+                form = ChangePasswordForm(user=user_)
                 
             user_.set_password(form.cleaned_data['password1'])
             user_.save()

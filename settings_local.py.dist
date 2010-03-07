@@ -42,6 +42,9 @@ DATABASE_PORT = ''
 #CACHE_BACKEND = 'file://%s' % os.path.join(os.path.dirname(__file__),'cache').replace('\\','/')
 CACHE_BACKEND = 'dummy://'
 
+#If you use memcache you may want to uncomment the following line to enable memcached based sessions
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+
 #email server settings
 SERVER_EMAIL = ''
 DEFAULT_FROM_EMAIL = ''

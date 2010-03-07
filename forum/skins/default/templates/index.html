@@ -71,7 +71,7 @@
              {% for award in awards %}
                 <li>
                 <a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
-                <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a> {% trans "given to" %}
+                <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a>
                 <a href="/users/{{ award.user_id }}/{{ award.user_name|slugify }}/">{{ award.user_name }}</a>
                 </li>
             {% endfor %}

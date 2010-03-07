@@ -54,7 +54,6 @@ def get_all_handlers(name):
 
 def get_handler(name, default):
     all = get_all_handlers(name)
-    print(len(all))
     return len(all) and all[0] or default
 
 module_template_re = re.compile('^modules\/(\w+)\/(.*)$')

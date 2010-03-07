@@ -19,6 +19,13 @@ import logging
 
 from forum.const import *
 
+class UserContent(models.Model):
+    user = models.ForeignKey(User, related_name='%(class)ss')
+
+    class Meta:
+        abstract = True
+        app_label = 'forum'
+
 class MetaContent(models.Model):
     """
         Base class for Vote, Comment and FlaggedItem
@@ -26,7 +33,6 @@ class MetaContent(models.Model):
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    user           = models.ForeignKey(User, related_name='%(class)ss')
 
     class Meta:
         abstract = True
@@ -117,7 +123,7 @@ class Content(models.Model):
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
-    def get_object_comments(self):
+    def get_comments(self):
         comments = self.comments.all().order_by('id')
         return comments
 

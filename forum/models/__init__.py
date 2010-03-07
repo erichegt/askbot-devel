@@ -122,9 +122,9 @@ def record_answer_event(instance, created, **kwargs):
     if created:
         q_author = instance.question.author
         found_match = False
-        print 'going through %d messages' % q_author.message_set.all().count()
+        #print 'going through %d messages' % q_author.message_set.all().count()
         for m in q_author.message_set.all():
-            print m.message
+            #print m.message
             match = record_answer_event_re.search(m.message)
             if match:
                 found_match = True
@@ -134,15 +134,15 @@ def record_answer_event(instance, created, **kwargs):
                     cnt = 1
                 m.message = u"You have received %d <a href=\"%s?sort=responses\">new responses</a>."\
                             % (cnt+1, q_author.get_profile_url())
-                print 'updated message'
-                print m.message
+                #print 'updated message'
+                #print m.message
                 m.save()
                 break
         if not found_match:
             msg = u"You have received a <a href=\"%s?sort=responses\">new response</a>."\
                     % q_author.get_profile_url()
-            print 'new message'
-            print msg
+            #print 'new message'
+            #print msg
             q_author.message_set.create(message=msg)
 
         activity = Activity(user=instance.author, \
