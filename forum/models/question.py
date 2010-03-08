@@ -1,8 +1,16 @@
 from base import *
 from tag import Tag
+from forum.const import CONST
+from forum.utils.html import sanitize_html
+from markdown2 import Markdown
+from django.utils.html import strip_tags
+import datetime
+markdowner = Markdown(html4tags=True)
 
 class QuestionManager(models.Manager):
-    def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
+    def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
+        html = sanitize_html(markdowner.convert(text))
+        summary = strip_tags(html)[:120]
         question = Question(
             title            = title,
             author           = author,
@@ -11,7 +19,7 @@ class QuestionManager(models.Manager):
             last_activity_by = author,
             wiki             = wiki,
             tagnames         = tagnames,
-            html             = text,
+            html             = html,
             summary          = summary
         )
         if question.wiki:
@@ -21,16 +29,11 @@ class QuestionManager(models.Manager):
 
         question.save()
 
-        # create the first revision
-        QuestionRevision.objects.create(
-            question   = question,
-            revision   = 1,
-            title      = question.title,
-            author     = author,
-            revised_at = added_at,
-            tagnames   = question.tagnames,
-            summary    = CONST['default_version'],
-            text       = text
+        question.add_revision(
+            author=author,
+            text=text,
+            comment=CONST['default_version'],
+            revised_at=added_at,
         )
         return question
 
@@ -142,6 +145,105 @@ class Question(Content, DeletableContent):
             ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
+
+    def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
+        if None in (retagged_by, retagged_at, tagnames):
+            raise Exception('arguments retagged_at, retagged_by and tagnames are required')
+        # Update the Question itself
+        self.tagnames = tagnames
+        self.last_edited_at = retagged_at
+        self.last_activity_at = retagged_at
+        self.last_edited_by = retagged_by
+        self.last_activity_by = retagged_by
+
+        # Update the Question's tag associations
+        tags_updated = self.objects.update_tags(self,
+            form.cleaned_data['tags'], request.user)
+
+        # Create a new revision
+        latest_revision = self.get_latest_revision()
+        QuestionRevision.objects.create(
+            question   = self,
+            title      = latest_revision.title,
+            author     = retagged_by,
+            revised_at = retagged_at,
+            tagnames   = tagnames,
+            summary    = CONST['retagged'],
+            text       = latest_revision.text
+        )
+        # send tags updated singal
+        tags_updated.send(sender=question.__class__, question=self)
+
+    def apply_edit(self, edited_at=None, edited_by=None, title=None,\
+                    text=None, comment=None, tags=None, wiki=False):
+
+        latest_revision = self.get_latest_revision()
+        #a hack to allow partial edits - important for SE loader
+        if title is None:
+            title = self.title
+        if text is None:
+            text = latest_revision.text
+        if tags is None:
+            tags = latest_revision.tagnames
+
+        if edited_by is None:
+            raise Exception('parameter edited_by is required')
+
+        if edited_at is None:
+            edited_at = datetime.datetime.now()
+
+        #todo: have this copy-paste in few places
+        html = sanitize_html(markdowner.convert(text))
+        question_summary = strip_tags(html)[:120]
+
+        # Update the Question itself
+        self.title = title
+        self.last_edited_at = edited_at
+        self.last_activity_at = edited_at
+        self.last_edited_by = edited_by
+        self.last_activity_by = edited_by
+        self.tagnames = tags
+        self.summary = question_summary
+        self.html = html
+
+        #wiki is an eternal trap whence there is no exit
+        if self.wiki == False and wiki == True:
+            self.wiki = True
+
+        self.save()
+
+        # Update the Question tag associations
+        if latest_revision.tagnames != tags:
+            tags_updated = Question.objects.update_tags(self, tags, edited_by)
+
+        # Create a new revision
+        self.add_revision(
+            author = edited_by,
+            text = text,
+            revised_at = edited_at,
+            comment = comment,
+        )
+
+    def add_revision(self,author=None, text=None, comment=None, revised_at=None):
+        if None in (author, text, comment):
+            raise Exception('author, text and revised_at are required arguments')
+        rev_no = self.revisions.all().count() + 1
+        if comment in (None, ''):
+            if rev_no == 1:
+                comment = CONST['default_version']
+            else:
+                comment = 'No.%s Revision' % rev_no
+            
+        return QuestionRevision.objects.create(
+            question   = self,
+            revision   = rev_no,
+            title      = self.title,
+            author     = author,
+            revised_at = revised_at,
+            tagnames   = self.tagnames,
+            summary    = comment,
+            text       = text
+        )
 
     def save(self, **kwargs):
         """

@@ -13,6 +13,7 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 import logging
 
+
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TitleField, self).__init__(*args, **kwargs)
@@ -41,7 +42,6 @@ class EditorField(forms.CharField):
     def clean(self, value):
         if len(value) < 10:
             raise forms.ValidationError(_('question content must be > 10 characters'))
-
         return value
 
 class TagNamesField(forms.CharField):
@@ -185,6 +185,7 @@ class EditQuestionForm(forms.Form):
     tags   = TagNamesField()
     summary = SummaryField()
 
+    #todo: this is odd that this form takes question as an argument
     def __init__(self, question, revision, *args, **kwargs):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title

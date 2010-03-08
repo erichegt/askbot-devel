@@ -27,6 +27,8 @@ xml_read_order = (
 #association tables SE item id --> OSQA item id
 #table associations are implied
 USER = {}#SE User.id --> django(OSQA) User.id
+QUESTION = {}
+ANSWER = {}
 NAMESAKE_COUNT = {}# number of times user name was used - for X.get_screen_name
 
 class X(object):#
@@ -195,9 +197,7 @@ class Command(BaseCommand):
 
         #transfer data into OSQA tables
         self.transfer_users()
-        self.transfer_questions()
-        self.transfer_answers()
-        self.transfer_close_decisions()
+        self.transfer_question_and_answer_activity()
         self.transfer_comments()
         self.transfer_badges()
         self.transfer_votes()
@@ -225,20 +225,77 @@ class Command(BaseCommand):
                 tags = X.clean_tags(rev.text)
             elif rev_type == 'Community Owned':
                 wiki = True
+            else:
+                raise Exception('unexpected revision type %s' % rev_type)
 
-        if rev_group[0].post.post_type.name == 'Question':
-            osqa.Question.objects.create_new(
+        post_type = rev_group[0].post.post_type.name
+        if post_type == 'Question':
+            q = osqa.Question.objects.create_new(
                 title            = title,
                 author           = author,
                 added_at         = added_at,
                 wiki             = wiki,
                 tagnames         = tags,
-                summary          = text[:120],
                 text = text
             )
+            QUESTION[rev_group[0].post.id] = q
+        elif post_type == 'Answer':
+            q = QUESTION[rev_group[0].post.parent.id]
+            a = osqa.Answer.objects.create_new(
+                question = q,
+                author = author,
+                added_at = added_at,
+                wiki = wiki,
+                text = text,
+            )
+            ANSWER[rev_group[0].post.id] = a
+        else:
+            post_id = rev_group[0].post.id
+            raise Exception('unknown post type %s for id=%d' % (post_type, post_id))
 
     def _process_post_edit_revision_group(self, rev_group):
-        pass
+        #question apply edit
+        (title, text, tags, wiki) = (None, None, None, False)
+        for rev in rev_group:
+            rev_type = rev.post_history_type.name
+            if rev_type == 'Edit Title':
+                title = rev.text
+            elif rev_type == 'Edit Body':
+                text = rev.text
+            elif rev_type == 'Edit Tags':
+                tags = X.clean_tags(rev.text)
+            elif rev_type == 'Community Owned':
+                wiki = True
+            else:
+                raise Exception('unexpected revision type %s' % rev_type)
+
+        rev0 = rev_group[0]
+        edited_by = USER[rev0.user.id]
+        edited_at = rev0.creation_date
+        comment = ';'.join([rev.comment for rev in rev_group if rev.comment])
+        post_type = rev0.post.post_type.name
+
+        if post_type == 'Question':
+            q = QUESTION[rev0.post.id]
+            q.apply_edit(
+                edited_at = edited_at,
+                edited_by = edited_by,
+                title = title,
+                text = text,
+                comment = comment,
+                tags = tags,
+                wiki = wiki
+            )
+        elif post_type == 'Answer':
+            a = ANSWER[rev0.post.id]
+            #todo: wiki will probably be lost here
+            a.apply_edit(
+                edited_at = edited_at,
+                edited_by = edited_by,
+                text = text,
+                comment = comment,
+                wiki = wiki
+            )
 
     def _process_post_action_revision_group(self, rev_group):
         pass
@@ -255,8 +312,14 @@ class Command(BaseCommand):
         else:
             self._process_post_action_revision_group(rev_group)
 
-    def transfer_questions(self):
-        se_revs = se.PostHistory.objects.filter(post__post_type__name='Question')
+    def transfer_question_and_answer_activity(self):
+        """transfers all question and answer
+        edits and related status changes
+        """
+        #assuming that there are only two post types
+        se_revs = se.PostHistory.objects.all()
+        #assuming that chronologial order is correct and there
+        #will be no problems of data integrity upon insertion of records
         se_revs = se_revs.order_by('creation_date','revision_guid')
         #todo: ignored fringe case - no revisions
         c_guid = se_revs[0].revision_guid
@@ -271,14 +334,6 @@ class Command(BaseCommand):
                 c_group = []
                 c_group.append(se_rev)
                 c_guid = se_rev.revision_guid
-
-    def transfer_answers(self):
-        pass
-
-    def transfer_close_decisions(self):
-        #this is not necessary, b/c close/reopen decisions
-        #are parts of revisions so this will stay noop
-        pass
 
     def transfer_comments(self):
         pass
