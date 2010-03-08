@@ -194,7 +194,6 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
             # Always check modifications against the latest revision
             form = EditQuestionForm(question, latest_revision, request.POST)
             if form.is_valid():
-                html = form.cleaned_data['text']#markdown this
                 if form.has_changed():
                     edited_at = datetime.datetime.now()
                     edited_by = request.user
