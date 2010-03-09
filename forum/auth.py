@@ -198,7 +198,9 @@ def calculate_reputation(origin, offset):
         return 1
 
 @transaction.commit_on_success
-def onFlaggedItem(item, post, user):
+def onFlaggedItem(item, post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
 
     item.save()
     post.offensive_flag_count = post.offensive_flag_count + 1
@@ -214,7 +216,7 @@ def onFlaggedItem(item, post, user):
 
     reputation = Repute(user=post.author,
                negative=int(REPUTATION_RULES['lose_by_flagged']),
-               question=question, reputed_at=datetime.datetime.now(),
+               question=question, reputed_at=timestamp,
                reputation_type=-4,
                reputation=post.author.reputation)
     reputation.save()
@@ -228,7 +230,7 @@ def onFlaggedItem(item, post, user):
         reputation = Repute(user=post.author,
                    negative=int(REPUTATION_RULES['lose_by_flagged_lastrevision_3_times']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=-6,
                    reputation=post.author.reputation)
         reputation.save()
@@ -241,21 +243,24 @@ def onFlaggedItem(item, post, user):
         reputation = Repute(user=post.author,
                    negative=int(REPUTATION_RULES['lose_by_flagged_lastrevision_5_times']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=-7,
                    reputation=post.author.reputation)
         reputation.save()
 
         post.deleted = True
-        #post.deleted_at = datetime.datetime.now()
+        #post.deleted_at = timestamp
         #post.deleted_by = Admin
         post.save()
 
 
 @transaction.commit_on_success
-def onAnswerAccept(answer, user):
+def onAnswerAccept(answer, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
+
     answer.accepted = True
-    answer.accepted_at = datetime.datetime.now()
+    answer.accepted_at = timestamp
     answer.question.answer_accepted = True
     answer.save()
     answer.question.save()
@@ -266,7 +271,7 @@ def onAnswerAccept(answer, user):
     reputation = Repute(user=answer.author,
                positive=int(REPUTATION_RULES['gain_by_answer_accepted']),
                question=answer.question,
-               reputed_at=datetime.datetime.now(),
+               reputed_at=timestamp,
                reputation_type=2,
                reputation=answer.author.reputation)
     reputation.save()
@@ -277,13 +282,15 @@ def onAnswerAccept(answer, user):
     reputation = Repute(user=user,
                positive=int(REPUTATION_RULES['gain_by_accepting_answer']),
                question=answer.question,
-               reputed_at=datetime.datetime.now(),
+               reputed_at=timestamp,
                reputation_type=3,
                reputation=user.reputation)
     reputation.save()
 
 @transaction.commit_on_success
-def onAnswerAcceptCanceled(answer, user):
+def onAnswerAcceptCanceled(answer, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     answer.accepted = False
     answer.accepted_at = None
     answer.question.answer_accepted = False
@@ -296,7 +303,7 @@ def onAnswerAcceptCanceled(answer, user):
     reputation = Repute(user=answer.author,
                negative=int(REPUTATION_RULES['lose_by_accepted_answer_cancled']),
                question=answer.question,
-               reputed_at=datetime.datetime.now(),
+               reputed_at=timestamp,
                reputation_type=-2,
                reputation=answer.author.reputation)
     reputation.save()
@@ -307,13 +314,15 @@ def onAnswerAcceptCanceled(answer, user):
     reputation = Repute(user=user,
                negative=int(REPUTATION_RULES['lose_by_canceling_accepted_answer']),
                question=answer.question,
-               reputed_at=datetime.datetime.now(),
+               reputed_at=timestamp,
                reputation_type=-1,
                reputation=user.reputation)
     reputation.save()
 
 @transaction.commit_on_success
-def onUpVoted(vote, post, user):
+def onUpVoted(vote, post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     vote.save()
 
     post.vote_up_count = int(post.vote_up_count) + 1
@@ -334,13 +343,15 @@ def onUpVoted(vote, post, user):
             reputation = Repute(user=author,
                        positive=int(REPUTATION_RULES['gain_by_upvoted']),
                        question=question,
-                       reputed_at=datetime.datetime.now(),
+                       reputed_at=timestamp,
                        reputation_type=1,
                        reputation=author.reputation)
             reputation.save()
 
 @transaction.commit_on_success
-def onUpVotedCanceled(vote, post, user):
+def onUpVotedCanceled(vote, post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     vote.delete()
 
     post.vote_up_count = int(post.vote_up_count) - 1
@@ -362,13 +373,15 @@ def onUpVotedCanceled(vote, post, user):
         reputation = Repute(user=author,
                    negative=int(REPUTATION_RULES['lose_by_upvote_canceled']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=-8,
                    reputation=author.reputation)
         reputation.save()
 
 @transaction.commit_on_success
-def onDownVoted(vote, post, user):
+def onDownVoted(vote, post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     vote.save()
 
     post.vote_down_count = int(post.vote_down_count) + 1
@@ -388,7 +401,7 @@ def onDownVoted(vote, post, user):
         reputation = Repute(user=author,
                    negative=int(REPUTATION_RULES['lose_by_downvoted']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=-3,
                    reputation=author.reputation)
         reputation.save()
@@ -400,13 +413,15 @@ def onDownVoted(vote, post, user):
         reputation = Repute(user=user,
                    negative=int(REPUTATION_RULES['lose_by_downvoting']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=-5,
                    reputation=user.reputation)
         reputation.save()
 
 @transaction.commit_on_success
-def onDownVotedCanceled(vote, post, user):
+def onDownVotedCanceled(vote, post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     vote.delete()
 
     post.vote_down_count = int(post.vote_down_count) - 1
@@ -428,7 +443,7 @@ def onDownVotedCanceled(vote, post, user):
         reputation = Repute(user=author,
                    positive=int(REPUTATION_RULES['gain_by_downvote_canceled']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=4,
                    reputation=author.reputation)
         reputation.save()
@@ -440,12 +455,13 @@ def onDownVotedCanceled(vote, post, user):
         reputation = Repute(user=user,
                    positive=int(REPUTATION_RULES['gain_by_canceling_downvote']),
                    question=question,
-                   reputed_at=datetime.datetime.now(),
+                   reputed_at=timestamp,
                    reputation_type=5,
                    reputation=user.reputation)
         reputation.save()
 
-def onDeleteCanceled(post, user):
+#here timestamp is not used, I guess added for consistency
+def onDeleteCanceled(post, user, timestamp=None):
     post.deleted = False
     post.deleted_by = None 
     post.deleted_at = None 
@@ -462,10 +478,12 @@ def onDeleteCanceled(post, user):
                 tag.deleted_at = None 
                 tag.save()
 
-def onDeleted(post, user):
+def onDeleted(post, user, timestamp=None):
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
     post.deleted = True
     post.deleted_by = user
-    post.deleted_at = datetime.datetime.now()
+    post.deleted_at = timestamp
     post.save()
 
     if isinstance(post, Question):
@@ -473,7 +491,7 @@ def onDeleted(post, user):
             if tag.used_count == 1:
                 tag.deleted = True
                 tag.deleted_by = user
-                tag.deleted_at = datetime.datetime.now()
+                tag.deleted_at = timestamp
             else:
                 tag.used_count = tag.used_count - 1 
             tag.save()

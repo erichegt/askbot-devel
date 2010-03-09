@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from forum.utils.decorators import ajax_method, ajax_login_required
 import logging
 
-def vote(request, id):#refactor - pretty incomprehensible view used by various ajax calls
+def vote(request, id):#todo: pretty incomprehensible view used by various ajax calls
 #issues: this subroutine is too long, contains many magic numbers and other issues
 #it's called "vote" but many actions processed here have nothing to do with voting
     """
@@ -106,23 +106,12 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
             # favorite
             elif vote_type == '4':
                 has_favorited = False
-                fav_questions = FavoriteQuestion.objects.filter(question=question)
-                # if the same question has been favorited before, then delete it
-                if fav_questions is not None:
-                    for item in fav_questions:
-                        if item.user == request.user:
-                            item.delete()
-                            response_data['status'] = 1
-                            response_data['count']  = len(fav_questions) - 1
-                            if response_data['count'] < 0:
-                                response_data['count'] = 0
-                            has_favorited = True
-                # if above deletion has not been executed, just insert a new favorite question
-                if not has_favorited:
-                    new_item = FavoriteQuestion(question=question, user=request.user)
-                    new_item.save()
-                    response_data['count']  = FavoriteQuestion.objects.filter(question=question).count()
-                Question.objects.update_favorite_count(question)
+                fave = request.user.toggle_favorite_question(question)
+                response_data['count'] = FavoriteQuestion.objects.filter(
+                                            question = question
+                                        ).count()
+                if fave == False:
+                    response_data['status'] = 1
 
             elif vote_type in ['1', '2', '5', '6']:
                 post_id = id

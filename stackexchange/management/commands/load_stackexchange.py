@@ -41,12 +41,23 @@ class X(object):#
 
     osqa_supported_id_providers = (
             'google','yahoo','aol','myopenid',
-            'flickr','technorati',#todo: typo in code openidauth/authentication.py !
+            'flickr','technorati',
             'wordpress','blogger','livejournal',
             'claimid','vidoop','verisign',
             'openidurl','facebook','local',
             'twitter' #oauth is not on this list, b/c it has no own url
             )
+
+    #map SE VoteType -> osqa.User vote method
+    #created methods with the same call structure in osqa.User
+    #User.<vote_method>(post, timestamp=None, cancel=False)
+    vote_actions = {
+        'UpMod':'upvote',
+        'DownMod':'downvote',
+        'AcceptedByOriginator':'accept_answer',
+        'Offensive','flag_post',
+        'Favorite','toggle_favorite_question',
+    }
 
     #these modes cannot be mixed
     exclusive_revision_modes = (
@@ -82,6 +93,22 @@ class X(object):#
         'Post Migrated':'migrate',
         'Question Merged':'merge',
     }
+    @classmethod
+    def get_post(cls, se_post):
+        #todo: fix this hack - either in-memory id association table
+        #or use database to store these associations
+        post_type = se_post.post_type.name
+        if post_type == 'Question':
+            return osqa.Question.objects.get(id=QUESTION[se_post.id].id)
+        elif post_type == 'Answer':
+            return osqa.Answer.objects.get(id=ANSWER[se_post.id].id)
+        else:
+            raise Exception('unknown post type %s' % post_type)
+
+    @classmethod
+    def get_user(cls, se_user):
+        #todo: same as get_post
+        return osqa.User.objects.get(id=USER[se_user.id].id)
 
     @classmethod
     def get_post_revision_group_types(cls, rev_group):
@@ -212,6 +239,7 @@ class Command(BaseCommand):
         #transfer data into OSQA tables
         self.transfer_users()
         self.transfer_question_and_answer_activity()
+        self.transfer_question_view_counts()
         self.transfer_comments()
         self.transfer_badges()
         self.transfer_votes()
@@ -433,8 +461,26 @@ class Command(BaseCommand):
         self._cleanup_badges()
         pass
 
+    def transfer_question_view_counts(self):
+        for se_q in se.Post.objects.filter(post_type__name='Question'):
+            q = X.get_post(se_q)
+            q.view_count = se_q.view_count
+            q.save()
+
+
     def transfer_votes(self):
-        pass
+        for v in se.Post2Vote.objects.all():
+            vote_type = v.vote_type.name
+            if not vote_type in X.vote_actions:
+                continue
+
+            u = X.get_user(v.user)
+            p = X.get_post(v.post)
+            m = X.vote_actions[vote_type]
+            vote_method = getattr(osqa.User, m['on'])
+            vote_method(u, p, timestamp = v.creation_date)
+            if v.deletion_date:
+                vote_method(u, p, timestamp = v.deletion_date, cancel=True)
 
     def transfer_favorites(self):
         pass

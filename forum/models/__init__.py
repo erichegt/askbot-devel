@@ -7,6 +7,7 @@ from repute import Badge, Award, Repute
 import re
 
 from base import *
+import datetime
 
 # User extend properties
 QUESTIONS_PER_PAGE_CHOICES = (
@@ -96,6 +97,39 @@ def get_profile_link(self):
     logging.debug('in get profile link %s' % profile_link)
     return mark_safe(profile_link)
 
+#series of methods for user vote-type commands
+#same call signature func(self, post, timestamp=None, cancel=None)
+def toggle_favorite_question(self, question, timestamp=None, cancel=False):
+    """cancel has no effect here, but is important
+    """
+    try:
+        fave = FavoriteQuestion.objects.get(question=question, user=self)
+        fave.delete()
+        result = False
+    except FavoriteQuestion.DoesNotExist:
+        fave = FavoriteQuestion(
+            question = question,
+            user = self,
+            added_at = timestamp,
+        )
+        fave.save()
+        result = True
+    Question.objects.update_favorite_count(question)
+    return result
+
+def upvote(self, post, timestamp=None, cancel=False):
+    pass
+
+def downvote(self, post, timestamp=None, cancel=False):
+    pass
+
+def accept_answer(self, answer, timestamp=None, cancel=False):
+    pass
+
+def flag_post(self, answer, timestamp=None, cancel=False):
+    pass
+
+User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
