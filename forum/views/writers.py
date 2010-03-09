@@ -337,11 +337,10 @@ def __comments(request, obj, type):#non-view generic ajax handler to load commen
             response = __generate_comments_json(obj, type, user)
         elif request.method == "POST":
             if auth.can_add_comments(user,obj):
-                comment_data = request.POST.get('comment')
-                comment = Comment(content_object=obj, comment=comment_data, user=request.user)
-                comment.save()
-                obj.comment_count = obj.comment_count + 1
-                obj.save()
+                obj.add_comment(
+                    comment = request.POST.get('comment'),
+                    user = request.user,
+                )
                 response = __generate_comments_json(obj, type, user)
             else:
                 response = HttpResponseForbidden(mimetype="application/json")

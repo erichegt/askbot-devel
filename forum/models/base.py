@@ -120,9 +120,21 @@ class Content(models.Model):
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
-    def get_object_comments(self):
+    def get_comments(self):
         comments = self.comments.all().order_by('id')
         return comments
+
+    def add_comment(self, comment=None, user=None, added_at=None):
+        if added_at is None:
+            added_at = datetime.datetime.now()
+        if None in (comment ,user):
+            raise Exception('arguments comment and user are required')
+
+        Comment = models.get_model('forum','Comment')#todo: forum hardcoded
+        comment = Comment(content_object=self, comment=comment, user=user, added_at=added_at)
+        comment.save()
+        self.comment_count = self.comment_count + 1
+        self.save()
 
     def post_get_last_update_info(self):
             when = self.added_at

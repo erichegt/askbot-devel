@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.template.defaultfilters import slugify #todo: adopt unicode-aware slugify
+#todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
 import os
 import re
 import sys
@@ -51,6 +53,14 @@ class X(object):#
         'initial','edit','lock','unlock',
         'migrate','close','reopen','merge',
     )
+
+    #badges whose names don't match exactly, but
+    #present in both SE and OSQA
+    badge_exceptions = {# SE --> OSQA
+        'Citizen Patrol':'Citizen patrol',#single #todo: why sentence case?
+        'Strunk &amp; White':'Strunk & White',#single
+        'Civic Duty':'Civic duty',
+    }
 
     revision_type_map = {
         'Initial Title':'initial',
@@ -178,6 +188,10 @@ class X(object):#
                     badge_type = cls.badge_type_map[m.groupdict()['type']]
                     locals()[badge_type] = int(m.groupdict()['count'])
         return (gold,silver,bronze)
+        
+    @classmethod
+    def get_badge_name(cls, name):
+        return cls.badge_exceptions.get(name, name)
 
 class Command(BaseCommand):
     help = 'Loads StackExchange data from unzipped directory of XML files into the OSQA database'
@@ -202,6 +216,7 @@ class Command(BaseCommand):
         self.transfer_badges()
         self.transfer_votes()
         self.transfer_favorites()
+        self.transfer_tag_preferences()
         self.transfer_update_subscriptions()
         self.transfer_flags()
         self.transfer_meta_pages()
@@ -298,7 +313,11 @@ class Command(BaseCommand):
             )
 
     def _process_post_action_revision_group(self, rev_group):
-        pass
+        #this is odd - there were no edit actions like these
+        #closed, reopened, etc in homeschoolers sample
+        print 'Warning: these content revisions were not processed'
+        print 'please give us your sample and we will write code to import it'
+        print ';'.join([rev.post_history_type.name for rev in rev_group])
 
     def _process_post_revision_group(self, rev_group):
         #determine revision type
@@ -311,6 +330,9 @@ class Command(BaseCommand):
             self._process_post_edit_revision_group(rev_group)
         else:
             self._process_post_action_revision_group(rev_group)
+
+    def transfer_tag_preferences(self):
+        pass
 
     def transfer_question_and_answer_activity(self):
         """transfers all question and answer
@@ -336,9 +358,79 @@ class Command(BaseCommand):
                 c_guid = se_rev.revision_guid
 
     def transfer_comments(self):
-        pass
+        for se_c in se.PostComment.objects.all():
+            if se_c.deletion_date:
+                print 'Warning deleted comment %d dropped' % se_c.id
+                continue
+            se_post = se_c.post
+            if se_post.post_type.name == 'Question':
+                osqa_post = QUESTION[se_post.id]
+            elif se_post.post_type.name == 'Answer':
+                osqa_post = ANSWER[se_post.id]
+
+            osqa_post.add_comment(
+                comment = se_c.text,
+                added_at = se_c.creation_date,
+                user = USER[se_c.user.id]
+            )
+
+    def _install_missing_badges(self):
+        self._missing_badges = {}
+        for se_b in se.Badge.objects.all():
+            name = X.get_badge_name(se_b.name)
+            try:
+                osqa.Badge.objects.get(name=name)
+            except:
+                self._missing_badges[name] = 0
+                if len(se_b.description) > 300:
+                    print 'Warning truncated description for badge %d' % se_b.id
+                osqa.Badge.objects.create(
+                    name = name,
+                    slug = slugify(name),
+                    description = se_b.description,
+                    multiple = (not se_b.single),
+                    type = se_b.class_type
+                )
+
+    def _award_badges(self):
+        #note: SE does not keep information on
+        #content-related badges like osqa does
+        for se_a in se.User2Badge.objects.all():
+            if se_a.user.id == -1:
+                continue #skip community user
+            u = USER[se_a.user.id]
+            badge_name = X.get_badge_name(se_a.badge.name)
+            b = osqa.Badge.objects.get(name=badge_name)
+            if b.multiple == False:
+                if b.award_badge.count() > 0:
+                    continue
+            #todo: fake content object here b/c SE does not support this
+            #todo: but osqa requires related content object
+            osqa.Award.objects.create(
+                user=u,
+                badge=b,
+                awarded_at=se_a.date,
+                content_object=u,
+            )
+            if b.name in self._missing_badges:
+                self._missing_badges[b.name] += 1
+
+    def _cleanup_badges(self):
+        d = self._missing_badges
+        unused = [name for name in d.keys() if d[name] == 0]
+        osqa.Badge.objects.filter(name__in=unused).delete()
+        installed = [name for name in d.keys() if d[name] > 0]
+        print 'Warning - following unsupported badges were installed:'
+        print ', '.join(installed)
 
     def transfer_badges(self):
+        #note: badge level is neglected
+        #1) install missing badges
+        self._install_missing_badges()
+        #2) award badges
+        self._award_badges()
+        #3) delete unused newly installed badges
+        self._cleanup_badges()
         pass
 
     def transfer_votes(self):

@@ -337,7 +337,7 @@ class Command(BaseCommand):
 
                 if user_id not in awarded_users:
                     user = get_object_or_404(User, id=user_id)
-                    award = Award(user=user, badge=badge)
+                    award = Award(user=user, badge=badge)#todo: will this work with content_object null?
                     award.save()
                     awarded_users.append(user_id)
         finally:
