@@ -7,24 +7,32 @@ this app's function will be to:
 
 Current process to load SE data into OSQA:
 
-1) unzip SE dump into dump_dir (any directory name)
+1) backup database
+
+2) unzip SE dump into dump_dir (any directory name)
    you may want to make sure that your dump directory in .gitignore file
    so that you don't publish it by mistake
 
-2) add 'stackexchange' to the list of installed apps
+3) add 'stackexchange' to the list of installed apps (probably aready in settings.py)
 
-3) (optional - create models.py for SE, which is included anyway) run: 
+4) (optional - create models.py for SE, which is included anyway) run: 
 
     #a) run in-place removal of xml namspace prefix to make parsing easier
     perl -pi -w -e 's/xs://g' $SE_DUMP_PATH/xsd/*.xsd 
     cd stackexchange
     python parse_models.py $SE_DUMP_PATH/xsd/*.xsd > models.py
 
-4) Install stackexchange models
+5) Install stackexchange models (as well as any other missing models)
     python manage.py syncdb
 
-5) run:
+6) make sure that osqa badges are installed
+   if not, run (example for mysql):
+
+   mysql -u user -p dbname < sql_scripts/badges.sql
+
+7) load SE data:
+
     python manage.py load_stackexchange dump_dir
 
     if anything doesn't go right - run 'python manage.py flush' and repeat
-    the above command
+    steps 6 and 7
