@@ -8,7 +8,6 @@ import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.db import transaction
-import django.db.models
 from models import Repute
 from models import Question
 from models import Answer
