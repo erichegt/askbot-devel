@@ -8,6 +8,7 @@ import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.db import transaction
+import django.db.models
 from models import Repute
 from models import Question
 from models import Answer
@@ -15,8 +16,6 @@ from models import Answer
 #from models import mark_offensive, delete_post_or_answer
 from const import TYPE_REPUTATION
 import logging
-question_type = ContentType.objects.get_for_model(Question)
-answer_type = ContentType.objects.get_for_model(Answer)
 
 VOTE_UP                   = 15
 FLAG_OFFENSIVE            = 15
