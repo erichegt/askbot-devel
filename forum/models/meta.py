@@ -48,6 +48,10 @@ class Vote(MetaContent):
     def is_downvote(self):
         return self.vote == self.VOTE_DOWN
 
+    def is_opposite(self, vote_type):
+        assert(vote_type in (self.VOTE_UP, self.VOTE_DOWN))
+        return self.vote != vote_type
+
 
 class FlaggedItemManager(models.Manager):
     def get_flagged_items_count_today(self, user):

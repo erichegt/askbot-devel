@@ -11,6 +11,8 @@ from django.db import transaction
 from models import Repute
 from models import Question
 from models import Answer
+#todo: why can't I import these?
+#from models import mark_offensive, delete_post_or_answer
 from const import TYPE_REPUTATION
 import logging
 question_type = ContentType.objects.get_for_model(Question)
@@ -252,6 +254,11 @@ def onFlaggedItem(item, post, user, timestamp=None):
         #post.deleted_at = timestamp
         #post.deleted_by = Admin
         post.save()
+        mark_offensive.send(
+            sender=post.__class__, 
+            instance=post, 
+            mark_by=user
+        )
 
 
 @transaction.commit_on_success
@@ -331,7 +338,8 @@ def onUpVoted(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        if Repute.objects.get_reputation_by_upvoted_today(author) <  int(REPUTATION_RULES['scope_per_day_by_upvotes']):
+        todays_rep_gain = Repute.objects.get_reputation_by_upvoted_today(author)
+        if todays_rep_gain <  int(REPUTATION_RULES['scope_per_day_by_upvotes']):
             author.reputation = calculate_reputation(author.reputation,
                               int(REPUTATION_RULES['gain_by_upvoted']))
             author.save()
@@ -514,3 +522,8 @@ def onDeleted(post, user, timestamp=None):
     elif isinstance(post, Answer):
         Question.objects.update_answer_count(post.question)
         logging.debug('updated answer count to %d' % post.question.answer_count)
+    delete_post_or_answer.send(
+        sender=post.__class__,
+        instance=post,
+        delete_by=user
+    )

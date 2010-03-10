@@ -8,6 +8,8 @@ import re
 
 from base import *
 import datetime
+from forum import auth
+from django.contrib.contenttypes.models import ContentType
 
 # User extend properties
 QUESTIONS_PER_PAGE_CHOICES = (
@@ -99,8 +101,19 @@ def get_profile_link(self):
 
 #series of methods for user vote-type commands
 #same call signature func(self, post, timestamp=None, cancel=None)
+#note that none of these have business logic checks internally
+#these functions are used by the forum app and
+#by the data importer jobs from say stackexchange, where internal rules
+#may be different
+#maybe if we do use business rule checks here - we should add
+#some flag allowing to bypass them for things like the data importers
 def toggle_favorite_question(self, question, timestamp=None, cancel=False):
-    """cancel has no effect here, but is important
+    """cancel has no effect here, but is important for the SE loader
+    it is hoped that toggle will work and data will be consistent
+    but there is no guarantee, maybe it's better to be more strict 
+    about processing the "cancel" option
+    another strange thing is that this function unlike others below
+    returns a value
     """
     try:
         fave = FavoriteQuestion.objects.get(question=question, user=self)
@@ -117,19 +130,95 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
     Question.objects.update_favorite_count(question)
     return result
 
+#"private" wrapper function that applies post upvotes/downvotes and cancelations
+def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
+    post_type = ContentType.objects.get_for_model(post)
+    #get or create the vote object
+    #return with noop in some situations
+    try:
+        vote = Vote.objects.get(
+                    user = user,
+                    content_type = post_type,
+                    object_id = post.id,
+                )
+    except Vote.DoesNotExist:
+        vote = None
+    if cancel:
+        if vote == None:
+            return
+        elif vote.is_opposite(vote_type):
+            return
+        else:
+            #we would call vote.delete() here
+            #but for now all that is handled by the
+            #legacy forum.auth functions
+            #vote.delete()
+            pass
+    else:
+        if vote == None:
+            vote = Vote(
+                    user = user,
+                    content_object = post,
+                    vote = vote_type,
+                    voted_at = timestamp,
+                    )
+        elif vote.is_opposite(vote_type):
+            vote.vote = vote_type
+        else:
+            return
+
+    #do the actual work
+    if vote_type == Vote.VOTE_UP:
+        if cancel:
+            auth.onUpVotedCanceled(vote, post, user, timestamp)
+        else:
+            auth.onUpVoted(vote, post, user, timestamp)
+    elif vote_type == Vote.VOTE_DOWN:
+        if cancel:
+            auth.onDownVotedCanceled(vote, post, user, timestamp)
+        else:
+            auth.onDonwVoted(vote, post, user, timestamp)
+
 def upvote(self, post, timestamp=None, cancel=False):
-    pass
+    _process_vote(
+        self,post,
+        timestamp=timestamp,
+        cancel=cancel,
+        vote_type=Vote.VOTE_UP
+    )
 
 def downvote(self, post, timestamp=None, cancel=False):
-    pass
+    _process_vote(
+        self,post,
+        timestamp=timestamp,
+        cancel=cancel,
+        vote_type=Vote.VOTE_DOWN
+    )
 
 def accept_answer(self, answer, timestamp=None, cancel=False):
-    pass
+    if cancel:
+        auth.onAnswerAcceptCanceled(answer, self, timestamp=timestamp)
+    else:
+        auth.onAnswerAccept(answer, self, timestamp=timestamp)
 
-def flag_post(self, answer, timestamp=None, cancel=False):
-    pass
+def flag_post(self, post, timestamp=None, cancel=False):
+    if cancel:#todo: can't unflag?
+        return
+    if post.flagged_items.filter(user=user).count() > 0:
+        return
+    else:
+        flag = FlaggedItem(
+                user = self,
+                content_object = post,
+                flagged_at = timestamp,
+            )
+        auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('upvote', upvote)
+User.add_to_class('downvote', downvote)
+User.add_to_class('accept_answer', accept_answer)
+User.add_to_class('flag_post', flag_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
@@ -395,7 +484,7 @@ __all__ = [
         'AnonymousEmail',
         'AuthKeyUserAssociation',
 
-        'User'
+        'User',
         ]
 
 
