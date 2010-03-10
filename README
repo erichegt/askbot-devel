@@ -1,6 +1,10 @@
 This is OSQA project - open source Q&A system
 
-Demo site is http://osqa.net
+Project Q&A site - http://meta.osqa.net
+Homepage - http://www.osqa.net
+MASTER devel. code - http://github.com/OSQA/osqa/
+Bug tracking - http://jira.osqa.net (bugs can be also at http://meta.osqa.net too)
+Wiki - http://wiki.osqa.net
 
-OSQA is based on code of CNPROG, originally created by Mike Chen and Sailing Cai.
+OSQA is based on the CNPROG project, originally created by Mike Chen and Sailing Cai.
 
