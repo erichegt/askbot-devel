@@ -5,7 +5,6 @@ The actions a User is authorised to perform are dependent on their reputation
 and superuser status.
 """
 import datetime
-from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.db import transaction
 from models import Repute
@@ -211,7 +210,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
     post.author.save()
 
     question = post
-    if ContentType.objects.get_for_model(post) == answer_type:
+    if isinstance(post, Answer):
         question = post.question
 
     reputation = Repute(user=post.author,
@@ -343,7 +342,7 @@ def onUpVoted(vote, post, user, timestamp=None):
             author.save()
 
             question = post
-            if ContentType.objects.get_for_model(post) == answer_type:
+            if isinstance(post, Answer):
                 question = post.question
 
             reputation = Repute(user=author,
@@ -373,7 +372,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
         author.save()
 
         question = post
-        if ContentType.objects.get_for_model(post) == answer_type:
+        if isinstance(post, Answer):
             question = post.question
 
         reputation = Repute(user=author,
@@ -401,7 +400,7 @@ def onDownVoted(vote, post, user, timestamp=None):
         author.save()
 
         question = post
-        if ContentType.objects.get_for_model(post) == answer_type:
+        if isinstance(post, Answer):
             question = post.question
 
         reputation = Repute(user=author,
@@ -443,7 +442,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
         author.save()
 
         question = post
-        if ContentType.objects.get_for_model(post) == answer_type:
+        if isinstance(post, Answer):
             question = post.question
 
         reputation = Repute(user=author,
