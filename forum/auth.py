@@ -10,8 +10,7 @@ from django.db import transaction
 from models import Repute
 from models import Question
 from models import Answer
-#todo: why can't I import these?
-#from models import mark_offensive, delete_post_or_answer
+from models import mark_offensive, delete_post_or_answer
 from const import TYPE_REPUTATION
 import logging
 
@@ -256,7 +255,6 @@ def onFlaggedItem(item, post, user, timestamp=None):
             instance=post, 
             mark_by=user
         )
-
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):

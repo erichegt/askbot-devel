@@ -70,6 +70,9 @@ class QuestionManager(models.Manager):
 
         return False
 
+    #todo: why not make this into a method of class Question?
+    #      also it is actually strange - why do we need the answer_count
+    #      field if the count depends on who is requesting this?
     def update_answer_count(self, question):
         """
         Executes an UPDATE query to update denormalised data with the

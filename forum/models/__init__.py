@@ -8,8 +8,19 @@ import re
 
 from base import *
 import datetime
-from forum import auth
 from django.contrib.contenttypes.models import ContentType
+
+#todo: move to a separate file?
+# custom signals
+tags_updated = django.dispatch.Signal(providing_args=["question"])
+edit_question_or_answer = django.dispatch.Signal(providing_args=["instance", "modified_by"])
+delete_post_or_answer = django.dispatch.Signal(providing_args=["instance", "deleted_by"])
+mark_offensive = django.dispatch.Signal(providing_args=["instance", "mark_by"])
+user_updated = django.dispatch.Signal(providing_args=["instance", "updated_by"])
+user_logged_in = django.dispatch.Signal(providing_args=["session"])
+
+#todo: must go after signals
+from forum import auth
 
 # User extend properties
 QUESTIONS_PER_PAGE_CHOICES = (
@@ -71,15 +82,6 @@ User.add_to_class('tag_filter_setting',
                                         default='ignored'
                                      )
                  )
-
-# custom signal
-tags_updated = django.dispatch.Signal(providing_args=["question"])
-edit_question_or_answer = django.dispatch.Signal(providing_args=["instance", "modified_by"])
-delete_post_or_answer = django.dispatch.Signal(providing_args=["instance", "deleted_by"])
-mark_offensive = django.dispatch.Signal(providing_args=["instance", "mark_by"])
-user_updated = django.dispatch.Signal(providing_args=["instance", "updated_by"])
-user_logged_in = django.dispatch.Signal(providing_args=["session"])
-
 
 def get_messages(self):
     messages = []

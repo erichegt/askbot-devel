@@ -30,6 +30,7 @@ xml_read_order = (
 
 #association tables SE item id --> OSQA item id
 #table associations are implied
+#todo: there is an issue that these may be inconsistent with the database
 USER = {}#SE User.id --> django(OSQA) User.id
 QUESTION = {}
 ANSWER = {}
@@ -383,7 +384,7 @@ class Command(BaseCommand):
             )
             QUESTION[rev_group[0].post.id] = q
         elif post_type == 'Answer':
-            q = QUESTION[rev_group[0].post.parent.id]
+            q = X.get_post(rev_group[0].post.parent)
             a = osqa.Answer.objects.create_new(
                 question = q,
                 author = author,
@@ -419,7 +420,7 @@ class Command(BaseCommand):
         post_type = rev0.post.post_type.name
 
         if post_type == 'Question':
-            q = QUESTION[rev0.post.id]
+            q = X.get_post(rev0.post)
             q.apply_edit(
                 edited_at = edited_at,
                 edited_by = edited_by,
@@ -429,7 +430,7 @@ class Command(BaseCommand):
                 tags = tags,
             )
         elif post_type == 'Answer':
-            a = ANSWER[rev0.post.id]
+            a = X.get_post(rev0.post)
             a.apply_edit(
                 edited_at = edited_at,
                 edited_by = edited_by,
