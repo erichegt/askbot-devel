@@ -14,7 +14,6 @@ def application_settings(context):
         'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
         'WIKI_ON':settings.WIKI_ON,
-        'USE_EXTERNAL_LEGACY_LOGIN':settings.USE_EXTERNAL_LEGACY_LOGIN,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
         'OSQA_SKIN':settings.OSQA_DEFAULT_SKIN,
         }
