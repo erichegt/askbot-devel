@@ -83,10 +83,6 @@ GOOGLE_SITEMAP_CODE = ''
 GOOGLE_ANALYTICS_KEY = ''
 BOOKS_ON = False
 WIKI_ON = True
-USE_EXTERNAL_LEGACY_LOGIN = False
-EXTERNAL_LEGACY_LOGIN_HOST = 'login.osqa.net'
-EXTERNAL_LEGACY_LOGIN_PORT = 80
-EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">OSQA</span>'
 FEEDBACK_SITE_URL = None #None or url
 EDITABLE_SCREEN_NAME = False #True or False - can user change screen name?
 

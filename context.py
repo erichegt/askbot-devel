@@ -15,7 +15,6 @@ def application_settings(context):
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
         'BOOKS_ON':settings.BOOKS_ON,
         'WIKI_ON':settings.WIKI_ON,
-        'USE_EXTERNAL_LEGACY_LOGIN':settings.USE_EXTERNAL_LEGACY_LOGIN,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
         'USE_SPHINX_SEARCH':settings.USE_SPHINX_SEARCH,
         'OSQA_SKIN':settings.OSQA_DEFAULT_SKIN,
