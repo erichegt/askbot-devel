@@ -1,0 +1,20 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+{% load extra_tags %}
+
+{% block content %}
+    <p>{% trans "Greetings from the Q&A forum" %},</p>
+
+    <p>{% trans "You're seeing this because someone requested a temporary login link" %}</p>
+
+    <a href="{% fullurl auth_tempsignin user=user.id,code=temp_login_code %}">{% fullurl auth_tempsignin user=user.id,code=temp_login_code %}</a>
+
+    <p>{% trans "Following the link above will give you access to your account." %}</p>
+
+    <p>{% blocktrans %}If you beleive that this message was sent in mistake -
+    no further action is needed. Just ingore this email, we apologize
+    for any inconvenience{% endblocktrans %}</p>
+
+    <p>{% blocktrans %}Sincerely,<br />
+    Forum Administrator{% endblocktrans %}</p>
+{% endblock %}

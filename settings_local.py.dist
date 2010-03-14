@@ -36,7 +36,14 @@ DATABASE_ENGINE = ''  #mysql, etc
 DATABASE_HOST = ''
 DATABASE_PORT = ''
 
-#Moved from settings.py for better organization. (please check it up to clean up settings.py)
+#set this value to 'dummy://' if you don't want to use cache, or set up your favourite caching mechanism
+#see http://docs.djangoproject.com/en/1.1/topics/cache/ for details
+#example (set local file system cache in a cache folder in the root of the osqa install):
+#CACHE_BACKEND = 'file://%s' % os.path.join(os.path.dirname(__file__),'cache').replace('\\','/')
+CACHE_BACKEND = 'dummy://'
+
+#If you use memcache you may want to uncomment the following line to enable memcached based sessions
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
 
 #email server settings
 SERVER_EMAIL = ''
@@ -81,7 +88,6 @@ EMAIL_UNIQUE = False
 APP_URL = 'http://osqa.net' #used by email notif system and RSS
 GOOGLE_SITEMAP_CODE = ''
 GOOGLE_ANALYTICS_KEY = ''
-BOOKS_ON = False
 WIKI_ON = True
 FEEDBACK_SITE_URL = None #None or url
 EDITABLE_SCREEN_NAME = False #True or False - can user change screen name?
@@ -89,21 +95,8 @@ EDITABLE_SCREEN_NAME = False #True or False - can user change screen name?
 DJANGO_VERSION = 1.1
 RESOURCE_REVISION=4
 
-USE_SPHINX_SEARCH = False #if True all SPHINX_* settings are required
-#also sphinx search engine and djangosphinxs app must be installed
-#sample sphinx configuration file is /sphinx/sphinx.conf
-SPHINX_API_VERSION = 0x113 #refer to djangosphinx documentation
-SPHINX_SEARCH_INDICES=('osqa',) #a tuple of index names remember about a comma after the
-#last item, especially if you have just one :)
-SPHINX_SERVER='localhost'
-SPHINX_PORT=3312
-
 #please get these at recaptcha.net
 RECAPTCHA_PRIVATE_KEY='...'
 RECAPTCHA_PUBLIC_KEY='...'
 OSQA_DEFAULT_SKIN = 'default'
 
-#Facebook settings
-USE_FB_CONNECT=False #make this True and fill out keys below
-FB_API_KEY='' #your api key from facebook
-FB_SECRET='' #your application secret

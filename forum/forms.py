@@ -262,25 +262,7 @@ class TagFilterSelectionForm(forms.ModelForm):
         if before != after:
             return True
         return False
-
-
-class ChangePasswordForm(SetPasswordForm):
-    """ change password form """
-    oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
-                label=mark_safe(_('Current password')))
-
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        if user is None:
-            raise TypeError("Keyword argument 'user' must be supplied")
-        super(ChangePasswordForm, self).__init__(data, *args, **kwargs)
-        self.user = user
-
-    def clean_oldpw(self):
-        """ test old password """
-        if not self.user.check_password(self.cleaned_data['oldpw']):
-            raise forms.ValidationError(_("Old password is incorrect. \
-                    Please enter the correct password."))
-        return self.cleaned_data['oldpw']
+        
 
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))

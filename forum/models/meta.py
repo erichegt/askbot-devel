@@ -22,7 +22,7 @@ class VoteManager(models.Manager):
             return 0
 
 
-class Vote(MetaContent):
+class Vote(MetaContent, UserContent):
     VOTE_UP = +1
     VOTE_DOWN = -1
     VOTE_CHOICES = (
@@ -61,7 +61,7 @@ class FlaggedItemManager(models.Manager):
         else:
             return 0
 
-class FlaggedItem(MetaContent):
+class FlaggedItem(MetaContent, UserContent):
     """A flag on a Question or Answer indicating offensive content."""
     flagged_at     = models.DateTimeField(default=datetime.datetime.now)
 
@@ -74,7 +74,7 @@ class FlaggedItem(MetaContent):
     def __unicode__(self):
         return '[%s] flagged at %s' %(self.user, self.flagged_at)
 
-class Comment(MetaContent):
+class Comment(MetaContent, UserContent):
     comment        = models.CharField(max_length=300)
     added_at       = models.DateTimeField(default=datetime.datetime.now)
 

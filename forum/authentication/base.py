@@ -33,6 +33,10 @@ class ConsumerTemplateContext(object):
     extra_css = []
     show_to_logged_in_user = True
 
+    @classmethod
+    def readable_key(cls, key):
+        return key.key
+
 class InvalidAuthentication(Exception):
     def __init__(self, message):
         self.message = message

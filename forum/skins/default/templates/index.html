@@ -5,6 +5,7 @@
 {% load humanize %}
 {% load extra_filters %}
 {% load smart_if %}
+{% load cache %}
 {% block title %}{% spaceless %}{% trans "Home" %}{% endspaceless %}{% endblock %}
 {% block meta %}<meta name="keywords" content="{{ settings.APP_KEYWORDS }}" />
         <meta name="description" content="{{ settings.APP_DESCRIPTION }}" />{% endblock %}
@@ -31,41 +32,7 @@
     </div>
 </div>
 <!-- ???? -->
-<div id="listA">
-    	{% for question in questions.object_list %}
-	<div class="short-summary">
-		<div class="counts">
-			<div class="votes">
-				<div class="item-count">{{question.score|intcomma}}</div>
-				<div>{% trans "votes" %}</div>
-			</div >
-			<div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
-				<div class="item-count">{{question.answer_count|intcomma}}</div>
-				<div>{% trans "answers" %}</div>
-			</div>
-			<div class="views">
-				 <div class="item-count">{{question.view_count|cnprog_intword|safe}}</div>
-				 <div>{% trans "views" %}</div>
-			</div>
-		</div>
-
-		<h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
-
-		<div class="userinfo">
-			<span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
-			{% if question.last_activity_by %}
-			<a href="{{ question.last_activity_by.get_profile_url }}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
-			{% endif %}
-		</div>
-
-		<div class="tags">
-			{% for tag in question.tagname_list %}
-			<a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
-			{% endfor %}
-		</div>
-	</div>
-	{% endfor %}
-</div>
+{% include "question_list.html" %}
 {% endblock %}
 
 {% block sidebar %}
@@ -85,10 +52,12 @@
 	<h3>{% trans "Recent tags" %}</h3>
 	<div class="body">
          <div class="tags">
+        {% cache 60 recent_tags %}
         {% for tag in tags %}
             <a rel="tag"
 				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
         {% endfor %}
+        {% endcache %}
         </div>
         <div class="more"><a href="{% url tags %}">{% trans "popular tags" %} </a> </div>
     </div>
@@ -98,20 +67,22 @@
     <h3>{% trans "Recent awards" %}</h3>
         <div class="body">
              <ul class="badge-list">
+             {% cache 60 recent_awards %}
              {% for award in awards %}
                 <li>
                 <a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
-                <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a> {% trans "given to" %}
-                <a href="{% url users %}{{award.user_id}}/{{award.user_name}}">{{ award.user_name }}</a>
+                <span class="badge{{ award.badge_type }}">&#9679;</span>&nbsp;{{ award.badge_name }}</a>
+                <a href="/users/{{ award.user_id }}/{{ award.user_name|slugify }}/">{{ award.user_name }}</a>
                 </li>
             {% endfor %}
+            {% endcache %}
             </ul>
         	<div class="more"><a href="{% url badges %}">{% trans "all awards" %} </a> </div>
          </div>
 </div>
 {% endif %}
 <div id="feeds">
-<a href="{% media  "/feeds/rss" %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
+<a href="{% url  latest_questions_feed %}" title="{% trans "subscribe to last 30 questions by RSS" %}">{% trans "subscribe to the questions feed" %}</a>
 </div>
 {% endblock %}
 {% block tail %}

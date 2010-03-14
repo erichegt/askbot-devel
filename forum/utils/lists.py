@@ -1,5 +1,9 @@
 """Utilities for working with lists and sequences."""
 
+class LazyList(list):
+    def __init__(self, get_data):
+        self.data = get_data
+
 def flatten(x):
     """
     Returns a single, flat list which contains all elements retrieved

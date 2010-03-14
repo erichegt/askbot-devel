@@ -14,7 +14,7 @@ Current process to load SE data into OSQA is:
    you may want to make sure that your dump directory in .gitignore file
    so that you don't publish it by mistake
 
-3) add 'stackexchange' to the list of installed apps (probably aready in settings.py)
+3) enable 'stackexchange' in the list of installed apps (probably aready in settings.py)
 
 4) (optional - create models.py for SE, which is included anyway) run: 
 

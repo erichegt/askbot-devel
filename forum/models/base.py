@@ -17,10 +17,14 @@ import django.dispatch
 from django.conf import settings
 import logging
 
-if settings.USE_SPHINX_SEARCH == True:
-    from djangosphinx.models import SphinxSearch
-
 from forum.const import *
+
+class UserContent(models.Model):
+    user = models.ForeignKey(User, related_name='%(class)ss')
+
+    class Meta:
+        abstract = True
+        app_label = 'forum'
 
 class MetaContent(models.Model):
     """
@@ -29,7 +33,6 @@ class MetaContent(models.Model):
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    user           = models.ForeignKey(User, related_name='%(class)ss')
 
     class Meta:
         abstract = True

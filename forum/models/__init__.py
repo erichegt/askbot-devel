@@ -2,7 +2,7 @@ from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion
 from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
-from user import Activity, AnonymousEmail, EmailFeedSetting, AuthKeyUserAssociation
+from user import Activity, ValidationHash, EmailFeedSetting, AuthKeyUserAssociation
 from repute import Badge, Award, Repute
 import re
 
@@ -48,6 +48,9 @@ def user_get_q_sel_email_feed_frequency(self):
     #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
 
+def user_get_absolute_url(self):
+    return "/users/%d/%s/" % (self.id, (self.username))
+
 User.add_to_class('is_approved', models.BooleanField(default=False))
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
@@ -82,6 +85,7 @@ User.add_to_class('tag_filter_setting',
                                         default='ignored'
                                      )
                  )
+User.add_to_class('get_absolute_url', user_get_absolute_url)
 
 def get_messages(self):
     messages = []
@@ -94,7 +98,7 @@ def delete_messages(self):
 
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
-    return '%s%s/' % (reverse('user', args=[self.id]), slugify(self.username))
+    return "/users/%d/%s" % (self.id, slugify(self.username))
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)
@@ -413,7 +417,6 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
             aa.publish(user)
 
 #signal for User modle save changes
-
 pre_save.connect(calculate_gravatar_hash, sender=User)
 post_save.connect(record_ask_event, sender=Question)
 post_save.connect(record_answer_event, sender=Answer)
@@ -457,7 +460,7 @@ Repute = Repute
 
 Activity = Activity
 EmailFeedSetting = EmailFeedSetting
-AnonymousEmail = AnonymousEmail
+ValidationHash = ValidationHash
 AuthKeyUserAssociation = AuthKeyUserAssociation
 
 __all__ = [
@@ -483,7 +486,7 @@ __all__ = [
 
         'Activity',
         'EmailFeedSetting',
-        'AnonymousEmail',
+        'ValidationHash',
         'AuthKeyUserAssociation',
 
         'User',

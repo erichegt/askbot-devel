@@ -1,0 +1,26 @@
+{% load extra_filters %}
+{% load extra_tags %}
+{% load i18n %}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="{% fullmedia  "/media/style/style.css" %}" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <a href="{% fullurl index %}">
+            <img src="{% fullmedia  "/media/images/logo.png" %}" title="{% trans "home" %}" alt="{{settings.APP_TITLE}} logo"/>
+        </a>
+        <br />
+        <p>{{ settings.APP_TITLE }}</p>
+    <br /><br />
+    <div id="wrapper">
+            <div id="room">
+                <div id="CALeft">
+                    {% block content%}
+                    {% endblock%}
+                </div>
+            </div>
+            <div class="spacer3"></div>
+        </div>
+    </body>
+</html>

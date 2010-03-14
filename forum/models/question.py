@@ -7,6 +7,8 @@ from django.utils.html import strip_tags
 import datetime
 markdowner = Markdown(html4tags=True)
 
+from forum.utils.lists import LazyList
+
 class QuestionManager(models.Manager):
     def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
         html = sanitize_html(markdowner.convert(text))
@@ -104,17 +106,25 @@ class QuestionManager(models.Manager):
         Questions with the individual tags will be added to list if above questions are not full.
         """
         #print datetime.datetime.now()
-        questions = list(self.filter(tagnames = question.tagnames, deleted=False).all())
 
-        tags_list = question.tags.all()
-        for tag in tags_list:
-            extend_questions = self.filter(tags__id = tag.id, deleted=False)[:50]
-            for item in extend_questions:
-                if item not in questions and len(questions) < 10:
-                    questions.append(item)
+        manager = self
 
-        #print datetime.datetime.now()
-        return questions
+        def get_data():
+            questions = list(manager.filter(tagnames = question.tagnames, deleted=False).all())
+
+            tags_list = question.tags.all()
+            for tag in tags_list:
+                extend_questions = manager.filter(tags__id = tag.id, deleted=False)[:50]
+                for item in extend_questions:
+                    if item not in questions and len(questions) < 10:
+                        questions.append(item)
+
+            #print datetime.datetime.now()
+            return questions
+
+        return LazyList(get_data)
+
+
 
 class Question(Content, DeletableContent):
     title    = models.CharField(max_length=300)
@@ -432,7 +442,7 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        QuestionManager.create_new(title=self.title, author=user, added_at=added_at,
+        Question.objects.create_new(title=self.title, author=user, added_at=added_at,
                                 wiki=self.wiki, tagnames=self.tagnames,
                                 summary=self.summary, text=self.text)
         self.delete()

@@ -13,10 +13,8 @@ def application_settings(context):
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
         'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
-        'BOOKS_ON':settings.BOOKS_ON,
         'WIKI_ON':settings.WIKI_ON,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
-        'USE_SPHINX_SEARCH':settings.USE_SPHINX_SEARCH,
         'OSQA_SKIN':settings.OSQA_DEFAULT_SKIN,
         }
     return {'settings':my_settings}

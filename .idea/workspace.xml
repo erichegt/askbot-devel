@@ -14,53 +14,338 @@
     <option name="scrTextFileName" value="" />
     <option name="historyRevisionsNumber" value="4" />
   </component>
-  <component name="ChangeListManager" verified="true">
+  <component name="ChangeListManager">
     <list default="true" readonly="true" id="df1b69cf-9c35-4a78-9890-c59b542399e8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/views.py" afterPath="$PROJECT_DIR$/fbconnect/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/urls.py" afterPath="$PROJECT_DIR$/django_authopenid/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.py" afterPath="$PROJECT_DIR$/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/book.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/book.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/auth.py" afterPath="$PROJECT_DIR$/forum/auth.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/pagesize.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/pagesize.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/close.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/close.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/facebook.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/facebook.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid-inputicon.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid-inputicon.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/templates/xd_receiver.html" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/templates/xd_receiver.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/auth.py" afterPath="$PROJECT_DIR$/forum/views/auth.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-favorite-on.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-favorite-on.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/technorati.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/technorati.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.flot.pack.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.flot.pack.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/email_base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/email_base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/feedback_email.txt" afterPath="$PROJECT_DIR$/forum/skins/default/templates/feedback_email.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/books/views.py" afterPath="$PROJECT_DIR$/forum_modules/books/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osqa.iml" afterPath="$PROJECT_DIR$/osqa.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/tags.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/tags.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/tag.py" afterPath="$PROJECT_DIR$/forum/models/tag.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/tests.py" afterPath="$PROJECT_DIR$/fbconnect/tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WISH_LIST" afterPath="$PROJECT_DIR$/WISH_LIST" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/urls.py" afterPath="$PROJECT_DIR$/fbconnect/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/question.py" afterPath="$PROJECT_DIR$/forum/models/question.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/meta.py" afterPath="$PROJECT_DIR$/forum/models/meta.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/__init__.py" afterPath="$PROJECT_DIR$/forum/models/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/pgfulltext/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/pgfulltext/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/compress.bat" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/compress.bat" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/email.py" afterPath="$PROJECT_DIR$/forum/utils/email.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/dependencies.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/dependencies.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/ask.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/ask.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/users_questions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/users_questions.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-favorite-off.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-favorite-off.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cron/multi_award_badges_virtualenv" afterPath="$PROJECT_DIR$/cron/multi_award_badges_virtualenv" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\external_legacy_login_info.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/subscribe_everyone.py" afterPath="$PROJECT_DIR$/forum/management/commands/subscribe_everyone.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/medala.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/medala.gif" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\sendpw_email.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.tag_selector.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.tag_selector.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/claimid.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/claimid.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.i18n.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.i18n.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/decorators.py" afterPath="$PROJECT_DIR$/forum/utils/decorators.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/cc-88x31.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/cc-88x31.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/pgfulltext/handlers.py" afterPath="$PROJECT_DIR$/forum_modules/pgfulltext/handlers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/consumer.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/consumer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/footer.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/footer.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/revisions_answer.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/revisions_answer.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up-on.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up-on.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/openid.gif" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\email_validation.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/authentication.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/authentication.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/pg_clean_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/pg_clean_award_badges.py" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\delete.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/__init__.py" afterPath="$PROJECT_DIR$/forum/skins/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-up.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/aol.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/aol.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/account_settings.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/account_settings.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/pg_multi_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/pg_multi_award_badges.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/pgfulltext/pg_fts_install.sql" afterPath="$PROJECT_DIR$/forum_modules/pgfulltext/pg_fts_install.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/500.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/500.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/settings.py" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/flickr.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/flickr.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/commands.py" afterPath="$PROJECT_DIR$/forum/views/commands.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.utils.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.utils.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/sitemap.py" afterPath="$PROJECT_DIR$/forum/sitemap.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/wordpress.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/wordpress.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd-min.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd-min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_summary_list_roll.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_summary_list_roll.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/blogger-1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/blogger-1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/privacy.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/privacy.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/reopen.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/reopen.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/send_email_alerts.py" afterPath="$PROJECT_DIR$/forum/management/commands/send_email_alerts.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/livejournal.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/livejournal.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/edit.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/edit.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/blue-up-arrow-h18px.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/blue-up-arrow-h18px.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/user_messages/context_processors.py" afterPath="$PROJECT_DIR$/forum/user_messages/context_processors.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/auth.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/auth.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/time.py" afterPath="$PROJECT_DIR$/forum/utils/time.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/__init__.py" afterPath="$PROJECT_DIR$/forum/management/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/user_messages/__init__.py" afterPath="$PROJECT_DIR$/forum/user_messages/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/se_hilite.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/se_hilite.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/bullet_green.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/bullet_green.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/__init__.py" afterPath="$PROJECT_DIR$/forum/middleware/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/yahoo.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/yahoo.gif" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\settings.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/forms.py" afterPath="$PROJECT_DIR$/forum/utils/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/sample_command.py" afterPath="$PROJECT_DIR$/forum/management/commands/sample_command.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/answer.py" afterPath="$PROJECT_DIR$/forum/models/answer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rmpyc" afterPath="$PROJECT_DIR$/rmpyc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/anon_user.py" afterPath="$PROJECT_DIR$/forum/middleware/anon_user.py" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\complete.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/openid.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/openid.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/showdown.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/showdown.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/views.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/signup.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/signup.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.validate.pack.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.validate.pack.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/users.py" afterPath="$PROJECT_DIR$/forum/views/users.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/urls.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/grippie.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/grippie.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/prettify.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/prettify.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/faq.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/faq.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/tag_selector.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/tag_selector.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/aol.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/aol.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/flickr.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/flickr.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openid.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openid.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/images/wmd-buttons.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/images/wmd-buttons.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_footer.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_footer.html" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\changeemail.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-accepted-on.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-accepted-on.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/complete.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/complete.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/flot-build.bat" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/flot-build.bat" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/user.py" afterPath="$PROJECT_DIR$/forum/models/user.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/__init__.py" afterPath="$PROJECT_DIR$/fbconnect/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-down-on.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-down-on.png" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\sendpw.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/new.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/new.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/claimid-0.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/claimid-0.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/models.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/yahoo.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/yahoo.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/dot-g.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/dot-g.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-down.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-arrow-down.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/users.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/users.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/templates/openidurl.html" afterPath="$PROJECT_DIR$/forum_modules/openidauth/templates/openidurl.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/lists.py" afterPath="$PROJECT_DIR$/forum/utils/lists.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/vidoop.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/vidoop.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/clean_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/clean_award_badges.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openid-inputicon.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openid-inputicon.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/vidoop.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/vidoop.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/views.py" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/djangomade124x25_grey.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/djangomade124x25_grey.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/twitter.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/twitter.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/google.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/google.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/authentication/__init__.py" afterPath="$PROJECT_DIR$/forum/authentication/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/base.py" afterPath="$PROJECT_DIR$/forum/models/base.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/django_authopenid/views.py" afterPath="$PROJECT_DIR$/django_authopenid/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/lib/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/lib/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/templatetags/extra_tags.py" afterPath="$PROJECT_DIR$/forum/templatetags/extra_tags.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/models.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/feed-icon-small.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/feed-icon-small.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/style.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/close-small.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/close-small.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/authentication/base.py" afterPath="$PROJECT_DIR$/forum/authentication/base.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/index.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/quest-bg.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/quest-bg.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/message_to_everyone.py" afterPath="$PROJECT_DIR$/forum/management/commands/message_to_everyone.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_edit_tips.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_edit_tips.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/const.py" afterPath="$PROJECT_DIR$/forum/const.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cron/once_award_badges_virtualenv" afterPath="$PROJECT_DIR$/cron/once_award_badges_virtualenv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/question.py" afterPath="$PROJECT_DIR$/forum/models/question.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal-1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/livejournal-1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.min.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/books/urls.py" afterPath="$PROJECT_DIR$/forum_modules/books/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/email_validation.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/email_validation.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_favorites.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_favorites.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/__init__.py" afterPath="$PROJECT_DIR$/forum/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/repute.py" afterPath="$PROJECT_DIR$/forum/models/repute.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/authopenid/signin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/models.py" afterPath="$PROJECT_DIR$/fbconnect/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings_local.py.dist" afterPath="$PROJECT_DIR$/settings_local.py.dist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/fb.py" afterPath="$PROJECT_DIR$/fbconnect/fb.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osqa.iml" afterPath="$PROJECT_DIR$/osqa.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester/models.py" afterPath="$PROJECT_DIR$/tester/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/fbconnect/xd_receiver.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/default.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/default.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/technorati.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/technorati.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/forms.py" afterPath="$PROJECT_DIR$/forum/forms.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/questions.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/showdown-min.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/showdown-min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/flickr.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/flickr.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/README.TXT" afterPath="$PROJECT_DIR$/log/README.TXT" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/technorati-1.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/technorati-1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/temp_login_request.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/temp_login_request.html" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\signin.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\confirm_email.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/modules.py" afterPath="$PROJECT_DIR$/forum/modules.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/common/media/README" afterPath="$PROJECT_DIR$/forum/skins/common/media/README" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/dash.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/dash.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/authentication.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/authentication.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/authentication/forms.py" afterPath="$PROJECT_DIR$/forum/authentication/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/close-small-hover.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/close-small-hover.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/robotstxt/templates/robots.txt" afterPath="$PROJECT_DIR$/forum_modules/robotstxt/templates/robots.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/writers.py" afterPath="$PROJECT_DIR$/forum/views/writers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/pg_once_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/pg_once_award_badges.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/books/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/books/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/verisign.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/verisign.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/temp_login_email.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/temp_login_email.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/myopenid.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/myopenid.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openidico16.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openidico16.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/badges.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/badges.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/verisign.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/verisign.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/__init__.py" afterPath="$PROJECT_DIR$/forum/views/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/se_hilite_src.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/se_hilite_src.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/expander-arrow-show.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/expander-arrow-show.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/style/jquery.autocomplete.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/style/jquery.autocomplete.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/answer_edit_tips.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/answer_edit_tips.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/verisign-2.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/verisign-2.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/odict.py" afterPath="$PROJECT_DIR$/forum/utils/odict.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/logo2.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/logo2.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/claimid.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/claimid.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/base_command.py" afterPath="$PROJECT_DIR$/forum/management/commands/base_command.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/upfiles/README" afterPath="$PROJECT_DIR$/forum/upfiles/README" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/once_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/once_award_badges.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/pg_base_command.py" afterPath="$PROJECT_DIR$/forum/management/commands/pg_base_command.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/store.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/store.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/favicon.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/favicon.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/nophoto.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/nophoto.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/pgfulltext/management.py" afterPath="$PROJECT_DIR$/forum_modules/pgfulltext/management.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/README" afterPath="$PROJECT_DIR$/forum/views/README" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/authentication.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/authentication.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/indicator.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/indicator.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/authentication.py" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/authentication.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings_local.py.dist" afterPath="$PROJECT_DIR$/settings_local.py.dist" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/myopenid-2.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/myopenid-2.png" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\failure.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_stats.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_stats.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/medala_on.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/medala_on.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_retag.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_retag.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_votes.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_votes.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/yuicompressor-2.4.2.jar" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/yuicompressor-2.4.2.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/blogger.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/blogger.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.i18n.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.i18n.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/handlers.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/handlers.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" afterPath="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/readers.py" afterPath="$PROJECT_DIR$/forum/views/readers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/forms.py" afterPath="$PROJECT_DIR$/fbconnect/forms.py" />
-      <change type="DELETED" beforePath="C:\osqadev\updated\osqa\user_messages\models.py" afterPath="" />
-      <change type="MOVED" beforePath="C:\osqadev\updated\osqa\forum\diff.py" afterPath="$PROJECT_DIR$/forum/utils/diff.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fbconnect/pjson.py" afterPath="$PROJECT_DIR$/fbconnect/pjson.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester/__init__.py" afterPath="$PROJECT_DIR$/tester/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/settings.py" afterPath="$PROJECT_DIR$/forum/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/meta.py" afterPath="$PROJECT_DIR$/forum/models/meta.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/google.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/google.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/diff.py" afterPath="$PROJECT_DIR$/forum/utils/diff.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/DISABLED" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/DISABLED" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/expander-arrow-hide.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/expander-arrow-hide.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/feeds/rss_description.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/feeds/rss_description.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/templates/button.html" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/templates/button.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/wordpress.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/wordpress.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/consumer.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/consumer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cache/README.TXT" afterPath="$PROJECT_DIR$/cache/README.TXT" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/openid.css" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/openid.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/paginator.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/paginator.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/html.py" afterPath="$PROJECT_DIR$/forum/utils/html.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/badge.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/badge.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/facebookauth/urls.py" afterPath="$PROJECT_DIR$/forum_modules/facebookauth/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/notarobot.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/notarobot.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/forms.py" afterPath="$PROJECT_DIR$/forum_modules/localauth/forms.py" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\changepw.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.form.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.form.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_tabs.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_tabs.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/dot-list.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/dot-list.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/forum_modules/default_badges/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/facebook.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/facebook.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/blogger.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/blogger.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/answer_edit.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/answer_edit.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.post.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.post.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_responses.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_responses.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/lib/oauth.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/lib/oauth.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/jquery.openid.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/jquery.openid.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/feedback.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/feedback.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.admin.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.admin.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/post_contributor_info.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/post_contributor_info.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/404.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/404.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd-test.html" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/wmd/wmd-test.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/index_.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/index_.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/models/__init__.py" afterPath="$PROJECT_DIR$/forum/models/__init__.py" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\yadis.xrdf" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.py" afterPath="$PROJECT_DIR$/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/excanvas.pack.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/excanvas.pack.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/about.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/about.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/settings.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cron/once_award_badges" afterPath="$PROJECT_DIR$/cron/once_award_badges" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/robotstxt/DISABLED" afterPath="$PROJECT_DIR$/forum_modules/robotstxt/DISABLED" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/__init__.py" afterPath="$PROJECT_DIR$/forum/management/commands/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/question_list.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/question_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/sphinxfulltext/settings.py" afterPath="$PROJECT_DIR$/forum_modules/sphinxfulltext/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/README" afterPath="$PROJECT_DIR$/forum/skins/README" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/templatetags/__init__.py" afterPath="$PROJECT_DIR$/forum/templatetags/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_email_subscriptions.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_email_subscriptions.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/openid/vidoop.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/openid/vidoop.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/localauth/templates/loginform.html" afterPath="$PROJECT_DIR$/forum_modules/localauth/templates/loginform.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/cancel.py" afterPath="$PROJECT_DIR$/forum/middleware/cancel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/books/models.py" afterPath="$PROJECT_DIR$/forum_modules/books/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cron/multi_award_badges" afterPath="$PROJECT_DIR$/cron/multi_award_badges" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery-1.2.6.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/oauthauth/settings.py" afterPath="$PROJECT_DIR$/forum_modules/oauthauth/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rmpyc" afterPath="$PROJECT_DIR$/rmpyc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_reputation.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_reputation.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/admin.py" afterPath="$PROJECT_DIR$/forum/admin.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/views/meta.py" afterPath="$PROJECT_DIR$/forum/views/meta.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openidico.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/openidico.png" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\changeopenid.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/templatetags/smart_if.py" afterPath="$PROJECT_DIR$/forum/templatetags/smart_if.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/vote-accepted.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/vote-accepted.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/logout.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/logout.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/urls.py" afterPath="$PROJECT_DIR$/forum/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/edit_user_email_feeds_form.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/edit_user_email_feeds_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/feeds/rss_title.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/feeds/rss_title.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/header.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/header.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/pgfulltext/DISABLED" afterPath="$PROJECT_DIR$/forum_modules/pgfulltext/DISABLED" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/gray-up-arrow-h18px.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/gray-up-arrow-h18px.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/wordpress.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/wordpress.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/openidauth/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/openidauth/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.openid.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.openid.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/templatetags/extra_filters.py" afterPath="$PROJECT_DIR$/forum/templatetags/extra_filters.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WISH_LIST" afterPath="$PROJECT_DIR$/WISH_LIST" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/myopenid.ico" afterPath="$PROJECT_DIR$/forum/skins/default/media/jquery-openid/images/myopenid.ico" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.flot.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.flot.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/base_content.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/base_content.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/signin.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/signin.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/feed.py" afterPath="$PROJECT_DIR$/forum/feed.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/cache.py" afterPath="$PROJECT_DIR$/forum/utils/cache.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/management/commands/multi_award_badges.py" afterPath="$PROJECT_DIR$/forum/management/commands/multi_award_badges.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/auth/auth_settings.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/auth/auth_settings.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_info.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_info.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.editor.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/com.cnprog.editor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/robotstxt/__init__.py" afterPath="$PROJECT_DIR$/forum_modules/robotstxt/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.ajaxfileupload.js" afterPath="$PROJECT_DIR$/forum/skins/default/media/js/jquery.ajaxfileupload.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum_modules/robotstxt/urls.py" afterPath="$PROJECT_DIR$/forum_modules/robotstxt/urls.py" />
+      <change type="DELETED" beforePath="C:\osqadev\100302\osqa\forum\skins\default\templates\authopenid\signup.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/middleware/pagesize.py" afterPath="$PROJECT_DIR$/forum/middleware/pagesize.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/revisions_question.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/revisions_question.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/close-small-dark.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/close-small-dark.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/forum_modules/default_badges/badges.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/forum/management/commands/sximport.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/templates/user_recent.html" afterPath="$PROJECT_DIR$/forum/skins/default/templates/user_recent.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/cc-wiki.png" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/cc-wiki.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/utils/__init__.py" afterPath="$PROJECT_DIR$/forum/utils/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forum/skins/default/media/images/box-arrow.gif" afterPath="$PROJECT_DIR$/forum/skins/default/media/images/box-arrow.gif" />
     </list>
     <ignored path="osqa.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -120,82 +405,46 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="question.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/question.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="179" column="49" selection-start="11615" selection-end="11615" vertical-scroll-proportion="-6.244898">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/models/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="105" selection-start="1086" selection-end="1086" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="question.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/models/question.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="72" selection-start="38" selection-end="38" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/forum/models/base.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="12" selection-start="4364" selection-end="4364" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="20" selection-start="2573" selection-end="2573" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="anon_user.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/middleware/anon_user.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="35" selection-start="174" selection-end="174" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cancel.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/middleware/cancel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pagesize.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/middleware/pagesize.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/middleware/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/user_messages/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="context_processors.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/forum/user_messages/context_processors.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="27" selection-start="330" selection-end="330" vertical-scroll-proportion="0.3707165">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="34" selection-start="34" selection-end="34" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="readers.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/forum/views/readers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="38" selection-start="913" selection-end="913" vertical-scroll-proportion="0.0">
+            <state line="71" column="5" selection-start="2587" selection-end="2587" vertical-scroll-proportion="0.5356601">
               <folding />
             </state>
           </provider>
@@ -211,22 +460,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/settings_local.py" />
-        <option value="$PROJECT_DIR$/settings_local.py.dist" />
-        <option value="$PROJECT_DIR$/forum/models/answer.py" />
+        <option value="$PROJECT_DIR$/forum/management/commands/sximport.py" />
+        <option value="$PROJECT_DIR$/forum/badges/base.py" />
+        <option value="$PROJECT_DIR$/forum_modules/default_badges/badges.py" />
+        <option value="$PROJECT_DIR$/forum/badges/__init__.py" />
+        <option value="$PROJECT_DIR$/sql_scripts/badges.sql" />
+        <option value="$PROJECT_DIR$/forum/modules.py" />
+        <option value="$PROJECT_DIR$/forum_modules/facebookauth/views.py" />
+        <option value="$PROJECT_DIR$/forum/skins/default/templates/index.html" />
+        <option value="$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql" />
         <option value="$PROJECT_DIR$/forum/models/question.py" />
-        <option value="$PROJECT_DIR$/django_authopenid/forms.py" />
-        <option value="$PROJECT_DIR$/forum/models/base.py" />
-        <option value="$PROJECT_DIR$/forum/views/writers.py" />
-        <option value="$PROJECT_DIR$/forum/views/commands.py" />
-        <option value="$PROJECT_DIR$/forum/views/users.py" />
-        <option value="$PROJECT_DIR$/forum/views/meta.py" />
-        <option value="$PROJECT_DIR$/forum/views/books.py" />
+        <option value="$PROJECT_DIR$/forum/models/meta.py" />
         <option value="$PROJECT_DIR$/forum/views/readers.py" />
-        <option value="$PROJECT_DIR$/forum/__init__.py" />
+        <option value="$PROJECT_DIR$/forum/models/__init__.py" />
         <option value="$PROJECT_DIR$/settings.py" />
-        <option value="$PROJECT_DIR$/forum/middleware/anon_user.py" />
-        <option value="$PROJECT_DIR$/forum/user_messages/context_processors.py" />
+        <option value="$PROJECT_DIR$/forum/models/base.py" />
+        <option value="$PROJECT_DIR$/settings_local.py" />
       </list>
     </option>
   </component>
@@ -267,8 +516,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -287,9 +534,129 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="openidauth" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="default_badges" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="skins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="osqa" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forum" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="badges" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -298,7 +665,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="preferences.editor" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -307,6 +674,18 @@
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\osqadev\100302\osqa\forum\skins" />
+      <recent name="C:\osqadev\100302\osqa\cache" />
+      <recent name="C:\osqadev\100302\osqa" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\osqadev\100302\osqa" />
+      <recent name="C:\osqadev\100302\osqa\forum" />
+      <recent name="C:\osqadev\100302\osqa\forum\skins\default\templates\auth" />
+    </key>
   </component>
   <component name="Regex">
     <option name="pos1" value="218" />
@@ -427,6 +806,17 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
+    <configuration default="true" type="JavascriptDebugSession" factoryName="Local">
+      <JSDebuggerConfigurationSettings>
+        <option name="engineId" value="embedded" />
+        <option name="fileUrl" />
+      </JSDebuggerConfigurationSettings>
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" />
       <extension name="snapshooter" />
@@ -489,6 +879,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="df1b69cf-9c35-4a78-9890-c59b542399e8" name="Default" comment="" />
       <created>1266447811437</created>
       <updated>1266447811437</updated>
     </task>
@@ -516,29 +907,29 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1277" y="-3" width="1286" height="806" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Archetypes" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Archetypes" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329927" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329927" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959481" sideWeight="0.659854" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26969942" sideWeight="0.659854" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Regex" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsManagerConfiguration">
@@ -551,6 +942,8 @@
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ROLLBACK_IN_BACKGROUND" value="false" />
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
+    <option name="ENABLE_BACKGROUND_PROCESSES" value="true" />
+    <option name="CHANGED_ON_SERVER_INTERVAL" value="60" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="LAST_COMMIT_MESSAGE" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
@@ -570,114 +963,100 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/forum/models/answer.py">
+    <entry file="file://$PROJECT_DIR$/sql_scripts/update_2010_01_23.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="54" selection-start="758" selection-end="758" vertical-scroll-proportion="0.1863354">
+        <state line="0" column="0" selection-start="0" selection-end="395" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/commands.py">
+    <entry file="file://$PROJECT_DIR$/forum_modules/facebookauth/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="44" selection-start="413" selection-end="413" vertical-scroll-proportion="0.26397514">
+        <state line="10" column="45" selection-start="325" selection-end="325" vertical-scroll-proportion="0.2647975">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/writers.py">
+    <entry file="file://$PROJECT_DIR$/forum/utils/diff.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="509" selection-end="553" vertical-scroll-proportion="-8.16">
+        <state line="64" column="0" selection-start="1793" selection-end="1793" vertical-scroll-proportion="0.7936267">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/users.py">
+    <entry file="file://$PROJECT_DIR$/forum/modules.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="44" selection-start="539" selection-end="539" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/meta.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="44" selection-start="295" selection-end="295" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/views/books.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="80" selection-start="867" selection-end="867" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.666149">
+        <state line="55" column="32" selection-start="1580" selection-end="1580" vertical-scroll-proportion="0.38088012">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forum/views/readers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="38" selection-start="913" selection-end="913" vertical-scroll-proportion="0.0">
+        <state line="515" column="28" selection-start="21145" selection-end="21145" vertical-scroll-proportion="13.594721">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forum/__init__.py">
+    <entry file="file://$PROJECT_DIR$/sql_scripts/badges.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="34" selection-start="34" selection-end="34" vertical-scroll-proportion="0.0">
+        <state line="29" column="43" selection-start="2399" selection-end="2399" vertical-scroll-proportion="0.76552796">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/meta.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="0" selection-start="2688" selection-end="2688" vertical-scroll-proportion="0.84522">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/badges/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/skins/default/templates/question.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="179" column="49" selection-start="11615" selection-end="11615" vertical-scroll-proportion="-6.244898">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="105" selection-start="1086" selection-end="1086" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/question.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="72" selection-start="38" selection-end="38" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/forum/models/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="12" selection-start="4364" selection-end="4364" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings_local.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="97" column="28" selection-start="2918" selection-end="2918" vertical-scroll-proportion="0.7936267">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="20" selection-start="2573" selection-end="2573" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/middleware/anon_user.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="35" selection-start="174" selection-end="174" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/middleware/cancel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/middleware/pagesize.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/middleware/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/user_messages/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/forum/user_messages/context_processors.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="27" selection-start="330" selection-end="330" vertical-scroll-proportion="0.3707165">
+        <state line="71" column="5" selection-start="2587" selection-end="2587" vertical-scroll-proportion="0.5356601">
           <folding />
         </state>
       </provider>
