@@ -23,15 +23,17 @@ class Command(NoArgsCommand):
             connection.close()
 
     def get_updated_questions_for_user(self,user):
+
         q_sel = None 
         q_ask = None 
         q_ans = None 
         q_all = None 
         now = datetime.datetime.now()
+        #Q_set1 - base questionquery set for this user
         Q_set1 = Question.objects.exclude(
-                                        last_activity_by=user,
+                                        last_activity_by=user,#exclude his/her own edits
                                   ).exclude(
-                                        last_activity_at__lt=user.date_joined
+                                        last_activity_at__lt=user.date_joined, #exclude old stuff
                                   ).filter(
                                         Q(viewed__who=user,viewed__when__lt=F('last_activity_at')) | \
                                         ~Q(viewed__who=user)
@@ -40,7 +42,7 @@ class Command(NoArgsCommand):
                                   ).exclude(
                                         closed=True
                                   )
-            
+
         user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
         for feed in user_feeds:
             cutoff_time = now - EmailFeedSetting.DELTA_TABLE[feed.frequency]
@@ -147,10 +149,10 @@ class Command(NoArgsCommand):
             num_q = 0
             num_moot = 0
             for meta_data in q_list.values():
-                if meta_data['nothing_new'] == False:
-                    num_q += 1
-                else:
+                if meta_data['nothing_new']:
                     num_moot += 1
+                else:
+                    num_q += 1
             if num_q > 0:
                 url_prefix = settings.APP_URL
                 subject = _('email update message subject')
