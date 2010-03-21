@@ -201,7 +201,7 @@ class Command(NoArgsCommand):
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
 
-            if 0 in (len(q_rev), len(new_ans), len(ans_rev)):
+            if len(q_rev) + len(new_ans) + len(ans_rev) == 0:
                 meta_data['skip'] = True
             else:
                 meta_data['skip'] = False
