@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     #'django_evolution',
     'forum',
-    #'stackexchange',#prototype of SE loader
+    'stackexchange',#prototype of SE loader
 ]
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
