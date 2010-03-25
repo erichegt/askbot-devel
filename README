@@ -1,6 +1,8 @@
-This is OSQA project - open source Q&A system
+This is Askbot project - open source Q&A system
 
-Demo site is http://osqa.net
+Demo site is http://askbot.org
 
-OSQA is based on code of CNPROG, originally created by Mike Chen and Sailing Cai.
+askbot-devel repository is open to anyone who wants to help develop Askbot - just drop us a note
+
+Askbot is based on code of CNPROG, originally created by Mike Chen and Sailing Cai and some code written for OSQA
 
