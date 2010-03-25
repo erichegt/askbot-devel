@@ -120,7 +120,7 @@ class Content(models.Model):
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
-    def get_object_comments(self):
+    def get_comments(self):
         comments = self.comments.all().order_by('id')
         return comments
 

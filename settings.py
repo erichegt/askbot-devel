@@ -15,7 +15,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.locale.LocaleMiddleware',
@@ -30,7 +30,7 @@ MIDDLEWARE_CLASSES = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-]
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
@@ -59,7 +59,7 @@ ALLOW_MAX_FILE_SIZE = 1024 * 1024
 # User settings
 from settings_local import *
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -70,30 +70,21 @@ INSTALLED_APPS = [
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
-]
+)
 
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
-
-if USE_SPHINX_SEARCH:
-    INSTALLED_APPS.append('djangosphinx')
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 if USE_FB_CONNECT:
-    INSTALLED_APPS.append('fbconnect')
-
-if DATABASE_ENGINE in ('postgresql_psycopg2', 'postgresql', ) and False:
-    USE_PG_FTS = True
-    INSTALLED_APPS.append('pgfulltext')
-else:
-    USE_PG_FTS = False
+    INSTALLED_APPS += ('fbconnect',)
 
 #load optional plugin module for external password login
 if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
-    INSTALLED_APPS.append(EXTERNAL_LEGACY_LOGIN_MODULE)
+    INSTALLED_APPS += (EXTERNAL_LEGACY_LOGIN_MODULE,)
 
     if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND' in locals():
-        AUTHENTICATION_BACKENDS.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND)
+        AUTHENTICATION_BACKENDS += (EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND,)
     if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE' in locals():
-        MIDDLEWARE_CLASSES.append(EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE)
+        MIDDLEWARE_CLASSES += (EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE,)
     def LOAD_EXTERNAL_LOGIN_APP():
         return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
 else:

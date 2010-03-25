@@ -42,12 +42,20 @@
                 {% trans "Click to sign in through any of these services." %}
               </div>
 			  <ul class="providers"> 
+              {% comment %}
 			  <li class="local" title="Local login">
 				  <div class="logo_box local_login_box">
-						<img src="{% media  "/media/jquery-openid/images/local-login.png" %}" alt="your icon here" /> 
+						<img src="{% media  "/media/jquery-openid/images/logo-small.gif" %}" alt="your icon here" /> 
 				  </div>
 			  <span></span>
 			  </li> 
+                {% endcomment %}
+			  <li class="username" title="OpenID URL"> 
+          <div class="logo_box openid_box">
+					<img src="{% media  "/media/jquery-openid/images/openid.gif" %}" alt="icon" />
+					<span>http://<strong>username</strong></span>
+            </div>
+		      </li> 
 			  <li class="direct" title="Google"> 
 			  	<div class="logo_box google_box">
 					<img src="{% media  "/media/jquery-openid/images/google.gif" %}" alt="icon" /><span>https://www.google.com/accounts/o8/id</span>
@@ -71,6 +79,7 @@
 				  </div>
 			  <span><strong>http://{your-openid-url}</strong></span>
 			  </li>-->
+              {% comment %}
               <li class="first_tiny_li facebook" title="Facebook Connect">
                     {% if question %}
                         <fb:login-button onlogin="window.location = '{% url fb_signin_new_question %}'"></fb:login-button>
@@ -82,11 +91,14 @@
                         {% endif %}
                     {% endif %}                    
               </li>
-			  <li class="openid" title="OpenID URL"> 
+              {% endcomment %}
+              {% comment %}
+			  <li class="openid first_tiny_li" title="OpenID URL"> 
 					<img src="{% media  "/media/jquery-openid/images/openidico16.png" %}" alt="icon" />
 					<span>http://{your-openid-url}</span>
 		      </li> 
-			  <li class="username" title="MyOpenID user name"> 
+              {% endcomment %}
+			  <li class="username first_tiny_li" title="MyOpenID user name"> 
 					<img src="{% media  "/media/jquery-openid/images/myopenid-2.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.myopenid.com/</span>
 		      </li> 
@@ -136,6 +148,7 @@
 				  <div><p><input id="openid_url" type="text" value="http://" name="openid_url" /> 
 				  <input id="bsignin" name="bsignin" type="submit" value="{% trans "Login" %}" /></p></div> 
 			  </fieldset> 
+              {% comment %}
               <fieldset id='local_login_fs'>
 				  <p>{% trans 'Enter your login name and password' %}</p> 
                   {% if form1.errors %}
@@ -152,6 +165,7 @@
                   </p>
                   </div>
               </fieldset>
+              {% endcomment %}
 			</form>
 {% endblock %}
 
@@ -178,8 +192,10 @@
         <a href="http://openid.net/get/" target="_blank">{% trans "Get OpenID" %} »</a>
     </p>
 </div>
+{% comment %}
 <script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script>
 <script type="text/javascript">  FB.init("{{ fb_api_key }}","{% url  xd_receiver %}");</script> 
+{% endcomment %}
 {% endblock%}
 
 		<script type="text/javascript">  $( function() { $("form.openid:eq(0)").openid(); })</script>

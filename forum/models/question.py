@@ -1,5 +1,12 @@
 from base import *
 from tag import Tag
+#todo: take care of copy-paste markdowner stuff maybe make html automatic field?
+from forum.const import CONST
+from markdown2 import Markdown
+from django.utils.html import strip_tags 
+from forum.utils.html import sanitize_html
+import datetime
+markdowner = Markdown(html4tags=True)
 
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None,summary=None, text=None):
@@ -11,7 +18,7 @@ class QuestionManager(models.Manager):
             last_activity_by = author,
             wiki             = wiki,
             tagnames         = tagnames,
-            html             = text,
+            html             = sanitize_html(markdowner.convert(text)),
             summary          = summary
         )
         if question.wiki:
@@ -327,7 +334,8 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        QuestionManager.create_new(title=self.title, author=user, added_at=added_at,
+        qm = QuestionManager()
+        qm.create_new(title=self.title, author=user, added_at=added_at,
                                 wiki=self.wiki, tagnames=self.tagnames,
                                 summary=self.summary, text=self.text)
         self.delete()

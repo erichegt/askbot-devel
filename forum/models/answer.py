@@ -1,4 +1,11 @@
 from base import *
+#todo: take care of copy-paste markdowner stuff maybe make html automatic field?
+from forum.const import CONST
+from markdown2 import Markdown
+from django.utils.html import strip_tags 
+from forum.utils.html import sanitize_html
+import datetime
+markdowner = Markdown(html4tags=True)
 
 from question import Question
 
@@ -9,7 +16,7 @@ class AnswerManager(models.Manager):
             author = author,
             added_at = added_at,
             wiki = wiki,
-            html = text
+            html = sanitize_html(markdowner.convert(text))
         )
         if answer.wiki:
             answer.last_edited_by = answer.author
@@ -43,6 +50,7 @@ class AnswerManager(models.Manager):
                 question.followed_by.remove(author)
             except:
                 pass
+        return answer
 
     #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
     def get_answers_from_question(self, question, user=None):
@@ -127,7 +135,8 @@ class AnonymousAnswer(AnonymousContent):
     def publish(self,user):
         added_at = datetime.datetime.now()
         #print user.id
-        AnswerManager.create_new(question=self.question,wiki=self.wiki,
+        am = AnswerManager()
+        am.create_new(question=self.question,wiki=self.wiki,
                             added_at=added_at,text=self.text,
                             author=user)
         self.delete()

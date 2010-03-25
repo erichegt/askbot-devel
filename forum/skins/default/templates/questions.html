@@ -160,39 +160,19 @@
 {% block sidebar %}
 <div class="boxC">
 		{% if searchtag %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}
-            have total {{q_num}} questions tagged {{tagname}}
-            {% plural %}
-            have total {{q_num}} questions tagged {{tagname}}
-            {% endblocktrans %}
+            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num and searchtag as tagname %}have total {{q_num}} questions tagged {{tagname}}{% plural %}have total {{q_num}} questions tagged {{tagname}}{% endblocktrans %}
 		{% else %}
 			{% if searchtitle %}
                 {% if settings.USE_SPHINX_SEARCH %}
-                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
-                    have total {{q_num}} questions containing {{searchtitle}} in full text
-                    {% plural %}
-                    have total {{q_num}} questions containing {{searchtitle}} in full text
-                    {% endblocktrans %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} have total {{q_num}} questions containing {{searchtitle}} in full text {% plural %} have total {{q_num}} questions containing {{searchtitle}} in full text {% endblocktrans %}
                 {% else %}
-                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
-                    have total {{q_num}} questions containing {{searchtitle}}
-                    {% plural %}
-                    have total {{q_num}} questions containing {{searchtitle}}
-                    {% endblocktrans %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} have total {{q_num}} questions containing {{searchtitle}} {% plural %} have total {{q_num}} questions containing {{searchtitle}} {% endblocktrans %}
                 {% endif %}
 			{% else %}
                 {% if is_unanswered %}
-                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
-                    have total {{q_num}} unanswered questions
-                    {% plural %}
-                    have total {{q_num}} unanswered questions
-                    {% endblocktrans %}
+                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %} have total {{q_num}} unanswered questions {% plural %} have total {{q_num}} unanswered questions {% endblocktrans %}
                 {% else %}
-                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %}
-                    have total {{q_num}} questions
-                    {% plural %}
-                    have total {{q_num}} questions
-                    {% endblocktrans %}
+                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %} have total {{q_num}} questions {% plural %} have total {{q_num}} questions {% endblocktrans %}
                 {% endif %}
 			{% endif %}
 		{% endif %}

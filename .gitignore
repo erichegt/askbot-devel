@@ -1,9 +1,14 @@
 *.pyc
 *.swp
 *.log
+cache/??
 osqa.wsgi
 nbproject
 settings_local.py
 .idea
 *.iml
+env
+nbproject
+pip-log.txt
 *.zip
+tmp/*

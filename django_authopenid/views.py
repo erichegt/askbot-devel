@@ -573,21 +573,28 @@ def signup(request):
         email_feeds_form = SimpleEmailSubscribeForm(request.POST)
         
         #validation outside if to remember form values
+        logging.debug('validating classic register form')
         form1_is_valid = form.is_valid()
+        logging.debug('classic register form validated')
         form2_is_valid = email_feeds_form.is_valid()
+        logging.debug('email feeds form validated')
         if form1_is_valid and form2_is_valid:
+            logging.debug('both forms are valid')
             next = form.cleaned_data['next']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             
             user_ = User.objects.create_user( username,email,password )
+            logging.debug('new user %s created' % username)
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
                 EXTERNAL_LOGIN_APP.api.create_user(username,email,password)
             
             user_.backend = "django.contrib.auth.backends.ModelBackend"
             login(request, user_)
+            logging.debug('new user logged in')
             email_feeds_form.save(user_)
+            logging.debug('email feeds form saved')
             
             # send email
             subject = _("Welcome email subject line")
@@ -602,7 +609,7 @@ def signup(request):
             message = message_template.render(message_context)
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, 
                     [user_.email])
-            logging.debug('new user with login and password created!')
+            logging.debug('new user with login and password created, confirmation email sent!')
             return HttpResponseRedirect(next)
         else:
             logging.debug('create classic account forms were invalid')

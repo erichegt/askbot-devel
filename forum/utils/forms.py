@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.conf import settings
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
+import logging
 import urllib
 
 DEFAULT_NEXT = '/' + getattr(settings, 'FORUM_SCRIPT_ALIAS')
@@ -14,7 +15,9 @@ def clean_next(next):
     next = str_to_unicode(urllib.unquote(next), 'utf-8')
     next = next.strip()
     if next.startswith('/'):
+        logging.debug('next url is %s' % next)
         return next
+    logging.debug('next url is %s' % DEFAULT_NEXT)
     return DEFAULT_NEXT
 
 def get_next_url(request):
@@ -64,9 +67,11 @@ class UserNameField(StrippedNonEmptyCharField):
     def clean(self,username):
         """ validate username """
         if self.skip_clean == True:
+            logging.debug('username accepted with no validation')
             return username
         if hasattr(self, 'user_instance') and isinstance(self.user_instance, User):
             if username == self.user_instance.username:
+                logging.debug('username valid')
                 return username
         try:
             username = super(UserNameField, self).clean(username)
@@ -82,15 +87,19 @@ class UserNameField(StrippedNonEmptyCharField):
             )
             if user:
                 if self.must_exist:
+                    logging.debug('user exists and name accepted b/c here we validate existing user')
                     return username
                 else:
                     raise forms.ValidationError(self.error_messages['taken'])
         except self.db_model.DoesNotExist:
             if self.must_exist:
+                logging.debug('user must exist, so raising the error')
                 raise forms.ValidationError(self.error_messages['missing'])
             else:
+                logging.debug('user name valid!')
                 return username
         except self.db_model.MultipleObjectsReturned:
+            logging.debug('error - user with this name already exists')
             raise forms.ValidationError(self.error_messages['multiple-taken'])
 
 class UserEmailField(forms.EmailField):
@@ -115,10 +124,13 @@ class UserEmailField(forms.EmailField):
         if settings.EMAIL_UNIQUE == True:
             try:
                 user = User.objects.get(email = email)
-                raise forms.ValidationError(self.error_messsages['taken'])
+                logging.debug('email taken')
+                raise forms.ValidationError(self.error_messages['taken'])
             except User.DoesNotExist:
+                logging.debug('email valid')
                 return email
             except User.MultipleObjectsReturned:
+                logging.debug('email taken many times over')
                 raise forms.ValidationError(self.error_messages['taken'])
         else:
             return email 

@@ -384,9 +384,7 @@
                     {% endifequal %}
                 {% endifequal %}
                 </label>
-                {% blocktrans with request.user.get_profile_url as profile_url %}
-                You can always adjust frequency of email updates from your {{profile_url}}
-                {% endblocktrans %}
+                {% blocktrans with request.user.get_profile_url as profile_url %}You can always adjust frequency of email updates from your {{profile_url}}{% endblocktrans %}
                 </p>
             {% else %}
                 <p style="padding-left:3px">

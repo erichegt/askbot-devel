@@ -111,7 +111,7 @@ def ask(request):#view used to ask a new question
                     wiki             = wiki,
                     tagnames         = tagnames,
                     summary          = summary,
-                    text = sanitize_html(markdowner.convert(text))
+                    text = text
                 )
 
                 return HttpResponseRedirect(question.get_absolute_url())
@@ -349,7 +349,7 @@ def answer(request, id):#process a new answer
                                   author=request.user,
                                   added_at=update_time,
                                   wiki=wiki,
-                                  text=sanitize_html(markdowner.convert(text)),
+                                  text=text,
                                   email_notify=form.cleaned_data['email_notify']
                                   )
             else:
