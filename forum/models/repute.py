@@ -1,4 +1,6 @@
 from base import *
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext as _
 
@@ -79,15 +81,26 @@ class ReputeManager(models.Manager):
         by upvoted(also substracted from upvoted canceled). This is because we need
         to prohibit gaming system by upvoting/cancel again and again.
         """
-        if user is not None:
-            today = datetime.date.today()
-            sums = self.filter(models.Q(reputation_type=1) | models.Q(reputation_type=-8),
-                                user=user, reputed_at__range=(today, today + datetime.timedelta(1))). \
-                               aggregate(models.Sum('positive'), models.Sum('negative'))            
-
-            return sums['positive__sum'] + sums['negative__sum']
-        else:
+        if user is None:
             return 0
+        else:
+            today = datetime.date.today()
+            tomorrow = today + datetime.timedelta(1)
+            rep_types = (1,-8)
+            sums = self.filter(models.Q(reputation_type__in=rep_types),
+                                user=user, 
+                                reputed_at__range=(today, tomorrow),
+                      ).aggregate(models.Sum('positive'), models.Sum('negative'))            
+            if sums:
+                pos = sums['positive__sum']
+                neg = sums['negative__sum']
+                if pos is None:
+                    pos = 0
+                if neg is None:
+                    neg = 0
+                return pos + neg
+            else:
+                return 0
 
 class Repute(models.Model):
     """The reputation histories for user"""

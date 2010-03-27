@@ -8,12 +8,12 @@ CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
     (3, _('too subjective and argumentative')),
-    (4, _('is not an answer to the question')),
+    (4, _('not a real question')),
     (5, _('the question is answered, right answer was accepted')),
-    (6, _('problem is not reproducible or outdated')),
-    #(7, u'太局部、本地化的问题',)
-    (7, _('question contains offensive inappropriate, or malicious remarks')),
+    (6, _('question is not relevant or outdated')),
+    (7, _('question contains offensive or malicious remarks')),
     (8, _('spam or advertising')),
+    (9, _('too localized')),
 )
 
 TYPE_REPUTATION = (
@@ -75,10 +75,10 @@ TYPE_ACTIVITY = (
 )
 
 TYPE_RESPONSE = {
-    'QUESTION_ANSWERED' : 'question_answered',
-    'QUESTION_COMMENTED': 'question_commented',
-    'ANSWER_COMMENTED'  : 'answer_commented',
-    'ANSWER_ACCEPTED'   : 'answer_accepted',
+    'QUESTION_ANSWERED' : _('question_answered'),
+    'QUESTION_COMMENTED': _('question_commented'),
+    'ANSWER_COMMENTED'  : _('answer_commented'),
+    'ANSWER_ACCEPTED'   : _('answer_accepted'),
 }
 
 CONST = {
@@ -90,3 +90,4 @@ CONST = {
 
 #how to filter questions by tags in email digests?
 TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))
+MAX_ALERTS_PER_EMAIL = 7

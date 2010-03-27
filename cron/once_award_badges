@@ -1,0 +1,14 @@
+#!/bin/sh
+PYTHONPATH=/path/to/dir_above_osqa_site
+export PYTHONPATH
+PROJECT_ROOT=$PYTHONPATH/osqa_site
+python manage.py once_award_badges >> $PROJECT_ROOT/log/cron_badges.log 2>&1
+
+
+#!/bin/sh
+PYTHONPATH=/usr/local/sites/osqa_production
+export PYTHONPATH
+PROJECT_ROOT=$PYTHONPATH/robofaqs
+python $PROJECT_ROOT/manage.py once_award_badges >> $PROJECT_ROOT/log/cron_badges.log 2>&1
+python $PROJECT_ROOT/manage.py multi_award_badges >> $PROJECT_ROOT/log/cron_badges.log 2>&1
+python $PROJECT_ROOT/manage.py send_email_alerts >> $PROJECT_ROOT/log/cron_email.log 2>&1

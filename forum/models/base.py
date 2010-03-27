@@ -17,10 +17,14 @@ import django.dispatch
 from django.conf import settings
 import logging
 
-if settings.USE_SPHINX_SEARCH == True:
-    from djangosphinx.models import SphinxSearch
-
 from forum.const import *
+
+class UserContent(models.Model):
+    user = models.ForeignKey(User, related_name='%(class)ss')
+
+    class Meta:
+        abstract = True
+        app_label = 'forum'
 
 class MetaContent(models.Model):
     """
@@ -29,7 +33,6 @@ class MetaContent(models.Model):
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    user           = models.ForeignKey(User, related_name='%(class)ss')
 
     class Meta:
         abstract = True
@@ -123,6 +126,18 @@ class Content(models.Model):
     def get_comments(self):
         comments = self.comments.all().order_by('id')
         return comments
+
+    def add_comment(self, comment=None, user=None, added_at=None):
+        if added_at is None:
+            added_at = datetime.datetime.now()
+        if None in (comment ,user):
+            raise Exception('arguments comment and user are required')
+
+        Comment = models.get_model('forum','Comment')#todo: forum hardcoded
+        comment = Comment(content_object=self, comment=comment, user=user, added_at=added_at)
+        comment.save()
+        self.comment_count = self.comment_count + 1
+        self.save()
 
     def post_get_last_update_info(self):
             when = self.added_at

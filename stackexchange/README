@@ -1,0 +1,62 @@
+this app's function will be to:
+
+* install it's own tables (#todo: not yet automated)
+* read SE xml dump into DjangoDB (automated)
+* populate osqa database (automated)
+* remove SE tables (#todo: not done yet)
+
+Current process to load SE data into OSQA is:
+==============================================
+
+1) backup database
+
+2) unzip SE dump into dump_dir (any directory name)
+   you may want to make sure that your dump directory in .gitignore file
+   so that you don't publish it by mistake
+
+3) enable 'stackexchange' in the list of installed apps (probably aready in settings.py)
+
+4) (optional - create models.py for SE, which is included anyway) run: 
+
+    #a) run in-place removal of xml namspace prefix to make parsing easier
+    perl -pi -w -e 's/xs://g' $SE_DUMP_PATH/xsd/*.xsd 
+    cd stackexchange
+    python parse_models.py $SE_DUMP_PATH/xsd/*.xsd > models.py
+
+5) Install stackexchange models (as well as any other missing models)
+    python manage.py syncdb
+
+6) make sure that osqa badges are installed
+   if not, run (example for mysql):
+
+   mysql -u user -p dbname < sql_scripts/badges.sql
+
+7) load SE data:
+
+    python manage.py load_stackexchange dump_dir
+
+    if anything doesn't go right - run 'python manage.py flush' and repeat
+    steps 6 and 7
+
+NOTES:
+============
+
+Here is the load script that I used for the testing
+it assumes that SE dump has been unzipped inside the tmp directory
+
+    #!/bin/sh$
+    python manage.py flush 
+    #delete all data
+    mysql -u osqa -p osqa < sql_scripts/badges.sql
+    python manage.py load_stackexchange tmp
+
+Untested parts are tagged with comments starting with 
+#todo:
+
+The test set did not have all the usage cases of StackExchange represented so
+it may break with other sets.
+
+The job takes some time to run, especially
+content revisions and votes - may be optimized
+
+Some of the fringe cases are described in file stackexchange/ANOMALIES

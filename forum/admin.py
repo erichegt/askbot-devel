@@ -3,7 +3,6 @@
 from django.contrib import admin
 from models import *
 
-
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
 
@@ -54,7 +53,6 @@ class ActivityAdmin(admin.ModelAdmin):
     
 #class BookAuthorRssAdmin(admin.ModelAdmin):
 #    """  admin class"""
-    
     
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Tag, TagAdmin)

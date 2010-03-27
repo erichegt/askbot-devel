@@ -2,7 +2,7 @@
 *.swp
 *.log
 cache/??
-osqa.wsgi
+*.wsgi
 nbproject
 settings_local.py
 .idea

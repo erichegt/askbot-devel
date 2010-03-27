@@ -16,7 +16,7 @@ class AnswerManager(models.Manager):
             author = author,
             added_at = added_at,
             wiki = wiki,
-            html = sanitize_html(markdowner.convert(text))
+            html = sanitize_html(markdowner.convert(text)),
         )
         if answer.wiki:
             answer.last_edited_by = answer.author
@@ -25,20 +25,18 @@ class AnswerManager(models.Manager):
 
         answer.save()
 
+        answer.add_revision(
+            revised_by=author,
+            revised_at=added_at,
+            text=text,
+            comment=CONST['default_version'],
+        )
+
         #update question data
         question.last_activity_at = added_at
         question.last_activity_by = author
         question.save()
         Question.objects.update_answer_count(question)
-
-        AnswerRevision.objects.create(
-            answer     = answer,
-            revision   = 1,
-            author     = author,
-            revised_at = added_at,
-            summary    = CONST['default_version'],
-            text       = text
-        )
 
         #set notification/delete
         if email_notify:
@@ -83,6 +81,50 @@ class Answer(Content, DeletableContent):
 
     class Meta(Content.Meta):
         db_table = u'answer'
+
+    def apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
+
+        if text is None:
+            text = self.get_latest_revision().text
+        if edited_at is None:
+            edited_at = datetime.datetime.now()
+        if edited_by is None:
+            raise Exception('edited_by is required')
+
+        self.last_edited_at = edited_at
+        self.last_edited_by = edited_by
+        self.html = sanitize_html(markdowner.convert(text))
+        #todo: bug wiki has no effect here
+        self.save()
+
+        self.add_revision(
+            revised_by=edited_by,
+            revised_at=edited_at,
+            text=text,
+            comment=comment
+        )
+
+        self.question.last_activity_at = edited_at
+        self.question.last_activity_by = edited_by
+        self.question.save()
+
+    def add_revision(self, revised_by=None, revised_at=None, text=None, comment=None):
+        if None in (revised_by, revised_at, text):
+            raise Exception('arguments revised_by, revised_at and text are required')
+        rev_no = self.revisions.all().count() + 1
+        if comment in (None, ''):
+            if rev_no == 1:
+                comment = CONST['default_version']
+            else:
+                comment = 'No.%s Revision' % rev_no
+        return AnswerRevision.objects.create(
+                                  answer=self,
+                                  author=revised_by,
+                                  revised_at=revised_at,
+                                  text=text,
+                                  summary=comment,
+                                  revision=rev_no
+                                  )
 
     def get_user_vote(self, user):
         if user.__class__.__name__ == "AnonymousUser":

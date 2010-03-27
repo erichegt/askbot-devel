@@ -1,8 +1,5 @@
 @import url(jquery.autocomplete.css);
-@import url(openid.css);
-@import url(prettify.css);
 
-/* 公用 */
 body {
     background: #FFF;
     font-size: 12px;

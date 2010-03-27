@@ -5,12 +5,13 @@ import sys
 
 SITE_ID = 1
 
-ADMIN_MEDIA_PREFIX = '/forum/admin/media/'
+ADMIN_MEDIA_PREFIX = '/admin_media/'
 SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
+    'forum.modules.module_templates_loader',
     'forum.skins.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
 )
@@ -27,14 +28,14 @@ MIDDLEWARE_CLASSES = (
     'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'forum.middleware.pagesize.QuestionsPageSizeMiddleware',
     'forum.middleware.cancel.CancelActionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'recaptcha_django.middleware.ReCaptchaMiddleware',
+    #'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'context.application_settings',
+    'forum.context.application_settings',
     #'django.core.context_processors.i18n',
     'forum.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
@@ -67,9 +68,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'debug_toolbar',
+    #'django_evolution',
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
+    #'stackexchange', #se loader
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)

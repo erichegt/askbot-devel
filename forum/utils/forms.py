@@ -145,6 +145,10 @@ class SetPasswordForm(forms.Form):
                                 error_messages={'required':_('please, retype your password'),
                                                 'nomatch':_('sorry, entered passwords did not match, please try again')},
                                 )
+
+    def __init__(self, data=None, user=None, *args, **kwargs):
+        super(SetPasswordForm, self).__init__(data, *args, **kwargs)
+
     def clean_password2(self):
         """
         Validates that the two password inputs match.

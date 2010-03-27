@@ -9,4 +9,4 @@ users.py - user views - user listing and profiles
 
 meta.py - privacy, about, faq, feedback, logout, badges
 
-books.py - book views - to be moved to a books extension
+auth.py - Authentication related views

@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from forum.utils.decorators import ajax_method, ajax_login_required
 import logging
 
-def vote(request, id):#refactor - pretty incomprehensible view used by various ajax calls
+def vote(request, id):#todo: pretty incomprehensible view used by various ajax calls
 #issues: this subroutine is too long, contains many magic numbers and other issues
 #it's called "vote" but many actions processed here have nothing to do with voting
     """
@@ -106,23 +106,12 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
             # favorite
             elif vote_type == '4':
                 has_favorited = False
-                fav_questions = FavoriteQuestion.objects.filter(question=question)
-                # if the same question has been favorited before, then delete it
-                if fav_questions is not None:
-                    for item in fav_questions:
-                        if item.user == request.user:
-                            item.delete()
-                            response_data['status'] = 1
-                            response_data['count']  = len(fav_questions) - 1
-                            if response_data['count'] < 0:
-                                response_data['count'] = 0
-                            has_favorited = True
-                # if above deletion has not been executed, just insert a new favorite question
-                if not has_favorited:
-                    new_item = FavoriteQuestion(question=question, user=request.user)
-                    new_item.save()
-                    response_data['count']  = FavoriteQuestion.objects.filter(question=question).count()
-                Question.objects.update_favorite_count(question)
+                fave = request.user.toggle_favorite_question(question)
+                response_data['count'] = FavoriteQuestion.objects.filter(
+                                            question = question
+                                        ).count()
+                if fave == False:
+                    response_data['status'] = 1
 
             elif vote_type in ['1', '2', '5', '6']:
                 post_id = id
@@ -141,7 +130,13 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
                 elif not __can_vote(vote_score, request.user):
                     response_data['allowed'] = -2
                 elif post.votes.filter(user=request.user).count() > 0:
+                    #todo: I think we have a bug here
+                    #we need to instead select vote on that particular post
+                    #not just the latest vote, although it is a good shortcut.
+                    #The problem is that this vote is deleted in one of
+                    #the on...Canceled() functions
                     vote = post.votes.filter(user=request.user)[0]
+                    # get latest vote by the current user
                     # unvote should be less than certain time
                     if (datetime.datetime.now().day - vote.voted_at.day) >= auth.VOTE_RULES['scope_deny_unvote_days']:
                         response_data['status'] = 2
@@ -189,8 +184,6 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
                     item = FlaggedItem(user=request.user, content_object=post, flagged_at=datetime.datetime.now())
                     auth.onFlaggedItem(item, post, request.user)
                     response_data['count'] = post.offensive_flag_count
-                    # send signal when question or answer be marked offensive
-                    mark_offensive.send(sender=post.__class__, instance=post, mark_by=request.user)
             elif vote_type in ['9', '10']:
                 post = question
                 post_id = id
@@ -206,7 +199,6 @@ def vote(request, id):#refactor - pretty incomprehensible view used by various a
                     response_data['status'] = 1
                 else:
                     auth.onDeleted(post, request.user)
-                    delete_post_or_answer.send(sender=post.__class__, instance=post, delete_by=request.user)
             elif vote_type == '11':#subscribe q updates
                 user = request.user
                 if user.is_authenticated():

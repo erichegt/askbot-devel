@@ -124,7 +124,7 @@
                 <tr>
                     <td width="180" style="line-height:35px">
                         {% for award in awards %}
-                            <a href="{% url badges %}{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> &#x2715; {{ award.count|intcomma }}</span><br/>
+                            <a href="{% url badges %}{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> &#215; {{ award.count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"6" %}
                                 </td>
                                 <td width="180" style="line-height:35px">

@@ -6,11 +6,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
+from django.utils.http import urlquote_plus
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
-from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm, 
+from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm,
+from forum.utils.html import sanitize_html
 from forum import auth
 import calendar
 from django.contrib.contenttypes.models import ContentType
@@ -98,6 +100,14 @@ def moderate_user(request, id):
         response = HttpResponseForbidden(mimetype="application/json")
     return response
 
+def set_new_email(user, new_email, nomessage=False):
+    if new_email != user.email:
+        user.email = new_email
+        user.email_isvalid = False
+        user.save()
+        #if settings.EMAIL_VALIDATION == 'on':
+        #    send_new_email_key(user,nomessage=nomessage)    
+
 @login_required
 def edit_user(request, id):
     user = get_object_or_404(User, id=id)
@@ -108,7 +118,6 @@ def edit_user(request, id):
         if form.is_valid():
             new_email = sanitize_html(form.cleaned_data['email'])
 
-            from django_authopenid.views import set_new_email
             set_new_email(user, new_email)
 
             #user.username = sanitize_html(form.cleaned_data['username'])
@@ -938,10 +947,32 @@ USER_TEMPLATE_VIEWS = (
     )
 )
 
-def user(request, id):
+def user(request, id, slug=None):
     sort = request.GET.get('sort', 'stats')
     user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
     from forum.views import users
     func = user_view.view_func
     return func(request, id, user_view)
+
+@login_required
+def account_settings(request):
+    """
+    index pages to changes some basic account settings :
+     - change password
+     - change email
+     - associate a new openid
+     - delete account
+
+    url : /
+
+    template : authopenid/settings.html
+    """
+    logging.debug('')
+    msg = request.GET.get('msg', '')
+    is_openid = False
+
+    return render_to_response('account_settings.html', {
+        'msg': msg,
+        'is_openid': is_openid
+        }, context_instance=RequestContext(request))
 

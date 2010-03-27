@@ -5,11 +5,13 @@ from models import *
 from const import *
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
-from forum.utils.forms import NextUrlField, UserNameField
 from django.contrib.contenttypes.models import ContentType
+from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
 from recaptcha_django import ReCaptchaField
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 import logging
+
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -39,7 +41,6 @@ class EditorField(forms.CharField):
     def clean(self, value):
         if len(value) < 10:
             raise forms.ValidationError(_('question content must be > 10 characters'))
-
         return value
 
 class TagNamesField(forms.CharField):
@@ -183,6 +184,7 @@ class EditQuestionForm(forms.Form):
     tags   = TagNamesField()
     summary = SummaryField()
 
+    #todo: this is odd that this form takes question as an argument
     def __init__(self, question, revision, *args, **kwargs):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title
@@ -259,6 +261,7 @@ class TagFilterSelectionForm(forms.ModelForm):
         if before != after:
             return True
         return False
+        
 
 class EditUserEmailFeedsForm(forms.Form):
     WN = (('w',_('weekly')),('n',_('no email')))
@@ -291,7 +294,7 @@ class EditUserEmailFeedsForm(forms.Form):
     def set_initial_values(self,user=None):
         KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])
         if user != None:
-            settings = EmailFeedSetting.objects.filter(subscriber=user) 
+            settings = EmailFeedSetting.objects.filter(subscriber=user)
             initial_values = {}
             for setting in settings:
                 feed_type = setting.feed_type
@@ -302,10 +305,11 @@ class EditUserEmailFeedsForm(forms.Form):
         return self
 
     def reset(self):
-        self.cleaned_data['all_questions'] = 'n'
-        self.cleaned_data['asked_by_me'] = 'n'
-        self.cleaned_data['answered_by_me'] = 'n'
-        self.cleaned_data['individually_selected'] = 'n'
+        if self.is_bound:
+            self.cleaned_data['all_questions'] = 'n'
+            self.cleaned_data['asked_by_me'] = 'n'
+            self.cleaned_data['answered_by_me'] = 'n'
+            self.cleaned_data['individually_selected'] = 'n'
         self.initial = self.NO_EMAIL_INITIAL
         return self
 
@@ -336,7 +340,6 @@ class EditUserEmailFeedsForm(forms.Form):
                 feed_type = ContentType.objects.get_for_model(Question)
                 user.followed_questions.clear()
         return changed
-
 
 class SimpleEmailSubscribeForm(forms.Form):
     SIMPLE_SUBSCRIBE_CHOICES = (

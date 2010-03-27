@@ -1,0 +1,14 @@
+* several user accounts with same email
+* users with no openid
+* users with no email (hack: gravatar set to settings.ANONYMOUS_USER_EMAIL)
+* users with no screen name
+* users with no email and no screen name (25% in homeschool)
+* tag preferences are not stored explicitly (interesting/ignored)
+  maybe they are in se.User.preferences_raw
+  but the data there is not marked up and is kind of cryptic
+* we don't have Community user. SE has one with id=-1
+  this id may break the load script
+  potential break places are anywhere where is X.get_user() call
+  issues may happen with larger data sets where activity
+  of user "Community" is somehow reflected in a way
+  that load_stackexchange does not take care of
