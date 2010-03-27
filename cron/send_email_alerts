@@ -1,5 +1,5 @@
 #!/bin/sh
-PYTHONPATH=/path/to/dir_above_osqa_site
+PYTHONPATH=/path/to/dir_above_askbot_site
 export PYTHONPATH
-PROJECT_ROOT=$PYTHONPATH/osqa_site
+PROJECT_ROOT=$PYTHONPATH/askbot_site
 /path/to/python $PROJECT_ROOT/manage.py send_email_alerts

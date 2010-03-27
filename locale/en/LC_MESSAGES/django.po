@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-27 11:18-0400\n"
+"POT-Creation-Date: 2010-03-27 11:33-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -580,7 +580,7 @@ msgstr ""
 msgid "okay, let's try!"
 msgstr ""
 
-#: forum/forms.py:347
+#: forum/forms.py:347 forum/authentication/forms.py:42
 msgid "no community email please, thanks"
 msgstr "no askbot email please, thanks"
 
@@ -764,10 +764,6 @@ msgstr ""
 
 #: forum/authentication/forms.py:33
 msgid "Sorry, but this email is not on our database."
-msgstr ""
-
-#: forum/authentication/forms.py:42
-msgid "no OSQA community email please, thanks"
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:236

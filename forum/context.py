@@ -15,7 +15,7 @@ def application_settings(context):
         'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
         'WIKI_ON':settings.WIKI_ON,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
-        'OSQA_SKIN':settings.OSQA_DEFAULT_SKIN,
+        'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,
         }
     return {'settings':my_settings}
 

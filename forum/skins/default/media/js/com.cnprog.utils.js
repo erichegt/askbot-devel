@@ -1,6 +1,6 @@
-//var $, scriptUrl, osqaSkin
+//var $, scriptUrl, askbotSkin
 var mediaUrl = function(resource){
-    return scriptUrl + 'm/' + osqaSkin + '/' + resource;
+    return scriptUrl + 'm/' + askbotSkin + '/' + resource;
 };
 
 var showMessage = function(object, msg) {

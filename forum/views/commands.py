@@ -317,7 +317,7 @@ def reopen(request, id):#re-open question
             'question' : question,
             }, context_instance=RequestContext(request))
 
-#osqa-user communication system
+#askbot-user communication system
 def read_message(request):#marks message a read
     if request.method == "POST":
         if request.POST['formdata'] == 'required':

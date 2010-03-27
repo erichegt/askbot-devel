@@ -5,9 +5,9 @@ from django.http import HttpResponse
 import os.path
 import logging
 
-#module for skinning osqa
+#module for skinning askbot
 #at this point skin can be changed only in settings file
-#via OSQA_DEFAULT_SKIN variable
+#via ASKBOT_DEFAULT_SKIN variable
 
 #note - Django template loaders use method django.utils._os.safe_join
 #to work on unicode file paths
@@ -15,7 +15,7 @@ import logging
 
 def load_template_source(name, dirs=None):
     try:
-        tname = os.path.join(settings.OSQA_DEFAULT_SKIN,'templates',name)
+        tname = os.path.join(settings.ASKBOT_DEFAULT_SKIN,'templates',name)
         return filesystem.load_template_source(tname,dirs)
     except:
         tname = os.path.join('default','templates',name)
@@ -26,7 +26,7 @@ def find_media_source(url):
     """returns url prefixed with the skin name
     of the first skin that contains the file 
     directories are searched in this order:
-    settings.OSQA_DEFAULT_SKIN, then 'default', then 'commmon'
+    settings.ASKBOT_DEFAULT_SKIN, then 'default', then 'commmon'
     if file is not found - returns None
     and logs an error message
     """
@@ -37,9 +37,9 @@ def find_media_source(url):
     f = os.path.isfile
     skins = n(j(d(d(__file__)),'skins'))
     try:
-        media = os.path.join(skins, settings.OSQA_DEFAULT_SKIN, url)
+        media = os.path.join(skins, settings.ASKBOT_DEFAULT_SKIN, url)
         assert(f(media))
-        use_skin = settings.OSQA_DEFAULT_SKIN
+        use_skin = settings.ASKBOT_DEFAULT_SKIN
     except:
         try:
             media = j(skins, 'default', url)

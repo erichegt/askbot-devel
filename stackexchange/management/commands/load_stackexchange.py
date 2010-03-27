@@ -7,7 +7,7 @@ import sys
 import stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models
-import forum.models as osqa
+import forum.models as askbot
 import stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
 from forum.utils.html import sanitize_html
@@ -28,21 +28,21 @@ xml_read_order = (
         'ModeratorMessages','Messages','Comments2Votes',
         )
 
-#association tables SE item id --> OSQA item id
+#association tables SE item id --> ASKBOT item id
 #table associations are implied
 #todo: there is an issue that these may be inconsistent with the database
-USER = {}#SE User.id --> django(OSQA) User.id
+USER = {}#SE User.id --> django(ASKBOT) User.id
 QUESTION = {}
 ANSWER = {}
 NAMESAKE_COUNT = {}# number of times user name was used - for X.get_screen_name
 
 class X(object):#
     """class with methods for handling some details
-    of SE --> OSQA mapping
+    of SE --> ASKBOT mapping
     """
     badge_type_map = {'1':'gold','2':'silver','3':'bronze'}
 
-    osqa_supported_id_providers = (
+    askbot_supported_id_providers = (
             'google','yahoo','aol','myopenid',
             'flickr','technorati',
             'wordpress','blogger','livejournal',
@@ -51,8 +51,8 @@ class X(object):#
             'twitter' #oauth is not on this list, b/c it has no own url
             )
 
-    #map SE VoteType -> osqa.User vote method
-    #created methods with the same call structure in osqa.User
+    #map SE VoteType -> askbot.User vote method
+    #created methods with the same call structure in askbot.User
     #User.<vote_method>(post, timestamp=None, cancel=False)
     vote_actions = {
         'UpMod':'upvote',
@@ -70,8 +70,8 @@ class X(object):#
     )
 
     #badges whose names don't match exactly, but
-    #present in both SE and OSQA
-    badge_exceptions = {# SE --> OSQA
+    #present in both SE and ASKBOT
+    badge_exceptions = {# SE --> ASKBOT
         'Citizen Patrol':'Citizen patrol',#single #todo: why sentence case?
         'Strunk &amp; White':'Strunk & White',#single
         'Civic Duty':'Civic duty',
@@ -112,7 +112,7 @@ class X(object):#
     @classmethod
     def get_message_text(cls, se_m):
         """try to intelligently translate
-        SE message to OSQA so that it makese sense in 
+        SE message to ASKBOT so that it makese sense in 
         our context
         """
         #todo: properly translate messages
@@ -137,9 +137,9 @@ class X(object):#
         #or use database to store these associations
         post_type = se_post.post_type.name
         if post_type == 'Question':
-            return osqa.Question.objects.get(id=QUESTION[se_post.id].id)
+            return askbot.Question.objects.get(id=QUESTION[se_post.id].id)
         elif post_type == 'Answer':
-            return osqa.Answer.objects.get(id=ANSWER[se_post.id].id)
+            return askbot.Answer.objects.get(id=ANSWER[se_post.id].id)
         else:
             raise Exception('unknown post type %s' % post_type)
 
@@ -152,7 +152,7 @@ class X(object):#
     @classmethod
     def get_user(cls, se_user):
         #todo: same as get_post
-        return osqa.User.objects.get(id=USER[se_user.id].id)
+        return askbot.User.objects.get(id=USER[se_user.id].id)
 
     @classmethod
     def get_post_revision_group_types(cls, rev_group):
@@ -191,7 +191,7 @@ class X(object):#
         name = re.subn(r'\s+',' ',name)[0]#remove repeating spaces
         
         try:
-            u = osqa.User.objects.get(username = name)
+            u = askbot.User.objects.get(username = name)
             try:
                 if u.location:
                     name += ', %s' % u.location
@@ -200,9 +200,9 @@ class X(object):#
                     name += ' %d' % NAMESAKE_COUNT[name]
                 else:
                     NAMESAKE_COUNT[name] = 1
-            except osqa.User.DoesNotExist:
+            except askbot.User.DoesNotExist:
                 pass
-        except osqa.User.DoesNotExist:
+        except askbot.User.DoesNotExist:
             NAMESAKE_COUNT[name] = 1
         return name
 
@@ -230,7 +230,7 @@ class X(object):#
         base_url = bits[2] #assume this is base url
         url_bits = base_url.split('.')
         provider_name = url_bits[-2].lower()
-        if provider_name not in cls.osqa_supported_id_providers:
+        if provider_name not in cls.askbot_supported_id_providers:
             raise Exception('could not determine login provider for %s' % openid_url)
         return provider_name
 
@@ -265,7 +265,7 @@ class X(object):#
         return cls.badge_exceptions.get(name, name)
 
 class Command(BaseCommand):
-    help = 'Loads StackExchange data from unzipped directory of XML files into the OSQA database'
+    help = 'Loads StackExchange data from unzipped directory of XML files into the ASKBOT database'
     args = 'se_dump_dir'
 
     def handle(self, *arg, **kwarg):
@@ -287,9 +287,9 @@ class Command(BaseCommand):
         #when we upgrade to django 1.2 and definitely by 1.4 when
         #the current message system will be replaced with the
         #django messages framework
-        self.save_osqa_message_id_list()
+        self.save_askbot_message_id_list()
 
-        #transfer data into OSQA tables
+        #transfer data into ASKBOT tables
         print 'Transferring users...',
         sys.stdout.flush()
         self.transfer_users()
@@ -323,20 +323,20 @@ class Command(BaseCommand):
         self.transfer_tag_preferences()
         self.transfer_meta_pages()
 
-    def save_osqa_message_id_list(self):
+    def save_askbot_message_id_list(self):
         id_list = list(DjangoMessage.objects.all().values('id'))
-        self._osqa_message_id_list = id_list
+        self._askbot_message_id_list = id_list
 
     def cleanup_messages(self):
         """deletes messages generated by the load process
         """
-        id_list = self._osqa_message_id_list
+        id_list = self._askbot_message_id_list
         mset = DjangoMessage.objects.all().exclude(id__in=id_list)
         mset.delete()
 
     def transfer_messages(self):
         """transfers some messages from
-        SE to OSQA
+        SE to ASKBOT
         """
         for m in se.Message.objects.all():
             if m.is_read:
@@ -374,7 +374,7 @@ class Command(BaseCommand):
 
         post_type = rev_group[0].post.post_type.name
         if post_type == 'Question':
-            q = osqa.Question.objects.create_new(
+            q = askbot.Question.objects.create_new(
                 title            = title,
                 author           = author,
                 added_at         = added_at,
@@ -385,7 +385,7 @@ class Command(BaseCommand):
             QUESTION[rev_group[0].post.id] = q
         elif post_type == 'Answer':
             q = X.get_post(rev_group[0].post.parent)
-            a = osqa.Answer.objects.create_new(
+            a = askbot.Answer.objects.create_new(
                 question = q,
                 author = author,
                 added_at = added_at,
@@ -455,10 +455,10 @@ class Command(BaseCommand):
     def mark_activity(self,p,u,t):
         """p,u,t - post, user, timestamp
         """
-        if isinstance(p, osqa.Question):
+        if isinstance(p, askbot.Question):
             p.last_activity_by = u
             p.last_activity_at = t
-        elif isinstance(p, osqa.Answer):
+        elif isinstance(p, askbot.Answer):
             p.question.last_activity_by = u
             p.question.last_activity_at = t
             p.question.save()
@@ -597,11 +597,11 @@ class Command(BaseCommand):
                 continue
             se_post = se_c.post
             if se_post.post_type.name == 'Question':
-                osqa_post = QUESTION[se_post.id]
+                askbot_post = QUESTION[se_post.id]
             elif se_post.post_type.name == 'Answer':
-                osqa_post = ANSWER[se_post.id]
+                askbot_post = ANSWER[se_post.id]
 
-            osqa_post.add_comment(
+            askbot_post.add_comment(
                 comment = se_c.text,
                 added_at = se_c.creation_date,
                 user = USER[se_c.user.id]
@@ -612,12 +612,12 @@ class Command(BaseCommand):
         for se_b in se.Badge.objects.all():
             name = X.get_badge_name(se_b.name)
             try:
-                osqa.Badge.objects.get(name=name)
+                askbot.Badge.objects.get(name=name)
             except:
                 self._missing_badges[name] = 0
                 if len(se_b.description) > 300:
                     print 'Warning truncated description for badge %d' % se_b.id
-                osqa.Badge.objects.create(
+                askbot.Badge.objects.create(
                     name = name,
                     slug = slugify(name),
                     description = se_b.description,
@@ -627,19 +627,19 @@ class Command(BaseCommand):
 
     def _award_badges(self):
         #note: SE does not keep information on
-        #content-related badges like osqa does
+        #content-related badges like askbot does
         for se_a in se.User2Badge.objects.all():
             if se_a.user.id == -1:
                 continue #skip community user
             u = USER[se_a.user.id]
             badge_name = X.get_badge_name(se_a.badge.name)
-            b = osqa.Badge.objects.get(name=badge_name)
+            b = askbot.Badge.objects.get(name=badge_name)
             if b.multiple == False:
                 if b.award_badge.count() > 0:
                     continue
             #todo: fake content object here b/c SE does not support this
-            #todo: but osqa requires related content object
-            osqa.Award.objects.create(
+            #todo: but askbot requires related content object
+            askbot.Award.objects.create(
                 user=u,
                 badge=b,
                 awarded_at=se_a.date,
@@ -651,7 +651,7 @@ class Command(BaseCommand):
     def _cleanup_badges(self):
         d = self._missing_badges
         unused = [name for name in d.keys() if d[name] == 0]
-        osqa.Badge.objects.filter(name__in=unused).delete()
+        askbot.Badge.objects.filter(name__in=unused).delete()
         installed = [name for name in d.keys() if d[name] > 0]
         print 'Warning - following unsupported badges were installed:'
         print ', '.join(installed)
@@ -682,7 +682,7 @@ class Command(BaseCommand):
             u = X.get_user(v.user)
             p = X.get_post(v.post)
             m = X.vote_actions[vote_type]
-            vote_method = getattr(osqa.User, m)
+            vote_method = getattr(askbot.User, m)
             vote_method(u, p, timestamp = v.creation_date)
             if v.deletion_date:
                 vote_method(u, p, timestamp = v.deletion_date, cancel=True)
@@ -727,7 +727,7 @@ class Command(BaseCommand):
         for se_u in se.User.objects.all():
             if se_u.id < 1:#skip the Community user
                 continue
-            u = osqa.User()
+            u = askbot.User()
             u_type = se_u.user_type.name
             if u_type == 'Administrator':
                 u.is_superuser = True
@@ -741,7 +741,7 @@ class Command(BaseCommand):
             #probably they'll just have to "recover" their account by email
             if u_type != 'Unregistered':
                 assert(se_u.open_id)#everybody must have open_id
-                u_auth = osqa.AuthKeyUserAssociation()
+                u_auth = askbot.AuthKeyUserAssociation()
                 u_auth.key = se_u.open_id
                 u_auth.provider = X.get_openid_provider_name(se_u.open_id)
                 u_auth.added_at = se_u.creation_date

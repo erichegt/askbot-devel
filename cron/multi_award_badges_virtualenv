@@ -1,7 +1,7 @@
 #!/bin/sh
 
-WORKON_HOME=~/envs/osqa
-PROJECT_ROOT=~/webapps/osqa_server/projects/osqa/
+WORKON_HOME=~/envs/askbot
+PROJECT_ROOT=~/webapps/askbot_server/projects/askbot/
 
 # activate virtual environment
 . $WORKON_HOME/bin/activate
