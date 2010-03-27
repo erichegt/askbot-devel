@@ -40,15 +40,9 @@
                 {% if request.user|can_view_user_edit:view_user %}
                 <tr>
                     <td class="user-profile-tool-links" align="left" colspan="2">
-                        {% joinitems using ' | ' %}
-                            {% if request.user|can_view_user_edit:view_user %}
-                            <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
-                            {% endif %}
-                        {% separator %}
-                            {% ifequal request.user view_user %}
-                            <a href="{% url user_authsettings %}">authentication settings</a>
-                            {% endifequal %}
-                        {% endjoinitems %}
+                        {% if request.user|can_view_user_edit:view_user %}
+                        <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
+                        {% endif %}
                     </td>
                 </tr>  
                 {% endif %}

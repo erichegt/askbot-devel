@@ -90,23 +90,6 @@ urlpatterns = patterns('',
     (r'^%s' % _('account/'), include('django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 
-    #url(r'^%s%s$' % (_('account/'), _('signin/')), app.auth.signin_page, name='auth_signin'),
-    #url(r'^%s%s$' % (_('account/'), _('signout/')), app.auth.signout, name='user_signout'),
-    #url(r'^%s%s(?P<action>\w+)/$' % (_('account/'), _('signin/')), app.auth.signin_page, name='auth_action_signin'),
-    #url(r'^%s(?P<provider>\w+)/%s$' % (_('account/'), _('signin/')), app.auth.prepare_provider_signin, name='auth_provider_signin'),
-    #url(r'^%s(?P<provider>\w+)/%s$' % (_('account/'), _('done/')), app.auth.process_provider_signin, name='auth_provider_done'),
-    #url(r'^%s%s$' % (_('account/'), _('register/')), app.auth.external_register, name='auth_external_register'),
-    #url(r'^%s%s(?P<user>\d+)/(?P<code>.+)/$' % (_('account/'), _('validate/')),  app.auth.validate_email, name="auth_validate_email"),
-    #url(r'^%s%s$' % (_('account/'), _('tempsignin/')),  app.auth.request_temp_login, name="auth_request_tempsignin"),
-    #url(r'^%s%s(?P<user>\d+)/(?P<code>.+)/$' % (_('account/'), _('tempsignin/')),  app.auth.temp_signin, name="auth_tempsignin"),
-    #url(r'^%s%s$' % (_('account/'), _('authsettings/')), app.auth.auth_settings, name='user_authsettings'),
-    #url(r'^%s%s(?P<id>\d+)/%s$' % (_('account/'), _('providers/'),  _('remove/')), app.auth.remove_external_provider, name='user_remove_external_provider'),
-    #url(r'^%s%s%s$' % (_('account/'), _('providers/'),  _('add/')), app.auth.signin_page, name='user_add_external_provider'),
-
-    #url(r'^%s%s%s$' % (_('accounts/'), _('password/'), _('confirm/')), app.user.confirmchangepw, name='user_confirmchangepw'),
-    #url(r'^%s$' % _('account/'), app.users.account_settings, name='user_account_settings'),
-    #url(r'^%s$' % _('delete/'), app.users.delete, name='user_delete'),
-
     url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
 )
 
