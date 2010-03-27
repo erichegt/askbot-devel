@@ -36,7 +36,7 @@ $.fn.openid = function() {
   };
   var local = function() {
     var $li = $(this);
-    $('#openid_form .providers li').removeClass('highlight');
+    $('#openid_form .providers td').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.hide();
     $idfs.hide();
@@ -47,19 +47,19 @@ $.fn.openid = function() {
 
   var direct = function() {
     var $li = $(this);
-    $('#openid_form .providers li').removeClass('highlight');
+    $('#openid_form .providers td').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.fadeOut('slow');
     $localfs.fadeOut('slow');
     $idfs.fadeOut('slow');
-    $id.val($this.find("li.highlight span").text());
+    $id.val($this.find("td.highlight span").text());
     setTimeout(function(){$('#bsignin').click();},1000);
     return false;
   };
 
   var openid = function() {
     var $li = $(this);
-    $('#openid_form .providers li').removeClass('highlight');
+    $('#openid_form .providers td').removeClass('highlight');
     $li.addClass('highlight');
     $usrfs.hide();
     $localfs.hide();
@@ -71,7 +71,7 @@ $.fn.openid = function() {
 
   var username = function() {
     var $li = $(this);
-    $('#openid_form .providers li').removeClass('highlight');
+    $('#openid_form .providers td').removeClass('highlight');
     $li.addClass('highlight');
     $idfs.hide();
     $localfs.hide();
@@ -84,10 +84,10 @@ $.fn.openid = function() {
     return false;
   };
 
-  $this.find('li.local').click(local);
-  $this.find('li.direct').click(direct);
-  $this.find('li.openid').click(openid);
-  $this.find('li.username').click(username);
+  $this.find('td.local').click(local);
+  $this.find('td.direct').click(direct);
+  $this.find('td.openid').click(openid);
+  $this.find('td.username').click(username);
   $id.keypress(function(e) {
     if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
       return submitid();
@@ -98,12 +98,12 @@ $.fn.openid = function() {
       return submitusr();
     }
   });
-  $this.find('li span').hide();
-  $this.find('li').css('line-height', 0).css('cursor', 'pointer');
+  $this.find('td span').hide();
+  $this.find('td').css('line-height', 0).css('cursor', 'pointer');
   $usrfs.hide();
   $idfs.hide();
   $localfs.hide();
-  $this.find('li:eq(0)').click();
+  $this.find('td:eq(0)').click();
 
   return this;
 };

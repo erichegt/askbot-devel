@@ -38,10 +38,10 @@
             </div>
         {% endif %}
 			<form id="openid_form" name="openid_form" class="openid" method="post" action="{% url user_signin %}"> 
-		      <div style="width:600px;float:left;margin-bottom:5px;">
+		      <div><!-- style="width:600px;float:left;margin-bottom:5px;"> -->
                 {% trans "Click to sign in through any of these services." %}
               </div>
-			  <ul class="providers"> 
+			  <table> 
               {% comment %}
 			  <li class="local" title="Local login">
 				  <div class="logo_box local_login_box">
@@ -50,29 +50,32 @@
 			  <span></span>
 			  </li> 
                 {% endcomment %}
-			  <li class="username" title="OpenID URL"> 
-          <div class="logo_box openid_box">
-					<img src="{% media  "/media/jquery-openid/images/openid.gif" %}" alt="icon" />
-					<span>http://<strong>username</strong></span>
-            </div>
-		      </li> 
-			  <li class="direct" title="Google"> 
-			  	<div class="logo_box google_box">
-					<img src="{% media  "/media/jquery-openid/images/google.gif" %}" alt="icon" /><span>https://www.google.com/accounts/o8/id</span>
-				</div>
-		 	  </li>
-			  <li class="direct" title="Yahoo"> 
-			  	<div class="logo_box yahoo_box">
-					<img src="{% media  "/media/jquery-openid/images/yahoo.gif" %}" alt="icon" /><span>http://yahoo.com/</span>
-				</div>
-			  </li>
-			  <li class="username" title="AOL screen name"> 
-			  	<div class="logo_box aol_box">
-					<img src="{% media  "/media/jquery-openid/images/aol.gif" %}" alt="icon" /><span>http://openid.aol.com/<strong>username</strong></span>
-				</div>
-			  </li>
-              </ul>            
-			  <ul id="openid_small_providers" class="providers"> 
+        <tr class="providers">
+                  <td class="username" title="OpenID URL"> 
+              <div class="logo_box openid_box">
+                        <img src="{% media  "/media/jquery-openid/images/openid.gif" %}" alt="icon" />
+                        <span>http://<strong>username</strong></span>
+                </div>
+                  </td> 
+                  <td class="direct" title="Google"> 
+                    <div class="logo_box google_box">
+                        <img src="{% media  "/media/jquery-openid/images/google.gif" %}" alt="icon" /><span>https://www.google.com/accounts/o8/id</span>
+                    </div>
+                  </td>
+                  <td class="direct" title="Yahoo"> 
+                    <div class="logo_box yahoo_box">
+                        <img src="{% media  "/media/jquery-openid/images/yahoo.gif" %}" alt="icon" /><span>http://yahoo.com/</span>
+                    </div>
+                  </td>
+                  <td class="username" title="AOL screen name"> 
+                    <div class="logo_box aol_box">
+                        <img src="{% media  "/media/jquery-openid/images/aol.gif" %}" alt="icon" /><span>http://openid.aol.com/<strong>username</strong></span>
+                    </div>
+                  </td>
+            </tr>
+        </table>
+        <table>
+			  <tr id="openid_small_providers" class="providers"> 
 			  <!--<li class="openid" title="OpenID">
 				  <div class="logo_box openid_box">
 						<img src="/media/jquery-openid/images/openid.gif" alt="icon" /> 
@@ -98,43 +101,44 @@
 					<span>http://{your-openid-url}</span>
 		      </li> 
               {% endcomment %}
-			  <li class="username first_tiny_li" title="MyOpenID user name"> 
+			  <td class="username first_tiny_li" title="MyOpenID user name"> 
 					<img src="{% media  "/media/jquery-openid/images/myopenid-2.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.myopenid.com/</span>
-		      </li> 
-			  <li class="username" title="Flickr user name"> 
+		      </td> 
+			  <td class="username" title="Flickr user name"> 
 					<img src="{% media  "/media/jquery-openid/images/flickr.png" %}" alt="icon" />
 					<span>http://flickr.com/<strong>username</strong>/</span>
-			  </li> 
-			  <li class="username" title="Technorati user name"> 
+			  </td> 
+			  <td class="username" title="Technorati user name"> 
 					<img src="{% media  "/media/jquery-openid/images/technorati-1.png" %}" alt="icon" />
 					<span>http://technorati.com/people/technorati/<strong>username</strong>/</span>
-			  </li> 
-			  <li class="username" title="Wordpress blog name"> 
+			  </td> 
+			  <td class="username" title="Wordpress blog name"> 
 					<img src="{% media  "/media/jquery-openid/images/wordpress.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.wordpress.com</span>
-              </li> 
-			  <li class="username" title="Blogger blog name"> 
+              </td> 
+			  <td class="username" title="Blogger blog name"> 
 					<img src="{% media  "/media/jquery-openid/images/blogger-1.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.blogspot.com/</span>
-			  </li> 
-			  <li class="username" title="LiveJournal blog name"> 
+			  </td> 
+			  <td class="username" title="LiveJournal blog name"> 
 					<img src="{% media  "/media/jquery-openid/images/livejournal-1.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.livejournal.com</span>
-			  </li> 
-			  <li class="username" title="ClaimID user name"> 
+			  </td> 
+			  <td class="username" title="ClaimID user name"> 
 					<img src="{% media  "/media/jquery-openid/images/claimid-0.png" %}" alt="icon" />
 					<span>http://claimid.com/<strong>username</strong></span>
-			  </li> 
-			  <li class="username" title="Vidoop user name"> 
+			  </td> 
+			  <td class="username" title="Vidoop user name"> 
 					<img src="{% media  "/media/jquery-openid/images/vidoop.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.myvidoop.com/</span>
-			  </li> 
-			  <li class="username" title="Verisign user name"> 
+			  </td> 
+			  <td class="username" title="Verisign user name"> 
 					<img src="{% media  "/media/jquery-openid/images/verisign-2.png" %}" alt="icon" />
 					<span>http://<strong>username</strong>.pip.verisignlabs.com/</span>
-			  </li> 
-			  </ul>
+			  </td> 
+			  </tr>
+        </table>
 			  {{ form2.next }}
 			  <fieldset> 
 				  <p id="provider_name_slot">{% trans 'Enter your <span id="enter_your_what">Provider user name</span>' %}</p> 
