@@ -80,7 +80,7 @@ def prepare_provider_signin(request, provider):
         except InvalidAuthentication, e:
             request.session['auth_error'] = e.message
 
-        return HttpResponseRedirect(reverse('auth_signin'))    
+        return HttpResponseRedirect(reverse('user_signin'))    
 
 
 def process_provider_signin(request, provider):
@@ -91,7 +91,7 @@ def process_provider_signin(request, provider):
             assoc_key = provider_class.process_authentication_request(request)
         except InvalidAuthentication, e:
             request.session['auth_error'] = e.message
-            return HttpResponseRedirect(reverse('auth_signin'))
+            return HttpResponseRedirect(reverse('user_signin'))
 
         if request.user.is_authenticated():
             if isinstance(assoc_key, (type, User)):
@@ -112,7 +112,7 @@ def process_provider_signin(request, provider):
                     request.user.message_set.create(message=_('The new credentials are now associated with your account'))
                     return HttpResponseRedirect(reverse('user_authsettings'))
 
-            return HttpResponseRedirect(reverse('auth_signin'))
+            return HttpResponseRedirect(reverse('user_signin'))
         else:
             if isinstance(assoc_key, (type, User)):
                 return login_and_forward(request, assoc_key) 
@@ -126,7 +126,7 @@ def process_provider_signin(request, provider):
             request.session['auth_provider'] = provider
             return HttpResponseRedirect(reverse('auth_external_register'))
 
-    return HttpResponseRedirect(reverse('auth_signin'))
+    return HttpResponseRedirect(reverse('user_signin'))
 
 def external_register(request):
     if request.method == 'POST' and 'bnewaccount' in request.POST:
@@ -148,7 +148,7 @@ def external_register(request):
                 auth_provider = request.session['auth_provider']
             except:
                 request.session['auth_error'] = _("Oops, something went wrong in the middle of this process. Please try again.")
-                return HttpResponseRedirect(request.session.get('on_signin_url', reverse('auth_signin'))) 
+                return HttpResponseRedirect(request.session.get('on_signin_url', reverse('user_signin'))) 
 
             uassoc = AuthKeyUserAssociation(user=user_, key=request.session['assoc_key'], provider=request.session['auth_provider'])
             uassoc.save()

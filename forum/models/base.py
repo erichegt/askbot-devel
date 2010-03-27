@@ -17,6 +17,8 @@ import django.dispatch
 from django.conf import settings
 import logging
 
+#todo: sphinx search import used to be here
+
 from forum.const import *
 
 class UserContent(models.Model):

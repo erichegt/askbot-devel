@@ -3,7 +3,7 @@ import os.path
 from django.utils.translation import ugettext as _
 
 SITE_SRC_ROOT = os.path.dirname(__file__)
-LOG_FILENAME = 'django.osqa.log'
+LOG_FILENAME = 'askbot.log'
 
 #for logging
 import logging
@@ -31,7 +31,7 @@ DATABASE_PORT = ''
 
 #set this value to 'dummy://' if you don't want to use cache, or set up your favourite caching mechanism
 #see http://docs.djangoproject.com/en/1.1/topics/cache/ for details
-#example (set local file system cache in a cache folder in the root of the osqa install):
+#example (set local file system cache in a cache folder in the root of the askbot install):
 #CACHE_BACKEND = 'file://%s' % os.path.join(os.path.dirname(__file__),'cache').replace('\\','/')
 CACHE_BACKEND = 'dummy://'
 
@@ -43,13 +43,13 @@ SERVER_EMAIL = ''
 DEFAULT_FROM_EMAIL = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
-EMAIL_SUBJECT_PREFIX = '[OSQA] '
-EMAIL_HOST='osqa.net'
+EMAIL_SUBJECT_PREFIX = '[ASKBOT] '
+EMAIL_HOST='askbot.org'
 EMAIL_PORT='25'
 EMAIL_USE_TLS=False
 
 #HACK - anonymous user email - for email-less users
-ANONYMOUS_USER_EMAIL = 'anonymous@osqa.net'
+ANONYMOUS_USER_EMAIL = 'anonymous@askbot.org'
 
 #LOCALIZATIONS
 TIME_ZONE = 'America/New_York'
@@ -64,12 +64,12 @@ FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
 
 
 #OTHER SETTINGS
-APP_TITLE = u'OSQA: Open Source Q&A Forum'
-APP_SHORT_NAME = u'OSQA'
-APP_KEYWORDS = u'OSQA,CNPROG,forum,community'
+APP_TITLE = u'ASKBOT: Open Source Q&A Forum'
+APP_SHORT_NAME = u'ASKBOT'
+APP_KEYWORDS = u'ASKBOT,CNPROG,forum,community'
 APP_DESCRIPTION = u'Ask and answer questions.'
 APP_INTRO = u'<p>Ask and answer questions, make the world better!</p>'
-APP_COPYRIGHT = 'Copyright OSQA, 2009. Some rights reserved under creative commons license.'
+APP_COPYRIGHT = 'Copyright ASKBOT, 2009. Some rights reserved under creative commons license.'
 LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,'account/','signin/')
 GREETING_URL = LOGIN_URL #may be url of "faq" page or "about", etc
 
@@ -78,7 +78,7 @@ LANGUAGE_CODE = 'en'
 EMAIL_VALIDATION = 'off' #string - on|off
 MIN_USERNAME_LENGTH = 1
 EMAIL_UNIQUE = False
-APP_URL = 'http://osqa.net' #used by email notif system and RSS
+APP_URL = 'http://askbot.org' #used by email notif system and RSS
 GOOGLE_SITEMAP_CODE = ''
 GOOGLE_ANALYTICS_KEY = ''
 WIKI_ON = True
@@ -91,5 +91,5 @@ RESOURCE_REVISION=4
 #please get these at recaptcha.net
 RECAPTCHA_PRIVATE_KEY='...'
 RECAPTCHA_PUBLIC_KEY='...'
-OSQA_DEFAULT_SKIN = 'default'
+ASKBOT_DEFAULT_SKIN = 'default'
 

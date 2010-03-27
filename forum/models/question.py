@@ -10,7 +10,7 @@ markdowner = Markdown(html4tags=True)
 from forum.utils.lists import LazyList
 
 class QuestionManager(models.Manager):
-    def create_new(cls, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
+    def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
         html = sanitize_html(markdowner.convert(text))
         summary = strip_tags(html)[:120]
         question = Question(
@@ -123,8 +123,6 @@ class QuestionManager(models.Manager):
             return questions
 
         return LazyList(get_data)
-
-
 
 class Question(Content, DeletableContent):
     title    = models.CharField(max_length=300)
@@ -442,11 +440,14 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        qm = QuestionManager()
-        #todo: use as classmethod instead??
-        qm.create_new(title=self.title, author=user, added_at=added_at,
-                                wiki=self.wiki, tagnames=self.tagnames,
-                                summary=self.summary, text=self.text)
+        Question.objects.create_new(
+                                title=self.title,
+                                author=user,
+                                added_at=added_at,
+                                wiki=self.wiki,
+                                tagnames=self.tagnames,
+                                text=self.text,
+                                )
         self.delete()
 
 from answer import Answer, AnswerManager

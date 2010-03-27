@@ -78,7 +78,7 @@ class ReputeManager(models.Manager):
     def get_reputation_by_upvoted_today(self, user):
         """
         For one user in one day, he can only earn rep till certain score (ep. +200)
-        by upvoted(also substracted from upvoted canceled). This is because we need
+        by upvoted(also subtracted from upvoted canceled). This is because we need
         to prohibit gaming system by upvoting/cancel again and again.
         """
         if user is None:

@@ -176,9 +176,7 @@ class AnonymousAnswer(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        #print user.id
-        am = AnswerManager()
-        am.create_new(question=self.question,wiki=self.wiki,
+        Answer.objects.create_new(question=self.question,wiki=self.wiki,
                             added_at=added_at,text=self.text,
                             author=user)
         self.delete()
