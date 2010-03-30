@@ -2454,3 +2454,23 @@ p.signup_p {
     list-style-position: outside;
     margin: 0;
 }
+
+/* a workaround to set link colors correctly */
+.answer-body a {
+    color:#0000ff;
+}
+.question-body a {
+    color:#0000ff;
+}
+.question-body li {
+    margin-bottom:0.7em;
+}
+.answer-body li {$
+    margin-bottom:0.7em;
+}
+.wmd-preview a {
+    color:#0000ff;
+}
+.wmd-preview li {
+    margin-bottom:0.7em;
+}

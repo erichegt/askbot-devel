@@ -68,9 +68,9 @@ class TagNamesField(forms.CharField):
             if len(tag) > 20:
                 raise forms.ValidationError(_('tags must be shorter than 20 characters'))
             #take tag regex from settings
-            tagname_re = re.compile(r'[a-z0-9]+')
+            tagname_re = re.compile(r'[a-z0-9\w._#-]+',re.UNICODE)
             if not tagname_re.match(tag):
-                raise forms.ValidationError(_('please use following characters in tags: letters \'a-z\', numbers, and characters \'.-_#\''))
+                raise forms.ValidationError(_('please use letters, numbers, and characters \'.-_#\''))
             # only keep one same tag
             if tag not in list_temp and len(tag.strip()) > 0:
                 list_temp.append(tag)
