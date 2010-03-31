@@ -27,7 +27,7 @@
 		<div class="userinfo">
 			<span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
 			{% if question.last_activity_by %}
-			<a href="/users/{{ question.last_activity_by.id }}/{{ question.last_activity_by.username|slugify }}/">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
+			<a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
 			{% endif %}
 		</div>
 

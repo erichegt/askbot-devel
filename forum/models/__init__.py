@@ -4,6 +4,7 @@ from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
 from user import Activity, ValidationHash, EmailFeedSetting, AuthKeyUserAssociation
 from repute import Badge, Award, Repute
+from django.core.urlresolvers import reverse
 import re
 
 from base import *
@@ -98,7 +99,7 @@ def delete_messages(self):
 
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
-    return "/users/%d/%s" % (self.id, slugify(self.username))
+    return reverse('user_profile', kwargs={'id':self.id, 'slug':slugify(self.username)})
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)
