@@ -5,7 +5,7 @@
 {% load smart_if %}
 {% load i18n %}
 <div id="subheader" class="headUser">
-    {{view_user.username}}
+    <a href="{% url user_profile view_user.id view_user.username|slugify %}">{{view_user.username}}</a>
 </div>
 <table class="user-info-table">
     <tr>
@@ -14,6 +14,9 @@
                 <tr>
                     <td>
                         {% gravatar view_user 128 %}
+                        {% if request.user == view_user %}
+                        <h1><a href="{% url faq %}#gravatar">{% trans "change picture" %}</a></h1>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>

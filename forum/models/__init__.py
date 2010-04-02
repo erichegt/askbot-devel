@@ -127,6 +127,8 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
         fave.delete()
         result = False
     except FavoriteQuestion.DoesNotExist:
+        if timestamp is None:
+            timestamp = datetime.datetime.now()
         fave = FavoriteQuestion(
             question = question,
             user = self,
@@ -221,7 +223,6 @@ def flag_post(self, post, timestamp=None, cancel=False):
             )
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
-User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)
@@ -230,6 +231,7 @@ User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
+User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""

@@ -183,6 +183,7 @@ def user_stats(request, user_id, user_view):
              'la_user_bronze',
              'la_user_reputation')[:100]
 
+    #this is meant for the questions answered by the user (or where answers were edited by him/her?)
     answered_questions = Question.objects.extra(
         select={
             'vote_up_count' : 'answer.vote_up_count',
@@ -219,6 +220,8 @@ def user_stats(request, user_id, user_view):
     user_tags = Tag.objects.filter(questions__id__in = question_id_set)
     try:
         from django.db.models import Count
+        #todo - rewrite template to do the table joins within standard ORM
+        #awards = Award.objects.filter(user=user).order_by('-awarded_at')
         awards = Award.objects.extra(
                                         select={'id': 'badge.id', 
                                                 'name':'badge.name', 
@@ -234,6 +237,7 @@ def user_stats(request, user_id, user_view):
         user_tags = user_tags.annotate(user_tag_usage_count=Count('name'))
 
     except ImportError:
+        #todo: remove all old django stuff, e.g. with '.group_by = ' pattern
         awards = Award.objects.extra(
                                         select={'id': 'badge.id', 
                                                 'count': 'count(badge_id)', 
@@ -804,7 +808,7 @@ def user_favorites(request, user_id, user_view):
             },
         select_params=[user_id],
         tables=['question', 'auth_user', 'favorite_question'],
-        where=['question.deleted=True AND question.last_activity_by_id = auth_user.id '+
+        where=['question.deleted=False AND question.last_activity_by_id = auth_user.id '+
             'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
         params=[user_id],
         order_by=['-vote_count', '-question.id']

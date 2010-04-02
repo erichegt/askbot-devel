@@ -11,7 +11,7 @@
     {% if action_status %}
     <p class="action-status"><span>{{action_status}}</span></p>
     {% endif %}
-    <form method="POST"> 
+    <form method="post" action=""> 
         {% include "edit_user_email_feeds_form.html" %}
         <table class='form-as-table'>
         {{tag_filter_selection_form}}

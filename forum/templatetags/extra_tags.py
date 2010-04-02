@@ -14,14 +14,19 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
 from django.template.defaulttags import url as default_url
+from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 from forum import skins
 
 register = template.Library()
 
-GRAVATAR_TEMPLATE = ('<img class="gravatar" width="%(size)s" height="%(size)s" '
+GRAVATAR_TEMPLATE = (
+                     '<a style="text-decoration:none" '
+                     'href="%(user_profile_url)s"><img class="gravatar" '
+                     'width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
                      '?s=%(size)s&amp;d=identicon&amp;r=PG" '
-                     'alt="%(username)s\'s gravatar image" />')
+                     'alt="%(username)s\'s gravatar image" /></a>')
 
 @register.simple_tag
 def gravatar(user, size):
@@ -34,10 +39,15 @@ def gravatar(user, size):
     try:
         gravatar = user['gravatar']
         username = user['username']
+        user_id = user['id']
     except (TypeError, AttributeError, KeyError):
         gravatar = user.gravatar
         username = user.username
+        user_id = user.id
+    slug = slugify(username)
+    user_profile_url = reverse('user_profile', kwargs={'id':user_id,'slug':slug})
     return mark_safe(GRAVATAR_TEMPLATE % {
+        'user_profile_url': user_profile_url,
         'size': size,
         'gravatar_hash': gravatar,
         'username': template.defaultfilters.urlencode(username),
@@ -247,9 +257,9 @@ def diff_date(date, limen=2):
 
     if days > 2:
         if date.year == now.year:
-            return date.strftime("%b %d at %H:%M")
+            return date.strftime("%b %d")# at %H:%M")
         else:
-            return date.strftime("%b %d '%y at %H:%M")
+            return date.strftime("%b %d '%y")# at %H:%M")
     elif days == 2:
         return _('2 days ago')
     elif days == 1:

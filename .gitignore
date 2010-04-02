@@ -12,3 +12,6 @@ nbproject
 pip-log.txt
 *.zip
 tmp/*
+load
+run
+forum/skins/default/media/js/flot
