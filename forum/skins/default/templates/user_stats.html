@@ -33,8 +33,8 @@
                 <a title="{{answered_question.summary|collapse}}" 
                     href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
                     <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
-						title="{% blocktrans with answered_question.vote_count as vote_count %}the answer has been voted for {{ vote_count }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
-                        {{ answered_question.vote_count }}
+						title="{% blocktrans with answered_question.answer_score as answer_score %}the answer has been voted for {{ answer_score }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
+                        {{ answered_question.answer_score }}
                     </span>
                 </a>
                 <div class="answer-link">

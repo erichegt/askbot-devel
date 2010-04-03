@@ -17,6 +17,8 @@ from django.template.defaulttags import url as default_url
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from forum import skins
+from forum.utils import colors
+from forum.utils.functions import get_from_dict_or_object
 
 register = template.Library()
 
@@ -36,14 +38,10 @@ def gravatar(user, size):
     This tag can accept a User object, or a dict containing the
     appropriate values.
     """
-    try:
-        gravatar = user['gravatar']
-        username = user['username']
-        user_id = user['id']
-    except (TypeError, AttributeError, KeyError):
-        gravatar = user.gravatar
-        username = user.username
-        user_id = user.id
+    #todo: rewrite using get_from_dict_or_object
+    gravatar = get_from_dict_or_object(user, 'gravatar')
+    username = get_from_dict_or_object(user, 'username')
+    user_id = get_from_dict_or_object(user, 'id')
     slug = slugify(username)
     user_profile_url = reverse('user_profile', kwargs={'id':user_id,'slug':slug})
     return mark_safe(GRAVATAR_TEMPLATE % {
@@ -389,4 +387,52 @@ def fullmedia(url):
     path = media(url)
     return "%s%s" % (domain, path)
 
+@register.inclusion_tag("question_counter_widget.html")
+def question_counter_widget(question):
+
+    view_count = get_from_dict_or_object(question,'view_count')
+    answer_count = get_from_dict_or_object(question,'answer_count')
+    vote_count = get_from_dict_or_object(question,'score')
+    answer_accepted = get_from_dict_or_object(question,'answer_accepted')
+
+    #background and foreground colors for each item
+    (views_fg, views_bg) = colors.get_counter_colors(
+                                view_count,
+                                max = settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
+                                zero_bg = settings.COLORS_VIEW_COUNTER_EMPTY_BG,
+                                zero_fg = settings.COLORS_VIEW_COUNTER_EMPTY_FG,
+                                min_bg = settings.COLORS_VIEW_COUNTER_MIN_BG,
+                                min_fg = settings.COLORS_VIEW_COUNTER_MIN_FG,
+                                max_bg = settings.COLORS_VIEW_COUNTER_MAX_BG,
+                                max_fg = settings.COLORS_VIEW_COUNTER_MAX_FG,
+                            )
+
+    (answers_fg, answers_bg) = colors.get_counter_colors(
+                                answer_count,
+                                max = settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
+                                zero_bg = settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
+                                zero_fg = settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
+                                min_bg = settings.COLORS_ANSWER_COUNTER_MIN_BG,
+                                min_fg = settings.COLORS_ANSWER_COUNTER_MIN_FG,
+                                max_bg = settings.COLORS_ANSWER_COUNTER_MAX_BG,
+                                max_fg = settings.COLORS_ANSWER_COUNTER_MAX_FG,
+                            )
+    if answer_accepted:
+        #todo: maybe recalculate the foreground color too
+        answers_bg = settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+        answers_fg = settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
+
+    (votes_fg, votes_bg) = colors.get_counter_colors(
+                                vote_count,
+                                max = settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
+                                zero_bg = settings.COLORS_VOTE_COUNTER_EMPTY_BG,
+                                zero_fg = settings.COLORS_VOTE_COUNTER_EMPTY_FG,
+                                min_bg = settings.COLORS_VOTE_COUNTER_MIN_BG,
+                                min_fg = settings.COLORS_VOTE_COUNTER_MIN_FG,
+                                max_bg = settings.COLORS_VOTE_COUNTER_MAX_BG,
+                                max_fg = settings.COLORS_VOTE_COUNTER_MAX_FG,
+                            )
+
+    #returns a dictionary with keys like 'votes_bg', etc
+    return locals()
 

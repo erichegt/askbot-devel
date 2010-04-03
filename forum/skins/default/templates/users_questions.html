@@ -24,38 +24,21 @@
         {% else %}
             <div class="favorites-empty"> </div>
         {% endif %}
-    <div id="question-summary-{{question.id}}" class="question-summary narrow">
-        <div class="stats">
-            <div class="votes">
-                <span class="vote-count-post">{{question.vote_count|intcomma}}</span>
-                {% trans "votes" %}
-            </div >
-            <div title="{% if question.answer_accepted %}{% trans "this answer has been accepted to be correct" %}{% endif %}" class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
-                <span class="answer-count-post">{{question.answer_count|intcomma}}</span>
-                {% trans "answers" %}
-            </div>
-            <div class="views">
-                 <span class="views-count-post">{{question.view_count|cnprog_intword|safe}}</span>
-                 {% trans "views" %}
-            </div>
+    <div id="question-summary-{{question.id}}" class="short-summary narrow">
+        {% question_counter_widget question %}
+        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <div class="tags">
+            {% convert2tagname_list question %}
+            {% for tag in question.tagnames %}
+                <!--todo - move trans below to blocktrans -->
+                <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
+            {% endfor %}
         </div>
-        <div class="summary">
-            <div class="question-title">
-                <a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a>
-            </div>
-            <div class="tags">
-                {% convert2tagname_list question %}
-                {% for tag in question.tagnames %}
-					<!--todo - move trans below to blocktrans -->
-                    <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
-                {% endfor %}
-            </div>
-            <div class="started">
-                <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
-                {% if question.la_username %}
-                    <a href="{% url users %}{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
-                {% endif %}
-            </div>
+        <div class="started">
+            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+            {% if question.la_username %}
+                <a href="{% url users %}{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
+            {% endif %}
         </div>
     </div>
     <br clear="all"/>

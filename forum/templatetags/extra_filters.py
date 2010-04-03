@@ -1,5 +1,6 @@
 from django import template
 from forum import auth
+from forum_modules.grapefruit import Color
 import logging
 
 register = template.Library()
@@ -86,8 +87,22 @@ def cnprog_intword(number):
     try:
         if 1000 <= number < 10000:
             string = str(number)[0:1]
-            return "<span class=""thousand"">%sk</span>" % string
+            return '<span class="thousand">%sk</span>' % string
         else:
             return number
     except:
         return number
+
+@register.filter
+def humanize_counter(number):
+    if number == 0:
+        return 'no'
+    elif number >= 1000:
+        number = number/1000
+        s = '%.1f' % number
+        if s.endswith('.0'):
+            return s[:-2] + 'k'
+        else:
+            return s + 'k'
+    else:
+        return str(number)

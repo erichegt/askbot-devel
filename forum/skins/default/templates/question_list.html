@@ -4,39 +4,20 @@
 {% load extra_filters %}
 {% load extra_tags %}
 
-<div id="listA">
-    {% for question in questions.object_list %}
-    {% cache 60 question_in_list question.id %}
-	<div class="short-summary">
-		<div class="counts">
-			<div class="votes">
-				<div class="item-count">{{question.score|intcomma}}</div>
-				<div>{% trans "votes" %}</div>
-			</div >
-			<div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
-				<div class="item-count">{{question.answer_count|intcomma}}</div>
-				<div>{% trans "answers" %}</div>
-			</div>
-			<div class="views">
-				 <div class="item-count">{{question.view_count|cnprog_intword|safe}}</div>
-				 <div>{% trans "views" %}</div>
-			</div>
-		</div>
-
-		<h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
-		<div class="userinfo">
-			<span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
-			{% if question.last_activity_by %}
-			<a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
-			{% endif %}
-		</div>
-
-		<div class="tags">
-			{% for tag in question.tagname_list %}
-			<a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
-			{% endfor %}
-		</div>
-	</div>
-    {% endcache %}
-	{% endfor %}
+{% for question in questions.object_list %}
+<div class="short-summary">
+    {% question_counter_widget question %}
+    <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+    <div class="userinfo">
+        <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+        {% if question.last_activity_by %}
+        <a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
+        {% endif %}
+    </div>
+    <div class="tags">
+        {% for tag in question.tagname_list %}
+        <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
+        {% endfor %}
+    </div>
 </div>
+{% endfor %}

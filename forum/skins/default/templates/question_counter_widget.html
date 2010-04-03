@@ -1,0 +1,47 @@
+{% load extra_filters %}
+{% load i18n %}
+<div class="counts">
+    <div class="votes" 
+        style="background:{{votes_bg}};color:{{votes_fg}}"
+        title="{% trans "Please decide if you like this question or not by voting" %}">
+        {% spaceless %}
+        <div class="item-count">
+            {{question.score|humanize_counter}}
+        </div>
+        <div>
+        {% blocktrans count question.score as cnt %}
+        vote
+        {% plural %}
+        votes
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div >
+    {% comment %}
+    <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
+    {% endcomment %}
+    <div class="votes" style="background:{{answers_bg}};color:{{answers_fg}}">
+        <div class="item-count">{{question.answer_count|humanize_counter}}</div>
+        {% spaceless %}
+        <div>
+        {% blocktrans count question.answer_count as cnt %}
+        answer 
+        {% plural %}
+        answers 
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div>
+    <div class="views" style="background:{{views_bg}};color:{{views_fg}}">
+        {% spaceless %}
+         <div class="item-count">{{question.view_count|humanize_counter}}</div>
+         <div>
+        {% blocktrans count question.view_count as cnt %}
+        view
+        {% plural %}
+        views
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div>
+</div>

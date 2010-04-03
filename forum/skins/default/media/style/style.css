@@ -518,9 +518,12 @@ blockquote {
 .short-summary .counts {
     float: right;
     margin-top: 4px;
+    margin-right: 10px;
+    margin-left: 5px;
 }
 
 .short-summary .counts .item-count {
+    padding-top:4px;
     font-size: 17px;
     font-weight: 800;
 }
@@ -1691,6 +1694,7 @@ ins .post-tag {
     text-align: center;
 }
 
+/*
 .narrow .votes {
     background: #EEEEEE none repeat scroll 0 0;
     float: left;
@@ -1703,21 +1707,26 @@ ins .post-tag {
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
+*/
 
+/*
 .narrow .summary {
     width: 600px;
     display: inline-block;
 }
+*/
 
 .narrow .summary h3 {
     padding: 0px;
     margin: 0px;
 }
 
+/* todo: delete commented out stuff */
+/*
 .narrow .views {
     height: 42px;
     float: left;
-    margin: 0 7px 0 0; /*padding:5px 0 5px 4px;*/
+    margin: 0 7px 0 0; *//*padding:5px 0 5px 4px;*//*
     padding: 5px;
     width: 46px;
     text-align: center;
@@ -1726,6 +1735,7 @@ ins .post-tag {
     -webkit-border-radius: 5px;
     color: #777;
 }
+*/
 
 .narrow .status {
     float: left;
