@@ -88,7 +88,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
              }
     view_id, orderby = _get_and_remember_questions_sort_method(request, view_dic, 'latest')
 
-    pagesize = QUESTIONS_PAGE_SIZE #request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
+    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -146,7 +146,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
     # Set flag to False by default. If it is equal to True, then need to be saved.
     pagesize_changed = False
     # get pagesize from session, if failed then get default value
-    pagesize = QUESTIONS_PAGE_SIZE #request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
+    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
