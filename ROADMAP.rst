@@ -10,19 +10,18 @@ http://groups.google.com/group/askbot
 
 Bacic principles of the project
 ==================================
-Our rule #1 is that all developers have commit right to the project
-repository, but they must follow this ROADMAP and TODO - 
-to keep up with our own sanity.
+Here they are:
 
-We welcome contributions by other people and show tolerance
-and patience - especially to the new team members.
-
-When users who might not be tech-savvy ask questions -
-we try to answer to the point and using their language 
-(i.e. not programmer jargon:)
-
-We favor plain and minimalistic style of programming, but pay
-attention to detail - especially details of user experience.
+* our rule #1 is that all developers have commit right to the project
+  repository, but they must follow this ROADMAP and TODO - 
+  to keep up with our own sanity.
+* we welcome contributions by other people and show tolerance
+  and patience - especially to the new team members.
+* when users who might not be tech-savvy ask questions -
+  we try to answer to the point and using their language 
+  (i.e. not programmer jargon:)
+* we favor plain and minimalistic style of programming, but pay
+  attention to detail - especially details of user experience.
 
 We try do develop using the following workflow:
 * specify problem that we try to solve
