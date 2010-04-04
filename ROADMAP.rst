@@ -24,6 +24,7 @@ Here they are:
   attention to detail - especially details of user experience.
 
 We try do develop using the following workflow:
+
 * specify problem that we try to solve
 * create requirements that will guarantee a solution, once met
 * dream up some implementation ideas (maybe even some sketches on the paper)
