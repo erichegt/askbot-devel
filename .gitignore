@@ -15,3 +15,4 @@ tmp/*
 load
 run
 forum/skins/default/media/js/flot
+forum/skins/common/media/js/closure/google-closure
