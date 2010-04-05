@@ -516,7 +516,7 @@ function createComments(type) {
 
     var getComments = function(id, jDiv) {
         //appendLoaderImg(id);
-        $.getJSON(scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+        $.getJSON(scriptUrl + $.i18n._(objectType + "s/") + id + "/" + $.i18n._("comments/"),
                 function(json) { showComments(id, json); });
     };
 
@@ -575,10 +575,9 @@ function createComments(type) {
         var formSelector = "#" + formId;
         var textarea = $(formSelector + " textarea");
 
-        //todo fix url translations!!!
         $.ajax({
             type: "POST",
-            url: scriptUrl + objectType + "s/" + id + "/" + $.i18n._("comments/"),
+            url: scriptUrl + $.i18n._(objectType + "s/") + id + "/" + $.i18n._("comments/"),
             dataType: "json",
             data: { comment: textarea.val() },
             success: function(json) {

@@ -147,6 +147,8 @@ var i18nEs = {
 	'enter url':'introduzca direcciones web, ejemplo：<br />http://www.cnprog.com/   \"titulo del enlace\"</p>"',
 	'upload image':'cargar imagen：',
 	'questions/' : 'preguntas/',
+	'answers/' : 'respuestas/',
+	'comments/' : 'comentarios/',
 	'vote/' : 'votar/'
 };
 
