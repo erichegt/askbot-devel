@@ -81,58 +81,9 @@ def _get_and_remember_questions_sort_method(request, view_dic, default):#service
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    view_dic = {
-             "latest":"-last_activity_at",
-             "hottest":"-answer_count",
-             "mostvoted":"-score",
-             }
-    view_id, orderby = _get_and_remember_questions_sort_method(request, view_dic, 'latest')
+    return HttpResponseRedirect(reverse('questions'))
 
-    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    qs = Question.objects.exclude(deleted=True).order_by(orderby)
-
-    objects_list = Paginator(qs, pagesize)
-    questions = objects_list.page(page)
-
-    # RISK - inner join queries
-    #questions = questions.select_related()
-    tags = Tag.objects.get_valid_tags(INDEX_TAGS_SIZE)
-
-    awards = Award.objects.get_recent_awards()
-
-    (interesting_tag_names, ignored_tag_names) = (None, None)
-    if request.user.is_authenticated():
-        pt = MarkedTag.objects.filter(user=request.user)
-        interesting_tag_names = pt.filter(reason='good').values_list('tag__name', flat=True)
-        ignored_tag_names = pt.filter(reason='bad').values_list('tag__name', flat=True)
-
-    tags_autocomplete = _get_tags_cache_json()
-
-    return render_to_response('index.html', {
-        'interesting_tag_names': interesting_tag_names,
-        'tags_autocomplete': tags_autocomplete,
-        'ignored_tag_names': ignored_tag_names,
-        "questions" : questions,
-        "tab_id" : view_id,
-        "tags" : tags,
-        "awards" : awards[:INDEX_AWARD_SIZE],
-        "context" : {
-            'is_paginated' : True,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': questions.has_previous(),
-            'has_next': questions.has_next(),
-            'previous': questions.previous_page_number(),
-            'next': questions.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'pagesize' : pagesize
-        }}, context_instance=RequestContext(request))
-
+#todo: eliminate this from urls
 def unanswered(request):#generates listing of unanswered questions
     return questions(request, unanswered=True)
 
@@ -146,6 +97,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
     # Set flag to False by default. If it is equal to True, then need to be saved.
     pagesize_changed = False
     # get pagesize from session, if failed then get default value
+    # there is also user page size in the database, but we should probably delete it
     pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
     try:
         page = int(request.GET.get('page', '1'))
@@ -157,6 +109,43 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
 
     # check if request is from tagged questions
     qs = Question.objects.exclude(deleted=True)
+
+    #query select input:
+    tags
+    user
+    search query
+    unanswered (meaning is function of forum size setting)
+
+    #sort methods
+    newest/oldest   +/-added_at
+    active/inactive +/-last_activity_at
+    answer count +/-answer_count
+    votes    +/- score
+    relevance (only if search query is not empty)
+
+    #have this call implemented for sphinx, mysql and pgsql
+    questions = Question.objects.advanced_search(
+                        tags = tags,
+                        author = user,#???question or answer author or just contributor
+                        request_user = request.user,
+                        search_query = search_query,
+                        scope = scope,#unanswered/all/favorite (for logged in)
+                        sort_method #newest/oldest/active/inactive/+-answers/+-votes/relevance(search only)
+    #maybe have this inside?
+    qs = qs.select_related(depth=1).order_by(orderby)
+                )
+
+    page = #Paginator(questions)
+    related_tags = #Tag.objects.get_related_to_questions
+    contributors = #User.objects.get_related_to_questions
+
+    return render_to_response(template_file, {
+        related_tags
+        questions
+        contributors
+        incoming request metadata
+
+    #todo: hide this inside the advanced_search call
 
     if tagname is not None:
         qs = qs.filter(tags__name = unquote(tagname))
@@ -176,6 +165,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
 
     if request.user.is_authenticated():
         uid_str = str(request.user.id)
+        #mark questions tagged with interesting tags
         qs = qs.extra(
                         select = SortedDict([
                             (
@@ -190,10 +180,12 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
                         select_params = (uid_str,),
                      )
         if request.user.hide_ignored_questions:
+            #exclude ignored tags if the user wants to
             ignored_tags = Tag.objects.filter(user_selections__reason='bad',
                                             user_selections__user = request.user)
             qs = qs.exclude(tags__in=ignored_tags)
         else:
+            #annotate questions tagged with ignored tags
             qs = qs.extra(
                         select = SortedDict([
                             (
@@ -208,6 +200,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
                         select_params = (uid_str, )
                      )
 
+    #todo: does this help? 
     qs = qs.select_related(depth=1).order_by(orderby)
 
     objects_list = Paginator(qs, pagesize)
@@ -218,6 +211,7 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
         related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
     else:
         related_tags = None
+
     tags_autocomplete = _get_tags_cache_json()
 
     # get the list of interesting and ignored tags
@@ -250,55 +244,10 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
             'pagesize' : pagesize
         }}, context_instance=RequestContext(request))
 
-def search(request): #generates listing of questions matching a search query - including tags and just words
-    """generates listing of questions matching a search query
-    supports full text search in mysql db using sphinx and internally in postgresql
-    falls back on simple partial string matching approach if
-    full text search function is not available
-    """
+def fulltext(request):
     if request.method == "GET":
         keywords = request.GET.get("q")
-        search_type = request.GET.get("t")
-        try:
-            page = int(request.GET.get('page', '1'))
-        except ValueError:
-            page = 1
-        if keywords is None:
-            return HttpResponseRedirect(reverse(index))
-        if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (keywords.strip(), page))
-        elif search_type == "user":
-            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (keywords.strip(), page))
-        elif search_type == "question":
             
-            template_file = "questions.html"
-            # Set flag to False by default. If it is equal to True, then need to be saved.
-            pagesize_changed = False
-            # get pagesize from session, if failed then get default value
-            user_page_size = request.session.get("pagesize", QUESTIONS_PAGE_SIZE)
-            # set pagesize equal to logon user specified value in database
-            if request.user.is_authenticated() and request.user.questions_per_page > 0:
-                user_page_size = request.user.questions_per_page
-
-            try:
-                page = int(request.GET.get('page', '1'))
-                # get new pagesize from UI selection
-                pagesize = int(request.GET.get('pagesize', user_page_size))
-                if pagesize <> user_page_size:
-                    pagesize_changed = True
-
-            except ValueError:
-                page = 1
-                pagesize  = user_page_size
-
-            # save this pagesize to user database
-            if pagesize_changed:
-                request.session["pagesize"] = pagesize
-                if request.user.is_authenticated():
-                    user = request.user
-                    user.questions_per_page = pagesize
-                    user.save()
-
             view_id = request.GET.get('sort', None)
             view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
             try:
@@ -357,6 +306,28 @@ def search(request): #generates listing of questions matching a search query - i
  
     else:
         raise Http404
+
+def search(request): #generates listing of questions matching a search query - including tags and just words
+    """redirects to people and tag search pages
+    todo: eliminate this altogether and instead make
+    search "tab" sensitive automatically - the radio-buttons
+    are useless under the search bar
+    """
+    if request.method == "GET":
+        search_type == request.GET.get('t')
+        try:
+            page = int(request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+        if search_type == 'tag':
+            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (keywords.strip(), page))
+        elif search_type == "user":
+            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (keywords.strip(), page))
+        else:
+            raise Http404
+    else:
+        raise Http404
+
 
 def tag(request, tag):#stub generates listing of questions tagged with a single tag
     return questions(request, tagname=tag)
