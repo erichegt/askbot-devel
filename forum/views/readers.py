@@ -24,6 +24,7 @@ from forum.forms import *
 from forum.models import *
 from forum.auth import *
 from forum.const import *
+from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url
 
@@ -35,7 +36,6 @@ INDEX_TAGS_SIZE = 25
 # used in tags list
 DEFAULT_PAGE_SIZE = 60
 # used in questions
-QUESTIONS_PAGE_SIZE = 30
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
@@ -54,24 +54,6 @@ def _get_tags_cache_json():#service routine used by views requiring tag list in 
     tags = simplejson.dumps(tags_list)
     return tags
 
-def _get_and_remember_questions_sort_method(request, view_dic, default):#service routine used by q listing views and question view
-    """manages persistence of post sort order
-    it is assumed that when user wants newest question - 
-    then he/she wants newest answers as well, etc.
-    how far should this assumption actually go - may be a good question
-    """
-    if default not in view_dic:
-        raise Exception('default value must be in view_dic')
-
-    q_sort_method = request.REQUEST.get('sort', None)
-    if q_sort_method == None:
-        q_sort_method = request.session.get('questions_sort_method', default)
-
-    if q_sort_method not in view_dic:
-        q_sort_method = default
-    request.session['questions_sort_method'] = q_sort_method
-    return q_sort_method, view_dic[q_sort_method]
-
 #refactor? - we have these
 #views that generate a listing of questions in one way or another:
 #index, unanswered, questions, search, tag
@@ -87,141 +69,89 @@ def index(request):#generates front page - shows listing of questions sorted in 
 def unanswered(request):#generates listing of unanswered questions
     return questions(request, unanswered=True)
 
+def _get_and_stick(key, storage, defaults, data=None):
+    """storage is request session in this case
+    if a new value is coming from data, then storage will be updated
+    this function assumes that data is clean
+    """
+    if key in storage:
+        value = storage[key]
+    else:
+        value = defaults[key]
+
+    if data and key in data:
+        new_value = data[key]
+        if new_value != value:
+            storage[key] = new_value
+            return new_value
+    else:
+        return value
+
 def questions(request, tagname=None, unanswered=False):#a view generating listing of questions, used by 'unanswered' too
     """
     List of Questions, Tagged questions, and Unanswered questions.
     """
-    # template file
-    # "questions.html" or maybe index.html in the future
-    template_file = "questions.html"
-    # Set flag to False by default. If it is equal to True, then need to be saved.
-    pagesize_changed = False
-    # get pagesize from session, if failed then get default value
-    # there is also user page size in the database, but we should probably delete it
-    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
 
-    view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
-    view_id, orderby = _get_and_remember_questions_sort_method(request,view_dic,'latest')
+    #don't allow to post to this view
+    if request.method == 'POST':
+        raise Http404
 
-    # check if request is from tagged questions
-    qs = Question.objects.exclude(deleted=True)
+    #default values
+    DV = {
+        'scope_selector': const.DEFAULT_POST_SCOPE,
+        'search_query': None,
+        'tag_selector': None,
+        'author_selector': None,
+        'question_sort_method': const.DEFAULT_POST_SORT_METHOD,
+        'page_size': const.QUESTIONS_PAGE_SIZE,
+        'page_number': 1,
+    }
 
-    #query select input:
-    tags
-    user
-    search query
-    unanswered (meaning is function of forum size setting)
+    form = AdvancedSearchForm(request)
+    if form.is_valid():
+        
+        d = form.cleaned_data
+        s = request.session
 
-    #sort methods
-    newest/oldest   +/-added_at
-    active/inactive +/-last_activity_at
-    answer count +/-answer_count
-    votes    +/- score
-    relevance (only if search query is not empty)
+        scope_selector = _get_and_stick('scope_selector', s, DV, d)
+        search_query = _get_and_stick('search_query', s, DV, d)
+        tag_selector = _get_and_stick('tag_selector', s, DV, d)
+        author_selector = _get_and_stick('author_selector', s, DV, d)
+        sort_method = _get_and_stick('question_sort_method', s, DV, d)
+        page_size = _get_and_stick('page_size', s, DV, d)
+    else:
+        s = request.session
+        scope_selector = _get_and_stick('scope_selector', s, DV)
+        search_query = _get_and_stick('search_query', s, DV)
+        tag_selector = _get_and_stick('tag_selector', s, DV)
+        author_selector = _get_and_stick('author_selector', s, DV)
+        sort_method = _get_and_stick('question_sort_method', s, DV)
+        page_size = _get_and_stick('page_size', s, DV)
 
     #have this call implemented for sphinx, mysql and pgsql
-    questions = Question.objects.advanced_search(
-                        tags = tags,
-                        author = user,#???question or answer author or just contributor
-                        request_user = request.user,
-                        search_query = search_query,
-                        scope = scope,#unanswered/all/favorite (for logged in)
-                        sort_method #newest/oldest/active/inactive/+-answers/+-votes/relevance(search only)
+    (questions, meta_data) = Question.objects.run_advanced_search(
+                            request_user = request.user,
+                            scope_selector = scope_selector,#unanswered/all/favorite (for logged in)
+                            search_query = search_query,
+                            tag_selector = tags,
+                            author_selector = author_selector,#???question or answer author or just contributor
+                            sort_method = sort_method#
+                        )
     #maybe have this inside?
-    qs = qs.select_related(depth=1).order_by(orderby)
-                )
+    questions = questions.select_related(depth=1).order_by(orderby)
 
-    page = #Paginator(questions)
-    related_tags = #Tag.objects.get_related_to_questions
-    contributors = #User.objects.get_related_to_questions
-
-    return render_to_response(template_file, {
-        related_tags
-        questions
-        contributors
-        incoming request metadata
-
-    #todo: hide this inside the advanced_search call
-
-    if tagname is not None:
-        qs = qs.filter(tags__name = unquote(tagname))
-
-    if unanswered:
-        qs = qs.exclude(answer_accepted=True)
-
-    author_name = None
-    #user contributed questions & answers
-    if 'user' in request.GET:
-        try:
-            author_name = request.GET['user']
-            u = User.objects.get(username=author_name)
-            qs = qs.filter(Q(author=u) | Q(answers__author=u))
-        except User.DoesNotExist:
-            author_name = None
-
-    if request.user.is_authenticated():
-        uid_str = str(request.user.id)
-        #mark questions tagged with interesting tags
-        qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'interesting_score', 
-                                'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                  + 'WHERE forum_markedtag.user_id = %s '
-                                  + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = \'good\' '
-                                  + 'AND question_tags.question_id = question.id'
-                            ),
-                                ]),
-                        select_params = (uid_str,),
-                     )
-        if request.user.hide_ignored_questions:
-            #exclude ignored tags if the user wants to
-            ignored_tags = Tag.objects.filter(user_selections__reason='bad',
-                                            user_selections__user = request.user)
-            qs = qs.exclude(tags__in=ignored_tags)
-        else:
-            #annotate questions tagged with ignored tags
-            qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'ignored_score', 
-                                'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                  + 'WHERE forum_markedtag.user_id = %s '
-                                  + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = \'bad\' '
-                                  + 'AND question_tags.question_id = question.id'
-                            )
-                                ]),
-                        select_params = (uid_str, )
-                     )
-
-    #todo: does this help? 
-    qs = qs.select_related(depth=1).order_by(orderby)
+    page = Paginator(questions).get_page(page_number)
+    related_tags = Tag.objects.get_tags_by_questions(questions)
 
     objects_list = Paginator(qs, pagesize)
-    questions = objects_list.page(page)
-
-    # Get related tags from this page objects
-    if questions.object_list.count() > 0:
-        related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
-    else:
-        related_tags = None
+    questions = objects_list.page(page)#todo: is this right?
 
     tags_autocomplete = _get_tags_cache_json()
+    #contributors = #User.objects.get_related_to_questions
 
-    # get the list of interesting and ignored tags
-    (interesting_tag_names, ignored_tag_names) = (None, None)
-    if request.user.is_authenticated():
-        pt = MarkedTag.objects.filter(user=request.user)
-        interesting_tag_names = pt.filter(reason='good').values_list('tag__name', flat=True)
-        ignored_tag_names = pt.filter(reason='bad').values_list('tag__name', flat=True)
-
-    return render_to_response(template_file, {
+    #todo make above form compatible with the template data
+    #take whatever is missing from meta_data returned above
+    return render_to_response('questions.html', {
         "questions" : questions,
         "author_name" : author_name,
         "tab_id" : view_id,

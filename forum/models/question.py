@@ -9,6 +9,18 @@ markdowner = Markdown(html4tags=True)
 
 from forum.utils.lists import LazyList
 
+QUESTION_ORDER_BY_MAP = {
+    _('newest'): '-added_at',
+    _('oldest'): 'added_at',
+    _('active'): '-last_activity_at',
+    _('inactive'): 'last_activity_at',
+    _('hot'): '-answer_count',
+    _('cold'): 'answer_count'
+    _('popular'): '-score',
+    _('unpopular'): 'score',
+    _('relevance'):None #this is a special case
+}
+
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
         html = sanitize_html(markdowner.convert(text))
@@ -38,6 +50,85 @@ class QuestionManager(models.Manager):
             revised_at=added_at,
         )
         return question
+
+    def run_advanced_search(
+                            self,
+                            request_user = None,
+                            scope_selector = scope_selector,#unanswered/all/favorite (for logged in)
+                            search_query = None,
+                            tag_selector = None,
+                            author_selector = None,#???question or answer author or just contributor
+                            sort_method = const.DEFAULT_POST_SORT_METHOD
+                            ):
+        """all parameters are guaranteed to be clean
+        however may not relate to database - in that case
+        a relvant filter will be silently dropped
+        """
+
+        #return metadata
+        meta_data = {}
+        if tag_selector: 
+            qs = qs.filter(tags__name__in = tag_selector)
+
+        if scope_selector:
+            
+        if unanswered:
+            qs = qs.exclude(answer_accepted=True)
+
+        #user contributed questions & answers
+        if author_selector:
+            try:
+                u = User.objects.get(username=author_selector)
+                qs = qs.filter(Q(author=u) | Q(answers__author=u))
+                meta_data['author_name'] = author_selector
+            except User.DoesNotExist:
+                meta_data['author_name'] = None
+
+        #get users tag filters
+        if request_user and request_user.is_authenticated():
+            uid_str = str(request_user.id)
+            #mark questions tagged with interesting tags
+            qs = qs.extra(
+                            select = SortedDict([
+                                (
+                                    'interesting_score', 
+                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                                      + 'WHERE forum_markedtag.user_id = %s '
+                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                                      + 'AND forum_markedtag.reason = \'good\' '
+                                      + 'AND question_tags.question_id = question.id'
+                                ),
+                                    ]),
+                            select_params = (uid_str,),
+                         )
+            if request_user.hide_ignored_questions:
+                #exclude ignored tags if the user wants to
+                ignored_tags = Tag.objects.filter(user_selections__reason='bad',
+                                                user_selections__user = request_user)
+                qs = qs.exclude(tags__in=ignored_tags)
+            else:
+                #annotate questions tagged with ignored tags
+                qs = qs.extra(
+                            select = SortedDict([
+                                (
+                                    'ignored_score', 
+                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                                      + 'WHERE forum_markedtag.user_id = %s '
+                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                                      + 'AND forum_markedtag.reason = \'bad\' '
+                                      + 'AND question_tags.question_id = question.id'
+                                )
+                                    ]),
+                            select_params = (uid_str, )
+                         )
+            # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
+            pt = MarkedTag.objects.filter(user=request_user)
+            meta_data['interesting_tag_names'] = pt.filter(reason='good').values_list('tag__name', flat=True)
+            meta_data['ignored_tag_names'] = pt.filter(reason='bad').values_list('tag__name', flat=True)
+
+    #todo: fix orderby here
+    qs = qs.select_related(depth=1).order_by(orderby)
+    return qs, meta_data
 
     def update_tags(self, question, tagnames, user):
         """

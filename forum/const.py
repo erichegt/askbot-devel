@@ -32,6 +32,30 @@ TYPE_REPUTATION = (
     (-8, 'lose_by_upvote_canceled'),
 )
 
+POST_SORT_METHODS = (
+                    _('newest'), _('oldest'),_('active'),
+                    _('inactive'),_('hot'),_('cold'),
+                    _('popular'),_('unpopular'),_('relevance')
+                    )
+#todo: add assertion here that all sort methods are unique
+#because they are keys to the hash used in implementations of Q.run_advanced_search
+
+DEFAULT_POST_SORT_METHOD = _('newest')
+POST_SCOPES = (_('all'),_('unanswered'),_('favorite'))
+DEFAULT_POST_SCOPE = _('all')
+
+QUESTIONS_PAGE_SIZE = 30
+
+#todo:
+#this probably needs to be language-specific
+#and selectable/changeable from the admin interface
+#however it will be hard to expect that people will type
+#correct regexes - plus this must be an anchored regex
+#to do full string match
+TAG_REGEX = r'^[a-z0-9\+\.\-]+$'
+MAX_TAG_LENGTH = 20 #default 20 chars
+MAX_TAGS_PER_POST = 5 #no more than five tags
+
 TYPE_ACTIVITY_ASK_QUESTION=1
 TYPE_ACTIVITY_ANSWER=2
 TYPE_ACTIVITY_COMMENT_QUESTION=3

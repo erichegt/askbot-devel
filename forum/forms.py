@@ -2,8 +2,10 @@ import re
 from datetime import date
 from django import forms
 from models import *
-from const import *
+from const import * #todo: clean out import * thing
+from forum import const
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
@@ -60,21 +62,33 @@ class TagNamesField(forms.CharField):
             raise forms.ValidationError(_('tags are required'))
 
         split_re = re.compile(r'[ ,]+')
-        list = split_re.split(data)
-        list_temp = []
-        if len(list) > 5:
-            raise forms.ValidationError(_('please use 5 tags or less'))
-        for tag in list:
-            if len(tag) > 20:
-                raise forms.ValidationError(_('tags must be shorter than 20 characters'))
-            #take tag regex from settings
-            tagname_re = re.compile(r'[a-z0-9\w._#-]+',re.UNICODE)
-            if not tagname_re.match(tag):
-                raise forms.ValidationError(_('please use letters, numbers, and characters \'.-_#\''))
-            # only keep one same tag
-            if tag not in list_temp and len(tag.strip()) > 0:
-                list_temp.append(tag)
-        return u' '.join(list_temp)
+        tag_strings = split_re.split(data)
+        out_tag_list = []
+        tag_count = len(tag_strings)
+        if tag_count > const.MAX_TAGS_PER_POST:
+            msg = ungettext(
+                        'please use %(tag_count)d tag or less',#odd but have to use to pluralize
+                        'please use %(tag_count)d tags or less',
+                        tag_count) % {'tag_count':tag_count}
+            raise forms.ValidationError(msg)
+        for tag in tag_strings:
+            tag_length = len(tag)
+            if tag_length > const.MAX_TAG_LENGTH:
+                #singular form is odd in english, but required for pluralization
+                #in other languages
+                msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
+                                'each tag must be shorter than %(max_shars)d characters',
+                                tag_length) % {'max_chars':tag_length}
+                raise forms.ValidationError(msg)_
+
+            #todo - this needs to come from settings
+            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+            if not tagname_re.search(tag):
+                raise forms.ValidationError(_('use-these-chars-in-tags'))
+            #only keep unique tags
+            if tag not in out_tag_list:
+                out_tag_list.append(tag)
+        return u' '.join(out_tag_list)
 
 class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
