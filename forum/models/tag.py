@@ -49,6 +49,8 @@ class TagManager(models.Manager):
 
     def get_tags_by_questions(self, questions):
         question_ids = []
+        if len(questions) == 0:
+            return []
         for question in questions:
             question_ids.append(question.id)
 

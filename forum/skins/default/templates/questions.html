@@ -10,9 +10,11 @@
        <script type="text/javascript">
            var tags = {{ tags_autocomplete|safe }};
            $().ready(function(){
-               var tab_id = "{{ tab_id }}";
-               $("#"+tab_id).attr('className',"on");
-               var on_tab = {% if is_unanswered %}'#nav_unanswered'{% else %}'#nav_questions'{% endif %};
+               var sort_tab_id = "{{ sort }}";
+               $("#"+sort_tab_id).attr('className',"on");
+               var scope_tab_id = "{{ scope }}";
+               $("#"+scope_tab_id).attr('className',"on");
+               var on_tab = '#nav_questions';
                $(on_tab).attr('className','on');
                Hilite.exact = false;
                Hilite.elementid = "listA";
@@ -24,6 +26,7 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
+    {% comment %}
     <div class="headQuestions">
         {% if searchtag %}
             {% trans "Found by tags" %}
@@ -42,27 +45,116 @@
                 {% endif %}
             {% endif %}
         {% endif %}
+    </div><br/>
+    {% endcomment %}
+    <div class="tabsC">
+        <span class="label">{% trans "Pick:" %}</span>
+        <a id="all" class="off" href="?scope=all" title="{% trans "see all questions" %}">{% trans "all" %}</a>
+        <a id="unanswered" class="off" href="?scope=unanswered" title="{% trans "see unanswered questions" %}">{% trans "unanswered" %}</a>
+        {% if request.user.is_authenticated %} 
+        <a id="favorite" class="off" href="?scope=favorite" title="{% trans "see your favorite questions" %}">{% trans "favorite" %}</a>
+        {% endif %}
     </div>
     <div class="tabsA">
-        <a id="latest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=latest" class="off" title="{% trans "most recently asked questions" %}">{% trans "newest" %}</a>
-        <a id="active" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=active" class="off" title="{% trans "most recently updated questions" %}">{% trans "active" %}</a>
-        <a id="hottest" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=hottest" class="off" title="{% trans "hottest questions" %}">{% trans "hottest" %}</a>
-        <a id="mostvoted" href="{% if is_search %}{{ search_uri }}&{% else %}?{% endif %}sort=mostvoted" class="off" title="{% trans "most voted questions" %}">{% trans "most voted" %}</a>    
+        <span class="label">{% trans "Sort by:" %}</span>
+        {% if sort == "oldest" %}
+        <a id="oldest" 
+            href="?sort=latest" 
+            class="off" 
+            title="{% trans "click to see the newest questions" %}">{% trans "oldest" %}</a>
+        {% else %}
+                {% if sort == "latest" %}
+                    <a id="latest" 
+                        href="?sort=oldest" 
+                        class="off" 
+                        title="{% trans "click to see the oldest questions" %}">{% trans "newest" %}</a>
+                {% else %}
+                    <a id="latest" 
+                        href="?sort=latest" 
+                        class="off" 
+                        title="{% trans "click to see the newest questions" %}">{% trans "newest" %}</a>
+                {% endif %}
+        {% endif %}
+
+        {% if sort == "inactive" %}
+        <a id="inactive" 
+            href="?sort=active" 
+            class="off" 
+            title="{% trans "click to see the most recently updated questions" %}">{% trans "inactive" %}</a>
+        {% else %}
+            {% if sort == "active" %}
+                <a id="active" 
+                    href="?sort=inactive" 
+                    class="off" 
+                    title="{% trans "click to see the least recently updated questions" %}">{% trans "active" %}</a>
+            {% else %}
+                <a id="active" 
+                    href="?sort=active" 
+                    class="off" 
+                    title="{% trans "click to see the most recently updated questions" %}">{% trans "active" %}</a>
+            {% endif %}
+        {% endif %}
+
+        {% if sort == "coldest" %}
+        <a id="coldest" 
+            href="?sort=hottest" 
+            class="off" 
+            title="{% trans "click to see hottest questions" %}">{% trans "coldest" %}</a>
+        {% else %}
+            {% if sort == "hottest" %}
+                <a id="hottest" 
+                    href="?sort=coldest" 
+                    class="off" 
+                    title="{% trans "click to see coldest questions" %}">{% trans "hottest" %}</a>
+            {% else %}
+                <a id="hottest" 
+                    href="?sort=hottest" 
+                    class="off" 
+                    title="{% trans "click to see hottest questions" %}">{% trans "hottest" %}</a>
+            {% endif %}
+        {% endif %}
+
+        {% if sort == "leastvoted" %}
+        <a id="leastvoted" 
+            href="?sort=mostvoted" 
+            class="off" 
+            title="{% trans "click to see most voted questions" %}">{% trans "unpopular" %}</a>    
+        {% else %}
+            {% if sort == "mostvoted" %}
+                <a id="mostvoted" 
+                    href="?sort=leastvoted" 
+                    class="off" 
+                    title="{% trans "click to see least voted questions" %}">{% trans "popular" %}</a>    
+            {% else %}
+                <a id="mostvoted" 
+                    href="?sort=mostvoted" 
+                    class="off" 
+                    title="{% trans "click to see most voted questions" %}">{% trans "popular" %}</a>    
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 <div id="listA">
     {% include "question_list.html" %}
-    {% if searchtitle %}
         {% if questions_count == 0 %}
-        <p class="evenMore" style="padding-top:30px;text-align:center;">
-            {% trans "Did not find anything?" %}
+            <p class="evenMore" style="padding-top:30px;text-align:center;">
+            {% if scope == "unanswered" %}
+                {% trans "There are no unanswered questions in this selection" %}
+            {% endif %}
+            {% if scope == "favorite" %}
+                {% trans "No favorite questions here. " %}
+                {% trans "Please bookmark some questions with a star and find them here later." %}
+            {% endif %}
+            {% if scope == "all" %}
+                {% trans "Did not find anything? Please feel free to ask your question!" %}
+            {% endif %}
+            </p>
         {% else %}
-        <p class="evenMore" style="padding-left:9px">
-            {% trans "Did not find what you were looking for?" %} 
+            <p class="evenMore" style="padding-left:9px">
+                {% trans "Did not find what you were looking for?" %} 
+                <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
+            </p>
         {% endif %}
-        <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
-        </p>
-    {% endif %}
 </div>
 {% endblock %}
 
@@ -84,9 +176,9 @@
                 {% endif %}
 			{% else %}
                 {% if is_unanswered %}
-                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %} have total {{q_num}} unanswered questions {% plural %} have total {{q_num}} unanswered questions {% endblocktrans %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} have total {{q_num}} unanswered questions {% plural %} have total {{q_num}} unanswered questions {% endblocktrans %}
                 {% else %}
-                    {% blocktrans count questions as cnt with questions_count|intcomma as q_num %} have total {{q_num}} questions {% plural %} have total {{q_num}} questions {% endblocktrans %}
+                    {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} have total {{q_num}} questions {% plural %} have total {{q_num}} questions {% endblocktrans %}
                 {% endif %}
 			{% endif %}
 		{% endif %}

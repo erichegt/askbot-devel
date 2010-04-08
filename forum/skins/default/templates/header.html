@@ -31,7 +31,9 @@
                     <a id="nav_books" href="{% url books %}">{% trans "books" %}</a>
                     {% endif %}
                     <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
+                    {% comment %}
                     <a id="nav_unanswered" href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
+                    {% endcomment %}
                     <div class="focus">
                     <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
                     </div>

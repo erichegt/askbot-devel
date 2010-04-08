@@ -61,7 +61,7 @@ class TagNamesField(forms.CharField):
         if len(data) < 1:
             raise forms.ValidationError(_('tags are required'))
 
-        split_re = re.compile(r'[ ,]+')
+        split_re = re.compile(const.TAG_SPLIT_REGEX)
         tag_strings = split_re.split(data)
         out_tag_list = []
         tag_count = len(tag_strings)
@@ -79,7 +79,7 @@ class TagNamesField(forms.CharField):
                 msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
                                 'each tag must be shorter than %(max_shars)d characters',
                                 tag_length) % {'max_chars':tag_length}
-                raise forms.ValidationError(msg)_
+                raise forms.ValidationError(msg)
 
             #todo - this needs to come from settings
             tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
@@ -126,6 +126,75 @@ class ModerateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('is_approved',)
+
+class AdvancedSearchForm(forms.Form):
+    #nothing must be required in this form
+    #it is used by the main questions view
+    scope = forms.ChoiceField(choices=const.POST_SCOPE_LIST, required=False)
+    sort = forms.ChoiceField(choices=const.POST_SORT_METHODS, required=False)
+    query = forms.CharField(max_length=256, required=False)
+    reset_tags = forms.BooleanField(required=False)
+    reset_author = forms.BooleanField(required=False)
+    reset_query = forms.BooleanField(required=False)
+    tags = forms.CharField(max_length=256,required=False)
+    author = forms.IntegerField(required=False)
+    page_size = forms.ChoiceField(choices=const.PAGE_SIZES, required=False)
+    page = forms.IntegerField(required=False)
+
+    def clean_tags(self):
+        if 'tags' in self.cleaned_data:
+            tags_input = self.cleaned_data['tags'].strip()
+            split_re = re.compile(TAG_SPLIT_REGEX)
+            tag_strings = split_re.split(tags_input)
+            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+            out = set()
+            for s in tag_strings:
+                if tagname_re.search(s):
+                    out.add(s)
+            if len(out) > 0:
+                self.cleaned_data['tags'] = out
+            else:
+                self.cleaned_data['tags'] = None
+            return self.cleaned_data['tags']
+
+    def clean_query(self):
+        if 'query' in self.cleaned_data:
+            q = self.cleaned_data['query'].strip()
+            if q == '':
+                q = None
+            self.cleaned_data['query'] = q
+            return self.cleaned_data['query']
+
+    def clean_page_size(self):
+        if 'page_size' in self.cleaned_data:
+            if self.cleaned_data['page_size'] == '':
+                self.cleaned_data['page_size'] = None
+            return self.cleaned_data['page_size']
+
+    def clean(self):
+        #todo rewrite
+        print self.cleaned_data
+        if self.cleaned_data['scope'] == '':
+            del self.cleaned_data['scope']
+        if self.cleaned_data['tags'] is None:
+            del self.cleaned_data['tags']
+        if self.cleaned_data['sort'] == '':
+            del self.cleaned_data['sort']
+        if self.cleaned_data['query'] == None:
+            del self.cleaned_data['query']
+        if self.cleaned_data['reset_tags'] == False:
+            del self.cleaned_data['reset_tags']
+        if self.cleaned_data['reset_author'] == False:
+            del self.cleaned_data['reset_author']
+        if self.cleaned_data['reset_query'] == False:
+            del self.cleaned_data['reset_query']
+        if self.cleaned_data['author'] is None:
+            del self.cleaned_data['author']
+        if self.cleaned_data['page'] is None:
+            del self.cleaned_data['page']
+        if self.cleaned_data['page_size'] is None:
+            del self.cleaned_data['page_size']
+        return self.cleaned_data
 
 class NotARobotForm(forms.Form):
     recaptcha = ReCaptchaField()

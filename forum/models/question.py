@@ -1,24 +1,31 @@
-from base import *
+from base import * #todo maybe remove *
 from tag import Tag
+#todo: make uniform import for consts
 from forum.const import CONST
+from forum import const
 from forum.utils.html import sanitize_html
 from markdown2 import Markdown
 from django.utils.html import strip_tags
 import datetime
+from django.conf import settings
+from django.utils.datastructures import SortedDict
+from forum.models.tag import MarkedTag
+
 markdowner = Markdown(html4tags=True)
 
 from forum.utils.lists import LazyList
 
+#todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
-    _('newest'): '-added_at',
-    _('oldest'): 'added_at',
-    _('active'): '-last_activity_at',
-    _('inactive'): 'last_activity_at',
-    _('hot'): '-answer_count',
-    _('cold'): 'answer_count'
-    _('popular'): '-score',
-    _('unpopular'): 'score',
-    _('relevance'):None #this is a special case
+    'latest': '-added_at',
+    'oldest': 'added_at',
+    'active': '-last_activity_at',
+    'inactive': 'last_activity_at',
+    'hottest': '-answer_count',
+    'coldest': 'answer_count',
+    'mostvoted': '-score',
+    'leastvoted': 'score',
+    'relevant': None #this is a special case
 }
 
 class QuestionManager(models.Manager):
@@ -54,7 +61,7 @@ class QuestionManager(models.Manager):
     def run_advanced_search(
                             self,
                             request_user = None,
-                            scope_selector = scope_selector,#unanswered/all/favorite (for logged in)
+                            scope_selector = const.DEFAULT_POST_SCOPE,#unanswered/all/favorite (for logged in)
                             search_query = None,
                             tag_selector = None,
                             author_selector = None,#???question or answer author or just contributor
@@ -65,16 +72,32 @@ class QuestionManager(models.Manager):
         a relvant filter will be silently dropped
         """
 
+        qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
+
         #return metadata
         meta_data = {}
         if tag_selector: 
             qs = qs.filter(tags__name__in = tag_selector)
 
-        if scope_selector:
-            
-        if unanswered:
-            qs = qs.exclude(answer_accepted=True)
+        if search_query:
+            qs = qs.filter(deleted=False).extra(
+                                    where=['title like %s'], 
+                                    params=['%' + search_query + '%']
+                                    )
 
+        if scope_selector:
+            if scope_selector == 'unanswered':
+                if const.UNANSWERED_MEANING == 'NO_ANSWERS':
+                    qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
+                elif const.UNANSWERED_MEANING == 'NO_ACCEPTED_ANSWERS':
+                    qs = qs.filter(answer_accepted=False)
+                elif const.UNANSWERED_MEANING == 'NO_UPVOTED_ANSWERS':
+                    raise NotImplementedError()
+                else:
+                    raise Exception('UNANSWERED_MEANING setting is wrong')
+            elif scope_selector == 'favorite':
+                qs = qs.filter(favorited_by = request_user)
+            
         #user contributed questions & answers
         if author_selector:
             try:
@@ -126,9 +149,13 @@ class QuestionManager(models.Manager):
             meta_data['interesting_tag_names'] = pt.filter(reason='good').values_list('tag__name', flat=True)
             meta_data['ignored_tag_names'] = pt.filter(reason='bad').values_list('tag__name', flat=True)
 
-    #todo: fix orderby here
-    qs = qs.select_related(depth=1).order_by(orderby)
-    return qs, meta_data
+        qs = qs.select_related(depth=1)
+        #todo: fix orderby here
+        orderby = QUESTION_ORDER_BY_MAP[sort_method]
+        if orderby:
+            #relevance will be ignored here
+            qs = qs.order_by(orderby)
+        return qs, meta_data
 
     def update_tags(self, question, tagnames, user):
         """

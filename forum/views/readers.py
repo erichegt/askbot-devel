@@ -13,7 +13,6 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-from django.utils.datastructures import SortedDict
 from django.views.decorators.cache import cache_page
 
 from forum.utils.html import sanitize_html
@@ -27,6 +26,7 @@ from forum.const import *
 from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url
+from forum.search.state_manager import SearchState
 
 # used in index page
 #refactor - move these numbers somewhere?
@@ -69,25 +69,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
 def unanswered(request):#generates listing of unanswered questions
     return questions(request, unanswered=True)
 
-def _get_and_stick(key, storage, defaults, data=None):
-    """storage is request session in this case
-    if a new value is coming from data, then storage will be updated
-    this function assumes that data is clean
-    """
-    if key in storage:
-        value = storage[key]
-    else:
-        value = defaults[key]
-
-    if data and key in data:
-        new_value = data[key]
-        if new_value != value:
-            storage[key] = new_value
-            return new_value
-    else:
-        return value
-
-def questions(request, tagname=None, unanswered=False):#a view generating listing of questions, used by 'unanswered' too
+def questions(request):#a view generating listing of questions, used by 'unanswered' too
     """
     List of Questions, Tagged questions, and Unanswered questions.
     """
@@ -96,146 +78,83 @@ def questions(request, tagname=None, unanswered=False):#a view generating listin
     if request.method == 'POST':
         raise Http404
 
-    #default values
-    DV = {
-        'scope_selector': const.DEFAULT_POST_SCOPE,
-        'search_query': None,
-        'tag_selector': None,
-        'author_selector': None,
-        'question_sort_method': const.DEFAULT_POST_SORT_METHOD,
-        'page_size': const.QUESTIONS_PAGE_SIZE,
-        'page_number': 1,
-    }
+    search_state = request.session.get('search_state', SearchState())
 
-    form = AdvancedSearchForm(request)
+    view_log = request.session['view_log']
+    print view_log
+    if view_log.get_previous(1) != 'questions':
+        if view_log.get_previous(2) != 'questions':
+            print 'user stepped too far, resetting search state'
+            search_state.reset()
+
+    if request.user.is_authenticated():
+        search_state.set_logged_in()
+
+    print 'before: ', search_state
+
+    form = AdvancedSearchForm(request.GET)
     if form.is_valid():
-        
-        d = form.cleaned_data
-        s = request.session
+        print 'form is valid'
+        search_state.update_from_user_input(form.cleaned_data)
+        request.session['search_state'] = search_state
+        request.session.modified = True
 
-        scope_selector = _get_and_stick('scope_selector', s, DV, d)
-        search_query = _get_and_stick('search_query', s, DV, d)
-        tag_selector = _get_and_stick('tag_selector', s, DV, d)
-        author_selector = _get_and_stick('author_selector', s, DV, d)
-        sort_method = _get_and_stick('question_sort_method', s, DV, d)
-        page_size = _get_and_stick('page_size', s, DV, d)
-    else:
-        s = request.session
-        scope_selector = _get_and_stick('scope_selector', s, DV)
-        search_query = _get_and_stick('search_query', s, DV)
-        tag_selector = _get_and_stick('tag_selector', s, DV)
-        author_selector = _get_and_stick('author_selector', s, DV)
-        sort_method = _get_and_stick('question_sort_method', s, DV)
-        page_size = _get_and_stick('page_size', s, DV)
+    print 'after: ', search_state
+
+    print 'going into the search'
 
     #have this call implemented for sphinx, mysql and pgsql
-    (questions, meta_data) = Question.objects.run_advanced_search(
+    (qs, meta_data) = Question.objects.run_advanced_search(
                             request_user = request.user,
-                            scope_selector = scope_selector,#unanswered/all/favorite (for logged in)
-                            search_query = search_query,
-                            tag_selector = tags,
-                            author_selector = author_selector,#???question or answer author or just contributor
-                            sort_method = sort_method#
+                            scope_selector = search_state.scope,#unanswered/all/favorite (for logged in)
+                            search_query = search_state.query,
+                            tag_selector = search_state.tags,
+                            author_selector = search_state.author,
+                            sort_method = search_state.sort
                         )
-    #maybe have this inside?
-    questions = questions.select_related(depth=1).order_by(orderby)
 
-    page = Paginator(questions).get_page(page_number)
-    related_tags = Tag.objects.get_tags_by_questions(questions)
+    print 'got out of the search'
 
-    objects_list = Paginator(qs, pagesize)
-    questions = objects_list.page(page)#todo: is this right?
+    logging.debug('search state is %s' % search_state)
+
+    objects_list = Paginator(qs, search_state.page_size)
+    questions = objects_list.page(search_state.page)
+
+    #todo maybe do this search on query the set instead
+    related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
 
     tags_autocomplete = _get_tags_cache_json()
+
+    #todo!!!!
     #contributors = #User.objects.get_related_to_questions
 
-    #todo make above form compatible with the template data
-    #take whatever is missing from meta_data returned above
+    print 'rendering template!!!'
+    print 'have %d' % objects_list.count
+
     return render_to_response('questions.html', {
-        "questions" : questions,
-        "author_name" : author_name,
-        "tab_id" : view_id,
-        "questions_count" : objects_list.count,
-        "tags" : related_tags,
-        "tags_autocomplete" : tags_autocomplete, 
-        "searchtag" : tagname,
-        "is_unanswered" : unanswered,
-        "interesting_tag_names": interesting_tag_names,
-        'ignored_tag_names': ignored_tag_names, 
-        "context" : {
+        'questions' : questions,
+        'author_name' : meta_data.get('author_name',None),
+        'tab_id' : search_state.sort,
+        'questions_count' : objects_list.count,
+        'tags' : related_tags,
+        'tags_autocomplete' : tags_autocomplete,
+        'searchtag' : search_state.tags,
+        'is_unanswered' : False,#remove this from template
+        'interesting_tag_names': meta_data.get('interesting_tag_names',None),
+        'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
+        'sort': search_state.sort,
+        'scope': search_state.scope,
+        'context' : {
             'is_paginated' : True,
             'pages': objects_list.num_pages,
-            'page': page,
+            'page': search_state.page,
             'has_previous': questions.has_previous(),
             'has_next': questions.has_next(),
             'previous': questions.previous_page_number(),
             'next': questions.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'pagesize' : pagesize
+            'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
+            'pagesize' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
-
-def fulltext(request):
-    if request.method == "GET":
-        keywords = request.GET.get("q")
-            
-            view_id = request.GET.get('sort', None)
-            view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
-            try:
-                orderby = view_dic[view_id]
-            except KeyError:
-                view_id = "latest"
-                orderby = "-added_at"
-
-            def question_search(keywords, orderby):
-                objects = Question.objects.filter(deleted=False).extra(where=['title like %s'], params=['%' + keywords + '%']).order_by(orderby)
-                # RISK - inner join queries
-                return objects.select_related();
-
-            from forum.modules import get_handler
-
-            question_search = get_handler('question_search', question_search)
-            
-            objects = question_search(keywords, orderby)
-
-            objects_list = Paginator(objects, pagesize)
-            questions = objects_list.page(page)
-
-            # Get related tags from this page objects
-            related_tags = []
-            for question in questions.object_list:
-                tags = list(question.tags.all())
-                for tag in tags:
-                    if tag not in related_tags:
-                        related_tags.append(tag)
-
-            #if is_search is true in the context, prepend this string to soting tabs urls
-            search_uri = "?q=%s&page=%d&t=question" % ("+".join(keywords.split()),  page)
-
-            return render_to_response(template_file, {
-                "questions" : questions,
-                "tab_id" : view_id,
-                "questions_count" : objects_list.count,
-                "tags" : related_tags,
-                "searchtag" : None,
-                "searchtitle" : keywords,
-                "keywords" : keywords,
-                "is_unanswered" : False,
-                "is_search": True, 
-                "search_uri":  search_uri, 
-                "context" : {
-                    'is_paginated' : True,
-                    'pages': objects_list.num_pages,
-                    'page': page,
-                    'has_previous': questions.has_previous(),
-                    'has_next': questions.has_next(),
-                    'previous': questions.previous_page_number(),
-                    'next': questions.next_page_number(),
-                    'base_url' : request.path + '?t=question&q=%s&sort=%s&' % (keywords, view_id),
-                    'pagesize' : pagesize
-                }}, context_instance=RequestContext(request))
- 
-    else:
-        raise Http404
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages
@@ -257,7 +176,6 @@ def search(request): #generates listing of questions matching a search query - i
             raise Http404
     else:
         raise Http404
-
 
 def tag(request, tag):#stub generates listing of questions tagged with a single tag
     return questions(request, tagname=tag)
