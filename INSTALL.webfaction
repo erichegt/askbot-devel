@@ -1,3 +1,5 @@
+NOTE: this file may be a bit out of date
+
 Detailed instructions for installing Askbot on WebFaction
 
 Adapted from http://code.pinaxproject.com/wiki/DetailedPinaxWebfaction/
@@ -281,7 +283,7 @@ Configure Apache2
         #SetEnvIf X-Forwarded-SSL on HTTPS=1
 
         WSGIPythonPath /home/USERNAME/envs/askbot/lib/python2.5/site-packages/
-        WSGIScriptAlias / /home/USERNAME/webapps/askbot_server/projects/myaskbot/askbot.wsgi
+        WSGIScriptAlias / /home/USERNAME/webapps/askbot_server/projects/myaskbot/django.wsgi
 
         LoadModule alias_module modules/mod_alias.so
         WSGIDaemonProcess askbotWSGI user=USERNAME group=USERNAME threads=25 python-path=/home/USERNAME/envs/askbot/lib/python2.5/site-packages
@@ -306,10 +308,7 @@ Configure Apache2
     If you want virtual hosts of the admin interface under HTTPS, please
     look at Askbot's install file.
 
-    Create askbot.wsgi and edit it:
-        cp askbot.wsgi.dist askbot.wsgi
-
-    Edit  ~/webapps/askbot_server/projects/myaskbot/deploy/askbot.wsgi as follows::
+    Edit  ~/webapps/askbot_server/projects/myaskbot/deploy/django.wsgi as follows::
         
         import os
         import sys

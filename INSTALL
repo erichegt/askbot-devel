@@ -125,29 +125,10 @@ when using the test server
 
 4. Installation under Apache/WSGI
 
-4.1 Prepare wsgi script
+The main wsgi script is in the file django.wsgi
+it does not need to be modified
 
-Make a file readable by your webserver with the following content:
-
----------
-import os
-import sys
-
-sys.path.insert(0,'/one/level/above') #insert to make sure that forum will be found
-sys.path.append('/one/level/above/askbot-site') #maybe this is not necessary
-os.environ['DJANGO_SETTINGS_MODULE'] = 'askbot-site.settings'
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
------------
-
-insert method is used for path because if the forum directory name
-is by accident the same as some other python module
-you wull see strange errors - forum won't be found even though
-it's in the python path. for example using name "test" is
-not a good idea - as there is a module with such name
-
-
-4.2 Configure webserver
+4.1 Configure webserver
 Settings below are not perfect but may be a good starting point
 
 ---------
@@ -179,7 +160,7 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
     </Directory>
 
     #this is your wsgi script described in the prev section
-    WSGIScriptAlias / /path/to/askbot-site/askbot.wsgi
+    WSGIScriptAlias / /path/to/askbot-site/django.wsgi
 
     #this will force admin interface to work only
     #through https (optional)
@@ -199,7 +180,7 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
     SSLEngine on
     SSLCertificateFile /path/to/ssl-certificate/server.crt
     SSLCertificateKeyFile /path/to/ssl-certificate/server.key
-    WSGIScriptAlias / /path/to/askbot-site/askbot.wsgi
+    WSGIScriptAlias / /path/to/askbot-site/django.wsgi
     CustomLog /var/log/httpd/askbot/access_log common
     ErrorLog /var/log/httpd/askbot/error_log
     DirectoryIndex index.html
