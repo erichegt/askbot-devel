@@ -1,28 +1,28 @@
-Detailed instructions for installing OSQA on WebFaction
+Detailed instructions for installing Askbot on WebFaction
 
 Adapted from http://code.pinaxproject.com/wiki/DetailedPinaxWebfaction/
 
 Please email turian at gmail with any updates or corrections.
 
 
-Installing OSQA on Webfaction
+Installing Askbot on Webfaction
 ------------------------------------
 
-Details the steps for setting up OSQA on a Webfaction shared-hosting
+Details the steps for setting up Askbot on a Webfaction shared-hosting
 account, including email setup, using Apache2, mod_wsgi, psycopg2.
 
 If you want to search-and-replace through this file, you will need to replace:
-    osqa_server         [name of Webfaction application, which will be in ~/webapps/]
-    osqa_static         [name of Webfaction application for static media serving]
-    DOMAIN.com          [domain name for OSQA site]
+    askbot_server         [name of Webfaction application, which will be in ~/webapps/]
+    askbot_static         [name of Webfaction application for static media serving]
+    DOMAIN.com          [domain name for Askbot site]
     PORT                [port number assigned by WebFaction to your mod_wsgi application]
-    SITENAME            [name you give the OSQA site, which will contain the apache logs]
-    MYOSQA              [name of the OSQA project]
+    SITENAME            [name you give the Askbot site, which will contain the apache logs]
+    myaskbot              [name of the Askbot project]
     MAILBOX_USERNAME    [username you give the email address]
     MAILBOX_PASSWORD    [password that webfaction gives to this email username]
-    OSQADATABASE_NAME   [username you give the database]
-    OSQADATABASE_PASSWORD   [password that webfaction gives to this database]
-    ~/envs/osqa         [directory for the OSQA python environment, grep for 'env']
+    AskbotDATABASE_NAME   [username you give the database]
+    AskbotDATABASE_PASSWORD   [password that webfaction gives to this database]
+    ~/envs/askbot         [directory for the Askbot python environment, grep for 'env']
     USERNAME            [your WebFaction username]
 
 Some things I'm not sure about:
@@ -30,7 +30,7 @@ Some things I'm not sure about:
 Here's what I don't know how to do:
     * Set up a nginx server for static media.
     * Configure sphinx search
-    * Use PostgreSQL, not MySQL: http://osqa.net/question/13/can-i-use-osqa-with-postgresql
+    * Use PostgreSQL, not MySQL: http://askbot.net/question/13/can-i-use-askbot-with-postgresql
 
 
 Webfaction Control Panel
@@ -46,7 +46,7 @@ for you, website/subdomain and associate the two for you.)
     Let's call the domain DOMAIN.com.
 
     Create a new Webfaction application with a "Type:" of "mod_wsgi
-    2.5/Python2.5", naming it "osqa_server". (These instructions
+    2.5/Python2.5", naming it "askbot_server". (These instructions
     might also work with mod_wsgi 2.0, if you like.)
 
         https://panel.webfaction.com/app_/list
@@ -55,8 +55,8 @@ for you, website/subdomain and associate the two for you.)
     it PORT.
 
     Create a new Webfaction website which will associate the subdomain
-    with the new osqa_server application. Give it name SITENAME, at least one
-    domain, and set it to use the osqa_server application for the site's
+    with the new askbot_server application. Give it name SITENAME, at least one
+    domain, and set it to use the askbot_server application for the site's
     root location, "/".
 
         https://panel.webfaction.com/site/list
@@ -64,20 +64,20 @@ for you, website/subdomain and associate the two for you.)
     You will need to create a database, typically one for each project
     you create. Change the type to PostgreSql and modify the name (it
     defaults to your webfaction account name) by adding an underscore
-    and a project-specific identifier such as "_osqa". Before
+    and a project-specific identifier such as "_askbot". Before
     leaving this section of the control panel, you may wish to change
     the password.
 
         https://panel.webfaction.com/database/create
 
-    Call these OSQADATABASE_NAME and OSQADATABASE_PASSWORD.
+    Call these AskbotDATABASE_NAME and AskbotDATABASE_PASSWORD.
 
     Save the database password for later.
 
     [The following I haven't figured out yet]
     You will probably want to add a static media server. This is a
     Webfaction application. I created one of type "Static only (no
-    .htaccess)" and with the name of "osqa_static".
+    .htaccess)" and with the name of "askbot_static".
 
         https://panel.webfaction.com/app_/create
 
@@ -96,15 +96,15 @@ for you, website/subdomain and associate the two for you.)
         https://panel.webfaction.com/email/list
 
 
-OSQA Software
+Askbot Software
 --------------
 
     Log onto webfaction and get the code. I use my fork because I have
     a simple pip installation:
-        git://github.com/turian/osqa.git
+        git://github.com/turian/askbot.git
     In my situation, I keep source code in ~/utils/src, create
-    virtual environments in ~/envs/osqa, and create Pinax projects in
-    ~/webapps/osqa_server/projects.
+    virtual environments in ~/envs/askbot, and create Pinax projects in
+    ~/webapps/askbot_server/projects.
 
     You will need pip + virtualenv installed:
 
@@ -112,15 +112,15 @@ OSQA Software
         easy_install --prefix=~/utils/ virtualenv
 
         cd ~/utils/src/
-        git clone git://github.com/turian/osqa.git
-        cd osqa
+        git clone git://github.com/turian/askbot.git
+        cd askbot
 
         # We need python2.5 to be compatible with WSGI
-        python2.5 ~/utils/bin/pip install -E ~/envs/osqa -r osqa-requirements.txt 
-        source ~/envs/osqa/bin/activate
+        python2.5 ~/utils/bin/pip install -E ~/envs/askbot -r askbot-requirements.txt 
+        source ~/envs/askbot/bin/activate
 
         # [Optional] If you want a MySQL database
-        easy_install-2.5 --prefix ~/envs/osqa/ mysql-python
+        easy_install-2.5 --prefix ~/envs/askbot/ mysql-python
 
 Additional Software
 -------------------
@@ -147,39 +147,39 @@ Additional Software
 Create a Project
 ----------------
 
-    In Pinax, you clone a project from OSQA.
-    However, OSQA we just copy it.
+    In Pinax, you clone a project from Askbot.
+    However, Askbot we just copy it.
 
-        cd ~/webapps/osqa_server
+        cd ~/webapps/askbot_server
         mkdir projects
         cd projects
-        cp -R ~/utils/src/osqa MYOSQA
-        cd MYOSQA
-        export OSQAPROJECT=`pwd`
+        cp -R ~/utils/src/askbot myaskbot
+        cd myaskbot
+        export AskbotPROJECT=`pwd`
 
-    Make some directories, as described in the OSQA INSTALL file:
+    Make some directories, as described in the Askbot INSTALL file:
     [okay I haven't actually done this yet]
 
-#        mkdir -p $OSQASITE/upfiles/
-#        mkdir -p $OSQALOG
-#        sudo chown -R `whoami`:www-data $OSQASITE
-#        sudo chown -R `whoami`:www-data $OSQALOG
-#        chmod -R g+w $OSQASITE/upfiles
-#        chmod -R g+w $OSQALOG
+#        mkdir -p $AskbotSITE/upfiles/
+#        mkdir -p $AskbotLOG
+#        sudo chown -R `whoami`:www-data $AskbotSITE
+#        sudo chown -R `whoami`:www-data $AskbotLOG
+#        chmod -R g+w $AskbotSITE/upfiles
+#        chmod -R g+w $AskbotLOG
 
 
     Edit the settings files:
 
-        cd $OSQAPROJECT
+        cd $AskbotPROJECT
         cp settings_local.py.dist settings_local.py
         vi settings_local.py settings.py 
 
         Pay attention to the following settings:
 
             DATABASE_ENGINE = 'mysql'
-            DATABASE_NAME = 'OSQADATABASE_NAME'
-            DATABASE_USER = 'OSQADATABASE_NAME'
-            DATABASE_PASSWORD = 'OSQADATABASE_PASSWORD'
+            DATABASE_NAME = 'AskbotDATABASE_NAME'
+            DATABASE_USER = 'AskbotDATABASE_NAME'
+            DATABASE_PASSWORD = 'AskbotDATABASE_PASSWORD'
 
             EMAIL_HOST='smtp.webfaction.com'
             EMAIL_HOST_USER='MAILBOX_USERNAME'
@@ -197,7 +197,7 @@ Create a Project
 
     Create a directory for logs:
 
-        cd $OSQAPROJECT
+        cd $AskbotPROJECT
         mkdir log
 
     Modify mail cron scripts "cron/send_email_alerts" as follows:
@@ -206,8 +206,8 @@ Create a Project
 
             #!/bin/sh
 
-            WORKON_HOME=~/envs/osqa
-            PROJECT_ROOT=~/webapps/osqa_server/projects/MYOSQA/
+            WORKON_HOME=~/envs/askbot
+            PROJECT_ROOT=~/webapps/askbot_server/projects/myaskbot/
 
             # activate virtual environment
             . $WORKON_HOME/bin/activate
@@ -217,7 +217,7 @@ Create a Project
 
         Use command "crontab -e" to add this script to your cron file, to run twice a day::
 
-            1 0,12 * * * ~/webapps/osqa_server/projects/MYOSQA/cron/send_email_alerts
+            1 0,12 * * * ~/webapps/askbot_server/projects/myaskbot/cron/send_email_alerts
 
     [Configure sphinx]
 
@@ -229,8 +229,8 @@ Create a Project
     Build media directory links within the project and create symbolic
     links on the static media server.
         python manage.py build_media -all
-        mkdir ~/webapps/OSQA_STATIC/MYOSQA
-        ln -sd ~/webapps/osqa_server/projects/MYOSQA/site_media ~/webapps/OSQA_STATIC/MYOSQA/site_media
+        mkdir ~/webapps/Askbot_STATIC/myaskbot
+        ln -sd ~/webapps/askbot_server/projects/myaskbot/site_media ~/webapps/Askbot_STATIC/myaskbot/site_media
 
 
     Set up the badges:
@@ -249,7 +249,7 @@ Create a Project
         4. Use `crontab -e` to call `cron/multi_award_badges` maybe
         four times an hour.
 
-            4,19,34,49 * * * * ~/webapps/osqa_server/projects/MYOSQA/cron/multi_award_badges
+            4,19,34,49 * * * * ~/webapps/askbot_server/projects/myaskbot/cron/multi_award_badges
 
         5. Repeat steps 1-4 for `cron/once_award_badges`.
 
@@ -257,10 +257,10 @@ Create a Project
 Configure Apache2
 ----------------
 
-    Edit  ~/webapps/osqa_server/apache2/conf/httpd.conf as follows::
+    Edit  ~/webapps/askbot_server/apache2/conf/httpd.conf as follows::
 
         ServerAdmin "MAILBOX_USERNAME@DOMAIN.com"
-        ServerRoot "/home/USERNAME/webapps/osqa_server/apache2"
+        ServerRoot "/home/USERNAME/webapps/askbot_server/apache2"
         ServerName DOMAIN.com
 
         LoadModule dir_module modules/mod_dir.so
@@ -274,42 +274,42 @@ Configure Apache2
         KeepAlive Off
         Listen PORT
         LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-        CustomLog /home/USERNAME/logs/user/access_osqa_server_log combined
-        ErrorLog /home/USERNAME/logs/user/error_osqa_server_log
+        CustomLog /home/USERNAME/logs/user/access_askbot_server_log combined
+        ErrorLog /home/USERNAME/logs/user/error_askbot_server_log
         ServerLimit 2
 
         #SetEnvIf X-Forwarded-SSL on HTTPS=1
 
-        WSGIPythonPath /home/USERNAME/envs/osqa/lib/python2.5/site-packages/
-        WSGIScriptAlias / /home/USERNAME/webapps/osqa_server/projects/MYOSQA/osqa.wsgi
+        WSGIPythonPath /home/USERNAME/envs/askbot/lib/python2.5/site-packages/
+        WSGIScriptAlias / /home/USERNAME/webapps/askbot_server/projects/myaskbot/askbot.wsgi
 
         LoadModule alias_module modules/mod_alias.so
-        WSGIDaemonProcess osqaWSGI user=USERNAME group=USERNAME threads=25 python-path=/home/USERNAME/envs/osqa/lib/python2.5/site-packages
-        WSGIProcessGroup osqaWSGI
+        WSGIDaemonProcess askbotWSGI user=USERNAME group=USERNAME threads=25 python-path=/home/USERNAME/envs/askbot/lib/python2.5/site-packages
+        WSGIProcessGroup askbotWSGI
 
         NameVirtualHost 127.0.0.1:PORT
 
-        #ErrorLog "logs/MYOSQA_2009_05_06.log"
+        #ErrorLog "logs/myaskbot_2009_05_06.log"
         SetHandler none
-        #Alias /site_media /home/USERNAME/webapps/static/MYOSQA/site_media
+        #Alias /site_media /home/USERNAME/webapps/static/myaskbot/site_media
 
         #force all content to be served as static files
         #otherwise django will be crunching images through itself wasting time
-        Alias /content/ /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/
-        Alias /forum/admin/media/ /home/turian/envs/osqa/lib/python2.5/site-packages/django/contrib/admin/media/
-        #AliasMatch /([^/]*\.css) /home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content/style/$1
-        <Directory "/home/USERNAME/webapps/osqa_server/projects/MYOSQA/templates/content">
+        Alias /content/ /home/USERNAME/webapps/askbot_server/projects/myaskbot/templates/content/
+        Alias /forum/admin/media/ /home/turian/envs/askbot/lib/python2.5/site-packages/django/contrib/admin/media/
+        #AliasMatch /([^/]*\.css) /home/USERNAME/webapps/askbot_server/projects/myaskbot/templates/content/style/$1
+        <Directory "/home/USERNAME/webapps/askbot_server/projects/myaskbot/templates/content">
         #    Order deny,allow
         #    Allow from all
         </Directory>
 
     If you want virtual hosts of the admin interface under HTTPS, please
-    look at OSQA's install file.
+    look at Askbot's install file.
 
-    Create osqa.wsgi and edit it:
-        cp osqa.wsgi.dist osqa.wsgi
+    Create askbot.wsgi and edit it:
+        cp askbot.wsgi.dist askbot.wsgi
 
-    Edit  ~/webapps/osqa_server/projects/MYOSQA/deploy/osqa.wsgi as follows::
+    Edit  ~/webapps/askbot_server/projects/myaskbot/deploy/askbot.wsgi as follows::
         
         import os
         import sys
@@ -323,13 +323,13 @@ Configure Apache2
         
         # add the virtual environment site-packages to the path
         from site import addsitedir
-        addsitedir('/home/USERNAME/envs/osqa/lib/python2.5/site-packages')
+        addsitedir('/home/USERNAME/envs/askbot/lib/python2.5/site-packages')
         
         sys.path.insert(0, abspath(join(dirname(__file__), "../")))
         sys.path.append(abspath(dirname(__file__)))
         
         from django.conf import settings
-        os.environ["DJANGO_SETTINGS_MODULE"] = "MYOSQA.settings"
+        os.environ["DJANGO_SETTINGS_MODULE"] = "myaskbot.settings"
 
         #print sys.path
 
@@ -338,8 +338,8 @@ Configure Apache2
 
 And then you're up and running with:
 
-    ~/webapps/osqa_server/apache2/bin/stop
-    ~/webapps/osqa_server/apache2/bin/start
+    ~/webapps/askbot_server/apache2/bin/stop
+    ~/webapps/askbot_server/apache2/bin/start
 
 You should log in to the admin interface (http://DOMAIN.com/admin/),
 and go to "Sites > Sites", and change the domain name that is used in

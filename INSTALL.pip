@@ -12,7 +12,7 @@
     git://github.com/johnl/deb-sphinx-search.git
 
 * Install a virtual environment OUTSIDE of this directory:
-    pip install -E ~/env -r osqa-requirements.txt 
+    pip install -E ~/env -r askbot-requirements.txt 
 [there is discussion on the pinax forums about what it should be outside
 the source directory]
 

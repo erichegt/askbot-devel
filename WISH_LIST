@@ -34,9 +34,9 @@ Just a joke - pick yourself a task and work on it.
 * validate HTML
 * set up loading of default settings from inside the /forum dir
 * automatic dependency checking for modules
-* propose how to rename directory forum --> osqa
+* propose how to rename directory forum --> askbot
   without breaking things and keeping name of the project root
-  named the same way - osqa
+  named the same way - askbot
 
 ==New features==
 Whoever wants - pick a feature from the WISH_LIST

@@ -73,7 +73,7 @@ INSTALLED_APPS = (
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
-    #'stackexchange', #se loader
+    'stackexchange', #se loader
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)

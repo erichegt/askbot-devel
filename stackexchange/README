@@ -2,10 +2,10 @@ this app's function will be to:
 
 * install it's own tables (#todo: not yet automated)
 * read SE xml dump into DjangoDB (automated)
-* populate osqa database (automated)
+* populate askbot database (automated)
 * remove SE tables (#todo: not done yet)
 
-Current process to load SE data into OSQA is:
+Current process to load SE data into Askbot is:
 ==============================================
 
 1) backup database
@@ -26,7 +26,7 @@ Current process to load SE data into OSQA is:
 5) Install stackexchange models (as well as any other missing models)
     python manage.py syncdb
 
-6) make sure that osqa badges are installed
+6) make sure that badges are installed
    if not, run (example for mysql):
 
    mysql -u user -p dbname < sql_scripts/badges.sql
@@ -47,7 +47,7 @@ it assumes that SE dump has been unzipped inside the tmp directory
     #!/bin/sh$
     python manage.py flush 
     #delete all data
-    mysql -u osqa -p osqa < sql_scripts/badges.sql
+    mysql -u askbot -p aksbot < sql_scripts/badges.sql
     python manage.py load_stackexchange tmp
 
 Untested parts are tagged with comments starting with 

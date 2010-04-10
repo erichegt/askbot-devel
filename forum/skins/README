@@ -10,11 +10,11 @@ default/templates - templates must be named the same way
 NO NEED TO CREATE ALL TEMPLATES/MEDIA FILES AT ONCE
 
 templates are resolved in the following way:
-* check in skin named as in settings.OSQA_DEFAULT_SKIN
+* check in skin named as in settings.ASKBOT_DEFAULT_SKIN
 * then skin named 'default'
 
 media is resolved with one extra option
-* settings.OSQA_DEFAULT_SKIN
+* settings.ASKBOT_DEFAULT_SKIN
 * 'default'
 * 'common'
 

@@ -18,17 +18,17 @@ logging.debug('') #this will add time, line number, function and file record
 #etc - take a look at http://docs.python.org/library/logging.html
 -------------------------------
 
-in OSQA logging is currently set up in settings_local.py.dist
+in Askbot logging is currently set up in settings_local.py.dist
 please update it if you need - in older revs logging strings have less info
 
 messages of interest can be grepped out of the log file by module/file/function name
 e.g. to take out all django_authopenid logs run: 
->grep 'osqa\/django_authopenid' log/django.osqa.log | sed 's/^.*MSG: //'
+>grep 'askbot\/django_authopenid' log/django.askbot.log | sed 's/^.*MSG: //'
 in the example above 'sed' call truncates out a long prefix
 and makes output look more meaningful
 
 2) DJANGO DEBUG TOOLBAR
-osqa works with django debug toolbar
+askbot works with django debug toolbar
 if debugging under apache server, check 
 that debug toolbar media is loaded correctly
 if toolbar is enabled but you do not see it, possibly some Alias statement

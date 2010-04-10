@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OSQA\n"
+"Project-Id-Version: Askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-23 10:41-0400\n"
 "PO-Revision-Date: 2010-03-28 22:15-0600\n"
@@ -597,7 +597,7 @@ msgid "okay, let's try!"
 msgstr "bien, vamos a probar!"
 
 #: forum/authentication/forms.py:42
-msgid "no OSQA community email please, thanks"
+msgid "no community email please, thanks"
 msgstr "no usar un email de la comunidad, por favor"
 
 #: forum/authentication/forms.py:45
@@ -2841,20 +2841,20 @@ msgstr "Enviar enlace"
 msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
 msgstr "Conectar con %(APP_SHORT_NAME)s Facebook!"
 
-#: forum/skins/default/templates/osqaadmin/base.html:12
-msgid "OSQA administration area"
+#: forum/skins/default/templates/askbotadmin/base.html:12
+msgid "administration area"
 msgstr "Área de Administración"
 
-#: forum/skins/default/templates/osqaadmin/base.html:36
+#: forum/skins/default/templates/askbotadmin/base.html:36
 msgid "Administration menu"
 msgstr "Menú de administración"
 
-#: forum/skins/default/templates/osqaadmin/index.html:6
+#: forum/skins/default/templates/askbotadmin/index.html:6
 msgid "Basic settings"
 msgstr "Configuraciones básicas"
 
-#: forum/skins/default/templates/osqaadmin/index.html:9
-msgid "Welcome to the OSQA administration area."
+#: forum/skins/default/templates/askbotadmin/index.html:9
+msgid "Welcome to the administration area."
 msgstr "Bienvenido al área de adminstración"
 
 #: forum/templatetags/extra_tags.py:167
