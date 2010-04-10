@@ -101,6 +101,8 @@ FB_SECRET='' #your application secret
 
 USE_EXTERNAL_LEGACY_LOGIN = False #DO NOT USE, and do not delete this line, will be removed later
 #counter colors
+from forum_modules.grapefruit import Color
+VOTE_COUNTER_EXPECTED_MAXIMUM = 5
 COLORS_VOTE_COUNTER_EMPTY_BG = 'white'
 COLORS_VOTE_COUNTER_EMPTY_FG = 'gray'
 COLORS_VOTE_COUNTER_MIN_BG = 'white'
