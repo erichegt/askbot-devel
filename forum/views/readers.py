@@ -90,18 +90,15 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
     if request.user.is_authenticated():
         search_state.set_logged_in()
 
-    print 'before: ', search_state
-
     form = AdvancedSearchForm(request.GET)
     if form.is_valid():
-        print 'form is valid'
-        search_state.update_from_user_input(form.cleaned_data)
+        search_state.update_from_user_input(form.cleaned_data, request.GET)
         request.session['search_state'] = search_state
         request.session.modified = True
 
-    print 'after: ', search_state
-
-    print 'going into the search'
+    #force reset for debugging
+    #search_state.reset()
+    #request.session.modified = True
 
     #have this call implemented for sphinx, mysql and pgsql
     (qs, meta_data) = Question.objects.run_advanced_search(
@@ -112,10 +109,6 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
                             author_selector = search_state.author,
                             sort_method = search_state.sort
                         )
-
-    print 'got out of the search'
-
-    logging.debug('search state is %s' % search_state)
 
     objects_list = Paginator(qs, search_state.page_size)
     questions = objects_list.page(search_state.page)
@@ -128,17 +121,16 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
     #todo!!!!
     #contributors = #User.objects.get_related_to_questions
 
-    print 'rendering template!!!'
-    print 'have %d' % objects_list.count
-
+    #todo: organize variables by type
     return render_to_response('questions.html', {
         'questions' : questions,
         'author_name' : meta_data.get('author_name',None),
         'tab_id' : search_state.sort,
         'questions_count' : objects_list.count,
         'tags' : related_tags,
+        'query': search_state.query,
+        'search_tags' : search_state.tags,
         'tags_autocomplete' : tags_autocomplete,
-        'searchtag' : search_state.tags,
         'is_unanswered' : False,#remove this from template
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
@@ -163,15 +155,16 @@ def search(request): #generates listing of questions matching a search query - i
     are useless under the search bar
     """
     if request.method == "GET":
-        search_type == request.GET.get('t')
+        search_type = request.GET.get('t')
+        query = request.GET.get('query')
         try:
             page = int(request.GET.get('page', '1'))
         except ValueError:
             page = 1
         if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (keywords.strip(), page))
-        elif search_type == "user":
-            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (keywords.strip(), page))
+            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (query.strip(), page))
+        elif search_type == 'user':
+            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (query.strip(), page))
         else:
             raise Http404
     else:
@@ -205,6 +198,7 @@ def tags(request):#view showing a listing of available tags - plain list
         tags = objects_list.page(objects_list.num_pages)
 
     return render_to_response('tags.html', {
+                                            "active_tab": "tags",
                                             "tags" : tags,
                                             "stag" : stag,
                                             "tab_id" : sortby,

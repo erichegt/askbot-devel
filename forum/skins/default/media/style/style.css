@@ -204,7 +204,6 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-/*页面布局*/
 #wrapper {
     width: 960px;
     margin: auto;
@@ -340,28 +339,56 @@ blockquote {
     padding-right: 0px;
 }
 
-/*搜索栏*/
 #searchBar {
     width: 958px;
     background-color: #888a85; /*#e9b96e;*/
     border: 1px solid #aaaaaa;
-    padding: 4px 0 0 0;
+    padding: 4px 0 5px 5px;
 }
-
-/* #B02B2C */
-#searchBar .content {
+#fakeSearchBar {
+    width: 958px;
+    height: 4px;
+    background-color: #888a85; /*#e9b96e;*/
+    border: 1px solid #aaaaaa;
 }
 
 #searchBar .searchInput {
-    font-size: 13px;
-    height: 18px;
-    width: 400px;
+    font-size: 24px;
+    line-height: 24px;
+    height: 36px;
+    width: 620px;
+    margin: 0px;
+    padding: 5px 0 0 5px;
+}
+
+#searchBar .searchInputCancelable {
+    font-size: 24px;
+    line-height: 24px;
+    height: 36px;
+    width: 570px;
+    padding: 5px 0 0 5px;
+    margin: 0px;
 }
 
 #searchBar .searchBtn {
-    font-size: 14px;
-    height: 26px;
-    width: 80px;
+    font-size: 20px;
+    color: #666666;
+    height: 40px;
+    line-height: 22px;
+    text-align: center;
+    margin-top:1px;
+    padding-bottom: 4px;
+}
+
+#searchBar .cancelSearchBtn {
+    font-size: 20px;
+    color: #666666;
+    height: 40px;
+    width: 40px;
+    line-height: 22px;
+    padding-bottom: 4px;
+    margin-top:1px;
+    text-align: center;
 }
 
 #searchBar .options {
@@ -550,6 +577,10 @@ blockquote {
 .evenMore {
     font-size: 14px;
     font-weight: 800;
+}
+
+.evenMore a {
+    text-decoration: underline;
 }
 
 .questions-count {
@@ -1500,6 +1531,10 @@ span.form-error {
     font-size: 100%;
     min-height: 200px;
     line-height: 18px;
+    width: 100%;
+}
+
+#id_title {
     width: 100%;
 }
 
@@ -2538,4 +2573,21 @@ p.signup_p {
     width:20px;
     color:red;
     padding:5px;
+}
+
+.search-result-summary {
+    font-weight: bold;
+    font-size:18px;
+    line-height:30px;
+    margin:0px 0px 0px 5px;
+    padding:0px;
+}
+.search-tips {
+    font-size:12px;
+    line-height:12px;
+    margin:0 0 5px 5px;
+    padding:0px;
+}
+.search-tips a {
+    text-decoration: underline;
 }

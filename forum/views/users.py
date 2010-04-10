@@ -63,11 +63,12 @@ def users(request):
         users = objects_list.page(objects_list.num_pages)
 
     return render_to_response('users.html', {
-                                "users" : users,
-                                "suser" : suser,
-                                "keywords" : suser,
-                                "tab_id" : sortby,
-                                "context" : {
+                                'active_tab': 'users',
+                                'users' : users,
+                                'suser' : suser,
+                                'keywords' : suser,
+                                'tab_id' : sortby,
+                                'context' : {
                                     'is_paginated' : is_paginated,
                                     'pages': objects_list.num_pages,
                                     'page': page,

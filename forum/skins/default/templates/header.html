@@ -1,5 +1,6 @@
 <!-- template header.html -->
 {% load extra_tags %}
+{% load smart_if %}
 {% load i18n %}
 	<div id="roof">
 		<div id="navBar">
@@ -15,53 +16,75 @@
 			</div>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
-				<td width="23%">
-					<div id="logo">
-						<a href="{% url index %}">
-							<img src="{% media  "/media/images/logo.png" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/>
-						</a>
-					</div>
-            	</td>
-				<td width="77%" valign="bottom">
-                <div class="nav">
-                    <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
-                    <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
-                    <a id="nav_users" href="{% url users %}">{% trans "users" %}</a>
-                    {% if settings.BOOKS_ON %}
-                    <a id="nav_books" href="{% url books %}">{% trans "books" %}</a>
-                    {% endif %}
-                    <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
-                    {% comment %}
-                    <a id="nav_unanswered" href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
-                    {% endcomment %}
-                    <div class="focus">
-                    <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
-                    </div>
+        <td width="23%">
+            <div id="logo">
+                <a href="{% url questions %}?start_over=true"><img 
+                    src="{% media  "/media/images/logo.png" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
+            </div>
+        </td>
+        <td width="77%" valign="bottom">
+            <div class="nav">
+                <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
+                <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
+                <a id="nav_users" href="{% url users %}">{% trans "users" %}</a>
+                {% if settings.BOOKS_ON %}
+                <a id="nav_books" href="{% url books %}">{% trans "books" %}</a>
+                {% endif %}
+                <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
+                <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
+                {% comment %}
+                <a id="nav_unanswered" href="{% url unanswered %}">{% trans "unanswered questions" %}</a>
+                <div class="focus">
+                <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
                 </div>
-
-              </td>
+                {% endcomment %}
+            </div>
+        </td>
 			  </tr>
 			</table>
 		</div>
+    {% if active_tab != "ask" %}
 		<div id="searchBar">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="content">
-            <tr>
-                <td align="center" valign="middle">
-                    <form action="{% url search %}" method="get">
-                        <div>
-                            <input type="text" class="searchInput" value="{{ keywords }}" name="q" id="keywords" />
-                            <input type="submit" name="Submit" value="{% trans "search" %}" class="searchBtn" />
-                        </div>
-                        <div class="options">
-                            <input id="type-question" type="radio" value="question" name="t" 
-                                checked="checked" /><label for="type-question">{% trans "questions" %}</label>
-                            <input id="type-tag" type="radio" value="tag" name="t" /><label for="type-tag">{% trans "tags" %}</label>
-                            <input id="type-user" type="radio" value="user" name="t" /><label for="type-user">{% trans "users" %}</label>
-                        </div>
-                    </form>
-                </td>
-            </tr>
-			</table>
+        {% comment %}url action depends on which tab is active{% endcomment %}
+        <form 
+            {% if active_tab == "tags" or active_tab == "users" %}
+                action="{% url search %}" 
+            {% else %}
+                action="{% url questions %}" 
+            {% endif %}
+            method="get">
+                {% comment %} class was searchInput {% endcomment %}
+                <input 
+                    {% if query %}
+                    class="searchInputCancelable"
+                    {% else %}
+                    class="searchInput" 
+                    {% endif %}
+                    type="text" 
+                    value="{{ query|default_if_none:"" }}" 
+                    name="query" 
+                    id="keywords"/>
+                {% if active_tab == "tags" %}
+                    <input type="hidden" name="t" value="tag"/>
+                {% else %}
+                    {% if active_tab == "users" %}
+                        <input type="hidden" name="t" value="user"/>
+                    {% endif %}
+                {% endif %}
+                {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
+                <input type="button" 
+                    value="x" 
+                    name="reset_query" 
+                    {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
+                    onclick="window.location.href='{% url questions %}?reset_query=true'" 
+                    value="true" 
+                    class="cancelSearchBtn"/>
+                {% endif %}
+                <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" default />
+        </form>
 		</div>
+    {% else %}
+    <div id="fakeSearchBar"></div>
+    {% endif %}
 	</div>
 <!-- end template header.html -->

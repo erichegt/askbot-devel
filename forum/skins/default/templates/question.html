@@ -128,10 +128,12 @@
                                 {{ question.html|safe }}
                             </div>
                             <div id="question-controls" class="post-controls">
+                                {% comment %}todo: here we have important case to reset search state{% endcomment %}
                                 <div id="question-tags" class="tags">
                                     {% for tag in question.tagname_list %}
-                                        <a href="{% url tag_questions tag|urlencode %}" class="post-tag"
-                                            title="{% blocktrans with tag as tagname %}see questions tagged '{{ tagname }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
+                                        <a href="{% url questions %}?tags={{tag|urlencode}}&start_over=true" 
+                                            class="post-tag"
+                                            title="{% blocktrans %}see questions tagged '{{tag}}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
                                     {% endfor %}
                                 </div>
                                 {% joinitems using '<span class="action-link-separator">|</span>' %}    
@@ -474,9 +476,10 @@
     </p>
     <p class="tags" >
         {% for tag in tags %}
-        	<a href="{% url tag_questions tag.name|urlencode %}" 
-			title="{% trans "see questions tagged"%}'{{tag.name}}'{% trans "using tags" %}" 
-			rel="tag">{{ tag.name }}</a> <span class="tag-number">&#215;{{ tag.used_count|intcomma }}</span><br/>
+        <a href="{% url questions %}?tags={{tag.name|urlencode}}&start_over=true" 
+            title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{tag_name}}'{% endblocktrans %}" 
+            rel="tag">{{ tag.name }}</a> 
+            <span class="tag-number">&#215;{{ tag.used_count|intcomma }}</span><br/>
         {% endfor %}
     </p>
     <p>

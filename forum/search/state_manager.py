@@ -51,12 +51,13 @@ class SearchState(object):
                 setattr(self, key, new_value)
                 self.reset_page()
 
-    def update_from_user_input(self,input):
+    def update_from_user_input(self,input, raw_input = {}):
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
-        print ','.join(input.keys())
+        if 'start_over' in input:
+            self.reset()
+
         if 'page' in input:
-            print input['page']
             self.page = input['page']
             #special case - on page flip no other input is accepted
             return
@@ -76,7 +77,10 @@ class SearchState(object):
         if 'tags' in input:
             if self.tags:
                 old_tags = self.tags.copy()
-                self.tags.union(input['tags'])
+                print 'old tags %s' % str(old_tags)
+                print 'new tags %s' % str(input['tags'])
+                self.tags = self.tags.union(input['tags'])
+                print 'combined %s' % str(self.tags)
                 if self.tags != old_tags:
                     self.reset_page()
             else:
@@ -97,11 +101,7 @@ class SearchState(object):
             return
 
         if 'reset_query' in input:
-            if self.query:
-                self.query = None
-                self.reset_page()
-                if self.sort == 'relevant':
-                    self.reset_sort()
+            self.reset_query()
             return
 
         self.update_value('author',input)
@@ -109,6 +109,9 @@ class SearchState(object):
         if 'query' in input:
             self.update_value('query',input)
             self.sort = 'relevant'
+        elif 'search' in raw_input:#a case of use nulling search query by hand
+            self.reset_query()
+            return
 
 
         if 'sort' in input:
@@ -119,6 +122,13 @@ class SearchState(object):
 
     def reset_page(self):
         self.page = 1
+
+    def reset_query(self):
+        if self.query:
+            self.query = None
+            self.reset_page()
+            if self.sort == 'relevant':
+                self.reset_sort()
 
     def reset_sort(self):
         self.sort = const.DEFAULT_POST_SORT_METHOD

@@ -122,7 +122,7 @@
                     </h3>
                     <div class="tags">
                         {% for tag in question.tagname_list %}
-                        <a href="{% url tag_questions tag|urlencode %}" title="{% "see questions tagged with" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">{{ tag }}</a>
+                        <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
                         {% endfor %}
                     </div>
                     <div class="started">

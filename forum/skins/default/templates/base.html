@@ -2,6 +2,7 @@
 <!-- template base.html -->
 {% load extra_filters %}
 {% load extra_tags %}
+{% load smart_if %}
 {% load i18n %}
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -36,7 +37,19 @@
             });
         </script>
         {% endif %}
-      
+        {% if active_tab != "tags" and active_tab != "users" %}
+        <script type="text/javascript">
+                    $('#nav_ask').click(
+                        function(){
+                            alert('hullo');
+                            var starting_title = $('#keywords').attr('value');
+                            alert('tittle is ' + starting_title);
+                            window.location.href = $(this).attr('href') + '?'
+                            + starting_title;
+                        }
+                    );
+        </script>
+        {% endif %}
         {% block forejs %}
         {% endblock %}
     </head>

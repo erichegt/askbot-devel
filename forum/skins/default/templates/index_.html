@@ -60,7 +60,7 @@
 
 		<div class="tags">
 			{% for tag in question.tagname_list %}
-			<a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
+			<a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
 			{% endfor %}
 		</div>
 	</div>
@@ -87,7 +87,8 @@
 		 <div class="tags">
 		{% for tag in tags %}
 			<a rel="tag"
-				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
+				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" 
+                href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
 		{% endfor %}
 		</div>
 		<div class="more"><a href="{% url tags %}">{% trans "popular tags" %} »</a> </div>

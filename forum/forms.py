@@ -136,6 +136,7 @@ class AdvancedSearchForm(forms.Form):
     reset_tags = forms.BooleanField(required=False)
     reset_author = forms.BooleanField(required=False)
     reset_query = forms.BooleanField(required=False)
+    start_over = forms.BooleanField(required=False)
     tags = forms.CharField(max_length=256,required=False)
     author = forms.IntegerField(required=False)
     page_size = forms.ChoiceField(choices=const.PAGE_SIZES, required=False)
@@ -188,6 +189,8 @@ class AdvancedSearchForm(forms.Form):
             del self.cleaned_data['reset_author']
         if self.cleaned_data['reset_query'] == False:
             del self.cleaned_data['reset_query']
+        if self.cleaned_data['start_over'] == False:
+            del self.cleaned_data['start_over']
         if self.cleaned_data['author'] is None:
             del self.cleaned_data['author']
         if self.cleaned_data['page'] is None:

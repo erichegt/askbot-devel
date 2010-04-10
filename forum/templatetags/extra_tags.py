@@ -304,8 +304,12 @@ class ItemSeparatorNode(template.Node):
         return self.content
 
 class JoinItemListNode(template.Node):
-    def __init__(self,separator=ItemSeparatorNode("''"), items=()):
+    def __init__(self,separator=ItemSeparatorNode("''"), last_separator=None, items=()):
         self.separator = separator
+        if last_separator:
+            self.last_separator = last_separator
+        else:
+            self.last_separator = separator
         self.items = items
     def render(self,context):
         out = []
@@ -314,16 +318,34 @@ class JoinItemListNode(template.Node):
             bit = item.render(context)
             if not empty_re.search(bit):
                 out.append(bit)
-        return self.separator.render(context).join(out)
+        if len(out) == 1:
+            return out[0]
+        if len(out) > 1:
+            last = out.pop()
+            all_but_last = self.separator.render(context).join(out)
+            return self.last_separator.render(context).join((all_but_last,last))
+        else:
+            assert(len(out)==0)
+            return ''
 
 @register.tag(name="joinitems")
 def joinitems(parser,token):
     try:
-        tagname,junk,sep_token = token.split_contents()
-    except ValueError:
-        raise template.TemplateSyntaxError("joinitems tag requires 'using \"separator html\"' parameters")
+        tagname, junk, sep_token = token.split_contents()
+        last_sep_token = None
+    except:
+        try:
+            tagname, junk, sep_token, last_sep_token = token.split_contents()
+        except:
+            raise template.TemplateSyntaxError('incorrect usage of joinitems tag first param '
+                                            'must be \'using\' second - separator and '
+                                            'optional third - last item separator')
     if junk == 'using':
         sep_node = ItemSeparatorNode(sep_token)
+        if last_sep_token:
+            last_sep_node = ItemSeparatorNode(last_sep_token)
+        else:
+            last_sep_node = None
     else:
         raise template.TemplateSyntaxError("joinitems tag requires 'using \"separator html\"' parameters")
     nodelist = []
@@ -333,7 +355,7 @@ def joinitems(parser,token):
         if next.contents == 'endjoinitems':
             break
 
-    return JoinItemListNode(separator=sep_node,items=nodelist)
+    return JoinItemListNode(separator=sep_node,last_separator=last_sep_node,items=nodelist)
 
 class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
@@ -436,3 +458,50 @@ def question_counter_widget(question):
     #returns a dictionary with keys like 'votes_bg', etc
     return locals()
 
+class IsManyNode(template.Node):
+    def __init__(self, test_items, true_nodelist, false_nodelist):
+        self.true_nodelist = true_nodelist
+        self.false_nodelist = false_nodelist
+        self.test_items = test_items 
+    def render(self, context):
+        maybe = False
+        for item in self.test_items:
+            is_good = item.resolve(context)
+            print item, is_good
+            if maybe == True and is_good:
+                print 'have many!'
+                return self.true_nodelist.render(context)
+            if is_good:
+                maybe = True
+        print 'have one item'
+        return self.false_nodelist.render(context)
+
+@register.tag(name='ifmany')
+def ifmany(parser,token):
+    """usage {% ifmany item1 item2 item3 ... itemN %} stuff {% endifmany %}
+    returns content included into the tag if more than one
+    item evaluates to Tru'ish value - that's the idea
+    {% else %} is not supported yet
+    """
+
+    bits = list(token.split_contents())
+    start_tag = bits.pop(0)
+
+    test_items = []
+    for bit in bits:
+        item = parser.compile_filter(bit)
+        test_items.append(item)
+
+    end_tag = 'end' + start_tag
+    else_tag = 'else'
+    true_nodelist = parser.parse((end_tag,else_tag,))
+    token = parser.next_token()
+    if token.contents == else_tag:
+        print 'have else clause'
+        false_nodelist = parser.parse((end_tag,))
+        token = parser.next_token()
+    else:
+        false_nodelist = template.NodeList()
+
+
+    return IsManyNode(test_items, true_nodelist, false_nodelist)

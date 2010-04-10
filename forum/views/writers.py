@@ -132,9 +132,18 @@ def ask(request):#view used to ask a new question
                 return HttpResponseRedirect(reverse('user_signin_new_question'))
     else:
         form = AskForm()
+        if 'title' in request.GET:
+            raw_title = request.GET['title']
+            form.initial['title'] = strip_tags(strip_entities(raw_title))
+        else:
+            search_state = request.session.get('search_state',None)
+            if search_state:
+                query = search_state.query
+                form.initial['title'] = query
 
     tags = _get_tags_cache_json()
     return render_to_response('ask.html', {
+        'active_tab': 'ask',
         'form' : form,
         'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
@@ -317,7 +326,6 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
 
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
-
 
 def question_comments(request, id):#ajax handler for loading comments to question
     question = get_object_or_404(Question, id=id)

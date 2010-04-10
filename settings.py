@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'django_authopenid',
     'debug_toolbar' ,
     #'stackexchange', #se loader
+    'south',
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)

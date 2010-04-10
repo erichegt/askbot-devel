@@ -10,6 +10,7 @@ import datetime
 from django.conf import settings
 from django.utils.datastructures import SortedDict
 from forum.models.tag import MarkedTag
+from django.db.models import Q
 
 markdowner = Markdown(html4tags=True)
 
@@ -77,7 +78,8 @@ class QuestionManager(models.Manager):
         #return metadata
         meta_data = {}
         if tag_selector: 
-            qs = qs.filter(tags__name__in = tag_selector)
+            for tag in tag_selector:
+                qs = qs.filter(tags__name = tag)
 
         if search_query:
             qs = qs.filter(deleted=False).extra(
@@ -101,9 +103,9 @@ class QuestionManager(models.Manager):
         #user contributed questions & answers
         if author_selector:
             try:
-                u = User.objects.get(username=author_selector)
-                qs = qs.filter(Q(author=u) | Q(answers__author=u))
-                meta_data['author_name'] = author_selector
+                u = User.objects.get(id=int(author_selector))
+                qs = qs.filter(Q(author=u, deleted=False) | Q(answers__author=u, answers__deleted=False))
+                meta_data['author_name'] = u.username
             except User.DoesNotExist:
                 meta_data['author_name'] = None
 
@@ -155,6 +157,7 @@ class QuestionManager(models.Manager):
         if orderby:
             #relevance will be ignored here
             qs = qs.order_by(orderby)
+        qs = qs.distinct()
         return qs, meta_data
 
     def update_tags(self, question, tagnames, user):
