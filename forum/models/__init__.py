@@ -442,7 +442,7 @@ tags_updated.connect(record_update_tags, sender=Question)
 post_save.connect(record_favorite_question, sender=FavoriteQuestion)
 user_updated.connect(record_user_full_updated, sender=User)
 user_logged_in.connect(post_stored_anonymous_content)
-post_syncdb.connect(create_fulltext_indexes)
+#post_syncdb.connect(create_fulltext_indexes)
 
 Question = Question
 QuestionRevision = QuestionRevision
