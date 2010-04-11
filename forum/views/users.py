@@ -16,6 +16,7 @@ from forum.utils.html import sanitize_html
 from forum import auth
 import calendar
 from django.contrib.contenttypes.models import ContentType
+from forum.const import USERS_PAGE_SIZE
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
@@ -29,8 +30,6 @@ comment_type_id = comment_type.id
 question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
-
-USERS_PAGE_SIZE = 35# refactor - move to some constants file
 
 def users(request):
     is_paginated = True

@@ -49,7 +49,6 @@ class ViewLogMiddleware(object):
         else:
             view_str = view_func.__name__
             if view_str == 'wrap':
-                print str(view_func.__module__)# == 'forum.utils.decorators':
                 return
 
         if settings.DEBUG == True:

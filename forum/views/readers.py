@@ -81,10 +81,10 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
     search_state = request.session.get('search_state', SearchState())
 
     view_log = request.session['view_log']
-    print view_log
+    #print view_log
     if view_log.get_previous(1) != 'questions':
         if view_log.get_previous(2) != 'questions':
-            print 'user stepped too far, resetting search state'
+            #print 'user stepped too far, resetting search state'
             search_state.reset()
 
     if request.user.is_authenticated():

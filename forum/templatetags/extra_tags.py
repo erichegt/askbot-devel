@@ -467,13 +467,10 @@ class IsManyNode(template.Node):
         maybe = False
         for item in self.test_items:
             is_good = item.resolve(context)
-            print item, is_good
             if maybe == True and is_good:
-                print 'have many!'
                 return self.true_nodelist.render(context)
             if is_good:
                 maybe = True
-        print 'have one item'
         return self.false_nodelist.render(context)
 
 @register.tag(name='ifmany')
@@ -497,7 +494,6 @@ def ifmany(parser,token):
     true_nodelist = parser.parse((end_tag,else_tag,))
     token = parser.next_token()
     if token.contents == else_tag:
-        print 'have else clause'
         false_nodelist = parser.parse((end_tag,))
         token = parser.next_token()
     else:

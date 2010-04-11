@@ -14,15 +14,15 @@
                 <a href="{% url about %}">{% trans "about" %}</a>
                 <a href="{% url faq %}">{% trans "faq" %}</a>
 			</div>
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<table border="0" cellspacing="0" cellpadding="0">
 			  <tr>
-        <td width="23%">
+        <td id="logoContainer">
             <div id="logo">
                 <a href="{% url questions %}?start_over=true"><img 
                     src="{% media  "/media/images/logo.png" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
             </div>
         </td>
-        <td width="77%" valign="bottom">
+        <td id="navTabContainer" valign="bottom" align="left">
             <div class="nav">
                 <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
                 <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
@@ -43,48 +43,5 @@
 			  </tr>
 			</table>
 		</div>
-    {% if active_tab != "ask" %}
-		<div id="searchBar">
-        {% comment %}url action depends on which tab is active{% endcomment %}
-        <form 
-            {% if active_tab == "tags" or active_tab == "users" %}
-                action="{% url search %}" 
-            {% else %}
-                action="{% url questions %}" 
-            {% endif %}
-            method="get">
-                {% comment %} class was searchInput {% endcomment %}
-                <input 
-                    {% if query %}
-                    class="searchInputCancelable"
-                    {% else %}
-                    class="searchInput" 
-                    {% endif %}
-                    type="text" 
-                    value="{{ query|default_if_none:"" }}" 
-                    name="query" 
-                    id="keywords"/>
-                {% if active_tab == "tags" %}
-                    <input type="hidden" name="t" value="tag"/>
-                {% else %}
-                    {% if active_tab == "users" %}
-                        <input type="hidden" name="t" value="user"/>
-                    {% endif %}
-                {% endif %}
-                {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
-                <input type="button" 
-                    value="x" 
-                    name="reset_query" 
-                    {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
-                    onclick="window.location.href='{% url questions %}?reset_query=true'" 
-                    value="true" 
-                    class="cancelSearchBtn"/>
-                {% endif %}
-                <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" default />
-        </form>
-		</div>
-    {% else %}
-    <div id="fakeSearchBar"></div>
-    {% endif %}
 	</div>
 <!-- end template header.html -->

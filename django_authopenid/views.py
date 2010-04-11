@@ -90,7 +90,7 @@ def login(request,user):
     _login(request,user)
     #4) transfer search_state to new session if found
     if search_state:
-        search_session.set_logged_in()
+        search_state.set_logged_in()
         request.session['search_state'] = search_state
     #5) send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))

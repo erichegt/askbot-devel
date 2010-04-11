@@ -15,7 +15,6 @@ class SearchState(object):
         self.page = 1
         self.logged_in = False
         logging.debug('new search state initialized')
-        print 'new search state'
 
     def __str__(self):
         out = 'scope=%s\n' % self.scope
@@ -77,10 +76,7 @@ class SearchState(object):
         if 'tags' in input:
             if self.tags:
                 old_tags = self.tags.copy()
-                print 'old tags %s' % str(old_tags)
-                print 'new tags %s' % str(input['tags'])
                 self.tags = self.tags.union(input['tags'])
-                print 'combined %s' % str(self.tags)
                 if self.tags != old_tags:
                     self.reset_page()
             else:

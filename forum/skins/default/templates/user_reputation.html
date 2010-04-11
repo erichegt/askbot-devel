@@ -4,6 +4,7 @@
 {% load extra_filters %}
 {% load humanize %}
 {% load i18n %}
+{% load smart_if %}
 {% block userjs %}
        <script type='text/javascript' src='{% media  "/media/js/excanvas.min.js" %}'></script>
        <script type='text/javascript' src='{% media  "/media/js/jquery.flot.min.js" %}'></script>
@@ -24,7 +25,11 @@
 {% block usercontent %}
         <div class="karma-summary">
             <div id="diagram" class="karma-diagram"></div>
-            <h3>{% trans "Change in karma per question or answer" %}</h3>
+            {% if view_user.id == user.id %}
+            <h3>{% trans "Your karma change log." %}</h3>
+            {% else %}
+            <h3>{% blocktrans with view_user.username as user_name %}{{user_name}}'s karma change log{% endblocktrans %}</h3>
+            {% endif %}
             <div class="karma-details">
                 {% for rep in reputation %}
                 <p>

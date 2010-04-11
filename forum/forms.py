@@ -174,7 +174,6 @@ class AdvancedSearchForm(forms.Form):
 
     def clean(self):
         #todo rewrite
-        print self.cleaned_data
         if self.cleaned_data['scope'] == '':
             del self.cleaned_data['scope']
         if self.cleaned_data['tags'] is None:

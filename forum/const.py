@@ -131,3 +131,4 @@ CONST = {
 #how to filter questions by tags in email digests?
 TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))
 MAX_ALERTS_PER_EMAIL = 7
+USERS_PAGE_SIZE = 28
