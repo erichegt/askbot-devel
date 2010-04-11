@@ -5,7 +5,7 @@ import sys
 
 SITE_ID = 1
 
-ADMIN_MEDIA_PREFIX = '/admin_media/'
+ADMIN_MEDIA_PREFIX = '/admin/media/'
 SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
