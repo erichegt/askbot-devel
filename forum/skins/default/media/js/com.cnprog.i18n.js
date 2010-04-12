@@ -149,7 +149,7 @@ var i18nEs = {
 	'questions/' : 'preguntas/',
 	'answers/' : 'respuestas/',
 	'comments/' : 'comentarios/',
-	'vote/' : 'votar/'
+	'vote/' : 'votar/',
 	'delete/' : 'eliminar/'
 };
 
