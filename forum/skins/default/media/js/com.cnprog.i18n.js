@@ -150,6 +150,7 @@ var i18nEs = {
 	'answers/' : 'respuestas/',
 	'comments/' : 'comentarios/',
 	'vote/' : 'votar/'
+	'delete/' : 'eliminar/'
 };
 
 var i18n = {

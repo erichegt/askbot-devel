@@ -609,7 +609,7 @@ function createComments(type) {
                 $(this).children().each(
                     function(i){
                         var comment_id = $(this).attr('id').replace('comment-','');
-                        var delete_url = scriptUrl + objectType + 's/' + post_id + '/' +
+                        var delete_url = scriptUrl + $.i18n._(objectType + 's/') + post_id + '/' +
                                         $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
                         var html = $(this).html();
                         var CommentsClass;
