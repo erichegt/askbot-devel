@@ -16,6 +16,7 @@ from forum.utils.html import sanitize_html
 from forum import auth
 import calendar
 from django.contrib.contenttypes.models import ContentType
+from forum.models import user_updated
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
