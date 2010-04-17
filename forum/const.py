@@ -47,7 +47,7 @@ POST_SORT_METHODS = (
 #todo: add assertion here that all sort methods are unique
 #because they are keys to the hash used in implementations of Q.run_advanced_search
 
-DEFAULT_POST_SORT_METHOD = 'latest'
+DEFAULT_POST_SORT_METHOD = 'active'
 POST_SCOPE_LIST = (
                     ('all', _('all')),
                     ('unanswered', _('unanswered')),

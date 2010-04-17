@@ -272,13 +272,16 @@ blockquote {
 }
 
 #logo {
-    padding: 5px 0px 0px 0px;
+    padding: 0px 0px 0px 10px;
+    height: 90px;
+    width: 70px;
 }
 
 #logoContainer {
 }
 #navTabContainer {
-    width: 500px;
+    width: 600px;
+    padding-left: 10px;
     text-align: left;
 }
 
@@ -306,8 +309,8 @@ blockquote {
     height: 25px;
     line-height: 30px;
     margin-left: 10px;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 100;
     text-decoration: none;
     display: block;
     float: left;
@@ -331,7 +334,7 @@ blockquote {
 }
 
 #navBar .nav a.special {
-    font-size: 14px;
+    font-size: 18px;
     color: #B02B2C;
     font-weight: bold;
     text-decoration: none;
@@ -548,7 +551,7 @@ blockquote {
 .short-summary {
     position: relative;
     padding: 3px 5px 5px 10px;
-    border-top: 1px dotted #ccccce;
+    border-top: 1px dashed #ccccce;
     overflow: hidden;
     width: 700px;
     float: left;
