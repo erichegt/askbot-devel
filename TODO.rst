@@ -14,6 +14,8 @@ Code Cleanups
     inside forum app directory
   * one-by one convert "auto-discovery" modules into 
     regular explicit python imports
+* python2.4 incompatibilities
+  *  datatime.datetime.strptime
 
 Bugs
 ======

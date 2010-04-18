@@ -66,6 +66,9 @@ http://south.aeracode.org/docs/installation.html
 Used for database schema and data migrations
 [sudo] easy_install South
 
+EXTRA DEPENDENCIES FOR PYTHON 2.4
+* hashlib (made standard in python 2.5)
+
 NOTES: django_authopenid is included into Askbot code
 and is significantly modified.  http://code.google.com/p/django-authopenid/
 no need to install this library
