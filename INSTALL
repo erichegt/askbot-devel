@@ -16,27 +16,32 @@ D. CUSTOMIZATION
 
 A. PREREQUISITES
 -----------------------------------------------
+Note: by default all installation activity is made in the superuser 'root' account.
+This can be achieved either by logging in as root (su root),
+or - if you have program sudo installed - prefix all commands with sudo.
+So sodo will be listed below as optional.
+
 0. We recommend you to use python-setuptools to install pre-requirement libraries.
 If you haven't installed it, please try to install it first.
-e.g, sudo apt-get install python-setuptools
+e.g, [sudo] apt-get install python-setuptools
 
-1. Python2.5/2.6, MySQL, Django v1.0/1.1
-Note: email subscription sender job requires Django 1.1, everything else works with 1.0
-Make sure mysql for python provider has been installed.
-sudo easy_install mysql-python
+1. Python2.5/2.6, Django v1.1.1
+
+1A If you are using MySQL, mysql client for python must be installed
+[sudo] easy_install mysql-python
 
 2. Python-openid v2.2
 http://openidenabled.com/python-openid/
-sudo easy_install python-openid
+[sudo] easy_install python-openid
 
 4. html5lib
 http://code.google.com/p/html5lib/
 Used for HTML sanitizer
-sudo easy_install html5lib
+[sudo] easy_install html5lib
 
 5. Markdown2
 http://code.google.com/p/python-markdown2/
-sudo easy_install markdown2
+[sudo] easy_install markdown2
 
 6. Django Debug Toolbar
 http://github.com/robhudson/django-debug-toolbar/tree/master
@@ -55,6 +60,14 @@ http://code.google.com/p/recaptcha/
 Notice that you will need to register with recaptcha.net and receive
 recaptcha public and private keys that need to be saved in your
 settings_local.py file
+
+11. South
+http://south.aeracode.org/docs/installation.html
+Used for database schema and data migrations
+[sudo] easy_install South
+
+EXTRA DEPENDENCIES FOR PYTHON 2.4
+* hashlib (made standard in python 2.5)
 
 NOTES: django_authopenid is included into Askbot code
 and is significantly modified.  http://code.google.com/p/django-authopenid/

@@ -18,11 +18,12 @@ def install_pg_fts():
     f = open(os.path.join(os.path.dirname(__file__), 'pg_fts_install.sql'), 'r')
     
     try:
-        cursor = connection.cursor()
-        cursor.execute(f.read())
-        transaction.commit_unless_managed()
-    except:
-        pass
+        try:
+            cursor = connection.cursor()
+            cursor.execute(f.read())
+            transaction.commit_unless_managed()
+        except:
+            pass
     finally:
         cursor.close()
 
