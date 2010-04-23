@@ -16,6 +16,7 @@ def application_settings(context):
         'WIKI_ON':settings.WIKI_ON,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
         'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,
+        'EDITABLE_SCREEN_NAME':settings.EDITABLE_SCREEN_NAME,
         }
     return {'settings':my_settings}
 

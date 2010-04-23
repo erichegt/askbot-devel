@@ -38,7 +38,13 @@
                 </tr>
                 <tr style="height:35px">
 	            	<td>{% trans "Screen Name" %}:</td>
-	            	<td>{{ request.user.username }} <span class="form-error"></span> {{ form.username.errors }} </td>
+	            	<td>
+                    {% if settings.EDITABLE_SCREEN_NAME %}
+                        {{ form.username }}
+                    {% else %}
+                        {{ request.user.username }}
+                    {% endif %}
+                    <span class="form-error"></span> {{ form.username.errors }} </td>
 	            </tr>
                 
 	            <tr style="height:35px">
