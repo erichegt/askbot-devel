@@ -18,6 +18,7 @@ import calendar
 from django.contrib.contenttypes.models import ContentType
 from forum.models import user_updated
 from forum.const import USERS_PAGE_SIZE
+from django.conf import settings
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
@@ -121,7 +122,9 @@ def edit_user(request, id):
 
             set_new_email(user, new_email)
 
-            #user.username = sanitize_html(form.cleaned_data['username'])
+            if settings.EDITABLE_SCREEN_NAME:
+                user.username = sanitize_html(form.cleaned_data['username'])
+
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
