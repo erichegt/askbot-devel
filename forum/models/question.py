@@ -337,6 +337,7 @@ class Question(Content, DeletableContent):
         self.tagnames = tags
         self.summary = question_summary
         self.html = html
+        self.text = text
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -430,9 +431,6 @@ class Question(Content, DeletableContent):
 
     def get_revision_url(self):
         return reverse('question_revisions', args=[self.id])
-
-    def get_latest_revision(self):
-        return self.revisions.all()[0]
 
     def get_last_update_info(self):
         when, who = self.post_get_last_update_info()

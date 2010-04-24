@@ -89,30 +89,31 @@ class Content(models.Model):
     """
         Base class for Question and Answer
     """
-    author               = models.ForeignKey(User, related_name='%(class)ss')
-    added_at             = models.DateTimeField(default=datetime.datetime.now)
+    author = models.ForeignKey(User, related_name='%(class)ss')
+    added_at = models.DateTimeField(default=datetime.datetime.now)
 
-    wiki                 = models.BooleanField(default=False)
-    wikified_at          = models.DateTimeField(null=True, blank=True)
+    wiki = models.BooleanField(default=False)
+    wikified_at = models.DateTimeField(null=True, blank=True)
 
-    locked               = models.BooleanField(default=False)
-    locked_by            = models.ForeignKey(User, null=True, blank=True, related_name='locked_%(class)ss')
-    locked_at            = models.DateTimeField(null=True, blank=True)
+    locked = models.BooleanField(default=False)
+    locked_by = models.ForeignKey(User, null=True, blank=True, related_name='locked_%(class)ss')
+    locked_at = models.DateTimeField(null=True, blank=True)
 
-    score                = models.IntegerField(default=0)
-    vote_up_count        = models.IntegerField(default=0)
-    vote_down_count      = models.IntegerField(default=0)
+    score = models.IntegerField(default=0)
+    vote_up_count = models.IntegerField(default=0)
+    vote_down_count = models.IntegerField(default=0)
 
-    comment_count        = models.PositiveIntegerField(default=0)
+    comment_count = models.PositiveIntegerField(default=0)
     offensive_flag_count = models.SmallIntegerField(default=0)
 
-    last_edited_at       = models.DateTimeField(null=True, blank=True)
-    last_edited_by       = models.ForeignKey(User, null=True, blank=True, related_name='last_edited_%(class)ss')
+    last_edited_at = models.DateTimeField(null=True, blank=True)
+    last_edited_by = models.ForeignKey(User, null=True, blank=True, related_name='last_edited_%(class)ss')
 
-    html                 = models.TextField()
-    comments             = generic.GenericRelation(Comment)
-    votes                = generic.GenericRelation(Vote)
-    flagged_items        = generic.GenericRelation(FlaggedItem)
+    html = models.TextField(null=True)
+    text = models.TextField(null=True) #denormalized copy of latest revision
+    comments = generic.GenericRelation(Comment)
+    votes = generic.GenericRelation(Vote)
+    flagged_items = generic.GenericRelation(FlaggedItem)
 
     class Meta:
         abstract = True
@@ -141,7 +142,10 @@ class Content(models.Model):
         self.comment_count = self.comment_count + 1
         self.save()
 
-    def post_get_last_update_info(self):
+    def get_latest_revision(self):
+        return self.revisions.all()[0]
+
+    def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at
             who = self.author
             if self.last_edited_at and self.last_edited_at > when:
