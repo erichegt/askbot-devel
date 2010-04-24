@@ -74,7 +74,7 @@ INSTALLED_APPS = (
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
-    #'stackexchange', #se loader
+    #'forum.importers.stackexchange', #se loader
     'south',
 )
 

@@ -4,11 +4,11 @@ from django.template.defaultfilters import slugify #todo: adopt unicode-aware sl
 import os
 import re
 import sys
-import stackexchange.parse_models as se_parser
+import forum.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models
 import forum.models as askbot
-import stackexchange.models as se
+import forum.importers.stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
 from forum.utils.html import sanitize_html
 from django.conf import settings

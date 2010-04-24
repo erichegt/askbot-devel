@@ -1,0 +1,4 @@
+This directory contains sample configuration for sphinx search
+
+Sphinx is a full text search engine for MySQL (only) with full
+word stemming in English and Russion (other languages are not supported)
