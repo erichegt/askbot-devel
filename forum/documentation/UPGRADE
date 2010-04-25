@@ -1,0 +1,24 @@
+if you are upgrading this software, then
+
+* first download the newer version and write it over the old one.
+
+for the database migrations you will need to use django package called "south"
+
+Install it (if you don't have it yet) with:
+
+    easy_install South
+
+* 'south' must already be in the list of INSTALLED_APPS
+  otherwise you must have downloaded wrong version of Askbot
+
+if you are using south the very first time, then type:
+
+    python manage.py migrate forum 0001_initial --fake
+
+otherwise skip above step.
+
+Finally run
+
+    python manage.py migrate forum --auto
+
+then all relevant schema and data migrations will be applied

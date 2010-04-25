@@ -31,6 +31,7 @@ MIDDLEWARE_CLASSES = (
     #'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'forum.middleware.view_log.ViewLogMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -73,7 +74,8 @@ INSTALLED_APPS = (
     'forum',
     'django_authopenid',
     'debug_toolbar' ,
-    #'stackexchange', #se loader
+    #'forum.importers.stackexchange', #se loader
+    'south',
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)

@@ -1,4 +1,4 @@
-{% extends "base_content.html" %}
+{% extends "base.html" %}
 <!-- tags.html -->
 {% load i18n %}
 {% load extra_tags %}
@@ -27,7 +27,7 @@
 {% block content %}
 <!-- Tabs -->
 <div class="tabBar">
-    <div class="headQuestions">{% trans "Tag list" %}</div>
+    <div class="headUsers">{% trans "Tag list" %}</div>
     <div class="tabsA">
         <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans "sorted alphabetically" %}">{% trans "by name" %}</a>
         <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans "sorted by frequency of tag use" %}">{% trans "by popularity" %}</a>
@@ -36,7 +36,7 @@
 <div id="searchtags">
 <p>
 {% if stag %}
-    {% trans "All tags matching query" %} '<span class="darkred"><strong>{{ stag }}</strong></span>' {% trans "all tags - make this empty in english" %}:
+    {% blocktrans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endblocktrans %}:
 {% endif %}
 {% if not tags.object_list %}
     <span>{% trans "Nothing found" %}</span>
@@ -46,7 +46,8 @@
 <ul class="tagsList tags">
 {% for tag in tags.object_list %}
    <li>
-    <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %}'{{ tag }}'{% trans "using tags" %}" rel="tag">
+    <a href="{% url questions %}?tags={{tag|urlencode}}" 
+        title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">
         {{ tag }}
     </a>&nbsp;
     <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>

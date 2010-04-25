@@ -1690,7 +1690,7 @@ msgstr ""
 #: forum/skins/default/templates/header.html:29
 #: forum/skins/default/templates/header.html:57
 msgid "users"
-msgstr ""
+msgstr "people"
 
 #: forum/skins/default/templates/header.html:31
 msgid "books"

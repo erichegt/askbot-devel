@@ -22,4 +22,3 @@ def ajax_method(view_func):
             json = simplejson.dumps(retval)
             return HttpResponse(json,mimetype='application/json')
     return wrap
-            

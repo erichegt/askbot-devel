@@ -2,8 +2,10 @@ import re
 from datetime import date
 from django import forms
 from models import *
-from const import *
+from const import * #todo: clean out import * thing
+from forum import const
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
@@ -59,22 +61,34 @@ class TagNamesField(forms.CharField):
         if len(data) < 1:
             raise forms.ValidationError(_('tags are required'))
 
-        split_re = re.compile(r'[ ,]+')
-        list = split_re.split(data)
-        list_temp = []
-        if len(list) > 5:
-            raise forms.ValidationError(_('please use 5 tags or less'))
-        for tag in list:
-            if len(tag) > 20:
-                raise forms.ValidationError(_('tags must be shorter than 20 characters'))
-            #take tag regex from settings
-            tagname_re = re.compile(r'[a-z0-9\w._#-]+',re.UNICODE)
-            if not tagname_re.match(tag):
-                raise forms.ValidationError(_('please use letters, numbers, and characters \'.-_#\''))
-            # only keep one same tag
-            if tag not in list_temp and len(tag.strip()) > 0:
-                list_temp.append(tag)
-        return u' '.join(list_temp)
+        split_re = re.compile(const.TAG_SPLIT_REGEX)
+        tag_strings = split_re.split(data)
+        out_tag_list = []
+        tag_count = len(tag_strings)
+        if tag_count > const.MAX_TAGS_PER_POST:
+            msg = ungettext(
+                        'please use %(tag_count)d tag or less',#odd but have to use to pluralize
+                        'please use %(tag_count)d tags or less',
+                        tag_count) % {'tag_count':tag_count}
+            raise forms.ValidationError(msg)
+        for tag in tag_strings:
+            tag_length = len(tag)
+            if tag_length > const.MAX_TAG_LENGTH:
+                #singular form is odd in english, but required for pluralization
+                #in other languages
+                msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
+                                'each tag must be shorter than %(max_shars)d characters',
+                                tag_length) % {'max_chars':tag_length}
+                raise forms.ValidationError(msg)
+
+            #todo - this needs to come from settings
+            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+            if not tagname_re.search(tag):
+                raise forms.ValidationError(_('use-these-chars-in-tags'))
+            #only keep unique tags
+            if tag not in out_tag_list:
+                out_tag_list.append(tag)
+        return u' '.join(out_tag_list)
 
 class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
@@ -112,6 +126,77 @@ class ModerateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('is_approved',)
+
+class AdvancedSearchForm(forms.Form):
+    #nothing must be required in this form
+    #it is used by the main questions view
+    scope = forms.ChoiceField(choices=const.POST_SCOPE_LIST, required=False)
+    sort = forms.ChoiceField(choices=const.POST_SORT_METHODS, required=False)
+    query = forms.CharField(max_length=256, required=False)
+    reset_tags = forms.BooleanField(required=False)
+    reset_author = forms.BooleanField(required=False)
+    reset_query = forms.BooleanField(required=False)
+    start_over = forms.BooleanField(required=False)
+    tags = forms.CharField(max_length=256,required=False)
+    author = forms.IntegerField(required=False)
+    page_size = forms.ChoiceField(choices=const.PAGE_SIZES, required=False)
+    page = forms.IntegerField(required=False)
+
+    def clean_tags(self):
+        if 'tags' in self.cleaned_data:
+            tags_input = self.cleaned_data['tags'].strip()
+            split_re = re.compile(TAG_SPLIT_REGEX)
+            tag_strings = split_re.split(tags_input)
+            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+            out = set()
+            for s in tag_strings:
+                if tagname_re.search(s):
+                    out.add(s)
+            if len(out) > 0:
+                self.cleaned_data['tags'] = out
+            else:
+                self.cleaned_data['tags'] = None
+            return self.cleaned_data['tags']
+
+    def clean_query(self):
+        if 'query' in self.cleaned_data:
+            q = self.cleaned_data['query'].strip()
+            if q == '':
+                q = None
+            self.cleaned_data['query'] = q
+            return self.cleaned_data['query']
+
+    def clean_page_size(self):
+        if 'page_size' in self.cleaned_data:
+            if self.cleaned_data['page_size'] == '':
+                self.cleaned_data['page_size'] = None
+            return self.cleaned_data['page_size']
+
+    def clean(self):
+        #todo rewrite
+        if self.cleaned_data['scope'] == '':
+            del self.cleaned_data['scope']
+        if self.cleaned_data['tags'] is None:
+            del self.cleaned_data['tags']
+        if self.cleaned_data['sort'] == '':
+            del self.cleaned_data['sort']
+        if self.cleaned_data['query'] == None:
+            del self.cleaned_data['query']
+        if self.cleaned_data['reset_tags'] == False:
+            del self.cleaned_data['reset_tags']
+        if self.cleaned_data['reset_author'] == False:
+            del self.cleaned_data['reset_author']
+        if self.cleaned_data['reset_query'] == False:
+            del self.cleaned_data['reset_query']
+        if self.cleaned_data['start_over'] == False:
+            del self.cleaned_data['start_over']
+        if self.cleaned_data['author'] is None:
+            del self.cleaned_data['author']
+        if self.cleaned_data['page'] is None:
+            del self.cleaned_data['page']
+        if self.cleaned_data['page_size'] is None:
+            del self.cleaned_data['page_size']
+        return self.cleaned_data
 
 class NotARobotForm(forms.Form):
     recaptcha = ReCaptchaField()

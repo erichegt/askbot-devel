@@ -74,6 +74,10 @@ and is significantly modified.  http://code.google.com/p/django-authopenid/
 no need to install this library
 
 B. INSTALLATION
+
+NOTE: If you want to upgrade software, not install from scratch - 
+      take a look into forum/documentation/UPGRADE
+
 -----------------------------------------------
 0. Make sure you have all above python libraries installed.
 
@@ -108,9 +112,13 @@ DATABASE_PASSWORD
 DATABASE_ENGINE
 
 If you set these up, and your database is ready (see section 2),
-run:
+run (note that application 'forum' is under control of south migration system:
 
-python manage.py syncdb
+python manage.py syncdb #create tables for anything not under control of migration system
+python manage.py migrate forum #run migration command - will apply all migrations in sequence
+
+Now you are ready to test your installation:
+
 python manage.py runserver `hostname -i`:8000
 (choose another port number if you wish)
 
@@ -121,10 +129,19 @@ please post them at http://askbot.org/meta
 
 Prepare your database by using the same database/account
 configuration from above.
-e.g,
+
+If your host has database manager in the control panel - you 
+can use that or you can create database by typing commands manually
+
+on MySQL the commands are:
+
 create database askbot DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
 grant all on askbot.* to 'askbot'@'localhost';
-And then run "python manage.py syncdb" to synchronize your database.
+
+And then run :
+
+python manage.py syncdb
+python manage.py migrate
 
 3. Running Askbot on the development server
 
@@ -241,10 +258,10 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
 
    This function at the moment requires Django 1.1
 
-   edit paths in the file cron/send_email_alerts
-   set up a cron job to call cron/send_email_alerts once or twice a day
+   edit paths in the file forum/cron/send_email_alerts
+   set up a cron job to call forum/cron/send_email_alerts once or twice a day
    subscription sender may be tested manually in shell
-   by calling cron/send_email_alerts
+   by calling forum/cron/send_email_alerts
 
 7. Sitemap
 Sitemap will be available at /<settings_local.FORUM_SCRIPT_ALIAS>sitemap.xml
@@ -258,7 +275,7 @@ https://www.google.com/webmasters/tools/
 
 8. Miscellaneous
 
-There are some demo scripts under sql_scripts folder,
+There are some demo scripts under forum/sql_scripts folder,
 including badges and test accounts for CNProg.com. You
 don't need them to run your sample.
 

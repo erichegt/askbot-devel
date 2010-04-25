@@ -31,7 +31,7 @@
             {% convert2tagname_list question %}
             {% for tag in question.tagnames %}
                 <!--todo - move trans below to blocktrans -->
-                <a href="{% url tag_questions tag|urlencode %}" title="{% trans "see questions tagged" %} '{{ tag }}' {% trans "using tags" %}" rel="tag">{{ tag }}</a>
+                <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
             {% endfor %}
         </div>
         <div class="started">

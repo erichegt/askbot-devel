@@ -17,6 +17,7 @@ from forum import auth
 import calendar
 from django.contrib.contenttypes.models import ContentType
 from forum.models import user_updated
+from forum.const import USERS_PAGE_SIZE
 from django.conf import settings
 
 question_type = ContentType.objects.get_for_model(Question)
@@ -31,8 +32,6 @@ comment_type_id = comment_type.id
 question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
-
-USERS_PAGE_SIZE = 35# refactor - move to some constants file
 
 def users(request):
     is_paginated = True
@@ -65,11 +64,12 @@ def users(request):
         users = objects_list.page(objects_list.num_pages)
 
     return render_to_response('users.html', {
-                                "users" : users,
-                                "suser" : suser,
-                                "keywords" : suser,
-                                "tab_id" : sortby,
-                                "context" : {
+                                'active_tab': 'users',
+                                'users' : users,
+                                'suser' : suser,
+                                'keywords' : suser,
+                                'tab_id' : sortby,
+                                'context' : {
                                     'is_paginated' : is_paginated,
                                     'pages': objects_list.num_pages,
                                     'page': page,
@@ -124,6 +124,7 @@ def edit_user(request, id):
 
             if settings.EDITABLE_SCREEN_NAME:
                 user.username = sanitize_html(form.cleaned_data['username'])
+
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])

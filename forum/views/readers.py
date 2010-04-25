@@ -13,7 +13,6 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-from django.utils.datastructures import SortedDict
 from django.views.decorators.cache import cache_page
 
 from forum.utils.html import sanitize_html
@@ -24,8 +23,10 @@ from forum.forms import *
 from forum.models import *
 from forum.auth import *
 from forum.const import *
+from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url
+from forum.search.state_manager import SearchState
 
 # used in index page
 #refactor - move these numbers somewhere?
@@ -35,7 +36,6 @@ INDEX_TAGS_SIZE = 25
 # used in tags list
 DEFAULT_PAGE_SIZE = 60
 # used in questions
-QUESTIONS_PAGE_SIZE = 30
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
@@ -54,24 +54,6 @@ def _get_tags_cache_json():#service routine used by views requiring tag list in 
     tags = simplejson.dumps(tags_list)
     return tags
 
-def _get_and_remember_questions_sort_method(request, view_dic, default):#service routine used by q listing views and question view
-    """manages persistence of post sort order
-    it is assumed that when user wants newest question - 
-    then he/she wants newest answers as well, etc.
-    how far should this assumption actually go - may be a good question
-    """
-    if default not in view_dic:
-        raise Exception('default value must be in view_dic')
-
-    q_sort_method = request.REQUEST.get('sort', None)
-    if q_sort_method == None:
-        q_sort_method = request.session.get('questions_sort_method', default)
-
-    if q_sort_method not in view_dic:
-        q_sort_method = default
-    request.session['questions_sort_method'] = q_sort_method
-    return q_sort_method, view_dic[q_sort_method]
-
 #refactor? - we have these
 #views that generate a listing of questions in one way or another:
 #index, unanswered, questions, search, tag
@@ -81,280 +63,122 @@ def _get_and_remember_questions_sort_method(request, view_dic, default):#service
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    view_dic = {
-             "latest":"-last_activity_at",
-             "hottest":"-answer_count",
-             "mostvoted":"-score",
-             }
-    view_id, orderby = _get_and_remember_questions_sort_method(request, view_dic, 'latest')
+    return HttpResponseRedirect(reverse('questions'))
 
-    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    qs = Question.objects.exclude(deleted=True).order_by(orderby)
-
-    objects_list = Paginator(qs, pagesize)
-    questions = objects_list.page(page)
-
-    # RISK - inner join queries
-    #questions = questions.select_related()
-    tags = Tag.objects.get_valid_tags(INDEX_TAGS_SIZE)
-
-    awards = Award.objects.get_recent_awards()
-
-    (interesting_tag_names, ignored_tag_names) = (None, None)
-    if request.user.is_authenticated():
-        pt = MarkedTag.objects.filter(user=request.user)
-        interesting_tag_names = pt.filter(reason='good').values_list('tag__name', flat=True)
-        ignored_tag_names = pt.filter(reason='bad').values_list('tag__name', flat=True)
-
-    tags_autocomplete = _get_tags_cache_json()
-
-    return render_to_response('index.html', {
-        'interesting_tag_names': interesting_tag_names,
-        'tags_autocomplete': tags_autocomplete,
-        'ignored_tag_names': ignored_tag_names,
-        "questions" : questions,
-        "tab_id" : view_id,
-        "tags" : tags,
-        "awards" : awards[:INDEX_AWARD_SIZE],
-        "context" : {
-            'is_paginated' : True,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': questions.has_previous(),
-            'has_next': questions.has_next(),
-            'previous': questions.previous_page_number(),
-            'next': questions.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'pagesize' : pagesize
-        }}, context_instance=RequestContext(request))
-
+#todo: eliminate this from urls
 def unanswered(request):#generates listing of unanswered questions
     return questions(request, unanswered=True)
 
-def questions(request, tagname=None, unanswered=False):#a view generating listing of questions, used by 'unanswered' too
+def questions(request):#a view generating listing of questions, used by 'unanswered' too
     """
     List of Questions, Tagged questions, and Unanswered questions.
     """
-    # template file
-    # "questions.html" or maybe index.html in the future
-    template_file = "questions.html"
-    # Set flag to False by default. If it is equal to True, then need to be saved.
-    pagesize_changed = False
-    # get pagesize from session, if failed then get default value
-    pagesize = request.session.get("pagesize",QUESTIONS_PAGE_SIZE)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
 
-    view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
-    view_id, orderby = _get_and_remember_questions_sort_method(request,view_dic,'latest')
+    #don't allow to post to this view
+    if request.method == 'POST':
+        raise Http404
 
-    # check if request is from tagged questions
-    qs = Question.objects.exclude(deleted=True)
+    #todo: redo SearchState to accept input from
+    #view_log, session and request parameters
+    search_state = request.session.get('search_state', SearchState())
 
-    if tagname is not None:
-        qs = qs.filter(tags__name = unquote(tagname))
+    view_log = request.session['view_log']
 
-    if unanswered:
-        qs = qs.exclude(answer_accepted=True)
-
-    author_name = None
-    #user contributed questions & answers
-    if 'user' in request.GET:
-        try:
-            author_name = request.GET['user']
-            u = User.objects.get(username=author_name)
-            qs = qs.filter(Q(author=u) | Q(answers__author=u))
-        except User.DoesNotExist:
-            author_name = None
+    if view_log.get_previous(1) != 'questions':
+        if view_log.get_previous(2) != 'questions':
+            #print 'user stepped too far, resetting search state'
+            search_state.reset()
 
     if request.user.is_authenticated():
-        uid_str = str(request.user.id)
-        qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'interesting_score', 
-                                'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                  + 'WHERE forum_markedtag.user_id = %s '
-                                  + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = \'good\' '
-                                  + 'AND question_tags.question_id = question.id'
-                            ),
-                                ]),
-                        select_params = (uid_str,),
-                     )
-        if request.user.hide_ignored_questions:
-            ignored_tags = Tag.objects.filter(user_selections__reason='bad',
-                                            user_selections__user = request.user)
-            qs = qs.exclude(tags__in=ignored_tags)
-        else:
-            qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'ignored_score', 
-                                'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                  + 'WHERE forum_markedtag.user_id = %s '
-                                  + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND forum_markedtag.reason = \'bad\' '
-                                  + 'AND question_tags.question_id = question.id'
-                            )
-                                ]),
-                        select_params = (uid_str, )
-                     )
+        search_state.set_logged_in()
 
-    qs = qs.select_related(depth=1).order_by(orderby)
+    form = AdvancedSearchForm(request.GET)
+    #todo: form is used only for validation...
+    if form.is_valid():
+        search_state.update_from_user_input(
+                                                form.cleaned_data, 
+                                                request.GET, 
+                                            )
+        #todo: better put these in separately then analyze
+        #what neesd to be done, otherwise there are two routines
+        #that take request.GET I don't like this use of parameters
+        #another weakness is that order of routine calls matters here
+        search_state.relax_stickiness( request.GET, view_log )
 
-    objects_list = Paginator(qs, pagesize)
-    questions = objects_list.page(page)
+        request.session['search_state'] = search_state
+        request.session.modified = True
 
-    # Get related tags from this page objects
-    if questions.object_list.count() > 0:
-        related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
-    else:
-        related_tags = None
+    #force reset for debugging
+    #search_state.reset()
+    #request.session.modified = True
+
+    #have this call implemented for sphinx, mysql and pgsql
+    (qs, meta_data) = Question.objects.run_advanced_search(
+                            request_user = request.user,
+                            scope_selector = search_state.scope,#unanswered/all/favorite (for logged in)
+                            search_query = search_state.query,
+                            tag_selector = search_state.tags,
+                            author_selector = search_state.author,
+                            sort_method = search_state.sort
+                        )
+
+    objects_list = Paginator(qs, search_state.page_size)
+    questions = objects_list.page(search_state.page)
+
+    #todo maybe do this search on query the set instead
+    related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
+
     tags_autocomplete = _get_tags_cache_json()
 
-    # get the list of interesting and ignored tags
-    (interesting_tag_names, ignored_tag_names) = (None, None)
-    if request.user.is_authenticated():
-        pt = MarkedTag.objects.filter(user=request.user)
-        interesting_tag_names = pt.filter(reason='good').values_list('tag__name', flat=True)
-        ignored_tag_names = pt.filter(reason='bad').values_list('tag__name', flat=True)
+    #todo!!!!
+    #contributors = #User.objects.get_related_to_questions
 
-    return render_to_response(template_file, {
-        "questions" : questions,
-        "author_name" : author_name,
-        "tab_id" : view_id,
-        "questions_count" : objects_list.count,
-        "tags" : related_tags,
-        "tags_autocomplete" : tags_autocomplete, 
-        "searchtag" : tagname,
-        "is_unanswered" : unanswered,
-        "interesting_tag_names": interesting_tag_names,
-        'ignored_tag_names': ignored_tag_names, 
-        "context" : {
+    #todo: organize variables by type
+    return render_to_response('questions.html', {
+        'questions' : questions,
+        'author_name' : meta_data.get('author_name',None),
+        'tab_id' : search_state.sort,
+        'questions_count' : objects_list.count,
+        'tags' : related_tags,
+        'query': search_state.query,
+        'search_tags' : search_state.tags,
+        'tags_autocomplete' : tags_autocomplete,
+        'is_unanswered' : False,#remove this from template
+        'interesting_tag_names': meta_data.get('interesting_tag_names',None),
+        'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
+        'sort': search_state.sort,
+        'scope': search_state.scope,
+        'context' : {
             'is_paginated' : True,
             'pages': objects_list.num_pages,
-            'page': page,
+            'page': search_state.page,
             'has_previous': questions.has_previous(),
             'has_next': questions.has_next(),
             'previous': questions.previous_page_number(),
             'next': questions.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'pagesize' : pagesize
+            'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
+            'pagesize' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
-    """generates listing of questions matching a search query
-    supports full text search in mysql db using sphinx and internally in postgresql
-    falls back on simple partial string matching approach if
-    full text search function is not available
+    """redirects to people and tag search pages
+    todo: eliminate this altogether and instead make
+    search "tab" sensitive automatically - the radio-buttons
+    are useless under the search bar
     """
     if request.method == "GET":
-        keywords = request.GET.get("q")
-        search_type = request.GET.get("t")
+        search_type = request.GET.get('t')
+        query = request.GET.get('query')
         try:
             page = int(request.GET.get('page', '1'))
         except ValueError:
             page = 1
-        if keywords is None:
-            return HttpResponseRedirect(reverse(index))
         if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (keywords.strip(), page))
-        elif search_type == "user":
-            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (keywords.strip(), page))
-        elif search_type == "question":
-            
-            template_file = "questions.html"
-            # Set flag to False by default. If it is equal to True, then need to be saved.
-            pagesize_changed = False
-            # get pagesize from session, if failed then get default value
-            user_page_size = request.session.get("pagesize", QUESTIONS_PAGE_SIZE)
-            # set pagesize equal to logon user specified value in database
-            if request.user.is_authenticated() and request.user.questions_per_page > 0:
-                user_page_size = request.user.questions_per_page
-
-            try:
-                page = int(request.GET.get('page', '1'))
-                # get new pagesize from UI selection
-                pagesize = int(request.GET.get('pagesize', user_page_size))
-                if pagesize <> user_page_size:
-                    pagesize_changed = True
-
-            except ValueError:
-                page = 1
-                pagesize  = user_page_size
-
-            # save this pagesize to user database
-            if pagesize_changed:
-                request.session["pagesize"] = pagesize
-                if request.user.is_authenticated():
-                    user = request.user
-                    user.questions_per_page = pagesize
-                    user.save()
-
-            view_id = request.GET.get('sort', None)
-            view_dic = {"latest":"-added_at", "active":"-last_activity_at", "hottest":"-answer_count", "mostvoted":"-score" }
-            try:
-                orderby = view_dic[view_id]
-            except KeyError:
-                view_id = "latest"
-                orderby = "-added_at"
-
-            def question_search(keywords, orderby):
-                objects = Question.objects.filter(deleted=False).extra(where=['title like %s'], params=['%' + keywords + '%']).order_by(orderby)
-                # RISK - inner join queries
-                return objects.select_related();
-
-            from forum.modules import get_handler
-
-            question_search = get_handler('question_search', question_search)
-            
-            objects = question_search(keywords, orderby)
-
-            objects_list = Paginator(objects, pagesize)
-            questions = objects_list.page(page)
-
-            # Get related tags from this page objects
-            related_tags = []
-            for question in questions.object_list:
-                tags = list(question.tags.all())
-                for tag in tags:
-                    if tag not in related_tags:
-                        related_tags.append(tag)
-
-            #if is_search is true in the context, prepend this string to soting tabs urls
-            search_uri = "?q=%s&page=%d&t=question" % ("+".join(keywords.split()),  page)
-
-            return render_to_response(template_file, {
-                "questions" : questions,
-                "tab_id" : view_id,
-                "questions_count" : objects_list.count,
-                "tags" : related_tags,
-                "searchtag" : None,
-                "searchtitle" : keywords,
-                "keywords" : keywords,
-                "is_unanswered" : False,
-                "is_search": True, 
-                "search_uri":  search_uri, 
-                "context" : {
-                    'is_paginated' : True,
-                    'pages': objects_list.num_pages,
-                    'page': page,
-                    'has_previous': questions.has_previous(),
-                    'has_next': questions.has_next(),
-                    'previous': questions.previous_page_number(),
-                    'next': questions.next_page_number(),
-                    'base_url' : request.path + '?t=question&q=%s&sort=%s&' % (keywords, view_id),
-                    'pagesize' : pagesize
-                }}, context_instance=RequestContext(request))
- 
+            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (query.strip(), page))
+        elif search_type == 'user':
+            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (query.strip(), page))
+        else:
+            raise Http404
     else:
         raise Http404
 
@@ -386,6 +210,7 @@ def tags(request):#view showing a listing of available tags - plain list
         tags = objects_list.page(objects_list.num_pages)
 
     return render_to_response('tags.html', {
+                                            "active_tab": "tags",
                                             "tags" : tags,
                                             "stag" : stag,
                                             "tab_id" : sortby,

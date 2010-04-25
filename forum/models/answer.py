@@ -16,6 +16,7 @@ class AnswerManager(models.Manager):
             author = author,
             added_at = added_at,
             wiki = wiki,
+            text = text,
             html = sanitize_html(markdowner.convert(text)),
         )
         if answer.wiki:
@@ -94,6 +95,7 @@ class Answer(Content, DeletableContent):
         self.last_edited_at = edited_at
         self.last_edited_by = edited_by
         self.html = sanitize_html(markdowner.convert(text))
+        self.text = text
         #todo: bug wiki has no effect here
         self.save()
 
@@ -135,9 +137,6 @@ class Answer(Content, DeletableContent):
             return votes[0]
         else:
             return None
-
-    def get_latest_revision(self):
-        return self.revisions.all()[0]
 
     def get_question_title(self):
         return self.question.title

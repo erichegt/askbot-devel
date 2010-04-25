@@ -204,7 +204,6 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-/*页面布局*/
 #wrapper {
     width: 960px;
     margin: auto;
@@ -218,7 +217,7 @@ blockquote {
 }
 
 #room {
-    padding: 10px 0 10px 0;
+    padding: 0 0 10px 0;
     background-color: #FFF;
     border-bottom: 1px solid #777;
 }
@@ -251,16 +250,15 @@ blockquote {
 
 /*#licenseLogo {position:absolute;top:10px;right:10px;}*/
 
-/*顶部及导航栏*/
+/* why is this called top? - this contains links like login, faq, etc */
 #top {
     position: absolute;
     top: 0px;
-    right: 0px;
+    right: 250px;
     height: 20px;
     text-align: right;
     padding: 3px;
     background-color: #ffffff;
-    width: 500px;
 }
 
 /*#header {width:960px;}*/
@@ -270,13 +268,24 @@ blockquote {
     margin-left: 20px;
     text-decoration: underline;
     font-size: 12px;
-    color: #333333;
+    color: #555555;
 }
 
 #logo {
-    padding: 5px 0px 0px 0px;
+    padding: 0px 0px 0px 10px;
+    height: 90px;
+    width: 70px;
 }
 
+#logoContainer {
+}
+#navTabContainer {
+    width: 600px;
+    padding-left: 10px;
+    text-align: left;
+}
+
+/* navBar includes logo, main tabs and links like logout, about, faq */
 #navBar {
     float: clear;
     position: relative;
@@ -285,7 +294,7 @@ blockquote {
 }
 
 #navBar .nav {
-    margin: 20px 0px 0px 16px; /*letter-spacing:1px; */
+    margin: 20px 0px 0px 0px; /*letter-spacing:1px; */
 }
 
 #navBar .nav a {
@@ -300,8 +309,8 @@ blockquote {
     height: 25px;
     line-height: 30px;
     margin-left: 10px;
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 100;
     text-decoration: none;
     display: block;
     float: left;
@@ -325,7 +334,7 @@ blockquote {
 }
 
 #navBar .nav a.special {
-    font-size: 14px;
+    font-size: 18px;
     color: #B02B2C;
     font-weight: bold;
     text-decoration: none;
@@ -335,34 +344,77 @@ blockquote {
     text-decoration: underline;
 }
 
+/* todo: this is probably not used any more */
 #navBar .nav div.focus {
     float: right;
     padding-right: 0px;
 }
 
-/*搜索栏*/
 #searchBar {
-    width: 958px;
-    background-color: #888a85; /*#e9b96e;*/
+    display:inline-block;
+    background-color: #cccccc;/*888a85; /*#e9b96e;*/
     border: 1px solid #aaaaaa;
-    padding: 4px 0 0 0;
-}
-
-/* #B02B2C */
-#searchBar .content {
+    padding: 4px 7px 5px 5px;
 }
 
 #searchBar .searchInput {
-    font-size: 13px;
-    height: 18px;
-    width: 400px;
+    font-size: 24px;
+    line-height: 24px;
+    height: 36px;
+    width: 598px;
+    margin: 0px;
+    padding: 5px 0 0 5px;
+}
+
+#searchBar .searchInputCancelable {
+    font-size: 24px;
+    line-height: 24px;
+    height: 36px;
+    width: 552px;
+    padding: 5px 0 0 5px;
+    margin: 0px;
 }
 
 #searchBar .searchBtn {
-    font-size: 14px;
-    height: 26px;
-    width: 80px;
+    font-size: 20px;
+    color: #666666;
+    height: 40px;
+    line-height: 22px;
+    text-align: center;
+    margin-top:1px;
+    padding-bottom: 4px;
 }
+
+#searchBar .cancelSearchBtn {
+    font-size: 20px;
+    color: #666666;
+    height: 40px;
+    width: 40px;
+    line-height: 22px;
+    padding-bottom: 4px;
+    margin-top:1px;
+    text-align: center;
+}
+
+#askFormBar {
+    display:inline-block;
+    background-color: #e3e3e3;/*888a85; /*#e9b96e;*/
+    border: 1px solid #aaaaaa;
+    padding: 4px 7px 5px 5px;
+}
+#askFormBar p {
+    width: 685px;
+    margin:0 0 5px 0;
+}
+#askFormBar .questionTitleInput {
+    font-size: 24px;
+    line-height: 24px;
+    height: 36px;
+    width: 680px;
+    margin: 0px;
+    padding: 5px 0 0 5px;
+}
+
 
 #searchBar .options {
     padding: 3px 0 3px 0;
@@ -499,7 +551,7 @@ blockquote {
 .short-summary {
     position: relative;
     padding: 3px 5px 5px 10px;
-    border-top: 1px dotted #ccccce;
+    border-top: 1px dashed #ccccce;
     overflow: hidden;
     width: 700px;
     float: left;
@@ -550,6 +602,10 @@ blockquote {
 .evenMore {
     font-size: 14px;
     font-weight: 800;
+}
+
+.evenMore a {
+    text-decoration: underline;
 }
 
 .questions-count {
@@ -623,13 +679,16 @@ blockquote {
 }
 
 .boxC {
-    background: #cacdc6; /*f9f7ed;*/
+    background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px;
     margin-bottom: 8px;
+    margin-left: 10px;
+    /*
     border-top: 1px solid #eeeeec;
     border-left: 1px solid #eeeeec;
     border-right: 1px solid #a9aca5;
     border-bottom: 1px solid #babdb6;
+    */
 }
 
 .boxC p {
@@ -846,6 +905,7 @@ a:hover.medal {
     width: 100%;
     clear: both;
     margin-bottom: 3px;
+    margin-top: 3px;
 }
 
 .tabsA {
@@ -866,7 +926,16 @@ a:hover.medal {
     height: 20px;
 }
 
-.tabsA a.on, .tabsA a:hover, .tabsB a.on, .tabsB a:hover {
+.tabsC {
+    background-color: #FFF;
+    float: left;
+    position: relative;
+    display: block;
+    font-weight: bold;
+    height: 20px;
+}
+
+.tabsA a.on, .tabsA a:hover, .tabsB a.on, .tabsB a:hover , .tabsC a.on, tabsC a:hover {
     background: #fff;
     color: #a40000;
     border-top: 1px solid #babdb6;
@@ -879,7 +948,7 @@ a:hover.medal {
     padding: 0px 11px 0px 11px;
 }
 
-.tabsA a {
+.tabsA a, .tabsC a{
     background: #f9f7eb;
     border-top: 1px solid #eeeeec;
     border-left: 1px solid #eeeeec;
@@ -893,6 +962,12 @@ a:hover.medal {
     margin: 5px 4px 0 0;
     padding: 0 11px 0 11px;
     text-decoration: none;
+}
+
+.tabsA .label, .tabsC .label {
+    float: left;
+    font-weight: bold;
+    margin: 8px 4px 0 4px;
 }
 
 .tabsB a {
@@ -920,7 +995,6 @@ a:hover.medal {
 }
 
 .headQuestions {
-    float: left;
     height: 23px;
     line-height: 23px;
     margin: 5px 0 0 5px;
@@ -951,6 +1025,7 @@ a:hover.medal {
     padding-left: 24px;
 }
 
+/* todo: make this class applicable to all headers it is actually uses in tags.html too */
 .headUsers {
     float: left;
     height: 23px;
@@ -1486,13 +1561,18 @@ span.form-error {
     font-size: 100%;
     min-height: 200px;
     line-height: 18px;
+    width: 697px;
+    margin:0;
+}
+
+#id_title {
     width: 100%;
 }
 
 .wmd-preview {
-    margin-top: 10px;
+    margin: 10px 0 0 0;
     padding: 6px;
-    width: 100%;
+    width: 691px;
     background-color: #F5F5F5;
     min-height: 20px;
 }
@@ -1680,13 +1760,17 @@ ins .post-tag {
 }
 
 .narrow .stats {
-    background: transparent none repeat scroll 0 0;
     float: left;
     height: 48px;
     margin: 0 0 0 7px;
     padding: 0;
     width: auto;
     font-family: Arial;
+}
+
+/* todo: remove this hack? */
+.user-stats-table .narrow {
+    width: 660px;
 }
 
 .stats div {
@@ -2497,15 +2581,16 @@ p.signup_p {
 }
 
 .karma-diagram {
-    width:550px;
-    height:250px;
+    width:390px;
+    height:300px;
     float:left;
+    margin-right:10px;
 }
 
 .karma-details {
     float:right;
-    width:385px;
-    height:300px;
+    width:300px;
+    height:250px;
     overflow-y:auto;
     word-wrap:break-word;
 }
@@ -2524,4 +2609,21 @@ p.signup_p {
     width:20px;
     color:red;
     padding:5px;
+}
+
+.search-result-summary {
+    font-weight: bold;
+    font-size:18px;
+    line-height:30px;
+    margin:0px 0px 0px 5px;
+    padding:0px;
+}
+.search-tips {
+    font-size:12px;
+    line-height:12px;
+    margin:0 0 5px 5px;
+    padding:0px;
+}
+.search-tips a {
+    text-decoration: underline;
 }

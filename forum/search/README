@@ -1,0 +1,5 @@
+module dealing with search functions
+at this time only question and answer search
+
+that among other things contains 
+available full text search implementations

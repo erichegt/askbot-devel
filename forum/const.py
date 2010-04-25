@@ -32,6 +32,46 @@ TYPE_REPUTATION = (
     (-8, 'lose_by_upvote_canceled'),
 )
 
+#do not translate these!!!
+POST_SORT_METHODS = (
+                     ('latest', _('newest')),
+                     ('oldest', _('oldest')),
+                     ('active', _('active')),
+                     ('inactive', _('inactive')),
+                     ('hottest', _('hottest')),
+                     ('coldest', _('coldest')),
+                     ('mostvoted', _('most voted')),
+                     ('leastvoted', _('least voted')),
+                     ('relevant', _('relevance')),
+                    )
+#todo: add assertion here that all sort methods are unique
+#because they are keys to the hash used in implementations of Q.run_advanced_search
+
+DEFAULT_POST_SORT_METHOD = 'active'
+POST_SCOPE_LIST = (
+                    ('all', _('all')),
+                    ('unanswered', _('unanswered')),
+                    ('favorite', _('favorite')),
+                   )
+DEFAULT_POST_SCOPE = 'all'
+DEFAULT_QUESTIONS_PAGE_SIZE = 30
+PAGE_SIZES = (10,30,50)
+
+UNANSWERED_MEANING_LIST = ('NO_ANSWERS','NO_UPVOTED_ANSWERS','NO_ACCEPTED_ANSWERS')
+UNANSWERED_MEANING = 'NO_ACCEPTED_ANSWERS'
+assert(UNANSWERED_MEANING in UNANSWERED_MEANING_LIST)
+
+#todo:
+#this probably needs to be language-specific
+#and selectable/changeable from the admin interface
+#however it will be hard to expect that people will type
+#correct regexes - plus this must be an anchored regex
+#to do full string match
+TAG_REGEX = r'^[a-z0-9\+\.\-]+$'
+TAG_SPLIT_REGEX = r'[ ,]+'
+MAX_TAG_LENGTH = 20 #default 20 chars
+MAX_TAGS_PER_POST = 5 #no more than five tags
+
 TYPE_ACTIVITY_ASK_QUESTION=1
 TYPE_ACTIVITY_ANSWER=2
 TYPE_ACTIVITY_COMMENT_QUESTION=3
@@ -91,3 +131,4 @@ CONST = {
 #how to filter questions by tags in email digests?
 TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))
 MAX_ALERTS_PER_EMAIL = 7
+USERS_PAGE_SIZE = 28

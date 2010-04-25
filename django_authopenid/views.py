@@ -71,6 +71,7 @@ from forum.utils.forms import get_next_url
 
 EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
+#todo: decouple from forum
 def login(request,user):
     from django.contrib.auth import login as _login
     from forum.models import user_logged_in #custom signal
@@ -80,14 +81,27 @@ def login(request,user):
 
     #1) get old session key
     session_key = request.session.session_key
-    #2) login and get new session key
+    #2) get old search state
+    search_state = None
+    if 'search_state' in request.session:
+        search_state = request.session['search_state']
+
+    #3) login and get new session key
     _login(request,user)
-    #3) send signal with old session key as argument
+    #4) transfer search_state to new session if found
+    if search_state:
+        search_state.set_logged_in()
+        request.session['search_state'] = search_state
+    #5) send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     user_logged_in.send(user=user,session_key=session_key,sender=None)
 
+#todo: uncouple this from forum
 def logout(request):
     from django.contrib.auth import logout as _logout#for login I've added wrapper below - called login
+    if 'search_state' in request.session:
+        request.session['search_state'].set_logged_out()
+        request.session.modified = True
     _logout(request)
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
         EXTERNAL_LOGIN_APP.api.logout(request)

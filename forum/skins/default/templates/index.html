@@ -23,7 +23,7 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-    <div class="headQuestions">{% trans "Questions" %}</div>
+    <div class="headUsers">{% trans "Questions" %}</div>
     <div class="tabsA">
     	 <a id="latest" href="{% url questions %}?sort=latest" title="{% trans "last updated questions" %}" >{% trans "newest" %}</a>
         <a id="hottest" href="{% url questions %}?sort=hottest" title="{% trans "hottest questions" %}" >{% trans "hottest" %}</a>
@@ -57,11 +57,12 @@
         {% cache 60 recent_tags %}
         {% for tag in tags %}
             <a rel="tag"
-				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
+                title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" 
+                href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
         {% endfor %}
         {% endcache %}
         </div>
-        <div class="more"><a href="{% url tags %}">{% trans "popular tags" %} </a> </div>
+        <div class="more"><a href="{% url tags %}">{% trans "see all tags" %}</a> </div>
     </div>
 </div>
 {% if awards %}

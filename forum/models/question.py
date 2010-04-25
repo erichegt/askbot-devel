@@ -1,28 +1,49 @@
-from base import *
+from base import * #todo maybe remove *
 from tag import Tag
+#todo: make uniform import for consts
 from forum.const import CONST
+from forum import const
 from forum.utils.html import sanitize_html
 from markdown2 import Markdown
 from django.utils.html import strip_tags
 import datetime
+from django.conf import settings
+from django.utils.datastructures import SortedDict
+from forum.models.tag import MarkedTag
+from django.db.models import Q
+
 markdowner = Markdown(html4tags=True)
 
 from forum.utils.lists import LazyList
+
+#todo: too bad keys are duplicated see const sort methods
+QUESTION_ORDER_BY_MAP = {
+    'latest': '-added_at',
+    'oldest': 'added_at',
+    'active': '-last_activity_at',
+    'inactive': 'last_activity_at',
+    'hottest': '-answer_count',
+    'coldest': 'answer_count',
+    'mostvoted': '-score',
+    'leastvoted': 'score',
+    'relevant': None #this is a special case
+}
 
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
         html = sanitize_html(markdowner.convert(text))
         summary = strip_tags(html)[:120]
         question = Question(
-            title            = title,
-            author           = author,
-            added_at         = added_at,
+            title = title,
+            author = author,
+            added_at = added_at,
             last_activity_at = added_at,
             last_activity_by = author,
-            wiki             = wiki,
-            tagnames         = tagnames,
-            html             = html,
-            summary          = summary
+            wiki = wiki,
+            tagnames = tagnames,
+            html = html,
+            text = text,
+            summary = summary
         )
         if question.wiki:
             question.last_edited_by = question.author
@@ -38,6 +59,115 @@ class QuestionManager(models.Manager):
             revised_at=added_at,
         )
         return question
+
+    def run_advanced_search(
+                            self,
+                            request_user = None,
+                            scope_selector = const.DEFAULT_POST_SCOPE,#unanswered/all/favorite (for logged in)
+                            search_query = None,
+                            tag_selector = None,
+                            author_selector = None,#???question or answer author or just contributor
+                            sort_method = const.DEFAULT_POST_SORT_METHOD
+                            ):
+        """all parameters are guaranteed to be clean
+        however may not relate to database - in that case
+        a relvant filter will be silently dropped
+        """
+
+        qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
+
+        #return metadata
+        meta_data = {}
+        if tag_selector: 
+            for tag in tag_selector:
+                qs = qs.filter(tags__name = tag)
+
+        if search_query:
+            try:
+                qs = qs.filter( Q(title__search = search_query) \
+                                | Q(text__search = search_query) \
+                                | Q(tagnames__search = search_query) \
+                                | Q(answers__text__search = search_query)
+                                )
+            except:
+                #fallback to dumb title match search
+                qs = qs.extra(
+                                where=['title like %s'], 
+                                params=['%' + search_query + '%']
+                            )
+
+        if scope_selector:
+            if scope_selector == 'unanswered':
+                if const.UNANSWERED_MEANING == 'NO_ANSWERS':
+                    qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
+                elif const.UNANSWERED_MEANING == 'NO_ACCEPTED_ANSWERS':
+                    qs = qs.filter(answer_accepted=False)
+                elif const.UNANSWERED_MEANING == 'NO_UPVOTED_ANSWERS':
+                    raise NotImplementedError()
+                else:
+                    raise Exception('UNANSWERED_MEANING setting is wrong')
+            elif scope_selector == 'favorite':
+                qs = qs.filter(favorited_by = request_user)
+            
+        #user contributed questions & answers
+        if author_selector:
+            try:
+                u = User.objects.get(id=int(author_selector))
+                qs = qs.filter(Q(author=u, deleted=False) | Q(answers__author=u, answers__deleted=False))
+                meta_data['author_name'] = u.username
+            except User.DoesNotExist:
+                meta_data['author_name'] = None
+
+        #get users tag filters
+        if request_user and request_user.is_authenticated():
+            uid_str = str(request_user.id)
+            #mark questions tagged with interesting tags
+            qs = qs.extra(
+                            select = SortedDict([
+                                (
+                                    'interesting_score', 
+                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                                      + 'WHERE forum_markedtag.user_id = %s '
+                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                                      + 'AND forum_markedtag.reason = \'good\' '
+                                      + 'AND question_tags.question_id = question.id'
+                                ),
+                                    ]),
+                            select_params = (uid_str,),
+                         )
+            if request_user.hide_ignored_questions:
+                #exclude ignored tags if the user wants to
+                ignored_tags = Tag.objects.filter(user_selections__reason='bad',
+                                                user_selections__user = request_user)
+                qs = qs.exclude(tags__in=ignored_tags)
+            else:
+                #annotate questions tagged with ignored tags
+                qs = qs.extra(
+                            select = SortedDict([
+                                (
+                                    'ignored_score', 
+                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                                      + 'WHERE forum_markedtag.user_id = %s '
+                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                                      + 'AND forum_markedtag.reason = \'bad\' '
+                                      + 'AND question_tags.question_id = question.id'
+                                )
+                                    ]),
+                            select_params = (uid_str, )
+                         )
+            # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
+            pt = MarkedTag.objects.filter(user=request_user)
+            meta_data['interesting_tag_names'] = pt.filter(reason='good').values_list('tag__name', flat=True)
+            meta_data['ignored_tag_names'] = pt.filter(reason='bad').values_list('tag__name', flat=True)
+
+        qs = qs.select_related(depth=1)
+        #todo: fix orderby here
+        orderby = QUESTION_ORDER_BY_MAP[sort_method]
+        if orderby:
+            #relevance will be ignored here
+            qs = qs.order_by(orderby)
+        qs = qs.distinct()
+        return qs, meta_data
 
     def update_tags(self, question, tagnames, user):
         """
@@ -216,6 +346,7 @@ class Question(Content, DeletableContent):
         self.tagnames = tags
         self.summary = question_summary
         self.html = html
+        self.text = text
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -309,9 +440,6 @@ class Question(Content, DeletableContent):
 
     def get_revision_url(self):
         return reverse('question_revisions', args=[self.id])
-
-    def get_latest_revision(self):
-        return self.revisions.all()[0]
 
     def get_last_update_info(self):
         when, who = self.post_get_last_update_info()
