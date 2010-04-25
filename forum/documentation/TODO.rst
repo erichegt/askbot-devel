@@ -2,7 +2,8 @@ note: there is also WISH_LIST. Here is only stuff that will be done soon.
 
 Site looks
 ===========
-* make links within posts blue so that they are visible
+* make links within posts underlined
+* add happy talk to tags and people view
 
 Code Cleanups
 ==============
@@ -17,14 +18,20 @@ Code Cleanups
 * python2.4 incompatibilities
   *  datatime.datetime.strptime
 
+Search
+========
+* make full text search work in postgres
+* walkthrough sphinx search setup again
+* text query lost when visiting question, it just doesn't print in Q view
+
 Bugs
 ======
-* make sure that search feature covers questions and answers 
-  (title, body, tags)
+* fix skin resolution bug in javascript - currently have to 
+  copy skin media to customize
 
 Refactoring
 =============
-* merge search, question and index view functions into one
+nothing right now
 
 Skins
 =======
@@ -59,5 +66,4 @@ Development environment
 
 Project website
 ====================
-* Logo!!! Ideas?
 * Adopt Jekyll for project site and transition from Dango

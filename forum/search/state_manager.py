@@ -128,12 +128,15 @@ class SearchState(object):
             self.reset_query()
             return
 
-
         if 'sort' in input:
             if input['sort'] == 'relevant' and self.query is None:
                 self.reset_sort()
             else:
                 self.update_value('sort',input)
+
+        #todo: plug - mysql has no relevance sort
+        if self.sort == 'relevant':
+            self.reset_sort()
 
     def reset_page(self):
         self.page = 1

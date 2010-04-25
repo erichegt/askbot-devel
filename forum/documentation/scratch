@@ -1,0 +1,3 @@
+Error upon restarting Apache:
+
+Name duplicates previous WSGI daemon definition
