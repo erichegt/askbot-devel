@@ -16,6 +16,7 @@ class AnswerManager(models.Manager):
             author = author,
             added_at = added_at,
             wiki = wiki,
+            text = text,
             html = sanitize_html(markdowner.convert(text)),
         )
         if answer.wiki:

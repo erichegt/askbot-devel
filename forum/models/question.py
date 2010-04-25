@@ -34,15 +34,16 @@ class QuestionManager(models.Manager):
         html = sanitize_html(markdowner.convert(text))
         summary = strip_tags(html)[:120]
         question = Question(
-            title            = title,
-            author           = author,
-            added_at         = added_at,
+            title = title,
+            author = author,
+            added_at = added_at,
             last_activity_at = added_at,
             last_activity_by = author,
-            wiki             = wiki,
-            tagnames         = tagnames,
-            html             = html,
-            summary          = summary
+            wiki = wiki,
+            tagnames = tagnames,
+            html = html,
+            text = text,
+            summary = summary
         )
         if question.wiki:
             question.last_edited_by = question.author
