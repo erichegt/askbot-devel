@@ -74,6 +74,10 @@ and is significantly modified.  http://code.google.com/p/django-authopenid/
 no need to install this library
 
 B. INSTALLATION
+
+NOTE: If you want to upgrade software, not install from scratch - 
+      take a look into forum/documentation/UPGRADE
+
 -----------------------------------------------
 0. Make sure you have all above python libraries installed.
 
@@ -257,7 +261,7 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    edit paths in the file forum/cron/send_email_alerts
    set up a cron job to call forum/cron/send_email_alerts once or twice a day
    subscription sender may be tested manually in shell
-   by calling foru/cron/send_email_alerts
+   by calling forum/cron/send_email_alerts
 
 7. Sitemap
 Sitemap will be available at /<settings_local.FORUM_SCRIPT_ALIAS>sitemap.xml
@@ -271,7 +275,7 @@ https://www.google.com/webmasters/tools/
 
 8. Miscellaneous
 
-There are some demo scripts under foru/sql_scripts folder,
+There are some demo scripts under forum/sql_scripts folder,
 including badges and test accounts for CNProg.com. You
 don't need them to run your sample.
 
