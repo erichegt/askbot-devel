@@ -82,10 +82,18 @@ class QuestionManager(models.Manager):
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
-            qs = qs.filter(deleted=False).extra(
-                                    where=['title like %s'], 
-                                    params=['%' + search_query + '%']
-                                    )
+            try:
+                qs = qs.filter( Q(title__search = search_query) \
+                                | Q(text__search = search_query) \
+                                | Q(tagnames__search = search_query) \
+                                | Q(answers__text__search = search_query)
+                                )
+            except:
+                #fallback to dumb title match search
+                qs = qs.extra(
+                                where=['title like %s'], 
+                                params=['%' + search_query + '%']
+                            )
 
         if scope_selector:
             if scope_selector == 'unanswered':

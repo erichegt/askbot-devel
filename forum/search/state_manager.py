@@ -4,6 +4,19 @@
 from forum import const
 import logging
 
+ACTIVE_COMMANDS = (
+    'sort', 'search', 'query',
+    'reset_query', 'reset_author', 'reset_tags',
+    'tags', 'scope', 'page_size', 'start_over',
+    'page'
+)
+
+def some_in(what, where):
+    for element in what:
+        if element in where:
+            return True
+    return False
+
 class SearchState(object):
     def __init__(self):
         self.scope= const.DEFAULT_POST_SCOPE
@@ -50,7 +63,13 @@ class SearchState(object):
                 setattr(self, key, new_value)
                 self.reset_page()
 
-    def update_from_user_input(self,input, raw_input = {}):
+    def relax_stickiness(self, input, view_log):
+        if view_log.get_previous(1) == 'questions':
+            if not some_in(ACTIVE_COMMANDS, input):
+                self.reset()
+        #todo also relax if 'all' scope was clicked twice
+
+    def update_from_user_input(self,input,raw_input = {}):
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
         if 'start_over' in input:

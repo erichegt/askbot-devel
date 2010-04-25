@@ -78,10 +78,12 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
     if request.method == 'POST':
         raise Http404
 
+    #todo: redo SearchState to accept input from
+    #view_log, session and request parameters
     search_state = request.session.get('search_state', SearchState())
 
     view_log = request.session['view_log']
-    #print view_log
+
     if view_log.get_previous(1) != 'questions':
         if view_log.get_previous(2) != 'questions':
             #print 'user stepped too far, resetting search state'
@@ -91,8 +93,18 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
         search_state.set_logged_in()
 
     form = AdvancedSearchForm(request.GET)
+    #todo: form is used only for validation...
     if form.is_valid():
-        search_state.update_from_user_input(form.cleaned_data, request.GET)
+        search_state.update_from_user_input(
+                                                form.cleaned_data, 
+                                                request.GET, 
+                                            )
+        #todo: better put these in separately then analyze
+        #what neesd to be done, otherwise there are two routines
+        #that take request.GET I don't like this use of parameters
+        #another weakness is that order of routine calls matters here
+        search_state.relax_stickiness( request.GET, view_log )
+
         request.session['search_state'] = search_state
         request.session.modified = True
 

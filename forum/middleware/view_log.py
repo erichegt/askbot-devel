@@ -10,7 +10,7 @@ from forum.views.readers import question, question_revisions, answer_revisions
 #trigger reset of sarch state?
 IGNORED_VIEWS = (serve, vote, delete_comment, 
                 question_comments, answer_comments,
-                question, question_revisions, answer_revisions)
+                question_revisions, answer_revisions)
 
 class ViewLog(object):
     """must be modified only in this middlware
