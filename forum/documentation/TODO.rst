@@ -23,6 +23,7 @@ Search
 * make full text search work in postgres
 * walkthrough sphinx search setup again
 * text query lost when visiting question, it just doesn't print in Q view
+* make username and tags persist in corresponding search windows
 
 Bugs
 ======

@@ -178,7 +178,7 @@ class QuestionManager(models.Manager):
         return User.objects.filter(
                                     Q(questions__in=question_list) \
                                     | Q(answers__in=answer_list)
-                                   ).distinct()
+                                   ).distinct().order_by('?')
 
     def update_tags(self, question, tagnames, user):
         """
