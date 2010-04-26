@@ -19,14 +19,14 @@
     <span class="curr" title="{% trans "current page" %}">{{ num }}</span>
     {% endifequal %}
   {% else %}
-  	<span class="page"><a href="{{base_url}}page={{ num }}{{ extend_url }}" title="{% trans "page number " %}{{ num }}{% trans "number - make blank in english" %}">{{ num }}</a></span>
+  	<span class="page"><a href="{{base_url}}page={{ num }}{{ extend_url }}" title="{% blocktrans %}page number {{num}}{% endblocktrans %}">{{ num }}</a></span>
   {% endifequal %}
 {% endfor %}
  
 {% if not in_trailing_range %}
 	...
 	{% for num in pages_outside_leading_range reversed %}
-		<span class="page"><a href="{{base_url}}page={{ num }}{{ extend_url }}" title="{% trans "page number " %}{{ num }}{% trans "number - make blank in english" %}">{{ num }}</a></span>
+		<span class="page"><a href="{{base_url}}page={{ num }}{{ extend_url }}" title="{% blocktrans %}page number {{ num }}{% endblocktrans %}">{{ num }}</a></span>
 	{% endfor %}
 {% endif %}
  

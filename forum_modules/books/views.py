@@ -37,7 +37,7 @@ def book(request, short_name, unanswered=False):
         author_rss = BookAuthorRss.objects.filter(book=book)
 
         # get pagesize from session, if failed then get default value
-        user_page_size = request.session.get("pagesize", QUESTIONS_PAGE_SIZE)
+        user_page_size = request.session.get("page_size", QUESTIONS_PAGE_SIZE)
         # set pagesize equal to logon user specified value in database
         if request.user.is_authenticated() and request.user.questions_per_page > 0:
             user_page_size = request.user.questions_per_page
@@ -82,7 +82,7 @@ def book(request, short_name, unanswered=False):
                 'previous': questions.previous_page_number(),
                 'next': questions.next_page_number(),
                 'base_url' : request.path + '?sort=%s&' % view_id,
-                'pagesize' : user_page_size
+                'page_size' : user_page_size
             }
         }, context_instance=RequestContext(request))
 

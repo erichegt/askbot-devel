@@ -157,7 +157,7 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
             'previous': questions.previous_page_number(),
             'next': questions.next_page_number(),
             'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
-            'pagesize' : search_state.page_size,#todo in T pagesize -> page_size
+            'page_size' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
 
 def search(request): #generates listing of questions matching a search query - including tags and just words

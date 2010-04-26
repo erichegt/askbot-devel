@@ -126,7 +126,7 @@ def cnprog_pagesize(context):
     if (context["is_paginated"]):
         return {
             "base_url": context["base_url"],
-            "pagesize" : context["pagesize"],
+            "page_size" : context["page_size"],
             "is_paginated": context["is_paginated"]
         }
 

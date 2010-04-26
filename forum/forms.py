@@ -139,7 +139,7 @@ class AdvancedSearchForm(forms.Form):
     start_over = forms.BooleanField(required=False)
     tags = forms.CharField(max_length=256,required=False)
     author = forms.IntegerField(required=False)
-    page_size = forms.ChoiceField(choices=const.PAGE_SIZES, required=False)
+    page_size = forms.ChoiceField(choices=const.PAGE_SIZE_CHOICES, required=False)
     page = forms.IntegerField(required=False)
 
     def clean_tags(self):
@@ -170,6 +170,10 @@ class AdvancedSearchForm(forms.Form):
         if 'page_size' in self.cleaned_data:
             if self.cleaned_data['page_size'] == '':
                 self.cleaned_data['page_size'] = None
+            else:
+                page_size = self.cleaned_data['page_size']
+                #by this time it is guaranteed to be castable as int
+                self.cleaned_data['page_size'] = int(page_size)
             return self.cleaned_data['page_size']
 
     def clean(self):
