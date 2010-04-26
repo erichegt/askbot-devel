@@ -130,12 +130,12 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
 
     tags_autocomplete = _get_tags_cache_json()
 
-    #todo!!!!
-    #contributors = #User.objects.get_related_to_questions
+    contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
     #todo: organize variables by type
     return render_to_response('questions.html', {
         'questions' : questions,
+        'contributors' : contributors,
         'author_name' : meta_data.get('author_name',None),
         'tab_id' : search_state.sort,
         'questions_count' : objects_list.count,

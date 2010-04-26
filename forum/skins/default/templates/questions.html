@@ -236,19 +236,30 @@
     {% endblock %}
 
 {% block sidebar %}
-{% if request.user.is_authenticated %} 
-{% include "tag_selector.html" %}
-{% endif %}
-<div class="boxC">
-	<h3 class="subtitle">{% trans "Related tags" %}</h3>
-    <div class="tags">
-        {% for tag in tags %}
-            <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
-            <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
-            <br />
+    {% if contributors %}
+        <div class="boxC">
+        <h3 class="subtitle">{% trans "Contributors" %}</h3>
+        {% for person in contributors %}
+            {% gravatar person 48 %}
         {% endfor %}
-    </div>
-</div>
+        </div>
+    {% endif %}
 
+    {% if request.user.is_authenticated %} 
+        {% include "tag_selector.html" %}
+    {% endif %}
+
+    {% if tags %}
+    <div class="boxC">
+        <h3 class="subtitle">{% trans "Related tags" %}</h3>
+        <div class="tags">
+            {% for tag in tags %}
+                <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
+                <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+                <br />
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 <!-- end questions.html -->

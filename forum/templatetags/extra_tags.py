@@ -28,7 +28,8 @@ GRAVATAR_TEMPLATE = (
                      'width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
                      '?s=%(size)s&amp;d=identicon&amp;r=PG" '
-                     'alt="%(username)s\'s gravatar image" /></a>')
+                     'title="%(username)s" '
+                     'alt="%(alt_text)s" /></a>')
 
 @register.simple_tag
 def gravatar(user, size):
@@ -44,11 +45,13 @@ def gravatar(user, size):
     user_id = get_from_dict_or_object(user, 'id')
     slug = slugify(username)
     user_profile_url = reverse('user_profile', kwargs={'id':user_id,'slug':slug})
+    #safe_username = template.defaultfilters.urlencode(username)
     return mark_safe(GRAVATAR_TEMPLATE % {
         'user_profile_url': user_profile_url,
         'size': size,
         'gravatar_hash': gravatar,
-        'username': template.defaultfilters.urlencode(username),
+        'alt_text': _('%(username)s gravatar image') % {'username': username},
+        'username': username,
     })
 
 MAX_FONTSIZE = 18

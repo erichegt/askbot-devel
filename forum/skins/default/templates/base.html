@@ -39,16 +39,27 @@
         {% endif %}
         {% if active_tab != "tags" and active_tab != "users" %}
         <script type="text/javascript">
-                    $('#nav_ask').click(
-                        function(){
-                            alert('hullo');
-                            var starting_title = $('#keywords').attr('value');
-                            alert('tittle is ' + starting_title);
-                            window.location.href = $(this).attr('href') + '?'
-                            + starting_title;
-                        }
-                    );
+            $(document).ready(function(){
+                $('#nav_ask').click(
+                    function(){
+                        var starting_title = $('#keywords').attr('value');
+                        var new_url = $(this).attr('href') + '?title=' + starting_title;
+                        window.location.href = new_url;
+                        return false;
+                    }
+                );
+            });
         </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                {% if active_tab != "ask" %}
+                    $('#keywords').focus();
+                {% else %}
+                    $('#id_title').focus();
+                {% endif %}
+            });
+        </script>
+
         {% endif %}
         {% block forejs %}
         {% endblock %}

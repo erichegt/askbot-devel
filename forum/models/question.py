@@ -169,6 +169,17 @@ class QuestionManager(models.Manager):
         qs = qs.distinct()
         return qs, meta_data
 
+    def get_question_and_answer_contributors(self, question_list):
+        answer_list = []
+        question_list = list(question_list)#important for MySQL, b/c it does not support
+        #the query in return statement below
+        for q in question_list:
+            answer_list.extend(list(q.answers.all()))
+        return User.objects.filter(
+                                    Q(questions__in=question_list) \
+                                    | Q(answers__in=answer_list)
+                                   ).distinct()
+
     def update_tags(self, question, tagnames, user):
         """
         Updates Tag associations for a question to match the given
