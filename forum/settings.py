@@ -1,6 +1,5 @@
 import os
 
-
 INSTALLED_APPS = ['forum']
 
 MIDDLEWARE_CLASSES = [
@@ -47,5 +46,3 @@ def setup_settings(settings):
     settings.TEMPLATE_LOADERS = set(settings.TEMPLATE_LOADERS) | set(TEMPLATE_LOADERS)
     settings.TEMPLATE_CONTEXT_PROCESSORS = set(settings.TEMPLATE_CONTEXT_PROCESSORS) | set(TEMPLATE_CONTEXT_PROCESSORS)
     settings.TEMPLATE_DIRS = set(settings.TEMPLATE_DIRS) | set(TEMPLATE_DIRS)
-
- 

@@ -138,7 +138,7 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                     vote = post.votes.filter(user=request.user)[0]
                     # get latest vote by the current user
                     # unvote should be less than certain time
-                    if (datetime.datetime.now().day - vote.voted_at.day) >= auth.VOTE_RULES['scope_deny_unvote_days']:
+                    if (datetime.datetime.now().day - vote.voted_at.day) >= auth.VOTE_RULES['scope_deny_unvote_days'].value:
                         response_data['status'] = 2
                     else:
                         voted = vote.vote
@@ -152,7 +152,7 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
 
                         response_data['status'] = 1
                         response_data['count'] = post.score
-                elif Vote.objects.get_votes_count_today_from_user(request.user) >= auth.VOTE_RULES['scope_votes_per_user_per_day']:
+                elif Vote.objects.get_votes_count_today_from_user(request.user) >= auth.VOTE_RULES['scope_votes_per_user_per_day'].value:
                     response_data['allowed'] = -3
                 else:
                     vote = Vote(user=request.user, content_object=post, vote=vote_score, voted_at=datetime.datetime.now())
@@ -163,8 +163,8 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                         # downvote
                         auth.onDownVoted(vote, post, request.user)
 
-                    votes_left = auth.VOTE_RULES['scope_votes_per_user_per_day'] - Vote.objects.get_votes_count_today_from_user(request.user)
-                    if votes_left <= auth.VOTE_RULES['scope_warn_votes_left']:
+                    votes_left = auth.VOTE_RULES['scope_votes_per_user_per_day'].value - Vote.objects.get_votes_count_today_from_user(request.user)
+                    if votes_left <= auth.VOTE_RULES['scope_warn_votes_left'].value:
                         response_data['message'] = u'%s votes left' % votes_left
                     response_data['count'] = post.score
             elif vote_type in ['7', '8']:
@@ -174,7 +174,7 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                     post_id = request.POST.get('postId')
                     post = get_object_or_404(Answer, id=post_id)
 
-                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= auth.VOTE_RULES['scope_flags_per_user_per_day']:
+                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= auth.VOTE_RULES['scope_flags_per_user_per_day'].value:
                     response_data['allowed'] = -3
                 elif not auth.can_flag_offensive(request.user):
                     response_data['allowed'] = -2

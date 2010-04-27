@@ -216,7 +216,7 @@ def user_stats(request, user_id, user_view):
     up_votes = Vote.objects.get_up_vote_count_from_user(user)
     down_votes = Vote.objects.get_down_vote_count_from_user(user)
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
-    votes_total = auth.VOTE_RULES['scope_votes_per_user_per_day']
+    votes_total = auth.VOTE_RULES['scope_votes_per_user_per_day'].value
 
     question_id_set = set(map(lambda v: v['id'], list(questions))) \
                         | set(map(lambda v: v['id'], list(answered_questions)))
