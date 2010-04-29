@@ -499,7 +499,7 @@ msgstr[1] "En fazla %(tag_count)d  etiket kullanabilirsiniz"
 #: forum/forms.py:79
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
-msgid_plural "each tag must be shorter than %(max_shars)d characters"
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "Her etiket en fazla  %(max_chars)d  karakter içerebilir"
 msgstr[1] "Her etiket en fazla  %(max_chars)d  karakter içerebilir"
 
@@ -1513,9 +1513,9 @@ msgid "Still have questions?"
 msgstr "Hala aklınıza takılan bir soru mu var?"
 
 #: forum/skins/default/templates/faq.html:128
-#, python-format
+#, fuzzy, python-format
 msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "Hiç çekinmeden sorunuzu sitemize yazın. Böylelikle hem başkalarına da faydalı olabilirsiniz."
+msgstr "Hiç çekinmeden sorunuzu sitemize yazın. Böy(%ask_question_url)s, lelikle hem başkalarına da faydalı olabilirsiniz."
 
 #: forum/skins/default/templates/faq.html:130
 #: forum/skins/default/templates/header.html:27
@@ -1691,7 +1691,7 @@ msgid "next page"
 msgstr "sonraki sayfa"
 
 #: forum/skins/default/templates/post_contributor_info.html:9
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                one revision\n"
@@ -1702,8 +1702,10 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"bir kez düzenlendi\n"
-msgstr[1] "%(rev_count)s düzenlendi"
+"bir kez düzenlendi\""
+msgstr[1] ""
+"\n"
+"%(rev_count)s düzenlendi"
 
 #: forum/skins/default/templates/post_contributor_info.html:19
 msgid "asked"
@@ -1848,11 +1850,13 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 "\n"
-"diğer <strong>bir tanesine</strong> bak\n"
-msgstr[1] "<strong>%(counter)s</strong> daha var"
+"diğer <strong>bir tanesine</strong> bak"
+msgstr[1] ""
+"\n"
+"<strong>%(counter)s</strong> daha var"
 
 #: forum/skins/default/templates/question.html:204
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                                            see <strong>one</strong> more comment\n"
@@ -1863,7 +1867,7 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 "\n"
-"diğer <strong>yorumu</strong> gör\n"
+"diğer <strong>yorumu</strong> gör\""
 msgstr[1] "diğer <strong>%(counter)s</strong> yorumu gör"
 
 #: forum/skins/default/templates/question.html:220
@@ -1888,8 +1892,10 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 "\n"
-"Bir tek cevap var:\n"
-msgstr[1] "%(counter)s cevap:"
+"Bir tek cevap var:"
+msgstr[1] ""
+"\n"
+"%(counter)s cevap:"
 
 #: forum/skins/default/templates/question.html:238
 msgid "oldest answers will be shown first"
@@ -1948,7 +1954,7 @@ msgid "undelete"
 msgstr "silineni geri al"
 
 #: forum/skins/default/templates/question.html:347
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                                                        see <strong>one</strong> more \n"
@@ -1959,11 +1965,13 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 "\n"
-"<strong>bir</strong> daha gör\n"
-msgstr[1] "<strong>%(counter)s</strong> daha gör"
+"<strong>bir</strong> daha gör\""
+msgstr[1] ""
+"\n"
+"<strong>%(counter)s</strong> daha gör"
 
 #: forum/skins/default/templates/question.html:353
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                                                        see <strong>one</strong> more comment\n"
@@ -2074,8 +2082,8 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"oy\n"
-msgstr[1] "oy"
+"oy"
+msgstr[1] "\noy"
 
 #: forum/skins/default/templates/question_counter_widget.html:21
 msgid "this answer has been accepted to be correct"
@@ -2092,8 +2100,8 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"cevap\n"
-msgstr[1] "cevap"
+"cevap"
+msgstr[1] "\ncevap"
 
 #: forum/skins/default/templates/question_counter_widget.html:39
 msgid ""
@@ -2106,8 +2114,8 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"izlenme\n"
-msgstr[1] "izlenme"
+"izlenme"
+msgstr[1] "\nizlenme"
 
 #: forum/skins/default/templates/question_edit.html:5
 #: forum/skins/default/templates/question_edit.html:66
@@ -2552,8 +2560,8 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> Soru\n"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Soru"
+"<span class=\"count\">1</span> Soru"
+msgstr[1] "\n<span class=\"count\">%(counter)s</span> Soru"
 
 #: forum/skins/default/templates/user_stats.html:23
 #, python-format
@@ -2567,8 +2575,8 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> Cevap\n"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Cevap"
+"<span class=\"count\">1</span> Cevap"
+msgstr[1] "\n<span class=\"count\">%(counter)s</span> Cevap"
 
 #: forum/skins/default/templates/user_stats.html:36
 #, python-format
@@ -2580,7 +2588,7 @@ msgid "this answer has been selected as correct"
 msgstr "bu cevap doğru olarak seçildi"
 
 #: forum/skins/default/templates/user_stats.html:46
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                    (one comment)\n"
@@ -2591,8 +2599,8 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 "\n"
-"(bir kez yorum yazıldı)\n"
-msgstr[1] "Cevap %(comment_count)s kez yorumlandı."
+"(bir kez yorum yazıldı)\n"""
+msgstr[1] "\nCevap %(comment_count)s kez yorumlandı."
 
 #: forum/skins/default/templates/user_stats.html:61
 #, python-format
@@ -2606,8 +2614,8 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> oy\n"
-msgstr[1] "<span class=\"count\">%(cnt)s</span> oy"
+"<span class=\"count\">1</span> oy"
+msgstr[1] "\n<span class=\"count\">%(cnt)s</span> oy"
 
 #: forum/skins/default/templates/user_stats.html:72
 msgid "thumb up"
@@ -2626,7 +2634,7 @@ msgid "user voted down this many times"
 msgstr "kullanıcılar tarafından defalarca beğenilmedi"
 
 #: forum/skins/default/templates/user_stats.html:87
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                    <span class=\"count\">1</span> Tag\n"
@@ -2637,8 +2645,10 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> Gün\n"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Gün"
+"<span class=\"count\">1</span> Gün\""
+msgstr[1] ""
+"\n"
+"<span class=\"count\">%(counter)s</span> Gün"
 
 #: forum/skins/default/templates/user_stats.html:100
 #, python-format
@@ -2657,8 +2667,10 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> Madalya\n"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Madalya"
+"<span class=\"count\">1</span> Madalya"
+msgstr[1] ""
+"\n"
+"<span class=\"count\">%(counter)s</span> Madalya"
 
 #: forum/skins/default/templates/user_tabs.html:7
 msgid "User profile"
