@@ -1,503 +1,493 @@
-# Russian translation of messages for Askbot 
-# Copyright (C) 2009 Gang Chen
-# This file is distributed under the same license as the Askbot package.
+# Russian translation made for Askbot projec project
+# Russian translation of messages for Askbot
+# le is Evgeny Fadeev distributed under the same license as the Askbot package.
 # FIRST AUTHOR <evgeny.fadeev@gmail.com>, 2010.
-#
-#, fuzzy
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-22 03:56-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-04-29 18:19\n"
+"Last-Translator: <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"X-Translated-Using: django-rosetta 0.5.3\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 
 #: django_authopenid/forms.py:71 django_authopenid/views.py:132
 msgid "i-names are not supported"
-msgstr ""
+msgstr "извините, но i-names не поддерживаются"
 
 #: django_authopenid/forms.py:134
 msgid "Account with this name already exists on the forum"
-msgstr ""
+msgstr "аккаунт с таким именем уже существует на форуме"
 
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."
-msgstr ""
+msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
 
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
-msgstr ""
+msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
 
 #: django_authopenid/forms.py:160 django_authopenid/forms.py:210
 msgid "This account is inactive."
-msgstr ""
+msgstr "Этот аккаунт деактивирован"
 
 #: django_authopenid/forms.py:162
 msgid "Login failed."
-msgstr ""
+msgstr "Логин неудачен"
 
 #: django_authopenid/forms.py:164
 msgid "Please enter username and password"
-msgstr ""
+msgstr "Пожалуйста, введите имя пользователя и пароль"
 
 #: django_authopenid/forms.py:166
 msgid "Please enter your password"
-msgstr ""
+msgstr "Пожалуйста, введите пароль"
 
 #: django_authopenid/forms.py:168
 msgid "Please enter user name"
-msgstr ""
+msgstr "Пожалуйста, введите имя пользователя"
 
 #: django_authopenid/forms.py:206
-msgid ""
-"Please enter a valid                     username and password. Note that "
-"both fields are                     case-sensitive."
-msgstr ""
+msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
+msgstr "Пожалуйста введите имя пользователя и пароль (обратите внимание - регистр букв важен для обоих параметров)"
 
 #: django_authopenid/forms.py:229 forum/authentication/forms.py:60
 msgid "Current password"
-msgstr ""
+msgstr "Настоящий пароль"
 
 #: django_authopenid/forms.py:240 forum/authentication/forms.py:71
-msgid ""
-"Old password is incorrect.                     Please enter the correct "
-"password."
-msgstr ""
+msgid "Old password is incorrect.                     Please enter the correct password."
+msgstr "Старый пароль неверен. Пожалуйста, введите правильный пароль."
 
 #: django_authopenid/forms.py:305
 msgid "Your user name (<i>required</i>)"
-msgstr ""
+msgstr "Ваше имя пользователя <i>(обязательно)</i>"
 
 #: django_authopenid/forms.py:320
 msgid "Incorrect username."
-msgstr ""
+msgstr "Неправильное имя пользователя."
 
 #: django_authopenid/urls.py:23 django_authopenid/urls.py:24
 #: django_authopenid/urls.py:25 django_authopenid/urls.py:27
 #: fbconnect/urls.py:12 fbconnect/urls.py:13 fbconnect/urls.py:14
 msgid "signin/"
-msgstr ""
+msgstr "войти/"
 
 #: django_authopenid/urls.py:24 fbconnect/urls.py:13 fbconnect/urls.py:17
 msgid "newquestion/"
-msgstr ""
+msgstr "новый-вопрос/"
 
 #: django_authopenid/urls.py:25 fbconnect/urls.py:14 fbconnect/urls.py:18
 msgid "newanswer/"
-msgstr ""
+msgstr "новый-ответ/"
 
 #: django_authopenid/urls.py:26
 msgid "signout/"
-msgstr ""
+msgstr "выйти/"
 
 #: django_authopenid/urls.py:27
 msgid "complete/"
-msgstr ""
+msgstr "завершить/"
 
 #: django_authopenid/urls.py:29 fbconnect/urls.py:16 fbconnect/urls.py:17
 #: fbconnect/urls.py:18
 msgid "register/"
-msgstr ""
+msgstr "регистрация/"
 
 #: django_authopenid/urls.py:30
 msgid "signup/"
-msgstr ""
+msgstr "создать-аккаунт/"
 
 #: django_authopenid/urls.py:32
 msgid "sendpw/"
-msgstr ""
+msgstr "послать-пароль/"
 
 #: django_authopenid/urls.py:33 django_authopenid/urls.py:37
 msgid "password/"
-msgstr ""
+msgstr "пароль/"
 
 #: django_authopenid/urls.py:33
 msgid "confirm/"
-msgstr ""
+msgstr "подтвердить/"
 
 #: django_authopenid/urls.py:36
 msgid "account_settings"
-msgstr ""
+msgstr "настройки-аккаунта"
 
 #: django_authopenid/urls.py:38 django_authopenid/urls.py:39
 #: django_authopenid/urls.py:40 django_authopenid/urls.py:41
 msgid "email/"
-msgstr ""
+msgstr "адрес-электронной-почты/"
 
 #: django_authopenid/urls.py:38
 msgid "validate/"
-msgstr ""
+msgstr "проверить/"
 
 #: django_authopenid/urls.py:39
 msgid "change/"
-msgstr ""
+msgstr "заменить/"
 
 #: django_authopenid/urls.py:40
 msgid "sendkey/"
-msgstr ""
+msgstr "послать-ключ/"
 
 #: django_authopenid/urls.py:41
 msgid "verify/"
-msgstr ""
+msgstr "проверить-ключ/"
 
 #: django_authopenid/urls.py:42
 msgid "openid/"
-msgstr ""
+msgstr "openid/"
 
 #: django_authopenid/urls.py:43 forum/urls.py:52 forum/urls.py:56
 msgid "delete/"
-msgstr ""
+msgstr "удалить/"
 
 #: django_authopenid/urls.py:51
 msgid "external-login/forgot-password/"
-msgstr ""
+msgstr "вход-с-партнерского-сайта/напомпнить-пароль/"
 
 #: django_authopenid/urls.py:54
 msgid "external-login/signup/"
-msgstr ""
+msgstr "вход-с-партнерского-сайта/создать-аккаунт/"
 
 #: django_authopenid/views.py:139
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr ""
+msgstr "OpenID %(openid_url)s недействителен"
 
 #: django_authopenid/views.py:614
 msgid "Welcome email subject line"
-msgstr ""
+msgstr "добро пожаловать на форум!"
 
 #: django_authopenid/views.py:720
 msgid "Password changed."
-msgstr ""
+msgstr "Пароль изменен."
 
 #: django_authopenid/views.py:732 django_authopenid/views.py:738
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
-msgstr ""
+msgstr "пожалуйста подтвердите адрес Вашей электронной почты (<a href=\"%(details_url)s\">дополнительная информация здесь</a>)"
 
 #: django_authopenid/views.py:759
 msgid "Email verification subject line"
-msgstr ""
+msgstr "[форум]: подтвердите адрес Вашей электронной почты"
 
 #: django_authopenid/views.py:850
 msgid "your email was not changed"
-msgstr ""
+msgstr "адрес Вашей электронной почты не изменён"
 
 #: django_authopenid/views.py:898 django_authopenid/views.py:1056
 #, python-format
 msgid "No OpenID %s found associated in our database"
-msgstr ""
+msgstr "в нашей базе данных нет OpenID %s"
 
 #: django_authopenid/views.py:902 django_authopenid/views.py:1063
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
-msgstr ""
+msgstr "OpenID %s не принадлежит данному пользователю"
 
 #: django_authopenid/views.py:910
 msgid "Email Changed."
-msgstr ""
+msgstr "Адрес электронной почты изменён."
 
 #: django_authopenid/views.py:988
 msgid "This OpenID is already associated with another account."
-msgstr ""
+msgstr "Этот OpenID уже изпользуется в другом аккаунте."
 
 #: django_authopenid/views.py:993
 #, python-format
 msgid "OpenID %s is now associated with your account."
-msgstr ""
+msgstr "Ваш аккаунт теперь соединен с OpenID %s"
 
 #: django_authopenid/views.py:1066
 msgid "Account deleted."
-msgstr ""
+msgstr "Аккаунт удален."
 
 #: django_authopenid/views.py:1118
 msgid "Request for new password"
-msgstr ""
+msgstr "[форум]: замена пароля"
 
 #: django_authopenid/views.py:1132
 msgid "A new password and the activation link were sent to your email address."
-msgstr ""
+msgstr "Новый пароль и ссылка для его активации были высланы по Вашему адресу электронной почты."
 
 #: django_authopenid/views.py:1164
 #, python-format
-msgid ""
-"Could not change password. Confirmation key '%s'                is not "
-"registered."
-msgstr ""
+msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgstr "Пароль не был изменён, т.к. ключ '%s' в нашей базе данных не найден."
 
 #: django_authopenid/views.py:1174
-msgid ""
-"Can not change password. User don't exist anymore                 in our "
-"database."
-msgstr ""
+msgid "Can not change password. User don't exist anymore                 in our database."
+msgstr "Пароль изменить невозоможно, т.к. запись данного пользователя была удалена."
 
 #: django_authopenid/views.py:1184
 #, python-format
 msgid "Password changed for %s. You may now sign in."
-msgstr ""
+msgstr "Пароль для %s изменен. Теперь вы можете с ним войти в сайт."
 
 #: forum/auth.py:505
 msgid "Your question and all of it's answers have been deleted"
-msgstr ""
+msgstr "Ваш вопрос и все оветы на него были удалены"
 
 #: forum/auth.py:507
 msgid "Your question has been deleted"
-msgstr ""
+msgstr "Ваш вопрос был удалён"
 
 #: forum/auth.py:510
 msgid "The question and all of it's answers have been deleted"
-msgstr ""
+msgstr "Вопрос и все оветы на него были удалены"
 
 #: forum/auth.py:512
 msgid "The question has been deleted"
-msgstr ""
+msgstr "Вопрос был удалён"
 
 #: forum/const.py:8
 msgid "duplicate question"
-msgstr ""
+msgstr "такой вопрос уже был задан"
 
 #: forum/const.py:9
 msgid "question is off-topic or not relevant"
-msgstr ""
+msgstr "вопрос не по теме данного форума"
 
 #: forum/const.py:10
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "вопрос слишком субъективный или спорный"
 
 #: forum/const.py:11
 msgid "not a real question"
-msgstr ""
+msgstr "на вопрос не похоже"
 
 #: forum/const.py:12
 msgid "the question is answered, right answer was accepted"
-msgstr ""
+msgstr "на этот вопрос был дан ответ и он был принят как правильный"
 
 #: forum/const.py:13
 msgid "question is not relevant or outdated"
-msgstr ""
+msgstr "вопрос устарел или более на актуален"
 
 #: forum/const.py:14
 msgid "question contains offensive or malicious remarks"
-msgstr ""
+msgstr "вопрос содержит грубые или злонамеренные заявления"
 
 #: forum/const.py:15
 msgid "spam or advertising"
-msgstr ""
+msgstr "спам или реклама"
 
 #: forum/const.py:16
 msgid "too localized"
-msgstr ""
+msgstr "слишком специализированный"
 
 #: forum/const.py:37 forum/skins/default/templates/index.html:28
 #: forum/skins/default/templates/index_.html:27
 #: forum/skins/default/templates/questions.html:70
 #: forum/skins/default/templates/questions.html:75
 msgid "newest"
-msgstr ""
+msgstr "новые"
 
 #: forum/const.py:38 forum/skins/default/templates/questions.html:64
 #: forum/skins/default/templates/users.html:28
 msgid "oldest"
-msgstr ""
+msgstr "старые"
 
 #: forum/const.py:39 forum/skins/default/templates/questions.html:89
 #: forum/skins/default/templates/questions.html:94
 msgid "active"
-msgstr ""
+msgstr "активные"
 
 #: forum/const.py:40 forum/skins/default/templates/questions.html:83
 msgid "inactive"
-msgstr ""
+msgstr "неактивные"
 
 #: forum/const.py:41 forum/skins/default/templates/index.html:29
 #: forum/skins/default/templates/index_.html:28
 msgid "hottest"
-msgstr ""
+msgstr "больше ответов"
 
 #: forum/const.py:42
 msgid "coldest"
-msgstr ""
+msgstr "меньше ответов"
 
 #: forum/const.py:43 forum/skins/default/templates/index.html:30
 #: forum/skins/default/templates/index_.html:29
 msgid "most voted"
-msgstr ""
+msgstr "больше голосов"
 
 #: forum/const.py:44
 msgid "least voted"
-msgstr ""
+msgstr "меньше голосов"
 
 #: forum/const.py:45
 msgid "relevance"
-msgstr ""
+msgstr "уместность"
 
 #: forum/const.py:52 forum/skins/default/templates/questions.html:52
 msgid "all"
-msgstr ""
+msgstr "все"
 
 #: forum/const.py:53 forum/skins/default/templates/questions.html:53
 msgid "unanswered"
-msgstr ""
+msgstr "без ответов"
 
 #: forum/const.py:54 forum/skins/default/templates/questions.html:55
 msgid "favorite"
-msgstr ""
+msgstr "отмеченные"
 
 #: forum/const.py:97
 msgid "question"
-msgstr ""
+msgstr "вопрос"
 
 #: forum/const.py:98 forum/skins/default/templates/book.html:110
 msgid "answer"
-msgstr ""
+msgstr "ответ"
 
 #: forum/const.py:99
 msgid "commented question"
-msgstr ""
+msgstr "комментарий на вопрос"
 
 #: forum/const.py:100
 msgid "commented answer"
-msgstr ""
+msgstr "комментарий на ответ"
 
 #: forum/const.py:101
 msgid "edited question"
-msgstr ""
+msgstr "отредактировали ответ"
 
 #: forum/const.py:102
 msgid "edited answer"
-msgstr ""
+msgstr "отредактировали ответ"
 
 #: forum/const.py:103
 msgid "received award"
-msgstr ""
+msgstr "получение награды"
 
 #: forum/const.py:104
 msgid "marked best answer"
-msgstr ""
+msgstr "отметка лучшего ответа"
 
 #: forum/const.py:105
 msgid "upvoted"
-msgstr ""
+msgstr "положительный голос"
 
 #: forum/const.py:106
 msgid "downvoted"
-msgstr ""
+msgstr "отрицательный голос"
 
 #: forum/const.py:107
 msgid "canceled vote"
-msgstr ""
+msgstr "отмена голоса"
 
 #: forum/const.py:108
 msgid "deleted question"
-msgstr ""
+msgstr "удаление вопроса"
 
 #: forum/const.py:109
 msgid "deleted answer"
-msgstr ""
+msgstr "удаление ответа"
 
 #: forum/const.py:110
 msgid "marked offensive"
-msgstr ""
+msgstr "отметка неуместного контента"
 
 #: forum/const.py:111
 msgid "updated tags"
-msgstr ""
+msgstr "обновление тем"
 
 #: forum/const.py:112
 msgid "selected favorite"
-msgstr ""
+msgstr "отметка интересного вопроса"
 
 #: forum/const.py:113
 msgid "completed user profile"
-msgstr ""
+msgstr "полное завершение учётной записи"
 
 #: forum/const.py:114
 msgid "email update sent to user"
-msgstr ""
+msgstr "сообщение выслано по электронной почте"
 
 #: forum/const.py:118
 msgid "question_answered"
-msgstr ""
+msgstr "question_answered"
 
 #: forum/const.py:119
 msgid "question_commented"
-msgstr ""
+msgstr "question_commented"
 
 #: forum/const.py:120
 msgid "answer_commented"
-msgstr ""
+msgstr "answer_commented"
 
 #: forum/const.py:121
 msgid "answer_accepted"
-msgstr ""
+msgstr "answer_accepted"
 
 #: forum/const.py:125
 msgid "[closed]"
-msgstr ""
+msgstr "[закрыт]"
 
 #: forum/const.py:126
 msgid "[deleted]"
-msgstr ""
+msgstr "[удален]"
 
 #: forum/const.py:127 forum/views/readers.py:378 forum/views/readers.py:397
 msgid "initial version"
-msgstr ""
+msgstr "изначальная версия"
 
 #: forum/const.py:128
 msgid "retagged"
-msgstr ""
+msgstr "редакция тематических отметок"
 
 #: forum/const.py:132
 msgid "exclude ignored tags"
-msgstr ""
+msgstr "исключить игнорируемые темы"
 
 #: forum/const.py:132
 msgid "allow only selected tags"
-msgstr ""
+msgstr "влючить только выбранные темы"
 
 #: forum/feed.py:18
 msgid " - "
-msgstr ""
+msgstr "-"
 
 #: forum/feed.py:18
 msgid "latest questions"
-msgstr ""
+msgstr "самые новые вопросы"
 
 #: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "title"
-msgstr ""
+msgstr "заголовок"
 
 #: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
-msgstr ""
+msgstr "пожалуйста введите подробный заголовок для вашего вопроса"
 
 #: forum/forms.py:29
 msgid "title must be > 10 characters"
-msgstr ""
+msgstr "заголовок должен иметь более 10-ти букв"
 
 #: forum/forms.py:38
 msgid "content"
-msgstr ""
+msgstr "основное содержание"
 
 #: forum/forms.py:44
 msgid "question content must be > 10 characters"
-msgstr ""
+msgstr "содержание вопроса должно быть более 10-ти букв"
 
 #: forum/forms.py:53 forum/skins/default/templates/header.html:31
 msgid "tags"
-msgstr ""
+msgstr "темы"
 
 #: forum/forms.py:55
-msgid ""
-"Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
@@ -530,9 +520,7 @@ msgid "community wiki"
 msgstr ""
 
 #: forum/forms.py:98
-msgid ""
-"if you choose community wiki option, the question and answer do not generate "
-"points and name of author will not be shown"
+msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
 msgstr ""
 
 #: forum/forms.py:114
@@ -540,9 +528,7 @@ msgid "update summary:"
 msgstr ""
 
 #: forum/forms.py:115
-msgid ""
-"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
-"improved style, this field is optional)"
+msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
 msgstr ""
 
 #: forum/forms.py:118
@@ -813,37 +799,24 @@ msgid "new question"
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:272
-msgid ""
-"Please visit the forum and see what's new! Could you spread the word about "
-"it - can somebody you know help answering those questions or benefit from "
-"posting one?"
+msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:284
-msgid ""
-"Your most frequent subscription setting is 'daily' on selected questions. If "
-"you are receiving more than one email per dayplease tell about this issue to "
-"the forum administrator."
+msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:290
-msgid ""
-"Your most frequent subscription setting is 'weekly' if you are receiving "
-"this email more than once a week please report this issue to the forum "
-"administrator."
+msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:296
-msgid ""
-"There is a chance that you may be receiving links seen before - due to a "
-"technicality that will eventually go away. "
+msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
-msgid ""
-"go to %(link)s to change frequency of email updates or %(email)s "
-"administrator"
+msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
 msgstr ""
 
 #: forum/middleware/anon_user.py:34
@@ -941,9 +914,7 @@ msgid "url has error - please check it;"
 msgstr ""
 
 #: forum/skins/default/templates/404.html:30
-msgid ""
-"the page you tried to visit is protected or you don't have sufficient "
-"points, see"
+msgid "the page you tried to visit is protected or you don't have sufficient points, see"
 msgstr ""
 
 #: forum/skins/default/templates/404.html:31
@@ -1241,7 +1212,7 @@ msgstr ""
 
 #: forum/skins/default/templates/badge.html:26
 msgid "The users have been awarded with badges:"
-msgstr ""
+msgstr "Награды, присужденные пользователям:"
 
 #: forum/skins/default/templates/badges.html:6
 msgid "Badges summary"
@@ -1259,8 +1230,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Give us feedback at %"
-"(feedback_faq_url)s.\n"
+"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
 "    "
 msgstr ""
 
@@ -1344,14 +1314,14 @@ msgstr ""
 #: forum/skins/default/templates/book.html:93
 #: forum/skins/default/templates/users_questions.html:18
 msgid "this question was selected as favorite"
-msgstr ""
+msgstr "к этому вопросу был отмечен как интересный"
 
 #: forum/skins/default/templates/book.html:88
 #: forum/skins/default/templates/book.html:93
 #: forum/skins/default/templates/users_questions.html:11
 #: forum/skins/default/templates/users_questions.html:18
 msgid "number of times"
-msgstr ""
+msgstr "раз"
 
 #: forum/skins/default/templates/book.html:105
 #: forum/skins/default/templates/index_.html:40
@@ -1378,7 +1348,7 @@ msgstr ""
 #: forum/skins/default/templates/users_questions.html:34
 #, python-format
 msgid "see questions tagged '%(tag)s'"
-msgstr ""
+msgstr "вопросы по теме '%(tag)s'"
 
 #: forum/skins/default/templates/book.html:147
 msgid "subscribe to book RSS feed"
@@ -1420,15 +1390,11 @@ msgid "What kinds of questions can I ask here?"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:17
-msgid ""
-"Most importanly - questions should be <strong>relevant</strong> to this "
-"community."
+msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:18
-msgid ""
-"Before asking the question - please make sure to use search to see whether "
-"your question has alredy been answered."
+msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:21
@@ -1436,9 +1402,7 @@ msgid "What questions should I avoid asking?"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:22
-msgid ""
-"Please avoid asking questions that are not relevant to this community, too "
-"subjective and argumentative."
+msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:27
@@ -1446,10 +1410,7 @@ msgid "What should I avoid in my answers?"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:28
-msgid ""
-"is a Q&A site, not a discussion group. Therefore - please avoid having "
-"discussions in your answers, comment facility allows some space for brief "
-"discussions."
+msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:32
@@ -1462,13 +1423,11 @@ msgstr ""
 
 #: forum/skins/default/templates/faq.html:34
 msgid "This website is moderated by the users."
-msgstr ""
+msgstr "Этот сайт находится под управлением самих пользователей."
 
 #: forum/skins/default/templates/faq.html:35
-msgid ""
-"The reputation system allows users earn the authorization to perform a "
-"variety of moderation tasks."
-msgstr ""
+msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
+msgstr "Система репутации позволяет пользователям приобретать различные управленческие права."
 
 #: forum/skins/default/templates/faq.html:40
 msgid "How does reputation system work?"
@@ -1479,14 +1438,7 @@ msgid "Rep system summary"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:42
-msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your input will be upvoted. On the other hand if the answer is misleading - "
-"it will be downvoted. Each vote in favor will generate <strong>10</strong> "
-"points, each vote against will subtract <strong>2</strong> points. There is "
-"a limit of <strong>200</strong> points that can be accumulated per question "
-"or answer. The table below explains reputation point requirements for each "
-"type of moderation task."
+msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:53
@@ -1541,8 +1493,7 @@ msgstr ""
 
 #: forum/skins/default/templates/faq.html:105
 #, python-format
-msgid ""
-"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:110
@@ -1558,9 +1509,7 @@ msgid "To register, do I need to create new password?"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:115
-msgid ""
-"No, you don't have to. You can login through any service that supports "
-"OpenID, e.g. Google, Yahoo, AOL, etc."
+msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:116
@@ -1576,11 +1525,8 @@ msgid "Goal of this site is..."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:122
-msgid ""
-"So questions and answers can be edited like wiki pages by experienced users "
-"of this site and this improves the overall quality of the knowledge base "
-"content."
-msgstr ""
+msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgstr "Таким образом, более опытные пользователи могут редактировать вопросы и отвеы как странички на вики, что в свою очередь улучшает качество содержания базы данных."
 
 #: forum/skins/default/templates/faq.html:123
 msgid "If this approach is not for you, we respect your choice."
@@ -1592,9 +1538,7 @@ msgstr ""
 
 #: forum/skins/default/templates/faq.html:128
 #, python-format
-msgid ""
-"Please ask your question at %(ask_question_url)s, help make our community "
-"better!"
+msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:130
@@ -1620,8 +1564,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"            <span class='big strong'>Dear %(user_name)s</span>, we look "
-"forward to hearing your feedback. \n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -1629,8 +1572,7 @@ msgstr ""
 #: forum/skins/default/templates/feedback.html:24
 msgid ""
 "\n"
-"            <span class='big strong'>Dear visitor</span>, we look forward to "
-"hearing your feedback.\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -1704,7 +1646,7 @@ msgstr ""
 
 #: forum/skins/default/templates/header.html:32
 msgid "users"
-msgstr ""
+msgstr "люди"
 
 #: forum/skins/default/templates/header.html:34
 msgid "books"
@@ -1838,9 +1780,7 @@ msgid "Logout"
 msgstr ""
 
 #: forum/skins/default/templates/logout.html:19
-msgid ""
-"As a registered user you can login with your OpenID, log out of the site or "
-"permanently remove your account."
+msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
 msgstr ""
 
 #: forum/skins/default/templates/logout.html:20
@@ -1979,12 +1919,12 @@ msgstr ""
 #: forum/skins/default/templates/question.html:109
 #: forum/skins/default/templates/question.html:110
 msgid "mark this question as favorite (click again to cancel)"
-msgstr ""
+msgstr "отметьте закладкой (чтобы отменить - отметьте еще раз)"
 
 #: forum/skins/default/templates/question.html:116
 #: forum/skins/default/templates/question.html:117
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr ""
+msgstr "удалить закладку (еще раз - чтобы восстановить)"
 
 #: forum/skins/default/templates/question.html:141
 #: forum/skins/default/templates/question.html:295
@@ -2003,8 +1943,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:300
-msgid ""
-"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:157
@@ -2035,8 +1974,7 @@ msgid ""
 "                                            "
 msgid_plural ""
 "\n"
-"                                            see <strong>%(counter)s</strong> "
-"more\n"
+"                                            see <strong>%(counter)s</strong> more\n"
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
@@ -2045,21 +1983,18 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                                            see <strong>one</strong> more "
-"comment\n"
+"                                            see <strong>one</strong> more comment\n"
 "                                            "
 msgid_plural ""
 "\n"
-"                                            see <strong>%(counter)s</strong> "
-"more comments\n"
+"                                            see <strong>%(counter)s</strong> more comments\n"
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
 
 #: forum/skins/default/templates/question.html:220
 #, python-format
-msgid ""
-"The question has been closed for the following reason \"%(close_reason)s\" by"
+msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:222
@@ -2117,7 +2052,7 @@ msgstr ""
 #: forum/skins/default/templates/question.html:269
 #: forum/skins/default/templates/question.html:270
 msgid "mark this answer as favorite (click again to undo)"
-msgstr ""
+msgstr "отметить этот вопрос как интересный (еще раз - чтобы удалить закладку)"
 
 #: forum/skins/default/templates/question.html:275
 #: forum/skins/default/templates/question.html:276
@@ -2140,13 +2075,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                                                        see <strong>one</"
-"strong> more \n"
+"                                                        see <strong>one</strong> more \n"
 "                                                        "
 msgid_plural ""
 "\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more\n"
+"                                                        see <strong>%(counter)s</strong> more\n"
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
@@ -2155,13 +2088,11 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "\n"
-"                                                        see <strong>one</"
-"strong> more comment\n"
+"                                                        see <strong>one</strong> more comment\n"
 "                                                        "
 msgid_plural ""
 "\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more comments\n"
+"                                                        see <strong>%(counter)s</strong> more comments\n"
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
@@ -2177,8 +2108,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:390
 #, python-format
-msgid ""
-"You can always adjust frequency of email updates from your %(profile_url)s"
+msgid "You can always adjust frequency of email updates from your %(profile_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:395
@@ -2364,7 +2294,7 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:55
 msgid "see your favorite questions"
-msgstr ""
+msgstr "просмотр отмеченных вопросов"
 
 #: forum/skins/default/templates/questions.html:59
 msgid "Sort by:"
@@ -2484,7 +2414,7 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:193
 msgid "No favorite questions here. "
-msgstr ""
+msgstr "Отмеченных вопросов нет."
 
 #: forum/skins/default/templates/questions.html:194
 msgid "Please start (bookmark) some questions when you visit them"
@@ -2614,8 +2544,7 @@ msgstr ""
 
 #: forum/skins/default/templates/tags.html:39
 #, python-format
-msgid ""
-"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
 msgstr ""
 
 #: forum/skins/default/templates/tags.html:42
@@ -2810,8 +2739,7 @@ msgstr[1] ""
 
 #: forum/skins/default/templates/user_stats.html:100
 #, python-format
-msgid ""
-"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:115
@@ -2865,11 +2793,11 @@ msgstr ""
 
 #: forum/skins/default/templates/user_tabs.html:23
 msgid "questions that user selected as his/her favorite"
-msgstr ""
+msgstr "Отмеченных вопросов нет (интересные вопросы можно отмечать нажав на звездочку)."
 
 #: forum/skins/default/templates/user_tabs.html:24
 msgid "favorites"
-msgstr ""
+msgstr "отмеченные"
 
 #: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:948
 msgid "email subscription settings"
@@ -2994,8 +2922,7 @@ msgid "Account: change OpenID URL"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:12
-msgid ""
-"This is where you can change your OpenID URL. Make sure you remember it!"
+msgid "This is where you can change your OpenID URL. Make sure you remember it!"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:14
@@ -3033,15 +2960,13 @@ msgstr ""
 #, python-format
 msgid ""
 "%(username)s already exists, choose another name for \n"
-"                            %(provider)s. Email is required too, see %"
-"(gravatar_faq_url)s\n"
+"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
 "                        "
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:35
 #, python-format
-msgid ""
-"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:38
@@ -3138,9 +3063,7 @@ msgid "Account: delete account"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/delete.html:12
-msgid ""
-"Note: After deleting your account, anyone will be able to register this "
-"username."
+msgid "Note: After deleting your account, anyone will be able to register this username."
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/delete.html:16
@@ -3189,9 +3112,7 @@ msgstr ""
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
-msgid ""
-"how to login with password through external login website or use %"
-"(feedback_url)s"
+msgid "how to login with password through external login website or use %(feedback_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/sendpw.html:4
@@ -3234,8 +3155,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                Your answer to %(title)s %(summary)s will be posted once you "
-"log in\n"
+"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
 "                "
 msgstr ""
 
@@ -3256,9 +3176,7 @@ msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signin.html:151
-msgid ""
-"Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
-"web address"
+msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signin.html:153
@@ -3323,9 +3241,7 @@ msgid "Traditional signup info"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signup.html:25
-msgid ""
-"Please read and type in the two words below to help us prevent automated "
-"account creation."
+msgid "Please read and type in the two words below to help us prevent automated account creation."
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signup.html:27
@@ -3432,9 +3348,7 @@ msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
 
 #: forum/views/auth.py:104 forum/views/auth.py:113
-msgid ""
-"Sorry, these login credentials belong to anoother user. Plese terminate your "
-"current session and try again."
+msgid "Sorry, these login credentials belong to anoother user. Plese terminate your current session and try again."
 msgstr ""
 
 #: forum/views/auth.py:106
@@ -3450,8 +3364,7 @@ msgid "The new credentials are now associated with your account"
 msgstr ""
 
 #: forum/views/auth.py:155
-msgid ""
-"Oops, something went wrong in the middle of this process. Please try again."
+msgid "Oops, something went wrong in the middle of this process. Please try again."
 msgstr ""
 
 #: forum/views/auth.py:215
@@ -3463,9 +3376,7 @@ msgid "An email has been sent with your temporary login key"
 msgstr ""
 
 #: forum/views/auth.py:235
-msgid ""
-"You are logged in with a temporary access key, please take the time to fix "
-"your issue with authentication."
+msgid "You are logged in with a temporary access key, please take the time to fix your issue with authentication."
 msgstr ""
 
 #: forum/views/auth.py:241
@@ -3586,8 +3497,7 @@ msgstr ""
 
 #: forum/views/writers.py:76
 #, python-format
-msgid ""
-"Error uploading file. Please contact the site administrator. Thank you. %s"
+msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
 msgstr ""
 
 #: forum_modules/books/urls.py:7 forum_modules/books/urls.py:8
