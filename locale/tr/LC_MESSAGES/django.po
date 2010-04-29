@@ -1,0 +1,3389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-28 15:31-0400\n"
+"PO-Revision-Date: 2010-04-29 15:50\n"
+"Last-Translator: <oktayxy@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Translated-Using: django-rosetta 0.5.3\n"
+
+#: django_authopenid/forms.py:71 django_authopenid/views.py:132
+msgid "i-names are not supported"
+msgstr "i-name girişleri desteklenmiyor"
+
+#: django_authopenid/forms.py:134
+msgid "Account with this name already exists on the forum"
+msgstr "Hesap bu adla zaten forum var"
+
+#: django_authopenid/forms.py:135
+msgid "can't have two logins to the same account yet, sorry."
+msgstr "Üzgünüm.. Bir hesaba aynı anda iki giriş mümkün değil."
+
+#: django_authopenid/forms.py:157
+msgid "Please enter valid username and password (both are case-sensitive)."
+msgstr "Lütfen) geçerli kullanıcı adı ve şifre (hem harf duyarlıdır girin."
+
+#: django_authopenid/forms.py:160 django_authopenid/forms.py:210
+msgid "This account is inactive."
+msgstr "Bu hesap etkin değil."
+
+#: django_authopenid/forms.py:162
+msgid "Login failed."
+msgstr "Giriş başarısız oldu."
+
+#: django_authopenid/forms.py:164
+msgid "Please enter username and password"
+msgstr "Lütfen kullanıcı adınızı ve şifrenizi girin"
+
+#: django_authopenid/forms.py:166
+msgid "Please enter your password"
+msgstr "Lütfen şifrenizi girin"
+
+#: django_authopenid/forms.py:168
+msgid "Please enter user name"
+msgstr "Lütfen kullanıcı adı girin"
+
+#: django_authopenid/forms.py:206
+msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
+msgstr "Lütfen geçerli bir kullanıcı adı ve şifrenizi giriniz. Her iki alan küçük harfe duyarlı olduğunu unutmayın."
+
+#: django_authopenid/forms.py:229
+msgid "Current password"
+msgstr "Şu anki şifre"
+
+#: django_authopenid/forms.py:240
+msgid "Old password is incorrect.                     Please enter the correct password."
+msgstr "Eski şifre doğru değil. Lütfen eski şifrenizi tekrar girin."
+
+#: django_authopenid/forms.py:305
+msgid "Your user name (<i>required</i>)"
+msgstr "Kullanıcı adınız <i>(gerekli)</i>"
+
+#: django_authopenid/forms.py:320
+msgid "Incorrect username."
+msgstr "Hatalı kullanıcı adı."
+
+#: django_authopenid/urls.py:23 django_authopenid/urls.py:24
+#: django_authopenid/urls.py:25 django_authopenid/urls.py:27
+#: fbconnect/urls.py:12 fbconnect/urls.py:13 fbconnect/urls.py:14
+msgid "signin/"
+msgstr "giriş/"
+
+#: django_authopenid/urls.py:24 fbconnect/urls.py:13 fbconnect/urls.py:17
+msgid "newquestion/"
+msgstr "yeni-soru/"
+
+#: django_authopenid/urls.py:25 fbconnect/urls.py:14 fbconnect/urls.py:18
+msgid "newanswer/"
+msgstr "yeni-cevap/"
+
+#: django_authopenid/urls.py:26
+msgid "signout/"
+msgstr "cikis/"
+
+#: django_authopenid/urls.py:27
+msgid "complete/"
+msgstr "tamamlandi/"
+
+#: django_authopenid/urls.py:29 fbconnect/urls.py:16 fbconnect/urls.py:17
+#: fbconnect/urls.py:18
+msgid "register/"
+msgstr "kayit/"
+
+#: django_authopenid/urls.py:30
+msgid "signup/"
+msgstr "kayit/"
+
+#: django_authopenid/urls.py:32
+msgid "sendpw/"
+msgstr "sifre-yolla/"
+
+#: django_authopenid/urls.py:33 django_authopenid/urls.py:37
+msgid "password/"
+msgstr "sifre/"
+
+#: django_authopenid/urls.py:33
+msgid "confirm/"
+msgstr "onayla/"
+
+#: django_authopenid/urls.py:36
+msgid "account_settings"
+msgstr "hesap ayarları"
+
+#: django_authopenid/urls.py:38 django_authopenid/urls.py:39
+#: django_authopenid/urls.py:40 django_authopenid/urls.py:41
+msgid "email/"
+msgstr "E-mail/"
+
+#: django_authopenid/urls.py:38
+msgid "validate/"
+msgstr "dogrula/"
+
+#: django_authopenid/urls.py:39
+msgid "change/"
+msgstr "degistir/"
+
+#: django_authopenid/urls.py:40
+msgid "sendkey/"
+msgstr "sifre-yolla/"
+
+#: django_authopenid/urls.py:41
+msgid "verify/"
+msgstr "dogrula/"
+
+#: django_authopenid/urls.py:42
+msgid "openid/"
+msgstr "OpenID/"
+
+#: django_authopenid/urls.py:43 forum/urls.py:52 forum/urls.py:56
+msgid "delete/"
+msgstr "sil/"
+
+#: django_authopenid/urls.py:51
+msgid "external-login/forgot-password/"
+msgstr "harici-giris/sifremi-unuttum/"
+
+#: django_authopenid/urls.py:54
+msgid "external-login/signup/"
+msgstr "harici-giris/üye-ol/"
+
+#: django_authopenid/views.py:139
+#, python-format
+msgid "OpenID %(openid_url)s is invalid"
+msgstr "OpenID %(openid_url)s geçersiz"
+
+#: django_authopenid/views.py:614
+msgid "Welcome email subject line"
+msgstr "Hoşgeldiniz mesajının konusu"
+
+#: django_authopenid/views.py:720
+msgid "Password changed."
+msgstr "Şifre değiştirildi."
+
+#: django_authopenid/views.py:732 django_authopenid/views.py:738
+#, python-format
+msgid "your email needs to be validated see %(details_url)s"
+msgstr "E-mail adresiniz doğrulanmalı. Lütfen bakın %(details_url)s"
+
+#: django_authopenid/views.py:759
+msgid "Email verification subject line"
+msgstr "E-mail doğrulaması"
+
+#: django_authopenid/views.py:850
+msgid "your email was not changed"
+msgstr "E-mail adresiniz değiştirilmedi"
+
+#: django_authopenid/views.py:898 django_authopenid/views.py:1056
+#, python-format
+msgid "No OpenID %s found associated in our database"
+msgstr "OpenID %s hesabı veritabanımızda yok"
+
+#: django_authopenid/views.py:902 django_authopenid/views.py:1063
+#, python-format
+msgid "The OpenID %s isn't associated to current user logged in"
+msgstr "OpenID %s hesabı giriş yapan kullanıcı ile bağlantılı değil"
+
+#: django_authopenid/views.py:910
+msgid "Email Changed."
+msgstr "E-mail adresi değiştirildi."
+
+#: django_authopenid/views.py:988
+msgid "This OpenID is already associated with another account."
+msgstr "Bu OpenID zaten başka bir hesap ile ilişkilidir."
+
+#: django_authopenid/views.py:993
+#, python-format
+msgid "OpenID %s is now associated with your account."
+msgstr "OpenID %s hesabını sizin ile ilişkilendirilecek."
+
+#: django_authopenid/views.py:1066
+msgid "Account deleted."
+msgstr "Hesap silindi."
+
+#: django_authopenid/views.py:1118
+msgid "Request for new password"
+msgstr "Yeni şifre iste"
+
+#: django_authopenid/views.py:1132
+msgid "A new password and the activation link were sent to your email address."
+msgstr "Yeni bir şifre ve aktivasyon linki e-mail adresinize gönderildi."
+
+#: django_authopenid/views.py:1164
+#, python-format
+msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgstr "Şifreniz değiştirilemedi. Onay kodu '%s' kayıtlı değil."
+
+#: django_authopenid/views.py:1174
+msgid "Can not change password. User don't exist anymore                 in our database."
+msgstr "Şifre değiştirilemez. Kullanıcı adı artık bizim veritabanımızda mevcut değildir."
+
+#: django_authopenid/views.py:1184
+#, python-format
+msgid "Password changed for %s. You may now sign in."
+msgstr "%s için şifre değiştirildi. Şimdi giriş yapabilirsiniz."
+
+#: forum/auth.py:505
+msgid "Your question and all of it's answers have been deleted"
+msgstr "Sorunuz ve ona ait tüm cevapları silindi."
+
+#: forum/auth.py:507
+msgid "Your question has been deleted"
+msgstr "Sorunuz silindi"
+
+#: forum/auth.py:510
+msgid "The question and all of it's answers have been deleted"
+msgstr "Soru ve ona ait tüm cevaplar silindi"
+
+#: forum/auth.py:512
+msgid "The question has been deleted"
+msgstr "Soru silindi"
+
+#: forum/const.py:8
+msgid "duplicate question"
+msgstr "yinelenen soru"
+
+#: forum/const.py:9
+msgid "question is off-topic or not relevant"
+msgstr "soru konu dışı veya alakalısız"
+
+#: forum/const.py:10
+msgid "too subjective and argumentative"
+msgstr "çok öznel ve tartışmacı"
+
+#: forum/const.py:11
+msgid "not a real question"
+msgstr "gerçek bir soru değil"
+
+#: forum/const.py:12
+msgid "the question is answered, right answer was accepted"
+msgstr "soru cevabı doğru kabul edildi"
+
+#: forum/const.py:13
+msgid "question is not relevant or outdated"
+msgstr "soru, ilgisiz veya eskimiş"
+
+#: forum/const.py:14
+msgid "question contains offensive or malicious remarks"
+msgstr "soru saldırgan ya da kötü niyetli sözler içeriyor"
+
+#: forum/const.py:15
+msgid "spam or advertising"
+msgstr "spam ya da reklam"
+
+#: forum/const.py:16
+msgid "too localized"
+msgstr "çok dar kapsamlı"
+
+#: forum/const.py:37 forum/skins/default/templates/questions.html:70
+#: forum/skins/default/templates/questions.html:75
+msgid "newest"
+msgstr "en yeni"
+
+#: forum/const.py:38 forum/skins/default/templates/questions.html:64
+#: forum/skins/default/templates/users.html:28
+msgid "oldest"
+msgstr "en eski"
+
+#: forum/const.py:39 forum/skins/default/templates/questions.html:89
+#: forum/skins/default/templates/questions.html:94
+msgid "active"
+msgstr "aktif"
+
+#: forum/const.py:40 forum/skins/default/templates/questions.html:83
+msgid "inactive"
+msgstr "durağan"
+
+#: forum/const.py:41
+msgid "hottest"
+msgstr "sıcak"
+
+#: forum/const.py:42
+msgid "coldest"
+msgstr "soğuk"
+
+#: forum/const.py:43
+msgid "most voted"
+msgstr "en çok oy alan"
+
+#: forum/const.py:44
+msgid "least voted"
+msgstr "En az oy"
+
+#: forum/const.py:45
+msgid "relevance"
+msgstr "ilgi"
+
+#: forum/const.py:52 forum/skins/default/templates/questions.html:52
+msgid "all"
+msgstr "tüm"
+
+#: forum/const.py:53 forum/skins/default/templates/questions.html:53
+msgid "unanswered"
+msgstr "cevapsız"
+
+#: forum/const.py:54 forum/skins/default/templates/questions.html:55
+msgid "favorite"
+msgstr "favori"
+
+#: forum/const.py:97
+msgid "question"
+msgstr "soru"
+
+#: forum/const.py:98 forum/skins/default/templates/book.html:110
+msgid "answer"
+msgstr "cevap"
+
+#: forum/const.py:99
+msgid "commented question"
+msgstr "soruya yorum yazıldı"
+
+#: forum/const.py:100
+msgid "commented answer"
+msgstr "cevaba yorum yazıldı"
+
+#: forum/const.py:101
+msgid "edited question"
+msgstr "soru düzeltilmiş"
+
+#: forum/const.py:102
+msgid "edited answer"
+msgstr "cevap düzeltilmiş"
+
+#: forum/const.py:103
+msgid "received award"
+msgstr "alınan ödül"
+
+#: forum/const.py:104
+msgid "marked best answer"
+msgstr "en iyi cevap olarak işaretlenmiş"
+
+#: forum/const.py:105
+msgid "upvoted"
+msgstr "beğendim"
+
+#: forum/const.py:106
+msgid "downvoted"
+msgstr "beğenmedim"
+
+#: forum/const.py:107
+msgid "canceled vote"
+msgstr "oy iptal"
+
+#: forum/const.py:108
+msgid "deleted question"
+msgstr "silinmiş bir soru"
+
+#: forum/const.py:109
+msgid "deleted answer"
+msgstr "silinmiş cevap"
+
+#: forum/const.py:110
+msgid "marked offensive"
+msgstr "saldırgan olarak işaretlenmiş"
+
+#: forum/const.py:111
+msgid "updated tags"
+msgstr "güncellenmiş etiketler"
+
+#: forum/const.py:112
+msgid "selected favorite"
+msgstr "favori olarak seçilmiş"
+
+#: forum/const.py:113
+msgid "completed user profile"
+msgstr "tamamlanmış kullanıcı profili"
+
+#: forum/const.py:114
+msgid "email update sent to user"
+msgstr "kullanıcıya e-mail güncelleme gönder"
+
+#: forum/const.py:118
+msgid "question_answered"
+msgstr "cevaplanmış_soru"
+
+#: forum/const.py:119
+msgid "question_commented"
+msgstr "yorumlanmış soru"
+
+#: forum/const.py:120
+msgid "answer_commented"
+msgstr "yorumlanmış soru"
+
+#: forum/const.py:121
+msgid "answer_accepted"
+msgstr "kabul edilmiş soru"
+
+#: forum/const.py:125
+msgid "[closed]"
+msgstr "[kapatıldı]"
+
+#: forum/const.py:126
+msgid "[deleted]"
+msgstr "[silindi]"
+
+#: forum/const.py:127 forum/views/readers.py:390 forum/views/readers.py:409
+msgid "initial version"
+msgstr "ilk versiyon"
+
+#: forum/const.py:128
+msgid "retagged"
+msgstr "yeniden etiketlendi"
+
+#: forum/const.py:132
+msgid "exclude ignored tags"
+msgstr "dışlanmış etiketleri dikkate al"
+
+#: forum/const.py:132
+msgid "allow only selected tags"
+msgstr "sadece seçilmiş etiketlere izin ver"
+
+#: forum/feed.py:18
+msgid " - "
+msgstr "-"
+
+#: forum/feed.py:18
+msgid "latest questions"
+msgstr "en son sorulanlar"
+
+#: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "title"
+msgstr "başlık"
+
+#: forum/forms.py:24
+msgid "please enter a descriptive title for your question"
+msgstr "Sorunuz için açıklayıcı bir başlık girin"
+
+#: forum/forms.py:29
+msgid "title must be > 10 characters"
+msgstr "en az 10 karakter olmalı"
+
+#: forum/forms.py:38
+msgid "content"
+msgstr "içerik"
+
+#: forum/forms.py:44
+msgid "question content must be > 10 characters"
+msgstr "soru içeriği en az 10 karakter olmalı"
+
+#: forum/forms.py:53 forum/skins/default/templates/header.html:28
+msgid "tags"
+msgstr "etiketler"
+
+#: forum/forms.py:55
+msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgstr "Etiketler kısa anahtar kelimelerdir ve bir soru için en fazla 5 etiket yazabilirsiniz."
+
+#: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
+msgid "tags are required"
+msgstr "etiket yazmalısınız"
+
+#: forum/forms.py:70
+#, python-format
+msgid "please use %(tag_count)d tag or less"
+msgid_plural "please use %(tag_count)d tags or less"
+msgstr[0] "En fazla %(tag_count)d  etiket kullanabilirsiniz"
+msgstr[1] "En fazla %(tag_count)d  etiket kullanabilirsiniz"
+
+#: forum/forms.py:79
+#, python-format
+msgid "each tag must be shorter than %(max_chars)d character"
+msgid_plural "each tag must be shorter than %(max_shars)d characters"
+msgstr[0] "Her etiket en fazla  %(max_chars)d  karakter içerebilir"
+msgstr[1] "Her etiket en fazla  %(max_chars)d  karakter içerebilir"
+
+#: forum/forms.py:87
+msgid "use-these-chars-in-tags"
+msgstr "bu-yazıları-etiket-olarak-kullan"
+
+#: forum/forms.py:97
+#: forum/skins/default/templates/post_contributor_info.html:7
+#: forum/skins/default/templates/question_summary_list_roll.html:26
+#: forum/skins/default/templates/question_summary_list_roll.html:38
+msgid "community wiki"
+msgstr "topluluk wiki"
+
+#: forum/forms.py:98
+msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
+msgstr "Eğer wiki seçeneğini seçerseniz, soru ve cevaplardan puan verilip alınamayacak ve yazarın ismi gizli kalacaktır."
+
+#: forum/forms.py:114
+msgid "update summary:"
+msgstr "güncelleme özeti:"
+
+#: forum/forms.py:115
+msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
+msgstr "revizyon özeti bildir (sabit yazım, dilbilgisi, gelişmiş stil gibi, bu alan isteğe bağlı gibi falan)"
+
+#: forum/forms.py:118
+msgid "Automatically accept user's contributions for the email updates"
+msgstr "E-mail güncelleştirmeleri için kullanıcı katkılarını otomatik kabul et"
+
+#: forum/forms.py:209
+msgid "Your name:"
+msgstr "Adınız:"
+
+#: forum/forms.py:210
+msgid "Email (not shared with anyone):"
+msgstr "E-mail (kimse göremeyecektir):"
+
+#: forum/forms.py:211
+msgid "Your message:"
+msgstr "Mesajınız:"
+
+#: forum/forms.py:294
+msgid "this email does not have to be linked to gravatar"
+msgstr "Bu e-mail gravatar bağlantılı olmak zorunda değildir"
+
+#: forum/forms.py:296
+msgid "Screen name"
+msgstr "Görünen isim"
+
+#: forum/forms.py:297
+msgid "Real name"
+msgstr "Gerçek isim"
+
+#: forum/forms.py:298
+msgid "Website"
+msgstr "Website"
+
+#: forum/forms.py:299
+msgid "Location"
+msgstr "Yer"
+
+#: forum/forms.py:300
+msgid "Date of birth"
+msgstr "Doğum tarihi"
+
+#: forum/forms.py:300
+msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
+msgstr "Gizli alan (Formatı: YYYY-AA-GG şeklinde olup, yaş hesaplamak için kullanılır)"
+
+#: forum/forms.py:301 forum/skins/default/templates/account_settings.html:21
+#: forum/skins/default/templates/authopenid/settings.html:21
+msgid "Profile"
+msgstr "Profil"
+
+#: forum/forms.py:332 forum/forms.py:333
+msgid "this email has already been registered, please use another one"
+msgstr "Bu e-mail sitemizde zaten kayıtlı, lütfen başka bir tane deneyin"
+
+#: forum/forms.py:339
+msgid "Choose email tag filter"
+msgstr "E-mail etiketi için filtre seç"
+
+#: forum/forms.py:355 forum/forms.py:356
+msgid "weekly"
+msgstr "haftalık"
+
+#: forum/forms.py:355 forum/forms.py:356
+msgid "no email"
+msgstr "e-mail yok"
+
+#: forum/forms.py:356
+msgid "daily"
+msgstr "günlük"
+
+#: forum/forms.py:371
+msgid "Asked by me"
+msgstr "Bana sorulan"
+
+#: forum/forms.py:374
+msgid "Answered by me"
+msgstr "Bana cevaplanan"
+
+#: forum/forms.py:377
+msgid "Individually selected"
+msgstr "Tek tek seçilmiş"
+
+#: forum/forms.py:380
+msgid "Entire forum (tag filtered)"
+msgstr "Tüm forum (etiket filtre)"
+
+#: forum/forms.py:434
+msgid "okay, let's try!"
+msgstr "tamam, şimdi başlayalım!"
+
+#: forum/forms.py:435
+msgid "no community email please, thanks"
+msgstr "toplu e-mail istemiyorum"
+
+#: forum/forms.py:438
+msgid "please choose one of the options above"
+msgstr "lütfen yukarıdaki seçeneklerden birini seçin "
+
+#: forum/urls.py:28
+msgid "upfiles/"
+msgstr "upfiles/"
+
+#: forum/urls.py:33
+msgid "about/"
+msgstr "hakkimizda/"
+
+#: forum/urls.py:34
+msgid "faq/"
+msgstr "sss/"
+
+#: forum/urls.py:35
+msgid "privacy/"
+msgstr "gizlilik/"
+
+#: forum/urls.py:36
+msgid "logout/"
+msgstr "guvenli-cikis/"
+
+#: forum/urls.py:37 forum/urls.py:38 forum/urls.py:39 forum/urls.py:56
+msgid "answers/"
+msgstr "cevaplar/"
+
+#: forum/urls.py:37 forum/urls.py:49 forum/urls.py:52 forum/urls.py:56
+msgid "comments/"
+msgstr "yorumlar/"
+
+#: forum/urls.py:38 forum/urls.py:43 forum/urls.py:78
+#: forum/skins/default/templates/user_info.html:47
+msgid "edit/"
+msgstr "düzenle/"
+
+#: forum/urls.py:39 forum/urls.py:48
+msgid "revisions/"
+msgstr "revizyonlar/"
+
+#: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:43
+#: forum/urls.py:44 forum/urls.py:45 forum/urls.py:46 forum/urls.py:47
+#: forum/urls.py:48 forum/urls.py:49 forum/urls.py:52
+msgid "questions/"
+msgstr "sorular/"
+
+#: forum/urls.py:41 forum_modules/books/urls.py:8
+msgid "ask/"
+msgstr "sor/"
+
+#: forum/urls.py:42
+msgid "unanswered/"
+msgstr "cevapsız/"
+
+#: forum/urls.py:44
+msgid "close/"
+msgstr "kapat/"
+
+#: forum/urls.py:45
+msgid "reopen/"
+msgstr "yeniden aç/"
+
+#: forum/urls.py:46
+msgid "answer/"
+msgstr "cevap/"
+
+#: forum/urls.py:47
+msgid "vote/"
+msgstr "oy/"
+
+#: forum/urls.py:50
+msgid "command/"
+msgstr "komut/"
+
+#: forum/urls.py:60 forum/views/readers.py:261
+msgid "question/"
+msgstr "soru/"
+
+#: forum/urls.py:61 forum/urls.py:62
+msgid "tags/"
+msgstr "etiketler/"
+
+#: forum/urls.py:64 forum/urls.py:68
+msgid "mark-tag/"
+msgstr "etiket /"
+
+#: forum/urls.py:64
+msgid "interesting/"
+msgstr "ilginç/"
+
+#: forum/urls.py:68
+msgid "ignored/"
+msgstr "yoksayıldı/"
+
+#: forum/urls.py:72
+msgid "unmark-tag/"
+msgstr "etiket işaretini kaldır/"
+
+#: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
+msgid "users/"
+msgstr "uyeler/"
+
+#: forum/urls.py:77
+msgid "moderate-user/"
+msgstr "yöneticiler/"
+
+#: forum/urls.py:80 forum/urls.py:81
+msgid "badges/"
+msgstr "madalyalar/"
+
+#: forum/urls.py:82
+msgid "messages/"
+msgstr "mesajlar/"
+
+#: forum/urls.py:82
+msgid "markread/"
+msgstr "konu/"
+
+#: forum/urls.py:84
+msgid "nimda/"
+msgstr "Nimda /"
+
+#: forum/urls.py:86
+msgid "upload/"
+msgstr "yükle/"
+
+#: forum/urls.py:87
+msgid "search/"
+msgstr "arama-yap/"
+
+#: forum/urls.py:88
+msgid "feedback/"
+msgstr "geribildirim/"
+
+#: forum/urls.py:89 forum/urls.py:90
+msgid "account/"
+msgstr "hesab/"
+
+#: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
+msgid "Congratulations, you are now an Administrator"
+msgstr "Tebrikler, artık sitemizde yönetici oldunuz..."
+
+#: forum/management/commands/send_email_alerts.py:236
+msgid "email update message subject"
+msgstr "e-mail güncelleme mesajı"
+
+#: forum/management/commands/send_email_alerts.py:238
+#, python-format
+msgid "%(name)s, this is an update message header for a question"
+msgid_plural "%(name)s, this is an update message header for %(num)d questions"
+msgstr[0] "%(name)s için güncellenen soru bildirisi"
+msgstr[1] "%(name)s,  %(num)d sorusu için güncellendi"
+
+#: forum/management/commands/send_email_alerts.py:255
+msgid "new question"
+msgstr "yeni soru"
+
+#: forum/management/commands/send_email_alerts.py:272
+msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
+msgstr "Lütfen forumu ziyaret edin ve yenilikleri görün! Belki birisine bir şekilde yardım ya da en azından sorusuna cevap yazabilirsiniz."
+
+#: forum/management/commands/send_email_alerts.py:284
+msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
+msgstr "Seçili sorulara aboneliğiniz 'günlük' olarak görünüyor. Eğer birden fazla e-posta alıyorsanız, lütfen bunu bize bildirin."
+
+#: forum/management/commands/send_email_alerts.py:290
+msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
+msgstr "Seçili sorulara aboneliğiniz 'haftalık' olarak görünüyor. Eğer birden fazla e-posta alıyorsanız, lütfen bunu bize bildirin."
+
+#: forum/management/commands/send_email_alerts.py:296
+msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
+msgstr "Ölen linkleri önceden görme şansın olabilir. "
+
+#: forum/management/commands/send_email_alerts.py:311
+#, python-format
+msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
+msgstr "%(link)s linkine giderek site yönetiminden alacağınız  %(email)s mesajların sıklığını değiştirebilirsiniz"
+
+#: forum/middleware/anon_user.py:34
+#, python-format
+msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
+msgstr "İlk defa mı buradasınız?  Sıkça sorulan sorular <a href=\"%s\">SSS</a> kısmını ziyaret edebilirsiniz."
+
+#: forum/models/question.py:499
+#, python-format
+msgid "%(author)s modified the question"
+msgstr "%(author)s soruyu düzenledi"
+
+#: forum/models/question.py:503
+#, python-format
+msgid "%(people)s posted %(new_answer_count)s new answers"
+msgstr "%(people)s adlı üyemiz %(new_answer_count)s yeni cevap yolladı"
+
+#: forum/models/question.py:508
+#, python-format
+msgid "%(people)s commented the question"
+msgstr "%(people)s bir soruyu yorumladı"
+
+#: forum/models/question.py:513
+#, python-format
+msgid "%(people)s commented answers"
+msgstr ""
+"suggest    forum/models/question.py:508\n"
+"  \n"
+"%(people)s cevaba yorum yazdı"
+
+#: forum/models/question.py:515
+#, python-format
+msgid "%(people)s commented an answer"
+msgstr "%(people)s bir cevabı yorumladı"
+
+#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
+msgid "gold"
+msgstr "altın"
+
+#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
+msgid "silver"
+msgstr "gümüş"
+
+#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
+msgid "bronze"
+msgstr "bronz"
+
+#: forum/models/tag.py:81
+msgid "interesting"
+msgstr "ilginç"
+
+#: forum/models/tag.py:81
+msgid "ignored"
+msgstr "yoksay"
+
+#: forum/models/user.py:36
+msgid "Entire forum"
+msgstr "Tüm forum"
+
+#: forum/models/user.py:37
+msgid "Questions that I asked"
+msgstr "Sorduğum sorular"
+
+#: forum/models/user.py:38
+msgid "Questions that I answered"
+msgstr "Cevapladığım sorular"
+
+#: forum/models/user.py:39
+msgid "Individually selected questions"
+msgstr "Seçtiğim sorular"
+
+#: forum/models/user.py:42
+msgid "Weekly"
+msgstr "Haftalık"
+
+#: forum/models/user.py:43
+msgid "Daily"
+msgstr "Günlük"
+
+#: forum/models/user.py:44
+msgid "No email"
+msgstr "E-posta yok"
+
+#: forum/skins/default/templates/404.html:24
+msgid "Sorry, could not find the page you requested."
+msgstr "Üzgünüz, istediğiniz sayfayı bulamadık."
+
+#: forum/skins/default/templates/404.html:26
+msgid "This might have happened for the following reasons:"
+msgstr "Bu durum, aşağıdaki sebeplerden dolayı olabilir:"
+
+#: forum/skins/default/templates/404.html:28
+msgid "this question or answer has been deleted;"
+msgstr "bu soru ya da cevap silindi;"
+
+#: forum/skins/default/templates/404.html:29
+msgid "url has error - please check it;"
+msgstr "adres hatası var - tekrar kontrol edin;"
+
+#: forum/skins/default/templates/404.html:30
+msgid "the page you tried to visit is protected or you don't have sufficient points, see"
+msgstr "ziyaret etmeye çalıştığınız sayfa korumalıdır ya da görmek için yeterince puanınız yoktur"
+
+#: forum/skins/default/templates/404.html:31
+msgid "if you believe this error 404 should not have occured, please"
+msgstr "Hata kodu 404: lütfen"
+
+#: forum/skins/default/templates/404.html:32
+msgid "report this problem"
+msgstr "Bu sorunu yöneticiye bildir"
+
+#: forum/skins/default/templates/404.html:41
+#: forum/skins/default/templates/500.html:27
+msgid "back to previous page"
+msgstr "önceki sayfaya geri dön"
+
+#: forum/skins/default/templates/404.html:42
+#: forum/skins/default/templates/questions.html:52
+msgid "see all questions"
+msgstr "tüm soruları gör"
+
+#: forum/skins/default/templates/404.html:43
+msgid "see all tags"
+msgstr "tüm etiketleri gör"
+
+#: forum/skins/default/templates/500.html:22
+msgid "sorry, system error"
+msgstr "Üzgünüm, bir sistem hatası oluştu!"
+
+#: forum/skins/default/templates/500.html:24
+msgid "system error log is recorded, error will be fixed as soon as possible"
+msgstr "Bu hata, sistem hata günlüğüne kayıt edildi. En kısa sürede çözümlenmesi için uğraşacağız."
+
+#: forum/skins/default/templates/500.html:25
+msgid "please report the error to the site administrators if you wish"
+msgstr "isterseniz hata raporunu site yöneticilerine bildirin"
+
+#: forum/skins/default/templates/500.html:28
+msgid "see latest questions"
+msgstr "son soruları gör"
+
+#: forum/skins/default/templates/500.html:29
+msgid "see tags"
+msgstr "etiketleri gör"
+
+#: forum/skins/default/templates/about.html:6
+#: forum/skins/default/templates/about.html:11
+msgid "About"
+msgstr "Hakkımızda"
+
+#: forum/skins/default/templates/account_settings.html:4
+#: forum/skins/default/templates/authopenid/settings.html:4
+msgid "Account functions"
+msgstr "Hesab özellikleri"
+
+#: forum/skins/default/templates/account_settings.html:29
+#: forum/skins/default/templates/authopenid/changepw.html:5
+#: forum/skins/default/templates/authopenid/changepw.html:14
+#: forum/skins/default/templates/authopenid/settings.html:29
+msgid "Change password"
+msgstr "Şifre değiştir"
+
+#: forum/skins/default/templates/account_settings.html:30
+#: forum/skins/default/templates/authopenid/settings.html:30
+msgid "Give your  account a new password."
+msgstr "Hesabınıza yeni bir şifre verin."
+
+#: forum/skins/default/templates/account_settings.html:32
+#: forum/skins/default/templates/authopenid/settings.html:31
+msgid "Change email "
+msgstr "E-mail değiştir"
+
+#: forum/skins/default/templates/account_settings.html:33
+#: forum/skins/default/templates/authopenid/settings.html:32
+msgid "Add or update the email address associated with your account."
+msgstr "hesabınızla bağlantılanmış e-mail adresinizi, güncelleyin, yoksa ekleyin"
+
+#: forum/skins/default/templates/account_settings.html:35
+#: forum/skins/default/templates/authopenid/changeopenid.html:4
+#: forum/skins/default/templates/authopenid/changeopenid.html:30
+#: forum/skins/default/templates/authopenid/settings.html:34
+msgid "Change OpenID"
+msgstr "OpenID değiştir"
+
+#: forum/skins/default/templates/account_settings.html:36
+#: forum/skins/default/templates/authopenid/settings.html:35
+msgid "Change openid associated to your account"
+msgstr "Hesabınıza ilişkili OpenID'yi değiştirin"
+
+#: forum/skins/default/templates/account_settings.html:39
+#: forum/skins/default/templates/authopenid/delete.html:4
+#: forum/skins/default/templates/authopenid/settings.html:38
+msgid "Delete account"
+msgstr "Hesabı sil"
+
+#: forum/skins/default/templates/account_settings.html:40
+#: forum/skins/default/templates/authopenid/settings.html:39
+msgid "Erase your username and all your data from website"
+msgstr "Kullanıcı adımı ve tüm bilgilerimi bu siteden sil"
+
+#: forum/skins/default/templates/answer_edit.html:5
+#: forum/skins/default/templates/answer_edit.html:48
+msgid "Edit answer"
+msgstr "Cevapı düzenle"
+
+#: forum/skins/default/templates/answer_edit.html:25
+#: forum/skins/default/templates/answer_edit.html:28
+#: forum/skins/default/templates/ask.html:26
+#: forum/skins/default/templates/ask.html:29
+#: forum/skins/default/templates/question.html:46
+#: forum/skins/default/templates/question.html:49
+#: forum/skins/default/templates/question_edit.html:25
+#: forum/skins/default/templates/question_edit.html:28
+msgid "hide preview"
+msgstr "önizlemeyi gizle"
+
+#: forum/skins/default/templates/answer_edit.html:28
+#: forum/skins/default/templates/ask.html:29
+#: forum/skins/default/templates/question.html:49
+#: forum/skins/default/templates/question_edit.html:28
+msgid "show preview"
+msgstr "önizlemeyi göster"
+
+#: forum/skins/default/templates/answer_edit.html:48
+#: forum/skins/default/templates/question_edit.html:66
+#: forum/skins/default/templates/question_retag.html:53
+#: forum/skins/default/templates/revisions_answer.html:38
+#: forum/skins/default/templates/revisions_question.html:38
+msgid "back"
+msgstr "geri"
+
+#: forum/skins/default/templates/answer_edit.html:53
+#: forum/skins/default/templates/question_edit.html:71
+#: forum/skins/default/templates/revisions_answer.html:52
+#: forum/skins/default/templates/revisions_question.html:52
+msgid "revision"
+msgstr "revizyon"
+
+#: forum/skins/default/templates/answer_edit.html:56
+#: forum/skins/default/templates/question_edit.html:75
+msgid "select revision"
+msgstr "revizyon seç"
+
+#: forum/skins/default/templates/answer_edit.html:63
+#: forum/skins/default/templates/ask.html:98
+#: forum/skins/default/templates/ask_form.html:39
+#: forum/skins/default/templates/question.html:433
+#: forum/skins/default/templates/question_edit.html:92
+msgid "Toggle the real time Markdown editor preview"
+msgstr "Toggle gerçek zamanlı Markdown editörü önizleme"
+
+#: forum/skins/default/templates/answer_edit.html:63
+#: forum/skins/default/templates/ask.html:98
+#: forum/skins/default/templates/ask_form.html:39
+#: forum/skins/default/templates/question.html:434
+#: forum/skins/default/templates/question_edit.html:92
+msgid "toggle preview"
+msgstr "toggle önizleme"
+
+#: forum/skins/default/templates/answer_edit.html:72
+#: forum/skins/default/templates/question_edit.html:118
+#: forum/skins/default/templates/question_retag.html:74
+msgid "Save edit"
+msgstr "Değişikliği kaydet"
+
+#: forum/skins/default/templates/answer_edit.html:73
+#: forum/skins/default/templates/close.html:29
+#: forum/skins/default/templates/feedback.html:50
+#: forum/skins/default/templates/question_edit.html:119
+#: forum/skins/default/templates/question_retag.html:75
+#: forum/skins/default/templates/reopen.html:30
+#: forum/skins/default/templates/user_edit.html:90
+#: forum/skins/default/templates/authopenid/changeemail.html:40
+msgid "Cancel"
+msgstr "Iptal"
+
+#: forum/skins/default/templates/answer_edit_tips.html:4
+msgid "answer tips"
+msgstr "cevap ipuçları"
+
+#: forum/skins/default/templates/answer_edit_tips.html:7
+msgid "please make your answer relevant to this community"
+msgstr "Cevabınızın sitemizdeki konu ile alakalı olmasına dikkat edin"
+
+#: forum/skins/default/templates/answer_edit_tips.html:10
+msgid "try to give an answer, rather than engage into a discussion"
+msgstr "tartışmaya girmek yerine, soruya bir cevap vermeye çalışın"
+
+#: forum/skins/default/templates/answer_edit_tips.html:13
+msgid "please try to provide details"
+msgstr "ayrıntılarıyayınlamayı deneyin"
+
+#: forum/skins/default/templates/answer_edit_tips.html:16
+#: forum/skins/default/templates/question_edit_tips.html:13
+msgid "be clear and concise"
+msgstr "açık ve kısa olmalı"
+
+#: forum/skins/default/templates/answer_edit_tips.html:20
+#: forum/skins/default/templates/question_edit_tips.html:17
+msgid "see frequently asked questions"
+msgstr "sık sorulan soruları gör"
+
+#: forum/skins/default/templates/answer_edit_tips.html:26
+#: forum/skins/default/templates/question_edit_tips.html:23
+msgid "Markdown tips"
+msgstr "İpuçları"
+
+#: forum/skins/default/templates/answer_edit_tips.html:29
+#: forum/skins/default/templates/question_edit_tips.html:26
+msgid "*italic* or __italic__"
+msgstr "* Italik * veya __italic__"
+
+#: forum/skins/default/templates/answer_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:29
+msgid "**bold** or __bold__"
+msgstr "** Kalın ** veya __bold__"
+
+#: forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/question_edit_tips.html:32
+msgid "link"
+msgstr "bağlantı"
+
+#: forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "text"
+msgstr "metin"
+
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "image"
+msgstr "resim"
+
+#: forum/skins/default/templates/answer_edit_tips.html:43
+#: forum/skins/default/templates/question_edit_tips.html:41
+msgid "numbered list:"
+msgstr "numaralandırılmış liste:"
+
+#: forum/skins/default/templates/answer_edit_tips.html:48
+#: forum/skins/default/templates/question_edit_tips.html:46
+msgid "basic HTML tags are also supported"
+msgstr "temel HTML etiketleri de desteklenmektedir"
+
+#: forum/skins/default/templates/answer_edit_tips.html:52
+#: forum/skins/default/templates/question_edit_tips.html:50
+msgid "learn more about Markdown"
+msgstr "Markdown hakkında daha fazla bilgi"
+
+#: forum/skins/default/templates/ask.html:5
+#: forum/skins/default/templates/ask.html:62
+msgid "Ask a question"
+msgstr "Soru sor"
+
+#: forum/skins/default/templates/ask.html:69
+#: forum/skins/default/templates/ask_form.html:11
+msgid "login to post question info"
+msgstr "soru yazmak için giriş yapmalısınız"
+
+#: forum/skins/default/templates/ask.html:75
+#, python-format
+msgid ""
+"must have valid %(email)s to post, \n"
+"                            see %(email_validation_faq_url)s\n"
+"                            "
+msgstr "mesaj yollayabilmek için %(email)s geçerli olmalıdır. Yardım için lütfen bakın: %(email_validation_faq_url)s"
+
+#: forum/skins/default/templates/ask.html:113
+#: forum/skins/default/templates/ask_form.html:54
+msgid "(required)"
+msgstr "(gerekli)"
+
+#: forum/skins/default/templates/ask.html:120
+#: forum/skins/default/templates/ask_form.html:61
+msgid "Login/signup to post your question"
+msgstr "Soru göndermek için üye girişi yapmalısınız"
+
+#: forum/skins/default/templates/ask.html:122
+#: forum/skins/default/templates/ask_form.html:63
+msgid "Ask your question"
+msgstr "Soru yazın"
+
+#: forum/skins/default/templates/ask_form.html:15
+#, python-format
+msgid ""
+"must have valid %(email)s to post, \n"
+"                                see %(email_validation_faq_url)s\n"
+"                                "
+msgstr "Mesaj yollayabilmek için geçerli bir %(email)s adresiniz olmalıdır. Lütfen bakınız:  %(email_validation_faq_url)s"
+
+#: forum/skins/default/templates/badge.html:6
+#: forum/skins/default/templates/badge.html:17
+msgid "Badge"
+msgstr "Madalya"
+
+#: forum/skins/default/templates/badge.html:26
+msgid "The users have been awarded with badges:"
+msgstr "Kullanıcıya verilen madalya:"
+
+#: forum/skins/default/templates/badges.html:6
+msgid "Badges summary"
+msgstr "Madalya özeti"
+
+#: forum/skins/default/templates/badges.html:17
+msgid "Badges"
+msgstr "Madalyalar"
+
+#: forum/skins/default/templates/badges.html:21
+msgid "Community gives you awards for your questions, answers and votes."
+msgstr "Sevgili site sakinleri... Sorularınız, cevaplarınız ya da oylarınız için ödül alabilirsiniz."
+
+#: forum/skins/default/templates/badges.html:22
+#, python-format
+msgid ""
+"Below is the list of available badges and number \n"
+"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
+"    "
+msgstr "Aşağıda alınabilecek madalyalar ve kaç defa verildikleri görülmektedir.<BR> Görüşlerinizi bekliyoruz... %(feedback_faq_url)s <BR>"
+
+#: forum/skins/default/templates/badges.html:50
+msgid "Community badges"
+msgstr "Site madalyaları"
+
+#: forum/skins/default/templates/badges.html:56
+msgid "gold badge description"
+msgstr "altın madalya açıklaması"
+
+#: forum/skins/default/templates/badges.html:64
+msgid "silver badge description"
+msgstr "gümüş madalya açıklaması"
+
+#: forum/skins/default/templates/badges.html:67
+msgid "bronze badge: often given as a special honor"
+msgstr "bronz madalya: genellikle özel bir onur olarak verilir"
+
+#: forum/skins/default/templates/badges.html:71
+msgid "bronze badge description"
+msgstr "bronz madalya açıklaması"
+
+#: forum/skins/default/templates/book.html:7
+msgid "reading channel"
+msgstr "kanal okuma"
+
+#: forum/skins/default/templates/book.html:26
+msgid "[author]"
+msgstr "[yazar]"
+
+#: forum/skins/default/templates/book.html:30
+msgid "[publisher]"
+msgstr "[yayıncı]"
+
+#: forum/skins/default/templates/book.html:34
+msgid "[publication date]"
+msgstr "[yayınlanma tarihi]"
+
+#: forum/skins/default/templates/book.html:38
+msgid "[price]"
+msgstr "[fiyat]"
+
+#: forum/skins/default/templates/book.html:39
+msgid "currency unit"
+msgstr "para birimi"
+
+#: forum/skins/default/templates/book.html:42
+msgid "[pages]"
+msgstr "[sayfa]"
+
+#: forum/skins/default/templates/book.html:43
+msgid "pages abbreviation"
+msgstr "sayfaları kısaltma"
+
+#: forum/skins/default/templates/book.html:46
+msgid "[tags]"
+msgstr "[etiketler]"
+
+#: forum/skins/default/templates/book.html:56
+msgid "author blog"
+msgstr "yazar günlüğü"
+
+#: forum/skins/default/templates/book.html:62
+msgid "book directory"
+msgstr "kitap listesi"
+
+#: forum/skins/default/templates/book.html:66
+msgid "buy online"
+msgstr "online satın al"
+
+#: forum/skins/default/templates/book.html:79
+msgid "reader questions"
+msgstr "okuyucu soruları"
+
+#: forum/skins/default/templates/book.html:82
+msgid "ask the author"
+msgstr "yazar sor"
+
+#: forum/skins/default/templates/book.html:88
+#: forum/skins/default/templates/book.html:93
+#: forum/skins/default/templates/users_questions.html:18
+msgid "this question was selected as favorite"
+msgstr "bu soru favori olarak seçildi"
+
+#: forum/skins/default/templates/book.html:88
+#: forum/skins/default/templates/book.html:93
+#: forum/skins/default/templates/users_questions.html:11
+#: forum/skins/default/templates/users_questions.html:18
+msgid "number of times"
+msgstr "kez"
+
+#: forum/skins/default/templates/book.html:105
+#: forum/skins/default/templates/question_summary_list_roll.html:14
+msgid "votes"
+msgstr "oy"
+
+#: forum/skins/default/templates/book.html:108
+msgid "the answer has been accepted to be correct"
+msgstr "cevap doğru olarak kabul edilmiştir"
+
+#: forum/skins/default/templates/book.html:115
+#: forum/skins/default/templates/question_summary_list_roll.html:15
+msgid "views"
+msgstr "izlenme"
+
+#: forum/skins/default/templates/book.html:125
+#: forum/skins/default/templates/question.html:136
+#: forum/skins/default/templates/question_list.html:19
+#: forum/skins/default/templates/question_summary_list_roll.html:52
+#: forum/skins/default/templates/tags.html:50
+#: forum/skins/default/templates/users_questions.html:34
+#, python-format
+msgid "see questions tagged '%(tag)s'"
+msgstr "'%(tag)s' etiketli sorulara bak"
+
+#: forum/skins/default/templates/book.html:147
+msgid "subscribe to book RSS feed"
+msgstr "RSS haber besleme akışına abone ol"
+
+#: forum/skins/default/templates/book.html:147
+msgid "subscribe to the questions feed"
+msgstr "soruya ve cevaplarına abone ol"
+
+#: forum/skins/default/templates/close.html:6
+#: forum/skins/default/templates/close.html:16
+msgid "Close question"
+msgstr "Soruyu kapat"
+
+#: forum/skins/default/templates/close.html:19
+msgid "Close the question"
+msgstr "Cevabı kapat"
+
+#: forum/skins/default/templates/close.html:25
+msgid "Reasons"
+msgstr "Nedenleri"
+
+#: forum/skins/default/templates/close.html:28
+msgid "OK to close"
+msgstr "Kapatmak için OK butonuna bas"
+
+#: forum/skins/default/templates/email_base.html:11
+msgid "home"
+msgstr "anasayfa"
+
+#: forum/skins/default/templates/faq.html:11
+msgid "Frequently Asked Questions "
+msgstr "Sıkça Sorulan Sorular"
+
+#: forum/skins/default/templates/faq.html:16
+msgid "What kinds of questions can I ask here?"
+msgstr "Ne tür sorular sorabilirim?"
+
+#: forum/skins/default/templates/faq.html:17
+msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
+msgstr "En önemli sorular sitemizde <strong>önemli</strong> şeklinde gösterilmektedir."
+
+#: forum/skins/default/templates/faq.html:18
+msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
+msgstr "Soru sormadan önce, öncelikle sitemizde bir arama yapın. Belki bu soru ve cevabı sitemizde bulunmaktadır."
+
+#: forum/skins/default/templates/faq.html:21
+msgid "What questions should I avoid asking?"
+msgstr "Ne tür sorulardan kaçınmalıyım?"
+
+#: forum/skins/default/templates/faq.html:22
+msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
+msgstr "Lütfen, çok subjektif ve tartışmacı olan, sitemizle ilgili olmayan sorular sormaktan kaçının."
+
+#: forum/skins/default/templates/faq.html:27
+msgid "What should I avoid in my answers?"
+msgstr "Cevaplarımda nelere dikkat etmeliyim?"
+
+#: forum/skins/default/templates/faq.html:28
+msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
+msgstr "bir soru & cevap sitesi olup, asla ve asla bir tartışma ortamı değildir. Bu nedenle cevaplarınızı, tartışmalardan kaçınacak şekilde, yorum ve karşılıklı fikir alışverişine dayalı şekilde yazınız."
+
+#: forum/skins/default/templates/faq.html:32
+msgid "Who moderates this community?"
+msgstr "Bu siteyi kimler yönetiyor?"
+
+#: forum/skins/default/templates/faq.html:33
+msgid "The short answer is: <strong>you</strong>."
+msgstr "Cevabı çok açık: <strong>Sen!</strong> Yani sizlersiniz! "
+
+#: forum/skins/default/templates/faq.html:34
+msgid "This website is moderated by the users."
+msgstr "Bu web sitesi, kullanıcıları tarafından yönetilmektedir."
+
+#: forum/skins/default/templates/faq.html:35
+msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
+msgstr "İtibar sistemi, kullanıcılarımızın sitedeki yetkilendirme ve yazdıklarının doğruluğu konusunda fikir verir."
+
+#: forum/skins/default/templates/faq.html:40
+msgid "How does reputation system work?"
+msgstr "İtibar sistemi nasıl çalışmaktadır?"
+
+#: forum/skins/default/templates/faq.html:41
+msgid "Rep system summary"
+msgstr "Puanlama sistemi özeti"
+
+#: forum/skins/default/templates/faq.html:42
+msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
+msgstr "Örneğin, ilginç bir soru sordunuz ya da yararlı bir cevap verdiniz. Doğal olarak bu durum, diğer kullanıcılarımız tarafından beğenilecektir. Diğer taraftan da, eğer cevabınız doğru değilse ya da  yanıltıcı ise beğenilmeyecektir. Sistem, beğenilen her soru veya cevap yazınız için size <strong>10</strong> puan verirken, beğenilmeyen soru veya cevabınız için <strong>2</strong>  puan düşmektedir. Her soru veya cevaptan alabileceğiniz en fazla puan <strong>200</strong> ile sınırlandırılmıştır. Aşağıdaki tablo, itibar sisteminden toplanan puanlar ile neler yapılabileceğini göstermektedir."
+
+#: forum/skins/default/templates/faq.html:53
+#: forum/skins/default/templates/user_votes.html:15
+msgid "upvote"
+msgstr "beğendim"
+
+#: forum/skins/default/templates/faq.html:57
+msgid "use tags"
+msgstr "etiketleri kullan"
+
+#: forum/skins/default/templates/faq.html:62
+msgid "add comments"
+msgstr "yorum ekle"
+
+#: forum/skins/default/templates/faq.html:66
+#: forum/skins/default/templates/user_votes.html:17
+msgid "downvote"
+msgstr "beğenmedim"
+
+#: forum/skins/default/templates/faq.html:69
+msgid "open and close own questions"
+msgstr "kendi sorularım açık ve kapalı "
+
+#: forum/skins/default/templates/faq.html:73
+msgid "retag questions"
+msgstr "soruları yeniden etiketle"
+
+#: forum/skins/default/templates/faq.html:78
+msgid "edit community wiki questions"
+msgstr "sitenin wiki sorularını değiştir"
+
+#: forum/skins/default/templates/faq.html:83
+msgid "edit any answer"
+msgstr "herhangi bir cevabı değiştir"
+
+#: forum/skins/default/templates/faq.html:87
+msgid "open any closed question"
+msgstr "kapatılmış bir soruyu aç"
+
+#: forum/skins/default/templates/faq.html:91
+msgid "delete any comment"
+msgstr "bir yorumu sil"
+
+#: forum/skins/default/templates/faq.html:95
+msgid "delete any questions and answers and perform other moderation tasks"
+msgstr "Herhangi bir soruyu veya cevabı silmek site yöneticilerinin görevidir."
+
+#: forum/skins/default/templates/faq.html:103
+msgid "how to validate email title"
+msgstr "E-mail doğrulama"
+
+#: forum/skins/default/templates/faq.html:105
+#, python-format
+msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr "E-mail adresinizi nasıl doğrulayabilirsiniz? %(send_email_key_url)s %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/faq.html:110
+msgid "what is gravatar"
+msgstr "Gravatar nedir?"
+
+#: forum/skins/default/templates/faq.html:111
+msgid "gravatar faq info"
+msgstr "gravatar hakkında bilgi bu kısımda verilecektir."
+
+#: forum/skins/default/templates/faq.html:114
+msgid "To register, do I need to create new password?"
+msgstr "Kaydolmak için, yeni bir şifremi oluşturmalıyım?"
+
+#: forum/skins/default/templates/faq.html:115
+msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr "Hayır, bu şart değil. Eğer OpenID destekleyen herhangi bir hizmete üye isen, mesela Facebook, Twitter, Google Mail, Yahoo, AOL, vb aracılığıyla da giriş yapabilirsiniz."
+
+#: forum/skins/default/templates/faq.html:116
+msgid "Login now!"
+msgstr "Şimdi giriş yap!"
+
+#: forum/skins/default/templates/faq.html:121
+msgid "Why other people can edit my questions/answers?"
+msgstr "Neden başkaları benim sorumu ya da cevabımı düzenleyebiliyor ve değiştirebiliyorlar?"
+
+#: forum/skins/default/templates/faq.html:122
+msgid "Goal of this site is..."
+msgstr "İşte bu, sitenin en önemli amaçlarından biridir..."
+
+#: forum/skins/default/templates/faq.html:122
+msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgstr "Böylelikle sorular ve cevaplar aynen wiki sayfaları gibi sitenin deneyimli kullanıcıları tarafından değiştirilip düzenlenebilir. Bu ise bilgi site içeriğimizin kalitesini artırır."
+
+#: forum/skins/default/templates/faq.html:123
+msgid "If this approach is not for you, we respect your choice."
+msgstr "Bu değişiklikler size uygun değilse, sizin seçiminize saygılı değilse, lütfen bize bildirin."
+
+#: forum/skins/default/templates/faq.html:127
+msgid "Still have questions?"
+msgstr "Hala aklınıza takılan bir soru mu var?"
+
+#: forum/skins/default/templates/faq.html:128
+#, python-format
+msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
+msgstr "Hiç çekinmeden sorunuzu sitemize yazın. Böylelikle hem başkalarına da faydalı olabilirsiniz."
+
+#: forum/skins/default/templates/faq.html:130
+#: forum/skins/default/templates/header.html:27
+msgid "questions"
+msgstr "sorular"
+
+#: forum/skins/default/templates/faq.html:130
+msgid "."
+msgstr "."
+
+#: forum/skins/default/templates/feedback.html:6
+msgid "Feedback"
+msgstr "Geri bildirim"
+
+#: forum/skins/default/templates/feedback.html:11
+msgid "Give us your feedback!"
+msgstr "Görüşlerinizi bize bildirin!"
+
+#: forum/skins/default/templates/feedback.html:17
+#, python-format
+msgid ""
+"\n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+"\n"
+"<span class='big strong'>Sevgili %(user_name)s</span>, sitemizle alakalı görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan çekinmeyin."
+
+#: forum/skins/default/templates/feedback.html:24
+msgid ""
+"\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+"\n"
+"<span class='big strong'>Sevgili ziyaretçimiz</span>, sitemizle alakalı görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan çekinmeyin."
+
+#: forum/skins/default/templates/feedback.html:41
+msgid "(this field is required)"
+msgstr "(bu alanın doldurulması gereklidir)"
+
+#: forum/skins/default/templates/feedback.html:49
+msgid "Send Feedback"
+msgstr "Geribildirim gönder"
+
+#: forum/skins/default/templates/feedback_email.txt:3
+#, python-format
+msgid ""
+"\n"
+"Hello, this is a %(site_title)s forum feedback message\n"
+msgstr ""
+"\n"
+"Merhaba,  bu bir %(site_title)s geribildirim mesajıdır.\n"
+
+#: forum/skins/default/templates/feedback_email.txt:9
+msgid "Sender is"
+msgstr "Gönderen"
+
+#: forum/skins/default/templates/feedback_email.txt:11
+#: forum/skins/default/templates/feedback_email.txt:14
+msgid "email"
+msgstr "E-mail"
+
+#: forum/skins/default/templates/feedback_email.txt:13
+msgid "anonymous"
+msgstr "anonim"
+
+#: forum/skins/default/templates/feedback_email.txt:19
+msgid "Message body:"
+msgstr "Mesajınız:"
+
+#: forum/skins/default/templates/footer.html:8
+#: forum/skins/default/templates/header.html:14
+msgid "about"
+msgstr "hakkımızda"
+
+#: forum/skins/default/templates/footer.html:9
+#: forum/skins/default/templates/header.html:15
+#: forum/skins/default/templates/question_edit_tips.html:17
+msgid "faq"
+msgstr "sss"
+
+#: forum/skins/default/templates/footer.html:10
+msgid "privacy policy"
+msgstr "gizlilik politikası"
+
+#: forum/skins/default/templates/footer.html:19
+msgid "give feedback"
+msgstr "görüşlerinizi bildirin"
+
+#: forum/skins/default/templates/header.html:10
+msgid "logout"
+msgstr "çıkış"
+
+#: forum/skins/default/templates/header.html:12
+msgid "login"
+msgstr "giriş"
+
+#: forum/skins/default/templates/header.html:22
+msgid "back to home page"
+msgstr "anasayfaya geri dön"
+
+#: forum/skins/default/templates/header.html:29
+msgid "users"
+msgstr "kullanıcılar"
+
+#: forum/skins/default/templates/header.html:31
+msgid "books"
+msgstr "kitaplar"
+
+#: forum/skins/default/templates/header.html:33
+#: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
+msgid "badges"
+msgstr "madalyalar"
+
+#: forum/skins/default/templates/header.html:34
+#: forum/skins/default/templates/header.html:38
+msgid "ask a question"
+msgstr "soru sor"
+
+#: forum/skins/default/templates/header.html:36
+msgid "unanswered questions"
+msgstr "cevapsız sorular"
+
+#: forum/skins/default/templates/input_bar.html:33
+msgid "search"
+msgstr "ara"
+
+#: forum/skins/default/templates/logout.html:6
+#: forum/skins/default/templates/logout.html:16
+msgid "Logout"
+msgstr "Çıkış"
+
+#: forum/skins/default/templates/logout.html:19
+msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
+msgstr "OpenID hesaplarından birisi ile (mesela Facebook, Twitter, Googlemail, Yahoo, MSN) giriş yapabilirsiniz. Şifreniz sitemizde kimse tarafından görünmeyecek, sitemizde kaydedilmeyecektir. Bize güvenebilirsiniz..."
+
+#: forum/skins/default/templates/logout.html:20
+msgid "Logout now"
+msgstr "Şimdi çıkış yap"
+
+#: forum/skins/default/templates/notarobot.html:3
+msgid "Please prove that you are a Human Being"
+msgstr "Gerçek kullanıcı olduğunuzu kanıtlayın!"
+
+#: forum/skins/default/templates/notarobot.html:10
+msgid "I am a Human Being"
+msgstr "Ben bir gerçek kullanıcıyım"
+
+#: forum/skins/default/templates/pagesize.html:6
+msgid "posts per page"
+msgstr "sayfa başına mesaj"
+
+#: forum/skins/default/templates/paginator.html:6
+#: forum/skins/default/templates/paginator.html:7
+msgid "previous"
+msgstr "önceki"
+
+#: forum/skins/default/templates/paginator.html:19
+msgid "current page"
+msgstr "şuanki sayfa"
+
+#: forum/skins/default/templates/paginator.html:22
+#: forum/skins/default/templates/paginator.html:29
+#, python-format
+msgid "page number %(num)s"
+msgstr "sayfa numarası %(num)s"
+
+#: forum/skins/default/templates/paginator.html:33
+msgid "next page"
+msgstr "sonraki sayfa"
+
+#: forum/skins/default/templates/post_contributor_info.html:9
+#, python-format
+msgid ""
+"\n"
+"                one revision\n"
+"            "
+msgid_plural ""
+"\n"
+"                %(rev_count)s revisions\n"
+"            "
+msgstr[0] ""
+"\n"
+"bir kez düzenlendi\n"
+msgstr[1] "%(rev_count)s düzenlendi"
+
+#: forum/skins/default/templates/post_contributor_info.html:19
+msgid "asked"
+msgstr "soruldu"
+
+#: forum/skins/default/templates/post_contributor_info.html:22
+msgid "answered"
+msgstr "cevaplandı"
+
+#: forum/skins/default/templates/post_contributor_info.html:24
+msgid "posted"
+msgstr "yollandı"
+
+#: forum/skins/default/templates/post_contributor_info.html:45
+msgid "updated"
+msgstr "güncellendi"
+
+#: forum/skins/default/templates/privacy.html:6
+#: forum/skins/default/templates/privacy.html:11
+msgid "Privacy policy"
+msgstr "Gizlilik politikası"
+
+#: forum/skins/default/templates/privacy.html:15
+msgid "general message about privacy"
+msgstr "gizlilik hakkında genel mesaj"
+
+#: forum/skins/default/templates/privacy.html:18
+msgid "Site Visitors"
+msgstr "Site ziyaretçileri"
+
+#: forum/skins/default/templates/privacy.html:20
+msgid "what technical information is collected about visitors"
+msgstr "ziyaretçiler hakkında toplanan bilgiler"
+
+#: forum/skins/default/templates/privacy.html:23
+msgid "Personal Information"
+msgstr "Kişisel bilgiler"
+
+#: forum/skins/default/templates/privacy.html:25
+msgid "details on personal information policies"
+msgstr "kişisel bilgilerin gizliliği ile ilgili ayrıntılar"
+
+#: forum/skins/default/templates/privacy.html:28
+msgid "Other Services"
+msgstr "Diğer Hizmetler"
+
+#: forum/skins/default/templates/privacy.html:30
+msgid "details on sharing data with third parties"
+msgstr "üçüncü şahıslarla paylaşılacak veriler ile ilgili ayrıntılar"
+
+#: forum/skins/default/templates/privacy.html:35
+msgid "cookie policy details"
+msgstr "çerezler hakkında"
+
+#: forum/skins/default/templates/privacy.html:37
+msgid "Policy Changes"
+msgstr "Site kurallarındaki değişiklikler"
+
+#: forum/skins/default/templates/privacy.html:38
+msgid "how privacy policies can be changed"
+msgstr "gizlilik politikaları nasıl değiştirilebilir?"
+
+#: forum/skins/default/templates/question.html:78
+#: forum/skins/default/templates/question.html:79
+#: forum/skins/default/templates/question.html:95
+#: forum/skins/default/templates/question.html:97
+msgid "i like this post (click again to cancel)"
+msgstr "bunu beğendim (iptal için tekrar tıklayın)"
+
+#: forum/skins/default/templates/question.html:81
+#: forum/skins/default/templates/question.html:99
+#: forum/skins/default/templates/question.html:258
+msgid "current number of votes"
+msgstr "oy geçerli sayısı"
+
+#: forum/skins/default/templates/question.html:90
+#: forum/skins/default/templates/question.html:91
+#: forum/skins/default/templates/question.html:104
+#: forum/skins/default/templates/question.html:105
+msgid "i dont like this post (click again to cancel)"
+msgstr "bu yazıyı beğenmedim (iptal etmek için tekrar tıklayın)"
+
+#: forum/skins/default/templates/question.html:109
+#: forum/skins/default/templates/question.html:110
+msgid "mark this question as favorite (click again to cancel)"
+msgstr "favorilerime ekle (iptal etmek için tıkla)"
+
+#: forum/skins/default/templates/question.html:116
+#: forum/skins/default/templates/question.html:117
+msgid "remove favorite mark from this question (click again to restore mark)"
+msgstr "bu sorudan favori işaretini kaldır (işareti tekrar koymak için tıklayın)"
+
+#: forum/skins/default/templates/question.html:141
+#: forum/skins/default/templates/question.html:295
+#: forum/skins/default/templates/revisions_answer.html:58
+#: forum/skins/default/templates/revisions_question.html:58
+msgid "edit"
+msgstr "değiştir"
+
+#: forum/skins/default/templates/question.html:146
+msgid "reopen"
+msgstr "yeniden aç"
+
+#: forum/skins/default/templates/question.html:150
+msgid "close"
+msgstr "kapat"
+
+#: forum/skins/default/templates/question.html:156
+#: forum/skins/default/templates/question.html:300
+msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgstr "şikayet et (spam, reklam, kötü amaçlı yazı vb. içeriyor)"
+
+#: forum/skins/default/templates/question.html:157
+#: forum/skins/default/templates/question.html:301
+msgid "flag offensive"
+msgstr "şikayet et"
+
+#: forum/skins/default/templates/question.html:165
+#: forum/skins/default/templates/question.html:312
+msgid "delete"
+msgstr "sil"
+
+#: forum/skins/default/templates/question.html:183
+#: forum/skins/default/templates/question.html:332
+msgid "delete this comment"
+msgstr "bu yorumu sil"
+
+#: forum/skins/default/templates/question.html:194
+#: forum/skins/default/templates/question.html:343
+msgid "add comment"
+msgstr "yorum ekle"
+
+#: forum/skins/default/templates/question.html:198
+#, python-format
+msgid ""
+"\n"
+"                                            see <strong>one</strong> more \n"
+"                                            "
+msgid_plural ""
+"\n"
+"                                            see <strong>%(counter)s</strong> more\n"
+"                                            "
+msgstr[0] ""
+"\n"
+"diğer <strong>bir tanesine</strong> bak\n"
+msgstr[1] "<strong>%(counter)s</strong> daha var"
+
+#: forum/skins/default/templates/question.html:204
+#, python-format
+msgid ""
+"\n"
+"                                            see <strong>one</strong> more comment\n"
+"                                            "
+msgid_plural ""
+"\n"
+"                                            see <strong>%(counter)s</strong> more comments\n"
+"                                            "
+msgstr[0] ""
+"\n"
+"diğer <strong>yorumu</strong> gör\n"
+msgstr[1] "diğer <strong>%(counter)s</strong> yorumu gör"
+
+#: forum/skins/default/templates/question.html:220
+#, python-format
+msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
+msgstr "Soru şu nedenle kapatılmış olabilir: %(close_reason)s"
+
+#: forum/skins/default/templates/question.html:222
+#, python-format
+msgid "close date %(closed_at)s"
+msgstr "kapatılma tarihi %(closed_at)s"
+
+#: forum/skins/default/templates/question.html:230
+#, python-format
+msgid ""
+"\n"
+"                    One Answer:\n"
+"                    "
+msgid_plural ""
+"\n"
+"                    %(counter)s Answers:\n"
+"                    "
+msgstr[0] ""
+"\n"
+"Bir tek cevap var:\n"
+msgstr[1] "%(counter)s cevap:"
+
+#: forum/skins/default/templates/question.html:238
+msgid "oldest answers will be shown first"
+msgstr "ilk önce eski cevaplar görünecek"
+
+#: forum/skins/default/templates/question.html:238
+msgid "oldest answers"
+msgstr "eski cevaplar"
+
+#: forum/skins/default/templates/question.html:240
+msgid "newest answers will be shown first"
+msgstr "yeni cevaplar ilk önce görünecek"
+
+#: forum/skins/default/templates/question.html:240
+msgid "newest answers"
+msgstr "yeni cevaplar"
+
+#: forum/skins/default/templates/question.html:242
+msgid "most voted answers will be shown first"
+msgstr "çok oy alan cevaplar önce görünsün"
+
+#: forum/skins/default/templates/question.html:242
+msgid "popular answers"
+msgstr "popüler cevaplar"
+
+#: forum/skins/default/templates/question.html:256
+#: forum/skins/default/templates/question.html:257
+msgid "i like this answer (click again to cancel)"
+msgstr "bu cevabı beğendim (iptal etmek için tekrar tıklayın)"
+
+#: forum/skins/default/templates/question.html:263
+#: forum/skins/default/templates/question.html:264
+msgid "i dont like this answer (click again to cancel)"
+msgstr "bu cevabı beğenmedim (iptal etmek için tekrar tıklayın)"
+
+#: forum/skins/default/templates/question.html:269
+#: forum/skins/default/templates/question.html:270
+msgid "mark this answer as favorite (click again to undo)"
+msgstr "bu cevabı favori olarak işaretle (geri almak için tıklayın)"
+
+#: forum/skins/default/templates/question.html:275
+#: forum/skins/default/templates/question.html:276
+msgid "the author of the question has selected this answer as correct"
+msgstr "bu soruyu yazan kişi, bu cevabı doğru olarak seçti"
+
+#: forum/skins/default/templates/question.html:289
+msgid "answer permanent link"
+msgstr "kalıcı bağlantıyı cevapla"
+
+#: forum/skins/default/templates/question.html:290
+msgid "permanent link"
+msgstr "kalıcı bağlantı"
+
+#: forum/skins/default/templates/question.html:312
+msgid "undelete"
+msgstr "silineni geri al"
+
+#: forum/skins/default/templates/question.html:347
+#, python-format
+msgid ""
+"\n"
+"                                                        see <strong>one</strong> more \n"
+"                                                        "
+msgid_plural ""
+"\n"
+"                                                        see <strong>%(counter)s</strong> more\n"
+"                                                        "
+msgstr[0] ""
+"\n"
+"<strong>bir</strong> daha gör\n"
+msgstr[1] "<strong>%(counter)s</strong> daha gör"
+
+#: forum/skins/default/templates/question.html:353
+#, python-format
+msgid ""
+"\n"
+"                                                        see <strong>one</strong> more comment\n"
+"                                                        "
+msgid_plural ""
+"\n"
+"                                                        see <strong>%(counter)s</strong> more comments\n"
+"                                                        "
+msgstr[0] ""
+"\n"
+"<strong>bir</strong> yorum daha gör\n"
+msgstr[1] "<strong>%(counter)s</strong> yorum daha gör"
+
+#: forum/skins/default/templates/question.html:379
+#: forum/skins/default/templates/question.html:382
+msgid "Notify me once a day when there are any new answers"
+msgstr "Soruya cevap verilirse bana bildir"
+
+#: forum/skins/default/templates/question.html:385
+msgid "Notify me weekly when there are any new answers"
+msgstr "Yeni cevapları bana haftalık olarak bildir"
+
+#: forum/skins/default/templates/question.html:390
+#, python-format
+msgid "You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr "%(profile_url)s adresinden E-mail güncellemelerini alma sıklığını ayarlayabilirsiniz."
+
+#: forum/skins/default/templates/question.html:395
+msgid "once you sign in you will be able to subscribe for any updates here"
+msgstr "güncellemelerden haberdar olmak için kaydolun."
+
+#: forum/skins/default/templates/question.html:406
+msgid "Your answer"
+msgstr "Cevabınız"
+
+#: forum/skins/default/templates/question.html:408
+msgid "Be the first one to answer this question!"
+msgstr "Bu soruya ilk cevabı sen yaz!"
+
+#: forum/skins/default/templates/question.html:414
+msgid "you can answer anonymously and then login"
+msgstr "şimdi hemen cevap yazabilir, yollamak için daha sonra üye girişi yapabilirsiniz."
+
+#: forum/skins/default/templates/question.html:418
+msgid "answer your own question only to give an answer"
+msgstr "Kendi soruna cevap vermek üzeresin. Ya da sorunu daha da açıklamak mı istiyorsun?"
+
+#: forum/skins/default/templates/question.html:420
+msgid "please only give an answer, no discussions"
+msgstr "sadece cevap yazınız, tartışmaya girmeyiniz."
+
+#: forum/skins/default/templates/question.html:456
+msgid "Login/Signup to Post Your Answer"
+msgstr "Cevap yollamak için üye girişi yapmalısınız"
+
+#: forum/skins/default/templates/question.html:459
+msgid "Answer Your Own Question"
+msgstr "Kendi soruna cevap yaz!"
+
+#: forum/skins/default/templates/question.html:461
+msgid "Answer the question"
+msgstr "Soru cevapla"
+
+#: forum/skins/default/templates/question.html:475
+msgid "Question tags"
+msgstr "Soru etiketleri"
+
+#: forum/skins/default/templates/question.html:480
+#: forum/skins/default/templates/questions.html:257
+#: forum/skins/default/templates/tag_selector.html:11
+#: forum/skins/default/templates/tag_selector.html:28
+#, python-format
+msgid "see questions tagged '%(tag_name)s'"
+msgstr "'%(tag_name)s' etiketli soruları gör"
+
+#: forum/skins/default/templates/question.html:486
+msgid "question asked"
+msgstr "sorulma zamanı"
+
+#: forum/skins/default/templates/question.html:489
+msgid "question was seen"
+msgstr "izlenme sayısı"
+
+#: forum/skins/default/templates/question.html:489
+msgid "times"
+msgstr "kez"
+
+#: forum/skins/default/templates/question.html:492
+msgid "last updated"
+msgstr "son güncelleme"
+
+#: forum/skins/default/templates/question.html:498
+msgid "Related questions"
+msgstr "İlgili sorular"
+
+#: forum/skins/default/templates/question_counter_widget.html:6
+msgid "Please decide if you like this question or not by voting"
+msgstr "Bu soruyu beğenip beğenmediğinize karar verin. Oy da verebilirsiniz."
+
+#: forum/skins/default/templates/question_counter_widget.html:12
+msgid ""
+"\n"
+"        vote\n"
+"        "
+msgid_plural ""
+"\n"
+"        votes\n"
+"        "
+msgstr[0] ""
+"\n"
+"oy\n"
+msgstr[1] "oy"
+
+#: forum/skins/default/templates/question_counter_widget.html:21
+msgid "this answer has been accepted to be correct"
+msgstr "bu cevap doğru olarak kabul edilmiştir"
+
+#: forum/skins/default/templates/question_counter_widget.html:27
+msgid ""
+"\n"
+"        answer \n"
+"        "
+msgid_plural ""
+"\n"
+"        answers \n"
+"        "
+msgstr[0] ""
+"\n"
+"cevap\n"
+msgstr[1] "cevap"
+
+#: forum/skins/default/templates/question_counter_widget.html:39
+msgid ""
+"\n"
+"        view\n"
+"        "
+msgid_plural ""
+"\n"
+"        views\n"
+"        "
+msgstr[0] ""
+"\n"
+"izlenme\n"
+msgstr[1] "izlenme"
+
+#: forum/skins/default/templates/question_edit.html:5
+#: forum/skins/default/templates/question_edit.html:66
+msgid "Edit question"
+msgstr "Soruyu düzenle"
+
+#: forum/skins/default/templates/question_edit_tips.html:4
+msgid "question tips"
+msgstr "soru ipuçları"
+
+#: forum/skins/default/templates/question_edit_tips.html:7
+msgid "please ask a relevant question"
+msgstr "lütfen ilgili bir soru sorunuz"
+
+#: forum/skins/default/templates/question_edit_tips.html:10
+msgid "please try provide enough details"
+msgstr "yeterince ayrıntılı olmasına çalışın"
+
+#: forum/skins/default/templates/question_retag.html:4
+#: forum/skins/default/templates/question_retag.html:53
+msgid "Change tags"
+msgstr "Etiket değiştir"
+
+#: forum/skins/default/templates/question_retag.html:40
+msgid "up to 5 tags, less than 20 characters each"
+msgstr "en fazla 5 etiket, her etiket en fazla 20 karakter"
+
+#: forum/skins/default/templates/question_retag.html:83
+msgid "Why use and modify tags?"
+msgstr "Neden etiket kullanıyor ve bunu değiştiriyoruz?"
+
+#: forum/skins/default/templates/question_retag.html:86
+msgid "tags help us keep Questions organized"
+msgstr "etiketler, bizim soruları organize etmemize yardımcı olur"
+
+#: forum/skins/default/templates/question_retag.html:94
+msgid "tag editors receive special awards from the community"
+msgstr "etiket editörleri, sitemizden özel ödül almaktadır"
+
+#: forum/skins/default/templates/question_summary_list_roll.html:13
+msgid "answers"
+msgstr "cevaplar"
+
+#: forum/skins/default/templates/questions.html:8
+msgid "Questions"
+msgstr "Sorular"
+
+#: forum/skins/default/templates/questions.html:32
+msgid "Found by tags"
+msgstr "Bulunan etiketler"
+
+#: forum/skins/default/templates/questions.html:36
+msgid "Search results"
+msgstr "Arama sonuçları"
+
+#: forum/skins/default/templates/questions.html:38
+msgid "Found by title"
+msgstr "Bulunan başlığa göre"
+
+#: forum/skins/default/templates/questions.html:42
+msgid "Unanswered questions"
+msgstr "Cevapsız sorular"
+
+#: forum/skins/default/templates/questions.html:44
+msgid "All questions"
+msgstr "Tüm sorular"
+
+#: forum/skins/default/templates/questions.html:51
+msgid "In:"
+msgstr "Nerede:"
+
+#: forum/skins/default/templates/questions.html:53
+msgid "see unanswered questions"
+msgstr "cevapsız sorular gör"
+
+#: forum/skins/default/templates/questions.html:55
+msgid "see your favorite questions"
+msgstr "beğendiğiniz soruları gör"
+
+#: forum/skins/default/templates/questions.html:59
+msgid "Sort by:"
+msgstr "Sıralama:"
+
+#: forum/skins/default/templates/questions.html:64
+#: forum/skins/default/templates/questions.html:75
+msgid "click to see the newest questions"
+msgstr "yeni soruları görmek için tıklayın"
+
+#: forum/skins/default/templates/questions.html:70
+msgid "click to see the oldest questions"
+msgstr "eski soruları görmek için tıklayın"
+
+#: forum/skins/default/templates/questions.html:83
+#: forum/skins/default/templates/questions.html:94
+msgid "click to see the most recently updated questions"
+msgstr "en güncel soruları görmek için tıklayın"
+
+#: forum/skins/default/templates/questions.html:89
+msgid "click to see the least recently updated questions"
+msgstr "güncel olmayan soruları görmek için tıklayın"
+
+#: forum/skins/default/templates/questions.html:102
+#: forum/skins/default/templates/questions.html:113
+msgid "click to see hottest questions"
+msgstr "en beğenilen cevaplar için tıklayın"
+
+#: forum/skins/default/templates/questions.html:102
+msgid "less answers"
+msgstr "cevapları kısalt"
+
+#: forum/skins/default/templates/questions.html:108
+msgid "click to see coldest questions"
+msgstr "en beğenilmeyen soruları gör"
+
+#: forum/skins/default/templates/questions.html:108
+#: forum/skins/default/templates/questions.html:113
+msgid "more answers"
+msgstr "daha fazla cevap"
+
+#: forum/skins/default/templates/questions.html:121
+#: forum/skins/default/templates/questions.html:132
+msgid "click to see most voted questions"
+msgstr "en çok oylanan soruları gör"
+
+#: forum/skins/default/templates/questions.html:121
+msgid "unpopular"
+msgstr "beğenilmeyen"
+
+#: forum/skins/default/templates/questions.html:127
+msgid "click to see least voted questions"
+msgstr "en az oylanan soruları gör"
+
+#: forum/skins/default/templates/questions.html:127
+#: forum/skins/default/templates/questions.html:132
+msgid "popular"
+msgstr "popüler"
+
+#: forum/skins/default/templates/questions.html:141
+#, python-format
+msgid " One question found"
+msgid_plural "%(q_num)s questions found"
+msgstr[0] "1 cevap bulundu."
+msgstr[1] "%(q_num)s cevap bulundu."
+
+#: forum/skins/default/templates/questions.html:143
+#, python-format
+msgid " %(q_num)s question"
+msgid_plural "%(q_num)s questions"
+msgstr[0] "%(q_num)s soru"
+msgstr[1] "%(q_num)s soru"
+
+#: forum/skins/default/templates/questions.html:147
+#, python-format
+msgid "with %(author_name)s's contributions"
+msgstr "%(author_name)s 'ın katkılarıyla"
+
+#: forum/skins/default/templates/questions.html:151
+msgid "tagged"
+msgstr "etiketlendi"
+
+#: forum/skins/default/templates/questions.html:157
+msgid "Search tips:"
+msgstr "Arama ipuçları:"
+
+#: forum/skins/default/templates/questions.html:161
+msgid "reset author"
+msgstr "yazarı sil"
+
+#: forum/skins/default/templates/questions.html:165
+msgid "reset tags"
+msgstr "etiketleri temizle"
+
+#: forum/skins/default/templates/questions.html:169
+#: forum/skins/default/templates/questions.html:173
+msgid "start over"
+msgstr "baştan başla"
+
+#: forum/skins/default/templates/questions.html:175
+msgid " - to expand, or dig in by adding more tags and revising the query."
+msgstr "- daha fazla etiket eklemek veya incelemek için inceleme alanını genişlet"
+
+#: forum/skins/default/templates/questions.html:178
+msgid "Search tip:"
+msgstr "Arama ipucu:"
+
+#: forum/skins/default/templates/questions.html:178
+msgid "add tags and a query to focus your search"
+msgstr "etiketleri kullanmak, arama sonucuna tam olarak odaklanmanızı sağlar"
+
+#: forum/skins/default/templates/questions.html:190
+msgid "There are no unanswered questions here"
+msgstr "Harika! Cevapsız bir soru bile kalmamış..."
+
+#: forum/skins/default/templates/questions.html:193
+msgid "No favorite questions here. "
+msgstr "Malesef, henüz beğenilmiş bir soru mevcut değil."
+
+#: forum/skins/default/templates/questions.html:194
+msgid "Please start (bookmark) some questions when you visit them"
+msgstr "Beğendiğiniz soruları, favorilerinize ekleyebilirsiniz."
+
+#: forum/skins/default/templates/questions.html:199
+msgid "You can expand your search by "
+msgstr "Ayrıntılı arama yapabilirsiniz"
+
+#: forum/skins/default/templates/questions.html:203
+msgid "resetting author"
+msgstr "yazar sıfırlanıyor"
+
+#: forum/skins/default/templates/questions.html:207
+msgid "resetting tags"
+msgstr "etiketler sıfırlanıyor"
+
+#: forum/skins/default/templates/questions.html:211
+#: forum/skins/default/templates/questions.html:215
+msgid "starting over"
+msgstr "baştan başlıyor"
+
+#: forum/skins/default/templates/questions.html:220
+msgid "Please always feel free to ask your question!"
+msgstr "Lütfen, asla soru sormaktan çekinmeyin! Sorun ki, başkaları da öğrensin!"
+
+#: forum/skins/default/templates/questions.html:224
+msgid "Did not find what you were looking for?"
+msgstr "Aradığını bulamadın mı?"
+
+#: forum/skins/default/templates/questions.html:225
+msgid "Please, post your question!"
+msgstr "Hemen kendi sorunu yolla!"
+
+#: forum/skins/default/templates/questions.html:241
+msgid "Contributors"
+msgstr "Yazarlar"
+
+#: forum/skins/default/templates/questions.html:254
+msgid "Related tags"
+msgstr "İlgili etiketler"
+
+#: forum/skins/default/templates/reopen.html:6
+#: forum/skins/default/templates/reopen.html:16
+msgid "Reopen question"
+msgstr "Soruyu yeniden aç"
+
+#: forum/skins/default/templates/reopen.html:19
+msgid "Open the previously closed question"
+msgstr "Daha önce kapalıtılan soru aç"
+
+#: forum/skins/default/templates/reopen.html:22
+msgid "The question was closed for the following reason "
+msgstr "Soru şu sebepten dolayı kaldırıldı:"
+
+#: forum/skins/default/templates/reopen.html:22
+msgid "reason - leave blank in english"
+msgstr "Sorunun kaldırılma sebebi"
+
+#: forum/skins/default/templates/reopen.html:22
+msgid "on "
+msgstr "yayında"
+
+#: forum/skins/default/templates/reopen.html:22
+msgid "date closed"
+msgstr "kapatılma tarihi"
+
+#: forum/skins/default/templates/reopen.html:29
+msgid "Reopen this question"
+msgstr "Bu soruyu tekrar aç"
+
+#: forum/skins/default/templates/revisions_answer.html:7
+#: forum/skins/default/templates/revisions_answer.html:38
+#: forum/skins/default/templates/revisions_question.html:8
+#: forum/skins/default/templates/revisions_question.html:38
+msgid "Revision history"
+msgstr "düzenleme geçmişi"
+
+#: forum/skins/default/templates/revisions_answer.html:50
+#: forum/skins/default/templates/revisions_question.html:50
+msgid "click to hide/show revision"
+msgstr "düzenlemeleri gizle/göster"
+
+#: forum/skins/default/templates/tag_selector.html:5
+msgid "Interesting tags"
+msgstr "İlginç etiketler"
+
+#: forum/skins/default/templates/tag_selector.html:15
+#, python-format
+msgid "remove '%(tag_name)s' from the list of interesting tags"
+msgstr "ilginizi çeken etiketler kısmından '%(tag_name)s' etiketini sil"
+
+#: forum/skins/default/templates/tag_selector.html:21
+#: forum/skins/default/templates/tag_selector.html:38
+msgid "Add"
+msgstr "Ekle"
+
+#: forum/skins/default/templates/tag_selector.html:22
+msgid "Ignored tags"
+msgstr "Yoksayılan etiketler"
+
+#: forum/skins/default/templates/tag_selector.html:32
+#, python-format
+msgid "remove '%(tag_name)s' from the list of ignored tags"
+msgstr "yoksaydığınız  etiketler kısmından '%(tag_name)s' etiketini sil"
+
+#: forum/skins/default/templates/tag_selector.html:41
+msgid "keep ignored questions hidden"
+msgstr "yoksayılan soruları gizle"
+
+#: forum/skins/default/templates/tags.html:6
+#: forum/skins/default/templates/tags.html:30
+msgid "Tag list"
+msgstr "Etiket listesi"
+
+#: forum/skins/default/templates/tags.html:32
+msgid "sorted alphabetically"
+msgstr "alfabetik sıraya göre"
+
+#: forum/skins/default/templates/tags.html:32
+msgid "by name"
+msgstr "isime göre"
+
+#: forum/skins/default/templates/tags.html:33
+msgid "sorted by frequency of tag use"
+msgstr "etiket kullanım sıklığına göre"
+
+#: forum/skins/default/templates/tags.html:33
+msgid "by popularity"
+msgstr "popülerliğe göre"
+
+#: forum/skins/default/templates/tags.html:39
+#, python-format
+msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgstr "Tüm etiketleri eşleştirme '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+
+#: forum/skins/default/templates/tags.html:42
+msgid "Nothing found"
+msgstr "Hiçbir şey bulunamadı"
+
+#: forum/skins/default/templates/user_edit.html:6
+msgid "Edit user profile"
+msgstr "Kullanıcı profilini düzenle"
+
+#: forum/skins/default/templates/user_edit.html:19
+msgid "edit profile"
+msgstr "profil değiştir"
+
+#: forum/skins/default/templates/user_edit.html:33
+#: forum/skins/default/templates/user_info.html:53
+msgid "Registered user"
+msgstr "Kayıtlı kullanıcı"
+
+#: forum/skins/default/templates/user_edit.html:40
+msgid "Screen Name"
+msgstr "Görünen isim"
+
+#: forum/skins/default/templates/user_edit.html:89
+#: forum/skins/default/templates/user_email_subscriptions.html:20
+msgid "Update"
+msgstr "Güncelleme"
+
+#: forum/skins/default/templates/user_email_subscriptions.html:8
+msgid "Email subscription settings"
+msgstr "E-mail abonelik ayarları"
+
+#: forum/skins/default/templates/user_email_subscriptions.html:9
+msgid "email subscription settings info"
+msgstr "E-mail abonelik ayarları bilgisi"
+
+#: forum/skins/default/templates/user_email_subscriptions.html:21
+msgid "Stop sending email"
+msgstr "E-mail yollamayı duraklat"
+
+#: forum/skins/default/templates/user_info.html:18
+msgid "change picture"
+msgstr "resim değiştir"
+
+#: forum/skins/default/templates/user_info.html:25
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:924
+msgid "reputation"
+msgstr "itibar puanı"
+
+#: forum/skins/default/templates/user_info.html:35
+msgid "Moderate this user"
+msgstr "Bu kullanıcıyı yönet"
+
+#: forum/skins/default/templates/user_info.html:47
+msgid "update profile"
+msgstr "profil güncelleme"
+
+#: forum/skins/default/templates/user_info.html:57
+msgid "real name"
+msgstr "gerçek ismi"
+
+#: forum/skins/default/templates/user_info.html:62
+msgid "member for"
+msgstr "üye için"
+
+#: forum/skins/default/templates/user_info.html:67
+msgid "last seen"
+msgstr "son görülme"
+
+#: forum/skins/default/templates/user_info.html:73
+msgid "user website"
+msgstr "websitesi"
+
+#: forum/skins/default/templates/user_info.html:79
+msgid "location"
+msgstr "yer"
+
+#: forum/skins/default/templates/user_info.html:86
+msgid "age"
+msgstr "yaş"
+
+#: forum/skins/default/templates/user_info.html:87
+msgid "age unit"
+msgstr "yaş aralığı"
+
+#: forum/skins/default/templates/user_info.html:93
+msgid "todays unused votes"
+msgstr "bugün kullanılmayan oy"
+
+#: forum/skins/default/templates/user_info.html:94
+msgid "votes left"
+msgstr "oy kullandı"
+
+#: forum/skins/default/templates/user_reputation.html:29
+msgid "Your karma change log."
+msgstr "Karma değişiklik kayıtları"
+
+#: forum/skins/default/templates/user_reputation.html:31
+#, python-format
+msgid "%(user_name)s's karma change log"
+msgstr "%(user_name)s 'nin karma değişim günlüğü"
+
+#: forum/skins/default/templates/user_stats.html:12
+#, python-format
+msgid ""
+"\n"
+"                <span class=\"count\">1</span> Question\n"
+"                "
+msgid_plural ""
+"\n"
+"                <span class=\"count\">%(counter)s</span> Questions\n"
+"                "
+msgstr[0] ""
+"\n"
+"<span class=\"count\">1</span> Soru\n"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Soru"
+
+#: forum/skins/default/templates/user_stats.html:23
+#, python-format
+msgid ""
+"\n"
+"                <span class=\"count\">1</span> Answer\n"
+"                "
+msgid_plural ""
+"\n"
+"                <span class=\"count\">%(counter)s</span> Answers\n"
+"                "
+msgstr[0] ""
+"\n"
+"<span class=\"count\">1</span> Cevap\n"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Cevap"
+
+#: forum/skins/default/templates/user_stats.html:36
+#, python-format
+msgid "the answer has been voted for %(answer_score)s times"
+msgstr "cevap için %(answer_score)s kez oy kullanıldı"
+
+#: forum/skins/default/templates/user_stats.html:36
+msgid "this answer has been selected as correct"
+msgstr "bu cevap doğru olarak seçildi"
+
+#: forum/skins/default/templates/user_stats.html:46
+#, python-format
+msgid ""
+"\n"
+"                    (one comment)\n"
+"                    "
+msgid_plural ""
+"\n"
+"                    the answer has been commented %(comment_count)s times\n"
+"                    "
+msgstr[0] ""
+"\n"
+"(bir kez yorum yazıldı)\n"
+msgstr[1] "Cevap %(comment_count)s kez yorumlandı."
+
+#: forum/skins/default/templates/user_stats.html:61
+#, python-format
+msgid ""
+"\n"
+"                    <span class=\"count\">1</span> Vote\n"
+"                "
+msgid_plural ""
+"\n"
+"                    <span class=\"count\">%(cnt)s</span> Votes\n"
+"                "
+msgstr[0] ""
+"\n"
+"<span class=\"count\">1</span> oy\n"
+msgstr[1] "<span class=\"count\">%(cnt)s</span> oy"
+
+#: forum/skins/default/templates/user_stats.html:72
+msgid "thumb up"
+msgstr "beğen"
+
+#: forum/skins/default/templates/user_stats.html:73
+msgid "user has voted up this many times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/skins/default/templates/user_stats.html:77
+msgid "thumb down"
+msgstr "beğenme"
+
+#: forum/skins/default/templates/user_stats.html:78
+msgid "user voted down this many times"
+msgstr "kullanıcılar tarafından defalarca beğenilmedi"
+
+#: forum/skins/default/templates/user_stats.html:87
+#, python-format
+msgid ""
+"\n"
+"                    <span class=\"count\">1</span> Tag\n"
+"                "
+msgid_plural ""
+"\n"
+"                    <span class=\"count\">%(counter)s</span> Tags\n"
+"                "
+msgstr[0] ""
+"\n"
+"<span class=\"count\">1</span> Gün\n"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Gün"
+
+#: forum/skins/default/templates/user_stats.html:100
+#, python-format
+msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgstr "%(view_user)s 'nin diğer '%(tag_name)s' etiketli diğer sorularını gör"
+
+#: forum/skins/default/templates/user_stats.html:115
+#, python-format
+msgid ""
+"\n"
+"            <span class=\"count\">1</span> Badge\n"
+"            "
+msgid_plural ""
+"\n"
+"            <span class=\"count\">%(counter)s</span> Badges\n"
+"            "
+msgstr[0] ""
+"\n"
+"<span class=\"count\">1</span> Madalya\n"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Madalya"
+
+#: forum/skins/default/templates/user_tabs.html:7
+msgid "User profile"
+msgstr "Kullanıcı profili"
+
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:898
+msgid "overview"
+msgstr "genel bakış"
+
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:906
+msgid "recent activity"
+msgstr "son etkinlik"
+
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:916
+msgid "comments and answers to others questions"
+msgstr "diğer sorulara cevaplar ve yorumlar"
+
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:915
+msgid "responses"
+msgstr "cevaplar"
+
+#: forum/skins/default/templates/user_tabs.html:16
+msgid "graph of user reputation"
+msgstr "kullanıcı itibar grafiği"
+
+#: forum/skins/default/templates/user_tabs.html:17
+msgid "reputation history"
+msgstr "itibar geçmişi"
+
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:942
+msgid "user vote record"
+msgstr "kullanıcı oy rekoru"
+
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:941
+msgid "casted votes"
+msgstr "kritik oy"
+
+#: forum/skins/default/templates/user_tabs.html:23
+msgid "questions that user selected as his/her favorite"
+msgstr "kullanıcının favori olarak seçtiği sorular"
+
+#: forum/skins/default/templates/user_tabs.html:24
+msgid "favorites"
+msgstr "favoriler"
+
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:951
+msgid "email subscription settings"
+msgstr "E-mail abonelik ayarları"
+
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:950
+msgid "email subscriptions"
+msgstr "e-mail abonelikleri"
+
+#: forum/skins/default/templates/users.html:6
+#: forum/skins/default/templates/users.html:24
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#: forum/skins/default/templates/users.html:27
+msgid "recent"
+msgstr "son"
+
+#: forum/skins/default/templates/users.html:29
+msgid "by username"
+msgstr "kullanıcı tarafından"
+
+#: forum/skins/default/templates/users.html:35
+#, python-format
+msgid "users matching query %(suser)s:"
+msgstr "kullanıcı sorgusuna eşleşen %(suser)s :"
+
+#: forum/skins/default/templates/users.html:39
+msgid "Nothing found."
+msgstr "Hiçbir şey bulunamadı."
+
+#: forum/skins/default/templates/users_questions.html:11
+msgid "this questions was selected as favorite"
+msgstr "Bu sorular favori olarak seçildi"
+
+#: forum/skins/default/templates/users_questions.html:12
+msgid "thumb-up on"
+msgstr "Küçük beğeni resmi açık"
+
+#: forum/skins/default/templates/users_questions.html:19
+msgid "thumb-up off"
+msgstr "Küçük beğeni resmi kapalı"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:3
+#: forum/skins/default/templates/authopenid/changeemail.html:9
+#: forum/skins/default/templates/authopenid/changeemail.html:38
+msgid "Change email"
+msgstr "E-mai değiştir"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:11
+msgid "Save your email address"
+msgstr "E-mail adresinizi kaydedin"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:16
+#, python-format
+msgid "change %(email)s info"
+msgstr "%(email)s değişiklik bilgisi"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:18
+#, python-format
+msgid "here is why email is required, see %(gravatar_faq_url)s"
+msgstr "buraya bakarak neden E-mail adresinin gerekli olduğunu görebilirsiniz: %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:31
+msgid "Your new Email"
+msgstr "Yeni E-mail adresiniz"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:31
+msgid "Your Email"
+msgstr "E-mail adresiniz"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:38
+msgid "Save Email"
+msgstr "E-mail adresini kaydet"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:49
+msgid "Validate email"
+msgstr "E-mail adresini doğrula"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:52
+#, python-format
+msgid "validate %(email)s info or go to %(change_email_url)s"
+msgstr " %(email)s adresini doğrulayın ya da  %(change_email_url)s adresine gidin."
+
+#: forum/skins/default/templates/authopenid/changeemail.html:57
+msgid "Email not changed"
+msgstr "E-mail değişmedi"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:60
+#, python-format
+msgid "old %(email)s kept, if you like go to %(change_email_url)s"
+msgstr "eski %(email)s saklansın diyorsanız, %(change_email_url)s adresi size yardımcı olacaktır."
+
+#: forum/skins/default/templates/authopenid/changeemail.html:65
+msgid "Email changed"
+msgstr "E-mail değiştirildi"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:68
+#, python-format
+msgid "your current %(email)s can be used for this"
+msgstr "şu anki geçerli %(email)s bunun için kullanılabilir"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:73
+msgid "Email verified"
+msgstr "E-mail doğrulandı"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:76
+msgid "thanks for verifying email"
+msgstr "E-mail doğrulaması için teşekkürler..."
+
+#: forum/skins/default/templates/authopenid/changeemail.html:81
+msgid "email key not sent"
+msgstr "E-mail anahtarı yollanmadı"
+
+#: forum/skins/default/templates/authopenid/changeemail.html:84
+#, python-format
+msgid "email key not sent %(email)s change email here %(change_link)s"
+msgstr "E-mail şifresi %(email)s yollanamadı. E-mail değiştirmek için: %(change_link)s adresine bakın."
+
+#: forum/skins/default/templates/authopenid/changeopenid.html:8
+msgid "Account: change OpenID URL"
+msgstr "Hesabınız hakkında: OpenID adresini değiştirin"
+
+#: forum/skins/default/templates/authopenid/changeopenid.html:12
+msgid "This is where you can change your OpenID URL. Make sure you remember it!"
+msgstr "Burada OpenID adresinizi değiştirebilirsiniz. Bu değişikliği hatırlayabileceğinizden emin olun!"
+
+#: forum/skins/default/templates/authopenid/changeopenid.html:14
+#: forum/skins/default/templates/authopenid/delete.html:14
+#: forum/skins/default/templates/authopenid/delete.html:24
+msgid "Please correct errors below:"
+msgstr "Lütfen aşağıdaki hataları düzeltin:"
+
+#: forum/skins/default/templates/authopenid/changeopenid.html:29
+msgid "OpenID URL:"
+msgstr "OpenID adresi:"
+
+#: forum/skins/default/templates/authopenid/changepw.html:7
+msgid "Account: change password"
+msgstr "Hesabınız: Şifremi değiştir"
+
+#: forum/skins/default/templates/authopenid/changepw.html:8
+msgid "This is where you can change your password. Make sure you remember it!"
+msgstr "Burada şifrenizi değiştirebilirsiniz. Yeni şifrenizin, hatırlıyacağınız bir şifre olduğundan emin olun!"
+
+#: forum/skins/default/templates/authopenid/complete.html:19
+msgid "Connect your OpenID with this site"
+msgstr "OpenID hesabınızla giriş yapın"
+
+#: forum/skins/default/templates/authopenid/complete.html:22
+msgid "Connect your OpenID with your account on this site"
+msgstr "Bu siteye OpenID hesabınızla giriş yapın"
+
+#: forum/skins/default/templates/authopenid/complete.html:27
+#, python-format
+msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr "Yeni %(provider)s hesabı kayıt bilgisi için lütfen bakınız: %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/authopenid/complete.html:31
+#, python-format
+msgid ""
+"%(username)s already exists, choose another name for \n"
+"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
+"                        "
+msgstr "%(username)s kullanıcı adı, %(provider)s için başka birisi tarafından alınmıştır. Başka bir isim deneyin.  Lütfen okuyun: %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/authopenid/complete.html:35
+#, python-format
+msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr "başka bir %(provider)s hesabı kaydetmek için bakınız:  %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/authopenid/complete.html:38
+#, python-format
+msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
+msgstr "Yeni Facebook hesabı ile bağlanma kaydı bilgisi: %(gravatar_faq_url)s"
+
+#: forum/skins/default/templates/authopenid/complete.html:42
+msgid "This account already exists, please use another."
+msgstr "Bu kullanıcı adı sitemizde zaten kayıtlı. Lütfen başka bir tane deneyin."
+
+#: forum/skins/default/templates/authopenid/complete.html:57
+msgid "Sorry, looks like we have some errors:"
+msgstr "Üzgünüm...Bazı hatalar var gibi görünüyor:"
+
+#: forum/skins/default/templates/authopenid/complete.html:82
+msgid "Screen name label"
+msgstr "Görünen isim etiketi"
+
+#: forum/skins/default/templates/authopenid/complete.html:89
+msgid "Email address label"
+msgstr "E-mail etiketi"
+
+#: forum/skins/default/templates/authopenid/complete.html:95
+#: forum/skins/default/templates/authopenid/signup.html:18
+msgid "receive updates motivational blurb"
+msgstr "Blurb güncellemelerini al"
+
+#: forum/skins/default/templates/authopenid/complete.html:99
+#: forum/skins/default/templates/authopenid/signup.html:22
+msgid "please select one of the options above"
+msgstr "Lütfen yukarıdaki seçeneklerden birini seçin"
+
+#: forum/skins/default/templates/authopenid/complete.html:102
+msgid "Tag filter tool will be your right panel, once you log in."
+msgstr "Etiket filtreleme aracı sağ panelde, oturum açınca bir kez görünecektir."
+
+#: forum/skins/default/templates/authopenid/complete.html:103
+msgid "create account"
+msgstr "hesap oluştur"
+
+#: forum/skins/default/templates/authopenid/complete.html:112
+msgid "Existing account"
+msgstr "Hesabım var"
+
+#: forum/skins/default/templates/authopenid/complete.html:113
+msgid "user name"
+msgstr "kullanıcı adı"
+
+#: forum/skins/default/templates/authopenid/complete.html:114
+msgid "password"
+msgstr "şifre"
+
+#: forum/skins/default/templates/authopenid/complete.html:121
+msgid "Register"
+msgstr "Kayıt"
+
+#: forum/skins/default/templates/authopenid/complete.html:122
+#: forum/skins/default/templates/authopenid/signin.html:168
+msgid "Forgot your password?"
+msgstr "Şifrenizi mi unuttunuz?"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:2
+msgid "Thank you for registering at our Q&A forum!"
+msgstr "Sorucevap.de sitesine kayıt olduğunuz için teşekkür ederiz!"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:4
+msgid "Your account details are:"
+msgstr "Hesap ayrıntılarınız şöyledir:"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:6
+msgid "Username:"
+msgstr "Kullanıcı adı:"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:7
+#: forum/skins/default/templates/authopenid/delete.html:19
+msgid "Password:"
+msgstr "Şifre:"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:9
+msgid "Please sign in here:"
+msgstr "Lütfen buradan giriş yapın:"
+
+#: forum/skins/default/templates/authopenid/confirm_email.txt:12
+#: forum/skins/default/templates/authopenid/email_validation.txt:14
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:8
+msgid ""
+"Sincerely,\n"
+"Forum Administrator"
+msgstr "Saygılarımızla, <BR> Site yönetimi"
+
+#: forum/skins/default/templates/authopenid/delete.html:8
+msgid "Account: delete account"
+msgstr "Hesabınız: hesabımı sil"
+
+#: forum/skins/default/templates/authopenid/delete.html:12
+msgid "Note: After deleting your account, anyone will be able to register this username."
+msgstr "Not: Hesabınızı sildikten sonra, artık hiç kimse bu kullanıcı adı ile kayıt olamayacaktır."
+
+#: forum/skins/default/templates/authopenid/delete.html:16
+msgid "Check confirm box, if you want delete your account."
+msgstr "Hesabınızı silmek istediğinizi, onay kutucuğunu işaretleyip onaylayın."
+
+#: forum/skins/default/templates/authopenid/delete.html:31
+msgid "I am sure I want to delete my account."
+msgstr "Hesabımı silmek istediğimden eminim."
+
+#: forum/skins/default/templates/authopenid/delete.html:32
+msgid "Password/OpenID URL"
+msgstr "Şifre ya da OpenID adresi"
+
+#: forum/skins/default/templates/authopenid/delete.html:32
+msgid "(required for your security)"
+msgstr "(güvenliğiniz için gereklidir)"
+
+#: forum/skins/default/templates/authopenid/delete.html:34
+msgid "Delete account permanently"
+msgstr "hesabı kalıcı olarak sil"
+
+#: forum/skins/default/templates/authopenid/email_validation.txt:2
+msgid "Greetings from the Q&A forum"
+msgstr "Sorucevap.de sitesinden selamlar..."
+
+#: forum/skins/default/templates/authopenid/email_validation.txt:4
+msgid "To make use of the Forum, please follow the link below:"
+msgstr "Forum faydalanmak için, aşağıdaki bağlantıyı takip edin:"
+
+#: forum/skins/default/templates/authopenid/email_validation.txt:8
+msgid "Following the link above will help us verify your email address."
+msgstr "Yukarıdaki bağlantı, E-mail adresinizi doğrulamada yardımcı olacaktır."
+
+#: forum/skins/default/templates/authopenid/email_validation.txt:10
+msgid ""
+"If you beleive that this message was sent in mistake - \n"
+"no further action is needed. Just ingore this email, we apologize\n"
+"for any inconvenience"
+msgstr "Eğer bu mesajın size yanlışlıkla gönderildiğini düşünüyorsanız, hiçbir şey yapmanıza gerek yok. <BR> Bu mesajı dikkate almayın. <BR> Bu durum için özür dileriz."
+
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:4
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:7
+msgid "Traditional login information"
+msgstr "Her zamanki giriş bilgileri"
+
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
+#, python-format
+msgid "how to login with password through external login website or use %(feedback_url)s"
+msgstr "Sitemize harici bir şifre ile nasıl girilebileceğini mi öğrenmek istiyorsunuz? Tıklayın: %(feedback_url)s"
+
+#: forum/skins/default/templates/authopenid/sendpw.html:4
+#: forum/skins/default/templates/authopenid/sendpw.html:7
+msgid "Send new password"
+msgstr "Yeni şifre gönder"
+
+#: forum/skins/default/templates/authopenid/sendpw.html:10
+msgid "password recovery information"
+msgstr "şifre kurtarma bilgisi"
+
+#: forum/skins/default/templates/authopenid/sendpw.html:21
+msgid "Reset password"
+msgstr "Şifreyi sıfırla"
+
+#: forum/skins/default/templates/authopenid/sendpw.html:22
+msgid "return to login"
+msgstr "girişe dön"
+
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:2
+#, python-format
+msgid ""
+"Someone has requested to reset your password on %(site_url)s.\n"
+"If it were not you, it is safe to ignore this email."
+msgstr "%(site_url)s sitesindeki kullanıcı, sizin E-mail adresiniz ile şifresini sıfırlamaya çalışıyor. Eğer bunu kendiniz istemediyseniz, hiçbir şeye tıklamayın ve bu mesajı dikkate almayın."
+
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:5
+#, python-format
+msgid ""
+"email explanation how to use new %(password)s for %(username)s\n"
+"with the %(key_link)s"
+msgstr "%(username)s için yeni şifre %(password)s ve kullanım açıklaması için link:  %(key_link)s"
+
+#: forum/skins/default/templates/authopenid/signin.html:5
+#: forum/skins/default/templates/authopenid/signin.html:21
+msgid "User login"
+msgstr "Kullanıcı girişi"
+
+#: forum/skins/default/templates/authopenid/signin.html:28
+#, python-format
+msgid ""
+"\n"
+"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
+"                "
+msgstr ""
+"\n"
+"\"%(title)s\" başlıklı soruya yazdığınız \"%(summary)s\" cevabını yollamak için giriş yapmalısınız."
+
+#: forum/skins/default/templates/authopenid/signin.html:35
+#, python-format
+msgid ""
+"Your question \n"
+"                %(title)s %(summary)s will be posted once you log in\n"
+"                "
+msgstr "\"%(title)s\" başlıklı \"%(summary)s\" sorunuzu yollamak için giriş yapmalısınız."
+
+#: forum/skins/default/templates/authopenid/signin.html:42
+msgid "Click to sign in through any of these services."
+msgstr "Bu hizmetlerden yararlanmak için üye girişi yapın."
+
+#: forum/skins/default/templates/authopenid/signin.html:144
+msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
+msgstr "<span id=\"enter_your_what\">Provider kullanıcı adınız</span>"
+
+#: forum/skins/default/templates/authopenid/signin.html:151
+msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
+msgstr "<a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> adresinizi girin"
+
+#: forum/skins/default/templates/authopenid/signin.html:153
+#: forum/skins/default/templates/authopenid/signin.html:166
+msgid "Login"
+msgstr "Giriş"
+
+#: forum/skins/default/templates/authopenid/signin.html:157
+msgid "Enter your login name and password"
+msgstr "Kullanıcı adınızı ve şifrenizi girin"
+
+#: forum/skins/default/templates/authopenid/signin.html:161
+msgid "Login name"
+msgstr "Kullanıcı adı"
+
+#: forum/skins/default/templates/authopenid/signin.html:163
+msgid "Password"
+msgstr "Şifre"
+
+#: forum/skins/default/templates/authopenid/signin.html:167
+msgid "Create account"
+msgstr "Hesap oluştur"
+
+#: forum/skins/default/templates/authopenid/signin.html:178
+msgid "Why use OpenID?"
+msgstr "Neden OpenID kullanıyoruz?"
+
+#: forum/skins/default/templates/authopenid/signin.html:181
+msgid "with openid it is easier"
+msgstr "OpenID ile üye girişleri daha kolay"
+
+#: forum/skins/default/templates/authopenid/signin.html:184
+msgid "reuse openid"
+msgstr "OpenID yeni kullanıyorum"
+
+#: forum/skins/default/templates/authopenid/signin.html:187
+msgid "openid is widely adopted"
+msgstr "OpenID yaygın olarak benimsenmiştir"
+
+#: forum/skins/default/templates/authopenid/signin.html:190
+msgid "openid is supported open standard"
+msgstr "OpenID açık kaynak standartları ile desteklenmektedir"
+
+#: forum/skins/default/templates/authopenid/signin.html:195
+msgid "Find out more"
+msgstr "Daha fazla bilgi"
+
+#: forum/skins/default/templates/authopenid/signin.html:196
+msgid "Get OpenID"
+msgstr "OpenID hesabı açın"
+
+#: forum/skins/default/templates/authopenid/signup.html:4
+msgid "Signup"
+msgstr "Kaydol"
+
+#: forum/skins/default/templates/authopenid/signup.html:8
+msgid "Create login name and password"
+msgstr "Kullanıcı adı ve şifre oluştur"
+
+#: forum/skins/default/templates/authopenid/signup.html:10
+msgid "Traditional signup info"
+msgstr "Normal giriş bilgileri hakkında bilgi"
+
+#: forum/skins/default/templates/authopenid/signup.html:25
+msgid "Please read and type in the two words below to help us prevent automated account creation."
+msgstr "Lütfen aşağıdaki iki kelimeyi yazın. Çünkü bazı otomatik hesap oluşturucular, sitemize böyle kayıt olup, gerçek olmayan içerikler eklemektedir."
+
+#: forum/skins/default/templates/authopenid/signup.html:27
+msgid "Create Account"
+msgstr "Hesap oluştur"
+
+#: forum/skins/default/templates/authopenid/signup.html:28
+msgid "or"
+msgstr "veya"
+
+#: forum/skins/default/templates/authopenid/signup.html:29
+msgid "return to OpenID login"
+msgstr "OpenID girişine dön"
+
+#: forum/skins/default/templates/fbconnect/xd_receiver.html:5
+#, python-format
+msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
+msgstr "%(APP_SHORT_NAME)s 'a Facebook hesabınızla bağlanın!"
+
+#: forum/templatetags/extra_tags.py:53
+#, python-format
+msgid "%(username)s gravatar image"
+msgstr "<CODE>%(username)s</code> Gravatar görüntüsü"
+
+#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
+msgid "reputation points"
+msgstr "itibar puanları"
+
+#: forum/templatetags/extra_tags.py:265
+msgid "2 days ago"
+msgstr "2 gün önce"
+
+#: forum/templatetags/extra_tags.py:267
+msgid "yesterday"
+msgstr "dün"
+
+#: forum/templatetags/extra_tags.py:269
+#, python-format
+msgid "%(hr)d hour ago"
+msgid_plural "%(hr)d hours ago"
+msgstr[0] "%(hr)d saat önce"
+msgstr[1] "%(hr)d saat önce"
+
+#: forum/templatetags/extra_tags.py:271
+#, python-format
+msgid "%(min)d min ago"
+msgid_plural "%(min)d mins ago"
+msgstr[0] "%(min)d dakika önce"
+msgstr[1] "%(min)d dakika önce"
+
+#: forum/utils/forms.py:30
+msgid "this field is required"
+msgstr "bu alanın doldurulması gereklidir"
+
+#: forum/utils/forms.py:45
+msgid "choose a username"
+msgstr "bir kullanıcı adı seçin"
+
+#: forum/utils/forms.py:50
+msgid "user name is required"
+msgstr "kullanıcı adı doldurulması gerekli alandır"
+
+#: forum/utils/forms.py:51
+msgid "sorry, this name is taken, please choose another"
+msgstr "üzgünüm, bu isim başkası tarafından kullanılıyor."
+
+#: forum/utils/forms.py:52
+msgid "sorry, this name is not allowed, please choose another"
+msgstr "Üzgünüm, bu ismin kullanılmasına izin verilmiyor. Başka bir tane deneyin."
+
+#: forum/utils/forms.py:53
+msgid "sorry, there is no user with this name"
+msgstr "Üzgünüm, bu isimle kayıtlı bir kullanıcı yoktur"
+
+#: forum/utils/forms.py:54
+msgid "sorry, we have a serious error - user name is taken by several users"
+msgstr "Üzgünüm, ciddi bir sorun var! Bu kullanıcı adı farklı kullanıcılar tarafından alınmıştır."
+
+#: forum/utils/forms.py:55
+msgid "user name can only consist of letters, empty space and underscore"
+msgstr "kullanıcı adı sadece harf, rakam veya altçizgiden oluşur"
+
+#: forum/utils/forms.py:109
+msgid "your email address"
+msgstr "E-mail adresiniz"
+
+#: forum/utils/forms.py:110
+msgid "email address is required"
+msgstr "E-mail adresinizi yazmalısınız"
+
+#: forum/utils/forms.py:111
+msgid "please enter a valid email address"
+msgstr "geçerli bir e-mail adresi girin"
+
+#: forum/utils/forms.py:112
+msgid "this email is already used by someone else, please choose another"
+msgstr "Bu E-mail sitemizde kullanılıyor. Şifre hatırlatmayı deneyebilir ya da yeniden kayıt olabilirsiniz."
+
+#: forum/utils/forms.py:140
+msgid "choose password"
+msgstr "şifre seçin"
+
+#: forum/utils/forms.py:141
+msgid "password is required"
+msgstr "şifre yazmalısınız."
+
+#: forum/utils/forms.py:144
+msgid "retype password"
+msgstr "şifreyi yeniden yazın"
+
+#: forum/utils/forms.py:145
+msgid "please, retype your password"
+msgstr "lütfen şifrenizi yeniden yazın"
+
+#: forum/utils/forms.py:146
+msgid "sorry, entered passwords did not match, please try again"
+msgstr "Üzgünüm, şifreler uyuşmuyor lütfen tekrar deneyin."
+
+#: forum/views/commands.py:209
+#, python-format
+msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
+msgstr "aboneliğiniz kaydedildi %(email)s adresindeki doğrulama linkini tıklamalısınız. Ayrıntılar için: %(details_url)s"
+
+#: forum/views/commands.py:217
+msgid "email update frequency has been set to daily"
+msgstr "E-mail güncelleme sıklığı günlük olarak belirtilmiştir."
+
+#: forum/views/meta.py:34
+msgid "Q&A forum feedback"
+msgstr "Sorucevap.de geribildirim"
+
+#: forum/views/meta.py:35
+msgid "Thanks for the feedback!"
+msgstr "Görüşleriniz için teşekkür ederiz!"
+
+#: forum/views/meta.py:43
+msgid "We look forward to hearing your feedback! Please, give it next time :)"
+msgstr "Görüşlerinizi bekliyoruz! Lütfen bize, yakın bir zamanda mutlaka sitemiz hakkındaki görüşlerinizi bildirin :)"
+
+#: forum/views/users.py:859 forum/views/users.py:863
+msgid "changes saved"
+msgstr "değişiklikler kaydedildi"
+
+#: forum/views/users.py:869
+msgid "email updates canceled"
+msgstr "E-mail güncellemeleri iptal edildi"
+
+#: forum/views/users.py:899
+msgid "user profile"
+msgstr "kullanıcı profili"
+
+#: forum/views/users.py:900
+msgid "user profile overview"
+msgstr "kullanıcı profiline genel bakış"
+
+#: forum/views/users.py:907
+msgid "recent user activity"
+msgstr "son kullanıcı etkinliği"
+
+#: forum/views/users.py:908
+msgid "profile - recent activity"
+msgstr "profil - son etkinlikler"
+
+#: forum/views/users.py:917
+msgid "profile - responses"
+msgstr "profil - cevapları"
+
+#: forum/views/users.py:925
+msgid "user reputation in the community"
+msgstr "sitemizde kullanıcının itibarı"
+
+#: forum/views/users.py:926
+msgid "profile - user reputation"
+msgstr "profil - kullanıcı itibarı"
+
+#: forum/views/users.py:932
+msgid "favorite questions"
+msgstr "favori sorular"
+
+#: forum/views/users.py:933
+msgid "users favorite questions"
+msgstr "kullanıcının favori soruları"
+
+#: forum/views/users.py:934
+msgid "profile - favorite questions"
+msgstr "profil - favori sorular"
+
+#: forum/views/users.py:943
+msgid "profile - votes"
+msgstr "profil - oy"
+
+#: forum/views/users.py:952
+msgid "profile - email subscriptions"
+msgstr "profil - e-mail abonelikleri"
+
+#: forum/views/writers.py:70
+msgid "uploading images is limited to users with >60 reputation points"
+msgstr "resim göndermek için en az 60 puan toplamalısınız"
+
+#: forum/views/writers.py:72
+msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+msgstr "izin verilen dosya türleri  ''jpeg, jpg, gif, bmp, tif, png''"
+
+#: forum/views/writers.py:74
+#, python-format
+msgid "maximum upload file size is %sK"
+msgstr "maksimum dosya yükleme boyutu %s Kb"
+
+#: forum/views/writers.py:76
+#, python-format
+msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
+msgstr "Yükleme dosyası hatası! Lütfen site yöneticisi ile iletişime geçin. Teşekkür ederiz. %s"
+
+#: forum_modules/authentication/auth.py:27
+msgid "Email Validation"
+msgstr "E-mail doğrulama"
+
+#: forum_modules/authentication/auth.py:38
+msgid "Thank you, your email is now validated."
+msgstr "E-mail adresinizi doğruladığınız için teşekkür ederiz."
+
+#: forum_modules/authentication/auth.py:62
+msgid "Your password was changed"
+msgstr "Şifreniz değiştirildi"
+
+#: forum_modules/authentication/auth.py:64
+msgid "New password set"
+msgstr "Yeni şifre ayarla"
+
+#: forum_modules/authentication/auth.py:130
+#, python-format
+msgid "Welcome back %s, you are now logged in"
+msgstr "Hoşgeldin %s, seni yeniden burada görmek güzel..."
+
+#: forum_modules/books/urls.py:7 forum_modules/books/urls.py:8
+#: forum_modules/books/urls.py:9
+msgid "books/"
+msgstr "kitaplar/"
