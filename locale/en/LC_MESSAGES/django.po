@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-25 22:00-0400\n"
+"POT-Creation-Date: 2010-05-01 12:43-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,9 +293,7 @@ msgstr ""
 msgid "too localized"
 msgstr ""
 
-#: forum/const.py:37 forum/skins/default/templates/index.html:28
-#: forum/skins/default/templates/index_.html:27
-#: forum/skins/default/templates/questions.html:70
+#: forum/const.py:37 forum/skins/default/templates/questions.html:70
 #: forum/skins/default/templates/questions.html:75
 msgid "newest"
 msgstr ""
@@ -314,8 +312,7 @@ msgstr ""
 msgid "inactive"
 msgstr ""
 
-#: forum/const.py:41 forum/skins/default/templates/index.html:29
-#: forum/skins/default/templates/index_.html:28
+#: forum/const.py:41
 msgid "hottest"
 msgstr ""
 
@@ -323,8 +320,7 @@ msgstr ""
 msgid "coldest"
 msgstr ""
 
-#: forum/const.py:43 forum/skins/default/templates/index.html:30
-#: forum/skins/default/templates/index_.html:29
+#: forum/const.py:43
 msgid "most voted"
 msgstr ""
 
@@ -514,7 +510,7 @@ msgstr[1] ""
 #: forum/forms.py:79
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
-msgid_plural "each tag must be shorter than %(max_shars)d characters"
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -844,27 +840,459 @@ msgstr ""
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr ""
 
-#: forum/models/question.py:488
+#: forum/migrations/0005_install_badges.py:10
+msgid "Disciplined"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "disciplined"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "Deleted own post with score of 3 or higher"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Peer Pressure"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "peer-pressure"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Deleted own post with score of -3 or lower"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "Nice answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "nice-answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "Answer voted up 10 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "Nice Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "nice-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "Question voted up 10 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "Pundit"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "pundit"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "Left 10 comments with score of 10 or more"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "Popular Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "popular-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "Asked a question with 1,000 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "Citizen patrol"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "citizen-patrol"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "First flagged post"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "Cleanup"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "cleanup"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "First rollback"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "Critic"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "critic"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "First down vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "Editor"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "editor"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "First edit"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "Organizer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "organizer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "First retag"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "Scholar"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "scholar"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "First accepted answer on your own question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Student"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "student"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Asked first question with at least one up vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "Supporter"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "supporter"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "First up vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "Teacher"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "teacher"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "Answered first question with at least one up vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "Autobiographer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "autobiographer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "Completed all user profile fields"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "Self-Learner"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "self-learner"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "Answered your own question with at least 3 up votes"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "Great Answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "great-answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "Answer voted up 100 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "Great Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "great-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "Question voted up 100 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "Stellar Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "stellar-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "Question favorited by 100 users"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "Famous question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "famous-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "Asked a question with 10,000 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Actively participated in the private alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "Good Answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "good-answer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "Answer voted up 25 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "Good Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "good-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "Question voted up 25 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "Favorite Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "favorite-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "Question favorited by 25 users"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Civic duty"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "civic-duty"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Voted 300 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Strunk & White"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "strunk-and-white"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Edited 100 entries"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "Generalist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "generalist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "Active in many different tags"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Expert"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "export"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Very active in one tag"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Yearling"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "yearling"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Active member for a year"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "Notable Question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "notable-question"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "Asked a question with 2,500 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "Enlightened"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "enlightened"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "First answer was accepted with at least 10 up votes"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Actively participated in the private beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "Guru"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "guru"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "Accepted answer and voted up 40 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Necromancer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "necromancer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Answered a question more than 60 days later with at least 5 votes"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "Taxonomist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "taxonomist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "Created a tag used by 50 questions"
+msgstr ""
+
+#: forum/models/question.py:499
 #, python-format
 msgid "%(author)s modified the question"
 msgstr ""
 
-#: forum/models/question.py:492
+#: forum/models/question.py:503
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: forum/models/question.py:497
+#: forum/models/question.py:508
 #, python-format
 msgid "%(people)s commented the question"
 msgstr ""
 
-#: forum/models/question.py:502
+#: forum/models/question.py:513
 #, python-format
 msgid "%(people)s commented answers"
 msgstr ""
 
-#: forum/models/question.py:504
+#: forum/models/question.py:515
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr ""
@@ -958,7 +1386,6 @@ msgid "see all questions"
 msgstr ""
 
 #: forum/skins/default/templates/404.html:43
-#: forum/skins/default/templates/index.html:65
 msgid "see all tags"
 msgstr ""
 
@@ -1376,7 +1803,6 @@ msgid "number of times"
 msgstr ""
 
 #: forum/skins/default/templates/book.html:105
-#: forum/skins/default/templates/index_.html:40
 #: forum/skins/default/templates/question_summary_list_roll.html:14
 msgid "votes"
 msgstr ""
@@ -1386,13 +1812,11 @@ msgid "the answer has been accepted to be correct"
 msgstr ""
 
 #: forum/skins/default/templates/book.html:115
-#: forum/skins/default/templates/index_.html:48
 #: forum/skins/default/templates/question_summary_list_roll.html:15
 msgid "views"
 msgstr ""
 
 #: forum/skins/default/templates/book.html:125
-#: forum/skins/default/templates/index_.html:63
 #: forum/skins/default/templates/question.html:136
 #: forum/skins/default/templates/question_list.html:19
 #: forum/skins/default/templates/question_summary_list_roll.html:52
@@ -1407,8 +1831,6 @@ msgid "subscribe to book RSS feed"
 msgstr ""
 
 #: forum/skins/default/templates/book.html:147
-#: forum/skins/default/templates/index.html:88
-#: forum/skins/default/templates/index_.html:115
 msgid "subscribe to the questions feed"
 msgstr ""
 
@@ -1664,8 +2086,6 @@ msgid "questions"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:130
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
 msgid "."
 msgstr ""
 
@@ -1730,15 +2150,11 @@ msgstr ""
 
 #: forum/skins/default/templates/footer.html:8
 #: forum/skins/default/templates/header.html:14
-#: forum/skins/default/templates/index.html:46
-#: forum/skins/default/templates/index_.html:77
 msgid "about"
 msgstr ""
 
 #: forum/skins/default/templates/footer.html:9
 #: forum/skins/default/templates/header.html:15
-#: forum/skins/default/templates/index.html:47
-#: forum/skins/default/templates/index_.html:78
 #: forum/skins/default/templates/question_edit_tips.html:17
 msgid "faq"
 msgstr ""
@@ -1772,7 +2188,7 @@ msgid "books"
 msgstr ""
 
 #: forum/skins/default/templates/header.html:33
-#: forum/templatetags/extra_tags.py:174 forum/templatetags/extra_tags.py:203
+#: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
 msgid "badges"
 msgstr ""
 
@@ -1784,110 +2200,6 @@ msgstr ""
 #: forum/skins/default/templates/header.html:36
 msgid "unanswered questions"
 msgstr "unanswered"
-
-#: forum/skins/default/templates/index.html:9
-#: forum/skins/default/templates/index_.html:8
-msgid "Home"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:26
-#: forum/skins/default/templates/index_.html:25
-#: forum/skins/default/templates/questions.html:8
-msgid "Questions"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:28
-#: forum/skins/default/templates/index_.html:27
-msgid "last updated questions"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:29
-#: forum/skins/default/templates/index_.html:28
-msgid "hottest questions"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:30
-#: forum/skins/default/templates/index_.html:29
-msgid "most voted questions"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:31
-#: forum/skins/default/templates/index_.html:30
-msgid "all questions"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:43
-#: forum/skins/default/templates/index_.html:74
-msgid "welcome to website"
-msgstr "Welcome to Q&amp;A forum"
-
-#: forum/skins/default/templates/index.html:54
-#: forum/skins/default/templates/index_.html:85
-msgid "Recent tags"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:60
-#: forum/skins/default/templates/index_.html:90
-#, python-format
-msgid "see questions tagged '%(tagname)s'"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:70
-#: forum/skins/default/templates/index_.html:99
-msgid "Recent awards"
-msgstr "Recent badges"
-
-#: forum/skins/default/templates/index.html:83
-#: forum/skins/default/templates/index_.html:110
-msgid "all awards"
-msgstr "all badges"
-
-#: forum/skins/default/templates/index.html:88
-#: forum/skins/default/templates/index_.html:115
-msgid "subscribe to last 30 questions by RSS"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
-msgid "Still looking for more? See"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
-msgid "complete list of questions"
-msgstr "list of all questions"
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
-#: forum/skins/default/templates/authopenid/signup.html:28
-msgid "or"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:94
-#: forum/skins/default/templates/index_.html:122
-msgid "popular tags"
-msgstr "tags"
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
-msgid "Please help us answer"
-msgstr ""
-
-#: forum/skins/default/templates/index.html:95
-#: forum/skins/default/templates/index_.html:122
-msgid "list of unanswered questions"
-msgstr "unanswered questions"
-
-#: forum/skins/default/templates/index_.html:42
-#: forum/skins/default/templates/question_counter_widget.html:21
-msgid "this answer has been accepted to be correct"
-msgstr ""
-
-#: forum/skins/default/templates/index_.html:44
-#: forum/skins/default/templates/question_summary_list_roll.html:13
-msgid "answers"
-msgstr ""
 
 #: forum/skins/default/templates/input_bar.html:33
 msgid "search"
@@ -2323,7 +2635,7 @@ msgid "Question tags"
 msgstr "Tags"
 
 #: forum/skins/default/templates/question.html:480
-#: forum/skins/default/templates/questions.html:246
+#: forum/skins/default/templates/questions.html:257
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
 #, python-format
@@ -2365,6 +2677,10 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
+
+#: forum/skins/default/templates/question_counter_widget.html:21
+msgid "this answer has been accepted to be correct"
+msgstr ""
 
 #: forum/skins/default/templates/question_counter_widget.html:27
 msgid ""
@@ -2426,6 +2742,14 @@ msgstr ""
 
 #: forum/skins/default/templates/question_retag.html:94
 msgid "tag editors receive special awards from the community"
+msgstr ""
+
+#: forum/skins/default/templates/question_summary_list_roll.html:13
+msgid "answers"
+msgstr ""
+
+#: forum/skins/default/templates/questions.html:8
+msgid "Questions"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:32
@@ -2611,7 +2935,11 @@ msgstr ""
 msgid "Please, post your question!"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:243
+#: forum/skins/default/templates/questions.html:241
+msgid "Contributors"
+msgstr ""
+
+#: forum/skins/default/templates/questions.html:254
 msgid "Related tags"
 msgstr "Tags"
 
@@ -3552,6 +3880,10 @@ msgstr ""
 msgid "Create Account"
 msgstr ""
 
+#: forum/skins/default/templates/authopenid/signup.html:28
+msgid "or"
+msgstr ""
+
 #: forum/skins/default/templates/authopenid/signup.html:29
 msgid "return to OpenID login"
 msgstr ""
@@ -3561,26 +3893,31 @@ msgstr ""
 msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:175 forum/templatetags/extra_tags.py:202
+#: forum/templatetags/extra_tags.py:53
+#, python-format
+msgid "%(username)s gravatar image"
+msgstr ""
+
+#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
 msgid "reputation points"
 msgstr "karma"
 
-#: forum/templatetags/extra_tags.py:262
+#: forum/templatetags/extra_tags.py:265
 msgid "2 days ago"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:264
+#: forum/templatetags/extra_tags.py:267
 msgid "yesterday"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:266
+#: forum/templatetags/extra_tags.py:269
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/templatetags/extra_tags.py:268
+#: forum/templatetags/extra_tags.py:271
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -3778,6 +4115,24 @@ msgstr ""
 #: forum_modules/books/urls.py:9
 msgid "books/"
 msgstr ""
+
+#~ msgid "welcome to website"
+#~ msgstr "Welcome to Q&amp;A forum"
+
+#~ msgid "Recent awards"
+#~ msgstr "Recent badges"
+
+#~ msgid "all awards"
+#~ msgstr "all badges"
+
+#~ msgid "complete list of questions"
+#~ msgstr "list of all questions"
+
+#~ msgid "popular tags"
+#~ msgstr "tags"
+
+#~ msgid "list of unanswered questions"
+#~ msgstr "unanswered questions"
 
 #~ msgid ""
 #~ " have total %(q_num)s questions containing %(searchtitle)s in full text "

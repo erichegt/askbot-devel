@@ -2,12 +2,12 @@
 # Copyright (C) 2010 Mike Chen and Askbot developers
 # This file is distributed under the same license as the Askbot package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-28 15:31-0400\n"
+"POT-Creation-Date: 2010-05-01 13:18-0400\n"
 "PO-Revision-Date: 2010-04-30 02:23\n"
 "Last-Translator: <oktayxy@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,15 +53,21 @@ msgid "Please enter user name"
 msgstr "Lütfen kullanıcı adı girin"
 
 #: django_authopenid/forms.py:206
-msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
-msgstr "Lütfen geçerli bir kullanıcı adı ve şifrenizi giriniz. Her iki alan küçük harfe duyarlı olduğunu unutmayın."
+msgid ""
+"Please enter a valid                     username and password. Note that "
+"both fields are                     case-sensitive."
+msgstr ""
+"Lütfen geçerli bir kullanıcı adı ve şifrenizi giriniz. Her iki alan küçük "
+"harfe duyarlı olduğunu unutmayın."
 
 #: django_authopenid/forms.py:229
 msgid "Current password"
 msgstr "Şu anki şifre"
 
 #: django_authopenid/forms.py:240
-msgid "Old password is incorrect.                     Please enter the correct password."
+msgid ""
+"Old password is incorrect.                     Please enter the correct "
+"password."
 msgstr "Eski şifre doğru değil. Lütfen eski şifrenizi tekrar girin."
 
 #: django_authopenid/forms.py:305
@@ -219,12 +225,18 @@ msgstr "Yeni bir şifre ve aktivasyon linki e-mail adresinize gönderildi."
 
 #: django_authopenid/views.py:1164
 #, python-format
-msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgid ""
+"Could not change password. Confirmation key '%s'                is not "
+"registered."
 msgstr "Şifreniz değiştirilemedi. Onay kodu '%s' kayıtlı değil."
 
 #: django_authopenid/views.py:1174
-msgid "Can not change password. User don't exist anymore                 in our database."
-msgstr "Şifre değiştirilemez. Kullanıcı adı artık bizim veritabanımızda mevcut değildir."
+msgid ""
+"Can not change password. User don't exist anymore                 in our "
+"database."
+msgstr ""
+"Şifre değiştirilemez. Kullanıcı adı artık bizim veritabanımızda mevcut "
+"değildir."
 
 #: django_authopenid/views.py:1184
 #, python-format
@@ -482,8 +494,11 @@ msgid "tags"
 msgstr "etiketler"
 
 #: forum/forms.py:55
-msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
-msgstr "Etiketler kısa anahtar kelimelerdir ve bir soru için en fazla 5 etiket yazabilirsiniz."
+msgid ""
+"Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgstr ""
+"Etiketler kısa anahtar kelimelerdir ve bir soru için en fazla 5 etiket "
+"yazabilirsiniz."
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
@@ -515,16 +530,24 @@ msgid "community wiki"
 msgstr "topluluk wiki"
 
 #: forum/forms.py:98
-msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
-msgstr "Eğer wiki seçeneğini seçerseniz, soru ve cevaplardan puan verilip alınamayacak ve yazarın ismi gizli kalacaktır."
+msgid ""
+"if you choose community wiki option, the question and answer do not generate "
+"points and name of author will not be shown"
+msgstr ""
+"Eğer wiki seçeneğini seçerseniz, soru ve cevaplardan puan verilip "
+"alınamayacak ve yazarın ismi gizli kalacaktır."
 
 #: forum/forms.py:114
 msgid "update summary:"
 msgstr "güncelleme özeti:"
 
 #: forum/forms.py:115
-msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
-msgstr "revizyon özeti bildir (sabit yazım, dilbilgisi, gelişmiş stil gibi, bu alan isteğe bağlı gibi falan)"
+msgid ""
+"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
+"improved style, this field is optional)"
+msgstr ""
+"revizyon özeti bildir (sabit yazım, dilbilgisi, gelişmiş stil gibi, bu alan "
+"isteğe bağlı gibi falan)"
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
@@ -568,7 +591,9 @@ msgstr "Doğum tarihi"
 
 #: forum/forms.py:300
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr "Gizli alan (Formatı: YYYY-AA-GG şeklinde olup, yaş hesaplamak için kullanılır)"
+msgstr ""
+"Gizli alan (Formatı: YYYY-AA-GG şeklinde olup, yaş hesaplamak için "
+"kullanılır)"
 
 #: forum/forms.py:301 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
@@ -778,30 +803,535 @@ msgid "new question"
 msgstr "yeni soru"
 
 #: forum/management/commands/send_email_alerts.py:272
-msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
-msgstr "Lütfen forumu ziyaret edin ve yenilikleri görün! Belki birisine bir şekilde yardım ya da en azından sorusuna cevap yazabilirsiniz."
+msgid ""
+"Please visit the forum and see what's new! Could you spread the word about "
+"it - can somebody you know help answering those questions or benefit from "
+"posting one?"
+msgstr ""
+"Lütfen forumu ziyaret edin ve yenilikleri görün! Belki birisine bir şekilde "
+"yardım ya da en azından sorusuna cevap yazabilirsiniz."
 
 #: forum/management/commands/send_email_alerts.py:284
-msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
-msgstr "Seçili sorulara aboneliğiniz 'günlük' olarak görünüyor. Eğer birden fazla e-posta alıyorsanız, lütfen bunu bize bildirin."
+msgid ""
+"Your most frequent subscription setting is 'daily' on selected questions. If "
+"you are receiving more than one email per dayplease tell about this issue to "
+"the forum administrator."
+msgstr ""
+"Seçili sorulara aboneliğiniz 'günlük' olarak görünüyor. Eğer birden fazla e-"
+"posta alıyorsanız, lütfen bunu bize bildirin."
 
 #: forum/management/commands/send_email_alerts.py:290
-msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
-msgstr "Seçili sorulara aboneliğiniz 'haftalık' olarak görünüyor. Eğer birden fazla e-posta alıyorsanız, lütfen bunu bize bildirin."
+msgid ""
+"Your most frequent subscription setting is 'weekly' if you are receiving "
+"this email more than once a week please report this issue to the forum "
+"administrator."
+msgstr ""
+"Seçili sorulara aboneliğiniz 'haftalık' olarak görünüyor. Eğer birden fazla "
+"e-posta alıyorsanız, lütfen bunu bize bildirin."
 
 #: forum/management/commands/send_email_alerts.py:296
-msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
+msgid ""
+"There is a chance that you may be receiving links seen before - due to a "
+"technicality that will eventually go away. "
 msgstr "Ölen linkleri önceden görme şansın olabilir. "
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
-msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
-msgstr "%(link)s linkine giderek site yönetiminden alacağınız  %(email)s mesajların sıklığını değiştirebilirsiniz"
+msgid ""
+"go to %(link)s to change frequency of email updates or %(email)s "
+"administrator"
+msgstr ""
+"%(link)s linkine giderek site yönetiminden alacağınız  %(email)s mesajların "
+"sıklığını değiştirebilirsiniz"
 
 #: forum/middleware/anon_user.py:34
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
-msgstr "İlk defa mı buradasınız?  Sıkça sorulan sorular <a href=\"%s\">SSS</a> kısmını ziyaret edebilirsiniz."
+msgstr ""
+"İlk defa mı buradasınız?  Sıkça sorulan sorular <a href=\"%s\">SSS</a> "
+"kısmını ziyaret edebilirsiniz."
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "Disciplined"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "disciplined"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "Deleted own post with score of 3 or higher"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Peer Pressure"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "peer-pressure"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Deleted own post with score of -3 or lower"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:12
+#, fuzzy
+msgid "Nice answer"
+msgstr "cevap düzeltilmiş"
+
+#: forum/migrations/0005_install_badges.py:12
+#, fuzzy
+msgid "nice-answer"
+msgstr "yeni-cevap/"
+
+#: forum/migrations/0005_install_badges.py:12
+#, fuzzy
+msgid "Answer voted up 10 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:13
+#, fuzzy
+msgid "Nice Question"
+msgstr "Sorular"
+
+#: forum/migrations/0005_install_badges.py:13
+#, fuzzy
+msgid "nice-question"
+msgstr "yeni-soru/"
+
+#: forum/migrations/0005_install_badges.py:13
+#, fuzzy
+msgid "Question voted up 10 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:14
+#, fuzzy
+msgid "Pundit"
+msgstr "değiştir"
+
+#: forum/migrations/0005_install_badges.py:14
+#, fuzzy
+msgid "pundit"
+msgstr "değiştir"
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "Left 10 comments with score of 10 or more"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:15
+#, fuzzy
+msgid "Popular Question"
+msgstr "Soru yazın"
+
+#: forum/migrations/0005_install_badges.py:15
+#, fuzzy
+msgid "popular-question"
+msgstr "soru"
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "Asked a question with 1,000 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "Citizen patrol"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "citizen-patrol"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "First flagged post"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "Cleanup"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "cleanup"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "First rollback"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "Critic"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "critic"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:18
+#, fuzzy
+msgid "First down vote"
+msgstr "beğenmedim"
+
+#: forum/migrations/0005_install_badges.py:19
+#, fuzzy
+msgid "Editor"
+msgstr "değiştir"
+
+#: forum/migrations/0005_install_badges.py:19
+#, fuzzy
+msgid "editor"
+msgstr "değiştir"
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "First edit"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "Organizer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:20
+#, fuzzy
+msgid "organizer"
+msgstr "Cevabınız"
+
+#: forum/migrations/0005_install_badges.py:20
+#, fuzzy
+msgid "First retag"
+msgstr "etiketleri temizle"
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "Scholar"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "scholar"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:21
+#, fuzzy
+msgid "First accepted answer on your own question"
+msgstr "diğer sorulara cevaplar ve yorumlar"
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Student"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "student"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Asked first question with at least one up vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:23
+#, fuzzy
+msgid "Supporter"
+msgstr "beğendim"
+
+#: forum/migrations/0005_install_badges.py:23
+#, fuzzy
+msgid "supporter"
+msgstr "beğendim"
+
+#: forum/migrations/0005_install_badges.py:23
+#, fuzzy
+msgid "First up vote"
+msgstr "beğendim"
+
+#: forum/migrations/0005_install_badges.py:24
+#, fuzzy
+msgid "Teacher"
+msgstr "ara"
+
+#: forum/migrations/0005_install_badges.py:24
+#, fuzzy
+msgid "teacher"
+msgstr "ara"
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "Answered first question with at least one up vote"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "Autobiographer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "autobiographer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:25
+#, fuzzy
+msgid "Completed all user profile fields"
+msgstr "tamamlanmış kullanıcı profili"
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "Self-Learner"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "self-learner"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:26
+#, fuzzy
+msgid "Answered your own question with at least 3 up votes"
+msgstr ""
+"Kendi soruna cevap vermek üzeresin. Ya da sorunu daha da açıklamak mı "
+"istiyorsun?"
+
+#: forum/migrations/0005_install_badges.py:27
+#, fuzzy
+msgid "Great Answer"
+msgstr "cevap"
+
+#: forum/migrations/0005_install_badges.py:27
+#, fuzzy
+msgid "great-answer"
+msgstr "cevap"
+
+#: forum/migrations/0005_install_badges.py:27
+#, fuzzy
+msgid "Answer voted up 100 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:28
+#, fuzzy
+msgid "Great Question"
+msgstr "soruları yeniden etiketle"
+
+#: forum/migrations/0005_install_badges.py:28
+#, fuzzy
+msgid "great-question"
+msgstr "soruları yeniden etiketle"
+
+#: forum/migrations/0005_install_badges.py:28
+#, fuzzy
+msgid "Question voted up 100 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:29
+#, fuzzy
+msgid "Stellar Question"
+msgstr "Hala aklınıza takılan bir soru mu var?"
+
+#: forum/migrations/0005_install_badges.py:29
+#, fuzzy
+msgid "stellar-question"
+msgstr "tüm soruları gör"
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "Question favorited by 100 users"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:30
+#, fuzzy
+msgid "Famous question"
+msgstr "Soruyu kapat"
+
+#: forum/migrations/0005_install_badges.py:30
+#, fuzzy
+msgid "famous-question"
+msgstr "soru"
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "Asked a question with 10,000 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Actively participated in the private alpha"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:32
+#, fuzzy
+msgid "Good Answer"
+msgstr "eski cevaplar"
+
+#: forum/migrations/0005_install_badges.py:32
+#, fuzzy
+msgid "good-answer"
+msgstr "cevap"
+
+#: forum/migrations/0005_install_badges.py:32
+#, fuzzy
+msgid "Answer voted up 25 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:33
+#, fuzzy
+msgid "Good Question"
+msgstr "Sorular"
+
+#: forum/migrations/0005_install_badges.py:33
+#, fuzzy
+msgid "good-question"
+msgstr "soru"
+
+#: forum/migrations/0005_install_badges.py:33
+#, fuzzy
+msgid "Question voted up 25 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:34
+#, fuzzy
+msgid "Favorite Question"
+msgstr "favori sorular"
+
+#: forum/migrations/0005_install_badges.py:34
+#, fuzzy
+msgid "favorite-question"
+msgstr "favori sorular"
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "Question favorited by 25 users"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Civic duty"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "civic-duty"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Voted 300 times"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Strunk & White"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "strunk-and-white"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Edited 100 entries"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:37
+#, fuzzy
+msgid "Generalist"
+msgstr "Gönderen"
+
+#: forum/migrations/0005_install_badges.py:37
+#, fuzzy
+msgid "generalist"
+msgstr "Gönderen"
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "Active in many different tags"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Expert"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:38
+#, fuzzy
+msgid "export"
+msgstr "metin"
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Very active in one tag"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Yearling"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "yearling"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Active member for a year"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:40
+#, fuzzy
+msgid "Notable Question"
+msgstr "gerçek bir soru değil"
+
+#: forum/migrations/0005_install_badges.py:40
+#, fuzzy
+msgid "notable-question"
+msgstr "gerçek bir soru değil"
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "Asked a question with 2,500 views"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "Enlightened"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "enlightened"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "First answer was accepted with at least 10 up votes"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Actively participated in the private beta"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "Guru"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "guru"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:43
+#, fuzzy
+msgid "Accepted answer and voted up 40 times"
+msgstr "kullanıcılar tarafından defalarca beğendi"
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Necromancer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "necromancer"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Answered a question more than 60 days later with at least 5 votes"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "Taxonomist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "taxonomist"
+msgstr ""
+
+#: forum/migrations/0005_install_badges.py:45
+#, fuzzy
+msgid "Created a tag used by 50 questions"
+msgstr "soruları yeniden etiketle"
 
 #: forum/models/question.py:499
 #, python-format
@@ -896,8 +1426,12 @@ msgid "url has error - please check it;"
 msgstr "adres hatası var - tekrar kontrol edin;"
 
 #: forum/skins/default/templates/404.html:30
-msgid "the page you tried to visit is protected or you don't have sufficient points, see"
-msgstr "ziyaret etmeye çalıştığınız sayfa korumalıdır ya da görmek için yeterince puanınız yoktur"
+msgid ""
+"the page you tried to visit is protected or you don't have sufficient "
+"points, see"
+msgstr ""
+"ziyaret etmeye çalıştığınız sayfa korumalıdır ya da görmek için yeterince "
+"puanınız yoktur"
 
 #: forum/skins/default/templates/404.html:31
 msgid "if you believe this error 404 should not have occured, please"
@@ -927,7 +1461,9 @@ msgstr "Üzgünüm, bir sistem hatası oluştu!"
 
 #: forum/skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
-msgstr "Bu hata, sistem hata günlüğüne kayıt edildi. En kısa sürede çözümlenmesi için uğraşacağız."
+msgstr ""
+"Bu hata, sistem hata günlüğüne kayıt edildi. En kısa sürede çözümlenmesi "
+"için uğraşacağız."
 
 #: forum/skins/default/templates/500.html:25
 msgid "please report the error to the site administrators if you wish"
@@ -971,7 +1507,8 @@ msgstr "E-mail değiştir"
 #: forum/skins/default/templates/account_settings.html:33
 #: forum/skins/default/templates/authopenid/settings.html:32
 msgid "Add or update the email address associated with your account."
-msgstr "hesabınızla bağlantılanmış e-mail adresinizi, güncelleyin, yoksa ekleyin"
+msgstr ""
+"hesabınızla bağlantılanmış e-mail adresinizi, güncelleyin, yoksa ekleyin"
 
 #: forum/skins/default/templates/account_settings.html:35
 #: forum/skins/default/templates/authopenid/changeopenid.html:4
@@ -1161,7 +1698,9 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                            see %(email_validation_faq_url)s\n"
 "                            "
-msgstr "mesaj yollayabilmek için %(email)s geçerli olmalıdır. Yardım için lütfen bakın: %(email_validation_faq_url)s"
+msgstr ""
+"mesaj yollayabilmek için %(email)s geçerli olmalıdır. Yardım için lütfen "
+"bakın: %(email_validation_faq_url)s"
 
 #: forum/skins/default/templates/ask.html:113
 #: forum/skins/default/templates/ask_form.html:54
@@ -1184,7 +1723,9 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                                see %(email_validation_faq_url)s\n"
 "                                "
-msgstr "Mesaj yollayabilmek için geçerli bir %(email)s adresiniz olmalıdır. Lütfen bakınız:  %(email_validation_faq_url)s"
+msgstr ""
+"Mesaj yollayabilmek için geçerli bir %(email)s adresiniz olmalıdır. Lütfen "
+"bakınız:  %(email_validation_faq_url)s"
 
 #: forum/skins/default/templates/badge.html:6
 #: forum/skins/default/templates/badge.html:17
@@ -1205,15 +1746,20 @@ msgstr "Ödüller"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr "Sevgili site sakinleri... Sorularınız, cevaplarınız ya da oylarınız için ödül alabilirsiniz."
+msgstr ""
+"Sevgili site sakinleri... Sorularınız, cevaplarınız ya da oylarınız için "
+"ödül alabilirsiniz."
 
 #: forum/skins/default/templates/badges.html:22
 #, python-format
 msgid ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
+"    of times each type of badge has been awarded. Give us feedback at %"
+"(feedback_faq_url)s.\n"
 "    "
-msgstr "Aşağıda alınabilecek ödüller ve kaç defa verildikleri görülmektedir.<BR> Görüşlerinizi bekliyoruz: %(feedback_faq_url)s"
+msgstr ""
+"Aşağıda alınabilecek ödüller ve kaç defa verildikleri görülmektedir.<BR> "
+"Görüşlerinizi bekliyoruz: %(feedback_faq_url)s"
 
 #: forum/skins/default/templates/badges.html:50
 msgid "Community badges"
@@ -1366,28 +1912,46 @@ msgid "What kinds of questions can I ask here?"
 msgstr "Ne tür sorular sorabilirim?"
 
 #: forum/skins/default/templates/faq.html:17
-msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
-msgstr "En önemli sorular sitemizde <strong>önemli</strong> şeklinde gösterilmektedir."
+msgid ""
+"Most importanly - questions should be <strong>relevant</strong> to this "
+"community."
+msgstr ""
+"En önemli sorular sitemizde <strong>önemli</strong> şeklinde "
+"gösterilmektedir."
 
 #: forum/skins/default/templates/faq.html:18
-msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
-msgstr "Soru sormadan önce, öncelikle sitemizde bir arama yapın. Belki bu soru ve cevabı sitemizde bulunmaktadır."
+msgid ""
+"Before asking the question - please make sure to use search to see whether "
+"your question has alredy been answered."
+msgstr ""
+"Soru sormadan önce, öncelikle sitemizde bir arama yapın. Belki bu soru ve "
+"cevabı sitemizde bulunmaktadır."
 
 #: forum/skins/default/templates/faq.html:21
 msgid "What questions should I avoid asking?"
 msgstr "Ne tür sorulardan kaçınmalıyım?"
 
 #: forum/skins/default/templates/faq.html:22
-msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
-msgstr "Lütfen, çok subjektif ve tartışmacı olan, sitemizle ilgili olmayan sorular sormaktan kaçının."
+msgid ""
+"Please avoid asking questions that are not relevant to this community, too "
+"subjective and argumentative."
+msgstr ""
+"Lütfen, çok subjektif ve tartışmacı olan, sitemizle ilgili olmayan sorular "
+"sormaktan kaçının."
 
 #: forum/skins/default/templates/faq.html:27
 msgid "What should I avoid in my answers?"
 msgstr "Cevaplarımda nelere dikkat etmeliyim?"
 
 #: forum/skins/default/templates/faq.html:28
-msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
-msgstr "bir soru & cevap sitesi olup, asla ve asla bir tartışma ortamı değildir. Bu nedenle cevaplarınızı, tartışmalardan kaçınacak şekilde, yorum ve karşılıklı fikir alışverişine dayalı şekilde yazınız."
+msgid ""
+"is a Q&A site, not a discussion group. Therefore - please avoid having "
+"discussions in your answers, comment facility allows some space for brief "
+"discussions."
+msgstr ""
+"bir soru & cevap sitesi olup, asla ve asla bir tartışma ortamı değildir. Bu "
+"nedenle cevaplarınızı, tartışmalardan kaçınacak şekilde, yorum ve karşılıklı "
+"fikir alışverişine dayalı şekilde yazınız."
 
 #: forum/skins/default/templates/faq.html:32
 msgid "Who moderates this community?"
@@ -1402,8 +1966,12 @@ msgid "This website is moderated by the users."
 msgstr "Bu web sitesi, kullanıcıları tarafından yönetilmektedir."
 
 #: forum/skins/default/templates/faq.html:35
-msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
-msgstr "İtibar sistemi, kullanıcılarımızın sitedeki yetkilendirme ve yazdıklarının doğruluğu konusunda fikir verir."
+msgid ""
+"The reputation system allows users earn the authorization to perform a "
+"variety of moderation tasks."
+msgstr ""
+"İtibar sistemi, kullanıcılarımızın sitedeki yetkilendirme ve yazdıklarının "
+"doğruluğu konusunda fikir verir."
 
 #: forum/skins/default/templates/faq.html:40
 msgid "How does reputation system work?"
@@ -1414,8 +1982,24 @@ msgid "Rep system summary"
 msgstr "Puanlama sistemi özeti"
 
 #: forum/skins/default/templates/faq.html:42
-msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
-msgstr "Örneğin, ilginç bir soru sordunuz ya da yararlı bir cevap verdiniz. Doğal olarak bu durum, diğer kullanıcılarımız tarafından beğenilecektir. Diğer taraftan da, eğer cevabınız doğru değilse ya da  yanıltıcı ise beğenilmeyecektir. Sistem, beğenilen her soru veya cevap yazınız için size <strong>10</strong> puan verirken, beğenilmeyen soru veya cevabınız için <strong>2</strong>  puan düşmektedir. Her soru veya cevaptan alabileceğiniz en fazla puan <strong>200</strong> ile sınırlandırılmıştır. Aşağıdaki tablo, itibar sisteminden toplanan puanlar ile neler yapılabileceğini göstermektedir."
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate <strong>10</strong> "
+"points, each vote against will subtract <strong>2</strong> points. There is "
+"a limit of <strong>200</strong> points that can be accumulated per question "
+"or answer. The table below explains reputation point requirements for each "
+"type of moderation task."
+msgstr ""
+"Örneğin, ilginç bir soru sordunuz ya da yararlı bir cevap verdiniz. Doğal "
+"olarak bu durum, diğer kullanıcılarımız tarafından beğenilecektir. Diğer "
+"taraftan da, eğer cevabınız doğru değilse ya da  yanıltıcı ise "
+"beğenilmeyecektir. Sistem, beğenilen her soru veya cevap yazınız için size "
+"<strong>10</strong> puan verirken, beğenilmeyen soru veya cevabınız için "
+"<strong>2</strong>  puan düşmektedir. Her soru veya cevaptan alabileceğiniz "
+"en fazla puan <strong>200</strong> ile sınırlandırılmıştır. Aşağıdaki tablo, "
+"itibar sisteminden toplanan puanlar ile neler yapılabileceğini "
+"göstermektedir."
 
 #: forum/skins/default/templates/faq.html:53
 #: forum/skins/default/templates/user_votes.html:15
@@ -1469,8 +2053,11 @@ msgstr "E-mail doğrulama"
 
 #: forum/skins/default/templates/faq.html:105
 #, python-format
-msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
-msgstr "E-mail adresinizi nasıl doğrulayabilirsiniz? %(send_email_key_url)s %(gravatar_faq_url)s"
+msgid ""
+"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr ""
+"E-mail adresinizi nasıl doğrulayabilirsiniz? %(send_email_key_url)s %"
+"(gravatar_faq_url)s"
 
 #: forum/skins/default/templates/faq.html:110
 msgid "what is gravatar"
@@ -1485,8 +2072,13 @@ msgid "To register, do I need to create new password?"
 msgstr "Kaydolmak için, yeni bir şifremi oluşturmalıyım?"
 
 #: forum/skins/default/templates/faq.html:115
-msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr "Hayır, bu şart değil. Eğer OpenID destekleyen herhangi bir hizmete üye isen, mesela Facebook, Twitter, Google Mail, Yahoo, AOL, vb aracılığıyla da giriş yapabilirsiniz."
+msgid ""
+"No, you don't have to. You can login through any service that supports "
+"OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr ""
+"Hayır, bu şart değil. Eğer OpenID destekleyen herhangi bir hizmete üye isen, "
+"mesela Facebook, Twitter, Google Mail, Yahoo, AOL, vb aracılığıyla da giriş "
+"yapabilirsiniz."
 
 #: forum/skins/default/templates/faq.html:116
 msgid "Login now!"
@@ -1494,19 +2086,29 @@ msgstr "Şimdi giriş yap!"
 
 #: forum/skins/default/templates/faq.html:121
 msgid "Why other people can edit my questions/answers?"
-msgstr "Neden başkaları benim sorumu ya da cevabımı düzenleyebiliyor ve değiştirebiliyorlar?"
+msgstr ""
+"Neden başkaları benim sorumu ya da cevabımı düzenleyebiliyor ve "
+"değiştirebiliyorlar?"
 
 #: forum/skins/default/templates/faq.html:122
 msgid "Goal of this site is..."
 msgstr "İşte bu, sitenin en önemli amaçlarından biridir..."
 
 #: forum/skins/default/templates/faq.html:122
-msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
-msgstr "Böylelikle sorular ve cevaplar aynen wiki sayfaları gibi sitenin deneyimli kullanıcıları tarafından değiştirilip düzenlenebilir. Bu ise bilgi site içeriğimizin kalitesini artırır."
+msgid ""
+"So questions and answers can be edited like wiki pages by experienced users "
+"of this site and this improves the overall quality of the knowledge base "
+"content."
+msgstr ""
+"Böylelikle sorular ve cevaplar aynen wiki sayfaları gibi sitenin deneyimli "
+"kullanıcıları tarafından değiştirilip düzenlenebilir. Bu ise bilgi site "
+"içeriğimizin kalitesini artırır."
 
 #: forum/skins/default/templates/faq.html:123
 msgid "If this approach is not for you, we respect your choice."
-msgstr "Bu değişiklikler size uygun değilse, sizin seçiminize saygılı değilse, lütfen bize bildirin."
+msgstr ""
+"Bu değişiklikler size uygun değilse, sizin seçiminize saygılı değilse, "
+"lütfen bize bildirin."
 
 #: forum/skins/default/templates/faq.html:127
 msgid "Still have questions?"
@@ -1514,8 +2116,12 @@ msgstr "Hala aklınıza takılan bir soru mu var?"
 
 #: forum/skins/default/templates/faq.html:128
 #, python-format
-msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "Lütfen sorularınızı %(ask_question_url)s kısmına yazın. Böylelikle bize daha fazla yardımcı olmuş olursunuz."
+msgid ""
+"Please ask your question at %(ask_question_url)s, help make our community "
+"better!"
+msgstr ""
+"Lütfen sorularınızı %(ask_question_url)s kısmına yazın. Böylelikle bize daha "
+"fazla yardımcı olmuş olursunuz."
 
 #: forum/skins/default/templates/faq.html:130
 #: forum/skins/default/templates/header.html:27
@@ -1538,22 +2144,28 @@ msgstr "Görüşlerinizi bize bildirin!"
 #, python-format
 msgid ""
 "\n"
-"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look "
+"forward to hearing your feedback. \n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
 "\n"
-"<span class='big strong'>Sevgili %(user_name)s</span>, sitemizle alakalı görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan çekinmeyin."
+"<span class='big strong'>Sevgili %(user_name)s</span>, sitemizle alakalı "
+"görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan "
+"çekinmeyin."
 
 #: forum/skins/default/templates/feedback.html:24
 msgid ""
 "\n"
-"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to "
+"hearing your feedback.\n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
 "\n"
-"<span class='big strong'>Sevgili ziyaretçimiz</span>, sitemizle alakalı görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan çekinmeyin."
+"<span class='big strong'>Sevgili ziyaretçimiz</span>, sitemizle alakalı "
+"görüş, öneri ve eleştirilerinizi bekliyoruz. Her konuda bize yazmaktan "
+"çekinmeyin."
 
 #: forum/skins/default/templates/feedback.html:41
 msgid "(this field is required)"
@@ -1652,8 +2264,13 @@ msgid "Logout"
 msgstr "Çıkış"
 
 #: forum/skins/default/templates/logout.html:19
-msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
-msgstr "OpenID hesaplarından birisi ile (mesela Facebook, Twitter, Googlemail, Yahoo, MSN) giriş yapabilirsiniz. Şifreniz sitemizde kimse tarafından görünmeyecek, sitemizde kaydedilmeyecektir. Bize güvenebilirsiniz..."
+msgid ""
+"As a registered user you can login with your OpenID, log out of the site or "
+"permanently remove your account."
+msgstr ""
+"OpenID hesaplarından birisi ile (mesela Facebook, Twitter, Googlemail, "
+"Yahoo, MSN) giriş yapabilirsiniz. Şifreniz sitemizde kimse tarafından "
+"görünmeyecek, sitemizde kaydedilmeyecektir. Bize güvenebilirsiniz..."
 
 #: forum/skins/default/templates/logout.html:20
 msgid "Logout now"
@@ -1794,7 +2411,8 @@ msgstr "favorilerime ekle (iptal etmek için tıkla)"
 #: forum/skins/default/templates/question.html:116
 #: forum/skins/default/templates/question.html:117
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr "bu sorudan favori işaretini kaldır (işareti tekrar koymak için tıklayın)"
+msgstr ""
+"bu sorudan favori işaretini kaldır (işareti tekrar koymak için tıklayın)"
 
 #: forum/skins/default/templates/question.html:141
 #: forum/skins/default/templates/question.html:295
@@ -1813,7 +2431,8 @@ msgstr "kapat"
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:300
-msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgid ""
+"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr "şikayet et (spam, reklam, kötü amaçlı yazı vb. içeriyor)"
 
 #: forum/skins/default/templates/question.html:157
@@ -1844,7 +2463,8 @@ msgid ""
 "                                            "
 msgid_plural ""
 "\n"
-"                                            see <strong>%(counter)s</strong> more\n"
+"                                            see <strong>%(counter)s</strong> "
+"more\n"
 "                                            "
 msgstr[0] ""
 "\n"
@@ -1857,11 +2477,13 @@ msgstr[1] ""
 #, fuzzy, python-format
 msgid ""
 "\n"
-"                                            see <strong>one</strong> more comment\n"
+"                                            see <strong>one</strong> more "
+"comment\n"
 "                                            "
 msgid_plural ""
 "\n"
-"                                            see <strong>%(counter)s</strong> more comments\n"
+"                                            see <strong>%(counter)s</strong> "
+"more comments\n"
 "                                            "
 msgstr[0] ""
 "\n"
@@ -1870,7 +2492,8 @@ msgstr[1] "diğer <strong>%(counter)s</strong> yorumu gör"
 
 #: forum/skins/default/templates/question.html:220
 #, python-format
-msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
+msgid ""
+"The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr "Soru şu nedenle kapatılmış olabilir: %(close_reason)s"
 
 #: forum/skins/default/templates/question.html:222
@@ -1955,11 +2578,13 @@ msgstr "silineni geri al"
 #, fuzzy, python-format
 msgid ""
 "\n"
-"                                                        see <strong>one</strong> more \n"
+"                                                        see <strong>one</"
+"strong> more \n"
 "                                                        "
 msgid_plural ""
 "\n"
-"                                                        see <strong>%(counter)s</strong> more\n"
+"                                                        see <strong>%"
+"(counter)s</strong> more\n"
 "                                                        "
 msgstr[0] ""
 "\n"
@@ -1970,11 +2595,13 @@ msgstr[1] "<strong>%(counter)s</strong> tane daha gör"
 #, fuzzy, python-format
 msgid ""
 "\n"
-"                                                        see <strong>one</strong> more comment\n"
+"                                                        see <strong>one</"
+"strong> more comment\n"
 "                                                        "
 msgid_plural ""
 "\n"
-"                                                        see <strong>%(counter)s</strong> more comments\n"
+"                                                        see <strong>%"
+"(counter)s</strong> more comments\n"
 "                                                        "
 msgstr[0] ""
 "\n"
@@ -1992,8 +2619,11 @@ msgstr "Yeni cevapları bana haftalık olarak bildir"
 
 #: forum/skins/default/templates/question.html:390
 #, python-format
-msgid "You can always adjust frequency of email updates from your %(profile_url)s"
-msgstr "%(profile_url)s adresinden E-mail güncellemelerini alma sıklığını ayarlayabilirsiniz."
+msgid ""
+"You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr ""
+"%(profile_url)s adresinden E-mail güncellemelerini alma sıklığını "
+"ayarlayabilirsiniz."
 
 #: forum/skins/default/templates/question.html:395
 msgid "once you sign in you will be able to subscribe for any updates here"
@@ -2009,11 +2639,15 @@ msgstr "Bu soruya ilk cevabı sen yaz!"
 
 #: forum/skins/default/templates/question.html:414
 msgid "you can answer anonymously and then login"
-msgstr "şimdi hemen cevap yazabilir, yollamak için daha sonra üye girişi yapabilirsiniz."
+msgstr ""
+"şimdi hemen cevap yazabilir, yollamak için daha sonra üye girişi "
+"yapabilirsiniz."
 
 #: forum/skins/default/templates/question.html:418
 msgid "answer your own question only to give an answer"
-msgstr "Kendi soruna cevap vermek üzeresin. Ya da sorunu daha da açıklamak mı istiyorsun?"
+msgstr ""
+"Kendi soruna cevap vermek üzeresin. Ya da sorunu daha da açıklamak mı "
+"istiyorsun?"
 
 #: forum/skins/default/templates/question.html:420
 msgid "please only give an answer, no discussions"
@@ -2297,7 +2931,8 @@ msgstr "baştan başla"
 
 #: forum/skins/default/templates/questions.html:175
 msgid " - to expand, or dig in by adding more tags and revising the query."
-msgstr "- daha fazla etiket eklemek veya incelemek için inceleme alanını genişlet"
+msgstr ""
+"- daha fazla etiket eklemek veya incelemek için inceleme alanını genişlet"
 
 #: forum/skins/default/templates/questions.html:178
 msgid "Search tip:"
@@ -2338,7 +2973,8 @@ msgstr "baştan başlıyor"
 
 #: forum/skins/default/templates/questions.html:220
 msgid "Please always feel free to ask your question!"
-msgstr "Asla soru sormaktan çekinmeyin! Sorun ki, sayenizde başkaları da öğrensin!"
+msgstr ""
+"Asla soru sormaktan çekinmeyin! Sorun ki, sayenizde başkaları da öğrensin!"
 
 #: forum/skins/default/templates/questions.html:224
 msgid "Did not find what you were looking for?"
@@ -2447,8 +3083,11 @@ msgstr "popülerliğe göre"
 
 #: forum/skins/default/templates/tags.html:39
 #, python-format
-msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
-msgstr "Tüm etiketleri eşleştirme '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgid ""
+"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgstr ""
+"Tüm etiketleri eşleştirme '<span class=\"darkred\"><strong>%(stag)s</"
+"strong></span>'"
 
 #: forum/skins/default/templates/tags.html:42
 msgid "Nothing found"
@@ -2658,7 +3297,8 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Etiket"
 
 #: forum/skins/default/templates/user_stats.html:100
 #, python-format
-msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgid ""
+"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "%(view_user)s 'nin diğer '%(tag_name)s' etiketli diğer sorularını gör"
 
 #: forum/skins/default/templates/user_stats.html:115
@@ -2782,7 +3422,9 @@ msgstr "%(email)s değişiklik bilgisi"
 #: forum/skins/default/templates/authopenid/changeemail.html:18
 #, python-format
 msgid "here is why email is required, see %(gravatar_faq_url)s"
-msgstr "buraya bakarak neden E-mail adresinin gerekli olduğunu görebilirsiniz: %(gravatar_faq_url)s"
+msgstr ""
+"buraya bakarak neden E-mail adresinin gerekli olduğunu görebilirsiniz: %"
+"(gravatar_faq_url)s"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:31
 msgid "Your new Email"
@@ -2803,7 +3445,8 @@ msgstr "E-mail adresini doğrula"
 #: forum/skins/default/templates/authopenid/changeemail.html:52
 #, python-format
 msgid "validate %(email)s info or go to %(change_email_url)s"
-msgstr " %(email)s adresini doğrulayın ya da  %(change_email_url)s adresine gidin."
+msgstr ""
+" %(email)s adresini doğrulayın ya da  %(change_email_url)s adresine gidin."
 
 #: forum/skins/default/templates/authopenid/changeemail.html:57
 msgid "Email not changed"
@@ -2812,7 +3455,9 @@ msgstr "E-mail değişmedi"
 #: forum/skins/default/templates/authopenid/changeemail.html:60
 #, python-format
 msgid "old %(email)s kept, if you like go to %(change_email_url)s"
-msgstr "eski %(email)s saklansın diyorsanız, %(change_email_url)s adresi size yardımcı olacaktır."
+msgstr ""
+"eski %(email)s saklansın diyorsanız, %(change_email_url)s adresi size "
+"yardımcı olacaktır."
 
 #: forum/skins/default/templates/authopenid/changeemail.html:65
 msgid "Email changed"
@@ -2838,15 +3483,20 @@ msgstr "E-mail anahtarı yollanmadı"
 #: forum/skins/default/templates/authopenid/changeemail.html:84
 #, python-format
 msgid "email key not sent %(email)s change email here %(change_link)s"
-msgstr "E-mail şifresi %(email)s yollanamadı. E-mail değiştirmek için: %(change_link)s adresine bakın."
+msgstr ""
+"E-mail şifresi %(email)s yollanamadı. E-mail değiştirmek için: %(change_link)"
+"s adresine bakın."
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:8
 msgid "Account: change OpenID URL"
 msgstr "Hesabınız hakkında: OpenID adresini değiştirin"
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:12
-msgid "This is where you can change your OpenID URL. Make sure you remember it!"
-msgstr "Burada OpenID adresinizi değiştirebilirsiniz. Bu değişikliği hatırlayabileceğinizden emin olun!"
+msgid ""
+"This is where you can change your OpenID URL. Make sure you remember it!"
+msgstr ""
+"Burada OpenID adresinizi değiştirebilirsiniz. Bu değişikliği "
+"hatırlayabileceğinizden emin olun!"
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:14
 #: forum/skins/default/templates/authopenid/delete.html:14
@@ -2864,7 +3514,9 @@ msgstr "Hesabınız: Şifremi değiştir"
 
 #: forum/skins/default/templates/authopenid/changepw.html:8
 msgid "This is where you can change your password. Make sure you remember it!"
-msgstr "Burada şifrenizi değiştirebilirsiniz. Yeni şifrenizin, hatırlıyacağınız bir şifre olduğundan emin olun!"
+msgstr ""
+"Burada şifrenizi değiştirebilirsiniz. Yeni şifrenizin, hatırlıyacağınız bir "
+"şifre olduğundan emin olun!"
 
 #: forum/skins/default/templates/authopenid/complete.html:19
 msgid "Connect your OpenID with this site"
@@ -2877,20 +3529,27 @@ msgstr "Bu siteye OpenID hesabınızla giriş yapın"
 #: forum/skins/default/templates/authopenid/complete.html:27
 #, python-format
 msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr "Yeni %(provider)s hesabı kayıt bilgisi için lütfen bakınız: %(gravatar_faq_url)s"
+msgstr ""
+"Yeni %(provider)s hesabı kayıt bilgisi için lütfen bakınız: %"
+"(gravatar_faq_url)s"
 
 #: forum/skins/default/templates/authopenid/complete.html:31
 #, python-format
 msgid ""
 "%(username)s already exists, choose another name for \n"
-"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
+"                            %(provider)s. Email is required too, see %"
+"(gravatar_faq_url)s\n"
 "                        "
-msgstr "%(username)s kullanıcı adı, %(provider)s için başka birisi tarafından alınmıştır. Başka bir isim deneyin.  Lütfen okuyun: %(gravatar_faq_url)s"
+msgstr ""
+"%(username)s kullanıcı adı, %(provider)s için başka birisi tarafından "
+"alınmıştır. Başka bir isim deneyin.  Lütfen okuyun: %(gravatar_faq_url)s"
 
 #: forum/skins/default/templates/authopenid/complete.html:35
 #, python-format
-msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr "başka bir %(provider)s hesabı kaydetmek için bakınız:  %(gravatar_faq_url)s"
+msgid ""
+"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+"başka bir %(provider)s hesabı kaydetmek için bakınız:  %(gravatar_faq_url)s"
 
 #: forum/skins/default/templates/authopenid/complete.html:38
 #, python-format
@@ -2899,7 +3558,8 @@ msgstr "Yeni Facebook hesabı ile bağlanma kaydı bilgisi: %(gravatar_faq_url)s
 
 #: forum/skins/default/templates/authopenid/complete.html:42
 msgid "This account already exists, please use another."
-msgstr "Bu kullanıcı adı sitemizde zaten kayıtlı. Lütfen başka bir tane deneyin."
+msgstr ""
+"Bu kullanıcı adı sitemizde zaten kayıtlı. Lütfen başka bir tane deneyin."
 
 #: forum/skins/default/templates/authopenid/complete.html:57
 msgid "Sorry, looks like we have some errors:"
@@ -2925,7 +3585,8 @@ msgstr "Lütfen yukarıdaki seçeneklerden birini seçin"
 
 #: forum/skins/default/templates/authopenid/complete.html:102
 msgid "Tag filter tool will be your right panel, once you log in."
-msgstr "Etiket filtreleme aracı sağ panelde, oturum açınca bir kez görünecektir."
+msgstr ""
+"Etiket filtreleme aracı sağ panelde, oturum açınca bir kez görünecektir."
 
 #: forum/skins/default/templates/authopenid/complete.html:103
 msgid "create account"
@@ -2986,8 +3647,12 @@ msgid "Account: delete account"
 msgstr "Hesabınız: hesabımı sil"
 
 #: forum/skins/default/templates/authopenid/delete.html:12
-msgid "Note: After deleting your account, anyone will be able to register this username."
-msgstr "Not: Hesabınızı sildikten sonra, artık hiç kimse bu kullanıcı adı ile kayıt olamayacaktır."
+msgid ""
+"Note: After deleting your account, anyone will be able to register this "
+"username."
+msgstr ""
+"Not: Hesabınızı sildikten sonra, artık hiç kimse bu kullanıcı adı ile kayıt "
+"olamayacaktır."
 
 #: forum/skins/default/templates/authopenid/delete.html:16
 msgid "Check confirm box, if you want delete your account."
@@ -3026,7 +3691,10 @@ msgid ""
 "If you beleive that this message was sent in mistake - \n"
 "no further action is needed. Just ingore this email, we apologize\n"
 "for any inconvenience"
-msgstr "Eğer bu mesajın size yanlışlıkla gönderildiğini düşünüyorsanız, hiçbir şey yapmanıza gerek yok. <BR> Bu mesajı dikkate almayın. <BR> Bu durum için özür dileriz."
+msgstr ""
+"Eğer bu mesajın size yanlışlıkla gönderildiğini düşünüyorsanız, hiçbir şey "
+"yapmanıza gerek yok. <BR> Bu mesajı dikkate almayın. <BR> Bu durum için özür "
+"dileriz."
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:4
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:7
@@ -3035,8 +3703,12 @@ msgstr "Her zamanki giriş bilgileri"
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
-msgid "how to login with password through external login website or use %(feedback_url)s"
-msgstr "Sitemize harici bir şifre ile nasıl girilebileceğini mi öğrenmek istiyorsunuz? Tıklayın: %(feedback_url)s"
+msgid ""
+"how to login with password through external login website or use %"
+"(feedback_url)s"
+msgstr ""
+"Sitemize harici bir şifre ile nasıl girilebileceğini mi öğrenmek "
+"istiyorsunuz? Tıklayın: %(feedback_url)s"
 
 #: forum/skins/default/templates/authopenid/sendpw.html:4
 #: forum/skins/default/templates/authopenid/sendpw.html:7
@@ -3060,14 +3732,19 @@ msgstr "girişe dön"
 msgid ""
 "Someone has requested to reset your password on %(site_url)s.\n"
 "If it were not you, it is safe to ignore this email."
-msgstr "%(site_url)s sitesindeki kullanıcı, sizin E-mail adresiniz ile şifresini sıfırlamaya çalışıyor. Eğer bunu kendiniz istemediyseniz, hiçbir şeye tıklamayın ve bu mesajı dikkate almayın."
+msgstr ""
+"%(site_url)s sitesindeki kullanıcı, sizin E-mail adresiniz ile şifresini "
+"sıfırlamaya çalışıyor. Eğer bunu kendiniz istemediyseniz, hiçbir şeye "
+"tıklamayın ve bu mesajı dikkate almayın."
 
 #: forum/skins/default/templates/authopenid/sendpw_email.txt:5
 #, python-format
 msgid ""
 "email explanation how to use new %(password)s for %(username)s\n"
 "with the %(key_link)s"
-msgstr "%(username)s için yeni şifre %(password)s ve kullanım açıklaması için link:  %(key_link)s"
+msgstr ""
+"%(username)s için yeni şifre %(password)s ve kullanım açıklaması için link:  "
+"%(key_link)s"
 
 #: forum/skins/default/templates/authopenid/signin.html:5
 #: forum/skins/default/templates/authopenid/signin.html:21
@@ -3078,11 +3755,13 @@ msgstr "Kullanıcı girişi"
 #, python-format
 msgid ""
 "\n"
-"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
+"                Your answer to %(title)s %(summary)s will be posted once you "
+"log in\n"
 "                "
 msgstr ""
 "\n"
-"\"%(title)s\" başlıklı soruya yazdığınız \"%(summary)s\" cevabını yollamak için giriş yapmalısınız."
+"\"%(title)s\" başlıklı soruya yazdığınız \"%(summary)s\" cevabını yollamak "
+"için giriş yapmalısınız."
 
 #: forum/skins/default/templates/authopenid/signin.html:35
 #, python-format
@@ -3090,7 +3769,9 @@ msgid ""
 "Your question \n"
 "                %(title)s %(summary)s will be posted once you log in\n"
 "                "
-msgstr "\"%(title)s\" başlıklı \"%(summary)s\" sorunuzu yollamak için giriş yapmalısınız."
+msgstr ""
+"\"%(title)s\" başlıklı \"%(summary)s\" sorunuzu yollamak için giriş "
+"yapmalısınız."
 
 #: forum/skins/default/templates/authopenid/signin.html:42
 msgid "Click to sign in through any of these services."
@@ -3101,8 +3782,12 @@ msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr "<span id=\"enter_your_what\">Provider kullanıcı adınız</span>"
 
 #: forum/skins/default/templates/authopenid/signin.html:151
-msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
-msgstr "<a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> adresinizi girin"
+msgid ""
+"Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
+"web address"
+msgstr ""
+"<a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> adresinizi "
+"girin"
 
 #: forum/skins/default/templates/authopenid/signin.html:153
 #: forum/skins/default/templates/authopenid/signin.html:166
@@ -3166,8 +3851,13 @@ msgid "Traditional signup info"
 msgstr "Normal giriş bilgileri hakkında bilgi"
 
 #: forum/skins/default/templates/authopenid/signup.html:25
-msgid "Please read and type in the two words below to help us prevent automated account creation."
-msgstr "Lütfen aşağıdaki iki kelimeyi yazın. Çünkü bazı otomatik hesap oluşturucular, sitemize böyle kayıt olup, gerçek olmayan içerikler eklemektedir."
+msgid ""
+"Please read and type in the two words below to help us prevent automated "
+"account creation."
+msgstr ""
+"Lütfen aşağıdaki iki kelimeyi yazın. Çünkü bazı otomatik hesap "
+"oluşturucular, sitemize böyle kayıt olup, gerçek olmayan içerikler "
+"eklemektedir."
 
 #: forum/skins/default/templates/authopenid/signup.html:27
 msgid "Create Account"
@@ -3235,7 +3925,8 @@ msgstr "üzgünüm, bu isim başkası tarafından kullanılıyor."
 
 #: forum/utils/forms.py:52
 msgid "sorry, this name is not allowed, please choose another"
-msgstr "Üzgünüm, bu ismin kullanılmasına izin verilmiyor. Başka bir tane deneyin."
+msgstr ""
+"Üzgünüm, bu ismin kullanılmasına izin verilmiyor. Başka bir tane deneyin."
 
 #: forum/utils/forms.py:53
 msgid "sorry, there is no user with this name"
@@ -3243,7 +3934,9 @@ msgstr "Üzgünüm, bu isimle kayıtlı bir kullanıcı yoktur"
 
 #: forum/utils/forms.py:54
 msgid "sorry, we have a serious error - user name is taken by several users"
-msgstr "Üzgünüm, ciddi bir sorun var! Bu kullanıcı adı farklı kullanıcılar tarafından alınmıştır."
+msgstr ""
+"Üzgünüm, ciddi bir sorun var! Bu kullanıcı adı farklı kullanıcılar "
+"tarafından alınmıştır."
 
 #: forum/utils/forms.py:55
 msgid "user name can only consist of letters, empty space and underscore"
@@ -3263,7 +3956,9 @@ msgstr "geçerli bir e-mail adresi girin"
 
 #: forum/utils/forms.py:112
 msgid "this email is already used by someone else, please choose another"
-msgstr "Bu E-mail sitemizde kullanılıyor. Şifre hatırlatmayı deneyebilir ya da yeniden kayıt olabilirsiniz."
+msgstr ""
+"Bu E-mail sitemizde kullanılıyor. Şifre hatırlatmayı deneyebilir ya da "
+"yeniden kayıt olabilirsiniz."
 
 #: forum/utils/forms.py:140
 msgid "choose password"
@@ -3288,7 +3983,9 @@ msgstr "Üzgünüm, şifreler uyuşmuyor lütfen tekrar deneyin."
 #: forum/views/commands.py:209
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
-msgstr "aboneliğiniz kaydedildi %(email)s adresindeki doğrulama linkini tıklamalısınız. Ayrıntılar için: %(details_url)s"
+msgstr ""
+"aboneliğiniz kaydedildi %(email)s adresindeki doğrulama linkini "
+"tıklamalısınız. Ayrıntılar için: %(details_url)s"
 
 #: forum/views/commands.py:217
 msgid "email update frequency has been set to daily"
@@ -3304,7 +4001,9 @@ msgstr "Görüşleriniz için teşekkür ederiz!"
 
 #: forum/views/meta.py:43
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
-msgstr "Görüşlerinizi bekliyoruz! Lütfen bize, yakın bir zamanda mutlaka sitemiz hakkındaki görüşlerinizi bildirin :)"
+msgstr ""
+"Görüşlerinizi bekliyoruz! Lütfen bize, yakın bir zamanda mutlaka sitemiz "
+"hakkındaki görüşlerinizi bildirin :)"
 
 #: forum/views/users.py:859 forum/views/users.py:863
 msgid "changes saved"
@@ -3377,8 +4076,11 @@ msgstr "maksimum dosya yükleme boyutu %s Kb"
 
 #: forum/views/writers.py:76
 #, python-format
-msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
-msgstr "Yükleme dosyası hatası! Lütfen site yöneticisi ile iletişime geçin. Teşekkür ederiz. %s"
+msgid ""
+"Error uploading file. Please contact the site administrator. Thank you. %s"
+msgstr ""
+"Yükleme dosyası hatası! Lütfen site yöneticisi ile iletişime geçin. Teşekkür "
+"ederiz. %s"
 
 #: forum_modules/authentication/auth.py:27
 msgid "Email Validation"

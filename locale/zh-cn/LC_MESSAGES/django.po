@@ -1,467 +1,494 @@
-# Russian translation of messages for Askbot
-# Copyright (C) 2009 Gang Chen
-# This file is distributed under the same license as the Askbot package.
-# FIRST AUTHOR <evgeny.fadeev@gmail.com>, 2010.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 13:22-0400\n"
-"PO-Revision-Date: 2010-04-30 21:06\n"
-"Last-Translator: <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2010-05-01 13:19-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Translated-Using: django-rosetta 0.5.3\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 
 #: django_authopenid/forms.py:71 django_authopenid/views.py:132
+#, fuzzy
 msgid "i-names are not supported"
-msgstr "извините, но i-names не поддерживаются"
+msgstr "基本的HTML标签也是支持的"
 
 #: django_authopenid/forms.py:134
 msgid "Account with this name already exists on the forum"
-msgstr "аккаунт с таким именем уже существует на форуме"
+msgstr ""
 
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."
-msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
+msgstr ""
 
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
-msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
+msgstr ""
 
 #: django_authopenid/forms.py:160 django_authopenid/forms.py:210
 msgid "This account is inactive."
-msgstr "Этот аккаунт деактивирован"
+msgstr ""
 
 #: django_authopenid/forms.py:162
+#, fuzzy
 msgid "Login failed."
-msgstr "Логин неудачен"
+msgstr "用户名"
 
 #: django_authopenid/forms.py:164
+#, fuzzy
 msgid "Please enter username and password"
-msgstr "Пожалуйста, введите имя пользователя и пароль"
+msgstr "使用帐号密码登录"
 
 #: django_authopenid/forms.py:166
+#, fuzzy
 msgid "Please enter your password"
-msgstr "Пожалуйста, введите пароль"
+msgstr "重设密码"
 
 #: django_authopenid/forms.py:168
+#, fuzzy
 msgid "Please enter user name"
-msgstr "Пожалуйста, введите имя пользователя"
+msgstr "请帮助我们回答"
 
 #: django_authopenid/forms.py:206
 msgid ""
 "Please enter a valid                     username and password. Note that "
 "both fields are                     case-sensitive."
 msgstr ""
-"Пожалуйста введите имя пользователя и пароль (обратите внимание - регистр "
-"букв важен для обоих параметров)"
 
 #: django_authopenid/forms.py:229
+#, fuzzy
 msgid "Current password"
-msgstr "Настоящий пароль"
+msgstr "确认密码"
 
 #: django_authopenid/forms.py:240
 msgid ""
 "Old password is incorrect.                     Please enter the correct "
 "password."
-msgstr "Старый пароль неверен. Пожалуйста, введите правильный пароль."
+msgstr ""
 
 #: django_authopenid/forms.py:305
 msgid "Your user name (<i>required</i>)"
-msgstr "Ваше имя пользователя <i>(обязательно)</i>"
+msgstr ""
 
 #: django_authopenid/forms.py:320
 msgid "Incorrect username."
-msgstr "Неправильное имя пользователя."
+msgstr "选择一个用户名"
 
 #: django_authopenid/urls.py:23 django_authopenid/urls.py:24
 #: django_authopenid/urls.py:25 django_authopenid/urls.py:27
 #: fbconnect/urls.py:12 fbconnect/urls.py:13 fbconnect/urls.py:14
 msgid "signin/"
-msgstr "войти/"
+msgstr ""
 
 #: django_authopenid/urls.py:24 fbconnect/urls.py:13 fbconnect/urls.py:17
+#, fuzzy
 msgid "newquestion/"
-msgstr "новый-вопрос/"
+msgstr "提问"
 
 #: django_authopenid/urls.py:25 fbconnect/urls.py:14 fbconnect/urls.py:18
+#, fuzzy
 msgid "newanswer/"
-msgstr "новый-ответ/"
+msgstr "回答"
 
 #: django_authopenid/urls.py:26
 msgid "signout/"
-msgstr "выйти/"
+msgstr ""
 
 #: django_authopenid/urls.py:27
 msgid "complete/"
-msgstr "завершить/"
+msgstr ""
 
 #: django_authopenid/urls.py:29 fbconnect/urls.py:16 fbconnect/urls.py:17
 #: fbconnect/urls.py:18
+#, fuzzy
 msgid "register/"
-msgstr "регистрация/"
+msgstr "确认"
 
 #: django_authopenid/urls.py:30
+#, fuzzy
 msgid "signup/"
-msgstr "создать-аккаунт/"
+msgstr "注册帐号"
 
 #: django_authopenid/urls.py:32
 msgid "sendpw/"
-msgstr "послать-пароль/"
+msgstr ""
 
 #: django_authopenid/urls.py:33 django_authopenid/urls.py:37
+#, fuzzy
 msgid "password/"
-msgstr "пароль/"
+msgstr "密码"
 
 #: django_authopenid/urls.py:33
 msgid "confirm/"
-msgstr "подтвердить/"
+msgstr ""
 
 #: django_authopenid/urls.py:36
+#, fuzzy
 msgid "account_settings"
-msgstr "настройки-аккаунта"
+msgstr "设置"
 
 #: django_authopenid/urls.py:38 django_authopenid/urls.py:39
 #: django_authopenid/urls.py:40 django_authopenid/urls.py:41
 msgid "email/"
-msgstr "адрес-электронной-почты/"
+msgstr ""
 
 #: django_authopenid/urls.py:38
 msgid "validate/"
-msgstr "проверить/"
+msgstr ""
 
+# user_info.html 
 #: django_authopenid/urls.py:39
+#, fuzzy
 msgid "change/"
-msgstr "заменить/"
+msgstr "年龄"
 
 #: django_authopenid/urls.py:40
 msgid "sendkey/"
-msgstr "послать-ключ/"
+msgstr ""
 
 #: django_authopenid/urls.py:41
 msgid "verify/"
-msgstr "проверить-ключ/"
+msgstr ""
 
 #: django_authopenid/urls.py:42
+#, fuzzy
 msgid "openid/"
-msgstr "openid/"
+msgstr "用同一个帐号可登录互联网所有激活OpenID的网站"
 
 #: django_authopenid/urls.py:43 forum/urls.py:52 forum/urls.py:56
 msgid "delete/"
-msgstr "удалить/"
+msgstr "删除"
 
 #: django_authopenid/urls.py:51
 msgid "external-login/forgot-password/"
-msgstr "вход-с-партнерского-сайта/напомпнить-пароль/"
+msgstr ""
 
 #: django_authopenid/urls.py:54
 msgid "external-login/signup/"
-msgstr "вход-с-партнерского-сайта/создать-аккаунт/"
+msgstr ""
 
 #: django_authopenid/views.py:139
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr "OpenID %(openid_url)s недействителен"
+msgstr ""
 
 #: django_authopenid/views.py:614
 msgid "Welcome email subject line"
-msgstr "добро пожаловать на форум!"
+msgstr ""
 
 #: django_authopenid/views.py:720
+#, fuzzy
 msgid "Password changed."
-msgstr "Пароль изменен."
+msgstr "密码"
 
 #: django_authopenid/views.py:732 django_authopenid/views.py:738
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
-"пожалуйста подтвердите адрес Вашей электронной почты (<a href=\"%"
-"(details_url)s\">дополнительная информация здесь</a>)"
 
 #: django_authopenid/views.py:759
 msgid "Email verification subject line"
-msgstr "[форум]: подтвердите адрес Вашей электронной почты"
+msgstr ""
 
 #: django_authopenid/views.py:850
 msgid "your email was not changed"
-msgstr "адрес Вашей электронной почты не изменён"
+msgstr ""
 
 #: django_authopenid/views.py:898 django_authopenid/views.py:1056
 #, python-format
 msgid "No OpenID %s found associated in our database"
-msgstr "в нашей базе данных нет OpenID %s"
+msgstr ""
 
 #: django_authopenid/views.py:902 django_authopenid/views.py:1063
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
-msgstr "OpenID %s не принадлежит данному пользователю"
+msgstr ""
 
 #: django_authopenid/views.py:910
 msgid "Email Changed."
-msgstr "Адрес электронной почты изменён."
+msgstr ""
 
 #: django_authopenid/views.py:988
 msgid "This OpenID is already associated with another account."
-msgstr "Этот OpenID уже изпользуется в другом аккаунте."
+msgstr ""
 
 #: django_authopenid/views.py:993
 #, python-format
 msgid "OpenID %s is now associated with your account."
-msgstr "Ваш аккаунт теперь соединен с OpenID %s"
+msgstr ""
 
+# todo please check this in chinese
 #: django_authopenid/views.py:1066
+#, fuzzy
 msgid "Account deleted."
-msgstr "Аккаунт удален."
+msgstr "取消"
 
 #: django_authopenid/views.py:1118
+#, fuzzy
 msgid "Request for new password"
-msgstr "[форум]: замена пароля"
+msgstr "重设密码"
 
 #: django_authopenid/views.py:1132
+#, fuzzy
 msgid "A new password and the activation link were sent to your email address."
-msgstr ""
-"Новый пароль и ссылка для его активации были высланы по Вашему адресу "
-"электронной почты."
+msgstr "和您的邮件地址是绑定的"
 
 #: django_authopenid/views.py:1164
 #, python-format
 msgid ""
 "Could not change password. Confirmation key '%s'                is not "
 "registered."
-msgstr "Пароль не был изменён, т.к. ключ '%s' в нашей базе данных не найден."
+msgstr ""
 
 #: django_authopenid/views.py:1174
 msgid ""
 "Can not change password. User don't exist anymore                 in our "
 "database."
 msgstr ""
-"Пароль изменить невозоможно, т.к. запись данного пользователя была удалена."
 
 #: django_authopenid/views.py:1184
 #, python-format
 msgid "Password changed for %s. You may now sign in."
-msgstr "Пароль для %s изменен. Теперь вы можете с ним войти в сайт."
+msgstr ""
 
 #: forum/auth.py:505
+#, fuzzy
 msgid "Your question and all of it's answers have been deleted"
-msgstr "Ваш вопрос и все оветы на него были удалены"
+msgstr "你正在查看的问题或者回答已经被删除；"
 
 #: forum/auth.py:507
+#, fuzzy
 msgid "Your question has been deleted"
-msgstr "Ваш вопрос был удалён"
+msgstr "你正在查看的问题或者回答已经被删除；"
 
 #: forum/auth.py:510
+#, fuzzy
 msgid "The question and all of it's answers have been deleted"
-msgstr "Вопрос и все оветы на него были удалены"
+msgstr "你正在查看的问题或者回答已经被删除；"
 
 #: forum/auth.py:512
+#, fuzzy
 msgid "The question has been deleted"
-msgstr "Вопрос был удалён"
+msgstr "你正在查看的问题或者回答已经被删除；"
 
 #: forum/const.py:8
 msgid "duplicate question"
-msgstr "такой вопрос уже был задан"
+msgstr "完全重复的问题"
 
+# chinese translation is domain specific
 #: forum/const.py:9
+#, fuzzy
 msgid "question is off-topic or not relevant"
-msgstr "вопрос не по теме данного форума"
+msgstr "不是编程技术问题"
 
 #: forum/const.py:10
 msgid "too subjective and argumentative"
-msgstr "вопрос слишком субъективный или спорный"
+msgstr "太主观性、引起争吵的问题"
 
 #: forum/const.py:11
+#, fuzzy
 msgid "not a real question"
-msgstr "на вопрос не похоже"
+msgstr "我要提问"
 
 #: forum/const.py:12
 msgid "the question is answered, right answer was accepted"
-msgstr "на этот вопрос был дан ответ и он был принят как правильный"
+msgstr "问题已经解决，已得到正确答案"
 
 #: forum/const.py:13
+#, fuzzy
 msgid "question is not relevant or outdated"
-msgstr "вопрос устарел или более на актуален"
+msgstr "已经过时、不可重现的问题"
 
 #: forum/const.py:14
+#, fuzzy
 msgid "question contains offensive or malicious remarks"
-msgstr "вопрос содержит грубые или злонамеренные заявления"
+msgstr "恶意言论"
 
 #: forum/const.py:15
 msgid "spam or advertising"
-msgstr "спам или реклама"
+msgstr "垃圾广告"
 
 #: forum/const.py:16
 msgid "too localized"
-msgstr "слишком специализированный"
+msgstr ""
 
 #: forum/const.py:37 forum/skins/default/templates/questions.html:70
 #: forum/skins/default/templates/questions.html:75
 msgid "newest"
-msgstr "новые"
+msgstr "最新问题"
 
 #: forum/const.py:38 forum/skins/default/templates/questions.html:64
 #: forum/skins/default/templates/users.html:28
 msgid "oldest"
-msgstr "старые"
+msgstr "最先加入"
 
 #: forum/const.py:39 forum/skins/default/templates/questions.html:89
 #: forum/skins/default/templates/questions.html:94
+#, fuzzy
 msgid "active"
-msgstr "активные"
+msgstr "活跃问题"
 
 #: forum/const.py:40 forum/skins/default/templates/questions.html:83
+#, fuzzy
 msgid "inactive"
-msgstr "неактивные"
+msgstr "活跃问题"
 
 #: forum/const.py:41
 msgid "hottest"
-msgstr "больше ответов"
+msgstr "热门问题"
 
 #: forum/const.py:42
+#, fuzzy
 msgid "coldest"
-msgstr "меньше ответов"
+msgstr "最先加入"
 
+# "最有价值问题"
+# "最新问题"
 #: forum/const.py:43
 msgid "most voted"
-msgstr "больше голосов"
+msgstr "最有价值的问题"
 
+# "最有价值问题"
+# "最新问题"
 #: forum/const.py:44
+#, fuzzy
 msgid "least voted"
-msgstr "меньше голосов"
+msgstr "最有价值的问题"
 
 #: forum/const.py:45
+#, fuzzy
 msgid "relevance"
-msgstr "уместность"
+msgstr "设置"
 
 #: forum/const.py:52 forum/skins/default/templates/questions.html:52
 msgid "all"
-msgstr "все"
+msgstr ""
 
 #: forum/const.py:53 forum/skins/default/templates/questions.html:53
+#, fuzzy
 msgid "unanswered"
-msgstr "неотвеченные"
+msgstr "回答"
 
 #: forum/const.py:54 forum/skins/default/templates/questions.html:55
+#, fuzzy
 msgid "favorite"
-msgstr "закладки"
+msgstr "收藏"
 
 #: forum/const.py:97
 msgid "question"
-msgstr "вопрос"
+msgstr "提问"
 
 #: forum/const.py:98 forum/skins/default/templates/book.html:110
 msgid "answer"
-msgstr "ответ"
+msgstr "回答"
 
 #: forum/const.py:99
 msgid "commented question"
-msgstr "комментарий на вопрос"
+msgstr "评论问题"
 
 #: forum/const.py:100
+#, fuzzy
 msgid "commented answer"
-msgstr "комментарий на ответ"
+msgstr "修改回答"
 
 #: forum/const.py:101
 msgid "edited question"
-msgstr "отредактировали ответ"
+msgstr "修改问题"
 
 #: forum/const.py:102
 msgid "edited answer"
-msgstr "отредактировали ответ"
+msgstr "修改回答"
 
 #: forum/const.py:103
 msgid "received award"
-msgstr "получение награды"
+msgstr "获奖"
 
 #: forum/const.py:104
 msgid "marked best answer"
-msgstr "отметка лучшего ответа"
+msgstr "标记最佳答案"
 
 #: forum/const.py:105
 msgid "upvoted"
-msgstr "положительный голос"
+msgstr "投赞成票"
 
 #: forum/const.py:106
 msgid "downvoted"
-msgstr "отрицательный голос"
+msgstr "投反对票"
 
 #: forum/const.py:107
 msgid "canceled vote"
-msgstr "отмена голоса"
+msgstr "撤销投票"
 
 #: forum/const.py:108
 msgid "deleted question"
-msgstr "удаление вопроса"
+msgstr "删除问题"
 
 #: forum/const.py:109
 msgid "deleted answer"
-msgstr "удаление ответа"
+msgstr "删除回答"
 
 #: forum/const.py:110
 msgid "marked offensive"
-msgstr "отметка неуместного контента"
+msgstr "标记垃圾帖"
 
 #: forum/const.py:111
 msgid "updated tags"
-msgstr "обновление тем"
+msgstr "更新标签"
 
 #: forum/const.py:112
 msgid "selected favorite"
-msgstr "отметка интересного вопроса"
+msgstr "收藏"
 
 #: forum/const.py:113
 msgid "completed user profile"
-msgstr "полное завершение учётной записи"
+msgstr "完成个人所有资料"
 
 #: forum/const.py:114
 msgid "email update sent to user"
-msgstr "сообщение выслано по электронной почте"
+msgstr ""
 
 #: forum/const.py:118
+#, fuzzy
 msgid "question_answered"
-msgstr "question_answered"
+msgstr "提问时间"
 
 #: forum/const.py:119
+#, fuzzy
 msgid "question_commented"
-msgstr "question_commented"
+msgstr "提问时间"
 
 #: forum/const.py:120
 msgid "answer_commented"
-msgstr "answer_commented"
+msgstr ""
 
 #: forum/const.py:121
 msgid "answer_accepted"
-msgstr "answer_accepted"
+msgstr ""
 
 #: forum/const.py:125
 msgid "[closed]"
-msgstr "[закрыт]"
+msgstr "[已关闭]"
 
 #: forum/const.py:126
 msgid "[deleted]"
-msgstr "[удален]"
+msgstr "[已删除]"
 
 #: forum/const.py:127 forum/views/readers.py:390 forum/views/readers.py:409
 msgid "initial version"
-msgstr "изначальная версия"
+msgstr "初始版本"
 
 #: forum/const.py:128
 msgid "retagged"
-msgstr "редакция тематических отметок"
+msgstr "更新了标签"
 
 #: forum/const.py:132
 msgid "exclude ignored tags"
-msgstr "исключить игнорируемые темы"
+msgstr ""
 
 #: forum/const.py:132
 msgid "allow only selected tags"
-msgstr "влючить только выбранные темы"
+msgstr ""
 
 #: forum/feed.py:18
 msgid " - "
@@ -469,348 +496,372 @@ msgstr "-"
 
 #: forum/feed.py:18
 msgid "latest questions"
-msgstr "самые новые вопросы"
+msgstr "最新问题"
 
 #: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "title"
-msgstr "заголовок"
+msgstr "标题"
 
 #: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
-msgstr "пожалуйста введите подробный заголовок для вашего вопроса"
+msgstr ""
+"请输入对问题具有描述性质的标题 - “帮忙！紧急求助！”不是建议的提问方式。"
 
 #: forum/forms.py:29
 msgid "title must be > 10 characters"
-msgstr "заголовок должен иметь более 10-ти букв"
+msgstr "标题的长度必须大于10"
 
 #: forum/forms.py:38
 msgid "content"
-msgstr "основное содержание"
+msgstr "内容"
 
 #: forum/forms.py:44
 msgid "question content must be > 10 characters"
-msgstr "содержание вопроса должно быть более 10-ти букв"
+msgstr "内容至少要10个字符"
 
 #: forum/forms.py:53 forum/skins/default/templates/header.html:28
 msgid "tags"
-msgstr "темы"
+msgstr "标签"
 
 #: forum/forms.py:55
 msgid ""
 "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
-"Тематические отметкы это короткие ключевые слова, не содержащие внутри "
-"пробелов. Пожалуйста используйте не более пяти отметок."
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
-msgstr "тематические отметки (ключевые слова) обязательны"
+msgstr " 标签不能为空。"
 
 #: forum/forms.py:70
-#, python-format
+#, fuzzy, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] "пожалуйста введите не более %(tag_count)d слов"
-msgstr[1] "пожалуйста введите не более %(tag_count)d слова"
-msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
+msgstr[0] "最多只能有5个标签"
+msgstr[1] "最多只能有5个标签"
 
 #: forum/forms.py:79
-#, python-format
+#, fuzzy, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] "каждое слово должно быть не более %(max_chars)d букв"
-msgstr[1] "каждое слово должно быть не более %(max_chars)d буквы"
-msgstr[2] "каждое слово должно быть не более %(max_chars)d букв"
+msgstr[0] "每个标签的长度不超过20"
+msgstr[1] "每个标签的长度不超过20"
 
 #: forum/forms.py:87
 msgid "use-these-chars-in-tags"
-msgstr "пожалуйста используйте только следующие символы"
+msgstr ""
 
+# index.html
 #: forum/forms.py:97
 #: forum/skins/default/templates/post_contributor_info.html:7
 #: forum/skins/default/templates/question_summary_list_roll.html:26
 #: forum/skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
-msgstr "общее вики"
+msgstr "社区Wiki"
 
 #: forum/forms.py:98
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
-msgstr ""
-"если вы отметите \"общее вики\", то голоса на ответ и вопрос не принесут "
-"изменения в репутации"
+msgstr "选择社区wiki模式，问答不计算积分，签名也不显示作者信息"
 
 #: forum/forms.py:114
 msgid "update summary:"
-msgstr "информация об обновлениях:"
+msgstr "更新概要："
 
 #: forum/forms.py:115
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
-"если у Вас есть желание, то кратко опишите здесь суть вашей правки (например "
-"- исправление орфографии, грамматики, стиля)"
+"输入本次修改的简单概述（如：修改了别字，修正了语法，改进了样式等。非必填"
+"项。）"
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
 msgstr ""
-"Авоматически принять сообщения от этого пользователя для рассылки по "
-"элетронной почте"
 
 #: forum/forms.py:209
+#, fuzzy
 msgid "Your name:"
-msgstr "Ваше имя:"
+msgstr "用户名"
 
 #: forum/forms.py:210
+#, fuzzy
 msgid "Email (not shared with anyone):"
-msgstr "Адрес электронной почты (держится в секрете):"
+msgstr "电子邮件（<i>用于头像显示服务</i>）"
 
 #: forum/forms.py:211
+#, fuzzy
 msgid "Your message:"
-msgstr "Ваше сообщение:"
+msgstr "Copyright(c)2009.CNPROG.COM"
 
 #: forum/forms.py:294
 msgid "this email does not have to be linked to gravatar"
-msgstr ""
-"Этот адрес не обязательно должен быть ассоциирован с глобальным аватаром "
-"(gravatar)"
+msgstr "不会公开，用于头像显示服务"
 
 #: forum/forms.py:296
+#, fuzzy
 msgid "Screen name"
-msgstr "Имя для публики"
+msgstr "姓名"
 
 #: forum/forms.py:297
 msgid "Real name"
-msgstr "Настоящее имя"
+msgstr "真实姓名"
 
 #: forum/forms.py:298
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "个人网站"
 
 #: forum/forms.py:299
 msgid "Location"
-msgstr "Местоположение"
+msgstr "城市"
 
 #: forum/forms.py:300
 msgid "Date of birth"
-msgstr "День рождения"
+msgstr "生日"
 
 #: forum/forms.py:300
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr "показывается только возраст, формат ГГГГ-ММ-ДД"
+msgstr "不会公开，只会显示您的年龄，格式为：YYYY-MM-DD"
 
 #: forum/forms.py:301 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
-msgstr "Профиль"
+msgstr "个人简介"
 
 #: forum/forms.py:332 forum/forms.py:333
 msgid "this email has already been registered, please use another one"
-msgstr "этот адрес уже зарегистрирован, пожалуйста введите другой"
+msgstr "该电子邮件已被注册，请选择另一个再试。"
 
 #: forum/forms.py:339
 msgid "Choose email tag filter"
-msgstr "Выберите тип фильтра по темам (ключевым словам)"
+msgstr ""
 
 #: forum/forms.py:355 forum/forms.py:356
 msgid "weekly"
-msgstr "еженедельно"
+msgstr ""
 
 #: forum/forms.py:355 forum/forms.py:356
+#, fuzzy
 msgid "no email"
-msgstr "не посылать электронную почту"
+msgstr "更换电子邮件"
 
 #: forum/forms.py:356
 msgid "daily"
-msgstr "ежедневно"
+msgstr ""
 
 #: forum/forms.py:371
 msgid "Asked by me"
-msgstr "Заданные мной"
+msgstr ""
 
 #: forum/forms.py:374
 msgid "Answered by me"
-msgstr "Отвеченные мной"
+msgstr ""
 
 #: forum/forms.py:377
 msgid "Individually selected"
-msgstr "Выбранные индивидуально"
+msgstr ""
 
 #: forum/forms.py:380
 msgid "Entire forum (tag filtered)"
-msgstr "Весь форум (фильтрованный по темам)"
+msgstr ""
 
 #: forum/forms.py:434
 msgid "okay, let's try!"
-msgstr "ну хорошо, давайте попробуем!"
+msgstr ""
 
 #: forum/forms.py:435
 msgid "no community email please, thanks"
-msgstr "спасибо, но не надо"
+msgstr ""
 
 #: forum/forms.py:438
 msgid "please choose one of the options above"
-msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
+msgstr ""
 
 #: forum/urls.py:28
+#, fuzzy
 msgid "upfiles/"
-msgstr "загруженные-файлы/"
+msgstr "个人资料"
 
+# footer.html
 #: forum/urls.py:33
+#, fuzzy
 msgid "about/"
-msgstr "о-нас/"
+msgstr "关于本站"
 
 #: forum/urls.py:34
+#, fuzzy
 msgid "faq/"
-msgstr "часто-задаваемые-вопросы/"
+msgstr "常见问题"
 
 #: forum/urls.py:35
+#, fuzzy
 msgid "privacy/"
-msgstr "правила-о-личной-информации/"
+msgstr "隐私政策"
 
 #: forum/urls.py:36
+#, fuzzy
 msgid "logout/"
-msgstr "выйти/"
+msgstr "退出登录"
 
 #: forum/urls.py:37 forum/urls.py:38 forum/urls.py:39 forum/urls.py:56
+#, fuzzy
 msgid "answers/"
-msgstr "ответы/"
+msgstr "回答"
 
 #: forum/urls.py:37 forum/urls.py:49 forum/urls.py:52 forum/urls.py:56
+#, fuzzy
 msgid "comments/"
-msgstr "комментарии/"
+msgstr "评论"
 
 #: forum/urls.py:38 forum/urls.py:43 forum/urls.py:78
 #: forum/skins/default/templates/user_info.html:47
+#, fuzzy
 msgid "edit/"
-msgstr "править/"
+msgstr "编辑"
 
 #: forum/urls.py:39 forum/urls.py:48
+#, fuzzy
 msgid "revisions/"
-msgstr "правки/"
+msgstr "版本"
 
 #: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:43
 #: forum/urls.py:44 forum/urls.py:45 forum/urls.py:46 forum/urls.py:47
 #: forum/urls.py:48 forum/urls.py:49 forum/urls.py:52
+#, fuzzy
 msgid "questions/"
-msgstr "вопросы/"
+msgstr "问题"
 
 #: forum/urls.py:41 forum_modules/books/urls.py:8
+#, fuzzy
 msgid "ask/"
-msgstr "спросить/"
+msgstr "提问于"
 
 #: forum/urls.py:42
+#, fuzzy
 msgid "unanswered/"
-msgstr "неотвеченные/"
+msgstr "回答"
 
 #: forum/urls.py:44
+#, fuzzy
 msgid "close/"
-msgstr "закрыть/"
+msgstr "关闭"
 
 #: forum/urls.py:45
+#, fuzzy
 msgid "reopen/"
-msgstr "открыть-снова/"
+msgstr "打开"
 
 #: forum/urls.py:46
+#, fuzzy
 msgid "answer/"
-msgstr "ответить/"
+msgstr "回答"
 
 #: forum/urls.py:47
+#, fuzzy
 msgid "vote/"
-msgstr "голосовать/"
+msgstr "票"
 
 #: forum/urls.py:50
+#, fuzzy
 msgid "command/"
-msgstr "комманда/"
+msgstr "评论"
 
 #: forum/urls.py:60 forum/views/readers.py:261
+#, fuzzy
 msgid "question/"
-msgstr "вопрос/"
+msgstr "提问"
 
 #: forum/urls.py:61 forum/urls.py:62
+#, fuzzy
 msgid "tags/"
-msgstr "темы/"
+msgstr "标签"
 
 #: forum/urls.py:64 forum/urls.py:68
 msgid "mark-tag/"
-msgstr "отметить-тему/"
+msgstr ""
 
 #: forum/urls.py:64
 msgid "interesting/"
-msgstr "интересная/"
+msgstr ""
 
 #: forum/urls.py:68
 msgid "ignored/"
-msgstr "неинтересная/"
+msgstr ""
 
 #: forum/urls.py:72
 msgid "unmark-tag/"
-msgstr "отменить-отметку-темы/"
+msgstr ""
 
 #: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
+#, fuzzy
 msgid "users/"
-msgstr "люди/"
+msgstr "用户"
 
 #: forum/urls.py:77
 msgid "moderate-user/"
-msgstr "модерировать-пользователя/"
+msgstr ""
 
 #: forum/urls.py:80 forum/urls.py:81
+#, fuzzy
 msgid "badges/"
-msgstr "награды/"
+msgstr "奖牌榜"
 
 #: forum/urls.py:82
 msgid "messages/"
-msgstr "сообщения/"
+msgstr ""
 
 #: forum/urls.py:82
 msgid "markread/"
-msgstr "отметить-прочитанное/"
+msgstr ""
 
 #: forum/urls.py:84
 msgid "nimda/"
-msgstr "администрация/"
+msgstr ""
 
 #: forum/urls.py:86
 msgid "upload/"
-msgstr "загрузить-файл/"
+msgstr ""
 
 #: forum/urls.py:87
+#, fuzzy
 msgid "search/"
-msgstr "искать/"
+msgstr "搜索"
 
 #: forum/urls.py:88
+#, fuzzy
 msgid "feedback/"
-msgstr "обратная-связь/"
+msgstr "问题反馈"
 
 #: forum/urls.py:89 forum/urls.py:90
+#, fuzzy
 msgid "account/"
-msgstr "аккаунт/"
+msgstr "新帐号"
 
+# base_content.html
 #: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
+#, fuzzy
 msgid "Congratulations, you are now an Administrator"
-msgstr ""
+msgstr "恭喜您，社区给您颁发了奖牌"
 
 #: forum/management/commands/send_email_alerts.py:236
 msgid "email update message subject"
-msgstr "новости с форума"
+msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:238
 #, python-format
 msgid "%(name)s, this is an update message header for a question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] "%(name)s, в этом вопросе есть новости"
-msgstr[1] "%(name)s, в этих %(num)d вопросах есть новости"
-msgstr[2] "%(name)s, в этих %(num)d вопросах есть новости"
+msgstr[0] ""
+msgstr[1] ""
 
 #: forum/management/commands/send_email_alerts.py:255
+#, fuzzy
 msgid "new question"
-msgstr "новый вопрос"
+msgstr "提问"
 
 #: forum/management/commands/send_email_alerts.py:272
 msgid ""
@@ -818,9 +869,6 @@ msgid ""
 "it - can somebody you know help answering those questions or benefit from "
 "posting one?"
 msgstr ""
-"Пожалуйста, зайдите на наш форум и посмотрите что есть нового. Может быть Вы "
-"поможете нам рассказать другим о нашем сайте или кто-нибудь из Ваших "
-"знакомых может ответить на эти вопросы или извлечь пользу из ответов?"
 
 #: forum/management/commands/send_email_alerts.py:284
 msgid ""
@@ -828,9 +876,6 @@ msgid ""
 "you are receiving more than one email per dayplease tell about this issue to "
 "the forum administrator."
 msgstr ""
-"Вы выбрали получать ежедневные сообщения о новостях в избранных вопросах. "
-"Если Вы получаете от нас более чем одно сообщение в день, пожалуйста дайте "
-"об этом знать администратору форума."
 
 #: forum/management/commands/send_email_alerts.py:290
 msgid ""
@@ -838,17 +883,12 @@ msgid ""
 "this email more than once a week please report this issue to the forum "
 "administrator."
 msgstr ""
-"Вы выбрали получать сообщения о новостях в избранных вопросах один раз в "
-"неделю. Если Вы получаете от нас более одного сообщения в неделю то "
-"пожалуйста дайте об этом знать администратору форума."
 
 #: forum/management/commands/send_email_alerts.py:296
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
 msgstr ""
-"Не исключено что здесь есть ссылки которые Вы раньше видели. Это результат "
-"технической детали, которая со временем перестанет себя проявлять."
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
@@ -856,16 +896,11 @@ msgid ""
 "go to %(link)s to change frequency of email updates or %(email)s "
 "administrator"
 msgstr ""
-"<a href=\"%(link)s\">Здесь</a> Вы можете изменить частоту рассылки. Если "
-"возникнет необходимость - пожалуйста свяжитесь с администратором форума по %"
-"(email)s."
 
 #: forum/middleware/anon_user.py:34
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr ""
-"Здравствуйте, Вы здесь впервые? Посмотрите наши <a href=\"%s\">часто "
-"задаваемые вопросы</a>!"
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "Disciplined"
@@ -894,40 +929,42 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:12
 #, fuzzy
 msgid "Nice answer"
-msgstr "отредактировали ответ"
+msgstr "修改回答"
 
 #: forum/migrations/0005_install_badges.py:12
 #, fuzzy
 msgid "nice-answer"
-msgstr "новый-ответ/"
+msgstr "回答"
 
 #: forum/migrations/0005_install_badges.py:12
 #, fuzzy
 msgid "Answer voted up 10 times"
-msgstr "Отвеченные мной"
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
 msgid "Nice Question"
-msgstr "новый вопрос"
+msgstr "问题列表"
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
 msgid "nice-question"
-msgstr "новый-вопрос/"
+msgstr "提问"
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
 msgid "Question voted up 10 times"
-msgstr "содержание вопроса должно быть более 10-ти букв"
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:14
+#, fuzzy
 msgid "Pundit"
-msgstr ""
+msgstr "编辑"
 
 #: forum/migrations/0005_install_badges.py:14
+#, fuzzy
 msgid "pundit"
-msgstr ""
+msgstr "编辑"
 
 #: forum/migrations/0005_install_badges.py:14
 msgid "Left 10 comments with score of 10 or more"
@@ -936,12 +973,12 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:15
 #, fuzzy
 msgid "Popular Question"
-msgstr "Задайте Ваш вопрос"
+msgstr "现在提问"
 
 #: forum/migrations/0005_install_badges.py:15
 #, fuzzy
 msgid "popular-question"
-msgstr "вопрос"
+msgstr "提问"
 
 #: forum/migrations/0005_install_badges.py:15
 msgid "Asked a question with 1,000 views"
@@ -982,16 +1019,17 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:18
 #, fuzzy
 msgid "First down vote"
-msgstr "отрицательный голос"
+msgstr "投反对票"
 
 #: forum/migrations/0005_install_badges.py:19
+#, fuzzy
 msgid "Editor"
-msgstr ""
+msgstr "编辑"
 
 #: forum/migrations/0005_install_badges.py:19
 #, fuzzy
 msgid "editor"
-msgstr "править/"
+msgstr "编辑"
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "First edit"
@@ -1002,8 +1040,9 @@ msgid "Organizer"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:20
+#, fuzzy
 msgid "organizer"
-msgstr ""
+msgstr "您的回答"
 
 #: forum/migrations/0005_install_badges.py:20
 msgid "First retag"
@@ -1018,8 +1057,9 @@ msgid "scholar"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:21
+#, fuzzy
 msgid "First accepted answer on your own question"
-msgstr ""
+msgstr "不是一个可以回答的“问题”"
 
 #: forum/migrations/0005_install_badges.py:22
 msgid "Student"
@@ -1036,25 +1076,27 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:23
 #, fuzzy
 msgid "Supporter"
-msgstr "положительный голос"
+msgstr "投赞成票"
 
 #: forum/migrations/0005_install_badges.py:23
 #, fuzzy
 msgid "supporter"
-msgstr "положительный голос"
+msgstr "投赞成票"
 
 #: forum/migrations/0005_install_badges.py:23
 #, fuzzy
 msgid "First up vote"
-msgstr "больше голосов"
+msgstr "投赞成票"
 
 #: forum/migrations/0005_install_badges.py:24
+#, fuzzy
 msgid "Teacher"
-msgstr ""
+msgstr "搜索"
 
 #: forum/migrations/0005_install_badges.py:24
+#, fuzzy
 msgid "teacher"
-msgstr ""
+msgstr "搜索"
 
 #: forum/migrations/0005_install_badges.py:24
 msgid "Answered first question with at least one up vote"
@@ -1071,7 +1113,7 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:25
 #, fuzzy
 msgid "Completed all user profile fields"
-msgstr "полное завершение учётной записи"
+msgstr "完成个人所有资料"
 
 #: forum/migrations/0005_install_badges.py:26
 msgid "Self-Learner"
@@ -1088,55 +1130,57 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:27
 #, fuzzy
 msgid "Great Answer"
-msgstr "ответ"
+msgstr "回答"
 
 #: forum/migrations/0005_install_badges.py:27
 #, fuzzy
 msgid "great-answer"
-msgstr "ответ"
+msgstr "回答"
 
 #: forum/migrations/0005_install_badges.py:27
 #, fuzzy
 msgid "Answer voted up 100 times"
-msgstr "Отвеченные мной"
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:28
 #, fuzzy
 msgid "Great Question"
-msgstr "новый вопрос"
+msgstr "给任何问题整理标签"
 
 #: forum/migrations/0005_install_badges.py:28
 #, fuzzy
 msgid "great-question"
-msgstr "вопрос"
+msgstr "给任何问题整理标签"
 
 #: forum/migrations/0005_install_badges.py:28
+#, fuzzy
 msgid "Question voted up 100 times"
-msgstr ""
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:29
 #, fuzzy
 msgid "Stellar Question"
-msgstr "смотреть все вопросы"
+msgstr "还有其他问题？"
 
 #: forum/migrations/0005_install_badges.py:29
 #, fuzzy
 msgid "stellar-question"
-msgstr "смотреть все вопросы"
+msgstr "个问题"
 
 #: forum/migrations/0005_install_badges.py:29
 msgid "Question favorited by 100 users"
 msgstr ""
 
+# close.html
 #: forum/migrations/0005_install_badges.py:30
 #, fuzzy
 msgid "Famous question"
-msgstr "самые новые вопросы"
+msgstr "关闭问题"
 
 #: forum/migrations/0005_install_badges.py:30
 #, fuzzy
 msgid "famous-question"
-msgstr "вопрос"
+msgstr "提问"
 
 #: forum/migrations/0005_install_badges.py:30
 msgid "Asked a question with 10,000 views"
@@ -1157,41 +1201,42 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:32
 #, fuzzy
 msgid "Good Answer"
-msgstr "Править ответ"
+msgstr "个回答"
 
 #: forum/migrations/0005_install_badges.py:32
 #, fuzzy
 msgid "good-answer"
-msgstr "ответ"
+msgstr "回答"
 
 #: forum/migrations/0005_install_badges.py:32
 #, fuzzy
 msgid "Answer voted up 25 times"
-msgstr "Отвеченные мной"
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:33
 #, fuzzy
 msgid "Good Question"
-msgstr "вопрос"
+msgstr "问题列表"
 
 #: forum/migrations/0005_install_badges.py:33
 #, fuzzy
 msgid "good-question"
-msgstr "вопрос"
+msgstr "提问"
 
 #: forum/migrations/0005_install_badges.py:33
+#, fuzzy
 msgid "Question voted up 25 times"
-msgstr ""
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:34
 #, fuzzy
 msgid "Favorite Question"
-msgstr "отредактировали ответ"
+msgstr "收藏"
 
 #: forum/migrations/0005_install_badges.py:34
 #, fuzzy
 msgid "favorite-question"
-msgstr "просмотр отмеченных вопросов"
+msgstr "收藏"
 
 #: forum/migrations/0005_install_badges.py:34
 msgid "Question favorited by 25 users"
@@ -1240,7 +1285,7 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:38
 #, fuzzy
 msgid "export"
-msgstr "текст"
+msgstr "文本"
 
 #: forum/migrations/0005_install_badges.py:38
 msgid "Very active in one tag"
@@ -1261,12 +1306,12 @@ msgstr ""
 #: forum/migrations/0005_install_badges.py:40
 #, fuzzy
 msgid "Notable Question"
-msgstr "на вопрос не похоже"
+msgstr "全部问题"
 
 #: forum/migrations/0005_install_badges.py:40
 #, fuzzy
 msgid "notable-question"
-msgstr "на вопрос не похоже"
+msgstr "全部问题"
 
 #: forum/migrations/0005_install_badges.py:40
 msgid "Asked a question with 2,500 views"
@@ -1305,8 +1350,9 @@ msgid "guru"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:43
+#, fuzzy
 msgid "Accepted answer and voted up 40 times"
-msgstr ""
+msgstr "该用户投的赞成票总数"
 
 #: forum/migrations/0005_install_badges.py:44
 msgid "Necromancer"
@@ -1329,211 +1375,215 @@ msgid "taxonomist"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:45
+#, fuzzy
 msgid "Created a tag used by 50 questions"
-msgstr ""
+msgstr "打开关闭任何人的问题"
 
 #: forum/models/question.py:499
-#, python-format
+#, fuzzy, python-format
 msgid "%(author)s modified the question"
-msgstr "%(author)s отредактировали вопрос"
+msgstr "由于以下原因，你要关闭这个问题"
 
 #: forum/models/question.py:503
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
-msgstr "%(people)s задали новых %(new_answer_count)s вопросов"
+msgstr ""
 
 #: forum/models/question.py:508
-#, python-format
+#, fuzzy, python-format
 msgid "%(people)s commented the question"
-msgstr "%(people)s оставили комментарии"
+msgstr "评论问题"
 
 #: forum/models/question.py:513
-#, python-format
+#, fuzzy, python-format
 msgid "%(people)s commented answers"
-msgstr "%(people)s комментировали вопросы"
+msgstr "修改回答"
 
 #: forum/models/question.py:515
-#, python-format
+#, fuzzy, python-format
 msgid "%(people)s commented an answer"
-msgstr "%(people)s комментировали ответы"
+msgstr "修改回答"
 
 #: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
 msgid "gold"
-msgstr "золотая"
+msgstr "金牌"
 
 #: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
 msgid "silver"
-msgstr "серебряная"
+msgstr "银牌"
 
 #: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
 msgid "bronze"
-msgstr "бронзовая"
+msgstr ""
 
 #: forum/models/tag.py:81
+#, fuzzy
 msgid "interesting"
-msgstr "интересные"
+msgstr "修改问题"
 
 #: forum/models/tag.py:81
 msgid "ignored"
-msgstr "игнорируемые"
+msgstr ""
 
 #: forum/models/user.py:36
 msgid "Entire forum"
-msgstr "Весь форум"
+msgstr ""
 
 #: forum/models/user.py:37
+#, fuzzy
 msgid "Questions that I asked"
-msgstr "Вопросы заданные мной"
+msgstr "提问时间"
 
 #: forum/models/user.py:38
+#, fuzzy
 msgid "Questions that I answered"
-msgstr "Вопросы отвеченные мной"
+msgstr "您正在浏览的问题含有以下标签"
 
 #: forum/models/user.py:39
+#, fuzzy
 msgid "Individually selected questions"
-msgstr "Индивидуально избранные вопросы"
+msgstr "删除问题"
 
 #: forum/models/user.py:42
 msgid "Weekly"
-msgstr "Раз в неделю"
+msgstr ""
 
 #: forum/models/user.py:43
 msgid "Daily"
-msgstr "Раз в день"
+msgstr ""
 
 #: forum/models/user.py:44
+#, fuzzy
 msgid "No email"
-msgstr "Отменить"
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/404.html:24
 msgid "Sorry, could not find the page you requested."
-msgstr "Извините, но запрошенный Вами документ не был найден."
+msgstr "对不起，没有找到您请求的页面！"
 
 #: forum/skins/default/templates/404.html:26
 msgid "This might have happened for the following reasons:"
-msgstr "Это могло произойти по следующим причинам:"
+msgstr "有可能是以下原因导致："
 
 #: forum/skins/default/templates/404.html:28
 msgid "this question or answer has been deleted;"
-msgstr "вопрос или ответ были удалены;"
+msgstr "你正在查看的问题或者回答已经被删除；"
 
 #: forum/skins/default/templates/404.html:29
 msgid "url has error - please check it;"
-msgstr "запрос был неверен - пожалуйста проверьте;"
+msgstr "请求的地址有误 - 请核实原始URL地址；"
 
 #: forum/skins/default/templates/404.html:30
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
-msgstr ""
-"документ который Вы запросили защищён или у Вас не хватает \"репутации\", "
-"пожалуйста посмотрите"
+msgstr "访问的页面被保护或你的积分不够，参见"
 
 #: forum/skins/default/templates/404.html:31
 msgid "if you believe this error 404 should not have occured, please"
-msgstr "если Вы считаете что эта ошибка показана неверно, пожалуйста"
+msgstr "如果你确信不该出现404错误，请"
 
 #: forum/skins/default/templates/404.html:32
 msgid "report this problem"
-msgstr "сообщите об этой проблеме"
+msgstr "报告这个问题"
 
 #: forum/skins/default/templates/404.html:41
 #: forum/skins/default/templates/500.html:27
 msgid "back to previous page"
-msgstr "вернуться на предыдущую страницу"
+msgstr "返回前页"
 
 #: forum/skins/default/templates/404.html:42
 #: forum/skins/default/templates/questions.html:52
 msgid "see all questions"
-msgstr "смотреть все вопросы"
+msgstr "查看最新问题"
 
 #: forum/skins/default/templates/404.html:43
 msgid "see all tags"
-msgstr "смотреть все темы"
+msgstr "查看标签列表"
 
 #: forum/skins/default/templates/500.html:22
 msgid "sorry, system error"
-msgstr "извините, произошла сбой в системе"
+msgstr ""
 
 #: forum/skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
 msgstr ""
-"об этой ошибке была сделана запись в журнале и соответствующие исправления "
-"будут вскоре сделаны"
 
 #: forum/skins/default/templates/500.html:25
 msgid "please report the error to the site administrators if you wish"
 msgstr ""
-"если у Вас имеется желание, пожалуйста сообщите об этой ошибке вебмастеру"
 
 #: forum/skins/default/templates/500.html:28
+#, fuzzy
 msgid "see latest questions"
-msgstr "смотреть самые новые вопросы"
+msgstr "最新问题"
 
 #: forum/skins/default/templates/500.html:29
+#, fuzzy
 msgid "see tags"
-msgstr "смотреть темы"
+msgstr "标记垃圾帖"
 
+# footer.html
 #: forum/skins/default/templates/about.html:6
 #: forum/skins/default/templates/about.html:11
+#, fuzzy
 msgid "About"
-msgstr "О нас"
+msgstr "关于本站"
 
 #: forum/skins/default/templates/account_settings.html:4
 #: forum/skins/default/templates/authopenid/settings.html:4
 msgid "Account functions"
-msgstr "Настройки аккаунта"
+msgstr ""
 
 #: forum/skins/default/templates/account_settings.html:29
 #: forum/skins/default/templates/authopenid/changepw.html:5
 #: forum/skins/default/templates/authopenid/changepw.html:14
 #: forum/skins/default/templates/authopenid/settings.html:29
 msgid "Change password"
-msgstr "Сменить пароль"
+msgstr "修改密码"
 
 #: forum/skins/default/templates/account_settings.html:30
 #: forum/skins/default/templates/authopenid/settings.html:30
 msgid "Give your  account a new password."
-msgstr "Дайте вашей учетной записи новый пароль."
+msgstr ""
 
 #: forum/skins/default/templates/account_settings.html:32
 #: forum/skins/default/templates/authopenid/settings.html:31
 msgid "Change email "
-msgstr "Изменить адрес электронной почты"
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/account_settings.html:33
 #: forum/skins/default/templates/authopenid/settings.html:32
 msgid "Add or update the email address associated with your account."
 msgstr ""
-"Добавить или обновить адрес электронной почты, связанный с вашим аккаунтом."
 
 #: forum/skins/default/templates/account_settings.html:35
 #: forum/skins/default/templates/authopenid/changeopenid.html:4
 #: forum/skins/default/templates/authopenid/changeopenid.html:30
 #: forum/skins/default/templates/authopenid/settings.html:34
 msgid "Change OpenID"
-msgstr "Изменить OpenID"
+msgstr "更换OpenID地址"
 
 #: forum/skins/default/templates/account_settings.html:36
 #: forum/skins/default/templates/authopenid/settings.html:35
 msgid "Change openid associated to your account"
-msgstr "Изменить OpenID связанный с вашим аккаунтом"
+msgstr ""
 
 #: forum/skins/default/templates/account_settings.html:39
 #: forum/skins/default/templates/authopenid/delete.html:4
 #: forum/skins/default/templates/authopenid/settings.html:38
 msgid "Delete account"
-msgstr "Удалить аккаунт"
+msgstr "删除帐号"
 
 #: forum/skins/default/templates/account_settings.html:40
 #: forum/skins/default/templates/authopenid/settings.html:39
 msgid "Erase your username and all your data from website"
-msgstr "Удалить Ваше имя и все данные о Вас на сайте"
+msgstr ""
 
 #: forum/skins/default/templates/answer_edit.html:5
 #: forum/skins/default/templates/answer_edit.html:48
 msgid "Edit answer"
-msgstr "Править ответ"
+msgstr "修改回答"
 
 #: forum/skins/default/templates/answer_edit.html:25
 #: forum/skins/default/templates/answer_edit.html:28
@@ -1544,14 +1594,14 @@ msgstr "Править ответ"
 #: forum/skins/default/templates/question_edit.html:25
 #: forum/skins/default/templates/question_edit.html:28
 msgid "hide preview"
-msgstr "убрать предварительный просмотр"
+msgstr "禁用预览"
 
 #: forum/skins/default/templates/answer_edit.html:28
 #: forum/skins/default/templates/ask.html:29
 #: forum/skins/default/templates/question.html:49
 #: forum/skins/default/templates/question_edit.html:28
 msgid "show preview"
-msgstr "показать предварительный просмотр"
+msgstr "启用预览"
 
 #: forum/skins/default/templates/answer_edit.html:48
 #: forum/skins/default/templates/question_edit.html:66
@@ -1559,19 +1609,19 @@ msgstr "показать предварительный просмотр"
 #: forum/skins/default/templates/revisions_answer.html:38
 #: forum/skins/default/templates/revisions_question.html:38
 msgid "back"
-msgstr "назад"
+msgstr "返回"
 
 #: forum/skins/default/templates/answer_edit.html:53
 #: forum/skins/default/templates/question_edit.html:71
 #: forum/skins/default/templates/revisions_answer.html:52
 #: forum/skins/default/templates/revisions_question.html:52
 msgid "revision"
-msgstr "версия правки"
+msgstr "版本"
 
 #: forum/skins/default/templates/answer_edit.html:56
 #: forum/skins/default/templates/question_edit.html:75
 msgid "select revision"
-msgstr "выбрать версию"
+msgstr "选择版本"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1579,7 +1629,7 @@ msgstr "выбрать версию"
 #: forum/skins/default/templates/question.html:433
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
-msgstr "Включить/выключить предварительный просмотр текста"
+msgstr "打开或者关闭Markdown编辑器的实时预览"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1587,13 +1637,14 @@ msgstr "Включить/выключить предварительный пр�
 #: forum/skins/default/templates/question.html:434
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
-msgstr "включить/выключить предварительный просмотр"
+msgstr "预览开关"
 
+# synonym of above in Edit question
 #: forum/skins/default/templates/answer_edit.html:72
 #: forum/skins/default/templates/question_edit.html:118
 #: forum/skins/default/templates/question_retag.html:74
 msgid "Save edit"
-msgstr "Сохранить"
+msgstr "现在修改"
 
 #: forum/skins/default/templates/answer_edit.html:73
 #: forum/skins/default/templates/close.html:29
@@ -1604,97 +1655,93 @@ msgstr "Сохранить"
 #: forum/skins/default/templates/user_edit.html:90
 #: forum/skins/default/templates/authopenid/changeemail.html:40
 msgid "Cancel"
-msgstr "Отменить"
+msgstr "取消"
 
 #: forum/skins/default/templates/answer_edit_tips.html:4
 msgid "answer tips"
-msgstr "Советы как лучше давать ответы"
+msgstr "受欢迎的提问"
 
 #: forum/skins/default/templates/answer_edit_tips.html:7
 msgid "please make your answer relevant to this community"
-msgstr ""
-"пожалуйста постарайтесь дать ответ который будет интересен коллегам по форуму"
+msgstr "您的问题与编程相关吗？"
 
 #: forum/skins/default/templates/answer_edit_tips.html:10
 msgid "try to give an answer, rather than engage into a discussion"
-msgstr "постарайтесь на самом деле дать ответ и избегать дискуссий"
+msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
 #: forum/skins/default/templates/answer_edit_tips.html:13
+#, fuzzy
 msgid "please try to provide details"
-msgstr "включите детали в Ваш ответ"
+msgstr "请详细描述您的问题。"
 
 #: forum/skins/default/templates/answer_edit_tips.html:16
 #: forum/skins/default/templates/question_edit_tips.html:13
 msgid "be clear and concise"
-msgstr "постарайтесь выражаться ясно и кратко"
+msgstr "我们推荐您使用中文描述问题，这样可以得到更多的答复机会。"
 
 #: forum/skins/default/templates/answer_edit_tips.html:20
 #: forum/skins/default/templates/question_edit_tips.html:17
 msgid "see frequently asked questions"
-msgstr "посмотрите на часто задаваемые вопросы"
+msgstr "查看常见问题"
 
 #: forum/skins/default/templates/answer_edit_tips.html:26
 #: forum/skins/default/templates/question_edit_tips.html:23
 msgid "Markdown tips"
-msgstr "Советы по использованию Markdown"
+msgstr "Markdown快速参考"
 
 #: forum/skins/default/templates/answer_edit_tips.html:29
 #: forum/skins/default/templates/question_edit_tips.html:26
+#, fuzzy
 msgid "*italic* or __italic__"
-msgstr "*курсив* или _курсив_"
+msgstr "*斜体* 或者 _斜体_"
 
 #: forum/skins/default/templates/answer_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:29
 msgid "**bold** or __bold__"
-msgstr "**жирный шрифт** или __жирный шрифт__"
+msgstr "**加粗** 或者 __加粗__ "
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/question_edit_tips.html:32
 msgid "link"
-msgstr "ссылка"
+msgstr "链接"
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "text"
-msgstr "текст"
+msgstr "文本"
 
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "image"
-msgstr "изображение"
+msgstr "图片"
 
 #: forum/skins/default/templates/answer_edit_tips.html:43
 #: forum/skins/default/templates/question_edit_tips.html:41
 msgid "numbered list:"
-msgstr "пронумерованный список:"
+msgstr "列表："
 
 #: forum/skins/default/templates/answer_edit_tips.html:48
 #: forum/skins/default/templates/question_edit_tips.html:46
 msgid "basic HTML tags are also supported"
-msgstr "а также, поддерживаются основные теги HTML"
+msgstr "基本的HTML标签也是支持的"
 
 #: forum/skins/default/templates/answer_edit_tips.html:52
 #: forum/skins/default/templates/question_edit_tips.html:50
 msgid "learn more about Markdown"
-msgstr "узнайте болше про Markdown"
+msgstr "有关Markdown详细说明"
 
 #: forum/skins/default/templates/ask.html:5
 #: forum/skins/default/templates/ask.html:62
 msgid "Ask a question"
-msgstr "Спросить"
+msgstr "我要提问"
 
 #: forum/skins/default/templates/ask.html:69
 #: forum/skins/default/templates/ask_form.html:11
+#, fuzzy
 msgid "login to post question info"
-msgstr ""
-"<span class=\"strong big\">Пожалуйста, начните задавать Ваш ворпос анонимно</"
-"span>. Когда Вы пошлете вопрос, Вы будете направлены на страницу "
-"авторизации. Ваш вопрос будет сохранён в текущей сессии и будет опубликован "
-"как только Вы авторизуетесь. Войти или записаться на наш форум очень легко. "
-"Авторизация займет не более полминуты а изначальная запись - приблизительно "
-"одну минуту."
+msgstr "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
 
 #: forum/skins/default/templates/ask.html:75
 #, python-format
@@ -1703,27 +1750,21 @@ msgid ""
 "                            see %(email_validation_faq_url)s\n"
 "                            "
 msgstr ""
-"<span class=\"big strong\">Похоже на то что адрес Вашей электронной почты, %"
-"(email)s еще не был проверен.</span> Чтобы публиковать сообщения на форуме "
-"сначала пожалуйста продемонстрируйте что Ваша электронная почта работает, "
-"дополнительная информация об етом <a href=\"%(email_validation_faq_url)s"
-"\">здесь</a>.<br/> Ваш вопрос будет опубликован сразу после того как ваш "
-"адрес будет проверен, а до тех пор вопос будет сохранён в базе данных."
 
 #: forum/skins/default/templates/ask.html:113
 #: forum/skins/default/templates/ask_form.html:54
 msgid "(required)"
-msgstr "(обязательно)"
+msgstr ""
 
 #: forum/skins/default/templates/ask.html:120
 #: forum/skins/default/templates/ask_form.html:61
 msgid "Login/signup to post your question"
-msgstr "Войдите или запишитесь чтобы опубликовать Ваш ворпос"
+msgstr ""
 
 #: forum/skins/default/templates/ask.html:122
 #: forum/skins/default/templates/ask_form.html:63
 msgid "Ask your question"
-msgstr "Задайте Ваш вопрос"
+msgstr "现在提问"
 
 #: forum/skins/default/templates/ask_form.html:15
 #, python-format
@@ -1736,36 +1777,39 @@ msgstr ""
 #: forum/skins/default/templates/badge.html:6
 #: forum/skins/default/templates/badge.html:17
 msgid "Badge"
-msgstr "Награда"
+msgstr "奖牌"
 
 #: forum/skins/default/templates/badge.html:26
 msgid "The users have been awarded with badges:"
-msgstr "Награды, присужденные пользователям:"
+msgstr "用户已被授予该奖牌："
 
 #: forum/skins/default/templates/badges.html:6
+#, fuzzy
 msgid "Badges summary"
-msgstr "Информация о знаках отличия (наградах)"
+msgstr "奖牌列表"
 
 #: forum/skins/default/templates/badges.html:17
 msgid "Badges"
-msgstr "Значки"
+msgstr "枚奖牌"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr "Награды"
+msgstr ""
+"提出问题，给予回答，投出你的票 - CNProg 会针对你在社区的表现，授予你各类奖"
+"牌。"
 
 #: forum/skins/default/templates/badges.html:22
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Give us feedback at %"
 "(feedback_faq_url)s.\n"
 "    "
-msgstr ""
+msgstr "这里列出社区所有的奖牌，以及到目前为此，每个奖牌被授予的用户人数。"
 
 #: forum/skins/default/templates/badges.html:50
 msgid "Community badges"
-msgstr ""
+msgstr "社区奖牌"
 
 #: forum/skins/default/templates/badges.html:56
 msgid "gold badge description"
@@ -1777,31 +1821,33 @@ msgstr ""
 
 #: forum/skins/default/templates/badges.html:67
 msgid "bronze badge: often given as a special honor"
-msgstr ""
+msgstr "铜牌:时常授予之特殊荣誉"
 
 #: forum/skins/default/templates/badges.html:71
+#, fuzzy
 msgid "bronze badge description"
-msgstr ""
+msgstr "答读者问"
 
+# templates/book.html 78
 #: forum/skins/default/templates/book.html:7
 msgid "reading channel"
-msgstr ""
+msgstr "读书频道"
 
 #: forum/skins/default/templates/book.html:26
 msgid "[author]"
-msgstr ""
+msgstr "【作者】"
 
 #: forum/skins/default/templates/book.html:30
 msgid "[publisher]"
-msgstr ""
+msgstr "【出版社】"
 
 #: forum/skins/default/templates/book.html:34
 msgid "[publication date]"
-msgstr ""
+msgstr "【出版日期】"
 
 #: forum/skins/default/templates/book.html:38
 msgid "[price]"
-msgstr ""
+msgstr "【价格】"
 
 #: forum/skins/default/templates/book.html:39
 msgid "currency unit"
@@ -1809,7 +1855,7 @@ msgstr ""
 
 #: forum/skins/default/templates/book.html:42
 msgid "[pages]"
-msgstr ""
+msgstr "【页数】"
 
 #: forum/skins/default/templates/book.html:43
 msgid "pages abbreviation"
@@ -1817,127 +1863,135 @@ msgstr ""
 
 #: forum/skins/default/templates/book.html:46
 msgid "[tags]"
-msgstr ""
+msgstr "【标签】"
 
 #: forum/skins/default/templates/book.html:56
 msgid "author blog"
-msgstr ""
+msgstr "作者博客"
 
 #: forum/skins/default/templates/book.html:62
 msgid "book directory"
-msgstr ""
+msgstr "书籍目录"
 
 #: forum/skins/default/templates/book.html:66
 msgid "buy online"
-msgstr ""
+msgstr "网上购买"
 
 #: forum/skins/default/templates/book.html:79
 msgid "reader questions"
-msgstr ""
+msgstr "答读者问"
 
 #: forum/skins/default/templates/book.html:82
 msgid "ask the author"
-msgstr ""
+msgstr "向作者提问"
 
 #: forum/skins/default/templates/book.html:88
 #: forum/skins/default/templates/book.html:93
 #: forum/skins/default/templates/users_questions.html:18
 msgid "this question was selected as favorite"
-msgstr "к этому вопросу был отмечен как интересный"
+msgstr "这个问题被"
 
 #: forum/skins/default/templates/book.html:88
 #: forum/skins/default/templates/book.html:93
 #: forum/skins/default/templates/users_questions.html:11
 #: forum/skins/default/templates/users_questions.html:18
 msgid "number of times"
-msgstr "раз"
+msgstr "位用户收藏"
 
 #: forum/skins/default/templates/book.html:105
 #: forum/skins/default/templates/question_summary_list_roll.html:14
 msgid "votes"
-msgstr ""
+msgstr "票"
 
 #: forum/skins/default/templates/book.html:108
 msgid "the answer has been accepted to be correct"
-msgstr ""
+msgstr "有答案已被接受为正确答案"
 
 #: forum/skins/default/templates/book.html:115
 #: forum/skins/default/templates/question_summary_list_roll.html:15
 msgid "views"
-msgstr ""
+msgstr "浏览"
 
+# this is how above two are supposed to be
 #: forum/skins/default/templates/book.html:125
 #: forum/skins/default/templates/question.html:136
 #: forum/skins/default/templates/question_list.html:19
 #: forum/skins/default/templates/question_summary_list_roll.html:52
 #: forum/skins/default/templates/tags.html:50
 #: forum/skins/default/templates/users_questions.html:34
-#, python-format
+#, fuzzy, python-format
 msgid "see questions tagged '%(tag)s'"
-msgstr "вопросы по теме '%(tag)s'"
+msgstr "查看有关'%(tagname)s'的问题"
 
 #: forum/skins/default/templates/book.html:147
 msgid "subscribe to book RSS feed"
-msgstr ""
+msgstr "RSS订阅该图书最新问题"
 
 #: forum/skins/default/templates/book.html:147
 msgid "subscribe to the questions feed"
-msgstr ""
+msgstr "订阅最>新问题"
 
+# close.html
 #: forum/skins/default/templates/close.html:6
 #: forum/skins/default/templates/close.html:16
 msgid "Close question"
-msgstr ""
+msgstr "关闭问题"
 
 #: forum/skins/default/templates/close.html:19
 msgid "Close the question"
-msgstr ""
+msgstr "由于以下原因，你要关闭这个问题"
 
 #: forum/skins/default/templates/close.html:25
 msgid "Reasons"
-msgstr ""
+msgstr "原因"
 
 #: forum/skins/default/templates/close.html:28
 msgid "OK to close"
-msgstr ""
+msgstr "确定关闭"
 
 #: forum/skins/default/templates/email_base.html:11
+#, fuzzy
 msgid "home"
-msgstr ""
+msgstr "首页"
 
 #: forum/skins/default/templates/faq.html:11
 msgid "Frequently Asked Questions "
-msgstr ""
+msgstr "常见问题"
 
 #: forum/skins/default/templates/faq.html:16
 msgid "What kinds of questions can I ask here?"
-msgstr ""
+msgstr "我可以在这里提问什么样的问题？"
 
 #: forum/skins/default/templates/faq.html:17
 msgid ""
 "Most importanly - questions should be <strong>relevant</strong> to this "
 "community."
-msgstr ""
+msgstr "毫无疑问，首先必须是<span class=\"yellowbg\">技术编程问题！</span>"
 
 #: forum/skins/default/templates/faq.html:18
 msgid ""
 "Before asking the question - please make sure to use search to see whether "
 "your question has alredy been answered."
 msgstr ""
+"提问之前，充分利用系统的自动查找、标签和搜索，看看是否已经有一样的问题并有了"
+"答案。"
 
 #: forum/skins/default/templates/faq.html:21
 msgid "What questions should I avoid asking?"
-msgstr ""
+msgstr "什么样的问题我不该在这里提问？"
 
 #: forum/skins/default/templates/faq.html:22
 msgid ""
 "Please avoid asking questions that are not relevant to this community, too "
 "subjective and argumentative."
 msgstr ""
+"<span class=\"yellowbg\">与程序员或技术无关的，引起争吵或太过于主观性等违背社"
+"区宗旨的内容。</span>本站建立是为了帮助大众程序员解决实际技术问题，我们需要实"
+"际的问题！"
 
 #: forum/skins/default/templates/faq.html:27
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "什么样的回答是不受欢迎的？"
 
 #: forum/skins/default/templates/faq.html:28
 msgid ""
@@ -1945,34 +1999,40 @@ msgid ""
 "discussions in your answers, comment facility allows some space for brief "
 "discussions."
 msgstr ""
+"希望用户提供针对提问的技术回答，可以是进一步了解问题实质，给予参考方案，或完"
+"全解决问题的回答。我们希望通过问答的形式解决用户的实际问题。因此，<span "
+"class=\"yellowbg\">我们不>欢迎在回答中出现不是回答问题的内容，包括针对他人回"
+"答的讨论，和其他无意义的浪费网络资源行为</span>。CNProg建议您使用<span class="
+"\"yellowbg\">评论</span>功能来讨论你的意见和想法。"
 
 #: forum/skins/default/templates/faq.html:32
 msgid "Who moderates this community?"
-msgstr ""
+msgstr "谁是社区的管理员？"
 
 #: forum/skins/default/templates/faq.html:33
 msgid "The short answer is: <strong>you</strong>."
-msgstr ""
+msgstr "答案是：<span class=\"yellowbg\">每个用户。</span>"
 
 #: forum/skins/default/templates/faq.html:34
 msgid "This website is moderated by the users."
-msgstr "Этот сайт находится под управлением самих пользователей."
+msgstr "社区没有严格意义上的管理员身份"
 
 #: forum/skins/default/templates/faq.html:35
 msgid ""
 "The reputation system allows users earn the authorization to perform a "
 "variety of moderation tasks."
 msgstr ""
-"Система репутации позволяет пользователям приобретать различные "
-"управленческие права."
+"通过积分运作，<span class=\"yellowbg\">每个用户都有权限创建标签，进行对所有问"
+"题、回答的投票、编辑、关闭等操作。</span>"
 
 #: forum/skins/default/templates/faq.html:40
 msgid "How does reputation system work?"
-msgstr ""
+msgstr "什么是社区积分？"
 
 #: forum/skins/default/templates/faq.html:41
+#, fuzzy
 msgid "Rep system summary"
-msgstr ""
+msgstr "更新概要："
 
 #: forum/skins/default/templates/faq.html:42
 msgid ""
@@ -1988,48 +2048,52 @@ msgstr ""
 #: forum/skins/default/templates/faq.html:53
 #: forum/skins/default/templates/user_votes.html:15
 msgid "upvote"
-msgstr ""
+msgstr "投赞成票"
 
 #: forum/skins/default/templates/faq.html:57
+#, fuzzy
 msgid "use tags"
-msgstr ""
+msgstr "标记垃圾帖"
 
+# todo - check if it's indeed plural
 #: forum/skins/default/templates/faq.html:62
 msgid "add comments"
-msgstr ""
+msgstr "添加评论"
 
 #: forum/skins/default/templates/faq.html:66
 #: forum/skins/default/templates/user_votes.html:17
 msgid "downvote"
-msgstr ""
+msgstr "投反对票"
 
 #: forum/skins/default/templates/faq.html:69
+#, fuzzy
 msgid "open and close own questions"
-msgstr ""
+msgstr "打开关闭任何人的问题"
 
 #: forum/skins/default/templates/faq.html:73
 msgid "retag questions"
-msgstr ""
+msgstr "给任何问题整理标签"
 
 #: forum/skins/default/templates/faq.html:78
 msgid "edit community wiki questions"
-msgstr ""
+msgstr "编辑wiki类问题"
 
 #: forum/skins/default/templates/faq.html:83
 msgid "edit any answer"
-msgstr ""
+msgstr "编辑任何问题或答案"
 
 #: forum/skins/default/templates/faq.html:87
+#, fuzzy
 msgid "open any closed question"
-msgstr ""
+msgstr "打开关闭任何人的问题"
 
 #: forum/skins/default/templates/faq.html:91
 msgid "delete any comment"
-msgstr ""
+msgstr "删除任何一个评论"
 
 #: forum/skins/default/templates/faq.html:95
 msgid "delete any questions and answers and perform other moderation tasks"
-msgstr ""
+msgstr "删除任何一个问题或答案，及其他管理功能"
 
 #: forum/skins/default/templates/faq.html:103
 msgid "how to validate email title"
@@ -2051,25 +2115,27 @@ msgstr ""
 
 #: forum/skins/default/templates/faq.html:114
 msgid "To register, do I need to create new password?"
-msgstr ""
+msgstr "我需要注册一个新用户吗？"
 
 #: forum/skins/default/templates/faq.html:115
 msgid ""
 "No, you don't have to. You can login through any service that supports "
 "OpenID, e.g. Google, Yahoo, AOL, etc."
 msgstr ""
+"不需要。社区提供了OpenID的登录支持，你要用Google、Yahoo等任何支持OpenID登录的"
+"帐号就可以使用系统。"
 
 #: forum/skins/default/templates/faq.html:116
 msgid "Login now!"
-msgstr ""
+msgstr "马上登录"
 
 #: forum/skins/default/templates/faq.html:121
 msgid "Why other people can edit my questions/answers?"
-msgstr ""
+msgstr "为什么其他人可以修改我的问题/回答？"
 
 #: forum/skins/default/templates/faq.html:122
 msgid "Goal of this site is..."
-msgstr ""
+msgstr "CNProg 是为了帮助程序员解决更多问题，更加方便的解决问题。"
 
 #: forum/skins/default/templates/faq.html:122
 msgid ""
@@ -2077,37 +2143,37 @@ msgid ""
 "of this site and this improves the overall quality of the knowledge base "
 "content."
 msgstr ""
-"Таким образом, более опытные пользователи могут редактировать вопросы и "
-"отвеы как странички на вики, что в свою очередь улучшает качество содержания "
-"базы данных."
+"所以问题和答案都是如Wiki一样可编辑的，我们希望社区能帮助用户沉淀、积累更多有"
+"用的知识和经验。"
 
 #: forum/skins/default/templates/faq.html:123
 msgid "If this approach is not for you, we respect your choice."
-msgstr ""
+msgstr "如果您不喜欢这种方式，我们尊重你的选择。"
 
 #: forum/skins/default/templates/faq.html:127
 msgid "Still have questions?"
-msgstr ""
+msgstr "还有其他问题？"
 
 #: forum/skins/default/templates/faq.html:128
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Please ask your question at %(ask_question_url)s, help make our community "
 "better!"
-msgstr ""
+msgstr "如果您对社区还有其他疑问，请一起来完善我们的"
 
 #: forum/skins/default/templates/faq.html:130
 #: forum/skins/default/templates/header.html:27
 msgid "questions"
-msgstr ""
+msgstr "问题"
 
 #: forum/skins/default/templates/faq.html:130
 msgid "."
-msgstr ""
+msgstr "。"
 
 #: forum/skins/default/templates/feedback.html:6
+#, fuzzy
 msgid "Feedback"
-msgstr ""
+msgstr "问题反馈"
 
 #: forum/skins/default/templates/feedback.html:11
 msgid "Give us your feedback!"
@@ -2133,12 +2199,14 @@ msgid ""
 msgstr ""
 
 #: forum/skins/default/templates/feedback.html:41
+#, fuzzy
 msgid "(this field is required)"
-msgstr ""
+msgstr " 标签不能为空。"
 
 #: forum/skins/default/templates/feedback.html:49
+#, fuzzy
 msgid "Send Feedback"
-msgstr ""
+msgstr "问题反馈"
 
 #: forum/skins/default/templates/feedback_email.txt:3
 #, python-format
@@ -2148,8 +2216,9 @@ msgid ""
 msgstr ""
 
 #: forum/skins/default/templates/feedback_email.txt:9
+#, fuzzy
 msgid "Sender is"
-msgstr ""
+msgstr "受欢迎的提问"
 
 #: forum/skins/default/templates/feedback_email.txt:11
 #: forum/skins/default/templates/feedback_email.txt:14
@@ -2164,77 +2233,81 @@ msgstr ""
 msgid "Message body:"
 msgstr ""
 
+# footer.html
 #: forum/skins/default/templates/footer.html:8
 #: forum/skins/default/templates/header.html:14
 msgid "about"
-msgstr ""
+msgstr "关于本站"
 
 #: forum/skins/default/templates/footer.html:9
 #: forum/skins/default/templates/header.html:15
 #: forum/skins/default/templates/question_edit_tips.html:17
 msgid "faq"
-msgstr ""
+msgstr "常见问题"
 
 #: forum/skins/default/templates/footer.html:10
 msgid "privacy policy"
-msgstr ""
+msgstr "隐私政策"
 
 #: forum/skins/default/templates/footer.html:19
+#, fuzzy
 msgid "give feedback"
-msgstr ""
+msgstr "问题反馈"
 
 #: forum/skins/default/templates/header.html:10
 msgid "logout"
-msgstr ""
+msgstr "退出登录"
 
 #: forum/skins/default/templates/header.html:12
 msgid "login"
-msgstr ""
+msgstr "登录"
 
 #: forum/skins/default/templates/header.html:22
 msgid "back to home page"
-msgstr ""
+msgstr "回到首页"
 
 #: forum/skins/default/templates/header.html:29
 msgid "users"
-msgstr "люди"
+msgstr "用户"
 
 #: forum/skins/default/templates/header.html:31
 msgid "books"
-msgstr ""
+msgstr "读书"
 
 #: forum/skins/default/templates/header.html:33
 #: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
 msgid "badges"
-msgstr ""
+msgstr "奖牌榜"
 
 #: forum/skins/default/templates/header.html:34
 #: forum/skins/default/templates/header.html:38
 msgid "ask a question"
-msgstr ""
+msgstr "我要提问"
 
 #: forum/skins/default/templates/header.html:36
 msgid "unanswered questions"
-msgstr "неотвеченные вопросы"
+msgstr "没有回答的问题"
 
 #: forum/skins/default/templates/input_bar.html:33
 msgid "search"
-msgstr ""
+msgstr "搜索"
 
 #: forum/skins/default/templates/logout.html:6
 #: forum/skins/default/templates/logout.html:16
 msgid "Logout"
-msgstr ""
+msgstr "退出登录"
 
 #: forum/skins/default/templates/logout.html:19
 msgid ""
 "As a registered user you can login with your OpenID, log out of the site or "
 "permanently remove your account."
 msgstr ""
+"您是系统的<strong class=\"darkred\">注册</strong>用户，可以随时使用OpenID帐号"
+"登录系统或者注销登录。"
 
 #: forum/skins/default/templates/logout.html:20
 msgid "Logout now"
-msgstr ""
+msgstr "点击退出登录"
 
 #: forum/skins/default/templates/notarobot.html:3
 msgid "Please prove that you are a Human Being"
@@ -2246,26 +2319,26 @@ msgstr ""
 
 #: forum/skins/default/templates/pagesize.html:6
 msgid "posts per page"
-msgstr ""
+msgstr "每页显示："
 
 #: forum/skins/default/templates/paginator.html:6
 #: forum/skins/default/templates/paginator.html:7
 msgid "previous"
-msgstr ""
+msgstr "上一页"
 
 #: forum/skins/default/templates/paginator.html:19
 msgid "current page"
-msgstr ""
+msgstr "当前页"
 
 #: forum/skins/default/templates/paginator.html:22
 #: forum/skins/default/templates/paginator.html:29
-#, python-format
+#, fuzzy, python-format
 msgid "page number %(num)s"
-msgstr ""
+msgstr "第"
 
 #: forum/skins/default/templates/paginator.html:33
 msgid "next page"
-msgstr ""
+msgstr "下一页"
 
 #: forum/skins/default/templates/post_contributor_info.html:9
 #, python-format
@@ -2279,139 +2352,164 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/post_contributor_info.html:19
 msgid "asked"
-msgstr ""
+msgstr "提问于"
 
 #: forum/skins/default/templates/post_contributor_info.html:22
+#, fuzzy
 msgid "answered"
-msgstr ""
+msgstr "回答"
 
 #: forum/skins/default/templates/post_contributor_info.html:24
+#, fuzzy
 msgid "posted"
-msgstr ""
+msgstr "投赞成票"
 
 #: forum/skins/default/templates/post_contributor_info.html:45
 msgid "updated"
-msgstr ""
+msgstr "更新于"
 
 #: forum/skins/default/templates/privacy.html:6
 #: forum/skins/default/templates/privacy.html:11
 msgid "Privacy policy"
-msgstr ""
+msgstr "隐私政策"
 
 #: forum/skins/default/templates/privacy.html:15
 msgid "general message about privacy"
 msgstr ""
+"CNProg承认用户隐私的重要性。本文件概述在您浏览CNProg过程中所接收和收集的个人"
+"信息的种类，以及CNProg所采取的保护信息的一些措施。CNProg希望这将有助于您在知"
+"情的情况下，就和我们 共享个人信息的问题作出决定。"
 
 #: forum/skins/default/templates/privacy.html:18
 msgid "Site Visitors"
-msgstr ""
+msgstr "网站访问者"
 
 #: forum/skins/default/templates/privacy.html:20
 msgid "what technical information is collected about visitors"
 msgstr ""
+"当您访问本网站或使用我们的某些在线服务时，服务器会自动记录信息，包括但不限于"
+"URL、IP地址、浏览器的类型、屏幕分辨率、系统类型和使用的语言以及访问日期和时"
+"间。我们的目的是为了向您>提供更好的用户服务，包括可能为您提供定制的在线服务。"
 
 #: forum/skins/default/templates/privacy.html:23
 msgid "Personal Information"
-msgstr ""
+msgstr "个人身份信息"
 
 #: forum/skins/default/templates/privacy.html:25
 msgid "details on personal information policies"
 msgstr ""
+"在登录使用CNProg的提问和回答功能时，我们要求使用者提供用户名、密码、电子邮件"
+"等信息。CNProg收集这类关于个人身份的信息只是为了登录系统获得使用功能的目的。"
+"我们不会向任何其他社区用 户、个人或第三方透露您的密码或者电子邮件信息。用户可"
+"以选择性地填写用户资料、个人网站、年龄、城市等信息，我们收集这些内容为了使用"
+"户能够更容易和更满意地使用CNProg提供的网页和服务。"
 
 #: forum/skins/default/templates/privacy.html:28
 msgid "Other Services"
-msgstr ""
+msgstr "其他服务"
 
 #: forum/skins/default/templates/privacy.html:30
 msgid "details on sharing data with third parties"
 msgstr ""
+"CNProg可能会收集和统计用户访问本站的概况数据。例如，CNProg可能会检测网站最流"
+"行的部分功能。CNProg可能会公开显示或者提供给第三方使用该数据。但是，CNProg不"
+"会公开您的身份信息。"
 
 #: forum/skins/default/templates/privacy.html:35
 msgid "cookie policy details"
 msgstr ""
+"访问CNProg时，我们会向您的计算机发送一个或多个专门用于识别您的浏览器的Cookie"
+"（包含一个字符串的小文件）。 使用 Cookie 的目的是通过储存用户偏好、跟踪用户倾"
+"向（例如搜索方法）来提高我们的服务质量。大多数浏览器的初始设置均为接受 "
+"Cookie，但也可以将其重置为拒绝所有 Cookie 或在收到 Cookie 时提示。不过，如果"
+"禁用 Cookie，某些功能和服务可能无法正常运行。"
 
 #: forum/skins/default/templates/privacy.html:37
 msgid "Policy Changes"
-msgstr ""
+msgstr "政策更改"
 
 #: forum/skins/default/templates/privacy.html:38
+#, fuzzy
 msgid "how privacy policies can be changed"
 msgstr ""
+"我们可能在事先通知或不通知的情况下随时更改此'隐私政策'，我们建议用户时常查看"
+"CNProg隐私政策的改动，在任何改动生效后您的继续访问和使用本站，我们假设您已同"
+"意了CNProg以上的所有条款。"
 
 #: forum/skins/default/templates/question.html:78
 #: forum/skins/default/templates/question.html:79
 #: forum/skins/default/templates/question.html:95
 #: forum/skins/default/templates/question.html:97
 msgid "i like this post (click again to cancel)"
-msgstr ""
+msgstr "这篇帖子有价值（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:81
 #: forum/skins/default/templates/question.html:99
 #: forum/skins/default/templates/question.html:258
 msgid "current number of votes"
-msgstr ""
+msgstr "当前总票数"
 
 #: forum/skins/default/templates/question.html:90
 #: forum/skins/default/templates/question.html:91
 #: forum/skins/default/templates/question.html:104
 #: forum/skins/default/templates/question.html:105
 msgid "i dont like this post (click again to cancel)"
-msgstr ""
+msgstr "这篇帖子没有价值（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:109
 #: forum/skins/default/templates/question.html:110
 msgid "mark this question as favorite (click again to cancel)"
-msgstr "отметьте закладкой (чтобы отменить - отметьте еще раз)"
+msgstr "我要收藏这个问题（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:116
 #: forum/skins/default/templates/question.html:117
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr "удалить закладку (еще раз - чтобы восстановить)"
+msgstr "我要收藏这个问题（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:141
 #: forum/skins/default/templates/question.html:295
 #: forum/skins/default/templates/revisions_answer.html:58
 #: forum/skins/default/templates/revisions_question.html:58
 msgid "edit"
-msgstr ""
+msgstr "编辑"
 
 #: forum/skins/default/templates/question.html:146
 msgid "reopen"
-msgstr ""
+msgstr "打开"
 
 #: forum/skins/default/templates/question.html:150
 msgid "close"
-msgstr ""
+msgstr "关闭"
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:300
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
-msgstr ""
+msgstr "检举该帖为垃“水帖”（含广告、人身攻击、恶意言论等）"
 
 #: forum/skins/default/templates/question.html:157
 #: forum/skins/default/templates/question.html:301
 msgid "flag offensive"
-msgstr ""
+msgstr "垃圾帖？"
 
 #: forum/skins/default/templates/question.html:165
 #: forum/skins/default/templates/question.html:312
 msgid "delete"
-msgstr ""
+msgstr "删除"
 
 #: forum/skins/default/templates/question.html:183
 #: forum/skins/default/templates/question.html:332
+#, fuzzy
 msgid "delete this comment"
-msgstr ""
+msgstr "删除任何一个评论"
 
 #: forum/skins/default/templates/question.html:194
 #: forum/skins/default/templates/question.html:343
 msgid "add comment"
-msgstr ""
+msgstr "添加评论"
 
 #: forum/skins/default/templates/question.html:198
 #, python-format
@@ -2426,7 +2524,6 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:204
 #, python-format
@@ -2442,18 +2539,17 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:220
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "The question has been closed for the following reason \"%(close_reason)s\" by"
-msgstr ""
+msgstr "问题以“%s”的原因已被"
 
 #: forum/skins/default/templates/question.html:222
-#, python-format
+#, fuzzy, python-format
 msgid "close date %(closed_at)s"
-msgstr ""
+msgstr "由于以下原因，你要关闭这个问题"
 
 #: forum/skins/default/templates/question.html:230
 #, python-format
@@ -2467,63 +2563,63 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:238
 msgid "oldest answers will be shown first"
-msgstr ""
+msgstr "最先回答显示在最前面"
 
 #: forum/skins/default/templates/question.html:238
 msgid "oldest answers"
-msgstr ""
+msgstr "最先回答"
 
 #: forum/skins/default/templates/question.html:240
 msgid "newest answers will be shown first"
-msgstr ""
+msgstr "最晚回答显示在最前面"
 
 #: forum/skins/default/templates/question.html:240
 msgid "newest answers"
-msgstr ""
+msgstr "最近回答"
 
 #: forum/skins/default/templates/question.html:242
 msgid "most voted answers will be shown first"
-msgstr ""
+msgstr "投票次数最多的显示在最前面"
 
 #: forum/skins/default/templates/question.html:242
 msgid "popular answers"
-msgstr ""
+msgstr "投票最多"
 
 #: forum/skins/default/templates/question.html:256
 #: forum/skins/default/templates/question.html:257
 msgid "i like this answer (click again to cancel)"
-msgstr ""
+msgstr "这篇帖子有价值（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:263
 #: forum/skins/default/templates/question.html:264
 msgid "i dont like this answer (click again to cancel)"
-msgstr ""
+msgstr "这篇帖子没有价值（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:269
 #: forum/skins/default/templates/question.html:270
 msgid "mark this answer as favorite (click again to undo)"
-msgstr "отметить этот вопрос как интересный (еще раз - чтобы удалить закладку)"
+msgstr "最佳答案（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:275
 #: forum/skins/default/templates/question.html:276
 msgid "the author of the question has selected this answer as correct"
-msgstr ""
+msgstr "这个答案已经被提问作者标记为最佳答案"
 
 #: forum/skins/default/templates/question.html:289
 msgid "answer permanent link"
-msgstr ""
+msgstr "该回答的链接地址"
 
 #: forum/skins/default/templates/question.html:290
 msgid "permanent link"
-msgstr ""
+msgstr "永久链接"
 
+# todo please check this in chinese
 #: forum/skins/default/templates/question.html:312
 msgid "undelete"
-msgstr ""
+msgstr "取消"
 
 #: forum/skins/default/templates/question.html:347
 #, python-format
@@ -2539,7 +2635,6 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:353
 #, python-format
@@ -2555,7 +2650,6 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:379
 #: forum/skins/default/templates/question.html:382
@@ -2578,11 +2672,12 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:406
 msgid "Your answer"
-msgstr ""
+msgstr "您的回答"
 
 #: forum/skins/default/templates/question.html:408
+#, fuzzy
 msgid "Be the first one to answer this question!"
-msgstr ""
+msgstr "不是一个可以回答的“问题”"
 
 #: forum/skins/default/templates/question.html:414
 msgid "you can answer anonymously and then login"
@@ -2593,52 +2688,57 @@ msgid "answer your own question only to give an answer"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:420
+#, fuzzy
 msgid "please only give an answer, no discussions"
-msgstr ""
+msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
 #: forum/skins/default/templates/question.html:456
 msgid "Login/Signup to Post Your Answer"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:459
+#, fuzzy
 msgid "Answer Your Own Question"
-msgstr ""
+msgstr "回答该问题"
 
 #: forum/skins/default/templates/question.html:461
 msgid "Answer the question"
-msgstr ""
+msgstr "回答该问题"
 
 #: forum/skins/default/templates/question.html:475
 msgid "Question tags"
-msgstr ""
+msgstr "您正在浏览的问题含有以下标签"
 
+# this is how above two are supposed to be
 #: forum/skins/default/templates/question.html:480
 #: forum/skins/default/templates/questions.html:257
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
-#, python-format
+#, fuzzy, python-format
 msgid "see questions tagged '%(tag_name)s'"
-msgstr ""
+msgstr "查看有关'%(tagname)s'的问题"
 
 #: forum/skins/default/templates/question.html:486
+#, fuzzy
 msgid "question asked"
-msgstr ""
+msgstr "提问时间"
 
 #: forum/skins/default/templates/question.html:489
 msgid "question was seen"
-msgstr ""
+msgstr "目前浏览数量"
 
 #: forum/skins/default/templates/question.html:489
 msgid "times"
-msgstr ""
+msgstr "次"
 
 #: forum/skins/default/templates/question.html:492
 msgid "last updated"
-msgstr ""
+msgstr "最后更新时间"
 
 #: forum/skins/default/templates/question.html:498
+#, fuzzy
 msgid "Related questions"
-msgstr ""
+msgstr "相似的问题"
 
 #: forum/skins/default/templates/question_counter_widget.html:6
 msgid "Please decide if you like this question or not by voting"
@@ -2655,11 +2755,11 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question_counter_widget.html:21
+#, fuzzy
 msgid "this answer has been accepted to be correct"
-msgstr ""
+msgstr "有答案已被接受为正确答案"
 
 #: forum/skins/default/templates/question_counter_widget.html:27
 msgid ""
@@ -2672,7 +2772,6 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/question_counter_widget.html:39
 msgid ""
@@ -2685,57 +2784,61 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
+# page title
 #: forum/skins/default/templates/question_edit.html:5
 #: forum/skins/default/templates/question_edit.html:66
 msgid "Edit question"
-msgstr ""
+msgstr "修改问题"
 
 #: forum/skins/default/templates/question_edit_tips.html:4
 msgid "question tips"
-msgstr ""
+msgstr "受欢迎的提问"
 
 #: forum/skins/default/templates/question_edit_tips.html:7
+#, fuzzy
 msgid "please ask a relevant question"
-msgstr ""
+msgstr "我要提问"
 
 #: forum/skins/default/templates/question_edit_tips.html:10
+#, fuzzy
 msgid "please try provide enough details"
-msgstr ""
+msgstr "请详细描述您的问题。"
 
 #: forum/skins/default/templates/question_retag.html:4
 #: forum/skins/default/templates/question_retag.html:53
 msgid "Change tags"
-msgstr ""
+msgstr "修改问题标签"
 
+# todo: remove magic numbers from this file
 #: forum/skins/default/templates/question_retag.html:40
 msgid "up to 5 tags, less than 20 characters each"
-msgstr ""
+msgstr "最多5个标签，每个标签长度小于20个字符。"
 
 #: forum/skins/default/templates/question_retag.html:83
 msgid "Why use and modify tags?"
-msgstr ""
+msgstr "为什么我只能修改问题标签？"
 
 #: forum/skins/default/templates/question_retag.html:86
+#, fuzzy
 msgid "tags help us keep Questions organized"
-msgstr ""
+msgstr "CNProg用标签来分类系统的信息"
 
 #: forum/skins/default/templates/question_retag.html:94
 msgid "tag editors receive special awards from the community"
-msgstr ""
+msgstr "修改标签的用户将授予特殊的社区奖牌"
 
 #: forum/skins/default/templates/question_summary_list_roll.html:13
 msgid "answers"
-msgstr ""
+msgstr "回答"
 
 #: forum/skins/default/templates/questions.html:8
 msgid "Questions"
-msgstr ""
+msgstr "问题列表"
 
 #: forum/skins/default/templates/questions.html:32
 msgid "Found by tags"
-msgstr ""
+msgstr "标签问题"
 
 #: forum/skins/default/templates/questions.html:36
 msgid "Search results"
@@ -2743,27 +2846,29 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:38
 msgid "Found by title"
-msgstr ""
+msgstr "查询结果"
 
 #: forum/skins/default/templates/questions.html:42
 msgid "Unanswered questions"
-msgstr "Неотвеченные вопросы"
+msgstr "没有回答的问题"
 
 #: forum/skins/default/templates/questions.html:44
 msgid "All questions"
-msgstr ""
+msgstr "所有问题"
 
 #: forum/skins/default/templates/questions.html:51
 msgid "In:"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:53
+#, fuzzy
 msgid "see unanswered questions"
-msgstr "просмотрите неотвеченные ворпосы"
+msgstr "没有回答的问题"
 
 #: forum/skins/default/templates/questions.html:55
+#, fuzzy
 msgid "see your favorite questions"
-msgstr "просмотр отмеченных вопросов"
+msgstr "用户收藏的问题"
 
 #: forum/skins/default/templates/questions.html:59
 msgid "Sort by:"
@@ -2771,73 +2876,85 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:64
 #: forum/skins/default/templates/questions.html:75
+#, fuzzy
 msgid "click to see the newest questions"
-msgstr ""
+msgstr "最新问题"
 
 #: forum/skins/default/templates/questions.html:70
+#, fuzzy
 msgid "click to see the oldest questions"
-msgstr ""
+msgstr "最新问题"
 
 #: forum/skins/default/templates/questions.html:83
 #: forum/skins/default/templates/questions.html:94
+#, fuzzy
 msgid "click to see the most recently updated questions"
-msgstr ""
+msgstr "最近被更新的问题"
 
 #: forum/skins/default/templates/questions.html:89
+#, fuzzy
 msgid "click to see the least recently updated questions"
-msgstr ""
+msgstr "最近被更新的问题"
 
 #: forum/skins/default/templates/questions.html:102
 #: forum/skins/default/templates/questions.html:113
+#, fuzzy
 msgid "click to see hottest questions"
-msgstr ""
+msgstr "被回复最多的问题"
 
 #: forum/skins/default/templates/questions.html:102
+#, fuzzy
 msgid "less answers"
-msgstr ""
+msgstr "最先回答"
 
 #: forum/skins/default/templates/questions.html:108
+#, fuzzy
 msgid "click to see coldest questions"
-msgstr ""
+msgstr "最新问题"
 
 #: forum/skins/default/templates/questions.html:108
 #: forum/skins/default/templates/questions.html:113
+#, fuzzy
 msgid "more answers"
-msgstr ""
+msgstr "您的回答"
 
 #: forum/skins/default/templates/questions.html:121
 #: forum/skins/default/templates/questions.html:132
+#, fuzzy
 msgid "click to see most voted questions"
-msgstr ""
+msgstr "投票次数最多的问题"
 
 #: forum/skins/default/templates/questions.html:121
+#, fuzzy
 msgid "unpopular"
-msgstr ""
+msgstr "受欢迎的标签"
 
 #: forum/skins/default/templates/questions.html:127
+#, fuzzy
 msgid "click to see least voted questions"
-msgstr ""
+msgstr "投票次数最多的问题"
 
 #: forum/skins/default/templates/questions.html:127
 #: forum/skins/default/templates/questions.html:132
+#, fuzzy
 msgid "popular"
-msgstr ""
+msgstr "受欢迎的标签"
 
 #: forum/skins/default/templates/questions.html:141
-#, python-format
+#, fuzzy, python-format
 msgid " One question found"
 msgid_plural "%(q_num)s questions found"
 msgstr[0] ""
+"问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
 msgstr[1] ""
-msgstr[2] ""
+"问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
 
 #: forum/skins/default/templates/questions.html:143
-#, python-format
+#, fuzzy, python-format
 msgid " %(q_num)s question"
 msgid_plural "%(q_num)s questions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "个"
+msgstr[1] "个"
 
 #: forum/skins/default/templates/questions.html:147
 #, python-format
@@ -2845,20 +2962,24 @@ msgid "with %(author_name)s's contributions"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:151
+#, fuzzy
 msgid "tagged"
-msgstr ""
+msgstr "更新了标签"
 
 #: forum/skins/default/templates/questions.html:157
+#, fuzzy
 msgid "Search tips:"
-msgstr ""
+msgstr "受欢迎的提问"
 
 #: forum/skins/default/templates/questions.html:161
+#, fuzzy
 msgid "reset author"
-msgstr ""
+msgstr "向作者提问"
 
 #: forum/skins/default/templates/questions.html:165
+#, fuzzy
 msgid "reset tags"
-msgstr ""
+msgstr "标记垃圾帖"
 
 #: forum/skins/default/templates/questions.html:169
 #: forum/skins/default/templates/questions.html:173
@@ -2878,12 +2999,16 @@ msgid "add tags and a query to focus your search"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:190
+#, fuzzy
 msgid "There are no unanswered questions here"
-msgstr "Неотвеченных вопросов здесь нет"
+msgstr ""
+"您正在浏览所有<br><div class=\"questions-count\">%(num_q)s</div>个<p>问题按 "
+"<strong>问题创建时间</strong> 排序。最新加入的问题将显示在最前面。</p>"
 
 #: forum/skins/default/templates/questions.html:193
+#, fuzzy
 msgid "No favorite questions here. "
-msgstr "Отмеченных вопросов нет."
+msgstr "收藏"
 
 #: forum/skins/default/templates/questions.html:194
 msgid "Please start (bookmark) some questions when you visit them"
@@ -2894,12 +3019,15 @@ msgid "You can expand your search by "
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:203
+#, fuzzy
 msgid "resetting author"
-msgstr ""
+msgstr "向作者提问"
 
+# book.html line 123 must be empty in english
 #: forum/skins/default/templates/questions.html:207
+#, fuzzy
 msgid "resetting tags"
-msgstr ""
+msgstr "的问题"
 
 #: forum/skins/default/templates/questions.html:211
 #: forum/skins/default/templates/questions.html:215
@@ -2907,16 +3035,18 @@ msgid "starting over"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:220
+#, fuzzy
 msgid "Please always feel free to ask your question!"
-msgstr ""
+msgstr "我要提问"
 
 #: forum/skins/default/templates/questions.html:224
 msgid "Did not find what you were looking for?"
 msgstr ""
 
 #: forum/skins/default/templates/questions.html:225
+#, fuzzy
 msgid "Please, post your question!"
-msgstr ""
+msgstr "现在提问"
 
 #: forum/skins/default/templates/questions.html:241
 msgid "Contributors"
@@ -2924,52 +3054,58 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:254
 msgid "Related tags"
-msgstr ""
+msgstr "相关标签"
 
 #: forum/skins/default/templates/reopen.html:6
 #: forum/skins/default/templates/reopen.html:16
 msgid "Reopen question"
-msgstr ""
+msgstr "重设问题"
 
 #: forum/skins/default/templates/reopen.html:19
 msgid "Open the previously closed question"
-msgstr ""
+msgstr "你将打开这个已经被关闭的问题"
 
 #: forum/skins/default/templates/reopen.html:22
+#, fuzzy
 msgid "The question was closed for the following reason "
-msgstr ""
+msgstr "问题曾以"
 
 #: forum/skins/default/templates/reopen.html:22
 msgid "reason - leave blank in english"
-msgstr ""
+msgstr "的原因被"
 
 #: forum/skins/default/templates/reopen.html:22
+#, fuzzy
 msgid "on "
-msgstr ""
+msgstr "于"
 
 #: forum/skins/default/templates/reopen.html:22
 msgid "date closed"
-msgstr ""
+msgstr "关闭"
 
 #: forum/skins/default/templates/reopen.html:29
+#, fuzzy
 msgid "Reopen this question"
-msgstr ""
+msgstr "确定打开这个问题"
 
+# revisions_answer.html
 #: forum/skins/default/templates/revisions_answer.html:7
 #: forum/skins/default/templates/revisions_answer.html:38
 #: forum/skins/default/templates/revisions_question.html:8
 #: forum/skins/default/templates/revisions_question.html:38
 msgid "Revision history"
-msgstr ""
+msgstr "版本历史"
 
 #: forum/skins/default/templates/revisions_answer.html:50
 #: forum/skins/default/templates/revisions_question.html:50
 msgid "click to hide/show revision"
 msgstr ""
 
+# book.html line 123 must be empty in english
 #: forum/skins/default/templates/tag_selector.html:5
+#, fuzzy
 msgid "Interesting tags"
-msgstr ""
+msgstr "的问题"
 
 #: forum/skins/default/templates/tag_selector.html:15
 #, python-format
@@ -2982,8 +3118,9 @@ msgid "Add"
 msgstr ""
 
 #: forum/skins/default/templates/tag_selector.html:22
+#, fuzzy
 msgid "Ignored tags"
-msgstr ""
+msgstr "修改问题标签"
 
 #: forum/skins/default/templates/tag_selector.html:32
 #, python-format
@@ -2991,29 +3128,31 @@ msgid "remove '%(tag_name)s' from the list of ignored tags"
 msgstr ""
 
 #: forum/skins/default/templates/tag_selector.html:41
+#, fuzzy
 msgid "keep ignored questions hidden"
-msgstr ""
+msgstr "打开关闭任何人的问题"
 
 #: forum/skins/default/templates/tags.html:6
 #: forum/skins/default/templates/tags.html:30
 msgid "Tag list"
-msgstr ""
+msgstr "标签列表"
 
 #: forum/skins/default/templates/tags.html:32
 msgid "sorted alphabetically"
-msgstr ""
+msgstr "按名称的字母先后顺序排序"
 
 #: forum/skins/default/templates/tags.html:32
 msgid "by name"
-msgstr ""
+msgstr "按名称排序"
 
 #: forum/skins/default/templates/tags.html:33
 msgid "sorted by frequency of tag use"
-msgstr ""
+msgstr "按标签被使用的次数排序"
 
 #: forum/skins/default/templates/tags.html:33
+#, fuzzy
 msgid "by popularity"
-msgstr ""
+msgstr "按流行程度排序"
 
 #: forum/skins/default/templates/tags.html:39
 #, python-format
@@ -3022,30 +3161,32 @@ msgid ""
 msgstr ""
 
 #: forum/skins/default/templates/tags.html:42
+#, fuzzy
 msgid "Nothing found"
-msgstr ""
+msgstr "没有找到相关数据。"
 
 #: forum/skins/default/templates/user_edit.html:6
 msgid "Edit user profile"
-msgstr ""
+msgstr "修改个人资料"
 
 #: forum/skins/default/templates/user_edit.html:19
 msgid "edit profile"
-msgstr ""
+msgstr "修改资料"
 
 #: forum/skins/default/templates/user_edit.html:33
 #: forum/skins/default/templates/user_info.html:53
 msgid "Registered user"
-msgstr ""
+msgstr "注册用户"
 
 #: forum/skins/default/templates/user_edit.html:40
+#, fuzzy
 msgid "Screen Name"
-msgstr ""
+msgstr "当前页"
 
 #: forum/skins/default/templates/user_edit.html:89
 #: forum/skins/default/templates/user_email_subscriptions.html:20
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: forum/skins/default/templates/user_email_subscriptions.html:8
 msgid "Email subscription settings"
@@ -3066,7 +3207,7 @@ msgstr ""
 #: forum/skins/default/templates/user_info.html:25
 #: forum/skins/default/templates/users.html:26 forum/views/users.py:924
 msgid "reputation"
-msgstr ""
+msgstr "积分"
 
 #: forum/skins/default/templates/user_info.html:35
 msgid "Moderate this user"
@@ -3074,43 +3215,44 @@ msgstr ""
 
 #: forum/skins/default/templates/user_info.html:47
 msgid "update profile"
-msgstr ""
+msgstr "更新我的资料"
 
 #: forum/skins/default/templates/user_info.html:57
 msgid "real name"
-msgstr ""
+msgstr "姓名"
 
 #: forum/skins/default/templates/user_info.html:62
 msgid "member for"
-msgstr ""
+msgstr "已加入"
 
 #: forum/skins/default/templates/user_info.html:67
 msgid "last seen"
-msgstr ""
+msgstr "上次活动时间"
 
 #: forum/skins/default/templates/user_info.html:73
 msgid "user website"
-msgstr ""
+msgstr "个人网站"
 
 #: forum/skins/default/templates/user_info.html:79
 msgid "location"
-msgstr ""
+msgstr "城市"
 
+# user_info.html 
 #: forum/skins/default/templates/user_info.html:86
 msgid "age"
-msgstr ""
+msgstr "年龄"
 
 #: forum/skins/default/templates/user_info.html:87
 msgid "age unit"
-msgstr ""
+msgstr "岁"
 
 #: forum/skins/default/templates/user_info.html:93
 msgid "todays unused votes"
-msgstr ""
+msgstr "今日剩余投票数"
 
 #: forum/skins/default/templates/user_info.html:94
 msgid "votes left"
-msgstr ""
+msgstr "票"
 
 #: forum/skins/default/templates/user_reputation.html:29
 msgid "Your karma change log."
@@ -3133,7 +3275,6 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:23
 #, python-format
@@ -3147,16 +3288,15 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:36
-#, python-format
+#, fuzzy, python-format
 msgid "the answer has been voted for %(answer_score)s times"
-msgstr ""
+msgstr "该回答总共有%d个投票"
 
 #: forum/skins/default/templates/user_stats.html:36
 msgid "this answer has been selected as correct"
-msgstr ""
+msgstr "该回答已被设为最佳答案"
 
 #: forum/skins/default/templates/user_stats.html:46
 #, python-format
@@ -3170,7 +3310,6 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:61
 #, python-format
@@ -3184,7 +3323,6 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:72
 msgid "thumb up"
@@ -3192,15 +3330,16 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:73
 msgid "user has voted up this many times"
-msgstr ""
+msgstr "该用户投的赞成票总数"
 
 #: forum/skins/default/templates/user_stats.html:77
 msgid "thumb down"
 msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:78
+#, fuzzy
 msgid "user voted down this many times"
-msgstr ""
+msgstr "用户投的反对票总数"
 
 #: forum/skins/default/templates/user_stats.html:87
 #, python-format
@@ -3214,13 +3353,12 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:100
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
-msgstr ""
+msgstr "查看有关'%s'的问题"
 
 #: forum/skins/default/templates/user_stats.html:115
 #, python-format
@@ -3234,87 +3372,87 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/skins/default/templates/user_tabs.html:7
 msgid "User profile"
-msgstr ""
+msgstr "用户概览"
 
 #: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:898
 msgid "overview"
-msgstr ""
+msgstr "概览"
 
 #: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:906
 msgid "recent activity"
-msgstr ""
+msgstr "最近活动"
 
 #: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:916
 msgid "comments and answers to others questions"
-msgstr ""
+msgstr "其他用户的回复和评论"
 
 #: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:915
 msgid "responses"
-msgstr ""
+msgstr "回应"
 
 #: forum/skins/default/templates/user_tabs.html:16
 msgid "graph of user reputation"
-msgstr ""
+msgstr "用户的社区积分历史"
 
 #: forum/skins/default/templates/user_tabs.html:17
 msgid "reputation history"
-msgstr ""
+msgstr "积分"
 
 #: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:942
 msgid "user vote record"
-msgstr ""
+msgstr "用户所有投票"
 
 #: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:941
 msgid "casted votes"
-msgstr ""
+msgstr "投票"
 
 #: forum/skins/default/templates/user_tabs.html:23
 msgid "questions that user selected as his/her favorite"
-msgstr ""
-"Вопросов отмеченных закладками (интересные вопросы можно отмечать нажав на "
-"звездочку)."
+msgstr "用户收藏的问题"
 
 #: forum/skins/default/templates/user_tabs.html:24
 msgid "favorites"
-msgstr "закладки"
+msgstr "收藏"
 
 #: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:951
 msgid "email subscription settings"
 msgstr ""
 
 #: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:950
+#, fuzzy
 msgid "email subscriptions"
-msgstr ""
+msgstr "全部问题"
 
 #: forum/skins/default/templates/users.html:6
 #: forum/skins/default/templates/users.html:24
 msgid "Users"
-msgstr ""
+msgstr "用户列表"
 
 #: forum/skins/default/templates/users.html:27
 msgid "recent"
-msgstr ""
+msgstr "最新加入"
 
 #: forum/skins/default/templates/users.html:29
 msgid "by username"
-msgstr ""
+msgstr "用户名"
 
 #: forum/skins/default/templates/users.html:35
-#, python-format
+#, fuzzy, python-format
 msgid "users matching query %(suser)s:"
 msgstr ""
+"匹配查询 '<span class=\"darkred\"><strong>%s</strong></span>' 的所有用户名："
 
 #: forum/skins/default/templates/users.html:39
 msgid "Nothing found."
-msgstr ""
+msgstr "没有找到相关数据。"
 
 #: forum/skins/default/templates/users_questions.html:11
+#, fuzzy
 msgid "this questions was selected as favorite"
-msgstr ""
+msgstr "这个问题被"
 
 #: forum/skins/default/templates/users_questions.html:12
 msgid "thumb-up on"
@@ -3328,16 +3466,17 @@ msgstr ""
 #: forum/skins/default/templates/authopenid/changeemail.html:9
 #: forum/skins/default/templates/authopenid/changeemail.html:38
 msgid "Change email"
-msgstr ""
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:11
+#, fuzzy
 msgid "Save your email address"
-msgstr ""
+msgstr "您的电子邮件地址"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:16
-#, python-format
+#, fuzzy, python-format
 msgid "change %(email)s info"
-msgstr ""
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:18
 #, python-format
@@ -3353,12 +3492,14 @@ msgid "Your Email"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeemail.html:38
+#, fuzzy
 msgid "Save Email"
-msgstr ""
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:49
+#, fuzzy
 msgid "Validate email"
-msgstr ""
+msgstr "更换电子邮件"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:52
 #, python-format
@@ -3375,8 +3516,9 @@ msgid "old %(email)s kept, if you like go to %(change_email_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeemail.html:65
+#, fuzzy
 msgid "Email changed"
-msgstr ""
+msgstr "密码"
 
 #: forum/skins/default/templates/authopenid/changeemail.html:68
 #, python-format
@@ -3401,8 +3543,9 @@ msgid "email key not sent %(email)s change email here %(change_link)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:8
+#, fuzzy
 msgid "Account: change OpenID URL"
-msgstr ""
+msgstr "更换OpenID地址"
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:12
 msgid ""
@@ -3420,8 +3563,9 @@ msgid "OpenID URL:"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changepw.html:7
+#, fuzzy
 msgid "Account: change password"
-msgstr ""
+msgstr "修改密码"
 
 #: forum/skins/default/templates/authopenid/changepw.html:8
 msgid "This is where you can change your password. Make sure you remember it!"
@@ -3429,11 +3573,11 @@ msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:19
 msgid "Connect your OpenID with this site"
-msgstr ""
+msgstr "绑定OpenID"
 
 #: forum/skins/default/templates/authopenid/complete.html:22
 msgid "Connect your OpenID with your account on this site"
-msgstr ""
+msgstr "绑定OpenID帐号"
 
 #: forum/skins/default/templates/authopenid/complete.html:27
 #, python-format
@@ -3460,21 +3604,23 @@ msgstr ""
 msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
 msgstr ""
 
+# todo: review this message may be confusing user
 #: forum/skins/default/templates/authopenid/complete.html:42
 msgid "This account already exists, please use another."
-msgstr ""
+msgstr "输入您的新帐号或者指定已经存在的帐号。"
 
 #: forum/skins/default/templates/authopenid/complete.html:57
 msgid "Sorry, looks like we have some errors:"
-msgstr ""
+msgstr "请注意以下错误："
 
 #: forum/skins/default/templates/authopenid/complete.html:82
 msgid "Screen name label"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:89
+#, fuzzy
 msgid "Email address label"
-msgstr ""
+msgstr "您的电子邮件地址"
 
 #: forum/skins/default/templates/authopenid/complete.html:95
 #: forum/skins/default/templates/authopenid/signup.html:18
@@ -3492,28 +3638,28 @@ msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:103
 msgid "create account"
-msgstr ""
+msgstr "创建帐号"
 
 #: forum/skins/default/templates/authopenid/complete.html:112
 msgid "Existing account"
-msgstr ""
+msgstr "已经存在的用户"
 
 #: forum/skins/default/templates/authopenid/complete.html:113
 msgid "user name"
-msgstr ""
+msgstr "用户名"
 
 #: forum/skins/default/templates/authopenid/complete.html:114
 msgid "password"
-msgstr ""
+msgstr "密码"
 
 #: forum/skins/default/templates/authopenid/complete.html:121
 msgid "Register"
-msgstr ""
+msgstr "确认"
 
 #: forum/skins/default/templates/authopenid/complete.html:122
 #: forum/skins/default/templates/authopenid/signin.html:168
 msgid "Forgot your password?"
-msgstr ""
+msgstr "忘记密码？"
 
 #: forum/skins/default/templates/authopenid/confirm_email.txt:2
 msgid "Thank you for registering at our Q&A forum!"
@@ -3524,13 +3670,15 @@ msgid "Your account details are:"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/confirm_email.txt:6
+#, fuzzy
 msgid "Username:"
-msgstr ""
+msgstr "您的大名"
 
 #: forum/skins/default/templates/authopenid/confirm_email.txt:7
 #: forum/skins/default/templates/authopenid/delete.html:19
+#, fuzzy
 msgid "Password:"
-msgstr ""
+msgstr "密码"
 
 #: forum/skins/default/templates/authopenid/confirm_email.txt:9
 msgid "Please sign in here:"
@@ -3545,8 +3693,9 @@ msgid ""
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/delete.html:8
+#, fuzzy
 msgid "Account: delete account"
-msgstr ""
+msgstr "删除帐号"
 
 #: forum/skins/default/templates/authopenid/delete.html:12
 msgid ""
@@ -3571,8 +3720,9 @@ msgid "(required for your security)"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/delete.html:34
+#, fuzzy
 msgid "Delete account permanently"
-msgstr ""
+msgstr "删除帐号"
 
 #: forum/skins/default/templates/authopenid/email_validation.txt:2
 msgid "Greetings from the Q&A forum"
@@ -3595,8 +3745,9 @@ msgstr ""
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:4
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:7
+#, fuzzy
 msgid "Traditional login information"
-msgstr ""
+msgstr "个人身份信息"
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
@@ -3608,7 +3759,7 @@ msgstr ""
 #: forum/skins/default/templates/authopenid/sendpw.html:4
 #: forum/skins/default/templates/authopenid/sendpw.html:7
 msgid "Send new password"
-msgstr ""
+msgstr "发送新密码"
 
 #: forum/skins/default/templates/authopenid/sendpw.html:10
 msgid "password recovery information"
@@ -3616,11 +3767,11 @@ msgstr ""
 
 #: forum/skins/default/templates/authopenid/sendpw.html:21
 msgid "Reset password"
-msgstr ""
+msgstr "重设密码"
 
 #: forum/skins/default/templates/authopenid/sendpw.html:22
 msgid "return to login"
-msgstr ""
+msgstr "返回登录"
 
 #: forum/skins/default/templates/authopenid/sendpw_email.txt:2
 #, python-format
@@ -3639,7 +3790,7 @@ msgstr ""
 #: forum/skins/default/templates/authopenid/signin.html:5
 #: forum/skins/default/templates/authopenid/signin.html:21
 msgid "User login"
-msgstr ""
+msgstr "用户登录"
 
 #: forum/skins/default/templates/authopenid/signin.html:28
 #, python-format
@@ -3675,59 +3826,64 @@ msgstr ""
 #: forum/skins/default/templates/authopenid/signin.html:153
 #: forum/skins/default/templates/authopenid/signin.html:166
 msgid "Login"
-msgstr ""
+msgstr "登录"
 
 #: forum/skins/default/templates/authopenid/signin.html:157
+#, fuzzy
 msgid "Enter your login name and password"
-msgstr ""
+msgstr "使用帐号密码登录"
 
 #: forum/skins/default/templates/authopenid/signin.html:161
 msgid "Login name"
-msgstr ""
+msgstr "用户名"
 
 #: forum/skins/default/templates/authopenid/signin.html:163
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: forum/skins/default/templates/authopenid/signin.html:167
+#, fuzzy
 msgid "Create account"
-msgstr ""
+msgstr "创建帐号"
 
 #: forum/skins/default/templates/authopenid/signin.html:178
 msgid "Why use OpenID?"
-msgstr ""
+msgstr "为什么需要OpenID登录？"
 
 #: forum/skins/default/templates/authopenid/signin.html:181
 msgid "with openid it is easier"
 msgstr ""
+"构建在OpenID网络认证上的本系统，不需要你注册新的帐号，即可使用我们系统的所有"
+"功能"
 
 #: forum/skins/default/templates/authopenid/signin.html:184
 msgid "reuse openid"
-msgstr ""
+msgstr "用同一个帐号可登录互联网所有激活OpenID的网站"
 
 #: forum/skins/default/templates/authopenid/signin.html:187
 msgid "openid is widely adopted"
-msgstr ""
+msgstr "全世界有1.6亿OpenID帐号，和10,000个支持OpenID的站点"
 
 #: forum/skins/default/templates/authopenid/signin.html:190
 msgid "openid is supported open standard"
-msgstr ""
+msgstr "OpenID是有开放标准，并且有相关的基金组织提供支持"
 
 #: forum/skins/default/templates/authopenid/signin.html:195
 msgid "Find out more"
-msgstr ""
+msgstr "查看更多"
 
 #: forum/skins/default/templates/authopenid/signin.html:196
 msgid "Get OpenID"
-msgstr ""
+msgstr "获取OpenID"
 
 #: forum/skins/default/templates/authopenid/signup.html:4
 msgid "Signup"
-msgstr ""
+msgstr "注册帐号"
 
 #: forum/skins/default/templates/authopenid/signup.html:8
+#, fuzzy
 msgid "Create login name and password"
-msgstr ""
+msgstr "使用帐号密码登录"
 
 #: forum/skins/default/templates/authopenid/signup.html:10
 msgid "Traditional signup info"
@@ -3740,16 +3896,18 @@ msgid ""
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signup.html:27
+#, fuzzy
 msgid "Create Account"
-msgstr ""
+msgstr "创建帐号"
 
 #: forum/skins/default/templates/authopenid/signup.html:28
 msgid "or"
-msgstr ""
+msgstr "或者"
 
 #: forum/skins/default/templates/authopenid/signup.html:29
+#, fuzzy
 msgid "return to OpenID login"
-msgstr ""
+msgstr "返回登录"
 
 #: forum/skins/default/templates/fbconnect/xd_receiver.html:5
 #, python-format
@@ -3762,12 +3920,14 @@ msgid "%(username)s gravatar image"
 msgstr ""
 
 #: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
+#, fuzzy
 msgid "reputation points"
-msgstr ""
+msgstr "积分"
 
 #: forum/templatetags/extra_tags.py:265
+#, fuzzy
 msgid "2 days ago"
-msgstr ""
+msgstr "于%s<font class=\"darkred\">关闭</font>"
 
 #: forum/templatetags/extra_tags.py:267
 msgid "yesterday"
@@ -3779,7 +3939,6 @@ msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/templatetags/extra_tags.py:271
 #, python-format
@@ -3787,27 +3946,30 @@ msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: forum/utils/forms.py:30
+#, fuzzy
 msgid "this field is required"
-msgstr ""
+msgstr " 标签不能为空。"
 
 #: forum/utils/forms.py:45
 msgid "choose a username"
-msgstr ""
+msgstr "选择一个用户名"
 
 #: forum/utils/forms.py:50
+#, fuzzy
 msgid "user name is required"
-msgstr ""
+msgstr " 标签不能为空。"
 
 #: forum/utils/forms.py:51
+#, fuzzy
 msgid "sorry, this name is taken, please choose another"
-msgstr ""
+msgstr "对不起，您不能注册该用户名，请换一个试试"
 
 #: forum/utils/forms.py:52
+#, fuzzy
 msgid "sorry, this name is not allowed, please choose another"
-msgstr ""
+msgstr "对不起，您不能注册该用户名，请换一个试试"
 
 #: forum/utils/forms.py:53
 msgid "sorry, there is no user with this name"
@@ -3823,35 +3985,39 @@ msgstr ""
 
 #: forum/utils/forms.py:109
 msgid "your email address"
-msgstr ""
+msgstr "您的电子邮件地址"
 
 #: forum/utils/forms.py:110
+#, fuzzy
 msgid "email address is required"
-msgstr ""
+msgstr " 标签不能为空。"
 
 #: forum/utils/forms.py:111
 msgid "please enter a valid email address"
-msgstr "пожалуйста, введите работающий адрес электронной почты"
+msgstr ""
 
 #: forum/utils/forms.py:112
+#, fuzzy
 msgid "this email is already used by someone else, please choose another"
-msgstr ""
+msgstr "该电子邮件已被注册，请选择另一个再试。"
 
 #: forum/utils/forms.py:140
 msgid "choose password"
-msgstr ""
+msgstr "密码"
 
 #: forum/utils/forms.py:141
+#, fuzzy
 msgid "password is required"
-msgstr ""
+msgstr " 标签不能为空。"
 
 #: forum/utils/forms.py:144
 msgid "retype password"
-msgstr ""
+msgstr "确认密码"
 
 #: forum/utils/forms.py:145
+#, fuzzy
 msgid "please, retype your password"
-msgstr ""
+msgstr "确认密码"
 
 #: forum/utils/forms.py:146
 msgid "sorry, entered passwords did not match, please try again"
@@ -3887,71 +4053,78 @@ msgid "email updates canceled"
 msgstr ""
 
 #: forum/views/users.py:899
+#, fuzzy
 msgid "user profile"
-msgstr ""
+msgstr "用户概览"
 
 #: forum/views/users.py:900
+#, fuzzy
 msgid "user profile overview"
-msgstr ""
+msgstr "用户概览"
 
 #: forum/views/users.py:907
+#, fuzzy
 msgid "recent user activity"
-msgstr ""
+msgstr "最近活动"
 
 #: forum/views/users.py:908
+#, fuzzy
 msgid "profile - recent activity"
-msgstr ""
+msgstr "最近活动"
 
 #: forum/views/users.py:917
 msgid "profile - responses"
-msgstr ""
+msgstr "回应 - 用户资料"
 
 #: forum/views/users.py:925
 msgid "user reputation in the community"
-msgstr ""
+msgstr "用户社区积分"
 
 #: forum/views/users.py:926
 msgid "profile - user reputation"
-msgstr ""
+msgstr "积分 - 用户资料"
 
 #: forum/views/users.py:932
+#, fuzzy
 msgid "favorite questions"
-msgstr ""
+msgstr "收藏"
 
 #: forum/views/users.py:933
 msgid "users favorite questions"
-msgstr ""
+msgstr "用户收藏的问题"
 
 #: forum/views/users.py:934
 msgid "profile - favorite questions"
-msgstr ""
+msgstr "收藏 - 用户资料"
 
 #: forum/views/users.py:943
 msgid "profile - votes"
-msgstr ""
+msgstr "投票 - 用户资料"
 
 #: forum/views/users.py:952
+#, fuzzy
 msgid "profile - email subscriptions"
-msgstr ""
+msgstr "收藏 - 用户资料"
 
 #: forum/views/writers.py:70
 msgid "uploading images is limited to users with >60 reputation points"
-msgstr ""
+msgstr "上传图片只限于积分+60以上注册用户!"
 
+# todo take these out of settings
 #: forum/views/writers.py:72
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr ""
+msgstr "只允许上传'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'类型的文件！"
 
 #: forum/views/writers.py:74
 #, python-format
 msgid "maximum upload file size is %sK"
-msgstr ""
+msgstr "只允许上传%sK大小的文件！"
 
 #: forum/views/writers.py:76
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
-msgstr ""
+msgstr "在文件上传过程中产生了错误，请联系管理员，谢谢^_^"
 
 #: forum_modules/authentication/auth.py:27
 msgid "Email Validation"
@@ -3962,12 +4135,14 @@ msgid "Thank you, your email is now validated."
 msgstr ""
 
 #: forum_modules/authentication/auth.py:62
+#, fuzzy
 msgid "Your password was changed"
-msgstr ""
+msgstr "密码"
 
 #: forum_modules/authentication/auth.py:64
+#, fuzzy
 msgid "New password set"
-msgstr ""
+msgstr "密码"
 
 #: forum_modules/authentication/auth.py:130
 #, python-format
@@ -3976,26 +4151,441 @@ msgstr ""
 
 #: forum_modules/books/urls.py:7 forum_modules/books/urls.py:8
 #: forum_modules/books/urls.py:9
+#, fuzzy
 msgid "books/"
-msgstr ""
+msgstr "读书"
 
-#~ msgid "Your account email"
-#~ msgstr "Адрес электронной почты связанный с аккаунтом"
+# translation and user name validation are language-specific
+#~ msgid "invalid user name"
+#~ msgstr "用户名只能包含英文字母、数字和下划线"
 
-#~ msgid "You cannot leave this field blank"
-#~ msgstr "Это необходимо заполнить"
+# minimal length of user name may be language specific
+#~ msgid "username too short"
+#~ msgstr "用户名太短，请使用三个或三个以上字符"
 
-#~ msgid "Sorry, but this email is not on our database."
-#~ msgstr "Извините, но этого адреса нет в нашей базе данных."
+#~ msgid "this name is already in use - please try anoter"
+#~ msgstr "该用户名已被注册，请换一个试试"
 
-#~ msgid "no OSQA community email please, thanks"
-#~ msgstr "спасибо, но электронной почты не надо"
+#~ msgid ""
+#~ "This email is already                 registered in our database. Please "
+#~ "choose another."
+#~ msgstr "该电子邮件已被注册，请选择另一个再试。"
 
-#~ msgid "list of unanswered questions"
-#~ msgstr "список неотвеченных вопросов"
+#~ msgid "site title"
+#~ msgstr "CNProg.com"
 
-#~ msgid "These login credentials are already associated with your account."
-#~ msgstr "Эта информация уже ассоциирована с Вашей учетной записью."
+#~ msgid "site slogan"
+#~ msgstr "程序员问答社区"
 
-#~ msgid "The new credentials are now associated with your account"
-#~ msgstr "Новая информация добавлена в Вашу учетную запись"
+#~ msgid "meta site content"
+#~ msgstr ""
+#~ "中国程序员的编程技术问答社区。我们做专业的、可协作编辑的技术问答社区。"
+
+#~ msgid ""
+#~ "please use space to separate tags (this enables autocomplete feature)"
+#~ msgstr "多个标签请用空格间隔-最多5个标签。（优先使用自动匹配的英文标签。）"
+
+#~ msgid ""
+#~ "please use following characters in tags: letters 'a-z', numbers, and "
+#~ "characters '.-_#'"
+#~ msgstr "标签请使用英文字母，中文或者数字字符串（. - _ # 也可以）"
+
+#~ msgid "user preference settings"
+#~ msgstr "用户参数的设置"
+
+#~ msgid "profile - user preferences"
+#~ msgstr "设置 - 用户资料"
+
+#, fuzzy
+#~ msgid " ago"
+#~ msgstr "前"
+
+#~ msgid "Save"
+#~ msgstr "保存"
+
+#~ msgid "Use"
+#~ msgstr "使用"
+
+#~ msgid "learn more about OpenID"
+#~ msgstr "了解更多有关OpenID的信息"
+
+#, fuzzy
+#~ msgid "Get your own "
+#~ msgstr "获取您自己的"
+
+#~ msgid "Email: (won't be shown to anyone)"
+#~ msgstr "电子邮件:（不会公开显示）"
+
+#~ msgid ""
+#~ "gold badge descriptionGold badge is very rare. To obtain it you have to "
+#~ "show profound knowledge and ability in addition to actively participating "
+#~ "in the community. Gold badge is the highest award in this community."
+#~ msgstr ""
+#~ "金牌是十分罕见的。你不仅要参与社区的提问、回答、投票等活动，而且需要有高深"
+#~ "的知识和能力才能获得。"
+
+#~ msgid ""
+#~ "silver badge descriptionObtaining silver badge requires significant "
+#~ "patience. If you got one, you've very significantly contributed to this "
+#~ "community"
+#~ msgstr "它是不同寻常的荣誉，只要你付出足够的努力就会得到。"
+
+#~ msgid "Connect with Twitter"
+#~ msgstr "同步Twitter消息"
+
+#~ msgid "Twitter account name:"
+#~ msgstr "账号:"
+
+#~ msgid "Twitter password:"
+#~ msgstr "密码:"
+
+#~ msgid "Send my Questions to Twitter"
+#~ msgstr "发布我的提问到我的Twitter"
+
+#~ msgid "Send my Answers to Twitter"
+#~ msgstr "发布我的回答到我的Twitter"
+
+#, fuzzy
+#~ msgid ""
+#~ "bronze badge descriptionIf you are active in this community, you will get "
+#~ "this medal - still it is a special honor."
+#~ msgstr "铜牌会在你活跃于社区时产生，它相对容易获得，但也是一种特殊的荣誉。"
+
+#~ msgid "see"
+#~ msgstr "查看"
+
+#, fuzzy
+#~ msgid "About us"
+#~ msgstr "关于本站"
+
+#, fuzzy
+#~ msgid "Contact"
+#~ msgstr "联系我们"
+
+#~ msgid "my profile"
+#~ msgstr "我的资料"
+
+#~ msgid "last updated questions"
+#~ msgstr "最新更新的问题"
+
+# must have extra space after in english
+#~ msgid "see questions tagged"
+#~ msgstr "查看有关"
+
+#~ msgid "welcome to website"
+#~ msgstr "CNProg欢迎您!"
+
+#~ msgid "Recent tags"
+#~ msgstr "最新标签"
+
+#~ msgid "Recent awards"
+#~ msgstr "最新奖牌"
+
+#~ msgid "given to"
+#~ msgstr "授予"
+
+#~ msgid "all awards"
+#~ msgstr "所有奖牌"
+
+#~ msgid "subscribe to last 30 questions by RSS"
+#~ msgstr "RSS订阅最新30个问题"
+
+#~ msgid "Still looking for more? See"
+#~ msgstr "在寻找更多问题吗？请查阅"
+
+#, fuzzy
+#~ msgid "complete list of quesionts"
+#~ msgstr "全部问题列表"
+
+#~ msgid "Account: change email"
+#~ msgstr "修改电子邮件"
+
+#, fuzzy
+#~ msgid "Size per page:"
+#~ msgstr "每页显示"
+
+#~ msgid "Login to answer"
+#~ msgstr "登录并回答该问题"
+
+#~ msgid "ago"
+#~ msgstr "前"
+
+# index.html
+#~ msgid "Community wiki"
+#~ msgstr "社区Wiki"
+
+# must have extra space after in english
+#, fuzzy
+#~ msgid "Browse questions with tag of "
+#~ msgstr "查看有关"
+
+#~ msgid "All tags matching query"
+#~ msgstr "匹配查询"
+
+#~ msgid "all tags - make this empty in english"
+#~ msgstr "的所有标签"
+
+#~ msgid "most recently asked questions"
+#~ msgstr "最新加入系统的问题"
+
+# in unanswered.html and somewhere else
+#~ msgid "Have a total of"
+#~ msgstr "您正在浏览所有"
+
+#~ msgid "image associated with your email address"
+#~ msgstr "和您的邮件地址是绑定的"
+
+#~ msgid "avatar"
+#~ msgstr "修改头像"
+
+#, fuzzy
+#~ msgid ""
+#~ "the answer has been commented %(answered_question.comment_count)s times"
+#~ msgstr "该回答有%d条评论"
+
+#~ msgid "votes total"
+#~ msgstr "个投票"
+
+#~ msgid "Tags"
+#~ msgstr "个标签"
+
+#, fuzzy
+#~ msgid "New password again"
+#~ msgstr "发送新密码"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your OpenID is accepted. Please complete this to finish registration."
+#~ msgstr "您的OpenID帐号已经验证通过! 请完成最后一步 - 绑定OpenID到您的帐号。"
+
+#~ msgid "New account"
+#~ msgstr "新帐号"
+
+#~ msgid "User name (<i>will be shown to others, cannot be modified</i>)"
+#~ msgstr "用户名（<i>在社区显示友好名称，不可更改</i>）"
+
+#~ msgid "Lost your password? No problem - here you can reset it."
+#~ msgstr "丢失了您的密码？ 你可以在这里重设密码。"
+
+#~ msgid ""
+#~ "Please enter your username below and new password will be sent to your "
+#~ "registered e-mail"
+#~ msgstr "请输入用户名，新的密码会发送到你注册时候填写的电子邮件。"
+
+# todo - check translation or see if it's indeed true
+#~ msgid ""
+#~ "Note: your new password will be activated only after you click the "
+#~ "activation link in the email message"
+#~ msgstr "注意: 新的密码只有您在激活邮件中的链接后才会被激活。"
+
+#~ msgid "we support two login modes"
+#~ msgstr ""
+#~ "CNProg支持<b>两种</b>登录模式。您可以使用帐号、密码登录，或者使用OpenID登"
+#~ "录。"
+
+#~ msgid "Login with your OpenID"
+#~ msgstr "使用OpenID登录"
+
+#~ msgid "select openid provider"
+#~ msgstr "1)请选择您的帐号类："
+
+#~ msgid "verify openid link and login"
+#~ msgstr "2)型并完成正确的OpenID地址（如：替换“{username}”为您的对应帐号）："
+
+#, fuzzy
+#~ msgid "Create new acccount"
+#~ msgstr "注册新帐号"
+
+#~ msgid ""
+#~ "We support two types of user registration: conventional username/"
+#~ "password, and"
+#~ msgstr "我们支持两种注册方式，你可以使用常规的用户名、密码方式注册，或者"
+
+#~ msgid "the OpenID method"
+#~ msgstr "使用OpenID帐号注册"
+
+#, fuzzy
+#~ msgid "Sorry, looks like we have some errors"
+#~ msgstr "请注意以下错误："
+
+#~ msgid "Conventional registration"
+#~ msgstr "请注意以下错误："
+
+#~ msgid "choose a user name"
+#~ msgstr "选择一个用户名"
+
+#~ msgid "back to login"
+#~ msgstr "返回登录"
+
+#~ msgid "Register with your OpenID"
+#~ msgstr "使用OpenID注册"
+
+#~ msgid "meta site keywords, comma separated"
+#~ msgstr ""
+#~ "技术问答社区，中国程序员，编程技术社区，程序员社区，程序员论坛，程序员"
+#~ "wiki，程序员博客"
+
+#~ msgid "what is this website"
+#~ msgstr ""
+#~ "CNProg是一个<strong>面向程序员</strong>的可协作编辑的<strong>开放源代码问"
+#~ "答社区</strong>。"
+
+#~ msgid "what can one do on this website"
+#~ msgstr ""
+#~ "您可以在这里提问各类<strong>程序技术问题</strong> - 问题不分语言和平台。 "
+#~ "同时也希望您对力所能及的问题，给予您的宝贵答案。"
+
+#~ msgid "book technical Q&A"
+#~ msgstr "图书相关的技术答疑"
+
+#~ msgid "blog"
+#~ msgstr "Blog"
+
+#~ msgid "current revision"
+#~ msgstr "当前版本"
+
+#~ msgid "number of votes"
+#~ msgstr "票数"
+
+#~ msgid "number - make blank in english"
+#~ msgstr "页"
+
+#~ msgid "Change now"
+#~ msgstr "现在修改"
+
+#~ msgid "uses tags for the classification of questions"
+#~ msgstr "用标签来分类系统的信息"
+
+#~ msgid "Found by tag"
+#~ msgstr "标签问题"
+
+#~ msgid ""
+#~ "\n"
+#~ "\t\t\thave total %(q_num)s questions tagged %(tagname)s\n"
+#~ "\t\t\t"
+#~ msgid_plural ""
+#~ "\n"
+#~ "\t\t\thave total %(q_num)s questions tagged %(tagname)s\n"
+#~ "\t\t\t"
+#~ msgstr[0] ""
+#~ "\n"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span "
+#~ "class=\"tag\">%(tagname)s</span></p>"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span "
+#~ "class=\"tag\">%(tagname)s</span></p>"
+
+#~ msgid ""
+#~ "\n"
+#~ "\t\t\thave total %(q_num)s questions containing %(searchtitle)s\n"
+#~ "\t\t\t"
+#~ msgid_plural ""
+#~ "\n"
+#~ "\t\t\thave total %(q_num)s questions containing %(searchtitle)s\n"
+#~ "\t\t\t"
+#~ msgstr[0] ""
+#~ "\n"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有"
+#~ "<span class=\"tag\">%(searchtitle)s</span></p>"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有"
+#~ "<span class=\"tag\">%(searchtitle)s</span></p>"
+
+#~ msgid "number of <strong>unanswered</strong> questions"
+#~ msgstr ""
+#~ "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+
+#~ msgid "tagged with"
+#~ msgstr "标记为"
+
+#~ msgid "whose title contains"
+#~ msgstr "标题含有"
+
+#~ msgid "number of questions end of sentence"
+#~ msgstr "的问题。"
+
+#~ msgid "Questions are sorted by the <strong>time of last update</strong>."
+#~ msgstr "问题按<strong>最后更新时间</strong>显示排序。"
+
+#~ msgid "Most recently answered ones are shown first."
+#~ msgstr "最后被回答或者>更新的问题将显示在最前面。"
+
+#~ msgid "Questions sorted by <strong>number of responses</strong>."
+#~ msgstr "问题按<strong>回复数量</strong>显示排序。"
+
+#~ msgid "Most answered questions are shown first"
+#~ msgstr "回复最多的问题将显示在最前面。"
+
+#~ msgid "Questions are sorted by the <strong>number of votes</strong>."
+#~ msgstr "问题按<strong>投票数量</strong>显示排序。"
+
+#~ msgid "Most voted questions are shown first"
+#~ msgstr "投票最多的问题将显示在最前面。"
+
+#~ msgid ""
+#~ "Anyone can ask questions and give answers, points are not necessary for "
+#~ "that."
+#~ msgstr "对于正常使用社区进行提问、回答而言，积分不是必须的。"
+
+#~ msgid ""
+#~ "As we've said before, users help running this site. Point system helps "
+#~ "select users who can administer this community."
+#~ msgstr ""
+#~ "我们一再声明，CNProg由你来运行和维护。如果你想帮助我们来运作CNProg，你需要"
+#~ "一定的积分等级。"
+
+#~ msgid ""
+#~ "Reputation points roughly measure how community trusts you. These points "
+#~ "are given to you directly by other members of the community."
+#~ msgstr ""
+#~ "<span class=\"yellowbg\">积分是一种用来粗略衡量社区对你有多信任的数据。</"
+#~ "span>积分不是有谁来支付或直接给予你的，而是你通过获得其他用户的支持和信"
+#~ "任“赚得”的。"
+
+#~ msgid ""
+#~ "For example, if you ask an interesting question or give a helpful answer, "
+#~ "your input will be upvoted and you will gain more trust in the community."
+#~ msgstr ""
+#~ "举例来说，如果你提了一个非常有帮助的问题或者做了很有用的回答，你将会被其他"
+#~ "用户投赞成票。"
+
+#~ msgid ""
+#~ "If on the other hand someone gives a misleading answer, the answer will "
+#~ "be voted down and he/she loses some points."
+#~ msgstr ""
+#~ "相反，你提了不受欢迎的问题，或者误导用户的回答，你将可能被其他用户投反对"
+#~ "票。每个赞成"
+
+#~ msgid ""
+#~ "Each vote in favor will generate <strong>10</strong> points, each vote "
+#~ "against will subtract <strong>2</strong> points."
+#~ msgstr ""
+#~ "票会帮你产生<strong>10</strong>个社区积分，每个反对票会相应扣除你"
+#~ "<strong>2</strong>个积分。"
+
+#~ msgid ""
+#~ "Through the votes of other people you can accumulate a maximum of "
+#~ "<strong>200</strong> points."
+#~ msgstr ""
+#~ "每天通过别人投赞成票，你最多只能产生<strong>200</strong>个积分，这是上限。"
+
+#~ msgid "After accumulating certain number of points, you can do more:"
+#~ msgstr "当你累计到一定>积分，你可以在社区做更多的事情："
+
+#~ msgid "gold badge: the highest honor and is very rare"
+#~ msgstr "金牌:十分罕见之最高荣耀"
+
+#~ msgid ""
+#~ "silver badge: occasionally awarded for the very high quality contributions"
+#~ msgstr "银牌:偶尔颁发之优质奖章"
+
+#~ msgid "Gold badge is very rare."
+#~ msgstr "金牌是十分罕见的。"
+
+#~ msgid "Gold badge is the highest award in this community."
+#~ msgstr "获得金牌意味着你在某个层次上已经达到了顶峰。"
+
+#~ msgid "Obtaining silver badge requires significant patience."
+#~ msgstr "银牌需要经过长时间的奋斗才能获得。"
