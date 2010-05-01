@@ -1,14 +1,14 @@
-# Turkish translation made for Askbot project by Oktay YILDIZ.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Oktay YILDIZ <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-28 15:31-0400\n"
-"PO-Revision-Date: 2010-04-29 15:50\n"
+"PO-Revision-Date: 2010-04-30 02:23\n"
 "Last-Translator: <oktayxy@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -300,7 +300,7 @@ msgstr "aktif"
 
 #: forum/const.py:40 forum/skins/default/templates/questions.html:83
 msgid "inactive"
-msgstr "durağan"
+msgstr "hareketsiz"
 
 #: forum/const.py:41
 msgid "hottest"
@@ -324,7 +324,7 @@ msgstr "ilgi"
 
 #: forum/const.py:52 forum/skins/default/templates/questions.html:52
 msgid "all"
-msgstr "tüm"
+msgstr "tümü"
 
 #: forum/const.py:53 forum/skins/default/templates/questions.html:53
 msgid "unanswered"
@@ -672,7 +672,7 @@ msgstr "sor/"
 
 #: forum/urls.py:42
 msgid "unanswered/"
-msgstr "cevapsız/"
+msgstr "cevapsiz/"
 
 #: forum/urls.py:44
 msgid "close/"
@@ -728,7 +728,7 @@ msgstr "yöneticiler/"
 
 #: forum/urls.py:80 forum/urls.py:81
 msgid "badges/"
-msgstr "madalyalar/"
+msgstr "oduller/"
 
 #: forum/urls.py:82
 msgid "messages/"
@@ -1091,7 +1091,7 @@ msgstr "ayrıntılarıyayınlamayı deneyin"
 #: forum/skins/default/templates/answer_edit_tips.html:16
 #: forum/skins/default/templates/question_edit_tips.html:13
 msgid "be clear and concise"
-msgstr "açık ve kısa olmalı"
+msgstr "sorunuzun açık ve kısa olmasına çalışın"
 
 #: forum/skins/default/templates/answer_edit_tips.html:20
 #: forum/skins/default/templates/question_edit_tips.html:17
@@ -1201,7 +1201,7 @@ msgstr "Madalya özeti"
 
 #: forum/skins/default/templates/badges.html:17
 msgid "Badges"
-msgstr "Madalyalar"
+msgstr "Ödüller"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
@@ -1213,11 +1213,11 @@ msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
 "    "
-msgstr "Aşağıda alınabilecek madalyalar ve kaç defa verildikleri görülmektedir.<BR> Görüşlerinizi bekliyoruz... %(feedback_faq_url)s <BR>"
+msgstr "Aşağıda alınabilecek ödüller ve kaç defa verildikleri görülmektedir.<BR> Görüşlerinizi bekliyoruz: %(feedback_faq_url)s"
 
 #: forum/skins/default/templates/badges.html:50
 msgid "Community badges"
-msgstr "Site madalyaları"
+msgstr "Site ödülleri"
 
 #: forum/skins/default/templates/badges.html:56
 msgid "gold badge description"
@@ -1513,9 +1513,9 @@ msgid "Still have questions?"
 msgstr "Hala aklınıza takılan bir soru mu var?"
 
 #: forum/skins/default/templates/faq.html:128
-#, fuzzy, python-format
+#, python-format
 msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "Hiç çekinmeden sorunuzu sitemize yazın. Böy(%ask_question_url)s, lelikle hem başkalarına da faydalı olabilirsiniz."
+msgstr "Lütfen sorularınızı %(ask_question_url)s kısmına yazın. Böylelikle bize daha fazla yardımcı olmuş olursunuz."
 
 #: forum/skins/default/templates/faq.html:130
 #: forum/skins/default/templates/header.html:27
@@ -1631,7 +1631,7 @@ msgstr "kitaplar"
 #: forum/skins/default/templates/header.html:33
 #: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
 msgid "badges"
-msgstr "madalyalar"
+msgstr "ödüller"
 
 #: forum/skins/default/templates/header.html:34
 #: forum/skins/default/templates/header.html:38
@@ -1702,10 +1702,8 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"bir kez düzenlendi\""
-msgstr[1] ""
-"\n"
-"%(rev_count)s düzenlendi"
+"bir kez düzenlendi\n"
+msgstr[1] "%(rev_count)s kez düzenlendi"
 
 #: forum/skins/default/templates/post_contributor_info.html:19
 msgid "asked"
@@ -1867,7 +1865,7 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 "\n"
-"diğer <strong>yorumu</strong> gör\""
+"<strong>bir</strong> yorum daha gör\n"
 msgstr[1] "diğer <strong>%(counter)s</strong> yorumu gör"
 
 #: forum/skins/default/templates/question.html:220
@@ -1965,10 +1963,8 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 "\n"
-"<strong>bir</strong> daha gör\""
-msgstr[1] ""
-"\n"
-"<strong>%(counter)s</strong> daha gör"
+"<strong>bir</strong> tane daha gör\n"
+msgstr[1] "<strong>%(counter)s</strong> tane daha gör"
 
 #: forum/skins/default/templates/question.html:353
 #, fuzzy, python-format
@@ -2083,7 +2079,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "oy"
-msgstr[1] "\noy"
+msgstr[1] ""
+"\n"
+"oy"
 
 #: forum/skins/default/templates/question_counter_widget.html:21
 msgid "this answer has been accepted to be correct"
@@ -2101,7 +2099,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "cevap"
-msgstr[1] "\ncevap"
+msgstr[1] ""
+"\n"
+"cevap"
 
 #: forum/skins/default/templates/question_counter_widget.html:39
 msgid ""
@@ -2115,7 +2115,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "izlenme"
-msgstr[1] "\nizlenme"
+msgstr[1] ""
+"\n"
+"izlenme"
 
 #: forum/skins/default/templates/question_edit.html:5
 #: forum/skins/default/templates/question_edit.html:66
@@ -2185,7 +2187,7 @@ msgstr "Tüm sorular"
 
 #: forum/skins/default/templates/questions.html:51
 msgid "In:"
-msgstr "Nerede:"
+msgstr "Sorular:"
 
 #: forum/skins/default/templates/questions.html:53
 msgid "see unanswered questions"
@@ -2224,7 +2226,7 @@ msgstr "en beğenilen cevaplar için tıklayın"
 
 #: forum/skins/default/templates/questions.html:102
 msgid "less answers"
-msgstr "cevapları kısalt"
+msgstr "az cevaplananlar"
 
 #: forum/skins/default/templates/questions.html:108
 msgid "click to see coldest questions"
@@ -2233,7 +2235,7 @@ msgstr "en beğenilmeyen soruları gör"
 #: forum/skins/default/templates/questions.html:108
 #: forum/skins/default/templates/questions.html:113
 msgid "more answers"
-msgstr "daha fazla cevap"
+msgstr "çok cevaplananlar"
 
 #: forum/skins/default/templates/questions.html:121
 #: forum/skins/default/templates/questions.html:132
@@ -2336,7 +2338,7 @@ msgstr "baştan başlıyor"
 
 #: forum/skins/default/templates/questions.html:220
 msgid "Please always feel free to ask your question!"
-msgstr "Lütfen, asla soru sormaktan çekinmeyin! Sorun ki, başkaları da öğrensin!"
+msgstr "Asla soru sormaktan çekinmeyin! Sorun ki, sayenizde başkaları da öğrensin!"
 
 #: forum/skins/default/templates/questions.html:224
 msgid "Did not find what you were looking for?"
@@ -2501,7 +2503,7 @@ msgstr "Bu kullanıcıyı yönet"
 
 #: forum/skins/default/templates/user_info.html:47
 msgid "update profile"
-msgstr "profil güncelleme"
+msgstr "profilimi güncelle"
 
 #: forum/skins/default/templates/user_info.html:57
 msgid "real name"
@@ -2509,7 +2511,7 @@ msgstr "gerçek ismi"
 
 #: forum/skins/default/templates/user_info.html:62
 msgid "member for"
-msgstr "üye için"
+msgstr "üyelik başlangıcı"
 
 #: forum/skins/default/templates/user_info.html:67
 msgid "last seen"
@@ -2529,7 +2531,7 @@ msgstr "yaş"
 
 #: forum/skins/default/templates/user_info.html:87
 msgid "age unit"
-msgstr "yaş aralığı"
+msgstr "yaşında"
 
 #: forum/skins/default/templates/user_info.html:93
 msgid "todays unused votes"
@@ -2561,7 +2563,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "<span class=\"count\">1</span> Soru"
-msgstr[1] "\n<span class=\"count\">%(counter)s</span> Soru"
+msgstr[1] ""
+"\n"
+"<span class=\"count\">%(counter)s</span> Soru"
 
 #: forum/skins/default/templates/user_stats.html:23
 #, python-format
@@ -2576,7 +2580,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "<span class=\"count\">1</span> Cevap"
-msgstr[1] "\n<span class=\"count\">%(counter)s</span> Cevap"
+msgstr[1] ""
+"\n"
+"<span class=\"count\">%(counter)s</span> Cevap"
 
 #: forum/skins/default/templates/user_stats.html:36
 #, python-format
@@ -2599,8 +2605,8 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 "\n"
-"(bir kez yorum yazıldı)\n"""
-msgstr[1] "\nCevap %(comment_count)s kez yorumlandı."
+"(bir kez yorum yazıldı)\n"
+msgstr[1] "Cevap %(comment_count)s kez yorumlandı"
 
 #: forum/skins/default/templates/user_stats.html:61
 #, python-format
@@ -2615,7 +2621,9 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "<span class=\"count\">1</span> oy"
-msgstr[1] "\n<span class=\"count\">%(cnt)s</span> oy"
+msgstr[1] ""
+"\n"
+"<span class=\"count\">%(cnt)s</span> oy"
 
 #: forum/skins/default/templates/user_stats.html:72
 msgid "thumb up"
@@ -2645,10 +2653,8 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 "\n"
-"<span class=\"count\">1</span> Gün\""
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span> Gün"
+"<span class=\"count\">1</span> Etiket\n"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Etiket"
 
 #: forum/skins/default/templates/user_stats.html:100
 #, python-format

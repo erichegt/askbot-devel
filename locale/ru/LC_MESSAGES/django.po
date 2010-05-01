@@ -1,6 +1,6 @@
-# Russian translation made for Askbot projec project
 # Russian translation of messages for Askbot
-# le is Evgeny Fadeev distributed under the same license as the Askbot package.
+# Copyright (C) 2009 Gang Chen
+# This file is distributed under the same license as the Askbot package.
 # FIRST AUTHOR <evgeny.fadeev@gmail.com>, 2010.
 # 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-22 03:56-0400\n"
-"PO-Revision-Date: 2010-04-29 18:19\n"
+"PO-Revision-Date: 2010-04-30 21:06\n"
 "Last-Translator: <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -333,11 +333,11 @@ msgstr "все"
 
 #: forum/const.py:53 forum/skins/default/templates/questions.html:53
 msgid "unanswered"
-msgstr "без ответов"
+msgstr "неотвеченные"
 
 #: forum/const.py:54 forum/skins/default/templates/questions.html:55
 msgid "favorite"
-msgstr "отмеченные"
+msgstr "закладки"
 
 #: forum/const.py:97
 msgid "question"
@@ -488,537 +488,540 @@ msgstr "темы"
 
 #: forum/forms.py:55
 msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
-msgstr ""
+msgstr "Тематические отметкы это короткие ключевые слова, не содержащие внутри пробелов. Пожалуйста используйте не более пяти отметок."
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
-msgstr ""
+msgstr "тематические отметки (ключевые слова) обязательны"
 
 #: forum/forms.py:70
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "пожалуйста введите не более %(tag_count)d слов"
+msgstr[1] "пожалуйста введите не более %(tag_count)d слова"
+msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
 
 #: forum/forms.py:79
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
-msgid_plural "each tag must be shorter than %(max_shars)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
+msgstr[0] "каждое слово должно быть не более %(max_chars)d букв"
+msgstr[1] "каждое слово должно быть не более %(max_chars)d буквы"
+msgstr[2] "каждое слово должно быть не более %(max_chars)d букв"
 
 #: forum/forms.py:87
 msgid "use-these-chars-in-tags"
-msgstr ""
+msgstr "пожалуйста используйте только следующие символы"
 
 #: forum/forms.py:97
 #: forum/skins/default/templates/post_contributor_info.html:7
 #: forum/skins/default/templates/question_summary_list_roll.html:26
 #: forum/skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
-msgstr ""
+msgstr "общее вики"
 
 #: forum/forms.py:98
 msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
-msgstr ""
+msgstr "если вы отметите \"общее вики\", то голоса на ответ и вопрос не принесут изменения в репутации"
 
 #: forum/forms.py:114
 msgid "update summary:"
-msgstr ""
+msgstr "информация об обновлениях:"
 
 #: forum/forms.py:115
 msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
-msgstr ""
+msgstr "если у Вас есть желание, то кратко опишите здесь суть вашей правки (например - исправление орфографии, грамматики, стиля)"
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
-msgstr ""
+msgstr "Авоматически принять сообщения от этого пользователя для рассылки по элетронной почте"
 
 #: forum/forms.py:205
 msgid "Your name:"
-msgstr ""
+msgstr "Ваше имя:"
 
 #: forum/forms.py:206
 msgid "Email (not shared with anyone):"
-msgstr ""
+msgstr "Адрес электронной почты (держится в секрете):"
 
 #: forum/forms.py:207
 msgid "Your message:"
-msgstr ""
+msgstr "Ваше сообщение:"
 
 #: forum/forms.py:290
 msgid "this email does not have to be linked to gravatar"
-msgstr ""
+msgstr "Этот адрес не обязательно должен быть ассоциирован с глобальным аватаром (gravatar)"
 
 #: forum/forms.py:292
 msgid "Screen name"
-msgstr ""
+msgstr "Имя для публики"
 
 #: forum/forms.py:293
 msgid "Real name"
-msgstr ""
+msgstr "Настоящее имя"
 
 #: forum/forms.py:294
 msgid "Website"
-msgstr ""
+msgstr "Вебсайт"
 
 #: forum/forms.py:295
 msgid "Location"
-msgstr ""
+msgstr "Местоположение"
 
 #: forum/forms.py:296
 msgid "Date of birth"
-msgstr ""
+msgstr "День рождения"
 
 #: forum/forms.py:296
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "показывается только возраст, формат ГГГГ-ММ-ДД"
 
 #: forum/forms.py:297 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
-msgstr ""
+msgstr "Профиль"
 
 #: forum/forms.py:328 forum/forms.py:329
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "этот адрес уже зарегистрирован, пожалуйста введите другой"
 
 #: forum/forms.py:335
 msgid "Choose email tag filter"
-msgstr ""
+msgstr "Выберите тип фильтра по темам (ключевым словам)"
 
 #: forum/forms.py:351 forum/forms.py:352
 msgid "weekly"
-msgstr ""
+msgstr "еженедельно"
 
 #: forum/forms.py:351 forum/forms.py:352
 msgid "no email"
-msgstr ""
+msgstr "не посылать электронную почту"
 
 #: forum/forms.py:352
 msgid "daily"
-msgstr ""
+msgstr "ежедневно"
 
 #: forum/forms.py:367
 msgid "Asked by me"
-msgstr ""
+msgstr "Заданные мной"
 
 #: forum/forms.py:370
 msgid "Answered by me"
-msgstr ""
+msgstr "Отвеченные мной"
 
 #: forum/forms.py:373
 msgid "Individually selected"
-msgstr ""
+msgstr "Выбранные индивидуально"
 
 #: forum/forms.py:376
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Весь форум (фильтрованный по темам)"
 
 #: forum/forms.py:430 forum/authentication/forms.py:41
 msgid "okay, let's try!"
-msgstr ""
+msgstr "ну хорошо, давайте попробуем!"
 
 #: forum/forms.py:431
 msgid "no community email please, thanks"
-msgstr ""
+msgstr "спасибо, но не надо"
 
 #: forum/forms.py:434 forum/authentication/forms.py:45
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
 
 #: forum/urls.py:28
 msgid "upfiles/"
-msgstr ""
+msgstr "загруженные-файлы/"
 
 #: forum/urls.py:33
 msgid "about/"
-msgstr ""
+msgstr "о-нас/"
 
 #: forum/urls.py:34
 msgid "faq/"
-msgstr ""
+msgstr "часто-задаваемые-вопросы/"
 
 #: forum/urls.py:35
 msgid "privacy/"
-msgstr ""
+msgstr "правила-о-личной-информации/"
 
 #: forum/urls.py:36
 msgid "logout/"
-msgstr ""
+msgstr "выйти/"
 
 #: forum/urls.py:37 forum/urls.py:38 forum/urls.py:39 forum/urls.py:56
 msgid "answers/"
-msgstr ""
+msgstr "ответы/"
 
 #: forum/urls.py:37 forum/urls.py:49 forum/urls.py:52 forum/urls.py:56
 msgid "comments/"
-msgstr ""
+msgstr "комментарии/"
 
 #: forum/urls.py:38 forum/urls.py:43 forum/urls.py:78
 #: forum/skins/default/templates/user_info.html:47
 msgid "edit/"
-msgstr ""
+msgstr "править/"
 
 #: forum/urls.py:39 forum/urls.py:48
 msgid "revisions/"
-msgstr ""
+msgstr "правки/"
 
 #: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:43
 #: forum/urls.py:44 forum/urls.py:45 forum/urls.py:46 forum/urls.py:47
 #: forum/urls.py:48 forum/urls.py:49 forum/urls.py:52
 msgid "questions/"
-msgstr ""
+msgstr "вопросы/"
 
 #: forum/urls.py:41 forum_modules/books/urls.py:8
 msgid "ask/"
-msgstr ""
+msgstr "спросить/"
 
 #: forum/urls.py:42
 msgid "unanswered/"
-msgstr ""
+msgstr "неотвеченные/"
 
 #: forum/urls.py:44
 msgid "close/"
-msgstr ""
+msgstr "закрыть/"
 
 #: forum/urls.py:45
 msgid "reopen/"
-msgstr ""
+msgstr "открыть-снова/"
 
 #: forum/urls.py:46
 msgid "answer/"
-msgstr ""
+msgstr "ответить/"
 
 #: forum/urls.py:47
 msgid "vote/"
-msgstr ""
+msgstr "голосовать/"
 
 #: forum/urls.py:50
 msgid "command/"
-msgstr ""
+msgstr "комманда/"
 
 #: forum/urls.py:60 forum/views/readers.py:249
 msgid "question/"
-msgstr ""
+msgstr "вопрос/"
 
 #: forum/urls.py:61 forum/urls.py:62
 msgid "tags/"
-msgstr ""
+msgstr "темы/"
 
 #: forum/urls.py:64 forum/urls.py:68
 msgid "mark-tag/"
-msgstr ""
+msgstr "отметить-тему/"
 
 #: forum/urls.py:64
 msgid "interesting/"
-msgstr ""
+msgstr "интересная/"
 
 #: forum/urls.py:68
 msgid "ignored/"
-msgstr ""
+msgstr "неинтересная/"
 
 #: forum/urls.py:72
 msgid "unmark-tag/"
-msgstr ""
+msgstr "отменить-отметку-темы/"
 
 #: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
 msgid "users/"
-msgstr ""
+msgstr "люди/"
 
 #: forum/urls.py:77
 msgid "moderate-user/"
-msgstr ""
+msgstr "модерировать-пользователя/"
 
 #: forum/urls.py:80 forum/urls.py:81
 msgid "badges/"
-msgstr ""
+msgstr "награды/"
 
 #: forum/urls.py:82
 msgid "messages/"
-msgstr ""
+msgstr "сообщения/"
 
 #: forum/urls.py:82
 msgid "markread/"
-msgstr ""
+msgstr "отметить-прочитанное/"
 
 #: forum/urls.py:84
 msgid "nimda/"
-msgstr ""
+msgstr "администрация/"
 
 #: forum/urls.py:86
 msgid "upload/"
-msgstr ""
+msgstr "загрузить-файл/"
 
 #: forum/urls.py:87
 msgid "search/"
-msgstr ""
+msgstr "искать/"
 
 #: forum/urls.py:88
 msgid "feedback/"
-msgstr ""
+msgstr "обратная-связь/"
 
 #: forum/urls.py:89 forum/urls.py:90
 msgid "account/"
-msgstr ""
+msgstr "аккаунт/"
 
 #: forum/authentication/forms.py:22
 msgid "Your account email"
-msgstr ""
+msgstr "Адрес электронной почты связанный с аккаунтом"
 
 #: forum/authentication/forms.py:24
 msgid "You cannot leave this field blank"
-msgstr ""
+msgstr "Это необходимо заполнить"
 
 #: forum/authentication/forms.py:25 forum/utils/forms.py:111
 msgid "please enter a valid email address"
-msgstr ""
+msgstr "пожалуйста, введите работающий адрес электронной почты"
 
 #: forum/authentication/forms.py:33
 msgid "Sorry, but this email is not on our database."
-msgstr ""
+msgstr "Извините, но этого адреса нет в нашей базе данных."
 
 #: forum/authentication/forms.py:42
 msgid "no OSQA community email please, thanks"
-msgstr ""
+msgstr "спасибо, но электронной почты не надо"
 
 #: forum/management/commands/send_email_alerts.py:236
 msgid "email update message subject"
-msgstr ""
+msgstr "новости с форума"
 
 #: forum/management/commands/send_email_alerts.py:238
 #, python-format
 msgid "%(name)s, this is an update message header for a question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(name)s, в этом вопросе есть новости"
+msgstr[1] "%(name)s, в этих %(num)d вопросах есть новости"
+msgstr[2] "%(name)s, в этих %(num)d вопросах есть новости"
 
 #: forum/management/commands/send_email_alerts.py:255
 msgid "new question"
-msgstr ""
+msgstr "новый вопрос"
 
 #: forum/management/commands/send_email_alerts.py:272
 msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
-msgstr ""
+msgstr "Пожалуйста, зайдите на наш форум и посмотрите что есть нового. Может быть Вы поможете нам рассказать другим о нашем сайте или кто-нибудь из Ваших знакомых может ответить на эти вопросы или извлечь пользу из ответов?"
 
 #: forum/management/commands/send_email_alerts.py:284
 msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
-msgstr ""
+msgstr "Вы выбрали получать ежедневные сообщения о новостях в избранных вопросах. Если Вы получаете от нас более чем одно сообщение в день, пожалуйста дайте об этом знать администратору форума."
 
 #: forum/management/commands/send_email_alerts.py:290
 msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
-msgstr ""
+msgstr "Вы выбрали получать сообщения о новостях в избранных вопросах один раз в неделю. Если Вы получаете от нас более одного сообщения в неделю то пожалуйста дайте об этом знать администратору форума."
 
 #: forum/management/commands/send_email_alerts.py:296
 msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
-msgstr ""
+msgstr "Не исключено что здесь есть ссылки которые Вы раньше видели. Это результат технической детали, которая со временем перестанет себя проявлять."
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
 msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
-msgstr ""
+msgstr "<a href=\"%(link)s\">Здесь</a> Вы можете изменить частоту рассылки. Если возникнет необходимость - пожалуйста свяжитесь с администратором форума по %(email)s."
 
 #: forum/middleware/anon_user.py:34
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
-msgstr ""
+msgstr "Здравствуйте, Вы здесь впервые? Посмотрите наши <a href=\"%s\">часто задаваемые вопросы</a>!"
 
 #: forum/models/question.py:481
 #, python-format
 msgid "%(author)s modified the question"
-msgstr ""
+msgstr "%(author)s отредактировали вопрос"
 
 #: forum/models/question.py:485
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
-msgstr ""
+msgstr "%(people)s задали новых %(new_answer_count)s вопросов"
 
 #: forum/models/question.py:490
 #, python-format
 msgid "%(people)s commented the question"
-msgstr ""
+msgstr "%(people)s оставили комментарии"
 
 #: forum/models/question.py:495
 #, python-format
 msgid "%(people)s commented answers"
-msgstr ""
+msgstr "%(people)s комментировали вопросы"
 
 #: forum/models/question.py:497
 #, python-format
 msgid "%(people)s commented an answer"
-msgstr ""
+msgstr "%(people)s комментировали ответы"
 
 #: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
 msgid "gold"
-msgstr ""
+msgstr "золотая"
 
 #: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
 msgid "silver"
-msgstr ""
+msgstr "серебряная"
 
 #: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
 msgid "bronze"
-msgstr ""
+msgstr "бронзовая"
 
 #: forum/models/tag.py:81
 msgid "interesting"
-msgstr ""
+msgstr "интересные"
 
 #: forum/models/tag.py:81
 msgid "ignored"
-msgstr ""
+msgstr "игнорируемые"
 
 #: forum/models/user.py:36
 msgid "Entire forum"
-msgstr ""
+msgstr "Весь форум"
 
 #: forum/models/user.py:37
 msgid "Questions that I asked"
-msgstr ""
+msgstr "Вопросы заданные мной"
 
 #: forum/models/user.py:38
 msgid "Questions that I answered"
-msgstr ""
+msgstr "Вопросы отвеченные мной"
 
 #: forum/models/user.py:39
 msgid "Individually selected questions"
-msgstr ""
+msgstr "Индивидуально избранные вопросы"
 
 #: forum/models/user.py:42
 msgid "Weekly"
-msgstr ""
+msgstr "Раз в неделю"
 
 #: forum/models/user.py:43
 msgid "Daily"
-msgstr ""
+msgstr "Раз в день"
 
 #: forum/models/user.py:44
 msgid "No email"
-msgstr ""
+msgstr "Отменить"
 
 #: forum/skins/default/templates/404.html:24
 msgid "Sorry, could not find the page you requested."
-msgstr ""
+msgstr "Извините, но запрошенный Вами документ не был найден."
 
 #: forum/skins/default/templates/404.html:26
 msgid "This might have happened for the following reasons:"
-msgstr ""
+msgstr "Это могло произойти по следующим причинам:"
 
 #: forum/skins/default/templates/404.html:28
 msgid "this question or answer has been deleted;"
-msgstr ""
+msgstr "вопрос или ответ были удалены;"
 
 #: forum/skins/default/templates/404.html:29
 msgid "url has error - please check it;"
-msgstr ""
+msgstr "запрос был неверен - пожалуйста проверьте;"
 
 #: forum/skins/default/templates/404.html:30
 msgid "the page you tried to visit is protected or you don't have sufficient points, see"
-msgstr ""
+msgstr "документ который Вы запросили защищён или у Вас не хватает \"репутации\", пожалуйста посмотрите"
 
 #: forum/skins/default/templates/404.html:31
 msgid "if you believe this error 404 should not have occured, please"
-msgstr ""
+msgstr "если Вы считаете что эта ошибка показана неверно, пожалуйста"
 
 #: forum/skins/default/templates/404.html:32
 msgid "report this problem"
-msgstr ""
+msgstr "сообщите об этой проблеме"
 
 #: forum/skins/default/templates/404.html:41
 #: forum/skins/default/templates/500.html:27
 msgid "back to previous page"
-msgstr ""
+msgstr "вернуться на предыдущую страницу"
 
 #: forum/skins/default/templates/404.html:42
 #: forum/skins/default/templates/questions.html:52
 msgid "see all questions"
-msgstr ""
+msgstr "смотреть все вопросы"
 
 #: forum/skins/default/templates/404.html:43
 #: forum/skins/default/templates/index.html:65
 msgid "see all tags"
-msgstr ""
+msgstr "смотреть все темы"
 
 #: forum/skins/default/templates/500.html:22
 msgid "sorry, system error"
-msgstr ""
+msgstr "извините, произошла сбой в системе"
 
 #: forum/skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
-msgstr ""
+msgstr "об этой ошибке была сделана запись в журнале и соответствующие исправления будут вскоре сделаны"
 
 #: forum/skins/default/templates/500.html:25
 msgid "please report the error to the site administrators if you wish"
-msgstr ""
+msgstr "если у Вас имеется желание, пожалуйста сообщите об этой ошибке вебмастеру"
 
 #: forum/skins/default/templates/500.html:28
 msgid "see latest questions"
-msgstr ""
+msgstr "смотреть самые новые вопросы"
 
 #: forum/skins/default/templates/500.html:29
 msgid "see tags"
-msgstr ""
+msgstr "смотреть темы"
 
 #: forum/skins/default/templates/about.html:6
 #: forum/skins/default/templates/about.html:11
 msgid "About"
-msgstr ""
+msgstr "О нас"
 
 #: forum/skins/default/templates/account_settings.html:4
 #: forum/skins/default/templates/authopenid/settings.html:4
 msgid "Account functions"
-msgstr ""
+msgstr "Настройки аккаунта"
 
 #: forum/skins/default/templates/account_settings.html:29
 #: forum/skins/default/templates/authopenid/changepw.html:5
 #: forum/skins/default/templates/authopenid/changepw.html:14
 #: forum/skins/default/templates/authopenid/settings.html:29
 msgid "Change password"
-msgstr ""
+msgstr "Сменить пароль"
 
 #: forum/skins/default/templates/account_settings.html:30
 #: forum/skins/default/templates/authopenid/settings.html:30
 msgid "Give your  account a new password."
-msgstr ""
+msgstr "Дайте вашей учетной записи новый пароль."
 
 #: forum/skins/default/templates/account_settings.html:32
 #: forum/skins/default/templates/authopenid/settings.html:31
 msgid "Change email "
-msgstr ""
+msgstr "Изменить адрес электронной почты"
 
 #: forum/skins/default/templates/account_settings.html:33
 #: forum/skins/default/templates/authopenid/settings.html:32
 msgid "Add or update the email address associated with your account."
-msgstr ""
+msgstr "Добавить или обновить адрес электронной почты, связанный с вашим аккаунтом."
 
 #: forum/skins/default/templates/account_settings.html:35
 #: forum/skins/default/templates/authopenid/changeopenid.html:4
 #: forum/skins/default/templates/authopenid/changeopenid.html:30
 #: forum/skins/default/templates/authopenid/settings.html:34
 msgid "Change OpenID"
-msgstr ""
+msgstr "Изменить OpenID"
 
 #: forum/skins/default/templates/account_settings.html:36
 #: forum/skins/default/templates/authopenid/settings.html:35
 msgid "Change openid associated to your account"
-msgstr ""
+msgstr "Изменить OpenID связанный с вашим аккаунтом"
 
 #: forum/skins/default/templates/account_settings.html:39
 #: forum/skins/default/templates/authopenid/delete.html:4
 #: forum/skins/default/templates/authopenid/settings.html:38
 msgid "Delete account"
-msgstr ""
+msgstr "Удалить аккаунт"
 
 #: forum/skins/default/templates/account_settings.html:40
 #: forum/skins/default/templates/authopenid/settings.html:39
 msgid "Erase your username and all your data from website"
-msgstr ""
+msgstr "Удалить Ваше имя и все данные о Вас на сайте"
 
 #: forum/skins/default/templates/answer_edit.html:5
 #: forum/skins/default/templates/answer_edit.html:48
 msgid "Edit answer"
-msgstr ""
+msgstr "Править ответ"
 
 #: forum/skins/default/templates/answer_edit.html:25
 #: forum/skins/default/templates/answer_edit.html:28
@@ -1029,14 +1032,14 @@ msgstr ""
 #: forum/skins/default/templates/question_edit.html:25
 #: forum/skins/default/templates/question_edit.html:28
 msgid "hide preview"
-msgstr ""
+msgstr "убрать предварительный просмотр"
 
 #: forum/skins/default/templates/answer_edit.html:28
 #: forum/skins/default/templates/ask.html:29
 #: forum/skins/default/templates/question.html:49
 #: forum/skins/default/templates/question_edit.html:28
 msgid "show preview"
-msgstr ""
+msgstr "показать предварительный просмотр"
 
 #: forum/skins/default/templates/answer_edit.html:48
 #: forum/skins/default/templates/question_edit.html:66
@@ -1044,19 +1047,19 @@ msgstr ""
 #: forum/skins/default/templates/revisions_answer.html:38
 #: forum/skins/default/templates/revisions_question.html:38
 msgid "back"
-msgstr ""
+msgstr "назад"
 
 #: forum/skins/default/templates/answer_edit.html:53
 #: forum/skins/default/templates/question_edit.html:71
 #: forum/skins/default/templates/revisions_answer.html:52
 #: forum/skins/default/templates/revisions_question.html:52
 msgid "revision"
-msgstr ""
+msgstr "версия правки"
 
 #: forum/skins/default/templates/answer_edit.html:56
 #: forum/skins/default/templates/question_edit.html:75
 msgid "select revision"
-msgstr ""
+msgstr "выбрать версию"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1064,7 +1067,7 @@ msgstr ""
 #: forum/skins/default/templates/question.html:433
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
-msgstr ""
+msgstr "Включить/выключить предварительный просмотр текста"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1072,13 +1075,13 @@ msgstr ""
 #: forum/skins/default/templates/question.html:434
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
-msgstr ""
+msgstr "включить/выключить предварительный просмотр"
 
 #: forum/skins/default/templates/answer_edit.html:72
 #: forum/skins/default/templates/question_edit.html:118
 #: forum/skins/default/templates/question_retag.html:74
 msgid "Save edit"
-msgstr ""
+msgstr "Сохранить"
 
 #: forum/skins/default/templates/answer_edit.html:73
 #: forum/skins/default/templates/close.html:29
@@ -1089,90 +1092,90 @@ msgstr ""
 #: forum/skins/default/templates/user_edit.html:84
 #: forum/skins/default/templates/authopenid/changeemail.html:40
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 #: forum/skins/default/templates/answer_edit_tips.html:4
 msgid "answer tips"
-msgstr ""
+msgstr "Советы как лучше давать ответы"
 
 #: forum/skins/default/templates/answer_edit_tips.html:7
 msgid "please make your answer relevant to this community"
-msgstr ""
+msgstr "пожалуйста постарайтесь дать ответ который будет интересен коллегам по форуму"
 
 #: forum/skins/default/templates/answer_edit_tips.html:10
 msgid "try to give an answer, rather than engage into a discussion"
-msgstr ""
+msgstr "постарайтесь на самом деле дать ответ и избегать дискуссий"
 
 #: forum/skins/default/templates/answer_edit_tips.html:13
 msgid "please try to provide details"
-msgstr ""
+msgstr "включите детали в Ваш ответ"
 
 #: forum/skins/default/templates/answer_edit_tips.html:16
 #: forum/skins/default/templates/question_edit_tips.html:13
 msgid "be clear and concise"
-msgstr ""
+msgstr "постарайтесь выражаться ясно и кратко"
 
 #: forum/skins/default/templates/answer_edit_tips.html:20
 #: forum/skins/default/templates/question_edit_tips.html:17
 msgid "see frequently asked questions"
-msgstr ""
+msgstr "посмотрите на часто задаваемые вопросы"
 
 #: forum/skins/default/templates/answer_edit_tips.html:26
 #: forum/skins/default/templates/question_edit_tips.html:23
 msgid "Markdown tips"
-msgstr ""
+msgstr "Советы по использованию Markdown"
 
 #: forum/skins/default/templates/answer_edit_tips.html:29
 #: forum/skins/default/templates/question_edit_tips.html:26
 msgid "*italic* or __italic__"
-msgstr ""
+msgstr "*курсив* или _курсив_"
 
 #: forum/skins/default/templates/answer_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:29
 msgid "**bold** or __bold__"
-msgstr ""
+msgstr "**жирный шрифт** или __жирный шрифт__"
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/question_edit_tips.html:32
 msgid "link"
-msgstr ""
+msgstr "ссылка"
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "text"
-msgstr ""
+msgstr "текст"
 
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "image"
-msgstr ""
+msgstr "изображение"
 
 #: forum/skins/default/templates/answer_edit_tips.html:43
 #: forum/skins/default/templates/question_edit_tips.html:41
 msgid "numbered list:"
-msgstr ""
+msgstr "пронумерованный список:"
 
 #: forum/skins/default/templates/answer_edit_tips.html:48
 #: forum/skins/default/templates/question_edit_tips.html:46
 msgid "basic HTML tags are also supported"
-msgstr ""
+msgstr "а также, поддерживаются основные теги HTML"
 
 #: forum/skins/default/templates/answer_edit_tips.html:52
 #: forum/skins/default/templates/question_edit_tips.html:50
 msgid "learn more about Markdown"
-msgstr ""
+msgstr "узнайте болше про Markdown"
 
 #: forum/skins/default/templates/ask.html:5
 #: forum/skins/default/templates/ask.html:62
 msgid "Ask a question"
-msgstr ""
+msgstr "Спросить"
 
 #: forum/skins/default/templates/ask.html:69
 #: forum/skins/default/templates/ask_form.html:11
 msgid "login to post question info"
-msgstr ""
+msgstr "<span class=\"strong big\">Пожалуйста, начните задавать Ваш ворпос анонимно</span>. Когда Вы пошлете вопрос, Вы будете направлены на страницу авторизации. Ваш вопрос будет сохранён в текущей сессии и будет опубликован как только Вы авторизуетесь. Войти или записаться на наш форум очень легко. Авторизация займет не более полминуты а изначальная запись - приблизительно одну минуту."
 
 #: forum/skins/default/templates/ask.html:75
 #, python-format
@@ -1180,22 +1183,22 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                            see %(email_validation_faq_url)s\n"
 "                            "
-msgstr ""
+msgstr "<span class=\"big strong\">Похоже на то что адрес Вашей электронной почты, %(email)s еще не был проверен.</span> Чтобы публиковать сообщения на форуме сначала пожалуйста продемонстрируйте что Ваша электронная почта работает, дополнительная информация об етом <a href=\"%(email_validation_faq_url)s\">здесь</a>.<br/> Ваш вопрос будет опубликован сразу после того как ваш адрес будет проверен, а до тех пор вопос будет сохранён в базе данных."
 
 #: forum/skins/default/templates/ask.html:113
 #: forum/skins/default/templates/ask_form.html:54
 msgid "(required)"
-msgstr ""
+msgstr "(обязательно)"
 
 #: forum/skins/default/templates/ask.html:120
 #: forum/skins/default/templates/ask_form.html:61
 msgid "Login/signup to post your question"
-msgstr ""
+msgstr "Войдите или запишитесь чтобы опубликовать Ваш ворпос"
 
 #: forum/skins/default/templates/ask.html:122
 #: forum/skins/default/templates/ask_form.html:63
 msgid "Ask your question"
-msgstr ""
+msgstr "Задайте Ваш вопрос"
 
 #: forum/skins/default/templates/ask_form.html:15
 #, python-format
@@ -1208,7 +1211,7 @@ msgstr ""
 #: forum/skins/default/templates/badge.html:6
 #: forum/skins/default/templates/badge.html:17
 msgid "Badge"
-msgstr ""
+msgstr "Награда"
 
 #: forum/skins/default/templates/badge.html:26
 msgid "The users have been awarded with badges:"
@@ -1216,15 +1219,15 @@ msgstr "Награды, присужденные пользователям:"
 
 #: forum/skins/default/templates/badges.html:6
 msgid "Badges summary"
-msgstr ""
+msgstr "Информация о знаках отличия (наградах)"
 
 #: forum/skins/default/templates/badges.html:17
 msgid "Badges"
-msgstr ""
+msgstr "Значки"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr ""
+msgstr "Награды"
 
 #: forum/skins/default/templates/badges.html:22
 #, python-format
@@ -1664,7 +1667,7 @@ msgstr ""
 
 #: forum/skins/default/templates/header.html:39
 msgid "unanswered questions"
-msgstr ""
+msgstr "неотвеченные вопросы"
 
 #: forum/skins/default/templates/index.html:9
 #: forum/skins/default/templates/index_.html:8
@@ -1758,7 +1761,7 @@ msgstr ""
 #: forum/skins/default/templates/index.html:95
 #: forum/skins/default/templates/index_.html:122
 msgid "list of unanswered questions"
-msgstr ""
+msgstr "список неотвеченных вопросов"
 
 #: forum/skins/default/templates/index_.html:42
 #: forum/skins/default/templates/question_counter_widget.html:21
@@ -1834,6 +1837,7 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/post_contributor_info.html:19
 msgid "asked"
@@ -1978,6 +1982,7 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:204
 #, python-format
@@ -1991,6 +1996,7 @@ msgid_plural ""
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:220
 #, python-format
@@ -2014,6 +2020,7 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:238
 msgid "oldest answers will be shown first"
@@ -2083,6 +2090,7 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:353
 #, python-format
@@ -2096,6 +2104,7 @@ msgid_plural ""
 "                                                        "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question.html:379
 #: forum/skins/default/templates/question.html:382
@@ -2193,14 +2202,8 @@ msgid_plural ""
 "        votes\n"
 "        "
 msgstr[0] ""
-"\n"
-"golos"
 msgstr[1] ""
-"\n"
-"golosa"
 msgstr[2] ""
-"\n"
-"golosov"
 
 #: forum/skins/default/templates/question_counter_widget.html:27
 msgid ""
@@ -2213,6 +2216,7 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question_counter_widget.html:39
 msgid ""
@@ -2225,6 +2229,7 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/question_edit.html:5
 #: forum/skins/default/templates/question_edit.html:66
@@ -2278,7 +2283,7 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:42
 msgid "Unanswered questions"
-msgstr ""
+msgstr "Неотвеченные вопросы"
 
 #: forum/skins/default/templates/questions.html:44
 msgid "All questions"
@@ -2290,7 +2295,7 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:53
 msgid "see unanswered questions"
-msgstr ""
+msgstr "просмотрите неотвеченные ворпосы"
 
 #: forum/skins/default/templates/questions.html:55
 msgid "see your favorite questions"
@@ -2410,7 +2415,7 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:190
 msgid "There are no unanswered questions here"
-msgstr ""
+msgstr "Неотвеченных вопросов здесь нет"
 
 #: forum/skins/default/templates/questions.html:193
 msgid "No favorite questions here. "
@@ -2659,6 +2664,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:23
 #, python-format
@@ -2672,6 +2678,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:36
 #, python-format
@@ -2694,6 +2701,7 @@ msgid_plural ""
 "                    "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:61
 #, python-format
@@ -2707,6 +2715,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:72
 msgid "thumb up"
@@ -2736,6 +2745,7 @@ msgid_plural ""
 "                "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_stats.html:100
 #, python-format
@@ -2754,6 +2764,7 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/skins/default/templates/user_tabs.html:7
 msgid "User profile"
@@ -2793,11 +2804,11 @@ msgstr ""
 
 #: forum/skins/default/templates/user_tabs.html:23
 msgid "questions that user selected as his/her favorite"
-msgstr "Отмеченных вопросов нет (интересные вопросы можно отмечать нажав на звездочку)."
+msgstr "Вопросов отмеченных закладками (интересные вопросы можно отмечать нажав на звездочку)."
 
 #: forum/skins/default/templates/user_tabs.html:24
 msgid "favorites"
-msgstr "отмеченные"
+msgstr "закладки"
 
 #: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:948
 msgid "email subscription settings"
@@ -3275,6 +3286,7 @@ msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/templatetags/extra_tags.py:268
 #, python-format
@@ -3282,6 +3294,7 @@ msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: forum/utils/forms.py:30
 msgid "this field is required"
@@ -3357,11 +3370,11 @@ msgstr ""
 
 #: forum/views/auth.py:111
 msgid "These login credentials are already associated with your account."
-msgstr ""
+msgstr "Эта информация уже ассоциирована с Вашей учетной записью."
 
 #: forum/views/auth.py:117
 msgid "The new credentials are now associated with your account"
-msgstr ""
+msgstr "Новая информация добавлена в Вашу учетную запись"
 
 #: forum/views/auth.py:155
 msgid "Oops, something went wrong in the middle of this process. Please try again."

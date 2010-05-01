@@ -1,14 +1,14 @@
-# German translation made for Askbot project 
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Pekka Gaiser <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-28 20:47-0400\n"
-"PO-Revision-Date: 2010-04-29 15:09\n"
+"PO-Revision-Date: 2010-04-30 05:58\n"
 "Last-Translator: <post@pekkagaiser.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -142,629 +142,629 @@ msgstr "verifizieren/"
 
 #: django_authopenid/urls.py:42
 msgid "openid/"
-msgstr ""
+msgstr "openid/"
 
 #: django_authopenid/urls.py:43 forum/urls.py:52 forum/urls.py:56
 msgid "delete/"
-msgstr ""
+msgstr "loeschen/"
 
 #: django_authopenid/urls.py:51
 msgid "external-login/forgot-password/"
-msgstr ""
+msgstr "externer-login/passwort-vergessen/"
 
 #: django_authopenid/urls.py:54
 msgid "external-login/signup/"
-msgstr ""
+msgstr "externer-login/anmelden/"
 
 #: django_authopenid/views.py:139
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr ""
+msgstr "OpenID %(openid_url)s ist ungültig"
 
 #: django_authopenid/views.py:614
 msgid "Welcome email subject line"
-msgstr "Welcome to the Q&A forum"
+msgstr "Willkommen im Forum"
 
 #: django_authopenid/views.py:720
 msgid "Password changed."
-msgstr ""
+msgstr "Passwort geändert."
 
 #: django_authopenid/views.py:732 django_authopenid/views.py:738
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
-msgstr "Your email needs to be validated. Please see details <a id='validate_email_alert' href='%(details_url)s'>here</a>."
+msgstr "Sie müssen Ihre E-Mail-Adresse bestätigen. Mehr Informationen<a id='validate_email_alert' href='%(details_url)s'>hier</a>."
 
 #: django_authopenid/views.py:759
 msgid "Email verification subject line"
-msgstr "Verification Email from Q&A forum"
+msgstr "Bestätigung Ihrer E-Mail-Adresse"
 
 #: django_authopenid/views.py:850
 msgid "your email was not changed"
-msgstr ""
+msgstr "Ihre E-Mail-Adresse wurde nicht geändert."
 
 #: django_authopenid/views.py:898 django_authopenid/views.py:1056
 #, python-format
 msgid "No OpenID %s found associated in our database"
-msgstr ""
+msgstr "Keine Verknüpfung für OpenID %s in der Datenbank gefunden."
 
 #: django_authopenid/views.py:902 django_authopenid/views.py:1063
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
-msgstr ""
+msgstr "Die OpenID %s ist nicht mit dem momentan eingeloggten Benutzer vernknüpft."
 
 #: django_authopenid/views.py:910
 msgid "Email Changed."
-msgstr ""
+msgstr "E-Mail-Adresse geändert."
 
 #: django_authopenid/views.py:988
 msgid "This OpenID is already associated with another account."
-msgstr ""
+msgstr "Diese OpenID ist bereits mit einem anderen Zugang verknüpft."
 
 #: django_authopenid/views.py:993
 #, python-format
 msgid "OpenID %s is now associated with your account."
-msgstr ""
+msgstr "Die OpenID %s ist jetzt mit Ihrem Zugang verknüpft."
 
 #: django_authopenid/views.py:1066
 msgid "Account deleted."
-msgstr ""
+msgstr "Zugang gelöscht."
 
 #: django_authopenid/views.py:1118
 msgid "Request for new password"
-msgstr ""
+msgstr "Anfordern eines neuen Passworts"
 
 #: django_authopenid/views.py:1132
 msgid "A new password and the activation link were sent to your email address."
-msgstr ""
+msgstr "Ein neues Passwort und ein Aktivierungslink wurden an Ihre E-Mail-Adresse gesandt."
 
 #: django_authopenid/views.py:1164
 #, python-format
 msgid "Could not change password. Confirmation key '%s'                is not registered."
-msgstr ""
+msgstr "Passwort konnte nicht geändert werden. Bestätigungscode '%s' nicht gefunden. "
 
 #: django_authopenid/views.py:1174
 msgid "Can not change password. User don't exist anymore                 in our database."
-msgstr ""
+msgstr "Passwort konnte nicht geändert werden. Der Benutzer existiert nicht mehr."
 
 #: django_authopenid/views.py:1184
 #, python-format
 msgid "Password changed for %s. You may now sign in."
-msgstr ""
+msgstr "Passwort für '%s' geändert. Sie können sich jetzt anmelden."
 
 #: forum/auth.py:505
 msgid "Your question and all of it's answers have been deleted"
-msgstr ""
+msgstr "Ihre Frage und alle Antworten wurden gelöscht."
 
 #: forum/auth.py:507
 msgid "Your question has been deleted"
-msgstr ""
+msgstr "Ihre Frage wurde gelöscht."
 
 #: forum/auth.py:510
 msgid "The question and all of it's answers have been deleted"
-msgstr ""
+msgstr "Die Frage und alle Antworten wurden gelöscht."
 
 #: forum/auth.py:512
 msgid "The question has been deleted"
-msgstr ""
+msgstr "Die Frage wurde gelöscht."
 
 #: forum/const.py:8
 msgid "duplicate question"
-msgstr ""
+msgstr "Duplikat"
 
 #: forum/const.py:9
 msgid "question is off-topic or not relevant"
-msgstr ""
+msgstr "Die Frage geht am Thema vorbei oder ist nicht relevant "
 
 #: forum/const.py:10
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "Zu subjektiv und zu diskussionen verleitend"
 
 #: forum/const.py:11
 msgid "not a real question"
-msgstr ""
+msgstr "Keine echte Frage"
 
 #: forum/const.py:12
 msgid "the question is answered, right answer was accepted"
-msgstr ""
+msgstr "The Frage wurde beantwortet, die korrekte Antwort als \"Akzeptiert\" markiert."
 
 #: forum/const.py:13
 msgid "question is not relevant or outdated"
-msgstr ""
+msgstr "Die Frage ist nicht relevant oder inzwischen veraltet."
 
 #: forum/const.py:14
 msgid "question contains offensive or malicious remarks"
-msgstr ""
+msgstr "Die Frage enthält beleidigende oder illegale Formulierungen"
 
 #: forum/const.py:15
 msgid "spam or advertising"
-msgstr ""
+msgstr "Spam oder Werbung"
 
 #: forum/const.py:16
 msgid "too localized"
-msgstr ""
+msgstr "Zu eng gefaßt"
 
 #: forum/const.py:37 forum/skins/default/templates/questions.html:70
 #: forum/skins/default/templates/questions.html:75
 msgid "newest"
-msgstr ""
+msgstr "neueste"
 
 #: forum/const.py:38 forum/skins/default/templates/questions.html:64
 #: forum/skins/default/templates/users.html:28
 msgid "oldest"
-msgstr ""
+msgstr "älteste"
 
 #: forum/const.py:39 forum/skins/default/templates/questions.html:89
 #: forum/skins/default/templates/questions.html:94
 msgid "active"
-msgstr ""
+msgstr "aktiv"
 
 #: forum/const.py:40 forum/skins/default/templates/questions.html:83
 msgid "inactive"
-msgstr ""
+msgstr "inaktiv"
 
 #: forum/const.py:41
 msgid "hottest"
-msgstr ""
+msgstr "heißeste"
 
 #: forum/const.py:42
 msgid "coldest"
-msgstr ""
+msgstr "kälteste"
 
 #: forum/const.py:43
 msgid "most voted"
-msgstr ""
+msgstr "am häufigsten positiv bewertet"
 
 #: forum/const.py:44
 msgid "least voted"
-msgstr ""
+msgstr "am seltensten positiv bewertet"
 
 #: forum/const.py:45
 msgid "relevance"
-msgstr ""
+msgstr "Relevanz"
 
 #: forum/const.py:52 forum/skins/default/templates/questions.html:52
 msgid "all"
-msgstr ""
+msgstr "alle"
 
 #: forum/const.py:53 forum/skins/default/templates/questions.html:53
 msgid "unanswered"
-msgstr ""
+msgstr "unbeantwortet"
 
 #: forum/const.py:54 forum/skins/default/templates/questions.html:55
 msgid "favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: forum/const.py:97
 msgid "question"
-msgstr ""
+msgstr "Frage"
 
 #: forum/const.py:98 forum/skins/default/templates/book.html:110
 msgid "answer"
-msgstr ""
+msgstr "Antwort"
 
 #: forum/const.py:99
 msgid "commented question"
-msgstr ""
+msgstr "kommentierte Frage"
 
 #: forum/const.py:100
 msgid "commented answer"
-msgstr ""
+msgstr "kommentierte Antwort"
 
 #: forum/const.py:101
 msgid "edited question"
-msgstr ""
+msgstr "überarbeitete Frage"
 
 #: forum/const.py:102
 msgid "edited answer"
-msgstr ""
+msgstr "überarbeitete Antwort"
 
 #: forum/const.py:103
 msgid "received award"
-msgstr "received badge"
+msgstr "Auszeichnung erhalten"
 
 #: forum/const.py:104
 msgid "marked best answer"
-msgstr ""
+msgstr "als beste Antwort markiert"
 
 #: forum/const.py:105
 msgid "upvoted"
-msgstr ""
+msgstr "positiv bewertet"
 
 #: forum/const.py:106
 msgid "downvoted"
-msgstr ""
+msgstr "negativ bewertet"
 
 #: forum/const.py:107
 msgid "canceled vote"
-msgstr ""
+msgstr "Bewertung zurückgezogen"
 
 #: forum/const.py:108
 msgid "deleted question"
-msgstr ""
+msgstr "Frage gelöscht"
 
 #: forum/const.py:109
 msgid "deleted answer"
-msgstr ""
+msgstr "Antwort gelöscht"
 
 #: forum/const.py:110
 msgid "marked offensive"
-msgstr ""
+msgstr "als beleidigend/illegal gemeldet"
 
 #: forum/const.py:111
 msgid "updated tags"
-msgstr ""
+msgstr "tags aktualisiert"
 
 #: forum/const.py:112
 msgid "selected favorite"
-msgstr ""
+msgstr "Favorit ausgewählt"
 
 #: forum/const.py:113
 msgid "completed user profile"
-msgstr ""
+msgstr "Benutzerprofil komplettiert"
 
 #: forum/const.py:114
 msgid "email update sent to user"
-msgstr ""
+msgstr "E-Mail-Update an Benutzer versandt"
 
 #: forum/const.py:118
 msgid "question_answered"
-msgstr "answered question"
+msgstr "Frage beantwortet"
 
 #: forum/const.py:119
 msgid "question_commented"
-msgstr "commented question"
+msgstr "Frage kommentiert"
 
 #: forum/const.py:120
 msgid "answer_commented"
-msgstr ""
+msgstr "Antwort kommentiert"
 
 #: forum/const.py:121
 msgid "answer_accepted"
-msgstr ""
+msgstr "Antwort akzeptiert"
 
 #: forum/const.py:125
 msgid "[closed]"
-msgstr ""
+msgstr "[geschlossen]"
 
 #: forum/const.py:126
 msgid "[deleted]"
-msgstr ""
+msgstr "[gelöscht]"
 
 #: forum/const.py:127 forum/views/readers.py:390 forum/views/readers.py:409
 msgid "initial version"
-msgstr ""
+msgstr "ursprüngliche Version"
 
 #: forum/const.py:128
 msgid "retagged"
-msgstr ""
+msgstr "Tags verändert"
 
 #: forum/const.py:132
 msgid "exclude ignored tags"
-msgstr ""
+msgstr "Ignorierte Tags ausschließen"
 
 #: forum/const.py:132
 msgid "allow only selected tags"
-msgstr ""
+msgstr "Nur ausgewählte Tags erlauben"
 
 #: forum/feed.py:18
 msgid " - "
-msgstr ""
+msgstr "-"
 
 #: forum/feed.py:18
 msgid "latest questions"
-msgstr ""
+msgstr "Neueste Fragen"
 
 #: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "title"
-msgstr ""
+msgstr "Titel"
 
 #: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
-msgstr ""
+msgstr "Bitte geben Sie einen Aussagekräftigen Titel für Ihre Frage ein."
 
 #: forum/forms.py:29
 msgid "title must be > 10 characters"
-msgstr ""
+msgstr "Der Titel muß länger als 10 Zeichen sein."
 
 #: forum/forms.py:38
 msgid "content"
-msgstr ""
+msgstr "Inhalt"
 
 #: forum/forms.py:44
 msgid "question content must be > 10 characters"
-msgstr ""
+msgstr "Der Fragentext muß länger als 10 Buchstaben sein."
 
 #: forum/forms.py:53 forum/skins/default/templates/header.html:28
 msgid "tags"
-msgstr ""
+msgstr "Tags"
 
 #: forum/forms.py:55
 msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
-msgstr ""
+msgstr "Tags sind kurze Stichwörter. Sie dürfen keine Leerzeichen enthalten. Bis zu fünf Tags können vergeben werden."
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
-msgstr ""
+msgstr "Mindestens ein Tag muß gesetzt sein."
 
 #: forum/forms.py:70
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bitte %(tag_count)d Tags oder weniger benutzen"
+msgstr[1] "Bitte %(tag_count)d Tags oder weniger benutzen"
 
 #: forum/forms.py:79
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
-msgid_plural "each tag must be shorter than %(max_shars)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
+msgstr[0] "Tags müssen kürzer als %(max_chars)d Zeichen sein"
+msgstr[1] "Tags müssen kürzer als %(max_chars)d Zeichen sein"
 
 #: forum/forms.py:87
 msgid "use-these-chars-in-tags"
-msgstr ""
+msgstr "Diese Buchstaben dürfen in Tags vorkommen"
 
 #: forum/forms.py:97
 #: forum/skins/default/templates/post_contributor_info.html:7
 #: forum/skins/default/templates/question_summary_list_roll.html:26
 #: forum/skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
-msgstr ""
+msgstr "Community Wiki"
 
 #: forum/forms.py:98
 msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
-msgstr ""
+msgstr "Wenn Sie \"Community Wiki\" auswählen, werden auf die Frage und die Antworten keine Bewertungspunkte vergeben, und der Name des Autors wird nicht angezeigt."
 
 #: forum/forms.py:114
 msgid "update summary:"
-msgstr ""
+msgstr "Zusammenfassung der Überarbeitung:"
 
 #: forum/forms.py:115
 msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
-msgstr ""
+msgstr "Bitte geben Sie eine kurze Beschreibung Ihrer Überarbeitung ein (z.B. Rechtschreibung, Tippfehler korrigiert, Grammatik, Stil verbessert) Freiwillige Angabe."
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
-msgstr ""
+msgstr "Beiträge dieses Benutzers automatisch für E-Mail-Updates akzeptieren"
 
 #: forum/forms.py:209
 msgid "Your name:"
-msgstr ""
+msgstr "Ihr Name:"
 
 #: forum/forms.py:210
 msgid "Email (not shared with anyone):"
-msgstr ""
+msgstr "Ihre E-Mail-Adresse (wird nicht angezeigt):"
 
 #: forum/forms.py:211
 msgid "Your message:"
-msgstr ""
+msgstr "Ihre Nachricht:"
 
 #: forum/forms.py:294
 msgid "this email does not have to be linked to gravatar"
-msgstr ""
+msgstr "Diese E-Mail muß nicht mit Gravatar verknüpft werden."
 
 #: forum/forms.py:296
 msgid "Screen name"
-msgstr ""
+msgstr "Nickname"
 
 #: forum/forms.py:297
 msgid "Real name"
-msgstr ""
+msgstr "Echter Name"
 
 #: forum/forms.py:298
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #: forum/forms.py:299
 msgid "Location"
-msgstr ""
+msgstr "Ort"
 
 #: forum/forms.py:300
 msgid "Date of birth"
-msgstr ""
+msgstr "Geburtsdatum"
 
 #: forum/forms.py:300
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "wird nicht angezeigt, aber für die Altersberechnung verwendet. Format: JJJJ-MM-TT, Beispiel: 1980-05-27 für den 27. Mai 1980"
 
 #: forum/forms.py:301 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: forum/forms.py:332 forum/forms.py:333
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "Ein Zugang mit dieser E-Mail-Adresse existiert bereits. Bitte verwenden Sie eine andere E-Mail-Adresse."
 
 #: forum/forms.py:339
 msgid "Choose email tag filter"
-msgstr ""
+msgstr "E-Mail-Tag-Filter festlegen"
 
 #: forum/forms.py:355 forum/forms.py:356
 msgid "weekly"
-msgstr ""
+msgstr "wöchentlich"
 
 #: forum/forms.py:355 forum/forms.py:356
 msgid "no email"
-msgstr ""
+msgstr "Keine E-Mail"
 
 #: forum/forms.py:356
 msgid "daily"
-msgstr ""
+msgstr "täglich"
 
 #: forum/forms.py:371
 msgid "Asked by me"
-msgstr ""
+msgstr "Von mir gefragt"
 
 #: forum/forms.py:374
 msgid "Answered by me"
-msgstr ""
+msgstr "Von mir beantwortet"
 
 #: forum/forms.py:377
 msgid "Individually selected"
-msgstr ""
+msgstr "Individuell ausgewählt"
 
 #: forum/forms.py:380
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Das ganze Forum (Tag-gefiltert)"
 
 #: forum/forms.py:434
 msgid "okay, let's try!"
-msgstr ""
+msgstr "Okay, versuchen wir's!"
 
 #: forum/forms.py:435
 msgid "no community email please, thanks"
-msgstr "no askbot email please, thanks"
+msgstr "Ich möchte gar keine E-Mails erhalten, danke"
 
 #: forum/forms.py:438
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "Bitte wählen Sie eine der obenstehenden Optionen aus"
 
 #: forum/urls.py:28
 msgid "upfiles/"
-msgstr ""
+msgstr "dateien/"
 
 #: forum/urls.py:33
 msgid "about/"
-msgstr ""
+msgstr "ueber/"
 
 #: forum/urls.py:34
 msgid "faq/"
-msgstr ""
+msgstr "faq/"
 
 #: forum/urls.py:35
 msgid "privacy/"
-msgstr ""
+msgstr "datenschutz/"
 
 #: forum/urls.py:36
 msgid "logout/"
-msgstr ""
+msgstr "logout/"
 
 #: forum/urls.py:37 forum/urls.py:38 forum/urls.py:39 forum/urls.py:56
 msgid "answers/"
-msgstr ""
+msgstr "antworten/"
 
 #: forum/urls.py:37 forum/urls.py:49 forum/urls.py:52 forum/urls.py:56
 msgid "comments/"
-msgstr ""
+msgstr "kommentare/"
 
 #: forum/urls.py:38 forum/urls.py:43 forum/urls.py:78
 #: forum/skins/default/templates/user_info.html:47
 msgid "edit/"
-msgstr ""
+msgstr "bearbeiten/"
 
 #: forum/urls.py:39 forum/urls.py:48
 msgid "revisions/"
-msgstr ""
+msgstr "revisionen/"
 
 #: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:43
 #: forum/urls.py:44 forum/urls.py:45 forum/urls.py:46 forum/urls.py:47
 #: forum/urls.py:48 forum/urls.py:49 forum/urls.py:52
 msgid "questions/"
-msgstr ""
+msgstr "fragen/"
 
 #: forum/urls.py:41 forum_modules/books/urls.py:8
 msgid "ask/"
-msgstr ""
+msgstr "frage/"
 
 #: forum/urls.py:42
 msgid "unanswered/"
-msgstr ""
+msgstr "unbeantwortet/"
 
 #: forum/urls.py:44
 msgid "close/"
-msgstr ""
+msgstr "schliessen/"
 
 #: forum/urls.py:45
 msgid "reopen/"
-msgstr ""
+msgstr "oeffnen/"
 
 #: forum/urls.py:46
 msgid "answer/"
-msgstr ""
+msgstr "antwort/"
 
 #: forum/urls.py:47
 msgid "vote/"
-msgstr ""
+msgstr "abstimmen/"
 
 #: forum/urls.py:50
 msgid "command/"
-msgstr ""
+msgstr "befehl/"
 
 #: forum/urls.py:60 forum/views/readers.py:261
 msgid "question/"
-msgstr ""
+msgstr "frage/"
 
 #: forum/urls.py:61 forum/urls.py:62
 msgid "tags/"
-msgstr ""
+msgstr "tags/"
 
 #: forum/urls.py:64 forum/urls.py:68
 msgid "mark-tag/"
-msgstr ""
+msgstr "tag-markieren/"
 
 #: forum/urls.py:64
 msgid "interesting/"
-msgstr ""
+msgstr "interessant/"
 
 #: forum/urls.py:68
 msgid "ignored/"
-msgstr ""
+msgstr "ignoriert/"
 
 #: forum/urls.py:72
 msgid "unmark-tag/"
-msgstr ""
+msgstr "tag-entfernen/"
 
 #: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
 msgid "users/"
-msgstr ""
+msgstr "benutzer/"
 
 #: forum/urls.py:77
 msgid "moderate-user/"
-msgstr ""
+msgstr "benutzer-moderieren/"
 
 #: forum/urls.py:80 forum/urls.py:81
 msgid "badges/"
-msgstr ""
+msgstr "auszeichnungen/"
 
 #: forum/urls.py:82
 msgid "messages/"
-msgstr ""
+msgstr "nachrichten/"
 
 #: forum/urls.py:82
 msgid "markread/"
-msgstr ""
+msgstr "gelesen_markieren/"
 
 #: forum/urls.py:84
 msgid "nimda/"
-msgstr ""
+msgstr "nimda/"
 
 #: forum/urls.py:86
 msgid "upload/"
-msgstr ""
+msgstr "upload/"
 
 #: forum/urls.py:87
 msgid "search/"
-msgstr ""
+msgstr "suche/"
 
 #: forum/urls.py:88
 msgid "feedback/"
-msgstr ""
+msgstr "feedback/"
 
 #: forum/urls.py:89 forum/urls.py:90
 msgid "account/"
-msgstr ""
+msgstr "zugang/"
 
 #: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
 msgid "Congratulations, you are now an Administrator"
-msgstr ""
+msgstr "Gratulation, Sie sind jetzt Administrator"
 
 #: forum/management/commands/send_email_alerts.py:236
 msgid "email update message subject"
-msgstr "news from Q&A forum"
+msgstr "Aktuelle Mitteilung"
 
 #: forum/management/commands/send_email_alerts.py:238
 #, python-format
