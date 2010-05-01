@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 13:19-0400\n"
+"POT-Creation-Date: 2010-05-01 16:45-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1626,7 +1626,7 @@ msgstr "选择版本"
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:433
+#: forum/skins/default/templates/question.html:418
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
 msgstr "打开或者关闭Markdown编辑器的实时预览"
@@ -1634,7 +1634,7 @@ msgstr "打开或者关闭Markdown编辑器的实时预览"
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:434
+#: forum/skins/default/templates/question.html:419
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
 msgstr "预览开关"
@@ -2341,33 +2341,27 @@ msgid "next page"
 msgstr "下一页"
 
 #: forum/skins/default/templates/post_contributor_info.html:9
-#, python-format
-msgid ""
-"\n"
-"                one revision\n"
-"            "
-msgid_plural ""
-"\n"
-"                %(rev_count)s revisions\n"
-"            "
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy, python-format
+msgid "one revision"
+msgid_plural "%(rev_count)s revisions"
+msgstr[0] "版本"
+msgstr[1] "版本"
 
-#: forum/skins/default/templates/post_contributor_info.html:19
+#: forum/skins/default/templates/post_contributor_info.html:15
 msgid "asked"
 msgstr "提问于"
 
-#: forum/skins/default/templates/post_contributor_info.html:22
+#: forum/skins/default/templates/post_contributor_info.html:18
 #, fuzzy
 msgid "answered"
 msgstr "回答"
 
-#: forum/skins/default/templates/post_contributor_info.html:24
+#: forum/skins/default/templates/post_contributor_info.html:20
 #, fuzzy
 msgid "posted"
 msgstr "投赞成票"
 
-#: forum/skins/default/templates/post_contributor_info.html:45
+#: forum/skins/default/templates/post_contributor_info.html:41
 msgid "updated"
 msgstr "更新于"
 
@@ -2448,7 +2442,7 @@ msgstr "这篇帖子有价值（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:81
 #: forum/skins/default/templates/question.html:99
-#: forum/skins/default/templates/question.html:258
+#: forum/skins/default/templates/question.html:251
 msgid "current number of votes"
 msgstr "当前总票数"
 
@@ -2470,7 +2464,7 @@ msgid "remove favorite mark from this question (click again to restore mark)"
 msgstr "我要收藏这个问题（再次点击取消操作）"
 
 #: forum/skins/default/templates/question.html:141
-#: forum/skins/default/templates/question.html:295
+#: forum/skins/default/templates/question.html:288
 #: forum/skins/default/templates/revisions_answer.html:58
 #: forum/skins/default/templates/revisions_question.html:58
 msgid "edit"
@@ -2485,73 +2479,64 @@ msgid "close"
 msgstr "关闭"
 
 #: forum/skins/default/templates/question.html:156
-#: forum/skins/default/templates/question.html:300
+#: forum/skins/default/templates/question.html:293
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr "检举该帖为垃“水帖”（含广告、人身攻击、恶意言论等）"
 
 #: forum/skins/default/templates/question.html:157
-#: forum/skins/default/templates/question.html:301
+#: forum/skins/default/templates/question.html:294
 msgid "flag offensive"
 msgstr "垃圾帖？"
 
 #: forum/skins/default/templates/question.html:165
-#: forum/skins/default/templates/question.html:312
+#: forum/skins/default/templates/question.html:305
 msgid "delete"
 msgstr "删除"
 
 #: forum/skins/default/templates/question.html:183
-#: forum/skins/default/templates/question.html:332
+#: forum/skins/default/templates/question.html:325
 #, fuzzy
 msgid "delete this comment"
 msgstr "删除任何一个评论"
 
 #: forum/skins/default/templates/question.html:194
-#: forum/skins/default/templates/question.html:343
+#: forum/skins/default/templates/question.html:336
 msgid "add comment"
 msgstr "添加评论"
 
 #: forum/skins/default/templates/question.html:198
+#: forum/skins/default/templates/question.html:340
+#, fuzzy, python-format
+msgid "see <strong>one</strong> more"
+msgid_plural "see <strong>%(counter)s</strong> more"
+msgstr[0] ""
+"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+msgstr[1] ""
+"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+
+#: forum/skins/default/templates/question.html:200
+#: forum/skins/default/templates/question.html:342
 #, python-format
-msgid ""
-"\n"
-"                                            see <strong>one</strong> more \n"
-"                                            "
+msgid "see <strong>one</strong> more comment"
 msgid_plural ""
-"\n"
-"                                            see <strong>%(counter)s</strong> "
-"more\n"
+"see <strong>%(counter)s</strong> more comments\n"
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:204
-#, python-format
-msgid ""
-"\n"
-"                                            see <strong>one</strong> more "
-"comment\n"
-"                                            "
-msgid_plural ""
-"\n"
-"                                            see <strong>%(counter)s</strong> "
-"more comments\n"
-"                                            "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:220
+#: forum/skins/default/templates/question.html:213
 #, fuzzy, python-format
 msgid ""
 "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr "问题以“%s”的原因已被"
 
-#: forum/skins/default/templates/question.html:222
+#: forum/skins/default/templates/question.html:215
 #, fuzzy, python-format
 msgid "close date %(closed_at)s"
 msgstr "由于以下原因，你要关闭这个问题"
 
-#: forum/skins/default/templates/question.html:230
+#: forum/skins/default/templates/question.html:223
 #, python-format
 msgid ""
 "\n"
@@ -2564,153 +2549,123 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:238
+#: forum/skins/default/templates/question.html:231
 msgid "oldest answers will be shown first"
 msgstr "最先回答显示在最前面"
 
-#: forum/skins/default/templates/question.html:238
+#: forum/skins/default/templates/question.html:231
 msgid "oldest answers"
 msgstr "最先回答"
 
-#: forum/skins/default/templates/question.html:240
+#: forum/skins/default/templates/question.html:233
 msgid "newest answers will be shown first"
 msgstr "最晚回答显示在最前面"
 
-#: forum/skins/default/templates/question.html:240
+#: forum/skins/default/templates/question.html:233
 msgid "newest answers"
 msgstr "最近回答"
 
-#: forum/skins/default/templates/question.html:242
+#: forum/skins/default/templates/question.html:235
 msgid "most voted answers will be shown first"
 msgstr "投票次数最多的显示在最前面"
 
-#: forum/skins/default/templates/question.html:242
+#: forum/skins/default/templates/question.html:235
 msgid "popular answers"
 msgstr "投票最多"
 
-#: forum/skins/default/templates/question.html:256
-#: forum/skins/default/templates/question.html:257
+#: forum/skins/default/templates/question.html:249
+#: forum/skins/default/templates/question.html:250
 msgid "i like this answer (click again to cancel)"
 msgstr "这篇帖子有价值（再次点击取消操作）"
 
-#: forum/skins/default/templates/question.html:263
-#: forum/skins/default/templates/question.html:264
+#: forum/skins/default/templates/question.html:256
+#: forum/skins/default/templates/question.html:257
 msgid "i dont like this answer (click again to cancel)"
 msgstr "这篇帖子没有价值（再次点击取消操作）"
 
-#: forum/skins/default/templates/question.html:269
-#: forum/skins/default/templates/question.html:270
+#: forum/skins/default/templates/question.html:262
+#: forum/skins/default/templates/question.html:263
 msgid "mark this answer as favorite (click again to undo)"
 msgstr "最佳答案（再次点击取消操作）"
 
-#: forum/skins/default/templates/question.html:275
-#: forum/skins/default/templates/question.html:276
+#: forum/skins/default/templates/question.html:268
+#: forum/skins/default/templates/question.html:269
 msgid "the author of the question has selected this answer as correct"
 msgstr "这个答案已经被提问作者标记为最佳答案"
 
-#: forum/skins/default/templates/question.html:289
+#: forum/skins/default/templates/question.html:282
 msgid "answer permanent link"
 msgstr "该回答的链接地址"
 
-#: forum/skins/default/templates/question.html:290
+#: forum/skins/default/templates/question.html:283
 msgid "permanent link"
 msgstr "永久链接"
 
 # todo please check this in chinese
-#: forum/skins/default/templates/question.html:312
+#: forum/skins/default/templates/question.html:305
 msgid "undelete"
 msgstr "取消"
 
-#: forum/skins/default/templates/question.html:347
-#, python-format
-msgid ""
-"\n"
-"                                                        see <strong>one</"
-"strong> more \n"
-"                                                        "
-msgid_plural ""
-"\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more\n"
-"                                                        "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:353
-#, python-format
-msgid ""
-"\n"
-"                                                        see <strong>one</"
-"strong> more comment\n"
-"                                                        "
-msgid_plural ""
-"\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more comments\n"
-"                                                        "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:379
-#: forum/skins/default/templates/question.html:382
+#: forum/skins/default/templates/question.html:364
+#: forum/skins/default/templates/question.html:367
 msgid "Notify me once a day when there are any new answers"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:385
+#: forum/skins/default/templates/question.html:370
 msgid "Notify me weekly when there are any new answers"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:390
+#: forum/skins/default/templates/question.html:375
 #, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:395
+#: forum/skins/default/templates/question.html:380
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:406
+#: forum/skins/default/templates/question.html:391
 msgid "Your answer"
 msgstr "您的回答"
 
-#: forum/skins/default/templates/question.html:408
+#: forum/skins/default/templates/question.html:393
 #, fuzzy
 msgid "Be the first one to answer this question!"
 msgstr "不是一个可以回答的“问题”"
 
-#: forum/skins/default/templates/question.html:414
+#: forum/skins/default/templates/question.html:399
 msgid "you can answer anonymously and then login"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:418
+#: forum/skins/default/templates/question.html:403
 msgid "answer your own question only to give an answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:420
+#: forum/skins/default/templates/question.html:405
 #, fuzzy
 msgid "please only give an answer, no discussions"
 msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
-#: forum/skins/default/templates/question.html:456
+#: forum/skins/default/templates/question.html:441
 msgid "Login/Signup to Post Your Answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:459
+#: forum/skins/default/templates/question.html:444
 #, fuzzy
 msgid "Answer Your Own Question"
 msgstr "回答该问题"
 
-#: forum/skins/default/templates/question.html:461
+#: forum/skins/default/templates/question.html:446
 msgid "Answer the question"
 msgstr "回答该问题"
 
-#: forum/skins/default/templates/question.html:475
+#: forum/skins/default/templates/question.html:460
 msgid "Question tags"
 msgstr "您正在浏览的问题含有以下标签"
 
 # this is how above two are supposed to be
-#: forum/skins/default/templates/question.html:480
+#: forum/skins/default/templates/question.html:465
 #: forum/skins/default/templates/questions.html:257
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
@@ -2718,24 +2673,24 @@ msgstr "您正在浏览的问题含有以下标签"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr "查看有关'%(tagname)s'的问题"
 
-#: forum/skins/default/templates/question.html:486
+#: forum/skins/default/templates/question.html:471
 #, fuzzy
 msgid "question asked"
 msgstr "提问时间"
 
-#: forum/skins/default/templates/question.html:489
+#: forum/skins/default/templates/question.html:474
 msgid "question was seen"
 msgstr "目前浏览数量"
 
-#: forum/skins/default/templates/question.html:489
+#: forum/skins/default/templates/question.html:474
 msgid "times"
 msgstr "次"
 
-#: forum/skins/default/templates/question.html:492
+#: forum/skins/default/templates/question.html:477
 msgid "last updated"
 msgstr "最后更新时间"
 
-#: forum/skins/default/templates/question.html:498
+#: forum/skins/default/templates/question.html:483
 #, fuzzy
 msgid "Related questions"
 msgstr "相似的问题"
@@ -3299,19 +3254,13 @@ msgid "this answer has been selected as correct"
 msgstr "该回答已被设为最佳答案"
 
 #: forum/skins/default/templates/user_stats.html:46
-#, python-format
-msgid ""
-"\n"
-"                    (one comment)\n"
-"                    "
-msgid_plural ""
-"\n"
-"                    the answer has been commented %(comment_count)s times\n"
-"                    "
-msgstr[0] ""
-msgstr[1] ""
+#, fuzzy, python-format
+msgid "(one comment)"
+msgid_plural "the answer has been commented %(comment_count)s times"
+msgstr[0] "添加评论"
+msgstr[1] "添加评论"
 
-#: forum/skins/default/templates/user_stats.html:61
+#: forum/skins/default/templates/user_stats.html:57
 #, python-format
 msgid ""
 "\n"
@@ -3324,43 +3273,37 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:72
+#: forum/skins/default/templates/user_stats.html:68
 msgid "thumb up"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:73
+#: forum/skins/default/templates/user_stats.html:69
 msgid "user has voted up this many times"
 msgstr "该用户投的赞成票总数"
 
-#: forum/skins/default/templates/user_stats.html:77
+#: forum/skins/default/templates/user_stats.html:73
 msgid "thumb down"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:78
+#: forum/skins/default/templates/user_stats.html:74
 #, fuzzy
 msgid "user voted down this many times"
 msgstr "用户投的反对票总数"
 
-#: forum/skins/default/templates/user_stats.html:87
+#: forum/skins/default/templates/user_stats.html:83
 #, python-format
-msgid ""
-"\n"
-"                    <span class=\"count\">1</span> Tag\n"
-"                "
-msgid_plural ""
-"\n"
-"                    <span class=\"count\">%(counter)s</span> Tags\n"
-"                "
+msgid "<span class=\"count\">1</span> Tag"
+msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:100
+#: forum/skins/default/templates/user_stats.html:92
 #, fuzzy, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "查看有关'%s'的问题"
 
-#: forum/skins/default/templates/user_stats.html:115
+#: forum/skins/default/templates/user_stats.html:107
 #, python-format
 msgid ""
 "\n"
@@ -3913,6 +3856,11 @@ msgstr "返回登录"
 #, python-format
 msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
 msgstr ""
+
+#: forum/templatetags/extra_filters.py:100
+#, fuzzy
+msgid "no items in counter"
+msgstr "no"
 
 #: forum/templatetags/extra_tags.py:53
 #, python-format
@@ -4492,10 +4440,6 @@ msgstr "读书"
 #~ "\n"
 #~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有"
 #~ "<span class=\"tag\">%(searchtitle)s</span></p>"
-
-#~ msgid "number of <strong>unanswered</strong> questions"
-#~ msgstr ""
-#~ "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
 
 #~ msgid "tagged with"
 #~ msgstr "标记为"

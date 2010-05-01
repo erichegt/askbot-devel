@@ -43,11 +43,7 @@
                     {% endspaceless %}
                     {% if answered_question.comment_count %}
                     <span>
-				    {% blocktrans count answered_question.comment_count as comment_count %}
-                    (one comment)
-                    {% plural %}
-                    the answer has been commented {{comment_count}} times
-                    {% endblocktrans %}
+                        {% blocktrans count answered_question.comment_count as comment_count %}(one comment){% plural %}the answer has been commented {{comment_count}} times{% endblocktrans %}
                     </span> 
                     {% endif %}
                 </div>
@@ -84,11 +80,7 @@
         <a name="tags"></a>
         {% spaceless %}
             <h2>
-                {% blocktrans count user_tags|length as counter %}
-                    <span class="count">1</span> Tag
-                {% plural %}
-                    <span class="count">{{counter}}</span> Tags
-                {% endblocktrans %}
+                {% blocktrans count user_tags|length as counter %}<span class="count">1</span> Tag{% plural %}<span class="count">{{counter}}</span> Tags{% endblocktrans %}
             </h2>
         {% endspaceless %}
         <div class="user-stats-table">
@@ -97,8 +89,8 @@
                     <td width="180" valign="top">
                         {% for tag in user_tags%}
                         <a rel="tag" 
-							title="{% blocktrans with tag.name as tag_name %}see other questions with {{view_user}}'s contributions tagged '{{ tag_name }}' {% endblocktrans %}" 
-							href="{% url questions %}?tags={{tag|urlencode}}&author={{view_user.id}}&start_over=true">{{tag.name}}</a>
+                            title="{% blocktrans with tag.name as tag_name %}see other questions with {{view_user}}'s contributions tagged '{{ tag_name }}' {% endblocktrans %}" 
+                            href="{% url questions %}?tags={{tag|urlencode}}&author={{view_user.id}}&start_over=true">{{tag.name}}</a>
                         <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"10" %}
                                 </td>

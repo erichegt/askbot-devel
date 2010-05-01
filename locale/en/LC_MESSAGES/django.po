@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 12:43-0400\n"
+"POT-Creation-Date: 2010-05-01 16:45-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1510,7 +1510,7 @@ msgstr ""
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:433
+#: forum/skins/default/templates/question.html:418
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
 msgstr ""
@@ -1518,7 +1518,7 @@ msgstr ""
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:434
+#: forum/skins/default/templates/question.html:419
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
 msgstr ""
@@ -2256,30 +2256,24 @@ msgstr ""
 
 #: forum/skins/default/templates/post_contributor_info.html:9
 #, python-format
-msgid ""
-"\n"
-"                one revision\n"
-"            "
-msgid_plural ""
-"\n"
-"                %(rev_count)s revisions\n"
-"            "
+msgid "one revision"
+msgid_plural "%(rev_count)s revisions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/post_contributor_info.html:19
+#: forum/skins/default/templates/post_contributor_info.html:15
 msgid "asked"
 msgstr ""
 
-#: forum/skins/default/templates/post_contributor_info.html:22
+#: forum/skins/default/templates/post_contributor_info.html:18
 msgid "answered"
 msgstr ""
 
-#: forum/skins/default/templates/post_contributor_info.html:24
+#: forum/skins/default/templates/post_contributor_info.html:20
 msgid "posted"
 msgstr ""
 
-#: forum/skins/default/templates/post_contributor_info.html:45
+#: forum/skins/default/templates/post_contributor_info.html:41
 msgid "updated"
 msgstr ""
 
@@ -2354,7 +2348,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:81
 #: forum/skins/default/templates/question.html:99
-#: forum/skins/default/templates/question.html:258
+#: forum/skins/default/templates/question.html:251
 msgid "current number of votes"
 msgstr ""
 
@@ -2376,7 +2370,7 @@ msgid "remove favorite mark from this question (click again to restore mark)"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:141
-#: forum/skins/default/templates/question.html:295
+#: forum/skins/default/templates/question.html:288
 #: forum/skins/default/templates/revisions_answer.html:58
 #: forum/skins/default/templates/revisions_question.html:58
 msgid "edit"
@@ -2391,72 +2385,61 @@ msgid "close"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:156
-#: forum/skins/default/templates/question.html:300
+#: forum/skins/default/templates/question.html:293
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:157
-#: forum/skins/default/templates/question.html:301
+#: forum/skins/default/templates/question.html:294
 msgid "flag offensive"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:165
-#: forum/skins/default/templates/question.html:312
+#: forum/skins/default/templates/question.html:305
 msgid "delete"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:183
-#: forum/skins/default/templates/question.html:332
+#: forum/skins/default/templates/question.html:325
 msgid "delete this comment"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:194
-#: forum/skins/default/templates/question.html:343
+#: forum/skins/default/templates/question.html:336
 msgid "add comment"
 msgstr "post a comment"
 
 #: forum/skins/default/templates/question.html:198
+#: forum/skins/default/templates/question.html:340
 #, python-format
-msgid ""
-"\n"
-"                                            see <strong>one</strong> more \n"
-"                                            "
+msgid "see <strong>one</strong> more"
+msgid_plural "see <strong>%(counter)s</strong> more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: forum/skins/default/templates/question.html:200
+#: forum/skins/default/templates/question.html:342
+#, python-format
+msgid "see <strong>one</strong> more comment"
 msgid_plural ""
-"\n"
-"                                            see <strong>%(counter)s</strong> "
-"more\n"
+"see <strong>%(counter)s</strong> more comments\n"
 "                                            "
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:204
-#, python-format
-msgid ""
-"\n"
-"                                            see <strong>one</strong> more "
-"comment\n"
-"                                            "
-msgid_plural ""
-"\n"
-"                                            see <strong>%(counter)s</strong> "
-"more comments\n"
-"                                            "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:220
+#: forum/skins/default/templates/question.html:213
 #, python-format
 msgid ""
 "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:222
+#: forum/skins/default/templates/question.html:215
 #, python-format
 msgid "close date %(closed_at)s"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:230
+#: forum/skins/default/templates/question.html:223
 #, python-format
 msgid ""
 "\n"
@@ -2469,105 +2452,75 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:238
+#: forum/skins/default/templates/question.html:231
 msgid "oldest answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:238
+#: forum/skins/default/templates/question.html:231
 msgid "oldest answers"
 msgstr "oldest"
 
-#: forum/skins/default/templates/question.html:240
+#: forum/skins/default/templates/question.html:233
 msgid "newest answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:240
+#: forum/skins/default/templates/question.html:233
 msgid "newest answers"
 msgstr "newest"
 
-#: forum/skins/default/templates/question.html:242
+#: forum/skins/default/templates/question.html:235
 msgid "most voted answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:242
+#: forum/skins/default/templates/question.html:235
 msgid "popular answers"
 msgstr "most voted"
 
-#: forum/skins/default/templates/question.html:256
-#: forum/skins/default/templates/question.html:257
+#: forum/skins/default/templates/question.html:249
+#: forum/skins/default/templates/question.html:250
 msgid "i like this answer (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:263
-#: forum/skins/default/templates/question.html:264
+#: forum/skins/default/templates/question.html:256
+#: forum/skins/default/templates/question.html:257
 msgid "i dont like this answer (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:269
-#: forum/skins/default/templates/question.html:270
+#: forum/skins/default/templates/question.html:262
+#: forum/skins/default/templates/question.html:263
 msgid "mark this answer as favorite (click again to undo)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:275
-#: forum/skins/default/templates/question.html:276
+#: forum/skins/default/templates/question.html:268
+#: forum/skins/default/templates/question.html:269
 msgid "the author of the question has selected this answer as correct"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:289
+#: forum/skins/default/templates/question.html:282
 msgid "answer permanent link"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:290
+#: forum/skins/default/templates/question.html:283
 msgid "permanent link"
 msgstr "link"
 
-#: forum/skins/default/templates/question.html:312
+#: forum/skins/default/templates/question.html:305
 msgid "undelete"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:347
-#, python-format
-msgid ""
-"\n"
-"                                                        see <strong>one</"
-"strong> more \n"
-"                                                        "
-msgid_plural ""
-"\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more\n"
-"                                                        "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:353
-#, python-format
-msgid ""
-"\n"
-"                                                        see <strong>one</"
-"strong> more comment\n"
-"                                                        "
-msgid_plural ""
-"\n"
-"                                                        see <strong>%"
-"(counter)s</strong> more comments\n"
-"                                                        "
-msgstr[0] ""
-msgstr[1] ""
-
-#: forum/skins/default/templates/question.html:379
-#: forum/skins/default/templates/question.html:382
+#: forum/skins/default/templates/question.html:364
+#: forum/skins/default/templates/question.html:367
 msgid "Notify me once a day when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> once a day by email when there are any new "
 "answers or updates"
 
-#: forum/skins/default/templates/question.html:385
+#: forum/skins/default/templates/question.html:370
 msgid "Notify me weekly when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> weekly when there are any new answers or updates"
 
-#: forum/skins/default/templates/question.html:390
+#: forum/skins/default/templates/question.html:375
 #, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
@@ -2575,21 +2528,21 @@ msgstr ""
 "(note: you can always <strong><a href='%(profile_url)s?"
 "sort=email_subscriptions'>change</a></strong> how often you receive updates)"
 
-#: forum/skins/default/templates/question.html:395
+#: forum/skins/default/templates/question.html:380
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 "<span class='strong'>Here</span> (once you log in) you will be able to sign "
 "up for the periodic email updates about this question."
 
-#: forum/skins/default/templates/question.html:406
+#: forum/skins/default/templates/question.html:391
 msgid "Your answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:408
+#: forum/skins/default/templates/question.html:393
 msgid "Be the first one to answer this question!"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:414
+#: forum/skins/default/templates/question.html:399
 msgid "you can answer anonymously and then login"
 msgstr ""
 "<span class='strong big'>Please start posting your answer anonymously</span> "
@@ -2598,7 +2551,7 @@ msgstr ""
 "answer</strong>, for discussions, <strong>please use comments</strong> and "
 "<strong>please do remember to vote</strong> (after you log in)!"
 
-#: forum/skins/default/templates/question.html:418
+#: forum/skins/default/templates/question.html:403
 msgid "answer your own question only to give an answer"
 msgstr ""
 "<span class='big strong'>You are welcome to answer your own question</span>, "
@@ -2608,7 +2561,7 @@ msgstr ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)! "
 
-#: forum/skins/default/templates/question.html:420
+#: forum/skins/default/templates/question.html:405
 msgid "please only give an answer, no discussions"
 msgstr ""
 "<span class='big strong'>Please try to give a substantial answer</span>. If "
@@ -2618,23 +2571,23 @@ msgstr ""
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
 
-#: forum/skins/default/templates/question.html:456
+#: forum/skins/default/templates/question.html:441
 msgid "Login/Signup to Post Your Answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:459
+#: forum/skins/default/templates/question.html:444
 msgid "Answer Your Own Question"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:461
+#: forum/skins/default/templates/question.html:446
 msgid "Answer the question"
 msgstr "Post Your Answer"
 
-#: forum/skins/default/templates/question.html:475
+#: forum/skins/default/templates/question.html:460
 msgid "Question tags"
 msgstr "Tags"
 
-#: forum/skins/default/templates/question.html:480
+#: forum/skins/default/templates/question.html:465
 #: forum/skins/default/templates/questions.html:257
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
@@ -2642,23 +2595,23 @@ msgstr "Tags"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:486
+#: forum/skins/default/templates/question.html:471
 msgid "question asked"
 msgstr "Asked"
 
-#: forum/skins/default/templates/question.html:489
+#: forum/skins/default/templates/question.html:474
 msgid "question was seen"
 msgstr "Seen"
 
-#: forum/skins/default/templates/question.html:489
+#: forum/skins/default/templates/question.html:474
 msgid "times"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:492
+#: forum/skins/default/templates/question.html:477
 msgid "last updated"
 msgstr "Last updated"
 
-#: forum/skins/default/templates/question.html:498
+#: forum/skins/default/templates/question.html:483
 msgid "Related questions"
 msgstr ""
 
@@ -3180,22 +3133,12 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:46
 #, python-format
-msgid ""
-"\n"
-"                    (one comment)\n"
-"                    "
-msgid_plural ""
-"\n"
-"                    the answer has been commented %(comment_count)s times\n"
-"                    "
+msgid "(one comment)"
+msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] ""
-"\n"
-"(one comment)"
 msgstr[1] ""
-"\n"
-"(%(comment_count)s comments)"
 
-#: forum/skins/default/templates/user_stats.html:61
+#: forum/skins/default/templates/user_stats.html:57
 #, python-format
 msgid ""
 "\n"
@@ -3208,42 +3151,36 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:72
+#: forum/skins/default/templates/user_stats.html:68
 msgid "thumb up"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:73
+#: forum/skins/default/templates/user_stats.html:69
 msgid "user has voted up this many times"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:77
+#: forum/skins/default/templates/user_stats.html:73
 msgid "thumb down"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:78
+#: forum/skins/default/templates/user_stats.html:74
 msgid "user voted down this many times"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:87
+#: forum/skins/default/templates/user_stats.html:83
 #, python-format
-msgid ""
-"\n"
-"                    <span class=\"count\">1</span> Tag\n"
-"                "
-msgid_plural ""
-"\n"
-"                    <span class=\"count\">%(counter)s</span> Tags\n"
-"                "
+msgid "<span class=\"count\">1</span> Tag"
+msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:100
+#: forum/skins/default/templates/user_stats.html:92
 #, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:115
+#: forum/skins/default/templates/user_stats.html:107
 #, python-format
 msgid ""
 "\n"
@@ -3893,6 +3830,10 @@ msgstr ""
 msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
 msgstr ""
 
+#: forum/templatetags/extra_filters.py:100
+msgid "no items in counter"
+msgstr "no"
+
 #: forum/templatetags/extra_tags.py:53
 #, python-format
 msgid "%(username)s gravatar image"
@@ -4115,6 +4056,22 @@ msgstr ""
 #: forum_modules/books/urls.py:9
 msgid "books/"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "                    (one comment)\n"
+#~ "                    "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                    the answer has been commented %(comment_count)s "
+#~ "times\n"
+#~ "                    "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "(one comment)"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "(%(comment_count)s comments)"
 
 #~ msgid "welcome to website"
 #~ msgstr "Welcome to Q&amp;A forum"

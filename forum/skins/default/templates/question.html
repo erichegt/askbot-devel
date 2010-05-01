@@ -195,16 +195,9 @@
                                     {% endif %}
                                     {% if question.comment_count > 5 %}
                                         {% if request.user|can_add_comments:question %}/
-                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}
-                                            see <strong>one</strong> more 
-                                            {% plural %}
-                                            see <strong>{{counter}}</strong> more
-                                            {% endblocktrans %}
+                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                         {% else %}
-                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}
-                                            see <strong>one</strong> more comment
-                                            {% plural %}
-                                            see <strong>{{counter}}</strong> more comments
+                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more comment{% plural %}see <strong>{{counter}}</strong> more comments
                                             {% endblocktrans %}
                                         {% endif %}
                                     {% endif %}</a>
@@ -344,17 +337,9 @@
                                                 {% endif %}
                                                 {% if answer.comment_count > 5 %}
                                                     {% if request.user|can_add_comments:answer %}/
-                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}
-                                                        see <strong>one</strong> more 
-                                                        {% plural %}
-                                                        see <strong>{{counter}}</strong> more
-                                                        {% endblocktrans %}
+                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                                     {% else %}
-                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}
-                                                        see <strong>one</strong> more comment
-                                                        {% plural %}
-                                                        see <strong>{{counter}}</strong> more comments
-                                                        {% endblocktrans %}
+                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more comment{% plural %} see <strong>{{counter}}</strong> more comments{% endblocktrans %}
                                                     {% endif %}
                                                 {% endif %}</a>
                                             {% endif %}
