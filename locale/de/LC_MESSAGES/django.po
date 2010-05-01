@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# translation made for askbot project
+# Copyright (C) Mike Chen and Askbot 2010
+# This file is distributed under the same license as the Askbot package.
+# Pekka Gaiser <EMAIL@ADDRESS>, YEAR.
 # 
 msgid ""
 msgstr ""
