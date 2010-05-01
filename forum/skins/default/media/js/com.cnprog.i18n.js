@@ -154,9 +154,9 @@ var i18nEs = {
 };
 
 var i18n = {
-	'en':i18nEn,
-	'zh_CN':i18nZh,
-	'es':i18nEs
+    'en':i18nEn,
+    'zh-cn':i18nZh,
+    'es':i18nEs
 };
 
 var i18n_dict = i18n[i18nLang];
