@@ -1,7 +1,7 @@
 # Translation prepared for Askbot project
 # Copyright (C) 2010 Mike Chen and Askbot developers
 # This file is distributed under the same license as the Askbot package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Otkay Yildiz <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""

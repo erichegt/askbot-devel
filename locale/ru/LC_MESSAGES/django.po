@@ -1,4 +1,4 @@
-# Russian translation of messages for Askbot
+# Russian translation of messa and 2010 Askbot
 # Copyright (C) 2009 Gang Chen
 # This file is distributed under the same license as the Askbot package.
 # FIRST AUTHOR <evgeny.fadeev@gmail.com>, 2010.
