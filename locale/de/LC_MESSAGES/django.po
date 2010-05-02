@@ -1,14 +1,14 @@
-# translation made for askbot project
-# Copyright (C) Mike Chen and Askbot 2010
-# This file is distributed under the same license as the Askbot package.
-# Pekka Gaiser <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 20:53-0400\n"
-"PO-Revision-Date: 2010-04-30 05:58\n"
+"POT-Creation-Date: 2010-05-01 23:21-0400\n"
+"PO-Revision-Date: 2010-05-01 09:07\n"
 "Last-Translator: <post@pekkagaiser.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -123,10 +123,6 @@ msgstr "passwort/"
 #: django_authopenid/urls.py:33
 msgid "confirm/"
 msgstr "bestaetigen/"
-
-#: django_authopenid/urls.py:36
-msgid "account_settings"
-msgstr "einstellungen"
 
 #: django_authopenid/urls.py:38 django_authopenid/urls.py:39
 #: django_authopenid/urls.py:40 django_authopenid/urls.py:41
@@ -522,7 +518,7 @@ msgstr[0] "Bitte %(tag_count)d Tags oder weniger benutzen"
 msgstr[1] "Bitte %(tag_count)d Tags oder weniger benutzen"
 
 #: forum/forms.py:79
-#, python-format
+#, fuzzy, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "Tags müssen kürzer als %(max_chars)d Zeichen sein"
@@ -809,16 +805,12 @@ msgstr "Aktuelle Mitteilung"
 #, python-format
 msgid "%(name)s, this is an update message header for a question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] ""
-"<p>Dear %(name)s,</p></p>The following question has been updated on the Q&A "
-"forum:</p>"
-msgstr[1] ""
-"<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
-"the Q&A forum:</p>"
+msgstr[0] "<p>Hallo %(name)s,</p></p>Es gibt neues zu einer Frage:</p>"
+msgstr[1] "<p>Hallo %(name)s,</p><p>Es gibt neues zu %(num)d Fragen:</p>"
 
 #: forum/management/commands/send_email_alerts.py:255
 msgid "new question"
-msgstr ""
+msgstr "Neue Frage"
 
 #: forum/management/commands/send_email_alerts.py:272
 msgid ""
@@ -826,6 +818,8 @@ msgid ""
 "it - can somebody you know help answering those questions or benefit from "
 "posting one?"
 msgstr ""
+"Schauen Sie rein und entdecken Sie neue Fragen und Antworten. Empfehlen Sie "
+"uns gern auch an Freunde und Bekannte weiter!"
 
 #: forum/management/commands/send_email_alerts.py:284
 msgid ""
@@ -833,6 +827,9 @@ msgid ""
 "you are receiving more than one email per dayplease tell about this issue to "
 "the forum administrator."
 msgstr ""
+"Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist "
+"\"täglich\". Sollten Sie mehr als eine E-Mail pro Tag bekommen, "
+"benachrichtigen Sie uns bitte."
 
 #: forum/management/commands/send_email_alerts.py:290
 msgid ""
@@ -840,12 +837,17 @@ msgid ""
 "this email more than once a week please report this issue to the forum "
 "administrator."
 msgstr ""
+"Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist "
+"\"wöchentlich\". Sollten Sie mehr als eine E-Mail pro Woche bekommen, "
+"benachrichtigen Sie uns bitte."
 
 #: forum/management/commands/send_email_alerts.py:296
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
 msgstr ""
+"Aus technischen Gründen kann es manchmal vorkommen, daß Sie Links empfangen, "
+"die Sie bereits gesehen haben. "
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
@@ -853,16 +855,15 @@ msgid ""
 "go to %(link)s to change frequency of email updates or %(email)s "
 "administrator"
 msgstr ""
-"<p>Please remember that you can always <a href='%(link)s'>adjust</a> "
-"frequency of the email updates or turn them off entirely.<br/>If you believe "
-"that this message was sent in an error, please email about it the forum "
-"administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum "
-"server.</p>"
+"<p>Sie können die Häufigkeit, mit der Sie Benachrichtigungen erhalten, "
+"jederzeit <a href='%(link)s'>hier</a> einstellen oder sie gänzlich "
+"abschalten.<br/>Falls Sie diese Nachricht irrtümlich erhalten haben, "
+"informieren Sie uns bitte unter %(email)s.</p>"
 
 #: forum/middleware/anon_user.py:34
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
-msgstr ""
+msgstr "Zum ersten Mal hier? <a href=\"%s\">Häufige Fragen</a> lesen!"
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "Disciplined"
@@ -894,21 +895,24 @@ msgid "Nice answer"
 msgstr "überarbeitete Antwort"
 
 #: forum/migrations/0005_install_badges.py:12
+#, fuzzy
 msgid "nice-answer"
-msgstr ""
+msgstr "antworten/"
 
 #: forum/migrations/0005_install_badges.py:12
+#, fuzzy
 msgid "Answer voted up 10 times"
-msgstr ""
+msgstr "Von mir beantwortet"
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
 msgid "Nice Question"
-msgstr "überarbeitete Frage"
+msgstr "Neue Frage"
 
 #: forum/migrations/0005_install_badges.py:13
+#, fuzzy
 msgid "nice-question"
-msgstr ""
+msgstr "frage_stellen/"
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
@@ -928,8 +932,9 @@ msgid "Left 10 comments with score of 10 or more"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
+#, fuzzy
 msgid "Popular Question"
-msgstr ""
+msgstr "Stellen Sie Ihre Frage"
 
 #: forum/migrations/0005_install_badges.py:15
 #, fuzzy
@@ -982,8 +987,9 @@ msgid "Editor"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
+#, fuzzy
 msgid "editor"
-msgstr ""
+msgstr "bearbeiten/"
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "First edit"
@@ -1074,12 +1080,20 @@ msgid "self-learner"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:26
+#, fuzzy
 msgid "Answered your own question with at least 3 up votes"
 msgstr ""
+"<span class='big strong'>You are welcome to answer your own question</span>, "
+"but please make sure to give an <strong>answer</strong>. Remember that you "
+"can always <strong>revise your original question</strong>. Please "
+"<strong>use comments for discussions</strong>  and <strong>please don't "
+"forget to vote :)</strong> for the answers that you liked (or perhaps did "
+"not like)! "
 
 #: forum/migrations/0005_install_badges.py:27
+#, fuzzy
 msgid "Great Answer"
-msgstr ""
+msgstr "Antwort"
 
 #: forum/migrations/0005_install_badges.py:27
 #, fuzzy
@@ -1094,7 +1108,7 @@ msgstr "Von mir beantwortet"
 #: forum/migrations/0005_install_badges.py:28
 #, fuzzy
 msgid "Great Question"
-msgstr "überarbeitete Frage"
+msgstr "Neue Frage"
 
 #: forum/migrations/0005_install_badges.py:28
 #, fuzzy
@@ -1106,24 +1120,28 @@ msgid "Question voted up 100 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
+#, fuzzy
 msgid "Stellar Question"
-msgstr ""
+msgstr "Alle Fragen zeigen"
 
 #: forum/migrations/0005_install_badges.py:29
+#, fuzzy
 msgid "stellar-question"
-msgstr ""
+msgstr "Alle Fragen zeigen"
 
 #: forum/migrations/0005_install_badges.py:29
 msgid "Question favorited by 100 users"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
+#, fuzzy
 msgid "Famous question"
-msgstr ""
+msgstr "Neueste Fragen"
 
 #: forum/migrations/0005_install_badges.py:30
+#, fuzzy
 msgid "famous-question"
-msgstr ""
+msgstr "Frage"
 
 #: forum/migrations/0005_install_badges.py:30
 msgid "Asked a question with 10,000 views"
@@ -1142,36 +1160,43 @@ msgid "Actively participated in the private alpha"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
+#, fuzzy
 msgid "Good Answer"
-msgstr ""
+msgstr "oldest"
 
 #: forum/migrations/0005_install_badges.py:32
+#, fuzzy
 msgid "good-answer"
-msgstr ""
+msgstr "Antwort"
 
 #: forum/migrations/0005_install_badges.py:32
+#, fuzzy
 msgid "Answer voted up 25 times"
-msgstr ""
+msgstr "Von mir beantwortet"
 
 #: forum/migrations/0005_install_badges.py:33
+#, fuzzy
 msgid "Good Question"
-msgstr ""
+msgstr "Frage"
 
 #: forum/migrations/0005_install_badges.py:33
+#, fuzzy
 msgid "good-question"
-msgstr ""
+msgstr "Frage"
 
 #: forum/migrations/0005_install_badges.py:33
 msgid "Question voted up 25 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
+#, fuzzy
 msgid "Favorite Question"
-msgstr ""
+msgstr "überarbeitete Frage"
 
 #: forum/migrations/0005_install_badges.py:34
+#, fuzzy
 msgid "favorite-question"
-msgstr ""
+msgstr "überarbeitete Frage"
 
 #: forum/migrations/0005_install_badges.py:34
 msgid "Question favorited by 25 users"
@@ -1218,8 +1243,9 @@ msgid "Expert"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
+#, fuzzy
 msgid "expert"
-msgstr ""
+msgstr "Text"
 
 #: forum/migrations/0005_install_badges.py:38
 msgid "Very active in one tag"
@@ -1238,12 +1264,14 @@ msgid "Active member for a year"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
+#, fuzzy
 msgid "Notable Question"
-msgstr ""
+msgstr "Keine echte Frage"
 
 #: forum/migrations/0005_install_badges.py:40
+#, fuzzy
 msgid "notable-question"
-msgstr ""
+msgstr "Keine echte Frage"
 
 #: forum/migrations/0005_install_badges.py:40
 msgid "Asked a question with 2,500 views"
@@ -1312,199 +1340,203 @@ msgstr ""
 #: forum/models/question.py:499
 #, python-format
 msgid "%(author)s modified the question"
-msgstr ""
+msgstr "%(author)s hat die Frage bearbeitet"
 
 #: forum/models/question.py:503
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
-msgstr ""
+msgstr "%(people)s Benutzer haben %(new_answer_count)s neue Antworten verfaßt"
 
 #: forum/models/question.py:508
 #, python-format
 msgid "%(people)s commented the question"
-msgstr ""
+msgstr "%(people)s Benutzer haben die Frage kommentiert"
 
 #: forum/models/question.py:513
 #, python-format
 msgid "%(people)s commented answers"
-msgstr ""
+msgstr "%(people)s Benutzer haben Kommentare zu Antworten verfaßt"
 
 #: forum/models/question.py:515
 #, python-format
 msgid "%(people)s commented an answer"
-msgstr ""
+msgstr "%(people)s Benutzer haben Kommentare zu einer Antwort verfaßt"
 
 #: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
 msgid "gold"
-msgstr ""
+msgstr "Gold"
 
 #: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
 msgid "silver"
-msgstr ""
+msgstr "Silber"
 
 #: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
 msgid "bronze"
-msgstr ""
+msgstr "Bronze"
 
 #: forum/models/tag.py:81
 msgid "interesting"
-msgstr ""
+msgstr "Interessant"
 
 #: forum/models/tag.py:81
 msgid "ignored"
-msgstr ""
+msgstr "Ignorieren"
 
 #: forum/models/user.py:36
 msgid "Entire forum"
-msgstr ""
+msgstr "Gesamtes Forum"
 
 #: forum/models/user.py:37
 msgid "Questions that I asked"
-msgstr ""
+msgstr "Fragen, die ich gestellt habe"
 
 #: forum/models/user.py:38
 msgid "Questions that I answered"
-msgstr ""
+msgstr "Fragen, die ich beantwortet habe"
 
 #: forum/models/user.py:39
 msgid "Individually selected questions"
-msgstr ""
+msgstr "Individuell ausgewählte Fragen"
 
 #: forum/models/user.py:42
 msgid "Weekly"
-msgstr ""
+msgstr "Wöchentlich"
 
 #: forum/models/user.py:43
 msgid "Daily"
-msgstr ""
+msgstr "Täglich"
 
 #: forum/models/user.py:44
 msgid "No email"
-msgstr ""
+msgstr "Keine E-Mail"
 
 #: forum/skins/default/templates/404.html:24
 msgid "Sorry, could not find the page you requested."
-msgstr ""
+msgstr "Die angeforderte Seite konnte nicht gefunden werden."
 
 #: forum/skins/default/templates/404.html:26
 msgid "This might have happened for the following reasons:"
-msgstr ""
+msgstr "Dies könnte einen der folgenden Gründe haben:"
 
 #: forum/skins/default/templates/404.html:28
 msgid "this question or answer has been deleted;"
-msgstr ""
+msgstr "Diese Frage oder Antwort wurde gelöscht;"
 
 #: forum/skins/default/templates/404.html:29
 msgid "url has error - please check it;"
-msgstr ""
+msgstr "Die eingegebene Adresse ist fehlerhaft - bitte überprüfen;"
 
 #: forum/skins/default/templates/404.html:30
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
 msgstr ""
+"Die angeforderte Seite ist geschützt oder Sie haben nicht genug Punkte, um "
+"sie anzuschauen, siehe"
 
 #: forum/skins/default/templates/404.html:31
 msgid "if you believe this error 404 should not have occured, please"
-msgstr ""
+msgstr "Falls dieser Fehler nicht hätte passieren sollen, "
 
 #: forum/skins/default/templates/404.html:32
 msgid "report this problem"
-msgstr ""
+msgstr "melden Sie uns das Problem bitte."
 
 #: forum/skins/default/templates/404.html:41
 #: forum/skins/default/templates/500.html:27
 msgid "back to previous page"
-msgstr ""
+msgstr "Zurück zur vorigen Seite"
 
 #: forum/skins/default/templates/404.html:42
 #: forum/skins/default/templates/questions.html:52
 msgid "see all questions"
-msgstr ""
+msgstr "Alle Fragen zeigen"
 
 #: forum/skins/default/templates/404.html:43
 msgid "see all tags"
-msgstr ""
+msgstr "Alle Tags zeigen"
 
 #: forum/skins/default/templates/500.html:22
 msgid "sorry, system error"
-msgstr ""
+msgstr "Interner Fehler"
 
 #: forum/skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
 msgstr ""
+"Der Fehler wurde aufgezeichnet, und wir werden ihn so bald wie möglich "
+"beheben."
 
 #: forum/skins/default/templates/500.html:25
 msgid "please report the error to the site administrators if you wish"
-msgstr ""
+msgstr "Bitte melden Sie uns den Fehler, falls Sie möchten."
 
 #: forum/skins/default/templates/500.html:28
 msgid "see latest questions"
-msgstr ""
+msgstr "Zeige neueste Fragen"
 
 #: forum/skins/default/templates/500.html:29
 msgid "see tags"
-msgstr ""
+msgstr "Zeige Tags"
 
 #: forum/skins/default/templates/about.html:6
 #: forum/skins/default/templates/about.html:11
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 #: forum/skins/default/templates/account_settings.html:4
 #: forum/skins/default/templates/authopenid/settings.html:4
 msgid "Account functions"
-msgstr ""
+msgstr "Zugangsverwaltung"
 
 #: forum/skins/default/templates/account_settings.html:29
 #: forum/skins/default/templates/authopenid/changepw.html:5
 #: forum/skins/default/templates/authopenid/changepw.html:14
 #: forum/skins/default/templates/authopenid/settings.html:29
 msgid "Change password"
-msgstr ""
+msgstr "Passwort ändern"
 
 #: forum/skins/default/templates/account_settings.html:30
 #: forum/skins/default/templates/authopenid/settings.html:30
 msgid "Give your  account a new password."
-msgstr ""
+msgstr "Legen Sie ein neues Passwort für Ihren Zugang fest."
 
 #: forum/skins/default/templates/account_settings.html:32
 #: forum/skins/default/templates/authopenid/settings.html:31
 msgid "Change email "
-msgstr ""
+msgstr "E-Mail verändern"
 
 #: forum/skins/default/templates/account_settings.html:33
 #: forum/skins/default/templates/authopenid/settings.html:32
 msgid "Add or update the email address associated with your account."
-msgstr ""
+msgstr "Neue E-Mail-Adresse zu Konto hinzufügen oder bestehende ändern"
 
 #: forum/skins/default/templates/account_settings.html:35
 #: forum/skins/default/templates/authopenid/changeopenid.html:4
 #: forum/skins/default/templates/authopenid/changeopenid.html:30
 #: forum/skins/default/templates/authopenid/settings.html:34
 msgid "Change OpenID"
-msgstr ""
+msgstr "OpenID ändern"
 
 #: forum/skins/default/templates/account_settings.html:36
 #: forum/skins/default/templates/authopenid/settings.html:35
 msgid "Change openid associated to your account"
-msgstr ""
+msgstr "Mit Ihrem Zugang verknüpfte OpenID ändern"
 
 #: forum/skins/default/templates/account_settings.html:39
 #: forum/skins/default/templates/authopenid/delete.html:4
 #: forum/skins/default/templates/authopenid/settings.html:38
 msgid "Delete account"
-msgstr ""
+msgstr "Zugang löschen"
 
 #: forum/skins/default/templates/account_settings.html:40
 #: forum/skins/default/templates/authopenid/settings.html:39
 msgid "Erase your username and all your data from website"
-msgstr ""
+msgstr "Ihren Benutzernamen und alle Ihre Daten von der Seite löschen"
 
 #: forum/skins/default/templates/answer_edit.html:5
 #: forum/skins/default/templates/answer_edit.html:48
 msgid "Edit answer"
-msgstr ""
+msgstr "Antwort bearbeiten"
 
 #: forum/skins/default/templates/answer_edit.html:25
 #: forum/skins/default/templates/answer_edit.html:28
@@ -1515,14 +1547,14 @@ msgstr ""
 #: forum/skins/default/templates/question_edit.html:25
 #: forum/skins/default/templates/question_edit.html:28
 msgid "hide preview"
-msgstr ""
+msgstr "Vorschau ausblenden"
 
 #: forum/skins/default/templates/answer_edit.html:28
 #: forum/skins/default/templates/ask.html:29
 #: forum/skins/default/templates/question.html:49
 #: forum/skins/default/templates/question_edit.html:28
 msgid "show preview"
-msgstr ""
+msgstr "Vorschau einblenden"
 
 #: forum/skins/default/templates/answer_edit.html:48
 #: forum/skins/default/templates/question_edit.html:66
@@ -1530,19 +1562,19 @@ msgstr ""
 #: forum/skins/default/templates/revisions_answer.html:38
 #: forum/skins/default/templates/revisions_question.html:38
 msgid "back"
-msgstr ""
+msgstr "Zurück"
 
 #: forum/skins/default/templates/answer_edit.html:53
 #: forum/skins/default/templates/question_edit.html:71
 #: forum/skins/default/templates/revisions_answer.html:52
 #: forum/skins/default/templates/revisions_question.html:52
 msgid "revision"
-msgstr ""
+msgstr "Version"
 
 #: forum/skins/default/templates/answer_edit.html:56
 #: forum/skins/default/templates/question_edit.html:75
 msgid "select revision"
-msgstr ""
+msgstr "Version auswählen"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1550,7 +1582,7 @@ msgstr ""
 #: forum/skins/default/templates/question.html:418
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
-msgstr ""
+msgstr "Die Markdown-Echtzeit-Vorschau ein- oder ausblenden"
 
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
@@ -1558,13 +1590,13 @@ msgstr ""
 #: forum/skins/default/templates/question.html:419
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
-msgstr ""
+msgstr "Vorschau ein- oder ausblenden"
 
 #: forum/skins/default/templates/answer_edit.html:72
 #: forum/skins/default/templates/question_edit.html:118
 #: forum/skins/default/templates/question_retag.html:74
 msgid "Save edit"
-msgstr ""
+msgstr "Überarbeitung speichern"
 
 #: forum/skins/default/templates/answer_edit.html:73
 #: forum/skins/default/templates/close.html:29
@@ -1575,95 +1607,98 @@ msgstr ""
 #: forum/skins/default/templates/user_edit.html:90
 #: forum/skins/default/templates/authopenid/changeemail.html:40
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: forum/skins/default/templates/answer_edit_tips.html:4
 msgid "answer tips"
-msgstr "Tips"
+msgstr "Tipps"
 
 #: forum/skins/default/templates/answer_edit_tips.html:7
 msgid "please make your answer relevant to this community"
 msgstr ""
+"Bitte formulieren Sie Ihre Frage so, daß sie für dieses Forum relevant ist."
 
 #: forum/skins/default/templates/answer_edit_tips.html:10
 msgid "try to give an answer, rather than engage into a discussion"
 msgstr ""
+"Bitte versuchen Sie, eine konkrete Antwort zu geben, und nicht in eine "
+"Diskussion einzusteigen."
 
 #: forum/skins/default/templates/answer_edit_tips.html:13
 msgid "please try to provide details"
-msgstr ""
+msgstr "Bitte versuchen Sie, Details einzubringen."
 
 #: forum/skins/default/templates/answer_edit_tips.html:16
 #: forum/skins/default/templates/question_edit_tips.html:13
 msgid "be clear and concise"
-msgstr ""
+msgstr "Seien Sie klar und deutlich."
 
 #: forum/skins/default/templates/answer_edit_tips.html:20
 #: forum/skins/default/templates/question_edit_tips.html:17
 msgid "see frequently asked questions"
-msgstr ""
+msgstr "Siehe die häufig gestellten Fragen"
 
 #: forum/skins/default/templates/answer_edit_tips.html:26
 #: forum/skins/default/templates/question_edit_tips.html:23
 msgid "Markdown tips"
-msgstr "Markdown basics"
+msgstr "Tipps zu Markdown"
 
 #: forum/skins/default/templates/answer_edit_tips.html:29
 #: forum/skins/default/templates/question_edit_tips.html:26
 msgid "*italic* or __italic__"
-msgstr ""
+msgstr "*kursiv* oder __kursiv__"
 
 #: forum/skins/default/templates/answer_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:29
 msgid "**bold** or __bold__"
-msgstr ""
+msgstr "**fett** oder __fett__"
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/question_edit_tips.html:32
 msgid "link"
-msgstr ""
+msgstr "Link"
 
 #: forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "text"
-msgstr ""
+msgstr "Text"
 
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "image"
-msgstr ""
+msgstr "Bild"
 
 #: forum/skins/default/templates/answer_edit_tips.html:43
 #: forum/skins/default/templates/question_edit_tips.html:41
 msgid "numbered list:"
-msgstr ""
+msgstr "Nummerierte Liste:"
 
 #: forum/skins/default/templates/answer_edit_tips.html:48
 #: forum/skins/default/templates/question_edit_tips.html:46
 msgid "basic HTML tags are also supported"
-msgstr ""
+msgstr "Grundlegende HTML-Tags werden ebenfalls unterstützt."
 
 #: forum/skins/default/templates/answer_edit_tips.html:52
 #: forum/skins/default/templates/question_edit_tips.html:50
 msgid "learn more about Markdown"
-msgstr ""
+msgstr "Mehr Informationen über Markdown"
 
 #: forum/skins/default/templates/ask.html:5
 #: forum/skins/default/templates/ask.html:62
 msgid "Ask a question"
-msgstr ""
+msgstr "Frage stellen"
 
 #: forum/skins/default/templates/ask.html:69
 #: forum/skins/default/templates/ask_form.html:11
 msgid "login to post question info"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+"<span class=\"strong big\">Sie können Ihre Frage formulieren, ohne sich "
+"vorher anmelden zu müssen</span>. Wenn Sie Ihre Frage speichern, werden Sie "
+"zum Anmeldeformular weitergeleitet. Einen neuen Zugang zu erstellen geht "
+"ganz schnell. Ihre Frage wird für die Dauer des Anmeldevorgangs im "
+"Hintergrund gespeichert und geht nicht verloren."
 
 #: forum/skins/default/templates/ask.html:75
 #, python-format
@@ -1672,26 +1707,26 @@ msgid ""
 "                            see %(email_validation_faq_url)s\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Looks like your email address, %(email)s has not "
-"yet been validated.</span> To post messages you must verify your email, "
-"please see <a href='%(email_validation_faq_url)s'>more details here</a>."
-"<br>You can submit your question now and validate email after that. Your "
-"question will saved as pending meanwhile. "
+"<span class='strong big'>Ihre E-Mail-Adresse %(email)s wurde noch nicht "
+"bestätigt.</span> Um Beiträge veröffentlichen zu können, müssen Sie Ihre E-"
+"Mail-Adresse bestätigen. <a href='%(email_validation_faq_url)s'>Mehr infos "
+"hier</a>.<br>Sie können Ihren Beitrag speichern und die Bestätigung danach "
+"durchführen - Ihr Beitrag wird bis dahin gespeichert."
 
 #: forum/skins/default/templates/ask.html:113
 #: forum/skins/default/templates/ask_form.html:54
 msgid "(required)"
-msgstr ""
+msgstr "(Pflichtfeld)"
 
 #: forum/skins/default/templates/ask.html:120
 #: forum/skins/default/templates/ask_form.html:61
 msgid "Login/signup to post your question"
-msgstr "Login/Signup to Post"
+msgstr "Bitte einloggen, um Frage zu veröffentlichen"
 
 #: forum/skins/default/templates/ask.html:122
 #: forum/skins/default/templates/ask_form.html:63
 msgid "Ask your question"
-msgstr "Ask Your Question"
+msgstr "Stellen Sie Ihre Frage"
 
 #: forum/skins/default/templates/ask_form.html:15
 #, python-format
@@ -2295,8 +2330,8 @@ msgstr ""
 #, fuzzy, python-format
 msgid "one revision"
 msgid_plural "%(rev_count)s revisions"
-msgstr[0] "revisionen/"
-msgstr[1] "revisionen/"
+msgstr[0] "Version"
+msgstr[1] "Version"
 
 #: forum/skins/default/templates/post_contributor_info.html:15
 msgid "asked"
@@ -3846,9 +3881,8 @@ msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
 msgstr ""
 
 #: forum/templatetags/extra_filters.py:100
-#, fuzzy
 msgid "no items in counter"
-msgstr "no"
+msgstr ""
 
 #: forum/templatetags/extra_tags.py:53
 #, python-format
@@ -4072,6 +4106,9 @@ msgstr ""
 #: forum_modules/books/urls.py:9
 msgid "books/"
 msgstr ""
+
+#~ msgid "account_settings"
+#~ msgstr "einstellungen"
 
 #~ msgid ""
 #~ "\n"
