@@ -35,7 +35,7 @@ INITIAL_BADGE_DATA = (
     (_('Civic duty'), 2, _('civic-duty'), _('Voted 300 times'), False, 0),
     (_('Strunk & White'), 2, _('strunk-and-white'), _('Edited 100 entries'), False, 0),
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
-    (_('Expert'), 2, _('export'), _('Very active in one tag'), False, 0),
+    (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
     (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
     (_('Notable Question'), 2, _('notable-question'), _('Asked a question with 2,500 views'), True, 0),
     (_('Enlightened'), 2, _('enlightened'), _('First answer was accepted with at least 10 up votes'), False, 0),

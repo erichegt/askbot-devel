@@ -34,11 +34,12 @@
             {% endfor %}
             </div>
             <div style="float:left;width:230px;">
-                <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {{ badge.description }}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{{ badge.name }}</a><strong> &#215; {{ badge.awarded_count|intcomma }}</strong>
+                <a href="{{badge.get_absolute_url}}" 
+                    title="{% trans badge.get_type_display %} : {% trans badge.description %}" 
+                    class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans badge.name %}</a><strong> 
+                    &#215; {{ badge.awarded_count|intcomma }}</strong>
             </div>
-            <p style="float:left;margin-top:8px;">
-                {{ badge.description }}
-            </p>
+            <p style="float:left;margin-top:8px;">{% trans badge.description %}</p>
         </div>
         {% endfor %}
     </div>

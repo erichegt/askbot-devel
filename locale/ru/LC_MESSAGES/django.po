@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 16:44-0400\n"
+"POT-Creation-Date: 2010-05-01 20:26-0400\n"
 "PO-Revision-Date: 2010-04-30 21:06\n"
 "Last-Translator: <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -892,34 +892,28 @@ msgid "Deleted own post with score of -3 or lower"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "Nice answer"
-msgstr "отредактировали ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "nice-answer"
-msgstr "новый-ответ/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "Answer voted up 10 times"
-msgstr "Отвеченные мной"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Nice Question"
-msgstr "новый вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "nice-question"
-msgstr "новый-вопрос/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Question voted up 10 times"
-msgstr "содержание вопроса должно быть более 10-ти букв"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:14
 msgid "Pundit"
@@ -934,14 +928,12 @@ msgid "Left 10 comments with score of 10 or more"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "Popular Question"
-msgstr "Задайте Ваш вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "popular-question"
-msgstr "вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
 msgid "Asked a question with 1,000 views"
@@ -980,18 +972,16 @@ msgid "critic"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:18
-#, fuzzy
 msgid "First down vote"
-msgstr "отрицательный голос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "Editor"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
-#, fuzzy
 msgid "editor"
-msgstr "править/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "First edit"
@@ -1034,19 +1024,16 @@ msgid "Asked first question with at least one up vote"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "Supporter"
-msgstr "положительный голос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "supporter"
-msgstr "положительный голос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "First up vote"
-msgstr "больше голосов"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:24
 msgid "Teacher"
@@ -1069,9 +1056,8 @@ msgid "autobiographer"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:25
-#, fuzzy
 msgid "Completed all user profile fields"
-msgstr "полное завершение учётной записи"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:26
 msgid "Self-Learner"
@@ -1086,57 +1072,48 @@ msgid "Answered your own question with at least 3 up votes"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "Great Answer"
-msgstr "ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "great-answer"
-msgstr "ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "Answer voted up 100 times"
-msgstr "Отвеченные мной"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "Great Question"
-msgstr "новый вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "great-question"
-msgstr "вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:28
 msgid "Question voted up 100 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "Stellar Question"
-msgstr "смотреть все вопросы"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "stellar-question"
-msgstr "смотреть все вопросы"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
 msgid "Question favorited by 100 users"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "Famous question"
-msgstr "самые новые вопросы"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "famous-question"
-msgstr "вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
 msgid "Asked a question with 10,000 views"
@@ -1155,43 +1132,36 @@ msgid "Actively participated in the private alpha"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Good Answer"
-msgstr "Править ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "good-answer"
-msgstr "ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Answer voted up 25 times"
-msgstr "Отвеченные мной"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "Good Question"
-msgstr "вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "good-question"
-msgstr "вопрос"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
 msgid "Question voted up 25 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "Favorite Question"
-msgstr "отредактировали ответ"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "favorite-question"
-msgstr "просмотр отмеченных вопросов"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
 msgid "Question favorited by 25 users"
@@ -1238,9 +1208,8 @@ msgid "Expert"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
-#, fuzzy
-msgid "export"
-msgstr "текст"
+msgid "expert"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
 msgid "Very active in one tag"
@@ -1259,14 +1228,12 @@ msgid "Active member for a year"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "Notable Question"
-msgstr "на вопрос не похоже"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "notable-question"
-msgstr "на вопрос не похоже"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
 msgid "Asked a question with 2,500 views"
@@ -1357,15 +1324,15 @@ msgstr "%(people)s комментировали вопросы"
 msgid "%(people)s commented an answer"
 msgstr "%(people)s комментировали ответы"
 
-#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
+#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
 msgid "gold"
 msgstr "золотая"
 
-#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
+#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
 msgid "silver"
 msgstr "серебряная"
 
-#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
+#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
 msgid "bronze"
 msgstr "бронзовая"
 
@@ -1763,23 +1730,23 @@ msgid ""
 "    "
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:50
+#: forum/skins/default/templates/badges.html:51
 msgid "Community badges"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:56
+#: forum/skins/default/templates/badges.html:57
 msgid "gold badge description"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:64
+#: forum/skins/default/templates/badges.html:65
 msgid "silver badge description"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:67
+#: forum/skins/default/templates/badges.html:68
 msgid "bronze badge: often given as a special honor"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:71
+#: forum/skins/default/templates/badges.html:72
 msgid "bronze badge description"
 msgstr ""
 

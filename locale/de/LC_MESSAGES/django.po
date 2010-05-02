@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 16:44-0400\n"
+"POT-Creation-Date: 2010-05-01 20:53-0400\n"
 "PO-Revision-Date: 2010-04-30 05:58\n"
 "Last-Translator: <post@pekkagaiser.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -894,14 +894,12 @@ msgid "Nice answer"
 msgstr "überarbeitete Antwort"
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "nice-answer"
-msgstr "antworten/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "Answer voted up 10 times"
-msgstr "Von mir beantwortet"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
@@ -909,9 +907,8 @@ msgid "Nice Question"
 msgstr "überarbeitete Frage"
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "nice-question"
-msgstr "frage_stellen/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:13
 #, fuzzy
@@ -931,9 +928,8 @@ msgid "Left 10 comments with score of 10 or more"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "Popular Question"
-msgstr "Ask Your Question"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:15
 #, fuzzy
@@ -986,9 +982,8 @@ msgid "Editor"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
-#, fuzzy
 msgid "editor"
-msgstr "bearbeiten/"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "First edit"
@@ -1079,20 +1074,12 @@ msgid "self-learner"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:26
-#, fuzzy
 msgid "Answered your own question with at least 3 up votes"
 msgstr ""
-"<span class='big strong'>You are welcome to answer your own question</span>, "
-"but please make sure to give an <strong>answer</strong>. Remember that you "
-"can always <strong>revise your original question</strong>. Please "
-"<strong>use comments for discussions</strong>  and <strong>please don't "
-"forget to vote :)</strong> for the answers that you liked (or perhaps did "
-"not like)! "
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "Great Answer"
-msgstr "Antwort"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:27
 #, fuzzy
@@ -1119,28 +1106,24 @@ msgid "Question voted up 100 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "Stellar Question"
-msgstr "überarbeitete Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "stellar-question"
-msgstr "Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:29
 msgid "Question favorited by 100 users"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "Famous question"
-msgstr "Neueste Fragen"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "famous-question"
-msgstr "Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:30
 msgid "Asked a question with 10,000 views"
@@ -1159,43 +1142,36 @@ msgid "Actively participated in the private alpha"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Good Answer"
-msgstr "oldest"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "good-answer"
-msgstr "Antwort"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Answer voted up 25 times"
-msgstr "Von mir beantwortet"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "Good Question"
-msgstr "Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "good-question"
-msgstr "Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:33
 msgid "Question voted up 25 times"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "Favorite Question"
-msgstr "überarbeitete Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "favorite-question"
-msgstr "überarbeitete Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:34
 msgid "Question favorited by 25 users"
@@ -1242,7 +1218,7 @@ msgid "Expert"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
-msgid "export"
+msgid "expert"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
@@ -1262,14 +1238,12 @@ msgid "Active member for a year"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "Notable Question"
-msgstr "Keine echte Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "notable-question"
-msgstr "Keine echte Frage"
+msgstr ""
 
 #: forum/migrations/0005_install_badges.py:40
 msgid "Asked a question with 2,500 views"
@@ -1360,15 +1334,15 @@ msgstr ""
 msgid "%(people)s commented an answer"
 msgstr ""
 
-#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
+#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
 msgid "gold"
 msgstr ""
 
-#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
+#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
 msgid "silver"
 msgstr ""
 
-#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
+#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
 msgid "bronze"
 msgstr ""
 
@@ -1770,27 +1744,27 @@ msgstr ""
 "s'>feedback</a></strong> - what kinds of badges would you like to see and "
 "suggest the activity for which those badges might be awarded."
 
-#: forum/skins/default/templates/badges.html:50
+#: forum/skins/default/templates/badges.html:51
 msgid "Community badges"
 msgstr "Badge levels"
 
-#: forum/skins/default/templates/badges.html:56
+#: forum/skins/default/templates/badges.html:57
 msgid "gold badge description"
 msgstr ""
 "Gold badge is the highest award in this community. To obtain it have to show "
 "profound knowledge and ability in addition to your active participation."
 
-#: forum/skins/default/templates/badges.html:64
+#: forum/skins/default/templates/badges.html:65
 msgid "silver badge description"
 msgstr ""
 "Obtaining silver badge requires significant patience. If you have received "
 "one, that means you have greatly contributed to this community."
 
-#: forum/skins/default/templates/badges.html:67
+#: forum/skins/default/templates/badges.html:68
 msgid "bronze badge: often given as a special honor"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:71
+#: forum/skins/default/templates/badges.html:72
 msgid "bronze badge description"
 msgstr ""
 "If you are an active participant in this community, you will be recognized "
@@ -3159,100 +3133,76 @@ msgstr ""
 msgid "%(user_name)s's karma change log"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:12
+#: forum/skins/default/templates/user_stats.html:11
 #, python-format
-msgid ""
-"\n"
-"                <span class=\"count\">1</span> Question\n"
-"                "
-msgid_plural ""
-"\n"
-"                <span class=\"count\">%(counter)s</span> Questions\n"
-"                "
+msgid "<span class=\"count\">1</span> Question"
+msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:23
+#: forum/skins/default/templates/user_stats.html:16
 #, python-format
-msgid ""
-"\n"
-"                <span class=\"count\">1</span> Answer\n"
-"                "
-msgid_plural ""
-"\n"
-"                <span class=\"count\">%(counter)s</span> Answers\n"
-"                "
+msgid "<span class=\"count\">1</span> Answer"
+msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:36
+#: forum/skins/default/templates/user_stats.html:24
 #, python-format
 msgid "the answer has been voted for %(answer_score)s times"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:36
+#: forum/skins/default/templates/user_stats.html:24
 msgid "this answer has been selected as correct"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:46
+#: forum/skins/default/templates/user_stats.html:34
 #, fuzzy, python-format
 msgid "(one comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] "post a comment"
 msgstr[1] "post a comment"
 
-#: forum/skins/default/templates/user_stats.html:57
+#: forum/skins/default/templates/user_stats.html:44
 #, python-format
-msgid ""
-"\n"
-"                    <span class=\"count\">1</span> Vote\n"
-"                "
-msgid_plural ""
-"\n"
-"                    <span class=\"count\">%(cnt)s</span> Votes\n"
-"                "
+msgid "<span class=\"count\">1</span> Vote"
+msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:68
+#: forum/skins/default/templates/user_stats.html:50
 msgid "thumb up"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:69
+#: forum/skins/default/templates/user_stats.html:51
 msgid "user has voted up this many times"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:73
+#: forum/skins/default/templates/user_stats.html:55
 msgid "thumb down"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:74
+#: forum/skins/default/templates/user_stats.html:56
 msgid "user voted down this many times"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:83
+#: forum/skins/default/templates/user_stats.html:64
 #, python-format
 msgid "<span class=\"count\">1</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:92
+#: forum/skins/default/templates/user_stats.html:72
 #, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:107
+#: forum/skins/default/templates/user_stats.html:86
 #, python-format
-msgid ""
-"\n"
-"            <span class=\"count\">1</span> Badge\n"
-"            "
-msgid_plural ""
-"\n"
-"            <span class=\"count\">%(counter)s</span> Badges\n"
-"            "
+msgid "<span class=\"count\">1</span> Badge"
+msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] ""
 msgstr[1] ""
 

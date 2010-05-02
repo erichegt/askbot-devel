@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load extra_tags %}
 {% load humanize %}
-{% block title %}{% spaceless %}{{ badge.name }} - {% trans "Badge" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans badge.name %} - {% trans "Badge" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
         $().ready(function(){
@@ -18,7 +18,7 @@
 </div>
 <div id="main-body" style="width:100%;margin-bottom:20px">
     <p>
-        <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {{ badge.description }}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{{ badge.name }}</a> {{ badge.description }}
+        <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {% trans badge.description %}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans badge.name %}</a> {% trans badge.description %}
     </p>
     <div>
         {% if badge.awarded_count %}

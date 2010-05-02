@@ -8,24 +8,12 @@
 	
         <a name="questions"></a>
         {% spaceless %}
-            <h2>
-                {% blocktrans count questions|length as counter %}
-                <span class="count">1</span> Question
-                {% plural %}
-                <span class="count">{{counter}}</span> Questions
-                {% endblocktrans %}
-            </h2>
+            <h2>{% blocktrans count questions|length as counter %}<span class="count">1</span> Question{% plural %}<span class="count">{{counter}}</span> Questions{% endblocktrans %}</h2>
         {% endspaceless %}
 		{% include "users_questions.html" %}
         <a name="answers"></a>
         {% spaceless %}
-            <h2>
-                {% blocktrans count answered_questions|length as counter %}
-                <span class="count">1</span> Answer
-                {% plural %}
-                <span class="count">{{counter}}</span> Answers
-                {% endblocktrans %}
-            </h2>
+            <h2>{% blocktrans count answered_questions|length as counter %}<span class="count">1</span> Answer{% plural %}<span class="count">{{counter}}</span> Answers{% endblocktrans %}</h2>
         {% endspaceless %}
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}
@@ -53,13 +41,7 @@
         <br/>
         <a name="votes"></a>
         {% spaceless %}
-            <h2>
-                {% blocktrans count total_votes as cnt %}
-                    <span class="count">1</span> Vote
-                {% plural %}
-                    <span class="count">{{cnt}}</span> Votes
-                {% endblocktrans %}
-            </h2>
+            <h2>{% blocktrans count total_votes as cnt %}<span class="count">1</span> Vote{% plural %}<span class="count">{{cnt}}</span> Votes {% endblocktrans %}</h2>
         {% endspaceless %}
         <div class="user-stats-table">
             <table>
@@ -79,9 +61,7 @@
         </div>
         <a name="tags"></a>
         {% spaceless %}
-            <h2>
-                {% blocktrans count user_tags|length as counter %}<span class="count">1</span> Tag{% plural %}<span class="count">{{counter}}</span> Tags{% endblocktrans %}
-            </h2>
+            <h2>{% blocktrans count user_tags|length as counter %}<span class="count">1</span> Tag{% plural %}<span class="count">{{counter}}</span> Tags{% endblocktrans %}</h2>
         {% endspaceless %}
         <div class="user-stats-table">
             <table class="tags">
@@ -103,20 +83,14 @@
         </div>
         <a name="badges"></a>
         {% spaceless %}
-        <h2>
-            {% blocktrans count total_awards as counter %}
-            <span class="count">1</span> Badge
-            {% plural %}
-            <span class="count">{{counter}}</span> Badges
-            {% endblocktrans %}
-        </h2>
+        <h2>{% blocktrans count total_awards as counter %}<span class="count">1</span> Badge{% plural %}<span class="count">{{counter}}</span> Badges{% endblocktrans %}</h2>
         {% endspaceless %}
         <div class="user-stats-table">
             <table>
                 <tr>
                     <td width="180" style="line-height:35px">
-                        {% for award in awards %}
-                            <a href="{% url badges %}{{award.id}}/{{award.name}}" title="{{ award.description }}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{{ award.name }}</a><span class="tag-number"> &#215; {{ award.count|intcomma }}</span><br/>
+                        {% for award in awards %}{% comment %}todo: translate badge name properly{% endcomment %}
+                            <a href="{% url badge award.id %}{{award.name}}" title="{% trans award.description %}" class="medal"><span class="badge{{ award.type }}">&#9679;</span>&nbsp;{% trans award.name %}</a><span class="tag-number"> &#215; {{ award.count|intcomma }}</span><br/>
                             {% if forloop.counter|divisibleby:"6" %}
                                 </td>
                                 <td width="180" style="line-height:35px">

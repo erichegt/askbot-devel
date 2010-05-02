@@ -33,7 +33,7 @@ urlpatterns = patterns('django_authopenid.views',
     url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', name='user_confirmchangepw'),
 
     # manage account settings
-    url(r'^$', _('account_settings'), name='user_account_settings'),
+    url(r'^$', 'account_settings', name='user_account_settings'),
     url(r'^%s$' % _('password/'), 'changepw', name='user_changepw'),
     url(r'^%s%s$' % (_('email/'),_('validate/')), 'changeemail', name='user_validateemail',kwargs = {'action':'validate'}),
     url(r'^%s%s$' % (_('email/'), _('change/')), 'changeemail', name='user_changeemail'),
