@@ -18,11 +18,7 @@
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
         $().ready(function(){
-            {% ifequal view_user request.user%}
-                $("#nav_profile").attr('className',"on");
-            {% else %}
-                $("#nav_users").attr('className',"on");
-            {% endifequal %}
+            $("#nav_users").attr('className',"on");
         }); 
     </script>
     {% block userjs %}

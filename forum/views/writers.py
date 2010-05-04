@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.template import RequestContext
-from django.utils.html import *
+from django.utils.html import * #todo: remove import * in favor of explicit imports
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -91,7 +91,7 @@ def ask(request):#view used to ask a new question
 
             added_at = datetime.datetime.now()
             #todo: move this to clean_title
-            title = strip_tags(form.cleaned_data['title'].strip())
+            title = form.cleaned_data['title'].strip()
             wiki = form.cleaned_data['wiki']
             #todo: move this to clean_tagnames
             tagnames = form.cleaned_data['tags'].strip()
@@ -131,11 +131,14 @@ def ask(request):#view used to ask a new question
                 question.save()
                 return HttpResponseRedirect(reverse('user_signin_new_question'))
     else:
+        #this branch is for the initial load of ask form
         form = AskForm()
         if 'title' in request.GET:
-            raw_title = request.GET['title']
-            form.initial['title'] = strip_tags(strip_entities(raw_title))
+            #normally this title is inherited from search query
+            #but it is possible to ask with a parameter title in the url query
+            form.initial['title'] = request.GET['title']
         else:
+            #attempt to extract title from previous search query
             search_state = request.session.get('search_state',None)
             if search_state:
                 query = search_state.query
@@ -180,6 +183,7 @@ def _retag_question(request, question):#non-url subview of edit question - just 
     else:
         form = RetagQuestionForm(question)
     return render_to_response('question_retag.html', {
+        'active_tab': 'questions',
         'question': question,
         'form' : form,
         'tags' : _get_tags_cache_json(),
@@ -222,6 +226,7 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
         revision_form = RevisionForm(question, latest_revision)
         form = EditQuestionForm(question, latest_revision)
     return render_to_response('question_edit.html', {
+        'active_tab': 'questions',
         'question': question,
         'revision_form': revision_form,
         'form' : form,
@@ -265,6 +270,7 @@ def edit_answer(request, id):
             revision_form = RevisionForm(answer, latest_revision)
             form = EditAnswerForm(answer, latest_revision)
         return render_to_response('answer_edit.html', {
+                                  'active_tab': 'questions',
                                   'answer': answer,
                                   'revision_form': revision_form,
                                   'form': form,

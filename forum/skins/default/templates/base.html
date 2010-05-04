@@ -38,6 +38,7 @@
         </script>
         {% endif %}
         {% if active_tab != "tags" and active_tab != "users" %}
+        {% comment %}start asking question with title from search query{% endcomment %}
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#nav_ask').click(
@@ -50,6 +51,7 @@
                 );
             });
         </script>
+        {% comment %}focus input on the search bar{% endcomment %}
         <script type="text/javascript">
             $(document).ready(function() {
                 {% if active_tab != "ask" %}
@@ -59,7 +61,6 @@
                 {% endif %}
             });
         </script>
-
         {% endif %}
         {% block forejs %}
         {% endblock %}
