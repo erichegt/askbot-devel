@@ -14,105 +14,177 @@ from models import mark_offensive, delete_post_or_answer
 from const import TYPE_REPUTATION
 import logging
 
-from livesettings import ConfigurationGroup, IntegerValue, config_register
-MINIMUM_REPUTATION_SETTINGS = ConfigurationGroup(
+from forum.settings import AskbotConfigGroup
+
+MIN_REP = AskbotConfigGroup(
                                 'MIN_REP', 
                                 _('Minimum reputation settings'), 
-                                ordering=0)
+                                ordering=0
+                            )
 
-MIN_REP_DATA = (
-    #(key, min_rep, description),
-    ('VOTE_UP', 15, _('Vote')),
-    ('FLAG_OFFENSIVE', 15, _('Flag offensive')),
-    #('POST_IMAGES', 15, _('Upload images')),#todo: looks like unused
-    ('LEAVE_COMMENTS', 50, _('Leave comments')),
-    ('UPLOAD_FILES', 60, _('Upload files')),
-    ('VOTE_DOWN', 100, _('Downvote')),
-    ('CLOSE_OWN_QUESTIONS', 250, _('Close own questions')),
-    ('RETAG_OTHER_QUESTIONS', 500, _('Retag questions posted by other people')),
-    ('REOPEN_OWN_QUESTIONS', 500, _('Reopen own questions')),
-    ('EDIT_COMMUNITY_WIKI_POSTS', 750, _('Edit community wiki posts')),
-    ('EDIT_OTHER_POSTS', 2000, _('Edit posts authored by other people')),
-    ('DELETE_COMMENTS', 2000, _('Delete comments')),
-    ('VIEW_OFFENSIVE_FLAGS', 2000, _('View offensive flags')),
-    ('DISABLE_URL_NOFOLLOW', 2000, _('Disable url nofollow')),
-    ('CLOSE_OTHER_QUESTIONS', 3000, _('Close questions asked by others')),
-    ('LOCK_POSTS', 4000, _('Lock posts')),
-)
+VOTE_UP = MIN_REP.new_int_setting('VOTE_UP', 15, _('Vote'))
 
-#rolled into eval block to save on typing an debugging
-python_format_string = '%(VAR_NAME)s = config_register(IntegerValue(%(SETTINGS_GROUP_KEY)s,\'%(VAR_NAME)s\', default = %(DEFAULT_VALUE)d,description = u\'%(VAR_DESCRIPTION)s\', ordering=%(ORDERING)d))\n'
-i = 0
-for item in MIN_REP_DATA:
-    name = item[0]
-    value = item[1]
-    description = item[2]
-    python_string = python_format_string \
-                % {
-                'SETTINGS_GROUP_KEY':'MINIMUM_REPUTATION_SETTINGS',
-                'VAR_NAME':name, 
-                'DEFAULT_VALUE':value, 
-                'VAR_DESCRIPTION':description, 
-                'ORDERING':i,
-                }
-    i += 1
-    exec(python_string)
+FLAG_OFFENSIVE = MIN_REP.new_int_setting('FLAG_OFFENSIVE', 15, _('Flag offensive'))
 
-VOTE_RULES_DATA = (
-    ('scope_votes_per_user_per_day', 30, _('Maximum votes per day')), # how many votes of one user has everyday
-    ('scope_flags_per_user_per_day', 5, _('Maximum flags per day')), # how many times user can flag posts everyday
-    ('scope_warn_votes_left', 5, _('How early to start warning about the vote per day limit')), # start when to warn user how many votes left
-    ('scope_deny_unvote_days', 1, _('Days to allow canceling votes')), # if 1 days passed, user can't cancel votes.
-    ('scope_flags_invisible_main_page', 3, _('Number of flags to hide post')), # post doesn't show on main page if has more than 3 offensive flags
-    ('scope_flags_delete_post', 5, _('Number of flags to delete post')),# post will be deleted if it has more than 5 offensive flags
-)
+LEAVE_COMMENTS = MIN_REP.new_int_setting('LEAVE_COMMENTS', 50, _('Leave comments'))
 
-VOTE_RULE_SETTINGS = ConfigurationGroup(
+UPLOAD_FILES = MIN_REP.new_int_setting('UPLOAD_FILES', 0, _('Upload files'))
+
+VOTE_DOWN = MIN_REP.new_int_setting('VOTE_DOWN', 0, _('Downvote'))
+
+CLOSE_OWN_QUESTIONS = MIN_REP.new_int_setting('CLOSE_OWN_QUESTIONS', 0, _('Close own questions'))
+
+RETAG_OTHER_QUESTIONS = MIN_REP.new_int_setting('RETAG_OTHER_QUESTIONS', 0, _('Retag questions posted by other people'))
+
+REOPEN_OWN_QUESTIONS = MIN_REP.new_int_setting('REOPEN_OWN_QUESTIONS', 0, _('Reopen own questions'))
+
+EDIT_COMMUNITY_WIKI_POSTS = MIN_REP.new_int_setting('EDIT_COMMUNITY_WIKI_POSTS', 0, _('Edit community wiki posts'))
+
+EDIT_OTHER_POSTS = MIN_REP.new_int_setting('EDIT_OTHER_POSTS', 0, _('Edit posts authored by other people'))
+
+DELETE_COMMENTS = MIN_REP.new_int_setting('DELETE_COMMENTS', 0, _('Delete comments'))
+
+VIEW_OFFENSIVE_FLAGS = MIN_REP.new_int_setting('VIEW_OFFENSIVE_FLAGS', 0, _('View offensive flags'))
+
+DISABLE_URL_NOFOLLOW = MIN_REP.new_int_setting('DISABLE_URL_NOFOLLOW', 0, _('Disable url nofollow'))
+
+CLOSE_OTHER_QUESTIONS = MIN_REP.new_int_setting('CLOSE_OTHER_QUESTIONS', 0, _('Close questions asked by others'))
+
+LOCK_POSTS = MIN_REP.new_int_setting('LOCK_POSTS', 0, _('Lock posts'))
+
+VOTE_RULE_SETTINGS = AskbotConfigGroup(
                                 'VOTE_RULES', 
                                 _('Vote and flag rules'), 
-                                ordering=0)
+                                ordering=1)
 
-i = 0
-for item in VOTE_RULES_DATA:
-    name = item[0]
-    value = item[1]
-    description = item[2]
-    python_string = python_format_string \
-                % {
-                'SETTINGS_GROUP_KEY':'VOTE_RULE_SETTINGS',
-                'VAR_NAME':name, 
-                'DEFAULT_VALUE':value, 
-                'VAR_DESCRIPTION':description, 
-                'ORDERING':i,
-                }
-    i += 1
-    exec(python_string)
+scope_votes_per_user_per_day = VOTE_RULE_SETTINGS.new_int_setting('scope_votes_per_user_per_day', 0, _('Maximum votes per day'))
+scope_flags_per_user_per_day = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_per_user_per_day', 5, _('Maximum flags per day'))
+scope_warn_votes_left = VOTE_RULE_SETTINGS.new_int_setting('scope_warn_votes_left', 5, _('How early to start warning about the vote per day limit'))
+scope_deny_unvote_days = VOTE_RULE_SETTINGS.new_int_setting('scope_deny_unvote_days', 1, _('Days to allow canceling votes'))
+scope_flags_invisible_main_page = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_invisible_main_page', 3, _('Number of flags to hide post'))
+scope_flags_delete_post = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_delete_post', 5, _('Number of flags to delete post'))
 
 VOTE_RULES = {
-    'scope_votes_per_user_per_day' : scope_votes_per_user_per_day, # how many votes of one user has everyday
-    'scope_flags_per_user_per_day' : scope_flags_per_user_per_day,  # how many times user can flag posts everyday
-    'scope_warn_votes_left' : scope_warn_votes_left, # start when to warn user how many votes left
-    'scope_deny_unvote_days' : scope_deny_unvote_days, # if 1 days passed, user can't cancel votes.
-    'scope_flags_invisible_main_page' : scope_flags_invisible_main_page, # post doesn't show on main page if has more than 3 offensive flags
-    'scope_flags_delete_post' : scope_flags_delete_post, # post will be deleted if it has more than 5 offensive flags
+    'scope_votes_per_user_per_day' : scope_votes_per_user_per_day,
+    'scope_flags_per_user_per_day' : scope_flags_per_user_per_day,
+    'scope_warn_votes_left' : scope_warn_votes_left,
+    'scope_deny_unvote_days' : scope_deny_unvote_days,
+    'scope_flags_invisible_main_page' : scope_flags_invisible_main_page,
+    'scope_flags_delete_post' : scope_flags_delete_post,
 }
 
+REP_RULE_SETTINGS = AskbotConfigGroup(
+                                    'REP_RULES',
+                                    _('Reputaion loss and gain rules'),
+                                    ordering=2
+                                )
+
+initial_score = REP_RULE_SETTINGS.new_int_setting(
+                                            'initial_score', 
+                                            1, 
+                                            _('Initial reputation')
+                                        )
+
+scope_per_day_by_upvotes = REP_RULE_SETTINGS.new_int_setting(
+                                            'scope_per_day_by_upvotes', 
+                                            0, 
+                                            _('Maximum gain per day')
+                                        )
+
+gain_by_upvoted = REP_RULE_SETTINGS.new_int_setting(
+                                            'GAIN_by_upvoted', 
+                                            0, 
+                                            _('Gain for an upvote')
+                                        )
+
+gain_by_answer_accepted = REP_RULE_SETTINGS.new_int_setting(
+                                            'gain_by_answer_accepted', 
+                                            5, 
+                                            _('Gain for answer owner when answer is accepted')
+                                        )
+
+gain_by_accepting_answer = REP_RULE_SETTINGS.new_int_setting(
+                                            'gain_by_accepting_answer', 
+                                            2, 
+                                            _('Gain for user who is accepting an answer')
+                                        )
+
+gain_by_downvote_canceled = REP_RULE_SETTINGS.new_int_setting(
+                                            'gain_by_downvote_canceled', 
+                                            2, 
+                                            _('Gain for post owner on canceled downvote')
+                                        )
+
+gain_by_canceling_downvote = REP_RULE_SETTINGS.new_int_setting(
+                                            'gain_by_canceling_downvote', 
+                                            1, 
+                                            _('Gain for voter canceling downvote')
+                                        )
+
+lose_by_canceling_accepted_answer = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_canceling_accepted_answer', 
+                                            2, 
+                                            _('Loss for voter by canceling accepted answer')
+                                        )
+
+lose_by_accepted_answer_cancled = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_accepted_answer_cancled', 
+                                            5, 
+                                            _('Loss for post owner when best answer selection is canceled')
+                                        )
+
+lose_by_downvoted = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_downvoted', 
+                                            2, 
+                                            _('Loss for voter for a downvote')
+                                        )
+
+lose_by_flagged = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_flagged', 
+                                            2, 
+                                            _('Loss for post owner when post is flagged offensive')
+                                        )
+
+lose_by_downvoting = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_downvoting', 
+                                            1, 
+                                            _('Loss for post owner when it is downvoted')
+                                        )
+
+lose_by_flagged_lastrevision_3_times = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_flagged_lastrevision_3_times', 
+                                            0, 
+                                            _('Loss for post owner when last revision is flagged 3 times')
+                                        )
+
+lose_by_flagged_lastrevision_5_times = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_flagged_lastrevision_5_times', 
+                                            0, 
+                                            _('Loss for post owner when last revision is flagged 5 times')
+                                        )
+
+lose_by_upvote_canceled = REP_RULE_SETTINGS.new_int_setting(
+                                            'lose_by_upvote_canceled',
+                                            0, 
+                                            _('Loss for post owner when upvote is canceled')
+                                        )
+
 REPUTATION_RULES = {
-    'initial_score'                       : 1,
-    'scope_per_day_by_upvotes'            : 200,
-    'gain_by_upvoted'                     : 10,
-    'gain_by_answer_accepted'             : 15,
-    'gain_by_accepting_answer'            : 2,
-    'gain_by_downvote_canceled'           : 2,
-    'gain_by_canceling_downvote'          : 1,
-    'lose_by_canceling_accepted_answer'   : -2,
-    'lose_by_accepted_answer_cancled'     : -15,
-    'lose_by_downvoted'                   : -2,
-    'lose_by_flagged'                     : -2,
-    'lose_by_downvoting'                  : -1,
-    'lose_by_flagged_lastrevision_3_times': -30,
-    'lose_by_flagged_lastrevision_5_times': -100,
-    'lose_by_upvote_canceled'             : -10,
+    'initial_score':initial_score,
+    'scope_per_day_by_upvotes':scope_per_day_by_upvotes,
+    'gain_by_upvoted':gain_by_upvoted,
+    'gain_by_answer_accepted':gain_by_answer_accepted,
+    'gain_by_accepting_answer':gain_by_accepting_answer,
+    'gain_by_downvote_canceled':gain_by_downvote_canceled,
+    'gain_by_canceling_downvote':gain_by_canceling_downvote,
+    'lose_by_canceling_accepted_answer':lose_by_canceling_accepted_answer,
+    'lose_by_accepted_answer_cancled':lose_by_accepted_answer_cancled,
+    'lose_by_downvoted':lose_by_downvoted,
+    'lose_by_flagged':lose_by_flagged,
+    'lose_by_downvoting':lose_by_downvoting,
+    'lose_by_flagged_lastrevision_3_times':lose_by_flagged_lastrevision_3_times,
+    'lose_by_flagged_lastrevision_5_times':lose_by_flagged_lastrevision_5_times,
+    'lose_by_upvote_canceled':lose_by_upvote_canceled,
 }
 
 def can_moderate_users(user):

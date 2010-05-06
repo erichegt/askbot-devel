@@ -1,4 +1,5 @@
 import os
+from livesettings import ConfigurationGroup, IntegerValue, config_register
 
 INSTALLED_APPS = ['forum']
 
@@ -30,7 +31,7 @@ TEMPLATE_DIRS = [
     os.path.join(os.path.dirname(__file__),'skins').replace('\\','/'),
 ]
 
-def setup_settings(settings):
+def setup_django_settings(settings):
 
     if (hasattr(settings, 'DEBUG') and getattr(settings, 'DEBUG')):
         try:
@@ -46,3 +47,20 @@ def setup_settings(settings):
     settings.TEMPLATE_LOADERS = set(settings.TEMPLATE_LOADERS) | set(TEMPLATE_LOADERS)
     settings.TEMPLATE_CONTEXT_PROCESSORS = set(settings.TEMPLATE_CONTEXT_PROCESSORS) | set(TEMPLATE_CONTEXT_PROCESSORS)
     settings.TEMPLATE_DIRS = set(settings.TEMPLATE_DIRS) | set(TEMPLATE_DIRS)
+
+
+class AskbotConfigGroup(ConfigurationGroup):
+    def __init__(self, key, name, *arg, **kwarg):
+        super(AskbotConfigGroup, self).__init__(key, name, *arg,**kwarg)
+        self.item_count = 0
+    def new_int_setting(self, key, value, description):
+        self.item_count += 1
+        setting = config_register(IntegerValue(
+                                        self,
+                                        key,
+                                        default=value,
+                                        description=description,
+                                        ordering=self.item_count
+                                        )
+                                )
+        return setting
