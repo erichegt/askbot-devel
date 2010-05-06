@@ -11,3 +11,8 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^settings/', include('livesettings.urls')),
 )
+
+if 'rosetta' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+                    url(r'^rosetta/', include('rosetta.urls')),
+                )

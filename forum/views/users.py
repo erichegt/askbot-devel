@@ -102,6 +102,7 @@ def moderate_user(request, id):
         response = HttpResponseForbidden(mimetype="application/json")
     return response
 
+#non-view function
 def set_new_email(user, new_email, nomessage=False):
     if new_email != user.email:
         user.email = new_email
@@ -142,6 +143,7 @@ def edit_user(request, id):
     else:
         form = EditUserForm(user)
     return render_to_response('user_edit.html', {
+                                                'active_tab': 'users',
                                                 'form' : form,
                                                 'gravatar_faq_url' : reverse('faq') + '#gravatar',
                                     }, context_instance=RequestContext(request))
@@ -268,6 +270,7 @@ def user_stats(request, user_id, user_view):
         moderate_user_form = None
 
     return render_to_response(user_view.template_file,{
+                                'active_tab':'users',
                                 'moderate_user_form': moderate_user_form,
                                 "tab_name" : user_view.id,
                                 "tab_description" : user_view.tab_description,
@@ -533,6 +536,7 @@ def user_recent(request, user_id, user_view):
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
     return render_to_response(user_view.template_file,{
+                                    'active_tab':'users',
                                     "tab_name" : user_view.id,
                                     "tab_description" : user_view.tab_description,
                                     "page_title" : user_view.page_title,
@@ -686,6 +690,7 @@ def user_responses(request, user_id, user_view):
     responses.sort(lambda x,y: cmp(y.time, x.time))
 
     return render_to_response(user_view.template_file,{
+        'active_tab':'users',
         "tab_name" : user_view.id,
         "tab_description" : user_view.tab_description,
         "page_title" : user_view.page_title,
@@ -748,6 +753,7 @@ def user_votes(request, user_id, user_view):
         votes.extend(answer_votes)
     votes.sort(lambda x,y: cmp(y['voted_at'], x['voted_at']))
     return render_to_response(user_view.template_file,{
+        'active_tab':'users',
         "tab_name" : user_view.id,
         "tab_description" : user_view.tab_description,
         "page_title" : user_view.page_title,
@@ -788,6 +794,7 @@ def user_reputation(request, user_id, user_view):
     reps = '[%s]' % reps
 
     return render_to_response(user_view.template_file, {
+                              'active_tab':'users',
                               "tab_name": user_view.id,
                               "tab_description": user_view.tab_description,
                               "page_title": user_view.page_title,
@@ -839,6 +846,7 @@ def user_favorites(request, user_id, user_view):
              'la_user_bronze',
              'la_user_reputation')
     return render_to_response(user_view.template_file,{
+        'active_tab':'users',
         "tab_name" : user_view.id,
         "tab_description" : user_view.tab_description,
         "page_title" : user_view.page_title,
@@ -873,6 +881,7 @@ def user_email_subscriptions(request, user_id, user_view):
         tag_filter_form = TagFilterSelectionForm(instance=user)
         action_status = None
     return render_to_response(user_view.template_file,{
+        'active_tab':'users',
         'tab_name':user_view.id,
         'tab_description':user_view.tab_description,
         'page_title':user_view.page_title,
@@ -963,7 +972,7 @@ def user(request, id, slug=None):
     return func(request, id, user_view)
 
 @login_required
-def account_settings(request):
+def account_settings(request):#todo: is this actually used?
     """
     index pages to changes some basic account settings :
      - change password
@@ -980,6 +989,7 @@ def account_settings(request):
     is_openid = False
 
     return render_to_response('account_settings.html', {
+        'active_tab':'users',
         'msg': msg,
         'is_openid': is_openid
         }, context_instance=RequestContext(request))

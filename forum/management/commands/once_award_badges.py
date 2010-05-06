@@ -144,22 +144,10 @@ class Command(BaseCommand):
                     new_award.save()
 
     def first_type_award(self):
-        """
-        This will award below badges for users first behaviors:
 
-        (7, '巡逻兵', 3, '巡逻兵', '第一次标记垃圾帖子', 0, 0),
-        (8, '清洁工', 3, '清洁工', '第一次撤销投票', 0, 0),
-        (9, '批评家', 3, '批评家', '第一次反对票', 0, 0),
-        (10, '小编', 3, '小编', '第一次编辑更新', 0, 0),
-        (11, '村长', 3, '村长', '第一次重新标签', 0, 0),
-        (12, '学者', 3, '学者', '第一次标记答案', 0, 0),
-        (14, '支持者', 3, '支持者', '第一次赞成票', 0, 0),
-        (16, '自传作者', 3, '自传作者', '完整填写用户资料所有选项', 0, 0),
-        """
         activity_types = ','.join('%s' % item for item in BADGE_AWARD_TYPE_FIRST.keys())
         # ORDER BY user_id, activity_type
         query = "SELECT id, user_id, activity_type, content_type_id, object_id FROM activity WHERE is_auditted = 0 AND activity_type IN (%s) ORDER BY user_id, activity_type" % activity_types
-
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -203,8 +191,6 @@ class Command(BaseCommand):
     def first_ask_be_voted(self):
         """
         For user asked question and got first upvote, we award him following badge:
-
-        (13, '学生', 3, '学生', '第一次提问并且有一次以上赞成票', 0, 0),
         """
         query = "SELECT act.user_id, q.vote_up_count, act.object_id FROM " \
                     "activity act, question q WHERE act.activity_type = %s AND " \

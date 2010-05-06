@@ -77,7 +77,7 @@ class TagNamesField(forms.CharField):
                 #singular form is odd in english, but required for pluralization
                 #in other languages
                 msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
-                                'each tag must be shorter than %(max_shars)d characters',
+                                'each tag must be shorter than %(max_chars)d characters',
                                 tag_length) % {'max_chars':tag_length}
                 raise forms.ValidationError(msg)
 

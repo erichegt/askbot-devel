@@ -6,11 +6,7 @@
     {% if wiki %}
         <p>{% trans "community wiki" %}</p>
         <p>
-            {% blocktrans count post.revisions.all|length as rev_count %}
-                one revision
-            {% plural %}
-                {{rev_count}} revisions
-            {% endblocktrans %}
+            {% blocktrans count post.revisions.all|length as rev_count %}one revision{% plural %}{{rev_count}} revisions{% endblocktrans %}
         </p>
         <p>{{post.author.get_profile_link}}</p>
     {% else %}

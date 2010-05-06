@@ -1,9 +1,9 @@
-{% extends "base_content.html" %}
+{% extends "base.html" %}
 <!-- template badge.html -->
 {% load i18n %}
 {% load extra_tags %}
 {% load humanize %}
-{% block title %}{% spaceless %}{{ badge.name }} - {% trans "Badge" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans badge.name %} - {% trans "Badge" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
         $().ready(function(){
@@ -18,12 +18,12 @@
 </div>
 <div id="main-body" style="width:100%;margin-bottom:20px">
     <p>
-        <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {{ badge.description }}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{{ badge.name }}</a> {{ badge.description }}
+        <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {% trans badge.description %}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans badge.name %}</a> {% trans badge.description %}
     </p>
     <div>
         {% if badge.awarded_count %}
         <p style="float:left"><span class="count">{{ awards|length|intcomma }}</span>
-        <strong>{% trans "The users have been awarded with badges:" %}</strong></p>
+        <strong>{% blocktrans count awards|length as num_awardees %}user received this badge:{% plural %}users received this badge:{% endblocktrans %}</strong></p>
         {% endif %}
     </div>
     <div id="award-list" style="clear:both;margin-left:20px;line-height:25px;">

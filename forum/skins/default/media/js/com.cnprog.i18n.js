@@ -1,5 +1,4 @@
-﻿
-//var i18nLang;
+﻿//var i18nLang;
 var i18nZh = {
 	'insufficient privilege':'用户权限不在操作范围',
 	'cannot pick own answer as best':'不能设置自己的回答为最佳答案',
@@ -90,6 +89,69 @@ var i18nEn = {
 	'>100 points required to downvote':'>100 points required to downvote '
 };
 
+var i18nTr = {
+	'insufficient privilege':'buna yetkiniz yoktur',
+	'cannot pick own answer as best':'en cevap olarak kendi cevabınızı seçemezsiniz',
+	'anonymous users cannot select favorite questions':'üye girişi yapmadan favori seçemezsiniz',
+	'please login':'lütfen üye girişi yapınız',
+	'anonymous users cannot vote':'üye girişi yapmadan oy kullanamazsınız',
+	'>15 points requried to upvote': 'beğeninizi göstermek için en az 15 puan toplamalısınız',
+	'>100 points required to downvote':'beğenmediğinizi göstermek için en az 100 puan toplamalısınız',
+	'please see': 'lütfen bakın',
+	'cannot vote for own posts':'kendi yazılarınıza oy veremezsiniz',
+	'daily vote cap exhausted':'bugünlük oy verme kotanız doldu',
+	'cannot revoke old vote':'verilen bir oyu iptal edemezsiniz',
+	'please confirm offensive':"şikayetinizi onaylayın",
+	'anonymous users cannot flag offensive posts':'üye girişi yapmadan şikayet gönderemezsiniz',
+	'cannot flag message as offensive twice':'şikayet mesajı olarak iki kez işaretlemelisiniz',
+	'flag offensive cap exhausted':'şikayet kotası aşıldı',
+	'need >15 points to report spam':"spam olarak bildirmek için an az 15 puanınız olmalı",
+	'confirm delete':"Bunu silmek istediğinizden emin misiniz?",
+	'anonymous users cannot delete/undelete':"üye girişi yapmadan yazı silemez yada geri alamazsınız",
+	'post recovered':"yazı geri alındı",
+	'post deleted':"yazı silindi",
+	'add comment':'yorum ekle',
+	'community karma points':'site itibar puanları',
+	'to comment, need':'Yorum için itibar puanınız olmalı',
+	'delete this comment':'bu yorumu sil',
+	'hide comments':"yorumları gizle",
+	'add a comment':"yorum ekle",
+	'comments':"yorumlar",
+	'confirm delete comment':"yorumu silmek istediğinizden emin misiniz?",
+	'characters':'karakter eksik',
+	'can write':'yazılabilir ',
+	'click to close':'kapatmak için tıklayın',
+	'loading...':'yükleniyor...',
+	'tags cannot be empty':'etiketler boş olamaz',
+	'tablimits info':"En fazla 5 etiket ve her biri en fazla 20 karakter",
+	'content cannot be empty':'içerik boş olamaz',
+	'content minchars': 'Lütfen en az (0) karakter girin',
+	'please enter title':'lütfen bir başlık yazın',
+	'title minchars':"Lütfen en az (0) karakter girin",
+	'delete':'sil',
+	'undelete':	'geri al',
+	'bold': 'kalın',
+	'italic':'italik',
+	'link':'link',
+	'quote':'alıntı',
+	'preformatted text':'hazır metin',
+	'image':'resimler',
+	'numbered list':'numaralı liste',
+	'bulleted list':'işaretli liste',
+	'heading':'Başlık',
+	'horizontal bar':'yatay bar',
+	'undo':'geri',
+	'redo':'yeniden',
+	'enter image url':'örnek resmin URLsini girin： <br />http://www.example.com/image.jpg   \"resim başlığı\"',
+	'enter url':'web adresini girin： <br />http://www.cnprog.com/   \"başlık bağlantısı\"</p>"',
+	'upload image':'resim yükle：',
+	'questions/' : 'sorular/',
+	'answers/' : 'cevaplar/',
+	'comments/' : 'yorumlar/',
+	'vote/' : 'oy/',
+	'delete/' : 'sil/'
+};
+
 var i18nEs = {
 	'insufficient privilege':'privilegio insuficiente',
 	'cannot pick own answer as best':'no puede escoger su propia respuesta como la mejor',
@@ -154,9 +216,10 @@ var i18nEs = {
 };
 
 var i18n = {
-	'en':i18nEn,
-	'zh_CN':i18nZh,
-	'es':i18nEs
+    'en':i18nEn,
+    'zh-cn':i18nZh,
+    'es':i18nEs,
+	'tr':i18nTr
 };
 
 var i18n_dict = i18n[i18nLang];

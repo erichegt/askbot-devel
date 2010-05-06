@@ -134,6 +134,8 @@ def questions(request):#a view generating listing of questions, used by 'unanswe
 
     #todo: organize variables by type
     return render_to_response('questions.html', {
+        'view_name': 'questions',
+        'active_tab': 'questions',
         'questions' : questions,
         'contributors' : contributors,
         'author_name' : meta_data.get('author_name',None),
@@ -182,6 +184,8 @@ def search(request): #generates listing of questions matching a search query - i
     else:
         raise Http404
 
+#todo: eliminate this - need to go through templates to make sure 
+#that there are no urls pointing here
 def tag(request, tag):#stub generates listing of questions tagged with a single tag
     return questions(request, tagname=tag)
 
@@ -210,6 +214,7 @@ def tags(request):#view showing a listing of available tags - plain list
         tags = objects_list.page(objects_list.num_pages)
 
     return render_to_response('tags.html', {
+                                            "view_name":"tags",
                                             "active_tab": "tags",
                                             "tags" : tags,
                                             "stag" : stag,
@@ -341,17 +346,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
         question_view.save()
 
     return render_to_response('question.html', {
-        "question" : question,
-        "question_vote" : question_vote,
-        "question_comment_count":question.comments.count(),
-        "answer" : answer_form,
-        "answers" : page_objects.object_list,
-        "user_answer_votes": user_answer_votes,
-        "tags" : question.tags.all(),
-        "tab_id" : view_id,
-        "favorited" : favorited,
-        "similar_questions" : Question.objects.get_similar_questions(question),
-        "context" : {
+        'view_name': 'question',
+        'active_tab': 'questions',
+        'question' : question,
+        'question_vote' : question_vote,
+        'question_comment_count':question.comments.count(),
+        'answer' : answer_form,
+        'answers' : page_objects.object_list,
+        'user_answer_votes': user_answer_votes,
+        'tags' : question.tags.all(),
+        'tab_id' : view_id,
+        'favorited' : favorited,
+        'similar_questions' : Question.objects.get_similar_questions(question),
+        'context' : {
             'is_paginated' : True,
             'pages': objects_list.num_pages,
             'page': page,
@@ -389,6 +396,8 @@ def question_revisions(request, id):
             }
             revisions[i].summary = _('initial version') 
     return render_to_response('revisions_question.html', {
+                              'view_name':'question_revisions',
+                              'active_tab':'questions',
                               'post': post,
                               'revisions': revisions,
                               }, context_instance=RequestContext(request))
@@ -408,6 +417,8 @@ def answer_revisions(request, id):
             revisions[i].diff = revisions[i].text
             revisions[i].summary = _('initial version')
     return render_to_response('revisions_answer.html', {
+                              'view_name':'answer_revisions',
+                              'active_tab':'questions',
                               'post': post,
                               'revisions': revisions,
                               }, context_instance=RequestContext(request))

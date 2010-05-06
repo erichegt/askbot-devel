@@ -796,6 +796,8 @@ blockquote {
 }
 
 /*标签*/
+/* todo: probably needs to be removed
+conflicts with WMD!
 .tag {
     font-size: 13px;
     font-weight: normal;
@@ -808,6 +810,7 @@ blockquote {
     border-right: 1px solid #CCC;
     padding: 1px 8px 1px 8px;
 }
+*/
 
 .tags {
     font-family: sans-serif;
