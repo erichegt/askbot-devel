@@ -16,6 +16,59 @@ import logging
 
 from forum.settings import AskbotConfigGroup
 
+from livesettings import BASE_GROUP, IntegerValue, IntegerValue, config_register
+from livesettings.values import SortedDotDict
+
+#todo: move this to forum.conf
+class ConfigSettings(object):
+    """A very simple Singleton wrapper for settings
+    a limitation is that all settings names using this class
+    must be distinct, even though they might belong
+    to different settings groups
+    """
+    __instance = None
+
+    def __init__(self):
+        """assigns SortedDotDict to self.__instance if not set"""
+        if ConfigSettings.__instance == None:
+            ConfigSettings.__instance = SortedDotDict()
+        self.__dict__['_ConfigSettings__instance'] = ConfigSettings.__instance
+
+    def __getattr__(self,key):
+        """value lookup returns the actual value of setting
+        not the object - this way only very minimal modifications
+        will be required in code to convert an app
+        depending on django.conf.settings to livesettings
+        """
+        return getattr(self.__instance, key).value
+
+    def __setattr__(self, attr, value):
+        """ settings crutch is read-only in the program """
+        raise Exception('ConfigSettings cannot be changed programmatically')
+
+    def register(self, value):
+        """registers the setting
+        value must be a subclass of livesettings.Value
+        """
+        key = value.key
+        if key in self.__instance:
+            raise Exception('setting %s is already registered' % key)
+        else:
+            self.__instance[key] = config_register(value)
+
+askbot_settings = ConfigSettings()
+
+askbot_settings.register(
+                        IntegerValue(
+                            BASE_GROUP,
+                            'JUNK_VALUE',
+                            default=5,
+                            description=_('Some trash value')
+                        )
+                    )
+
+print 'junk value is ', askbot_settings.JUNK_VALUE
+
 MIN_REP = AskbotConfigGroup(
                                 'MIN_REP', 
                                 _('Minimum reputation settings'), 
@@ -23,6 +76,8 @@ MIN_REP = AskbotConfigGroup(
                             )
 
 VOTE_UP = MIN_REP.new_int_setting('VOTE_UP', 15, _('Vote'))
+
+print 'VOTE_UP=',VOTE_UP.value
 
 FLAG_OFFENSIVE = MIN_REP.new_int_setting('FLAG_OFFENSIVE', 15, _('Flag offensive'))
 
