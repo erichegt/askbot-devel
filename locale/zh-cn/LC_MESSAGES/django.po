@@ -1,3 +1,8 @@
+# Original chinese localization of CNPROG package.
+# Copyright (C) 2009 Gang Chen
+# This file is distributed under the same license as the CNPROG package.
+# Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
