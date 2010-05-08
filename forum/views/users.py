@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from forum.models import user_updated
 from forum.const import USERS_PAGE_SIZE
 from django.conf import settings
+from forum.conf import settings as forum_settings
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
@@ -218,7 +219,7 @@ def user_stats(request, user_id, user_view):
     up_votes = Vote.objects.get_up_vote_count_from_user(user)
     down_votes = Vote.objects.get_down_vote_count_from_user(user)
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
-    votes_total = auth.VOTE_RULES['scope_votes_per_user_per_day'].value
+    votes_total = forum_settings.MAX_VOTES_PER_USER_PER_DAY
 
     question_id_set = set(map(lambda v: v['id'], list(questions))) \
                         | set(map(lambda v: v['id'], list(answered_questions)))

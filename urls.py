@@ -1,7 +1,8 @@
-from django.conf.urls.defaults import *
-from django.utils.translation import ugettext as _
+"""
+main url configuration file for the askbot site
+"""
+from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
-import livesettings
 
 from django.contrib import admin
 admin.autodiscover()

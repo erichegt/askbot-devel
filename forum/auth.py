@@ -14,119 +14,8 @@ from models import mark_offensive, delete_post_or_answer
 from const import TYPE_REPUTATION
 import logging
 
-from forum.settings import AskbotConfigGroup
-
-from livesettings import BASE_GROUP, IntegerValue, IntegerValue, config_register
-from livesettings.values import SortedDotDict
-
-#todo: move this to forum.conf
-class ConfigSettings(object):
-    """A very simple Singleton wrapper for settings
-    a limitation is that all settings names using this class
-    must be distinct, even though they might belong
-    to different settings groups
-    """
-    __instance = None
-
-    def __init__(self):
-        """assigns SortedDotDict to self.__instance if not set"""
-        if ConfigSettings.__instance == None:
-            ConfigSettings.__instance = SortedDotDict()
-        self.__dict__['_ConfigSettings__instance'] = ConfigSettings.__instance
-
-    def __getattr__(self,key):
-        """value lookup returns the actual value of setting
-        not the object - this way only very minimal modifications
-        will be required in code to convert an app
-        depending on django.conf.settings to livesettings
-        """
-        return getattr(self.__instance, key).value
-
-    def __setattr__(self, attr, value):
-        """ settings crutch is read-only in the program """
-        raise Exception('ConfigSettings cannot be changed programmatically')
-
-    def register(self, value):
-        """registers the setting
-        value must be a subclass of livesettings.Value
-        """
-        key = value.key
-        if key in self.__instance:
-            raise Exception('setting %s is already registered' % key)
-        else:
-            self.__instance[key] = config_register(value)
-
-askbot_settings = ConfigSettings()
-
-askbot_settings.register(
-                        IntegerValue(
-                            BASE_GROUP,
-                            'JUNK_VALUE',
-                            default=5,
-                            description=_('Some trash value')
-                        )
-                    )
-
-print 'junk value is ', askbot_settings.JUNK_VALUE
-
-MIN_REP = AskbotConfigGroup(
-                                'MIN_REP', 
-                                _('Minimum reputation settings'), 
-                                ordering=0
-                            )
-
-VOTE_UP = MIN_REP.new_int_setting('VOTE_UP', 15, _('Vote'))
-
-print 'VOTE_UP=',VOTE_UP.value
-
-FLAG_OFFENSIVE = MIN_REP.new_int_setting('FLAG_OFFENSIVE', 15, _('Flag offensive'))
-
-LEAVE_COMMENTS = MIN_REP.new_int_setting('LEAVE_COMMENTS', 50, _('Leave comments'))
-
-UPLOAD_FILES = MIN_REP.new_int_setting('UPLOAD_FILES', 0, _('Upload files'))
-
-VOTE_DOWN = MIN_REP.new_int_setting('VOTE_DOWN', 0, _('Downvote'))
-
-CLOSE_OWN_QUESTIONS = MIN_REP.new_int_setting('CLOSE_OWN_QUESTIONS', 0, _('Close own questions'))
-
-RETAG_OTHER_QUESTIONS = MIN_REP.new_int_setting('RETAG_OTHER_QUESTIONS', 0, _('Retag questions posted by other people'))
-
-REOPEN_OWN_QUESTIONS = MIN_REP.new_int_setting('REOPEN_OWN_QUESTIONS', 0, _('Reopen own questions'))
-
-EDIT_COMMUNITY_WIKI_POSTS = MIN_REP.new_int_setting('EDIT_COMMUNITY_WIKI_POSTS', 0, _('Edit community wiki posts'))
-
-EDIT_OTHER_POSTS = MIN_REP.new_int_setting('EDIT_OTHER_POSTS', 0, _('Edit posts authored by other people'))
-
-DELETE_COMMENTS = MIN_REP.new_int_setting('DELETE_COMMENTS', 0, _('Delete comments'))
-
-VIEW_OFFENSIVE_FLAGS = MIN_REP.new_int_setting('VIEW_OFFENSIVE_FLAGS', 0, _('View offensive flags'))
-
-DISABLE_URL_NOFOLLOW = MIN_REP.new_int_setting('DISABLE_URL_NOFOLLOW', 0, _('Disable url nofollow'))
-
-CLOSE_OTHER_QUESTIONS = MIN_REP.new_int_setting('CLOSE_OTHER_QUESTIONS', 0, _('Close questions asked by others'))
-
-LOCK_POSTS = MIN_REP.new_int_setting('LOCK_POSTS', 0, _('Lock posts'))
-
-VOTE_RULE_SETTINGS = AskbotConfigGroup(
-                                'VOTE_RULES', 
-                                _('Vote and flag rules'), 
-                                ordering=1)
-
-scope_votes_per_user_per_day = VOTE_RULE_SETTINGS.new_int_setting('scope_votes_per_user_per_day', 0, _('Maximum votes per day'))
-scope_flags_per_user_per_day = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_per_user_per_day', 5, _('Maximum flags per day'))
-scope_warn_votes_left = VOTE_RULE_SETTINGS.new_int_setting('scope_warn_votes_left', 5, _('How early to start warning about the vote per day limit'))
-scope_deny_unvote_days = VOTE_RULE_SETTINGS.new_int_setting('scope_deny_unvote_days', 1, _('Days to allow canceling votes'))
-scope_flags_invisible_main_page = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_invisible_main_page', 3, _('Number of flags to hide post'))
-scope_flags_delete_post = VOTE_RULE_SETTINGS.new_int_setting('scope_flags_delete_post', 5, _('Number of flags to delete post'))
-
-VOTE_RULES = {
-    'scope_votes_per_user_per_day' : scope_votes_per_user_per_day,
-    'scope_flags_per_user_per_day' : scope_flags_per_user_per_day,
-    'scope_warn_votes_left' : scope_warn_votes_left,
-    'scope_deny_unvote_days' : scope_deny_unvote_days,
-    'scope_flags_invisible_main_page' : scope_flags_invisible_main_page,
-    'scope_flags_delete_post' : scope_flags_delete_post,
-}
+from forum.conf import settings
+from forum.conf import AskbotConfigGroup
 
 REP_RULE_SETTINGS = AskbotConfigGroup(
                                     'REP_RULES',
@@ -248,13 +137,13 @@ def can_moderate_users(user):
 def can_vote_up(user):
     """Determines if a User can vote Questions and Answers up."""
     return user.is_authenticated() and (
-        user.reputation >= VOTE_UP.value or
+        user.reputation >= settings.MIN_REP_TO_VOTE_UP or
         user.is_superuser)
 
 def can_flag_offensive(user):
     """Determines if a User can flag Questions and Answers as offensive."""
     return user.is_authenticated() and (
-        user.reputation >= FLAG_OFFENSIVE.value or
+        user.reputation >= settings.MIN_REP_TO_FLAG_OFFENSIVE or
         user.is_superuser)
 
 def can_add_comments(user,subject):
@@ -262,7 +151,7 @@ def can_add_comments(user,subject):
     if user.is_authenticated():
         if user.id == subject.author.id:
             return True
-        if user.reputation >= LEAVE_COMMENTS.value:
+        if user.reputation >= settings.MIN_REP_TO_LEAVE_COMMENTS:
             return True
         if user.is_superuser:
             return True
@@ -273,53 +162,55 @@ def can_add_comments(user,subject):
 def can_vote_down(user):
     """Determines if a User can vote Questions and Answers down."""
     return user.is_authenticated() and (
-        user.reputation >= VOTE_DOWN.value or
+        user.reputation >= settings.MIN_REP_TO_VOTE_DOWN or
         user.is_superuser)
 
 def can_retag_questions(user):
     """Determines if a User can retag Questions."""
     return user.is_authenticated() and (
-        RETAG_OTHER_QUESTIONS.value <= user.reputation < EDIT_OTHER_POSTS.value or
+        settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
+        <= user.reputation 
+        < settings.MIN_REP_TO_EDIT_OTHERS_POSTS or
         user.is_superuser)
 
 def can_edit_post(user, post):
     """Determines if a User can edit the given Question or Answer."""
     return user.is_authenticated() and (
         user.id == post.author_id or
-        (post.wiki and user.reputation >= EDIT_COMMUNITY_WIKI_POSTS.value) or
-        user.reputation >= EDIT_OTHER_POSTS.value or
+        (post.wiki and user.reputation >= settings.MIN_REP_TO_EDIT_WIKI) or
+        user.reputation >= settings.MIN_REP_TO_EDIT_OTHERS_POSTS or
         user.is_superuser)
 
 def can_delete_comment(user, comment):
     """Determines if a User can delete the given Comment."""
     return user.is_authenticated() and (
         user.id == comment.user_id or
-        user.reputation >= DELETE_COMMENTS.value or
+        user.reputation >= settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS or
         user.is_superuser)
 
 def can_view_offensive_flags(user):
     """Determines if a User can view offensive flag counts."""
     return user.is_authenticated() and (
-        user.reputation >= VIEW_OFFENSIVE_FLAGS.value or
+        user.reputation >= settings.MIN_REP_TO_VIEW_OFFENSIVE_FLAGS or
         user.is_superuser)
 
 def can_close_question(user, question):
     """Determines if a User can close the given Question."""
     return user.is_authenticated() and (
         (user.id == question.author_id and
-         user.reputation >= CLOSE_OWN_QUESTIONS.value) or
-        user.reputation >= CLOSE_OTHER_QUESTIONS.value or
+         user.reputation >= settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS) or
+        user.reputation >= settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS or
         user.is_superuser)
 
 def can_lock_posts(user):
     """Determines if a User can lock Questions or Answers."""
     return user.is_authenticated() and (
-        user.reputation >= LOCK_POSTS.value or
+        user.reputation >= settings.MIN_REP_TO_LOCK_POSTS or
         user.is_superuser)
 
 def can_follow_url(user):
     """Determines if the URL link can be followed by Google search engine."""
-    return user.reputation >= DISABLE_URL_NOFOLLOW.value
+    return user.reputation >= settings.MIN_REP_TO_DISABLE_URL_NOFOLLOW
 
 def can_accept_answer(user, question, answer):
     return (user.is_authenticated() and
@@ -330,7 +221,7 @@ def can_accept_answer(user, question, answer):
 def can_reopen_question(user, question):
     return (user.is_authenticated() and
         user.id == question.author_id and
-        user.reputation >= REOPEN_OWN_QUESTIONS.value) or user.is_superuser
+        user.reputation >= settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS) or user.is_superuser
 
 def can_delete_post(user, post):
     if user.is_superuser:
@@ -366,7 +257,8 @@ def can_view_user_edit(request_user, target_user):
     return (request_user.is_authenticated() and request_user == target_user)
 
 def can_upload_files(request_user):
-    return (request_user.is_authenticated() and request_user.reputation >= UPLOAD_FILES.value) or \
+    return (request_user.is_authenticated() and 
+            request_user.reputation >= settings.MIN_REP_TO_UPLOAD_FILES) or \
            request_user.is_superuser
 
 ###########################################
@@ -404,7 +296,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
     reputation.save()
 
     #todo: These should be updated to work on same revisions.
-    if post.offensive_flag_count ==  VOTE_RULES['scope_flags_invisible_main_page'].value :
+    if post.offensive_flag_count ==  settings.MIN_FLAGS_TO_HIDE_POST:
         post.author.reputation = calculate_reputation(post.author.reputation,
                                int(REPUTATION_RULES['lose_by_flagged_lastrevision_3_times'].value))
         post.author.save()
@@ -417,7 +309,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
                    reputation=post.author.reputation)
         reputation.save()
 
-    elif post.offensive_flag_count == VOTE_RULES['scope_flags_delete_post'].value :
+    elif post.offensive_flag_count == settings.MIN_FLAGS_TO_DELETE_POST:
         post.author.reputation = calculate_reputation(post.author.reputation,
                                int(REPUTATION_RULES['lose_by_flagged_lastrevision_5_times'].value))
         post.author.save()

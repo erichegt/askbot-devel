@@ -1,5 +1,5 @@
 import os
-from livesettings import ConfigurationGroup, IntegerValue, config_register
+from livesettings import ConfigurationGroup, IntegerValue, config_register, SortedDotDict
 
 INSTALLED_APPS = ['forum']
 
@@ -64,3 +64,7 @@ class AskbotConfigGroup(ConfigurationGroup):
                                         )
                                 )
         return setting
+
+import forum.conf.minimum_reputation
+import forum.conf.vote_rules
+from forum.conf.settings_wrapper import settings

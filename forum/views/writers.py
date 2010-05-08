@@ -15,7 +15,6 @@ from django.core.exceptions import PermissionDenied
 
 from forum.forms import *
 from forum.models import *
-from forum.auth import *
 from forum.const import *
 from forum import auth
 from forum.utils.forms import get_next_url
