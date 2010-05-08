@@ -57,6 +57,8 @@ def user_get_absolute_url(self):
 User.add_to_class('is_approved', models.BooleanField(default=False))
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
+
+#hardcoded initial reputaion of 1, no setting for this one
 User.add_to_class('reputation', models.PositiveIntegerField(default=1))
 User.add_to_class('gravatar', models.CharField(max_length=32))
 

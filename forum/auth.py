@@ -15,121 +15,6 @@ from const import TYPE_REPUTATION
 import logging
 
 from forum.conf import settings
-from forum.conf import AskbotConfigGroup
-
-REP_RULE_SETTINGS = AskbotConfigGroup(
-                                    'REP_RULES',
-                                    _('Reputaion loss and gain rules'),
-                                    ordering=2
-                                )
-
-initial_score = REP_RULE_SETTINGS.new_int_setting(
-                                            'initial_score', 
-                                            1, 
-                                            _('Initial reputation')
-                                        )
-
-scope_per_day_by_upvotes = REP_RULE_SETTINGS.new_int_setting(
-                                            'scope_per_day_by_upvotes', 
-                                            0, 
-                                            _('Maximum gain per day')
-                                        )
-
-gain_by_upvoted = REP_RULE_SETTINGS.new_int_setting(
-                                            'GAIN_by_upvoted', 
-                                            0, 
-                                            _('Gain for an upvote')
-                                        )
-
-gain_by_answer_accepted = REP_RULE_SETTINGS.new_int_setting(
-                                            'gain_by_answer_accepted', 
-                                            5, 
-                                            _('Gain for answer owner when answer is accepted')
-                                        )
-
-gain_by_accepting_answer = REP_RULE_SETTINGS.new_int_setting(
-                                            'gain_by_accepting_answer', 
-                                            2, 
-                                            _('Gain for user who is accepting an answer')
-                                        )
-
-gain_by_downvote_canceled = REP_RULE_SETTINGS.new_int_setting(
-                                            'gain_by_downvote_canceled', 
-                                            2, 
-                                            _('Gain for post owner on canceled downvote')
-                                        )
-
-gain_by_canceling_downvote = REP_RULE_SETTINGS.new_int_setting(
-                                            'gain_by_canceling_downvote', 
-                                            1, 
-                                            _('Gain for voter canceling downvote')
-                                        )
-
-lose_by_canceling_accepted_answer = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_canceling_accepted_answer', 
-                                            2, 
-                                            _('Loss for voter by canceling accepted answer')
-                                        )
-
-lose_by_accepted_answer_cancled = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_accepted_answer_cancled', 
-                                            5, 
-                                            _('Loss for post owner when best answer selection is canceled')
-                                        )
-
-lose_by_downvoted = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_downvoted', 
-                                            2, 
-                                            _('Loss for voter for a downvote')
-                                        )
-
-lose_by_flagged = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_flagged', 
-                                            2, 
-                                            _('Loss for post owner when post is flagged offensive')
-                                        )
-
-lose_by_downvoting = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_downvoting', 
-                                            1, 
-                                            _('Loss for post owner when it is downvoted')
-                                        )
-
-lose_by_flagged_lastrevision_3_times = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_flagged_lastrevision_3_times', 
-                                            0, 
-                                            _('Loss for post owner when last revision is flagged 3 times')
-                                        )
-
-lose_by_flagged_lastrevision_5_times = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_flagged_lastrevision_5_times', 
-                                            0, 
-                                            _('Loss for post owner when last revision is flagged 5 times')
-                                        )
-
-lose_by_upvote_canceled = REP_RULE_SETTINGS.new_int_setting(
-                                            'lose_by_upvote_canceled',
-                                            0, 
-                                            _('Loss for post owner when upvote is canceled')
-                                        )
-
-REPUTATION_RULES = {
-    'initial_score':initial_score,
-    'scope_per_day_by_upvotes':scope_per_day_by_upvotes,
-    'gain_by_upvoted':gain_by_upvoted,
-    'gain_by_answer_accepted':gain_by_answer_accepted,
-    'gain_by_accepting_answer':gain_by_accepting_answer,
-    'gain_by_downvote_canceled':gain_by_downvote_canceled,
-    'gain_by_canceling_downvote':gain_by_canceling_downvote,
-    'lose_by_canceling_accepted_answer':lose_by_canceling_accepted_answer,
-    'lose_by_accepted_answer_cancled':lose_by_accepted_answer_cancled,
-    'lose_by_downvoted':lose_by_downvoted,
-    'lose_by_flagged':lose_by_flagged,
-    'lose_by_downvoting':lose_by_downvoting,
-    'lose_by_flagged_lastrevision_3_times':lose_by_flagged_lastrevision_3_times,
-    'lose_by_flagged_lastrevision_5_times':lose_by_flagged_lastrevision_5_times,
-    'lose_by_upvote_canceled':lose_by_upvote_canceled,
-}
 
 def can_moderate_users(user):
     return user.is_superuser
@@ -281,7 +166,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
     post.save()
 
     post.author.reputation = calculate_reputation(post.author.reputation,
-                           int(REPUTATION_RULES['lose_by_flagged'].value))
+                           settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE)
     post.author.save()
 
     question = post
@@ -289,7 +174,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
         question = post.question
 
     reputation = Repute(user=post.author,
-               negative=int(REPUTATION_RULES['lose_by_flagged'].value),
+               negative=settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
                question=question, reputed_at=timestamp,
                reputation_type=-4,
                reputation=post.author.reputation)
@@ -298,28 +183,30 @@ def onFlaggedItem(item, post, user, timestamp=None):
     #todo: These should be updated to work on same revisions.
     if post.offensive_flag_count ==  settings.MIN_FLAGS_TO_HIDE_POST:
         post.author.reputation = calculate_reputation(post.author.reputation,
-                               int(REPUTATION_RULES['lose_by_flagged_lastrevision_3_times'].value))
+                        settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION)
+
         post.author.save()
 
         reputation = Repute(user=post.author,
-                   negative=int(REPUTATION_RULES['lose_by_flagged_lastrevision_3_times'].value),
-                   question=question,
-                   reputed_at=timestamp,
-                   reputation_type=-6,
-                   reputation=post.author.reputation)
+               negative=settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
+               question=question,
+               reputed_at=timestamp,
+               reputation_type=-6,
+               reputation=post.author.reputation)
         reputation.save()
 
     elif post.offensive_flag_count == settings.MIN_FLAGS_TO_DELETE_POST:
         post.author.reputation = calculate_reputation(post.author.reputation,
-                               int(REPUTATION_RULES['lose_by_flagged_lastrevision_5_times'].value))
+                        settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION)
+
         post.author.save()
 
         reputation = Repute(user=post.author,
-                   negative=int(REPUTATION_RULES['lose_by_flagged_lastrevision_5_times'].value),
-                   question=question,
-                   reputed_at=timestamp,
-                   reputation_type=-7,
-                   reputation=post.author.reputation)
+               negative=settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
+               question=question,
+               reputed_at=timestamp,
+               reputation_type=-7,
+               reputation=post.author.reputation)
         reputation.save()
 
         post.deleted = True
@@ -343,11 +230,13 @@ def onAnswerAccept(answer, user, timestamp=None):
     answer.save()
     answer.question.save()
 
-    answer.author.reputation = calculate_reputation(answer.author.reputation,
-                             int(REPUTATION_RULES['gain_by_answer_accepted'].value))
+    answer.author.reputation = calculate_reputation(
+                            answer.author.reputation,
+                            settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+                        )
     answer.author.save()
     reputation = Repute(user=answer.author,
-               positive=int(REPUTATION_RULES['gain_by_answer_accepted'].value),
+               positive=REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
                question=answer.question,
                reputed_at=timestamp,
                reputation_type=2,
@@ -355,10 +244,10 @@ def onAnswerAccept(answer, user, timestamp=None):
     reputation.save()
 
     user.reputation = calculate_reputation(user.reputation,
-                    int(REPUTATION_RULES['gain_by_accepting_answer'].value))
+                            settings.REP_GAIN_FOR_ACCEPTING_ANSWER)
     user.save()
     reputation = Repute(user=user,
-               positive=int(REPUTATION_RULES['gain_by_accepting_answer'].value),
+               positive=settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
                question=answer.question,
                reputed_at=timestamp,
                reputation_type=3,
@@ -376,21 +265,21 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     answer.question.save()
 
     answer.author.reputation = calculate_reputation(answer.author.reputation,
-                             int(REPUTATION_RULES['lose_by_accepted_answer_cancled'].value))
+                    settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE)
     answer.author.save()
     reputation = Repute(user=answer.author,
-               negative=int(REPUTATION_RULES['lose_by_accepted_answer_cancled'].value),
-               question=answer.question,
-               reputed_at=timestamp,
-               reputation_type=-2,
-               reputation=answer.author.reputation)
+           negative=settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE,
+           question=answer.question,
+           reputed_at=timestamp,
+           reputation_type=-2,
+           reputation=answer.author.reputation)
     reputation.save()
 
     user.reputation = calculate_reputation(user.reputation,
-                    int(REPUTATION_RULES['lose_by_canceling_accepted_answer'].value))
+                    settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE)
     user.save()
     reputation = Repute(user=user,
-               negative=int(REPUTATION_RULES['lose_by_canceling_accepted_answer'].value),
+               negative=settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE,
                question=answer.question,
                reputed_at=timestamp,
                reputation_type=-1,
@@ -410,9 +299,9 @@ def onUpVoted(vote, post, user, timestamp=None):
     if not post.wiki:
         author = post.author
         todays_rep_gain = Repute.objects.get_reputation_by_upvoted_today(author)
-        if todays_rep_gain <  int(REPUTATION_RULES['scope_per_day_by_upvotes'].value):
+        if todays_rep_gain <  settings.MAX_REP_GAIN_PER_USER_PER_DAY:
             author.reputation = calculate_reputation(author.reputation,
-                              int(REPUTATION_RULES['gain_by_upvoted'].value))
+                              settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
             author.save()
 
             question = post
@@ -420,7 +309,7 @@ def onUpVoted(vote, post, user, timestamp=None):
                 question = post.question
 
             reputation = Repute(user=author,
-                       positive=int(REPUTATION_RULES['gain_by_upvoted'].value),
+                       positive=settings.REP_GAIN_FOR_RECEIVING_UPVOTE,
                        question=question,
                        reputed_at=timestamp,
                        reputation_type=1,
@@ -442,7 +331,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
     if not post.wiki:
         author = post.author
         author.reputation = calculate_reputation(author.reputation,
-                          int(REPUTATION_RULES['lose_by_upvote_canceled'].value))
+                          settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION)
         author.save()
 
         question = post
@@ -450,7 +339,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
             question = post.question
 
         reputation = Repute(user=author,
-                   negative=int(REPUTATION_RULES['lose_by_upvote_canceled'].value),
+                   negative=settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=-8,
@@ -470,7 +359,7 @@ def onDownVoted(vote, post, user, timestamp=None):
     if not post.wiki:
         author = post.author
         author.reputation = calculate_reputation(author.reputation,
-                          int(REPUTATION_RULES['lose_by_downvoted'].value))
+                                        settings.REP_LOSS_FOR_DOWNVOTING)
         author.save()
 
         question = post
@@ -478,7 +367,7 @@ def onDownVoted(vote, post, user, timestamp=None):
             question = post.question
 
         reputation = Repute(user=author,
-                   negative=int(REPUTATION_RULES['lose_by_downvoted'].value),
+                   negative=settings.REP_LOSS_FOR_DOWNVOTING,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=-3,
@@ -486,11 +375,11 @@ def onDownVoted(vote, post, user, timestamp=None):
         reputation.save()
 
         user.reputation = calculate_reputation(user.reputation,
-                        int(REPUTATION_RULES['lose_by_downvoting'].value))
+                                settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE)
         user.save()
 
         reputation = Repute(user=user,
-                   negative=int(REPUTATION_RULES['lose_by_downvoting'].value),
+                   negative=settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=-5,
@@ -512,7 +401,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
     if not post.wiki:
         author = post.author
         author.reputation = calculate_reputation(author.reputation,
-                          int(REPUTATION_RULES['gain_by_downvote_canceled'].value))
+                          settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION)
         author.save()
 
         question = post
@@ -520,7 +409,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
             question = post.question
 
         reputation = Repute(user=author,
-                   positive=int(REPUTATION_RULES['gain_by_downvote_canceled'].value),
+                   positive=settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=4,
@@ -528,11 +417,11 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
         reputation.save()
 
         user.reputation = calculate_reputation(user.reputation,
-                        int(REPUTATION_RULES['gain_by_canceling_downvote'].value))
+                        settings.REP_GAIN_FOR_CANCELING_DOWNVOTE)
         user.save()
 
         reputation = Repute(user=user,
-                   positive=int(REPUTATION_RULES['gain_by_canceling_downvote'].value),
+                   positive=settings.REP_GAIN_FOR_CANCELING_DOWNVOTE,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=5,

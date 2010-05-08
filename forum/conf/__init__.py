@@ -48,23 +48,10 @@ def setup_django_settings(settings):
     settings.TEMPLATE_CONTEXT_PROCESSORS = set(settings.TEMPLATE_CONTEXT_PROCESSORS) | set(TEMPLATE_CONTEXT_PROCESSORS)
     settings.TEMPLATE_DIRS = set(settings.TEMPLATE_DIRS) | set(TEMPLATE_DIRS)
 
-
-class AskbotConfigGroup(ConfigurationGroup):
-    def __init__(self, key, name, *arg, **kwarg):
-        super(AskbotConfigGroup, self).__init__(key, name, *arg,**kwarg)
-        self.item_count = 0
-    def new_int_setting(self, key, value, description):
-        self.item_count += 1
-        setting = config_register(IntegerValue(
-                                        self,
-                                        key,
-                                        default=value,
-                                        description=description,
-                                        ordering=self.item_count
-                                        )
-                                )
-        return setting
-
+#import these to compile code and install values
 import forum.conf.minimum_reputation
 import forum.conf.vote_rules
+import forum.conf.reputation_changes
+
+#import main settings object
 from forum.conf.settings_wrapper import settings
