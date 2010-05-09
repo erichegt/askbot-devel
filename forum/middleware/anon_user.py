@@ -3,6 +3,8 @@ from forum.utils.forms import get_next_url
 from django.utils.translation import ugettext as _
 from forum.user_messages import create_message, get_and_delete_messages
 from django.core.urlresolvers import reverse
+from forum.conf import settings
+from forum import const
 import logging
 
 class AnonymousMessageManager(object):
@@ -28,7 +30,6 @@ class ConnectToSessionMessagesMiddleware(object):
             request.user.get_and_delete_messages = request.user.message_set.get_and_delete
 
             #also set the first greeting one time per session only
-            from forum.conf import settings
             if 'greeting_set' not in request.session:
                 request.session['greeting_set'] = True
                 msg = _(const.GREETING_FOR_ANONYMOUS_USER) % settings.GREETING_URL

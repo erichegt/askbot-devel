@@ -15,7 +15,7 @@ from django.utils.translation import ugettext as _
 from models import Question
 from forum.conf import settings
 class RssLastestQuestionsFeed(Feed):
-    title = settings.ASKBOT_FORUM_TITLE + _(' - ')+ _('latest questions')
+    title = settings.APP_TITLE + _(' - ')+ _('latest questions')
     link = settings.APP_URL
     description = settings.APP_DESCRIPTION
     #ttl = 10

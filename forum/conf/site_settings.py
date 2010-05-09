@@ -7,7 +7,6 @@ from livesettings import ConfigurationGroup, StringValue
 from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
 from forum import const
-from django.core.urlresolvers import reverse
 
 QA_SITE_SETTINGS = ConfigurationGroup(
                     'QA_SITE_SETTINGS',
@@ -53,6 +52,15 @@ settings.register(
 settings.register(
     StringValue(
         QA_SITE_SETTINGS,
+        'APP_SHORT_NAME',
+        default=_('Askbot'),
+        description=_('Short name for your Q&A forum')
+    )
+)
+
+settings.register(
+    StringValue(
+        QA_SITE_SETTINGS,
         'APP_URL',
         default='http://askbot.org',
         description=_('Base URL for your Q&A forum, must start with http or https'),
@@ -63,7 +71,7 @@ settings.register(
     StringValue(
         QA_SITE_SETTINGS,
         'GREETING_URL',
-        default=reverse('faq'),
+        default=_('faq/'),#cannot reverse url here, unfortunately
         description=_('Link shown in the greeting message shown to the anonymous user'),
         help_text=_('If you change this url from the default - '
                     'then you wil have to adjust translation of '
@@ -74,7 +82,7 @@ settings.register(
 settings.register(
     StringValue(
         QA_SITE_SETTINGS,
-        'FEEBACK_SITE_URL'
+        'FEEDBACK_SITE_URL',
         description=_('Feedback site URL'),
         help_text=_('If left empty, a simple internal feedback form will be used instead')
     )

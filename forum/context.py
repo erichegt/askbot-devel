@@ -11,7 +11,7 @@ def application_settings(context):
         'FEEDBACK_SITE_URL': forum_settings.FEEDBACK_SITE_URL,
         'FORUM_ABOUT': forum_settings.FORUM_ABOUT,
         'FORUM_PRIVACY': forum_settings.FORUM_PRIVACY,
-        'GOOGLE_SITEMAP_CODE':forum_settings.GOOGLE_VERIFICATION_CODE,
+        'GOOGLE_SITEMAP_CODE':forum_settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':forum_settings.GOOGLE_ANALYTICS_KEY,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
         'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,

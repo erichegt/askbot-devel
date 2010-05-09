@@ -2,8 +2,9 @@
 External service key settings
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue
+from livesettings import ConfigurationGroup, StringValue
 from django.utils.translation import ugettext as _
+from django.conf import settings as django_settings
 
 EXTERNAL_KEYS = ConfigurationGroup(
                     'EXTERNAL_KEYS',
@@ -32,7 +33,7 @@ settings.register(
         'GOOGLE_ANALYTICS_KEY',
         description=_('Google Analytics key'),
         help_text=_(
-                        'Obtain is at <a href="%(ga_site)s>'
+                        'Obtain is at <a href="%(ga_site)s">'
                         'Google Analytics</a> site, if you '
                         'wish to use Google Analytics to monitor '
                         'your site'
@@ -43,9 +44,9 @@ settings.register(
 
 settings.register(
     StringValue(
-        EXERNAL_KEYS,
-        'RECAPTCHA_PRIVATE_KEY'
-        description=_('Recaptcha private key') + ' - does not work yet'),
+        EXTERNAL_KEYS,
+        'RECAPTCHA_PRIVATE_KEY',
+        description=_('Recaptcha private key') + ' - does not work yet',
         help_text=_(
                         'Recaptcha is a tool that helps distinguish '
                         'real people from annoying spam robots. '
@@ -59,7 +60,7 @@ settings.register(
     StringValue(
         EXTERNAL_KEYS,
         'RECAPTCHA_PUBLIC_KEY',
-        description=_('Recaptcha public key') + ' - does not work yet')
+        description=_('Recaptcha public key') + ' - does not work yet'
     )
 )
 
@@ -72,7 +73,7 @@ settings.register(
                      'Facebook API key and Facebook secret '
                      'allow to use Facebook Connect login method '
                      'at your site. Please obtain these keys '
-                     'at <a href="http://www.facebook.com/developers/createapp.php>'
+                     'at <a href="http://www.facebook.com/developers/createapp.php">'
                      'facebook create app</a> site'
                     )
     )

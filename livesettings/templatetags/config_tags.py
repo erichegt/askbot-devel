@@ -31,6 +31,8 @@ def force_space(value, chars=40):
 
 def break_at(value,  chars=40):
     """Force spaces into long lines which don't have spaces"""
+    #todo: EF - lazy patch
+    return value
 
     chars = int(chars)
     value = unicode(value)

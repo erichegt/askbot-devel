@@ -1,4 +1,4 @@
-from django.conf import settings
+from forum.conf import settings as forum_settings
 from time import time
 from datetime import datetime
 from urllib import urlopen,  urlencode
@@ -20,11 +20,11 @@ def generate_sig(values):
     for key in sorted(values.keys()):
         keys.append(key)
         
-    signature = ''.join(['%s=%s' % (key,  values[key]) for key in keys]) + settings.FB_SECRET
+    signature = ''.join(['%s=%s' % (key,  values[key]) for key in keys]) + forum_settings.FB_SECRET
     return hashlib.md5(signature).hexdigest()
 
 def check_cookies_signature(cookies):
-    API_KEY = settings.FB_API_KEY
+    API_KEY = forum_settings.FB_API_KEY
     
     values = {}
     
@@ -37,10 +37,10 @@ def check_cookies_signature(cookies):
 def get_user_data(cookies):
     request_data = {
         'method': 'Users.getInfo',
-        'api_key': settings.FB_API_KEY, 
+        'api_key': forum_settings.FB_API_KEY, 
         'call_id': time(), 
         'v': '1.0', 
-        'uids': cookies[settings.FB_API_KEY + '_user'], 
+        'uids': cookies[forum_settings.FB_API_KEY + '_user'], 
         'fields': 'name,first_name,last_name',
         'format': 'json',
     }
@@ -52,7 +52,7 @@ def get_user_data(cookies):
     
     
 def delete_cookies(response):
-    API_KEY = settings.FB_API_KEY
+    API_KEY = forum_settings.FB_API_KEY
     
     response.delete_cookie(API_KEY + '_user')
     response.delete_cookie(API_KEY + '_session_key')
@@ -62,7 +62,7 @@ def delete_cookies(response):
     response.delete_cookie('fbsetting_' + API_KEY)
     
 def check_session_expiry(cookies):
-    return datetime.fromtimestamp(float(cookies[settings.FB_API_KEY+'_expires'])) > datetime.now()
+    return datetime.fromtimestamp(float(cookies[forum_settings.FB_API_KEY+'_expires'])) > datetime.now()
 
 STATES = {
             'FIRSTTIMER': 1, 
@@ -72,7 +72,7 @@ STATES = {
 }
 
 def get_user_state(request):
-    API_KEY = settings.FB_API_KEY
+    API_KEY = forum_settings.FB_API_KEY
     logging.debug('')
     
     if API_KEY in request.COOKIES:

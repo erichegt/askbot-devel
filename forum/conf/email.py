@@ -18,3 +18,10 @@ settings.register(
         description=_('Maximum number of news entries in an email alert')
     )
 )
+
+#todo: move email.py email_settings.py?
+
+EMAIL_VALIDATION = 'off' #string - on|off
+EMAIL_UNIQUE = False
+ANONYMOUS_USER_EMAIL = 'anonymous@askbot.org'
+

@@ -365,7 +365,7 @@ def signin(request,newquestion=False,newanswer=False):
         'form2': form_signin,
         'msg':  request.GET.get('msg',''),
         'sendpw_url': reverse('user_sendpw'),
-        'fb_api_key': settings.FB_API_KEY, 
+        'fb_api_key': forum_settings.FB_API_KEY, 
     }, context_instance=RequestContext(request))
 
 def complete_signin(request):

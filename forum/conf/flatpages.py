@@ -4,7 +4,6 @@ Q&A forum flatpages (about, etc.)
 from forum.conf.settings_wrapper import settings
 from livesettings import ConfigurationGroup, LongStringValue
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 
 FLATPAGES = ConfigurationGroup(
                 'FLATPAGES',
@@ -20,7 +19,7 @@ settings.register(
         _(
             'Save, then <a href="http://validator.w3.org/check?uri=%(url)s">'
             'validate HTML</a>'
-        ) % {'url':reverse('about')}
+        ) % {'url':_('about/')}
     )
 )
 
@@ -33,6 +32,6 @@ settings.register(
         _(
             'Save, then <a href="http://validator.w3.org/check?uri=%(url)s">'
             'validate HTML</a>'
-        ) % {'url':reverse('privacy')}
+        ) % {'url':_('privacy/')}
     )
 )
