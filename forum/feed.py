@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #encoding:utf-8
 #-------------------------------------------------------------------------------
-# Name:        Syndication feed class for subsribtion
+# Name:        Syndication feed class for subscription
 # Purpose:
 #
 # Author:      Mike
@@ -13,10 +13,10 @@
 from django.contrib.syndication.feeds import Feed, FeedDoesNotExist
 from django.utils.translation import ugettext as _
 from models import Question
-from django.conf import settings
+from forum.conf import settings
 class RssLastestQuestionsFeed(Feed):
-    title = settings.APP_TITLE + _(' - ')+ _('latest questions')
-    link = settings.APP_URL #+ '/' + _('question/')
+    title = settings.ASKBOT_FORUM_TITLE + _(' - ')+ _('latest questions')
+    link = settings.APP_URL
     description = settings.APP_DESCRIPTION
     #ttl = 10
     copyright = settings.APP_COPYRIGHT

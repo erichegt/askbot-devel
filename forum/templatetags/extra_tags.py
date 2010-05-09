@@ -13,6 +13,7 @@ from forum.models import Question, Answer, QuestionRevision, AnswerRevision
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.template.defaulttags import url as default_url
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
@@ -146,7 +147,7 @@ def post_contributor_info(post,contributor_type='original_author'):
     return {
         'post':post,
         'post_type':post_type,
-        'wiki_on':settings.WIKI_ON,
+        'wiki_on':forum_settings.WIKI_ON,
         'contributor_type':contributor_type
     }
         
@@ -395,7 +396,7 @@ class FullUrlNode(template.Node):
         self.default_node = default_node
 
     def render(self, context):
-        domain = settings.APP_URL
+        domain = forum_settings.APP_URL
         #protocol = getattr(settings, "PROTOCOL", "http")
         path = self.default_node.render(context)
         return "%s%s" % (domain, path)
@@ -407,7 +408,7 @@ def fullurl(parser, token):
 
 @register.simple_tag
 def fullmedia(url):
-    domain = settings.APP_URL
+    domain = forum_settings.APP_URL
     #protocol = getattr(settings, "PROTOCOL", "http")
     path = media(url)
     return "%s%s" % (domain, path)

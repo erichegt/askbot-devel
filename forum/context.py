@@ -1,21 +1,23 @@
 from django.conf import settings
+from forum.conf import settings as forum_settings
 def application_settings(context):
     my_settings = {
-        'APP_TITLE' : settings.APP_TITLE,
-        'APP_SHORT_NAME' : settings.APP_SHORT_NAME,
-        'APP_URL'   : settings.APP_URL,
-        'APP_KEYWORDS' : settings.APP_KEYWORDS,
-        'APP_DESCRIPTION' : settings.APP_DESCRIPTION,
-        'APP_INTRO' : settings.APP_INTRO,
-        'EMAIL_VALIDATION': settings.EMAIL_VALIDATION,
-        'FEEDBACK_SITE_URL': settings.FEEDBACK_SITE_URL,
-        'FORUM_SCRIPT_ALIAS': settings.FORUM_SCRIPT_ALIAS,
-        'LANGUAGE_CODE': settings.LANGUAGE_CODE,
-        'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
-        'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
-        'WIKI_ON':settings.WIKI_ON,
+        'WIKI_ON':forum_settings.WIKI_ON,
+        'APP_TITLE' : forum_settings.APP_TITLE,
+        'APP_URL'   : forum_settings.APP_URL,
+        'APP_KEYWORDS' : forum_settings.APP_KEYWORDS,
+        'APP_DESCRIPTION': forum_settings.APP_DESCRIPTION,
+        'APP_COPYRIGHT': forum_settings.APP_COPYRIGHT,
+        'FEEDBACK_SITE_URL': forum_settings.FEEDBACK_SITE_URL,
+        'FORUM_ABOUT': forum_settings.FORUM_ABOUT,
+        'FORUM_PRIVACY': forum_settings.FORUM_PRIVACY,
+        'GOOGLE_SITEMAP_CODE':forum_settings.GOOGLE_VERIFICATION_CODE,
+        'GOOGLE_ANALYTICS_KEY':forum_settings.GOOGLE_ANALYTICS_KEY,
         'RESOURCE_REVISION':settings.RESOURCE_REVISION,
         'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,
+        'EMAIL_VALIDATION': settings.EMAIL_VALIDATION,
+        'FORUM_SCRIPT_ALIAS': settings.FORUM_SCRIPT_ALIAS,
+        'LANGUAGE_CODE': settings.LANGUAGE_CODE,
         'EDITABLE_SCREEN_NAME':settings.EDITABLE_SCREEN_NAME,
         }
     return {'settings':my_settings}

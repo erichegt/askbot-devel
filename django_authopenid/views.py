@@ -35,6 +35,7 @@ from django.http import HttpResponseRedirect, get_host, Http404, \
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -616,7 +617,7 @@ def signup(request):
                     'authopenid/confirm_email.txt'
             )
             message_context = Context({ 
-                'signup_url': settings.APP_URL + reverse('user_signin'),
+                'signup_url': forum_settings.APP_URL + reverse('user_signin'),
                 'username': username,
                 'password': password,
             })
@@ -760,7 +761,7 @@ def _send_email_key(user):
     message_template = loader.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
-    'validation_link': settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
+    'validation_link': forum_settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
     })
     message = message_template.render(message_context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
@@ -1118,10 +1119,10 @@ def sendpw(request):
             subject = _("Request for new password")
             message_template = loader.get_template(
                     'authopenid/sendpw_email.txt')
-            key_link = settings.APP_URL + reverse('user_confirmchangepw') + '?key=' + confirm_key
+            key_link = forum_settings.APP_URL + reverse('user_confirmchangepw') + '?key=' + confirm_key
             logging.debug('emailing new password for %s' % form.user_cache.username)
             message_context = Context({ 
-                'site_url': settings.APP_URL + reverse('index'),
+                'site_url': forum_settings.APP_URL + reverse('index'),
                 'key_link': key_link,
                 'username': form.user_cache.username,
                 'password': new_pw,

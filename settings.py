@@ -89,9 +89,6 @@ INSTALLED_APPS = (
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
-if USE_FB_CONNECT:
-    INSTALLED_APPS += ('fbconnect',)
-
 #this needs to go
 if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
     INSTALLED_APPS += (EXTERNAL_LEGACY_LOGIN_MODULE,)

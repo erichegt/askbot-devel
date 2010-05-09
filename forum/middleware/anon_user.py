@@ -2,7 +2,6 @@ from django.http import HttpResponseRedirect
 from forum.utils.forms import get_next_url
 from django.utils.translation import ugettext as _
 from forum.user_messages import create_message, get_and_delete_messages
-from django.conf import settings
 from django.core.urlresolvers import reverse
 import logging
 
@@ -29,7 +28,8 @@ class ConnectToSessionMessagesMiddleware(object):
             request.user.get_and_delete_messages = request.user.message_set.get_and_delete
 
             #also set the first greeting one time per session only
+            from forum.conf import settings
             if 'greeting_set' not in request.session:
                 request.session['greeting_set'] = True
-                msg = _('First time here? Check out the <a href="%s">FAQ</a>!') % reverse('faq')
+                msg = _(const.GREETING_FOR_ANONYMOUS_USER) % settings.GREETING_URL
                 request.user.message_set.create(message=msg)

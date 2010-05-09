@@ -7,9 +7,11 @@
 {% load i18n %}
 {% load cache %}
 {% block title %}{% spaceless %}{{ question.get_question_title }}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block meta_description %}
         <meta name="description" content="{{question.summary}}" />
-        <meta name="keywords" content="{{question.tagname_meta_generator}}" />
+{% endblock %}
+{% block keywords %}{{question.tagname_meta_generator}}{% endblock %}
+{% block forejs %}
         <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url}}" />
         {% if not question.closed %}
         <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
