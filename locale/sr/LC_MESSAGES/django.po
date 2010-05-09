@@ -27,7 +27,7 @@ msgstr "Налог са овим именом већ постоји на фор�
 
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."
-msgstr ""
+msgstr "не можете имати два начина пријаве за исти налог."
 
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
@@ -92,19 +92,17 @@ msgid "signout/"
 msgstr "одјава/"
 
 #: django_authopenid/urls.py:29
-#, fuzzy
 msgid "complete/"
 msgstr "complete/"
 
 #: django_authopenid/urls.py:31 fbconnect/urls.py:16 fbconnect/urls.py:17
 #: fbconnect/urls.py:18
-#, fuzzy
 msgid "register/"
 msgstr "register/"
 
 #: django_authopenid/urls.py:32
 msgid "signup/"
-msgstr ""
+msgstr "signup/"
 
 #: django_authopenid/urls.py:34
 #, fuzzy
@@ -126,15 +124,15 @@ msgstr "е-пошта/"
 
 #: django_authopenid/urls.py:40
 msgid "validate/"
-msgstr ""
+msgstr "validate/"
 
 #: django_authopenid/urls.py:41
 msgid "change/"
-msgstr ""
+msgstr "change/"
 
 #: django_authopenid/urls.py:42
 msgid "sendkey/"
-msgstr ""
+msgstr "sendkey/"
 
 #: django_authopenid/urls.py:43
 #, fuzzy
@@ -155,7 +153,7 @@ msgstr "екстерна-пријава/заборављена-шифра/"
 
 #: django_authopenid/urls.py:56
 msgid "external-login/signup/"
-msgstr ""
+msgstr "external-login/signup/"
 
 #: django_authopenid/views.py:139
 #, python-format
@@ -186,12 +184,12 @@ msgstr "Ваша е-пошта није промењена"
 #: django_authopenid/views.py:898 django_authopenid/views.py:1056
 #, python-format
 msgid "No OpenID %s found associated in our database"
-msgstr ""
+msgstr "Унети OpenID %s, није пронађен у нашој бази."
 
 #: django_authopenid/views.py:902 django_authopenid/views.py:1063
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
-msgstr ""
+msgstr "%s OpenID није повезан са тренутно пријављеним корисником."
 
 #: django_authopenid/views.py:910
 msgid "Email Changed."
@@ -216,16 +214,16 @@ msgstr "Захтев за нову шифру"
 
 #: django_authopenid/views.py:1132
 msgid "A new password and the activation link were sent to your email address."
-msgstr "Нова шифра и активациони линк су послати на вашу адресу."
+msgstr "Нова шифра и активациони линк послати су на вашу адресу."
 
 #: django_authopenid/views.py:1164
 #, python-format
 msgid "Could not change password. Confirmation key '%s'                is not registered."
-msgstr ""
+msgstr "Шифра није промењена. Потврдни кључ ' %s' није регистрован."
 
 #: django_authopenid/views.py:1174
 msgid "Can not change password. User don't exist anymore                 in our database."
-msgstr ""
+msgstr "Шифра није промењена. Корисник више не постоје у нашој бази."
 
 #: django_authopenid/views.py:1184
 #, python-format
@@ -311,14 +309,12 @@ msgid "inactive"
 msgstr "не активнa"
 
 #: forum/const.py:41
-#, fuzzy
 msgid "hottest"
-msgstr "најтоплији"
+msgstr "hottest"
 
 #: forum/const.py:42
-#, fuzzy
 msgid "coldest"
-msgstr "најхладнији"
+msgstr "coldest"
 
 #: forum/const.py:43
 msgid "most voted"
@@ -357,12 +353,10 @@ msgid "answer"
 msgstr "одговор"
 
 #: forum/const.py:99
-#, fuzzy
 msgid "commented question"
 msgstr "коментарисано питање"
 
 #: forum/const.py:100
-#, fuzzy
 msgid "commented answer"
 msgstr "коментарисан одговор"
 
@@ -375,29 +369,30 @@ msgid "edited answer"
 msgstr "измењен одговор"
 
 #: forum/const.py:103
-#, fuzzy
 msgid "received award"
-msgstr "received badge"
+msgstr "примљен беџ"
 
 #: forum/const.py:104
 msgid "marked best answer"
-msgstr ""
+msgstr "означен најбољи одговор"
 
 #: forum/const.py:105
+#, fuzzy
 msgid "upvoted"
-msgstr ""
+msgstr "upvoted"
 
 #: forum/const.py:106
+#, fuzzy
 msgid "downvoted"
-msgstr ""
+msgstr "downvoted"
 
 #: forum/const.py:107
 msgid "canceled vote"
-msgstr ""
+msgstr "гласање је отказано"
 
 #: forum/const.py:108
 msgid "deleted question"
-msgstr ""
+msgstr "обрисано питање"
 
 #: forum/const.py:109
 msgid "deleted answer"
@@ -405,7 +400,7 @@ msgstr "обрисан одговор"
 
 #: forum/const.py:110
 msgid "marked offensive"
-msgstr ""
+msgstr "означено увредљивим"
 
 #: forum/const.py:111
 msgid "updated tags"
@@ -421,7 +416,7 @@ msgstr ""
 
 #: forum/const.py:114
 msgid "email update sent to user"
-msgstr ""
+msgstr "ажурирање је послато на корисникову е-пошту"
 
 #: forum/const.py:118
 msgid "question_answered"
@@ -432,12 +427,13 @@ msgid "question_commented"
 msgstr "коментарисано питање"
 
 #: forum/const.py:120
+#, fuzzy
 msgid "answer_commented"
-msgstr ""
+msgstr "одговор коментарисао"
 
 #: forum/const.py:121
 msgid "answer_accepted"
-msgstr ""
+msgstr "прихваћен одговор"
 
 #: forum/const.py:125
 msgid "[closed]"
@@ -452,8 +448,9 @@ msgid "initial version"
 msgstr "почетна верзија"
 
 #: forum/const.py:128
+#, fuzzy
 msgid "retagged"
-msgstr ""
+msgstr "ретаговано"
 
 #: forum/const.py:132
 msgid "exclude ignored tags"
@@ -461,7 +458,7 @@ msgstr "занемари игнорисане ознаке"
 
 #: forum/const.py:132
 msgid "allow only selected tags"
-msgstr ""
+msgstr "дозволи само изабране тагове"
 
 #: forum/feed.py:18
 msgid " - "
@@ -516,16 +513,16 @@ msgstr "ознаке су обавезне"
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "користите %(tag_count)d ознаку или мање"
+msgstr[1] "користите %(tag_count)d ознака или мање"
 msgstr[2] ""
 
 #: forum/forms.py:79
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "свака ознака мора имати мање од %(max_chars)d карактера"
+msgstr[1] "свака ознака мора имати мање од %(max_chars)d карактера"
 msgstr[2] ""
 
 #: forum/forms.py:87
@@ -543,15 +540,15 @@ msgstr "вики"
 
 #: forum/forms.py:98
 msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
-msgstr ""
+msgstr "уколико одаберете вики опцију, питање и одговор не доносе поене; име аутора се не приказује"
 
 #: forum/forms.py:114
 msgid "update summary:"
-msgstr "ажурирање резиме:"
+msgstr "ажурирање резимеа:"
 
 #: forum/forms.py:115
 msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
-msgstr ""
+msgstr "унесите кратко објашњење Ваше измене (нпр. правопис, граматика, побољшање стила, ово поље није обавезно)"
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
@@ -595,7 +592,7 @@ msgstr "Датум рођења"
 
 #: forum/forms.py:300
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "неће бити приказано, користи се за израчунавање ваших година, формат: ГГГГ-ММ-ДД"
 
 #: forum/forms.py:301 forum/skins/askbot/templates/account_settings.html:21
 #: forum/skins/askbot/templates/authopenid/settings.html:21
@@ -606,7 +603,7 @@ msgstr "Профил"
 
 #: forum/forms.py:332 forum/forms.py:333
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "ова е-пошта је већ регистрована, молимо Вас унесите другу"
 
 #: forum/forms.py:339
 msgid "Choose email tag filter"
@@ -634,15 +631,15 @@ msgstr ""
 
 #: forum/forms.py:377
 msgid "Individually selected"
-msgstr ""
+msgstr "Појединачно одабрани"
 
 #: forum/forms.py:380
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Цео форум (ознака филтрирана)"
 
 #: forum/forms.py:434
 msgid "okay, let's try!"
-msgstr ""
+msgstr "У реду, хајде да покушамо!"
 
 #: forum/forms.py:435
 msgid "no community email please, thanks"
@@ -650,11 +647,11 @@ msgstr "молимо Вас без askbot е-поште, хвала"
 
 #: forum/forms.py:438
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "молимо Вас изаберете једну од опција изнад"
 
 #: forum/urls.py:31
 msgid "upfiles/"
-msgstr ""
+msgstr "upfiles/"
 
 #: forum/urls.py:36
 msgid "about/"
@@ -722,11 +719,11 @@ msgstr "гласај/"
 
 #: forum/urls.py:53
 msgid "command/"
-msgstr ""
+msgstr "command/"
 
 #: forum/urls.py:63 forum/views/readers.py:266
 msgid "question/"
-msgstr ""
+msgstr "питање/"
 
 #: forum/urls.py:64 forum/urls.py:65
 msgid "tags/"
@@ -734,27 +731,27 @@ msgstr "ознаке/"
 
 #: forum/urls.py:67 forum/urls.py:71
 msgid "mark-tag/"
-msgstr ""
+msgstr "означи-ознаку/"
 
 #: forum/urls.py:67
 msgid "interesting/"
-msgstr ""
+msgstr "занимљиво/"
 
 #: forum/urls.py:71
 msgid "ignored/"
-msgstr ""
+msgstr "игнорисано/"
 
 #: forum/urls.py:75
 msgid "unmark-tag/"
-msgstr ""
+msgstr "unmark-tag/"
 
 #: forum/urls.py:79 forum/urls.py:81 forum/urls.py:82
 msgid "users/"
-msgstr ""
+msgstr "корисници/"
 
 #: forum/urls.py:80
 msgid "moderate-user/"
-msgstr ""
+msgstr "moderate-user/"
 
 #: forum/urls.py:83 forum/urls.py:84
 msgid "badges/"
@@ -762,23 +759,23 @@ msgstr "беџеви/"
 
 #: forum/urls.py:85
 msgid "messages/"
-msgstr ""
+msgstr "поруке/"
 
 #: forum/urls.py:85
 msgid "markread/"
-msgstr ""
+msgstr "означипрочитано/"
 
 #: forum/urls.py:88
 msgid "upload/"
-msgstr ""
+msgstr "upload/"
 
 #: forum/urls.py:89
 msgid "search/"
-msgstr ""
+msgstr "претрага/"
 
 #: forum/urls.py:90
 msgid "feedback/"
-msgstr ""
+msgstr "сугестија/"
 
 #: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
 msgid "Congratulations, you are now an Administrator"
@@ -789,11 +786,11 @@ msgid "email update message subject"
 msgstr "новости од П&О форума"
 
 #: forum/management/commands/send_email_alerts.py:238
-#, fuzzy, python-format
+#, python-format
 msgid "%(name)s, this is an update message header for a question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] "<p>Dear %(name)s,</p></p>The following question has been updated on the Q&A forum:</p>"
-msgstr[1] "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on the Q&A forum:</p>"
+msgstr[0] "<p>%(name)s,</p></p>Следеће питање је ажурирано на П&О форуму:</p>"
+msgstr[1] "<p>%(name)s,</p><p>Следећих %(num)d питања је ажурирано на П&О форуму:</p>"
 msgstr[2] ""
 
 #: forum/management/commands/send_email_alerts.py:255
@@ -883,8 +880,9 @@ msgid "pundit"
 msgstr ""
 
 #: forum/migrations/0005_install_badges.py:14
+#, fuzzy
 msgid "Left 10 comments with score of 10 or more"
-msgstr ""
+msgstr "Написао/ла 10 коментара са резултатом од 10 или више"
 
 #: forum/migrations/0005_install_badges.py:15
 msgid "Popular Question"
@@ -1902,17 +1900,17 @@ msgstr ""
 #: forum/skins/default/templates/close.html:6
 #: forum/skins/default/templates/close.html:16
 msgid "Close question"
-msgstr ""
+msgstr "Затвори питање"
 
 #: forum/skins/askbot/templates/close.html:19
 #: forum/skins/default/templates/close.html:19
 msgid "Close the question"
-msgstr ""
+msgstr "Затвори питање"
 
 #: forum/skins/askbot/templates/close.html:25
 #: forum/skins/default/templates/close.html:25
 msgid "Reasons"
-msgstr ""
+msgstr "Разлози"
 
 #: forum/skins/askbot/templates/close.html:28
 #: forum/skins/default/templates/close.html:28
@@ -2249,7 +2247,7 @@ msgstr "назад на почетну страну"
 #: forum/skins/askbot/templates/header.html:33
 #: forum/skins/default/templates/header.html:29
 msgid "users"
-msgstr "људи"
+msgstr "корисници"
 
 #: forum/skins/askbot/templates/header.html:35
 #: forum/skins/default/templates/header.html:31
@@ -2793,7 +2791,7 @@ msgstr ""
 #: forum/skins/askbot/templates/reopen.html:22
 #: forum/skins/default/templates/reopen.html:22
 msgid "The question was closed for the following reason "
-msgstr ""
+msgstr "Питање је затворено из следећих разлога"
 
 #: forum/skins/askbot/templates/reopen.html:22
 #: forum/skins/default/templates/reopen.html:22
@@ -2808,7 +2806,7 @@ msgstr ""
 #: forum/skins/askbot/templates/reopen.html:22
 #: forum/skins/default/templates/reopen.html:22
 msgid "date closed"
-msgstr ""
+msgstr "датум затварања"
 
 #: forum/skins/askbot/templates/reopen.html:29
 #: forum/skins/default/templates/reopen.html:29
@@ -3811,7 +3809,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:150
 msgid "close"
-msgstr ""
+msgstr "затвори"
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:293
@@ -3821,17 +3819,17 @@ msgstr ""
 #: forum/skins/default/templates/question.html:157
 #: forum/skins/default/templates/question.html:294
 msgid "flag offensive"
-msgstr ""
+msgstr "означи увредљивим"
 
 #: forum/skins/default/templates/question.html:165
 #: forum/skins/default/templates/question.html:305
 msgid "delete"
-msgstr ""
+msgstr "избриши"
 
 #: forum/skins/default/templates/question.html:183
 #: forum/skins/default/templates/question.html:325
 msgid "delete this comment"
-msgstr ""
+msgstr "избриши овај коментар"
 
 #: forum/skins/default/templates/question.html:194
 #: forum/skins/default/templates/question.html:336
@@ -3866,7 +3864,7 @@ msgstr ""
 #: forum/skins/default/templates/question.html:215
 #, python-format
 msgid "close date %(closed_at)s"
-msgstr ""
+msgstr "датум затварања %(closed_at)s"
 
 #: forum/skins/default/templates/question.html:223
 #, python-format
@@ -3909,26 +3907,26 @@ msgstr "популарна"
 #: forum/skins/default/templates/question.html:249
 #: forum/skins/default/templates/question.html:250
 msgid "i like this answer (click again to cancel)"
-msgstr ""
+msgstr "свиђа ми се овај одговор (кликните поново да бисте отказали)"
 
 #: forum/skins/default/templates/question.html:256
 #: forum/skins/default/templates/question.html:257
 msgid "i dont like this answer (click again to cancel)"
-msgstr ""
+msgstr "не свиђа ми се овај одговор (кликните поново да бисте отказали)"
 
 #: forum/skins/default/templates/question.html:262
 #: forum/skins/default/templates/question.html:263
 msgid "mark this answer as favorite (click again to undo)"
-msgstr ""
+msgstr "означи овај одговор као омиљени (кликните поново да бисте отказали)"
 
 #: forum/skins/default/templates/question.html:268
 #: forum/skins/default/templates/question.html:269
 msgid "the author of the question has selected this answer as correct"
-msgstr ""
+msgstr "аутор питања је изабрао овај одговор као прави"
 
 #: forum/skins/default/templates/question.html:282
 msgid "answer permanent link"
-msgstr ""
+msgstr "трајни линк одговора"
 
 #: forum/skins/default/templates/question.html:283
 msgid "permanent link"
@@ -3936,7 +3934,7 @@ msgstr "трајни линк"
 
 #: forum/skins/default/templates/question.html:305
 msgid "undelete"
-msgstr ""
+msgstr "undelete"
 
 #: forum/skins/default/templates/question.html:364
 #: forum/skins/default/templates/question.html:367
@@ -3958,11 +3956,11 @@ msgstr "<span class='strong'>Here</span> (once you log in) you will be able to s
 
 #: forum/skins/default/templates/question.html:391
 msgid "Your answer"
-msgstr ""
+msgstr "Ваш одговор"
 
 #: forum/skins/default/templates/question.html:393
 msgid "Be the first one to answer this question!"
-msgstr ""
+msgstr "Будите први који ћете дати одговор на ово питање!"
 
 #: forum/skins/default/templates/question.html:399
 msgid "you can answer anonymously and then login"
@@ -3982,7 +3980,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:444
 msgid "Answer Your Own Question"
-msgstr ""
+msgstr "Одговорите на ваше питање"
 
 #: forum/skins/default/templates/question.html:446
 msgid "Answer the question"
@@ -3998,7 +3996,7 @@ msgstr "Питано"
 
 #: forum/skins/default/templates/question.html:474
 msgid "question was seen"
-msgstr "Погледано"
+msgstr "Прегледано"
 
 #: forum/skins/default/templates/question.html:474
 msgid "times"
@@ -4097,7 +4095,7 @@ msgstr "без"
 #: forum/templatetags/extra_tags.py:53
 #, python-format
 msgid "%(username)s gravatar image"
-msgstr ""
+msgstr "%(username)s gravatar слика"
 
 #: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
 msgid "reputation points"
@@ -4133,7 +4131,7 @@ msgstr "ово поље је обавезно"
 
 #: forum/utils/forms.py:45
 msgid "choose a username"
-msgstr "Choose screen name"
+msgstr "Одаберете корисничко име"
 
 #: forum/utils/forms.py:50
 msgid "user name is required"
@@ -4153,11 +4151,11 @@ msgstr "нажалост, не постоји корисник са овим и�
 
 #: forum/utils/forms.py:54
 msgid "sorry, we have a serious error - user name is taken by several users"
-msgstr "нажалост, имамо озбиљну грешку - корисничко име је заузет од стране више корисника"
+msgstr "нажалост, имамо озбиљну грешку - корисничко име је заузето од стране више корисника"
 
 #: forum/utils/forms.py:55
 msgid "user name can only consist of letters, empty space and underscore"
-msgstr ""
+msgstr "корисничко име се може састојати искључиво од слова, празног простора и доње линије."
 
 #: forum/utils/forms.py:109
 msgid "your email address"
@@ -4165,7 +4163,7 @@ msgstr "Your email <i>(never shared)</i>"
 
 #: forum/utils/forms.py:110
 msgid "email address is required"
-msgstr ""
+msgstr "е-пошта је обавезна"
 
 #: forum/utils/forms.py:111
 msgid "please enter a valid email address"
@@ -4173,7 +4171,7 @@ msgstr "унесите валидну е-пошту"
 
 #: forum/utils/forms.py:112
 msgid "this email is already used by someone else, please choose another"
-msgstr ""
+msgstr "ову е-пошту већ користи неки корисник, изаберите другу"
 
 #: forum/utils/forms.py:140
 msgid "choose password"
@@ -4193,12 +4191,12 @@ msgstr "молимo Вас, поново откуцајте шифру"
 
 #: forum/utils/forms.py:146
 msgid "sorry, entered passwords did not match, please try again"
-msgstr ""
+msgstr "унета шифра не одговара, покушајте поново"
 
 #: forum/views/commands.py:209
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
-msgstr "Your subscription is saved, but email address %(email)s needs to be validated, please see <a href='%(details_url)s'>more details here</a>"
+msgstr "Ваша претплата је сачувана, али е-пошту %(email)s је потребно проверити, погледајте <a href='%(details_url)s'>овде за више информација</a>"
 
 #: forum/views/commands.py:217
 msgid "email update frequency has been set to daily"
@@ -4258,7 +4256,7 @@ msgstr "омиљена питања"
 
 #: forum/views/users.py:942
 msgid "users favorite questions"
-msgstr ""
+msgstr "омиљена питања корисника"
 
 #: forum/views/users.py:943
 msgid "profile - favorite questions"
@@ -4278,7 +4276,7 @@ msgstr "нажалост, слање датотека на сервер захт
 
 #: forum/views/writers.py:72
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr ""
+msgstr "дозвољени типови датотека су 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 
 #: forum/views/writers.py:74
 #, python-format
