@@ -22,7 +22,6 @@ from forum.utils.diff import textDiff as htmldiff
 from forum.forms import *
 from forum.models import *
 from forum.auth import *
-from forum.const import *
 from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url

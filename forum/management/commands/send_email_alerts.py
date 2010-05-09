@@ -235,7 +235,7 @@ class Command(NoArgsCommand):
                 url_prefix = settings.APP_URL
                 subject = _('email update message subject')
                 print 'have %d updated questions for %s' % (num_q, user.username)
-                text = ungettext('%(name)s, this is an update message header for a question', 
+                text = ungettext('%(name)s, this is an update message header for %(num)d question', 
                             '%(name)s, this is an update message header for %(num)d questions',num_q) \
                                 % {'num':num_q, 'name':user.username}
 

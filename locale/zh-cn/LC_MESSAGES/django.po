@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-01 16:45-0400\n"
+"POT-Creation-Date: 2010-05-09 19:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,11 +127,6 @@ msgstr "密码"
 #: django_authopenid/urls.py:33
 msgid "confirm/"
 msgstr ""
-
-#: django_authopenid/urls.py:36
-#, fuzzy
-msgid "account_settings"
-msgstr "设置"
 
 #: django_authopenid/urls.py:38 django_authopenid/urls.py:39
 #: django_authopenid/urls.py:40 django_authopenid/urls.py:41
@@ -479,7 +474,7 @@ msgstr "[已关闭]"
 msgid "[deleted]"
 msgstr "[已删除]"
 
-#: forum/const.py:127 forum/views/readers.py:390 forum/views/readers.py:409
+#: forum/const.py:127 forum/views/readers.py:396 forum/views/readers.py:417
 msgid "initial version"
 msgstr "初始版本"
 
@@ -775,7 +770,7 @@ msgstr "票"
 msgid "command/"
 msgstr "评论"
 
-#: forum/urls.py:60 forum/views/readers.py:261
+#: forum/urls.py:60 forum/views/readers.py:265
 #, fuzzy
 msgid "question/"
 msgstr "提问"
@@ -858,7 +853,7 @@ msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:238
 #, python-format
-msgid "%(name)s, this is an update message header for a question"
+msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
 msgstr[1] ""
@@ -1289,7 +1284,7 @@ msgstr ""
 
 #: forum/migrations/0005_install_badges.py:38
 #, fuzzy
-msgid "export"
+msgid "expert"
 msgstr "文本"
 
 #: forum/migrations/0005_install_badges.py:38
@@ -1409,15 +1404,15 @@ msgstr "修改回答"
 msgid "%(people)s commented an answer"
 msgstr "修改回答"
 
-#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:53
+#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
 msgid "gold"
 msgstr "金牌"
 
-#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:61
+#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
 msgid "silver"
 msgstr "银牌"
 
-#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:68
+#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
 msgid "bronze"
 msgstr ""
 
@@ -1785,8 +1780,10 @@ msgid "Badge"
 msgstr "奖牌"
 
 #: forum/skins/default/templates/badge.html:26
-msgid "The users have been awarded with badges:"
-msgstr "用户已被授予该奖牌："
+msgid "user received this badge:"
+msgid_plural "users received this badge:"
+msgstr[0] ""
+msgstr[1] ""
 
 #: forum/skins/default/templates/badges.html:6
 #, fuzzy
@@ -1812,23 +1809,23 @@ msgid ""
 "    "
 msgstr "这里列出社区所有的奖牌，以及到目前为此，每个奖牌被授予的用户人数。"
 
-#: forum/skins/default/templates/badges.html:50
+#: forum/skins/default/templates/badges.html:51
 msgid "Community badges"
 msgstr "社区奖牌"
 
-#: forum/skins/default/templates/badges.html:56
+#: forum/skins/default/templates/badges.html:57
 msgid "gold badge description"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:64
+#: forum/skins/default/templates/badges.html:65
 msgid "silver badge description"
 msgstr ""
 
-#: forum/skins/default/templates/badges.html:67
+#: forum/skins/default/templates/badges.html:68
 msgid "bronze badge: often given as a special honor"
 msgstr "铜牌:时常授予之特殊荣誉"
 
-#: forum/skins/default/templates/badges.html:71
+#: forum/skins/default/templates/badges.html:72
 #, fuzzy
 msgid "bronze badge description"
 msgstr "答读者问"
@@ -2347,10 +2344,10 @@ msgstr "下一页"
 
 #: forum/skins/default/templates/post_contributor_info.html:9
 #, fuzzy, python-format
-msgid "one revision"
+msgid "%(rev_count)s revision"
 msgid_plural "%(rev_count)s revisions"
-msgstr[0] "版本"
-msgstr[1] "版本"
+msgstr[0] "当前版本"
+msgstr[1] "当前版本"
 
 #: forum/skins/default/templates/post_contributor_info.html:15
 msgid "asked"
@@ -2513,7 +2510,7 @@ msgstr "添加评论"
 #: forum/skins/default/templates/question.html:198
 #: forum/skins/default/templates/question.html:340
 #, fuzzy, python-format
-msgid "see <strong>one</strong> more"
+msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] ""
 "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
@@ -2522,13 +2519,15 @@ msgstr[1] ""
 
 #: forum/skins/default/templates/question.html:200
 #: forum/skins/default/templates/question.html:342
-#, python-format
-msgid "see <strong>one</strong> more comment"
+#, fuzzy, python-format
+msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
 "                                            "
 msgstr[0] ""
+"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
 msgstr[1] ""
+"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
 
 #: forum/skins/default/templates/question.html:213
 #, fuzzy, python-format
@@ -2545,7 +2544,7 @@ msgstr "由于以下原因，你要关闭这个问题"
 #, python-format
 msgid ""
 "\n"
-"                    One Answer:\n"
+"                    %(counter)s Answer:\n"
 "                    "
 msgid_plural ""
 "\n"
@@ -2902,12 +2901,10 @@ msgstr "受欢迎的标签"
 
 #: forum/skins/default/templates/questions.html:141
 #, fuzzy, python-format
-msgid " One question found"
+msgid " %(q_num)s question found"
 msgid_plural "%(q_num)s questions found"
-msgstr[0] ""
-"问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
-msgstr[1] ""
-"问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
+msgstr[0] "个"
+msgstr[1] "个"
 
 #: forum/skins/default/templates/questions.html:143
 #, fuzzy, python-format
@@ -3165,7 +3162,7 @@ msgid "change picture"
 msgstr ""
 
 #: forum/skins/default/templates/user_info.html:25
-#: forum/skins/default/templates/users.html:26 forum/views/users.py:924
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:933
 msgid "reputation"
 msgstr "积分"
 
@@ -3223,101 +3220,77 @@ msgstr ""
 msgid "%(user_name)s's karma change log"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:12
+#: forum/skins/default/templates/user_stats.html:11
 #, python-format
-msgid ""
-"\n"
-"                <span class=\"count\">1</span> Question\n"
-"                "
-msgid_plural ""
-"\n"
-"                <span class=\"count\">%(counter)s</span> Questions\n"
-"                "
+msgid "<span class=\"count\">%(counter)s</span> Question"
+msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:23
+#: forum/skins/default/templates/user_stats.html:16
 #, python-format
-msgid ""
-"\n"
-"                <span class=\"count\">1</span> Answer\n"
-"                "
-msgid_plural ""
-"\n"
-"                <span class=\"count\">%(counter)s</span> Answers\n"
-"                "
+msgid "<span class=\"count\">%(counter)s</span> Answer"
+msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:36
+#: forum/skins/default/templates/user_stats.html:24
 #, fuzzy, python-format
 msgid "the answer has been voted for %(answer_score)s times"
 msgstr "该回答总共有%d个投票"
 
-#: forum/skins/default/templates/user_stats.html:36
+#: forum/skins/default/templates/user_stats.html:24
 msgid "this answer has been selected as correct"
 msgstr "该回答已被设为最佳答案"
 
-#: forum/skins/default/templates/user_stats.html:46
+#: forum/skins/default/templates/user_stats.html:34
 #, fuzzy, python-format
-msgid "(one comment)"
+msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] "添加评论"
 msgstr[1] "添加评论"
 
-#: forum/skins/default/templates/user_stats.html:57
+#: forum/skins/default/templates/user_stats.html:44
 #, python-format
-msgid ""
-"\n"
-"                    <span class=\"count\">1</span> Vote\n"
-"                "
-msgid_plural ""
-"\n"
-"                    <span class=\"count\">%(cnt)s</span> Votes\n"
-"                "
+msgid "<span class=\"count\">%(cnt)s</span> Vote"
+msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:68
+#: forum/skins/default/templates/user_stats.html:50
 msgid "thumb up"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:69
+#: forum/skins/default/templates/user_stats.html:51
 msgid "user has voted up this many times"
 msgstr "该用户投的赞成票总数"
 
-#: forum/skins/default/templates/user_stats.html:73
+#: forum/skins/default/templates/user_stats.html:55
 msgid "thumb down"
 msgstr ""
 
-#: forum/skins/default/templates/user_stats.html:74
+#: forum/skins/default/templates/user_stats.html:56
 #, fuzzy
 msgid "user voted down this many times"
 msgstr "用户投的反对票总数"
 
-#: forum/skins/default/templates/user_stats.html:83
+#: forum/skins/default/templates/user_stats.html:64
 #, python-format
-msgid "<span class=\"count\">1</span> Tag"
+msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/user_stats.html:92
+#: forum/skins/default/templates/user_stats.html:72
 #, fuzzy, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "查看有关'%s'的问题"
 
-#: forum/skins/default/templates/user_stats.html:107
+#: forum/skins/default/templates/user_stats.html:86
 #, python-format
-msgid ""
-"\n"
-"            <span class=\"count\">1</span> Badge\n"
-"            "
-msgid_plural ""
-"\n"
-"            <span class=\"count\">%(counter)s</span> Badges\n"
-"            "
+msgid "<span class=\"count\">%(counter)s</span> Badge"
+msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3325,19 +3298,19 @@ msgstr[1] ""
 msgid "User profile"
 msgstr "用户概览"
 
-#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:898
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:907
 msgid "overview"
 msgstr "概览"
 
-#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:906
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:915
 msgid "recent activity"
 msgstr "最近活动"
 
-#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:916
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:925
 msgid "comments and answers to others questions"
 msgstr "其他用户的回复和评论"
 
-#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:915
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:924
 msgid "responses"
 msgstr "回应"
 
@@ -3349,11 +3322,11 @@ msgstr "用户的社区积分历史"
 msgid "reputation history"
 msgstr "积分"
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:942
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:951
 msgid "user vote record"
 msgstr "用户所有投票"
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:941
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:950
 msgid "casted votes"
 msgstr "投票"
 
@@ -3365,11 +3338,11 @@ msgstr "用户收藏的问题"
 msgid "favorites"
 msgstr "收藏"
 
-#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:951
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:960
 msgid "email subscription settings"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:950
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:959
 #, fuzzy
 msgid "email subscriptions"
 msgstr "全部问题"
@@ -3985,76 +3958,76 @@ msgstr ""
 msgid "email update frequency has been set to daily"
 msgstr ""
 
-#: forum/views/meta.py:34
+#: forum/views/meta.py:35
 msgid "Q&A forum feedback"
 msgstr ""
 
-#: forum/views/meta.py:35
+#: forum/views/meta.py:36
 msgid "Thanks for the feedback!"
 msgstr ""
 
-#: forum/views/meta.py:43
+#: forum/views/meta.py:44
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: forum/views/users.py:859 forum/views/users.py:863
+#: forum/views/users.py:867 forum/views/users.py:871
 msgid "changes saved"
 msgstr ""
 
-#: forum/views/users.py:869
+#: forum/views/users.py:877
 msgid "email updates canceled"
 msgstr ""
 
-#: forum/views/users.py:899
+#: forum/views/users.py:908
 #, fuzzy
 msgid "user profile"
 msgstr "用户概览"
 
-#: forum/views/users.py:900
+#: forum/views/users.py:909
 #, fuzzy
 msgid "user profile overview"
 msgstr "用户概览"
 
-#: forum/views/users.py:907
+#: forum/views/users.py:916
 #, fuzzy
 msgid "recent user activity"
 msgstr "最近活动"
 
-#: forum/views/users.py:908
+#: forum/views/users.py:917
 #, fuzzy
 msgid "profile - recent activity"
 msgstr "最近活动"
 
-#: forum/views/users.py:917
+#: forum/views/users.py:926
 msgid "profile - responses"
 msgstr "回应 - 用户资料"
 
-#: forum/views/users.py:925
+#: forum/views/users.py:934
 msgid "user reputation in the community"
 msgstr "用户社区积分"
 
-#: forum/views/users.py:926
+#: forum/views/users.py:935
 msgid "profile - user reputation"
 msgstr "积分 - 用户资料"
 
-#: forum/views/users.py:932
+#: forum/views/users.py:941
 #, fuzzy
 msgid "favorite questions"
 msgstr "收藏"
 
-#: forum/views/users.py:933
+#: forum/views/users.py:942
 msgid "users favorite questions"
 msgstr "用户收藏的问题"
 
-#: forum/views/users.py:934
+#: forum/views/users.py:943
 msgid "profile - favorite questions"
 msgstr "收藏 - 用户资料"
 
-#: forum/views/users.py:943
+#: forum/views/users.py:952
 msgid "profile - votes"
 msgstr "投票 - 用户资料"
 
-#: forum/views/users.py:952
+#: forum/views/users.py:961
 #, fuzzy
 msgid "profile - email subscriptions"
 msgstr "收藏 - 用户资料"
@@ -4107,6 +4080,27 @@ msgstr ""
 #, fuzzy
 msgid "books/"
 msgstr "读书"
+
+#, fuzzy
+#~ msgid "account_settings"
+#~ msgstr "设置"
+
+#~ msgid "The users have been awarded with badges:"
+#~ msgstr "用户已被授予该奖牌："
+
+#, fuzzy
+#~ msgid "one revision"
+#~ msgid_plural "%(rev_count)s revisions"
+#~ msgstr[0] "版本"
+#~ msgstr[1] "版本"
+
+#, fuzzy
+#~ msgid " One question found"
+#~ msgid_plural "%(q_num)s questions found"
+#~ msgstr[0] ""
+#~ "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
+#~ msgstr[1] ""
+#~ "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
 
 # translation and user name validation are language-specific
 #~ msgid "invalid user name"
@@ -4393,9 +4387,6 @@ msgstr "读书"
 
 #~ msgid "blog"
 #~ msgstr "Blog"
-
-#~ msgid "current revision"
-#~ msgstr "当前版本"
 
 #~ msgid "number of votes"
 #~ msgstr "票数"

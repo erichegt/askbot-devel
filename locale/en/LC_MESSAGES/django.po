@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-03 22:40-0400\n"
+"POT-Creation-Date: 2010-05-09 19:28-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -436,7 +436,7 @@ msgstr ""
 msgid "[deleted]"
 msgstr ""
 
-#: forum/const.py:127 forum/views/readers.py:397 forum/views/readers.py:418
+#: forum/const.py:127 forum/views/readers.py:396 forum/views/readers.py:417
 msgid "initial version"
 msgstr ""
 
@@ -705,7 +705,7 @@ msgstr ""
 msgid "command/"
 msgstr ""
 
-#: forum/urls.py:60 forum/views/readers.py:266
+#: forum/urls.py:60 forum/views/readers.py:265
 msgid "question/"
 msgstr ""
 
@@ -779,7 +779,7 @@ msgstr "news from Q&A forum"
 
 #: forum/management/commands/send_email_alerts.py:238
 #, python-format
-msgid "%(name)s, this is an update message header for a question"
+msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
 "<p>Dear %(name)s,</p></p>The following question has been updated on the Q&A "
@@ -2251,7 +2251,7 @@ msgstr ""
 
 #: forum/skins/default/templates/post_contributor_info.html:9
 #, python-format
-msgid "one revision"
+msgid "%(rev_count)s revision"
 msgid_plural "%(rev_count)s revisions"
 msgstr[0] ""
 msgstr[1] ""
@@ -2408,7 +2408,7 @@ msgstr "post a comment"
 #: forum/skins/default/templates/question.html:198
 #: forum/skins/default/templates/question.html:340
 #, python-format
-msgid "see <strong>one</strong> more"
+msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] ""
 msgstr[1] ""
@@ -2416,7 +2416,7 @@ msgstr[1] ""
 #: forum/skins/default/templates/question.html:200
 #: forum/skins/default/templates/question.html:342
 #, python-format
-msgid "see <strong>one</strong> more comment"
+msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
 "                                            "
@@ -2438,7 +2438,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    One Answer:\n"
+"                    %(counter)s Answer:\n"
 "                    "
 msgid_plural ""
 "\n"
@@ -2792,9 +2792,9 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:141
 #, python-format
-msgid " One question found"
+msgid " %(q_num)s question found"
 msgid_plural "%(q_num)s questions found"
-msgstr[0] ""
+msgstr[0] "One question found"
 msgstr[1] ""
 
 #: forum/skins/default/templates/questions.html:143
@@ -3093,14 +3093,14 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:11
 #, python-format
-msgid "<span class=\"count\">1</span> Question"
+msgid "<span class=\"count\">%(counter)s</span> Question"
 msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
 msgstr[0] ""
 msgstr[1] ""
 
 #: forum/skins/default/templates/user_stats.html:16
 #, python-format
-msgid "<span class=\"count\">1</span> Answer"
+msgid "<span class=\"count\">%(counter)s</span> Answer"
 msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
 msgstr[0] ""
 msgstr[1] ""
@@ -3116,14 +3116,14 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:34
 #, python-format
-msgid "(one comment)"
+msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] ""
 msgstr[1] ""
 
 #: forum/skins/default/templates/user_stats.html:44
 #, python-format
-msgid "<span class=\"count\">1</span> Vote"
+msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] ""
 msgstr[1] ""
@@ -3146,7 +3146,7 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:64
 #, python-format
-msgid "<span class=\"count\">1</span> Tag"
+msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
 msgstr[0] ""
 msgstr[1] ""
@@ -3159,7 +3159,7 @@ msgstr ""
 
 #: forum/skins/default/templates/user_stats.html:86
 #, python-format
-msgid "<span class=\"count\">1</span> Badge"
+msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] ""
 msgstr[1] ""
@@ -4027,22 +4027,6 @@ msgstr ""
 #: forum_modules/books/urls.py:9
 msgid "books/"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                    (one comment)\n"
-#~ "                    "
-#~ msgid_plural ""
-#~ "\n"
-#~ "                    the answer has been commented %(comment_count)s "
-#~ "times\n"
-#~ "                    "
-#~ msgstr[0] ""
-#~ "\n"
-#~ "(one comment)"
-#~ msgstr[1] ""
-#~ "\n"
-#~ "(%(comment_count)s comments)"
 
 #~ msgid "welcome to website"
 #~ msgstr "Welcome to Q&amp;A forum"

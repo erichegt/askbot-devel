@@ -123,7 +123,7 @@ TYPE_RESPONSE = {
 
 CONST = {
     'closed'            : _('[closed]'),
-	'deleted'           : _('[deleted]'),
+    'deleted'           : _('[deleted]'),
     'default_version'   : _('initial version'),
     'retagged'          : _('retagged'),
 }
