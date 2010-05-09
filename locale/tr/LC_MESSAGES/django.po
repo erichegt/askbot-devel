@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-09 19:30-0400\n"
+"POT-Creation-Date: 2010-05-09 19:43-0400\n"
 "PO-Revision-Date: 2010-04-30 02:23\n"
 "Last-Translator: <who@email.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2910,8 +2910,8 @@ msgstr[0] "%(q_num)s soru"
 msgstr[1] "%(q_num)s soru"
 
 #: forum/skins/default/templates/questions.html:143
-#, python-format
-msgid " %(q_num)s question"
+#, fuzzy, python-format
+msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] "%(q_num)s soru"
 msgstr[1] "%(q_num)s soru"
