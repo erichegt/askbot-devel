@@ -98,13 +98,13 @@
             </table>
         </div>
         {% comment %}
-        {% ifequal settings.EMAIL_VALIDATION 'on' %}
+        {% if settings.EMAIL_VALIDATION %}
         <div>
             <a id='validate'></a><h3 class="subtitle">{% trans "how to validate email title" %}</h3>
             <!--special case here message must contain paragraphs-->
             {% blocktrans %}how to validate email info with {{send_email_key_url}} {{gravatar_faq_url}}{% endblocktrans %}
         </div>
-        {% endifequal %}
+        {% endif %}
         {% endcomment %}
         <div>
             <a id='gravatar'></a><h3 class="subtitle">{% trans "what is gravatar" %}</h3>

@@ -11,7 +11,7 @@ import forum.models as askbot
 import forum.importers.stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
 from forum.utils.html import sanitize_html
-from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
 #from markdown2 import Markdown
@@ -209,7 +209,7 @@ class X(object):#
     @classmethod
     def get_email(cls, email):#todo: fix fringe case - user did not give email!
         if email is None:
-            return settings.ANONYMOUS_USER_EMAIL
+            return forum_settings.ANONYMOUS_USER_EMAIL
         else:
             assert(email != '')
             return email

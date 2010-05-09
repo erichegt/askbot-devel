@@ -109,7 +109,7 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        #if settings.EMAIL_VALIDATION == 'on':
+        #if forum_settings.EMAIL_VALIDATION == True:
         #    send_new_email_key(user,nomessage=nomessage)    
 
 @login_required
@@ -124,7 +124,7 @@ def edit_user(request, id):
 
             set_new_email(user, new_email)
 
-            if settings.EDITABLE_SCREEN_NAME:
+            if forum_settings.EDITABLE_SCREEN_NAME:
                 user.username = sanitize_html(form.cleaned_data['username'])
 
             user.real_name = sanitize_html(form.cleaned_data['realname'])

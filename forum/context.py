@@ -13,12 +13,12 @@ def application_settings(context):
         'FORUM_PRIVACY': forum_settings.FORUM_PRIVACY,
         'GOOGLE_SITEMAP_CODE':forum_settings.GOOGLE_SITEMAP_CODE,
         'GOOGLE_ANALYTICS_KEY':forum_settings.GOOGLE_ANALYTICS_KEY,
-        'RESOURCE_REVISION':settings.RESOURCE_REVISION,
-        'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,
-        'EMAIL_VALIDATION': settings.EMAIL_VALIDATION,
+        'EMAIL_VALIDATION': forum_settings.EMAIL_VALIDATION,
+        'RESOURCE_REVISION':forum_settings.MEDIA_RESOURCE_REVISION,
+        'ASKBOT_SKIN':forum_settings.ASKBOT_DEFAULT_SKIN,
+        'EDITABLE_SCREEN_NAME':forum_settings.EDITABLE_SCREEN_NAME,
         'FORUM_SCRIPT_ALIAS': settings.FORUM_SCRIPT_ALIAS,
         'LANGUAGE_CODE': settings.LANGUAGE_CODE,
-        'EDITABLE_SCREEN_NAME':settings.EDITABLE_SCREEN_NAME,
         }
     return {'settings':my_settings}
 

@@ -210,7 +210,9 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                 if user.is_authenticated():
                     if user not in question.followed_by.all():
                         question.followed_by.add(user)
-                        if settings.EMAIL_VALIDATION == 'on' and user.email_isvalid == False:
+                        if forum_settings.EMAIL_VALIDATION == True \
+                            and user.email_isvalid == False:
+
                             response_data['message'] = \
                                     _('subscription saved, %(email)s needs validation, see %(details_url)s') \
                                     % {'email':user.email,'details_url':reverse('faq') + '#validate'}

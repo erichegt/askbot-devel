@@ -7,6 +7,10 @@ import forum.conf.forum_data_rules
 import forum.conf.flatpages
 import forum.conf.site_settings
 import forum.conf.external_keys
+import forum.conf.skin_counter_settings
+import forum.conf.skin_general_settings
+import forum.conf.user_settings
 
 #import main settings object
 from forum.conf.settings_wrapper import settings
+

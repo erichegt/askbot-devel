@@ -6,9 +6,12 @@ via dotted lookup.
 
 for example to lookup value of setting BLAH you would do
 
-from forum.conf import settings
+from forum.conf import settings as forum_settings
 
-settings.BLAH
+forum_settings.BLAH
+
+NOTE that at the moment there is distinction between settings
+(django settings) and forum_settings (livesettings)
 
 the value will be taken from livesettings database or cache
 note that during compilation phase database is not accessible

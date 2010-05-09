@@ -408,8 +408,8 @@ def record_user_full_updated(instance, **kwargs):
 def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs):
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-    from django.conf import settings
-    if settings.EMAIL_VALIDATION == 'on':#add user to the record
+    from forum.conf import settings as forum_settings
+    if forum_settings.EMAIL_VALIDATION == True:#add user to the record
         for aq in aq_list:
             aq.author = user
             aq.save()

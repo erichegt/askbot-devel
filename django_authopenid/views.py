@@ -508,7 +508,7 @@ def register(request):
         #if user just logged in and did not need to create the new account
         
         if user_ != None:
-            if settings.EMAIL_VALIDATION == 'on':
+            if forum_settings.EMAIL_VALIDATION == True:
                 logging.debug('sending email validation')
                 send_new_email_key(user_,nomessage=True)
                 output = validation_email_sent(request)
@@ -750,7 +750,7 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        if settings.EMAIL_VALIDATION == 'on':
+        if forum_settings.EMAIL_VALIDATION == True:
             send_new_email_key(user,nomessage=nomessage)
 
 def _send_email_key(user):
@@ -788,7 +788,7 @@ def send_email_key(request):
     authopenid/changeemail.html template
     """
 
-    if settings.EMAIL_VALIDATION != 'off':
+    if forum_settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
             return render_to_response('authopenid/changeemail.html',
                             { 'email': request.user.email, 
@@ -818,7 +818,7 @@ def verifyemail(request,id=None,key=None):
     url = /email/verify/{{user.id}}/{{user.email_key}}/
     """
     logging.debug('')
-    if settings.EMAIL_VALIDATION != 'off':
+    if forum.settings.EMAIL_VALIDATION == True:
         user = User.objects.get(id=id)
         if user:
             if user.email_key == key:
@@ -855,7 +855,7 @@ def changeemail(request, action='change'):
         if form.is_valid():
             new_email = form.cleaned_data['email']
             if new_email != user_.email:
-                if settings.EMAIL_VALIDATION == 'on':
+                if forum_settings.EMAIL_VALIDATION == True:
                     action = 'validate'
                 else:
                     action = 'done_novalidate'
