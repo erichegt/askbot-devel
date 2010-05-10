@@ -73,10 +73,15 @@ def find_media_source(url):
     return use_skin + '/' + url
 
 def get_skin_choices():
+    #todo: expand this to handle custom skin directories
     dirs = get_skin_dirs()
-    items = os.listdir(dirs[0])
+    default_dir = dirs[0]
+    items = os.listdir(default_dir)
     skin_list = ['default']
     for i in items:
+        item_path = os.path.join(default_dir,i)
+        if not os.path.isdir(item_path):
+            continue
         if i == 'common':
             continue
         if i not in skin_list:

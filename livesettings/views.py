@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.admin.views.decorators import staff_member_required
@@ -15,13 +16,10 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     use_db, overrides = get_overrides();
     
     mgr = ConfigurationSettings()
-    if group is None:
-        settings = mgr
-        title = 'Site settings'
-    else:
-        settings = mgr[group]
-        title = settings.name
-        log.debug('title: %s', title)
+
+    settings = mgr[group]
+    title = settings.name
+    log.debug('title: %s', title)
 
     if use_db:
         # Create an editor customized for the current user
@@ -48,8 +46,9 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
             form = forms.SettingsEditor(settings=settings)
     else:
         form = None
-        
+
     return render_to_response(template, {
+        'all_groups': mgr.groups(),
         'title': title,
         'group' : group,
         'form': form,
@@ -60,7 +59,11 @@ group_settings = never_cache(staff_member_required(group_settings))
 # Site-wide setting editor is identical, but without a group
 # staff_member_required is implied, since it calls group_settings
 def site_settings(request):
-    return group_settings(request, group=None, template='livesettings/site_settings.html')
+    mgr = ConfigurationSettings()
+    default_group= mgr.groups()[0].key
+    print default_group
+    return HttpResponseRedirect(reverse('group_settings', args=[default_group]))
+    #return group_settings(request, group=None, template='livesettings/site_settings.html')
     
 def export_as_python(request):
     """Export site settings as a dictionary of dictionaries"""
