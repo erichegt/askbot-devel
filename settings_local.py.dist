@@ -54,7 +54,7 @@ LANGUAGE_CODE = 'en'
 
 #Do not use these - will be phased out
 USE_EXTERNAL_LEGACY_LOGIN = False
-EXTERNAL_LEGACY_LOGIN_HOST = 'login.askbot.net'
+EXTERNAL_LEGACY_LOGIN_HOST = 'login.askbot.org'
 EXTERNAL_LEGACY_LOGIN_PORT = 80
 EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME = '<span class="orange">ASKBOT</span>'
 
