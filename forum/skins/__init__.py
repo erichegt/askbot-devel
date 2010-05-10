@@ -1,4 +1,3 @@
-from forum.conf import settings as forum_settings
 from django.template import loader
 from django.template.loaders import filesystem 
 from django.http import HttpResponse
@@ -15,6 +14,8 @@ import logging
 
 def load_template_source(name, dirs=None):
     try:
+        #todo: move this to top after splitting out get_skin_dirs()
+        from forum.conf import settings as forum_settings
         tname = os.path.join(forum_settings.ASKBOT_DEFAULT_SKIN,'templates',name)
         return filesystem.load_template_source(tname,dirs)
     except:
@@ -22,6 +23,8 @@ def load_template_source(name, dirs=None):
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
 
+#todo: move this to skins/utils.py
+#then move import forum.conf.settings to top
 def get_skin_dirs():
     #todo: handle case of multiple skin directories
     d = os.path.dirname
@@ -48,6 +51,8 @@ def find_media_source(url):
     #todo: handles case of multiple skin directories
     skins = get_skin_dirs()[0]
     try:
+        #todo: move this to top after splitting out get_skin_dirs()
+        from forum.conf import settings as forum_settings
         media = os.path.join(skins, forum_settings.ASKBOT_DEFAULT_SKIN, url)
         assert(f(media))
         use_skin = forum_settings.ASKBOT_DEFAULT_SKIN
