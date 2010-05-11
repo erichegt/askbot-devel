@@ -67,10 +67,11 @@ class TagNamesField(forms.CharField):
         out_tag_list = []
         tag_count = len(tag_strings)
         if tag_count > forum_settings.MAX_TAGS_PER_POST:
+            max_tags = forum_settings.MAX_TAGS_PER_POST
             msg = ungettext(
-                        'please use %(tag_count)d tag or less',#odd but have to use to pluralize
+                        'please use %(tag_count)d tag or less',
                         'please use %(tag_count)d tags or less',
-                        tag_count) % {'tag_count':tag_count}
+                        tag_count) % {'tag_count':max_tags}
             raise forms.ValidationError(msg)
         for tag in tag_strings:
             tag_length = len(tag)

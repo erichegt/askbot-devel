@@ -50,7 +50,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     return render_to_response(template, {
         'all_groups': mgr.groups(),
         'title': title,
-        'group' : group,
+        'group' : settings,
         'form': form,
         'use_db' : use_db
     }, context_instance=RequestContext(request))
@@ -61,7 +61,6 @@ group_settings = never_cache(staff_member_required(group_settings))
 def site_settings(request):
     mgr = ConfigurationSettings()
     default_group= mgr.groups()[0].key
-    print default_group
     return HttpResponseRedirect(reverse('group_settings', args=[default_group]))
     #return group_settings(request, group=None, template='livesettings/site_settings.html')
     

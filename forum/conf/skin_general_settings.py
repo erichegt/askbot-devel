@@ -29,7 +29,9 @@ settings.register(
         description=_('Skin media revision number'),
         help_text=_(
                     'Increment this number when you change '
-                    'image in skin media or stylesheet'
+                    'image in skin media or stylesheet. '
+                    'This helps avoid showing your users '
+                    'outdated images from their browser cache.'
                     )
     )
 )

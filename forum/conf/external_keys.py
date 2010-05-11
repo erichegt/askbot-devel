@@ -47,6 +47,7 @@ settings.register(
         EXTERNAL_KEYS,
         'RECAPTCHA_PRIVATE_KEY',
         description=_('Recaptcha private key') + ' - does not work yet',
+        hidden=True,
         help_text=_(
                         'Recaptcha is a tool that helps distinguish '
                         'real people from annoying spam robots. '
@@ -60,6 +61,7 @@ settings.register(
     StringValue(
         EXTERNAL_KEYS,
         'RECAPTCHA_PUBLIC_KEY',
+        hidden=True,
         description=_('Recaptcha public key') + ' - does not work yet'
     )
 )
@@ -69,6 +71,7 @@ settings.register(
         EXTERNAL_KEYS,
         'FB_API_KEY',
         description=_('Facebook public API key') + ' - does not work yet',
+        hidden=True,
         help_text=_(
                      'Facebook API key and Facebook secret '
                      'allow to use Facebook Connect login method '
@@ -84,6 +87,7 @@ settings.register(
     StringValue(
         EXTERNAL_KEYS,
         'FB_SECRET',
+        hidden=True,
         description=_('Facebook secret key') + ' - does not work yet'
     )
 )

@@ -27,25 +27,34 @@
     <div class="module">
     <table summary="{% filter capfirst %}{% blocktrans with group.name as name %}Settings included in {{ name }}.{% endblocktrans %}{% endfilter %}" width="100%">
         {% for field in form %}
-            {% if field.errors %}
-            <tr class="error">
-                <td colspan="2">{{ field.errors }}</td>
-            </tr>
+            {% if field.is_hidden %}
+                <!-- skip hidden field {{field.key}} -->
+            {% else %}
+                {% if field.errors %}
+                <tr class="error">
+                    <td colspan="2">{{ field.errors }}</td>
+                </tr>
+                {% endif %}
+                <tr{% if field.errors %} class="error"{% endif %}>
+                    <td style="width: 50%;">
+                        {{ field.label_tag }}
+                        {% if field.help_text %}
+                            <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                        {% if field.field.default_text %}
+                            <p class="help">{{ field.field.default_text|safe }}</p>
+                        {% endif %}
+                    </td>
+                    <td>{{ field }}</td>
+                </tr>
             {% endif %}
-            <tr{% if field.errors %} class="error"{% endif %}>
-                <td style="width: 50%;">
-                    {{ field.label_tag }}
-                    {% if field.help_text %}
-                        <p class="help">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                    {% if field.field.default_text %}
-                        <p class="help">{{ field.field.default_text|safe }}</p>
-                    {% endif %}
-                </td>
-                <td>{{ field }}</td>
-            </tr>
         {% endfor %}
     </table>
+        {% for field in form %}
+            {% if field.is_hidden %}
+                {{field}}
+            {% endif %}
+        {% endfor %}
     </div>
     <input type="submit" value="Save" class="default" />
 </form>
@@ -59,7 +68,11 @@
         <h2>{% trans "Setting groups" %}</h2>
         <ul>
         {% for g in all_groups %}
-            <li><a href="{% url group_settings g.key %}">{{g.name}}</a></li>
+            {% ifequal g.key group.key %}
+                <li><b>{{g.name}}</b></li>
+            {% else %}
+                <li><a href="{% url group_settings g.key %}">{{g.name}}</a></li>
+            {% endifequal %}
         {% endfor %}
         </ul>
     </div>

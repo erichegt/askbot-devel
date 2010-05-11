@@ -25,6 +25,7 @@ settings.register(
         EMAIL,
         'EMAIL_VALIDATION',
         default=False,
+        hidden=True,
         description=_('Require email verification before allowing to post'),
         help_text=_('Active email verification is done by sending a verification key in email')
     )

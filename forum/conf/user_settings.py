@@ -23,6 +23,7 @@ settings.register(
     IntegerValue(
         USER_SETTINGS,
         'MIN_USERNAME_LENGTH',
+        hidden=True,
         default=1,
         description=_('Minimum allowed length for screen name')
     )

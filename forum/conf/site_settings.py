@@ -5,6 +5,7 @@ keywords
 from forum.conf.settings_wrapper import settings
 from livesettings import ConfigurationGroup, StringValue
 from django.utils.translation import ugettext as _
+from django.utils.html import escape
 from django.conf import settings as django_settings
 from forum import const
 
@@ -54,6 +55,7 @@ settings.register(
         QA_SITE_SETTINGS,
         'APP_SHORT_NAME',
         default=_('Askbot'),
+        hidden=True,
         description=_('Short name for your Q&A forum')
     )
 )
@@ -71,11 +73,15 @@ settings.register(
     StringValue(
         QA_SITE_SETTINGS,
         'GREETING_URL',
-        default=_('faq/'),#cannot reverse url here, unfortunately
+        default='/' + _('faq/'),#cannot reverse url here, unfortunately, must be absolute also
+        hidden=True,
         description=_('Link shown in the greeting message shown to the anonymous user'),
         help_text=_('If you change this url from the default - '
-                    'then you wil have to adjust translation of '
-                    'the following string: ') + const.GREETING_FOR_ANONYMOUS_USER
+                    'then you will also probably want to adjust translation of '
+                    'the following string: ') + '"' 
+                    + escape(const.GREETING_FOR_ANONYMOUS_USER + '"'
+                    ' You can find this string in your locale django.po file'
+                    )
     )
 )
 

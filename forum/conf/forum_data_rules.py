@@ -17,7 +17,7 @@ settings.register(
         FORUM_DATA_RULES,
         'WIKI_ON',
         default=True,
-        description=_('Enable/disable community wiki feature')
+        description=_('Check to enable community wiki feature')
     )
 )
 
@@ -27,6 +27,15 @@ settings.register(
         'MAX_TAG_LENGTH',
         default=20,
         description=_('Maximum length of tag (number of characters)')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        FORUM_DATA_RULES,
+        'MAX_TAGS_PER_POST',
+        default=5,
+        description=_('Maximum number of tags per question')
     )
 )
 

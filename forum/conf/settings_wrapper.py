@@ -35,6 +35,7 @@ class ConfigSettings(object):
         if ConfigSettings.__instance == None:
             ConfigSettings.__instance = SortedDotDict()
         self.__dict__['_ConfigSettings__instance'] = ConfigSettings.__instance
+        self.__ordering_index = {}
 
     def __getattr__(self, key):
         """value lookup returns the actual value of setting
@@ -44,15 +45,22 @@ class ConfigSettings(object):
         """
         return getattr(self.__instance, key).value
 
-    def __setattr__(self, attr, value):
-        """ settings crutch is read-only in the program """
-        raise Exception('ConfigSettings cannot be changed programmatically')
-
     def register(self, value):
         """registers the setting
         value must be a subclass of livesettings.Value
         """
         key = value.key
+        group_key = value.group.key
+
+        ordering = self.__ordering_index.get(group_key, None)
+        if ordering:
+            ordering += 1
+            value.ordering = ordering
+        else:
+            ordering = 1
+            value.ordering = ordering
+        self.__ordering_index[group_key] = ordering
+
         if key in self.__instance:
             raise Exception('setting %s is already registered' % key)
         else:

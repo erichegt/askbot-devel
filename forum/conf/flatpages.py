@@ -17,9 +17,9 @@ settings.register(
         description=_('Text the Q&A forum About page (html format)'),
         help_text=\
         _(
-            'Save, then <a href="http://validator.w3.org/check?uri=%(url)s">'
-            'validate HTML</a>'
-        ) % {'url':_('about/')}
+            'Save, then <a href="http://validator.w3.org/">'
+            'use HTML validator</a> on the "about" page to check your input.'
+        )
     )
 )
 
@@ -30,8 +30,8 @@ settings.register(
         description=_('Text the Q&A forum Privacy Policy (html format)'),
         help_text=\
         _(
-            'Save, then <a href="http://validator.w3.org/check?uri=%(url)s">'
-            'validate HTML</a>'
-        ) % {'url':_('privacy/')}
+            'Save, then <a href="http://validator.w3.org/">'
+            'use HTML validator</a> on the "privacy" page to check your input.'
+        )
     )
 )
