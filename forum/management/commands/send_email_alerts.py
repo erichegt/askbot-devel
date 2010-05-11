@@ -10,19 +10,23 @@ import datetime
 from django.conf import settings
 from forum.conf import settings as forum_settings
 import logging
-from forum.utils.odict import OrderedDict
+from django.utils.datastructures import SortedDict 
 from django.contrib.contenttypes.models import ContentType
 from forum import const
+
+DEBUG_THIS_COMMAND = False
 
 def extend_question_list(src, dst, limit=False):
     """src is a query set with questions
        or None
        dst - is an ordered dictionary
+       update reporting cutoff time for each question
+       to the latest value to be more permissive about updates
     """
-    if limit and len(dst.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
-        return
     if src is None:#is not QuerySet
         return #will not do anything if subscription of this type is not used
+    if limit and len(dst.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
+        return
     cutoff_time = src.cutoff_time
     for q in src:
         if q in dst:
@@ -34,8 +38,13 @@ def extend_question_list(src, dst, limit=False):
             #initialise a questions metadata dictionary to use for email reporting
             dst[q] = {'cutoff_time':cutoff_time}
 
+def format_action_count(string, number, output):
+    if number > 0:
+        output.append(_(string) % {'num':number})
+
+
 class Command(NoArgsCommand):
-    def handle_noargs(self,**options):
+    def handle_noargs(self, **options):
         try:
             try:
                 self.send_email_alerts()
@@ -45,6 +54,23 @@ class Command(NoArgsCommand):
             connection.close()
 
     def get_updated_questions_for_user(self,user):
+        """
+        retreive relevant question updates for the user
+        according to their subscriptions and recorded question
+        views
+        """
+
+        user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
+
+        should_proceed = False
+        for feed in user_feeds:
+            if feed.should_send_now() == True:
+                should_proceed = True
+                break
+
+        #shortcirquit - if there is no ripe feed to work on for this user
+        if should_proceed == False:
+            return {}
 
         #these are placeholders for separate query sets per question group
         #there are four groups - one for each EmailFeedSetting.feed_type
@@ -63,9 +89,10 @@ class Command(NoArgsCommand):
         q_all_A = None
         q_all_B = None
 
-        now = datetime.datetime.now()
-        #Q_set1 - base questionquery set for this user
-        Q_set1 = Question.objects.exclude(
+        #base question query set for this user
+        #basic things - not deleted, not closed, not too old
+        #not last edited by the same user
+        base_qs = Question.objects.exclude(
                                 last_activity_by=user
                             ).exclude(
                                 last_activity_at__lt=user.date_joined#exclude old stuff
@@ -80,56 +107,83 @@ class Command(NoArgsCommand):
         #so because of that I've created separate query sets Q_set2 and Q_set3
         #plus two separate queries run faster!
 
-        #questions that are not seen by the user
-        Q_set2 = Q_set1.filter(~Q(viewed__who=user))
-        #questions seen before the last modification
-        Q_set3 = Q_set1.filter(Q(viewed__who=user,viewed__when__lt=F('last_activity_at')))
+        #build two two queries based
 
-        #todo may shortcirquit here is len(user_feeds) == 0
-        user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
-        if len(user_feeds) == 0:
-            return {};#short cirquit
+        #questions that are not seen by the user at all
+        not_seen_qs = base_qs.filter(~Q(viewed__who=user))
+        #questions that were seen, but before last modification
+        seen_before_last_mod_qs = base_qs.filter(
+                                    Q(
+                                        viewed__who=user,
+                                        viewed__when__lt=F('last_activity_at')
+                                    )
+                                )
+
         for feed in user_feeds:
-            #each group of updates has it's own cutoff time
-            #to be saved as a new parameter for each query set
-            #won't send email for a given question if it has been done
-            #after the cutoff_time
-            cutoff_time = now - EmailFeedSetting.DELTA_TABLE[feed.frequency]
-            if feed.reported_at == None or feed.reported_at <= cutoff_time:
-                Q_set_A = Q_set2#.exclude(last_activity_at__gt=cutoff_time)#report these excluded later
-                Q_set_B = Q_set3#.exclude(last_activity_at__gt=cutoff_time)
-                feed.reported_at = now
-                feed.save()#may not actually report anything, depending on filters below
+            #each group of updates represented by the corresponding
+            #query set has it's own cutoff time
+            #that cutoff time is computed for each user individually
+            #and stored as a parameter "cutoff_time"
+            #
+            #we won't send email for a given question if an email has been
+            #sent after that cutoff_time
+            if feed.should_send_now():
+
+                if DEBUG_THIS_COMMAND == False:
+                    feed.mark_reported_now()
+                cutoff_time = feed.get_previous_report_cutoff_time() 
+
+                #shorten variables for convenience
+                Q_set_A = not_seen_qs
+                Q_set_B = seen_before_last_mod_qs
+
                 if feed.feed_type == 'q_sel':
                     q_sel_A = Q_set_A.filter(followed_by=user)
                     q_sel_A.cutoff_time = cutoff_time #store cutoff time per query set
                     q_sel_B = Q_set_B.filter(followed_by=user)
                     q_sel_B.cutoff_time = cutoff_time #store cutoff time per query set
+
                 elif feed.feed_type == 'q_ask':
                     q_ask_A = Q_set_A.filter(author=user)
                     q_ask_A.cutoff_time = cutoff_time
                     q_ask_B = Q_set_B.filter(author=user)
                     q_ask_B.cutoff_time = cutoff_time
+
                 elif feed.feed_type == 'q_ans':
-                    q_ans_A = Q_set_A.filter(answers__author=user)[:forum_settings.MAX_ALERTS_PER_EMAIL]
+                    q_ans_A = Q_set_A.filter(answers__author=user)
+                    q_ans_A = q_ans_A[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_A.cutoff_time = cutoff_time
-                    q_ans_B = Q_set_B.filter(answers__author=user)[:forum_settings.MAX_ALERTS_PER_EMAIL]
+
+                    q_ans_B = Q_set_B.filter(answers__author=user)
+                    q_ans_B = q_ans_B[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_B.cutoff_time = cutoff_time
+
                 elif feed.feed_type == 'q_all':
                     if user.tag_filter_setting == 'ignored':
-                        ignored_tags = Tag.objects.filter(user_selections__reason='bad', \
-                                                            user_selections__user=user)
-                        q_all_A = Q_set_A.exclude( tags__in=ignored_tags )[:forum_settings.MAX_ALERTS_PER_EMAIL]
-                        q_all_B = Q_set_B.exclude( tags__in=ignored_tags )[:forum_settings.MAX_ALERTS_PER_EMAIL]
+
+                        ignored_tags = Tag.objects.filter(
+                                                user_selections__reason='bad',
+                                                user_selections__user=user
+                                            )
+
+                        q_all_A = Q_set_A.exclude( tags__in=ignored_tags )
+
+                        q_all_B = Q_set_B.exclude( tags__in=ignored_tags )
                     else:
-                        selected_tags = Tag.objects.filter(user_selections__reason='good', \
-                                                            user_selections__user=user)
+                        selected_tags = Tag.objects.filter(
+                                                user_selections__reason='good',
+                                                user_selections__user=user
+                                            )
                         q_all_A = Q_set_A.filter( tags__in=selected_tags )
                         q_all_B = Q_set_B.filter( tags__in=selected_tags )
+
+                    q_all_A = q_all_A[:forum_settings.MAX_ALERTS_PER_EMAIL]
+                    q_all_B = q_all_B[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_A.cutoff_time = cutoff_time
                     q_all_B.cutoff_time = cutoff_time
-        #build list in this order
-        q_list = OrderedDict()
+
+        #build ordered list questions for the email report
+        q_list = SortedDict()
 
         extend_question_list(q_sel_A, q_list)
         extend_question_list(q_sel_B, q_list)
@@ -150,39 +204,59 @@ class Command(NoArgsCommand):
 
         ctype = ContentType.objects.get_for_model(Question)
         EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT
+
+        #up to this point we still don't know if emails about
+        #collected questions were sent recently
+        #the next loop examines activity record and decides
+        #for each question, whether it needs to be included or not
+        #into the report
+
         for q, meta_data in q_list.items():
             #this loop edits meta_data for each question
             #so that user will receive counts on new edits new answers, etc
-            #maybe not so important actually??
+            #and marks questions that need to be skipped
+            #because an email about them was sent recently enough
 
-            #keeps email activity per question per user
+            #also it keeps a record of latest email activity per question per user
             try:
+                #todo: is it possible to use content_object here, instead of
+                #content type and object_id pair?
                 update_info = Activity.objects.get(
-                                                    user=user,
-                                                    content_type=ctype,
-                                                    object_id=q.id,
-                                                    activity_type=EMAIL_UPDATE_ACTIVITY
-                                                    )
+                                            user=user,
+                                            content_type=ctype,
+                                            object_id=q.id,
+                                            activity_type=EMAIL_UPDATE_ACTIVITY
+                                        )
                 emailed_at = update_info.active_at
             except Activity.DoesNotExist:
-                update_info = Activity(user=user, content_object=q, activity_type=EMAIL_UPDATE_ACTIVITY)
+                update_info = Activity(
+                                        user=user, 
+                                        content_object=q, 
+                                        activity_type=EMAIL_UPDATE_ACTIVITY
+                                    )
                 emailed_at = datetime.datetime(1970,1,1)#long time ago
             except Activity.MultipleObjectsReturned:
-                raise Exception('server error - multiple question email activities found per user-question pair')
+                raise Exception(
+                                'server error - multiple question email activities '
+                                'found per user-question pair'
+                                )
 
             cutoff_time = meta_data['cutoff_time']#cutoff time for the question
 
-            #wait some more time before emailing about this question
-            if emailed_at > cutoff_time:
-                #here we are maybe losing opportunity to record the finding
-                #of yet unseen version of a question
+            #skip question if we need to wait longer because
+            #the delay before the next email has not yet elapsed
+            #or if last email was sent after the most recent modification
+            if emailed_at > cutoff_time or emailed_at > q.last_activity_at:
                 meta_data['skip'] = True
                 continue
 
             #collect info on all sorts of news that happened after
             #the most recent emailing to the user about this question
-            q_rev = QuestionRevision.objects.filter(question=q,\
-                                                    revised_at__gt=emailed_at)
+            q_rev = QuestionRevision.objects.filter(
+                                                question=q,
+                                                revised_at__gt=emailed_at
+                                            )
+
             q_rev = q_rev.exclude(author=user)
 
             #now update all sorts of metadata per question
@@ -193,8 +267,11 @@ class Command(NoArgsCommand):
             else:
                 meta_data['new_q'] = False
                 
-            new_ans = Answer.objects.filter(question=q,\
-                                            added_at__gt=emailed_at)
+            new_ans = Answer.objects.filter(
+                                            question=q,
+                                            added_at__gt=emailed_at
+                                        )
+
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
             ans_rev = AnswerRevision.objects.filter(answer__question=q,\
@@ -202,20 +279,18 @@ class Command(NoArgsCommand):
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
 
+            #finally skip question if there are no news indeed
             if len(q_rev) + len(new_ans) + len(ans_rev) == 0:
                 meta_data['skip'] = True
             else:
                 meta_data['skip'] = False
-                update_info.active_at = now
-                update_info.save() #save question email update activity 
-        #q_list is actually a ordered dictionary
+                update_info.active_at = datetime.datetime.now() 
+                if DEBUG_THIS_COMMAND == False:
+                    update_info.save() #save question email update activity 
+        #q_list is actually an ordered dictionary
         #print 'user %s gets %d' % (user.username, len(q_list.keys()))
         #todo: sort question list by update time
         return q_list 
-
-    def __action_count(self,string,number,output):
-        if number > 0:
-            output.append(_(string) % {'num':number})
 
     def send_email_alerts(self):
         #does not change the database, only sends the email
@@ -254,9 +329,9 @@ class Command(NoArgsCommand):
                         items_added += 1
                         if meta_data['new_q']:
                             act_list.append(_('new question'))
-                        self.__action_count('%(num)d rev', meta_data['q_rev'],act_list)
-                        self.__action_count('%(num)d ans', meta_data['new_ans'],act_list)
-                        self.__action_count('%(num)d ans rev',meta_data['ans_rev'],act_list)
+                        format_action_count('%(num)d rev', meta_data['q_rev'],act_list)
+                        format_action_count('%(num)d ans', meta_data['new_ans'],act_list)
+                        format_action_count('%(num)d ans rev',meta_data['ans_rev'],act_list)
                         act_token = ', '.join(act_list)
                         text += '<li><a href="%s?sort=latest">%s</a> <font color="#777777">(%s)</font></li>' \
                                     % (url_prefix + q.get_absolute_url(), q.title, act_token)
@@ -313,7 +388,8 @@ class Command(NoArgsCommand):
                                 % {'link':link, 'email':settings.ADMINS[0][1]}
                 msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
                 msg.content_subtype = 'html'
-                msg.send()
+                if DEBUG_THIS_COMMAND == False:
+                    msg.send()
                 #uncomment lines below to get copies of emails sent to others
                 #todo: maybe some debug setting would be appropriate here
                 #msg2 = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, ['your@email.com'])
