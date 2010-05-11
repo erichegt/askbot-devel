@@ -1,8 +1,8 @@
 This is Askbot project - open source Q&A system
 
-Demo site is http://askbot.org/meta
+Demo site is http://askbot.org
 
-All documentation is in the directory forum/documentation
+All documentation is in the directory forum/doc
 
 askbot-devel repository is open to anyone who wants to help develop Askbot - just drop us a note
 

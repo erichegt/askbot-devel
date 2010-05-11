@@ -1,13 +1,14 @@
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
-from forum.models import *
-from forum import const 
+from forum.models import User, Question, Answer, Tag, QuestionRevision
+from forum.models import AnswerRevision, Activity, EmailFeedSetting
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 import datetime
 from django.conf import settings
+from forum.conf import settings as forum_settings
 import logging
 from forum.utils.odict import OrderedDict
 from django.contrib.contenttypes.models import ContentType
@@ -18,7 +19,7 @@ def extend_question_list(src, dst, limit=False):
        or None
        dst - is an ordered dictionary
     """
-    if limit and len(dst.keys()) >= const.MAX_ALERTS_PER_EMAIL:
+    if limit and len(dst.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
         return
     if src is None:#is not QuerySet
         return #will not do anything if subscription of this type is not used
@@ -110,16 +111,16 @@ class Command(NoArgsCommand):
                     q_ask_B = Q_set_B.filter(author=user)
                     q_ask_B.cutoff_time = cutoff_time
                 elif feed.feed_type == 'q_ans':
-                    q_ans_A = Q_set_A.filter(answers__author=user)[:const.MAX_ALERTS_PER_EMAIL]
+                    q_ans_A = Q_set_A.filter(answers__author=user)[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_A.cutoff_time = cutoff_time
-                    q_ans_B = Q_set_B.filter(answers__author=user)[:const.MAX_ALERTS_PER_EMAIL]
+                    q_ans_B = Q_set_B.filter(answers__author=user)[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_B.cutoff_time = cutoff_time
                 elif feed.feed_type == 'q_all':
                     if user.tag_filter_setting == 'ignored':
                         ignored_tags = Tag.objects.filter(user_selections__reason='bad', \
                                                             user_selections__user=user)
-                        q_all_A = Q_set_A.exclude( tags__in=ignored_tags )[:const.MAX_ALERTS_PER_EMAIL]
-                        q_all_B = Q_set_B.exclude( tags__in=ignored_tags )[:const.MAX_ALERTS_PER_EMAIL]
+                        q_all_A = Q_set_A.exclude( tags__in=ignored_tags )[:forum_settings.MAX_ALERTS_PER_EMAIL]
+                        q_all_B = Q_set_B.exclude( tags__in=ignored_tags )[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     else:
                         selected_tags = Tag.objects.filter(user_selections__reason='good', \
                                                             user_selections__user=user)
@@ -232,7 +233,7 @@ class Command(NoArgsCommand):
                 else:
                     num_q += 1
             if num_q > 0:
-                url_prefix = settings.APP_URL
+                url_prefix = forum_settings.APP_URL
                 subject = _('email update message subject')
                 print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for %(num)d question', 
@@ -246,7 +247,7 @@ class Command(NoArgsCommand):
                     act_list = []
                     if meta_data['skip']:
                         continue
-                    if items_added >= const.MAX_ALERTS_PER_EMAIL:
+                    if items_added >= forum_settings.MAX_ALERTS_PER_EMAIL:
                         items_unreported = num_q - items_added #may be inaccurate actually, but it's ok
                         
                     else:
@@ -261,7 +262,7 @@ class Command(NoArgsCommand):
                                     % (url_prefix + q.get_absolute_url(), q.title, act_token)
                 text += '</ul>'
                 text += '<p></p>'
-                #if len(q_list.keys()) >= const.MAX_ALERTS_PER_EMAIL:
+                #if len(q_list.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
                 #    text += _('There may be more questions updated since '
                 #                'you have logged in last time as this list is '
                 #                'abridged for your convinience. Please visit '

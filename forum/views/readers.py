@@ -21,14 +21,13 @@ from markdown2 import Markdown
 from forum.utils.diff import textDiff as htmldiff
 from forum.forms import *
 from forum.models import *
-from forum.auth import *
 from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url
 from forum.search.state_manager import SearchState
 
 # used in index page
-#refactor - move these numbers somewhere?
+#todo: - take these out of const or settings
 INDEX_PAGE_SIZE = 30
 INDEX_AWARD_SIZE = 15
 INDEX_TAGS_SIZE = 25

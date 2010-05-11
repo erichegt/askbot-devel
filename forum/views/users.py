@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from forum.models import user_updated
 from forum.const import USERS_PAGE_SIZE
 from django.conf import settings
+from forum.conf import settings as forum_settings
 
 question_type = ContentType.objects.get_for_model(Question)
 answer_type = ContentType.objects.get_for_model(Answer)
@@ -108,7 +109,7 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        #if settings.EMAIL_VALIDATION == 'on':
+        #if forum_settings.EMAIL_VALIDATION == True:
         #    send_new_email_key(user,nomessage=nomessage)    
 
 @login_required
@@ -123,7 +124,7 @@ def edit_user(request, id):
 
             set_new_email(user, new_email)
 
-            if settings.EDITABLE_SCREEN_NAME:
+            if forum_settings.EDITABLE_SCREEN_NAME:
                 user.username = sanitize_html(form.cleaned_data['username'])
 
             user.real_name = sanitize_html(form.cleaned_data['realname'])
@@ -218,7 +219,7 @@ def user_stats(request, user_id, user_view):
     up_votes = Vote.objects.get_up_vote_count_from_user(user)
     down_votes = Vote.objects.get_down_vote_count_from_user(user)
     votes_today = Vote.objects.get_votes_count_today_from_user(user)
-    votes_total = auth.VOTE_RULES['scope_votes_per_user_per_day']
+    votes_total = forum_settings.MAX_VOTES_PER_USER_PER_DAY
 
     question_id_set = set(map(lambda v: v['id'], list(questions))) \
                         | set(map(lambda v: v['id'], list(answered_questions)))

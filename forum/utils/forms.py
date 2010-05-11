@@ -3,6 +3,7 @@ import re
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
 import logging
@@ -121,7 +122,7 @@ class UserEmailField(forms.EmailField):
         email = super(UserEmailField,self).clean(email.strip())
         if self.skip_clean:
             return email
-        if settings.EMAIL_UNIQUE == True:
+        if forum_settings.EMAIL_UNIQUE == True:
             try:
                 user = User.objects.get(email = email)
                 logging.debug('email taken')

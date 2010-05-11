@@ -1,0 +1,5 @@
+this directory contains
+forum site configurations for livesettings
+
+they need to be imported in models so made this a part of
+models module

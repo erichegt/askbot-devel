@@ -54,12 +54,15 @@ POST_SCOPE_LIST = (
                     ('favorite', _('favorite')),
                    )
 DEFAULT_POST_SCOPE = 'all'
-DEFAULT_QUESTIONS_PAGE_SIZE = 30
 PAGE_SIZE_CHOICES = (('10','10',),('30','30',),('50','50',),)
 
-UNANSWERED_MEANING_LIST = ('NO_ANSWERS','NO_UPVOTED_ANSWERS','NO_ACCEPTED_ANSWERS')
-UNANSWERED_MEANING = 'NO_ACCEPTED_ANSWERS'
-assert(UNANSWERED_MEANING in UNANSWERED_MEANING_LIST)
+UNANSWERED_QUESTION_MEANING_CHOICES = (
+    ('NO_ANSWERS', _('Question has no answers')),
+    ('NO_ACCEPTED_ANSWERS', _('Question has no accepted answers')),
+)
+#todo: implement this
+#    ('NO_UPVOTED_ANSWERS',),
+#)
 
 #todo:
 #this probably needs to be language-specific
@@ -69,8 +72,6 @@ assert(UNANSWERED_MEANING in UNANSWERED_MEANING_LIST)
 #to do full string match
 TAG_REGEX = r'^[a-z0-9\+\.\-]+$'
 TAG_SPLIT_REGEX = r'[ ,]+'
-MAX_TAG_LENGTH = 20 #default 20 chars
-MAX_TAGS_PER_POST = 5 #no more than five tags
 
 TYPE_ACTIVITY_ASK_QUESTION=1
 TYPE_ACTIVITY_ANSWER=2
@@ -130,5 +131,7 @@ CONST = {
 
 #how to filter questions by tags in email digests?
 TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))
-MAX_ALERTS_PER_EMAIL = 7
-USERS_PAGE_SIZE = 28
+USERS_PAGE_SIZE = 28#todo: move it to settings?
+
+#an exception import * because that file has only strings
+from forum.const.message_keys import *

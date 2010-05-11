@@ -35,6 +35,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from forum.conf import settings as forum_settings
 import types
 import re
 from django.utils.safestring import mark_safe
@@ -254,7 +255,7 @@ class ChangeEmailForm(forms.Form):
     def clean_email(self):
         """ check if email don't exist """
         if 'email' in self.cleaned_data:
-            if settings.EMAIL_UNIQUE == True:
+            if forum_settings.EMAIL_UNIQUE == True:
                 try:
                     user = User.objects.get(email = self.cleaned_data['email'])
                     if self.user and self.user == user:   

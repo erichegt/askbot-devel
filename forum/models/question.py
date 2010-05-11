@@ -96,16 +96,19 @@ class QuestionManager(models.Manager):
                                 params=['%' + search_query + '%']
                             )
 
+        #have to import this at run time, otherwise there
+        #a circular import dependency...
+        from forum.conf import settings as forum_settings
         if scope_selector:
             if scope_selector == 'unanswered':
-                if const.UNANSWERED_MEANING == 'NO_ANSWERS':
+                if forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
-                elif const.UNANSWERED_MEANING == 'NO_ACCEPTED_ANSWERS':
+                elif forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
                     qs = qs.filter(answer_accepted=False)
-                elif const.UNANSWERED_MEANING == 'NO_UPVOTED_ANSWERS':
+                elif forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
                     raise NotImplementedError()
                 else:
-                    raise Exception('UNANSWERED_MEANING setting is wrong')
+                    raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
                 qs = qs.filter(favorited_by = request_user)
             
@@ -513,7 +516,7 @@ class Question(Content, DeletableContent):
                     out.append(_('%(people)s commented answers') % {'people':people})
                 else:
                     out.append(_('%(people)s commented an answer') % {'people':people})
-            url = settings.APP_URL + self.get_absolute_url()
+            url = forum_settings.APP_URL + self.get_absolute_url()
             retval = '<a href="%s">%s</a>:<br>\n' % (url,self.title)
             out = map(lambda x: '<li>' + x + '</li>',out)
             retval += '<ul>' + '\n'.join(out) + '</ul><br>\n'

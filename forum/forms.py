@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
 from recaptcha_django import ReCaptchaField
 from django.conf import settings
+from forum.conf import settings as forum_settings
 import logging
 
 
@@ -65,15 +66,16 @@ class TagNamesField(forms.CharField):
         tag_strings = split_re.split(data)
         out_tag_list = []
         tag_count = len(tag_strings)
-        if tag_count > const.MAX_TAGS_PER_POST:
+        if tag_count > forum_settings.MAX_TAGS_PER_POST:
+            max_tags = forum_settings.MAX_TAGS_PER_POST
             msg = ungettext(
-                        'please use %(tag_count)d tag or less',#odd but have to use to pluralize
+                        'please use %(tag_count)d tag or less',
                         'please use %(tag_count)d tags or less',
-                        tag_count) % {'tag_count':tag_count}
+                        tag_count) % {'tag_count':max_tags}
             raise forms.ValidationError(msg)
         for tag in tag_strings:
             tag_length = len(tag)
-            if tag_length > const.MAX_TAG_LENGTH:
+            if tag_length > forum_settings.MAX_TAG_LENGTH:
                 #singular form is odd in english, but required for pluralization
                 #in other languages
                 msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
@@ -97,7 +99,7 @@ class WikiField(forms.BooleanField):
         self.label  = _('community wiki')
         self.help_text = _('if you choose community wiki option, the question and answer do not generate points and name of author will not be shown')
     def clean(self,value):
-        return value and settings.WIKI_ON
+        return value and forum_settings.WIKI_ON
 
 class EmailNotifyField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
@@ -231,7 +233,7 @@ class AnswerForm(forms.Form):
     def __init__(self, question, user, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['email_notify'].widget.attrs['id'] = 'question-subscribe-updates';
-        if question.wiki and settings.WIKI_ON:
+        if question.wiki and forum_settings.WIKI_ON:
             self.fields['wiki'].initial = True
         if user.is_authenticated():
             if user in question.followed_by.all():
@@ -292,7 +294,7 @@ class EditAnswerForm(forms.Form):
 
 class EditUserForm(forms.Form):
     email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=True, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    if settings.EDITABLE_SCREEN_NAME:
+    if forum_settings.EDITABLE_SCREEN_NAME:
         username = UserNameField(label=_('Screen name'))
     realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -303,7 +305,7 @@ class EditUserForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
         logging.debug('initializing the form')
-        if settings.EDITABLE_SCREEN_NAME:
+        if forum_settings.EDITABLE_SCREEN_NAME:
             self.fields['username'].initial = user.username
             self.fields['username'].user_instance = user
         self.fields['email'].initial = user.email
@@ -322,7 +324,7 @@ class EditUserForm(forms.Form):
         """For security reason one unique email in database"""
         if self.user.email != self.cleaned_data['email']:
             #todo dry it, there is a similar thing in openidauth
-            if settings.EMAIL_UNIQUE == True:
+            if forum_settings.EMAIL_UNIQUE == True:
                 if 'email' in self.cleaned_data:
                     try:
                         user = User.objects.get(email = self.cleaned_data['email'])

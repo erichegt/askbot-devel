@@ -1,5 +1,7 @@
 import datetime
+#todo: maybe eliminate usage of django.settings
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
@@ -138,7 +140,8 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                     vote = post.votes.filter(user=request.user)[0]
                     # get latest vote by the current user
                     # unvote should be less than certain time
-                    if (datetime.datetime.now().day - vote.voted_at.day) >= auth.VOTE_RULES['scope_deny_unvote_days']:
+                    if (datetime.datetime.now().day - vote.voted_at.day) \
+                        >= forum_settings.MAX_DAYS_TO_CANCEL_VOTE:
                         response_data['status'] = 2
                     else:
                         voted = vote.vote
@@ -152,7 +155,8 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
 
                         response_data['status'] = 1
                         response_data['count'] = post.score
-                elif Vote.objects.get_votes_count_today_from_user(request.user) >= auth.VOTE_RULES['scope_votes_per_user_per_day']:
+                elif Vote.objects.get_votes_count_today_from_user(request.user)\
+                >= forum_settings.MAX_VOTES_PER_USER_PER_DAY:
                     response_data['allowed'] = -3
                 else:
                     vote = Vote(user=request.user, content_object=post, vote=vote_score, voted_at=datetime.datetime.now())
@@ -163,8 +167,10 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                         # downvote
                         auth.onDownVoted(vote, post, request.user)
 
-                    votes_left = auth.VOTE_RULES['scope_votes_per_user_per_day'] - Vote.objects.get_votes_count_today_from_user(request.user)
-                    if votes_left <= auth.VOTE_RULES['scope_warn_votes_left']:
+                    votes_left = forum_settings.MAX_VOTES_PER_USER_PER_DAY \
+                    - Vote.objects.get_votes_count_today_from_user(request.user)
+                    if votes_left <= \
+                            forum_settings.VOTES_LEFT_WARNING_THRESHOLD:
                         response_data['message'] = u'%s votes left' % votes_left
                     response_data['count'] = post.score
             elif vote_type in ['7', '8']:
@@ -174,7 +180,7 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                     post_id = request.POST.get('postId')
                     post = get_object_or_404(Answer, id=post_id)
 
-                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= auth.VOTE_RULES['scope_flags_per_user_per_day']:
+                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= forum_settings.MAX_FLAGS_PER_USER_PER_DAY:
                     response_data['allowed'] = -3
                 elif not auth.can_flag_offensive(request.user):
                     response_data['allowed'] = -2
@@ -204,7 +210,9 @@ def vote(request, id):#todo: pretty incomprehensible view used by various ajax c
                 if user.is_authenticated():
                     if user not in question.followed_by.all():
                         question.followed_by.add(user)
-                        if settings.EMAIL_VALIDATION == 'on' and user.email_isvalid == False:
+                        if forum_settings.EMAIL_VALIDATION == True \
+                            and user.email_isvalid == False:
+
                             response_data['message'] = \
                                     _('subscription saved, %(email)s needs validation, see %(details_url)s') \
                                     % {'email':user.email,'details_url':reverse('faq') + '#validate'}

@@ -2,6 +2,7 @@
 #that lives in the session and takes care of the state
 #persistece during the search session
 from forum import const
+from forum.conf import settings as forum_settings
 import logging
 
 ACTIVE_COMMANDS = (
@@ -24,7 +25,7 @@ class SearchState(object):
         self.tags = None
         self.author = None
         self.sort = const.DEFAULT_POST_SORT_METHOD
-        self.page_size = const.DEFAULT_QUESTIONS_PAGE_SIZE
+        self.page_size = int(forum_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
         self.page = 1
         self.logged_in = False
         logging.debug('new search state initialized')

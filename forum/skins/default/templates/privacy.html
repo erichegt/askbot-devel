@@ -11,32 +11,7 @@
 	{% trans "Privacy policy" %}
 </div>
 <div id="main-body" style="width:100%">
-    <p>
-		{% trans "general message about privacy" %}
-    </p>
-    
-        <h3 class="subtitle">{% trans "Site Visitors" %}</h3>
-    <p>    
-	{% trans "what technical information is collected about visitors" %}
-    </p>
-    
-        <h3 class="subtitle">{% trans "Personal Information" %}</h3>
-    <p>   
-		{% trans "details on personal information policies" %}
-    </p>
-   
-        <h3 class="subtitle">{% trans "Other Services" %}</h3>
-     <p>   
-	 {% trans "details on sharing data with third parties" %}
-    </p>
-    
-        <h3 class="subtitle">Cookies</h3>
-    <p>
-		{% trans "cookie policy details" %}
-    </p>
-        <h3 class="subtitle">{% trans "Policy Changes" %}</h3>
-    <p>{% trans "how privacy policies can be changed" %}
-    </p>
+    {{settings.FORUM_PRIVACY|safe}}
 </div>
 {% endblock %}
 <!-- end privacy.html -->

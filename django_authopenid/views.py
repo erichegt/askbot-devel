@@ -35,6 +35,7 @@ from django.http import HttpResponseRedirect, get_host, Http404, \
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -364,7 +365,7 @@ def signin(request,newquestion=False,newanswer=False):
         'form2': form_signin,
         'msg':  request.GET.get('msg',''),
         'sendpw_url': reverse('user_sendpw'),
-        'fb_api_key': settings.FB_API_KEY, 
+        'fb_api_key': forum_settings.FB_API_KEY, 
     }, context_instance=RequestContext(request))
 
 def complete_signin(request):
@@ -507,7 +508,7 @@ def register(request):
         #if user just logged in and did not need to create the new account
         
         if user_ != None:
-            if settings.EMAIL_VALIDATION == 'on':
+            if forum_settings.EMAIL_VALIDATION == True:
                 logging.debug('sending email validation')
                 send_new_email_key(user_,nomessage=True)
                 output = validation_email_sent(request)
@@ -616,7 +617,7 @@ def signup(request):
                     'authopenid/confirm_email.txt'
             )
             message_context = Context({ 
-                'signup_url': settings.APP_URL + reverse('user_signin'),
+                'signup_url': forum_settings.APP_URL + reverse('user_signin'),
                 'username': username,
                 'password': password,
             })
@@ -749,7 +750,7 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        if settings.EMAIL_VALIDATION == 'on':
+        if forum_settings.EMAIL_VALIDATION == True:
             send_new_email_key(user,nomessage=nomessage)
 
 def _send_email_key(user):
@@ -760,7 +761,7 @@ def _send_email_key(user):
     message_template = loader.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
-    'validation_link': settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
+    'validation_link': forum_settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
     })
     message = message_template.render(message_context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
@@ -787,7 +788,7 @@ def send_email_key(request):
     authopenid/changeemail.html template
     """
 
-    if settings.EMAIL_VALIDATION != 'off':
+    if forum_settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
             return render_to_response('authopenid/changeemail.html',
                             { 'email': request.user.email, 
@@ -817,7 +818,7 @@ def verifyemail(request,id=None,key=None):
     url = /email/verify/{{user.id}}/{{user.email_key}}/
     """
     logging.debug('')
-    if settings.EMAIL_VALIDATION != 'off':
+    if forum.settings.EMAIL_VALIDATION == True:
         user = User.objects.get(id=id)
         if user:
             if user.email_key == key:
@@ -854,7 +855,7 @@ def changeemail(request, action='change'):
         if form.is_valid():
             new_email = form.cleaned_data['email']
             if new_email != user_.email:
-                if settings.EMAIL_VALIDATION == 'on':
+                if forum_settings.EMAIL_VALIDATION == True:
                     action = 'validate'
                 else:
                     action = 'done_novalidate'
@@ -1118,10 +1119,10 @@ def sendpw(request):
             subject = _("Request for new password")
             message_template = loader.get_template(
                     'authopenid/sendpw_email.txt')
-            key_link = settings.APP_URL + reverse('user_confirmchangepw') + '?key=' + confirm_key
+            key_link = forum_settings.APP_URL + reverse('user_confirmchangepw') + '?key=' + confirm_key
             logging.debug('emailing new password for %s' % form.user_cache.username)
             message_context = Context({ 
-                'site_url': settings.APP_URL + reverse('index'),
+                'site_url': forum_settings.APP_URL + reverse('index'),
                 'key_link': key_link,
                 'username': form.user_cache.username,
                 'password': new_pw,

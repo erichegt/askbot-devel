@@ -10,13 +10,13 @@
                 {% if not request.user.is_authenticated %}
                     <p>{% trans "login to post question info" %}</p>
                 {% else %}
-                    {% ifequal settings.EMAIL_VALIDATION 'on' %}
+                    {% if settings.EMAIL_VALIDATION %}
                         {% if not request.user.email_isvalid %}
                                 {% blocktrans with request.user.email as email %}must have valid {{email}} to post, 
                                 see {{email_validation_faq_url}}
                                 {% endblocktrans %}
                         {% endif %}
-                    {% endifequal %}
+                    {% endif %}
                 {% endif %}
                 <input id="id_title" class="questionTitleInput" name="title" 
                     value="{% if form.initial.title %}{{form.initial.title}}{% endif %}"/>

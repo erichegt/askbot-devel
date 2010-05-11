@@ -12,25 +12,7 @@
 </div>
 
 <div class="content">
-    <p class="strong">Please customize file templates/about.html</p>
-
-    <p>Here you can <strong>ask</strong> and <strong>answer</strong> questions, <strong>comment</strong>
-    and <strong>vote</strong> for the questions of others and their answers. Both questions and answers
-    <strong>can be revised</strong> and improved. Questions can be <strong>tagged</strong> with
-    the relevant keywords to simplify future access and organize the accumulated material.
-    </p>
-
-    <p>This <span class="orange">Q&amp;A</span> site is moderated by its members, hopefully - including yourself!
-    Moderation rights are gradually assigned to the site users based on the accumulated <strong>"reputation"</strong>
-    points. These points are added to the users account when others vote for his/her questions or answers.
-    These points (very) roughly reflect the level of trust of the community.
-    </p>
-    <p>No points are necessary to ask or answer the questions - so please -
-    <strong><a href="{% url user_signin %}">join us!</a></strong>
-    </p>
-    <p>
-            If you would like to find out more about this site - please see <strong><a href="{% url faq %}">frequently asked questions</a></strong>.
-    </p>
+    {{settings.FORUM_ABOUT|safe}}
 </div>
 {% endblock %}
 <!-- end template about.html -->
