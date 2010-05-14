@@ -236,7 +236,7 @@ def onAnswerAccept(answer, user, timestamp=None):
                         )
     answer.author.save()
     reputation = Repute(user=answer.author,
-               positive=REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
+               positive=forum_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
                question=answer.question,
                reputed_at=timestamp,
                reputation_type=2,

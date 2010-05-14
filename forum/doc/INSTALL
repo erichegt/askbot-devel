@@ -254,14 +254,16 @@ WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
    and uncomment #'djangosphinx',
 
 
-6. Email subscriptions
+6. Email subsctiptions and badge awards 
 
-   This function at the moment requires Django 1.1
+   copy file forum/cron/askbot_cron_job
+   somewhere in your user space (outside of forum)
+   edit paths in that file
 
-   edit paths in the file forum/cron/send_email_alerts
-   set up a cron job to call forum/cron/send_email_alerts once or twice a day
-   subscription sender may be tested manually in shell
-   by calling forum/cron/send_email_alerts
+   set up a cron job to call it say hourly
+
+   the commands within askbot_cron_job can also be called manually
+   from the command line for the testing purposes
 
 7. Sitemap
 Sitemap will be available at /<settings_local.FORUM_SCRIPT_ALIAS>sitemap.xml
