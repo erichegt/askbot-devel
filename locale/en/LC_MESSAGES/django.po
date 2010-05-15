@@ -3214,7 +3214,7 @@ msgstr ""
 
 #: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:959
 msgid "email subscriptions"
-msgstr ""
+msgstr "subscriptions"
 
 #: forum/skins/default/templates/users.html:6
 #: forum/skins/default/templates/users.html:24

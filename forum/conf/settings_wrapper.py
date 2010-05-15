@@ -66,5 +66,12 @@ class ConfigSettings(object):
         else:
             self.__instance[key] = config_register(value)
 
+    def as_dict(self):
+        out = dict()
+        for key in self.__instance.keys():
+            #todo: this is odd that I could not use self.__instance.items() mapping here
+            out[key] = self.__instance[key].value
+        return out
+
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()

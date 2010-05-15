@@ -107,3 +107,7 @@ def humanize_counter(number):
             return s + 'k'
     else:
         return str(number)
+
+@register.filter
+def absolute_value(number):
+    return abs(number)

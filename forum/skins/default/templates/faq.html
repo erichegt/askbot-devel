@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- template faq.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load humanize %}
 {% load i18n %}
 {% block title %}{% spaceless %}FAQ{% endspaceless %}{% endblock %}
@@ -39,7 +40,7 @@
         <div>
             <h3 class="subtitle">{% trans "How does reputation system work?" %}</h3>
             <p>{% trans "Rep system summary" %}</p>
-            <p>{% blocktrans %}For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task.{% endblocktrans %}
+            <p>{% blocktrans with settings.MAX_REP_GAIN_PER_USER_PER_DAY as MAX_REP_GAIN_PER_USER_PER_DAY and settings.REP_GAIN_FOR_RECEIVING_UPVOTE as REP_GAIN_FOR_RECEIVING_UPVOTE and settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE|absolute_value as REP_LOSS_FOR_RECEIVING_DOWNVOTE%}For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>{{REP_GAIN_FOR_RECEIVING_UPVOTE}}</strong> points, each vote against will subtract <strong>{{REP_LOSS_FOR_RECEIVING_DOWNVOTE}}</strong> points. There is a limit of <strong>{{MAX_REP_GAIN_PER_USER_PER_DAY}}</strong> points that can be accumulated for a question or answer per day. The table below explains reputation point requirements for each type of moderation task.{% endblocktrans %}
             </p>
 
             <table style="font-family:arial;" cellspacing="3" cellpadding="3">
@@ -47,54 +48,45 @@
                     <th width="40px" style="text-align:right"></th>
                     <th width="300px"></th>
                 </tr>
-                <!--
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>15</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_VOTE_UP}}</strong></td>
                     <td>{% trans "upvote" %}</td>
                 </tr>
+                <!--
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>15</strong></td>
+                    <td class="faq-rep-item"><strong>15</strong></td>
                     <td>{% trans "use tags" %}</td>
                 </tr>
                 -->
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>50</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_LEAVE_COMMENTS}}</strong></td>
                     <td>{% trans "add comments" %}</td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>100</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_VOTE_DOWN}}</strong></td>
                     <td>{% trans "downvote" %}</td>
                 </tr><tr>
-                    <td style="text-align:right;padding-right:5px"><strong>250</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS}}</strong></td>
                     <td>{% trans "open and close own questions" %}</td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>500</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}</strong></td>
                     <td>{% trans "retag questions" %}</td>
                 </tr>
                 {% if settings.WIKI_ON %}
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>750</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_EDIT_WIKI}}</strong></td>
                     <td>{% trans "edit community wiki questions" %}</td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>2000</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}</strong></td>
                     <td>{% trans "edit any answer" %}</td>
                 </tr>
                 <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>3000</strong></td>
-                    <td>{% trans "open any closed question" %}</td>
-                </tr>
-                <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>5000</strong></td>
+                    <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}</strong></td>
                     <td>{% trans "delete any comment" %}</td>
                 </tr>
-                <tr>
-                    <td style="text-align:right;padding-right:5px"><strong>10000</strong></td>
-                    <td>{% trans "delete any questions and answers and perform other moderation tasks" %}</td>
-                </tr>
-
             </table>
         </div>
         {% comment %}
