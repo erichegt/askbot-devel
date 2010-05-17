@@ -25,7 +25,7 @@
             var visible = arrow.attr("src").indexOf("hide") > -1;
 
             var path = $.i18n._('/') + "media/images/expander-arrow-" + 
-                        (visible ? "show" : "hide") + ".gif" + "?v={{settings.RESOURCE_REVISION}}";
+                        (visible ? "show" : "hide") + ".gif" + "?v={{settings.MEDIA_RESOURCE_REVISION}}";
             arrow.attr("src", path);
             $("#rev-body-" + id).slideToggle("fast");
         }

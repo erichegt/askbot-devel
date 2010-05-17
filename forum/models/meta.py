@@ -1,4 +1,6 @@
 from base import *
+from forum import const
+from django.utils.html import urlize
 
 class VoteManager(models.Manager):
     def get_up_vote_count_from_user(self, user):
@@ -75,19 +77,36 @@ class FlaggedItem(MetaContent, UserContent):
         return '[%s] flagged at %s' %(self.user, self.flagged_at)
 
 class Comment(MetaContent, UserContent):
-    comment        = models.CharField(max_length=300)
-    added_at       = models.DateTimeField(default=datetime.datetime.now)
+    comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
+    added_at = models.DateTimeField(default = datetime.datetime.now)
+    html = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH, default='')
 
     class Meta(MetaContent.Meta):
         ordering = ('-added_at',)
         db_table = u'comment'
 
+    def get_origin_post(self):
+        return self.content_object.get_origin_post()
+
     def save(self,**kwargs):
+        from forum.utils.markup import mentionize
         super(Comment,self).save(**kwargs)
+        self.html = mentionize(urlize(self.comment, nofollow=True), context_object = self)
+        #todo - try post_save to install mentions
+        super(Comment,self).save(**kwargs)#have to save twice!!, b/c need id for generic relation
         try:
             ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
+
+    def delete(self, **kwargs):
+        from forum.models.user import Mention
+        ctype = ContentType.objects.get_for_model(self)
+        Mention.objects.filter(
+                            content_type = ctype,
+                            object_id = self.id
+                        ).delete()
+        super(Comment,self).delete(**kwargs)
 
     def __unicode__(self):
         return self.comment

@@ -28,6 +28,9 @@ class UserContent(models.Model):
         abstract = True
         app_label = 'forum'
 
+    def get_last_author(self):
+        return self.user
+
 class MetaContent(models.Model):
     """
         Base class for Vote, Comment and FlaggedItem
@@ -39,7 +42,6 @@ class MetaContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'forum'
-
 
 class DeletableContent(models.Model):
     deleted     = models.BooleanField(default=False)
@@ -137,13 +139,21 @@ class Content(models.Model):
             raise Exception('arguments comment and user are required')
 
         Comment = models.get_model('forum','Comment')#todo: forum hardcoded
-        comment = Comment(content_object=self, comment=comment, user=user, added_at=added_at)
+        comment = Comment(
+                            content_object=self, 
+                            comment=comment, 
+                            user=user, 
+                            added_at=added_at
+                        )
         comment.save()
         self.comment_count = self.comment_count + 1
         self.save()
 
     def get_latest_revision(self):
         return self.revisions.all()[0]
+
+    def get_last_author(self):
+        return self.last_edited_by
 
     def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at

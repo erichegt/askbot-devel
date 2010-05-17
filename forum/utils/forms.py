@@ -6,6 +6,7 @@ from django.conf import settings
 from forum.conf import settings as forum_settings
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
+from forum import const
 import logging
 import urllib
 
@@ -38,7 +39,6 @@ class NextUrlField(forms.CharField):
         return clean_next(value)
 
 login_form_widget_attrs = { 'class': 'required login' }
-username_re = re.compile(r'^[\w ]+$')
 
 class UserNameField(StrippedNonEmptyCharField):
     RESERVED_NAMES = (u'fuck', u'shit', u'ass', u'sex', u'add',
@@ -78,7 +78,9 @@ class UserNameField(StrippedNonEmptyCharField):
             username = super(UserNameField, self).clean(username)
         except forms.ValidationError:
             raise forms.ValidationError(self.error_messages['required'])
-        if self.required and not username_re.search(username):
+
+        username_regex = re.compile(const.USERNAME_REGEX_STRING)
+        if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:
             raise forms.ValidationError(self.error_messages['forbidden'])

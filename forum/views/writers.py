@@ -323,7 +323,7 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
         json_comments.append({"id" : comment.id,
             "object_id" : obj.id,
             "comment_age" : diff_date(comment.added_at),
-            "text" : comment.comment,
+            "text" : comment.html,
             "user_display_name" : comment_user.username,
             "user_url" : comment_user.get_profile_url(),
             "delete_url" : delete_url

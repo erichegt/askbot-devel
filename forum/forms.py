@@ -353,33 +353,45 @@ class TagFilterSelectionForm(forms.ModelForm):
         return False
         
 
+class EmailFeedSettingField(forms.ChoiceField):
+    def __init__(self, *arg, **kwarg):
+        kwarg['choices'] = const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES
+        kwarg['initial'] = forum_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
+        kwarg['widget'] = forms.RadioSelect
+        super(EmailFeedSettingField, self).__init__(*arg, **kwarg)
+
 class EditUserEmailFeedsForm(forms.Form):
-    WN = (('w',_('weekly')),('n',_('no email')))
-    DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))
     FORM_TO_MODEL_MAP = {
-                'all_questions':'q_all',
-                'asked_by_me':'q_ask',
-                'answered_by_me':'q_ans',
-                'individually_selected':'q_sel',
+                    'all_questions':'q_all',
+                    'asked_by_me':'q_ask',
+                    'answered_by_me':'q_ans',
+                    'individually_selected':'q_sel',
+                    'mentions_and_comments':'m_and_c',
                 }
     NO_EMAIL_INITIAL = {
-                'all_questions':'n',
-                'asked_by_me':'n',
-                'answered_by_me':'n',
-                'individually_selected':'n',
+                    'all_questions':'n',
+                    'asked_by_me':'n',
+                    'answered_by_me':'n',
+                    'individually_selected':'n',
+                    'mentions_and_comments':'n',
                 }
-    asked_by_me = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Asked by me'))
-    answered_by_me = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Answered by me'))
-    individually_selected = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Individually selected'))
-    all_questions = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Entire forum (tag filtered)'),)
+
+    asked_by_me = EmailFeedSettingField(
+                            label=_('Asked by me')
+                        )
+    answered_by_me = EmailFeedSettingField(
+                            label=_('Answered by me')
+                        )
+    individually_selected = EmailFeedSettingField(
+                            label=_('Individually selected')
+                        )
+    all_questions = EmailFeedSettingField(
+                            label=_('Entire forum (tag filtered)'),
+                        )
+
+    mentions_and_comments = EmailFeedSettingField(
+                            label=_('Comments and posts mentioning me'),
+                        )
 
     def set_initial_values(self,user=None):
         KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])
@@ -400,6 +412,7 @@ class EditUserEmailFeedsForm(forms.Form):
             self.cleaned_data['asked_by_me'] = 'n'
             self.cleaned_data['answered_by_me'] = 'n'
             self.cleaned_data['individually_selected'] = 'n'
+            self.cleaned_data['mentions_and_comments'] = 'n'
         self.initial = self.NO_EMAIL_INITIAL
         return self
 
@@ -436,9 +449,11 @@ class SimpleEmailSubscribeForm(forms.Form):
         ('y',_('okay, let\'s try!')),
         ('n',_('no community email please, thanks'))
     )
-    subscribe = forms.ChoiceField(widget=forms.widgets.RadioSelect(), \
-                                error_messages={'required':_('please choose one of the options above')},
-                                choices=SIMPLE_SUBSCRIBE_CHOICES)
+    subscribe = forms.ChoiceField(
+            widget=forms.widgets.RadioSelect, 
+            error_messages={'required':_('please choose one of the options above')},
+            choices=SIMPLE_SUBSCRIBE_CHOICES
+        )
 
     def save(self,user=None):
         EFF = EditUserEmailFeedsForm

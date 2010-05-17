@@ -175,7 +175,7 @@
                             <div class="comments-container" id="comments-container-question-{{question.id}}">
                             {% for comment in question.get_comments|slice:":5" %}
                                 <p class="comment" id="comment-{{comment.id}}">
-                                    {{comment.comment}} 
+                                    {{comment.html|safe}} 
                                     - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                     {% spaceless %}
                                     <span class="comment-age">({% diff_date comment.added_at %})</span>
@@ -317,7 +317,7 @@
                                         <div class="comments-container" id="comments-container-answer-{{answer.id}}">
                                         {% for comment in answer.get_comments|slice:":5" %}
                                             <p id="comment-{{comment.id}}" class="comment">
-                                                {{comment.comment}} 
+                                                {{comment.html|safe}} 
                                                 - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                                 {% spaceless %}
                                                 <span class="comment-age">({% diff_date comment.added_at %})</span>

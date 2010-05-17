@@ -1,9 +1,11 @@
 from base import *
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from hashlib import md5
 import string
 from random import Random
+from forum import const
 import datetime
 
 from django.utils.translation import ugettext as _
@@ -15,10 +17,10 @@ class Activity(models.Model):
     user = models.ForeignKey(User)
     activity_type = models.SmallIntegerField(choices=TYPE_ACTIVITY)
     active_at = models.DateTimeField(default=datetime.datetime.now)
-    content_type   = models.ForeignKey(ContentType)
-    object_id      = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    is_auditted    = models.BooleanField(default=False)
+    is_auditted = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)
@@ -27,10 +29,47 @@ class Activity(models.Model):
         app_label = 'forum'
         db_table = u'activity'
 
+class MentionManager(models.Manager):
+    def get_question_list(self):
+        out = []
+        for m in self.all():
+            post = m.content_object
+            if isinstance(post, Question):
+                out.append(post)
+            elif isinstance(post, Answer):
+                out.append(post.question)
+            elif isinstance(post, Comment):
+                p =  post.content_object
+                if isinstance(p, Question):
+                    out.append(p)
+                elif isinstance(p, Answer):
+                    out.append(p.question)
+        return out
+
+class Mention(models.Model):
+    """
+    Table holding @mention type entries in the posts
+    """
+    mentioned_by = models.ForeignKey(User, related_name = 'mentions_sent')
+    mentioned_whom = models.ForeignKey(User, related_name = 'mentions_received')
+    mentioned_at = models.DateTimeField(default=datetime.datetime.now)
+
+    #have to use generic foreign key here to point to the context of the mention
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    objects = MentionManager()
+
+    class Meta:
+        app_label = 'forum'
+        db_table = u'mention'
+
 class EmailFeedSetting(models.Model):
     DELTA_TABLE = {
-        'w':datetime.timedelta(7),
+        'i':datetime.timedelta(-1),#instant emails are processed separately
         'd':datetime.timedelta(1),
+        'w':datetime.timedelta(7),
         'n':datetime.timedelta(-1),
     }
     FEED_TYPES = (
@@ -38,17 +77,51 @@ class EmailFeedSetting(models.Model):
                     ('q_ask',_('Questions that I asked')),
                     ('q_ans',_('Questions that I answered')),
                     ('q_sel',_('Individually selected questions')),
+                    ('m_and_c',_('Mentions and comment responses')),
                     )
     UPDATE_FREQUENCY = (
-                    ('w',_('Weekly')),
+                    ('i',_('Instantly')),
                     ('d',_('Daily')),
+                    ('w',_('Weekly')),
                     ('n',_('No email')),
                    )
-    subscriber = models.ForeignKey(User)
+
+
+    subscriber = models.ForeignKey(User, related_name='notification_subscriptions')
     feed_type = models.CharField(max_length=16,choices=FEED_TYPES)
-    frequency = models.CharField(max_length=8,choices=UPDATE_FREQUENCY,default='n')
+    frequency = models.CharField(
+                                    max_length=8,
+                                    choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
+                                    default='n',
+                                )
     added_at = models.DateTimeField(auto_now_add=True)
     reported_at = models.DateTimeField(null=True)
+
+    #functions for rich comparison
+    #PRECEDENCE = ('i','d','w','n')#the greater ones are first
+    #def __eq__(self, other):
+    #    return self.id == other.id
+
+#    def __eq__(self, other):
+#        return self.id != other.id
+
+#    def __gt__(self, other):
+#        return PRECEDENCE.index(self.frequency) < PRECEDENCE.index(other.frequency) 
+
+#    def __lt__(self, other):
+#        return PRECEDENCE.index(self.frequency) > PRECEDENCE.index(other.frequency) 
+
+#    def __gte__(self, other):
+#        if self.__eq__(other):
+#            return True
+#        else:
+#            return self.__gt__(other)
+
+#    def __lte__(self, other):
+#        if self.__eq__(other):
+#            return True
+#        else:
+#            return self.__lt__(other)
 
     def save(self,*args,**kwargs):
         type = self.feed_type

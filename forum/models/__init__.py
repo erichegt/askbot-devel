@@ -2,7 +2,8 @@ from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion
 from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
-from user import Activity, ValidationHash, EmailFeedSetting, AuthKeyUserAssociation
+from user import Activity, ValidationHash, EmailFeedSetting
+from user import Mention, AuthKeyUserAssociation
 from repute import Badge, Award, Repute
 from django.core.urlresolvers import reverse
 from forum.search.indexer import create_fulltext_indexes
@@ -470,6 +471,7 @@ Activity = Activity
 EmailFeedSetting = EmailFeedSetting
 ValidationHash = ValidationHash
 AuthKeyUserAssociation = AuthKeyUserAssociation
+Mention = Mention
 
 __all__ = [
         'Question',
@@ -496,6 +498,7 @@ __all__ = [
         'EmailFeedSetting',
         'ValidationHash',
         'AuthKeyUserAssociation',
+        'Mention',
 
         'User',
         ]

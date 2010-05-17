@@ -1,5 +1,6 @@
 # encoding:utf-8
 from django.utils.translation import ugettext as _
+import re
 """
 All constants could be used in other modules
 For reasons that models, views can't have unicode text in this project, all unicode text go here.
@@ -130,8 +131,24 @@ CONST = {
 }
 
 #how to filter questions by tags in email digests?
-TAG_EMAIL_FILTER_CHOICES = (('ignored', _('exclude ignored tags')),('interesting',_('allow only selected tags')))
+TAG_EMAIL_FILTER_CHOICES = (
+    ('ignored', _('exclude ignored tags')),
+    ('interesting',_('allow only selected tags'))
+)
+
+NOTIFICATION_DELIVERY_SCHEDULE_CHOICES= (
+                            ('i',_('instantly')),
+                            ('d',_('daily')),
+                            ('w',_('weekly')),
+                            ('n',_('no email')),
+                        )
+
 USERS_PAGE_SIZE = 28#todo: move it to settings?
+USERNAME_REGEX_STRING = r'^[\w ]+$'
+
+TWITTER_STYLE_MENTION_TERMINATION_CHARS = ' ;,.!?'#chars that can go after @mention
+
+COMMENT_HARD_MAX_LENGTH = 2048
 
 #an exception import * because that file has only strings
 from forum.const.message_keys import *

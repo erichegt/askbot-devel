@@ -1337,6 +1337,12 @@ a.comments-link, a.comments-link-accepted, a.comments-link-owner, a.comments-lin
     text-decoration: none;
 }
 
+.comment a {
+    background-color: inherit;
+    color: blue;
+    padding: 0;
+}
+
 a.comment-user, a.comment-user:hover {
     background-color: inherit;
     color: blue;

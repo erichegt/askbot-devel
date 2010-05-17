@@ -855,8 +855,11 @@ def user_favorites(request, user_id, user_view):
         "view_user" : user
     }, context_instance=RequestContext(request))
 
+@login_required
 def user_email_subscriptions(request, user_id, user_view):
     user = get_object_or_404(User, id=user_id)
+    if request.user != user:
+        raise Http404
     if request.method == 'POST':
         email_feeds_form = EditUserEmailFeedsForm(request.POST)
         tag_filter_form = TagFilterSelectionForm(request.POST, instance=user)

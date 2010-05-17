@@ -128,6 +128,9 @@ class Answer(Content, DeletableContent):
                                   revision=rev_no
                                   )
 
+    def get_origin_post(self):
+        return self.question
+
     def get_user_vote(self, user):
         if user.__class__.__name__ == "AnonymousUser":
             return None

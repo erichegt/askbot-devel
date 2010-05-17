@@ -3,6 +3,7 @@ from django.db import connection
 from django.db.models import Q, F
 from forum.models import User, Question, Answer, Tag, QuestionRevision
 from forum.models import AnswerRevision, Activity, EmailFeedSetting
+from forum.models import Comment
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -16,7 +17,8 @@ from forum import const
 
 DEBUG_THIS_COMMAND = False
 
-def extend_question_list(src, dst, limit=False):
+#todo: refactor this as class
+def extend_question_list(src, dst, limit=False, add_mention=False):
     """src is a query set with questions
        or None
        dst - is an ordered dictionary
@@ -27,21 +29,29 @@ def extend_question_list(src, dst, limit=False):
         return #will not do anything if subscription of this type is not used
     if limit and len(dst.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
         return
-    cutoff_time = src.cutoff_time
+    cutoff_time = src.cutoff_time#todo: this limits use of function to query sets
+    #but sometimes we have a list on the input (like in the case of comment)
     for q in src:
         if q in dst:
+            meta_data = dst[q]
+        else:
+            meta_data = {'cutoff_time': cutoff_time}
+            dst[q] = meta_data
+
+        if cutoff_time > meta_data['cutoff_time']:
             #the latest cutoff time wins for a given question
             #if the question falls into several subscription groups
-            if cutoff_time > dst[q]['cutoff_time']:
-                dst[q]['cutoff_time'] = cutoff_time
-        else:
-            #initialise a questions metadata dictionary to use for email reporting
-            dst[q] = {'cutoff_time':cutoff_time}
+            #this makes mailer more eager in sending email
+            meta_data['cutoff_time'] = cutoff_time
+        if add_mention:
+            if 'mentions' in meta_data:
+                meta_data['mentions'] += 1
+            else:
+                meta_data['mentions'] = 1
 
 def format_action_count(string, number, output):
     if number > 0:
         output.append(_(string) % {'num':number})
-
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -88,6 +98,9 @@ class Command(NoArgsCommand):
 
         q_all_A = None
         q_all_B = None
+
+        q_m_and_c_A = None#mentions and post comments
+        q_m_and_c_B = None
 
         #base question query set for this user
         #basic things - not deleted, not closed, not too old
@@ -185,8 +198,62 @@ class Command(NoArgsCommand):
         #build ordered list questions for the email report
         q_list = SortedDict()
 
+        #todo: refactor q_list into a separate class
         extend_question_list(q_sel_A, q_list)
         extend_question_list(q_sel_B, q_list)
+
+        #build list of comment and mention responses here
+        #it is separate because posts are not marked as changed
+        #when people add comments
+        #mention responses could be collected in the loop above, but
+        #it is inconvenient, because feed_type m_and_c bundles the two
+        #also we collect metadata for these here
+        if user_feeds.exists(feed_type='m_and_c'):
+            feed = user_feeds.get(feed_type='m_and_c')
+            if feed.should_report_now():
+                cutoff_time = feed.get_previous_report_cutoff_time()
+                comments = Comment.objects.filter(
+                                            added_at__gt = cutoff_time,
+                                            user__ne = user,
+                                        )
+                q_commented = list() 
+                for c in comments:
+                    post = c.content_object
+                    if post.author != user:
+                        continue
+
+                    #skip is post was seen by the user after
+                    #the comment posting time
+
+                    if isinstance(post, Question):
+                        q_commented.append(post)
+                    elif isinstance(post, Answer):
+                        q_commented.append(post.question)
+
+                for q in q_commented:
+                    if q in q_list:
+                        meta_data = q_list[q]
+                        if meta_data['cutoff_time'] < cutoff_time:
+                            meta_data['cutoff_time'] = cutoff_time
+                        if 'comments' in meta_data:
+                            meta_data['comments'] += 1
+                        else:
+                            meta_data['comments'] = 1
+
+                mentions = Mention.objects.filter(
+                                                    mentioned_at__gt = cutoff_time,
+                                                    mentioned_whom = user
+                                                )
+
+                q_mentions_id = [q.id for q in mentions.get_question_list()]
+
+                q_mentions_A = Q_set_A.filter(id__in, q_mentions_id)
+                q_mentions_A.cutoff_time = cutoff_time
+                extend_question_list(q_mentions_A, q_list, add_mention=True)
+
+                q_mentions_B = Q_set_B.filter(id__in, q_mentions_id)
+                q_mentions_B.cutoff_time = cutoff_time
+                extend_question_list(q_mentions_B, q_list, add_mention=True)
 
         if user.tag_filter_setting == 'interesting':
             extend_question_list(q_all_A, q_list)

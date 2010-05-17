@@ -5,6 +5,7 @@ from forum.conf.settings_wrapper import settings
 from livesettings import ConfigurationGroup, IntegerValue, BooleanValue
 from livesettings import StringValue
 from django.utils.translation import ugettext as _
+from forum import const
 
 EMAIL = ConfigurationGroup(
             'EMAIL',
@@ -17,6 +18,23 @@ settings.register(
         'MAX_ALERTS_PER_EMAIL',
         default=7,
         description=_('Maximum number of news entries in an email alert')
+    )
+)
+
+settings.register(
+    StringValue(
+        EMAIL,
+        'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE',
+        default='w',
+        choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
+        description=_('Default news notification frequency'),
+        help_text=_(
+                    'This option currently defines default frequency '
+                    'of emailed updates in the following five categories: '
+                    'questions asked by user, answered by user, individually '
+                    'selected, entire forum (per person tag filter applies) '
+                    'and posts mentioning the user and comment responses'
+                    )
     )
 )
 

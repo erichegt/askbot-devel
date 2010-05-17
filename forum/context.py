@@ -4,6 +4,7 @@ def application_settings(context):
     my_settings = forum_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = settings.LANGUAGE_CODE
     my_settings['FORUM_SCRIPT_ALIAS'] = settings.FORUM_SCRIPT_ALIAS
+    #print '\n'.join(sorted(my_settings.keys()))
     return {'settings':my_settings}
 
 def auth_processor(request):

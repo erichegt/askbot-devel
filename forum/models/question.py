@@ -301,6 +301,15 @@ class Question(Content, DeletableContent):
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
+    def get_all_authors(self):
+        authors = set()
+        authors.update([r.author for r in self.revisions.all()])
+        authors.update([c.user for c in self.comments.all()])
+        for a in self.answers.filter(deleted = False):
+            authors.update([r.author for r in a.revisions.all()])
+            authors.update([c.user for c in a.comments.all()])
+        return authors
+
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
@@ -328,6 +337,9 @@ class Question(Content, DeletableContent):
         )
         # send tags updated singal
         tags_updated.send(sender=question.__class__, question=self)
+
+    def get_origin_post(self):
+        return self
 
     def apply_edit(self, edited_at=None, edited_by=None, title=None,\
                     text=None, comment=None, tags=None, wiki=False):
