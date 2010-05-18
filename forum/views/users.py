@@ -564,6 +564,7 @@ def user_responses(request, user_id, user_view):
 
     user = get_object_or_404(User, id=user_id)
     responses = []
+
     answers = Answer.objects.extra(
                                     select={
                                         'title' : 'question.title',

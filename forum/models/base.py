@@ -155,6 +155,19 @@ class Content(models.Model):
     def get_last_author(self):
         return self.last_edited_by
 
+    def get_author_list(self, include_comments = False, recursive = False, exclude_list = None):
+        authors = set()
+        authors.update([r.author for r in self.revisions.all()])
+        if include_comments:
+            authors.update([c.user for c in self.comments.all()])
+        if recursive:
+            if hasattr(self, 'answers'):
+                for a in self.answers.all():
+                    authors.update(a.get_author_list( include_comments = include_comments ) )
+        if exclude_list:
+            authors -= set(exclude_list)
+        return list(authors)
+
     def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at
             who = self.author

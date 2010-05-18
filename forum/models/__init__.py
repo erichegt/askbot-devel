@@ -8,6 +8,7 @@ from repute import Badge, Award, Repute
 from django.core.urlresolvers import reverse
 from forum.search.indexer import create_fulltext_indexes
 from django.db.models.signals import post_syncdb
+import logging
 import re
 
 from base import *
@@ -108,7 +109,6 @@ def get_profile_url(self):
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)
-    logging.debug('in get profile link %s' % profile_link)
     return mark_safe(profile_link)
 
 #series of methods for user vote-type commands
@@ -246,7 +246,12 @@ def calculate_gravatar_hash(instance, **kwargs):
 
 def record_ask_event(instance, created, **kwargs):
     if created:
-        activity = Activity(user=instance.author, active_at=instance.added_at, content_object=instance, activity_type=TYPE_ACTIVITY_ASK_QUESTION)
+        activity = Activity(
+                        user=instance.author, 
+                        active_at=instance.added_at, 
+                        content_object=instance, 
+                        activity_type=TYPE_ACTIVITY_ASK_QUESTION
+                    )
         activity.save()
 
 #todo: translate this
@@ -272,33 +277,85 @@ def record_answer_event(instance, created, **kwargs):
                     % q_author.get_profile_url()
             q_author.message_set.create(message=msg)
 
-        activity = Activity(user=instance.author, \
-                            active_at=instance.added_at,\
-                            content_object=instance, \
-                            activity_type=TYPE_ACTIVITY_ANSWER)
+        activity = Activity(
+                        user = instance.author,
+                        active_at = instance.added_at,
+                        content_object = instance,
+                        activity_type = TYPE_ACTIVITY_ANSWER
+                    )
         activity.save()
+        receiving_users = instance.question.get_author_list(
+                                                    include_comments = True,
+                                                    exclude_list = [instance.author],
+                                                )
+
+        activity.receiving_users.add(*receiving_users)
+
 
 def record_comment_event(instance, created, **kwargs):
     if created:
-        from django.contrib.contenttypes.models import ContentType
-        question_type = ContentType.objects.get_for_model(Question)
-        question_type_id = question_type.id
-        if (instance.content_type_id == question_type_id):
+        if isinstance(instance.content_object, Question):
             type = TYPE_ACTIVITY_COMMENT_QUESTION
-        else:
+        elif isinstance(instance.content_object, Answer):
             type = TYPE_ACTIVITY_COMMENT_ANSWER
-        activity = Activity(user=instance.user, active_at=instance.added_at, content_object=instance, activity_type=type)
+        else:
+            logging.critical('recording comment for %s is not implemented' % type(instance.content_object))
+
+        activity = Activity(
+                        user = instance.user, 
+                        active_at = instance.added_at, 
+                        content_object = instance, 
+                        activity_type = type
+                    )
         activity.save()
+
+        receiving_users = instance.content_object.get_author_list(
+                                        include_comments = True,
+                                        exclude_list = [instance.user],
+                                    )
+        activity.receiving_users.add(*receiving_users)
+
 
 def record_revision_question_event(instance, created, **kwargs):
     if created and instance.revision <> 1:
-        activity = Activity(user=instance.author, active_at=instance.revised_at, content_object=instance, activity_type=TYPE_ACTIVITY_UPDATE_QUESTION)
+        activity = Activity(
+                        user=instance.author,
+                        active_at=instance.revised_at,
+                        content_object=instance,
+                        activity_type=TYPE_ACTIVITY_UPDATE_QUESTION
+                    )
         activity.save()
+        receiving_users = set()
+        receiving_users.update(
+                            instance.question.get_author_list(include_comments = True)
+                        )
+        for a in instance.question.answers:
+            receiving_users.update(a.get_author_list())
+        receiving_users -= set([instance.author])
+
+        receiving_users = list(receiving_users)
+        activity.receiving_users.add(*receiving_users)
 
 def record_revision_answer_event(instance, created, **kwargs):
     if created and instance.revision <> 1:
-        activity = Activity(user=instance.author, active_at=instance.revised_at, content_object=instance, activity_type=TYPE_ACTIVITY_UPDATE_ANSWER)
+        activity = Activity(
+                        user=instance.author, 
+                        active_at=instance.revised_at, 
+                        content_object=instance, 
+                        activity_type=TYPE_ACTIVITY_UPDATE_ANSWER
+                    )
         activity.save()
+        receiving_users = set()
+        receiving_users.update(
+                            instance.answer.get_author_list(
+                                            including_comments = True 
+                                        )
+                        )
+        receiving_users.update(instance.answer.question.get_author_list())
+        receiving_users -= set([instance.author])
+        receiving_users = list(receiving_users)
+
+        activity.receiving_users.add(*receiving_users)
 
 def record_award_event(instance, created, **kwargs):
     """
@@ -306,9 +363,14 @@ def record_award_event(instance, created, **kwargs):
     We also recaculate awarded_count of this badge and user information.
     """
     if created:
-        activity = Activity(user=instance.user, active_at=instance.awarded_at, content_object=instance,
-            activity_type=TYPE_ACTIVITY_PRIZE)
+        activity = Activity(
+                        user=instance.user,#todo: change this to community user who gives the award
+                        active_at=instance.awarded_at,
+                        content_object=instance,
+                        activity_type=TYPE_ACTIVITY_PRIZE
+                    )
         activity.save()
+        activity.receiving_users.add(instance.user)
 
         instance.badge.awarded_count += 1
         instance.badge.save()
@@ -339,14 +401,23 @@ def record_answer_accepted(instance, created, **kwargs):
     when answer is accepted, we record this for question author - who accepted it.
     """
     if not created and instance.accepted:
-        activity = Activity(user=instance.question.author, active_at=datetime.datetime.now(), \
-            content_object=instance, activity_type=TYPE_ACTIVITY_MARK_ANSWER)
+        activity = Activity(
+                        user=instance.question.author,
+                        active_at=datetime.datetime.now(),
+                        content_object=instance,
+                        activity_type=TYPE_ACTIVITY_MARK_ANSWER
+                    )
+        receiving_users = instance.get_author_list(
+                                            exclude_list = [instance.question.author]
+                                        )
+        activity.receiving_users.add(*receiving_users)
         activity.save()
 
 def update_last_seen(instance, created, **kwargs):
     """
     when user has activities, we update 'last_seen' time stamp for him
     """
+    #todo: improve this
     user = instance.user
     user.last_seen = datetime.datetime.now()
     user.save()
@@ -361,14 +432,26 @@ def record_vote(instance, created, **kwargs):
         else:
             vote_type = TYPE_ACTIVITY_VOTE_DOWN
 
-        activity = Activity(user=instance.user, active_at=instance.voted_at, content_object=instance, activity_type=vote_type)
+        activity = Activity(
+                        user=instance.user,
+                        active_at=instance.voted_at,
+                        content_object=instance,
+                        activity_type=vote_type
+                    )
+        #todo: problem cannot access receiving user here
         activity.save()
 
 def record_cancel_vote(instance, **kwargs):
     """
     when user canceled vote, the vote will be deleted.
     """
-    activity = Activity(user=instance.user, active_at=datetime.datetime.now(), content_object=instance, activity_type=TYPE_ACTIVITY_CANCEL_VOTE)
+    activity = Activity(
+                    user=instance.user, 
+                    active_at=datetime.datetime.now(), 
+                    content_object=instance, 
+                    activity_type=TYPE_ACTIVITY_CANCEL_VOTE
+                )
+    #todo: same problem - cannot access receiving user here
     activity.save()
 
 def record_delete_question(instance, delete_by, **kwargs):
@@ -380,18 +463,38 @@ def record_delete_question(instance, delete_by, **kwargs):
     else:
         activity_type = TYPE_ACTIVITY_DELETE_ANSWER
 
-    activity = Activity(user=delete_by, active_at=datetime.datetime.now(), content_object=instance, activity_type=activity_type)
+    activity = Activity(
+                    user=delete_by, 
+                    active_at=datetime.datetime.now(), 
+                    content_object=instance, 
+                    activity_type=activity_type
+                )
+    #no need to set receiving user here
     activity.save()
 
 def record_mark_offensive(instance, mark_by, **kwargs):
-    activity = Activity(user=mark_by, active_at=datetime.datetime.now(), content_object=instance, activity_type=TYPE_ACTIVITY_MARK_OFFENSIVE)
+    activity = Activity(
+                    user=mark_by, 
+                    active_at=datetime.datetime.now(), 
+                    content_object=instance, 
+                    activity_type=TYPE_ACTIVITY_MARK_OFFENSIVE
+                )
     activity.save()
+    receiving_users = instance.get_author_list(
+                                        exclude_list = [mark_by]
+                                    )
+    activity.receiving_users.add(*receiving_users)
 
 def record_update_tags(question, **kwargs):
     """
     when user updated tags of the question
     """
-    activity = Activity(user=question.author, active_at=datetime.datetime.now(), content_object=question, activity_type=TYPE_ACTIVITY_UPDATE_TAGS)
+    activity = Activity(
+                    user=question.author,
+                    active_at=datetime.datetime.now(),
+                    content_object=question,
+                    activity_type=TYPE_ACTIVITY_UPDATE_TAGS
+                )
     activity.save()
 
 def record_favorite_question(instance, created, **kwargs):
@@ -399,11 +502,25 @@ def record_favorite_question(instance, created, **kwargs):
     when user add the question in him favorite questions list.
     """
     if created:
-        activity = Activity(user=instance.user, active_at=datetime.datetime.now(), content_object=instance, activity_type=TYPE_ACTIVITY_FAVORITE)
+        activity = Activity(
+                        user=instance.user, 
+                        active_at=datetime.datetime.now(), 
+                        content_object=instance, 
+                        activity_type=TYPE_ACTIVITY_FAVORITE
+                    )
         activity.save()
+        receiving_users = instance.question.get_author_list(
+                                                    exclude_list = [instance.user]
+                                                )
+        activity.receiving_users.add(*receiving_users)
 
 def record_user_full_updated(instance, **kwargs):
-    activity = Activity(user=instance, active_at=datetime.datetime.now(), content_object=instance, activity_type=TYPE_ACTIVITY_USER_FULL_UPDATED)
+    activity = Activity(
+                    user=instance, 
+                    active_at=datetime.datetime.now(), 
+                    content_object=instance, 
+                    activity_type=TYPE_ACTIVITY_USER_FULL_UPDATED
+                )
     activity.save()
 
 def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs):

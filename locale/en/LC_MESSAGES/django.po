@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-09 19:39-0400\n"
+"POT-Creation-Date: 2010-05-17 21:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,77 +16,77 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: django_authopenid/forms.py:71 django_authopenid/views.py:132
+#: django_authopenid/forms.py:72 django_authopenid/views.py:133
 msgid "i-names are not supported"
 msgstr ""
 
-#: django_authopenid/forms.py:134
+#: django_authopenid/forms.py:135
 msgid "Account with this name already exists on the forum"
 msgstr ""
 
-#: django_authopenid/forms.py:135
+#: django_authopenid/forms.py:136
 msgid "can't have two logins to the same account yet, sorry."
 msgstr ""
 
-#: django_authopenid/forms.py:157
+#: django_authopenid/forms.py:158
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr ""
 
-#: django_authopenid/forms.py:160 django_authopenid/forms.py:210
+#: django_authopenid/forms.py:161 django_authopenid/forms.py:211
 msgid "This account is inactive."
 msgstr ""
 
-#: django_authopenid/forms.py:162
+#: django_authopenid/forms.py:163
 msgid "Login failed."
 msgstr ""
 
-#: django_authopenid/forms.py:164
+#: django_authopenid/forms.py:165
 msgid "Please enter username and password"
 msgstr ""
 
-#: django_authopenid/forms.py:166
+#: django_authopenid/forms.py:167
 msgid "Please enter your password"
 msgstr ""
 
-#: django_authopenid/forms.py:168
+#: django_authopenid/forms.py:169
 msgid "Please enter user name"
 msgstr ""
 
-#: django_authopenid/forms.py:206
+#: django_authopenid/forms.py:207
 msgid ""
 "Please enter a valid                     username and password. Note that "
 "both fields are                     case-sensitive."
 msgstr ""
 
-#: django_authopenid/forms.py:229
+#: django_authopenid/forms.py:230
 msgid "Current password"
 msgstr ""
 
-#: django_authopenid/forms.py:240
+#: django_authopenid/forms.py:241
 msgid ""
 "Old password is incorrect.                     Please enter the correct "
 "password."
 msgstr ""
 
-#: django_authopenid/forms.py:305
+#: django_authopenid/forms.py:306
 msgid "Your user name (<i>required</i>)"
 msgstr ""
 
-#: django_authopenid/forms.py:320
+#: django_authopenid/forms.py:321
 msgid "Incorrect username."
 msgstr "sorry, there is no such user name"
 
 #: django_authopenid/urls.py:23 django_authopenid/urls.py:24
 #: django_authopenid/urls.py:25 django_authopenid/urls.py:27
-#: fbconnect/urls.py:12 fbconnect/urls.py:13 fbconnect/urls.py:14
+#: fbconnect/urls.py:14 fbconnect/urls.py:15 fbconnect/urls.py:16
 msgid "signin/"
 msgstr ""
 
-#: django_authopenid/urls.py:24 fbconnect/urls.py:13 fbconnect/urls.py:17
+#: django_authopenid/urls.py:24 fbconnect/urls.py:15 fbconnect/urls.py:19
 msgid "newquestion/"
 msgstr ""
 
-#: django_authopenid/urls.py:25 fbconnect/urls.py:14 fbconnect/urls.py:18
+#: django_authopenid/urls.py:25 fbconnect/urls.py:16 fbconnect/urls.py:20
 msgid "newanswer/"
 msgstr ""
 
@@ -98,8 +98,8 @@ msgstr ""
 msgid "complete/"
 msgstr ""
 
-#: django_authopenid/urls.py:29 fbconnect/urls.py:16 fbconnect/urls.py:17
-#: fbconnect/urls.py:18
+#: django_authopenid/urls.py:29 fbconnect/urls.py:18 fbconnect/urls.py:19
+#: fbconnect/urls.py:20
 msgid "register/"
 msgstr ""
 
@@ -156,300 +156,101 @@ msgstr ""
 msgid "external-login/signup/"
 msgstr ""
 
-#: django_authopenid/views.py:139
+#: django_authopenid/views.py:140
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr ""
 
-#: django_authopenid/views.py:614
+#: django_authopenid/views.py:615
 msgid "Welcome email subject line"
 msgstr "Welcome to the Q&A forum"
 
-#: django_authopenid/views.py:720
+#: django_authopenid/views.py:721
 msgid "Password changed."
 msgstr ""
 
-#: django_authopenid/views.py:732 django_authopenid/views.py:738
+#: django_authopenid/views.py:733 django_authopenid/views.py:739
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
 "Your email needs to be validated. Please see details <a "
 "id='validate_email_alert' href='%(details_url)s'>here</a>."
 
-#: django_authopenid/views.py:759
+#: django_authopenid/views.py:760
 msgid "Email verification subject line"
 msgstr "Verification Email from Q&A forum"
 
-#: django_authopenid/views.py:850
+#: django_authopenid/views.py:851
 msgid "your email was not changed"
 msgstr ""
 
-#: django_authopenid/views.py:898 django_authopenid/views.py:1056
+#: django_authopenid/views.py:899 django_authopenid/views.py:1057
 #, python-format
 msgid "No OpenID %s found associated in our database"
 msgstr ""
 
-#: django_authopenid/views.py:902 django_authopenid/views.py:1063
+#: django_authopenid/views.py:903 django_authopenid/views.py:1064
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
 msgstr ""
 
-#: django_authopenid/views.py:910
+#: django_authopenid/views.py:911
 msgid "Email Changed."
 msgstr ""
 
-#: django_authopenid/views.py:988
+#: django_authopenid/views.py:989
 msgid "This OpenID is already associated with another account."
 msgstr ""
 
-#: django_authopenid/views.py:993
+#: django_authopenid/views.py:994
 #, python-format
 msgid "OpenID %s is now associated with your account."
 msgstr ""
 
-#: django_authopenid/views.py:1066
+#: django_authopenid/views.py:1067
 msgid "Account deleted."
 msgstr ""
 
-#: django_authopenid/views.py:1118
+#: django_authopenid/views.py:1119
 msgid "Request for new password"
 msgstr ""
 
-#: django_authopenid/views.py:1132
+#: django_authopenid/views.py:1133
 msgid "A new password and the activation link were sent to your email address."
 msgstr ""
 
-#: django_authopenid/views.py:1164
+#: django_authopenid/views.py:1165
 #, python-format
 msgid ""
 "Could not change password. Confirmation key '%s'                is not "
 "registered."
 msgstr ""
 
-#: django_authopenid/views.py:1174
+#: django_authopenid/views.py:1175
 msgid ""
 "Can not change password. User don't exist anymore                 in our "
 "database."
 msgstr ""
 
-#: django_authopenid/views.py:1184
+#: django_authopenid/views.py:1185
 #, python-format
 msgid "Password changed for %s. You may now sign in."
 msgstr ""
 
-#: forum/auth.py:505
+#: forum/auth.py:470
 msgid "Your question and all of it's answers have been deleted"
 msgstr ""
 
-#: forum/auth.py:507
+#: forum/auth.py:472
 msgid "Your question has been deleted"
 msgstr ""
 
-#: forum/auth.py:510
+#: forum/auth.py:475
 msgid "The question and all of it's answers have been deleted"
 msgstr ""
 
-#: forum/auth.py:512
+#: forum/auth.py:477
 msgid "The question has been deleted"
-msgstr ""
-
-#: forum/const.py:8
-msgid "duplicate question"
-msgstr ""
-
-#: forum/const.py:9
-msgid "question is off-topic or not relevant"
-msgstr ""
-
-#: forum/const.py:10
-msgid "too subjective and argumentative"
-msgstr ""
-
-#: forum/const.py:11
-msgid "not a real question"
-msgstr ""
-
-#: forum/const.py:12
-msgid "the question is answered, right answer was accepted"
-msgstr ""
-
-#: forum/const.py:13
-msgid "question is not relevant or outdated"
-msgstr ""
-
-#: forum/const.py:14
-msgid "question contains offensive or malicious remarks"
-msgstr ""
-
-#: forum/const.py:15
-msgid "spam or advertising"
-msgstr ""
-
-#: forum/const.py:16
-msgid "too localized"
-msgstr ""
-
-#: forum/const.py:37 forum/skins/default/templates/questions.html:70
-#: forum/skins/default/templates/questions.html:75
-msgid "newest"
-msgstr ""
-
-#: forum/const.py:38 forum/skins/default/templates/questions.html:64
-#: forum/skins/default/templates/users.html:28
-msgid "oldest"
-msgstr ""
-
-#: forum/const.py:39 forum/skins/default/templates/questions.html:89
-#: forum/skins/default/templates/questions.html:94
-msgid "active"
-msgstr ""
-
-#: forum/const.py:40 forum/skins/default/templates/questions.html:83
-msgid "inactive"
-msgstr ""
-
-#: forum/const.py:41
-msgid "hottest"
-msgstr ""
-
-#: forum/const.py:42
-msgid "coldest"
-msgstr ""
-
-#: forum/const.py:43
-msgid "most voted"
-msgstr ""
-
-#: forum/const.py:44
-msgid "least voted"
-msgstr ""
-
-#: forum/const.py:45
-msgid "relevance"
-msgstr ""
-
-#: forum/const.py:52 forum/skins/default/templates/questions.html:52
-msgid "all"
-msgstr ""
-
-#: forum/const.py:53 forum/skins/default/templates/questions.html:53
-msgid "unanswered"
-msgstr ""
-
-#: forum/const.py:54 forum/skins/default/templates/questions.html:55
-msgid "favorite"
-msgstr ""
-
-#: forum/const.py:97
-msgid "question"
-msgstr ""
-
-#: forum/const.py:98 forum/skins/default/templates/book.html:110
-msgid "answer"
-msgstr ""
-
-#: forum/const.py:99
-msgid "commented question"
-msgstr ""
-
-#: forum/const.py:100
-msgid "commented answer"
-msgstr ""
-
-#: forum/const.py:101
-msgid "edited question"
-msgstr ""
-
-#: forum/const.py:102
-msgid "edited answer"
-msgstr ""
-
-#: forum/const.py:103
-msgid "received award"
-msgstr "received badge"
-
-#: forum/const.py:104
-msgid "marked best answer"
-msgstr ""
-
-#: forum/const.py:105
-msgid "upvoted"
-msgstr ""
-
-#: forum/const.py:106
-msgid "downvoted"
-msgstr ""
-
-#: forum/const.py:107
-msgid "canceled vote"
-msgstr ""
-
-#: forum/const.py:108
-msgid "deleted question"
-msgstr ""
-
-#: forum/const.py:109
-msgid "deleted answer"
-msgstr ""
-
-#: forum/const.py:110
-msgid "marked offensive"
-msgstr ""
-
-#: forum/const.py:111
-msgid "updated tags"
-msgstr ""
-
-#: forum/const.py:112
-msgid "selected favorite"
-msgstr ""
-
-#: forum/const.py:113
-msgid "completed user profile"
-msgstr ""
-
-#: forum/const.py:114
-msgid "email update sent to user"
-msgstr ""
-
-#: forum/const.py:118
-msgid "question_answered"
-msgstr "answered question"
-
-#: forum/const.py:119
-msgid "question_commented"
-msgstr "commented question"
-
-#: forum/const.py:120
-msgid "answer_commented"
-msgstr ""
-
-#: forum/const.py:121
-msgid "answer_accepted"
-msgstr ""
-
-#: forum/const.py:125
-msgid "[closed]"
-msgstr ""
-
-#: forum/const.py:126
-msgid "[deleted]"
-msgstr ""
-
-#: forum/const.py:127 forum/views/readers.py:396 forum/views/readers.py:417
-msgid "initial version"
-msgstr ""
-
-#: forum/const.py:128
-msgid "retagged"
-msgstr ""
-
-#: forum/const.py:132
-msgid "exclude ignored tags"
-msgstr ""
-
-#: forum/const.py:132
-msgid "allow only selected tags"
 msgstr ""
 
 #: forum/feed.py:18
@@ -460,177 +261,169 @@ msgstr ""
 msgid "latest questions"
 msgstr ""
 
-#: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/forms.py:24 forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "title"
 msgstr ""
 
-#: forum/forms.py:24
+#: forum/forms.py:25
 msgid "please enter a descriptive title for your question"
 msgstr ""
 
-#: forum/forms.py:29
+#: forum/forms.py:30
 msgid "title must be > 10 characters"
 msgstr ""
 
-#: forum/forms.py:38
+#: forum/forms.py:39
 msgid "content"
 msgstr ""
 
-#: forum/forms.py:44
+#: forum/forms.py:45
 msgid "question content must be > 10 characters"
 msgstr ""
 
-#: forum/forms.py:53 forum/skins/default/templates/header.html:28
+#: forum/forms.py:54 forum/skins/default/templates/header.html:28
 msgid "tags"
 msgstr ""
 
-#: forum/forms.py:55
+#: forum/forms.py:56
 msgid ""
 "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
 
-#: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
+#: forum/forms.py:63 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
 msgstr ""
 
-#: forum/forms.py:70
+#: forum/forms.py:72
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/forms.py:79
+#: forum/forms.py:81
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/forms.py:87
+#: forum/forms.py:89
 msgid "use-these-chars-in-tags"
 msgstr ""
 
-#: forum/forms.py:97
+#: forum/forms.py:99
 #: forum/skins/default/templates/post_contributor_info.html:7
 #: forum/skins/default/templates/question_summary_list_roll.html:26
 #: forum/skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
 msgstr ""
 
-#: forum/forms.py:98
+#: forum/forms.py:100
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
 
-#: forum/forms.py:114
+#: forum/forms.py:116
 msgid "update summary:"
 msgstr ""
 
-#: forum/forms.py:115
+#: forum/forms.py:117
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
 
-#: forum/forms.py:118
+#: forum/forms.py:120
 msgid "Automatically accept user's contributions for the email updates"
 msgstr ""
 
-#: forum/forms.py:209
+#: forum/forms.py:211
 msgid "Your name:"
 msgstr ""
 
-#: forum/forms.py:210
+#: forum/forms.py:212
 msgid "Email (not shared with anyone):"
 msgstr ""
 
-#: forum/forms.py:211
+#: forum/forms.py:213
 msgid "Your message:"
 msgstr ""
 
-#: forum/forms.py:294
+#: forum/forms.py:296
 msgid "this email does not have to be linked to gravatar"
 msgstr ""
 
-#: forum/forms.py:296
+#: forum/forms.py:298
 msgid "Screen name"
 msgstr ""
 
-#: forum/forms.py:297
+#: forum/forms.py:299
 msgid "Real name"
 msgstr ""
 
-#: forum/forms.py:298
+#: forum/forms.py:300
 msgid "Website"
 msgstr ""
 
-#: forum/forms.py:299
+#: forum/forms.py:301
 msgid "Location"
 msgstr ""
 
-#: forum/forms.py:300
+#: forum/forms.py:302
 msgid "Date of birth"
 msgstr ""
 
-#: forum/forms.py:300
+#: forum/forms.py:302
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr ""
 
-#: forum/forms.py:301 forum/skins/default/templates/account_settings.html:21
+#: forum/forms.py:303 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
 msgstr ""
 
-#: forum/forms.py:332 forum/forms.py:333
+#: forum/forms.py:334 forum/forms.py:335
 msgid "this email has already been registered, please use another one"
 msgstr ""
 
-#: forum/forms.py:339
+#: forum/forms.py:341
 msgid "Choose email tag filter"
 msgstr ""
 
-#: forum/forms.py:355 forum/forms.py:356
-msgid "weekly"
-msgstr ""
-
-#: forum/forms.py:355 forum/forms.py:356
-msgid "no email"
-msgstr ""
-
-#: forum/forms.py:356
-msgid "daily"
-msgstr ""
-
-#: forum/forms.py:371
+#: forum/forms.py:380
 msgid "Asked by me"
 msgstr ""
 
-#: forum/forms.py:374
+#: forum/forms.py:383
 msgid "Answered by me"
 msgstr ""
 
-#: forum/forms.py:377
+#: forum/forms.py:386
 msgid "Individually selected"
 msgstr ""
 
-#: forum/forms.py:380
+#: forum/forms.py:389
 msgid "Entire forum (tag filtered)"
 msgstr ""
 
-#: forum/forms.py:434
+#: forum/forms.py:393
+msgid "Comments and posts mentioning me"
+msgstr ""
+
+#: forum/forms.py:449
 msgid "okay, let's try!"
 msgstr ""
 
-#: forum/forms.py:435
+#: forum/forms.py:450
 msgid "no community email please, thanks"
 msgstr "no askbot email please, thanks"
 
-#: forum/forms.py:438
+#: forum/forms.py:454
 msgid "please choose one of the options above"
 msgstr ""
 
@@ -642,7 +435,7 @@ msgstr ""
 msgid "about/"
 msgstr ""
 
-#: forum/urls.py:34
+#: forum/urls.py:34 forum/conf/site_settings.py:76
 msgid "faq/"
 msgstr ""
 
@@ -705,7 +498,7 @@ msgstr ""
 msgid "command/"
 msgstr ""
 
-#: forum/urls.py:60 forum/views/readers.py:265
+#: forum/urls.py:60 forum/views/readers.py:264
 msgid "question/"
 msgstr ""
 
@@ -749,35 +542,760 @@ msgstr ""
 msgid "markread/"
 msgstr ""
 
-#: forum/urls.py:84
-msgid "nimda/"
-msgstr ""
-
-#: forum/urls.py:86
+#: forum/urls.py:85
 msgid "upload/"
 msgstr ""
 
-#: forum/urls.py:87
+#: forum/urls.py:86
 msgid "search/"
 msgstr ""
 
-#: forum/urls.py:88
+#: forum/urls.py:87
 msgid "feedback/"
 msgstr ""
 
-#: forum/urls.py:89 forum/urls.py:90
+#: forum/urls.py:88 forum/urls.py:89
 msgid "account/"
+msgstr ""
+
+#: forum/conf/email.py:12
+msgid "Email and email alert settings"
+msgstr ""
+
+#: forum/conf/email.py:20
+msgid "Maximum number of news entries in an email alert"
+msgstr ""
+
+#: forum/conf/email.py:30
+msgid "Default news notification frequency"
+msgstr ""
+
+#: forum/conf/email.py:32
+msgid ""
+"This option currently defines default frequency of emailed updates in the "
+"following five categories: questions asked by user, answered by user, "
+"individually selected, entire forum (per person tag filter applies) and "
+"posts mentioning the user and comment responses"
+msgstr ""
+
+#: forum/conf/email.py:47
+msgid "Require email verification before allowing to post"
+msgstr ""
+
+#: forum/conf/email.py:48
+msgid ""
+"Active email verification is done by sending a verification key in email"
+msgstr ""
+
+#: forum/conf/email.py:57
+msgid "Allow only one account per email address"
+msgstr ""
+
+#: forum/conf/email.py:66
+msgid "Fake email for anonymous user"
+msgstr ""
+
+#: forum/conf/email.py:67
+msgid "Use this setting to control gravatar for email-less user"
+msgstr ""
+
+#: forum/conf/external_keys.py:11
+msgid "Keys to connect the site with external services like Facebook, etc."
+msgstr ""
+
+#: forum/conf/external_keys.py:18
+msgid "Google site verification key"
+msgstr ""
+
+#: forum/conf/external_keys.py:20
+#, python-format
+msgid ""
+"This key helps google index your site please obtain is at <a href=\"%"
+"(google_webmasters_tools_url)s\">google webmasters tools site</a>"
+msgstr ""
+
+#: forum/conf/external_keys.py:34
+msgid "Google Analytics key"
+msgstr ""
+
+#: forum/conf/external_keys.py:36
+#, python-format
+msgid ""
+"Obtain is at <a href=\"%(ga_site)s\">Google Analytics</a> site, if you wish "
+"to use Google Analytics to monitor your site"
+msgstr ""
+
+#: forum/conf/external_keys.py:49
+msgid "Recaptcha private key"
+msgstr ""
+
+#: forum/conf/external_keys.py:52
+msgid ""
+"Recaptcha is a tool that helps distinguish real people from annoying spam "
+"robots. Please get this and a public key at the <a href=\"http://recaptcha."
+"net\">recaptcha.net</a>"
+msgstr ""
+
+#: forum/conf/external_keys.py:65
+msgid "Recaptcha public key"
+msgstr ""
+
+#: forum/conf/external_keys.py:73
+msgid "Facebook public API key"
+msgstr ""
+
+#: forum/conf/external_keys.py:76
+msgid ""
+"Facebook API key and Facebook secret allow to use Facebook Connect login "
+"method at your site. Please obtain these keys at <a href=\"http://www."
+"facebook.com/developers/createapp.php\">facebook create app</a> site"
+msgstr ""
+
+#: forum/conf/external_keys.py:91
+msgid "Facebook secret key"
+msgstr ""
+
+#: forum/conf/flatpages.py:10
+msgid "Flatpages - about, privacy policy, etc."
+msgstr ""
+
+#: forum/conf/flatpages.py:17
+msgid "Text the Q&A forum About page (html format)"
+msgstr ""
+
+#: forum/conf/flatpages.py:20
+msgid ""
+"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
+"the \"about\" page to check your input."
+msgstr ""
+
+#: forum/conf/flatpages.py:30
+msgid "Text the Q&A forum Privacy Policy (html format)"
+msgstr ""
+
+#: forum/conf/flatpages.py:33
+msgid ""
+"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
+"the \"privacy\" page to check your input."
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:12
+msgid "Settings for forum data entry and display"
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:20
+msgid "Check to enable community wiki feature"
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:29
+msgid "Maximum length of tag (number of characters)"
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:38
+msgid "Maximum number of tags per question"
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:50
+msgid "Number of questions to list by default"
+msgstr ""
+
+#: forum/conf/forum_data_rules.py:60
+msgid "What should \"unanswered question\" mean?"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:11
+msgid "Minimum reputation required to perform actions"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:20
+msgid "Upvote"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:29
+msgid "Downvote"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:38
+msgid "Flag offensive"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:47
+msgid "Leave comments"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:56
+msgid "Delete comments posted by others"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:65
+msgid "Upload files"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:74
+msgid "Close own questions"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:83
+msgid "Retag questions posted by other people"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:92
+msgid "Reopen own questions"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:101
+msgid "Edit community wiki posts"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:110
+msgid "Edit posts authored by other people"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:119
+msgid "View offensive flags"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:128
+msgid "Disable nofollow directive on links"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:137
+msgid "Close questions asked by others"
+msgstr ""
+
+#: forum/conf/minimum_reputation.py:146
+msgid "Lock posts"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:12
+msgid "Reputaion loss and gain rules"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:21
+msgid "Maximum daily reputation gain per user"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:30
+msgid "Gain for receiving an upvote"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:39
+msgid "Gain for the author of accepted answer"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:48
+msgid "Gain for accepting best answer"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:57
+msgid "Gain for post owner on canceled downvote"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:66
+msgid "Gain for voter on canceling downvote"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:76
+msgid "Loss for voter for canceling of answer acceptance"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:86
+msgid "Loss for author whose answer was \"un-accepted\""
+msgstr ""
+
+#: forum/conf/reputation_changes.py:96
+msgid "Loss for giving a downvote"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:106
+msgid "Loss for owner of post that was flagged offensive"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:116
+msgid "Loss for owner of post that was downvoted"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:126
+msgid "Loss for owner of post that was flagged 3 times per same revision"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:136
+msgid "Loss for owner of post that was flagged 5 times per same revision"
+msgstr ""
+
+#: forum/conf/reputation_changes.py:146
+msgid "Loss for post owner when upvote is canceled"
+msgstr ""
+
+#: forum/conf/site_settings.py:14
+msgid "Q&A forum website parameters and urls"
+msgstr ""
+
+#: forum/conf/site_settings.py:22
+msgid "Site title for the Q&A forum"
+msgstr ""
+
+#: forum/conf/site_settings.py:31
+msgid "Comma separated list of Q&A site keywords"
+msgstr ""
+
+#: forum/conf/site_settings.py:40
+msgid "Copyright message to show in the footer"
+msgstr ""
+
+#: forum/conf/site_settings.py:49
+msgid "Site description for the search engines"
+msgstr ""
+
+#: forum/conf/site_settings.py:57
+msgid "Askbot"
+msgstr ""
+
+#: forum/conf/site_settings.py:59
+msgid "Short name for your Q&A forum"
+msgstr ""
+
+#: forum/conf/site_settings.py:68
+msgid "Base URL for your Q&A forum, must start with http or https"
+msgstr ""
+
+#: forum/conf/site_settings.py:78
+msgid "Link shown in the greeting message shown to the anonymous user"
+msgstr ""
+
+#: forum/conf/site_settings.py:79
+msgid ""
+"If you change this url from the default - then you will also probably want "
+"to adjust translation of the following string: "
+msgstr ""
+
+#: forum/conf/site_settings.py:92
+msgid "Feedback site URL"
+msgstr ""
+
+#: forum/conf/site_settings.py:93
+msgid "If left empty, a simple internal feedback form will be used instead"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:11
+msgid "Skin: view, vote and answer counters"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:19
+msgid "Vote counter value to give \"full color\""
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:28
+msgid "Background color for votes = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:29
+#: forum/conf/skin_counter_settings.py:39
+#: forum/conf/skin_counter_settings.py:49
+#: forum/conf/skin_counter_settings.py:59
+#: forum/conf/skin_counter_settings.py:69
+#: forum/conf/skin_counter_settings.py:81
+#: forum/conf/skin_counter_settings.py:100
+#: forum/conf/skin_counter_settings.py:110
+#: forum/conf/skin_counter_settings.py:120
+#: forum/conf/skin_counter_settings.py:132
+#: forum/conf/skin_counter_settings.py:142
+#: forum/conf/skin_counter_settings.py:154
+#: forum/conf/skin_counter_settings.py:175
+#: forum/conf/skin_counter_settings.py:185
+#: forum/conf/skin_counter_settings.py:195
+#: forum/conf/skin_counter_settings.py:205
+#: forum/conf/skin_counter_settings.py:217
+#: forum/conf/skin_counter_settings.py:227
+#: forum/conf/skin_counter_settings.py:239
+#: forum/conf/skin_counter_settings.py:249
+msgid "HTML color name of hex value"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:38
+msgid "Foreground color for votes = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:48
+msgid "Background color for votes = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:58
+msgid "Foreground color for votes = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:68
+msgid "Background color for votes = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:80
+msgid "Foreground color for votes = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:90
+msgid "View counter value to give \"full color\""
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:99
+msgid "Background color for views = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:109
+msgid "Foreground color for views = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:119
+msgid "Background color for views = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:131
+msgid "Foreground color for views = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:141
+msgid "Background color for views = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:153
+msgid "Foreground color for views = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:163
+msgid "Answer counter value to give \"full color\""
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:174
+msgid "Background color for answers = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:184
+msgid "Foreground color for answers = 0"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:194
+msgid "Background color for answers = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:204
+msgid "Foreground color for answers = 1"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:216
+msgid "Background color for answers = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:226
+msgid "Foreground color for answers = MAX"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:238
+msgid "Background color for accepted"
+msgstr ""
+
+#: forum/conf/skin_counter_settings.py:248
+msgid "Foreground color for accepted answer"
+msgstr ""
+
+#: forum/conf/skin_general_settings.py:11
+msgid "Skin: general settings"
+msgstr ""
+
+#: forum/conf/skin_general_settings.py:20
+msgid "Select skin"
+msgstr ""
+
+#: forum/conf/skin_general_settings.py:29
+msgid "Skin media revision number"
+msgstr ""
+
+#: forum/conf/skin_general_settings.py:31
+msgid ""
+"Increment this number when you change image in skin media or stylesheet. "
+"This helps avoid showing your users outdated images from their browser cache."
+msgstr ""
+
+#: forum/conf/user_settings.py:10
+msgid "User policy settings"
+msgstr ""
+
+#: forum/conf/user_settings.py:18
+msgid "Allow editing user screen name"
+msgstr ""
+
+#: forum/conf/user_settings.py:28
+msgid "Minimum allowed length for screen name"
+msgstr ""
+
+#: forum/conf/vote_rules.py:13
+msgid "Limits applicable to votes and moderation flags"
+msgstr ""
+
+#: forum/conf/vote_rules.py:22
+msgid "Number of votes a user can cast per day"
+msgstr ""
+
+#: forum/conf/vote_rules.py:31
+msgid "Maximum number of flags per user per day"
+msgstr ""
+
+#: forum/conf/vote_rules.py:40
+msgid "Threshold for warning about remaining daily votes"
+msgstr ""
+
+#: forum/conf/vote_rules.py:49
+msgid "Number of days to allow canceling votes"
+msgstr ""
+
+#: forum/conf/vote_rules.py:58
+msgid "Number of flags required to automatically hide posts"
+msgstr ""
+
+#: forum/conf/vote_rules.py:67
+msgid "Number of flags required to automatically delete posts"
+msgstr ""
+
+#: forum/const/__init__.py:9
+msgid "duplicate question"
+msgstr ""
+
+#: forum/const/__init__.py:10
+msgid "question is off-topic or not relevant"
+msgstr ""
+
+#: forum/const/__init__.py:11
+msgid "too subjective and argumentative"
+msgstr ""
+
+#: forum/const/__init__.py:12
+msgid "not a real question"
+msgstr ""
+
+#: forum/const/__init__.py:13
+msgid "the question is answered, right answer was accepted"
+msgstr ""
+
+#: forum/const/__init__.py:14
+msgid "question is not relevant or outdated"
+msgstr ""
+
+#: forum/const/__init__.py:15
+msgid "question contains offensive or malicious remarks"
+msgstr ""
+
+#: forum/const/__init__.py:16
+msgid "spam or advertising"
+msgstr ""
+
+#: forum/const/__init__.py:17
+msgid "too localized"
+msgstr ""
+
+#: forum/const/__init__.py:38 forum/skins/default/templates/questions.html:70
+#: forum/skins/default/templates/questions.html:75
+msgid "newest"
+msgstr ""
+
+#: forum/const/__init__.py:39 forum/skins/default/templates/questions.html:64
+#: forum/skins/default/templates/users.html:28
+msgid "oldest"
+msgstr ""
+
+#: forum/const/__init__.py:40 forum/skins/default/templates/questions.html:89
+#: forum/skins/default/templates/questions.html:94
+msgid "active"
+msgstr ""
+
+#: forum/const/__init__.py:41 forum/skins/default/templates/questions.html:83
+msgid "inactive"
+msgstr ""
+
+#: forum/const/__init__.py:42
+msgid "hottest"
+msgstr ""
+
+#: forum/const/__init__.py:43
+msgid "coldest"
+msgstr ""
+
+#: forum/const/__init__.py:44
+msgid "most voted"
+msgstr ""
+
+#: forum/const/__init__.py:45
+msgid "least voted"
+msgstr ""
+
+#: forum/const/__init__.py:46
+msgid "relevance"
+msgstr ""
+
+#: forum/const/__init__.py:53 forum/skins/default/templates/questions.html:52
+msgid "all"
+msgstr ""
+
+#: forum/const/__init__.py:54 forum/skins/default/templates/questions.html:53
+msgid "unanswered"
+msgstr ""
+
+#: forum/const/__init__.py:55 forum/skins/default/templates/questions.html:55
+msgid "favorite"
+msgstr ""
+
+#: forum/const/__init__.py:61
+msgid "Question has no answers"
+msgstr ""
+
+#: forum/const/__init__.py:62
+msgid "Question has no accepted answers"
+msgstr ""
+
+#: forum/const/__init__.py:100
+msgid "question"
+msgstr ""
+
+#: forum/const/__init__.py:101 forum/skins/default/templates/book.html:110
+msgid "answer"
+msgstr ""
+
+#: forum/const/__init__.py:102
+msgid "commented question"
+msgstr ""
+
+#: forum/const/__init__.py:103
+msgid "commented answer"
+msgstr ""
+
+#: forum/const/__init__.py:104
+msgid "edited question"
+msgstr ""
+
+#: forum/const/__init__.py:105
+msgid "edited answer"
+msgstr ""
+
+#: forum/const/__init__.py:106
+msgid "received award"
+msgstr "received badge"
+
+#: forum/const/__init__.py:107
+msgid "marked best answer"
+msgstr ""
+
+#: forum/const/__init__.py:108
+msgid "upvoted"
+msgstr ""
+
+#: forum/const/__init__.py:109
+msgid "downvoted"
+msgstr ""
+
+#: forum/const/__init__.py:110
+msgid "canceled vote"
+msgstr ""
+
+#: forum/const/__init__.py:111
+msgid "deleted question"
+msgstr ""
+
+#: forum/const/__init__.py:112
+msgid "deleted answer"
+msgstr ""
+
+#: forum/const/__init__.py:113
+msgid "marked offensive"
+msgstr ""
+
+#: forum/const/__init__.py:114
+msgid "updated tags"
+msgstr ""
+
+#: forum/const/__init__.py:115
+msgid "selected favorite"
+msgstr ""
+
+#: forum/const/__init__.py:116
+msgid "completed user profile"
+msgstr ""
+
+#: forum/const/__init__.py:117
+msgid "email update sent to user"
+msgstr ""
+
+#: forum/const/__init__.py:118
+msgid "mentioned in the post"
+msgstr ""
+
+#: forum/const/__init__.py:141
+msgid "question_answered"
+msgstr "answered question"
+
+#: forum/const/__init__.py:142
+msgid "question_commented"
+msgstr "commented question"
+
+#: forum/const/__init__.py:143
+msgid "answer_commented"
+msgstr ""
+
+#: forum/const/__init__.py:144
+msgid "answer_accepted"
+msgstr ""
+
+#: forum/const/__init__.py:148
+msgid "[closed]"
+msgstr ""
+
+#: forum/const/__init__.py:149
+msgid "[deleted]"
+msgstr ""
+
+#: forum/const/__init__.py:150 forum/views/readers.py:395
+#: forum/views/readers.py:416
+msgid "initial version"
+msgstr ""
+
+#: forum/const/__init__.py:151
+msgid "retagged"
+msgstr ""
+
+#: forum/const/__init__.py:156
+msgid "exclude ignored tags"
+msgstr ""
+
+#: forum/const/__init__.py:157
+msgid "allow only selected tags"
+msgstr ""
+
+#: forum/const/__init__.py:161
+msgid "instantly"
+msgstr ""
+
+#: forum/const/__init__.py:162
+msgid "daily"
+msgstr ""
+
+#: forum/const/__init__.py:163
+msgid "weekly"
+msgstr ""
+
+#: forum/const/__init__.py:164
+msgid "no email"
+msgstr ""
+
+#: forum/const/message_keys.py:19
+#, python-format
+msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr ""
 
 #: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
 msgid "Congratulations, you are now an Administrator"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:236
+#: forum/management/commands/send_email_alerts.py:379
 msgid "email update message subject"
 msgstr "news from Q&A forum"
 
-#: forum/management/commands/send_email_alerts.py:238
+#: forum/management/commands/send_email_alerts.py:381
 #, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
@@ -788,38 +1306,38 @@ msgstr[1] ""
 "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
 "the Q&A forum:</p>"
 
-#: forum/management/commands/send_email_alerts.py:255
+#: forum/management/commands/send_email_alerts.py:398
 msgid "new question"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:272
+#: forum/management/commands/send_email_alerts.py:415
 msgid ""
 "Please visit the forum and see what's new! Could you spread the word about "
 "it - can somebody you know help answering those questions or benefit from "
 "posting one?"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:284
+#: forum/management/commands/send_email_alerts.py:427
 msgid ""
 "Your most frequent subscription setting is 'daily' on selected questions. If "
 "you are receiving more than one email per dayplease tell about this issue to "
 "the forum administrator."
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:290
+#: forum/management/commands/send_email_alerts.py:433
 msgid ""
 "Your most frequent subscription setting is 'weekly' if you are receiving "
 "this email more than once a week please report this issue to the forum "
 "administrator."
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:296
+#: forum/management/commands/send_email_alerts.py:439
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:311
+#: forum/management/commands/send_email_alerts.py:454
 #, python-format
 msgid ""
 "go to %(link)s to change frequency of email updates or %(email)s "
@@ -830,11 +1348,6 @@ msgstr ""
 "that this message was sent in an error, please email about it the forum "
 "administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum "
 "server.</p>"
-
-#: forum/middleware/anon_user.py:34
-#, python-format
-msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
-msgstr ""
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "Disciplined"
@@ -1268,27 +1781,27 @@ msgstr ""
 msgid "Created a tag used by 50 questions"
 msgstr ""
 
-#: forum/models/question.py:499
+#: forum/models/question.py:508
 #, python-format
 msgid "%(author)s modified the question"
 msgstr ""
 
-#: forum/models/question.py:503
+#: forum/models/question.py:512
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: forum/models/question.py:508
+#: forum/models/question.py:517
 #, python-format
 msgid "%(people)s commented the question"
 msgstr ""
 
-#: forum/models/question.py:513
+#: forum/models/question.py:522
 #, python-format
 msgid "%(people)s commented answers"
 msgstr ""
 
-#: forum/models/question.py:515
+#: forum/models/question.py:524
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr ""
@@ -1313,31 +1826,39 @@ msgstr ""
 msgid "ignored"
 msgstr ""
 
-#: forum/models/user.py:36
+#: forum/models/user.py:78
 msgid "Entire forum"
 msgstr ""
 
-#: forum/models/user.py:37
+#: forum/models/user.py:79
 msgid "Questions that I asked"
 msgstr ""
 
-#: forum/models/user.py:38
+#: forum/models/user.py:80
 msgid "Questions that I answered"
 msgstr ""
 
-#: forum/models/user.py:39
+#: forum/models/user.py:81
 msgid "Individually selected questions"
 msgstr ""
 
-#: forum/models/user.py:42
-msgid "Weekly"
+#: forum/models/user.py:82
+msgid "Mentions and comment responses"
 msgstr ""
 
-#: forum/models/user.py:43
+#: forum/models/user.py:85
+msgid "Instantly"
+msgstr ""
+
+#: forum/models/user.py:86
 msgid "Daily"
 msgstr ""
 
-#: forum/models/user.py:44
+#: forum/models/user.py:87
+msgid "Weekly"
+msgstr ""
+
+#: forum/models/user.py:88
 msgid "No email"
 msgstr ""
 
@@ -1419,6 +1940,8 @@ msgstr ""
 #: forum/skins/default/templates/authopenid/changepw.html:5
 #: forum/skins/default/templates/authopenid/changepw.html:14
 #: forum/skins/default/templates/authopenid/settings.html:29
+#: livesettings/templates/livesettings/group_settings.html:11
+#: livesettings/templates/livesettings/site_settings.html:23
 msgid "Change password"
 msgstr ""
 
@@ -1469,8 +1992,8 @@ msgstr ""
 #: forum/skins/default/templates/answer_edit.html:28
 #: forum/skins/default/templates/ask.html:26
 #: forum/skins/default/templates/ask.html:29
-#: forum/skins/default/templates/question.html:46
-#: forum/skins/default/templates/question.html:49
+#: forum/skins/default/templates/question.html:48
+#: forum/skins/default/templates/question.html:51
 #: forum/skins/default/templates/question_edit.html:25
 #: forum/skins/default/templates/question_edit.html:28
 msgid "hide preview"
@@ -1478,7 +2001,7 @@ msgstr ""
 
 #: forum/skins/default/templates/answer_edit.html:28
 #: forum/skins/default/templates/ask.html:29
-#: forum/skins/default/templates/question.html:49
+#: forum/skins/default/templates/question.html:51
 #: forum/skins/default/templates/question_edit.html:28
 msgid "show preview"
 msgstr ""
@@ -1506,7 +2029,7 @@ msgstr ""
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:418
+#: forum/skins/default/templates/question.html:420
 #: forum/skins/default/templates/question_edit.html:92
 msgid "Toggle the real time Markdown editor preview"
 msgstr ""
@@ -1514,7 +2037,7 @@ msgstr ""
 #: forum/skins/default/templates/answer_edit.html:63
 #: forum/skins/default/templates/ask.html:98
 #: forum/skins/default/templates/ask_form.html:39
-#: forum/skins/default/templates/question.html:419
+#: forum/skins/default/templates/question.html:421
 #: forum/skins/default/templates/question_edit.html:92
 msgid "toggle preview"
 msgstr ""
@@ -1812,7 +2335,7 @@ msgid "views"
 msgstr ""
 
 #: forum/skins/default/templates/book.html:125
-#: forum/skins/default/templates/question.html:136
+#: forum/skins/default/templates/question.html:138
 #: forum/skins/default/templates/question_list.html:19
 #: forum/skins/default/templates/question_summary_list_roll.html:52
 #: forum/skins/default/templates/tags.html:50
@@ -1850,21 +2373,21 @@ msgstr ""
 msgid "home"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:11
+#: forum/skins/default/templates/faq.html:12
 msgid "Frequently Asked Questions "
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:16
+#: forum/skins/default/templates/faq.html:17
 msgid "What kinds of questions can I ask here?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:17
+#: forum/skins/default/templates/faq.html:18
 msgid ""
 "Most importanly - questions should be <strong>relevant</strong> to this "
 "community."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:18
+#: forum/skins/default/templates/faq.html:19
 msgid ""
 "Before asking the question - please make sure to use search to see whether "
 "your question has alredy been answered."
@@ -1872,21 +2395,21 @@ msgstr ""
 "Before you ask - please make sure to search for a similar question. You can "
 "search questions by their title or tags."
 
-#: forum/skins/default/templates/faq.html:21
+#: forum/skins/default/templates/faq.html:22
 msgid "What questions should I avoid asking?"
 msgstr "What kinds of questions should be avoided?"
 
-#: forum/skins/default/templates/faq.html:22
+#: forum/skins/default/templates/faq.html:23
 msgid ""
 "Please avoid asking questions that are not relevant to this community, too "
 "subjective and argumentative."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:27
+#: forum/skins/default/templates/faq.html:28
 msgid "What should I avoid in my answers?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:28
+#: forum/skins/default/templates/faq.html:29
 msgid ""
 "is a Q&A site, not a discussion group. Therefore - please avoid having "
 "discussions in your answers, comment facility allows some space for brief "
@@ -1897,19 +2420,19 @@ msgstr ""
 "they tend to dilute the essense of questions and answers. For the brief "
 "discussions please use commenting facility."
 
-#: forum/skins/default/templates/faq.html:32
+#: forum/skins/default/templates/faq.html:33
 msgid "Who moderates this community?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:33
+#: forum/skins/default/templates/faq.html:34
 msgid "The short answer is: <strong>you</strong>."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:34
+#: forum/skins/default/templates/faq.html:35
 msgid "This website is moderated by the users."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:35
+#: forum/skins/default/templates/faq.html:36
 msgid ""
 "The reputation system allows users earn the authorization to perform a "
 "variety of moderation tasks."
@@ -1917,11 +2440,11 @@ msgstr ""
 "Karma system allows users to earn rights to perform a variety of moderation "
 "tasks"
 
-#: forum/skins/default/templates/faq.html:40
+#: forum/skins/default/templates/faq.html:41
 msgid "How does reputation system work?"
 msgstr "How does karma system work?"
 
-#: forum/skins/default/templates/faq.html:41
+#: forum/skins/default/templates/faq.html:42
 msgid "Rep system summary"
 msgstr ""
 "When a question or answer is upvoted, the user who posted them will gain "
@@ -1929,15 +2452,17 @@ msgstr ""
 "rough measure of the community trust to him/her. Various moderation tasks "
 "are gradually assigned to the users based on those points."
 
-#: forum/skins/default/templates/faq.html:42
+#: forum/skins/default/templates/faq.html:43
+#, python-format
 msgid ""
 "For example, if you ask an interesting question or give a helpful answer, "
 "your input will be upvoted. On the other hand if the answer is misleading - "
-"it will be downvoted. Each vote in favor will generate <strong>10</strong> "
-"points, each vote against will subtract <strong>2</strong> points. There is "
-"a limit of <strong>200</strong> points that can be accumulated per question "
-"or answer. The table below explains reputation point requirements for each "
-"type of moderation task."
+"it will be downvoted. Each vote in favor will generate <strong>%"
+"(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against will "
+"subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. There "
+"is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> points that "
+"can be accumulated for a question or answer per day. The table below "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:53
@@ -1945,52 +2470,44 @@ msgstr ""
 msgid "upvote"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:57
+#: forum/skins/default/templates/faq.html:58
 msgid "use tags"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:62
+#: forum/skins/default/templates/faq.html:63
 msgid "add comments"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:66
+#: forum/skins/default/templates/faq.html:67
 #: forum/skins/default/templates/user_votes.html:17
 msgid "downvote"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:69
+#: forum/skins/default/templates/faq.html:70
 msgid "open and close own questions"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:73
+#: forum/skins/default/templates/faq.html:74
 msgid "retag questions"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:78
+#: forum/skins/default/templates/faq.html:79
 msgid "edit community wiki questions"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:83
+#: forum/skins/default/templates/faq.html:84
 msgid "edit any answer"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:87
-msgid "open any closed question"
-msgstr ""
-
-#: forum/skins/default/templates/faq.html:91
+#: forum/skins/default/templates/faq.html:88
 msgid "delete any comment"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:95
-msgid "delete any questions and answers and perform other moderation tasks"
-msgstr ""
-
-#: forum/skins/default/templates/faq.html:103
 msgid "how to validate email title"
 msgstr "How to validate email and why?"
 
-#: forum/skins/default/templates/faq.html:105
+#: forum/skins/default/templates/faq.html:97
 #, python-format
 msgid ""
 "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
@@ -2008,11 +2525,11 @@ msgstr ""
 "Also, when you sign up for the first time - create a unique <a href='%"
 "(gravatar_faq_url)s'><strong>gravatar</strong></a> personal image.</p>"
 
-#: forum/skins/default/templates/faq.html:110
+#: forum/skins/default/templates/faq.html:102
 msgid "what is gravatar"
 msgstr "How to change my picture (gravatar) and what is gravatar?"
 
-#: forum/skins/default/templates/faq.html:111
+#: forum/skins/default/templates/faq.html:103
 msgid "gravatar faq info"
 msgstr ""
 "<p>The picture that appears on the users profiles is called "
@@ -2029,44 +2546,44 @@ msgstr ""
 "be sure to use the same email address that you used to register with us). "
 "Default image that looks like a kitchen tile is generated automatically.</p>"
 
-#: forum/skins/default/templates/faq.html:114
+#: forum/skins/default/templates/faq.html:106
 msgid "To register, do I need to create new password?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:115
+#: forum/skins/default/templates/faq.html:107
 msgid ""
 "No, you don't have to. You can login through any service that supports "
 "OpenID, e.g. Google, Yahoo, AOL, etc."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:116
+#: forum/skins/default/templates/faq.html:108
 msgid "Login now!"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:121
+#: forum/skins/default/templates/faq.html:113
 msgid "Why other people can edit my questions/answers?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:122
+#: forum/skins/default/templates/faq.html:114
 msgid "Goal of this site is..."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:122
+#: forum/skins/default/templates/faq.html:114
 msgid ""
 "So questions and answers can be edited like wiki pages by experienced users "
 "of this site and this improves the overall quality of the knowledge base "
 "content."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:123
+#: forum/skins/default/templates/faq.html:115
 msgid "If this approach is not for you, we respect your choice."
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:127
+#: forum/skins/default/templates/faq.html:119
 msgid "Still have questions?"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:128
+#: forum/skins/default/templates/faq.html:120
 #, python-format
 msgid ""
 "Please ask your question at %(ask_question_url)s, help make our community "
@@ -2075,12 +2592,12 @@ msgstr ""
 "Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
 
-#: forum/skins/default/templates/faq.html:130
+#: forum/skins/default/templates/faq.html:122
 #: forum/skins/default/templates/header.html:27
 msgid "questions"
 msgstr ""
 
-#: forum/skins/default/templates/faq.html:130
+#: forum/skins/default/templates/faq.html:122
 msgid "."
 msgstr ""
 
@@ -2178,23 +2695,14 @@ msgstr ""
 msgid "users"
 msgstr "people"
 
-#: forum/skins/default/templates/header.html:31
-msgid "books"
-msgstr ""
-
-#: forum/skins/default/templates/header.html:33
-#: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
+#: forum/skins/default/templates/header.html:30
+#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:207
 msgid "badges"
 msgstr ""
 
-#: forum/skins/default/templates/header.html:34
-#: forum/skins/default/templates/header.html:38
+#: forum/skins/default/templates/header.html:31
 msgid "ask a question"
 msgstr ""
-
-#: forum/skins/default/templates/header.html:36
-msgid "unanswered questions"
-msgstr "unanswered"
 
 #: forum/skins/default/templates/input_bar.html:33
 msgid "search"
@@ -2277,144 +2785,87 @@ msgstr ""
 msgid "Privacy policy"
 msgstr ""
 
-#: forum/skins/default/templates/privacy.html:15
-msgid "general message about privacy"
-msgstr ""
-"Respecting users privacy is an important core principle of this Q&amp;A "
-"forum. Information on this page details how this forum protects your "
-"privacy, and what type of information is collected."
-
-#: forum/skins/default/templates/privacy.html:18
-msgid "Site Visitors"
-msgstr ""
-
-#: forum/skins/default/templates/privacy.html:20
-msgid "what technical information is collected about visitors"
-msgstr ""
-"Information on question views, revisions of questions and answers - both "
-"times and content are recorded for each user in order to correctly count "
-"number of views, maintain data integrity and report relevant updates."
-
-#: forum/skins/default/templates/privacy.html:23
-msgid "Personal Information"
-msgstr ""
-
-#: forum/skins/default/templates/privacy.html:25
-msgid "details on personal information policies"
-msgstr ""
-"Members of this community may choose to display personally identifiable "
-"information in their profiles. Forum will never display such information "
-"without a request from the user."
-
-#: forum/skins/default/templates/privacy.html:28
-msgid "Other Services"
-msgstr ""
-
-#: forum/skins/default/templates/privacy.html:30
-msgid "details on sharing data with third parties"
-msgstr ""
-"None of the data that is not openly shown on the forum by the choice of the "
-"user is shared with any third party."
-
-#: forum/skins/default/templates/privacy.html:35
-msgid "cookie policy details"
-msgstr ""
-"Forum software relies on the internet cookie technology to keep track of "
-"user sessions. Cookies must be enabled in your browser so that forum can "
-"work for you."
-
-#: forum/skins/default/templates/privacy.html:37
-msgid "Policy Changes"
-msgstr ""
-
-#: forum/skins/default/templates/privacy.html:38
-msgid "how privacy policies can be changed"
-msgstr ""
-"These policies may be adjusted to improve protection of user's privacy. "
-"Whenever such changes occur, users will be notified via the internal "
-"messaging system. "
-
-#: forum/skins/default/templates/question.html:78
-#: forum/skins/default/templates/question.html:79
-#: forum/skins/default/templates/question.html:95
+#: forum/skins/default/templates/question.html:80
+#: forum/skins/default/templates/question.html:81
 #: forum/skins/default/templates/question.html:97
+#: forum/skins/default/templates/question.html:99
 msgid "i like this post (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:81
-#: forum/skins/default/templates/question.html:99
-#: forum/skins/default/templates/question.html:251
+#: forum/skins/default/templates/question.html:83
+#: forum/skins/default/templates/question.html:101
+#: forum/skins/default/templates/question.html:253
 msgid "current number of votes"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:90
-#: forum/skins/default/templates/question.html:91
-#: forum/skins/default/templates/question.html:104
-#: forum/skins/default/templates/question.html:105
+#: forum/skins/default/templates/question.html:92
+#: forum/skins/default/templates/question.html:93
+#: forum/skins/default/templates/question.html:106
+#: forum/skins/default/templates/question.html:107
 msgid "i dont like this post (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:109
-#: forum/skins/default/templates/question.html:110
+#: forum/skins/default/templates/question.html:111
+#: forum/skins/default/templates/question.html:112
 msgid "mark this question as favorite (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:116
-#: forum/skins/default/templates/question.html:117
+#: forum/skins/default/templates/question.html:118
+#: forum/skins/default/templates/question.html:119
 msgid "remove favorite mark from this question (click again to restore mark)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:141
-#: forum/skins/default/templates/question.html:288
+#: forum/skins/default/templates/question.html:143
+#: forum/skins/default/templates/question.html:290
 #: forum/skins/default/templates/revisions_answer.html:58
 #: forum/skins/default/templates/revisions_question.html:58
 msgid "edit"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:146
+#: forum/skins/default/templates/question.html:148
 msgid "reopen"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:150
+#: forum/skins/default/templates/question.html:152
 msgid "close"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:156
-#: forum/skins/default/templates/question.html:293
+#: forum/skins/default/templates/question.html:158
+#: forum/skins/default/templates/question.html:295
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:157
-#: forum/skins/default/templates/question.html:294
+#: forum/skins/default/templates/question.html:159
+#: forum/skins/default/templates/question.html:296
 msgid "flag offensive"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:165
-#: forum/skins/default/templates/question.html:305
+#: forum/skins/default/templates/question.html:167
+#: forum/skins/default/templates/question.html:307
 msgid "delete"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:183
-#: forum/skins/default/templates/question.html:325
+#: forum/skins/default/templates/question.html:185
+#: forum/skins/default/templates/question.html:327
 msgid "delete this comment"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:194
-#: forum/skins/default/templates/question.html:336
+#: forum/skins/default/templates/question.html:196
+#: forum/skins/default/templates/question.html:338
 msgid "add comment"
 msgstr "post a comment"
 
-#: forum/skins/default/templates/question.html:198
-#: forum/skins/default/templates/question.html:340
+#: forum/skins/default/templates/question.html:200
+#: forum/skins/default/templates/question.html:342
 #, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:200
-#: forum/skins/default/templates/question.html:342
+#: forum/skins/default/templates/question.html:202
+#: forum/skins/default/templates/question.html:344
 #, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
@@ -2423,18 +2874,18 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:213
+#: forum/skins/default/templates/question.html:215
 #, python-format
 msgid ""
 "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:215
+#: forum/skins/default/templates/question.html:217
 #, python-format
 msgid "close date %(closed_at)s"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:223
+#: forum/skins/default/templates/question.html:225
 #, python-format
 msgid ""
 "\n"
@@ -2447,75 +2898,75 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/question.html:231
+#: forum/skins/default/templates/question.html:233
 msgid "oldest answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:231
+#: forum/skins/default/templates/question.html:233
 msgid "oldest answers"
 msgstr "oldest"
 
-#: forum/skins/default/templates/question.html:233
+#: forum/skins/default/templates/question.html:235
 msgid "newest answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:233
+#: forum/skins/default/templates/question.html:235
 msgid "newest answers"
 msgstr "newest"
 
-#: forum/skins/default/templates/question.html:235
+#: forum/skins/default/templates/question.html:237
 msgid "most voted answers will be shown first"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:235
+#: forum/skins/default/templates/question.html:237
 msgid "popular answers"
 msgstr "most voted"
 
-#: forum/skins/default/templates/question.html:249
-#: forum/skins/default/templates/question.html:250
+#: forum/skins/default/templates/question.html:251
+#: forum/skins/default/templates/question.html:252
 msgid "i like this answer (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:256
-#: forum/skins/default/templates/question.html:257
+#: forum/skins/default/templates/question.html:258
+#: forum/skins/default/templates/question.html:259
 msgid "i dont like this answer (click again to cancel)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:262
-#: forum/skins/default/templates/question.html:263
+#: forum/skins/default/templates/question.html:264
+#: forum/skins/default/templates/question.html:265
 msgid "mark this answer as favorite (click again to undo)"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:268
-#: forum/skins/default/templates/question.html:269
+#: forum/skins/default/templates/question.html:270
+#: forum/skins/default/templates/question.html:271
 msgid "the author of the question has selected this answer as correct"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:282
+#: forum/skins/default/templates/question.html:284
 msgid "answer permanent link"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:283
+#: forum/skins/default/templates/question.html:285
 msgid "permanent link"
 msgstr "link"
 
-#: forum/skins/default/templates/question.html:305
+#: forum/skins/default/templates/question.html:307
 msgid "undelete"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:364
-#: forum/skins/default/templates/question.html:367
+#: forum/skins/default/templates/question.html:366
+#: forum/skins/default/templates/question.html:369
 msgid "Notify me once a day when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> once a day by email when there are any new "
 "answers or updates"
 
-#: forum/skins/default/templates/question.html:370
+#: forum/skins/default/templates/question.html:372
 msgid "Notify me weekly when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> weekly when there are any new answers or updates"
 
-#: forum/skins/default/templates/question.html:375
+#: forum/skins/default/templates/question.html:377
 #, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
@@ -2523,21 +2974,21 @@ msgstr ""
 "(note: you can always <strong><a href='%(profile_url)s?"
 "sort=email_subscriptions'>change</a></strong> how often you receive updates)"
 
-#: forum/skins/default/templates/question.html:380
+#: forum/skins/default/templates/question.html:382
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 "<span class='strong'>Here</span> (once you log in) you will be able to sign "
 "up for the periodic email updates about this question."
 
-#: forum/skins/default/templates/question.html:391
+#: forum/skins/default/templates/question.html:393
 msgid "Your answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:393
+#: forum/skins/default/templates/question.html:395
 msgid "Be the first one to answer this question!"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:399
+#: forum/skins/default/templates/question.html:401
 msgid "you can answer anonymously and then login"
 msgstr ""
 "<span class='strong big'>Please start posting your answer anonymously</span> "
@@ -2546,7 +2997,7 @@ msgstr ""
 "answer</strong>, for discussions, <strong>please use comments</strong> and "
 "<strong>please do remember to vote</strong> (after you log in)!"
 
-#: forum/skins/default/templates/question.html:403
+#: forum/skins/default/templates/question.html:405
 msgid "answer your own question only to give an answer"
 msgstr ""
 "<span class='big strong'>You are welcome to answer your own question</span>, "
@@ -2556,7 +3007,7 @@ msgstr ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)! "
 
-#: forum/skins/default/templates/question.html:405
+#: forum/skins/default/templates/question.html:407
 msgid "please only give an answer, no discussions"
 msgstr ""
 "<span class='big strong'>Please try to give a substantial answer</span>. If "
@@ -2566,23 +3017,23 @@ msgstr ""
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
 
-#: forum/skins/default/templates/question.html:441
+#: forum/skins/default/templates/question.html:443
 msgid "Login/Signup to Post Your Answer"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:444
+#: forum/skins/default/templates/question.html:446
 msgid "Answer Your Own Question"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:446
+#: forum/skins/default/templates/question.html:448
 msgid "Answer the question"
 msgstr "Post Your Answer"
 
-#: forum/skins/default/templates/question.html:460
+#: forum/skins/default/templates/question.html:462
 msgid "Question tags"
 msgstr "Tags"
 
-#: forum/skins/default/templates/question.html:465
+#: forum/skins/default/templates/question.html:467
 #: forum/skins/default/templates/questions.html:257
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
@@ -2590,23 +3041,23 @@ msgstr "Tags"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:471
+#: forum/skins/default/templates/question.html:473
 msgid "question asked"
 msgstr "Asked"
 
-#: forum/skins/default/templates/question.html:474
+#: forum/skins/default/templates/question.html:476
 msgid "question was seen"
 msgstr "Seen"
 
-#: forum/skins/default/templates/question.html:474
+#: forum/skins/default/templates/question.html:476
 msgid "times"
 msgstr ""
 
-#: forum/skins/default/templates/question.html:477
+#: forum/skins/default/templates/question.html:479
 msgid "last updated"
 msgstr "Last updated"
 
-#: forum/skins/default/templates/question.html:483
+#: forum/skins/default/templates/question.html:485
 msgid "Related questions"
 msgstr ""
 
@@ -3034,7 +3485,7 @@ msgid "change picture"
 msgstr ""
 
 #: forum/skins/default/templates/user_info.html:25
-#: forum/skins/default/templates/users.html:26 forum/views/users.py:933
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:938
 msgid "reputation"
 msgstr "karma"
 
@@ -3168,19 +3619,19 @@ msgstr[1] ""
 msgid "User profile"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:907
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:912
 msgid "overview"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:915
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:920
 msgid "recent activity"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:925
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:930
 msgid "comments and answers to others questions"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:924
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:929
 msgid "responses"
 msgstr ""
 
@@ -3192,11 +3643,11 @@ msgstr "Graph of user karma"
 msgid "reputation history"
 msgstr "karma history"
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:951
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:956
 msgid "user vote record"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:950
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:955
 msgid "casted votes"
 msgstr "votes"
 
@@ -3208,11 +3659,11 @@ msgstr ""
 msgid "favorites"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:960
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:965
 msgid "email subscription settings"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:959
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:964
 msgid "email subscriptions"
 msgstr "subscriptions"
 
@@ -3798,120 +4249,120 @@ msgstr ""
 
 #: forum/skins/default/templates/fbconnect/xd_receiver.html:5
 #, python-format
-msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
+msgid "Connect to %(settings.APP_SHORT_NAME)s with Facebook!"
 msgstr ""
 
 #: forum/templatetags/extra_filters.py:100
 msgid "no items in counter"
 msgstr "no"
 
-#: forum/templatetags/extra_tags.py:53
+#: forum/templatetags/extra_tags.py:54
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
+#: forum/templatetags/extra_tags.py:179 forum/templatetags/extra_tags.py:206
 msgid "reputation points"
 msgstr "karma"
 
-#: forum/templatetags/extra_tags.py:265
+#: forum/templatetags/extra_tags.py:266
 msgid "2 days ago"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:267
+#: forum/templatetags/extra_tags.py:268
 msgid "yesterday"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:269
+#: forum/templatetags/extra_tags.py:270
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/templatetags/extra_tags.py:271
+#: forum/templatetags/extra_tags.py:272
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/utils/forms.py:30
+#: forum/utils/forms.py:32
 msgid "this field is required"
 msgstr ""
 
-#: forum/utils/forms.py:45
+#: forum/utils/forms.py:46
 msgid "choose a username"
 msgstr "Choose screen name"
 
-#: forum/utils/forms.py:50
+#: forum/utils/forms.py:51
 msgid "user name is required"
 msgstr ""
 
-#: forum/utils/forms.py:51
+#: forum/utils/forms.py:52
 msgid "sorry, this name is taken, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:52
+#: forum/utils/forms.py:53
 msgid "sorry, this name is not allowed, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:53
+#: forum/utils/forms.py:54
 msgid "sorry, there is no user with this name"
 msgstr ""
 
-#: forum/utils/forms.py:54
+#: forum/utils/forms.py:55
 msgid "sorry, we have a serious error - user name is taken by several users"
 msgstr ""
 
-#: forum/utils/forms.py:55
+#: forum/utils/forms.py:56
 msgid "user name can only consist of letters, empty space and underscore"
 msgstr ""
 
-#: forum/utils/forms.py:109
+#: forum/utils/forms.py:112
 msgid "your email address"
 msgstr "Your email <i>(never shared)</i>"
 
-#: forum/utils/forms.py:110
+#: forum/utils/forms.py:113
 msgid "email address is required"
 msgstr ""
 
-#: forum/utils/forms.py:111
+#: forum/utils/forms.py:114
 msgid "please enter a valid email address"
 msgstr ""
 
-#: forum/utils/forms.py:112
+#: forum/utils/forms.py:115
 msgid "this email is already used by someone else, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:140
+#: forum/utils/forms.py:143
 msgid "choose password"
 msgstr "Password"
 
-#: forum/utils/forms.py:141
+#: forum/utils/forms.py:144
 msgid "password is required"
 msgstr ""
 
-#: forum/utils/forms.py:144
+#: forum/utils/forms.py:147
 msgid "retype password"
 msgstr "Password <i>(please retype)</i>"
 
-#: forum/utils/forms.py:145
+#: forum/utils/forms.py:148
 msgid "please, retype your password"
 msgstr ""
 
-#: forum/utils/forms.py:146
+#: forum/utils/forms.py:149
 msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
 
-#: forum/views/commands.py:209
+#: forum/views/commands.py:217
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href='%(details_url)s'>more details here</a>"
 
-#: forum/views/commands.py:217
+#: forum/views/commands.py:225
 msgid "email update frequency has been set to daily"
 msgstr ""
 
@@ -3927,76 +4378,76 @@ msgstr ""
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: forum/views/users.py:867 forum/views/users.py:871
+#: forum/views/users.py:872 forum/views/users.py:876
 msgid "changes saved"
 msgstr ""
 
-#: forum/views/users.py:877
+#: forum/views/users.py:882
 msgid "email updates canceled"
 msgstr ""
 
-#: forum/views/users.py:908
+#: forum/views/users.py:913
 msgid "user profile"
 msgstr ""
 
-#: forum/views/users.py:909
+#: forum/views/users.py:914
 msgid "user profile overview"
 msgstr ""
 
-#: forum/views/users.py:916
+#: forum/views/users.py:921
 msgid "recent user activity"
 msgstr ""
 
-#: forum/views/users.py:917
+#: forum/views/users.py:922
 msgid "profile - recent activity"
 msgstr ""
 
-#: forum/views/users.py:926
+#: forum/views/users.py:931
 msgid "profile - responses"
 msgstr ""
 
-#: forum/views/users.py:934
+#: forum/views/users.py:939
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: forum/views/users.py:935
+#: forum/views/users.py:940
 msgid "profile - user reputation"
 msgstr "Profile - User's Karma"
 
-#: forum/views/users.py:941
+#: forum/views/users.py:946
 msgid "favorite questions"
 msgstr ""
 
-#: forum/views/users.py:942
+#: forum/views/users.py:947
 msgid "users favorite questions"
 msgstr ""
 
-#: forum/views/users.py:943
+#: forum/views/users.py:948
 msgid "profile - favorite questions"
 msgstr ""
 
-#: forum/views/users.py:952
+#: forum/views/users.py:957
 msgid "profile - votes"
 msgstr ""
 
-#: forum/views/users.py:961
+#: forum/views/users.py:966
 msgid "profile - email subscriptions"
 msgstr ""
 
-#: forum/views/writers.py:70
+#: forum/views/writers.py:69
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "sorry, file uploading requires karma >60"
 
-#: forum/views/writers.py:72
+#: forum/views/writers.py:71
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 
-#: forum/views/writers.py:74
+#: forum/views/writers.py:73
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr ""
 
-#: forum/views/writers.py:76
+#: forum/views/writers.py:75
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
@@ -4028,6 +4479,164 @@ msgstr ""
 msgid "books/"
 msgstr ""
 
+#: keyedcache/views.py:14
+msgid "Yes"
+msgstr ""
+
+#: keyedcache/views.py:15
+msgid "No"
+msgstr ""
+
+#: keyedcache/views.py:19
+msgid "Key to delete"
+msgstr ""
+
+#: keyedcache/views.py:20
+msgid "Include Children?"
+msgstr ""
+
+#: keyedcache/views.py:21
+msgid "Delete all keys?"
+msgstr ""
+
+#: keyedcache/templates/keyedcache/delete.html:6
+#: keyedcache/templates/keyedcache/stats.html:6
+#: keyedcache/templates/keyedcache/view.html:6
+#: livesettings/templates/livesettings/group_settings.html:14
+#: livesettings/templates/livesettings/site_settings.html:26
+msgid "Home"
+msgstr ""
+
+#: keyedcache/templates/keyedcache/delete.html:7
+#: keyedcache/templates/keyedcache/view.html:7
+msgid "Cache"
+msgstr ""
+
+#: keyedcache/templates/keyedcache/delete.html:8
+msgid "Cache Delete"
+msgstr ""
+
+#: keyedcache/templates/keyedcache/stats.html:7
+msgid "Cache Stats"
+msgstr ""
+
+#: keyedcache/templates/keyedcache/view.html:8
+msgid "Cache View"
+msgstr ""
+
+#: livesettings/models.py:101 livesettings/models.py:140
+msgid "Site"
+msgstr ""
+
+#: livesettings/values.py:103
+msgid "Base Settings"
+msgstr ""
+
+#: livesettings/values.py:210
+msgid "Default value: \"\""
+msgstr ""
+
+#: livesettings/values.py:217
+msgid "Default value: "
+msgstr ""
+
+#: livesettings/values.py:220
+#, python-format
+msgid "Default value: %s"
+msgstr ""
+
+#: livesettings/templates/livesettings/_admin_site_views.html:4
+msgid "Sites"
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:11
+#: livesettings/templates/livesettings/site_settings.html:23
+msgid "Documentation"
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:11
+#: livesettings/templates/livesettings/site_settings.html:23
+msgid "Log out"
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:15
+msgid "Edit Group Settings"
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:22
+#: livesettings/templates/livesettings/site_settings.html:50
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: livesettings/templates/livesettings/group_settings.html:28
+#, python-format
+msgid "Settings included in %(name)s."
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:62
+#: livesettings/templates/livesettings/site_settings.html:97
+msgid "You don't have permission to edit values."
+msgstr ""
+
+#: livesettings/templates/livesettings/group_settings.html:68
+msgid "Setting groups"
+msgstr ""
+
+#: livesettings/templates/livesettings/site_settings.html:27
+msgid "Edit Site Settings"
+msgstr ""
+
+#: livesettings/templates/livesettings/site_settings.html:43
+msgid "Livesettings are disabled for this site."
+msgstr ""
+
+#: livesettings/templates/livesettings/site_settings.html:44
+msgid "All configuration options must be edited in the site settings.py file"
+msgstr ""
+
+#: livesettings/templates/livesettings/site_settings.html:66
+#, python-format
+msgid "Group settings: %(name)s"
+msgstr ""
+
+#: livesettings/templates/livesettings/site_settings.html:93
+msgid "Uncollapse all"
+msgstr ""
+
+#~ msgid "unanswered questions"
+#~ msgstr "unanswered"
+
+#~ msgid "general message about privacy"
+#~ msgstr ""
+#~ "Respecting users privacy is an important core principle of this Q&amp;A "
+#~ "forum. Information on this page details how this forum protects your "
+#~ "privacy, and what type of information is collected."
+
+#~ msgid "what technical information is collected about visitors"
+#~ msgstr ""
+#~ "Information on question views, revisions of questions and answers - both "
+#~ "times and content are recorded for each user in order to correctly count "
+#~ "number of views, maintain data integrity and report relevant updates."
+
+#~ msgid "details on personal information policies"
+#~ msgstr ""
+#~ "Members of this community may choose to display personally identifiable "
+#~ "information in their profiles. Forum will never display such information "
+#~ "without a request from the user."
+
+#~ msgid "details on sharing data with third parties"
+#~ msgstr ""
+#~ "None of the data that is not openly shown on the forum by the choice of "
+#~ "the user is shared with any third party."
+
+#~ msgid "how privacy policies can be changed"
+#~ msgstr ""
+#~ "These policies may be adjusted to improve protection of user's privacy. "
+#~ "Whenever such changes occur, users will be notified via the internal "
+#~ "messaging system. "
+
 #~ msgid "welcome to website"
 #~ msgstr "Welcome to Q&amp;A forum"
 
@@ -4037,14 +4646,8 @@ msgstr ""
 #~ msgid "all awards"
 #~ msgstr "all badges"
 
-#~ msgid "complete list of questions"
-#~ msgstr "list of all questions"
-
 #~ msgid "popular tags"
 #~ msgstr "tags"
-
-#~ msgid "list of unanswered questions"
-#~ msgstr "unanswered questions"
 
 #~ msgid ""
 #~ " have total %(q_num)s questions containing %(searchtitle)s in full text "

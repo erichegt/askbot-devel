@@ -19,7 +19,6 @@ class VoteManager(models.Manager):
         if user is not None:
             today = datetime.date.today()
             return self.filter(user=user, voted_at__range=(today, today + datetime.timedelta(1))).count()
-
         else:
             return 0
 

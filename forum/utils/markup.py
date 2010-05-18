@@ -44,7 +44,7 @@ def mentionize(text, context_object = None):
         return text
 
     op = context_object.get_origin_post()
-    authors = list(op.get_all_authors())
+    authors = op.get_author_list( include_comments = True, recursive = True )
 
     extra_name_seed = ''
     for c in text:
