@@ -3,168 +3,35 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from django.utils.html import urlize
-from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse
 from forum import const
-import re
-
-def get_authors(question, orm = None):
-    authors = set()
-    for q_rev in orm['forum.QuestionRevision'].objects.filter(question=question):
-        authors.add(q_rev.author)
-
-    q_comments = orm['forum.Comment'].objects.filter(
-                            content_type__model='question',
-                            object_id = question.id
-                        )
-    for q_c in q_comments:
-        authors.add(q_c.user)
-
-    answers = orm['forum.Answer'].objects.filter(
-                                question = question,
-                                deleted = False
-                            )
-    for a in answers:
-        for a_rev in orm['forum.AnswerRevision'].objects.filter(answer = a):
-            authors.add(a_rev.author)
-        a_comments = orm['forum.Comment'].objects.filter(
-                                        content_type__model = 'answer',
-                                        object_id = a.id
-                                    )
-        for a_c in a_comments:
-            authors.add(a_c.user)
-    return authors
-
-def get_absolute_url(user):
-    url = reverse(
-                    'user_profile', 
-                    kwargs={
-                            'id':user.id, 
-                            'slug': slugify(user.username)
-                        }
-                )
-    return u'<a href="%s">@%s</a>' % (url, user.username)
-
-def get_comment_continuation(matching_author):
-    if matching_author:
-        return get_absolute_url(matching_author)
-    else:
-        return '@'
-
-def maybe_save_mention(
-                        context = None, 
-                        mentioned_whom = None, 
-                        orm = None,
-                        comment_content_type = None
-                    ):
-    if mentioned_whom and mentioned_whom != context.user:
-        m = orm['forum.Mention'](
-                mentioned_by = context.user,
-                mentioned_whom = mentioned_whom,
-                mentioned_at = context.added_at,
-                object_id = context.id,
-                content_type = comment_content_type, 
-            )
-        m.save()
-
-def extract_matching_author(text, ordered_authors):
-    for a in ordered_authors:
-        if text.startswith(a.username):
-            ulen = len(a.username)
-            if len(text) == ulen:
-                text = ''
-            elif text[ulen] in const.TWITTER_STYLE_MENTION_TERMINATION_CHARS:
-                text = text[ulen:]
-            else:
-                #near miss, here we could insert a warning that perhaps
-                #a termination character is needed
-                continue
-            return a, text
-    return None, text
-
-
-def mentionize(text, comment = None, all_users = None, orm = None):
-    if comment.content_type.model == 'answer':
-        answer = orm['forum.Answer'].objects.get(id = comment.object_id)
-        question = answer.question
-    else:
-        question = orm['forum.Question'].objects.get(id = comment.object_id)
-
-    #build ordered list of author names
-    authors = get_authors(question, orm = orm)
-    the_rest = all_users - authors
-    ordered_authors = list(authors) + list(the_rest)
-
-    comment_content_type = orm['contenttypes.ContentType'].objects.get(model='comment')
-
-    output = ''
-    while '@' in text:
-        #the purpose of this loop is to convert any occurance of '@mention ' syntax
-        #to user account links leading space is required unless @ is the first 
-        #character in whole text, also, either a punctuation or a ' ' char is required
-        #after the name
-        pos = text.index('@')
-
-        output += text[:pos]
-
-        if len(text) == pos + 1:
-            output += '@'
-            text = ''
-            break
-
-        if pos > 0:
-            if text[pos-1] in const.TWITTER_STYLE_MENTION_TERMINATION_CHARS:
-
-                text = text[pos+1:]
-                matching_author, text = extract_matching_author(text, ordered_authors)
-                output += get_comment_continuation(matching_author)
-                maybe_save_mention(
-                                    context = comment, 
-                                    mentioned_whom = matching_author, 
-                                    orm = orm,
-                                    comment_content_type = comment_content_type
-                                )
-            else:
-                text = text[pos+1:]
-                output += '@'
-        else:
-            text = text[1:]
-            matching_author, text = extract_matching_author(text, ordered_authors)
-            output += get_comment_continuation(matching_author)
-            maybe_save_mention(
-                                context = comment, 
-                                mentioned_whom = matching_author, 
-                                orm = orm,
-                                comment_content_type = comment_content_type
-                            )
-
-    #append the rest of text that did not have @ symbols
-    output += text
-    return output
 
 class Migration(DataMigration):
     
     def forwards(self, orm):
         "Write your forwards methods here."
-        all_users = set(orm['auth.User'].objects.all())
-        for comment in orm['forum.Comment'].objects.all():
-            comment.html = mentionize(
-                                        urlize(comment.comment, nofollow=True), 
-                                        comment = comment,
-                                        all_users = all_users,
-                                        orm = orm
-                                    )
-            #print 'was %s' % comment.comment
-            #print 'now %s' % comment.html
-            comment.save()
+        for m in orm['forum.Mention'].objects.all():
+            a = orm['forum.Activity']()
+            a.activity_type = const.TYPE_ACTIVITY_MENTION
+            a.user = m.mentioned_by
+            a.active_at = m.mentioned_at
+            a.object_id = m.object_id
+            a.content_type = m.content_type
+            a.save()
+            a.receiving_users.add(m.mentioned_whom)
+            m.delete()
     
     def backwards(self, orm):
         "Write your backwards methods here."
-        from forum.models import Comment
-        for comment in Comment.objects.all():
-            comment.html = comment.comment
-            comment.save()
+        m_type = const.TYPE_ACTIVITY_MENTION
+        for a in orm['forum.Activity'].objects.filter(activity_type = m_type):
+            m = orm['forum.Mention']()
+            m.mentioned_by = a.user
+            m.mentioned_whom = a.receiving_users.all()[0]
+            m.mentioned_at = a.active_at
+            m.content_type = a.content_type
+            m.object_id = a.object_id
+            a.delete()
+            m.save()
     
     models = {
         'auth.group': {
@@ -228,6 +95,7 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_auditted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'receiving_users': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'received_activity'", 'to': "orm['auth.User']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'forum.anonymousanswer': {
@@ -487,7 +355,7 @@ class Migration(DataMigration):
         },
         'forum.validationhash': {
             'Meta': {'unique_together': "(('user', 'type'),)", 'object_name': 'ValidationHash'},
-            'expiration': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2010, 5, 17, 15, 33, 45, 429877)'}),
+            'expiration': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2010, 5, 22, 21, 40, 30, 531379)'}),
             'hash_code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'seed': ('django.db.models.fields.CharField', [], {'max_length': '12'}),

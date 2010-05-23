@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-17 21:17-0400\n"
+"POT-Creation-Date: 2010-05-23 17:31-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1225,60 +1225,60 @@ msgstr ""
 msgid "mentioned in the post"
 msgstr ""
 
-#: forum/const/__init__.py:141
+#: forum/const/__init__.py:148
 msgid "question_answered"
 msgstr "answered question"
 
-#: forum/const/__init__.py:142
+#: forum/const/__init__.py:149
 msgid "question_commented"
 msgstr "commented question"
 
-#: forum/const/__init__.py:143
+#: forum/const/__init__.py:150
 msgid "answer_commented"
 msgstr ""
 
-#: forum/const/__init__.py:144
+#: forum/const/__init__.py:151
 msgid "answer_accepted"
 msgstr ""
 
-#: forum/const/__init__.py:148
+#: forum/const/__init__.py:155
 msgid "[closed]"
 msgstr ""
 
-#: forum/const/__init__.py:149
+#: forum/const/__init__.py:156
 msgid "[deleted]"
 msgstr ""
 
-#: forum/const/__init__.py:150 forum/views/readers.py:395
+#: forum/const/__init__.py:157 forum/views/readers.py:395
 #: forum/views/readers.py:416
 msgid "initial version"
 msgstr ""
 
-#: forum/const/__init__.py:151
+#: forum/const/__init__.py:158
 msgid "retagged"
 msgstr ""
 
-#: forum/const/__init__.py:156
+#: forum/const/__init__.py:163
 msgid "exclude ignored tags"
 msgstr ""
 
-#: forum/const/__init__.py:157
+#: forum/const/__init__.py:164
 msgid "allow only selected tags"
 msgstr ""
 
-#: forum/const/__init__.py:161
+#: forum/const/__init__.py:168
 msgid "instantly"
 msgstr ""
 
-#: forum/const/__init__.py:162
+#: forum/const/__init__.py:169
 msgid "daily"
 msgstr ""
 
-#: forum/const/__init__.py:163
+#: forum/const/__init__.py:170
 msgid "weekly"
 msgstr ""
 
-#: forum/const/__init__.py:164
+#: forum/const/__init__.py:171
 msgid "no email"
 msgstr ""
 
@@ -1781,27 +1781,27 @@ msgstr ""
 msgid "Created a tag used by 50 questions"
 msgstr ""
 
-#: forum/models/question.py:508
+#: forum/models/question.py:517
 #, python-format
 msgid "%(author)s modified the question"
 msgstr ""
 
-#: forum/models/question.py:512
+#: forum/models/question.py:521
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: forum/models/question.py:517
+#: forum/models/question.py:526
 #, python-format
 msgid "%(people)s commented the question"
 msgstr ""
 
-#: forum/models/question.py:522
+#: forum/models/question.py:531
 #, python-format
 msgid "%(people)s commented answers"
 msgstr ""
 
-#: forum/models/question.py:524
+#: forum/models/question.py:533
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr ""
@@ -1826,39 +1826,39 @@ msgstr ""
 msgid "ignored"
 msgstr ""
 
-#: forum/models/user.py:78
+#: forum/models/user.py:217
 msgid "Entire forum"
 msgstr ""
 
-#: forum/models/user.py:79
+#: forum/models/user.py:218
 msgid "Questions that I asked"
 msgstr ""
 
-#: forum/models/user.py:80
+#: forum/models/user.py:219
 msgid "Questions that I answered"
 msgstr ""
 
-#: forum/models/user.py:81
+#: forum/models/user.py:220
 msgid "Individually selected questions"
 msgstr ""
 
-#: forum/models/user.py:82
+#: forum/models/user.py:221
 msgid "Mentions and comment responses"
 msgstr ""
 
-#: forum/models/user.py:85
+#: forum/models/user.py:224
 msgid "Instantly"
 msgstr ""
 
-#: forum/models/user.py:86
+#: forum/models/user.py:225
 msgid "Daily"
 msgstr ""
 
-#: forum/models/user.py:87
+#: forum/models/user.py:226
 msgid "Weekly"
 msgstr ""
 
-#: forum/models/user.py:88
+#: forum/models/user.py:227
 msgid "No email"
 msgstr ""
 
@@ -2708,6 +2708,35 @@ msgstr ""
 msgid "search"
 msgstr ""
 
+#: forum/skins/default/templates/instant_notification.html:16
+#, python-format
+msgid "Dear %(user_name)s,"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:20
+#, python-format
+msgid ""
+"\n"
+"%(author_link)s has left you a <a href=\"%(update_url|safe)s\">comment</a>\n"
+"related to question <a href=\"%(origin_post_url|safe)s\">%(origin_post_title)"
+"s</a>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:27
+#, python-format
+msgid ""
+"\n"
+"%(author_link)s has left a new <a href=\"%(update_url|safe)s\">comment</a>\n"
+"related to question <a href=\"%(origin_post_url|safe)s\">%(origin_post_title)"
+"s</a>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:35
+msgid ""
+"\n"
+"\n"
+msgstr ""
+
 #: forum/skins/default/templates/logout.html:6
 #: forum/skins/default/templates/logout.html:16
 msgid "Logout"
@@ -3034,7 +3063,7 @@ msgid "Question tags"
 msgstr "Tags"
 
 #: forum/skins/default/templates/question.html:467
-#: forum/skins/default/templates/questions.html:257
+#: forum/skins/default/templates/questions.html:261
 #: forum/skins/default/templates/tag_selector.html:11
 #: forum/skins/default/templates/tag_selector.html:28
 #, python-format
@@ -3243,102 +3272,112 @@ msgstr ""
 
 #: forum/skins/default/templates/questions.html:141
 #, python-format
-msgid " %(q_num)s question found"
-msgid_plural "%(q_num)s questions found"
-msgstr[0] "One question found"
+msgid ""
+"\n"
+"                %(q_num)s question found\n"
+"            "
+msgid_plural ""
+"\n"
+"                %(q_num)s questions found\n"
+"            "
+msgstr[0] ""
+"\n"
+"<div class=\"questions-count\">%(q_num)s</div><p>question</p>"
 msgstr[1] ""
+"\n"
+"<div class=\"questions-count\">%(q_num)s</div><p>questions<p>"
 
-#: forum/skins/default/templates/questions.html:143
+#: forum/skins/default/templates/questions.html:147
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/skins/default/templates/questions.html:147
+#: forum/skins/default/templates/questions.html:151
 #, python-format
 msgid "with %(author_name)s's contributions"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:151
+#: forum/skins/default/templates/questions.html:155
 msgid "tagged"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:157
+#: forum/skins/default/templates/questions.html:161
 msgid "Search tips:"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:161
+#: forum/skins/default/templates/questions.html:165
 msgid "reset author"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:165
+#: forum/skins/default/templates/questions.html:169
 msgid "reset tags"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:169
 #: forum/skins/default/templates/questions.html:173
+#: forum/skins/default/templates/questions.html:177
 msgid "start over"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:175
+#: forum/skins/default/templates/questions.html:179
 msgid " - to expand, or dig in by adding more tags and revising the query."
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:178
+#: forum/skins/default/templates/questions.html:182
 msgid "Search tip:"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:178
+#: forum/skins/default/templates/questions.html:182
 msgid "add tags and a query to focus your search"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:190
+#: forum/skins/default/templates/questions.html:194
 msgid "There are no unanswered questions here"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:193
+#: forum/skins/default/templates/questions.html:197
 msgid "No favorite questions here. "
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:194
+#: forum/skins/default/templates/questions.html:198
 msgid "Please start (bookmark) some questions when you visit them"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:199
+#: forum/skins/default/templates/questions.html:203
 msgid "You can expand your search by "
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:203
+#: forum/skins/default/templates/questions.html:207
 msgid "resetting author"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:207
+#: forum/skins/default/templates/questions.html:211
 msgid "resetting tags"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:211
 #: forum/skins/default/templates/questions.html:215
+#: forum/skins/default/templates/questions.html:219
 msgid "starting over"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:220
+#: forum/skins/default/templates/questions.html:224
 msgid "Please always feel free to ask your question!"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:224
+#: forum/skins/default/templates/questions.html:228
 msgid "Did not find what you were looking for?"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:225
+#: forum/skins/default/templates/questions.html:229
 msgid "Please, post your question!"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:241
+#: forum/skins/default/templates/questions.html:245
 msgid "Contributors"
 msgstr ""
 
-#: forum/skins/default/templates/questions.html:254
+#: forum/skins/default/templates/questions.html:258
 msgid "Related tags"
 msgstr "Tags"
 
@@ -3485,7 +3524,7 @@ msgid "change picture"
 msgstr ""
 
 #: forum/skins/default/templates/user_info.html:25
-#: forum/skins/default/templates/users.html:26 forum/views/users.py:938
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:948
 msgid "reputation"
 msgstr "karma"
 
@@ -3619,19 +3658,19 @@ msgstr[1] ""
 msgid "User profile"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:912
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:922
 msgid "overview"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:920
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:930
 msgid "recent activity"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:930
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:940
 msgid "comments and answers to others questions"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:929
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:939
 msgid "responses"
 msgstr ""
 
@@ -3643,11 +3682,11 @@ msgstr "Graph of user karma"
 msgid "reputation history"
 msgstr "karma history"
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:956
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:966
 msgid "user vote record"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:955
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:965
 msgid "casted votes"
 msgstr "votes"
 
@@ -3659,11 +3698,11 @@ msgstr ""
 msgid "favorites"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:965
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:975
 msgid "email subscription settings"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:964
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:974
 msgid "email subscriptions"
 msgstr "subscriptions"
 
@@ -4378,59 +4417,59 @@ msgstr ""
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: forum/views/users.py:872 forum/views/users.py:876
+#: forum/views/users.py:882 forum/views/users.py:886
 msgid "changes saved"
 msgstr ""
 
-#: forum/views/users.py:882
+#: forum/views/users.py:892
 msgid "email updates canceled"
 msgstr ""
 
-#: forum/views/users.py:913
+#: forum/views/users.py:923
 msgid "user profile"
 msgstr ""
 
-#: forum/views/users.py:914
+#: forum/views/users.py:924
 msgid "user profile overview"
 msgstr ""
 
-#: forum/views/users.py:921
+#: forum/views/users.py:931
 msgid "recent user activity"
 msgstr ""
 
-#: forum/views/users.py:922
+#: forum/views/users.py:932
 msgid "profile - recent activity"
 msgstr ""
 
-#: forum/views/users.py:931
+#: forum/views/users.py:941
 msgid "profile - responses"
 msgstr ""
 
-#: forum/views/users.py:939
+#: forum/views/users.py:949
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: forum/views/users.py:940
+#: forum/views/users.py:950
 msgid "profile - user reputation"
 msgstr "Profile - User's Karma"
 
-#: forum/views/users.py:946
+#: forum/views/users.py:956
 msgid "favorite questions"
 msgstr ""
 
-#: forum/views/users.py:947
+#: forum/views/users.py:957
 msgid "users favorite questions"
 msgstr ""
 
-#: forum/views/users.py:948
+#: forum/views/users.py:958
 msgid "profile - favorite questions"
 msgstr ""
 
-#: forum/views/users.py:957
+#: forum/views/users.py:967
 msgid "profile - votes"
 msgstr ""
 
-#: forum/views/users.py:966
+#: forum/views/users.py:976
 msgid "profile - email subscriptions"
 msgstr ""
 
@@ -4605,6 +4644,11 @@ msgstr ""
 msgid "Uncollapse all"
 msgstr ""
 
+#~ msgid "%(q_num)s question found"
+#~ msgid_plural "%(q_num)s questions found"
+#~ msgstr[0] "One question found"
+#~ msgstr[1] ""
+
 #~ msgid "unanswered questions"
 #~ msgstr "unanswered"
 
@@ -4715,18 +4759,3 @@ msgstr ""
 #~ "\n"
 #~ "<div class=\"questions-count\">%(q_num)s</div><p>questions without an "
 #~ "accepted answer</p>"
-
-#~ msgid ""
-#~ "\n"
-#~ "                    have total %(q_num)s questions\n"
-#~ "                    "
-#~ msgid_plural ""
-#~ "\n"
-#~ "                    have total %(q_num)s questions\n"
-#~ "                    "
-#~ msgstr[0] ""
-#~ "\n"
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>question</p>"
-#~ msgstr[1] ""
-#~ "\n"
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>questions<p>"

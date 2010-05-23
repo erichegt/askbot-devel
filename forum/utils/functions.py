@@ -1,5 +1,11 @@
-def get_from_dict_or_object(object,key):
+def get_from_dict_or_object(source, key):
     try:
-        return object[key]
+        return source[key]
     except:
-        return getattr(object,key)
+        return getattr(source,key)
+
+def is_iterable(thing):
+    if hasattr(thing, '__iter__'):
+        return True
+    else:
+        return isinstance(thing, basestring)

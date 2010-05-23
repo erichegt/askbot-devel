@@ -2,13 +2,123 @@ from base import *
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from forum.models.question import Question, QuestionRevision
+from forum.models.answer import Answer, AnswerRevision
+from forum.models.meta import Comment
 from hashlib import md5
 import string
 from random import Random
 from forum import const
+from forum.utils import functions
 import datetime
+import logging
 
 from django.utils.translation import ugettext as _
+
+class ActivityManager(models.Manager):
+    def get_all_origin_posts(self):
+        #todo: redo this with query sets
+        origin_posts = set()
+        for m in self.all():
+            post = m.content_object
+            if post and hasattr(post, 'get_origin_post'):
+                origin_posts.add(post.get_origin_post())
+            else:
+                logging.debug(
+                            'method get_origin_post() not implemented for %s' \
+                            % unicode(post)
+                        )
+        return list(origin_posts)
+
+    def create_new_mention(
+                self,
+                mentioned_by = None,
+                mentioned_whom = None,
+                mentioned_at = None,
+                mentioned_in = None,
+                reported = None
+            ): 
+
+        #todo: automate this using python inspect module
+        kwargs = dict()
+
+        kwargs['activity_type'] = const.TYPE_ACTIVITY_MENTION
+
+        if mentioned_at:
+            #todo: handle cases with rich lookups here like __lt
+            kwargs['active_at'] = mentioned_at
+
+        if mentioned_by:
+            kwargs['user'] = mentioned_by
+
+        if mentioned_in:
+            if functions.is_iterable(mentioned_in):
+                raise NotImplementedError('mentioned_in only works for single items')
+            else:
+                post_content_type = ContentType.objects.get_for_model(mentioned_in)
+                kwargs['content_type'] = post_content_type
+                kwargs['object_id'] = mentioned_in.id
+
+        if reported == True:
+            kwargs['is_auditted'] = True
+        else:
+            kwargs['is_auditted'] = False
+
+
+        mention_activity = Activity(**kwargs)
+        mention_activity.save()
+
+        if mentioned_whom:
+            if functions.is_iterable(mentioned_whom):
+                raise NotImplementedError('cannot yet mention multiple people at once')
+            else:
+                mention_activity.receiving_users.add(mentioned_whom)
+
+        return mention_activity
+
+
+    def get_mentions(
+                self, 
+                mentioned_by = None,
+                mentioned_whom = None,
+                mentioned_at = None,
+                mentioned_in = None,
+                reported = None
+            ):
+
+        kwargs = dict()
+
+        kwargs['activity_type'] = const.TYPE_ACTIVITY_MENTION
+
+        if mentioned_at:
+            #todo: handle cases with rich lookups here like __lt
+            kwargs['active_at'] = mentioned_at
+
+        if mentioned_by:
+            kwargs['user'] = mentioned_by
+
+        if mentioned_whom:
+            if functions.is_iterable(mentioned_whom):
+                kwargs['receiving_users__in'] = mentioned_whom
+            else:
+                kwargs['receiving_users__in'] = (mentioned_whom,)
+
+        if mentioned_in:
+            if functions.is_iterable(mentioned_in):
+                it = iter(mentioned_in)
+                raise NotImplementedError('mentioned_in only works for single items')
+            else:
+                post_content_type = ContentType.objects.get_for_model(mentioned_in)
+                kwargs['content_type'] = post_content_type
+                kwargs['object_id'] = mentioned_in.id
+
+        if reported == True:
+            kwargs['is_auditted'] = True
+        else:
+            kwargs['is_auditted'] = False
+
+        return self.filter(**kwargs)
+
 
 class Activity(models.Model):
     """
@@ -16,56 +126,85 @@ class Activity(models.Model):
     """
     user = models.ForeignKey(User)
     receiving_users = models.ManyToManyField(User, related_name='received_activity')
-    activity_type = models.SmallIntegerField(choices=TYPE_ACTIVITY)
+    activity_type = models.SmallIntegerField(choices = const.TYPE_ACTIVITY)
     active_at = models.DateTimeField(default=datetime.datetime.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     is_auditted = models.BooleanField(default=False)
 
+    objects = ActivityManager()
+
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)
+
+    def get_response_type_content_object(self):
+        """
+        This method will go when post models are
+        unified (todo:)
+        """
+        cobj = self.content_object
+        if isinstance(cobj, Comment):
+            return cobj
+        elif isinstance(cobj, AnswerRevision):
+            return cobj.answer
+        elif isinstance(cobj, QuestionRevision):
+            return cobj.question
+        else:
+            raise NotImplementedError()
 
     class Meta:
         app_label = 'forum'
         db_table = u'activity'
 
-class MentionManager(models.Manager):
-    def get_question_list(self):
-        out = []
-        for m in self.all():
-            post = m.content_object
-            if isinstance(post, Question):
-                out.append(post)
-            elif isinstance(post, Answer):
-                out.append(post.question)
-            elif isinstance(post, Comment):
-                p =  post.content_object
-                if isinstance(p, Question):
-                    out.append(p)
-                elif isinstance(p, Answer):
-                    out.append(p.question)
-        return out
 
-class Mention(models.Model):
-    """
-    Table holding @mention type entries in the posts
-    todo: maybe merge this with Activity table
-    """
-    mentioned_by = models.ForeignKey(User, related_name = 'mentions_sent')
-    mentioned_whom = models.ForeignKey(User, related_name = 'mentions_received')
-    mentioned_at = models.DateTimeField(default=datetime.datetime.now)
+class EmailFeedSettingManager(models.Manager):
+    def exists_match_to_post_and_subscriber(self, post = None, subscriber = None, **kwargs):
+        """returns list of feeds matching the post
+        and subscriber
+        """
+        feeds = self.filter(subscriber = subscriber, **kwargs)
 
-    #have to use generic foreign key here to point to the context of the mention
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+        for feed in feeds:
 
-    objects = MentionManager()
+            if feed.feed_type == 'm_and_c':
+                if isinstance(post, Comment):
+                    return True
+                else:
+                    post_content_type = ContentType.objects.get_for_model(post)
+                    subscriber_mentions = Mention.objects.filter(
+                                                content_type = post_content_type,
+                                                object_id = post.id,
+                                                mentioned_whom = subscriber,
+                                                is_auditted = False
+                                            )
+                    if subscriber_mentions:
+                        return True
+            else:
+                if feed.feed_type == 'q_all':
+                    #'everything' category is tag filtered
+                    if post.passes_tag_filter_for_user(subscriber):
+                        return True
+                else:
 
-    class Meta:
-        app_label = 'forum'
-        db_table = u'mention'
+                    origin_post = post.get_origin_post()
+
+                    if feed.feed_type == 'q_ask':
+                        if origin_post.author == subscriber:
+                            return True
+
+                    elif feed.feed_type == 'q_ans':
+                        #make sure that subscriber answered origin post
+                        answers = origin_post.answers.exclude(deleted=True)
+                        if subscriber in answers.get_author_list():
+                            return True
+
+                    elif feed.feed_type == 'q_sel':
+                        #make sure that subscriber has selected this post
+                        #individually
+                        if subscriber in origin_post.followed_by.all():
+                            return True
+        return False
 
 class EmailFeedSetting(models.Model):
     DELTA_TABLE = {
@@ -98,6 +237,8 @@ class EmailFeedSetting(models.Model):
                                 )
     added_at = models.DateTimeField(auto_now_add=True)
     reported_at = models.DateTimeField(null=True)
+
+    objects = EmailFeedSettingManager()
 
     #functions for rich comparison
     #PRECEDENCE = ('i','d','w','n')#the greater ones are first

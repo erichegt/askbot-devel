@@ -111,8 +111,8 @@ class Content(models.Model):
     last_edited_at = models.DateTimeField(null=True, blank=True)
     last_edited_by = models.ForeignKey(User, null=True, blank=True, related_name='last_edited_%(class)ss')
 
-    html = models.TextField(null=True)
-    text = models.TextField(null=True) #denormalized copy of latest revision
+    html = models.TextField(null=True)#html rendition of the latest revision
+    text = models.TextField(null=True)#denormalized copy of latest revision
     comments = generic.GenericRelation(Comment)
     votes = generic.GenericRelation(Vote)
     flagged_items = generic.GenericRelation(FlaggedItem)
@@ -150,7 +150,10 @@ class Content(models.Model):
         self.save()
 
     def get_latest_revision(self):
-        return self.revisions.all()[0]
+        return self.revisions.all().order_by('-revised_at')[0]
+
+    def get_latest_revision_number(self):
+        return self.get_latest_revision().revision
 
     def get_last_author(self):
         return self.last_edited_by
@@ -162,11 +165,29 @@ class Content(models.Model):
             authors.update([c.user for c in self.comments.all()])
         if recursive:
             if hasattr(self, 'answers'):
-                for a in self.answers.all():
+                for a in self.answers.exclude(deleted = True):
                     authors.update(a.get_author_list( include_comments = include_comments ) )
         if exclude_list:
             authors -= set(exclude_list)
         return list(authors)
+
+    def passes_tag_filter_for_user(self, user):
+        tags = self.get_origin_post().tags.all()
+
+        if self.tag_filter_setting == 'interesting':
+            #at least some of the tags must be marked interesting
+            return self.tag_selections.exists(tag__in = tags, reason = 'good')
+
+        elif self.tag_filter_setting == 'ignored':
+            #at least one tag must be ignored
+            if self.tag_selections.exists(tag__in = tags, reason = 'bad'):
+                return False
+            else:
+                return True
+
+        else:
+            raise Exception('unexpected User.tag_filter_setting %' % self.tag_filter_setting)
+
 
     def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at

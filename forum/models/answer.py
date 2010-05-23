@@ -51,6 +51,12 @@ class AnswerManager(models.Manager):
                 pass
         return answer
 
+    def get_author_list(self, **kwargs):
+        authors = set()
+        for answer in self:
+            authors.update(answer.get_author_list(**kwargs))
+        return list(authors)
+
     #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
     def get_answers_from_question(self, question, user=None):
         """

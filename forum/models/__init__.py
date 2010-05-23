@@ -3,11 +3,12 @@ from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
 from user import Activity, ValidationHash, EmailFeedSetting
-from user import Mention, AuthKeyUserAssociation
+from user import AuthKeyUserAssociation
 from repute import Badge, Award, Repute
 from django.core.urlresolvers import reverse
 from forum.search.indexer import create_fulltext_indexes
 from django.db.models.signals import post_syncdb
+from forum import const
 import logging
 import re
 
@@ -250,7 +251,7 @@ def record_ask_event(instance, created, **kwargs):
                         user=instance.author, 
                         active_at=instance.added_at, 
                         content_object=instance, 
-                        activity_type=TYPE_ACTIVITY_ASK_QUESTION
+                        activity_type=const.TYPE_ACTIVITY_ASK_QUESTION
                     )
         activity.save()
 
@@ -281,7 +282,7 @@ def record_answer_event(instance, created, **kwargs):
                         user = instance.author,
                         active_at = instance.added_at,
                         content_object = instance,
-                        activity_type = TYPE_ACTIVITY_ANSWER
+                        activity_type = const.TYPE_ACTIVITY_ANSWER
                     )
         activity.save()
         receiving_users = instance.question.get_author_list(
@@ -295,9 +296,9 @@ def record_answer_event(instance, created, **kwargs):
 def record_comment_event(instance, created, **kwargs):
     if created:
         if isinstance(instance.content_object, Question):
-            type = TYPE_ACTIVITY_COMMENT_QUESTION
+            activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
         elif isinstance(instance.content_object, Answer):
-            type = TYPE_ACTIVITY_COMMENT_ANSWER
+            activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
         else:
             logging.critical('recording comment for %s is not implemented' % type(instance.content_object))
 
@@ -305,7 +306,7 @@ def record_comment_event(instance, created, **kwargs):
                         user = instance.user, 
                         active_at = instance.added_at, 
                         content_object = instance, 
-                        activity_type = type
+                        activity_type = activity_type
                     )
         activity.save()
 
@@ -322,7 +323,7 @@ def record_revision_question_event(instance, created, **kwargs):
                         user=instance.author,
                         active_at=instance.revised_at,
                         content_object=instance,
-                        activity_type=TYPE_ACTIVITY_UPDATE_QUESTION
+                        activity_type=const.TYPE_ACTIVITY_UPDATE_QUESTION
                     )
         activity.save()
         receiving_users = set()
@@ -342,7 +343,7 @@ def record_revision_answer_event(instance, created, **kwargs):
                         user=instance.author, 
                         active_at=instance.revised_at, 
                         content_object=instance, 
-                        activity_type=TYPE_ACTIVITY_UPDATE_ANSWER
+                        activity_type=const.TYPE_ACTIVITY_UPDATE_ANSWER
                     )
         activity.save()
         receiving_users = set()
@@ -367,7 +368,7 @@ def record_award_event(instance, created, **kwargs):
                         user=instance.user,#todo: change this to community user who gives the award
                         active_at=instance.awarded_at,
                         content_object=instance,
-                        activity_type=TYPE_ACTIVITY_PRIZE
+                        activity_type=const.TYPE_ACTIVITY_PRIZE
                     )
         activity.save()
         activity.receiving_users.add(instance.user)
@@ -405,7 +406,7 @@ def record_answer_accepted(instance, created, **kwargs):
                         user=instance.question.author,
                         active_at=datetime.datetime.now(),
                         content_object=instance,
-                        activity_type=TYPE_ACTIVITY_MARK_ANSWER
+                        activity_type=const.TYPE_ACTIVITY_MARK_ANSWER
                     )
         receiving_users = instance.get_author_list(
                                             exclude_list = [instance.question.author]
@@ -428,9 +429,9 @@ def record_vote(instance, created, **kwargs):
     """
     if created:
         if instance.vote == 1:
-            vote_type = TYPE_ACTIVITY_VOTE_UP
+            vote_type = const.TYPE_ACTIVITY_VOTE_UP
         else:
-            vote_type = TYPE_ACTIVITY_VOTE_DOWN
+            vote_type = const.TYPE_ACTIVITY_VOTE_DOWN
 
         activity = Activity(
                         user=instance.user,
@@ -449,7 +450,7 @@ def record_cancel_vote(instance, **kwargs):
                     user=instance.user, 
                     active_at=datetime.datetime.now(), 
                     content_object=instance, 
-                    activity_type=TYPE_ACTIVITY_CANCEL_VOTE
+                    activity_type=const.TYPE_ACTIVITY_CANCEL_VOTE
                 )
     #todo: same problem - cannot access receiving user here
     activity.save()
@@ -459,9 +460,9 @@ def record_delete_question(instance, delete_by, **kwargs):
     when user deleted the question
     """
     if instance.__class__ == "Question":
-        activity_type = TYPE_ACTIVITY_DELETE_QUESTION
+        activity_type = const.TYPE_ACTIVITY_DELETE_QUESTION
     else:
-        activity_type = TYPE_ACTIVITY_DELETE_ANSWER
+        activity_type = const.TYPE_ACTIVITY_DELETE_ANSWER
 
     activity = Activity(
                     user=delete_by, 
@@ -477,7 +478,7 @@ def record_mark_offensive(instance, mark_by, **kwargs):
                     user=mark_by, 
                     active_at=datetime.datetime.now(), 
                     content_object=instance, 
-                    activity_type=TYPE_ACTIVITY_MARK_OFFENSIVE
+                    activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE
                 )
     activity.save()
     receiving_users = instance.get_author_list(
@@ -493,7 +494,7 @@ def record_update_tags(question, **kwargs):
                     user=question.author,
                     active_at=datetime.datetime.now(),
                     content_object=question,
-                    activity_type=TYPE_ACTIVITY_UPDATE_TAGS
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS
                 )
     activity.save()
 
@@ -506,7 +507,7 @@ def record_favorite_question(instance, created, **kwargs):
                         user=instance.user, 
                         active_at=datetime.datetime.now(), 
                         content_object=instance, 
-                        activity_type=TYPE_ACTIVITY_FAVORITE
+                        activity_type=const.TYPE_ACTIVITY_FAVORITE
                     )
         activity.save()
         receiving_users = instance.question.get_author_list(
@@ -519,7 +520,7 @@ def record_user_full_updated(instance, **kwargs):
                     user=instance, 
                     active_at=datetime.datetime.now(), 
                     content_object=instance, 
-                    activity_type=TYPE_ACTIVITY_USER_FULL_UPDATED
+                    activity_type=const.TYPE_ACTIVITY_USER_FULL_UPDATED
                 )
     activity.save()
 
@@ -588,7 +589,6 @@ Activity = Activity
 EmailFeedSetting = EmailFeedSetting
 ValidationHash = ValidationHash
 AuthKeyUserAssociation = AuthKeyUserAssociation
-Mention = Mention
 
 __all__ = [
         'Question',
@@ -615,7 +615,6 @@ __all__ = [
         'EmailFeedSetting',
         'ValidationHash',
         'AuthKeyUserAssociation',
-        'Mention',
 
         'User',
         ]

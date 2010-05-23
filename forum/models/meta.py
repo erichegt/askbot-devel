@@ -99,13 +99,20 @@ class Comment(MetaContent, UserContent):
             logging.debug('problem pinging google did you register you sitemap with google?')
 
     def delete(self, **kwargs):
-        from forum.models.user import Mention
-        ctype = ContentType.objects.get_for_model(self)
-        Mention.objects.filter(
-                            content_type = ctype,
-                            object_id = self.id
+        #todo: not very good import in models of other models
+        #todo: potentially a circular import
+        from forum.models.user import Activity
+        Activity.objects.get_mentions(
+                            mentioned_in = self
                         ).delete()
         super(Comment,self).delete(**kwargs)
+
+    def get_absolute_url(self):
+        origin_post = self.get_origin_post()
+        return '%s#comment-%d' % (origin_post.get_absolute_url(), self.id)
+
+    def get_latest_revision_number(self):
+        return 1
 
     def __unicode__(self):
         return self.comment

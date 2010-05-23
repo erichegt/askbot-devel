@@ -1,18 +1,18 @@
 from forum import const
 #from forum.models import Comment, Question, Answer
 #from forum.models import QuestionRevision, AnswerRevision
-from forum.models import Mention, User
+from forum.models import Activity, User
 
+#todo: don't like that this file deals with models directly
 def _make_mention(mentioned_whom, context_object = None):
     mentioned_by = context_object.get_last_author()
     if mentioned_whom:
         if mentioned_whom != mentioned_by:
-            m = Mention(
+            m = Activity.objects.create_new_mention(
                     mentioned_by = mentioned_by,
                     mentioned_whom = mentioned_whom,
-                    content_object = context_object
+                    mentioned_in = context_object
                 )
-            m.save()
         url = mentioned_whom.get_profile_url()
         username = mentioned_whom.username
         return '<a href="%s">@%s</a>' % (url, username)
@@ -46,17 +46,30 @@ def mentionize(text, context_object = None):
     op = context_object.get_origin_post()
     authors = op.get_author_list( include_comments = True, recursive = True )
 
-    extra_name_seed = ''
-    for c in text:
-        if c in const.TWITTER_STYLE_MENTION_TERMINATION_CHARS:
-            break
-        else:
-            extra_name_seed += c
-        if len(extra_name_seed) > 10:
-            break
+    text_copy = text
+    extra_name_seeds = set()
+    while '@' in text_copy:
+        pos = text_copy.index('@')
+        text_copy = text_copy[pos+1:]#chop off prefix
+        name_seed = ''
+        for c in text_copy:
+            if c in const.TWITTER_STYLE_MENTION_TERMINATION_CHARS:
+                extra_name_seeds.add(name_seed)
+                break
+            if len(name_seed) > 10:
+                extra_name_seeds.add(name_seed)
+                break
+            if c == '@':
+                extra_name_seeds.add(name_seed)
+                break
+            name_seed += c
 
-    if len(extra_name_seed) > 0:
-        authors += list(User.objects.filter(username__startswith = extra_name_seed))
+    extra_authors = set()
+    for name_seed in extra_name_seeds:
+        if len(name_seed) > 0:
+            extra_authors.update(User.objects.filter(username__startswith = name_seed))
+
+    authors += list(extra_authors)
 
     output = ''
     while '@' in text:

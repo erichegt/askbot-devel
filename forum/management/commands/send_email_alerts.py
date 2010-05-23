@@ -240,12 +240,12 @@ class Command(NoArgsCommand):
                         else:
                             meta_data['comments'] = 1
 
-                mentions = Mention.objects.filter(
+                mentions = Activity.objects.get_mentions(
                                                     mentioned_at__gt = cutoff_time,
                                                     mentioned_whom = user
                                                 )
 
-                q_mentions_id = [q.id for q in mentions.get_question_list()]
+                q_mentions_id = [q.id for q in mentions.get_all_origin_posts()]
 
                 q_mentions_A = Q_set_A.filter(id__in, q_mentions_id)
                 q_mentions_A.cutoff_time = cutoff_time
@@ -453,12 +453,11 @@ class Command(NoArgsCommand):
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
                 text += _('go to %(link)s to change frequency of email updates or %(email)s administrator') \
                                 % {'link':link, 'email':settings.ADMINS[0][1]}
-                msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
-                msg.content_subtype = 'html'
                 if DEBUG_THIS_COMMAND == False:
+                    msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
+                    msg.content_subtype = 'html'
                     msg.send()
-                #uncomment lines below to get copies of emails sent to others
-                #todo: maybe some debug setting would be appropriate here
-                #msg2 = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, ['your@email.com'])
-                #msg2.content_subtype = 'html'
-                #msg2.send()
+                else:
+                    msg2 = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, ['your@email.com'])
+                    msg2.content_subtype = 'html'
+                    msg2.send()

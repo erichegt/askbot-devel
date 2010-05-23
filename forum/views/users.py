@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
@@ -11,22 +10,22 @@ from django.utils.translation import ugettext as _
 from django.utils.http import urlquote_plus
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
-from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm,
 from forum.utils.html import sanitize_html
 from forum import auth
+from forum import forms
 import calendar
 from django.contrib.contenttypes.models import ContentType
-from forum.models import user_updated
-from forum.const import USERS_PAGE_SIZE
+from forum import const
 from django.conf import settings
 from forum.conf import settings as forum_settings
+from forum import models
 
-question_type = ContentType.objects.get_for_model(Question)
-answer_type = ContentType.objects.get_for_model(Answer)
-comment_type = ContentType.objects.get_for_model(Comment)
-question_revision_type = ContentType.objects.get_for_model(QuestionRevision)
-answer_revision_type = ContentType.objects.get_for_model(AnswerRevision)
-repute_type = ContentType.objects.get_for_model(Repute)
+question_type = ContentType.objects.get_for_model(models.Question)
+answer_type = ContentType.objects.get_for_model(models.Answer)
+comment_type = ContentType.objects.get_for_model(models.Comment)
+question_revision_type = ContentType.objects.get_for_model(models.QuestionRevision)
+answer_revision_type = ContentType.objects.get_for_model(models.AnswerRevision)
+repute_type = ContentType.objects.get_for_model(models.Repute)
 question_type_id = question_type.id
 answer_type_id = answer_type.id
 comment_type_id = comment_type.id
@@ -45,18 +44,29 @@ def users(request):
 
     if suser == "":
         if sortby == "newest":
-            objects_list = Paginator(User.objects.all().order_by('-date_joined'), USERS_PAGE_SIZE)
+            order_by_parameter = '-date_joined'
         elif sortby == "last":
-            objects_list = Paginator(User.objects.all().order_by('date_joined'), USERS_PAGE_SIZE)
+            order_by_parameter = 'date_joined'
         elif sortby == "user":
-            objects_list = Paginator(User.objects.all().order_by('username'), USERS_PAGE_SIZE)
-        # default
+            order_by_parameter = 'username'
         else:
-            objects_list = Paginator(User.objects.all().order_by('-reputation'), USERS_PAGE_SIZE)
+            # default
+            order_by_parameter = '-reputation'
+
+        objects_list = Paginator(
+                            models.User.objects.all().order_by(order_by_parameter), 
+                            const.USERS_PAGE_SIZE
+                        )
         base_url = reverse('users') + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
-        objects_list = Paginator(User.objects.extra(where=['username like %s'], params=['%' + suser + '%']).order_by('-reputation'), USERS_PAGE_SIZE)
+        objects_list = Paginator(
+                            models.User.objects.extra(
+                                                    where=['username like %s'], 
+                                                    params=['%' + suser + '%']
+                                                ).order_by('-reputation'), 
+                            const.USERS_PAGE_SIZE
+                        )
         base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
 
     try:
@@ -92,8 +102,8 @@ def moderate_user(request, id):
     if not request.is_ajax():
         return HttpResponseForbidden(mimetype="application/json")
 
-    user = get_object_or_404(User, id=id)
-    form = ModerateUserForm(request.POST, instance=user)
+    user = get_object_or_404(models.User, id=id)
+    form = forms.ModerateUserForm(request.POST, instance=user)
 
     if form.is_valid():
         form.save()
@@ -114,11 +124,11 @@ def set_new_email(user, new_email, nomessage=False):
 
 @login_required
 def edit_user(request, id):
-    user = get_object_or_404(User, id=id)
+    user = get_object_or_404(models.User, id=id)
     if request.user != user:
         raise Http404
     if request.method == "POST":
-        form = EditUserForm(user, request.POST)
+        form = forms.EditUserForm(user, request.POST)
         if form.is_valid():
             new_email = sanitize_html(form.cleaned_data['email'])
 
@@ -139,10 +149,10 @@ def edit_user(request, id):
             # send user updated singal if full fields have been updated
             if user.email and user.real_name and user.website and user.location and \
                 user.date_of_birth and user.about:
-                user_updated.send(sender=user.__class__, instance=user, updated_by=user)
+                models.user_updated.send(sender=user.__class__, instance=user, updated_by=user)
             return HttpResponseRedirect(user.get_profile_url())
     else:
-        form = EditUserForm(user)
+        form = forms.EditUserForm(user)
     return render_to_response('user_edit.html', {
                                                 'active_tab': 'users',
                                                 'form' : form,
@@ -150,8 +160,8 @@ def edit_user(request, id):
                                     }, context_instance=RequestContext(request))
 
 def user_stats(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
-    questions = Question.objects.extra(
+    user = get_object_or_404(models.User, id=user_id)
+    questions = models.Question.objects.extra(
         select={
             'score' : 'question.score',
             'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s AND f.question_id = question.id',
@@ -191,7 +201,7 @@ def user_stats(request, user_id, user_view):
              'la_user_reputation')[:100]
 
     #this is meant for the questions answered by the user (or where answers were edited by him/her?)
-    answered_questions = Question.objects.extra(
+    answered_questions = models.Question.objects.extra(
         select={
             'vote_up_count' : 'answer.vote_up_count',
             'vote_down_count' : 'answer.vote_down_count',
@@ -216,20 +226,20 @@ def user_stats(request, user_id, user_view):
                         'vote_up_count',
                         'vote_down_count')[:100]
 
-    up_votes = Vote.objects.get_up_vote_count_from_user(user)
-    down_votes = Vote.objects.get_down_vote_count_from_user(user)
-    votes_today = Vote.objects.get_votes_count_today_from_user(user)
+    up_votes = models.Vote.objects.get_up_vote_count_from_user(user)
+    down_votes = models.Vote.objects.get_down_vote_count_from_user(user)
+    votes_today = models.Vote.objects.get_votes_count_today_from_user(user)
     votes_total = forum_settings.MAX_VOTES_PER_USER_PER_DAY
 
     question_id_set = set(map(lambda v: v['id'], list(questions))) \
                         | set(map(lambda v: v['id'], list(answered_questions)))
 
-    user_tags = Tag.objects.filter(questions__id__in = question_id_set)
+    user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
     try:
         from django.db.models import Count
         #todo - rewrite template to do the table joins within standard ORM
-        #awards = Award.objects.filter(user=user).order_by('-awarded_at')
-        awards = Award.objects.extra(
+        #awards = models.Award.objects.filter(user=user).order_by('-awarded_at')
+        awards = models.Award.objects.extra(
                                         select={'id': 'badge.id', 
                                                 'name':'badge.name', 
                                                 'description': 'badge.description', 
@@ -245,7 +255,7 @@ def user_stats(request, user_id, user_view):
 
     except ImportError:
         #todo: remove all old django stuff, e.g. with '.group_by = ' pattern
-        awards = Award.objects.extra(
+        awards = models.Award.objects.extra(
                                         select={'id': 'badge.id', 
                                                 'count': 'count(badge_id)', 
                                                 'name':'badge.name', 
@@ -266,7 +276,7 @@ def user_stats(request, user_id, user_view):
         user_tags.query.group_by = ['name']
 
     if auth.can_moderate_users(request.user):
-        moderate_user_form = ModerateUserForm(instance=user)
+        moderate_user_form = forms.ModerateUserForm(instance=user)
     else:
         moderate_user_form = None
 
@@ -290,9 +300,9 @@ def user_stats(request, user_id, user_view):
                             }, context_instance=RequestContext(request))
 
 def user_recent(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(models.User, id=user_id)
     def get_type_name(type_id):
-        for item in TYPE_ACTIVITY:
+        for item in const.TYPE_ACTIVITY:
             if type_id in item:
                 return item[1]
 
@@ -313,11 +323,11 @@ def user_recent(request, user_id, user_view):
             self.time = time
             self.type = get_type_name(type)
             self.type_id = type
-            self.badge = get_object_or_404(Badge, id=id)
+            self.badge = get_object_or_404(models.Badge, id=id)
 
     activities = []
     # ask questions
-    questions = Activity.objects.extra(
+    questions = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -327,7 +337,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = ' +
             'question.id AND question.deleted=False AND activity.user_id = %s AND activity.activity_type = %s'],
-        params=[question_type_id, user_id, TYPE_ACTIVITY_ASK_QUESTION],
+        params=[question_type_id, user_id, const.TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -341,7 +351,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(questions)
 
     # answers
-    answers = Activity.objects.extra(
+    answers = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -353,7 +363,7 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
             'answer.question_id=question.id AND answer.deleted=False AND activity.user_id=%s AND '+ 
             'activity.activity_type=%s AND question.deleted=False'],
-        params=[answer_type_id, user_id, TYPE_ACTIVITY_ANSWER],
+        params=[answer_type_id, user_id, const.TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -368,7 +378,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(answers)
 
     # question comments
-    comments = Activity.objects.extra(
+    comments = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'comment.object_id',
@@ -381,7 +391,7 @@ def user_recent(request, user_id, user_view):
             'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
             'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
             'question.deleted=False'],
-        params=[comment_type_id, question_type_id, user_id, TYPE_ACTIVITY_COMMENT_QUESTION],
+        params=[comment_type_id, question_type_id, user_id, const.TYPE_ACTIVITY_COMMENT_QUESTION],
         order_by=['-comment.added_at']
     ).values(
             'title',
@@ -396,7 +406,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(comments)
 
     # answer comments
-    comments = Activity.objects.extra(
+    comments = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -411,7 +421,7 @@ def user_recent(request, user_id, user_view):
             'comment.content_type_id=%s AND question.id = answer.question_id AND '+
             'activity.user_id = %s AND activity.activity_type=%s AND '+
             'answer.deleted=False AND question.deleted=False'],
-        params=[comment_type_id, answer_type_id, user_id, TYPE_ACTIVITY_COMMENT_ANSWER],
+        params=[comment_type_id, answer_type_id, user_id, const.TYPE_ACTIVITY_COMMENT_ANSWER],
         order_by=['-comment.added_at']
     ).values(
             'title',
@@ -427,7 +437,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(comments)
 
     # question revisions
-    revisions = Activity.objects.extra(
+    revisions = models.Activity.objects.extra(
         select={
             'title' : 'question_revision.title',
             'question_id' : 'question_revision.question_id',
@@ -440,7 +450,7 @@ def user_recent(request, user_id, user_view):
             'question_revision.id=question.id AND question.deleted=False AND '+
             'activity.user_id = question_revision.author_id AND activity.user_id = %s AND '+
             'activity.activity_type=%s'],
-        params=[question_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_QUESTION],
+        params=[question_revision_type_id, user_id, const.TYPE_ACTIVITY_UPDATE_QUESTION],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -456,7 +466,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(revisions)
 
     # answer revisions
-    revisions = Activity.objects.extra(
+    revisions = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -472,7 +482,7 @@ def user_recent(request, user_id, user_view):
             'answer_revision.answer_id=answer.id AND answer.question_id = question.id AND '+
             'question.deleted=False AND answer.deleted=False AND '+
             'activity.activity_type=%s'],
-        params=[answer_revision_type_id, user_id, TYPE_ACTIVITY_UPDATE_ANSWER],
+        params=[answer_revision_type_id, user_id, const.TYPE_ACTIVITY_UPDATE_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -489,7 +499,7 @@ def user_recent(request, user_id, user_view):
         activities.extend(revisions)
 
     # accepted answers
-    accept_answers = Activity.objects.extra(
+    accept_answers = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -501,7 +511,7 @@ def user_recent(request, user_id, user_view):
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
             'answer.deleted=False AND question.deleted=False AND '+
             'answer.question_id=question.id AND activity.activity_type=%s'],
-        params=[answer_type_id, user_id, TYPE_ACTIVITY_MARK_ANSWER],
+        params=[answer_type_id, user_id, const.TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -514,7 +524,7 @@ def user_recent(request, user_id, user_view):
             q['question_id'])) for q in accept_answers]
         activities.extend(accept_answers)
     #award history
-    awards = Activity.objects.extra(
+    awards = models.Activity.objects.extra(
         select={
             'badge_id' : 'badge.id',
             'awarded_at': 'award.awarded_at',
@@ -523,7 +533,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'award', 'badge'],
         where=['activity.user_id = award.user_id AND activity.user_id = %s AND '+
             'award.badge_id=badge.id AND activity.object_id=award.id AND activity.activity_type=%s'],
-        params=[user_id, TYPE_ACTIVITY_PRIZE],
+        params=[user_id, const.TYPE_ACTIVITY_PRIZE],
         order_by=['-activity.active_at']
     ).values(
             'badge_id',
@@ -562,10 +572,10 @@ def user_responses(request, user_id, user_view):
         def __unicode__(self):
             return u'%s %s' % (self.type, self.titlelink)
 
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(models.User, id=user_id)
     responses = []
 
-    answers = Answer.objects.extra(
+    answers = models.Answer.objects.extra(
                                     select={
                                         'title' : 'question.title',
                                         'question_id' : 'question.id',
@@ -597,7 +607,7 @@ def user_responses(request, user_id, user_view):
 
 
     # question comments
-    comments = Comment.objects.extra(
+    comments = models.Comment.objects.extra(
                                 select={
                                     'title' : 'question.title',
                                     'question_id' : 'comment.object_id',
@@ -626,7 +636,7 @@ def user_responses(request, user_id, user_view):
         responses.extend(comments)
 
     # answer comments
-    comments = Comment.objects.extra(
+    comments = models.Comment.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -658,7 +668,7 @@ def user_responses(request, user_id, user_view):
         responses.extend(comments)
 
     # answer has been accepted
-    answers = Answer.objects.extra(
+    answers = models.Answer.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -702,11 +712,11 @@ def user_responses(request, user_id, user_view):
     }, context_instance=RequestContext(request))
 
 def user_votes(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(models.User, id=user_id)
     if not auth.can_view_user_votes(request.user, user):
         raise Http404
     votes = []
-    question_votes = Vote.objects.extra(
+    question_votes = models.Vote.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -730,7 +740,7 @@ def user_votes(request, user_id, user_view):
     if(len(question_votes) > 0):
         votes.extend(question_votes)
 
-    answer_votes = Vote.objects.extra(
+    answer_votes = models.Vote.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
@@ -765,10 +775,10 @@ def user_votes(request, user_id, user_view):
     }, context_instance=RequestContext(request))
 
 def user_reputation(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(models.User, id=user_id)
     try:
         from django.db.models import Sum
-        reputation = Repute.objects.extra(
+        reputation = models.Repute.objects.extra(
                                           select={'question_id':'question_id',
                                           'title': 'question.title'},
                                           tables=['repute', 'question'],
@@ -778,7 +788,7 @@ def user_reputation(request, user_id, user_view):
                                           ).values('question_id', 'title', 'reputed_at', 'reputation')
         reputation = reputation.annotate(positive=Sum("positive"), negative=Sum("negative"))
     except ImportError:
-        reputation = Repute.objects.extra(
+        reputation = models.Repute.objects.extra(
                                           select={'positive':'sum(positive)', 'negative':'sum(negative)', 'question_id':'question_id',
                                           'title': 'question.title'},
                                           tables=['repute', 'question'],
@@ -789,7 +799,7 @@ def user_reputation(request, user_id, user_view):
         reputation.query.group_by = ['question_id']
 
     rep_list = []
-    for rep in Repute.objects.filter(user=user).order_by('reputed_at'):
+    for rep in models.Repute.objects.filter(user=user).order_by('reputed_at'):
         dic = '[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation)
         rep_list.append(dic)
     reps = ','.join(rep_list)
@@ -806,8 +816,8 @@ def user_reputation(request, user_id, user_view):
                               }, context_instance=RequestContext(request))
 
 def user_favorites(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
-    questions = Question.objects.extra(
+    user = get_object_or_404(models.User, id=user_id)
+    questions = models.Question.objects.extra(
         select={
             'score' : 'question.vote_up_count + question.vote_down_count',
             'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s '+
@@ -858,12 +868,12 @@ def user_favorites(request, user_id, user_view):
 
 @login_required
 def user_email_subscriptions(request, user_id, user_view):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(models.User, id=user_id)
     if request.user != user:
         raise Http404
     if request.method == 'POST':
-        email_feeds_form = EditUserEmailFeedsForm(request.POST)
-        tag_filter_form = TagFilterSelectionForm(request.POST, instance=user)
+        email_feeds_form = forms.EditUserEmailFeedsForm(request.POST)
+        tag_filter_form = forms.TagFilterSelectionForm(request.POST, instance=user)
         if email_feeds_form.is_valid() and tag_filter_form.is_valid():
 
             action_status = None
@@ -876,14 +886,14 @@ def user_email_subscriptions(request, user_id, user_view):
                     action_status = _('changes saved')
             elif 'stop_email' in request.POST:
                 email_stopped = email_feeds_form.reset().save(user)
-                initial_values = EditUserEmailFeedsForm.NO_EMAIL_INITIAL
-                email_feeds_form = EditUserEmailFeedsForm(initial=initial_values)
+                initial_values = forms.EditUserEmailFeedsForm.NO_EMAIL_INITIAL
+                email_feeds_form = forms.EditUserEmailFeedsForm(initial=initial_values)
                 if email_stopped:
                     action_status = _('email updates canceled')
     else:
-        email_feeds_form = EditUserEmailFeedsForm()
+        email_feeds_form = forms.EditUserEmailFeedsForm()
         email_feeds_form.set_initial_values(user)
-        tag_filter_form = TagFilterSelectionForm(instance=user)
+        tag_filter_form = forms.TagFilterSelectionForm(instance=user)
         action_status = None
     return render_to_response(user_view.template_file,{
         'active_tab':'users',

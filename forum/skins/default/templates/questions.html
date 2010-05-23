@@ -138,7 +138,11 @@
     <div style="clear:both">
         <p class="search-result-summary">
         {% if author_name or search_tags or query %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} {{q_num}} question found{% plural %}{{q_num}} questions found{% endblocktrans %}
+            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                {{q_num}} question found
+            {% plural %}
+                {{q_num}} questions found
+            {% endblocktrans %}
         {% else %}
             {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}{{q_num}} question{% plural %}{{q_num}} questions{% endblocktrans %}
         {% endif %}

@@ -183,6 +183,15 @@ class QuestionManager(models.Manager):
                                     | Q(answers__in=answer_list)
                                    ).distinct().order_by('?')
 
+    def get_author_list(self, **kwargs):
+        #todo: - this is duplication - answer manager also has this method
+        #will be gone when models are consolidated
+        #note that method get_question_and_answer_contributors is similar in function
+        authors = set()
+        for question in self:
+            authors.update(question.get_author_list(**kwargs))
+        return list(authors)
+
     def update_tags(self, question, tagnames, user):
         """
         Updates Tag associations for a question to match the given
