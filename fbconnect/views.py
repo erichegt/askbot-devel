@@ -92,8 +92,8 @@ def login_and_forward(request,  user,  newquestion = False,  newanswer = False):
     login(request,  user)
     logging.debug('user logged in!')
     
-    from forum.models import user_logged_in
-    user_logged_in.send(user=user,session_key=old_session,sender=None)
+    from forum.models import signals#todo: move to authentication app
+    signals.user_logged_in.send(user=user,session_key=old_session,sender=None)
     logging.debug('user_logged_in signal sent')
     
     if (newquestion):

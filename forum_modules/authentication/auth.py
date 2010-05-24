@@ -110,8 +110,8 @@ def login_and_forward(request,  user, forward=None, message=None):
     user.backend = "django.contrib.auth.backends.ModelBackend"
     login(request,  user)
 
-    from forum.models import user_logged_in
-    user_logged_in.send(user=user,session_key=old_session,sender=None)
+    from forum.models import signals#todo: move to auth app
+    signals.user_logged_in.send(user=user,session_key=old_session,sender=None)
 
     if not forward:
         signin_action = request.session.get('on_signin_action', None)

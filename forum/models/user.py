@@ -1,5 +1,7 @@
 from base import *
+#todo: remove this with Django 1.2
 from django.contrib.contenttypes.models import ContentType
+from forum.models import signals
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from forum.models.question import Question, QuestionRevision
@@ -73,6 +75,12 @@ class ActivityManager(models.Manager):
                 raise NotImplementedError('cannot yet mention multiple people at once')
             else:
                 mention_activity.receiving_users.add(mentioned_whom)
+
+        signals.fake_m2m_changed.send(
+                            sender = Activity,
+                            instance = mention_activity,
+                            created = True
+                        )
 
         return mention_activity
 

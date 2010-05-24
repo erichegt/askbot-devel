@@ -10,7 +10,7 @@ from django.db import transaction
 from models import Repute
 from models import Question
 from models import Answer
-from models import mark_offensive, delete_post_or_answer
+from models import signals
 from const import TYPE_REPUTATION
 import logging
 
@@ -213,7 +213,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
         #post.deleted_at = timestamp
         #post.deleted_by = Admin
         post.save()
-        mark_offensive.send(
+        signals.mark_offensive.send(
             sender=post.__class__, 
             instance=post, 
             mark_by=user
@@ -482,7 +482,7 @@ def onDeleted(post, user, timestamp=None):
     elif isinstance(post, Answer):
         Question.objects.update_answer_count(post.question)
         logging.debug('updated answer count to %d' % post.question.answer_count)
-    delete_post_or_answer.send(
+    signals.delete_post_or_answer.send(
         sender=post.__class__,
         instance=post,
         delete_by=user

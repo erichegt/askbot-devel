@@ -75,7 +75,7 @@ EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 #todo: decouple from forum
 def login(request,user):
     from django.contrib.auth import login as _login
-    from forum.models import user_logged_in #custom signal
+    from forum.models import signals
 
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
         EXTERNAL_LOGIN_APP.api.login(request,user)
@@ -95,7 +95,8 @@ def login(request,user):
         request.session['search_state'] = search_state
     #5) send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
-    user_logged_in.send(user=user,session_key=session_key,sender=None)
+    #todo: move to auth app
+    signals.user_logged_in.send(user=user,session_key=session_key,sender=None)
 
 #todo: uncouple this from forum
 def logout(request):

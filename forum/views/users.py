@@ -19,6 +19,7 @@ from forum import const
 from django.conf import settings
 from forum.conf import settings as forum_settings
 from forum import models
+from forum.models import signals
 
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
@@ -149,7 +150,7 @@ def edit_user(request, id):
             # send user updated singal if full fields have been updated
             if user.email and user.real_name and user.website and user.location and \
                 user.date_of_birth and user.about:
-                models.user_updated.send(sender=user.__class__, instance=user, updated_by=user)
+                signals.user_updated.send(sender=user.__class__, instance=user, updated_by=user)
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)

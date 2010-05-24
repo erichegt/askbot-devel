@@ -1,4 +1,5 @@
 from base import * #todo maybe remove *
+from forum.models import signals
 from tag import Tag
 #todo: make uniform import for consts
 from forum.const import CONST
@@ -321,7 +322,7 @@ class Question(Content, DeletableContent):
         self.last_activity_by = retagged_by
 
         # Update the Question's tag associations
-        tags_updated = self.objects.update_tags(
+        signals.tags_updated = self.objects.update_tags(
                                         self,
                                         form.cleaned_data['tags'], 
                                         request.user
@@ -339,7 +340,7 @@ class Question(Content, DeletableContent):
             text       = latest_revision.text
         )
         # send tags updated singal
-        tags_updated.send(sender=question.__class__, question=self)
+        signals.tags_updated.send(sender=question.__class__, question=self)
 
     def get_origin_post(self):
         return self

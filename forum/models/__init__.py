@@ -5,9 +5,13 @@ from meta import Vote, Comment, FlaggedItem
 from user import Activity, ValidationHash, EmailFeedSetting
 from user import AuthKeyUserAssociation
 from repute import Badge, Award, Repute
+import signals
 from django.core.urlresolvers import reverse
+from django.core.mail import EmailMessage
 from forum.search.indexer import create_fulltext_indexes
 from django.db.models.signals import post_syncdb
+from django.template import loader, Context
+from django.utils.translation import ugettext as _
 from forum import const
 import logging
 import re
@@ -15,15 +19,6 @@ import re
 from base import *
 import datetime
 from django.contrib.contenttypes.models import ContentType
-
-#todo: move to a separate file?
-# custom signals
-tags_updated = django.dispatch.Signal(providing_args=["question"])
-edit_question_or_answer = django.dispatch.Signal(providing_args=["instance", "modified_by"])
-delete_post_or_answer = django.dispatch.Signal(providing_args=["instance", "deleted_by"])
-mark_offensive = django.dispatch.Signal(providing_args=["instance", "mark_by"])
-user_updated = django.dispatch.Signal(providing_args=["instance", "updated_by"])
-user_logged_in = django.dispatch.Signal(providing_args=["session"])
 
 #todo: must go after signals
 from forum import auth
@@ -229,6 +224,14 @@ def flag_post(self, post, timestamp=None, cancel=False):
             )
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
+def user_should_receive_instant_notification_about_post(user, post):
+    return EmailFeedSetting.objects.exists_match_to_post_and_subscriber(
+                                            subscriber = user,
+                                            post = post,
+                                            frequency = 'i',
+                                       )
+
+
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)
@@ -238,6 +241,10 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class(
+        'should_receive_instant_notification_about_post', 
+        user_should_receive_instant_notification_about_post
+    )
 
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
@@ -300,7 +307,10 @@ def record_comment_event(instance, created, **kwargs):
         elif isinstance(instance.content_object, Answer):
             activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
         else:
-            logging.critical('recording comment for %s is not implemented' % type(instance.content_object))
+            logging.critical(
+                        'recording comment for %s is not implemented'\
+                        % type(instance.content_object)
+                    )
 
         activity = Activity(
                         user = instance.user, 
@@ -315,6 +325,8 @@ def record_comment_event(instance, created, **kwargs):
                                         exclude_list = [instance.user],
                                     )
         activity.receiving_users.add(*receiving_users)
+        #todo: remove this upon migration to 1.2
+        signals.fake_m2m_changed.send(sender = Activity, instance = activity, created = True)
 
 
 def record_revision_question_event(instance, created, **kwargs):
@@ -337,6 +349,7 @@ def record_revision_question_event(instance, created, **kwargs):
         receiving_users = list(receiving_users)
         activity.receiving_users.add(*receiving_users)
 
+
 def record_revision_answer_event(instance, created, **kwargs):
     if created and instance.revision <> 1:
         activity = Activity(
@@ -357,6 +370,65 @@ def record_revision_answer_event(instance, created, **kwargs):
         receiving_users = list(receiving_users)
 
         activity.receiving_users.add(*receiving_users)
+
+
+def maybe_send_instant_notifications(instance, created, **kwargs):
+    """todo: this handler must change when we switch to django 1.2
+    """
+    activity_instance = instance
+    if not created:
+        return
+    activity_type = activity_instance.activity_type
+    if activity_type not in const.RESPONSE_ACTIVITY_TYPES_FOR_EMAIL:
+        return
+
+    #todo: remove this after migrating to string type for const.TYPE_ACTIVITY...
+    update_type_map = {
+                    const.TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
+                    const.TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
+                    const.TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
+                    const.TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
+                    const.TYPE_ACTIVITY_MENTION: 'mention',
+                }
+
+    post = activity_instance.get_response_type_content_object()
+    template = loader.get_template('instant_notification.html')
+    for u in activity_instance.receiving_users.all():
+        if u.should_receive_instant_notification_about_post(post):
+            
+            mentions = Activity.objects.get_mentions(
+                                        mentioned_whom = u,
+                                        mentioned_in = post,
+                                        reported = False
+                                    )
+            if mentions:
+                #todo: find a more semantic way to do this
+                mentions.update(is_auditted = True)
+                has_mention = True
+            else:
+                has_mention = False
+
+            #get details about update
+            #todo: is there a way to solve this import issue?
+            from forum.conf import settings as forum_settings
+            data = {
+                'receiving_user': u,
+                'update_author': activity_instance.user,
+                'updated_post': post,
+                'update_url': forum_settings.APP_URL + post.get_absolute_url(),
+                'update_type': update_type_map[activity_type],
+                'revision_number': post.get_latest_revision_number(),
+                'related_origin_post': post.get_origin_post(),
+                'has_mention': has_mention,
+            }
+            #send update
+            subject = _('email update message subject')
+            text = template.render(Context(data)) 
+            msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [u.email])
+            #print 'sending email to %s' % u.email
+            #print 'subject: %s' % subject
+            #print 'body: %s' % text
+            #msg.send()
 
 def record_award_event(instance, created, **kwargs):
     """
@@ -542,7 +614,7 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
         for aa in aa_list:
             aa.publish(user)
 
-#signal for User modle save changes
+#signal for User model save changes
 pre_save.connect(calculate_gravatar_hash, sender=User)
 post_save.connect(record_ask_event, sender=Question)
 post_save.connect(record_answer_event, sender=Answer)
@@ -554,16 +626,22 @@ post_save.connect(notify_award_message, sender=Award)
 post_save.connect(record_answer_accepted, sender=Answer)
 post_save.connect(update_last_seen, sender=Activity)
 post_save.connect(record_vote, sender=Vote)
-post_delete.connect(record_cancel_vote, sender=Vote)
-delete_post_or_answer.connect(record_delete_question, sender=Question)
-delete_post_or_answer.connect(record_delete_question, sender=Answer)
-mark_offensive.connect(record_mark_offensive, sender=Question)
-mark_offensive.connect(record_mark_offensive, sender=Answer)
-tags_updated.connect(record_update_tags, sender=Question)
 post_save.connect(record_favorite_question, sender=FavoriteQuestion)
-user_updated.connect(record_user_full_updated, sender=User)
-user_logged_in.connect(post_stored_anonymous_content)
+post_delete.connect(record_cancel_vote, sender=Vote)
+
+#change this to real m2m_changed with Django1.2
+signals.fake_m2m_changed.connect(maybe_send_instant_notifications, sender=Activity)
+signals.delete_post_or_answer.connect(record_delete_question, sender=Question)
+signals.delete_post_or_answer.connect(record_delete_question, sender=Answer)
+signals.mark_offensive.connect(record_mark_offensive, sender=Question)
+signals.mark_offensive.connect(record_mark_offensive, sender=Answer)
+signals.tags_updated.connect(record_update_tags, sender=Question)
+signals.user_updated.connect(record_user_full_updated, sender=User)
+signals.user_logged_in.connect(post_stored_anonymous_content)
 #post_syncdb.connect(create_fulltext_indexes)
+
+#todo: wtf??? what is x=x about?
+signals = signals
 
 Question = Question
 QuestionRevision = QuestionRevision
@@ -591,6 +669,8 @@ ValidationHash = ValidationHash
 AuthKeyUserAssociation = AuthKeyUserAssociation
 
 __all__ = [
+        'signals',
+
         'Question',
         'QuestionRevision',
         'QuestionView',
