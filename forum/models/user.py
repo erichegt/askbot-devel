@@ -76,12 +76,6 @@ class ActivityManager(models.Manager):
             else:
                 mention_activity.receiving_users.add(mentioned_whom)
 
-        signals.fake_m2m_changed.send(
-                            sender = Activity,
-                            instance = mention_activity,
-                            created = True
-                        )
-
         return mention_activity
 
 
@@ -145,21 +139,6 @@ class Activity(models.Model):
 
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)
-
-    def get_response_type_content_object(self):
-        """
-        This method will go when post models are
-        unified (todo:)
-        """
-        cobj = self.content_object
-        if isinstance(cobj, Comment):
-            return cobj
-        elif isinstance(cobj, AnswerRevision):
-            return cobj.answer
-        elif isinstance(cobj, QuestionRevision):
-            return cobj.question
-        else:
-            raise NotImplementedError()
 
     class Meta:
         app_label = 'forum'

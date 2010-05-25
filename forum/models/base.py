@@ -21,6 +21,19 @@ import logging
 
 from forum.const import *
 
+#todo: this method belongs to a common post class
+def get_newly_mentioned_users_in_post(post):
+    from forum.models import Activity
+    mentions = Activity.objects.get_mentions(
+                            mentioned_in = post,
+                            reported = False
+                        )
+    users = set()
+    for m in mentions:
+        users.update(m.receiving_users.all())
+    return list(users)
+
+
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')
 
@@ -170,6 +183,8 @@ class Content(models.Model):
         if exclude_list:
             authors -= set(exclude_list)
         return list(authors)
+
+    get_newly_mentioned_users = get_newly_mentioned_users_in_post
 
     def passes_tag_filter_for_user(self, user):
         tags = self.get_origin_post().tags.all()

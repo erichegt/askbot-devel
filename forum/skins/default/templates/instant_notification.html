@@ -9,24 +9,47 @@ related_origin_post - origin post related to the update
 update_url - absolute url (including http://... to updated post
 update_type - question_comment|answer_comment|answer_update|question_update
 revision_number - integer (first revision is 1)
-has_mention - Boolean 
+admin_email - email of forum administrator
+email_settings_url - url of user's email settings
 {% endcomment %}
 {% load i18n %} 
 {% load smart_if %}
 {% blocktrans with receiving_user.get_best_name as user_name %}Dear {{user_name}},{% endblocktrans %}
 
-{% if has_mention %}
-    {% if update_type == 'question_comment' or update_type == 'answer_comment' %}
-    {% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
-    {{author_link}} has left you a <a href="{{update_url}}">comment</a>
-    related to question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
-    {% endblocktrans %}
-    {% endif %}
-{% else %}{# updated post has no mention of user #}
-    {% if update_type == 'question_comment' or update_type == 'answer_comment' %}
-    {% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
-    {{author_link}} has left a new <a href="{{update_url}}">comment</a>
-    related to question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
-    {% endblocktrans %}
-    {% endif %}
+{% if update_type == 'question_comment' or update_type == 'answer_comment' %}
+{% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
+{{author_link}} has left a new <a href="{{update_url}}">comment</a>
+related to question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
+{% endblocktrans %}
 {% endif %}
+{% if update_type == 'answer_update' %}
+{% if revision_number == 1 %}
+{% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
+{{author_link}} posted <a href="{{update_url}}">a new answer</a>
+to question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
+{% endblocktrans %}
+{% else %}
+{% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
+{{author_link}} updated <a href="{{update_url}}">an answer</a>
+to question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
+{% endblocktrans %}
+{% endif %}
+{% endif %}
+{% if update_type == 'question_update' %}
+{% if revision_number == 1 %}
+{% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
+{{author_link}} asked a new question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
+{% endblocktrans %}
+{% else %}
+{% blocktrans with post_author.get_profile_link as author_link and related_origin_post.get_absolute_url as origin_post_url and related_origin_post.title as origin_post_title %}
+{{author_link}} updated the question <a href="{{origin_post_url}}">{{origin_post_title}}</a>
+{% endblocktrans %}
+{% endif %}
+{% endif %}
+
+{% trans "Please take a look." %}
+
+{% blocktrans %}Sincerely,
+Forum Administrator{% endblocktrans %}
+
+{% blocktrans %}go to {{email_settings_url}} to change frequency of email updates or {{admin_email}} administrator{% endblocktrans %}

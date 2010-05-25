@@ -451,8 +451,8 @@ class Command(NoArgsCommand):
                 #    text += '</p>'
 
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
-                text += _('go to %(link)s to change frequency of email updates or %(email)s administrator') \
-                                % {'link':link, 'email':settings.ADMINS[0][1]}
+                text += _('go to %(email_settings_link)s to change frequency of email updates or %(admin_email)s administrator') \
+                                % {'email_settings_link':link, 'admin_email':settings.ADMINS[0][1]}
                 if DEBUG_THIS_COMMAND == False:
                     msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
                     msg.content_subtype = 'html'

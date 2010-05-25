@@ -246,6 +246,64 @@ User.add_to_class(
         user_should_receive_instant_notification_about_post
     )
 
+
+def send_instant_notifications_about_activity_in_post(
+                                                activity,
+                                                post,
+                                                receiving_users
+                                            ):
+    """
+    function called when posts are updated
+    """
+
+    #todo: remove this after migrating to string type for const.TYPE_ACTIVITY...
+    update_type_map = {
+                    const.TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
+                    const.TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
+                    const.TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
+                    const.TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
+                }
+
+    template = loader.get_template('instant_notification.html')
+    for u in receiving_users:
+        if u.should_receive_instant_notification_about_post(post):
+            
+            mentions = Activity.objects.get_mentions(
+                                        mentioned_whom = u,
+                                        mentioned_in = post,
+                                        reported = False
+                                    )
+            if mentions:
+                #todo: find a more semantic way to do this
+                mentions.update(is_auditted = True)
+
+            #get details about update
+            #todo: is there a way to solve this import issue?
+            from forum.conf import settings as forum_settings
+            base_url = forum_settings.APP_URL
+            data = {
+                'receiving_user': u,
+                'update_author': activity.user,
+                'updated_post': post,
+                'update_url': base_url + post.get_absolute_url(),
+                'update_type': update_type_map[activity.activity_type],
+                'revision_number': post.get_latest_revision_number(),
+                'related_origin_post': post.get_origin_post(),
+                'admin_email': settings.ADMINS[0][1],
+                #todo: clean up url calculation below
+                'email_settings_url': base_url + u.get_profile_url() \
+                                        + '?sort=email_subscriptions'
+            }
+            #send update
+            subject = _('email update message subject')
+            text = template.render(Context(data)) 
+            msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [u.email])
+            print 'sending email to %s' % u.email
+            print 'subject: %s' % subject
+            print 'body: %s' % text
+            #msg.send()
+
+
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
     if kwargs.get('raw', False):
@@ -300,37 +358,54 @@ def record_answer_event(instance, created, **kwargs):
         activity.receiving_users.add(*receiving_users)
 
 
-def record_comment_event(instance, created, **kwargs):
-    if created:
-        if isinstance(instance.content_object, Question):
-            activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
-        elif isinstance(instance.content_object, Answer):
-            activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
-        else:
-            logging.critical(
-                        'recording comment for %s is not implemented'\
-                        % type(instance.content_object)
+def record_comment_event(instance, **kwargs):
+    if isinstance(instance.content_object, Question):
+        activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
+    elif isinstance(instance.content_object, Answer):
+        activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
+    else:
+        logging.critical(
+                    'recording comment for %s is not implemented'\
+                    % type(instance.content_object)
+                )
+
+    activity = Activity(
+                    user = instance.user, 
+                    active_at = instance.added_at, 
+                    content_object = instance, 
+                    activity_type = activity_type
+                )
+    activity.save()
+
+    receiving_users = set()
+    receiving_users.update(
+                        #get authors of parent object and all associated comments
+                        instance.content_object.get_author_list(
+                                include_comments = True,
+                            )
                     )
 
-        activity = Activity(
-                        user = instance.user, 
-                        active_at = instance.added_at, 
-                        content_object = instance, 
-                        activity_type = activity_type
+    receiving_users.update(
+                        instance.get_newly_mentioned_users()
                     )
-        activity.save()
 
-        receiving_users = instance.content_object.get_author_list(
-                                        include_comments = True,
-                                        exclude_list = [instance.user],
-                                    )
-        activity.receiving_users.add(*receiving_users)
-        #todo: remove this upon migration to 1.2
-        signals.fake_m2m_changed.send(sender = Activity, instance = activity, created = True)
+    receiving_users -= set([instance.user])#remove activity user
+    receiving_users = list(receiving_users)
+
+    activity.receiving_users.add(*receiving_users)
+
+    print 'in post_save handler on comment'
+    print receiving_users
+
+    send_instant_notifications_about_activity_in_post(
+                                    activity,
+                                    instance,
+                                    receiving_users
+                                )
 
 
 def record_revision_question_event(instance, created, **kwargs):
-    if created and instance.revision <> 1:
+    if created and instance.revision != 1:
         activity = Activity(
                         user=instance.author,
                         active_at=instance.revised_at,
@@ -342,16 +417,30 @@ def record_revision_question_event(instance, created, **kwargs):
         receiving_users.update(
                             instance.question.get_author_list(include_comments = True)
                         )
+
+        receiving_users.update(
+                        )
         for a in instance.question.answers:
             receiving_users.update(a.get_author_list())
-        receiving_users -= set([instance.author])
+
+        receiving_users.update(
+                            instance.question.get_newly_mentioned_users()
+                        )
+
+        receiving_users -= set([instance.author])#remove activity user
 
         receiving_users = list(receiving_users)
         activity.receiving_users.add(*receiving_users)
 
+        send_instant_notifications_about_activity_in_post(
+                                        activity,
+                                        instance.question,
+                                        receiving_users
+                                    )
+
 
 def record_revision_answer_event(instance, created, **kwargs):
-    if created and instance.revision <> 1:
+    if created and instance.revision != 1:
         activity = Activity(
                         user=instance.author, 
                         active_at=instance.revised_at, 
@@ -366,69 +455,21 @@ def record_revision_answer_event(instance, created, **kwargs):
                                         )
                         )
         receiving_users.update(instance.answer.question.get_author_list())
+
+        receiving_users.update(
+                            instance.answer.get_newly_mentioned_users()
+                        )
+
         receiving_users -= set([instance.author])
         receiving_users = list(receiving_users)
 
         activity.receiving_users.add(*receiving_users)
 
-
-def maybe_send_instant_notifications(instance, created, **kwargs):
-    """todo: this handler must change when we switch to django 1.2
-    """
-    activity_instance = instance
-    if not created:
-        return
-    activity_type = activity_instance.activity_type
-    if activity_type not in const.RESPONSE_ACTIVITY_TYPES_FOR_EMAIL:
-        return
-
-    #todo: remove this after migrating to string type for const.TYPE_ACTIVITY...
-    update_type_map = {
-                    const.TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
-                    const.TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
-                    const.TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
-                    const.TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
-                    const.TYPE_ACTIVITY_MENTION: 'mention',
-                }
-
-    post = activity_instance.get_response_type_content_object()
-    template = loader.get_template('instant_notification.html')
-    for u in activity_instance.receiving_users.all():
-        if u.should_receive_instant_notification_about_post(post):
-            
-            mentions = Activity.objects.get_mentions(
-                                        mentioned_whom = u,
-                                        mentioned_in = post,
-                                        reported = False
+        send_instant_notifications_about_activity_in_post(
+                                        activity,
+                                        instance.answer,
+                                        receiving_users
                                     )
-            if mentions:
-                #todo: find a more semantic way to do this
-                mentions.update(is_auditted = True)
-                has_mention = True
-            else:
-                has_mention = False
-
-            #get details about update
-            #todo: is there a way to solve this import issue?
-            from forum.conf import settings as forum_settings
-            data = {
-                'receiving_user': u,
-                'update_author': activity_instance.user,
-                'updated_post': post,
-                'update_url': forum_settings.APP_URL + post.get_absolute_url(),
-                'update_type': update_type_map[activity_type],
-                'revision_number': post.get_latest_revision_number(),
-                'related_origin_post': post.get_origin_post(),
-                'has_mention': has_mention,
-            }
-            #send update
-            subject = _('email update message subject')
-            text = template.render(Context(data)) 
-            msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [u.email])
-            #print 'sending email to %s' % u.email
-            #print 'subject: %s' % subject
-            #print 'body: %s' % text
-            #msg.send()
 
 def record_award_event(instance, created, **kwargs):
     """
@@ -618,7 +659,6 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
 pre_save.connect(calculate_gravatar_hash, sender=User)
 post_save.connect(record_ask_event, sender=Question)
 post_save.connect(record_answer_event, sender=Answer)
-post_save.connect(record_comment_event, sender=Comment)
 post_save.connect(record_revision_question_event, sender=QuestionRevision)
 post_save.connect(record_revision_answer_event, sender=AnswerRevision)
 post_save.connect(record_award_event, sender=Award)
@@ -630,7 +670,6 @@ post_save.connect(record_favorite_question, sender=FavoriteQuestion)
 post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
-signals.fake_m2m_changed.connect(maybe_send_instant_notifications, sender=Activity)
 signals.delete_post_or_answer.connect(record_delete_question, sender=Question)
 signals.delete_post_or_answer.connect(record_delete_question, sender=Answer)
 signals.mark_offensive.connect(record_mark_offensive, sender=Question)
@@ -638,6 +677,7 @@ signals.mark_offensive.connect(record_mark_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags, sender=Question)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)
+signals.comment_post_save.connect(record_comment_event, sender=Comment)
 #post_syncdb.connect(create_fulltext_indexes)
 
 #todo: wtf??? what is x=x about?

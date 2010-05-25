@@ -1,6 +1,7 @@
 from base import *
 from forum import const
 from django.utils.html import urlize
+from forum.models import signals
 
 class VoteManager(models.Manager):
     def get_up_vote_count_from_user(self, user):
@@ -88,11 +89,17 @@ class Comment(MetaContent, UserContent):
         return self.content_object.get_origin_post()
 
     def save(self,**kwargs):
-        from forum.utils.markup import mentionize
+        print 'before first save'
         super(Comment,self).save(**kwargs)
+        print 'after first save'
+        from forum.models.utils import mentionize
         self.html = mentionize(urlize(self.comment, nofollow=True), context_object = self)
+        print 'mentionized'
         #todo - try post_save to install mentions
         super(Comment,self).save(**kwargs)#have to save twice!!, b/c need id for generic relation
+
+        signals.comment_post_save.send(instance = self, sender = Comment)
+
         try:
             ping_google()
         except Exception:
@@ -113,6 +120,8 @@ class Comment(MetaContent, UserContent):
 
     def get_latest_revision_number(self):
         return 1
+
+    get_newly_mentioned_users = get_newly_mentioned_users_in_post
 
     def __unicode__(self):
         return self.comment
