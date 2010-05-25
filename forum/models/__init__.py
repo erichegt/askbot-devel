@@ -420,7 +420,7 @@ def record_revision_question_event(instance, created, **kwargs):
 
         receiving_users.update(
                         )
-        for a in instance.question.answers:
+        for a in instance.question.answers.all():
             receiving_users.update(a.get_author_list())
 
         receiving_users.update(
@@ -451,7 +451,7 @@ def record_revision_answer_event(instance, created, **kwargs):
         receiving_users = set()
         receiving_users.update(
                             instance.answer.get_author_list(
-                                            including_comments = True 
+                                            include_comments = True 
                                         )
                         )
         receiving_users.update(instance.answer.question.get_author_list())
