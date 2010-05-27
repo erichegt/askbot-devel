@@ -1,9 +1,12 @@
-from base import *
+from base import Content, AnonymousContent, ContentRevision, DeletableContent
 #todo: take care of copy-paste markdowner stuff maybe make html automatic field?
-from forum.const import CONST
+from forum import const
 from markdown2 import Markdown
 from django.utils.html import strip_tags 
 from forum.utils.html import sanitize_html
+from django.db import models
+from django.utils.http import urlquote  as django_urlquote
+from django.template.defaultfilters import slugify
 import datetime
 markdowner = Markdown(html4tags=True)
 
@@ -27,10 +30,10 @@ class AnswerManager(models.Manager):
         answer.save()
 
         answer.add_revision(
-            revised_by=author,
-            revised_at=added_at,
-            text=text,
-            comment=CONST['default_version'],
+            revised_by = author,
+            revised_at = added_at,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
         )
 
         #update question data
@@ -122,7 +125,7 @@ class Answer(Content, DeletableContent):
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = CONST['default_version']
+                comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
         return AnswerRevision.objects.create(

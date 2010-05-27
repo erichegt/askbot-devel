@@ -56,6 +56,12 @@ POST_SCOPE_LIST = (
                    )
 DEFAULT_POST_SCOPE = 'all'
 PAGE_SIZE_CHOICES = (('10','10',),('30','30',),('50','50',),)
+#todo: remove this duplication
+QUESTIONS_PER_PAGE_USER_CHOICES = (
+   (10, u'10'),
+   (30, u'30'),
+   (50, u'50'),
+)
 
 UNANSWERED_QUESTION_MEANING_CHOICES = (
     ('NO_ANSWERS', _('Question has no answers')),
@@ -144,7 +150,7 @@ TYPE_RESPONSE = {
     'ANSWER_ACCEPTED'   : _('answer_accepted'),
 }
 
-CONST = {
+POST_STATUS = {
     'closed'            : _('[closed]'),
     'deleted'           : _('[deleted]'),
     'default_version'   : _('initial version'),

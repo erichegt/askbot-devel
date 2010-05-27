@@ -14,4 +14,9 @@ user_updated = django.dispatch.Signal(providing_args=['instance', 'updated_by'])
 #todo: move this to authentication app
 user_logged_in = django.dispatch.Signal(providing_args=['session'])
 
-comment_post_save = django.dispatch.Signal(providing_args=['instance'])
+post_updated = django.dispatch.Signal(
+                                providing_args=[
+                                            'post', 
+                                            'newly_mentioned_users'
+                                        ]
+                            )

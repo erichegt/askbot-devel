@@ -1,8 +1,10 @@
-from base import *
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
-
+from django.db import models
 from django.utils.translation import ugettext as _
+import datetime
+from forum import const
 
 class Badge(models.Model):
     """Awarded for notable actions performed on the site by Users."""
@@ -109,7 +111,7 @@ class Repute(models.Model):
     negative = models.SmallIntegerField(default=0)
     question = models.ForeignKey('Question')
     reputed_at = models.DateTimeField(default=datetime.datetime.now)
-    reputation_type = models.SmallIntegerField(choices=TYPE_REPUTATION)
+    reputation_type = models.SmallIntegerField(choices=const.TYPE_REPUTATION)
     reputation = models.IntegerField(default=1)
     
     objects = ReputeManager()

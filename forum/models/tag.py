@@ -1,4 +1,7 @@
-from base import *
+from base import DeletableContent
+from django.db import models
+from django.db import connection, transaction
+from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext as _
 

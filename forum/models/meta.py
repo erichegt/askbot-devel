@@ -1,7 +1,9 @@
-from base import *
+from django.db import models
+from base import MetaContent, UserContent
+from base import render_post_text_and_get_newly_mentioned_users
+from base import save_content
 from forum import const
-from django.utils.html import urlize
-from forum.models import signals
+import datetime
 
 class VoteManager(models.Manager):
     def get_up_vote_count_from_user(self, user):
@@ -88,22 +90,35 @@ class Comment(MetaContent, UserContent):
     def get_origin_post(self):
         return self.content_object.get_origin_post()
 
+    #todo: maybe remove this wnen post models are unified
+    def get_text(self):
+        return self.comment
+
+    _render_text_and_get_newly_mentioned_users = \
+        render_post_text_and_get_newly_mentioned_users
+
+    _save = save_content
+
     def save(self,**kwargs):
-        print 'before first save'
-        super(Comment,self).save(**kwargs)
-        print 'after first save'
-        from forum.models.utils import mentionize
-        self.html = mentionize(urlize(self.comment, nofollow=True), context_object = self)
-        print 'mentionized'
-        #todo - try post_save to install mentions
-        super(Comment,self).save(**kwargs)#have to save twice!!, b/c need id for generic relation
+        self._save(urlize_content = True)
 
-        signals.comment_post_save.send(instance = self, sender = Comment)
+    def get_updated_activity_type(self):
+        if self.content_object.__class__.__name__ == 'Question':
+            return const.TYPE_ACTIVITY_COMMENT_QUESTION
+        elif self.content_object.__class__.__name__ == 'Answer':
+            return const.TYPE_ACTIVITY_COMMENT_ANSWER
 
-        try:
-            ping_google()
-        except Exception:
-            logging.debug('problem pinging google did you register you sitemap with google?')
+    def get_potentially_interested_users(self):
+        users = set()
+        users.update(
+                    #get authors of parent object and all associated comments
+                    comment.content_object.get_author_list(
+                            include_comments = True,
+                        )
+                )
+
+        users -= set([comment.user])#remove activity user
+        return list(users)
 
     def delete(self, **kwargs):
         #todo: not very good import in models of other models
@@ -120,8 +135,6 @@ class Comment(MetaContent, UserContent):
 
     def get_latest_revision_number(self):
         return 1
-
-    get_newly_mentioned_users = get_newly_mentioned_users_in_post
 
     def __unicode__(self):
         return self.comment

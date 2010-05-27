@@ -1,38 +1,103 @@
 import datetime
 import hashlib
 from urllib import quote_plus, urlencode
-from django.db import models, IntegrityError, connection, transaction
+from django.db import models
 from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.template.defaultfilters import slugify
-from django.db.models.signals import post_delete, post_save, pre_save
 from django.utils.translation import ugettext as _
-from django.utils.safestring import mark_safe
 from django.contrib.sitemaps import ping_google
 import django.dispatch
 from django.conf import settings
+from forum.utils import markup
+from django.utils import html
 import logging
 
-#todo: sphinx search import used to be here
+#todo: following methods belong to a future common post class
+def render_post_text_and_get_newly_mentioned_users(post, 
+                                        urlize_content = False):
 
-from forum.const import *
+    text = post.get_text()
 
-#todo: this method belongs to a common post class
-def get_newly_mentioned_users_in_post(post):
-    from forum.models import Activity
-    mentions = Activity.objects.get_mentions(
-                            mentioned_in = post,
-                            reported = False
-                        )
-    users = set()
-    for m in mentions:
-        users.update(m.receiving_users.all())
-    return list(users)
+    if urlize_content:
+        text = html.urlize(text)
 
+    if '@' not in text:
+        return list()
+
+    from forum.models.user import Activity
+
+    mentioned_by = post.get_last_author()
+
+    op = post.get_origin_post()
+    anticipated_authors = op.get_author_list( include_comments = True, recursive = True )
+
+    extra_name_seeds = markup.extract_mentioned_name_seeds(text)
+    extra_authors = set()
+    for name_seed in extra_name_seeds:
+        extra_authors.update(User.objects.filter(username__startswith = name_seed))
+
+    #it is important to preserve order here so that authors of post get mentioned first
+    anticipated_authors += list(extra_authors)
+
+    mentioned_authors, post.html = markup.mentionize_text(text, anticipated_authors)
+
+    #maybe delete some previous mentions
+    if self.id != None:
+        #only look for previous mentions if post was already saved before
+        prev_mention_qs = Activity.objects.get_mentions(
+                                    mentioned_in = post
+                                )
+        new_set = set(mentioned_authors)
+        for mention in prev_mention_qs:
+            delta_set = set(mention.receiving_users.all()) - new_set
+            if not delta_set:
+                mention.delete()
+                new_set -= delta_set
+
+        mentioned_authors = list(new_set)
+
+    return mentioned_authors
+
+def save_content(self, urlize_content = False, **kwargs):
+    """generic save method to use with posts
+    """
+
+    new_mentions = self._render_text_and_get_newly_mentioned_users( 
+                                                            urlize_content
+                                                        )
+
+    from forum.models.user import Activity
+
+    #this save must precede saving the mention activity
+    super(self.__class__, self).save(**kwargs)
+
+    post_author = self.get_last_author()
+
+    for u in new_mentions:
+        Activity.objects.create_new_mention(
+                                mentioned_whom = u,
+                                mentioned_in = self,
+                                mentioned_by = post_author
+                            )
+
+
+    #todo: this is handled in signal because models for posts
+    #are too spread out
+    from forum.models import signals
+    signals.post_updated.send(
+                    post = self, 
+                    newly_mentioned_users = new_mentions, 
+                    sender = self.__class__
+                )
+
+    try:
+        ping_google()
+    except Exception:
+        logging.debug('problem pinging google did you register you sitemap with google?')
 
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')
@@ -145,6 +210,10 @@ class Content(models.Model):
         comments = self.comments.all().order_by('id')
         return comments
 
+    #todo: maybe remove this wnen post models are unified
+    def get_text(self):
+        return self.text
+
     def add_comment(self, comment=None, user=None, added_at=None):
         if added_at is None:
             added_at = datetime.datetime.now()
@@ -184,8 +253,6 @@ class Content(models.Model):
             authors -= set(exclude_list)
         return list(authors)
 
-    get_newly_mentioned_users = get_newly_mentioned_users_in_post
-
     def passes_tag_filter_for_user(self, user):
         tags = self.get_origin_post().tags.all()
 
@@ -202,8 +269,6 @@ class Content(models.Model):
 
         else:
             raise Exception('unexpected User.tag_filter_setting %' % self.tag_filter_setting)
-
-
     def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at
             who = self.author

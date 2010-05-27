@@ -1,3 +1,4 @@
+import signals
 from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion, FavoriteQuestion
 from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
@@ -5,30 +6,64 @@ from meta import Vote, Comment, FlaggedItem
 from user import Activity, ValidationHash, EmailFeedSetting
 from user import AuthKeyUserAssociation
 from repute import Badge, Award, Repute
-import signals
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
 from forum.search.indexer import create_fulltext_indexes
-from django.db.models.signals import post_syncdb
+from django.db.models import signals as django_signals
 from django.template import loader, Context
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
+from django.utils.safestring import mark_safe
+from django.db import models
 from forum import const
 import logging
 import re
+import hashlib
 
-from base import *
 import datetime
 from django.contrib.contenttypes.models import ContentType
 
 #todo: must go after signals
 from forum import auth
 
-# User extend properties
-QUESTIONS_PER_PAGE_CHOICES = (
-   (10, u'10'),
-   (30, u'30'),
-   (50, u'50'),
-)
+User.add_to_class('is_approved', models.BooleanField(default=False))
+User.add_to_class('email_isvalid', models.BooleanField(default=False))
+User.add_to_class('email_key', models.CharField(max_length=32, null=True))
+
+#hardcoded initial reputaion of 1, no setting for this one
+User.add_to_class('reputation', models.PositiveIntegerField(default=1))
+User.add_to_class('gravatar', models.CharField(max_length=32))
+
+#User.add_to_class('favorite_questions',
+#                  models.ManyToManyField(Question, through=FavoriteQuestion,
+#                                         related_name='favorited_by'))
+
+#User.add_to_class('badges', models.ManyToManyField(Badge, through=Award,
+#                                                   related_name='awarded_to'))
+User.add_to_class('gold', models.SmallIntegerField(default=0))
+User.add_to_class('silver', models.SmallIntegerField(default=0))
+User.add_to_class('bronze', models.SmallIntegerField(default=0))
+User.add_to_class('questions_per_page',
+                  models.SmallIntegerField(
+                                choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
+                                default=10)
+                            )
+User.add_to_class('last_seen',
+                  models.DateTimeField(default=datetime.datetime.now))
+User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
+User.add_to_class('website', models.URLField(max_length=200, blank=True))
+User.add_to_class('location', models.CharField(max_length=100, blank=True))
+User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
+User.add_to_class('about', models.TextField(blank=True))
+User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
+User.add_to_class('tag_filter_setting',
+                    models.CharField(
+                                        max_length=16,
+                                        choices=const.TAG_EMAIL_FILTER_CHOICES,
+                                        default='ignored'
+                                     )
+                 )
 
 def user_is_username_taken(cls,username):
     try:
@@ -52,43 +87,6 @@ def user_get_q_sel_email_feed_frequency(self):
 def user_get_absolute_url(self):
     return "/users/%d/%s/" % (self.id, (self.username))
 
-User.add_to_class('is_approved', models.BooleanField(default=False))
-User.add_to_class('email_isvalid', models.BooleanField(default=False))
-User.add_to_class('email_key', models.CharField(max_length=32, null=True))
-
-#hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation', models.PositiveIntegerField(default=1))
-User.add_to_class('gravatar', models.CharField(max_length=32))
-
-#User.add_to_class('favorite_questions',
-#                  models.ManyToManyField(Question, through=FavoriteQuestion,
-#                                         related_name='favorited_by'))
-
-#User.add_to_class('badges', models.ManyToManyField(Badge, through=Award,
-#                                                   related_name='awarded_to'))
-User.add_to_class('gold', models.SmallIntegerField(default=0))
-User.add_to_class('silver', models.SmallIntegerField(default=0))
-User.add_to_class('bronze', models.SmallIntegerField(default=0))
-User.add_to_class('questions_per_page',
-                  models.SmallIntegerField(choices=QUESTIONS_PER_PAGE_CHOICES, default=10))
-User.add_to_class('last_seen',
-                  models.DateTimeField(default=datetime.datetime.now))
-User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
-User.add_to_class('website', models.URLField(max_length=200, blank=True))
-User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
-User.add_to_class('about', models.TextField(blank=True))
-User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
-User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
-User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
-User.add_to_class('tag_filter_setting',
-                    models.CharField(
-                                        max_length=16,
-                                        choices=TAG_EMAIL_FILTER_CHOICES,
-                                        default='ignored'
-                                     )
-                 )
-User.add_to_class('get_absolute_url', user_get_absolute_url)
 
 def get_messages(self):
     messages = []
@@ -224,14 +222,21 @@ def flag_post(self, post, timestamp=None, cancel=False):
             )
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
-def user_should_receive_instant_notification_about_post(user, post):
+def user_should_receive_instant_notification_about_post(
+                                        user, 
+                                        post, 
+                                        newly_mentioned_users = []
+                                    ):
     return EmailFeedSetting.objects.exists_match_to_post_and_subscriber(
-                                            subscriber = user,
-                                            post = post,
-                                            frequency = 'i',
-                                       )
+                                subscriber = user,
+                                post = post,
+                                frequency = 'i',
+                                newly_mentioned_users = newly_mentioned_users 
+                           )
 
-
+User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
+User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
+User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)
@@ -246,11 +251,11 @@ User.add_to_class(
         user_should_receive_instant_notification_about_post
     )
 
-
 def send_instant_notifications_about_activity_in_post(
-                                                activity,
-                                                post,
-                                                receiving_users
+                                                activity = None,
+                                                post = None,
+                                                receiving_users = [],
+                                                newly_mentioned_users = []
                                             ):
     """
     function called when posts are updated
@@ -265,18 +270,12 @@ def send_instant_notifications_about_activity_in_post(
                 }
 
     template = loader.get_template('instant_notification.html')
-    for u in receiving_users:
-        if u.should_receive_instant_notification_about_post(post):
+    for u in set(receiving_users) + set(newly_mentioned_users):
+        if u.should_receive_instant_notification_about_post(
+                                post,
+                                newly_mentioned_users = newly_mentioned_users
+                            ):
             
-            mentions = Activity.objects.get_mentions(
-                                        mentioned_whom = u,
-                                        mentioned_in = post,
-                                        reported = False
-                                    )
-            if mentions:
-                #todo: find a more semantic way to do this
-                mentions.update(is_auditted = True)
-
             #get details about update
             #todo: is there a way to solve this import issue?
             from forum.conf import settings as forum_settings
@@ -358,50 +357,35 @@ def record_answer_event(instance, created, **kwargs):
         activity.receiving_users.add(*receiving_users)
 
 
-def record_comment_event(instance, **kwargs):
-    if isinstance(instance.content_object, Question):
-        activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
-    elif isinstance(instance.content_object, Answer):
-        activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
-    else:
-        logging.critical(
-                    'recording comment for %s is not implemented'\
-                    % type(instance.content_object)
-                )
+#todo: change to more general post_update_activity
+def record_post_update_activity(post, newly_mentioned_users, **kwargs):
+    #todo: take into account created == True case
+    activity_type = post.get_updated_activity_type()
 
+    #fields will depend on post type and maybe activity type
+    #post has to be saved already, b/c Activity is in generic relation to post
     activity = Activity(
-                    user = instance.user, 
-                    active_at = instance.added_at, 
-                    content_object = instance, 
+                    user = post.get_last_author(), 
+                    active_at = post.added_at, 
+                    content_object = post, 
                     activity_type = activity_type
                 )
     activity.save()
 
-    receiving_users = set()
-    receiving_users.update(
-                        #get authors of parent object and all associated comments
-                        instance.content_object.get_author_list(
-                                include_comments = True,
-                            )
-                    )
-
-    receiving_users.update(
-                        instance.get_newly_mentioned_users()
-                    )
-
-    receiving_users -= set([instance.user])#remove activity user
-    receiving_users = list(receiving_users)
+    #what users are included depends on the post type
+    #for example for question - all Q&A contributors
+    #are included, for comments only authors of comments and parent 
+    #post are included
+    receiving_users = post.get_potentially_interested_users()
 
     activity.receiving_users.add(*receiving_users)
 
-    print 'in post_save handler on comment'
-    print receiving_users
-
     send_instant_notifications_about_activity_in_post(
-                                    activity,
-                                    instance,
-                                    receiving_users
-                                )
+                            activity = activity,
+                            post = post,
+                            receiving_users = receiving_users,
+                            newly_mentioned_users = newly_mentioned_users
+                        )
 
 
 def record_revision_question_event(instance, created, **kwargs):
@@ -422,10 +406,6 @@ def record_revision_question_event(instance, created, **kwargs):
                         )
         for a in instance.question.answers.all():
             receiving_users.update(a.get_author_list())
-
-        receiving_users.update(
-                            instance.question.get_newly_mentioned_users()
-                        )
 
         receiving_users -= set([instance.author])#remove activity user
 
@@ -455,10 +435,6 @@ def record_revision_answer_event(instance, created, **kwargs):
                                         )
                         )
         receiving_users.update(instance.answer.question.get_author_list())
-
-        receiving_users.update(
-                            instance.answer.get_newly_mentioned_users()
-                        )
 
         receiving_users -= set([instance.author])
         receiving_users = list(receiving_users)
@@ -656,18 +632,18 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
             aa.publish(user)
 
 #signal for User model save changes
-pre_save.connect(calculate_gravatar_hash, sender=User)
-post_save.connect(record_ask_event, sender=Question)
-post_save.connect(record_answer_event, sender=Answer)
-post_save.connect(record_revision_question_event, sender=QuestionRevision)
-post_save.connect(record_revision_answer_event, sender=AnswerRevision)
-post_save.connect(record_award_event, sender=Award)
-post_save.connect(notify_award_message, sender=Award)
-post_save.connect(record_answer_accepted, sender=Answer)
-post_save.connect(update_last_seen, sender=Activity)
-post_save.connect(record_vote, sender=Vote)
-post_save.connect(record_favorite_question, sender=FavoriteQuestion)
-post_delete.connect(record_cancel_vote, sender=Vote)
+django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.post_save.connect(record_ask_event, sender=Question)
+django_signals.post_save.connect(record_answer_event, sender=Answer)
+django_signals.post_save.connect(record_revision_question_event, sender=QuestionRevision)
+django_signals.post_save.connect(record_revision_answer_event, sender=AnswerRevision)
+django_signals.post_save.connect(record_award_event, sender=Award)
+django_signals.post_save.connect(notify_award_message, sender=Award)
+django_signals.post_save.connect(record_answer_accepted, sender=Answer)
+django_signals.post_save.connect(update_last_seen, sender=Activity)
+django_signals.post_save.connect(record_vote, sender=Vote)
+django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
+django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
 signals.delete_post_or_answer.connect(record_delete_question, sender=Question)
@@ -677,7 +653,10 @@ signals.mark_offensive.connect(record_mark_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags, sender=Question)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)
-signals.comment_post_save.connect(record_comment_event, sender=Comment)
+signals.post_updated.connect(
+                           record_post_update_activity,
+                           sender=Comment
+                       )
 #post_syncdb.connect(create_fulltext_indexes)
 
 #todo: wtf??? what is x=x about?

@@ -1,8 +1,6 @@
-from base import * #todo maybe remove *
+from base import Content, DeletableContent, AnonymousContent, ContentRevision
 from forum.models import signals
 from tag import Tag
-#todo: make uniform import for consts
-from forum.const import CONST
 from forum import const
 from forum.utils.html import sanitize_html
 from markdown2 import Markdown
@@ -11,7 +9,11 @@ import datetime
 from django.conf import settings
 from django.utils.datastructures import SortedDict
 from forum.models.tag import MarkedTag
-from django.db.models import Q
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils.http import urlquote  as django_urlquote
+from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 
 markdowner = Markdown(html4tags=True)
 
@@ -56,7 +58,7 @@ class QuestionManager(models.Manager):
         question.add_revision(
             author=author,
             text=text,
-            comment=CONST['default_version'],
+            comment=const.POST_STATUS['default_version'],
             revised_at=added_at,
         )
         return question
@@ -85,11 +87,12 @@ class QuestionManager(models.Manager):
 
         if search_query:
             try:
-                qs = qs.filter( Q(title__search = search_query) \
-                                | Q(text__search = search_query) \
-                                | Q(tagnames__search = search_query) \
-                                | Q(answers__text__search = search_query)
-                                )
+                qs = qs.filter( 
+                            models.Q(title__search = search_query) \
+                           | models.Q(text__search = search_query) \
+                           | models.Q(tagnames__search = search_query) \
+                           | models.Q(answers__text__search = search_query)
+                        )
             except:
                 #fallback to dumb title match search
                 qs = qs.extra(
@@ -117,7 +120,10 @@ class QuestionManager(models.Manager):
         if author_selector:
             try:
                 u = User.objects.get(id=int(author_selector))
-                qs = qs.filter(Q(author=u, deleted=False) | Q(answers__author=u, answers__deleted=False))
+                qs = qs.filter(
+                            models.Q(author=u, deleted=False) \
+                            | models.Q(answers__author=u, answers__deleted=False)
+                        )
                 meta_data['author_name'] = u.username
             except User.DoesNotExist:
                 meta_data['author_name'] = None
@@ -180,8 +186,8 @@ class QuestionManager(models.Manager):
         for q in question_list:
             answer_list.extend(list(q.answers.all()))
         return User.objects.filter(
-                                    Q(questions__in=question_list) \
-                                    | Q(answers__in=answer_list)
+                                    models.Q(questions__in=question_list) \
+                                    | models.Q(answers__in=answer_list)
                                    ).distinct().order_by('?')
 
     def get_author_list(self, **kwargs):
@@ -285,7 +291,11 @@ class Question(Content, DeletableContent):
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True, related_name='closed_questions')
     closed_at       = models.DateTimeField(null=True, blank=True)
-    close_reason    = models.SmallIntegerField(choices=CLOSE_REASONS, null=True, blank=True)
+    close_reason    = models.SmallIntegerField(
+                                            choices=const.CLOSE_REASONS, 
+                                            null=True, 
+                                            blank=True
+                                        )
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
@@ -336,7 +346,7 @@ class Question(Content, DeletableContent):
             author     = retagged_by,
             revised_at = retagged_at,
             tagnames   = tagnames,
-            summary    = CONST['retagged'],
+            summary    = const.POST_STATUS['retagged'],
             text       = latest_revision.text
         )
         # send tags updated singal
@@ -402,7 +412,7 @@ class Question(Content, DeletableContent):
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = CONST['default_version']
+                comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
             
@@ -458,9 +468,9 @@ class Question(Content, DeletableContent):
 
     def get_question_title(self):
         if self.closed:
-            attr = CONST['closed']
+            attr = const.POST_STATUS['closed']
         elif self.deleted:
-            attr = CONST['deleted']
+            attr = const.POST_STATUS['deleted']
         else:
             attr = None
         if attr is not None:

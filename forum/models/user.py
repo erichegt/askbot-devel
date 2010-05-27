@@ -1,12 +1,9 @@
-from base import *
 #todo: remove this with Django 1.2
+from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from forum.models import signals
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
-from forum.models.question import Question, QuestionRevision
-from forum.models.answer import Answer, AnswerRevision
-from forum.models.meta import Comment
 from hashlib import md5
 import string
 from random import Random
@@ -66,7 +63,6 @@ class ActivityManager(models.Manager):
         else:
             kwargs['is_auditted'] = False
 
-
         mention_activity = Activity(**kwargs)
         mention_activity.save()
 
@@ -77,7 +73,6 @@ class ActivityManager(models.Manager):
                 mention_activity.receiving_users.add(mentioned_whom)
 
         return mention_activity
-
 
     def get_mentions(
                 self, 
@@ -146,26 +141,28 @@ class Activity(models.Model):
 
 
 class EmailFeedSettingManager(models.Manager):
-    def exists_match_to_post_and_subscriber(self, post = None, subscriber = None, **kwargs):
+    def exists_match_to_post_and_subscriber(
+                                self,
+                                post = None,
+                                subscriber = None,
+                                newly_mentioned_users = [],
+                                **kwargs
+                            ):
         """returns list of feeds matching the post
         and subscriber
+        newly_mentioned_user parameter is there to save
+        on a database hit looking for mentions of subscriber
+        in the current post
         """
         feeds = self.filter(subscriber = subscriber, **kwargs)
 
         for feed in feeds:
 
             if feed.feed_type == 'm_and_c':
-                if isinstance(post, Comment):
+                if post.__clas__.__name__ == 'Comment':#isinstance(post, Comment):
                     return True
                 else:
-                    post_content_type = ContentType.objects.get_for_model(post)
-                    subscriber_mentions = Mention.objects.filter(
-                                                content_type = post_content_type,
-                                                object_id = post.id,
-                                                mentioned_whom = subscriber,
-                                                is_auditted = False
-                                            )
-                    if subscriber_mentions:
+                    if subscriber in newly_mentioned_users:
                         return True
             else:
                 if feed.feed_type == 'q_all':
@@ -256,7 +253,10 @@ class EmailFeedSetting(models.Model):
     def save(self,*args,**kwargs):
         type = self.feed_type
         subscriber = self.subscriber
-        similar = self.__class__.objects.filter(feed_type=type,subscriber=subscriber).exclude(pk=self.id)
+        similar = self.__class__.objects.filter(
+                                            feed_type=type,
+                                            subscriber=subscriber
+                                        ).exclude(pk=self.id)
         if len(similar) > 0:
             raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
@@ -284,7 +284,14 @@ from forum.utils.time import one_day_from_now
 
 class ValidationHashManager(models.Manager):
     def _generate_md5_hash(self, user, type, hash_data, seed):
-        return md5("%s%s%s%s" % (seed, "".join(map(str, hash_data)), user.id, type)).hexdigest()
+        return md5(
+                    "%s%s%s%s"  % (
+                                    seed, 
+                                    "".join(map(str, hash_data)), 
+                                    user.id, 
+                                    type
+                                )
+                ).hexdigest()
 
     def create_new(self, user, type, hash_data=[], expiration=None):
         seed = ''.join(Random().sample(string.letters+string.digits, 12))
@@ -314,7 +321,13 @@ class ValidationHashManager(models.Manager):
         if obj.user != user:
             return False
 
-        valid = (obj.hash_code == self._generate_md5_hash(obj.user, type, hash_data, obj.seed))
+        valid = (obj.hash_code == self._generate_md5_hash(
+                                            obj.user, 
+                                            type, 
+                                            hash_data, 
+                                            obj.seed
+                                        )
+                )
 
         if valid:
             if obj.expiration < datetime.datetime.now():
