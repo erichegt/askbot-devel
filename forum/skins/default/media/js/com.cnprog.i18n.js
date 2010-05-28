@@ -215,11 +215,76 @@ var i18nEs = {
 	'delete/' : 'eliminar/'
 };
 
+var i18nDe = {
+ '>100 points required to downvote': 'Negativ bewerten benötigt mindestens 100 Punkte', 
+ '>15 points requried to upvote': 'Positiv bewerten benötigt mindestens 15 Punkte', 
+ 'add a comment': 'Kommentar hinzufügen', 
+ 'add comment': 'OK', 
+ 'anonymous users cannot delete/undelete': 'Gastbenutzer können Beiträge nicht löschen oder wiederherstellen', 
+ 'anonymous users cannot flag offensive posts': 'Gastbenutzer können Beiträge nicht melden', 
+ 'anonymous users cannot select favorite questions': 'Gastbenutzer können keine Fragen als Favoriten markieren', 
+ 'anonymous users cannot vote': 'Gastbenutzer können nicht abstimmen', 
+ 'answers/': 'antworten/', 
+ 'bold': 'Fett', 
+ 'bulleted list': 'Liste', 
+ 'can write': 'Noch ', 
+ 'cannot flag message as offensive twice': 'Beiträge können nicht doppelt gemeldet werden', 
+ 'cannot pick own answer as best': 'Eigene Antworten können nicht als die korrekte akzeptiert werden', 
+ 'cannot revoke old vote': 'Bewertung kann nicht mehr zurückgenommen werden', 
+ 'cannot vote for own posts': 'Über selbst verfaßte Beiträge kann nicht abgestimmt werden', 
+ 'characters': 'Zeichen', 
+ 'click to close': 'Schließen mit Klick', 
+ 'comments': 'Kommentare', 
+ 'comments/': 'kommentare/', 
+ 'community karma points': ' Punkte erforderlich) - ', 
+ 'confirm delete': 'Löschen bestätigen', 
+ 'confirm delete comment': 'Löschen des Kommentars bestätigen', 
+ 'content cannot be empty': 'Inhalt darf nicht leer sein', 
+ 'content minchars': 'Bitte mindestens {0} Zeichen eingeben', 
+ 'daily vote cap exhausted': 'Tägliches Abstimmungslimit erreicht', 
+ 'delete': 'löschen', 
+ 'delete this comment': 'Diesen Kommentar löschen', 
+ 'delete/': 'loeschen/', 
+ 'enter image url': 'Bild-URL eingeben, zum Beispiel <br />http://www.ihredomain.de/bildname.jpg', 
+ 'enter url': 'URL eingeben, zum Beispiel <br />http://www.askbot.org/ </p>', 
+ 'flag offensive cap exhausted': 'Tägliches Limit zum Melden von Beiträgen erreicht', 
+ 'heading': 'Titel', 
+ 'hide comments': 'Kommentare verstecken', 
+ 'horizontal bar': 'horizontaler Balken', 
+ 'image': 'Bild', 
+ 'insufficient privilege': 'nicht genügend Rechte', 
+ 'italic': 'Kursiv', 
+ 'link': 'Link', 
+ 'loading...': 'Lade...', 
+ 'need >15 points to report spam': 'Zum Melden von Spam werden mindestens 15 Punkte benötigt', 
+ 'numbered list': 'Nummerierte Liste', 
+ 'please confirm offensive': 'Bitte beleidigenden/regelwidrigen Beitrag bestätigen', 
+ 'please enter title': 'Bitte Titel eingeben', 
+ 'please login': 'Bitte einloggen', 
+ 'please see': 'Siehe', 
+ 'post deleted': 'Beitrag gelöscht', 
+ 'post recovered': 'Beitrag wiederhergestellt', 
+ 'preformatted text': 'Vorformatierter Text', 
+ 'questions/': 'fragen/', 
+ 'quote': 'Zitat', 
+ 'redo': 'Wiederholen', 
+ 'tablimits info': 'Bis zu 5 Tags mit jeweils bis zu 20 Zeichen', 
+ 'tags cannot be empty': 'Tags dürfen nicht leer sein', 
+ 'title minchars': 'Bitte mindestens {0} Zeichen eingeben', 
+ 'to comment, need': '(Um Beiträge anderer benutzer zu kommentieren, sind mindestens ', 
+ 'undelete': 'wiederherstellen', 
+ 'undo': 'Rückgängig', 
+ 'upload image': 'Bild hochladen', 
+ 'vote/': 'abstimmen/' 
+ 
+}
+
 var i18n = {
     'en':i18nEn,
     'zh-cn':i18nZh,
     'es':i18nEs,
-	'tr':i18nTr
+	'tr':i18nTr,
+    'de':i18nDe  
 };
 
 var i18n_dict = i18n[i18nLang];
