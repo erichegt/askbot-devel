@@ -92,12 +92,11 @@ urlpatterns = patterns('',
     url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
 )
 
-from forum.modules import get_modules_script
-
-module_patterns = get_modules_script('urls')
-
-for pattern_file in module_patterns:
-    pattern = getattr(pattern_file, 'urlpatterns', None)
-    if pattern:
-        urlpatterns += pattern
+#todo: modules
+#from forum.modules import get_modules_script
+#module_patterns = get_modules_script('urls')
+#for pattern_file in module_patterns:
+#    pattern = getattr(pattern_file, 'urlpatterns', None)
+#    if pattern:
+#        urlpatterns += pattern
 

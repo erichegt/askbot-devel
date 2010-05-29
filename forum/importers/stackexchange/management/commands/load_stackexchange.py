@@ -8,6 +8,7 @@ import forum.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models
 import forum.models as askbot
+import django_authopenid.models as askbot_openid
 import forum.importers.stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
 from forum.utils.html import sanitize_html
@@ -741,10 +742,9 @@ class Command(BaseCommand):
             #probably they'll just have to "recover" their account by email
             if u_type != 'Unregistered':
                 assert(se_u.open_id)#everybody must have open_id
-                u_auth = askbot.AuthKeyUserAssociation()
-                u_auth.key = se_u.open_id
-                u_auth.provider = X.get_openid_provider_name(se_u.open_id)
-                u_auth.added_at = se_u.creation_date
+                u_openid = askbot_openid.UserAssociation()
+                u_openid.openid_url = se_u.open_id
+                u_openid.user = u
 
             if se_u.open_id is None and se_u.email is None:
                 print 'Warning: SE user %d is not recoverable (no email or openid)'

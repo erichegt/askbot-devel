@@ -112,12 +112,12 @@ class Comment(MetaContent, UserContent):
         users = set()
         users.update(
                     #get authors of parent object and all associated comments
-                    comment.content_object.get_author_list(
+                    self.content_object.get_author_list(
                             include_comments = True,
                         )
                 )
 
-        users -= set([comment.user])#remove activity user
+        users -= set([self.user])#remove activity user
         return list(users)
 
     def delete(self, **kwargs):

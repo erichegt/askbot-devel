@@ -357,11 +357,11 @@ class ValidationHash(models.Model):
     def __str__(self):
         return self.hash_code
 
-class AuthKeyUserAssociation(models.Model):
-    key = models.CharField(max_length=255,null=False,unique=True)
-    provider = models.CharField(max_length=64)#string 'yahoo', 'google', etc.
-    user = models.ForeignKey(User, related_name="auth_keys")
-    added_at = models.DateTimeField(default=datetime.datetime.now)
-
-    class Meta:
-        app_label = 'forum'
+#class AuthKeyUserAssociation(models.Model):
+#    key = models.CharField(max_length=255,null=False,unique=True)
+#    provider = models.CharField(max_length=64)#string 'yahoo', 'google', etc.
+#    user = models.ForeignKey(User, related_name="auth_keys")
+#    added_at = models.DateTimeField(default=datetime.datetime.now)
+#
+#    class Meta:
+#        app_label = 'forum'

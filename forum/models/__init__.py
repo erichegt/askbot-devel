@@ -4,7 +4,7 @@ from answer import Answer, AnonymousAnswer, AnswerRevision
 from tag import Tag, MarkedTag
 from meta import Vote, Comment, FlaggedItem
 from user import Activity, ValidationHash, EmailFeedSetting
-from user import AuthKeyUserAssociation
+#from user import AuthKeyUserAssociation
 from repute import Badge, Award, Repute
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
@@ -270,7 +270,7 @@ def send_instant_notifications_about_activity_in_post(
                 }
 
     template = loader.get_template('instant_notification.html')
-    for u in set(receiving_users) + set(newly_mentioned_users):
+    for u in set(receiving_users) | set(newly_mentioned_users):
         if u.should_receive_instant_notification_about_post(
                                 post,
                                 newly_mentioned_users = newly_mentioned_users
@@ -497,11 +497,11 @@ def record_answer_accepted(instance, created, **kwargs):
                         content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_MARK_ANSWER
                     )
+        activity.save()
         receiving_users = instance.get_author_list(
                                             exclude_list = [instance.question.author]
                                         )
         activity.receiving_users.add(*receiving_users)
-        activity.save()
 
 def update_last_seen(instance, created, **kwargs):
     """
@@ -685,7 +685,7 @@ Repute = Repute
 Activity = Activity
 EmailFeedSetting = EmailFeedSetting
 ValidationHash = ValidationHash
-AuthKeyUserAssociation = AuthKeyUserAssociation
+#AuthKeyUserAssociation = AuthKeyUserAssociation
 
 __all__ = [
         'signals',
@@ -713,15 +713,15 @@ __all__ = [
         'Activity',
         'EmailFeedSetting',
         'ValidationHash',
-        'AuthKeyUserAssociation',
+        #'AuthKeyUserAssociation',
 
         'User',
         ]
 
 
-from forum.modules import get_modules_script_classes
-
-for k, v in get_modules_script_classes('models', models.Model).items():
-    if not k in __all__:
-        __all__.append(k)
-        exec "%s = v" % k
+#from forum.modules import get_modules_script_classes
+#
+#for k, v in get_modules_script_classes('models', models.Model).items():
+#    if not k in __all__:
+#        __all__.append(k)
+#        exec "%s = v" % k

@@ -1,4 +1,5 @@
-from base import Content, DeletableContent, AnonymousContent, ContentRevision
+from base import DeletableContent, AnonymousContent, ContentRevision
+from content import Content
 from forum.models import signals
 from tag import Tag
 from forum import const

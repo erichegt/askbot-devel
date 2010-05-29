@@ -1,4 +1,5 @@
-from base import Content, AnonymousContent, ContentRevision, DeletableContent
+from base import AnonymousContent, ContentRevision, DeletableContent
+from content import Content
 #todo: take care of copy-paste markdowner stuff maybe make html automatic field?
 from forum import const
 from markdown2 import Markdown
@@ -7,6 +8,7 @@ from forum.utils.html import sanitize_html
 from django.db import models
 from django.utils.http import urlquote  as django_urlquote
 from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
 import datetime
 markdowner = Markdown(html4tags=True)
 

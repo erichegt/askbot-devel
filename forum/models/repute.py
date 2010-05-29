@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 import datetime
 from forum import const
+from django.core.urlresolvers import reverse
 
 class Badge(models.Model):
     """Awarded for notable actions performed on the site by Users."""
