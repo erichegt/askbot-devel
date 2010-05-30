@@ -39,7 +39,6 @@ urlpatterns = patterns('',
     url(r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), app.readers.answer_revisions, name='answer_revisions'),
     url(r'^%s$' % _('questions/'), app.readers.questions, name='questions'),
     url(r'^%s%s$' % (_('questions/'), _('ask/')), app.writers.ask, name='ask'),
-    url(r'^%s%s$' % (_('questions/'), _('unanswered/')), app.readers.unanswered, name='unanswered'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), app.writers.edit_question, name='edit_question'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), app.commands.close, name='close'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), app.commands.reopen, name='reopen'),
@@ -59,7 +58,6 @@ urlpatterns = patterns('',
     #place general question item in the end of other operations
     url(r'^%s(?P<id>\d+)/' % _('question/'), app.readers.question, name='question'),
     url(r'^%s$' % _('tags/'), app.readers.tags, name='tags'),
-    url(r'^%s(?P<tag>[^/]+)/$' % _('tags/'), app.readers.tag, name='tag_questions'),
 
     url(r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')), app.commands.mark_tag, \
                                 kwargs={'reason':'good','action':'add'}, \
@@ -75,6 +73,7 @@ urlpatterns = patterns('',
 
     url(r'^%s$' % _('users/'),app.users.users, name='users'),
     url(r'^%s(?P<id>\d+)/$' % _('moderate-user/'), app.users.moderate_user, name='moderate_user'),
+    #todo: rename as user_edit, b/c that's how template is named
     url(r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')), app.users.edit_user, name='edit_user'),
     url(r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'), app.users.user, name='user_profile'),
     url(r'^%s$' % _('badges/'),app.meta.badges, name='badges'),
@@ -85,7 +84,6 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('upload/'), app.writers.upload, name='upload'),
     url(r'^%s$' % _('search/'), app.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.meta.feedback, name='feedback'),
-    (r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
     (r'^%s' % _('account/'), include('django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
 
