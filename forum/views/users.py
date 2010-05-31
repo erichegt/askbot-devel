@@ -560,6 +560,9 @@ def user_responses(request, user_id, user_view):
     """
     We list answers for question, comments, and answer accepted by others for this user.
     """
+    user = get_object_or_404(models.User, id=user_id)
+    if request.user != user:
+        raise Http404
     class Response:
         def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
             self.type = type
@@ -602,10 +605,19 @@ def user_responses(request, user_id, user_view):
                                         'user_id'
                                         )
     if len(answers) > 0:
-        answers = [(Response(TYPE_RESPONSE['QUESTION_ANSWERED'], a['title'], a['question_id'],
-        a['answer_id'], a['added_at'], a['username'], a['user_id'], a['html'])) for a in answers]
-        responses.extend(answers)
-
+        answer_responses = []
+        for a in answers:
+            r = Response(
+                    const.TYPE_RESPONSE['QUESTION_ANSWERED'],
+                    a['title'],
+                    a['question_id'],
+                    a['answer_id'],
+                    a['added_at'],
+                    a['username'],
+                    a['user_id'],
+                    a['html']
+                )
+        responses.extend(answer_responses)
 
     # question comments
     comments = models.Comment.objects.extra(
@@ -632,7 +644,7 @@ def user_responses(request, user_id, user_view):
                                     )
 
     if len(comments) > 0:
-        comments = [(Response(TYPE_RESPONSE['QUESTION_COMMENTED'], c['title'], c['question_id'],
+        comments = [(Response(const.TYPE_RESPONSE['QUESTION_COMMENTED'], c['title'], c['question_id'],
             '', c['added_at'], c['username'], c['user_id'], c['comment'])) for c in comments]
         responses.extend(comments)
 
@@ -664,7 +676,7 @@ def user_responses(request, user_id, user_view):
             )
 
     if len(comments) > 0:
-        comments = [(Response(TYPE_RESPONSE['ANSWER_COMMENTED'], c['title'], c['question_id'],
+        comments = [(Response(const.TYPE_RESPONSE['ANSWER_COMMENTED'], c['title'], c['question_id'],
         c['answer_id'], c['added_at'], c['username'], c['user_id'], c['comment'])) for c in comments]
         responses.extend(comments)
 
@@ -695,7 +707,7 @@ def user_responses(request, user_id, user_view):
             'user_id'
             )
     if len(answers) > 0:
-        answers = [(Response(TYPE_RESPONSE['ANSWER_ACCEPTED'], a['title'], a['question_id'],
+        answers = [(Response(const.TYPE_RESPONSE['ANSWER_ACCEPTED'], a['title'], a['question_id'],
             a['answer_id'], a['added_at'], a['username'], a['user_id'], a['html'])) for a in answers]
         responses.extend(answers)
 
@@ -867,7 +879,6 @@ def user_favorites(request, user_id, user_view):
         "view_user" : user
     }, context_instance=RequestContext(request))
 
-@login_required
 def user_email_subscriptions(request, user_id, user_view):
     user = get_object_or_404(models.User, id=user_id)
     if request.user != user:

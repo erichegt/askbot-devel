@@ -33,4 +33,4 @@ class QuestionsPageSizeMiddleware(object):
         import traceback
         import sys
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        logging.debug(repr(traceback.extract_tb(exc_traceback)))
+        logging.debug(''.join(traceback.format_tb(exc_traceback)))
