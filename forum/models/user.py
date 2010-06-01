@@ -159,7 +159,7 @@ class EmailFeedSettingManager(models.Manager):
         for feed in feeds:
 
             if feed.feed_type == 'm_and_c':
-                if post.__clas__.__name__ == 'Comment':#isinstance(post, Comment):
+                if post.__class__.__name__ == 'Comment':#isinstance(post, Comment):
                     return True
                 else:
                     if subscriber in newly_mentioned_users:

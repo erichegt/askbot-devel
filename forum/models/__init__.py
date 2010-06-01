@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
 from django.db import models
+from django.conf import settings as django_settings
 from forum import const
 import logging
 import re
@@ -251,6 +252,23 @@ User.add_to_class(
         user_should_receive_instant_notification_about_post
     )
 
+def format_instant_notification_body(template, data):
+    """data has the following keys:
+    receiving_user: User instance
+    update_author: Uses instance
+    updated_post: post = Question|Answer|Comment instance
+    update_url: absolute url (including http...) of the post
+    revision_number: latest revision number of the post
+    update_type: type of update from the map in function below
+    related_origin_post: another post related to the updated one, if any
+    admin_email: email address of forum administrator
+    email_settings_url: full url to the page where user can change email settings
+    """
+    #todo: write this function so that
+    #it can be easily used for testing of the email messages
+    #separately using a script
+    return template.render(Context(data))
+
 def send_instant_notifications_about_activity_in_post(
                                                 activity = None,
                                                 post = None,
@@ -288,15 +306,15 @@ def send_instant_notifications_about_activity_in_post(
                 'update_type': update_type_map[activity.activity_type],
                 'revision_number': post.get_latest_revision_number(),
                 'related_origin_post': post.get_origin_post(),
-                'admin_email': settings.ADMINS[0][1],
+                'admin_email': django_settings.ADMINS[0][1],
                 #todo: clean up url calculation below
                 'email_settings_url': base_url + u.get_profile_url() \
                                         + '?sort=email_subscriptions'
             }
             #send update
             subject = _('email update message subject')
-            text = template.render(Context(data)) 
-            msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [u.email])
+            text = format_instant_notification_body(template, data)
+            msg = EmailMessage(subject, text, django_settings.DEFAULT_FROM_EMAIL, [u.email])
             print 'sending email to %s' % u.email
             print 'subject: %s' % subject
             print 'body: %s' % text

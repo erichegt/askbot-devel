@@ -26,6 +26,7 @@ def render_post_text_and_get_newly_mentioned_users(post,
         text = html.urlize(text)
 
     if '@' not in text:
+        post.html = text
         return list()
 
     from forum.models.user import Activity
@@ -36,6 +37,7 @@ def render_post_text_and_get_newly_mentioned_users(post,
     anticipated_authors = op.get_author_list( include_comments = True, recursive = True )
 
     extra_name_seeds = markup.extract_mentioned_name_seeds(text)
+
     extra_authors = set()
     for name_seed in extra_name_seeds:
         extra_authors.update(User.objects.filter(username__startswith = name_seed))
@@ -46,7 +48,7 @@ def render_post_text_and_get_newly_mentioned_users(post,
     mentioned_authors, post.html = markup.mentionize_text(text, anticipated_authors)
 
     #maybe delete some previous mentions
-    if self.id != None:
+    if post.id != None:
         #only look for previous mentions if post was already saved before
         prev_mention_qs = Activity.objects.get_mentions(
                                     mentioned_in = post

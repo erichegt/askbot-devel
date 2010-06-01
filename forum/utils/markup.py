@@ -78,7 +78,7 @@ def mentionize_text(text, anticipated_authors):
                 text = text[pos+1:]
                 mentioned_author, text = extract_first_matching_mentioned_author(
                                                                             text, 
-                                                                            authors
+                                                                            anticipated_authors
                                                                         )
                 if mentioned_author:
                     mentioned_authors.append(mentioned_author)

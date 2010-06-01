@@ -94,6 +94,9 @@ class Comment(MetaContent, UserContent):
     def get_text(self):
         return self.comment
 
+    def set_text(self, text):
+        self.comment = text
+
     _render_text_and_get_newly_mentioned_users = \
         render_post_text_and_get_newly_mentioned_users
 
