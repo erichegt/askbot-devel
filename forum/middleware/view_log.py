@@ -4,7 +4,7 @@ from forum.views.readers import questions as questions_view
 from forum.views.commands import vote
 from django.views.static import serve
 from forum.views.writers import delete_comment, question_comments, answer_comments
-from forum.views.readers import question, question_revisions, answer_revisions
+from forum.views.readers import question_revisions, answer_revisions
 
 #todo: the list is getting bigger and bigger - maybe there is a better way to
 #trigger reset of sarch state?
@@ -19,8 +19,6 @@ class ViewLog(object):
     def __init__(self):
         self.views = []
         self.depth = 3 #todo maybe move this to const.py
-    def set_current(self, view_name):
-        thi
 
     def get_previous(self, num):
         if num > self.depth - 1:

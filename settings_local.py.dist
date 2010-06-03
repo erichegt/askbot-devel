@@ -37,6 +37,11 @@ CACHE_BACKEND = 'dummy://'
 
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+# for user upload
+
+ALLOW_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
+# unit byte
+ALLOW_MAX_FILE_SIZE = 1024 * 1024
 
 #email server settings
 SERVER_EMAIL = ''

@@ -4,7 +4,6 @@ General skin settings
 from forum.conf.settings_wrapper import settings
 from livesettings import ConfigurationGroup, StringValue, IntegerValue
 from django.utils.translation import ugettext as _
-from forum.skins import get_skin_choices
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
@@ -16,7 +15,7 @@ settings.register(
         GENERAL_SKIN_SETTINGS,
         'ASKBOT_DEFAULT_SKIN',
         default='default',
-        choices=get_skin_choices(),
+        choices=[('default','default')],#todo: get_skin_choices(),
         description=_('Select skin'),
     )
 )

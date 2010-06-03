@@ -6,7 +6,6 @@ from forum.conf.settings_wrapper import settings
 from livesettings import ConfigurationGroup, StringValue
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
-from django.conf import settings as django_settings
 from forum import const
 
 QA_SITE_SETTINGS = ConfigurationGroup(

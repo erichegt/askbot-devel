@@ -1,7 +1,7 @@
 from forum_modules.grapefruit import Color
 import math
 
-def get_counter_colors(count, max=10, empty_bg='white', empty_fg='black', 
+def get_counter_colors(count, counter_max=10, empty_bg='white', empty_fg='black', 
                         zero_bg='white', zero_fg='black',
                         min_bg='white', min_fg='black',
                         max_bg='white', max_fg='black'
@@ -9,7 +9,7 @@ def get_counter_colors(count, max=10, empty_bg='white', empty_fg='black',
     if count == 0:
         return zero_fg, zero_bg
 
-    if count > max:
+    if count > counter_max:
         blend_factor = 0
     else:
         #todo deal with negative counts properly

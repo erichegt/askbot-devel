@@ -1,9 +1,10 @@
 from django.template import loader
 from django.template.loaders import filesystem 
-from django.http import HttpResponse
 import os.path
 import os
 import logging
+from forum.conf import settings as forum_settings
+from forum.skins import utils
 
 #module for skinning askbot
 #via ASKBOT_DEFAULT_SKIN configureation variable (not django setting)
@@ -13,27 +14,20 @@ import logging
 #here it is ignored because it is assumed that we won't use unicode paths
 
 def load_template_source(name, dirs=None):
+    print 'want template %s' % name
     try:
         #todo: move this to top after splitting out get_skin_dirs()
-        from forum.conf import settings as forum_settings
+        print 'trying to import forum_settings'
+        print 'imported!'
         tname = os.path.join(forum_settings.ASKBOT_DEFAULT_SKIN,'templates',name)
+        print tname
+        print 'success'
         return filesystem.load_template_source(tname,dirs)
     except:
+        print 'failed'
         tname = os.path.join('default','templates',name)
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
-
-#todo: move this to skins/utils.py
-#then move import forum.conf.settings to top
-def get_skin_dirs():
-    #todo: handle case of multiple skin directories
-    d = os.path.dirname
-    n = os.path.normpath
-    j = os.path.join
-    f = os.path.isfile
-    skin_dirs = []
-    skin_dirs.append( n(j(d(d(__file__)), 'skins')) )
-    return skin_dirs
 
 def find_media_source(url):
     """returns url prefixed with the skin name
@@ -43,20 +37,23 @@ def find_media_source(url):
     if file is not found - returns None
     and logs an error message
     """
+    print 'trying to get source dammit'
     while url[0] == '/': url = url[1:]
     d = os.path.dirname
     n = os.path.normpath
     j = os.path.join
     f = os.path.isfile
     #todo: handles case of multiple skin directories
-    skins = get_skin_dirs()[0]
+    skins = utils.get_skin_dirs()[0]
     try:
         #todo: move this to top after splitting out get_skin_dirs()
-        from forum.conf import settings as forum_settings
+        print 'looking for the media path'
         media = os.path.join(skins, forum_settings.ASKBOT_DEFAULT_SKIN, url)
+        print 'out of dadata'
         assert(f(media))
         use_skin = forum_settings.ASKBOT_DEFAULT_SKIN
     except:
+        print 'failed'
         try:
             media = j(skins, 'default', url)
             assert(f(media))
@@ -71,20 +68,3 @@ def find_media_source(url):
                 use_skin = ''
                 return None
     return use_skin + '/' + url
-
-def get_skin_choices():
-    #todo: expand this to handle custom skin directories
-    dirs = get_skin_dirs()
-    default_dir = dirs[0]
-    items = os.listdir(default_dir)
-    skin_list = ['default']
-    for i in items:
-        item_path = os.path.join(default_dir,i)
-        if not os.path.isdir(item_path):
-            continue
-        if i == 'common':
-            continue
-        if i not in skin_list:
-            skin_list.append(i)
-
-    return [(i,i) for i in skin_list]

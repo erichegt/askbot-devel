@@ -52,4 +52,3 @@ class LazyMessages (StrAndUnicode):
         self._messages = get_and_delete_messages(self.request)
         return self._messages
     messages = property(_get_messages)
-    

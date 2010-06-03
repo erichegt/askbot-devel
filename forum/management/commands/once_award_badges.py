@@ -192,12 +192,12 @@ class Command(BaseCommand):
         """
         For user asked question and got first upvote, we award him following badge:
         """
-        query = "SELECT act.user_id, q.vote_up_count, act.object_id FROM "
-                    "activity act, question q WHERE act.activity_type = %s AND "
-                    "act.object_id = q.id AND "
-                    "act.user_id NOT IN "
-                    "(SELECT distinct user_id FROM award WHERE badge_id = %s)"\
-                    % (const.TYPE_ACTIVITY_ASK_QUESTION, 13)
+        query = ('SELECT act.user_id, q.vote_up_count, act.object_id FROM ' \
+                + 'activity act, question q WHERE act.activity_type = %s AND ' \
+                + 'act.object_id = q.id AND ' \
+                + 'act.user_id NOT IN ' \
+                + '(SELECT distinct user_id FROM award WHERE badge_id = %s)') \
+                % (const.TYPE_ACTIVITY_ASK_QUESTION, 13)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -224,12 +224,12 @@ class Command(BaseCommand):
 
         (15, '教师', 3, '教师', '第一次回答问题并且得到一个以上赞成票', 0, 0),
         """
-        query = "SELECT act.user_id, a.vote_up_count, act.object_id FROM "
-                    "activity act, answer a WHERE act.activity_type = %s AND "
-                    "act.object_id = a.id AND "
-                    "act.user_id NOT IN "
-                    "(SELECT distinct user_id FROM award WHERE badge_id = %s)"\
-                    % (const.TYPE_ACTIVITY_ANSWER, 15)
+        query = ("SELECT act.user_id, a.vote_up_count, act.object_id FROM "\
+                + "activity act, answer a WHERE act.activity_type = %s AND "\
+                + "act.object_id = a.id AND "\
+                + "act.user_id NOT IN "\
+                + "(SELECT distinct user_id FROM award WHERE badge_id = %s)") \
+                % (const.TYPE_ACTIVITY_ANSWER, 15)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -254,13 +254,13 @@ class Command(BaseCommand):
         """
         (32, '学问家', 2, '学问家', '第一次回答被投赞成票10次以上', 0, 0)
         """
-        query = "SELECT act.user_id, act.object_id FROM "
-                    "activity act, answer a WHERE act.object_id = a.id AND "
-                    "act.activity_type = %s AND "
-                    "a.vote_up_count >= 10 AND "
-                    "act.user_id NOT IN "
-                    "(SELECT user_id FROM award WHERE badge_id = %s)"\
-                    % (const.TYPE_ACTIVITY_ANSWER, 32)
+        query = ("SELECT act.user_id, act.object_id FROM " \
+                + "activity act, answer a WHERE act.object_id = a.id AND "\
+                + "act.activity_type = %s AND "\
+                + "a.vote_up_count >= 10 AND "\
+                + "act.user_id NOT IN "\
+                + "(SELECT user_id FROM award WHERE badge_id = %s)") \
+                % (const.TYPE_ACTIVITY_ANSWER, 32)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -284,16 +284,16 @@ class Command(BaseCommand):
         """
         (26, '优秀市民', 2, '优秀市民', '投票300次以上', 0, 0)
         """
-        query = "SELECT count(*) vote_count, user_id FROM activity WHERE "
-                    "activity_type = %s OR "
-                    "activity_type = %s AND "
-                    "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) "
-                    "GROUP BY user_id HAVING vote_count >= 300"\
-                    % (
-                        const.TYPE_ACTIVITY_VOTE_UP, 
-                        const.TYPE_ACTIVITY_VOTE_DOWN, 
-                        2
-                    )
+        query = ("SELECT count(*) vote_count, user_id FROM activity WHERE " \
+                + "activity_type = %s OR " \
+                + "activity_type = %s AND " \
+                + "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) " \
+                + "GROUP BY user_id HAVING vote_count >= 300") \
+                % (
+                    const.TYPE_ACTIVITY_VOTE_UP, 
+                    const.TYPE_ACTIVITY_VOTE_DOWN, 
+                    2
+                )
 
         self.__award_for_count_num(query, 26)
 
@@ -301,16 +301,16 @@ class Command(BaseCommand):
         """
         (27, '编辑主任', 2, '编辑主任', '编辑了100个帖子', 0, 0)
         """
-        query = "SELECT count(*) vote_count, user_id FROM activity WHERE "
-                    "activity_type = %s OR "
-                    "activity_type = %s AND "
-                    "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) "
-                    "GROUP BY user_id HAVING vote_count >= 100"\
-                    % (
-                        const.TYPE_ACTIVITY_UPDATE_QUESTION, 
-                        const.TYPE_ACTIVITY_UPDATE_ANSWER, 
-                        27
-                    )
+        query = ("SELECT count(*) vote_count, user_id FROM activity WHERE " \
+                + "activity_type = %s OR " \
+                + "activity_type = %s AND " \
+                + "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) " \
+                + "GROUP BY user_id HAVING vote_count >= 100" )\
+                % (
+                    const.TYPE_ACTIVITY_UPDATE_QUESTION, 
+                    const.TYPE_ACTIVITY_UPDATE_ANSWER, 
+                    27
+                )
 
         self.__award_for_count_num(query, 27)
 
@@ -318,16 +318,16 @@ class Command(BaseCommand):
         """
         (5, '评论家', 3, '评论家', '评论10次以上', 0, 0),
         """
-        query = "SELECT count(*) vote_count, user_id FROM activity WHERE "
-                    "activity_type = %s OR "
-                    "activity_type = %s AND "
-                    "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) "
-                    "GROUP BY user_id HAVING vote_count >= 10"\
-                    % (
-                        const.TYPE_ACTIVITY_COMMENT_QUESTION,
-                        const.TYPE_ACTIVITY_COMMENT_ANSWER, 
-                        5
-                    )
+        query = ("SELECT count(*) vote_count, user_id FROM activity WHERE " \
+                + "activity_type = %s OR " \
+                + "activity_type = %s AND " \
+                + "user_id NOT IN (SELECT user_id FROM award WHERE badge_id = %s) " \
+                + "GROUP BY user_id HAVING vote_count >= 10" )\
+                % (
+                    const.TYPE_ACTIVITY_COMMENT_QUESTION,
+                    const.TYPE_ACTIVITY_COMMENT_ANSWER, 
+                    5
+                )
         self.__award_for_count_num(query, 5)
 
     def __award_for_count_num(self, query, badge):

@@ -20,7 +20,7 @@ def some_in(what, where):
 
 class SearchState(object):
     def __init__(self):
-        self.scope= const.DEFAULT_POST_SCOPE
+        self.scope = const.DEFAULT_POST_SCOPE
         self.query = None
         self.tags = None
         self.author = None
@@ -64,76 +64,76 @@ class SearchState(object):
                 setattr(self, key, new_value)
                 self.reset_page()
 
-    def relax_stickiness(self, input, view_log):
+    def relax_stickiness(self, input_dict, view_log):
         if view_log.get_previous(1) == 'questions':
-            if not some_in(ACTIVE_COMMANDS, input):
+            if not some_in(ACTIVE_COMMANDS, input_dict):
                 self.reset()
         #todo also relax if 'all' scope was clicked twice
 
-    def update_from_user_input(self,input,raw_input = {}):
+    def update_from_user_input(self, input_dict, unprocessed_input = {}):
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
-        if 'start_over' in input:
+        if 'start_over' in input_dict:
             self.reset()
 
-        if 'page' in input:
-            self.page = input['page']
+        if 'page' in input_dict:
+            self.page = input_dict['page']
             #special case - on page flip no other input is accepted
             return
 
-        if 'page_size' in input:
-            self.update_value('page_size',input)
+        if 'page_size' in input_dict:
+            self.update_value('page_size', input_dict)
             self.reset_page()#todo may be smarter here - start with ~same q
             #same as with page - return right away
             return
 
-        if 'scope' in input:
-            if input['scope'] == 'favorite' and self.logged_in == False:
+        if 'scope' in input_dict:
+            if input_dict['scope'] == 'favorite' and self.logged_in == False:
                 self.reset_scope()
             else:
-                self.update_value('scope',input)
+                self.update_value('scope', input_dict)
 
-        if 'tags' in input:
+        if 'tags' in input_dict:
             if self.tags:
                 old_tags = self.tags.copy()
-                self.tags = self.tags.union(input['tags'])
+                self.tags = self.tags.union(input_dict['tags'])
                 if self.tags != old_tags:
                     self.reset_page()
             else:
-                self.tags = input['tags']
+                self.tags = input_dict['tags']
 
         #all resets just return
-        if 'reset_tags' in input:
+        if 'reset_tags' in input_dict:
             if self.tags:
                 self.tags = None
                 self.reset_page()
             return
 
         #todo: handle case of deleting tags one-by-one
-        if 'reset_author' in input:
+        if 'reset_author' in input_dict:
             if self.author:
                 self.author = None
                 self.reset_page()
             return
 
-        if 'reset_query' in input:
+        if 'reset_query' in input_dict:
             self.reset_query()
             return
 
-        self.update_value('author',input)
+        self.update_value('author', input_dict)
 
-        if 'query' in input:
-            self.update_value('query',input)
+        if 'query' in input_dict:
+            self.update_value('query', input_dict)
             self.sort = 'relevant'
-        elif 'search' in raw_input:#a case of use nulling search query by hand
+        elif 'search' in unprocessed_input:#a case of use nulling search query by hand
             self.reset_query()
             return
 
-        if 'sort' in input:
-            if input['sort'] == 'relevant' and self.query is None:
+        if 'sort' in input_dict:
+            if input_dict['sort'] == 'relevant' and self.query is None:
                 self.reset_sort()
             else:
-                self.update_value('sort',input)
+                self.update_value('sort', input_dict)
 
         #todo: plug - mysql has no relevance sort
         if self.sort == 'relevant':

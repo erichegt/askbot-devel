@@ -1,18 +1,15 @@
-from base import AnonymousContent, ContentRevision, DeletableContent
-from content import Content
-#todo: take care of copy-paste markdowner stuff maybe make html automatic field?
-from forum import const
-from markdown2 import Markdown
-from django.utils.html import strip_tags 
-from forum.utils.html import sanitize_html
+import datetime
 from django.db import models
 from django.utils.http import urlquote  as django_urlquote
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-import datetime
-markdowner = Markdown(html4tags=True)
+from forum.models.base import AnonymousContent, DeletableContent
+from forum.models.base import ContentRevision
+from forum.models.base import save_post, parse_post_text
+from forum.models import content
+from forum.models.question import Question
+from forum import const
 
-from question import Question
 
 class AnswerManager(models.Manager):
     def create_new(self, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
@@ -22,7 +19,7 @@ class AnswerManager(models.Manager):
             added_at = added_at,
             wiki = wiki,
             text = text,
-            html = sanitize_html(markdowner.convert(text)),
+            #.html field is denormalized by the save() call
         )
         if answer.wiki:
             answer.last_edited_by = answer.author
@@ -84,15 +81,18 @@ class AnswerManager(models.Manager):
     #    cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
     #    return cursor.fetchall()
 
-class Answer(Content, DeletableContent):
+class Answer(content.Content, DeletableContent):
     question = models.ForeignKey('Question', related_name='answers')
     accepted    = models.BooleanField(default=False)
     accepted_at = models.DateTimeField(null=True, blank=True)
 
     objects = AnswerManager()
 
-    class Meta(Content.Meta):
+    class Meta(content.Content.Meta):
         db_table = u'answer'
+
+    save = save_post
+    parse = parse_post_text
 
     def apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
 
@@ -105,7 +105,7 @@ class Answer(Content, DeletableContent):
 
         self.last_edited_at = edited_at
         self.last_edited_by = edited_by
-        self.html = sanitize_html(markdowner.convert(text))
+        #self.html is denormalized in save()
         self.text = text
         #todo: bug wiki has no effect here
         self.save()

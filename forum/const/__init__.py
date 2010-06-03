@@ -55,7 +55,7 @@ POST_SCOPE_LIST = (
                     ('favorite', _('favorite')),
                    )
 DEFAULT_POST_SCOPE = 'all'
-PAGE_SIZE_CHOICES = (('10','10',),('30','30',),('50','50',),)
+PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
 #todo: remove this duplication
 QUESTIONS_PER_PAGE_USER_CHOICES = (
    (10, u'10'),

@@ -1,9 +1,7 @@
-from django.db import models
-from base import MetaContent, UserContent
-from base import render_post_text_and_get_newly_mentioned_users
-from base import save_content
-from forum import const
 import datetime
+from django.db import models
+from forum import const
+from forum.models import base
 
 class VoteManager(models.Manager):
     def get_up_vote_count_from_user(self, user):
@@ -26,7 +24,7 @@ class VoteManager(models.Manager):
             return 0
 
 
-class Vote(MetaContent, UserContent):
+class Vote(base.MetaContent, base.UserContent):
     VOTE_UP = +1
     VOTE_DOWN = -1
     VOTE_CHOICES = (
@@ -39,7 +37,7 @@ class Vote(MetaContent, UserContent):
 
     objects = VoteManager()
 
-    class Meta(MetaContent.Meta):
+    class Meta(base.MetaContent.Meta):
         unique_together = ('content_type', 'object_id', 'user')
         db_table = u'vote'
 
@@ -65,25 +63,28 @@ class FlaggedItemManager(models.Manager):
         else:
             return 0
 
-class FlaggedItem(MetaContent, UserContent):
+class FlaggedItem(base.MetaContent, base.UserContent):
     """A flag on a Question or Answer indicating offensive content."""
     flagged_at     = models.DateTimeField(default=datetime.datetime.now)
 
     objects = FlaggedItemManager()
 
-    class Meta(MetaContent.Meta):
+    class Meta(base.MetaContent.Meta):
         unique_together = ('content_type', 'object_id', 'user')
         db_table = u'flagged_item'
 
     def __unicode__(self):
         return '[%s] flagged at %s' %(self.user, self.flagged_at)
 
-class Comment(MetaContent, UserContent):
+class Comment(base.MetaContent, base.UserContent):
     comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
     added_at = models.DateTimeField(default = datetime.datetime.now)
     html = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH, default='')
 
-    class Meta(MetaContent.Meta):
+    _urlize = True
+    _use_markdown = False
+
+    class Meta(base.MetaContent.Meta):
         ordering = ('-added_at',)
         db_table = u'comment'
 
@@ -97,15 +98,13 @@ class Comment(MetaContent, UserContent):
     def set_text(self, text):
         self.comment = text
 
-    _render_text_and_get_newly_mentioned_users = \
-        render_post_text_and_get_newly_mentioned_users
-
-    _save = save_content
+    def parse(self):
+        return base.parse_post_text(self)
 
     def save(self,**kwargs):
-        self._save(urlize_content = True)
+        base.save_post(self)
 
-    def get_updated_activity_type(self):
+    def get_updated_activity_type(self, created = False):
         if self.content_object.__class__.__name__ == 'Question':
             return const.TYPE_ACTIVITY_COMMENT_QUESTION
         elif self.content_object.__class__.__name__ == 'Answer':
@@ -122,6 +121,9 @@ class Comment(MetaContent, UserContent):
 
         users -= set([self.user])#remove activity user
         return list(users)
+
+    def get_time_of_last_edit(self):
+        return self.added_at
 
     def delete(self, **kwargs):
         #todo: not very good import in models of other models

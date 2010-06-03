@@ -13,7 +13,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 
     #below is forum stuff for this tuple
-    'forum.modules.module_templates_loader',#todo: remove this
     'forum.skins.load_template_source',#forum stuff
 #     'django.template.loaders.eggs.load_template_source',
 )
@@ -59,10 +58,6 @@ FILE_UPLOAD_TEMP_DIR = os.path.join(os.path.dirname(__file__), 'tmp').replace('\
 FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-# for user upload
-ALLOW_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
-# unit byte
-ALLOW_MAX_FILE_SIZE = 1024 * 1024
 
 # User settings
 from settings_local import *
@@ -80,7 +75,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'forum',
     'django_authopenid',
-    'debug_toolbar' ,
     #'forum.importers.stackexchange', #se loader
     'south',
     'livesettings',

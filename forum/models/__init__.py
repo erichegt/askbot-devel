@@ -1,11 +1,7 @@
-import signals
-from question import Question ,QuestionRevision, QuestionView, AnonymousQuestion, FavoriteQuestion
-from answer import Answer, AnonymousAnswer, AnswerRevision
-from tag import Tag, MarkedTag
-from meta import Vote, Comment, FlaggedItem
-from user import Activity, ValidationHash, EmailFeedSetting
-#from user import AuthKeyUserAssociation
-from repute import Badge, Award, Repute
+import logging
+import re
+import hashlib
+import datetime
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage
 from forum.search.indexer import create_fulltext_indexes
@@ -17,15 +13,19 @@ from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
 from django.db import models
 from django.conf import settings as django_settings
-from forum import const
-import logging
-import re
-import hashlib
-
-import datetime
 from django.contrib.contenttypes.models import ContentType
-
-#todo: must go after signals
+from forum import const
+from forum.models.question import Question, QuestionRevision
+from forum.models.question import QuestionView, AnonymousQuestion
+from forum.models.question import FavoriteQuestion
+from forum.models.answer import Answer, AnonymousAnswer, AnswerRevision
+from forum.models.tag import Tag, MarkedTag
+from forum.models.meta import Vote, Comment, FlaggedItem
+from forum.models.user import Activity, ValidationHash, EmailFeedSetting
+from forum.models import signals
+#from user import AuthKeyUserAssociation
+from forum.models.repute import Badge, Award, Repute
+from forum.conf import settings as forum_settings
 from forum import auth
 
 User.add_to_class('is_approved', models.BooleanField(default=False))
@@ -186,7 +186,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
         if cancel:
             auth.onDownVotedCanceled(vote, post, user, timestamp)
         else:
-            auth.onDonwVoted(vote, post, user, timestamp)
+            auth.onDownVoted(vote, post, user, timestamp)
 
 def upvote(self, post, timestamp=None, cancel=False):
     _process_vote(
@@ -210,14 +210,14 @@ def accept_answer(self, answer, timestamp=None, cancel=False):
     else:
         auth.onAnswerAccept(answer, self, timestamp=timestamp)
 
-def flag_post(self, post, timestamp=None, cancel=False):
+def flag_post(user, post, timestamp=None, cancel=False):
     if cancel:#todo: can't unflag?
         return
     if post.flagged_items.filter(user=user).count() > 0:
         return
     else:
         flag = FlaggedItem(
-                user = self,
+                user = user,
                 content_object = post,
                 flagged_at = timestamp,
             )
@@ -296,7 +296,7 @@ def send_instant_notifications_about_activity_in_post(
             
             #get details about update
             #todo: is there a way to solve this import issue?
-            from forum.conf import settings as forum_settings
+            #from forum.conf import settings as forum_settings
             base_url = forum_settings.APP_URL
             data = {
                 'receiving_user': u,
@@ -313,7 +313,8 @@ def send_instant_notifications_about_activity_in_post(
             }
             #send update
             subject = _('email update message subject')
-            text = format_instant_notification_body(template, data)
+            text = format_instant_notification_body(
+                        )
             msg = EmailMessage(subject, text, django_settings.DEFAULT_FROM_EMAIL, [u.email])
             print 'sending email to %s' % u.email
             print 'subject: %s' % subject
@@ -337,29 +338,8 @@ def record_ask_event(instance, created, **kwargs):
                     )
         activity.save()
 
-#todo: translate this
-record_answer_event_re = re.compile("You have received (a|\d+) .*new response.*")
 def record_answer_event(instance, created, **kwargs):
     if created:
-        q_author = instance.question.author
-        found_match = False
-        for m in q_author.message_set.all():
-            match = record_answer_event_re.search(m.message)
-            if match:
-                found_match = True
-                try:
-                    cnt = int(match.group(1))
-                except:
-                    cnt = 1
-                m.message = u"You have received %d <a href=\"%s?sort=responses\">new responses</a>."\
-                            % (cnt+1, q_author.get_profile_url())
-                m.save()
-                break
-        if not found_match:
-            msg = u"You have received a <a href=\"%s?sort=responses\">new response</a>."\
-                    % q_author.get_profile_url()
-            q_author.message_set.create(message=msg)
-
         activity = Activity(
                         user = instance.author,
                         active_at = instance.added_at,
@@ -376,15 +356,26 @@ def record_answer_event(instance, created, **kwargs):
 
 
 #todo: change to more general post_update_activity
-def record_post_update_activity(post, newly_mentioned_users, **kwargs):
+def record_post_update_activity(
+        post, 
+        newly_mentioned_users = list(), 
+        timestamp = None,
+        created = False,
+        **kwargs
+    ):
+    """called upon signal forum.models.signals.post_updated
+    which is sent at the end of save() method in posts
+    """
     #todo: take into account created == True case
-    activity_type = post.get_updated_activity_type()
+    activity_type = post.get_updated_activity_type(created)
+
+    assert(timestamp != None)
 
     #fields will depend on post type and maybe activity type
     #post has to be saved already, b/c Activity is in generic relation to post
     activity = Activity(
                     user = post.get_last_author(), 
-                    active_at = post.added_at, 
+                    active_at = timestamp, 
                     content_object = post, 
                     activity_type = activity_type
                 )
@@ -420,8 +411,6 @@ def record_revision_question_event(instance, created, **kwargs):
                             instance.question.get_author_list(include_comments = True)
                         )
 
-        receiving_users.update(
-                        )
         for a in instance.question.answers.all():
             receiving_users.update(a.get_author_list())
 
@@ -562,6 +551,8 @@ def record_cancel_vote(instance, **kwargs):
     #todo: same problem - cannot access receiving user here
     activity.save()
 
+#todo: weird that there is no record delete answer or comment
+#is this even necessary to keep track of?
 def record_delete_question(instance, delete_by, **kwargs):
     """
     when user deleted the question
@@ -634,7 +625,7 @@ def record_user_full_updated(instance, **kwargs):
 def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs):
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-    from forum.conf import settings as forum_settings
+    #from forum.conf import settings as forum_settings
     if forum_settings.EMAIL_VALIDATION == True:#add user to the record
         for aq in aq_list:
             aq.author = user
@@ -652,7 +643,6 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(record_ask_event, sender=Question)
-django_signals.post_save.connect(record_answer_event, sender=Answer)
 django_signals.post_save.connect(record_revision_question_event, sender=QuestionRevision)
 django_signals.post_save.connect(record_revision_answer_event, sender=AnswerRevision)
 django_signals.post_save.connect(record_award_event, sender=Award)
@@ -674,6 +664,10 @@ signals.user_logged_in.connect(post_stored_anonymous_content)
 signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Comment
+                       )
+signals.post_updated.connect(
+                           record_post_update_activity,
+                           sender=Answer
                        )
 #post_syncdb.connect(create_fulltext_indexes)
 

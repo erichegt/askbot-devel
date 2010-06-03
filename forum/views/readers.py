@@ -63,13 +63,10 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-#todo: eliminate this from urls
-def unanswered(request):#generates listing of unanswered questions
-    return questions(request, unanswered=True)
-
-def questions(request):#a view generating listing of questions, used by 'unanswered' too
+def questions(request):
     """
     List of Questions, Tagged questions, and Unanswered questions.
+    matching search query or user selection
     """
 
     #don't allow to post to this view
@@ -181,11 +178,6 @@ def search(request): #generates listing of questions matching a search query - i
             raise Http404
     else:
         raise Http404
-
-#todo: eliminate this - need to go through templates to make sure 
-#that there are no urls pointing here
-def tag(request, tag):#stub generates listing of questions tagged with a single tag
-    return questions(request, tagname=tag)
 
 def tags(request):#view showing a listing of available tags - plain list
     stag = ""

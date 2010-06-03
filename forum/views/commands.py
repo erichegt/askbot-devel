@@ -4,6 +4,7 @@ from django.conf import settings
 from forum.conf import settings as forum_settings
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.translation import ugettext as _
 from django.template import RequestContext
@@ -276,7 +277,9 @@ def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering syste
     request.user.save()
 
 @ajax_method
-def ajax_command(request):#refactor? view processing ajax commands - note "vote" and view others do it too
+def ajax_command(request):
+    """view processing ajax commands - note "vote" and view others do it too
+    """
     if 'command' not in request.POST:
         return HttpResponseForbidden(mimetype="application/json")
     if request.POST['command'] == 'toggle-ignored-questions':

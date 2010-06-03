@@ -1,6 +1,5 @@
 import time
 import os
-import posixpath
 import datetime
 import math
 import re
@@ -294,7 +293,7 @@ def media(url):
     url = skins.find_media_source(url)
     if url:
         url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
-        return posixpath.normpath(url) + '?v=%d' \
+        return os.path.normpath(url) + '?v=%d' \
                 % forum_settings.MEDIA_RESOURCE_REVISION
     else:
         return '' #todo: raise exception here?
@@ -377,7 +376,7 @@ class BlockMediaUrlNode(template.Node):
 
         url = skins.find_media_source(url)
         url = prefix + url
-        out = posixpath.normpath(url) + '?v=%d' % forum_settings.MEDIA_RESOURCE_REVISION
+        out = os.path.normpath(url) + '?v=%d' % forum_settings.MEDIA_RESOURCE_REVISION
         return out.replace(' ','')
 
 @register.tag(name='blockmedia')
@@ -426,41 +425,41 @@ def question_counter_widget(question):
 
     #background and foreground colors for each item
     (views_fg, views_bg) = colors.get_counter_colors(
-                                view_count,
-                                max = forum_settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_BG,
-                                zero_fg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_FG,
-                                min_bg = forum_settings.COLORS_VIEW_COUNTER_MIN_BG,
-                                min_fg = forum_settings.COLORS_VIEW_COUNTER_MIN_FG,
-                                max_bg = forum_settings.COLORS_VIEW_COUNTER_MAX_BG,
-                                max_fg = forum_settings.COLORS_VIEW_COUNTER_MAX_FG,
-                            )
+                view_count,
+                counter_max = forum_settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_VIEW_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_VIEW_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_VIEW_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_VIEW_COUNTER_MAX_FG,
+            )
 
     (answers_fg, answers_bg) = colors.get_counter_colors(
-                                answer_count,
-                                max = forum_settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
-                                zero_fg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
-                                min_bg = forum_settings.COLORS_ANSWER_COUNTER_MIN_BG,
-                                min_fg = forum_settings.COLORS_ANSWER_COUNTER_MIN_FG,
-                                max_bg = forum_settings.COLORS_ANSWER_COUNTER_MAX_BG,
-                                max_fg = forum_settings.COLORS_ANSWER_COUNTER_MAX_FG,
-                            )
+                answer_count,
+                counter_max = forum_settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_ANSWER_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_ANSWER_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_ANSWER_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_ANSWER_COUNTER_MAX_FG,
+            )
     if answer_accepted:
         #todo: maybe recalculate the foreground color too
         answers_bg = forum_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
         answers_fg = forum_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
 
     (votes_fg, votes_bg) = colors.get_counter_colors(
-                                vote_count,
-                                max = forum_settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_BG,
-                                zero_fg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_FG,
-                                min_bg = forum_settings.COLORS_VOTE_COUNTER_MIN_BG,
-                                min_fg = forum_settings.COLORS_VOTE_COUNTER_MIN_FG,
-                                max_bg = forum_settings.COLORS_VOTE_COUNTER_MAX_BG,
-                                max_fg = forum_settings.COLORS_VOTE_COUNTER_MAX_FG,
-                            )
+                vote_count,
+                counter_max = forum_settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_VOTE_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_VOTE_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_VOTE_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_VOTE_COUNTER_MAX_FG,
+            )
 
     #returns a dictionary with keys like 'votes_bg', etc
     return locals()
@@ -505,6 +504,5 @@ def ifmany(parser,token):
         token = parser.next_token()
     else:
         false_nodelist = template.NodeList()
-
 
     return IsManyNode(test_items, true_nodelist, false_nodelist)

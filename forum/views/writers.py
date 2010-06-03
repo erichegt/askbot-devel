@@ -1,24 +1,22 @@
 # encoding:utf-8
 import os.path
 import time, datetime, random
-import logging
 from django.core.files.storage import default_storage
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.template import RequestContext
-from django.utils.html import * #todo: remove import * in favor of explicit imports
 from django.utils import simplejson
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
 
-from forum.forms import *
-from forum.models import *
-from forum.const import *
 from forum import auth
-from forum.utils.forms import get_next_url
 from forum.views.readers import _get_tags_cache_json
+from forum import forms
+from forum import models
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -85,7 +83,7 @@ def ask(request):#view used to ask a new question
     must login/register in order for the question go be shown
     """
     if request.method == "POST":
-        form = AskForm(request.POST)
+        form = forms.AskForm(request.POST)
         if form.is_valid():
 
             added_at = datetime.datetime.now()
@@ -103,7 +101,7 @@ def ask(request):#view used to ask a new question
             if request.user.is_authenticated():
                 author = request.user 
 
-                question = Question.objects.create_new(
+                question = models.Question.objects.create_new(
                     title            = title,
                     author           = author, 
                     added_at         = added_at,
@@ -117,7 +115,7 @@ def ask(request):#view used to ask a new question
                 request.session.flush()
                 session_key = request.session.session_key
                 summary = strip_tags(text)[:120]
-                question = AnonymousQuestion(
+                question = models.AnonymousQuestion(
                     session_key = session_key,
                     title       = title,
                     tagnames = tagnames,
@@ -131,7 +129,7 @@ def ask(request):#view used to ask a new question
                 return HttpResponseRedirect(reverse('user_signin_new_question'))
     else:
         #this branch is for the initial load of ask form
-        form = AskForm()
+        form = forms.AskForm()
         if 'title' in request.GET:
             #normally this title is inherited from search query
             #but it is possible to ask with a parameter title in the url query
@@ -155,7 +153,7 @@ def ask(request):#view used to ask a new question
 def edit_question(request, id):#edit or retag a question
     """view to edit question
     """
-    question = get_object_or_404(Question, id=id)
+    question = get_object_or_404(models.Question, id=id)
     if question.deleted and not auth.can_view_deleted_post(request.user, question):
         raise Http404
     if auth.can_edit_post(request.user, question):
@@ -170,7 +168,7 @@ def _retag_question(request, question):#non-url subview of edit question - just 
     view "edit_question"
     """
     if request.method == 'POST':
-        form = RetagQuestionForm(question, request.POST)
+        form = forms.RetagQuestionForm(question, request.POST)
         if form.is_valid():
             if form.has_changed():
                 question.retag(
@@ -180,7 +178,7 @@ def _retag_question(request, question):#non-url subview of edit question - just 
                 )
             return HttpResponseRedirect(question.get_absolute_url())
     else:
-        form = RetagQuestionForm(question)
+        form = forms.RetagQuestionForm(question)
     return render_to_response('question_retag.html', {
         'active_tab': 'questions',
         'question': question,
@@ -194,17 +192,17 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
     if request.method == 'POST':
         if 'select_revision' in request.POST:#revert-type edit
             # user has changed revistion number
-            revision_form = RevisionForm(question, latest_revision, request.POST)
+            revision_form = forms.RevisionForm(question, latest_revision, request.POST)
             if revision_form.is_valid():
                 # Replace with those from the selected revision
-                form = EditQuestionForm(question,
-                    QuestionRevision.objects.get(question=question,
+                form = forms.EditQuestionForm(question,
+                    models.QuestionRevision.objects.get(question=question,
                         revision=revision_form.cleaned_data['revision']))
             else:
-                form = EditQuestionForm(question, latest_revision, request.POST)
+                form = forms.EditQuestionForm(question, latest_revision, request.POST)
         else:#new content edit
             # Always check modifications against the latest revision
-            form = EditQuestionForm(question, latest_revision, request.POST)
+            form = forms.EditQuestionForm(question, latest_revision, request.POST)
             if form.is_valid():
                 if form.has_changed():
                     edited_at = datetime.datetime.now()
@@ -222,8 +220,8 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
 
                 return HttpResponseRedirect(question.get_absolute_url())
     else:
-        revision_form = RevisionForm(question, latest_revision)
-        form = EditQuestionForm(question, latest_revision)
+        revision_form = forms.RevisionForm(question, latest_revision)
+        form = forms.EditQuestionForm(question, latest_revision)
     return render_to_response('question_edit.html', {
         'active_tab': 'questions',
         'question': question,
@@ -234,7 +232,7 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
 
 @login_required
 def edit_answer(request, id):
-    answer = get_object_or_404(Answer, id=id)
+    answer = get_object_or_404(models.Answer, id=id)
     if answer.deleted and not auth.can_view_deleted_post(request.user, answer):
         raise Http404
     elif not auth.can_edit_post(request.user, answer):
@@ -244,16 +242,16 @@ def edit_answer(request, id):
         if request.method == "POST":
             if 'select_revision' in request.POST:
                 # user has changed revistion number
-                revision_form = RevisionForm(answer, latest_revision, request.POST)
+                revision_form = forms.RevisionForm(answer, latest_revision, request.POST)
                 if revision_form.is_valid():
                     # Replace with those from the selected revision
-                    form = EditAnswerForm(answer,
-                                          AnswerRevision.objects.get(answer=answer,
+                    form = forms.EditAnswerForm(answer,
+                                          models.AnswerRevision.objects.get(answer=answer,
                                           revision=revision_form.cleaned_data['revision']))
                 else:
-                    form = EditAnswerForm(answer, latest_revision, request.POST)
+                    form = forms.EditAnswerForm(answer, latest_revision, request.POST)
             else:
-                form = EditAnswerForm(answer, latest_revision, request.POST)
+                form = forms.EditAnswerForm(answer, latest_revision, request.POST)
                 if form.is_valid():
                     if form.has_changed():
                         edited_at = datetime.datetime.now()
@@ -266,8 +264,8 @@ def edit_answer(request, id):
                         )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
-            revision_form = RevisionForm(answer, latest_revision)
-            form = EditAnswerForm(answer, latest_revision)
+            revision_form = forms.RevisionForm(answer, latest_revision)
+            form = forms.EditAnswerForm(answer, latest_revision)
         return render_to_response('answer_edit.html', {
                                   'active_tab': 'questions',
                                   'answer': answer,
@@ -275,17 +273,18 @@ def edit_answer(request, id):
                                   'form': form,
                                   }, context_instance=RequestContext(request))
 
+#todo: rename this function to post_new_answer
 def answer(request, id):#process a new answer
-    question = get_object_or_404(Question, id=id)
+    question = get_object_or_404(models.Question, id=id)
     if request.method == "POST":
-        form = AnswerForm(question, request.user, request.POST)
+        form = forms.AnswerForm(question, request.user, request.POST)
         if form.is_valid():
             wiki = form.cleaned_data['wiki']
             text = form.cleaned_data['text']
             update_time = datetime.datetime.now()
 
             if request.user.is_authenticated():
-                Answer.objects.create_new(
+                models.Answer.objects.create_new(
                                   question=question,
                                   author=request.user,
                                   added_at=update_time,
@@ -295,7 +294,7 @@ def answer(request, id):#process a new answer
                                   )
             else:
                 request.session.flush()
-                anon = AnonymousAnswer(
+                anon = models.AnonymousAnswer(
                                        question=question,
                                        wiki=wiki,
                                        text=text,
@@ -308,7 +307,9 @@ def answer(request, id):#process a new answer
 
     return HttpResponseRedirect(question.get_absolute_url())
 
-def __generate_comments_json(obj, type, user):#non-view generates json data for the post comments
+def __generate_comments_json(obj, comment_type, user):
+    """non-view generates json data for the post comments
+    """
     comments = obj.comments.all().order_by('id')
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
@@ -319,7 +320,8 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
         if user != None and auth.can_delete_comment(user, comment):
             #/posts/392845/comments/219852/delete
             #todo translate this url
-            delete_url = reverse('index') + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
+            delete_url = reverse('index') + comment_type + \
+                            "s/%s/comments/%s/delete/" % (obj.id, comment.id)
         json_comments.append({"id" : comment.id,
             "object_id" : obj.id,
             "comment_age" : diff_date(comment.added_at),
@@ -333,42 +335,39 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
     return HttpResponse(data, mimetype="application/json")
 
 def question_comments(request, id):#ajax handler for loading comments to question
-    question = get_object_or_404(Question, id=id)
-    user = request.user
+    question = get_object_or_404(models.Question, id=id)
     return __comments(request, question, 'question')
 
 def answer_comments(request, id):#ajax handler for loading comments on answer
-    answer = get_object_or_404(Answer, id=id)
-    user = request.user
+    answer = get_object_or_404(models.Answer, id=id)
     return __comments(request, answer, 'answer')
 
-def __comments(request, obj, type):#non-view generic ajax handler to load comments to an object
+def __comments(request, obj, comment_type):#non-view generic ajax handler to load comments to an object
     # only support get post comments by ajax now
     user = request.user
     if request.is_ajax():
         if request.method == "GET":
-            response = __generate_comments_json(obj, type, user)
+            response = __generate_comments_json(obj, comment_type, user)
         elif request.method == "POST":
-            if auth.can_add_comments(user,obj):
+            if auth.can_add_comments(user, obj):
                 obj.add_comment(
                     comment = request.POST.get('comment'),
                     user = request.user,
                 )
-                response = __generate_comments_json(obj, type, user)
+                response = __generate_comments_json(obj, comment_type, user)
             else:
                 response = HttpResponseForbidden(mimetype="application/json")
         return response
 
 def delete_comment(request, object_id='', comment_id='', commented_object_type=None):#ajax handler to delete comment
-    response = None
     commented_object = None
     if commented_object_type == 'question':
-        commented_object = Question
+        commented_object = models.Question
     elif commented_object_type == 'answer':
-        commented_object = Answer
+        commented_object = models.Answer
 
     if request.is_ajax():
-        comment = get_object_or_404(Comment, id=comment_id)
+        comment = get_object_or_404(models.Comment, id=comment_id)
         if auth.can_delete_comment(request.user, comment):
             obj = get_object_or_404(commented_object, id=object_id)
             obj.comments.remove(comment)

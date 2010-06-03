@@ -1,14 +1,12 @@
-from django.test import Client, TestCase
+from django.test import TestCase
 from django.contrib.auth.models import User
-from forum import models
-import datetime
 from django.template import defaultfilters
 from django.core.urlresolvers import reverse
 
 
 
 class AnonymousVisitorTests(TestCase):
-    fixtures = ['forum/fixtures/full_dump.json',]
+    fixtures = ['forum/fixtures/full_dump.json', ]
 
     def test_index(self):
         #todo: merge this with all reader url tests
@@ -35,7 +33,7 @@ class AnonymousVisitorTests(TestCase):
             url = reverse(url_name, kwargs = kwargs)
             url_info = 'getting url %s' % url
             if data:
-                url_info += '?' + '&'.join(['%s=%s' % (k,v) for k,v in data.iteritems()])
+                url_info += '?' + '&'.join(['%s=%s' % (k, v) for k, v in data.iteritems()])
             print url_info
 
             r = self.client.get(url, data=data, follow=follow)
@@ -215,8 +213,8 @@ class AnonymousVisitorTests(TestCase):
                 status_code=200,
                 follow=True,
             )
-        u = User.objects.get(id=2)
-        name_slug = defaultfilters.slugify(u.username)
+        user = User.objects.get(id=2)
+        name_slug = defaultfilters.slugify(user.username)
         try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},

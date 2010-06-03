@@ -10,7 +10,6 @@ from django.utils.translation import ungettext
 import datetime
 from django.conf import settings
 from forum.conf import settings as forum_settings
-import logging
 from django.utils.datastructures import SortedDict 
 from django.contrib.contenttypes.models import ContentType
 from forum import const
@@ -247,11 +246,11 @@ class Command(NoArgsCommand):
 
                 q_mentions_id = [q.id for q in mentions.get_all_origin_posts()]
 
-                q_mentions_A = Q_set_A.filter(id__in, q_mentions_id)
+                q_mentions_A = Q_set_A.filter(id__in = q_mentions_id)
                 q_mentions_A.cutoff_time = cutoff_time
                 extend_question_list(q_mentions_A, q_list, add_mention=True)
 
-                q_mentions_B = Q_set_B.filter(id__in, q_mentions_id)
+                q_mentions_B = Q_set_B.filter(id__in = q_mentions_id)
                 q_mentions_B.cutoff_time = cutoff_time
                 extend_question_list(q_mentions_B, q_list, add_mention=True)
 
@@ -301,7 +300,7 @@ class Command(NoArgsCommand):
                                         content_object=q, 
                                         activity_type=EMAIL_UPDATE_ACTIVITY
                                     )
-                emailed_at = datetime.datetime(1970,1,1)#long time ago
+                emailed_at = datetime.datetime(1970, 1, 1)#long time ago
             except Activity.MultipleObjectsReturned:
                 raise Exception(
                                 'server error - multiple question email activities '
@@ -341,8 +340,10 @@ class Command(NoArgsCommand):
 
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
-            ans_rev = AnswerRevision.objects.filter(answer__question=q,\
-                                            revised_at__gt=emailed_at)
+            ans_rev = AnswerRevision.objects.filter(
+                                            answer__question=q,
+                                            revised_at__gt=emailed_at
+                                        )
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
 
@@ -458,6 +459,11 @@ class Command(NoArgsCommand):
                     msg.content_subtype = 'html'
                     msg.send()
                 else:
-                    msg2 = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, ['your@email.com'])
+                    msg2 = EmailMessage(
+                                subject, 
+                                text, 
+                                settings.DEFAULT_FROM_EMAIL, 
+                                ['your@email.com']
+                            )
                     msg2.content_subtype = 'html'
                     msg2.send()

@@ -7,19 +7,17 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
-from django.utils.http import urlquote_plus
 from django.utils.html import strip_tags
-from django.core.urlresolvers import reverse
+from django.utils import simplejson
 from forum.utils.html import sanitize_html
 from forum import auth
 from forum import forms
 import calendar
-from django.contrib.contenttypes.models import ContentType
 from forum import const
-from django.conf import settings
 from forum.conf import settings as forum_settings
 from forum import models
 from forum.models import signals
+import logging
 
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
@@ -71,13 +69,13 @@ def users(request):
         base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
 
     try:
-        users = objects_list.page(page)
+        users_page = objects_list.page(page)
     except (EmptyPage, InvalidPage):
-        users = objects_list.page(objects_list.num_pages)
+        users_page = objects_list.page(objects_list.num_pages)
 
     return render_to_response('users.html', {
                                 'active_tab': 'users',
-                                'users' : users,
+                                'users' : users_page,
                                 'suser' : suser,
                                 'keywords' : suser,
                                 'tab_id' : sortby,
@@ -85,10 +83,10 @@ def users(request):
                                     'is_paginated' : is_paginated,
                                     'pages': objects_list.num_pages,
                                     'page': page,
-                                    'has_previous': users.has_previous(),
-                                    'has_next': users.has_next(),
-                                    'previous': users.previous_page_number(),
-                                    'next': users.next_page_number(),
+                                    'has_previous': users_page.has_previous(),
+                                    'has_next': users_page.has_next(),
+                                    'previous': users_page.previous_page_number(),
+                                    'next': users_page.next_page_number(),
                                     'base_url' : base_url
                                 }
 
@@ -607,7 +605,7 @@ def user_responses(request, user_id, user_view):
     if len(answers) > 0:
         answer_responses = []
         for a in answers:
-            r = Response(
+            resp = Response(
                     const.TYPE_RESPONSE['QUESTION_ANSWERED'],
                     a['title'],
                     a['question_id'],
@@ -617,6 +615,7 @@ def user_responses(request, user_id, user_view):
                     a['user_id'],
                     a['html']
                 )
+            answer_responses.append(resp)
         responses.extend(answer_responses)
 
     # question comments
@@ -991,10 +990,14 @@ USER_TEMPLATE_VIEWS = (
     )
 )
 
+#todo: rename this function - variable named user is everywhere
 def user(request, id, slug=None):
     sort = request.GET.get('sort', 'stats')
-    user_view = dict((v.id, v) for v in USER_TEMPLATE_VIEWS).get(sort, USER_TEMPLATE_VIEWS[0])
-    from forum.views import users
+    user_view = dict(
+                        (v.id, v) for v in USER_TEMPLATE_VIEWS
+                    ).get(
+                            sort, USER_TEMPLATE_VIEWS[0]
+                        )
     func = user_view.view_func
     return func(request, id, user_view)
 

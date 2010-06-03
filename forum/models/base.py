@@ -1,99 +1,143 @@
 import datetime
-import hashlib
-from urllib import quote_plus, urlencode
 from django.db import models
-from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext as _
 from django.contrib.sitemaps import ping_google
-import django.dispatch
-from django.conf import settings
+#todo: maybe merge forum.utils.markup and forum.utils.html
 from forum.utils import markup
+from forum.utils.html import sanitize_html
 from django.utils import html
 import logging
+from markdown2 import Markdown
+
+markdowner = Markdown(html4tags=True)
 
 #todo: following methods belong to a future common post class
-def render_post_text_and_get_newly_mentioned_users(post, 
-                                        urlize_content = False):
+def parse_post_text(post):
+    """typically post has a field to store raw source text
+    in comment it is called .comment, in Question and Answer it is 
+    called .text
+    also there is another field called .html (consistent across models)
+    so the goal of this function is to render raw text into .html
+    and extract any metadata given stored in source (currently
+    this metadata is limited by twitter style @mentions
+    but there may be more in the future
+
+    so really it should be renamed into ..._and_get_meta_data
+    """
 
     text = post.get_text()
 
-    if urlize_content:
+    if post._urlize:
         text = html.urlize(text)
 
-    if '@' not in text:
-        post.html = text
-        return list()
+    if post._use_markdown:
+        text = sanitize_html(markdowner.convert(text))
 
-    from forum.models.user import Activity
+    #todo, add markdown parser call conditional on
+    #post.use_markdown flag
+    post_html = text
+    mentioned_authors = list()
+    removed_mentions = list()
+    if '@' in text:
+        from forum.models.user import Activity
 
-    mentioned_by = post.get_last_author()
+        mentioned_by = post.get_last_author()
 
-    op = post.get_origin_post()
-    anticipated_authors = op.get_author_list( include_comments = True, recursive = True )
-
-    extra_name_seeds = markup.extract_mentioned_name_seeds(text)
-
-    extra_authors = set()
-    for name_seed in extra_name_seeds:
-        extra_authors.update(User.objects.filter(username__startswith = name_seed))
-
-    #it is important to preserve order here so that authors of post get mentioned first
-    anticipated_authors += list(extra_authors)
-
-    mentioned_authors, post.html = markup.mentionize_text(text, anticipated_authors)
-
-    #maybe delete some previous mentions
-    if post.id != None:
-        #only look for previous mentions if post was already saved before
-        prev_mention_qs = Activity.objects.get_mentions(
-                                    mentioned_in = post
+        op = post.get_origin_post()
+        anticipated_authors = op.get_author_list(
+                                    include_comments = True,
+                                    recursive = True 
                                 )
-        new_set = set(mentioned_authors)
-        for mention in prev_mention_qs:
-            delta_set = set(mention.receiving_users.all()) - new_set
-            if not delta_set:
-                mention.delete()
-                new_set -= delta_set
 
-        mentioned_authors = list(new_set)
+        extra_name_seeds = markup.extract_mentioned_name_seeds(text)
 
-    return mentioned_authors
+        extra_authors = set()
+        for name_seed in extra_name_seeds:
+            extra_authors.update(User.objects.filter(
+                                        username__startswith = name_seed
+                                    )
+                            )
 
-def save_content(self, urlize_content = False, **kwargs):
+        #it is important to preserve order here so that authors of post 
+        #get mentioned first
+        anticipated_authors += list(extra_authors)
+
+        mentioned_authors, post_html = markup.mentionize_text(
+                                                text, 
+                                                anticipated_authors
+                                            )
+
+        #find mentions that were removed and identify any previously
+        #entered mentions so that we can send alerts on only new ones
+        if post.pk is not None:
+            #only look for previous mentions if post was already saved before
+            prev_mention_qs = Activity.objects.get_mentions(
+                                        mentioned_in = post
+                                    )
+            new_set = set(mentioned_authors)
+            for prev_mention in prev_mention_qs:
+
+                user = prev_mention.get_mentioned_user()
+                if user in new_set:
+                    #don't report mention twice
+                    new_set.remove(user)
+                else:
+                    removed_mentions.append(prev_mention)
+            mentioned_authors = list(new_set)
+
+    data = {
+        'html': post_html,
+        'newly_mentioned_users': mentioned_authors,
+        'removed_mentions': removed_mentions,
+    }
+    return data
+
+def save_post(post, **kwargs):
     """generic save method to use with posts
     """
 
-    new_mentions = self._render_text_and_get_newly_mentioned_users( 
-                                                            urlize_content
-                                                        )
+    data = post.parse()
 
-    from forum.models.user import Activity
+    post.html = data['html']
+    newly_mentioned_users = data['newly_mentioned_users']
+    removed_mentions = data['removed_mentions']
+
+    #a hack allowing to save denormalized .summary field for questions
+    if hasattr(post, 'summary'):
+        post.summary = strip_tags(post.html)[:120]
+
+    #delete removed mentions
+    for rm in removed_mentions:
+        rm.delete()
+
+    created = post.pk is None
 
     #this save must precede saving the mention activity
-    super(self.__class__, self).save(**kwargs)
+    #because generic relation needs primary key of the related object
+    super(post.__class__, post).save(**kwargs)
+    last_author = post.get_last_author()
 
-    post_author = self.get_last_author()
-
-    for u in new_mentions:
+    #create new mentions
+    for u in newly_mentioned_users:
+        from forum.models.user import Activity
         Activity.objects.create_new_mention(
                                 mentioned_whom = u,
-                                mentioned_in = self,
-                                mentioned_by = post_author
+                                mentioned_in = post,
+                                mentioned_by = last_author
                             )
-
 
     #todo: this is handled in signal because models for posts
     #are too spread out
     from forum.models import signals
     signals.post_updated.send(
-                    post = self, 
-                    newly_mentioned_users = new_mentions, 
-                    sender = self.__class__
+                    post = post, 
+                    newly_mentioned_users = newly_mentioned_users,
+                    timestamp = post.get_time_of_last_edit(),
+                    created = created,
+                    sender = post.__class__
                 )
 
     try:

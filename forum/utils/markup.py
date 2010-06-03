@@ -76,10 +76,11 @@ def mentionize_text(text, anticipated_authors):
                 #if there is a termination character before @mention
                 #indeed try to find a matching person
                 text = text[pos+1:]
-                mentioned_author, text = extract_first_matching_mentioned_author(
-                                                                            text, 
-                                                                            anticipated_authors
-                                                                        )
+                mentioned_author, text = \
+                                    extract_first_matching_mentioned_author(
+                                                            text, 
+                                                            anticipated_authors
+                                                        )
                 if mentioned_author:
                     mentioned_authors.append(mentioned_author)
                     output += format_mention_in_html(mentioned_author)
@@ -93,7 +94,11 @@ def mentionize_text(text, anticipated_authors):
         else:
             #do this if @ is the first character
             text = text[1:]
-            mentioned_author, text = extract_first_matching_mentioned_name(text, authors)
+            mentioned_author, text = \
+                                extract_first_matching_mentioned_author(
+                                                    text, 
+                                                    anticipated_authors
+                                                )
             if mentioned_author:
                 mentioned_authors.append(mentioned_author)
                 output += format_mention_in_html(mentioned_author)

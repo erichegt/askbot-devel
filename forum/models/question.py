@@ -1,23 +1,20 @@
-from base import DeletableContent, AnonymousContent, ContentRevision
-from content import Content
-from forum.models import signals
-from tag import Tag
-from forum import const
-from forum.utils.html import sanitize_html
-from markdown2 import Markdown
-from django.utils.html import strip_tags
+import logging
 import datetime
 from django.conf import settings
 from django.utils.datastructures import SortedDict
-from forum.models.tag import MarkedTag
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.http import urlquote  as django_urlquote
+from django.utils.http import urlquote as django_urlquote
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-
-markdowner = Markdown(html4tags=True)
-
+from django.contrib.sitemaps import ping_google
+from django.utils.translation import ugettext as _
+from forum.models.tag import Tag, MarkedTag
+from forum.models import signals
+from forum.models.base import AnonymousContent, DeletableContent, ContentRevision
+from forum.models.base import save_post, parse_post_text
+from forum.models import content
+from forum import const
 from forum.utils.lists import LazyList
 
 #todo: too bad keys are duplicated see const sort methods
@@ -35,8 +32,7 @@ QUESTION_ORDER_BY_MAP = {
 
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
-        html = sanitize_html(markdowner.convert(text))
-        summary = strip_tags(html)[:120]
+
         question = Question(
             title = title,
             author = author,
@@ -45,11 +41,15 @@ class QuestionManager(models.Manager):
             last_activity_by = author,
             wiki = wiki,
             tagnames = tagnames,
-            html = html,
+            #html field is denormalized in .save() call
             text = text,
-            summary = summary
+            #summary field is denormalized in .save() call
         )
         if question.wiki:
+            #todo: this is confusing - last_edited_at field
+            #is used as an indicator whether question has been edited
+            #in template forum/skins/default/templates/post_contributor_info.html
+            #but in principle, post creation should count as edit as well
             question.last_edited_by = question.author
             question.last_edited_at = added_at
             question.wikified_at = added_at
@@ -233,7 +233,7 @@ class QuestionManager(models.Manager):
 
         return False
 
-    #todo: why not make this into a method of class Question?
+    #todo: why not make this into a method of Question class?
     #      also it is actually strange - why do we need the answer_count
     #      field if the count depends on who is requesting this?
     def update_answer_count(self, question):
@@ -244,7 +244,7 @@ class QuestionManager(models.Manager):
 
         # for some reasons, this Answer class failed to be imported,
         # although we have imported all classes from models on top.
-        from answer import Answer
+        from forum.models.answer import Answer
         self.filter(id=question.id).update(
             answer_count=Answer.objects.get_answers_from_question(question).filter(deleted=False).count())
 
@@ -285,7 +285,7 @@ class QuestionManager(models.Manager):
 
         return LazyList(get_data)
 
-class Question(Content, DeletableContent):
+class Question(content.Content, DeletableContent):
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
     answer_accepted = models.BooleanField(default=False)
@@ -312,8 +312,10 @@ class Question(Content, DeletableContent):
 
     objects = QuestionManager()
 
-    class Meta(Content.Meta):
+    class Meta(content.Content.Meta):
         db_table = u'question'
+
+    parse = parse_post_text
 
     def delete(self):
         super(Question, self).delete()
@@ -335,8 +337,8 @@ class Question(Content, DeletableContent):
         # Update the Question's tag associations
         signals.tags_updated = self.objects.update_tags(
                                         self,
-                                        form.cleaned_data['tags'], 
-                                        request.user
+                                        tagnames,
+                                        retagged_by
                                     )
 
         # Create a new revision
@@ -351,7 +353,7 @@ class Question(Content, DeletableContent):
             text       = latest_revision.text
         )
         # send tags updated singal
-        signals.tags_updated.send(sender=question.__class__, question=self)
+        signals.tags_updated.send(sender=Question, question=self)
 
     def get_origin_post(self):
         return self
@@ -374,10 +376,6 @@ class Question(Content, DeletableContent):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        #todo: have this copy-paste in few places
-        html = sanitize_html(markdowner.convert(text))
-        question_summary = strip_tags(html)[:120]
-
         # Update the Question itself
         self.title = title
         self.last_edited_at = edited_at
@@ -385,8 +383,6 @@ class Question(Content, DeletableContent):
         self.last_edited_by = edited_by
         self.last_activity_by = edited_by
         self.tagnames = tags
-        self.summary = question_summary
-        self.html = html
         self.text = text
 
         #wiki is an eternal trap whence there is no exit
@@ -436,13 +432,15 @@ class Question(Content, DeletableContent):
         This is required as we're using ``tagnames`` as the sole means of
         adding and editing tags.
         """
-        initial_addition = (self.id is None)
-        
-        super(Question, self).save(**kwargs)
+        initial_addition = (self.pk is None)
+
+        save_post(self, **kwargs)
 
         if initial_addition:
-            tags = Tag.objects.get_or_create_multiple(self.tagname_list(),
-                                                      self.author)
+            tags = Tag.objects.get_or_create_multiple(
+                                       self.tagname_list(),
+                                       self.author
+                                    )
             self.tags.add(*tags)
             Tag.objects.update_use_counts(tags)
 
@@ -454,7 +452,10 @@ class Question(Content, DeletableContent):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
+        return '%s%s' % (
+                    reverse('question', args=[self.id]), 
+                    django_urlquote(slugify(self.title))
+                )
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -463,7 +464,7 @@ class Question(Content, DeletableContent):
         return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
 
     def get_answer_count_by_user(self, user_id):
-        from answer import Answer
+        from forum.models.answer import Answer
         query_set = Answer.objects.filter(author__id=user_id)
         return query_set.filter(question=self).count()
 
@@ -523,6 +524,7 @@ class Question(Content, DeletableContent):
                     answer_comments.append(comment)
 
         #create the report
+        from forum.conf import settings as forum_settings
         if edited or new_answers or modified_answers or answer_comments:
             out = []
             if edited:
@@ -618,5 +620,3 @@ class AnonymousQuestion(AnonymousContent):
                                 text=self.text,
                                 )
         self.delete()
-
-from answer import Answer, AnswerManager

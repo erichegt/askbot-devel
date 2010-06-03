@@ -1,6 +1,9 @@
+"""
+linking of forum modules to admin interface
+"""
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from forum.models import *
+from forum import models
 
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
@@ -53,19 +56,19 @@ class ActivityAdmin(admin.ModelAdmin):
 #class BookAuthorRssAdmin(admin.ModelAdmin):
 #    """  admin class"""
     
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Answer, Answerdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(Vote, VoteAdmin)
-admin.site.register(FlaggedItem, FlaggedItemAdmin)
-admin.site.register(FavoriteQuestion, FavoriteQuestionAdmin)
-admin.site.register(QuestionRevision, QuestionRevisionAdmin)
-admin.site.register(AnswerRevision, AnswerRevisionAdmin)
-admin.site.register(Badge, BadgeAdmin)
-admin.site.register(Award, AwardAdmin)
-admin.site.register(Repute, ReputeAdmin)
-admin.site.register(Activity, ActivityAdmin)
+admin.site.register(models.Question, QuestionAdmin)
+admin.site.register(models.Tag, TagAdmin)
+admin.site.register(models.Answer, Answerdmin)
+admin.site.register(models.Comment, CommentAdmin)
+admin.site.register(models.Vote, VoteAdmin)
+admin.site.register(models.FlaggedItem, FlaggedItemAdmin)
+admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
+admin.site.register(models.QuestionRevision, QuestionRevisionAdmin)
+admin.site.register(models.AnswerRevision, AnswerRevisionAdmin)
+admin.site.register(models.Badge, BadgeAdmin)
+admin.site.register(models.Award, AwardAdmin)
+admin.site.register(models.Repute, ReputeAdmin)
+admin.site.register(models.Activity, ActivityAdmin)
 #admin.site.register(Book, BookAdmin)
 #admin.site.register(BookAuthorInfo, BookAuthorInfoAdmin)
 #admin.site.register(BookAuthorRss, BookAuthorRssAdmin)

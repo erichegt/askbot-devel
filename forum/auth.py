@@ -7,11 +7,10 @@ and superuser status.
 import datetime
 from django.utils.translation import ugettext as _
 from django.db import transaction
-from models import Repute
-from models import Question
-from models import Answer
-from models import signals
-from const import TYPE_REPUTATION
+from forum.models import Repute
+from forum.models import Question
+from forum.models import Answer
+from forum.models import signals
 import logging
 
 from forum.conf import settings as forum_settings
@@ -31,7 +30,7 @@ def can_flag_offensive(user):
         user.reputation >= forum_settings.MIN_REP_TO_FLAG_OFFENSIVE or
         user.is_superuser)
 
-def can_add_comments(user,subject):
+def can_add_comments(user, subject):
     """Determines if a User can add comments to Questions and Answers."""
     if user.is_authenticated():
         if user.id == subject.author.id:
@@ -40,31 +39,43 @@ def can_add_comments(user,subject):
             return True
         if user.is_superuser:
             return True
-        if isinstance(subject,Answer) and subject.question.author.id == user.id:
-            return True
+        if isinstance(subject, Answer):
+            if subject.question.author.id == user.id:
+                return True
     return False
 
 def can_vote_down(user):
     """Determines if a User can vote Questions and Answers down."""
-    return user.is_authenticated() and (
-        user.reputation >= forum_settings.MIN_REP_TO_VOTE_DOWN or
-        user.is_superuser)
+    if user.is_authenticated():
+        if user.reputation >= forum_settings.MIN_REP_TO_VOTE_DOWN:
+            return True
+        if user.is_superuser:
+            return True
+    return False
 
 def can_retag_questions(user):
     """Determines if a User can retag Questions."""
-    return user.is_authenticated() and (
-        forum_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
-        <= user.reputation 
-        < forum_settings.MIN_REP_TO_EDIT_OTHERS_POSTS or
-        user.is_superuser)
+    if user.is_authenticated():
+        if user.reputation >= forum_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS:
+            if user.reputation < forum_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
+                return True
+        if user.is_superuser:
+            return True
+    return False
 
 def can_edit_post(user, post):
     """Determines if a User can edit the given Question or Answer."""
-    return user.is_authenticated() and (
-        user.id == post.author_id or
-        (post.wiki and user.reputation >= forum_settings.MIN_REP_TO_EDIT_WIKI) or
-        user.reputation >= forum_settings.MIN_REP_TO_EDIT_OTHERS_POSTS or
-        user.is_superuser)
+    if user.is_authenticated():
+        if user.id == post.author_id:
+            return True
+        if post.wiki:
+            if user.reputation >= forum_settings.MIN_REP_TO_EDIT_WIKI:
+                return True
+        if user.reputation >= forum_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
+            return True
+        if user.is_superuser:
+            return True
+    return False
 
 def can_delete_comment(user, comment):
     """Determines if a User can delete the given Comment."""
@@ -98,23 +109,29 @@ def can_follow_url(user):
     return user.reputation >= forum_settings.MIN_REP_TO_DISABLE_URL_NOFOLLOW
 
 def can_accept_answer(user, question, answer):
-    return (user.is_authenticated() and
-        question.author != answer.author and
-        question.author == user) or user.is_superuser
+    if user.is_superuser:
+        return True
+    if user.is_authenticated():
+        if question.author != answer.author and question.author == user:
+            return True
+    return False
 
 # now only support to reopen own question except superuser
 def can_reopen_question(user, question):
-    return (user.is_authenticated() and
-        user.id == question.author_id and
-        user.reputation >= forum_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS) or user.is_superuser
+    if user.is_superuser:
+        return True
+    if user.is_authenticated() and user.id == question.author_id:
+        if user.reputation >= forum_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS:
+            return True
+    return False
 
 def can_delete_post(user, post):
     if user.is_superuser:
         return True
     elif user.is_authenticated() and user == post.author:
-        if isinstance(post,Answer):
+        if isinstance(post, Answer):
             return True
-        elif isinstance(post,Question):
+        elif isinstance(post, Question):
             answers = post.answers.all()
             for answer in answers:
                 if user != answer.author and answer.deleted == False:
@@ -142,9 +159,12 @@ def can_view_user_edit(request_user, target_user):
     return (request_user.is_authenticated() and request_user == target_user)
 
 def can_upload_files(request_user):
-    return (request_user.is_authenticated() and 
-            request_user.reputation >= forum_settings.MIN_REP_TO_UPLOAD_FILES) or \
-           request_user.is_superuser
+    if request_user.is_superuser:
+        return True
+    if request_user.is_authenticated():
+        if request_user.reputation >= forum_settings.MIN_REP_TO_UPLOAD_FILES:
+            return True
+    return False
 
 ###########################################
 ## actions and reputation changes event
@@ -165,48 +185,64 @@ def onFlaggedItem(item, post, user, timestamp=None):
     post.offensive_flag_count = post.offensive_flag_count + 1
     post.save()
 
-    post.author.reputation = calculate_reputation(post.author.reputation,
-                           forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE)
+    post.author.reputation = calculate_reputation(
+                                post.author.reputation,
+                                forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+                            )
     post.author.save()
 
     question = post
     if isinstance(post, Answer):
         question = post.question
 
-    reputation = Repute(user=post.author,
-               negative=forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
-               question=question, reputed_at=timestamp,
-               reputation_type=-4,
-               reputation=post.author.reputation)
+    reputation = Repute(
+                    user=post.author,
+                    negative=forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
+                    question=question, reputed_at=timestamp,
+                    reputation_type=-4,
+                    reputation=post.author.reputation
+                )
     reputation.save()
 
     #todo: These should be updated to work on same revisions.
     if post.offensive_flag_count ==  forum_settings.MIN_FLAGS_TO_HIDE_POST:
-        post.author.reputation = calculate_reputation(post.author.reputation,
-                        forum_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION)
+        post.author.reputation = \
+            calculate_reputation(
+                post.author.reputation,
+                forum_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
+            )
 
         post.author.save()
 
-        reputation = Repute(user=post.author,
-               negative=forum_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
-               question=question,
-               reputed_at=timestamp,
-               reputation_type=-6,
-               reputation=post.author.reputation)
+        reputation = Repute(
+            user=post.author,
+            negative=\
+                forum_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
+            question=question,
+            reputed_at=timestamp,
+            reputation_type=-6,
+            reputation=post.author.reputation
+        )
         reputation.save()
 
     elif post.offensive_flag_count == forum_settings.MIN_FLAGS_TO_DELETE_POST:
-        post.author.reputation = calculate_reputation(post.author.reputation,
-                        forum_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION)
+        post.author.reputation = \
+            calculate_reputation(
+                post.author.reputation,
+                forum_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
+            )
 
         post.author.save()
 
-        reputation = Repute(user=post.author,
-               negative=forum_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
-               question=question,
-               reputed_at=timestamp,
-               reputation_type=-7,
-               reputation=post.author.reputation)
+        reputation = Repute(
+            user=post.author,
+            negative=\
+                forum_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
+            question=question,
+            reputed_at=timestamp,
+            reputation_type=-7,
+            reputation=post.author.reputation
+        )
         reputation.save()
 
         post.deleted = True
@@ -231,9 +267,9 @@ def onAnswerAccept(answer, user, timestamp=None):
     answer.question.save()
 
     answer.author.reputation = calculate_reputation(
-                            answer.author.reputation,
-                            forum_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
-                        )
+                        answer.author.reputation,
+                        forum_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+                    )
     answer.author.save()
     reputation = Repute(user=answer.author,
                positive=forum_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
@@ -264,15 +300,20 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     answer.save()
     answer.question.save()
 
-    answer.author.reputation = calculate_reputation(answer.author.reputation,
-                    forum_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE)
+    answer.author.reputation = calculate_reputation(
+        answer.author.reputation,
+        forum_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE
+    )
     answer.author.save()
-    reputation = Repute(user=answer.author,
-           negative=forum_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE,
-           question=answer.question,
-           reputed_at=timestamp,
-           reputation_type=-2,
-           reputation=answer.author.reputation)
+    reputation = Repute(
+        user=answer.author,
+        negative=\
+         forum_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE,
+        question=answer.question,
+        reputed_at=timestamp,
+        reputation_type=-2,
+        reputation=answer.author.reputation
+    )
     reputation.save()
 
     user.reputation = calculate_reputation(user.reputation,
@@ -330,20 +371,25 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = calculate_reputation(author.reputation,
-                          forum_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION)
+        author.reputation = \
+                calculate_reputation(
+                    author.reputation,
+                    forum_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION
+                )
         author.save()
 
         question = post
         if isinstance(post, Answer):
             question = post.question
 
-        reputation = Repute(user=author,
-                   negative=forum_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION,
-                   question=question,
-                   reputed_at=timestamp,
-                   reputation_type=-8,
-                   reputation=author.reputation)
+        reputation = Repute(
+            user=author,
+            negative=forum_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION,
+            question=question,
+            reputed_at=timestamp,
+            reputation_type=-8,
+            reputation=author.reputation
+        )
         reputation.save()
 
 @transaction.commit_on_success
@@ -358,8 +404,10 @@ def onDownVoted(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = calculate_reputation(author.reputation,
-                                        forum_settings.REP_LOSS_FOR_DOWNVOTING)
+        author.reputation = calculate_reputation(
+                                        author.reputation,
+                                        forum_settings.REP_LOSS_FOR_DOWNVOTING
+                                    )
         author.save()
 
         question = post
@@ -374,8 +422,10 @@ def onDownVoted(vote, post, user, timestamp=None):
                    reputation=author.reputation)
         reputation.save()
 
-        user.reputation = calculate_reputation(user.reputation,
-                                forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE)
+        user.reputation = calculate_reputation(
+                                user.reputation,
+                                forum_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+                            )
         user.save()
 
         reputation = Repute(user=user,
@@ -400,8 +450,10 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = calculate_reputation(author.reputation,
-                          forum_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION)
+        author.reputation = calculate_reputation(
+                author.reputation,
+                forum_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION
+            )
         author.save()
 
         question = post
@@ -409,11 +461,13 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
             question = post.question
 
         reputation = Repute(user=author,
-                   positive=forum_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION,
-                   question=question,
-                   reputed_at=timestamp,
-                   reputation_type=4,
-                   reputation=author.reputation)
+                positive=\
+                    forum_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION,
+                question=question,
+                reputed_at=timestamp,
+                reputation_type=4,
+                reputation=author.reputation
+            )
         reputation.save()
 
         user.reputation = calculate_reputation(user.reputation,
@@ -435,10 +489,13 @@ def onDeleteCanceled(post, user, timestamp=None):
     post.deleted_at = None 
     post.save()
     logging.debug('now restoring something')
-    if isinstance(post,Answer):
-        logging.debug('updated answer count on undelete, have %d' % post.question.answer_count)
+    if isinstance(post, Answer):
+        logging.debug(
+                    'updated answer count on undelete, have %d' \
+                    % post.question.answer_count
+                )
         Question.objects.update_answer_count(post.question)
-    elif isinstance(post,Question):
+    elif isinstance(post, Question):
         for tag in list(post.tags.all()):
             if tag.used_count == 1 and tag.deleted:
                 tag.deleted = False
@@ -467,12 +524,16 @@ def onDeleted(post, user, timestamp=None):
         answers = post.answers.all()
         if user == post.author:
             if len(answers) > 0:
-                msg = _('Your question and all of it\'s answers have been deleted')
+                msg = _(
+                    'Your question and all of it\'s answers have been deleted'
+                    )
             else:
                 msg = _('Your question has been deleted')
         else:
             if len(answers) > 0:
-                msg = _('The question and all of it\'s answers have been deleted')
+                msg = _(
+                    'The question and all of it\'s answers have been deleted'
+                    )
             else:
                 msg = _('The question has been deleted')
         user.message_set.create(message=msg)

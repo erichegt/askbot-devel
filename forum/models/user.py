@@ -1,18 +1,17 @@
-#todo: remove this with Django 1.2
-from django.db import models
-from django.contrib.contenttypes.models import ContentType
-from forum.models import signals
-from django.contrib.contenttypes import generic
-from django.contrib.auth.models import User
 from hashlib import md5
 import string
 from random import Random
-from forum import const
-from forum.utils import functions
 import datetime
 import logging
-
+from django.db import models
+from django.db.backends.dummy.base import IntegrityError
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from forum import const
+from forum.utils import functions
+
 
 class ActivityManager(models.Manager):
     def get_all_origin_posts(self):
@@ -80,8 +79,12 @@ class ActivityManager(models.Manager):
                 mentioned_whom = None,
                 mentioned_at = None,
                 mentioned_in = None,
-                reported = None
+                reported = None,
+                mentioned_at__gt = None,
             ):
+        """extract mention-type activity objects
+        todo: implement better rich field lookups
+        """
 
         kwargs = dict()
 
@@ -90,6 +93,8 @@ class ActivityManager(models.Manager):
         if mentioned_at:
             #todo: handle cases with rich lookups here like __lt
             kwargs['active_at'] = mentioned_at
+        elif mentioned_at__gt:
+            kwargs['active_at__gt'] = mentioned_at__gt
 
         if mentioned_by:
             kwargs['user'] = mentioned_by
@@ -138,6 +143,12 @@ class Activity(models.Model):
     class Meta:
         app_label = 'forum'
         db_table = u'activity'
+
+    def get_mentioned_user(self):
+        assert(self.activity_type == const.TYPE_ACTIVITY_MENTION)
+        user_qs = self.receiving_users.all()
+        assert(len(user_qs) == 1)
+        return user_qs[0]
 
 
 class EmailFeedSettingManager(models.Manager):

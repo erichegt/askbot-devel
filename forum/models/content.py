@@ -1,9 +1,10 @@
-from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
-from django.db import models
-from meta import Comment, Vote, FlaggedItem
 import datetime
 import logging
+from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
+from django.contrib.sitemaps import ping_google
+from django.db import models
+from forum.models.meta import Comment, Vote, FlaggedItem
 
 class Content(models.Model):
     """
@@ -34,6 +35,9 @@ class Content(models.Model):
     comments = generic.GenericRelation(Comment)
     votes = generic.GenericRelation(Vote)
     flagged_items = generic.GenericRelation(FlaggedItem)
+
+    _use_markdown = True
+    _urlize = False
 
     class Meta:
         abstract = True
@@ -80,6 +84,12 @@ class Content(models.Model):
     def get_last_author(self):
         return self.last_edited_by
 
+    def get_time_of_last_edit(self):
+        if self.last_edited_at:
+            return self.last_edited_at
+        else:
+            return self.added_at
+
     def get_author_list(self, include_comments = False, recursive = False, exclude_list = None):
         authors = set()
         authors.update([r.author for r in self.revisions.all()])
@@ -108,7 +118,11 @@ class Content(models.Model):
                 return True
 
         else:
-            raise Exception('unexpected User.tag_filter_setting %' % self.tag_filter_setting)
+            raise ValueError(
+                        'unexpected User.tag_filter_setting %s' \
+                        % self.tag_filter_setting
+                    )
+
     def post_get_last_update_info(self):#todo: rename this subroutine
             when = self.added_at
             who = self.author

@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-#encoding:utf-8
+"""
 #-------------------------------------------------------------------------------
 # Name:        Award badges command
 # Purpose:     This is a command file croning in background process regularly to
@@ -11,16 +10,17 @@
 # Copyright:   (c) Mike 2009
 # Licence:     GPL V2
 #-------------------------------------------------------------------------------
+"""
+#!/usr/bin/env python
+#encoding:utf-8
 
-from datetime import datetime, date
-from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
-from forum.models import Badge, User, Award, Question, Answer
+from forum.models import Badge, User, Award, Question, Answer, Tag
 from forum import const
-from base_command import BaseCommand
+from forum.management.commands.base_command BaseCommand
 
 class Command(BaseCommand):
     def handle_noargs(self, **options):

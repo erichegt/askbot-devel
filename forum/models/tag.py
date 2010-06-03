@@ -1,9 +1,9 @@
-from base import DeletableContent
 from django.db import models
 from django.db import connection, transaction
 from django.contrib.auth.models import User
-
 from django.utils.translation import ugettext as _
+from forum.models.base import DeletableContent
+
 
 class TagManager(models.Manager):
     UPDATE_USED_COUNTS_QUERY = (

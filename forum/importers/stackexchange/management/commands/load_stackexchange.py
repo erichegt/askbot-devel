@@ -11,7 +11,6 @@ import forum.models as askbot
 import django_authopenid.models as askbot_openid
 import forum.importers.stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
-from forum.utils.html import sanitize_html
 from forum.conf import settings as forum_settings
 from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
@@ -797,8 +796,4 @@ class Command(BaseCommand):
                 form.initial['answered_by_me'] = 'd'
             #
             form.save(user=u, save_unbound=True)
-
-            if 'u_auth' in locals():
-                u_auth.user = u
-                u_auth.save()
             USER[se_u.id] = u
