@@ -290,7 +290,7 @@ def get_latest_changed_timestamp():
 
 @register.simple_tag
 def media(url):
-    url = skins.find_media_source(url)
+    url = skins.loaders.find_media_source(url)
     if url:
         url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
         return os.path.normpath(url) + '?v=%d' \
@@ -374,7 +374,7 @@ class BlockMediaUrlNode(template.Node):
         for item in self.items:
             url += item.render(context)
 
-        url = skins.find_media_source(url)
+        url = skins.loaders.find_media_source(url)
         url = prefix + url
         out = os.path.normpath(url) + '?v=%d' % forum_settings.MEDIA_RESOURCE_REVISION
         return out.replace(' ','')

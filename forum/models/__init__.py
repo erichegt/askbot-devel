@@ -15,6 +15,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from forum import const
+from forum.conf import settings as forum_settings
 from forum.models.question import Question, QuestionRevision
 from forum.models.question import QuestionView, AnonymousQuestion
 from forum.models.question import FavoriteQuestion
@@ -25,7 +26,6 @@ from forum.models.user import Activity, ValidationHash, EmailFeedSetting
 from forum.models import signals
 #from user import AuthKeyUserAssociation
 from forum.models.repute import Badge, Award, Repute
-from forum.conf import settings as forum_settings
 from forum import auth
 
 User.add_to_class('is_approved', models.BooleanField(default=False))
@@ -225,7 +225,7 @@ def flag_post(user, post, timestamp=None, cancel=False):
 
 def user_should_receive_instant_notification_about_post(
                                         user, 
-                                        post, 
+                                        post = None, 
                                         newly_mentioned_users = []
                                     ):
     return EmailFeedSetting.objects.exists_match_to_post_and_subscriber(
@@ -252,22 +252,43 @@ User.add_to_class(
         user_should_receive_instant_notification_about_post
     )
 
-def format_instant_notification_body(template, data):
-    """data has the following keys:
-    receiving_user: User instance
-    update_author: Uses instance
-    updated_post: post = Question|Answer|Comment instance
-    update_url: absolute url (including http...) of the post
-    revision_number: latest revision number of the post
-    update_type: type of update from the map in function below
-    related_origin_post: another post related to the updated one, if any
-    admin_email: email address of forum administrator
-    email_settings_url: full url to the page where user can change email settings
+def format_instant_notification_body(
+                                        to_user = None,
+                                        from_user = None,
+                                        post = None,
+                                        update_type = None,
+                                        template = None,
+                                    ):
     """
-    #todo: write this function so that
-    #it can be easily used for testing of the email messages
-    #separately using a script
-    return template.render(Context(data))
+    returns text of the instant notification body
+    that is built when post is updated
+    only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+    are supported
+    """
+
+    site_url = forum_settings.APP_URL
+    origin_post = post.get_origin_post()
+    user_subscriptions_url = site_url + to_user.get_absolute_url() + \
+                            '?sort=email_subscriptions'
+
+    if update_type == 'question_comment':
+        assert(isinstance(post, Comment))
+        assert(isinstance(post.content_object, Question))
+    elif update_type == 'answer_comment':
+        assert(isinstance(post, Comment))
+        assert(isinstance(post.content_object, Answer))
+    elif update_type in ('answer_update', 'new_answer'):
+        assert(isinstance(post, Answer))
+    elif update_type in ('question_update', 'new_question'):
+        assert(isinstance(post, Question))
+
+    update_data = {
+        'update_author_name': from_user.username,
+        'post_url': site_url + post.get_absolute_url(),
+        'origin_post_title': origin_post.title
+        'user_subscriptions_url': user_subscriptions_url
+    }
+    return template.render(Context(update_data))
 
 def send_instant_notifications_about_activity_in_post(
                                                 activity = None,
@@ -277,49 +298,40 @@ def send_instant_notifications_about_activity_in_post(
                                             ):
     """
     function called when posts are updated
+    newly mentioned users are carried through to reduce
+    database hits
     """
 
-    #todo: remove this after migrating to string type for const.TYPE_ACTIVITY...
-    update_type_map = {
-                    const.TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
-                    const.TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
-                    const.TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
-                    const.TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
-                }
+    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+
+    if activity.activity_type in update_type_map:
+        update_type = update_type_map[activity.activity_type]
+    else:
+        return
 
     template = loader.get_template('instant_notification.html')
-    for u in set(receiving_users) | set(newly_mentioned_users):
-        if u.should_receive_instant_notification_about_post(
-                                post,
+    for user in set(receiving_users) | set(newly_mentioned_users):
+
+        if user.should_receive_instant_notification_about_post(
+                                post = post,
                                 newly_mentioned_users = newly_mentioned_users
                             ):
-            
-            #get details about update
-            #todo: is there a way to solve this import issue?
-            #from forum.conf import settings as forum_settings
-            base_url = forum_settings.APP_URL
-            data = {
-                'receiving_user': u,
-                'update_author': activity.user,
-                'updated_post': post,
-                'update_url': base_url + post.get_absolute_url(),
-                'update_type': update_type_map[activity.activity_type],
-                'revision_number': post.get_latest_revision_number(),
-                'related_origin_post': post.get_origin_post(),
-                'admin_email': django_settings.ADMINS[0][1],
-                #todo: clean up url calculation below
-                'email_settings_url': base_url + u.get_profile_url() \
-                                        + '?sort=email_subscriptions'
-            }
             #send update
             subject = _('email update message subject')
             text = format_instant_notification_body(
+                            to_user = user,
+                            from_user = activity.user,
+                            post = post,
+                            update_type = update_type,
+                            template = template,
                         )
-            msg = EmailMessage(subject, text, django_settings.DEFAULT_FROM_EMAIL, [u.email])
-            print 'sending email to %s' % u.email
-            print 'subject: %s' % subject
-            print 'body: %s' % text
-            #msg.send()
+            msg = EmailMessage(
+                        subject,
+                        text,
+                        django_settings.DEFAULT_FROM_EMAIL,
+                        [user.email]
+                    )
+            msg.send()
 
 
 def calculate_gravatar_hash(instance, **kwargs):

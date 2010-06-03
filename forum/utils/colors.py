@@ -13,7 +13,7 @@ def get_counter_colors(count, counter_max=10, empty_bg='white', empty_fg='black'
         blend_factor = 0
     else:
         #todo deal with negative counts properly
-        blend_factor = 1 - math.fabs(float(count)/float(max))
+        blend_factor = 1 - math.fabs(float(count)/float(counter_max))
 
     max_fg_color = Color.NewFromHtml(max_fg)
     fg = Color.NewFromHtml(min_fg).Blend(max_fg_color, blend_factor)

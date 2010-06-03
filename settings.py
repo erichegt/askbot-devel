@@ -13,7 +13,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 
     #below is forum stuff for this tuple
-    'forum.skins.load_template_source',#forum stuff
+    'forum.skins.loaders.load_template_source',#forum stuff
 #     'django.template.loaders.eggs.load_template_source',
 )
 

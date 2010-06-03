@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-23 17:31-0400\n"
+"POT-Creation-Date: 2010-06-03 18:48-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: django_authopenid/forms.py:72 django_authopenid/views.py:133
+#: django_authopenid/forms.py:72 django_authopenid/views.py:134
 msgid "i-names are not supported"
 msgstr ""
 
@@ -144,7 +144,7 @@ msgstr ""
 msgid "openid/"
 msgstr ""
 
-#: django_authopenid/urls.py:43 forum/urls.py:52 forum/urls.py:56
+#: django_authopenid/urls.py:43 forum/urls.py:113 forum/urls.py:120
 msgid "delete/"
 msgstr ""
 
@@ -156,405 +156,401 @@ msgstr ""
 msgid "external-login/signup/"
 msgstr ""
 
-#: django_authopenid/views.py:140
+#: django_authopenid/views.py:141
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr ""
 
-#: django_authopenid/views.py:615
+#: django_authopenid/views.py:616
 msgid "Welcome email subject line"
 msgstr "Welcome to the Q&A forum"
 
-#: django_authopenid/views.py:721
+#: django_authopenid/views.py:722
 msgid "Password changed."
 msgstr ""
 
-#: django_authopenid/views.py:733 django_authopenid/views.py:739
+#: django_authopenid/views.py:734 django_authopenid/views.py:740
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
 "Your email needs to be validated. Please see details <a "
 "id='validate_email_alert' href='%(details_url)s'>here</a>."
 
-#: django_authopenid/views.py:760
+#: django_authopenid/views.py:761
 msgid "Email verification subject line"
 msgstr "Verification Email from Q&A forum"
 
-#: django_authopenid/views.py:851
+#: django_authopenid/views.py:852
 msgid "your email was not changed"
 msgstr ""
 
-#: django_authopenid/views.py:899 django_authopenid/views.py:1057
+#: django_authopenid/views.py:900 django_authopenid/views.py:1058
 #, python-format
 msgid "No OpenID %s found associated in our database"
 msgstr ""
 
-#: django_authopenid/views.py:903 django_authopenid/views.py:1064
+#: django_authopenid/views.py:904 django_authopenid/views.py:1065
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
 msgstr ""
 
-#: django_authopenid/views.py:911
+#: django_authopenid/views.py:912
 msgid "Email Changed."
 msgstr ""
 
-#: django_authopenid/views.py:989
+#: django_authopenid/views.py:990
 msgid "This OpenID is already associated with another account."
 msgstr ""
 
-#: django_authopenid/views.py:994
+#: django_authopenid/views.py:995
 #, python-format
 msgid "OpenID %s is now associated with your account."
 msgstr ""
 
-#: django_authopenid/views.py:1067
+#: django_authopenid/views.py:1068
 msgid "Account deleted."
 msgstr ""
 
-#: django_authopenid/views.py:1119
+#: django_authopenid/views.py:1120
 msgid "Request for new password"
 msgstr ""
 
-#: django_authopenid/views.py:1133
+#: django_authopenid/views.py:1134
 msgid "A new password and the activation link were sent to your email address."
 msgstr ""
 
-#: django_authopenid/views.py:1165
+#: django_authopenid/views.py:1166
 #, python-format
 msgid ""
 "Could not change password. Confirmation key '%s'                is not "
 "registered."
 msgstr ""
 
-#: django_authopenid/views.py:1175
+#: django_authopenid/views.py:1176
 msgid ""
 "Can not change password. User don't exist anymore                 in our "
 "database."
 msgstr ""
 
-#: django_authopenid/views.py:1185
+#: django_authopenid/views.py:1186
 #, python-format
 msgid "Password changed for %s. You may now sign in."
 msgstr ""
 
-#: forum/auth.py:470
+#: forum/auth.py:528
 msgid "Your question and all of it's answers have been deleted"
 msgstr ""
 
-#: forum/auth.py:472
+#: forum/auth.py:531
 msgid "Your question has been deleted"
 msgstr ""
 
-#: forum/auth.py:475
+#: forum/auth.py:535
 msgid "The question and all of it's answers have been deleted"
 msgstr ""
 
-#: forum/auth.py:477
+#: forum/auth.py:538
 msgid "The question has been deleted"
 msgstr ""
 
-#: forum/feed.py:18
+#: forum/feed.py:22
 msgid " - "
 msgstr ""
 
-#: forum/feed.py:18
+#: forum/feed.py:22
 msgid "latest questions"
 msgstr ""
 
-#: forum/forms.py:24 forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/forms.py:23 forum/skins/default/templates/answer_edit_tips.html:35
 #: forum/skins/default/templates/answer_edit_tips.html:39
 #: forum/skins/default/templates/question_edit_tips.html:32
 #: forum/skins/default/templates/question_edit_tips.html:37
 msgid "title"
 msgstr ""
 
-#: forum/forms.py:25
+#: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
 msgstr ""
 
-#: forum/forms.py:30
+#: forum/forms.py:29
 msgid "title must be > 10 characters"
 msgstr ""
 
-#: forum/forms.py:39
+#: forum/forms.py:38
 msgid "content"
 msgstr ""
 
-#: forum/forms.py:45
+#: forum/forms.py:44
 msgid "question content must be > 10 characters"
 msgstr ""
 
-#: forum/forms.py:54 forum/skins/default/templates/header.html:28
+#: forum/forms.py:53 forum/skins/default/templates/header.html:28
 msgid "tags"
 msgstr ""
 
-#: forum/forms.py:56
+#: forum/forms.py:55
 msgid ""
 "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
 
-#: forum/forms.py:63 forum/skins/default/templates/question_retag.html:39
+#: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
 msgid "tags are required"
 msgstr ""
 
-#: forum/forms.py:72
+#: forum/forms.py:71
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/forms.py:81
+#: forum/forms.py:80
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/forms.py:89
+#: forum/forms.py:88
 msgid "use-these-chars-in-tags"
 msgstr ""
 
-#: forum/forms.py:99
+#: forum/forms.py:98
 #: forum/skins/default/templates/post_contributor_info.html:7
 #: forum/skins/default/templates/question_summary_list_roll.html:26
 #: forum/skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
 msgstr ""
 
-#: forum/forms.py:100
+#: forum/forms.py:99
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
 
-#: forum/forms.py:116
+#: forum/forms.py:115
 msgid "update summary:"
 msgstr ""
 
-#: forum/forms.py:117
+#: forum/forms.py:116
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
 
-#: forum/forms.py:120
+#: forum/forms.py:119
 msgid "Automatically accept user's contributions for the email updates"
 msgstr ""
 
-#: forum/forms.py:211
+#: forum/forms.py:210
 msgid "Your name:"
 msgstr ""
 
-#: forum/forms.py:212
+#: forum/forms.py:211
 msgid "Email (not shared with anyone):"
 msgstr ""
 
-#: forum/forms.py:213
+#: forum/forms.py:212
 msgid "Your message:"
 msgstr ""
 
-#: forum/forms.py:296
+#: forum/forms.py:295
 msgid "this email does not have to be linked to gravatar"
 msgstr ""
 
-#: forum/forms.py:298
+#: forum/forms.py:297
 msgid "Screen name"
 msgstr ""
 
-#: forum/forms.py:299
+#: forum/forms.py:298
 msgid "Real name"
 msgstr ""
 
-#: forum/forms.py:300
+#: forum/forms.py:299
 msgid "Website"
 msgstr ""
 
-#: forum/forms.py:301
+#: forum/forms.py:300
 msgid "Location"
 msgstr ""
 
-#: forum/forms.py:302
+#: forum/forms.py:301
 msgid "Date of birth"
 msgstr ""
 
-#: forum/forms.py:302
+#: forum/forms.py:301
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr ""
 
-#: forum/forms.py:303 forum/skins/default/templates/account_settings.html:21
+#: forum/forms.py:302 forum/skins/default/templates/account_settings.html:21
 #: forum/skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
 msgstr ""
 
-#: forum/forms.py:334 forum/forms.py:335
+#: forum/forms.py:333 forum/forms.py:334
 msgid "this email has already been registered, please use another one"
 msgstr ""
 
-#: forum/forms.py:341
+#: forum/forms.py:340
 msgid "Choose email tag filter"
 msgstr ""
 
-#: forum/forms.py:380
+#: forum/forms.py:379
 msgid "Asked by me"
 msgstr ""
 
-#: forum/forms.py:383
+#: forum/forms.py:382
 msgid "Answered by me"
 msgstr ""
 
-#: forum/forms.py:386
+#: forum/forms.py:385
 msgid "Individually selected"
 msgstr ""
 
-#: forum/forms.py:389
+#: forum/forms.py:388
 msgid "Entire forum (tag filtered)"
 msgstr ""
 
-#: forum/forms.py:393
+#: forum/forms.py:392
 msgid "Comments and posts mentioning me"
 msgstr ""
 
-#: forum/forms.py:449
+#: forum/forms.py:450
 msgid "okay, let's try!"
 msgstr ""
 
-#: forum/forms.py:450
+#: forum/forms.py:451
 msgid "no community email please, thanks"
 msgstr "no askbot email please, thanks"
 
-#: forum/forms.py:454
+#: forum/forms.py:455
 msgid "please choose one of the options above"
 msgstr ""
 
-#: forum/urls.py:28
+#: forum/urls.py:37
 msgid "upfiles/"
 msgstr ""
 
-#: forum/urls.py:33
+#: forum/urls.py:42
 msgid "about/"
 msgstr ""
 
-#: forum/urls.py:34 forum/conf/site_settings.py:76
+#: forum/urls.py:43 forum/conf/site_settings.py:75
 msgid "faq/"
 msgstr ""
 
-#: forum/urls.py:35
+#: forum/urls.py:44
 msgid "privacy/"
 msgstr ""
 
-#: forum/urls.py:36
+#: forum/urls.py:45
 msgid "logout/"
 msgstr ""
 
-#: forum/urls.py:37 forum/urls.py:38 forum/urls.py:39 forum/urls.py:56
+#: forum/urls.py:47 forum/urls.py:52 forum/urls.py:57 forum/urls.py:120
 msgid "answers/"
 msgstr ""
 
-#: forum/urls.py:37 forum/urls.py:49 forum/urls.py:52 forum/urls.py:56
+#: forum/urls.py:47 forum/urls.py:102 forum/urls.py:113 forum/urls.py:120
 msgid "comments/"
 msgstr ""
 
-#: forum/urls.py:38 forum/urls.py:43 forum/urls.py:78
+#: forum/urls.py:52 forum/urls.py:72 forum/urls.py:166
 #: forum/skins/default/templates/user_info.html:47
 msgid "edit/"
 msgstr ""
 
-#: forum/urls.py:39 forum/urls.py:48
+#: forum/urls.py:57 forum/urls.py:97
 msgid "revisions/"
 msgstr ""
 
-#: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:43
-#: forum/urls.py:44 forum/urls.py:45 forum/urls.py:46 forum/urls.py:47
-#: forum/urls.py:48 forum/urls.py:49 forum/urls.py:52
+#: forum/urls.py:62 forum/urls.py:67 forum/urls.py:72 forum/urls.py:77
+#: forum/urls.py:82 forum/urls.py:87 forum/urls.py:92 forum/urls.py:97
+#: forum/urls.py:102 forum/urls.py:113
 msgid "questions/"
 msgstr ""
 
-#: forum/urls.py:41 forum_modules/books/urls.py:8
+#: forum/urls.py:67 forum_modules/books/urls.py:8
 msgid "ask/"
 msgstr ""
 
-#: forum/urls.py:42
-msgid "unanswered/"
-msgstr ""
-
-#: forum/urls.py:44
+#: forum/urls.py:77
 msgid "close/"
 msgstr ""
 
-#: forum/urls.py:45
+#: forum/urls.py:82
 msgid "reopen/"
 msgstr ""
 
-#: forum/urls.py:46
+#: forum/urls.py:87
 msgid "answer/"
 msgstr ""
 
-#: forum/urls.py:47
+#: forum/urls.py:92
 msgid "vote/"
 msgstr ""
 
-#: forum/urls.py:50
+#: forum/urls.py:107
 msgid "command/"
 msgstr ""
 
-#: forum/urls.py:60 forum/views/readers.py:264
+#: forum/urls.py:127 forum/views/readers.py:256
 msgid "question/"
 msgstr ""
 
-#: forum/urls.py:61 forum/urls.py:62
+#: forum/urls.py:132
 msgid "tags/"
 msgstr ""
 
-#: forum/urls.py:64 forum/urls.py:68
+#: forum/urls.py:137 forum/urls.py:143
 msgid "mark-tag/"
 msgstr ""
 
-#: forum/urls.py:64
+#: forum/urls.py:137
 msgid "interesting/"
 msgstr ""
 
-#: forum/urls.py:68
+#: forum/urls.py:143
 msgid "ignored/"
 msgstr ""
 
-#: forum/urls.py:72
+#: forum/urls.py:149
 msgid "unmark-tag/"
 msgstr ""
 
-#: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
+#: forum/urls.py:155 forum/urls.py:166 forum/urls.py:171
 msgid "users/"
 msgstr ""
 
-#: forum/urls.py:77
+#: forum/urls.py:160
 msgid "moderate-user/"
 msgstr ""
 
-#: forum/urls.py:80 forum/urls.py:81
+#: forum/urls.py:176 forum/urls.py:181
 msgid "badges/"
 msgstr ""
 
-#: forum/urls.py:82
+#: forum/urls.py:186
 msgid "messages/"
 msgstr ""
 
-#: forum/urls.py:82
+#: forum/urls.py:186
 msgid "markread/"
 msgstr ""
 
-#: forum/urls.py:85
+#: forum/urls.py:197
 msgid "upload/"
 msgstr ""
 
-#: forum/urls.py:86
+#: forum/urls.py:198
 msgid "search/"
 msgstr ""
 
-#: forum/urls.py:87
+#: forum/urls.py:199
 msgid "feedback/"
 msgstr ""
 
-#: forum/urls.py:88 forum/urls.py:89
+#: forum/urls.py:200
 msgid "account/"
 msgstr ""
 
@@ -827,53 +823,53 @@ msgstr ""
 msgid "Loss for post owner when upvote is canceled"
 msgstr ""
 
-#: forum/conf/site_settings.py:14
+#: forum/conf/site_settings.py:13
 msgid "Q&A forum website parameters and urls"
 msgstr ""
 
-#: forum/conf/site_settings.py:22
+#: forum/conf/site_settings.py:21
 msgid "Site title for the Q&A forum"
 msgstr ""
 
-#: forum/conf/site_settings.py:31
+#: forum/conf/site_settings.py:30
 msgid "Comma separated list of Q&A site keywords"
 msgstr ""
 
-#: forum/conf/site_settings.py:40
+#: forum/conf/site_settings.py:39
 msgid "Copyright message to show in the footer"
 msgstr ""
 
-#: forum/conf/site_settings.py:49
+#: forum/conf/site_settings.py:48
 msgid "Site description for the search engines"
 msgstr ""
 
-#: forum/conf/site_settings.py:57
+#: forum/conf/site_settings.py:56
 msgid "Askbot"
 msgstr ""
 
-#: forum/conf/site_settings.py:59
+#: forum/conf/site_settings.py:58
 msgid "Short name for your Q&A forum"
 msgstr ""
 
-#: forum/conf/site_settings.py:68
+#: forum/conf/site_settings.py:67
 msgid "Base URL for your Q&A forum, must start with http or https"
 msgstr ""
 
-#: forum/conf/site_settings.py:78
+#: forum/conf/site_settings.py:77
 msgid "Link shown in the greeting message shown to the anonymous user"
 msgstr ""
 
-#: forum/conf/site_settings.py:79
+#: forum/conf/site_settings.py:78
 msgid ""
 "If you change this url from the default - then you will also probably want "
 "to adjust translation of the following string: "
 msgstr ""
 
-#: forum/conf/site_settings.py:92
+#: forum/conf/site_settings.py:91
 msgid "Feedback site URL"
 msgstr ""
 
-#: forum/conf/site_settings.py:93
+#: forum/conf/site_settings.py:92
 msgid "If left empty, a simple internal feedback form will be used instead"
 msgstr ""
 
@@ -1141,144 +1137,144 @@ msgstr ""
 msgid "favorite"
 msgstr ""
 
-#: forum/const/__init__.py:61
+#: forum/const/__init__.py:67
 msgid "Question has no answers"
 msgstr ""
 
-#: forum/const/__init__.py:62
+#: forum/const/__init__.py:68
 msgid "Question has no accepted answers"
 msgstr ""
 
-#: forum/const/__init__.py:100
+#: forum/const/__init__.py:106
 msgid "question"
 msgstr ""
 
-#: forum/const/__init__.py:101 forum/skins/default/templates/book.html:110
+#: forum/const/__init__.py:107 forum/skins/default/templates/book.html:110
 msgid "answer"
 msgstr ""
 
-#: forum/const/__init__.py:102
+#: forum/const/__init__.py:108
 msgid "commented question"
 msgstr ""
 
-#: forum/const/__init__.py:103
+#: forum/const/__init__.py:109
 msgid "commented answer"
 msgstr ""
 
-#: forum/const/__init__.py:104
+#: forum/const/__init__.py:110
 msgid "edited question"
 msgstr ""
 
-#: forum/const/__init__.py:105
+#: forum/const/__init__.py:111
 msgid "edited answer"
 msgstr ""
 
-#: forum/const/__init__.py:106
+#: forum/const/__init__.py:112
 msgid "received award"
 msgstr "received badge"
 
-#: forum/const/__init__.py:107
+#: forum/const/__init__.py:113
 msgid "marked best answer"
 msgstr ""
 
-#: forum/const/__init__.py:108
+#: forum/const/__init__.py:114
 msgid "upvoted"
 msgstr ""
 
-#: forum/const/__init__.py:109
+#: forum/const/__init__.py:115
 msgid "downvoted"
 msgstr ""
 
-#: forum/const/__init__.py:110
+#: forum/const/__init__.py:116
 msgid "canceled vote"
 msgstr ""
 
-#: forum/const/__init__.py:111
+#: forum/const/__init__.py:117
 msgid "deleted question"
 msgstr ""
 
-#: forum/const/__init__.py:112
+#: forum/const/__init__.py:118
 msgid "deleted answer"
 msgstr ""
 
-#: forum/const/__init__.py:113
+#: forum/const/__init__.py:119
 msgid "marked offensive"
 msgstr ""
 
-#: forum/const/__init__.py:114
+#: forum/const/__init__.py:120
 msgid "updated tags"
 msgstr ""
 
-#: forum/const/__init__.py:115
+#: forum/const/__init__.py:121
 msgid "selected favorite"
 msgstr ""
 
-#: forum/const/__init__.py:116
+#: forum/const/__init__.py:122
 msgid "completed user profile"
 msgstr ""
 
-#: forum/const/__init__.py:117
+#: forum/const/__init__.py:123
 msgid "email update sent to user"
 msgstr ""
 
-#: forum/const/__init__.py:118
+#: forum/const/__init__.py:124
 msgid "mentioned in the post"
 msgstr ""
 
-#: forum/const/__init__.py:148
+#: forum/const/__init__.py:171
 msgid "question_answered"
 msgstr "answered question"
 
-#: forum/const/__init__.py:149
+#: forum/const/__init__.py:172
 msgid "question_commented"
 msgstr "commented question"
 
-#: forum/const/__init__.py:150
+#: forum/const/__init__.py:173
 msgid "answer_commented"
 msgstr ""
 
-#: forum/const/__init__.py:151
+#: forum/const/__init__.py:174
 msgid "answer_accepted"
 msgstr ""
 
-#: forum/const/__init__.py:155
+#: forum/const/__init__.py:178
 msgid "[closed]"
 msgstr ""
 
-#: forum/const/__init__.py:156
+#: forum/const/__init__.py:179
 msgid "[deleted]"
 msgstr ""
 
-#: forum/const/__init__.py:157 forum/views/readers.py:395
-#: forum/views/readers.py:416
+#: forum/const/__init__.py:180 forum/views/readers.py:387
+#: forum/views/readers.py:408
 msgid "initial version"
 msgstr ""
 
-#: forum/const/__init__.py:158
+#: forum/const/__init__.py:181
 msgid "retagged"
 msgstr ""
 
-#: forum/const/__init__.py:163
+#: forum/const/__init__.py:186
 msgid "exclude ignored tags"
 msgstr ""
 
-#: forum/const/__init__.py:164
+#: forum/const/__init__.py:187
 msgid "allow only selected tags"
 msgstr ""
 
-#: forum/const/__init__.py:168
+#: forum/const/__init__.py:191
 msgid "instantly"
 msgstr ""
 
-#: forum/const/__init__.py:169
+#: forum/const/__init__.py:192
 msgid "daily"
 msgstr ""
 
-#: forum/const/__init__.py:170
+#: forum/const/__init__.py:193
 msgid "weekly"
 msgstr ""
 
-#: forum/const/__init__.py:171
+#: forum/const/__init__.py:194
 msgid "no email"
 msgstr ""
 
@@ -1291,11 +1287,12 @@ msgstr ""
 msgid "Congratulations, you are now an Administrator"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:379
+#: forum/management/commands/send_email_alerts.py:380
+#: forum/models/__init__.py:320
 msgid "email update message subject"
 msgstr "news from Q&A forum"
 
-#: forum/management/commands/send_email_alerts.py:381
+#: forum/management/commands/send_email_alerts.py:382
 #, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
@@ -1306,42 +1303,42 @@ msgstr[1] ""
 "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
 "the Q&A forum:</p>"
 
-#: forum/management/commands/send_email_alerts.py:398
+#: forum/management/commands/send_email_alerts.py:399
 msgid "new question"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:415
+#: forum/management/commands/send_email_alerts.py:416
 msgid ""
 "Please visit the forum and see what's new! Could you spread the word about "
 "it - can somebody you know help answering those questions or benefit from "
 "posting one?"
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:427
+#: forum/management/commands/send_email_alerts.py:428
 msgid ""
 "Your most frequent subscription setting is 'daily' on selected questions. If "
 "you are receiving more than one email per dayplease tell about this issue to "
 "the forum administrator."
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:433
+#: forum/management/commands/send_email_alerts.py:434
 msgid ""
 "Your most frequent subscription setting is 'weekly' if you are receiving "
 "this email more than once a week please report this issue to the forum "
 "administrator."
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:439
+#: forum/management/commands/send_email_alerts.py:440
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
 msgstr ""
 
-#: forum/management/commands/send_email_alerts.py:454
+#: forum/management/commands/send_email_alerts.py:455
 #, python-format
 msgid ""
-"go to %(link)s to change frequency of email updates or %(email)s "
-"administrator"
+"go to %(email_settings_link)s to change frequency of email updates or %"
+"(admin_email)s administrator"
 msgstr ""
 "<p>Please remember that you can always <a href='%(link)s'>adjust</a> "
 "frequency of the email updates or turn them off entirely.<br/>If you believe "
@@ -1781,84 +1778,84 @@ msgstr ""
 msgid "Created a tag used by 50 questions"
 msgstr ""
 
-#: forum/models/question.py:517
+#: forum/models/question.py:531
 #, python-format
 msgid "%(author)s modified the question"
 msgstr ""
 
-#: forum/models/question.py:521
+#: forum/models/question.py:535
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: forum/models/question.py:526
+#: forum/models/question.py:540
 #, python-format
 msgid "%(people)s commented the question"
 msgstr ""
 
-#: forum/models/question.py:531
+#: forum/models/question.py:545
 #, python-format
 msgid "%(people)s commented answers"
 msgstr ""
 
-#: forum/models/question.py:533
+#: forum/models/question.py:547
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr ""
 
-#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
+#: forum/models/repute.py:16 forum/skins/default/templates/badges.html:54
 msgid "gold"
 msgstr ""
 
-#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
+#: forum/models/repute.py:17 forum/skins/default/templates/badges.html:62
 msgid "silver"
 msgstr ""
 
-#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
+#: forum/models/repute.py:18 forum/skins/default/templates/badges.html:69
 msgid "bronze"
 msgstr ""
 
-#: forum/models/tag.py:81
+#: forum/models/tag.py:84
 msgid "interesting"
 msgstr ""
 
-#: forum/models/tag.py:81
+#: forum/models/tag.py:84
 msgid "ignored"
 msgstr ""
 
-#: forum/models/user.py:217
+#: forum/models/user.py:212
 msgid "Entire forum"
 msgstr ""
 
-#: forum/models/user.py:218
+#: forum/models/user.py:213
 msgid "Questions that I asked"
 msgstr ""
 
-#: forum/models/user.py:219
+#: forum/models/user.py:214
 msgid "Questions that I answered"
 msgstr ""
 
-#: forum/models/user.py:220
+#: forum/models/user.py:215
 msgid "Individually selected questions"
 msgstr ""
 
-#: forum/models/user.py:221
+#: forum/models/user.py:216
 msgid "Mentions and comment responses"
 msgstr ""
 
-#: forum/models/user.py:224
+#: forum/models/user.py:219
 msgid "Instantly"
 msgstr ""
 
-#: forum/models/user.py:225
+#: forum/models/user.py:220
 msgid "Daily"
 msgstr ""
 
-#: forum/models/user.py:226
+#: forum/models/user.py:221
 msgid "Weekly"
 msgstr ""
 
-#: forum/models/user.py:227
+#: forum/models/user.py:222
 msgid "No email"
 msgstr ""
 
@@ -2696,7 +2693,7 @@ msgid "users"
 msgstr "people"
 
 #: forum/skins/default/templates/header.html:30
-#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:207
+#: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
 msgid "badges"
 msgstr ""
 
@@ -2708,33 +2705,70 @@ msgstr ""
 msgid "search"
 msgstr ""
 
-#: forum/skins/default/templates/instant_notification.html:16
+#: forum/skins/default/templates/instant_notification.html:3
 #, python-format
-msgid "Dear %(user_name)s,"
+msgid "<p>Dear %(receiving_user_name)s,</p>"
 msgstr ""
 
-#: forum/skins/default/templates/instant_notification.html:20
-#, python-format
-msgid ""
-"\n"
-"%(author_link)s has left you a <a href=\"%(update_url|safe)s\">comment</a>\n"
-"related to question <a href=\"%(origin_post_url|safe)s\">%(origin_post_title)"
-"s</a>\n"
-msgstr ""
-
-#: forum/skins/default/templates/instant_notification.html:27
+#: forum/skins/default/templates/instant_notification.html:6
 #, python-format
 msgid ""
 "\n"
-"%(author_link)s has left a new <a href=\"%(update_url|safe)s\">comment</a>\n"
-"related to question <a href=\"%(origin_post_url|safe)s\">%(origin_post_title)"
-"s</a>\n"
+"<p>%(update_author_name)s left a <a href=\"%%(post_url)s\">new comment</a>\n"
+"for question \"%(origin_post_title)s\"</p>\n"
 msgstr ""
 
-#: forum/skins/default/templates/instant_notification.html:35
+#: forum/skins/default/templates/instant_notification.html:12
+#, python-format
 msgid ""
 "\n"
+"<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a>\n"
+" for an answer to question \"%(origin_post_title)s\"</p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:18
+#, python-format
+msgid ""
 "\n"
+"<p>%(update_author_name)s answered a question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:24
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s asked a question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:29
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s updated an answer to the question\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:34
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s updated a question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:40
+#, python-format
+msgid ""
+"\n"
+"<p>Please note - you can easily <a href=\"%(user_subscriptions_url)s"
+"\">change</a>\n"
+"how often you receive these notifications.</p>\n"
+msgstr ""
+
+#: forum/skins/default/templates/instant_notification.html:44
+msgid "<p>Sincerely,<br/>Forum Administrator</p>"
 msgstr ""
 
 #: forum/skins/default/templates/logout.html:6
@@ -3524,7 +3558,7 @@ msgid "change picture"
 msgstr ""
 
 #: forum/skins/default/templates/user_info.html:25
-#: forum/skins/default/templates/users.html:26 forum/views/users.py:948
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:959
 msgid "reputation"
 msgstr "karma"
 
@@ -3658,19 +3692,19 @@ msgstr[1] ""
 msgid "User profile"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:922
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:933
 msgid "overview"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:930
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:941
 msgid "recent activity"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:940
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:951
 msgid "comments and answers to others questions"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:939
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:950
 msgid "responses"
 msgstr ""
 
@@ -3682,11 +3716,11 @@ msgstr "Graph of user karma"
 msgid "reputation history"
 msgstr "karma history"
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:966
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:977
 msgid "user vote record"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:965
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:976
 msgid "casted votes"
 msgstr "votes"
 
@@ -3698,11 +3732,11 @@ msgstr ""
 msgid "favorites"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:975
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:986
 msgid "email subscription settings"
 msgstr ""
 
-#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:974
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:985
 msgid "email subscriptions"
 msgstr "subscriptions"
 
@@ -4295,31 +4329,31 @@ msgstr ""
 msgid "no items in counter"
 msgstr "no"
 
-#: forum/templatetags/extra_tags.py:54
+#: forum/templatetags/extra_tags.py:53
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:179 forum/templatetags/extra_tags.py:206
+#: forum/templatetags/extra_tags.py:178 forum/templatetags/extra_tags.py:205
 msgid "reputation points"
 msgstr "karma"
 
-#: forum/templatetags/extra_tags.py:266
+#: forum/templatetags/extra_tags.py:265
 msgid "2 days ago"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:268
+#: forum/templatetags/extra_tags.py:267
 msgid "yesterday"
 msgstr ""
 
-#: forum/templatetags/extra_tags.py:270
+#: forum/templatetags/extra_tags.py:269
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forum/templatetags/extra_tags.py:272
+#: forum/templatetags/extra_tags.py:271
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -4334,74 +4368,74 @@ msgstr ""
 msgid "choose a username"
 msgstr "Choose screen name"
 
-#: forum/utils/forms.py:51
+#: forum/utils/forms.py:52
 msgid "user name is required"
 msgstr ""
 
-#: forum/utils/forms.py:52
+#: forum/utils/forms.py:53
 msgid "sorry, this name is taken, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:53
+#: forum/utils/forms.py:54
 msgid "sorry, this name is not allowed, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:54
+#: forum/utils/forms.py:55
 msgid "sorry, there is no user with this name"
 msgstr ""
 
-#: forum/utils/forms.py:55
+#: forum/utils/forms.py:56
 msgid "sorry, we have a serious error - user name is taken by several users"
 msgstr ""
 
-#: forum/utils/forms.py:56
+#: forum/utils/forms.py:57
 msgid "user name can only consist of letters, empty space and underscore"
 msgstr ""
 
-#: forum/utils/forms.py:112
+#: forum/utils/forms.py:118
 msgid "your email address"
 msgstr "Your email <i>(never shared)</i>"
 
-#: forum/utils/forms.py:113
+#: forum/utils/forms.py:119
 msgid "email address is required"
 msgstr ""
 
-#: forum/utils/forms.py:114
+#: forum/utils/forms.py:120
 msgid "please enter a valid email address"
 msgstr ""
 
-#: forum/utils/forms.py:115
+#: forum/utils/forms.py:121
 msgid "this email is already used by someone else, please choose another"
 msgstr ""
 
-#: forum/utils/forms.py:143
+#: forum/utils/forms.py:149
 msgid "choose password"
 msgstr "Password"
 
-#: forum/utils/forms.py:144
+#: forum/utils/forms.py:150
 msgid "password is required"
 msgstr ""
 
-#: forum/utils/forms.py:147
+#: forum/utils/forms.py:153
 msgid "retype password"
 msgstr "Password <i>(please retype)</i>"
 
-#: forum/utils/forms.py:148
+#: forum/utils/forms.py:154
 msgid "please, retype your password"
 msgstr ""
 
-#: forum/utils/forms.py:149
+#: forum/utils/forms.py:155
 msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
 
-#: forum/views/commands.py:217
+#: forum/views/commands.py:218
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href='%(details_url)s'>more details here</a>"
 
-#: forum/views/commands.py:225
+#: forum/views/commands.py:226
 msgid "email update frequency has been set to daily"
 msgstr ""
 
@@ -4417,76 +4451,76 @@ msgstr ""
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: forum/views/users.py:882 forum/views/users.py:886
+#: forum/views/users.py:893 forum/views/users.py:897
 msgid "changes saved"
 msgstr ""
 
-#: forum/views/users.py:892
+#: forum/views/users.py:903
 msgid "email updates canceled"
 msgstr ""
 
-#: forum/views/users.py:923
+#: forum/views/users.py:934
 msgid "user profile"
 msgstr ""
 
-#: forum/views/users.py:924
+#: forum/views/users.py:935
 msgid "user profile overview"
 msgstr ""
 
-#: forum/views/users.py:931
+#: forum/views/users.py:942
 msgid "recent user activity"
 msgstr ""
 
-#: forum/views/users.py:932
+#: forum/views/users.py:943
 msgid "profile - recent activity"
 msgstr ""
 
-#: forum/views/users.py:941
+#: forum/views/users.py:952
 msgid "profile - responses"
 msgstr ""
 
-#: forum/views/users.py:949
+#: forum/views/users.py:960
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: forum/views/users.py:950
+#: forum/views/users.py:961
 msgid "profile - user reputation"
 msgstr "Profile - User's Karma"
 
-#: forum/views/users.py:956
+#: forum/views/users.py:967
 msgid "favorite questions"
 msgstr ""
 
-#: forum/views/users.py:957
+#: forum/views/users.py:968
 msgid "users favorite questions"
 msgstr ""
 
-#: forum/views/users.py:958
+#: forum/views/users.py:969
 msgid "profile - favorite questions"
 msgstr ""
 
-#: forum/views/users.py:967
+#: forum/views/users.py:978
 msgid "profile - votes"
 msgstr ""
 
-#: forum/views/users.py:976
+#: forum/views/users.py:987
 msgid "profile - email subscriptions"
 msgstr ""
 
-#: forum/views/writers.py:69
+#: forum/views/writers.py:67
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "sorry, file uploading requires karma >60"
 
-#: forum/views/writers.py:71
+#: forum/views/writers.py:69
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 
-#: forum/views/writers.py:73
+#: forum/views/writers.py:71
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr ""
 
-#: forum/views/writers.py:75
+#: forum/views/writers.py:73
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
@@ -4644,6 +4678,21 @@ msgstr ""
 msgid "Uncollapse all"
 msgstr ""
 
+#, fuzzy
+#~ msgid "user_subscriptions_url"
+#~ msgstr "subscriptions"
+
+#, fuzzy
+#~ msgid ""
+#~ "go to %(email_settings_url)s to change frequency of email updates or %"
+#~ "(admin_email)s administrator"
+#~ msgstr ""
+#~ "<p>Please remember that you can always <a href='%(link)s'>adjust</a> "
+#~ "frequency of the email updates or turn them off entirely.<br/>If you "
+#~ "believe that this message was sent in an error, please email about it the "
+#~ "forum administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly "
+#~ "Q&A forum server.</p>"
+
 #~ msgid "%(q_num)s question found"
 #~ msgid_plural "%(q_num)s questions found"
 #~ msgstr[0] "One question found"
@@ -4735,13 +4784,6 @@ msgstr ""
 
 #~ msgid "avatar, see %(gravatar_faq_url)s"
 #~ msgstr "<a href='%(gravatar_faq_url)s'>gravatar</a>"
-
-#~ msgid ""
-#~ "Sincerely,<br />\n"
-#~ "    Forum Administrator"
-#~ msgstr ""
-#~ "Sincerely,\n"
-#~ "Q&A Forum Administrator"
 
 #~ msgid ""
 #~ "\n"
