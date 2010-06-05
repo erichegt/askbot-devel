@@ -16,6 +16,13 @@ from forum import const
 
 DEBUG_THIS_COMMAND = False
 
+def get_all_origin_posts(mentions):
+    origin_posts = set()
+    for mention in mentions:
+        post = mention.content_object
+        origin_posts.add(post.get_origin_post())
+    return list(origin_posts)
+
 #todo: refactor this as class
 def extend_question_list(src, dst, limit=False, add_mention=False):
     """src is a query set with questions
@@ -244,7 +251,8 @@ class Command(NoArgsCommand):
                                                     mentioned_whom = user
                                                 )
 
-                q_mentions_id = [q.id for q in mentions.get_all_origin_posts()]
+                mention_posts = get_all_origin_posts(mentions)
+                q_mentions_id = [q.id for q in mention_posts]
 
                 q_mentions_A = Q_set_A.filter(id__in = q_mentions_id)
                 q_mentions_A.cutoff_time = cutoff_time
@@ -269,7 +277,7 @@ class Command(NoArgsCommand):
             extend_question_list(q_all_B, q_list, limit=True)
 
         ctype = ContentType.objects.get_for_model(Question)
-        EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT
+        EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
 
         #up to this point we still don't know if emails about
         #collected questions were sent recently

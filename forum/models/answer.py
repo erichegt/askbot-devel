@@ -94,6 +94,15 @@ class Answer(content.Content, DeletableContent):
     save = save_post
     parse = parse_post_text
 
+    def get_updated_activity_data(self, created = False):
+        #todo: simplify this to always return latest revision for the second
+        #part
+        if created:
+            return const.TYPE_ACTIVITY_ANSWER, self
+        else:
+            latest_revision = self.get_latest_revision()
+            return const.TYPE_ACTIVITY_UPDATE_ANSWER, latest_revision
+
     def apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
 
         if text is None:
@@ -141,6 +150,31 @@ class Answer(content.Content, DeletableContent):
 
     def get_origin_post(self):
         return self.question
+
+    def get_response_receivers(self, exclude_list = None):
+        """get list of users interested in this response
+        update based on their participation in the question
+        activity
+
+        exclude_list is required and normally should contain
+        author of the updated so that he/she is not notified of
+        the response
+        """
+        assert(exclude_list is not None)
+        receiving_users = set()
+        receiving_users.update(
+                            self.get_author_list(
+                                include_comments = True 
+                            )
+                        )
+        receiving_users.update(
+                            self.question.get_author_list(
+                                    include_comments = True
+                                )
+                        )
+        receiving_users -= set(exclude_list)
+
+        return list(receiving_users)
 
     def get_user_vote(self, user):
         if user.__class__.__name__ == "AnonymousUser":

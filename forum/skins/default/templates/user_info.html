@@ -4,9 +4,6 @@
 {% load humanize %}
 {% load smart_if %}
 {% load i18n %}
-<div id="subheader" class="headUser">
-    <a href="{% url user_profile view_user.id view_user.username|slugify %}">{{view_user.username}}</a>
-</div>
 <table class="user-info-table">
     <tr>
         <td width="180" style="vertical-align:middle;text-align:center;">

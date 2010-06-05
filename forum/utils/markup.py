@@ -55,10 +55,11 @@ def mentionize_text(text, anticipated_authors):
     output = ''
     mentioned_authors = list()
     while '@' in text:
-        #the purpose of this loop is to convert any occurance of '@mention ' syntax
-        #to user account links leading space is required unless @ is the first 
-        #character in whole text, also, either a punctuation or a ' ' char is required
-        #after the name
+        #the purpose of this loop is to convert any occurance of 
+        #'@mention ' syntax
+        #to user account links leading space is required unless @ is the first
+        #character in whole text, also, either a punctuation or 
+        #a ' ' char is required after the name
         pos = text.index('@')
 
         #save stuff before @mention to the output
@@ -88,7 +89,8 @@ def mentionize_text(text, anticipated_authors):
                     output += '@'
 
             else:
-                #if there isn't, i.e. text goes like something@mention, do not look up people
+                #if there isn't, i.e. text goes like something@mention,
+                #do not look up people
                 output += '@'
                 text = text[pos+1:]
         else:

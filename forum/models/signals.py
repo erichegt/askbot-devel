@@ -17,6 +17,7 @@ user_logged_in = django.dispatch.Signal(providing_args=['session'])
 post_updated = django.dispatch.Signal(
                                 providing_args=[
                                             'post', 
+                                            'updated_by',
                                             'newly_mentioned_users'
                                         ]
                             )

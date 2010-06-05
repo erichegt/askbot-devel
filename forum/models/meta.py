@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from forum import const
 from forum.models import base
+from forum.models.user import EmailFeedSetting
 
 class VoteManager(models.Manager):
     def get_up_vote_count_from_user(self, user):
@@ -104,13 +105,17 @@ class Comment(base.MetaContent, base.UserContent):
     def save(self,**kwargs):
         base.save_post(self)
 
-    def get_updated_activity_type(self, created = False):
+    def get_updated_activity_data(self, created = False):
         if self.content_object.__class__.__name__ == 'Question':
-            return const.TYPE_ACTIVITY_COMMENT_QUESTION
+            return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
         elif self.content_object.__class__.__name__ == 'Answer':
-            return const.TYPE_ACTIVITY_COMMENT_ANSWER
+            return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
 
-    def get_potentially_interested_users(self):
+    def get_response_receivers(self, exclude_list = None):
+        """get list of users who authored comments on a post
+        and the post itself
+        """
+        assert(exclude_list is not None)
         users = set()
         users.update(
                     #get authors of parent object and all associated comments
@@ -118,9 +123,72 @@ class Comment(base.MetaContent, base.UserContent):
                             include_comments = True,
                         )
                 )
-
-        users -= set([self.user])#remove activity user
+        users -= set(exclude_list)
         return list(users)
+
+    def get_instant_notification_subscribers(
+                                    self, 
+                                    potential_subscribers = None,
+                                    mentioned_users = None,
+                                    exclude_list = None
+                                ):
+        """get list of users who want instant notifications
+        about this post
+
+        argument potential_subscribers is required as it saves on db hits
+        """
+
+        subscriber_set = set()
+
+        if potential_subscribers:
+            potential_subscribers = set(potential_subscribers)
+        else:
+            potential_subscribers = set()
+
+        if mentioned_users:
+            potential_subscribers.update(mentioned_users)
+
+        if potential_subscribers:
+            comment_subscribers = EmailFeedSetting.objects.filter(
+                                            subscriber__in = potential_subscribers,
+                                            feed_type = 'm_and_c',
+                                            frequency = 'i'
+                                        ).values_list(
+                                                'subscriber', 
+                                                flat=True
+                                        )
+            subscriber_set.update(comment_subscribers)
+
+        origin_post = self.get_origin_post()
+        selective_subscribers = origin_post.followed_by.all()
+        if selective_subscribers:
+            selective_subscribers = EmailFeedSetting.objects.filter(
+                                                subscriber__in = selective_subscribers,
+                                                feed_type = 'q_sel',
+                                                frequency = 'i'
+                                            ).values_list(
+                                                    'subscriber', 
+                                                    flat=True
+                                            )
+            for subscriber in selective_subscribers:
+                if origin_post.passes_tag_filter_for_user(subscriber):
+                    subscriber_set.add(subscriber)
+
+            subscriber_set.update(selective_subscribers)
+
+        global_subscribers = EmailFeedSetting.objects.filter(
+                                            feed_type = 'q_all',
+                                            frequency = 'i'
+                                        ).values_list(
+                                                'subscriber', 
+                                                flat=True
+                                        )
+
+        subscriber_set.update(global_subscribers)
+        if exclude_list:
+            subscriber_set -= set(exclude_list)
+
+        return list(subscriber_set)
 
     def get_time_of_last_edit(self):
         return self.added_at

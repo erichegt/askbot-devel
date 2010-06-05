@@ -5,7 +5,7 @@
 {% load extra_filters %}
 {% load humanize %}
 		{% block usercontent %}
-	
+        {% include "user_info.html" %}
         <a name="questions"></a>
         {% spaceless %}
             <h2>{% blocktrans count questions|length as counter %}<span class="count">{{counter}}</span> Question{% plural %}<span class="count">{{counter}}</span> Questions{% endblocktrans %}</h2>

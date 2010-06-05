@@ -223,18 +223,6 @@ def flag_post(user, post, timestamp=None, cancel=False):
             )
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
-def user_should_receive_instant_notification_about_post(
-                                        user, 
-                                        post = None, 
-                                        newly_mentioned_users = []
-                                    ):
-    return EmailFeedSetting.objects.exists_match_to_post_and_subscriber(
-                                subscriber = user,
-                                post = post,
-                                frequency = 'i',
-                                newly_mentioned_users = newly_mentioned_users 
-                           )
-
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
 User.add_to_class('get_absolute_url', user_get_absolute_url)
@@ -247,11 +235,8 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
-User.add_to_class(
-        'should_receive_instant_notification_about_post', 
-        user_should_receive_instant_notification_about_post
-    )
 
+#todo: move this to forum/utils ??
 def format_instant_notification_body(
                                         to_user = None,
                                         from_user = None,
@@ -268,6 +253,7 @@ def format_instant_notification_body(
 
     site_url = forum_settings.APP_URL
     origin_post = post.get_origin_post()
+    #todo: create a better method to access "sub-urls" in user views
     user_subscriptions_url = site_url + to_user.get_absolute_url() + \
                             '?sort=email_subscriptions'
 
@@ -285,16 +271,16 @@ def format_instant_notification_body(
     update_data = {
         'update_author_name': from_user.username,
         'post_url': site_url + post.get_absolute_url(),
-        'origin_post_title': origin_post.title
+        'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url
     }
     return template.render(Context(update_data))
 
+#todo: action
 def send_instant_notifications_about_activity_in_post(
-                                                activity = None,
+                                                update_activity = None,
                                                 post = None,
                                                 receiving_users = [],
-                                                newly_mentioned_users = []
                                             ):
     """
     function called when posts are updated
@@ -302,75 +288,57 @@ def send_instant_notifications_about_activity_in_post(
     database hits
     """
 
-    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+    acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
 
-    if activity.activity_type in update_type_map:
-        update_type = update_type_map[activity.activity_type]
-    else:
+    if update_activity.activity_type not in acceptable_types:
         return
 
     template = loader.get_template('instant_notification.html')
-    for user in set(receiving_users) | set(newly_mentioned_users):
 
-        if user.should_receive_instant_notification_about_post(
-                                post = post,
-                                newly_mentioned_users = newly_mentioned_users
-                            ):
-            #send update
+    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+    update_type = update_type_map[update_activity.activity_type]
+
+    for user in receiving_users:
+
             subject = _('email update message subject')
             text = format_instant_notification_body(
                             to_user = user,
-                            from_user = activity.user,
+                            from_user = update_activity.user,
                             post = post,
                             update_type = update_type,
                             template = template,
                         )
+            #todo: this could be packaged as an "action" - a bundle
+            #of executive function with the corresponding activity log recording
             msg = EmailMessage(
                         subject,
                         text,
                         django_settings.DEFAULT_FROM_EMAIL,
                         [user.email]
                     )
-            msg.send()
+            #msg.send()
+            print text
+            EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            email_activity = Activity(
+                                    user = user,
+                                    content_object = post.get_origin_post(),
+                                    activity_type = EMAIL_UPDATE_ACTIVITY
+                                )
+            email_activity.save()
 
 
+#todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
     if kwargs.get('raw', False):
         return
     instance.gravatar = hashlib.md5(instance.email).hexdigest()
 
-def record_ask_event(instance, created, **kwargs):
-    if created:
-        activity = Activity(
-                        user=instance.author, 
-                        active_at=instance.added_at, 
-                        content_object=instance, 
-                        activity_type=const.TYPE_ACTIVITY_ASK_QUESTION
-                    )
-        activity.save()
 
-def record_answer_event(instance, created, **kwargs):
-    if created:
-        activity = Activity(
-                        user = instance.author,
-                        active_at = instance.added_at,
-                        content_object = instance,
-                        activity_type = const.TYPE_ACTIVITY_ANSWER
-                    )
-        activity.save()
-        receiving_users = instance.question.get_author_list(
-                                                    include_comments = True,
-                                                    exclude_list = [instance.author],
-                                                )
-
-        activity.receiving_users.add(*receiving_users)
-
-
-#todo: change to more general post_update_activity
 def record_post_update_activity(
-        post, 
+        post,
         newly_mentioned_users = list(), 
+        updated_by = None,
         timestamp = None,
         created = False,
         **kwargs
@@ -378,93 +346,42 @@ def record_post_update_activity(
     """called upon signal forum.models.signals.post_updated
     which is sent at the end of save() method in posts
     """
-    #todo: take into account created == True case
-    activity_type = post.get_updated_activity_type(created)
-
     assert(timestamp != None)
+    assert(updated_by != None)
 
-    #fields will depend on post type and maybe activity type
-    #post has to be saved already, b/c Activity is in generic relation to post
-    activity = Activity(
-                    user = post.get_last_author(), 
+    #todo: take into account created == True case
+    (activity_type, update_object) = post.get_updated_activity_data(created)
+
+    update_activity = Activity(
+                    user = updated_by,
                     active_at = timestamp, 
                     content_object = post, 
                     activity_type = activity_type
                 )
-    activity.save()
+    update_activity.save()
 
     #what users are included depends on the post type
     #for example for question - all Q&A contributors
     #are included, for comments only authors of comments and parent 
     #post are included
-    receiving_users = post.get_potentially_interested_users()
+    receiving_users = post.get_response_receivers(
+                                exclude_list = [updated_by, ]
+                            )
 
-    activity.receiving_users.add(*receiving_users)
+    update_activity.receiving_users.add(*receiving_users)
+
+    notification_subscribers = post.get_instant_notification_subscribers(
+                                        potential_subscribers = receiving_users,
+                                        mentioned_users = newly_mentioned_users,
+                                        exclude_list = [updated_by, ]
+                                    )
 
     send_instant_notifications_about_activity_in_post(
-                            activity = activity,
+                            update_activity = update_activity,
                             post = post,
-                            receiving_users = receiving_users,
-                            newly_mentioned_users = newly_mentioned_users
+                            receiving_users = notification_subscribers,
                         )
 
-
-def record_revision_question_event(instance, created, **kwargs):
-    if created and instance.revision != 1:
-        activity = Activity(
-                        user=instance.author,
-                        active_at=instance.revised_at,
-                        content_object=instance,
-                        activity_type=const.TYPE_ACTIVITY_UPDATE_QUESTION
-                    )
-        activity.save()
-        receiving_users = set()
-        receiving_users.update(
-                            instance.question.get_author_list(include_comments = True)
-                        )
-
-        for a in instance.question.answers.all():
-            receiving_users.update(a.get_author_list())
-
-        receiving_users -= set([instance.author])#remove activity user
-
-        receiving_users = list(receiving_users)
-        activity.receiving_users.add(*receiving_users)
-
-        send_instant_notifications_about_activity_in_post(
-                                        activity,
-                                        instance.question,
-                                        receiving_users
-                                    )
-
-
-def record_revision_answer_event(instance, created, **kwargs):
-    if created and instance.revision != 1:
-        activity = Activity(
-                        user=instance.author, 
-                        active_at=instance.revised_at, 
-                        content_object=instance, 
-                        activity_type=const.TYPE_ACTIVITY_UPDATE_ANSWER
-                    )
-        activity.save()
-        receiving_users = set()
-        receiving_users.update(
-                            instance.answer.get_author_list(
-                                            include_comments = True 
-                                        )
-                        )
-        receiving_users.update(instance.answer.question.get_author_list())
-
-        receiving_users -= set([instance.author])
-        receiving_users = list(receiving_users)
-
-        activity.receiving_users.add(*receiving_users)
-
-        send_instant_notifications_about_activity_in_post(
-                                        activity,
-                                        instance.answer,
-                                        receiving_users
-                                    )
 
 def record_award_event(instance, created, **kwargs):
     """
@@ -522,14 +439,20 @@ def record_answer_accepted(instance, created, **kwargs):
                                         )
         activity.receiving_users.add(*receiving_users)
 
+
 def update_last_seen(instance, created, **kwargs):
     """
     when user has activities, we update 'last_seen' time stamp for him
     """
-    #todo: improve this
+    #todo: in reality author of this activity must not be the receiving user
+    #but for now just have this plug, so that last seen timestamp is not 
+    #perturbed by the email update sender
+    if instance.activity_type == const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT:
+        return
     user = instance.user
     user.last_seen = datetime.datetime.now()
     user.save()
+
 
 def record_vote(instance, created, **kwargs):
     """
@@ -550,6 +473,7 @@ def record_vote(instance, created, **kwargs):
         #todo: problem cannot access receiving user here
         activity.save()
 
+
 def record_cancel_vote(instance, **kwargs):
     """
     when user canceled vote, the vote will be deleted.
@@ -562,6 +486,7 @@ def record_cancel_vote(instance, **kwargs):
                 )
     #todo: same problem - cannot access receiving user here
     activity.save()
+
 
 #todo: weird that there is no record delete answer or comment
 #is this even necessary to keep track of?
@@ -654,9 +579,6 @@ def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs)
 
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
-django_signals.post_save.connect(record_ask_event, sender=Question)
-django_signals.post_save.connect(record_revision_question_event, sender=QuestionRevision)
-django_signals.post_save.connect(record_revision_answer_event, sender=AnswerRevision)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
@@ -680,6 +602,10 @@ signals.post_updated.connect(
 signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Answer
+                       )
+signals.post_updated.connect(
+                           record_post_update_activity,
+                           sender=Question
                        )
 #post_syncdb.connect(create_fulltext_indexes)
 

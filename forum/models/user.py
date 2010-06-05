@@ -150,57 +150,6 @@ class Activity(models.Model):
         assert(len(user_qs) == 1)
         return user_qs[0]
 
-
-class EmailFeedSettingManager(models.Manager):
-    def exists_match_to_post_and_subscriber(
-                                self,
-                                post = None,
-                                subscriber = None,
-                                newly_mentioned_users = [],
-                                **kwargs
-                            ):
-        """returns list of feeds matching the post
-        and subscriber
-        newly_mentioned_user parameter is there to save
-        on a database hit looking for mentions of subscriber
-        in the current post
-        """
-        feeds = self.filter(subscriber = subscriber, **kwargs)
-
-        for feed in feeds:
-
-            if feed.feed_type == 'm_and_c':
-                if post.__class__.__name__ == 'Comment':#isinstance(post, Comment):
-                    return True
-                else:
-                    if subscriber in newly_mentioned_users:
-                        return True
-            else:
-                if feed.feed_type == 'q_all':
-                    #'everything' category is tag filtered
-                    if post.passes_tag_filter_for_user(subscriber):
-                        return True
-                else:
-
-                    origin_post = post.get_origin_post()
-
-                    if feed.feed_type == 'q_ask':
-                        if origin_post.author == subscriber:
-                            return True
-
-                    elif feed.feed_type == 'q_ans':
-                        #make sure that subscriber answered origin post
-                        answers = origin_post.answers.exclude(deleted=True)
-                        if subscriber in answers.get_author_list():
-                            return True
-
-                    elif feed.feed_type == 'q_sel':
-                        #make sure that subscriber has selected this post
-                        #individually
-                        if subscriber in origin_post.followed_by.all():
-                            return True
-        return False
-
 class EmailFeedSetting(models.Model):
     DELTA_TABLE = {
         'i':datetime.timedelta(-1),#instant emails are processed separately
@@ -232,8 +181,6 @@ class EmailFeedSetting(models.Model):
                                 )
     added_at = models.DateTimeField(auto_now_add=True)
     reported_at = models.DateTimeField(null=True)
-
-    objects = EmailFeedSettingManager()
 
     #functions for rich comparison
     #PRECEDENCE = ('i','d','w','n')#the greater ones are first

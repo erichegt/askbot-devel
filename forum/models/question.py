@@ -134,18 +134,18 @@ class QuestionManager(models.Manager):
             uid_str = str(request_user.id)
             #mark questions tagged with interesting tags
             qs = qs.extra(
-                            select = SortedDict([
-                                (
-                                    'interesting_score', 
-                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                      + 'WHERE forum_markedtag.user_id = %s '
-                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                      + 'AND forum_markedtag.reason = \'good\' '
-                                      + 'AND question_tags.question_id = question.id'
-                                ),
-                                    ]),
-                            select_params = (uid_str,),
-                         )
+                select = SortedDict([
+                    (
+                        'interesting_score', 
+                        'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                         + 'WHERE forum_markedtag.user_id = %s '
+                         + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                         + 'AND forum_markedtag.reason = \'good\' '
+                         + 'AND question_tags.question_id = question.id'
+                    ),
+                        ]),
+                select_params = (uid_str,),
+             )
             if request_user.hide_ignored_questions:
                 #exclude ignored tags if the user wants to
                 ignored_tags = Tag.objects.filter(user_selections__reason='bad',
@@ -180,6 +180,9 @@ class QuestionManager(models.Manager):
         qs = qs.distinct()
         return qs, meta_data
 
+    #todo: this function is similar to get_response_receivers
+    #profile this function against the other one
+    #todo: maybe this must be a query set method, not manager method
     def get_question_and_answer_contributors(self, question_list):
         answer_list = []
         question_list = list(question_list)#important for MySQL, b/c it does not support
@@ -323,6 +326,35 @@ class Question(content.Content, DeletableContent):
             ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
+
+    def get_updated_activity_data(self, created = False):
+        if created:
+            return const.TYPE_ACTIVITY_ASK_QUESTION, self
+        else:
+            latest_revision = self.get_latest_revision()
+            return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
+
+    def get_response_receivers(self, exclude_list = None):
+        """returns list of users who might be interested
+        in the question update based on their participation 
+        in the question activity
+
+        exclude_list is mandatory - it normally should have the
+        author of the update so the he/she is not notified about the update
+        """
+        assert(exclude_list != None)
+        receiving_users = set()
+        receiving_users.update(
+                            self.get_author_list(
+                                    include_comments = True
+                                )
+                        )
+        #do not include answer commenters here
+        for a in self.answers.all():
+            receiving_users.update(a.get_author_list())
+
+        receiving_users -= set(exclude_list)
+        return receiving_users
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
         if None in (retagged_by, retagged_at, tagnames):

@@ -25,7 +25,10 @@ def parse_post_text(post):
     this metadata is limited by twitter style @mentions
     but there may be more in the future
 
-    so really it should be renamed into ..._and_get_meta_data
+    function returns a dictionary with the following keys
+    html
+    newly_mentioned_users - list of <User> objects
+    removed_mentions - list of mention <Activity> objects - for removed ones
     """
 
     text = post.get_text()
@@ -134,6 +137,7 @@ def save_post(post, **kwargs):
     from forum.models import signals
     signals.post_updated.send(
                     post = post, 
+                    updated_by = last_author,
                     newly_mentioned_users = newly_mentioned_users,
                     timestamp = post.get_time_of_last_edit(),
                     created = created,
@@ -143,7 +147,7 @@ def save_post(post, **kwargs):
     try:
         ping_google()
     except Exception:
-        logging.debug('problem pinging google did you register you sitemap with google?')
+        logging.debug('problem pinging google did you register the sitemap with google?')
 
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')
@@ -153,6 +157,10 @@ class UserContent(models.Model):
         app_label = 'forum'
 
     def get_last_author(self):
+        """
+        get author who last edited the content
+        since here we don't have revisions, it will be the creator
+        """
         return self.user
 
 class MetaContent(models.Model):

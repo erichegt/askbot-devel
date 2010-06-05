@@ -5,7 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from django.utils import simplejson
@@ -22,8 +23,13 @@ import logging
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
 comment_type = ContentType.objects.get_for_model(models.Comment)
-question_revision_type = ContentType.objects.get_for_model(models.QuestionRevision)
-answer_revision_type = ContentType.objects.get_for_model(models.AnswerRevision)
+question_revision_type = ContentType.objects.get_for_model(
+                                                models.QuestionRevision
+                                            )
+
+answer_revision_type = ContentType.objects.get_for_model(
+                                            models.AnswerRevision
+                                        )
 repute_type = ContentType.objects.get_for_model(models.Repute)
 question_type_id = question_type.id
 answer_type_id = answer_type.id
@@ -53,7 +59,9 @@ def users(request):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            models.User.objects.all().order_by(order_by_parameter), 
+                            models.User.objects.all().order_by(
+                                                order_by_parameter
+                                            ), 
                             const.USERS_PAGE_SIZE
                         )
         base_url = reverse('users') + '?sort=%s&' % sortby
@@ -61,9 +69,11 @@ def users(request):
         sortby = "reputation"
         objects_list = Paginator(
                             models.User.objects.extra(
-                                                    where=['username like %s'], 
-                                                    params=['%' + suser + '%']
-                                                ).order_by('-reputation'), 
+                                                where=['username like %s'],
+                                                params=['%' + suser + '%']
+                                            ).order_by(
+                                                '-reputation'
+                                            ), 
                             const.USERS_PAGE_SIZE
                         )
         base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
@@ -73,24 +83,27 @@ def users(request):
     except (EmptyPage, InvalidPage):
         users_page = objects_list.page(objects_list.num_pages)
 
-    return render_to_response('users.html', {
-                                'active_tab': 'users',
-                                'users' : users_page,
-                                'suser' : suser,
-                                'keywords' : suser,
-                                'tab_id' : sortby,
-                                'context' : {
-                                    'is_paginated' : is_paginated,
-                                    'pages': objects_list.num_pages,
-                                    'page': page,
-                                    'has_previous': users_page.has_previous(),
-                                    'has_next': users_page.has_next(),
-                                    'previous': users_page.previous_page_number(),
-                                    'next': users_page.next_page_number(),
-                                    'base_url' : base_url
-                                }
-
-                                }, context_instance=RequestContext(request))
+    return render_to_response(
+                    'users.html', 
+                    {
+                        'active_tab': 'users',
+                        'users' : users_page,
+                        'suser' : suser,
+                        'keywords' : suser,
+                        'tab_id' : sortby,
+                        'context' : {
+                            'is_paginated' : is_paginated,
+                            'pages': objects_list.num_pages,
+                            'page': page,
+                            'has_previous': users_page.has_previous(),
+                            'has_next': users_page.has_next(),
+                            'previous': users_page.previous_page_number(),
+                            'next': users_page.next_page_number(),
+                            'base_url' : base_url
+                        }
+                    }, 
+                    context_instance=RequestContext(request)
+                )
 
 @login_required
 def moderate_user(request, id):
@@ -107,7 +120,10 @@ def moderate_user(request, id):
     if form.is_valid():
         form.save()
         logging.debug('data saved')
-        response = HttpResponse(simplejson.dumps(''), mimetype="application/json")
+        response = HttpResponse(
+                            simplejson.dumps(''), 
+                            mimetype="application/json"
+                        )
     else:
         response = HttpResponseForbidden(mimetype="application/json")
     return response
@@ -140,23 +156,33 @@ def edit_user(request, id):
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
             user.date_of_birth = sanitize_html(form.cleaned_data['birthday'])
+
             if len(user.date_of_birth) == 0:
                 user.date_of_birth = '1900-01-01'
+
             user.about = sanitize_html(form.cleaned_data['about'])
 
             user.save()
             # send user updated singal if full fields have been updated
-            if user.email and user.real_name and user.website and user.location and \
-                user.date_of_birth and user.about:
-                signals.user_updated.send(sender=user.__class__, instance=user, updated_by=user)
+            if user.email and user.real_name and user.website \
+                and user.location and  user.date_of_birth and user.about:
+                signals.user_updated.send(
+                                sender=user.__class__, 
+                                instance=user, 
+                                updated_by=user
+                            )
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)
-    return render_to_response('user_edit.html', {
-                                                'active_tab': 'users',
-                                                'form' : form,
-                                                'gravatar_faq_url' : reverse('faq') + '#gravatar',
-                                    }, context_instance=RequestContext(request))
+    return render_to_response(
+                        'user_edit.html', 
+                        {
+                            'active_tab': 'users',
+                            'form' : form,
+                            'gravatar_faq_url' : reverse('faq') + '#gravatar',
+                        }, 
+                        context_instance=RequestContext(request)
+                    )
 
 def user_stats(request, user_id, user_view):
     user = get_object_or_404(models.User, id=user_id)
@@ -230,24 +256,26 @@ def user_stats(request, user_id, user_view):
     votes_today = models.Vote.objects.get_votes_count_today_from_user(user)
     votes_total = forum_settings.MAX_VOTES_PER_USER_PER_DAY
 
-    question_id_set = set(map(lambda v: v['id'], list(questions))) \
-                        | set(map(lambda v: v['id'], list(answered_questions)))
-
+    question_id_set = set()
+    #todo: there may be a better way to do these queries
+    question_id_set.update([q['id'] for q in questions])
+    question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
     try:
         from django.db.models import Count
         #todo - rewrite template to do the table joins within standard ORM
         #awards = models.Award.objects.filter(user=user).order_by('-awarded_at')
         awards = models.Award.objects.extra(
-                                        select={'id': 'badge.id', 
-                                                'name':'badge.name', 
-                                                'description': 'badge.description', 
-                                                'type': 'badge.type'},
-                                        tables=['award', 'badge'],
-                                        order_by=['-awarded_at'],
-                                        where=['user_id=%s AND badge_id=badge.id'],
-                                        params=[user.id]
-                                    ).values('id', 'name', 'description', 'type')
+                        select={'id': 'badge.id', 
+                                'name':'badge.name', 
+                                'description': 'badge.description', 
+                                'type': 'badge.type'},
+                        tables=['award', 'badge'],
+                        order_by=['-awarded_at'],
+                        where=['user_id=%s AND badge_id=badge.id'],
+                        params=[user.id]
+                    ).values('id', 'name', 'description', 'type')
+
         total_awards = awards.count()
         awards = awards.annotate(count = Count('badge__id'))
         user_tags = user_tags.annotate(user_tag_usage_count=Count('name'))
@@ -255,16 +283,17 @@ def user_stats(request, user_id, user_view):
     except ImportError:
         #todo: remove all old django stuff, e.g. with '.group_by = ' pattern
         awards = models.Award.objects.extra(
-                                        select={'id': 'badge.id', 
-                                                'count': 'count(badge_id)', 
-                                                'name':'badge.name', 
-                                                'description': 'badge.description', 
-                                                'type': 'badge.type'},
-                                        tables=['award', 'badge'],
-                                        order_by=['-awarded_at'],
-                                        where=['user_id=%s AND badge_id=badge.id'],
-                                        params=[user.id]
-                                    ).values('id', 'count', 'name', 'description', 'type')
+                        select={'id': 'badge.id', 
+                                'count': 'count(badge_id)', 
+                                'name':'badge.name', 
+                                'description': 'badge.description', 
+                                'type': 'badge.type'},
+                        tables=['award', 'badge'],
+                        order_by=['-awarded_at'],
+                        where=['user_id=%s AND badge_id=badge.id'],
+                        params=[user.id]
+                    ).values('id', 'count', 'name', 'description', 'type')
+
         total_awards = awards.count()
         awards.query.group_by = ['badge_id']
 
@@ -279,24 +308,28 @@ def user_stats(request, user_id, user_view):
     else:
         moderate_user_form = None
 
-    return render_to_response(user_view.template_file,{
-                                'active_tab':'users',
-                                'moderate_user_form': moderate_user_form,
-                                "tab_name" : user_view.id,
-                                "tab_description" : user_view.tab_description,
-                                "page_title" : user_view.page_title,
-                                "view_user" : user,
-                                "questions" : questions,
-                                "answered_questions" : answered_questions,
-                                "up_votes" : up_votes,
-                                "down_votes" : down_votes,
-                                "total_votes": up_votes + down_votes,
-                                "votes_today_left": votes_total-votes_today,
-                                "votes_total_per_day": votes_total,
-                                "user_tags" : user_tags[:50],
-                                "awards": awards,
-                                "total_awards" : total_awards,
-                            }, context_instance=RequestContext(request))
+    return render_to_response(
+                        user_view.template_file,
+                        {
+                            'active_tab':'users',
+                            'moderate_user_form': moderate_user_form,
+                            "tab_name" : user_view.id,
+                            "tab_description" : user_view.tab_description,
+                            "page_title" : user_view.page_title,
+                            "view_user" : user,
+                            "questions" : questions,
+                            "answered_questions" : answered_questions,
+                            "up_votes" : up_votes,
+                            "down_votes" : down_votes,
+                            "total_votes": up_votes + down_votes,
+                            "votes_today_left": votes_total-votes_today,
+                            "votes_total_per_day": votes_total,
+                            "user_tags" : user_tags[:50],
+                            "awards": awards,
+                            "total_awards" : total_awards,
+                        }, 
+                        context_instance=RequestContext(request)
+                    )
 
 def user_recent(request, user_id, user_view):
     user = get_object_or_404(models.User, id=user_id)
@@ -313,7 +346,10 @@ def user_recent(request, user_id, user_view):
             self.title = title
             self.summary = summary
             slug_title = slugify(title)
-            self.title_link = reverse('question', kwargs={'id':question_id}) + u'%s' % slug_title
+            self.title_link = reverse(
+                                'question', 
+                                kwargs={'id':question_id}
+                            ) + u'%s' % slug_title
             if int(answer_id) > 0:
                 self.title_link += '#%s' % answer_id
 
@@ -345,9 +381,20 @@ def user_recent(request, user_id, user_view):
             'activity_type'
             )
     if len(questions) > 0:
-        questions = [(Event(q['active_at'], q['activity_type'], q['title'], '', '0', \
-                      q['question_id'])) for q in questions]
-        activities.extend(questions)
+
+        question_activities = []
+        for q in questions:
+            q_event = Event(
+                        q['active_at'], 
+                        q['activity_type'], 
+                        q['title'], 
+                        '', 
+                        '0', 
+                        q['question_id']
+                    )
+            question_activities.append(q_event)
+
+        activities.extend(question_activities)
 
     # answers
     answers = models.Activity.objects.extra(
