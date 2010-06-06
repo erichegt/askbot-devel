@@ -31,17 +31,9 @@ from forum import auth
 User.add_to_class('is_approved', models.BooleanField(default=False))
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
-
 #hardcoded initial reputaion of 1, no setting for this one
 User.add_to_class('reputation', models.PositiveIntegerField(default=1))
 User.add_to_class('gravatar', models.CharField(max_length=32))
-
-#User.add_to_class('favorite_questions',
-#                  models.ManyToManyField(Question, through=FavoriteQuestion,
-#                                         related_name='favorited_by'))
-
-#User.add_to_class('badges', models.ManyToManyField(Badge, through=Award,
-#                                                   related_name='awarded_to'))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -65,6 +57,7 @@ User.add_to_class('tag_filter_setting',
                                         default='ignored'
                                      )
                  )
+User.add_to_class('response_count', models.IntegerField(default=0))
 
 def user_is_username_taken(cls,username):
     try:
@@ -78,16 +71,15 @@ def user_is_username_taken(cls,username):
 def user_get_q_sel_email_feed_frequency(self):
     #print 'looking for frequency for user %s' % self
     try:
-        feed_setting = EmailFeedSetting.objects.get(subscriber=self,feed_type='q_sel')
+        feed_setting = EmailFeedSetting.objects.get(
+                                        subscriber=self,
+                                        feed_type='q_sel'
+                                    )
     except Exception, e:
         #print 'have error %s' % e.message
         raise e
     #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
-
-def user_get_absolute_url(self):
-    return "/users/%d/%s/" % (self.id, (self.username))
-
 
 def get_messages(self):
     messages = []
@@ -98,12 +90,21 @@ def get_messages(self):
 def delete_messages(self):
     self.message_set.all().delete()
 
+#todo: find where this is used and replace with get_absolute_url
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
-    return reverse('user_profile', kwargs={'id':self.id, 'slug':slugify(self.username)})
+    return reverse(
+                'user_profile', 
+                kwargs={'id':self.id, 'slug':slugify(self.username)}
+            )
+
+def user_get_absolute_url(self):
+    return self.get_profile_url()
 
 def get_profile_link(self):
-    profile_link = u'<a href="%s">%s</a>' % (self.get_profile_url(),self.username)
+    profile_link = u'<a href="%s">%s</a>' \
+        % (self.get_profile_url(),self.username)
+
     return mark_safe(profile_link)
 
 #series of methods for user vote-type commands
@@ -139,8 +140,10 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
     Question.objects.update_favorite_count(question)
     return result
 
-#"private" wrapper function that applies post upvotes/downvotes and cancelations
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
+    """"private" wrapper function that applies post upvotes/downvotes
+    and cancelations
+    """
     post_type = ContentType.objects.get_for_model(post)
     #get or create the vote object
     #return with noop in some situations
@@ -224,7 +227,10 @@ def flag_post(user, post, timestamp=None, cancel=False):
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
-User.add_to_class('get_q_sel_email_feed_frequency',user_get_q_sel_email_feed_frequency)
+User.add_to_class(
+            'get_q_sel_email_feed_frequency',
+            user_get_q_sel_email_feed_frequency
+        )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
@@ -309,7 +315,7 @@ def send_instant_notifications_about_activity_in_post(
                             template = template,
                         )
             #todo: this could be packaged as an "action" - a bundle
-            #of executive function with the corresponding activity log recording
+            #of executive function with the activity log recording
             msg = EmailMessage(
                         subject,
                         text,
@@ -370,11 +376,19 @@ def record_post_update_activity(
 
     update_activity.receiving_users.add(*receiving_users)
 
+    assert(updated_by not in receiving_users)
+
+    for user in set(receiving_users) | set(newly_mentioned_users):
+        user.response_count += 1
+        user.save()
+
+    #todo: weird thing is that only comments need the receiving_users
+    #argument to this call
     notification_subscribers = post.get_instant_notification_subscribers(
-                                        potential_subscribers = receiving_users,
-                                        mentioned_users = newly_mentioned_users,
-                                        exclude_list = [updated_by, ]
-                                    )
+                                    potential_subscribers = receiving_users,
+                                    mentioned_users = newly_mentioned_users,
+                                    exclude_list = [updated_by, ]
+                                )
 
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
@@ -385,12 +399,14 @@ def record_post_update_activity(
 
 def record_award_event(instance, created, **kwargs):
     """
-    After we awarded a badge to user, we need to record this activity and notify user.
+    After we awarded a badge to user, we need to 
+    record this activity and notify user.
     We also recaculate awarded_count of this badge and user information.
     """
     if created:
+        #todo: change this to community user who gives the award
         activity = Activity(
-                        user=instance.user,#todo: change this to community user who gives the award
+                        user=instance.user,
                         active_at=instance.awarded_at,
                         content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_PRIZE
@@ -424,7 +440,8 @@ def notify_award_message(instance, created, **kwargs):
 
 def record_answer_accepted(instance, created, **kwargs):
     """
-    when answer is accepted, we record this for question author - who accepted it.
+    when answer is accepted, we record this for question author 
+    - who accepted it.
     """
     if not created and instance.accepted:
         activity = Activity(
@@ -435,8 +452,8 @@ def record_answer_accepted(instance, created, **kwargs):
                     )
         activity.save()
         receiving_users = instance.get_author_list(
-                                            exclude_list = [instance.question.author]
-                                        )
+                                    exclude_list = [instance.question.author]
+                                )
         activity.receiving_users.add(*receiving_users)
 
 
@@ -546,8 +563,8 @@ def record_favorite_question(instance, created, **kwargs):
                     )
         activity.save()
         receiving_users = instance.question.get_author_list(
-                                                    exclude_list = [instance.user]
-                                                )
+                                            exclude_list = [instance.user]
+                                        )
         activity.receiving_users.add(*receiving_users)
 
 def record_user_full_updated(instance, **kwargs):
@@ -559,7 +576,14 @@ def record_user_full_updated(instance, **kwargs):
                 )
     activity.save()
 
-def post_stored_anonymous_content(sender,user,session_key,signal,*args,**kwargs):
+def post_stored_anonymous_content(
+                                sender,
+                                user,
+                                session_key,
+                                signal,
+                                *args,
+                                **kwargs):
+
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
     #from forum.conf import settings as forum_settings
@@ -584,7 +608,10 @@ django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
 django_signals.post_save.connect(update_last_seen, sender=Activity)
 django_signals.post_save.connect(record_vote, sender=Vote)
-django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
+django_signals.post_save.connect(
+                            record_favorite_question, 
+                            sender=FavoriteQuestion
+                        )
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
@@ -670,7 +697,6 @@ __all__ = [
 
 
 #from forum.modules import get_modules_script_classes
-#
 #for k, v in get_modules_script_classes('models', models.Model).items():
 #    if not k in __all__:
 #        __all__.append(k)

@@ -271,6 +271,13 @@ blockquote {
     color: #555555;
 }
 
+#top a.ab-responses-envelope {
+    margin-left: 0;
+}
+#top a img {
+    vertical-align:text-bottom;
+}
+
 #logo {
     padding: 0px 0px 0px 10px;
     height: 90px;

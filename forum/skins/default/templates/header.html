@@ -6,7 +6,22 @@
     <div id="navBar">
         <div id="top">
             {% if request.user.is_authenticated %}
-                <a href="{% url user_profile id=request.user.id,slug=request.user.username|slugify %}">{{ request.user.username }}</a> {% get_score_badge request.user %} 
+                <a href="{% url user_profile id=request.user.id,slug=request.user.username|slugify %}">{{ request.user.username }}</a> 
+                {% spaceless %}
+                <a class='ab-responses-envelope' href="{{request.user.get_absolute_url}}?sort=responses">
+                    <img 
+                        alt="{%blocktrans with request.user.username as username %}responses for {{username}}{% endblocktrans %}"
+                        {% if request.user.response_count > 0 %}
+                        src="{% media "/media/images/mail-envelope-full.png" %}"
+                        title="{% blocktrans count request.user.response_count as response_count %}you have a new response{% plural %}you nave {{response_count}} new responses{% endblocktrans %}"
+                        {% else %}
+                        src="{% media "/media/images/mail-envelope-empty.png" %}"
+                        title="{% trans "no new responses yet" %}"
+                        {% endif %}
+                    />
+                </a>
+                {% endspaceless %}
+                <span>(karma:</span> {% get_score_badge request.user %})
                 <a href="{% url logout %}">{% trans "logout" %}</a>
             {% else %}
                 <a href="{% url user_signin %}">{% trans "login" %}</a>

@@ -24,6 +24,7 @@ from forum.models import *
 from forum import const
 from forum import auth
 from forum.utils.forms import get_next_url
+from forum.utils.functions import not_a_robot_request
 from forum.search.state_manager import SearchState
 
 # used in index page
@@ -304,36 +305,66 @@ def question(request, id):#refactor - long subroutine. display question body, an
     objects_list = Paginator(filtered_answers, ANSWERS_PAGE_SIZE)
     page_objects = objects_list.page(page)
 
-    #todo: merge view counts per user and per session
-    #1) view count per session
-    update_view_count = False
-    if 'question_view_times' not in request.session:
-        request.session['question_view_times'] = {}
+    if not_a_robot_request(request):
+        #todo: split this out into a subroutine
+        #todo: merge view counts per user and per session
+        #1) view count per session
+        update_view_count = False
+        if 'question_view_times' not in request.session:
+            request.session['question_view_times'] = {}
 
-    last_seen = request.session['question_view_times'].get(question.id,None)
-    updated_when, updated_who = question.get_last_update_info()
+        last_seen = request.session['question_view_times'].get(question.id,None)
+        updated_when, updated_who = question.get_last_update_info()
 
-    if updated_who != request.user:
-        if last_seen:
-            if last_seen < updated_when:
-                update_view_count = True 
-        else:
-            update_view_count = True
+        if updated_who != request.user:
+            if last_seen:
+                if last_seen < updated_when:
+                    update_view_count = True 
+            else:
+                update_view_count = True
 
-    request.session['question_view_times'][question.id] = datetime.datetime.now()
+        request.session['question_view_times'][question.id] = \
+                                                    datetime.datetime.now()
+        if update_view_count:
+            question.view_count += 1
+            question.save()
 
-    if update_view_count:
-        question.view_count += 1
-        question.save()
+        #2) question view count per user
+        if request.user.is_authenticated():
+            try:
+                question_view = QuestionView.objects.get(
+                                                who=request.user,
+                                                question=question
+                                            )
+                #another task - remove the response alert if it exists
+                ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+                response_activities = Activity.objects.filter(
+                                            receiving_users = request.user,
+                                            activity_type__in = ACTIVITY_TYPES,
+                                            active_at__gt = question_view.when
+                                        )
 
-    #2) question view count per user
-    if request.user.is_authenticated():
-        try:
-            question_view = QuestionView.objects.get(who=request.user, question=question)
-        except QuestionView.DoesNotExist:
-            question_view = QuestionView(who=request.user, question=question)
-        question_view.when = datetime.datetime.now()
-        question_view.save()
+                for activity in response_activities:
+                    post = activity.content_object
+                    if hasattr(post, 'get_origin_post'):
+                        if question == post.get_origin_post():
+                            activity.receiving_users.remove(request.user)
+                            if request.user.response_count > 0:
+                                request.user.response_count -= 1
+                                request.user.save()
+                            else:
+                                logging.critical(
+                                        'response count wanted to go below zero'
+                                    )
+                    else:
+                        logging.critical(
+                            'activity content object has no get_origin_post method'
+                        )
+
+            except QuestionView.DoesNotExist:
+                question_view = QuestionView(who=request.user, question=question)
+            question_view.when = datetime.datetime.now()
+            question_view.save()
 
     return render_to_response('question.html', {
         'view_name': 'question',
