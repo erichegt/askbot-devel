@@ -172,6 +172,9 @@ class Answer(content.Content, DeletableContent):
                                     include_comments = True
                                 )
                         )
+        for answer in self.question.answers.all():
+            receiving_users.update(answer.get_author_list())
+
         receiving_users -= set(exclude_list)
 
         return list(receiving_users)

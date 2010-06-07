@@ -7,19 +7,27 @@ from django.db import models
 class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        
-        # Adding field 'Activity.junk'
-        db.add_column(
-                u'auth_user', 
-                'response_count', 
-                self.gf('django.db.models.fields.IntegerField')(default=0, ), 
-                keep_default=False
-            )
+        """adds integer field User.response_counter
+        if the field does not yet exist
+        this case checking is necessary to support syncdb of auth models
+        a bit hacky but we have to do it as long as we keep patching auth models
+        within the forum application
+        """
+        try:
+            db.add_column(
+                    u'auth_user', 
+                    'response_count', 
+                    self.gf('django.db.models.fields.IntegerField')(default=0, ), 
+                    keep_default=False
+                )
+        except:
+            print 'probably already have column User.response_count'
+            pass
     
     
     def backwards(self, orm):
-        
-        # Deleting field 'Activity.junk'
+        """remove field User.respose_count
+        """
         db.delete_column(u'auth_user', 'response_count')
     
     

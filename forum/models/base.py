@@ -126,11 +126,12 @@ def save_post(post, **kwargs):
     #create new mentions
     for u in newly_mentioned_users:
         from forum.models.user import Activity
-        Activity.objects.create_new_mention(
-                                mentioned_whom = u,
-                                mentioned_in = post,
-                                mentioned_by = last_author
-                            )
+        if u != last_author:
+            Activity.objects.create_new_mention(
+                                    mentioned_whom = u,
+                                    mentioned_in = post,
+                                    mentioned_by = last_author
+                                )
 
     #todo: this is handled in signal because models for posts
     #are too spread out

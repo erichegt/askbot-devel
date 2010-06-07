@@ -437,7 +437,7 @@ class Question(content.Content, DeletableContent):
 
     def add_revision(self,author=None, text=None, comment=None, revised_at=None):
         if None in (author, text, comment):
-            raise Exception('author, text and revised_at are required arguments')
+            raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:

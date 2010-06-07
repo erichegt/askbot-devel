@@ -75,6 +75,7 @@ class Content(models.Model):
         comment.save()
         self.comment_count = self.comment_count + 1
         self.save()
+        return comment
 
     def get_instant_notification_subscribers(
                                 self,
