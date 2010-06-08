@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from forum.models.tag import Tag, MarkedTag
 from forum.models import signals
 from forum.models.base import AnonymousContent, DeletableContent, ContentRevision
-from forum.models.base import save_post, parse_post_text
+from forum.models.base import parse_post_text, parse_and_save_post
 from forum.models import content
 from forum import const
 from forum.utils.lists import LazyList
@@ -54,7 +54,7 @@ class QuestionManager(models.Manager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.save()
+        question.parse_and_save()
 
         question.add_revision(
             author=author,
@@ -319,6 +319,7 @@ class Question(content.Content, DeletableContent):
         db_table = u'question'
 
     parse = parse_post_text
+    parse_and_save = parse_and_save_post
 
     def delete(self):
         super(Question, self).delete()
@@ -421,7 +422,7 @@ class Question(content.Content, DeletableContent):
         if self.wiki == False and wiki == True:
             self.wiki = True
 
-        self.save()
+        self.parse_and_save()
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
@@ -466,7 +467,7 @@ class Question(content.Content, DeletableContent):
         """
         initial_addition = (self.pk is None)
 
-        save_post(self, **kwargs)
+        super(Question, self).save(**kwargs)
 
         if initial_addition:
             tags = Tag.objects.get_or_create_multiple(

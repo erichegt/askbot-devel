@@ -5,7 +5,7 @@ from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from forum.models.base import AnonymousContent, DeletableContent
 from forum.models.base import ContentRevision
-from forum.models.base import save_post, parse_post_text
+from forum.models.base import parse_post_text, parse_and_save_post
 from forum.models import content
 from forum.models.question import Question
 from forum import const
@@ -26,7 +26,7 @@ class AnswerManager(models.Manager):
             answer.last_edited_at = added_at
             answer.wikified_at = added_at
 
-        answer.save()
+        answer.parse_and_save()
 
         answer.add_revision(
             revised_by = author,
@@ -91,8 +91,8 @@ class Answer(content.Content, DeletableContent):
     class Meta(content.Content.Meta):
         db_table = u'answer'
 
-    save = save_post
     parse = parse_post_text
+    parse_and_save = parse_and_save_post
 
     def get_updated_activity_data(self, created = False):
         #todo: simplify this to always return latest revision for the second
@@ -117,7 +117,7 @@ class Answer(content.Content, DeletableContent):
         #self.html is denormalized in save()
         self.text = text
         #todo: bug wiki has no effect here
-        self.save()
+        self.parse_and_save()
 
         self.add_revision(
             revised_by=edited_by,

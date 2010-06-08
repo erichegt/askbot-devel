@@ -4,7 +4,6 @@ from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sitemaps import ping_google
 #todo: maybe merge forum.utils.markup and forum.utils.html
 from forum.utils import markup
 from forum.utils.html import sanitize_html
@@ -98,8 +97,9 @@ def parse_post_text(post):
     }
     return data
 
-def save_post(post, **kwargs):
-    """generic save method to use with posts
+def parse_and_save_post(post, **kwargs):
+    """generic method to use with posts to be used prior to saving
+    post edit or addition
     """
 
     data = post.parse()
@@ -121,6 +121,9 @@ def save_post(post, **kwargs):
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
     super(post.__class__, post).save(**kwargs)
+    last_author = post.get_last_author()
+
+
     last_author = post.get_last_author()
 
     #create new mentions
@@ -148,7 +151,7 @@ def save_post(post, **kwargs):
     try:
         ping_google()
     except Exception:
-        logging.debug('problem pinging google did you register the sitemap with google?')
+        logging.debug('cannot ping google - did you register with them?')
 
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')

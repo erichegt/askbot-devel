@@ -204,12 +204,12 @@ class UpdateNotificationTests(TestCase):
         )
 
     def test_comments_to_post_authors(self):
-        self.reset_response_counts()
         self.question.apply_edit(
                         edited_by = self.u14,
                         text = 'now much better',
                         comment = 'improved text'
                     )
+        self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
         self.question.add_comment(
@@ -250,7 +250,7 @@ class UpdateNotificationTests(TestCase):
                         text = 'now much better',
                         comment = 'improved text'
                     )
-        self.reset_repsonse_counters()
+        self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
         self.answer1.add_comment(
@@ -360,7 +360,7 @@ class UpdateNotificationTests(TestCase):
             ],
             [
                  1, 1, 1, 1,
-                 0, 0, 0, 0,
+                 1, 0, 0, 0,
                  0, 0, 0, 0,
             ]
         )

@@ -44,13 +44,6 @@ class Content(models.Model):
         abstract = True
         app_label = 'forum'
 
-    def save(self,**kwargs):
-        super(Content,self).save(**kwargs)
-        try:
-            ping_google()
-        except Exception:
-            logging.debug('problem pinging google did you register you sitemap with google?')
-
     def get_comments(self):
         comments = self.comments.all().order_by('id')
         return comments
@@ -72,7 +65,7 @@ class Content(models.Model):
                             user=user, 
                             added_at=added_at
                         )
-        comment.save()
+        comment.parse_and_save()
         self.comment_count = self.comment_count + 1
         self.save()
         return comment

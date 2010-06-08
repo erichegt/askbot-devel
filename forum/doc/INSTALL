@@ -52,11 +52,12 @@ http://github.com/dcramer/django-sphinx/tree/master/djangosphinx
 8. sphinx search engine (optional, works together with djangosphinx)
 http://sphinxsearch.com/downloads.html
 
-9. recaptcha_django
+9. recaptcha_django (installed through svn)
 http://code.google.com/p/recaptcha-django/
 
 10. python recaptcha module
 http://code.google.com/p/recaptcha/
+easy_install recaptcha-client
 Notice that you will need to register with recaptcha.net and receive
 recaptcha public and private keys that need to be saved in your
 settings_local.py file

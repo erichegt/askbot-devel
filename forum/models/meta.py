@@ -89,6 +89,10 @@ class Comment(base.MetaContent, base.UserContent):
         ordering = ('-added_at',)
         db_table = u'comment'
 
+    #these two are methods
+    parse = base.parse_post_text
+    parse_and_save = base.parse_and_save_post
+
     def get_origin_post(self):
         return self.content_object.get_origin_post()
 
@@ -98,12 +102,6 @@ class Comment(base.MetaContent, base.UserContent):
 
     def set_text(self, text):
         self.comment = text
-
-    def parse(self):
-        return base.parse_post_text(self)
-
-    def save(self,**kwargs):
-        base.save_post(self)
 
     def get_updated_activity_data(self, created = False):
         if self.content_object.__class__.__name__ == 'Question':
