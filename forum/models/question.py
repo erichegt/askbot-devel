@@ -54,7 +54,7 @@ class QuestionManager(models.Manager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.parse_and_save()
+        question.parse_and_save(author = author)
 
         question.add_revision(
             author=author,
@@ -422,7 +422,7 @@ class Question(content.Content, DeletableContent):
         if self.wiki == False and wiki == True:
             self.wiki = True
 
-        self.parse_and_save()
+        self.parse_and_save(author = edited_by)
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:

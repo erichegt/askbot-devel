@@ -46,8 +46,6 @@ def parse_post_text(post):
     if '@' in text:
         from forum.models.user import Activity
 
-        mentioned_by = post.get_last_author()
-
         op = post.get_origin_post()
         anticipated_authors = op.get_author_list(
                                     include_comments = True,
@@ -97,15 +95,18 @@ def parse_post_text(post):
     }
     return data
 
-def parse_and_save_post(post, **kwargs):
+#todo: when models are merged, it would be great to remove author parameter
+def parse_and_save_post(post, author = None, **kwargs):
     """generic method to use with posts to be used prior to saving
     post edit or addition
     """
 
+    assert(author is not None)
+
     data = post.parse()
 
     post.html = data['html']
-    newly_mentioned_users = data['newly_mentioned_users']
+    newly_mentioned_users = set(data['newly_mentioned_users']) - set([author]) 
     removed_mentions = data['removed_mentions']
 
     #a hack allowing to save denormalized .summary field for questions
@@ -121,27 +122,22 @@ def parse_and_save_post(post, **kwargs):
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
     super(post.__class__, post).save(**kwargs)
-    last_author = post.get_last_author()
-
-
-    last_author = post.get_last_author()
 
     #create new mentions
     for u in newly_mentioned_users:
         from forum.models.user import Activity
-        if u != last_author:
-            Activity.objects.create_new_mention(
-                                    mentioned_whom = u,
-                                    mentioned_in = post,
-                                    mentioned_by = last_author
-                                )
+        Activity.objects.create_new_mention(
+                                mentioned_whom = u,
+                                mentioned_in = post,
+                                mentioned_by = author 
+                            )
 
     #todo: this is handled in signal because models for posts
     #are too spread out
     from forum.models import signals
     signals.post_updated.send(
                     post = post, 
-                    updated_by = last_author,
+                    updated_by = author,
                     newly_mentioned_users = newly_mentioned_users,
                     timestamp = post.get_time_of_last_edit(),
                     created = created,
@@ -160,12 +156,6 @@ class UserContent(models.Model):
         abstract = True
         app_label = 'forum'
 
-    def get_last_author(self):
-        """
-        get author who last edited the content
-        since here we don't have revisions, it will be the creator
-        """
-        return self.user
 
 class MetaContent(models.Model):
     """

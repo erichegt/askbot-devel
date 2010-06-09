@@ -135,7 +135,7 @@ class UpdateNotificationTests(TestCase):
         timestamp = datetime.datetime.now()
         self.question.add_comment(
                             user = self.u11,
-                            comment = 'self-comment 1',
+                            comment = 'self-comment',
                             added_at = timestamp
                         )
         notifications = get_re_notif_after(timestamp)
@@ -172,6 +172,120 @@ class UpdateNotificationTests(TestCase):
         self.answer1.add_comment(
                             user = self.u21,
                             comment = 'self-comment 2',
+                            added_at = timestamp
+                        )
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(
+            set(notifications[0].receiving_users.all()),
+            set([self.u22, self.u23]),
+        )
+        self.reload_users()
+        self.assertEqual(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            [
+                 0, 0, 0, 0,
+                 0, 1, 1, 0,
+                 0, 0, 0, 0,
+            ]
+        )
+
+    def test_self_mention_not_posting_in_comment_to_question1(self):
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        self.question.add_comment(
+                            user = self.u11,
+                            comment = 'self-comment @user11',
+                            added_at = timestamp
+                        )
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(
+            set(notifications[0].receiving_users.all()),
+            set([self.u12, self.u13]),
+        )
+        self.reload_users()
+        self.assertEqual(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            [
+                 0, 1, 1, 0,
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+            ]
+        )
+
+    def test_self_mention_not_posting_in_comment_to_question2(self):
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        self.question.add_comment(
+                            user = self.u11,
+                            comment = 'self-comment @user11 blah',
+                            added_at = timestamp
+                        )
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(
+            set(notifications[0].receiving_users.all()),
+            set([self.u12, self.u13]),
+        )
+        self.reload_users()
+        self.assertEqual(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            [
+                 0, 1, 1, 0,
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+            ]
+        )
+
+    def test_self_mention_not_posting_in_comment_to_answer(self):
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        self.answer1.add_comment(
+                            user = self.u21,
+                            comment = 'self-comment 1 @user21',
                             added_at = timestamp
                         )
         notifications = get_re_notif_after(timestamp)

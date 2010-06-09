@@ -26,7 +26,7 @@ class AnswerManager(models.Manager):
             answer.last_edited_at = added_at
             answer.wikified_at = added_at
 
-        answer.parse_and_save()
+        answer.parse_and_save(author = author)
 
         answer.add_revision(
             revised_by = author,
@@ -117,7 +117,7 @@ class Answer(content.Content, DeletableContent):
         #self.html is denormalized in save()
         self.text = text
         #todo: bug wiki has no effect here
-        self.parse_and_save()
+        self.parse_and_save(author = edited_by)
 
         self.add_revision(
             revised_by=edited_by,

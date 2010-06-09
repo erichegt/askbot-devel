@@ -65,7 +65,7 @@ class Content(models.Model):
                             user=user, 
                             added_at=added_at
                         )
-        comment.parse_and_save()
+        comment.parse_and_save(author = user)
         self.comment_count = self.comment_count + 1
         self.save()
         return comment
@@ -184,13 +184,6 @@ class Content(models.Model):
 
     def get_latest_revision_number(self):
         return self.get_latest_revision().revision
-
-    def get_last_author(self):
-        #todo: fix this issue
-        if self.last_edited_by:
-            return self.last_edited_by
-        else:
-            return self.author
 
     def get_time_of_last_edit(self):
         if self.last_edited_at:
