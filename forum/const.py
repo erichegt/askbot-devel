@@ -67,7 +67,7 @@ assert(UNANSWERED_MEANING in UNANSWERED_MEANING_LIST)
 #however it will be hard to expect that people will type
 #correct regexes - plus this must be an anchored regex
 #to do full string match
-TAG_REGEX = r'^[a-z0-9\+\.\-]+$'
+TAG_REGEX = r'^[\w\+\.\-]+$'
 TAG_SPLIT_REGEX = r'[ ,]+'
 MAX_TAG_LENGTH = 20 #default 20 chars
 MAX_TAGS_PER_POST = 5 #no more than five tags
