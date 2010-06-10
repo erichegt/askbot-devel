@@ -1,4 +1,5 @@
 from base import * #todo maybe remove *
+import random
 from tag import Tag
 #todo: make uniform import for consts
 from forum.const import CONST
@@ -175,10 +176,13 @@ class QuestionManager(models.Manager):
         #the query in return statement below
         for q in question_list:
             answer_list.extend(list(q.answers.all()))
-        return User.objects.filter(
+        contributors = User.objects.filter(
                                     Q(questions__in=question_list) \
                                     | Q(answers__in=answer_list)
-                                   ).distinct().order_by('?')
+                                   ).distinct()
+        contributors = list(contributors)
+        random.shuffle(contributors)
+        return contributors
 
     def update_tags(self, question, tagnames, user):
         """
