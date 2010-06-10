@@ -29,11 +29,10 @@ DATABASE_ENGINE = ''  #mysql, etc
 DATABASE_HOST = ''
 DATABASE_PORT = ''
 
-#set this value to 'dummy://' if you don't want to use cache, or set up your favourite caching mechanism
+#set this value to 'locmem://'
+#use memcached for production
 #see http://docs.djangoproject.com/en/1.1/topics/cache/ for details
-#example (set local file system cache in a cache folder in the root of the askbot install):
-#CACHE_BACKEND = 'file://%s' % os.path.join(os.path.dirname(__file__),'cache').replace('\\','/')
-CACHE_BACKEND = 'dummy://'
+CACHE_BACKEND = 'locmem://'
 
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
