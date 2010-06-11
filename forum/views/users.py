@@ -601,54 +601,78 @@ def user_recent(request, user_id, user_view):
                                     "activities" : activities[:user_view.data_size]
                                 }, context_instance=RequestContext(request))
 
+class Response:
+    """class that abstracts any kind of response
+    answer, comment, mention, post edits, etc.
+    """
+    def __init__(
+            self, type, title, question_id, 
+            answer_id, time, username, 
+            user_id, content):
+
+        self.type = type
+        self.title = title
+        self.titlelink = reverse(
+                            'question', 
+                            args=[question_id]) \
+                                    + u'%s#%s' % (slugify(title), 
+                            answer_id
+                        )
+        self.time = time
+        self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
+        self.username = username
+        self.content = u'%s ...' % strip_tags(content)[:300]
+
+    def __unicode__(self):
+        return u'%s %s' % (self.type, self.titlelink)
+
 def user_responses(request, user_id, user_view):
     """
-    We list answers for question, comments, and answer accepted by others for this user.
+    We list answers for question, comments, and 
+    answer accepted by others for this user.
+    as well as mentions of the user
+
+    user_id - id of the profile owner
+    user_view - id of the user who is looking at the
+                page
     """
     user = get_object_or_404(models.User, id=user_id)
     if request.user != user:
         raise Http404
-    class Response:
-        def __init__(self, type, title, question_id, answer_id, time, username, user_id, content):
-            self.type = type
-            self.title = title
-            self.titlelink = reverse('question', args=[question_id]) + u'%s#%s' % (slugify(title), answer_id)
-            self.time = time
-            self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
-            self.username = username
-            self.content = u'%s ...' % strip_tags(content)[:300]
-
-        def __unicode__(self):
-            return u'%s %s' % (self.type, self.titlelink)
 
     user = get_object_or_404(models.User, id=user_id)
     responses = []
 
     answers = models.Answer.objects.extra(
-                                    select={
-                                        'title' : 'question.title',
-                                        'question_id' : 'question.id',
-                                        'answer_id' : 'answer.id',
-                                        'added_at' : 'answer.added_at',
-                                        'html' : 'answer.html',
-                                        'username' : 'auth_user.username',
-                                        'user_id' : 'auth_user.id'
-                                        },
-                                    select_params=[user_id],
-                                    tables=['answer', 'question', 'auth_user'],
-                                    where=['answer.question_id = question.id AND answer.deleted=False AND question.deleted=False AND '+
-                                        'question.author_id = %s AND answer.author_id <> %s AND answer.author_id=auth_user.id'],
-                                    params=[user_id, user_id],
-                                    order_by=['-answer.id']
-                                ).values(
-                                        'title',
-                                        'question_id',
-                                        'answer_id',
-                                        'added_at',
-                                        'html',
-                                        'username',
-                                        'user_id'
-                                        )
+                        select={
+                            'title' : 'question.title',
+                            'question_id' : 'question.id',
+                            'answer_id' : 'answer.id',
+                            'added_at' : 'answer.added_at',
+                            'html' : 'answer.html',
+                            'username' : 'auth_user.username',
+                            'user_id' : 'auth_user.id'
+                            },
+                        select_params=[user_id],
+                        tables=['answer', 'question', 'auth_user'],
+                        where=['answer.question_id = question.id '\
+                               + 'AND answer.deleted=False' \
+                               + 'AND question.deleted=False '\
+                               + 'AND question.author_id = %s '\
+                               + 'AND answer.author_id != %s '\
+                               + 'AND answer.author_id=auth_user.id'
+                            ],
+                        params=[user_id, user_id],
+                        order_by=['-answer.id']
+                    ).values(
+                            'title',
+                            'question_id',
+                            'answer_id',
+                            'added_at',
+                            'html',
+                            'username',
+                            'user_id'
+                            )
     if len(answers) > 0:
         answer_responses = []
         for a in answers:

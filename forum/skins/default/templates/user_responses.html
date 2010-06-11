@@ -1,23 +1,39 @@
 {% extends "user.html" %}
 <!-- user_responses.html -->
+
+{% comment %}
+This template accepts a list of response objects
+they are a generalized form of any response and 
+are not database objects
+
+The following properties of response object are used:
+time - when it happened
+userlink - url to the profile of whoever gave the response
+username - name of that user
+type - type of response
+titlelink - link to the question
+title - title of the question
+content - abbreviated content of the response
+{% endcomment %}
+
 {% load extra_tags %}
 {% load humanize %}
 
 {% block usercontent %}
-        <div style="padding-top:5px;font-size:13px;">
-        {% for response in responses %}
-            <div style="clear:both;line-height:18px">
-                <div style="width:150px;float:left">{% diff_date response.time 3 %}</div>
-                <div style="width:100px;float:left"><a href="{{ response.userlink }}">{{ response.username }}</a></div>
-                <div style="float:left;overflow:hidden;width:680px">
-                    <strong {% ifequal response.type "question_answered" %}class="user-action-2"{% endifequal %}{% ifequal response.type "answer_accepted" %}class="user-action-8"{% endifequal %}>{{ response.type }}</strong>：
-                    <a href="{{ response.titlelink }}">{{ response.title }}</a><br/>
-                    {{ response.content|safe }}
-                    <div style="height:10px"></div>
-                </div>
-
+    <div style="padding-top:5px;font-size:13px;">
+    {% for response in responses %}
+        <div style="clear:both;line-height:18px">
+            <div style="width:150px;float:left">{% diff_date response.time 3 %}</div>
+            <div style="width:100px;float:left"><a href="{{ response.userlink }}">{{ response.username }}</a></div>
+            <div style="float:left;overflow:hidden;width:680px">
+                <strong {% ifequal response.type "question_answered" %}class="user-action-2"{% endifequal %}{% ifequal response.type "answer_accepted" %}class="user-action-8"{% endifequal %}>{{ response.type }}</strong>：
+                <a href="{{ response.titlelink }}">{{ response.title }}</a><br/>
+                {{ response.content|safe }}
+                <div style="height:10px"></div>
             </div>
-        {% endfor %}
+
         </div>
+    {% endfor %}
+    </div>
 {% endblock %}
 <!-- end user_responses.html -->

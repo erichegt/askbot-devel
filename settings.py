@@ -35,6 +35,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'forum.middleware.view_log.ViewLogMiddleware',
+    'forum.middleware.spaceless.SpacelessMiddleware',
 )
 
 #all of these are necessary for the forum and absend in default settings.py
