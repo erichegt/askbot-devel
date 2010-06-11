@@ -489,10 +489,13 @@ function createComments(type) {
         if (canPostComments(id)) {
             if (jDiv.find("#" + formId).length === 0) {
                 var form = '<form id="' + formId + '" class="post-comments"><div>';
-                form += '<textarea name="comment" cols="60" rows="5" maxlength="300" onblur="'+ objectType +'Comments.updateTextCounter(this)" ';
-                form += 'onfocus="' + objectType + 'Comments.updateTextCounter(this)" onkeyup="'+ objectType +'Comments.updateTextCounter(this)"></textarea>';
+                form += '<textarea name="comment" cols="60" rows="5" maxlength="300" onblur="' +
+                        objectType +'Comments.updateTextCounter(this)" ';
+                form += 'onfocus="' + objectType +
+                        'Comments.updateTextCounter(this)" onkeyup="' + objectType +
+                        'Comments.updateTextCounter(this)"></textarea>';
                 form += '<input type="submit" value="' +
-						$.i18n._('add comment') + '" /><br><span class="text-counter"></span>';
+                        $.i18n._('add comment') + '" /><br><span class="text-counter"></span>';
                 form += '<span class="form-error"></span></div></form>';
 
                 jDiv.append(form);
@@ -505,11 +508,13 @@ function createComments(type) {
         else {
             var divId = "comments-rep-needed-" + objectType + '-' + id;
             if (jDiv.find("#" + divId).length === 0) {
-                jDiv.append('<p id="' + divId + '" class="comment">' + 
-                    $.i18n._('to comment, need') + ' ' +
-					repNeededForComments + ' ' + $.i18n._('community karma points') + 
-                    '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
-                    $.i18n._('please see') + 'faq</a></span></p>');
+                jDiv.append(
+                        '<p id="' + divId + '" class="comment">' + 
+                        $.i18n._('to comment, need') + ' ' +
+                        repNeededForComments + ' ' + $.i18n._('community karma points') + 
+                        '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
+                        $.i18n._('please see') + 'faq</a></span></p>'
+                    );
             }
         }
     };
@@ -540,8 +545,11 @@ function createComments(type) {
             var html = '';
             var img = mediaUrl("media/images/close-small.png");
             var imgHover = mediaUrl("media/images/close-small-hover.png");
-            html += '<img class="delete-icon" onclick="' + objectType + 'Comments.deleteComment($(this), ' + post_id + ', \'' + delete_url + '\')" src="' + img;
-            html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + '\')" onmouseout="$(this).attr(\'src\', \'' + img;
+            html += '<img class="delete-icon" onclick="' + objectType + 
+                    'Comments.deleteComment($(this), ' + post_id + ', \'' + 
+                    delete_url + '\')" src="' + img;
+            html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + 
+                    '\')" onmouseout="$(this).attr(\'src\', \'' + img;
             html += '\')" title="' + $.i18n._('delete this comment') + '" />';
             return html;
         }

@@ -84,7 +84,9 @@ function pickedTags(){
                 new_tag.addClass('deletable-tag');
                 var tag_link = $('<a></a>');
                 tag_link.attr('rel','tag');
-                tag_link.attr('href', scriptUrl + $.i18n._('tags/') + tagname);
+                var tag_url = scriptUrl + $.i18n._('questions/') +
+                              '?tags=' + tagname;
+                tag_link.attr('href', tag_url);
                 tag_link.html(tagname);
                 var del_link = $('<img></img>');
                 del_link.addClass('delete-icon');

@@ -728,7 +728,7 @@ msgstr "etiketler/"
 
 #: forum/urls.py:64 forum/urls.py:68
 msgid "mark-tag/"
-msgstr "etiket /"
+msgstr "etiket/"
 
 #: forum/urls.py:64
 msgid "interesting/"
@@ -740,7 +740,7 @@ msgstr "yoksayıldı/"
 
 #: forum/urls.py:72
 msgid "unmark-tag/"
-msgstr "etiket işaretini kaldır/"
+msgstr "etiket-işaretini-kaldır/"
 
 #: forum/urls.py:76 forum/urls.py:78 forum/urls.py:79
 msgid "users/"

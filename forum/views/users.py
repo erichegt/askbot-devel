@@ -10,6 +10,7 @@ from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirec
 from django.utils.translation import ugettext as _
 from django.utils.http import urlquote_plus
 from django.utils.html import strip_tags
+from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from forum.forms import *#incomplete list is EditUserForm, ModerateUserForm, TagFilterSelectionForm,
 from forum.utils.html import sanitize_html

@@ -309,7 +309,7 @@ def answer(request, id):#process a new answer
 
     return HttpResponseRedirect(question.get_absolute_url())
 
-def __generate_comments_json(obj, type, user):#non-view generates json data for the post comments
+def __generate_comments_json(obj, user):#non-view generates json data for the post comments
     comments = obj.comments.all().order_by('id')
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
@@ -320,7 +320,17 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
         if user != None and auth.can_delete_comment(user, comment):
             #/posts/392845/comments/219852/delete
             #todo translate this url
-            delete_url = reverse('index') + type + "s/%s/comments/%s/delete/" % (obj.id, comment.id)
+            if isinstance(comment.content_object, Answer):
+                delete_comment_view = 'delete_answer_comment'
+            elif isinstance(comment.content_object, Question):
+                delete_comment_view = 'delete_question_comment'
+            delete_url = reverse(
+                            delete_comment_view,
+                            kwargs = {
+                                    'object_id': obj.id, 
+                                    'comment_id': comment.id
+                                }
+                        )
         json_comments.append({"id" : comment.id,
             "object_id" : obj.id,
             "comment_age" : diff_date(comment.added_at),
@@ -336,26 +346,26 @@ def __generate_comments_json(obj, type, user):#non-view generates json data for 
 def question_comments(request, id):#ajax handler for loading comments to question
     question = get_object_or_404(Question, id=id)
     user = request.user
-    return __comments(request, question, 'question')
+    return __comments(request, question)
 
 def answer_comments(request, id):#ajax handler for loading comments on answer
     answer = get_object_or_404(Answer, id=id)
     user = request.user
-    return __comments(request, answer, 'answer')
+    return __comments(request, answer)
 
-def __comments(request, obj, type):#non-view generic ajax handler to load comments to an object
+def __comments(request, obj):#non-view generic ajax handler to load comments to an object
     # only support get post comments by ajax now
     user = request.user
     if request.is_ajax():
         if request.method == "GET":
-            response = __generate_comments_json(obj, type, user)
+            response = __generate_comments_json(obj, user)
         elif request.method == "POST":
             if auth.can_add_comments(user,obj):
                 obj.add_comment(
                     comment = request.POST.get('comment'),
                     user = request.user,
                 )
-                response = __generate_comments_json(obj, type, user)
+                response = __generate_comments_json(obj, user)
             else:
                 response = HttpResponseForbidden(mimetype="application/json")
         return response
@@ -376,5 +386,5 @@ def delete_comment(request, object_id='', comment_id='', commented_object_type=N
             obj.comment_count = obj.comment_count - 1
             obj.save()
             user = request.user
-            return __generate_comments_json(obj, commented_object_type, user)
+            return __generate_comments_json(obj, user)
     raise PermissionDenied()

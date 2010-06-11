@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-04 18:42-0400\n"
-"PO-Revision-Date: 2010-06-09 10:20\n"
+"PO-Revision-Date: 2010-06-11 12:25\n"
 "Last-Translator: <matsur25@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -195,7 +195,7 @@ msgstr "Адрес электронной почты изменён."
 
 #: django_authopenid/views.py:988
 msgid "This OpenID is already associated with another account."
-msgstr "Этот OpenID уже изпользуется в другом аккаунте."
+msgstr "Данный OpenID уже используется в другом аккаунте."
 
 #: django_authopenid/views.py:993
 #, python-format
@@ -221,7 +221,7 @@ msgstr "Пароль не был изменён, т.к. ключ '%s' в наш�
 
 #: django_authopenid/views.py:1174
 msgid "Can not change password. User don't exist anymore                 in our database."
-msgstr "Пароль изменить невозоможно, т.к. запись данного пользователя была удалена."
+msgstr "Пароль изменить невозможно, т.к. аккаунт пользователя был удален."
 
 #: django_authopenid/views.py:1184
 #, python-format
@@ -475,7 +475,7 @@ msgstr "заголовок"
 
 #: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
-msgstr "пожалуйста, введите информативный заголовок для вашего вопроса"
+msgstr "пожалуйста, введите информативный заголовок раскрывающий суть вашего вопроса"
 
 #: forum/forms.py:29
 msgid "title must be > 10 characters"
@@ -2628,7 +2628,7 @@ msgstr "непопулярный"
 #: forum/skins/askbot/templates/questions.html:127
 #: forum/skins/default/templates/questions.html:127
 msgid "click to see least voted questions"
-msgstr "нажмите, чтобы просмотреть последние проголосванные вопросы"
+msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
 
 #: forum/skins/askbot/templates/questions.html:127
 #: forum/skins/askbot/templates/questions.html:132
@@ -4079,7 +4079,7 @@ msgstr[2] "<span class=\"count\">%(counter)s</span> Значков"
 
 #: forum/templatetags/extra_filters.py:100
 msgid "no items in counter"
-msgstr "нет элементов"
+msgstr "нет"
 
 #: forum/templatetags/extra_tags.py:53
 #, python-format
