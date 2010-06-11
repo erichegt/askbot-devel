@@ -17,6 +17,12 @@ class Badge(models.Model):
         (SILVER, _('silver')),
         (BRONZE, _('bronze')),
     )
+    CSS_CLASSES = {
+        GOLD: 'badge1',
+        SILVER: 'badge2',
+        BRONZE: 'badge3',
+    }
+    DISPLAY_SYMBOL = '&#9679;'
 
     name        = models.CharField(max_length=50)
     type        = models.SmallIntegerField(choices=TYPE_CHOICES)

@@ -275,7 +275,8 @@ blockquote {
     margin-left: 0;
 }
 #top a img {
-    vertical-align:text-bottom;
+    vertical-align:middle;
+    margin-bottom:2px;
 }
 
 #logo {
@@ -2651,4 +2652,9 @@ p.signup_p {
 .faq-rep-item { 
     text-align:right;
     padding-right:5px; 
+}
+
+#top a.ab-nav-karma, #top a.ab-nav-badges {
+    margin: 0;
+    text-decoration: none;
 }

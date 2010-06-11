@@ -1340,10 +1340,10 @@ msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or %"
 "(admin_email)s administrator"
 msgstr ""
-"<p>Please remember that you can always <a href='%(link)s'>adjust</a> "
+"<p>Please remember that you can always <a href='%(email_settings_link)s'>adjust</a> "
 "frequency of the email updates or turn them off entirely.<br/>If you believe "
 "that this message was sent in an error, please email about it the forum "
-"administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum "
+"administrator at %(admin_email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum "
 "server.</p>"
 
 #: forum/migrations/0005_install_badges.py:10
@@ -2678,11 +2678,11 @@ msgstr ""
 
 #: forum/skins/default/templates/header.html:10
 msgid "logout"
-msgstr ""
+msgstr "sign out"
 
 #: forum/skins/default/templates/header.html:12
 msgid "login"
-msgstr ""
+msgstr "Hi, there! Please sign in"
 
 #: forum/skins/default/templates/header.html:22
 msgid "back to home page"

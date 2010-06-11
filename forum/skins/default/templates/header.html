@@ -21,7 +21,7 @@
                     />
                 </a>
                 {% endspaceless %}
-                <span>(karma:</span> {% get_score_badge request.user %})
+                ({% get_long_score_and_badge_report user %})
                 <a href="{% url logout %}">{% trans "logout" %}</a>
             {% else %}
                 <a href="{% url user_signin %}">{% trans "login" %}</a>
