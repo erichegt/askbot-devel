@@ -637,162 +637,43 @@ def user_responses(request, user_id, user_view):
                 page
     """
     user = get_object_or_404(models.User, id=user_id)
-    if request.user != user:
-        raise Http404
+    #if request.user != user:
+    #    raise Http404
 
     user = get_object_or_404(models.User, id=user_id)
-    responses = []
+    response_list = []
 
-    answers = models.Answer.objects.extra(
-                        select={
-                            'title' : 'question.title',
-                            'question_id' : 'question.id',
-                            'answer_id' : 'answer.id',
-                            'added_at' : 'answer.added_at',
-                            'html' : 'answer.html',
-                            'username' : 'auth_user.username',
-                            'user_id' : 'auth_user.id'
-                            },
-                        select_params=[user_id],
-                        tables=['answer', 'question', 'auth_user'],
-                        where=['answer.question_id = question.id '\
-                               + 'AND answer.deleted=False' \
-                               + 'AND question.deleted=False '\
-                               + 'AND question.author_id = %s '\
-                               + 'AND answer.author_id != %s '\
-                               + 'AND answer.author_id=auth_user.id'
-                            ],
-                        params=[user_id, user_id],
-                        order_by=['-answer.id']
-                    ).values(
-                            'title',
-                            'question_id',
-                            'answer_id',
-                            'added_at',
-                            'html',
-                            'username',
-                            'user_id'
-                            )
-    if len(answers) > 0:
-        answer_responses = []
-        for a in answers:
-            resp = Response(
-                    const.TYPE_RESPONSE['QUESTION_ANSWERED'],
-                    a['title'],
-                    a['question_id'],
-                    a['answer_id'],
-                    a['added_at'],
-                    a['username'],
-                    a['user_id'],
-                    a['html']
+    activities = list()
+    activities = models.Activity.responses_and_mentions.filter(
+                                                        receiving_users = user
+                                                    )
+
+    for act in activities:
+        origin_post = act.content_object.get_origin_post()
+        response = {
+            'timestamp': act.active_at,
+            'user': act.user,
+            'response_url': act.get_absolute_url(),
+            'response_snippet': strip_tags(act.content_object.html)[:300],
+            'response_title': origin_post.title,
+            'response_type': act.get_activity_type_display(),
+        }
+        response_list.append(response)
+
+    response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+
+    return render_to_response(
+                    user_view.template_file,
+                    {
+                        'active_tab':'users',
+                        'tab_name' : user_view.id,
+                        'tab_description' : user_view.tab_description,
+                        'page_title' : user_view.page_title,
+                        'view_user' : user,
+                        'responses' : response_list[:user_view.data_size],
+                    }, 
+                    context_instance=RequestContext(request)
                 )
-            answer_responses.append(resp)
-        responses.extend(answer_responses)
-
-    # question comments
-    comments = models.Comment.objects.extra(
-                                select={
-                                    'title' : 'question.title',
-                                    'question_id' : 'comment.object_id',
-                                    'added_at' : 'comment.added_at',
-                                    'comment' : 'comment.comment',
-                                    'username' : 'auth_user.username',
-                                    'user_id' : 'auth_user.id'
-                                    },
-                                tables=['question', 'auth_user', 'comment'],
-                                where=['question.deleted=False AND question.author_id = %s AND comment.object_id=question.id AND '+
-                                    'comment.content_type_id=%s AND comment.user_id <> %s AND comment.user_id = auth_user.id'],
-                                params=[user_id, question_type_id, user_id],
-                                order_by=['-comment.added_at']
-                            ).values(
-                                    'title',
-                                    'question_id',
-                                    'added_at',
-                                    'comment',
-                                    'username',
-                                    'user_id'
-                                    )
-
-    if len(comments) > 0:
-        comments = [(Response(const.TYPE_RESPONSE['QUESTION_COMMENTED'], c['title'], c['question_id'],
-            '', c['added_at'], c['username'], c['user_id'], c['comment'])) for c in comments]
-        responses.extend(comments)
-
-    # answer comments
-    comments = models.Comment.objects.extra(
-        select={
-            'title' : 'question.title',
-            'question_id' : 'question.id',
-            'answer_id' : 'answer.id',
-            'added_at' : 'comment.added_at',
-            'comment' : 'comment.comment',
-            'username' : 'auth_user.username',
-            'user_id' : 'auth_user.id'
-            },
-        tables=['answer', 'auth_user', 'comment', 'question'],
-        where=['answer.deleted=False AND answer.author_id = %s AND comment.object_id=answer.id AND '+
-            'comment.content_type_id=%s AND comment.user_id <> %s AND comment.user_id = auth_user.id '+
-            'AND question.id = answer.question_id'],
-        params=[user_id, answer_type_id, user_id],
-        order_by=['-comment.added_at']
-    ).values(
-            'title',
-            'question_id',
-            'answer_id',
-            'added_at',
-            'comment',
-            'username',
-            'user_id'
-            )
-
-    if len(comments) > 0:
-        comments = [(Response(const.TYPE_RESPONSE['ANSWER_COMMENTED'], c['title'], c['question_id'],
-        c['answer_id'], c['added_at'], c['username'], c['user_id'], c['comment'])) for c in comments]
-        responses.extend(comments)
-
-    # answer has been accepted
-    answers = models.Answer.objects.extra(
-        select={
-            'title' : 'question.title',
-            'question_id' : 'question.id',
-            'answer_id' : 'answer.id',
-            'added_at' : 'answer.accepted_at',
-            'html' : 'answer.html',
-            'username' : 'auth_user.username',
-            'user_id' : 'auth_user.id'
-            },
-        select_params=[user_id],
-        tables=['answer', 'question', 'auth_user'],
-        where=['answer.question_id = question.id AND answer.deleted=False AND question.deleted=False AND '+
-            'answer.author_id = %s AND answer.accepted=True AND question.author_id=auth_user.id'],
-        params=[user_id],
-        order_by=['-answer.id']
-    ).values(
-            'title',
-            'question_id',
-            'answer_id',
-            'added_at',
-            'html',
-            'username',
-            'user_id'
-            )
-    if len(answers) > 0:
-        answers = [(Response(const.TYPE_RESPONSE['ANSWER_ACCEPTED'], a['title'], a['question_id'],
-            a['answer_id'], a['added_at'], a['username'], a['user_id'], a['html'])) for a in answers]
-        responses.extend(answers)
-
-    # sort posts by time
-    responses.sort(lambda x,y: cmp(y.time, x.time))
-
-    return render_to_response(user_view.template_file,{
-        'active_tab':'users',
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "view_user" : user,
-        "responses" : responses[:user_view.data_size],
-
-    }, context_instance=RequestContext(request))
 
 def user_votes(request, user_id, user_view):
     user = get_object_or_404(models.User, id=user_id)

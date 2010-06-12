@@ -13,6 +13,17 @@ from forum import const
 from forum.utils import functions
 
 
+class ResponseAndMentionActivityManager(models.Manager):
+    def get_query_set(self):
+        response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        response_types += (const.TYPE_ACTIVITY_MENTION, )
+        return super(
+                    ResponseAndMentionActivityManager,
+                    self
+                ).get_query_set().filter(
+                    activity_type__in = response_types
+                )
+
 class ActivityManager(models.Manager):
     def get_all_origin_posts(self):
         #todo: redo this with query sets
@@ -136,6 +147,7 @@ class Activity(models.Model):
     is_auditted = models.BooleanField(default=False)
 
     objects = ActivityManager()
+    responses_and_mentions = ResponseAndMentionActivityManager()
 
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)
@@ -149,6 +161,9 @@ class Activity(models.Model):
         user_qs = self.receiving_users.all()
         assert(len(user_qs) == 1)
         return user_qs[0]
+
+    def get_absolute_url(self):
+        return self.content_object.get_absolute_url()
 
 class EmailFeedSetting(models.Model):
     DELTA_TABLE = {
