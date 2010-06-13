@@ -50,7 +50,7 @@ except ImportError:
     from yadis import xri
     
 from forum.utils.forms import clean_next
-from django_authopenid.models import ExternalLoginData
+from forum.deps.django_authopenid.models import ExternalLoginData
 
 __all__ = ['OpenidSigninForm', 'ClassicLoginForm', 'OpenidVerifyForm',
         'OpenidRegisterForm', 'ClassicRegisterForm', 'ChangePasswordForm',

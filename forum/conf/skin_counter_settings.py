@@ -2,7 +2,7 @@
 Skin settings to color view, vote and answer counters
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue, StringValue
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue, StringValue
 from django.utils.translation import ugettext as _
 from forum.deps.grapefruit import Color
 

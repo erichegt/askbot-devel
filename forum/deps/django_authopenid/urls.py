@@ -16,7 +16,7 @@ from django.conf import settings
 #settings.EXTERNAL_LOGIN_APP.views.signup_view()
 
 #print settings.EXTERNAL_LOGIN_APP.__dict__.keys()
-urlpatterns = patterns('django_authopenid.views',
+urlpatterns = patterns('forum.deps.django_authopenid.views',
     # yadis rdf
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
@@ -49,7 +49,7 @@ if settings.USE_EXTERNAL_LEGACY_LOGIN:
     EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
     urlpatterns += patterns('',
         url('^%s$' % _('external-login/forgot-password/'),\
-            'django_authopenid.views.external_legacy_login_info', \
+            'forum.deps.django_authopenid.views.external_legacy_login_info', \
             name='user_external_legacy_login_issues'),
         url('^%s$' % _('external-login/signup/'), \
             EXTERNAL_LOGIN_APP.views.signup,\

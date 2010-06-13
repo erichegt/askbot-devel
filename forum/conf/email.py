@@ -2,8 +2,8 @@
 Email related settings
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue, BooleanValue
-from livesettings import StringValue
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue, BooleanValue
+from forum.deps.livesettings import StringValue
 from django.utils.translation import ugettext as _
 from forum import const
 

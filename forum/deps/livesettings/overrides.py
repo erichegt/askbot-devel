@@ -1,4 +1,4 @@
-"""Allows livesettings to be "locked down" and no longer use the settings page or the database
+"""Allows forum.deps.livesettings to be "locked down" and no longer use the settings page or the database
 for settings retrieval.
 """
 
@@ -20,7 +20,7 @@ def _safe_get_siteid(site):
     return siteid
 
 def get_overrides(siteid=-1):
-    """Check to see if livesettings is allowed to use the database.  If not, then
+    """Check to see if forum.deps.livesettings is allowed to use the database.  If not, then
     it will only use the values in the dictionary, LIVESETTINGS_OPTIONS[SITEID]['SETTINGS'],
     this allows 'lockdown' of a live site.
 

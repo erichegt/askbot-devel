@@ -1,5 +1,5 @@
 from django import forms
-from livesettings import *
+from forum.deps.livesettings import *
 import logging
 
 log = logging.getLogger('configuration')

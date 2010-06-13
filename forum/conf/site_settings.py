@@ -3,7 +3,7 @@ Q&A website settings - title, desctiption, basic urls
 keywords
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, StringValue
+from forum.deps.livesettings import ConfigurationGroup, StringValue
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from forum import const

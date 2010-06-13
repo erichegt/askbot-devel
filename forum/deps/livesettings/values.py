@@ -9,9 +9,9 @@ from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext, ugettext_lazy as _
-from livesettings.models import find_setting, LongSetting, Setting, SettingNotSet
-from livesettings.overrides import get_overrides
-from livesettings.utils import load_module, is_string_like, is_list_or_tuple
+from forum.deps.livesettings.models import find_setting, LongSetting, Setting, SettingNotSet
+from forum.deps.livesettings.overrides import get_overrides
+from forum.deps.livesettings.utils import load_module, is_string_like, is_list_or_tuple
 import datetime
 import logging
 import signals
@@ -344,7 +344,7 @@ class Value(object):
 
                 return True
         else:
-            log.debug('not updating setting %s.%s - livesettings db is disabled',self.group.key, self.key)
+            log.debug('not updating setting %s.%s - forum.deps.livesettings db is disabled',self.group.key, self.key)
 
         return False
 

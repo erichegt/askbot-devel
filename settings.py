@@ -75,10 +75,10 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'debug_toolbar',
     'forum',
-    'django_authopenid',
+    'forum.deps.django_authopenid',
     #'forum.importers.stackexchange', #se loader
     'south',
-    'livesettings',
+    'forum.deps.livesettings',
     'keyedcache',
 )
 

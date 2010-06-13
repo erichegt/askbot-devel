@@ -1,6 +1,6 @@
 #todo: this file is currently not in use
 import os
-from livesettings import ConfigurationGroup, IntegerValue, config_register
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue, config_register
 
 INSTALLED_APPS = ['forum']
 

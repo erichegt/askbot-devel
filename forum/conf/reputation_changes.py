@@ -4,7 +4,7 @@ user in response to various actions by the same
 users or others
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue
 from django.utils.translation import ugettext as _
 
 REP_CHANGES = ConfigurationGroup(

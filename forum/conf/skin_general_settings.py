@@ -2,7 +2,7 @@
 General skin settings
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, StringValue, IntegerValue
+from forum.deps.livesettings import ConfigurationGroup, StringValue, IntegerValue
 from django.utils.translation import ugettext as _
 from forum.skins.utils import get_skin_choices
 

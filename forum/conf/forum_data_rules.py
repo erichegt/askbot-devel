@@ -2,8 +2,8 @@
 Settings for forum data display and entry
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, BooleanValue, IntegerValue
-from livesettings import StringValue
+from forum.deps.livesettings import ConfigurationGroup, BooleanValue, IntegerValue
+from forum.deps.livesettings import StringValue
 from django.utils.translation import ugettext as _
 from forum import const
 
@@ -39,7 +39,7 @@ settings.register(
     )
 )
 
-#todo: looks like there is a bug in livesettings 
+#todo: looks like there is a bug in forum.deps.livesettings 
 #that does not allow Integer values with defaults and choices
 settings.register(
     StringValue(

@@ -1,8 +1,8 @@
 from django import template
 from django.contrib.sites.models import Site
 from django.core import urlresolvers
-from livesettings import config_value
-from livesettings.utils import url_join
+from forum.deps.livesettings import config_value
+from forum.deps.livesettings.utils import url_join
 import logging
 
 log = logging.getLogger('configuration.config_tags')
@@ -88,4 +88,4 @@ def admin_site_views(view):
     return ret
 
 
-register.inclusion_tag('livesettings/_admin_site_views.html')(admin_site_views)
+register.inclusion_tag('forum.deps.livesettings/_admin_site_views.html')(admin_site_views)

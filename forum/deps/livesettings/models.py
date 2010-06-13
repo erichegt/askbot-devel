@@ -5,7 +5,7 @@ from django.db.models import loading
 from django.utils.translation import ugettext_lazy as _
 from keyedcache import cache_key, cache_get, cache_set, NotCachedError
 from keyedcache.models import CachedObjectMixin
-from livesettings.overrides import get_overrides
+from forum.deps.livesettings.overrides import get_overrides
 import logging
 
 log = logging.getLogger('configuration.models')

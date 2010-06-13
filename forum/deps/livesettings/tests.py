@@ -1,7 +1,7 @@
 from django.conf import settings as djangosettings
 from django.test import TestCase
 import keyedcache
-from livesettings import *
+from forum.deps.livesettings import *
 import logging
 log = logging.getLogger('test');
 

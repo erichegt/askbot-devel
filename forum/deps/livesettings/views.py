@@ -4,13 +4,13 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
-from livesettings import ConfigurationSettings, forms
-from livesettings.overrides import get_overrides
+from forum.deps.livesettings import ConfigurationSettings, forms
+from forum.deps.livesettings.overrides import get_overrides
 import logging
 
 log = logging.getLogger('configuration.views')
 
-def group_settings(request, group, template='livesettings/group_settings.html'):
+def group_settings(request, group, template='forum.deps.livesettings/group_settings.html'):
     # Determine what set of settings this editor is used for
     
     use_db, overrides = get_overrides();
@@ -62,12 +62,12 @@ def site_settings(request):
     mgr = ConfigurationSettings()
     default_group= mgr.groups()[0].key
     return HttpResponseRedirect(reverse('group_settings', args=[default_group]))
-    #return group_settings(request, group=None, template='livesettings/site_settings.html')
+    #return group_settings(request, group=None, template='forum.deps.livesettings/site_settings.html')
     
 def export_as_python(request):
     """Export site settings as a dictionary of dictionaries"""
     
-    from livesettings.models import Setting, LongSetting
+    from forum.deps.livesettings.models import Setting, LongSetting
     import pprint
     
     work = {}
@@ -88,6 +88,6 @@ def export_as_python(request):
     pp = pprint.PrettyPrinter(indent=4)
     pretty = pp.pformat(work)
 
-    return render_to_response('livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
+    return render_to_response('forum.deps.livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
     
 export_as_python = never_cache(staff_member_required(export_as_python))

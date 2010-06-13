@@ -3,7 +3,7 @@ Settings for minimum reputation required for
 a variety of actions on the askbot forum
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue
 from django.utils.translation import ugettext as _
 
 MIN_REP = ConfigurationGroup(

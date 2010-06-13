@@ -2,7 +2,7 @@
 User policy settings
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, BooleanValue, IntegerValue
+from forum.deps.livesettings import ConfigurationGroup, BooleanValue, IntegerValue
 from django.utils.translation import ugettext as _
 
 USER_SETTINGS = ConfigurationGroup(

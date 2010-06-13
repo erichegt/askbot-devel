@@ -2,7 +2,7 @@
 Q&A forum flatpages (about, etc.)
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, LongStringValue
+from forum.deps.livesettings import ConfigurationGroup, LongStringValue
 from django.utils.translation import ugettext as _
 
 FLATPAGES = ConfigurationGroup(

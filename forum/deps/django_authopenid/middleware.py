@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django_authopenid import mimeparse
+from forum.deps.django_authopenid import mimeparse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings

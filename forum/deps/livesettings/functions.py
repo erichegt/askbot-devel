@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext
-from livesettings import values
-from livesettings.models import SettingNotSet
-from livesettings.utils import is_string_like
+from forum.deps.livesettings import values
+from forum.deps.livesettings.models import SettingNotSet
+from forum.deps.livesettings.utils import is_string_like
 
 import logging
 

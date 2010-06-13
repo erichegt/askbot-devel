@@ -62,9 +62,9 @@ import re
 import urllib
 
 from forum.forms import SimpleEmailSubscribeForm 
-from django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response
-from django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
-from django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRegisterForm, \
+from forum.deps.django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response
+from forum.deps.django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
+from forum.deps.django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRegisterForm, \
         OpenidVerifyForm, ClassicRegisterForm, ChangePasswordForm, ChangeEmailForm, \
         ChangeopenidForm, DeleteForm, EmailPasswordForm
 import logging
@@ -155,7 +155,7 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
     on_success = on_success or default_on_success
     on_failure = on_failure or default_on_failure
     
-    logging.debug('in django_authopenid.complete')
+    logging.debug('in forum.deps.django_authopenid.complete')
     
     consumer = Consumer(request.session, DjangoOpenIDStore())
     # make sure params are encoded in utf8

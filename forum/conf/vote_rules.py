@@ -5,7 +5,7 @@ and offensive flags.
 For example number of times a person can vote each day, etc.
 """
 from forum.conf.settings_wrapper import settings
-from livesettings import ConfigurationGroup, IntegerValue
+from forum.deps.livesettings import ConfigurationGroup, IntegerValue
 from django.utils.translation import ugettext as _
 
 VOTE_RULES = ConfigurationGroup(

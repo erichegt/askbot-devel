@@ -197,7 +197,7 @@ urlpatterns = patterns('',
     url( r'^%s$' % _('upload/'), app.writers.upload, name='upload'),
     url(r'^%s$' % _('search/'), app.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.meta.feedback, name='feedback'),
-    (r'^%s' % _('account/'), include('django_authopenid.urls')),
+    (r'^%s' % _('account/'), include('forum.deps.django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
 )

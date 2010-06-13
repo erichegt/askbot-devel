@@ -1,5 +1,5 @@
 """
-Definition of a Singleton wrapper class for livesettings
+Definition of a Singleton wrapper class for forum.deps.livesettings
 with interface similar to django.conf.settings
 that is each setting has unique key and is accessible
 via dotted lookup.
@@ -11,16 +11,16 @@ from forum.conf import settings as forum_settings
 forum_settings.BLAH
 
 NOTE that at the moment there is distinction between settings
-(django settings) and forum_settings (livesettings)
+(django settings) and forum_settings (forum.deps.livesettings)
 
-the value will be taken from livesettings database or cache
+the value will be taken from forum.deps.livesettings database or cache
 note that during compilation phase database is not accessible
 for the most part, so actual values are reliably available only 
 at run time
 
-livesettings is a module developed for satchmo project
+forum.deps.livesettings is a module developed for satchmo project
 """
-from livesettings import SortedDotDict, config_register
+from forum.deps.livesettings import SortedDotDict, config_register
 
 class ConfigSettings(object):
     """A very simple Singleton wrapper for settings
@@ -41,13 +41,13 @@ class ConfigSettings(object):
         """value lookup returns the actual value of setting
         not the object - this way only very minimal modifications
         will be required in code to convert an app
-        depending on django.conf.settings to livesettings
+        depending on django.conf.settings to forum.deps.livesettings
         """
         return getattr(self.__instance, key).value
 
     def register(self, value):
         """registers the setting
-        value must be a subclass of livesettings.Value
+        value must be a subclass of forum.deps.livesettings.Value
         """
         key = value.key
         group_key = value.group.key

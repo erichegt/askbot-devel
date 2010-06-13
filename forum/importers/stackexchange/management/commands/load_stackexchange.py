@@ -8,7 +8,7 @@ import forum.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models
 import forum.models as askbot
-import django_authopenid.models as askbot_openid
+import forum.deps.django_authopenid.models as askbot_openid
 import forum.importers.stackexchange.models as se
 from forum.forms import EditUserEmailFeedsForm
 from forum.conf import settings as forum_settings
