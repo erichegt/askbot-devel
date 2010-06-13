@@ -39,7 +39,7 @@ from askbot.conf import settings as askbot_settings
 import types
 import re
 from django.utils.safestring import mark_safe
-from recaptcha_django import ReCaptchaField
+from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 

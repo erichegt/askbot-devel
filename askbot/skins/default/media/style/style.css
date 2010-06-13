@@ -692,7 +692,7 @@ blockquote {
 
 .boxC {
     background: white /*#cacdc6; /*f9f7ed;*/
-    padding: 10px;
+    padding: 10px 10px 10px 15px;
     margin-bottom: 8px;
     /*
     border-top: 1px solid #eeeeec;
@@ -832,7 +832,7 @@ conflicts with WMD!
 
 .tags a {
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: normal;
     color: #333;
     text-decoration: none;
@@ -2657,4 +2657,8 @@ p.signup_p {
 #top a.ab-nav-karma, #top a.ab-nav-badges {
     margin: 0;
     text-decoration: none;
+}
+
+img.gravatar {
+    margin:2px;
 }

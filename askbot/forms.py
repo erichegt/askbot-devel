@@ -7,7 +7,7 @@ from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from askbot.utils.forms import NextUrlField, UserNameField
-from recaptcha_django import ReCaptchaField
+from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
