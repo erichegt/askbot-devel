@@ -693,11 +693,4 @@ __all__ = [
         #'AuthKeyUserAssociation',
 
         'User',
-        ]
-
-
-#from forum.modules import get_modules_script_classes
-#for k, v in get_modules_script_classes('models', models.Model).items():
-#    if not k in __all__:
-#        __all__.append(k)
-#        exec "%s = v" % k
+]

@@ -1,1 +1,0 @@
-python manage.py runserver `hostname -i`:8000

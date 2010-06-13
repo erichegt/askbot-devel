@@ -104,8 +104,8 @@ TYPE_ACTIVITY_MENTION = 19
 
 #todo: rename this to TYPE_ACTIVITY_CHOICES
 TYPE_ACTIVITY = (
-    (TYPE_ACTIVITY_ASK_QUESTION, _('question')),
-    (TYPE_ACTIVITY_ANSWER, _('answer')),
+    (TYPE_ACTIVITY_ASK_QUESTION, _('asked a question')),
+    (TYPE_ACTIVITY_ANSWER, _('answered a question')),
     (TYPE_ACTIVITY_COMMENT_QUESTION, _('commented question')),
     (TYPE_ACTIVITY_COMMENT_ANSWER, _('commented answer')),
     (TYPE_ACTIVITY_UPDATE_QUESTION, _('edited question')),

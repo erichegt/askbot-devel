@@ -1,6 +1,6 @@
 from django import template
 from forum import auth
-from forum_modules.grapefruit import Color
+from forum.deps.grapefruit import Color
 from django.utils.translation import ugettext as _
 import logging
 

@@ -28,8 +28,8 @@ response_snippet - abbreviated content of the response
             </div>
                 <a style="font-size:12px" href="{{ response.user.get_absolute_url }}">{{ response.user.username }}</a>
                 <a style="text-decoration:none;" href="{{ response.response_url }}">
-                    {{ response.response_type }}, 
-                    {% diff_date response.timestamp 3 %}:<br/>
+                    {{ response.response_type }}
+                    ({% diff_date response.timestamp 3 "True" %}):<br/>
                     <strong>"{{ response.response_title }}"</strong>&nbsp;
                     {{ response.response_snippet|safe }}
                 </a>

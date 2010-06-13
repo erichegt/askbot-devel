@@ -1,4 +1,4 @@
-from forum_modules.grapefruit import Color
+from forum.deps.grapefruit import Color
 import math
 
 def get_counter_colors(count, counter_max=10, empty_bg='white', empty_fg='black', 

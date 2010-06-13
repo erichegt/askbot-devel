@@ -301,7 +301,7 @@ def convert2tagname_list(question):
     return ''
 
 @register.simple_tag
-def diff_date(date, limen=2):
+def diff_date(date, limen=2, use_on_prefix = False):
     now = datetime.datetime.now()#datetime(*time.localtime()[0:6])#???
     diff = now - date
     days = diff.days
@@ -310,9 +310,13 @@ def diff_date(date, limen=2):
 
     if days > 2:
         if date.year == now.year:
-            return date.strftime("%b %d")# at %H:%M")
+            date_token = date.strftime("%b %d")
         else:
-            return date.strftime("%b %d '%y")# at %H:%M")
+            date_token = date.strftime("%b %d '%y")
+        if use_on_prefix:
+            return _('on %(date)s') % { 'date': date_token }
+        else:
+            return date_token
     elif days == 2:
         return _('2 days ago')
     elif days == 1:

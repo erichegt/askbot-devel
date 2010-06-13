@@ -637,8 +637,8 @@ def user_responses(request, user_id, user_view):
                 page
     """
     user = get_object_or_404(models.User, id=user_id)
-    #if request.user != user:
-    #    raise Http404
+    if request.user != user:
+        raise Http404
 
     user = get_object_or_404(models.User, id=user_id)
     response_list = []

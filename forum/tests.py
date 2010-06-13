@@ -614,7 +614,7 @@ class UpdateNotificationTests(TestCase):
 
 
 class AnonymousVisitorTests(TestCase):
-    fixtures = ['forum/fixtures/full_dump.json', ]
+    fixtures = ['tmp/fixture1.json', ]
 
     def test_index(self):
         #todo: merge this with all reader url tests

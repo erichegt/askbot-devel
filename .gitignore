@@ -2,6 +2,7 @@
 *.swp
 *.log
 cache/??
+run
 *.wsgi
 nbproject
 settings_local.py
