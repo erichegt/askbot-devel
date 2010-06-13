@@ -12,8 +12,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
 
-    #below is forum stuff for this tuple
-    'forum.skins.loaders.load_template_source',#forum stuff
+    #below is askbot stuff for this tuple
+    'askbot.skins.loaders.load_template_source',#askbot stuff
 #     'django.template.loaders.eggs.load_template_source',
 )
 
@@ -27,31 +27,31 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.middleware.sqlprint.SqlPrintingMiddleware',
 
-    #below is forum stuff for this tuple
-    'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
-    'forum.middleware.pagesize.QuestionsPageSizeMiddleware',
-    'forum.middleware.cancel.CancelActionMiddleware',
+    #below is askbot stuff for this tuple
+    'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
+    'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
+    'askbot.middleware.cancel.CancelActionMiddleware',
     #'recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'forum.middleware.view_log.ViewLogMiddleware',
-    'forum.middleware.spaceless.SpacelessMiddleware',
+    'askbot.middleware.view_log.ViewLogMiddleware',
+    'askbot.middleware.spaceless.SpacelessMiddleware',
 )
 
-#all of these are necessary for the forum and absend in default settings.py
+#all of these are necessary for the askbot and absend in default settings.py
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
-    'forum.context.application_settings',
+    'askbot.context.application_settings',
     #'django.core.context_processors.i18n',
-    'forum.user_messages.context_processors.user_messages',#must be before auth
+    'askbot.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
 )
 
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    #specific to forum
-    os.path.join(os.path.dirname(__file__),'forum','skins').replace('\\','/'),
+    #specific to askbot
+    os.path.join(os.path.dirname(__file__),'askbot','skins').replace('\\','/'),
 )
 
 #UPLOAD SETTINGS
@@ -69,16 +69,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
 
-    #all of these are needed for the forum
+    #all of these are needed for the askbot
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'debug_toolbar',
-    'forum',
-    'forum.deps.django_authopenid',
-    #'forum.importers.stackexchange', #se loader
+    'askbot',
+    'askbot.deps.django_authopenid',
+    #'askbot.importers.stackexchange', #se loader
     'south',
-    'forum.deps.livesettings',
+    'askbot.deps.livesettings',
     'keyedcache',
 )
 

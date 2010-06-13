@@ -8,7 +8,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^%s' % settings.FORUM_SCRIPT_ALIAS, include('forum.urls')),
+    (r'^%s' % settings.FORUM_SCRIPT_ALIAS, include('askbot.urls')),
     (r'^admin/', include(admin.site.urls)),
     (r'^cache/', include('keyedcache.urls')),
     (r'^settings/', include('livesettings.urls')),
