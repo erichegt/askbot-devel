@@ -10,7 +10,7 @@ from askbot import const
 
 QA_SITE_SETTINGS = ConfigurationGroup(
                     'QA_SITE_SETTINGS',
-                    _('Q&A askbot website parameters and urls')
+                    _('Q&A forum website parameters and urls')
                 )
 
 settings.register(
@@ -18,7 +18,7 @@ settings.register(
         QA_SITE_SETTINGS,
         'APP_TITLE',
         default=u'ASKBOT: Open Source Q&A Forum',
-        description=_('Site title for the Q&A askbot')
+        description=_('Site title for the Q&A forum')
     )
 )
 
@@ -26,7 +26,7 @@ settings.register(
     StringValue(
         QA_SITE_SETTINGS,
         'APP_KEYWORDS',
-        default=u'ASKBOT,CNPROG,askbot,community',
+        default=u'ASKBOT,CNPROG,forum,community',
         description=_('Comma separated list of Q&A site keywords')
     )
 )
@@ -44,7 +44,7 @@ settings.register(
     StringValue(
         QA_SITE_SETTINGS,
         'APP_DESCRIPTION',
-        default='Open source question and answer askbot written in Python and Django',
+        default='Open source question and answer forum written in Python and Django',
         description=_('Site description for the search engines')
     )
 )
@@ -55,7 +55,7 @@ settings.register(
         'APP_SHORT_NAME',
         default=_('Askbot'),
         hidden=True,
-        description=_('Short name for your Q&A askbot')
+        description=_('Short name for your Q&A forum')
     )
 )
 
@@ -64,7 +64,7 @@ settings.register(
         QA_SITE_SETTINGS,
         'APP_URL',
         default='http://askbot.org',
-        description=_('Base URL for your Q&A askbot, must start with http or https'),
+        description=_('Base URL for your Q&A forum, must start with http or https'),
     )
 )
 

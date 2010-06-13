@@ -32,7 +32,7 @@ settings.register(
                     'This option currently defines default frequency '
                     'of emailed updates in the following five categories: '
                     'questions asked by user, answered by user, individually '
-                    'selected, entire askbot (per person tag filter applies) '
+                    'selected, entire forum (per person tag filter applies) '
                     'and posts mentioning the user and comment responses'
                     )
     )

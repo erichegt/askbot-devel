@@ -132,7 +132,7 @@ class ClassicLoginForm(forms.Form):
                     openid_logins = user.userassociation_set.all()
                     
                     if len(openid_logins) > 0:
-                        msg1 = _('Account with this name already exists on the askbot')
+                        msg1 = _('Account with this name already exists on the forum')
                         msg2 = _('can\'t have two logins to the same account yet, sorry.')
                         error_list.append(msg1)
                         error_list.append(msg2)

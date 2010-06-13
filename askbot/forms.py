@@ -385,7 +385,7 @@ class EditUserEmailFeedsForm(forms.Form):
                             label=_('Individually selected')
                         )
     all_questions = EmailFeedSettingField(
-                            label=_('Entire askbot (tag filtered)'),
+                            label=_('Entire forum (tag filtered)'),
                         )
 
     mentions_and_comments = EmailFeedSettingField(
