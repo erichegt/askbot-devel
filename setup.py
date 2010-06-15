@@ -25,6 +25,11 @@ setup(
     author_email = 'evgeny.fadeev@gmail.com',
     license = 'GPLv3',
     keywords = 'forum, community, wiki, Q&A',
+    entry_points = {
+        'console_scripts' : [
+            'startforum = askbot.deployment:startforum',
+        ]
+    },
     url = 'http://askbot.org',
     include_package_data = True,
     install_requires = install_requires,
@@ -37,3 +42,13 @@ setup(
 if sys.platform in WIN_PLATFORMS:
     print 'ATTENTION!! please install windows binary mysql-python package'
     print 'at http://www.codegood.com/archives/4'
+
+print '**************************************************************'
+print '*                                                            *'
+print '*  Thanks for installing Askbot.                             *'
+print '*  To start deploying type: >startforum                      *'
+print '*  Please take a look at the manual askbot/doc/INSTALL       *'
+print '*  And please do not hesitate to ask your questions at       *'
+print '*  at http://askbot.org                                      *'
+print '*                                                            *'
+print '**************************************************************'

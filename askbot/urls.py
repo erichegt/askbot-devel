@@ -9,6 +9,7 @@ from askbot import views as app
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 admin.autodiscover()
 feeds = {
@@ -36,7 +37,7 @@ urlpatterns = patterns('',
     url(
         r'^%s(?P<path>.*)$' % _('upfiles/'), 
         'django.views.static.serve',
-        {'document_root': os.path.join(APP_PATH,'upfiles').replace('\\','/')},
+        {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
         name='uploaded_file',
     ),
     url(r'^%s$' % _('about/'), app.meta.about, name='about'),

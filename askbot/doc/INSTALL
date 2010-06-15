@@ -1,7 +1,7 @@
 CONTENTS
 ------------------
-A. PREREQUISITES
-B. INSTALLATION
+A. INSTALLATION
+B. DEPLOYMENT
    1. Settings file
    2. Database
    3. Running Askbot in the development server
@@ -14,67 +14,69 @@ C. CONFIGURATION PARAMETERS (settings_local.py)
 D. CUSTOMIZATION
 
 
-A. PREREQUISITES
------------------------------------------------
-Note: by default all installation activity is made in the superuser 'root' account.
-This can be achieved either by logging in as root (su root),
-or - if you have program sudo installed - prefix all commands with sudo.
-So sodo will be listed below as optional.
+A. INSTALLATION
 
-0. We recommend you to use python-setuptools to install pre-requirement libraries.
-If you haven't installed it, please try to install it first.
-e.g, [sudo] apt-get install python-setuptools
+NOTE: if you need to install in non-standard locations
+please take a look here: http://askbot.org/wiki/index.php/Installing_software_components_at_non-standard_locations
 
-1. Python2.5/2.6, Django v1.1.1
+type
 
-1A If you are using MySQL, mysql client for python must be installed
-[sudo] easy_install mysql-python
+> python setup.py install
 
-2. Python-openid v2.2
-http://openidenabled.com/python-openid/
-[sudo] easy_install python-openid
+or
 
-4. html5lib
-http://code.google.com/p/html5lib/
-Used for HTML sanitizer
-[sudo] easy_install html5lib
+> easy_install askbot
 
-5. Markdown2
-http://code.google.com/p/python-markdown2/
-[sudo] easy_install markdown2
+then, if you need to start a new deployment, type
 
-6. Django Debug Toolbar
-http://github.com/robhudson/django-debug-toolbar/tree/master
+> startforum
 
-7. djangosphinx (optional - for full text questions+answer+tag)
-http://github.com/dcramer/django-sphinx/tree/master/djangosphinx
+Please read a few paragraphs of the following section on 
+how to initialize the application
 
-8. sphinx search engine (optional, works together with djangosphinx)
-http://sphinxsearch.com/downloads.html
+ATTENTION WINDOWS USERS: you will need to manually install
+binary for mysql-python from here
+http://www.codegood.com/archives/4
 
-9. recaptcha_django (installed through svn)
-http://code.google.com/p/recaptcha-django/
+B. DEPLOYMENT 
 
-10. python recaptcha module
-http://code.google.com/p/recaptcha/
-easy_install recaptcha-client
-Notice that you will need to register with recaptcha.net and receive
-recaptcha public and private keys that need to be saved in your
-settings_local.py file
+if you are adding askbot to your existing project that already 
+has other apps, you'll need to "merge" some of the files in
+directory askbot/install_templates into your corresponding project files
+more instuctions about this are to follow soon - if you have questions
+ask on the forum
 
-11. South
-http://south.aeracode.org/docs/installation.html
-Used for database schema and data migrations
-[sudo] easy_install South
+for new deployment
+> startforum
 
-EXTRA DEPENDENCIES FOR PYTHON 2.4
-* hashlib (made standard in python 2.5)
+and answer questions in the end you should be able to get almost
+working installation, you'll need to edit file settings.py
+and at least enter database name, user name and password
 
-NOTES: django_authopenid is included into Askbot code
-and is significantly modified.  http://code.google.com/p/django-authopenid/
-no need to install this library
+then type
 
-B. INSTALLATION
+> python manage.py syncdb
+> python manage.py migrate forum
+
+now run:
+
+> python manage.py runserver `hostname -i`:8000 #or use some other port
+
+command `hostname -i` returns IP address on Unix, you can type the IP by hand too
+
+
+
+
+
+
+NOTES BELOW ARE OUTDATED, but may be useful
+if you have questions - please ask at http://askbot.org
+
+
+
+
+
+
 
 NOTE: If you want to upgrade software, not install from scratch - 
       take a look into forum/documentation/UPGRADE

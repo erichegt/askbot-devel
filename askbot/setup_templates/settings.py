@@ -13,9 +13,9 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'mysql'           # only mysql is supported, more will be in the near future
-DATABASE_NAME = 'junk'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'junk'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'secret'         # Not used with sqlite3.
+DATABASE_NAME = ''             # Or path to database file if using sqlite3.
+DATABASE_USER = ''             # Not used with sqlite3.
+DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -51,12 +51,14 @@ LANGUAGE_CODE = 'en'
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = ''#set this to serve uploaded files correctly
+
+PROJECT_ROOT = os.path.dirname(__file__)
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
