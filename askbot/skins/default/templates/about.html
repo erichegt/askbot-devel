@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+<!-- template about.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load humanize %}
+{% block title %}{% spaceless %}{% trans "About" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+{% endblock %}
+{% block content %}
+<div class="headNormal">
+{% trans "About" %}
+</div>
+
+<div class="content">
+    {{settings.FORUM_ABOUT|safe}}
+</div>
+{% endblock %}
+<!-- end template about.html -->

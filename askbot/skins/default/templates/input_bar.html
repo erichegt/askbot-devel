@@ -1,0 +1,45 @@
+{% load i18n %}
+{% load smart_if %}
+{% if active_tab != "ask" %}
+<div id="searchBar">
+    {% comment %}url action depends on which tab is active{% endcomment %}
+    <form 
+        {% if active_tab == "tags" or active_tab == "users" %}
+            action="{% url search %}" 
+        {% else %}
+            action="{% url questions %}" 
+        {% endif %}
+        method="get">
+            {% comment %} class was searchInput {% endcomment %}
+            <input 
+                {% if query %}
+                class="searchInputCancelable"
+                {% else %}
+                class="searchInput" 
+                {% endif %}
+                type="text" 
+                value="{{ query|default_if_none:"" }}" 
+                name="query" 
+                id="keywords"/>
+            {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
+            <input type="button" 
+                value="x" 
+                name="reset_query" 
+                {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
+                onclick="window.location.href='{% url questions %}?reset_query=true'" 
+                value="true" 
+                class="cancelSearchBtn"/>
+            {% endif %}
+            <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" />
+            {% if active_tab == "tags" %}
+                <input type="hidden" name="t" value="tag"/>
+            {% else %}
+                {% if active_tab == "users" %}
+                    <input type="hidden" name="t" value="user"/>
+                {% endif %}
+            {% endif %}
+    </form>
+</div>
+{% else %}
+    {% include "ask_form.html" %}
+{% endif %}

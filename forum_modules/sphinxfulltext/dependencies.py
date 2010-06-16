@@ -1,2 +1,0 @@
-DJANGO_APPS = ('djangosphinx', )
-

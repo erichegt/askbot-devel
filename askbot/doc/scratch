@@ -1,0 +1,12 @@
+Error upon restarting Apache:
+
+Name duplicates previous WSGI daemon definition
+
+different keys - empty space counts for translation keys
+{% blocktrans %}page number {{num}} {% endblocktrans %}
+{% blocktrans %}page number {{num}}{% endblocktrans %}
+
+for admin interface downloaded two packages:
+django-keyedcache
+django-livesettings
+from http://bitbucket.org/bkroeze/

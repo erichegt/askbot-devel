@@ -1,0 +1,66 @@
+{% load i18n %}
+{% load smart_if %}
+<div id="askform">
+    <form id="fmask" action="" method="post" >
+        <div class="form-item">
+            {% comment %}
+            <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> 
+            {% endcomment %}
+            <div id="askFormBar">
+                {% if not request.user.is_authenticated %}
+                    <p>{% trans "login to post question info" %}</p>
+                {% else %}
+                    {% if settings.EMAIL_VALIDATION %}
+                        {% if not request.user.email_isvalid %}
+                                {% blocktrans with request.user.email as email %}must have valid {{email}} to post, 
+                                see {{email_validation_faq_url}}
+                                {% endblocktrans %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                <input id="id_title" class="questionTitleInput" name="title" 
+                    value="{% if form.initial.title %}{{form.initial.title}}{% endif %}"/>
+            </div>
+            {{ form.title.errors }}
+            <span class="form-error"></span><br/>
+            <div class="title-desc">
+                {{ form.title.help_text }}
+            </div>
+        </div>
+
+        <div class="form-item">
+            <div id="wmd-button-bar" class="wmd-panel"></div>
+            {{ form.text }}
+
+            <div class="preview-toggle">
+                <table>
+                    <tr>
+                        <td>
+                            <span id="pre-collapse" title="{% trans "Toggle the real time Markdown editor preview" %}">{% trans "toggle preview" %}</span>
+                        </td>
+                        {% if settings.WIKI_ON %}
+                        <td style="text-align:right;">
+                            {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag }} </span>
+                        </td>
+                        {% endif %}
+                    </tr>
+
+                </table>
+            </div>
+            <div id="previewer" class="wmd-preview"></div>
+            <span class="form-error"></span>
+        </div>
+        <div class="form-item">
+            <strong>{{ form.tags.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br/>
+            {{ form.tags }}  {{ form.tags.errors }}
+        </div>
+        <p class="title-desc">
+            {{ form.tags.help_text }}
+        </p>
+        {% if not request.user.is_authenticated %}
+        <input type="submit" value="{% trans "Login/signup to post your question" %}" class="submit" />
+        {% else %}
+        <input type="submit" value="{% trans "Ask your question" %}" class="submit" />
+        {% endif %}
+    </form>
+</div>

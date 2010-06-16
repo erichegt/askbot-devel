@@ -1,0 +1,4333 @@
+# Russian translation of messa and 2010 Askbot
+# Copyright (C) 2009 Gang Chen
+# This file is distributed under the same license as the Askbot package.
+# FIRST AUTHOR <evgeny.fadeev@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-04 18:42-0400\n"
+"PO-Revision-Date: 2010-06-11 12:25\n"
+"Last-Translator: <matsur25@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Translated-Using: django-rosetta 0.5.3\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+
+#: django_authopenid/forms.py:72 django_authopenid/views.py:133
+msgid "i-names are not supported"
+msgstr "извините, но i-names не поддерживаются"
+
+#: django_authopenid/forms.py:135
+msgid "Account with this name already exists on the forum"
+msgstr "аккаунт с таким именем уже существует на форуме"
+
+#: django_authopenid/forms.py:136
+msgid "can't have two logins to the same account yet, sorry."
+msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
+
+#: django_authopenid/forms.py:158
+msgid "Please enter valid username and password (both are case-sensitive)."
+msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
+
+#: django_authopenid/forms.py:161 django_authopenid/forms.py:211
+msgid "This account is inactive."
+msgstr "Этот аккаунт деактивирован"
+
+#: django_authopenid/forms.py:163
+msgid "Login failed."
+msgstr "Логин неудачен"
+
+#: django_authopenid/forms.py:165
+msgid "Please enter username and password"
+msgstr "Пожалуйста, введите имя пользователя и пароль"
+
+#: django_authopenid/forms.py:167
+msgid "Please enter your password"
+msgstr "Пожалуйста, введите пароль"
+
+#: django_authopenid/forms.py:169
+msgid "Please enter user name"
+msgstr "Пожалуйста, введите имя пользователя"
+
+#: django_authopenid/forms.py:206
+msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
+msgstr "Пожалуйста введите имя пользователя и пароль (обратите внимание - регистр букв важен для обоих параметров)"
+
+#: django_authopenid/forms.py:230
+msgid "Current password"
+msgstr "Настоящий пароль"
+
+#: django_authopenid/forms.py:240
+msgid "Old password is incorrect.                     Please enter the correct password."
+msgstr "Старый пароль неверен. Пожалуйста, введите правильный пароль."
+
+#: django_authopenid/forms.py:306
+msgid "Your user name (<i>required</i>)"
+msgstr "Ваше имя пользователя <i>(обязательно)</i>"
+
+#: django_authopenid/forms.py:321
+msgid "Incorrect username."
+msgstr "Неправильное имя пользователя."
+
+#: django_authopenid/urls.py:26 django_authopenid/urls.py:27
+#: django_authopenid/urls.py:29 fbconnect/urls.py:12 fbconnect/urls.py:13
+#: fbconnect/urls.py:14
+msgid "signin/"
+msgstr "войти/"
+
+#: django_authopenid/urls.py:26 fbconnect/urls.py:13 fbconnect/urls.py:17
+msgid "newquestion/"
+msgstr "новый-вопрос/"
+
+#: django_authopenid/urls.py:27 fbconnect/urls.py:14 fbconnect/urls.py:18
+msgid "newanswer/"
+msgstr "новый-ответ/"
+
+#: django_authopenid/urls.py:28
+msgid "signout/"
+msgstr "выйти/"
+
+#: django_authopenid/urls.py:29
+msgid "complete/"
+msgstr "завершить/"
+
+#: django_authopenid/urls.py:31 fbconnect/urls.py:16 fbconnect/urls.py:17
+#: fbconnect/urls.py:18
+msgid "register/"
+msgstr "регистрация/"
+
+#: django_authopenid/urls.py:32
+msgid "signup/"
+msgstr "создать-аккаунт/"
+
+#: django_authopenid/urls.py:34
+msgid "sendpw/"
+msgstr "послать-пароль/"
+
+#: django_authopenid/urls.py:35 django_authopenid/urls.py:39
+msgid "password/"
+msgstr "пароль/"
+
+#: django_authopenid/urls.py:35
+msgid "confirm/"
+msgstr "подтвердить/"
+
+#: django_authopenid/urls.py:40 django_authopenid/urls.py:41
+#: django_authopenid/urls.py:42 django_authopenid/urls.py:43
+msgid "email/"
+msgstr "адрес-электронной-почты/"
+
+#: django_authopenid/urls.py:40
+msgid "validate/"
+msgstr "проверить/"
+
+#: django_authopenid/urls.py:41
+msgid "change/"
+msgstr "заменить/"
+
+#: django_authopenid/urls.py:42
+msgid "sendkey/"
+msgstr "послать-ключ/"
+
+#: django_authopenid/urls.py:43
+msgid "verify/"
+msgstr "проверить-ключ/"
+
+#: django_authopenid/urls.py:44
+msgid "openid/"
+msgstr "openid/"
+
+#: django_authopenid/urls.py:45 forum/urls.py:55 forum/urls.py:59
+msgid "delete/"
+msgstr "удалить/"
+
+#: django_authopenid/urls.py:53
+msgid "external-login/forgot-password/"
+msgstr "вход-с-партнерского-сайта/напомпнить-пароль/"
+
+#: django_authopenid/urls.py:56
+msgid "external-login/signup/"
+msgstr "вход-с-партнерского-сайта/создать-аккаунт/"
+
+#: django_authopenid/views.py:140
+#, python-format
+msgid "OpenID %(openid_url)s is invalid"
+msgstr "OpenID %(openid_url)s недействителен"
+
+#: django_authopenid/views.py:615
+msgid "Welcome email subject line"
+msgstr "добро пожаловать на форум!"
+
+#: django_authopenid/views.py:721
+msgid "Password changed."
+msgstr "Пароль изменен."
+
+#: django_authopenid/views.py:733 django_authopenid/views.py:739
+#, python-format
+msgid "your email needs to be validated see %(details_url)s"
+msgstr "пожалуйста подтвердите адрес Вашей электронной почты (<a href=\"%(details_url)s\">дополнительная информация здесь</a>)"
+
+#: django_authopenid/views.py:760
+msgid "Email verification subject line"
+msgstr "[форум]: подтвердите адрес Вашей электронной почты"
+
+#: django_authopenid/views.py:851
+msgid "your email was not changed"
+msgstr "адрес Вашей электронной почты не изменён"
+
+#: django_authopenid/views.py:899 django_authopenid/views.py:1057
+#, python-format
+msgid "No OpenID %s found associated in our database"
+msgstr "в нашей базе данных нет OpenID %s"
+
+#: django_authopenid/views.py:903 django_authopenid/views.py:1064
+#, python-format
+msgid "The OpenID %s isn't associated to current user logged in"
+msgstr "OpenID %s не принадлежит данному пользователю"
+
+#: django_authopenid/views.py:911
+msgid "Email Changed."
+msgstr "Адрес электронной почты изменён."
+
+#: django_authopenid/views.py:989
+msgid "This OpenID is already associated with another account."
+msgstr "Данный OpenID уже используется в другом аккаунте."
+
+#: django_authopenid/views.py:994
+#, python-format
+msgid "OpenID %s is now associated with your account."
+msgstr "Ваш аккаунт теперь соединен с OpenID %s"
+
+#: django_authopenid/views.py:1067
+msgid "Account deleted."
+msgstr "Аккаунт удален."
+
+#: django_authopenid/views.py:1119
+msgid "Request for new password"
+msgstr "[форум]: замена пароля"
+
+#: django_authopenid/views.py:1133
+msgid "A new password and the activation link were sent to your email address."
+msgstr "Новый пароль и ссылка для его активации были высланы по Вашему адресу электронной почты."
+
+#: django_authopenid/views.py:1165
+#, python-format
+msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgstr "Пароль не был изменён, т.к. ключ '%s' в нашей базе данных не найден."
+
+#: django_authopenid/views.py:1174
+msgid "Can not change password. User don't exist anymore                 in our database."
+msgstr "Пароль изменить невозможно, т.к. аккаунт пользователя был удален."
+
+#: django_authopenid/views.py:1185
+#, python-format
+msgid "Password changed for %s. You may now sign in."
+msgstr "Пароль для %s изменен. Теперь вы можете с ним войти в сайт."
+
+#: forum/auth.py:470
+msgid "Your question and all of it's answers have been deleted"
+msgstr "Ваш вопрос и все оветы на него были удалены"
+
+#: forum/auth.py:472
+msgid "Your question has been deleted"
+msgstr "Ваш вопрос был удалён"
+
+#: forum/auth.py:475
+msgid "The question and all of it's answers have been deleted"
+msgstr "Вопрос и все оветы на него были удалены"
+
+#: forum/auth.py:477
+msgid "The question has been deleted"
+msgstr "Вопрос был удалён"
+
+#: forum/const.py:8
+msgid "duplicate question"
+msgstr "такой вопрос уже был задан"
+
+#: forum/const.py:9
+msgid "question is off-topic or not relevant"
+msgstr "вопрос не по теме данного форума"
+
+#: forum/const.py:10
+msgid "too subjective and argumentative"
+msgstr "вопрос слишком субъективный или спорный"
+
+#: forum/const.py:11
+msgid "not a real question"
+msgstr "на вопрос не похоже"
+
+#: forum/const.py:12
+msgid "the question is answered, right answer was accepted"
+msgstr "на этот вопрос был дан ответ и он был принят как правильный"
+
+#: forum/const.py:13
+msgid "question is not relevant or outdated"
+msgstr "вопрос устарел или более на актуален"
+
+#: forum/const.py:14
+msgid "question contains offensive or malicious remarks"
+msgstr "вопрос содержит грубые или злонамеренные заявления"
+
+#: forum/const.py:15
+msgid "spam or advertising"
+msgstr "спам или реклама"
+
+#: forum/const.py:16
+msgid "too localized"
+msgstr "слишком специализированный"
+
+#: forum/const.py:37 forum/skins/askbot/templates/questions.html:70
+#: forum/skins/askbot/templates/questions.html:75
+#: forum/skins/default/templates/questions.html:70
+#: forum/skins/default/templates/questions.html:75
+msgid "newest"
+msgstr "новые"
+
+#: forum/const.py:38 forum/skins/askbot/templates/questions.html:64
+#: forum/skins/askbot/templates/users.html:28
+#: forum/skins/default/templates/questions.html:64
+#: forum/skins/default/templates/users.html:28
+msgid "oldest"
+msgstr "старожилы"
+
+#: forum/const.py:39 forum/skins/askbot/templates/questions.html:89
+#: forum/skins/askbot/templates/questions.html:94
+#: forum/skins/default/templates/questions.html:89
+#: forum/skins/default/templates/questions.html:94
+msgid "active"
+msgstr "активные"
+
+#: forum/const.py:40 forum/skins/askbot/templates/questions.html:83
+#: forum/skins/default/templates/questions.html:83
+msgid "inactive"
+msgstr "неактивные"
+
+#: forum/const.py:41
+msgid "hottest"
+msgstr "больше ответов"
+
+#: forum/const.py:42
+msgid "coldest"
+msgstr "меньше ответов"
+
+#: forum/const.py:43
+msgid "most voted"
+msgstr "больше голосов"
+
+#: forum/const.py:44
+msgid "least voted"
+msgstr "меньше голосов"
+
+#: forum/const.py:45
+msgid "relevance"
+msgstr "уместность"
+
+#: forum/const.py:52 forum/skins/askbot/templates/questions.html:52
+#: forum/skins/default/templates/questions.html:52
+msgid "all"
+msgstr "все"
+
+#: forum/const.py:53 forum/skins/askbot/templates/questions.html:53
+#: forum/skins/default/templates/questions.html:53
+msgid "unanswered"
+msgstr "неотвеченные"
+
+#: forum/const.py:54 forum/skins/askbot/templates/questions.html:55
+#: forum/skins/default/templates/questions.html:55
+msgid "favorite"
+msgstr "закладки"
+
+#: forum/const.py:97
+msgid "question"
+msgstr "вопрос"
+
+#: forum/const.py:98 forum/skins/askbot/templates/book.html:110
+#: forum/skins/default/templates/book.html:110
+msgid "answer"
+msgstr "ответ"
+
+#: forum/const.py:99
+msgid "commented question"
+msgstr "комментарий на вопрос"
+
+#: forum/const.py:100
+msgid "commented answer"
+msgstr "комментарий на ответ"
+
+#: forum/const.py:101
+msgid "edited question"
+msgstr "отредактировали ответ"
+
+#: forum/const.py:102
+msgid "edited answer"
+msgstr "отредактировали ответ"
+
+#: forum/const.py:103
+msgid "received award"
+msgstr "получение награды"
+
+#: forum/const.py:104
+msgid "marked best answer"
+msgstr "отметка лучшего ответа"
+
+#: forum/const.py:105
+msgid "upvoted"
+msgstr "положительный голос"
+
+#: forum/const.py:106
+msgid "downvoted"
+msgstr "отрицательный голос"
+
+#: forum/const.py:107
+msgid "canceled vote"
+msgstr "отмена голоса"
+
+#: forum/const.py:108
+msgid "deleted question"
+msgstr "удаление вопроса"
+
+#: forum/const.py:109
+msgid "deleted answer"
+msgstr "удаление ответа"
+
+#: forum/const.py:110
+msgid "marked offensive"
+msgstr "отметка неуместного контента"
+
+#: forum/const.py:111
+msgid "updated tags"
+msgstr "обновление тем"
+
+#: forum/const.py:112
+msgid "selected favorite"
+msgstr "отметка интересного вопроса"
+
+#: forum/const.py:113
+msgid "completed user profile"
+msgstr "полное завершение учётной записи"
+
+#: forum/const.py:114
+msgid "email update sent to user"
+msgstr "сообщение выслано по электронной почте"
+
+#: forum/const.py:118
+msgid "question_answered"
+msgstr "question_answered"
+
+#: forum/const.py:119
+msgid "question_commented"
+msgstr "question_commented"
+
+#: forum/const.py:120
+msgid "answer_commented"
+msgstr "answer_commented"
+
+#: forum/const.py:121
+msgid "answer_accepted"
+msgstr "answer_accepted"
+
+#: forum/const.py:125
+msgid "[closed]"
+msgstr "[закрыт]"
+
+#: forum/const.py:126
+msgid "[deleted]"
+msgstr "[удален]"
+
+#: forum/const.py:127 forum/views/readers.py:397 forum/views/readers.py:418
+msgid "initial version"
+msgstr "изначальная версия"
+
+#: forum/const.py:128
+msgid "retagged"
+msgstr "редакция тематических отметок"
+
+#: forum/const.py:132
+msgid "exclude ignored tags"
+msgstr "исключить игнорируемые темы"
+
+#: forum/const.py:132
+msgid "allow only selected tags"
+msgstr "влючить только выбранные темы"
+
+#: forum/feed.py:18
+msgid " - "
+msgstr "-"
+
+#: forum/feed.py:18
+msgid "latest questions"
+msgstr "самые новые вопросы"
+
+#: forum/forms.py:23 forum/skins/askbot/templates/answer_edit_tips.html:35
+#: forum/skins/askbot/templates/answer_edit_tips.html:39
+#: forum/skins/askbot/templates/question_edit_tips.html:32
+#: forum/skins/askbot/templates/question_edit_tips.html:37
+#: forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "title"
+msgstr "заголовок"
+
+#: forum/forms.py:25
+msgid "please enter a descriptive title for your question"
+msgstr "пожалуйста, введите информативный заголовок раскрывающий суть вашего вопроса"
+
+#: forum/forms.py:30
+msgid "title must be > 10 characters"
+msgstr "заголовок должен иметь более 10-ти букв"
+
+#: forum/forms.py:39
+msgid "content"
+msgstr "основное содержание"
+
+#: forum/forms.py:45
+msgid "question content must be > 10 characters"
+msgstr "содержание вопроса должно быть более 10-ти букв"
+
+#: forum/forms.py:53 forum/skins/askbot/templates/header.html:32
+#: forum/skins/default/templates/header.html:28
+msgid "tags"
+msgstr "темы"
+
+#: forum/forms.py:55
+msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgstr "Теги - это ключевые слова характеризующие вопрос, для разделения тегов используйте пробел, для объединения слов в теге используйте дефис. Допускается добавление не более пяти тегов."
+
+#: forum/forms.py:62 forum/skins/askbot/templates/question_retag.html:39
+#: forum/skins/default/templates/question_retag.html:39
+msgid "tags are required"
+msgstr "тематические отметки (ключевые слова) обязательны"
+
+#: forum/forms.py:72
+#, python-format
+msgid "please use %(tag_count)d tag or less"
+msgid_plural "please use %(tag_count)d tags or less"
+msgstr[0] "пожалуйста введите не более %(tag_count)d слов"
+msgstr[1] "пожалуйста введите не более %(tag_count)d слова"
+msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
+
+#: forum/forms.py:81
+#, python-format
+msgid "each tag must be shorter than %(max_chars)d character"
+msgid_plural "each tag must be shorter than %(max_chars)d characters"
+msgstr[0] "каждое слово должно быть не более %(max_chars)d букв"
+msgstr[1] "каждое слово должно быть не более %(max_chars)d буквы"
+msgstr[2] "каждое слово должно быть не более %(max_chars)d букв"
+
+#: forum/forms.py:89
+msgid "use-these-chars-in-tags"
+msgstr "допускается использование только символа дефис \"-\""
+
+#: forum/forms.py:97
+#: forum/skins/askbot/templates/question_summary_list_roll.html:26
+#: forum/skins/askbot/templates/question_summary_list_roll.html:38
+#: forum/skins/default/templates/post_contributor_info.html:7
+#: forum/skins/default/templates/question_summary_list_roll.html:26
+#: forum/skins/default/templates/question_summary_list_roll.html:38
+msgid "community wiki"
+msgstr "общее вики"
+
+#: forum/forms.py:98
+msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
+msgstr "если вы отметите \"общее вики\", то голоса на ответ и вопрос не принесут изменения в репутации"
+
+#: forum/forms.py:116
+msgid "update summary:"
+msgstr "информация об обновлениях:"
+
+#: forum/forms.py:115
+msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
+msgstr "если у Вас есть желание, то кратко опишите здесь суть вашей правки (например - исправление орфографии, грамматики, стиля)"
+
+#: forum/forms.py:120
+msgid "Automatically accept user's contributions for the email updates"
+msgstr "Авоматически принять сообщения от этого пользователя для рассылки по элетронной почте"
+
+#: forum/forms.py:211
+msgid "Your name:"
+msgstr "Ваше имя:"
+
+#: forum/forms.py:212
+msgid "Email (not shared with anyone):"
+msgstr "Адрес электронной почты (держится в секрете):"
+
+#: forum/forms.py:213
+msgid "Your message:"
+msgstr "Ваше сообщение:"
+
+#: forum/forms.py:296
+msgid "this email does not have to be linked to gravatar"
+msgstr "Этот адрес не обязательно должен быть ассоциирован с глобальным аватаром (gravatar)"
+
+#: forum/forms.py:298
+msgid "Screen name"
+msgstr "Имя для публики"
+
+#: forum/forms.py:299
+msgid "Real name"
+msgstr "Настоящее имя"
+
+#: forum/forms.py:300
+msgid "Website"
+msgstr "Вебсайт"
+
+#: forum/forms.py:301
+msgid "Location"
+msgstr "Местоположение"
+
+#: forum/forms.py:302
+msgid "Date of birth"
+msgstr "День рождения"
+
+#: forum/forms.py:302
+msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
+msgstr "показывается только возраст, формат ГГГГ-ММ-ДД"
+
+#: forum/forms.py:301 forum/skins/askbot/templates/account_settings.html:21
+#: forum/skins/askbot/templates/authopenid/settings.html:21
+#: forum/skins/default/templates/account_settings.html:21
+#: forum/skins/default/templates/authopenid/settings.html:21
+msgid "Profile"
+msgstr "Профиль"
+
+#: forum/forms.py:334 forum/forms.py:335
+msgid "this email has already been registered, please use another one"
+msgstr "этот адрес уже зарегистрирован, пожалуйста введите другой"
+
+#: forum/forms.py:341
+msgid "Choose email tag filter"
+msgstr "Выберите тип фильтра по темам (ключевым словам)"
+
+#: forum/forms.py:357 forum/forms.py:358
+msgid "weekly"
+msgstr "еженедельно"
+
+#: forum/forms.py:357 forum/forms.py:358
+msgid "no email"
+msgstr "не посылать электронную почту"
+
+#: forum/forms.py:358
+msgid "daily"
+msgstr "ежедневно"
+
+#: forum/forms.py:373
+msgid "Asked by me"
+msgstr "Заданные мной"
+
+#: forum/forms.py:376
+msgid "Answered by me"
+msgstr "Отвеченные мной"
+
+#: forum/forms.py:379
+msgid "Individually selected"
+msgstr "Выбранные индивидуально"
+
+#: forum/forms.py:382
+msgid "Entire forum (tag filtered)"
+msgstr "Весь форум (фильтрованный по темам)"
+
+#: forum/forms.py:436
+msgid "okay, let's try!"
+msgstr "ну хорошо, давайте попробуем!"
+
+#: forum/forms.py:437
+msgid "no community email please, thanks"
+msgstr "спасибо, но не надо"
+
+#: forum/forms.py:440
+msgid "please choose one of the options above"
+msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
+
+#: forum/urls.py:31
+msgid "upfiles/"
+msgstr "загруженные-файлы/"
+
+#: forum/urls.py:36
+msgid "about/"
+msgstr "о-нас/"
+
+#: forum/urls.py:37
+msgid "faq/"
+msgstr "часто-задаваемые-вопросы/"
+
+#: forum/urls.py:38
+msgid "privacy/"
+msgstr "правила-о-личной-информации/"
+
+#: forum/urls.py:39
+msgid "logout/"
+msgstr "выйти/"
+
+#: forum/urls.py:40 forum/urls.py:41 forum/urls.py:42 forum/urls.py:59
+msgid "answers/"
+msgstr "ответы/"
+
+#: forum/urls.py:40 forum/urls.py:52 forum/urls.py:55 forum/urls.py:59
+msgid "comments/"
+msgstr "комментарии/"
+
+#: forum/urls.py:41 forum/urls.py:46 forum/urls.py:81
+#: forum/skins/askbot/templates/user_info.html:47
+#: forum/skins/default/templates/user_info.html:47
+msgid "edit/"
+msgstr "править/"
+
+#: forum/urls.py:42 forum/urls.py:51
+msgid "revisions/"
+msgstr "правки/"
+
+#: forum/urls.py:43 forum/urls.py:44 forum/urls.py:45 forum/urls.py:46
+#: forum/urls.py:47 forum/urls.py:48 forum/urls.py:49 forum/urls.py:50
+#: forum/urls.py:51 forum/urls.py:52 forum/urls.py:55
+msgid "questions/"
+msgstr "вопросы/"
+
+#: forum/urls.py:44 forum_modules/books/urls.py:8
+msgid "ask/"
+msgstr "спросить/"
+
+#: forum/urls.py:45
+msgid "unanswered/"
+msgstr "неотвеченные/"
+
+#: forum/urls.py:47
+msgid "close/"
+msgstr "закрыть/"
+
+#: forum/urls.py:48
+msgid "reopen/"
+msgstr "открыть-снова/"
+
+#: forum/urls.py:49
+msgid "answer/"
+msgstr "ответить/"
+
+#: forum/urls.py:50
+msgid "vote/"
+msgstr "голосовать/"
+
+#: forum/urls.py:53
+msgid "command/"
+msgstr "комманда/"
+
+#: forum/urls.py:63 forum/views/readers.py:266
+msgid "question/"
+msgstr "вопрос/"
+
+#: forum/urls.py:64 forum/urls.py:65
+msgid "tags/"
+msgstr "темы/"
+
+#: forum/urls.py:67 forum/urls.py:71
+msgid "mark-tag/"
+msgstr "отметить-тему/"
+
+#: forum/urls.py:67
+msgid "interesting/"
+msgstr "интересная/"
+
+#: forum/urls.py:71
+msgid "ignored/"
+msgstr "неинтересная/"
+
+#: forum/urls.py:75
+msgid "unmark-tag/"
+msgstr "отменить-отметку-темы/"
+
+#: forum/urls.py:79 forum/urls.py:81 forum/urls.py:82
+msgid "users/"
+msgstr "люди/"
+
+#: forum/urls.py:80
+msgid "moderate-user/"
+msgstr "модерировать-пользователя/"
+
+#: forum/urls.py:83 forum/urls.py:84
+msgid "badges/"
+msgstr "награды/"
+
+#: forum/urls.py:85
+msgid "messages/"
+msgstr "сообщения/"
+
+#: forum/urls.py:85
+msgid "markread/"
+msgstr "отметить-прочитанное/"
+
+#: forum/urls.py:88
+msgid "upload/"
+msgstr "загрузить-файл/"
+
+#: forum/urls.py:89
+msgid "search/"
+msgstr "искать/"
+
+#: forum/urls.py:90
+msgid "feedback/"
+msgstr "обратная-связь/"
+
+#: forum/importers/stackexchange/management/commands/load_stackexchange.py:124
+msgid "Congratulations, you are now an Administrator"
+msgstr "Поздравляем, теперь Вы администратор на нашем форуме"
+
+#: forum/management/commands/send_email_alerts.py:312
+msgid "email update message subject"
+msgstr "новости с форума"
+
+#: forum/management/commands/send_email_alerts.py:238
+#, python-format
+msgid "%(name)s, this is an update message header for a question"
+msgid_plural "%(name)s, this is an update message header for %(num)d questions"
+msgstr[0] "%(name)s, в этом вопросе есть новости"
+msgstr[1] "%(name)s, в этих %(num)d вопросах есть новости"
+msgstr[2] "%(name)s, в этих %(num)d вопросах есть новости"
+
+#: forum/management/commands/send_email_alerts.py:331
+msgid "new question"
+msgstr "новый вопрос"
+
+#: forum/management/commands/send_email_alerts.py:272
+msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
+msgstr "Пожалуйста, зайдите на наш форум и посмотрите что есть нового. Может быть Вы поможете нам рассказать другим о нашем сайте или кто-нибудь из Ваших знакомых может ответить на эти вопросы или извлечь пользу из ответов?"
+
+#: forum/management/commands/send_email_alerts.py:284
+msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
+msgstr "Вы выбрали получать ежедневные сообщения о новостях в избранных вопросах. Если Вы получаете от нас более чем одно сообщение в день, пожалуйста дайте об этом знать администратору форума."
+
+#: forum/management/commands/send_email_alerts.py:290
+msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
+msgstr "Вы выбрали получать сообщения о новостях в избранных вопросах один раз в неделю. Если Вы получаете от нас более одного сообщения в неделю то пожалуйста дайте об этом знать администратору форума."
+
+#: forum/management/commands/send_email_alerts.py:296
+msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
+msgstr "Не исключено что здесь есть ссылки которые Вы раньше видели. Это результат технической детали, которая со временем перестанет себя проявлять."
+
+#: forum/management/commands/send_email_alerts.py:387
+#, python-format
+msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
+msgstr "<a href=\"%(link)s\">Здесь</a> Вы можете изменить частоту рассылки. Если возникнет необходимость - пожалуйста свяжитесь с администратором форума по %(email)s."
+
+#: forum/middleware/anon_user.py:34
+#, python-format
+msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
+msgstr "Здравствуйте, Вы здесь впервые? Посмотрите наши <a href=\"%s\">часто задаваемые вопросы</a>!"
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "Disciplined"
+msgstr "Дисциплина"
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "disciplined"
+msgstr "дисциплина"
+
+#: forum/migrations/0005_install_badges.py:10
+msgid "Deleted own post with score of 3 or higher"
+msgstr "Удалили своё сообщение с 3-мя или более положительными откликами"
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Peer Pressure"
+msgstr "Коллегиальное давление"
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "peer-pressure"
+msgstr "коллегиальное-давление"
+
+#: forum/migrations/0005_install_badges.py:11
+msgid "Deleted own post with score of -3 or lower"
+msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "Nice answer"
+msgstr "Хороший ответ"
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "nice-answer"
+msgstr "хороший-ответ"
+
+#: forum/migrations/0005_install_badges.py:12
+msgid "Answer voted up 10 times"
+msgstr "Ответ получил 10 положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "Nice Question"
+msgstr "Хороший Вопрос"
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "nice-question"
+msgstr "хороший-вопос"
+
+#: forum/migrations/0005_install_badges.py:13
+msgid "Question voted up 10 times"
+msgstr "Вопрос с 10-ю или более положительными откликами"
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "Pundit"
+msgstr "Знаток"
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "pundit"
+msgstr "знаток"
+
+#: forum/migrations/0005_install_badges.py:14
+msgid "Left 10 comments with score of 10 or more"
+msgstr "Поместили 10 ответов с 10-ю или более положительными откликами"
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "Popular Question"
+msgstr "Популярный Вопрос"
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "popular-question"
+msgstr "популярный-вопрос"
+
+#: forum/migrations/0005_install_badges.py:15
+msgid "Asked a question with 1,000 views"
+msgstr "Задали вопрос с более 1,000 просмотров"
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "Citizen patrol"
+msgstr "Гражданский Дозор"
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "citizen-patrol"
+msgstr "гражданский-дозор"
+
+#: forum/migrations/0005_install_badges.py:16
+msgid "First flagged post"
+msgstr "Впервые отметили флажком неуместное сообщение"
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "Cleanup"
+msgstr "Уборщик"
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "cleanup"
+msgstr "уборщик"
+
+#: forum/migrations/0005_install_badges.py:17
+msgid "First rollback"
+msgstr "В первый раз вернули сообщение к предыдущей версии"
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "Critic"
+msgstr "Критик"
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "critic"
+msgstr "критик"
+
+#: forum/migrations/0005_install_badges.py:18
+msgid "First down vote"
+msgstr "Впервые дали негативный отклик"
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "Editor"
+msgstr "Редактор"
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "editor"
+msgstr "редактор"
+
+#: forum/migrations/0005_install_badges.py:19
+msgid "First edit"
+msgstr "Впервые исправили сообщение"
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "Organizer"
+msgstr "Организатор"
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "organizer"
+msgstr "организатор"
+
+#: forum/migrations/0005_install_badges.py:20
+msgid "First retag"
+msgstr "Впервые изменили тематические отметки"
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "Scholar"
+msgstr "Ученый"
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "scholar"
+msgstr "ученый"
+
+#: forum/migrations/0005_install_badges.py:21
+msgid "First accepted answer on your own question"
+msgstr "Впервые приняли лучший ответ на собственный вопрос"
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Student"
+msgstr "Ученик"
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "student"
+msgstr "ученик"
+
+#: forum/migrations/0005_install_badges.py:22
+msgid "Asked first question with at least one up vote"
+msgstr "Спросили вопос получивший хотя бы один положительный отклик"
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "Supporter"
+msgstr "Фанат"
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "supporter"
+msgstr "фанат"
+
+#: forum/migrations/0005_install_badges.py:23
+msgid "First up vote"
+msgstr "В первый раз дали положительный отклик другому поьзователю"
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "Teacher"
+msgstr "Учитель"
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "teacher"
+msgstr "учитель"
+
+#: forum/migrations/0005_install_badges.py:24
+msgid "Answered first question with at least one up vote"
+msgstr "Дали ответ получивший один или более положительных отликов"
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "Autobiographer"
+msgstr "Автобиограф"
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "autobiographer"
+msgstr "автобиограф"
+
+#: forum/migrations/0005_install_badges.py:25
+msgid "Completed all user profile fields"
+msgstr "Заполнены все пункты в профиле"
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "Self-Learner"
+msgstr "Самоучка"
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "self-learner"
+msgstr "самоучка"
+
+#: forum/migrations/0005_install_badges.py:26
+msgid "Answered your own question with at least 3 up votes"
+msgstr "Поместили ответ на собственный вопрос и получили 3 или более положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "Great Answer"
+msgstr "Замечательный Ответ"
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "great-answer"
+msgstr "замечательный-ответ"
+
+#: forum/migrations/0005_install_badges.py:27
+msgid "Answer voted up 100 times"
+msgstr "Дали ответ получивший 100 положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "Great Question"
+msgstr "Замечательный Вопрос"
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "great-question"
+msgstr "замечательный-вопрос"
+
+#: forum/migrations/0005_install_badges.py:28
+msgid "Question voted up 100 times"
+msgstr "Задали вопрос 100 положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "Stellar Question"
+msgstr "Гениальный Вопрос"
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "stellar-question"
+msgstr "гениальный-вопрос"
+
+#: forum/migrations/0005_install_badges.py:29
+msgid "Question favorited by 100 users"
+msgstr "Задали ворпос отмеченный закладкой более чем 100 пользователями"
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "Famous question"
+msgstr "Знаменитый Вопрос"
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "famous-question"
+msgstr "знаменитый-вопрос"
+
+#: forum/migrations/0005_install_badges.py:30
+msgid "Asked a question with 10,000 views"
+msgstr "Задали вопрос просомотренный более чем 10,000 раз"
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Alpha"
+msgstr "Альфа Тестер"
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "alpha"
+msgstr "альфа-тестер"
+
+#: forum/migrations/0005_install_badges.py:31
+msgid "Actively participated in the private alpha"
+msgstr "За участие в альфа тестировании"
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "Good Answer"
+msgstr "Очень Хороший Ответ"
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "good-answer"
+msgstr "очень-хороший-ответ"
+
+#: forum/migrations/0005_install_badges.py:32
+msgid "Answer voted up 25 times"
+msgstr "Дали ответ получивший 25 положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "Good Question"
+msgstr "Очень Хороший Вопрос"
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "good-question"
+msgstr "очень-хороший-вопрос"
+
+#: forum/migrations/0005_install_badges.py:33
+msgid "Question voted up 25 times"
+msgstr "Задали вопрос получивший 25 положительных откликов"
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "Favorite Question"
+msgstr "Интересный Вопрос"
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "favorite-question"
+msgstr "интересный-вопрос"
+
+#: forum/migrations/0005_install_badges.py:34
+msgid "Question favorited by 25 users"
+msgstr "Задали ворпос получивший 25 закладок"
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Civic duty"
+msgstr "Общественный Долг"
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "civic-duty"
+msgstr "общественный долг"
+
+#: forum/migrations/0005_install_badges.py:35
+msgid "Voted 300 times"
+msgstr "Набрано 300 голосов"
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Strunk & White"
+msgstr "Главный Редактор"
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "strunk-and-white"
+msgstr "мастер-старания"
+
+#: forum/migrations/0005_install_badges.py:36
+msgid "Edited 100 entries"
+msgstr "главный-редактор"
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "Generalist"
+msgstr "Полиглот"
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "generalist"
+msgstr "полиглот"
+
+#: forum/migrations/0005_install_badges.py:37
+msgid "Active in many different tags"
+msgstr "Активность в разнообразных темах"
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Expert"
+msgstr "Эксперт"
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "expert"
+msgstr "эксперт"
+
+#: forum/migrations/0005_install_badges.py:38
+msgid "Very active in one tag"
+msgstr "Очень активны в одной теме"
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Yearling"
+msgstr "Годовщина"
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "yearling"
+msgstr "годовщина"
+
+#: forum/migrations/0005_install_badges.py:39
+msgid "Active member for a year"
+msgstr "Активный пользователь в течение года"
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "Notable Question"
+msgstr "Известные Вопрос"
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "notable-question"
+msgstr "заметные-вопрос"
+
+#: forum/migrations/0005_install_badges.py:40
+msgid "Asked a question with 2,500 views"
+msgstr "Вопрос задан с 2500 просмотров"
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "Enlightened"
+msgstr "Просвещенный"
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "enlightened"
+msgstr "просвещенный"
+
+#: forum/migrations/0005_install_badges.py:41
+msgid "First answer was accepted with at least 10 up votes"
+msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Beta"
+msgstr "Бета"
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "beta"
+msgstr "бета"
+
+#: forum/migrations/0005_install_badges.py:42
+msgid "Actively participated in the private beta"
+msgstr "За активное участие в закрытой бета-версии"
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "Guru"
+msgstr "Гуру"
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "guru"
+msgstr "гуру"
+
+#: forum/migrations/0005_install_badges.py:43
+msgid "Accepted answer and voted up 40 times"
+msgstr "Принят ответ и проголосовали 40 раз"
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Necromancer"
+msgstr "Некромант"
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "necromancer"
+msgstr "некромант"
+
+#: forum/migrations/0005_install_badges.py:44
+msgid "Answered a question more than 60 days later with at least 5 votes"
+msgstr "Ответ на вопрос более чем 60 дней спустя с минимум 5 голосами"
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "Taxonomist"
+msgstr "Таксономист"
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "taxonomist"
+msgstr "таксономист"
+
+#: forum/migrations/0005_install_badges.py:45
+msgid "Created a tag used by 50 questions"
+msgstr "Создал тег, использованный в 50 вопросах"
+
+#: forum/models/question.py:500
+#, python-format
+msgid "%(author)s modified the question"
+msgstr "%(author)s отредактировали вопрос"
+
+#: forum/models/question.py:504
+#, python-format
+msgid "%(people)s posted %(new_answer_count)s new answers"
+msgstr "%(people)s задали новых %(new_answer_count)s вопросов"
+
+#: forum/models/question.py:509
+#, python-format
+msgid "%(people)s commented the question"
+msgstr "%(people)s оставили комментарии"
+
+#: forum/models/question.py:514
+#, python-format
+msgid "%(people)s commented answers"
+msgstr "%(people)s комментировали вопросы"
+
+#: forum/models/question.py:516
+#, python-format
+msgid "%(people)s commented an answer"
+msgstr "%(people)s комментировали ответы"
+
+#: forum/models/repute.py:13 forum/skins/default/templates/badges.html:54
+msgid "gold"
+msgstr "золотой"
+
+#: forum/models/repute.py:14 forum/skins/default/templates/badges.html:62
+msgid "silver"
+msgstr "серебряный"
+
+#: forum/models/repute.py:15 forum/skins/default/templates/badges.html:69
+msgid "bronze"
+msgstr "бронзовый"
+
+#: forum/models/tag.py:81
+msgid "interesting"
+msgstr "интересные"
+
+#: forum/models/tag.py:81
+msgid "ignored"
+msgstr "игнорируемые"
+
+#: forum/models/user.py:37
+msgid "Entire forum"
+msgstr "Весь форум"
+
+#: forum/models/user.py:38
+msgid "Questions that I asked"
+msgstr "Вопросы заданные мной"
+
+#: forum/models/user.py:39
+msgid "Questions that I answered"
+msgstr "Вопросы отвеченные мной"
+
+#: forum/models/user.py:40
+msgid "Individually selected questions"
+msgstr "Индивидуально избранные вопросы"
+
+#: forum/models/user.py:43
+msgid "Weekly"
+msgstr "Раз в неделю"
+
+#: forum/models/user.py:44
+msgid "Daily"
+msgstr "Раз в день"
+
+#: forum/models/user.py:45
+msgid "No email"
+msgstr "Отменить"
+
+#: forum/skins/askbot/templates/404.html:24
+#: forum/skins/default/templates/404.html:24
+msgid "Sorry, could not find the page you requested."
+msgstr "Извините, но запрошенный Вами документ не был найден."
+
+#: forum/skins/askbot/templates/404.html:26
+#: forum/skins/default/templates/404.html:26
+msgid "This might have happened for the following reasons:"
+msgstr "Это могло произойти по следующим причинам:"
+
+#: forum/skins/askbot/templates/404.html:28
+#: forum/skins/default/templates/404.html:28
+msgid "this question or answer has been deleted;"
+msgstr "вопрос или ответ были удалены;"
+
+#: forum/skins/askbot/templates/404.html:29
+#: forum/skins/default/templates/404.html:29
+msgid "url has error - please check it;"
+msgstr "запрос был неверен - пожалуйста проверьте;"
+
+#: forum/skins/askbot/templates/404.html:30
+#: forum/skins/default/templates/404.html:30
+msgid "the page you tried to visit is protected or you don't have sufficient points, see"
+msgstr "документ который Вы запросили защищён или у Вас не хватает \"репутации\", пожалуйста посмотрите"
+
+#: forum/skins/askbot/templates/404.html:31
+#: forum/skins/default/templates/404.html:31
+msgid "if you believe this error 404 should not have occured, please"
+msgstr "если Вы считаете что эта ошибка показана неверно, пожалуйста"
+
+#: forum/skins/askbot/templates/404.html:32
+#: forum/skins/default/templates/404.html:32
+msgid "report this problem"
+msgstr "сообщите об этой проблеме"
+
+#: forum/skins/askbot/templates/404.html:41
+#: forum/skins/askbot/templates/500.html:27
+#: forum/skins/default/templates/404.html:41
+#: forum/skins/default/templates/500.html:27
+msgid "back to previous page"
+msgstr "вернуться на предыдущую страницу"
+
+#: forum/skins/askbot/templates/404.html:42
+#: forum/skins/askbot/templates/questions.html:52
+#: forum/skins/default/templates/404.html:42
+#: forum/skins/default/templates/questions.html:52
+msgid "see all questions"
+msgstr "смотреть все вопросы"
+
+#: forum/skins/askbot/templates/404.html:43
+#: forum/skins/default/templates/404.html:43
+msgid "see all tags"
+msgstr "смотреть все темы"
+
+#: forum/skins/askbot/templates/500.html:22
+#: forum/skins/default/templates/500.html:22
+msgid "sorry, system error"
+msgstr "извините, произошла сбой в системе"
+
+#: forum/skins/askbot/templates/500.html:24
+#: forum/skins/default/templates/500.html:24
+msgid "system error log is recorded, error will be fixed as soon as possible"
+msgstr "об этой ошибке была сделана запись в журнале и соответствующие исправления будут вскоре сделаны"
+
+#: forum/skins/askbot/templates/500.html:25
+#: forum/skins/default/templates/500.html:25
+msgid "please report the error to the site administrators if you wish"
+msgstr "если у Вас имеется желание, пожалуйста сообщите об этой ошибке вебмастеру"
+
+#: forum/skins/askbot/templates/500.html:28
+#: forum/skins/default/templates/500.html:28
+msgid "see latest questions"
+msgstr "смотреть самые новые вопросы"
+
+#: forum/skins/askbot/templates/500.html:29
+#: forum/skins/default/templates/500.html:29
+msgid "see tags"
+msgstr "смотреть темы"
+
+#: forum/skins/askbot/templates/about.html:6
+#: forum/skins/askbot/templates/about.html:11
+#: forum/skins/default/templates/about.html:6
+#: forum/skins/default/templates/about.html:11
+msgid "About"
+msgstr "О нас"
+
+#: forum/skins/askbot/templates/account_settings.html:4
+#: forum/skins/askbot/templates/authopenid/settings.html:4
+#: forum/skins/default/templates/account_settings.html:4
+#: forum/skins/default/templates/authopenid/settings.html:4
+msgid "Account functions"
+msgstr "Настройки аккаунта"
+
+#: forum/skins/askbot/templates/account_settings.html:29
+#: forum/skins/askbot/templates/authopenid/changepw.html:5
+#: forum/skins/askbot/templates/authopenid/changepw.html:14
+#: forum/skins/askbot/templates/authopenid/settings.html:29
+#: forum/skins/default/templates/account_settings.html:29
+#: forum/skins/default/templates/authopenid/changepw.html:5
+#: forum/skins/default/templates/authopenid/changepw.html:14
+#: forum/skins/default/templates/authopenid/settings.html:29
+#: livesettings/templates/livesettings/group_settings.html:11
+#: livesettings/templates/livesettings/site_settings.html:23
+msgid "Change password"
+msgstr "Сменить пароль"
+
+#: forum/skins/askbot/templates/account_settings.html:30
+#: forum/skins/askbot/templates/authopenid/settings.html:30
+#: forum/skins/default/templates/account_settings.html:30
+#: forum/skins/default/templates/authopenid/settings.html:30
+msgid "Give your  account a new password."
+msgstr "Дайте вашей учетной записи новый пароль."
+
+#: forum/skins/askbot/templates/account_settings.html:32
+#: forum/skins/askbot/templates/authopenid/settings.html:31
+#: forum/skins/default/templates/account_settings.html:32
+#: forum/skins/default/templates/authopenid/settings.html:31
+msgid "Change email "
+msgstr "Изменить адрес электронной почты"
+
+#: forum/skins/askbot/templates/account_settings.html:33
+#: forum/skins/askbot/templates/authopenid/settings.html:32
+#: forum/skins/default/templates/account_settings.html:33
+#: forum/skins/default/templates/authopenid/settings.html:32
+msgid "Add or update the email address associated with your account."
+msgstr "Добавить или обновить адрес электронной почты, связанный с вашим аккаунтом."
+
+#: forum/skins/askbot/templates/account_settings.html:35
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:4
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:30
+#: forum/skins/askbot/templates/authopenid/settings.html:34
+#: forum/skins/default/templates/account_settings.html:35
+#: forum/skins/default/templates/authopenid/changeopenid.html:4
+#: forum/skins/default/templates/authopenid/changeopenid.html:30
+#: forum/skins/default/templates/authopenid/settings.html:34
+msgid "Change OpenID"
+msgstr "Изменить OpenID"
+
+#: forum/skins/askbot/templates/account_settings.html:36
+#: forum/skins/askbot/templates/authopenid/settings.html:35
+#: forum/skins/default/templates/account_settings.html:36
+#: forum/skins/default/templates/authopenid/settings.html:35
+msgid "Change openid associated to your account"
+msgstr "Изменить OpenID связанный с вашим аккаунтом"
+
+#: forum/skins/askbot/templates/account_settings.html:39
+#: forum/skins/askbot/templates/authopenid/delete.html:4
+#: forum/skins/askbot/templates/authopenid/settings.html:38
+#: forum/skins/default/templates/account_settings.html:39
+#: forum/skins/default/templates/authopenid/delete.html:4
+#: forum/skins/default/templates/authopenid/settings.html:38
+msgid "Delete account"
+msgstr "Удалить аккаунт"
+
+#: forum/skins/askbot/templates/account_settings.html:40
+#: forum/skins/askbot/templates/authopenid/settings.html:39
+#: forum/skins/default/templates/account_settings.html:40
+#: forum/skins/default/templates/authopenid/settings.html:39
+msgid "Erase your username and all your data from website"
+msgstr "Удалить Ваше имя и все данные о Вас на сайте"
+
+#: forum/skins/askbot/templates/answer_edit.html:5
+#: forum/skins/askbot/templates/answer_edit.html:48
+#: forum/skins/default/templates/answer_edit.html:5
+#: forum/skins/default/templates/answer_edit.html:48
+msgid "Edit answer"
+msgstr "Править ответ"
+
+#: forum/skins/askbot/templates/answer_edit.html:25
+#: forum/skins/askbot/templates/answer_edit.html:28
+#: forum/skins/askbot/templates/ask.html:26
+#: forum/skins/askbot/templates/ask.html:29
+#: forum/skins/askbot/templates/question_edit.html:25
+#: forum/skins/askbot/templates/question_edit.html:28
+#: forum/skins/default/templates/answer_edit.html:25
+#: forum/skins/default/templates/answer_edit.html:28
+#: forum/skins/default/templates/ask.html:26
+#: forum/skins/default/templates/ask.html:29
+#: forum/skins/default/templates/question.html:48
+#: forum/skins/default/templates/question.html:51
+#: forum/skins/default/templates/question_edit.html:25
+#: forum/skins/default/templates/question_edit.html:28
+msgid "hide preview"
+msgstr "скрыть предварительный просмотр"
+
+#: forum/skins/askbot/templates/answer_edit.html:28
+#: forum/skins/askbot/templates/ask.html:29
+#: forum/skins/askbot/templates/question_edit.html:28
+#: forum/skins/default/templates/answer_edit.html:28
+#: forum/skins/default/templates/ask.html:29
+#: forum/skins/default/templates/question.html:51
+#: forum/skins/default/templates/question_edit.html:28
+msgid "show preview"
+msgstr "показать предварительный просмотр"
+
+#: forum/skins/askbot/templates/answer_edit.html:48
+#: forum/skins/askbot/templates/question_edit.html:66
+#: forum/skins/askbot/templates/question_retag.html:53
+#: forum/skins/askbot/templates/revisions_answer.html:38
+#: forum/skins/askbot/templates/revisions_question.html:38
+#: forum/skins/default/templates/answer_edit.html:48
+#: forum/skins/default/templates/question_edit.html:66
+#: forum/skins/default/templates/question_retag.html:53
+#: forum/skins/default/templates/revisions_answer.html:38
+#: forum/skins/default/templates/revisions_question.html:38
+msgid "back"
+msgstr "назад"
+
+#: forum/skins/askbot/templates/answer_edit.html:53
+#: forum/skins/askbot/templates/question_edit.html:71
+#: forum/skins/askbot/templates/revisions_answer.html:52
+#: forum/skins/askbot/templates/revisions_question.html:52
+#: forum/skins/default/templates/answer_edit.html:53
+#: forum/skins/default/templates/question_edit.html:71
+#: forum/skins/default/templates/revisions_answer.html:52
+#: forum/skins/default/templates/revisions_question.html:52
+msgid "revision"
+msgstr "версия правки"
+
+#: forum/skins/askbot/templates/answer_edit.html:56
+#: forum/skins/askbot/templates/question_edit.html:75
+#: forum/skins/default/templates/answer_edit.html:56
+#: forum/skins/default/templates/question_edit.html:75
+msgid "select revision"
+msgstr "выбрать версию"
+
+#: forum/skins/askbot/templates/answer_edit.html:63
+#: forum/skins/askbot/templates/ask.html:98
+#: forum/skins/askbot/templates/ask_form.html:39
+#: forum/skins/askbot/templates/question_edit.html:92
+#: forum/skins/default/templates/answer_edit.html:63
+#: forum/skins/default/templates/ask.html:98
+#: forum/skins/default/templates/ask_form.html:39
+#: forum/skins/default/templates/question.html:420
+#: forum/skins/default/templates/question_edit.html:92
+msgid "Toggle the real time Markdown editor preview"
+msgstr "Включить/выключить предварительный просмотр текста"
+
+#: forum/skins/askbot/templates/answer_edit.html:63
+#: forum/skins/askbot/templates/ask.html:98
+#: forum/skins/askbot/templates/ask_form.html:39
+#: forum/skins/askbot/templates/question_edit.html:92
+#: forum/skins/default/templates/answer_edit.html:63
+#: forum/skins/default/templates/ask.html:98
+#: forum/skins/default/templates/ask_form.html:39
+#: forum/skins/default/templates/question.html:421
+#: forum/skins/default/templates/question_edit.html:92
+msgid "toggle preview"
+msgstr "включить/выключить предварительный просмотр"
+
+#: forum/skins/askbot/templates/answer_edit.html:72
+#: forum/skins/askbot/templates/question_edit.html:118
+#: forum/skins/askbot/templates/question_retag.html:74
+#: forum/skins/default/templates/answer_edit.html:72
+#: forum/skins/default/templates/question_edit.html:118
+#: forum/skins/default/templates/question_retag.html:74
+msgid "Save edit"
+msgstr "Сохранить"
+
+#: forum/skins/askbot/templates/answer_edit.html:73
+#: forum/skins/askbot/templates/close.html:29
+#: forum/skins/askbot/templates/feedback.html:50
+#: forum/skins/askbot/templates/question_edit.html:119
+#: forum/skins/askbot/templates/question_retag.html:75
+#: forum/skins/askbot/templates/reopen.html:30
+#: forum/skins/askbot/templates/user_edit.html:90
+#: forum/skins/askbot/templates/authopenid/changeemail.html:40
+#: forum/skins/default/templates/answer_edit.html:73
+#: forum/skins/default/templates/close.html:29
+#: forum/skins/default/templates/feedback.html:50
+#: forum/skins/default/templates/question_edit.html:119
+#: forum/skins/default/templates/question_retag.html:75
+#: forum/skins/default/templates/reopen.html:30
+#: forum/skins/default/templates/user_edit.html:90
+#: forum/skins/default/templates/authopenid/changeemail.html:40
+msgid "Cancel"
+msgstr "Отменить"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:4
+#: forum/skins/default/templates/answer_edit_tips.html:4
+msgid "answer tips"
+msgstr "Советы как лучше давать ответы"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:7
+#: forum/skins/default/templates/answer_edit_tips.html:7
+msgid "please make your answer relevant to this community"
+msgstr "пожалуйста постарайтесь дать ответ который будет интересен коллегам по форуму"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:10
+#: forum/skins/default/templates/answer_edit_tips.html:10
+msgid "try to give an answer, rather than engage into a discussion"
+msgstr "постарайтесь на самом деле дать ответ и избегать дискуссий"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:13
+#: forum/skins/default/templates/answer_edit_tips.html:13
+msgid "please try to provide details"
+msgstr "включите детали в Ваш ответ"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:16
+#: forum/skins/askbot/templates/question_edit_tips.html:13
+#: forum/skins/default/templates/answer_edit_tips.html:16
+#: forum/skins/default/templates/question_edit_tips.html:13
+msgid "be clear and concise"
+msgstr "вопрос должен быть четким и лаконичным"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:20
+#: forum/skins/askbot/templates/question_edit_tips.html:17
+#: forum/skins/default/templates/answer_edit_tips.html:20
+#: forum/skins/default/templates/question_edit_tips.html:17
+msgid "see frequently asked questions"
+msgstr "посмотрите на часто задаваемые вопросы"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:26
+#: forum/skins/askbot/templates/question_edit_tips.html:23
+#: forum/skins/default/templates/answer_edit_tips.html:26
+#: forum/skins/default/templates/question_edit_tips.html:23
+msgid "Markdown tips"
+msgstr "Поддерживается язык разметки - Markdown"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:29
+#: forum/skins/askbot/templates/question_edit_tips.html:26
+#: forum/skins/default/templates/answer_edit_tips.html:29
+#: forum/skins/default/templates/question_edit_tips.html:26
+msgid "*italic* or __italic__"
+msgstr "*курсив* или _курсив_"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:32
+#: forum/skins/askbot/templates/question_edit_tips.html:29
+#: forum/skins/default/templates/answer_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:29
+msgid "**bold** or __bold__"
+msgstr "**жирный шрифт** или __жирный шрифт__"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:35
+#: forum/skins/askbot/templates/question_edit_tips.html:32
+#: forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/question_edit_tips.html:32
+msgid "link"
+msgstr "ссылка"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:35
+#: forum/skins/askbot/templates/answer_edit_tips.html:39
+#: forum/skins/askbot/templates/question_edit_tips.html:32
+#: forum/skins/askbot/templates/question_edit_tips.html:37
+#: forum/skins/default/templates/answer_edit_tips.html:35
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:32
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "text"
+msgstr "текст"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:39
+#: forum/skins/askbot/templates/question_edit_tips.html:37
+#: forum/skins/default/templates/answer_edit_tips.html:39
+#: forum/skins/default/templates/question_edit_tips.html:37
+msgid "image"
+msgstr "изображение"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:43
+#: forum/skins/askbot/templates/question_edit_tips.html:41
+#: forum/skins/default/templates/answer_edit_tips.html:43
+#: forum/skins/default/templates/question_edit_tips.html:41
+msgid "numbered list:"
+msgstr "пронумерованный список:"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:48
+#: forum/skins/askbot/templates/question_edit_tips.html:46
+#: forum/skins/default/templates/answer_edit_tips.html:48
+#: forum/skins/default/templates/question_edit_tips.html:46
+msgid "basic HTML tags are also supported"
+msgstr "а также, поддерживаются основные теги HTML"
+
+#: forum/skins/askbot/templates/answer_edit_tips.html:52
+#: forum/skins/askbot/templates/question_edit_tips.html:50
+#: forum/skins/default/templates/answer_edit_tips.html:52
+#: forum/skins/default/templates/question_edit_tips.html:50
+msgid "learn more about Markdown"
+msgstr "узнайте болше про Markdown"
+
+#: forum/skins/askbot/templates/ask.html:5
+#: forum/skins/askbot/templates/ask.html:62
+#: forum/skins/default/templates/ask.html:5
+#: forum/skins/default/templates/ask.html:62
+msgid "Ask a question"
+msgstr "Спросить"
+
+#: forum/skins/askbot/templates/ask.html:69
+#: forum/skins/askbot/templates/ask_form.html:11
+#: forum/skins/default/templates/ask.html:69
+#: forum/skins/default/templates/ask_form.html:11
+msgid "login to post question info"
+msgstr "<span class=\"strong big\">Пожалуйста, начните задавать Ваш ворпос анонимно</span>. Когда Вы пошлете вопрос, Вы будете направлены на страницу авторизации. Ваш вопрос будет сохранён в текущей сессии и будет опубликован как только Вы авторизуетесь. Войти или записаться на наш форум очень легко. Авторизация займет не более полминуты а изначальная запись - приблизительно одну минуту."
+
+#: forum/skins/askbot/templates/ask.html:75
+#: forum/skins/default/templates/ask.html:75
+#, python-format
+msgid ""
+"must have valid %(email)s to post, \n"
+"                            see %(email_validation_faq_url)s\n"
+"                            "
+msgstr "<span class=\"big strong\">Похоже на то что адрес Вашей электронной почты, %(email)s еще не был проверен.</span> Чтобы публиковать сообщения на форуме сначала пожалуйста продемонстрируйте что Ваша электронная почта работает, дополнительная информация об етом <a href=\"%(email_validation_faq_url)s\">здесь</a>.<br/> Ваш вопрос будет опубликован сразу после того как ваш адрес будет проверен, а до тех пор вопос будет сохранён в базе данных."
+
+#: forum/skins/askbot/templates/ask.html:113
+#: forum/skins/askbot/templates/ask_form.html:54
+#: forum/skins/default/templates/ask.html:113
+#: forum/skins/default/templates/ask_form.html:54
+msgid "(required)"
+msgstr "(обязательно)"
+
+#: forum/skins/askbot/templates/ask.html:120
+#: forum/skins/askbot/templates/ask_form.html:61
+#: forum/skins/default/templates/ask.html:120
+#: forum/skins/default/templates/ask_form.html:61
+msgid "Login/signup to post your question"
+msgstr "Войдите или запишитесь чтобы опубликовать Ваш ворпос"
+
+#: forum/skins/askbot/templates/ask.html:122
+#: forum/skins/askbot/templates/ask_form.html:63
+#: forum/skins/default/templates/ask.html:122
+#: forum/skins/default/templates/ask_form.html:63
+msgid "Ask your question"
+msgstr "Задайте Ваш вопрос"
+
+#: forum/skins/askbot/templates/ask_form.html:15
+#: forum/skins/default/templates/ask_form.html:15
+#, python-format
+msgid ""
+"must have valid %(email)s to post, \n"
+"                                see %(email_validation_faq_url)s\n"
+"                                "
+msgstr "для публикации %(email)s должен быть действительным, см. %(email_validation_faq_url)s"
+
+#: forum/skins/askbot/templates/book.html:7
+#: forum/skins/default/templates/book.html:7
+msgid "reading channel"
+msgstr "чтение каналов"
+
+#: forum/skins/askbot/templates/book.html:26
+#: forum/skins/default/templates/book.html:26
+msgid "[author]"
+msgstr "[автор]"
+
+#: forum/skins/askbot/templates/book.html:30
+#: forum/skins/default/templates/book.html:30
+msgid "[publisher]"
+msgstr "[издатель]"
+
+#: forum/skins/askbot/templates/book.html:34
+#: forum/skins/default/templates/book.html:34
+msgid "[publication date]"
+msgstr "[дата публикации]"
+
+#: forum/skins/askbot/templates/book.html:38
+#: forum/skins/default/templates/book.html:38
+msgid "[price]"
+msgstr "[Цена]"
+
+#: forum/skins/askbot/templates/book.html:39
+#: forum/skins/default/templates/book.html:39
+msgid "currency unit"
+msgstr "валютная единица"
+
+#: forum/skins/askbot/templates/book.html:42
+#: forum/skins/default/templates/book.html:42
+msgid "[pages]"
+msgstr "[страницы]"
+
+#: forum/skins/askbot/templates/book.html:43
+#: forum/skins/default/templates/book.html:43
+msgid "pages abbreviation"
+msgstr "сокращение страниц"
+
+#: forum/skins/askbot/templates/book.html:46
+#: forum/skins/default/templates/book.html:46
+msgid "[tags]"
+msgstr "[теги]"
+
+#: forum/skins/askbot/templates/book.html:56
+#: forum/skins/default/templates/book.html:56
+msgid "author blog"
+msgstr "блога автора"
+
+#: forum/skins/askbot/templates/book.html:62
+#: forum/skins/default/templates/book.html:62
+msgid "book directory"
+msgstr "каталог книг"
+
+#: forum/skins/askbot/templates/book.html:66
+#: forum/skins/default/templates/book.html:66
+msgid "buy online"
+msgstr "купить онлайн"
+
+#: forum/skins/askbot/templates/book.html:79
+#: forum/skins/default/templates/book.html:79
+msgid "reader questions"
+msgstr "вопросы читателей"
+
+#: forum/skins/askbot/templates/book.html:82
+#: forum/skins/default/templates/book.html:82
+msgid "ask the author"
+msgstr "спросить автора"
+
+#: forum/skins/askbot/templates/book.html:88
+#: forum/skins/askbot/templates/book.html:93
+#: forum/skins/askbot/templates/users_questions.html:18
+#: forum/skins/default/templates/book.html:88
+#: forum/skins/default/templates/book.html:93
+#: forum/skins/default/templates/users_questions.html:18
+msgid "this question was selected as favorite"
+msgstr "к этому вопросу был отмечен как интересный"
+
+#: forum/skins/askbot/templates/book.html:88
+#: forum/skins/askbot/templates/book.html:93
+#: forum/skins/askbot/templates/users_questions.html:11
+#: forum/skins/askbot/templates/users_questions.html:18
+#: forum/skins/default/templates/book.html:88
+#: forum/skins/default/templates/book.html:93
+#: forum/skins/default/templates/users_questions.html:11
+#: forum/skins/default/templates/users_questions.html:18
+msgid "number of times"
+msgstr "раз"
+
+#: forum/skins/askbot/templates/book.html:105
+#: forum/skins/askbot/templates/question_summary_list_roll.html:14
+#: forum/skins/default/templates/book.html:105
+#: forum/skins/default/templates/question_summary_list_roll.html:14
+msgid "votes"
+msgstr "голосов"
+
+#: forum/skins/askbot/templates/book.html:108
+#: forum/skins/default/templates/book.html:108
+msgid "the answer has been accepted to be correct"
+msgstr "ответ был принят, в качестве правильного"
+
+#: forum/skins/askbot/templates/book.html:115
+#: forum/skins/askbot/templates/question_summary_list_roll.html:15
+#: forum/skins/default/templates/book.html:115
+#: forum/skins/default/templates/question_summary_list_roll.html:15
+msgid "views"
+msgstr "просмотров"
+
+#: forum/skins/askbot/templates/book.html:125
+#: forum/skins/askbot/templates/question_list.html:19
+#: forum/skins/askbot/templates/question_summary_list_roll.html:52
+#: forum/skins/askbot/templates/tags.html:50
+#: forum/skins/askbot/templates/users_questions.html:34
+#: forum/skins/default/templates/book.html:125
+#: forum/skins/default/templates/question.html:138
+#: forum/skins/default/templates/question_list.html:19
+#: forum/skins/default/templates/question_summary_list_roll.html:52
+#: forum/skins/default/templates/tags.html:50
+#: forum/skins/default/templates/users_questions.html:34
+#, python-format
+msgid "see questions tagged '%(tag)s'"
+msgstr "вопросы по теме '%(tag)s'"
+
+#: forum/skins/askbot/templates/book.html:147
+#: forum/skins/default/templates/book.html:147
+msgid "subscribe to book RSS feed"
+msgstr "подписаться на RSS-канал для книги"
+
+#: forum/skins/askbot/templates/book.html:147
+#: forum/skins/default/templates/book.html:147
+msgid "subscribe to the questions feed"
+msgstr "подписаться на RSS-канал для вопросов"
+
+#: forum/skins/askbot/templates/close.html:6
+#: forum/skins/askbot/templates/close.html:16
+#: forum/skins/default/templates/close.html:6
+#: forum/skins/default/templates/close.html:16
+msgid "Close question"
+msgstr "Закрыть вопрос"
+
+#: forum/skins/askbot/templates/close.html:19
+#: forum/skins/default/templates/close.html:19
+msgid "Close the question"
+msgstr "Закрыть вопрос"
+
+#: forum/skins/askbot/templates/close.html:25
+#: forum/skins/default/templates/close.html:25
+msgid "Reasons"
+msgstr "Причины"
+
+#: forum/skins/askbot/templates/close.html:28
+#: forum/skins/default/templates/close.html:28
+msgid "OK to close"
+msgstr "OK, чтобы закрыть"
+
+#: forum/skins/askbot/templates/email_base.html:11
+#: forum/skins/default/templates/email_base.html:11
+msgid "home"
+msgstr "главная"
+
+#: forum/skins/askbot/templates/faq.html:11
+#: forum/skins/default/templates/faq.html:11
+msgid "Frequently Asked Questions "
+msgstr "Часто задаваемые вопросы"
+
+#: forum/skins/askbot/templates/faq.html:16
+#: forum/skins/default/templates/faq.html:16
+msgid "What kinds of questions can I ask here?"
+msgstr "Какие вопросы я могу задать здесь?"
+
+#: forum/skins/askbot/templates/faq.html:17
+#: forum/skins/default/templates/faq.html:17
+msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
+msgstr "Самое главное - вопросы должны <strong>соответствовать теме</strong> сайта."
+
+#: forum/skins/askbot/templates/faq.html:18
+#: forum/skins/default/templates/faq.html:18
+msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
+msgstr "Перед тем как задать вопрос - пожалуйста, не забудьте использовать поиск, чтобы убедиться, что ваш вопрос еще не имеет ответа."
+
+#: forum/skins/askbot/templates/faq.html:21
+#: forum/skins/default/templates/faq.html:21
+msgid "What questions should I avoid asking?"
+msgstr "Каких вопросов мне следует избегать?"
+
+#: forum/skins/askbot/templates/faq.html:22
+#: forum/skins/default/templates/faq.html:22
+msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
+msgstr "Просьба не задавать вопросы, которые не соответствуют теме этого сайта, слишком субъективные и очевидные."
+
+#: forum/skins/askbot/templates/faq.html:27
+#: forum/skins/default/templates/faq.html:27
+msgid "What should I avoid in my answers?"
+msgstr "Чего я должен избегать в своих ответах?"
+
+#: forum/skins/askbot/templates/faq.html:28
+#: forum/skins/default/templates/faq.html:28
+msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
+msgstr "является местом ответов/вопросов, а не группой обсуждения. Поэтому - пожалуйста, избегайте обсуждения в своих ответах. Комментарии позволяют лишь краткое обсуждение."
+
+#: forum/skins/askbot/templates/faq.html:32
+#: forum/skins/default/templates/faq.html:32
+msgid "Who moderates this community?"
+msgstr "Кто модерирует этим сообществом?"
+
+#: forum/skins/askbot/templates/faq.html:33
+#: forum/skins/default/templates/faq.html:33
+msgid "The short answer is: <strong>you</strong>."
+msgstr "Короткий ответ: <strong>вы.</strong>"
+
+#: forum/skins/askbot/templates/faq.html:34
+#: forum/skins/default/templates/faq.html:34
+msgid "This website is moderated by the users."
+msgstr "Этот сайт находится под управлением самих пользователей."
+
+#: forum/skins/askbot/templates/faq.html:35
+#: forum/skins/default/templates/faq.html:35
+msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
+msgstr "Система репутации позволяет пользователям приобретать различные управленческие права."
+
+#: forum/skins/askbot/templates/faq.html:40
+#: forum/skins/default/templates/faq.html:40
+msgid "How does reputation system work?"
+msgstr "Как работает карма?"
+
+#: forum/skins/askbot/templates/faq.html:41
+#: forum/skins/default/templates/faq.html:41
+msgid "Rep system summary"
+msgstr "Суть кармы"
+
+#: forum/skins/askbot/templates/faq.html:42
+#: forum/skins/default/templates/faq.html:42
+msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
+msgstr "Например, если задать интересующий вопрос или дать полный ответ, ваш вклад будет оценен положительно. С другой стороны, если ответ будет вводить в заблуждение - это будет оценено отрицательно. Каждый голос в пользу будет генерировать <strong>10 пунктов</strong> кармы, каждый голос против - будет отнимать <strong>2 балла</strong> кармы. Существует лимит <strong>на 200 пунктов</strong> кармы, которые могут быть накоплены на каждый вопрос или ответ. В таблице ниже представлены все требования к карме для каждого типа задачи модерации."
+
+#: forum/skins/askbot/templates/faq.html:53
+#: forum/skins/askbot/templates/user_votes.html:15
+#: forum/skins/default/templates/faq.html:53
+#: forum/skins/default/templates/user_votes.html:15
+msgid "upvote"
+msgstr "проголосовать \"за\""
+
+#: forum/skins/askbot/templates/faq.html:57
+#: forum/skins/default/templates/faq.html:57
+msgid "use tags"
+msgstr "использовать теги"
+
+#: forum/skins/askbot/templates/faq.html:62
+#: forum/skins/default/templates/faq.html:62
+msgid "add comments"
+msgstr "добавить комментарии"
+
+#: forum/skins/askbot/templates/faq.html:66
+#: forum/skins/askbot/templates/user_votes.html:17
+#: forum/skins/default/templates/faq.html:66
+#: forum/skins/default/templates/user_votes.html:17
+msgid "downvote"
+msgstr "проголосовать \"против\""
+
+#: forum/skins/askbot/templates/faq.html:69
+#: forum/skins/default/templates/faq.html:69
+msgid "open and close own questions"
+msgstr "открывать и закрывать свои вопросы"
+
+#: forum/skins/askbot/templates/faq.html:73
+#: forum/skins/default/templates/faq.html:73
+msgid "retag questions"
+msgstr "изменять состав тэгов в вопросах"
+
+#: forum/skins/askbot/templates/faq.html:78
+#: forum/skins/default/templates/faq.html:78
+msgid "edit community wiki questions"
+msgstr "редактировать вопросы в вики сообщества "
+
+#: forum/skins/askbot/templates/faq.html:83
+#: forum/skins/default/templates/faq.html:83
+msgid "edit any answer"
+msgstr "редактировать любой ответ"
+
+#: forum/skins/askbot/templates/faq.html:87
+#: forum/skins/default/templates/faq.html:87
+msgid "open any closed question"
+msgstr "открыть любой закрытый вопрос"
+
+#: forum/skins/askbot/templates/faq.html:91
+#: forum/skins/default/templates/faq.html:91
+msgid "delete any comment"
+msgstr "удалять любые комментарии"
+
+#: forum/skins/askbot/templates/faq.html:95
+#: forum/skins/default/templates/faq.html:95
+msgid "delete any questions and answers and perform other moderation tasks"
+msgstr "удалить любые вопросы и ответы и выполнять другие задачи модерации"
+
+#: forum/skins/askbot/templates/faq.html:103
+#: forum/skins/default/templates/faq.html:103
+msgid "how to validate email title"
+msgstr "как проверить заголовок электронного сообщения"
+
+#: forum/skins/askbot/templates/faq.html:105
+#: forum/skins/default/templates/faq.html:105
+#, python-format
+msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr "как проверить электронную почту с помощью %(send_email_key_url)s %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/faq.html:110
+#: forum/skins/default/templates/faq.html:110
+msgid "what is gravatar"
+msgstr "что такое Gravatar"
+
+#: forum/skins/askbot/templates/faq.html:111
+#: forum/skins/default/templates/faq.html:111
+msgid "gravatar faq info"
+msgstr "gravatar фак"
+
+#: forum/skins/askbot/templates/faq.html:114
+#: forum/skins/default/templates/faq.html:114
+msgid "To register, do I need to create new password?"
+msgstr "Необходимо ли создавать новый пароль, чтобы зарегистрироваться?"
+
+#: forum/skins/askbot/templates/faq.html:115
+#: forum/skins/default/templates/faq.html:115
+msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr "Нет, этого делать нет необходимости. Вы можете Войти через любой сервис, который поддерживает OpenID, например, Google, Yahoo, AOL и т.д."
+
+#: forum/skins/askbot/templates/faq.html:116
+#: forum/skins/default/templates/faq.html:116
+msgid "Login now!"
+msgstr "Войти сейчас!"
+
+#: forum/skins/askbot/templates/faq.html:121
+#: forum/skins/default/templates/faq.html:121
+msgid "Why other people can edit my questions/answers?"
+msgstr "Почему другие люди могут изменить вопросы / ответы?"
+
+#: forum/skins/askbot/templates/faq.html:122
+#: forum/skins/default/templates/faq.html:122
+msgid "Goal of this site is..."
+msgstr "Цель этого сайта ..."
+
+#: forum/skins/askbot/templates/faq.html:122
+#: forum/skins/default/templates/faq.html:122
+msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgstr "Таким образом, более опытные пользователи могут редактировать вопросы и отвеы как странички на вики, что в свою очередь улучшает качество содержания базы данных."
+
+#: forum/skins/askbot/templates/faq.html:123
+#: forum/skins/default/templates/faq.html:123
+msgid "If this approach is not for you, we respect your choice."
+msgstr "Если этот подход не для вас, мы уважаем ваш выбор."
+
+#: forum/skins/askbot/templates/faq.html:127
+#: forum/skins/default/templates/faq.html:127
+msgid "Still have questions?"
+msgstr "Остались вопросы?"
+
+#: forum/skins/askbot/templates/faq.html:128
+#: forum/skins/default/templates/faq.html:128
+#, python-format
+msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
+msgstr "Задайте свой вопрос в %(ask_question_url)s, помогайте сделать наше сообщество лучше!"
+
+#: forum/skins/askbot/templates/faq.html:130
+#: forum/skins/askbot/templates/header.html:31
+#: forum/skins/default/templates/faq.html:130
+#: forum/skins/default/templates/header.html:27
+msgid "questions"
+msgstr "вопросы"
+
+#: forum/skins/askbot/templates/faq.html:130
+#: forum/skins/default/templates/faq.html:130
+msgid "."
+msgstr "."
+
+#: forum/skins/askbot/templates/feedback.html:6
+#: forum/skins/default/templates/feedback.html:6
+msgid "Feedback"
+msgstr "Обратная связь"
+
+#: forum/skins/askbot/templates/feedback.html:11
+#: forum/skins/default/templates/feedback.html:11
+msgid "Give us your feedback!"
+msgstr "Выскажите свое мнение!"
+
+#: forum/skins/askbot/templates/feedback.html:17
+#: forum/skins/default/templates/feedback.html:17
+#, python-format
+msgid ""
+"\n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+"\n"
+"<span class='big strong'>Уважаемый %(user_name)s,</span> мы с нетерпением ждем ваших отзывов. \n"
+"Пожалуйста, укажите и отправьте нам свое сообщение ниже."
+
+#: forum/skins/askbot/templates/feedback.html:24
+#: forum/skins/default/templates/feedback.html:24
+msgid ""
+"\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+"\n"
+"<span class='big strong'>Уважаемый посетитель</span>, мы с нетерпением ждем ваших отзывов. Пожалуйста, введите и отправить нам свое сообщение ниже."
+
+#: forum/skins/askbot/templates/feedback.html:41
+#: forum/skins/default/templates/feedback.html:41
+msgid "(this field is required)"
+msgstr "(это поле обязательно)"
+
+#: forum/skins/askbot/templates/feedback.html:49
+#: forum/skins/default/templates/feedback.html:49
+msgid "Send Feedback"
+msgstr "Отправить отзыв"
+
+#: forum/skins/askbot/templates/feedback_email.txt:3
+#: forum/skins/default/templates/feedback_email.txt:3
+#, python-format
+msgid ""
+"\n"
+"Hello, this is a %(site_title)s forum feedback message\n"
+msgstr ""
+"\n"
+"Здравствуйте, это сообщение обратной связи с форума: %(site_title)s\n"
+
+#: forum/skins/askbot/templates/feedback_email.txt:9
+#: forum/skins/default/templates/feedback_email.txt:9
+msgid "Sender is"
+msgstr "Отправитель"
+
+#: forum/skins/askbot/templates/feedback_email.txt:11
+#: forum/skins/askbot/templates/feedback_email.txt:14
+#: forum/skins/default/templates/feedback_email.txt:11
+#: forum/skins/default/templates/feedback_email.txt:14
+msgid "email"
+msgstr "email"
+
+#: forum/skins/askbot/templates/feedback_email.txt:13
+#: forum/skins/default/templates/feedback_email.txt:13
+msgid "anonymous"
+msgstr "анонимный"
+
+#: forum/skins/askbot/templates/feedback_email.txt:19
+#: forum/skins/default/templates/feedback_email.txt:19
+msgid "Message body:"
+msgstr "Текст сообщения:"
+
+#: forum/skins/askbot/templates/footer.html:8
+#: forum/skins/default/templates/footer.html:8
+#: forum/skins/default/templates/header.html:14
+msgid "about"
+msgstr "о нас"
+
+#: forum/skins/askbot/templates/footer.html:9
+#: forum/skins/askbot/templates/header.html:19
+#: forum/skins/askbot/templates/question_edit_tips.html:17
+#: forum/skins/default/templates/footer.html:9
+#: forum/skins/default/templates/header.html:15
+#: forum/skins/default/templates/question_edit_tips.html:17
+msgid "faq"
+msgstr "часто задаваемые вопросы"
+
+#: forum/skins/askbot/templates/footer.html:10
+#: forum/skins/default/templates/footer.html:10
+msgid "privacy policy"
+msgstr "политика конфиденциальности"
+
+#: forum/skins/askbot/templates/footer.html:19
+#: forum/skins/default/templates/footer.html:19
+msgid "give feedback"
+msgstr "оставить отзыв"
+
+#: forum/skins/askbot/templates/header.html:10
+#: forum/skins/default/templates/header.html:10
+msgid "logout"
+msgstr "выход"
+
+#: forum/skins/askbot/templates/header.html:12
+msgid "please login"
+msgstr "пожалуйста, выполнить вход"
+
+#: forum/skins/askbot/templates/header.html:26
+#: forum/skins/default/templates/header.html:22
+msgid "back to home page"
+msgstr "вернуться на главную страницу"
+
+#: forum/skins/askbot/templates/header.html:33
+#: forum/skins/default/templates/header.html:29
+msgid "users"
+msgstr "люди"
+
+#: forum/skins/askbot/templates/header.html:35
+#: forum/skins/default/templates/header.html:31
+msgid "books"
+msgstr "книги"
+
+#: forum/skins/askbot/templates/header.html:37
+#: forum/skins/default/templates/header.html:33
+#: forum/templatetags/extra_tags.py:177 forum/templatetags/extra_tags.py:206
+msgid "badges"
+msgstr "значки"
+
+#: forum/skins/askbot/templates/header.html:38
+#: forum/skins/askbot/templates/header.html:42
+#: forum/skins/default/templates/header.html:34
+#: forum/skins/default/templates/header.html:38
+msgid "ask a question"
+msgstr "задать вопрос"
+
+#: forum/skins/askbot/templates/header.html:40
+#: forum/skins/default/templates/header.html:36
+msgid "unanswered questions"
+msgstr "неотвеченные вопросы"
+
+#: forum/skins/askbot/templates/input_bar.html:33
+#: forum/skins/default/templates/input_bar.html:33
+msgid "search"
+msgstr "поиск"
+
+#: forum/skins/askbot/templates/logout.html:6
+#: forum/skins/askbot/templates/logout.html:16
+#: forum/skins/default/templates/logout.html:6
+#: forum/skins/default/templates/logout.html:16
+msgid "Logout"
+msgstr "Выйти"
+
+#: forum/skins/askbot/templates/logout.html:19
+#: forum/skins/default/templates/logout.html:19
+msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
+msgstr "Как зарегистрированный пользователь Вы можете Войти с OpenID, выйдите из сайта или удалить свой аккаунт."
+
+#: forum/skins/askbot/templates/logout.html:20
+#: forum/skins/default/templates/logout.html:20
+msgid "Logout now"
+msgstr "Выйти сейчас"
+
+#: forum/skins/askbot/templates/notarobot.html:3
+#: forum/skins/default/templates/notarobot.html:3
+msgid "Please prove that you are a Human Being"
+msgstr "Вы Человек?"
+
+#: forum/skins/askbot/templates/notarobot.html:10
+#: forum/skins/default/templates/notarobot.html:10
+msgid "I am a Human Being"
+msgstr "Я Человек"
+
+#: forum/skins/askbot/templates/pagesize.html:6
+#: forum/skins/default/templates/pagesize.html:6
+msgid "posts per page"
+msgstr "сообщений на странице"
+
+#: forum/skins/askbot/templates/paginator.html:6
+#: forum/skins/askbot/templates/paginator.html:7
+#: forum/skins/default/templates/paginator.html:6
+#: forum/skins/default/templates/paginator.html:7
+msgid "previous"
+msgstr "предыдущая"
+
+#: forum/skins/askbot/templates/paginator.html:19
+#: forum/skins/default/templates/paginator.html:19
+msgid "current page"
+msgstr "текущая страница"
+
+#: forum/skins/askbot/templates/paginator.html:22
+#: forum/skins/askbot/templates/paginator.html:29
+#: forum/skins/default/templates/paginator.html:22
+#: forum/skins/default/templates/paginator.html:29
+#, python-format
+msgid "page number %(num)s"
+msgstr "номер страницы %(num)s"
+
+#: forum/skins/askbot/templates/paginator.html:33
+#: forum/skins/default/templates/paginator.html:33
+msgid "next page"
+msgstr "следующая страница"
+
+#: forum/skins/askbot/templates/privacy.html:6
+#: forum/skins/askbot/templates/privacy.html:11
+#: forum/skins/default/templates/privacy.html:6
+#: forum/skins/default/templates/privacy.html:11
+msgid "Privacy policy"
+msgstr "Конфиденциальность"
+
+#: forum/skins/askbot/templates/privacy.html:15
+#: forum/skins/default/templates/privacy.html:15
+msgid "general message about privacy"
+msgstr "общее мнение о конфиденциальности"
+
+#: forum/skins/askbot/templates/privacy.html:18
+#: forum/skins/default/templates/privacy.html:18
+msgid "Site Visitors"
+msgstr "Посетителям сайта"
+
+#: forum/skins/askbot/templates/privacy.html:20
+#: forum/skins/default/templates/privacy.html:20
+msgid "what technical information is collected about visitors"
+msgstr "какая техническая информация собирается о посетителях"
+
+#: forum/skins/askbot/templates/privacy.html:23
+#: forum/skins/default/templates/privacy.html:23
+msgid "Personal Information"
+msgstr "Персональная информация"
+
+#: forum/skins/askbot/templates/privacy.html:25
+#: forum/skins/default/templates/privacy.html:25
+msgid "details on personal information policies"
+msgstr "сведения о личной информационной политики"
+
+#: forum/skins/askbot/templates/privacy.html:28
+#: forum/skins/default/templates/privacy.html:28
+msgid "Other Services"
+msgstr "Прочие услуги"
+
+#: forum/skins/askbot/templates/privacy.html:30
+#: forum/skins/default/templates/privacy.html:30
+msgid "details on sharing data with third parties"
+msgstr "подробная информация об обмене данными с третьими сторонами"
+
+#: forum/skins/askbot/templates/privacy.html:35
+#: forum/skins/default/templates/privacy.html:35
+msgid "cookie policy details"
+msgstr "политика в отношении cookie"
+
+#: forum/skins/askbot/templates/privacy.html:37
+#: forum/skins/default/templates/privacy.html:37
+msgid "Policy Changes"
+msgstr "Изменения политики"
+
+#: forum/skins/askbot/templates/privacy.html:38
+#: forum/skins/default/templates/privacy.html:38
+msgid "how privacy policies can be changed"
+msgstr "как политики конфиденциальности могут быть изменены"
+
+#: forum/skins/askbot/templates/question_counter_widget.html:6
+#: forum/skins/default/templates/question_counter_widget.html:6
+msgid "Please decide if you like this question or not by voting"
+msgstr "Пожалуйста, решите, если вам нравится этот вопрос или не путем голосования"
+
+#: forum/skins/askbot/templates/question_counter_widget.html:12
+#: forum/skins/default/templates/question_counter_widget.html:12
+msgid ""
+"\n"
+"        vote\n"
+"        "
+msgid_plural ""
+"\n"
+"        votes\n"
+"        "
+msgstr[0] ""
+"\n"
+"голос\n"
+" "
+msgstr[1] ""
+"\n"
+"голоса"
+msgstr[2] ""
+"\n"
+"голосов"
+
+#: forum/skins/askbot/templates/question_counter_widget.html:21
+#: forum/skins/default/templates/question_counter_widget.html:21
+msgid "this answer has been accepted to be correct"
+msgstr "ответ был принят как правильный"
+
+#: forum/skins/askbot/templates/question_counter_widget.html:27
+#: forum/skins/default/templates/question_counter_widget.html:27
+msgid ""
+"\n"
+"        answer \n"
+"        "
+msgid_plural ""
+"\n"
+"        answers \n"
+"        "
+msgstr[0] ""
+"\n"
+"ответ\n"
+" "
+msgstr[1] ""
+"\n"
+"ответа"
+msgstr[2] ""
+"\n"
+"ответов"
+
+#: forum/skins/askbot/templates/question_counter_widget.html:39
+#: forum/skins/default/templates/question_counter_widget.html:39
+msgid ""
+"\n"
+"        view\n"
+"        "
+msgid_plural ""
+"\n"
+"        views\n"
+"        "
+msgstr[0] ""
+"\n"
+"просмотр\n"
+" "
+msgstr[1] ""
+"\n"
+"просмотра"
+msgstr[2] ""
+"\n"
+"просмотров"
+
+#: forum/skins/askbot/templates/question_edit.html:5
+#: forum/skins/askbot/templates/question_edit.html:66
+#: forum/skins/default/templates/question_edit.html:5
+#: forum/skins/default/templates/question_edit.html:66
+msgid "Edit question"
+msgstr "Изменить вопрос"
+
+#: forum/skins/askbot/templates/question_edit_tips.html:4
+#: forum/skins/default/templates/question_edit_tips.html:4
+msgid "question tips"
+msgstr "подсказки к вопросам"
+
+#: forum/skins/askbot/templates/question_edit_tips.html:7
+#: forum/skins/default/templates/question_edit_tips.html:7
+msgid "please ask a relevant question"
+msgstr "ваш вопрос должен соответствовать тематике сообщества"
+
+#: forum/skins/askbot/templates/question_edit_tips.html:10
+#: forum/skins/default/templates/question_edit_tips.html:10
+msgid "please try provide enough details"
+msgstr "постарайтесь придать максимум информативности своему вопросу"
+
+#: forum/skins/askbot/templates/question_retag.html:4
+#: forum/skins/askbot/templates/question_retag.html:53
+#: forum/skins/default/templates/question_retag.html:4
+#: forum/skins/default/templates/question_retag.html:53
+msgid "Change tags"
+msgstr "Измененить тэги"
+
+#: forum/skins/askbot/templates/question_retag.html:40
+#: forum/skins/default/templates/question_retag.html:40
+msgid "up to 5 tags, less than 20 characters each"
+msgstr "до 5 тегов, менее 20 символов каждый"
+
+#: forum/skins/askbot/templates/question_retag.html:83
+#: forum/skins/default/templates/question_retag.html:83
+msgid "Why use and modify tags?"
+msgstr "Зачем использовать и изменять теги?"
+
+#: forum/skins/askbot/templates/question_retag.html:86
+#: forum/skins/default/templates/question_retag.html:86
+msgid "tags help us keep Questions organized"
+msgstr "метки помогают нам структурировать вопросы"
+
+#: forum/skins/askbot/templates/question_retag.html:94
+#: forum/skins/default/templates/question_retag.html:94
+msgid "tag editors receive special awards from the community"
+msgstr "теги редакторы получают специальные призы от сообщества"
+
+#: forum/skins/askbot/templates/question_summary_list_roll.html:13
+#: forum/skins/default/templates/question_summary_list_roll.html:13
+msgid "answers"
+msgstr "ответы"
+
+#: forum/skins/askbot/templates/questions.html:8
+#: forum/skins/default/templates/questions.html:8
+msgid "Questions"
+msgstr "Вопросы"
+
+#: forum/skins/askbot/templates/questions.html:32
+#: forum/skins/default/templates/questions.html:32
+msgid "Found by tags"
+msgstr "Найдено по тегам"
+
+#: forum/skins/askbot/templates/questions.html:36
+#: forum/skins/default/templates/questions.html:36
+msgid "Search results"
+msgstr "Результаты поиска"
+
+#: forum/skins/askbot/templates/questions.html:38
+#: forum/skins/default/templates/questions.html:38
+msgid "Found by title"
+msgstr "Найдено по названию"
+
+#: forum/skins/askbot/templates/questions.html:42
+#: forum/skins/default/templates/questions.html:42
+msgid "Unanswered questions"
+msgstr "Неотвеченные вопросы"
+
+#: forum/skins/askbot/templates/questions.html:44
+#: forum/skins/default/templates/questions.html:44
+msgid "All questions"
+msgstr "Все вопросы"
+
+#: forum/skins/askbot/templates/questions.html:51
+#: forum/skins/default/templates/questions.html:51
+msgid "In:"
+msgstr "В:"
+
+#: forum/skins/askbot/templates/questions.html:53
+#: forum/skins/default/templates/questions.html:53
+msgid "see unanswered questions"
+msgstr "просмотрите неотвеченные ворпосы"
+
+#: forum/skins/askbot/templates/questions.html:55
+#: forum/skins/default/templates/questions.html:55
+msgid "see your favorite questions"
+msgstr "просмотр отмеченных вопросов"
+
+#: forum/skins/askbot/templates/questions.html:59
+#: forum/skins/default/templates/questions.html:59
+msgid "Sort by:"
+msgstr "По:"
+
+#: forum/skins/askbot/templates/questions.html:64
+#: forum/skins/askbot/templates/questions.html:75
+#: forum/skins/default/templates/questions.html:64
+#: forum/skins/default/templates/questions.html:75
+msgid "click to see the newest questions"
+msgstr "нажмите, чтобы увидеть последние вопросы"
+
+#: forum/skins/askbot/templates/questions.html:70
+#: forum/skins/default/templates/questions.html:70
+msgid "click to see the oldest questions"
+msgstr "нажмите, чтобы увидеть старые вопросы"
+
+#: forum/skins/askbot/templates/questions.html:83
+#: forum/skins/askbot/templates/questions.html:94
+#: forum/skins/default/templates/questions.html:83
+#: forum/skins/default/templates/questions.html:94
+msgid "click to see the most recently updated questions"
+msgstr "нажмите, чтобы посмотреть недавно обновленные вопросы"
+
+#: forum/skins/askbot/templates/questions.html:89
+#: forum/skins/default/templates/questions.html:89
+msgid "click to see the least recently updated questions"
+msgstr "нажмите, чтобы посмотреть последние обновленные вопросы"
+
+#: forum/skins/askbot/templates/questions.html:102
+#: forum/skins/askbot/templates/questions.html:113
+#: forum/skins/default/templates/questions.html:102
+#: forum/skins/default/templates/questions.html:113
+msgid "click to see hottest questions"
+msgstr "нажмите, чтобы посмотреть популярные вопросы"
+
+#: forum/skins/askbot/templates/questions.html:102
+#: forum/skins/default/templates/questions.html:102
+msgid "less answers"
+msgstr "меньше ответов"
+
+#: forum/skins/askbot/templates/questions.html:108
+#: forum/skins/default/templates/questions.html:108
+msgid "click to see coldest questions"
+msgstr "нажмите, чтобы посмотреть непопулярные вопросы"
+
+#: forum/skins/askbot/templates/questions.html:108
+#: forum/skins/askbot/templates/questions.html:113
+#: forum/skins/default/templates/questions.html:108
+#: forum/skins/default/templates/questions.html:113
+msgid "more answers"
+msgstr "кол-ву ответов"
+
+#: forum/skins/askbot/templates/questions.html:121
+#: forum/skins/askbot/templates/questions.html:132
+#: forum/skins/default/templates/questions.html:121
+#: forum/skins/default/templates/questions.html:132
+msgid "click to see most voted questions"
+msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
+
+#: forum/skins/askbot/templates/questions.html:121
+#: forum/skins/default/templates/questions.html:121
+msgid "unpopular"
+msgstr "непопулярный"
+
+#: forum/skins/askbot/templates/questions.html:127
+#: forum/skins/default/templates/questions.html:127
+msgid "click to see least voted questions"
+msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
+
+#: forum/skins/askbot/templates/questions.html:127
+#: forum/skins/askbot/templates/questions.html:132
+#: forum/skins/default/templates/questions.html:127
+#: forum/skins/default/templates/questions.html:132
+msgid "popular"
+msgstr "популярные"
+
+#: forum/skins/askbot/templates/questions.html:141
+#: forum/skins/default/templates/questions.html:141
+#, python-format
+msgid " One question found"
+msgid_plural "%(q_num)s questions found"
+msgstr[0] "Найден один вопрос "
+msgstr[1] "Найдено %(q_num)s вопроса"
+msgstr[2] "Найдено %(q_num)s вопросов"
+
+#: forum/skins/askbot/templates/questions.html:143
+#: forum/skins/default/templates/questions.html:143
+#, python-format
+msgid " %(q_num)s question"
+msgid_plural "%(q_num)s questions"
+msgstr[0] "%(q_num)s вопрос"
+msgstr[1] "%(q_num)s вопроса"
+msgstr[2] "%(q_num)s вопросов"
+
+#: forum/skins/askbot/templates/questions.html:147
+#: forum/skins/default/templates/questions.html:147
+#, python-format
+msgid "with %(author_name)s's contributions"
+msgstr "с помошью от %(author_name)s"
+
+#: forum/skins/askbot/templates/questions.html:151
+#: forum/skins/default/templates/questions.html:151
+msgid "tagged"
+msgstr "помеченный"
+
+#: forum/skins/askbot/templates/questions.html:157
+#: forum/skins/default/templates/questions.html:157
+msgid "Search tips:"
+msgstr "Советы по поиску:"
+
+#: forum/skins/askbot/templates/questions.html:161
+#: forum/skins/default/templates/questions.html:161
+msgid "reset author"
+msgstr "сброс автора"
+
+#: forum/skins/askbot/templates/questions.html:165
+#: forum/skins/default/templates/questions.html:165
+msgid "reset tags"
+msgstr "сбросить тэги"
+
+#: forum/skins/askbot/templates/questions.html:169
+#: forum/skins/askbot/templates/questions.html:173
+#: forum/skins/default/templates/questions.html:169
+#: forum/skins/default/templates/questions.html:173
+msgid "start over"
+msgstr "начать все сначала"
+
+#: forum/skins/askbot/templates/questions.html:175
+#: forum/skins/default/templates/questions.html:175
+msgid " - to expand, or dig in by adding more tags and revising the query."
+msgstr "- расширить или сузить, добавляя свои метки и получая запрос."
+
+#: forum/skins/askbot/templates/questions.html:178
+#: forum/skins/default/templates/questions.html:178
+msgid "Search tip:"
+msgstr "Подсказки для поиска:"
+
+#: forum/skins/askbot/templates/questions.html:178
+#: forum/skins/default/templates/questions.html:178
+msgid "add tags and a query to focus your search"
+msgstr "добавить теги и выполнить поиск"
+
+#: forum/skins/askbot/templates/questions.html:190
+#: forum/skins/default/templates/questions.html:190
+msgid "There are no unanswered questions here"
+msgstr "Неотвеченных вопросов здесь нет"
+
+#: forum/skins/askbot/templates/questions.html:193
+#: forum/skins/default/templates/questions.html:193
+msgid "No favorite questions here. "
+msgstr "Отмеченных вопросов нет."
+
+#: forum/skins/askbot/templates/questions.html:194
+#: forum/skins/default/templates/questions.html:194
+msgid "Please start (bookmark) some questions when you visit them"
+msgstr "Начните (закладки) некоторые вопросы, когда вы посещаете их"
+
+#: forum/skins/askbot/templates/questions.html:199
+#: forum/skins/default/templates/questions.html:199
+msgid "You can expand your search by "
+msgstr "Вы можете расширить поиск"
+
+#: forum/skins/askbot/templates/questions.html:203
+#: forum/skins/default/templates/questions.html:203
+msgid "resetting author"
+msgstr "сброс автора"
+
+#: forum/skins/askbot/templates/questions.html:207
+#: forum/skins/default/templates/questions.html:207
+msgid "resetting tags"
+msgstr "сброс тэгов"
+
+#: forum/skins/askbot/templates/questions.html:211
+#: forum/skins/askbot/templates/questions.html:215
+#: forum/skins/default/templates/questions.html:211
+#: forum/skins/default/templates/questions.html:215
+msgid "starting over"
+msgstr "начать сначала"
+
+#: forum/skins/askbot/templates/questions.html:220
+#: forum/skins/default/templates/questions.html:220
+msgid "Please always feel free to ask your question!"
+msgstr "Пожалуйста, всегда можете задать свой вопрос!"
+
+#: forum/skins/askbot/templates/questions.html:224
+#: forum/skins/default/templates/questions.html:224
+msgid "Did not find what you were looking for?"
+msgstr "Не нашли то, что искали?"
+
+#: forum/skins/askbot/templates/questions.html:225
+#: forum/skins/default/templates/questions.html:225
+msgid "Please, post your question!"
+msgstr "Пожалуйста, опубликуйте свой вопрос!"
+
+#: forum/skins/askbot/templates/questions.html:241
+#: forum/skins/default/templates/questions.html:241
+msgid "Contributors"
+msgstr "Авторы"
+
+#: forum/skins/askbot/templates/questions.html:254
+#: forum/skins/default/templates/questions.html:254
+msgid "Related tags"
+msgstr "Связанные теги"
+
+#: forum/skins/askbot/templates/questions.html:257
+#: forum/skins/askbot/templates/tag_selector.html:11
+#: forum/skins/askbot/templates/tag_selector.html:28
+#: forum/skins/default/templates/question.html:465
+#: forum/skins/default/templates/questions.html:257
+#: forum/skins/default/templates/tag_selector.html:11
+#: forum/skins/default/templates/tag_selector.html:28
+#, python-format
+msgid "see questions tagged '%(tag_name)s'"
+msgstr "см. вопросы с тегами '%(tag_name)s'"
+
+#: forum/skins/askbot/templates/reopen.html:6
+#: forum/skins/askbot/templates/reopen.html:16
+#: forum/skins/default/templates/reopen.html:6
+#: forum/skins/default/templates/reopen.html:16
+msgid "Reopen question"
+msgstr "Переоткрыть вопрос"
+
+#: forum/skins/askbot/templates/reopen.html:19
+#: forum/skins/default/templates/reopen.html:19
+msgid "Open the previously closed question"
+msgstr "Открыть ранее закрытый вопрос"
+
+#: forum/skins/askbot/templates/reopen.html:22
+#: forum/skins/default/templates/reopen.html:22
+msgid "The question was closed for the following reason "
+msgstr "Вопрос был закрыт по следующим причинам"
+
+#: forum/skins/askbot/templates/reopen.html:22
+#: forum/skins/default/templates/reopen.html:22
+msgid "reason - leave blank in english"
+msgstr "причина - оставить пустым на английском языке"
+
+#: forum/skins/askbot/templates/reopen.html:22
+#: forum/skins/default/templates/reopen.html:22
+msgid "on "
+msgstr "на"
+
+#: forum/skins/askbot/templates/reopen.html:22
+#: forum/skins/default/templates/reopen.html:22
+msgid "date closed"
+msgstr "дату окончания"
+
+#: forum/skins/askbot/templates/reopen.html:29
+#: forum/skins/default/templates/reopen.html:29
+msgid "Reopen this question"
+msgstr "Переоткрыть этот вопрос"
+
+#: forum/skins/askbot/templates/revisions_answer.html:7
+#: forum/skins/askbot/templates/revisions_answer.html:38
+#: forum/skins/askbot/templates/revisions_question.html:8
+#: forum/skins/askbot/templates/revisions_question.html:38
+#: forum/skins/default/templates/revisions_answer.html:7
+#: forum/skins/default/templates/revisions_answer.html:38
+#: forum/skins/default/templates/revisions_question.html:8
+#: forum/skins/default/templates/revisions_question.html:38
+msgid "Revision history"
+msgstr "История изменений"
+
+#: forum/skins/askbot/templates/revisions_answer.html:50
+#: forum/skins/askbot/templates/revisions_question.html:50
+#: forum/skins/default/templates/revisions_answer.html:50
+#: forum/skins/default/templates/revisions_question.html:50
+msgid "click to hide/show revision"
+msgstr "нажмите, чтобы скрыть / показать ревизию"
+
+#: forum/skins/askbot/templates/revisions_answer.html:58
+#: forum/skins/askbot/templates/revisions_question.html:58
+#: forum/skins/default/templates/question.html:141
+#: forum/skins/default/templates/question.html:288
+#: forum/skins/default/templates/revisions_answer.html:58
+#: forum/skins/default/templates/revisions_question.html:58
+msgid "edit"
+msgstr "редактировать"
+
+#: forum/skins/askbot/templates/tag_selector.html:5
+#: forum/skins/default/templates/tag_selector.html:5
+msgid "Interesting tags"
+msgstr "Избранные теги"
+
+#: forum/skins/askbot/templates/tag_selector.html:15
+#: forum/skins/default/templates/tag_selector.html:15
+#, python-format
+msgid "remove '%(tag_name)s' from the list of interesting tags"
+msgstr "удалить '%(tag_name)s' из списка интересных теги"
+
+#: forum/skins/askbot/templates/tag_selector.html:21
+#: forum/skins/askbot/templates/tag_selector.html:38
+#: forum/skins/default/templates/tag_selector.html:21
+#: forum/skins/default/templates/tag_selector.html:38
+msgid "Add"
+msgstr "Добавить"
+
+#: forum/skins/askbot/templates/tag_selector.html:22
+#: forum/skins/default/templates/tag_selector.html:22
+msgid "Ignored tags"
+msgstr "Игнорируемые теги"
+
+#: forum/skins/askbot/templates/tag_selector.html:32
+#: forum/skins/default/templates/tag_selector.html:32
+#, python-format
+msgid "remove '%(tag_name)s' from the list of ignored tags"
+msgstr "удалить '%(tag_name)s' из списка игнорируемых тегов"
+
+#: forum/skins/askbot/templates/tag_selector.html:41
+#: forum/skins/default/templates/tag_selector.html:41
+msgid "keep ignored questions hidden"
+msgstr "скрыть игнорируемые вопросы"
+
+#: forum/skins/askbot/templates/tags.html:6
+#: forum/skins/askbot/templates/tags.html:30
+#: forum/skins/default/templates/tags.html:6
+#: forum/skins/default/templates/tags.html:30
+msgid "Tag list"
+msgstr "Список тегов"
+
+#: forum/skins/askbot/templates/tags.html:32
+#: forum/skins/default/templates/tags.html:32
+msgid "sorted alphabetically"
+msgstr "сортируются в алфавитном порядке"
+
+#: forum/skins/askbot/templates/tags.html:32
+#: forum/skins/default/templates/tags.html:32
+msgid "by name"
+msgstr "по имени"
+
+#: forum/skins/askbot/templates/tags.html:33
+#: forum/skins/default/templates/tags.html:33
+msgid "sorted by frequency of tag use"
+msgstr "отсортировано по частоте использования тега"
+
+#: forum/skins/askbot/templates/tags.html:33
+#: forum/skins/default/templates/tags.html:33
+msgid "by popularity"
+msgstr "по популярности"
+
+#: forum/skins/askbot/templates/tags.html:39
+#: forum/skins/default/templates/tags.html:39
+#, python-format
+msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgstr "Все тэга, соответствующие <strong><span class=\"darkred\"> '%(stag)s'</span></strong> "
+
+#: forum/skins/askbot/templates/tags.html:42
+#: forum/skins/default/templates/tags.html:42
+msgid "Nothing found"
+msgstr "Ничего не найдено"
+
+#: forum/skins/askbot/templates/user_edit.html:6
+#: forum/skins/default/templates/user_edit.html:6
+msgid "Edit user profile"
+msgstr "Изменить профиль пользователя"
+
+#: forum/skins/askbot/templates/user_edit.html:19
+#: forum/skins/default/templates/user_edit.html:19
+msgid "edit profile"
+msgstr "изменить профиль"
+
+#: forum/skins/askbot/templates/user_edit.html:33
+#: forum/skins/askbot/templates/user_info.html:53
+#: forum/skins/default/templates/user_edit.html:33
+#: forum/skins/default/templates/user_info.html:53
+msgid "Registered user"
+msgstr "Зарегистрированный пользователь"
+
+#: forum/skins/askbot/templates/user_edit.html:40
+#: forum/skins/default/templates/user_edit.html:40
+msgid "Screen Name"
+msgstr "Название экрана"
+
+#: forum/skins/askbot/templates/user_edit.html:89
+#: forum/skins/askbot/templates/user_email_subscriptions.html:20
+#: forum/skins/default/templates/user_edit.html:89
+#: forum/skins/default/templates/user_email_subscriptions.html:20
+msgid "Update"
+msgstr "Обновить"
+
+#: forum/skins/askbot/templates/user_email_subscriptions.html:8
+#: forum/skins/default/templates/user_email_subscriptions.html:8
+msgid "Email subscription settings"
+msgstr "Настройка подписки по электронной почте"
+
+#: forum/skins/askbot/templates/user_email_subscriptions.html:9
+#: forum/skins/default/templates/user_email_subscriptions.html:9
+msgid "email subscription settings info"
+msgstr "Информация о настройках подписки по электронной почте"
+
+#: forum/skins/askbot/templates/user_email_subscriptions.html:21
+#: forum/skins/default/templates/user_email_subscriptions.html:21
+msgid "Stop sending email"
+msgstr "Остановить отправку электронной почты"
+
+#: forum/skins/askbot/templates/user_info.html:18
+#: forum/skins/default/templates/user_info.html:18
+msgid "change picture"
+msgstr "изменить изображение"
+
+#: forum/skins/askbot/templates/user_info.html:25
+#: forum/skins/askbot/templates/users.html:26
+#: forum/skins/default/templates/user_info.html:25
+#: forum/skins/default/templates/users.html:26 forum/views/users.py:934
+msgid "reputation"
+msgstr "карма"
+
+#: forum/skins/askbot/templates/user_info.html:35
+#: forum/skins/default/templates/user_info.html:35
+msgid "Moderate this user"
+msgstr "Модерировать этого пользователя"
+
+#: forum/skins/askbot/templates/user_info.html:47
+#: forum/skins/default/templates/user_info.html:47
+msgid "update profile"
+msgstr "обновить профиль"
+
+#: forum/skins/askbot/templates/user_info.html:57
+#: forum/skins/default/templates/user_info.html:57
+msgid "real name"
+msgstr "настоящее имя"
+
+#: forum/skins/askbot/templates/user_info.html:62
+#: forum/skins/default/templates/user_info.html:62
+msgid "member for"
+msgstr "состоит в "
+
+#: forum/skins/askbot/templates/user_info.html:67
+#: forum/skins/default/templates/user_info.html:67
+msgid "last seen"
+msgstr "последнее посещение"
+
+#: forum/skins/askbot/templates/user_info.html:73
+#: forum/skins/default/templates/user_info.html:73
+msgid "user website"
+msgstr "сайт пользователя"
+
+#: forum/skins/askbot/templates/user_info.html:79
+#: forum/skins/default/templates/user_info.html:79
+msgid "location"
+msgstr "местоположение"
+
+#: forum/skins/askbot/templates/user_info.html:86
+#: forum/skins/default/templates/user_info.html:86
+msgid "age"
+msgstr "возраст"
+
+#: forum/skins/askbot/templates/user_info.html:87
+#: forum/skins/default/templates/user_info.html:87
+msgid "age unit"
+msgstr "блок возраста"
+
+#: forum/skins/askbot/templates/user_info.html:93
+#: forum/skins/default/templates/user_info.html:93
+msgid "todays unused votes"
+msgstr "сегодняшних неиспользованных голосов"
+
+#: forum/skins/askbot/templates/user_info.html:94
+#: forum/skins/default/templates/user_info.html:94
+msgid "votes left"
+msgstr "осталось голосов"
+
+#: forum/skins/askbot/templates/user_reputation.html:29
+#: forum/skins/default/templates/user_reputation.html:29
+msgid "Your karma change log."
+msgstr "История зменений кармы"
+
+#: forum/skins/askbot/templates/user_reputation.html:31
+#: forum/skins/default/templates/user_reputation.html:31
+#, python-format
+msgid "%(user_name)s's karma change log"
+msgstr "История зменений кармы для %(user_name)s "
+
+#: forum/skins/askbot/templates/user_tabs.html:7
+#: forum/skins/default/templates/user_tabs.html:7
+msgid "User profile"
+msgstr "Профиль пользователя"
+
+#: forum/skins/askbot/templates/user_tabs.html:7
+#: forum/skins/default/templates/user_tabs.html:7 forum/views/users.py:907
+msgid "overview"
+msgstr "обзор"
+
+#: forum/skins/askbot/templates/user_tabs.html:9
+#: forum/skins/default/templates/user_tabs.html:9 forum/views/users.py:915
+msgid "recent activity"
+msgstr "активность"
+
+#: forum/skins/askbot/templates/user_tabs.html:12
+#: forum/skins/default/templates/user_tabs.html:12 forum/views/users.py:925
+msgid "comments and answers to others questions"
+msgstr "комментарии и ответы на другие вопросы"
+
+#: forum/skins/askbot/templates/user_tabs.html:13
+#: forum/skins/default/templates/user_tabs.html:13 forum/views/users.py:924
+msgid "responses"
+msgstr "ответы"
+
+#: forum/skins/askbot/templates/user_tabs.html:16
+#: forum/skins/default/templates/user_tabs.html:16
+msgid "graph of user reputation"
+msgstr "график кармы"
+
+#: forum/skins/askbot/templates/user_tabs.html:17
+#: forum/skins/default/templates/user_tabs.html:17
+msgid "reputation history"
+msgstr "карма"
+
+#: forum/skins/askbot/templates/user_tabs.html:20
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:951
+msgid "user vote record"
+msgstr "голос пользователя записан"
+
+#: forum/skins/askbot/templates/user_tabs.html:20
+#: forum/skins/default/templates/user_tabs.html:20 forum/views/users.py:950
+msgid "casted votes"
+msgstr "голоса"
+
+#: forum/skins/askbot/templates/user_tabs.html:23
+#: forum/skins/default/templates/user_tabs.html:23
+msgid "questions that user selected as his/her favorite"
+msgstr "Вопросов отмеченных закладками (интересные вопросы можно отмечать нажав на звездочку)."
+
+#: forum/skins/askbot/templates/user_tabs.html:24
+#: forum/skins/default/templates/user_tabs.html:24
+msgid "favorites"
+msgstr "закладки"
+
+#: forum/skins/askbot/templates/user_tabs.html:27
+#: forum/skins/default/templates/user_tabs.html:27 forum/views/users.py:960
+msgid "email subscription settings"
+msgstr "настройки подписки по электронной почте"
+
+#: forum/skins/askbot/templates/user_tabs.html:28
+#: forum/skins/default/templates/user_tabs.html:28 forum/views/users.py:959
+msgid "email subscriptions"
+msgstr "подписки по email"
+
+#: forum/skins/askbot/templates/users.html:6
+#: forum/skins/askbot/templates/users.html:24
+#: forum/skins/default/templates/users.html:6
+#: forum/skins/default/templates/users.html:24
+msgid "Users"
+msgstr "Пользователи"
+
+#: forum/skins/askbot/templates/users.html:27
+#: forum/skins/default/templates/users.html:27
+msgid "recent"
+msgstr "новички"
+
+#: forum/skins/askbot/templates/users.html:29
+#: forum/skins/default/templates/users.html:29
+msgid "by username"
+msgstr "по имени"
+
+#: forum/skins/askbot/templates/users.html:35
+#: forum/skins/default/templates/users.html:35
+#, python-format
+msgid "users matching query %(suser)s:"
+msgstr "пользователей, соответствующих запросу, %(suser)s:"
+
+#: forum/skins/askbot/templates/users.html:39
+#: forum/skins/default/templates/users.html:39
+msgid "Nothing found."
+msgstr "Ничего не найдено."
+
+#: forum/skins/askbot/templates/users_questions.html:11
+#: forum/skins/default/templates/users_questions.html:11
+msgid "this questions was selected as favorite"
+msgstr "эти вопросы были выбраны в качестве любимых"
+
+#: forum/skins/askbot/templates/users_questions.html:12
+#: forum/skins/default/templates/users_questions.html:12
+msgid "thumb-up on"
+msgstr "я \"за\""
+
+#: forum/skins/askbot/templates/users_questions.html:19
+#: forum/skins/default/templates/users_questions.html:19
+msgid "thumb-up off"
+msgstr "я \"против\""
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:3
+#: forum/skins/askbot/templates/authopenid/changeemail.html:9
+#: forum/skins/askbot/templates/authopenid/changeemail.html:38
+#: forum/skins/default/templates/authopenid/changeemail.html:3
+#: forum/skins/default/templates/authopenid/changeemail.html:9
+#: forum/skins/default/templates/authopenid/changeemail.html:38
+msgid "Change email"
+msgstr "Изменить адрес электронной почты"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:11
+#: forum/skins/default/templates/authopenid/changeemail.html:11
+msgid "Save your email address"
+msgstr "Сохранить адрес электронной почты"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:16
+#: forum/skins/default/templates/authopenid/changeemail.html:16
+#, python-format
+msgid "change %(email)s info"
+msgstr "измененить %(email)s"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:18
+#: forum/skins/default/templates/authopenid/changeemail.html:18
+#, python-format
+msgid "here is why email is required, see %(gravatar_faq_url)s"
+msgstr "вот почему требуется электронной почты, см. %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:31
+#: forum/skins/default/templates/authopenid/changeemail.html:31
+msgid "Your new Email"
+msgstr "Ваш новый Email"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:31
+#: forum/skins/default/templates/authopenid/changeemail.html:31
+msgid "Your Email"
+msgstr "Ваш E-mail"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:38
+#: forum/skins/default/templates/authopenid/changeemail.html:38
+msgid "Save Email"
+msgstr "Сохранить Email"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:49
+#: forum/skins/default/templates/authopenid/changeemail.html:49
+msgid "Validate email"
+msgstr "Проверить адрес электронной почты"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:52
+#: forum/skins/default/templates/authopenid/changeemail.html:52
+#, python-format
+msgid "validate %(email)s info or go to %(change_email_url)s"
+msgstr "Проверить информацию о %(email)s или перейти на %(change_email_url)s"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:57
+#: forum/skins/default/templates/authopenid/changeemail.html:57
+msgid "Email not changed"
+msgstr "Email не изменился"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:60
+#: forum/skins/default/templates/authopenid/changeemail.html:60
+#, python-format
+msgid "old %(email)s kept, if you like go to %(change_email_url)s"
+msgstr "старый %(email)s сохранен, при желании можно изменить тут %(change_email_url)s"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:65
+#: forum/skins/default/templates/authopenid/changeemail.html:65
+msgid "Email changed"
+msgstr "Email изменен"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:68
+#: forum/skins/default/templates/authopenid/changeemail.html:68
+#, python-format
+msgid "your current %(email)s can be used for this"
+msgstr "текущий %(email)s  может быть использован для этого"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:73
+#: forum/skins/default/templates/authopenid/changeemail.html:73
+msgid "Email verified"
+msgstr "Email проверен"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:76
+#: forum/skins/default/templates/authopenid/changeemail.html:76
+msgid "thanks for verifying email"
+msgstr "спасибо за проверку email"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:81
+#: forum/skins/default/templates/authopenid/changeemail.html:81
+msgid "email key not sent"
+msgstr "email ключ не передается"
+
+#: forum/skins/askbot/templates/authopenid/changeemail.html:84
+#: forum/skins/default/templates/authopenid/changeemail.html:84
+#, python-format
+msgid "email key not sent %(email)s change email here %(change_link)s"
+msgstr "email ключ не послан на %(email)s, изменить email здесь %(change_link)s"
+
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:8
+#: forum/skins/default/templates/authopenid/changeopenid.html:8
+msgid "Account: change OpenID URL"
+msgstr "Учетная запись: изменения OpenID URL"
+
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:12
+#: forum/skins/default/templates/authopenid/changeopenid.html:12
+msgid "This is where you can change your OpenID URL. Make sure you remember it!"
+msgstr "Здесь вы можете изменить свой OpenID URL. Убедитесь, что вы помните это!"
+
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:14
+#: forum/skins/askbot/templates/authopenid/delete.html:14
+#: forum/skins/askbot/templates/authopenid/delete.html:24
+#: forum/skins/default/templates/authopenid/changeopenid.html:14
+#: forum/skins/default/templates/authopenid/delete.html:14
+#: forum/skins/default/templates/authopenid/delete.html:24
+msgid "Please correct errors below:"
+msgstr "Пожалуйста, исправьте ошибки, указанные ниже:"
+
+#: forum/skins/askbot/templates/authopenid/changeopenid.html:29
+#: forum/skins/default/templates/authopenid/changeopenid.html:29
+msgid "OpenID URL:"
+msgstr "OpenID URL:"
+
+#: forum/skins/askbot/templates/authopenid/changepw.html:7
+#: forum/skins/default/templates/authopenid/changepw.html:7
+msgid "Account: change password"
+msgstr "Учетная запись: сменить пароль"
+
+#: forum/skins/askbot/templates/authopenid/changepw.html:8
+#: forum/skins/default/templates/authopenid/changepw.html:8
+msgid "This is where you can change your password. Make sure you remember it!"
+msgstr "Здесь вы можете изменить свой пароль. Убедитесь, что вы помните его!"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:19
+#: forum/skins/default/templates/authopenid/complete.html:19
+msgid "Connect your OpenID with this site"
+msgstr "Подключите ваш OpenID с этого сайта"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:22
+#: forum/skins/default/templates/authopenid/complete.html:22
+msgid "Connect your OpenID with your account on this site"
+msgstr "Подключите ваш OpenID с вашей учетной записью на этом сайте"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:27
+#: forum/skins/default/templates/authopenid/complete.html:27
+#, python-format
+msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr "зарегистрировать нового провайдера %(provider)s к учетной записи, смотрите %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:31
+#: forum/skins/default/templates/authopenid/complete.html:31
+#, python-format
+msgid ""
+"%(username)s already exists, choose another name for \n"
+"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
+"                        "
+msgstr "%(username)s уже существует, выберите другое имя для %(provider)s. Email так же требуется тоже, смотрите %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:35
+#: forum/skins/default/templates/authopenid/complete.html:35
+#, python-format
+msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr "регистрация нового внешнего %(provider)s  к учетной записи, смотрите %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:38
+#: forum/skins/default/templates/authopenid/complete.html:38
+#, python-format
+msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
+msgstr "регистрация нового Facebook подключения, смотрите %(gravatar_faq_url)s"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:42
+#: forum/skins/default/templates/authopenid/complete.html:42
+msgid "This account already exists, please use another."
+msgstr "Эта учетная запись уже существует, пожалуйста, используйте другую."
+
+#: forum/skins/askbot/templates/authopenid/complete.html:57
+#: forum/skins/default/templates/authopenid/complete.html:57
+msgid "Sorry, looks like we have some errors:"
+msgstr "К сожалению, у нас есть некоторые ошибки:"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:82
+#: forum/skins/default/templates/authopenid/complete.html:82
+msgid "Screen name label"
+msgstr "Логин"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:89
+#: forum/skins/default/templates/authopenid/complete.html:89
+msgid "Email address label"
+msgstr "Ярлык для Email"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:95
+#: forum/skins/askbot/templates/authopenid/signup.html:18
+#: forum/skins/default/templates/authopenid/complete.html:95
+#: forum/skins/default/templates/authopenid/signup.html:18
+msgid "receive updates motivational blurb"
+msgstr "получать обновления мотивационной рекламы"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:99
+#: forum/skins/askbot/templates/authopenid/signup.html:22
+#: forum/skins/default/templates/authopenid/complete.html:99
+#: forum/skins/default/templates/authopenid/signup.html:22
+msgid "please select one of the options above"
+msgstr "Пожалуйста, выберите один из вариантов"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:102
+#: forum/skins/default/templates/authopenid/complete.html:102
+msgid "Tag filter tool will be your right panel, once you log in."
+msgstr "Фильтр тегов будет в правой панели, после того, как вы войдете в систему"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:103
+#: forum/skins/default/templates/authopenid/complete.html:103
+msgid "create account"
+msgstr "зарегистрироваться"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:112
+#: forum/skins/default/templates/authopenid/complete.html:112
+msgid "Existing account"
+msgstr "Существующие учетные записи"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:113
+#: forum/skins/default/templates/authopenid/complete.html:113
+msgid "user name"
+msgstr "имя пользователя"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:114
+#: forum/skins/default/templates/authopenid/complete.html:114
+msgid "password"
+msgstr "пароль"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:121
+#: forum/skins/default/templates/authopenid/complete.html:121
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+#: forum/skins/askbot/templates/authopenid/complete.html:122
+#: forum/skins/askbot/templates/authopenid/signin.html:168
+#: forum/skins/default/templates/authopenid/complete.html:122
+#: forum/skins/default/templates/authopenid/signin.html:168
+msgid "Forgot your password?"
+msgstr "Забыли пароль?"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:2
+#: forum/skins/default/templates/authopenid/confirm_email.txt:2
+msgid "Thank you for registering at our Q&A forum!"
+msgstr "Благодарим вас за регистрацию на нашем Q/A форуме!"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:4
+#: forum/skins/default/templates/authopenid/confirm_email.txt:4
+msgid "Your account details are:"
+msgstr "Подробности вашей учетной записи:"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:6
+#: forum/skins/default/templates/authopenid/confirm_email.txt:6
+msgid "Username:"
+msgstr "Имя пользователя:"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:7
+#: forum/skins/askbot/templates/authopenid/delete.html:19
+#: forum/skins/default/templates/authopenid/confirm_email.txt:7
+#: forum/skins/default/templates/authopenid/delete.html:19
+msgid "Password:"
+msgstr "Пароль:"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:9
+#: forum/skins/default/templates/authopenid/confirm_email.txt:9
+msgid "Please sign in here:"
+msgstr "Пожалуйста, войдите здесь:"
+
+#: forum/skins/askbot/templates/authopenid/confirm_email.txt:12
+#: forum/skins/askbot/templates/authopenid/email_validation.txt:14
+#: forum/skins/askbot/templates/authopenid/sendpw_email.txt:8
+#: forum/skins/default/templates/authopenid/confirm_email.txt:12
+#: forum/skins/default/templates/authopenid/email_validation.txt:14
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:8
+msgid ""
+"Sincerely,\n"
+"Forum Administrator"
+msgstr "С уважением, администратор форума"
+
+#: forum/skins/askbot/templates/authopenid/delete.html:8
+#: forum/skins/default/templates/authopenid/delete.html:8
+msgid "Account: delete account"
+msgstr "Учетная запись: удалить учетную запись"
+
+#: forum/skins/askbot/templates/authopenid/delete.html:12
+#: forum/skins/default/templates/authopenid/delete.html:12
+msgid "Note: After deleting your account, anyone will be able to register this username."
+msgstr "Примечание: После удаления учетной записи, любой пользователь сможет зарегистрировать это имя пользователя."
+
+#: forum/skins/askbot/templates/authopenid/delete.html:16
+#: forum/skins/default/templates/authopenid/delete.html:16
+msgid "Check confirm box, if you want delete your account."
+msgstr "Установите флаг, подтвержадющий, что вы хотите удалить свой аккаунт."
+
+#: forum/skins/askbot/templates/authopenid/delete.html:31
+#: forum/skins/default/templates/authopenid/delete.html:31
+msgid "I am sure I want to delete my account."
+msgstr "Я уверен, что хочу удалить свой аккаунт."
+
+#: forum/skins/askbot/templates/authopenid/delete.html:32
+#: forum/skins/default/templates/authopenid/delete.html:32
+msgid "Password/OpenID URL"
+msgstr "Пароль / OpenID URL"
+
+#: forum/skins/askbot/templates/authopenid/delete.html:32
+#: forum/skins/default/templates/authopenid/delete.html:32
+msgid "(required for your security)"
+msgstr "(необходимо для вашей безопасности)"
+
+#: forum/skins/askbot/templates/authopenid/delete.html:34
+#: forum/skins/default/templates/authopenid/delete.html:34
+msgid "Delete account permanently"
+msgstr "Удалить аккаунт навсегда"
+
+#: forum/skins/askbot/templates/authopenid/email_validation.txt:2
+#: forum/skins/default/templates/authopenid/email_validation.txt:2
+msgid "Greetings from the Q&A forum"
+msgstr "С Уважением, Q/A форум"
+
+#: forum/skins/askbot/templates/authopenid/email_validation.txt:4
+#: forum/skins/default/templates/authopenid/email_validation.txt:4
+msgid "To make use of the Forum, please follow the link below:"
+msgstr "Для того чтобы воспользоваться форумом, пожалуйста, перейдите по ссылке ниже:"
+
+#: forum/skins/askbot/templates/authopenid/email_validation.txt:8
+#: forum/skins/default/templates/authopenid/email_validation.txt:8
+msgid "Following the link above will help us verify your email address."
+msgstr "Перейдя по ссылке выше, вы поможете нам проверить ваш email."
+
+#: forum/skins/askbot/templates/authopenid/email_validation.txt:10
+#: forum/skins/default/templates/authopenid/email_validation.txt:10
+msgid ""
+"If you beleive that this message was sent in mistake - \n"
+"no further action is needed. Just ingore this email, we apologize\n"
+"for any inconvenience"
+msgstr "Если вы считаете, что сообщение было отправлено по ошибке - никаких дальнейших действий не требуется. Просто проигнорируйте это письмо, мы приносим свои извинения за причиненные неудобства."
+
+#: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:4
+#: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:7
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:4
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:7
+msgid "Traditional login information"
+msgstr "Традиционная информация для входа"
+
+#: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:12
+#: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
+#, python-format
+msgid "how to login with password through external login website or use %(feedback_url)s"
+msgstr "как войти с паролем через внешнюю учетную запись или использовать %(feedback_url)s"
+
+#: forum/skins/askbot/templates/authopenid/sendpw.html:4
+#: forum/skins/askbot/templates/authopenid/sendpw.html:7
+#: forum/skins/default/templates/authopenid/sendpw.html:4
+#: forum/skins/default/templates/authopenid/sendpw.html:7
+msgid "Send new password"
+msgstr "Получить новый пароль"
+
+#: forum/skins/askbot/templates/authopenid/sendpw.html:10
+#: forum/skins/default/templates/authopenid/sendpw.html:10
+msgid "password recovery information"
+msgstr "информация для восстановления пароля"
+
+#: forum/skins/askbot/templates/authopenid/sendpw.html:21
+#: forum/skins/default/templates/authopenid/sendpw.html:21
+msgid "Reset password"
+msgstr "Сброс пароля"
+
+#: forum/skins/askbot/templates/authopenid/sendpw.html:22
+#: forum/skins/default/templates/authopenid/sendpw.html:22
+msgid "return to login"
+msgstr "вернуться к странице входа"
+
+#: forum/skins/askbot/templates/authopenid/sendpw_email.txt:2
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:2
+#, python-format
+msgid ""
+"Someone has requested to reset your password on %(site_url)s.\n"
+"If it were not you, it is safe to ignore this email."
+msgstr ""
+"Кто-то запросил сброс вашего пароля на сайте %(site_url)s. \n"
+"Если это не вы, то можно просто проигнорировать это сообщение."
+
+#: forum/skins/askbot/templates/authopenid/sendpw_email.txt:5
+#: forum/skins/default/templates/authopenid/sendpw_email.txt:5
+#, python-format
+msgid ""
+"email explanation how to use new %(password)s for %(username)s\n"
+"with the %(key_link)s"
+msgstr ""
+"email-инструкция по использованию новых %(username)s / %(password)s\n"
+"с помощью %(key_link)s"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:5
+#: forum/skins/askbot/templates/authopenid/signin.html:21
+#: forum/skins/default/templates/authopenid/signin.html:5
+#: forum/skins/default/templates/authopenid/signin.html:21
+msgid "User login"
+msgstr "Вход выполнен"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:28
+#: forum/skins/default/templates/authopenid/signin.html:28
+#, python-format
+msgid ""
+"\n"
+"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
+"                "
+msgstr ""
+"\n"
+"Ваш ответ на %(title)s / %(summary)s будет опубликован, как только вы войдете"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:35
+#: forum/skins/default/templates/authopenid/signin.html:35
+#, python-format
+msgid ""
+"Your question \n"
+"                %(title)s %(summary)s will be posted once you log in\n"
+"                "
+msgstr "Ваш вопрос %(title)s / %(summary)s ы будет опубликован после того, как вы войдёте"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:42
+#: forum/skins/default/templates/authopenid/signin.html:42
+msgid "Click to sign in through any of these services."
+msgstr "Нажмите на изображение используемого при регистрации сервиса"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:144
+#: forum/skins/default/templates/authopenid/signin.html:144
+msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
+msgstr "Введите <span id=\"enter_your_what\">имя пользователя провайдера</span>"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:151
+#: forum/skins/default/templates/authopenid/signin.html:151
+msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
+msgstr "Введите свой <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> веб-адрес"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:153
+#: forum/skins/askbot/templates/authopenid/signin.html:166
+#: forum/skins/default/templates/authopenid/signin.html:153
+#: forum/skins/default/templates/authopenid/signin.html:166
+msgid "Login"
+msgstr "Войти"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:157
+#: forum/skins/default/templates/authopenid/signin.html:157
+msgid "Enter your login name and password"
+msgstr "Введите имя и пароль"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:161
+#: forum/skins/default/templates/authopenid/signin.html:161
+msgid "Login name"
+msgstr "Имя прльзователя"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:163
+#: forum/skins/default/templates/authopenid/signin.html:163
+msgid "Password"
+msgstr "Пароль"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:167
+#: forum/skins/default/templates/authopenid/signin.html:167
+msgid "Create account"
+msgstr "Создать учетную запись"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:178
+#: forum/skins/default/templates/authopenid/signin.html:178
+msgid "Why use OpenID?"
+msgstr "Плюсы использования OpenID"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:181
+#: forum/skins/default/templates/authopenid/signin.html:181
+msgid "with openid it is easier"
+msgstr "Легкая и быстрая регистрация"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:184
+#: forum/skins/default/templates/authopenid/signin.html:184
+msgid "reuse openid"
+msgstr "Простая аутентификация"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:187
+#: forum/skins/default/templates/authopenid/signin.html:187
+msgid "openid is widely adopted"
+msgstr "Имеет широкое распространение"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:190
+#: forum/skins/default/templates/authopenid/signin.html:190
+msgid "openid is supported open standard"
+msgstr "OpenID поддерживаемый открытый стандарт"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:195
+#: forum/skins/default/templates/authopenid/signin.html:195
+msgid "Find out more"
+msgstr "Узнать больше"
+
+#: forum/skins/askbot/templates/authopenid/signin.html:196
+#: forum/skins/default/templates/authopenid/signin.html:196
+msgid "Get OpenID"
+msgstr "Получить OpenID"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:4
+#: forum/skins/default/templates/authopenid/signup.html:4
+msgid "Signup"
+msgstr "Зарегистрироваться"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:8
+#: forum/skins/default/templates/authopenid/signup.html:8
+msgid "Create login name and password"
+msgstr "Создать имя и пароль"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:10
+#: forum/skins/default/templates/authopenid/signup.html:10
+msgid "Traditional signup info"
+msgstr "Информация о традиционной регистрации"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:25
+#: forum/skins/default/templates/authopenid/signup.html:25
+msgid "Please read and type in the two words below to help us prevent automated account creation."
+msgstr "Пожалуйста, прочтите и укажите два слова ниже, чтобы помочь нам предотвратить автоматизированные создания учетной записи."
+
+#: forum/skins/askbot/templates/authopenid/signup.html:27
+#: forum/skins/default/templates/authopenid/signup.html:27
+msgid "Create Account"
+msgstr "Создать учетную запись"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:28
+#: forum/skins/default/templates/authopenid/signup.html:28
+msgid "or"
+msgstr "или"
+
+#: forum/skins/askbot/templates/authopenid/signup.html:29
+#: forum/skins/default/templates/authopenid/signup.html:29
+msgid "return to OpenID login"
+msgstr "вернуться к старнице OpenID входа"
+
+#: forum/skins/askbot/templates/fbconnect/xd_receiver.html:5
+#: forum/skins/default/templates/fbconnect/xd_receiver.html:5
+#, python-format
+msgid "Connect to %(APP_SHORT_NAME)s with Facebook!"
+msgstr "Подключение к %(APP_SHORT_NAME)s с Facebook!"
+
+#: forum/skins/default/templates/badge.html:6
+#: forum/skins/default/templates/badge.html:17
+msgid "Badge"
+msgstr "Награда"
+
+#: forum/skins/default/templates/badge.html:26
+msgid "user received this badge:"
+msgid_plural "users received this badge:"
+msgstr[0] "пользователь, получивший этот значок"
+msgstr[1] "пользователя, получивших этот значок"
+msgstr[2] "пользователей, получивших этот значок"
+
+#: forum/skins/default/templates/badges.html:6
+msgid "Badges summary"
+msgstr "Информация о знаках отличия (наградах)"
+
+#: forum/skins/default/templates/badges.html:17
+msgid "Badges"
+msgstr "Значки"
+
+#: forum/skins/default/templates/badges.html:21
+msgid "Community gives you awards for your questions, answers and votes."
+msgstr "Награды"
+
+#: forum/skins/default/templates/badges.html:22
+#, python-format
+msgid ""
+"Below is the list of available badges and number \n"
+"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
+"    "
+msgstr "Ниже приведен список доступных значков и число награждений каждым из них. Предложения по новым значкам отправляйте через обратную связь -  %(feedback_faq_url)s."
+
+#: forum/skins/default/templates/badges.html:51
+msgid "Community badges"
+msgstr "Значки отличия сообщества"
+
+#: forum/skins/default/templates/badges.html:57
+msgid "gold badge description"
+msgstr "золотой значок"
+
+#: forum/skins/default/templates/badges.html:65
+msgid "silver badge description"
+msgstr "серебряный значок"
+
+#: forum/skins/default/templates/badges.html:68
+msgid "bronze badge: often given as a special honor"
+msgstr "бронзовый значок: часто делаются с особым почетом"
+
+#: forum/skins/default/templates/badges.html:72
+msgid "bronze badge description"
+msgstr "бронзовый значок"
+
+#: forum/skins/default/templates/header.html:12
+msgid "login"
+msgstr "Войти"
+
+#: forum/skins/default/templates/post_contributor_info.html:9
+#, python-format
+msgid "one revision"
+msgid_plural "%(rev_count)s revisions"
+msgstr[0] "одна версия"
+msgstr[1] "%(rev_count)s версии правки"
+msgstr[2] "%(rev_count)s  версий правки"
+
+#: forum/skins/default/templates/post_contributor_info.html:15
+msgid "asked"
+msgstr "спросил"
+
+#: forum/skins/default/templates/post_contributor_info.html:18
+msgid "answered"
+msgstr "ответил"
+
+#: forum/skins/default/templates/post_contributor_info.html:20
+msgid "posted"
+msgstr "опубликовал"
+
+#: forum/skins/default/templates/post_contributor_info.html:41
+msgid "updated"
+msgstr "обновил"
+
+#: forum/skins/default/templates/question.html:78
+#: forum/skins/default/templates/question.html:79
+#: forum/skins/default/templates/question.html:95
+#: forum/skins/default/templates/question.html:97
+msgid "i like this post (click again to cancel)"
+msgstr "мне понравился этот пост (щелкните снова, чтобы отменить)"
+
+#: forum/skins/default/templates/question.html:81
+#: forum/skins/default/templates/question.html:99
+#: forum/skins/default/templates/question.html:251
+msgid "current number of votes"
+msgstr "текущее число голосов"
+
+#: forum/skins/default/templates/question.html:90
+#: forum/skins/default/templates/question.html:91
+#: forum/skins/default/templates/question.html:104
+#: forum/skins/default/templates/question.html:105
+msgid "i dont like this post (click again to cancel)"
+msgstr "я не понравился этот пост (нажмите еще раз для отмены)"
+
+#: forum/skins/default/templates/question.html:109
+#: forum/skins/default/templates/question.html:110
+msgid "mark this question as favorite (click again to cancel)"
+msgstr "отметьте закладкой (чтобы отменить - отметьте еще раз)"
+
+#: forum/skins/default/templates/question.html:116
+#: forum/skins/default/templates/question.html:117
+msgid "remove favorite mark from this question (click again to restore mark)"
+msgstr "удалить закладку (еще раз - чтобы восстановить)"
+
+#: forum/skins/default/templates/question.html:146
+msgid "reopen"
+msgstr "переоткрыть"
+
+#: forum/skins/default/templates/question.html:150
+msgid "close"
+msgstr "закрыть"
+
+#: forum/skins/default/templates/question.html:156
+#: forum/skins/default/templates/question.html:293
+msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgstr "сообщить о спаме (т.е. сообщениях содержащих спам, рекламу, вредоносные ссылки и т.д.)"
+
+#: forum/skins/default/templates/question.html:157
+#: forum/skins/default/templates/question.html:294
+msgid "flag offensive"
+msgstr "спам"
+
+#: forum/skins/default/templates/question.html:165
+#: forum/skins/default/templates/question.html:305
+msgid "delete"
+msgstr "удалить"
+
+#: forum/skins/default/templates/question.html:183
+#: forum/skins/default/templates/question.html:325
+msgid "delete this comment"
+msgstr "удалить этот комментарий"
+
+#: forum/skins/default/templates/question.html:194
+#: forum/skins/default/templates/question.html:336
+msgid "add comment"
+msgstr "добавить комментарий"
+
+#: forum/skins/default/templates/question.html:198
+#: forum/skins/default/templates/question.html:340
+#, python-format
+msgid "see <strong>one</strong> more"
+msgid_plural "see <strong>%(counter)s</strong> more"
+msgstr[0] "смотреть еще <strong>один</strong>"
+msgstr[1] "смотреть еще <strong>%(counter)s</strong>"
+msgstr[2] "смотреть еще <strong>%(counter)s</strong>"
+
+#: forum/skins/default/templates/question.html:200
+#: forum/skins/default/templates/question.html:342
+#, python-format
+msgid "see <strong>one</strong> more comment"
+msgid_plural ""
+"see <strong>%(counter)s</strong> more comments\n"
+"                                            "
+msgstr[0] "смотреть еще <strong>один</strong> комментарий"
+msgstr[1] "смотреть еще <strong>%(counter)s</strong> комментария"
+msgstr[2] "смотреть еще <strong>%(counter)s</strong> комментариев"
+
+#: forum/skins/default/templates/question.html:213
+#, python-format
+msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
+msgstr "Вопрос был закрыт по следующим причинам \"%(close_reason)s\", автор:"
+
+#: forum/skins/default/templates/question.html:215
+#, python-format
+msgid "close date %(closed_at)s"
+msgstr "дата закрытия: %(closed_at)s"
+
+#: forum/skins/default/templates/question.html:223
+#, python-format
+msgid ""
+"\n"
+"                    One Answer:\n"
+"                    "
+msgid_plural ""
+"\n"
+"                    %(counter)s Answers:\n"
+"                    "
+msgstr[0] ""
+"\n"
+"Один ответ:\n"
+" "
+msgstr[1] ""
+"\n"
+"%(counter)s Ответа:"
+msgstr[2] ""
+"\n"
+"%(counter)s Ответов:"
+
+#: forum/skins/default/templates/question.html:231
+msgid "oldest answers will be shown first"
+msgstr "самые старые ответы будут показаны первыми"
+
+#: forum/skins/default/templates/question.html:231
+msgid "oldest answers"
+msgstr "самые старые ответы"
+
+#: forum/skins/default/templates/question.html:233
+msgid "newest answers will be shown first"
+msgstr "самые новые ответы будут показаны первыми"
+
+#: forum/skins/default/templates/question.html:233
+msgid "newest answers"
+msgstr "самые новые ответы"
+
+#: forum/skins/default/templates/question.html:235
+msgid "most voted answers will be shown first"
+msgstr "ответы с б<b>о</b>льшим числом голосов будут показаны первыми"
+
+#: forum/skins/default/templates/question.html:235
+msgid "popular answers"
+msgstr "популярные ответы"
+
+#: forum/skins/default/templates/question.html:249
+#: forum/skins/default/templates/question.html:250
+msgid "i like this answer (click again to cancel)"
+msgstr "мне нравится этот ответ (нажмите еще раз для отмены)"
+
+#: forum/skins/default/templates/question.html:256
+#: forum/skins/default/templates/question.html:257
+msgid "i dont like this answer (click again to cancel)"
+msgstr "мне не нравится этот ответ (нажмите еще раз для отмены)"
+
+#: forum/skins/default/templates/question.html:262
+#: forum/skins/default/templates/question.html:263
+msgid "mark this answer as favorite (click again to undo)"
+msgstr "отметить этот вопрос как интересный (еще раз - чтобы удалить закладку)"
+
+#: forum/skins/default/templates/question.html:268
+#: forum/skins/default/templates/question.html:269
+msgid "the author of the question has selected this answer as correct"
+msgstr "автор вопроса выбрал этот ответ правильным"
+
+#: forum/skins/default/templates/question.html:282
+msgid "answer permanent link"
+msgstr "постоянная ссылка на ответ"
+
+#: forum/skins/default/templates/question.html:283
+msgid "permanent link"
+msgstr "постоянная ссылка"
+
+#: forum/skins/default/templates/question.html:305
+msgid "undelete"
+msgstr "восстановить"
+
+#: forum/skins/default/templates/question.html:364
+#: forum/skins/default/templates/question.html:367
+msgid "Notify me once a day when there are any new answers"
+msgstr "Информировать один раз в день, если есть новые ответы"
+
+#: forum/skins/default/templates/question.html:370
+msgid "Notify me weekly when there are any new answers"
+msgstr "Еженедельно информировать о новых ответах"
+
+#: forum/skins/default/templates/question.html:375
+#, python-format
+msgid "You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr "(в своем профиле, вы можете настроить частоту оповещений по электронной почте, нажав на кнопку \"подписка по e-mail\" - %(profile_url)s)"
+
+#: forum/skins/default/templates/question.html:380
+msgid "once you sign in you will be able to subscribe for any updates here"
+msgstr "После входа в систему вы сможете подписаться на все обновления"
+
+#: forum/skins/default/templates/question.html:391
+msgid "Your answer"
+msgstr "Ваш ответ"
+
+#: forum/skins/default/templates/question.html:393
+msgid "Be the first one to answer this question!"
+msgstr "Будьте первым, кто ответ на этот вопрос!"
+
+#: forum/skins/default/templates/question.html:399
+msgid "you can answer anonymously and then login"
+msgstr "Вы можете ответить анонимно, а затем войти"
+
+#: forum/skins/default/templates/question.html:403
+msgid "answer your own question only to give an answer"
+msgstr "ответ на собственный вопрос только ради ответа"
+
+#: forum/skins/default/templates/question.html:405
+msgid "please only give an answer, no discussions"
+msgstr "пожалуйста, отвечайте на вопросы, а не вступайте в обсуждения"
+
+#: forum/skins/default/templates/question.html:441
+msgid "Login/Signup to Post Your Answer"
+msgstr "Войти / Зарегистрироваться чтобы ответить"
+
+#: forum/skins/default/templates/question.html:444
+msgid "Answer Your Own Question"
+msgstr "Ответ на собственный вопрос"
+
+#: forum/skins/default/templates/question.html:446
+msgid "Answer the question"
+msgstr "Ответ на вопрос"
+
+#: forum/skins/default/templates/question.html:460
+msgid "Question tags"
+msgstr "Теги вопроса"
+
+#: forum/skins/default/templates/question.html:471
+msgid "question asked"
+msgstr "вопрос был задан"
+
+#: forum/skins/default/templates/question.html:474
+msgid "question was seen"
+msgstr "вопрос был просмотрен"
+
+#: forum/skins/default/templates/question.html:474
+msgid "times"
+msgstr "раз"
+
+#: forum/skins/default/templates/question.html:477
+msgid "last updated"
+msgstr "последнее обновление"
+
+#: forum/skins/default/templates/question.html:483
+msgid "Related questions"
+msgstr "похожие вопросы:"
+
+#: forum/skins/default/templates/user_stats.html:11
+#, python-format
+msgid "<span class=\"count\">1</span> Question"
+msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
+msgstr[0] "<span class=\"count\">1</span> Вопрос"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Вопросов"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Вопроса"
+
+#: forum/skins/default/templates/user_stats.html:16
+#, python-format
+msgid "<span class=\"count\">1</span> Answer"
+msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
+msgstr[0] "<span class=\"count\">1</span> Ответ"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Ответов"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Ответа"
+
+#: forum/skins/default/templates/user_stats.html:24
+#, python-format
+msgid "the answer has been voted for %(answer_score)s times"
+msgstr "за ответ проголосовали %(answer_score)s раз"
+
+#: forum/skins/default/templates/user_stats.html:24
+msgid "this answer has been selected as correct"
+msgstr "этот ответ был выбран в качестве правильного"
+
+#: forum/skins/default/templates/user_stats.html:34
+#, python-format
+msgid "(one comment)"
+msgid_plural "the answer has been commented %(comment_count)s times"
+msgstr[0] "(один комментарий)"
+msgstr[1] "ответ был прокомментирован %(comment_count)s  раз"
+msgstr[2] "ответ был прокомментирован %(comment_count)s  раза"
+
+#: forum/skins/default/templates/user_stats.html:44
+#, python-format
+msgid "<span class=\"count\">1</span> Vote"
+msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
+msgstr[0] "<span class=\"count\">1</span> Голос"
+msgstr[1] "<span class=\"count\">%(cnt)s</span> Голосов"
+msgstr[2] "<span class=\"count\">%(cnt)s</span> Голоса"
+
+#: forum/skins/default/templates/user_stats.html:50
+msgid "thumb up"
+msgstr "я \"за\""
+
+#: forum/skins/default/templates/user_stats.html:51
+msgid "user has voted up this many times"
+msgstr "пользователь проголосовал \"за\" много раз"
+
+#: forum/skins/default/templates/user_stats.html:55
+msgid "thumb down"
+msgstr "я \"против\""
+
+#: forum/skins/default/templates/user_stats.html:56
+msgid "user voted down this many times"
+msgstr "пользователь проголосовал \"против\" много раз"
+
+#: forum/skins/default/templates/user_stats.html:64
+#, python-format
+msgid "<span class=\"count\">1</span> Tag"
+msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
+msgstr[0] "<span class=\"count\">1</span> Тэг"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Тэгов"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Тэга"
+
+#: forum/skins/default/templates/user_stats.html:72
+#, python-format
+msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgstr "см. другие вопросы, в которых есть вклад от %(view_user)s, отмеченные тэгом '%(tag_name)s'"
+
+#: forum/skins/default/templates/user_stats.html:86
+#, python-format
+msgid "<span class=\"count\">1</span> Badge"
+msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
+msgstr[0] "<span class=\"count\">1</span> Значок"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Значка"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Значков"
+
+#: forum/templatetags/extra_filters.py:100
+msgid "no items in counter"
+msgstr "нет"
+
+#: forum/templatetags/extra_tags.py:54
+#, python-format
+msgid "%(username)s gravatar image"
+msgstr "%(username)s Gravatar"
+
+#: forum/templatetags/extra_tags.py:179 forum/templatetags/extra_tags.py:206
+msgid "reputation points"
+msgstr "очки кармы"
+
+#: forum/templatetags/extra_tags.py:266
+msgid "2 days ago"
+msgstr "2 дня назад"
+
+#: forum/templatetags/extra_tags.py:268
+msgid "yesterday"
+msgstr "вчера"
+
+#: forum/templatetags/extra_tags.py:270
+#, python-format
+msgid "%(hr)d hour ago"
+msgid_plural "%(hr)d hours ago"
+msgstr[0] "%(hr)d час назад"
+msgstr[1] "%(hr)d часов назад"
+msgstr[2] "%(hr)d часа назад"
+
+#: forum/templatetags/extra_tags.py:272
+#, python-format
+msgid "%(min)d min ago"
+msgid_plural "%(min)d mins ago"
+msgstr[0] "%(min)d минуту назад"
+msgstr[1] "%(min)d минут назад"
+msgstr[2] "%(min)d минуты назад"
+
+#: forum/utils/forms.py:31
+msgid "this field is required"
+msgstr "это поле обязательное"
+
+#: forum/utils/forms.py:46
+msgid "choose a username"
+msgstr "выбрать имя пользователя"
+
+#: forum/utils/forms.py:51
+msgid "user name is required"
+msgstr "имя пользователя обязательно"
+
+#: forum/utils/forms.py:52
+msgid "sorry, this name is taken, please choose another"
+msgstr "к сожалению, это имя используется, выберите другое"
+
+#: forum/utils/forms.py:53
+msgid "sorry, this name is not allowed, please choose another"
+msgstr "к сожалению, это имя не разрешено, выберите другое"
+
+#: forum/utils/forms.py:54
+msgid "sorry, there is no user with this name"
+msgstr "е сожалению, пользователя с таким именем не существует"
+
+#: forum/utils/forms.py:55
+msgid "sorry, we have a serious error - user name is taken by several users"
+msgstr "е сожалению, у нас есть серьезная ошибка - имя пользователя используется несколькими пользователями"
+
+#: forum/utils/forms.py:56
+msgid "user name can only consist of letters, empty space and underscore"
+msgstr "имя пользователя может состоять только из букв, пробелов и подчеркиваний"
+
+#: forum/utils/forms.py:110
+msgid "your email address"
+msgstr "ваш email"
+
+#: forum/utils/forms.py:111
+msgid "email address is required"
+msgstr "email обязательное"
+
+#: forum/utils/forms.py:112
+msgid "please enter a valid email address"
+msgstr "пожалуйста, введите работающий адрес электронной почты"
+
+#: forum/utils/forms.py:113
+msgid "this email is already used by someone else, please choose another"
+msgstr "этот email уже используется кем-то еще, пожалуйста, выберите другое"
+
+#: forum/utils/forms.py:141
+msgid "choose password"
+msgstr "выбрать пароль"
+
+#: forum/utils/forms.py:142
+msgid "password is required"
+msgstr "пароль обязателен"
+
+#: forum/utils/forms.py:145
+msgid "retype password"
+msgstr "введите пароль еще раз"
+
+#: forum/utils/forms.py:146
+msgid "please, retype your password"
+msgstr "пожалуйста, повторите свой пароль"
+
+#: forum/utils/forms.py:147
+msgid "sorry, entered passwords did not match, please try again"
+msgstr "к сожалению, пароли не совпадают, попробуйте еще раз"
+
+#: forum/views/commands.py:217
+#, python-format
+msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
+msgstr "подписка сохранена, %(email)s требует проверки, см. %(details_url)s"
+
+#: forum/views/commands.py:225
+msgid "email update frequency has been set to daily"
+msgstr "частота обновлений по email была установлена в ежедневную"
+
+#: forum/views/meta.py:35
+msgid "Q&A forum feedback"
+msgstr "Обратная связь"
+
+#: forum/views/meta.py:36
+msgid "Thanks for the feedback!"
+msgstr "Спасибо за отзыв!"
+
+#: forum/views/meta.py:44
+msgid "We look forward to hearing your feedback! Please, give it next time :)"
+msgstr "Мы с нетерпением ждем ваших отзывов!"
+
+#: forum/views/users.py:868 forum/views/users.py:872
+msgid "changes saved"
+msgstr "изменения сохранены"
+
+#: forum/views/users.py:878
+msgid "email updates canceled"
+msgstr "обновления по email отменены"
+
+#: forum/views/users.py:909
+msgid "user profile"
+msgstr "профиль пользователя"
+
+#: forum/views/users.py:910
+msgid "user profile overview"
+msgstr "обзор профиля пользователя"
+
+#: forum/views/users.py:917
+msgid "recent user activity"
+msgstr "последние данные по активности пользователя"
+
+#: forum/views/users.py:918
+msgid "profile - recent activity"
+msgstr "профиль - последние данные по активности"
+
+#: forum/views/users.py:927
+msgid "profile - responses"
+msgstr "профиль - ответы"
+
+#: forum/views/users.py:935
+msgid "user reputation in the community"
+msgstr "карма пользователя в сообществе"
+
+#: forum/views/users.py:936
+msgid "profile - user reputation"
+msgstr "профиль - карма пользователя"
+
+#: forum/views/users.py:942
+msgid "favorite questions"
+msgstr "избранные вопросы"
+
+#: forum/views/users.py:943
+msgid "users favorite questions"
+msgstr "избранные вопросы пользователей"
+
+#: forum/views/users.py:944
+msgid "profile - favorite questions"
+msgstr "профиль - избранные вопросы"
+
+#: forum/views/users.py:953
+msgid "profile - votes"
+msgstr "профиль - голоса"
+
+#: forum/views/users.py:962
+msgid "profile - email subscriptions"
+msgstr "профиль - email подписки"
+
+#: forum/views/writers.py:69
+msgid "uploading images is limited to users with >60 reputation points"
+msgstr "загрузка изображений доступна только пользователям с репутацией > 60"
+
+#: forum/views/writers.py:71
+msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+msgstr "допустимые типы файлов: 'JPG ',' JPEG ',' GIF ',' BMP ',' PNG ',' TIFF'"
+
+#: forum/views/writers.py:73
+#, python-format
+msgid "maximum upload file size is %sK"
+msgstr "максимальный размер загружаемого файла - %s K"
+
+#: forum/views/writers.py:75
+#, python-format
+msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
+msgstr "Ошибка при загрузке файла. Пожалуйста, свяжитесь с администрацией сайта. Спасибо. %s"
+
+#: forum_modules/authentication/auth.py:27
+msgid "Email Validation"
+msgstr "Проверка Email"
+
+#: forum_modules/authentication/auth.py:38
+msgid "Thank you, your email is now validated."
+msgstr "Спасибо, Ваш email в настоящее время проверяется."
+
+#: forum_modules/authentication/auth.py:62
+msgid "Your password was changed"
+msgstr "Ваш пароль был изменен"
+
+#: forum_modules/authentication/auth.py:64
+msgid "New password set"
+msgstr "Установлен новый пароль"
+
+#: forum_modules/authentication/auth.py:130
+#, python-format
+msgid "Welcome back %s, you are now logged in"
+msgstr "С возвращением, %s, вы вошли в систему"
+
+#: forum_modules/books/urls.py:7 forum_modules/books/urls.py:8
+#: forum_modules/books/urls.py:9
+msgid "books/"
+msgstr "books/"
+
+#~ msgid "nimda/"
+#~ msgstr "администрация/"
+
+#~ msgid "account/"
+#~ msgstr "аккаунт/"
+
+#~ msgid "The users have been awarded with badges:"
+#~ msgstr "Награды, присужденные пользователям:"
+
+#~ msgid "Your account email"
+#~ msgstr "Адрес электронной почты связанный с аккаунтом"
+
+#~ msgid "You cannot leave this field blank"
+#~ msgstr "Это необходимо заполнить"
+
+#~ msgid "Sorry, but this email is not on our database."
+#~ msgstr "Извините, но этого адреса нет в нашей базе данных."
+
+#~ msgid "no OSQA community email please, thanks"
+#~ msgstr "спасибо, но электронной почты не надо"
+
+#~ msgid "These login credentials are already associated with your account."
+#~ msgstr "Эта информация уже ассоциирована с Вашей учетной записью."
+
+#~ msgid "The new credentials are now associated with your account"
+#~ msgstr "Новая информация добавлена в Вашу учетную запись"

@@ -1,0 +1,293 @@
+CONTENTS
+------------------
+A. INSTALLATION
+B. DEPLOYMENT
+   1. Settings file
+   2. Database
+   3. Running Askbot in the development server
+   4. Installation under Apache/WSGI
+   5. Full text search
+   6. Email subscriptions
+   7. Sitemap
+   8. Miscellaneous
+C. CONFIGURATION PARAMETERS (settings_local.py)
+D. CUSTOMIZATION
+
+
+A. INSTALLATION
+
+NOTE: if you need to install in non-standard locations
+please take a look here: http://askbot.org/wiki/index.php/Installing_software_components_at_non-standard_locations
+
+type
+
+> python setup.py install
+
+or
+
+> easy_install askbot
+
+then, if you need to start a new deployment, type
+
+> startforum
+
+Please read a few paragraphs of the following section on 
+how to initialize the application
+
+ATTENTION WINDOWS USERS: you will need to manually install
+binary for mysql-python from here
+http://www.codegood.com/archives/4
+
+B. DEPLOYMENT 
+
+if you are adding askbot to your existing project that already 
+has other apps, you'll need to "merge" some of the files in
+directory askbot/install_templates into your corresponding project files
+more instuctions about this are to follow soon - if you have questions
+ask on the forum
+
+for new deployment
+> startforum
+
+and answer questions in the end you should be able to get almost
+working installation, you'll need to edit file settings.py
+and at least enter database name, user name and password
+
+then type
+
+> python manage.py syncdb
+> python manage.py migrate forum
+
+now run:
+
+> python manage.py runserver `hostname -i`:8000 #or use some other port
+
+command `hostname -i` returns IP address on Unix, you can type the IP by hand too
+
+
+
+
+
+
+NOTES BELOW ARE OUTDATED, but may be useful
+if you have questions - please ask at http://askbot.org
+
+
+
+
+
+
+
+NOTE: If you want to upgrade software, not install from scratch - 
+      take a look into forum/documentation/UPGRADE
+
+-----------------------------------------------
+0. Make sure you have all above python libraries installed.
+
+   DO NOT name the main directory 'askbot' - this name is reserved
+   for the future name of the app file itself.
+
+   make askbot installation server-readable on Linux command might be:
+   chown -R yourlogin:apache /path/to/askbot-site
+
+   directories: 
+    /path/to/askbot-site/forum/upfiles
+    /path/to/askbot-site/log
+   must be server writable
+
+   on Linux type chmod
+   chmod -R g+w /path/to/askbot-site/forum/upfiles
+   chmod -R g+w /path/to/askbot-site/log
+
+   above it is assumed that webserver runs under group named "apache"
+
+1. Settings file
+
+Copy settings_local.py.dist to settings_local.py and
+update all your settings. Check settings.py and update
+it as well if necessory.
+Section C explains configuration paramaters.
+
+Minimally required modification of settings_local.py are
+DATABASE_NAME
+DATABASE_USER
+DATABASE_PASSWORD
+DATABASE_ENGINE
+
+If you set these up, and your database is ready (see section 2),
+run (note that application 'forum' is under control of south migration system:
+
+python manage.py syncdb #create tables for anything not under control of migration system
+python manage.py migrate forum #run migration command - will apply all migrations in sequence
+
+Now you are ready to test your installation:
+
+python manage.py runserver `hostname -i`:8000
+(choose another port number if you wish)
+
+and askbot should be running - if you have any issues at this point (or later:)
+please post them at http://askbot.org/meta
+
+2. Database
+
+Prepare your database by using the same database/account
+configuration from above.
+
+If your host has database manager in the control panel - you 
+can use that or you can create database by typing commands manually
+
+on MySQL the commands are:
+
+create database askbot DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
+grant all on askbot.* to 'askbot'@'localhost';
+
+And then run :
+
+python manage.py syncdb
+python manage.py migrate
+
+3. Running Askbot on the development server
+
+Run "python manage.py runserver" to startup django
+development environment.
+(Under Linux you can use command "python manage.py runserver `hostname -i`:8000",
+where you can use any other available number for the port)
+
+you might want to have DEBUG=True in the beginning of settings.py
+when using the test server
+
+4. Installation under Apache/WSGI
+
+The main wsgi script is in the file django.wsgi
+it does not need to be modified
+
+4.1 Configure webserver
+Settings below are not perfect but may be a good starting point
+
+---------
+WSGISocketPrefix /path/to/socket/sock #must be readable and writable by apache
+WSGIPythonHome /usr/local #must be readable by apache
+WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
+
+#NOTE: all urs below will need to be adjusted if
+#settings.FORUM_SCRIPT_ALIAS !='' (e.g. = 'forum/')
+#this allows "rooting" forum at http://example.com/forum, if you like
+<VirtualHost ...your ip...:80>
+    ServerAdmin forum@example.com
+    DocumentRoot /path/to/askbot-site
+    ServerName example.com
+
+    #run mod_wsgi process for django in daemon mode
+    #this allows avoiding confused timezone settings when
+    #another application runs in the same virtual host
+    WSGIDaemonProcess askbot
+    WSGIProcessGroup askbot
+
+    #force all content to be served as static files
+    #otherwise django will be crunching images through itself wasting time
+    Alias /m/ /path/to/askbot-site/forum/skins/
+    Alias /upfiles/ /path/to/askbot-site/forum/upfiles/
+    <Directory /path/to/askbot-site/forum/skins>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    #this is your wsgi script described in the prev section
+    WSGIScriptAlias / /path/to/askbot-site/django.wsgi
+
+    #this will force admin interface to work only
+    #through https (optional)
+    #"nimda" is the secret spelling of "admin" ;)
+    <Location "/nimda">
+        RewriteEngine on
+        RewriteRule /nimda(.*)$ https://example.com/nimda$1 [L,R=301]
+    </Location>
+    CustomLog /var/log/httpd/askbot/access_log common
+    ErrorLog /var/log/httpd/askbot/error_log
+</VirtualHost>
+#(optional) run admin interface under https
+<VirtualHost ..your ip..:443>
+    ServerAdmin forum@example.com
+    DocumentRoot /path/to/askbot-site
+    ServerName example.com
+    SSLEngine on
+    SSLCertificateFile /path/to/ssl-certificate/server.crt
+    SSLCertificateKeyFile /path/to/ssl-certificate/server.key
+    WSGIScriptAlias / /path/to/askbot-site/django.wsgi
+    CustomLog /var/log/httpd/askbot/access_log common
+    ErrorLog /var/log/httpd/askbot/error_log
+    DirectoryIndex index.html
+</VirtualHost>
+-------------
+
+5. Full text search (using sphinx search)
+
+   Currently full text search works only with sphinx search engine
+   And builtin PostgreSQL (postgres only >= 8.3???)
+
+   5.1 Instructions for Sphinx search setup
+   Sphinx at this time supports only MySQL and PostgreSQL databases
+   to enable this, install sphinx search engine and djangosphinx
+
+   configure sphinx, sample configuration can be found in
+   sphinx/sphinx.conf file usually goes somewhere in /etc tree
+
+   build askbot index first time manually
+
+   % indexer --config /path/to/sphinx.conf --index askbot
+
+   setup cron job to rebuild index periodically with command
+   your crontab entry may be something like
+
+   0 9,15,21 * * * /usr/local/bin/indexer --config /etc/sphinx/sphinx.conf --all --rotate >/dev/null 2>&1
+   adjust it as necessary this one will reindex three times a day at 9am 3pm and 9pm
+
+   if your forum grows very big ( good luck with that :) you'll
+   need to two search indices one diff index and one main
+   please refer to online sphinx search documentation for the information
+   on the subject http://sphinxsearch.com/docs/
+
+   in settings_local.py set
+   USE_SPHINX_SEARCH=True
+   adjust other settings that have SPHINX_* prefix accordingly
+   remember that there must be trailing comma in parentheses for
+   SHPINX_SEARCH_INDICES tuple - particlarly with just one item!
+
+   in settings.py look for INSTALLED_APPS
+   and uncomment #'djangosphinx',
+
+
+6. Email subsctiptions and badge awards 
+
+   copy file forum/cron/askbot_cron_job
+   somewhere in your user space (outside of forum)
+   edit paths in that file
+
+   set up a cron job to call it say hourly
+
+   the commands within askbot_cron_job can also be called manually
+   from the command line for the testing purposes
+
+7. Sitemap
+Sitemap will be available at /<settings_local.FORUM_SCRIPT_ALIAS>sitemap.xml
+e.g yoursite.com/forum/sitemap.xml
+
+google will be pinged each time question, answer or
+comment is saved or a question deleted
+
+for this to be useful - do register you sitemap with Google at
+https://www.google.com/webmasters/tools/
+
+8. Miscellaneous
+
+There are some demo scripts under forum/sql_scripts folder,
+including badges and test accounts for CNProg.com. You
+don't need them to run your sample.
+
+C. Customization
+
+Other than settings_local.py the following will most likely need customization:
+* locale/*/django.po - language files that may also contain your site-specific messages
+  if you want to start with english messages file - look for words like "forum" and
+  "Askbot" in the msgstr lines
+* skins

@@ -1,0 +1,53 @@
+<!-- template header.html -->
+{% load extra_tags %}
+{% load smart_if %}
+{% load i18n %}
+<div id="roof">
+    <div id="navBar">
+        <div id="top">
+            {% if request.user.is_authenticated %}
+                <a href="{% url user_profile id=request.user.id,slug=request.user.username|slugify %}">{{ request.user.username }}</a> 
+                {% spaceless %}
+                <a class='ab-responses-envelope' href="{{request.user.get_absolute_url}}?sort=responses">
+                    <img 
+                        alt="{%blocktrans with request.user.username as username %}responses for {{username}}{% endblocktrans %}"
+                        {% if request.user.response_count > 0 %}
+                        src="{% media "/media/images/mail-envelope-full.png" %}"
+                        title="{% blocktrans count request.user.response_count as response_count %}you have a new response{% plural %}you nave {{response_count}} new responses{% endblocktrans %}"
+                        {% else %}
+                        src="{% media "/media/images/mail-envelope-empty.png" %}"
+                        title="{% trans "no new responses yet" %}"
+                        {% endif %}
+                    />
+                </a>
+                {% endspaceless %}
+                ({% get_long_score_and_badge_report user %})
+                <a href="{% url logout %}">{% trans "logout" %}</a>
+            {% else %}
+                <a href="{% url user_signin %}">{% trans "login" %}</a>
+            {% endif %}
+            <a href="{% url about %}">{% trans "about" %}</a>
+            <a href="{% url faq %}">{% trans "faq" %}</a>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+    <td id="logoContainer">
+        <div id="logo">
+            <a href="{% url questions %}?start_over=true"><img 
+                src="{% media  "/media/images/logo.gif" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
+        </div>
+    </td>
+    <td id="navTabContainer" valign="bottom" align="left">
+        <div class="nav">
+            <a id="nav_questions" href="{% url questions %}" >{% trans "questions" %}</a>
+            <a id="nav_tags" href="{% url tags %}">{% trans "tags" %}</a>
+            <a id="nav_users" href="{% url users %}">{% trans "users" %}</a>
+            <a id="nav_badges" href="{% url badges %}">{% trans "badges" %}</a>
+            <a id="nav_ask" href="{% url ask %}" class="special">{% trans "ask a question" %}</a>
+        </div>
+    </td>
+          </tr>
+        </table>
+    </div>
+</div>
+<!-- end template header.html -->

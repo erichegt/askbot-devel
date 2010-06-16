@@ -1,0 +1,41 @@
+{% extends "user.html" %}
+<!-- user_responses.html -->
+
+{% comment %}
+This template accepts a list of response list
+they are a generalized form of any response and 
+
+The following properties of response object are used:
+timestamp - when it happened
+user - user who gave response (database object)
+response_type - type of response
+response_url - link to the question
+response_title - title of the question
+response_snippet - abbreviated content of the response
+{% endcomment %}
+
+{% load extra_tags %}
+{% load humanize %}
+{% load i18n %}
+
+{% block usercontent %}
+    <div style="padding-top:5px;font-size:13px;">
+    {% for response in responses %}
+        <div style="clear:both;line-height:18px;margin-bottom:15px;">
+            <div>
+            <div style="float:left; display:inline-block; text-align: center; width: 54px; padding: 3px;overflow:hidden;">
+            {% gravatar response.user 48 %}
+            </div>
+                <a style="font-size:12px" href="{{ response.user.get_absolute_url }}">{{ response.user.username }}</a>
+                <a style="text-decoration:none;" href="{{ response.response_url }}">
+                    {{ response.response_type }}
+                    ({% diff_date response.timestamp 3 "True" %}):<br/>
+                    <strong>"{{ response.response_title }}"</strong>&nbsp;
+                    {{ response.response_snippet|safe }}
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+<!-- end user_responses.html -->

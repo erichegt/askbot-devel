@@ -1,0 +1,17 @@
+{% extends "base_content.html" %}
+<!-- privacy.html -->
+{% load extra_tags %}
+{% load i18n %}
+{% load humanize %}
+{% block title %}{% spaceless %}{% trans "Privacy policy" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+{% endblock %}
+{% block content %}
+<div class="headNormal">
+	{% trans "Privacy policy" %}
+</div>
+<div id="main-body" style="width:100%">
+    {{settings.FORUM_PRIVACY|safe}}
+</div>
+{% endblock %}
+<!-- end privacy.html -->

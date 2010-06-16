@@ -1,0 +1,106 @@
+<!-- user_info.html -->
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+{% load smart_if %}
+{% load i18n %}
+<table class="user-info-table">
+    <tr>
+        <td width="180" style="vertical-align:middle;text-align:center;">
+            <table width="100%">
+                <tr>
+                    <td>
+                        {% gravatar view_user 128 %}
+                        {% if request.user == view_user %}
+                        <h1><a href="{% url faq %}#gravatar">{% trans "change picture" %}</a></h1>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
+                        <p><b style="color:#777;">{% trans "reputation" %}</b></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td width="360" style="vertical-align: top;">
+            <table class="user-details">
+                {% if view_user != request.user and request.user|can_moderate_users %}
+                <tr>
+                    <td class="admin" align="left" colspan="2">
+                        <h3>{% trans "Moderate this user" %}</h3>
+                        <form id="moderate_user_form" method="post">
+                            {{moderate_user_form.as_p}}
+                        </form>
+                        <p id="action_status"></p>
+                    </td>
+                </tr>
+                {% endif %}
+                {% if request.user|can_view_user_edit:view_user %}
+                <tr>
+                    <td class="user-profile-tool-links" align="left" colspan="2">
+                        {% if request.user|can_view_user_edit:view_user %}
+                        <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
+                        {% endif %}
+                    </td>
+                </tr>  
+                {% endif %}
+                <tr>
+                    <th colspan="2" align="left"><h3>{% trans "Registered user" %}</h3></th>
+                </tr>
+                {% if view_user.real_name %}
+                <tr>
+                    <td>{% trans "real name" %}</td>
+                    <td><b>{{view_user.real_name}}</b></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>{% trans "member for" %}</td>
+                    <td><strong>{% diff_date view_user.date_joined %}</strong></td>
+                </tr>
+                {% if view_user.last_seen %}
+                <tr>
+                    <td>{% trans "last seen" %}</td>
+                    <td><strong title="{{ view_user.last_seen }}">{% diff_date view_user.last_seen %}</strong></td>
+                </tr>
+                {% endif %}
+                {% if view_user.website %}
+                <tr>
+                    <td>{% trans "user website" %}</td>
+                    <td><a rel="nofollow" target="_blank" href="{{view_user.website}}">{{view_user.website}}</a></td>
+                </tr>
+                {% endif  %}
+                {% if view_user.location %}
+                <tr>
+                    <td>{% trans "location" %}</td>
+                    <td>{{view_user.location}}</td>
+                </tr>
+                {% endif %}
+                {% if view_user.date_of_birth%}
+                <tr>
+					<!--todo  - redo this with blocktrans -->
+                    <td>{% trans "age" %}</td>
+                    <td>{% get_age view_user.date_of_birth %} {% trans "age unit" %}</td>
+                </tr>
+                {% endif %}
+				<!--
+                {% if votes_today_left %}
+                <tr>
+                    <td>{% trans "todays unused votes" %}</td>
+                    <td><strong class="darkred">{{ votes_today_left }}</strong> {% trans "votes left" %}</td>
+                </tr>
+                {% endif %}
+				-->
+            </table>
+        </td>
+        <td width="380">
+            <div class="user-about">
+            {% if view_user.about %}
+                {{view_user.about|safe|linebreaks}}
+            {% endif %}
+            </div>
+        </td>
+    </tr>
+</table>
+<!-- end user_info.html -->

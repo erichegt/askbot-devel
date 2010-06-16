@@ -1,0 +1,46 @@
+{% load i18n %} 
+{% load smart_if %}
+{% blocktrans %}<p>Dear {{receiving_user_name}},</p>{% endblocktrans %}
+<p></p>
+    {% if update_type == 'question_comment' %}
+{% blocktrans %}
+<p>{{update_author_name}} left a <a href="%{{post_url}}">new comment</a>
+for question "{{origin_post_title}}"</p>
+{% endblocktrans %}
+    {% endif %}
+    {% if update_type == 'answer_comment' %}
+{% blocktrans %}
+<p>{{update_author_name}} left a <a href="{{post_url}}">new comment</a>
+ for an answer to question "{{origin_post_title}}"</p>
+{% endblocktrans %}
+    {% endif %}
+    {% if update_type == 'new_answer' %}
+{% blocktrans %}
+<p>{{update_author_name}} answered a question 
+<a href="{{post_url}}">{{origin_post_title}}</a></p>
+{% endblocktrans %}
+    {% endif %}
+    {% if update_type == 'new_question' %}
+{% blocktrans %}
+<p>{{update_author_name}} asked a question 
+<a href="{{post_url}}">{{origin_post_title}}</a></p>
+{% endblocktrans %}
+    {% endif %}
+    {%if update_type == 'answer_update' %}
+{% blocktrans %}
+<p>{{update_author_name}} updated an answer to the question
+<a href="{{post_url}}">{{origin_post_title}}</a></p>
+{% endblocktrans %}
+    {% endif %}
+    {% if update_type == 'question_update' %}
+{% blocktrans %}
+<p>{{update_author_name}} updated a question 
+<a href="{{post_url}}">{{origin_post_title}}</a></p>
+{% endblocktrans %}
+    {% endif %}
+<p></p>
+{% blocktrans %}
+<p>Please note - you can easily <a href="{{user_subscriptions_url}}">change</a>
+how often you receive these notifications.</p>
+{% endblocktrans %}
+{% trans "<p>Sincerely,<br/>Forum Administrator</p>" %}

@@ -1,7 +1,0 @@
-Error upon restarting Apache:
-
-Name duplicates previous WSGI daemon definition
-
-different keys - empty space counts for translation keys
-{% blocktrans %}page number {{num}} {% endblocktrans %}
-{% blocktrans %}page number {{num}}{% endblocktrans %}
