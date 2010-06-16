@@ -12,7 +12,6 @@ settings.py
 env
 nbproject
 pip-log.txt
-*.zip
 tmp/*
 /tmp/
 /__init__.py
