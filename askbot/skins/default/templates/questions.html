@@ -186,7 +186,8 @@
         </div>
 {% endif %}
 <div id="listA">
-{% cache 600 questions search_tags scope sort query %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 600 questions search_tags scope sort query LANGUAGE_CODE %}
     {% include "question_list.html" %}
 {% endcache %}
         {% comment %}todo: fix css here{% endcomment %}

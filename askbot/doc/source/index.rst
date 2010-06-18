@@ -26,6 +26,7 @@ interpreter for the installation and testing as the one assigned
 (or will be assigned) to the webserver.
 
 If you already have `easy_install`_ on your system, then type::
+
  easy_install askbot
 
 If you are using the easy\_install tool, make sure that it was also 
@@ -33,6 +34,7 @@ originally installed with the python interpreter mentioned above,
 otherwise use the second method:
 
 Download the latest version of askbot_, unzip and untar the archive and run::
+
  python setup.py install
 
 If you are planning to use askbot on Windows, please install 
@@ -65,10 +67,12 @@ If any of the provided links
 do not work please try to look up those packages or notify askbot maintainers at admin@askbot.org.
 
 .. _Configuration:
+
 Configuration
 ====================
 
 type::
+
  startforum
 
 and answer questions.
@@ -82,16 +86,19 @@ In the case you are adding askbot to an existing Django project, you will need t
 merge askbot files settings.py_ and urls.py_ into your project files manually.
 
 Within settings.py, at the very minimum you will need to provide correct values to::
+
  DATABASE_NAME = ''
  DATABASE_USER = ''
  DATABASE_PASSWORD = '' 
 
 within single quotes - login credential to your mysql database. Assuming that
 the database exists, you can now install the tables by running::
+
  python manage.py syncdb
  python manage.py migrate forum
 
 now run the development sever::
+
  python manage.py runserver `hostname -i`:8000 #or use some other port number > 1024
 
 `hostname -i` is a Unix command returning the IP address of your system, you can also type 
@@ -102,13 +109,14 @@ Your basic installation is now complete. Many settings can be
 changed at runtime by following url /settings.
 
 If you choose to host a real website, please read
-section Deployment_. For advice on hosting Askbot, please take 
-a look at section Hosting_.
+section Deployment_.
 
 .. _Deployment:
+
 Deployment
 ==============
 Webserver process must be able to write to the following locations::
+
  /path/to/django-project/log/
  /path/to/django-project/askbot/upfiles
 
@@ -141,58 +149,68 @@ Configure webserver
 
 Settings below are not perfect but may be a good starting point::
 
-    WSGISocketPrefix /path/to/socket/sock #must be readable and writable by apache
-    WSGIPythonHome /usr/local #must be readable by apache
-    WSGIPythonEggs /var/python/eggs #must be readable and writable by apache
+    #NOTE: the directory paths used here may be adjusted
+
+    #the following two directories must be both readable and writable by apache
+    WSGISocketPrefix /path/to/socket/sock
+    WSGIPythonEggs /var/python/eggs
+
+    #the following directory must be readable by apache
+    WSGIPythonHome /usr/local
 
     #NOTE: all urs below will need to be adjusted if
-    #settings.FORUM_SCRIPT_ALIAS !='' (e.g. = 'forum/')
+    #settings.FORUM_SCRIPT_ALIAS is anything other than empty string (e.g. = 'forum/')
     #this allows "rooting" forum at http://example.com/forum, if you like
-    <VirtualHost ...your ip...:80>
-        ServerAdmin forum@example.com
-        DocumentRoot /path/to/askbot-site
-        ServerName example.com
 
-        #run mod_wsgi process for django in daemon mode
-        #this allows avoiding confused timezone settings when
-        #another application runs in the same virtual host
-        WSGIDaemonProcess askbot
-        WSGIProcessGroup askbot
+    #replace with 127.0.0.1 with real IP address
+    <VirtualHost 127.0.0.1:80>
+         ServerAdmin you@example.com
+         DocumentRoot /path/to/django-project
+         ServerName example.come
 
-        #force all content to be served as static files
-        #otherwise django will be crunching images through itself wasting time
-        Alias /m/ /path/to/askbot-site/forum/skins/
-        Alias /upfiles/ /path/to/askbot-site/forum/upfiles/
-        <Directory /path/to/askbot-site/forum/skins>
+         #aliases to serve static media directly
+         #will probably need adjustment
+         Alias /m/ /usr/local/lib/python2.6/site-packages/askbot/skins/default/media/
+         Alias /upfiles/ /path/to/django-project/askbot/upfiles/
+         Alias /admin/media/ /usr/local/lib/python2.6/site-packages/django/contrib/admin/media/
+         <DirectoryMatch "/path/to/django-project/askbot/skins/([^/]+)/media">
             Order deny,allow
             Allow from all
-        </Directory>
-
-        #this is your wsgi script described in the prev section
-        WSGIScriptAlias / /path/to/askbot-site/django.wsgi
-
-        #this will force admin interface to work only
-        #through https (optional)
-        #"nimda" is the secret spelling of "admin" ;)
-        <Location "/nimda">
-            RewriteEngine on
-            RewriteRule /nimda(.*)$ https://example.com/nimda$1 [L,R=301]
-        </Location>
-        CustomLog /var/log/httpd/askbot/access_log common
-        ErrorLog /var/log/httpd/askbot/error_log
+         </DirectoryMatch>
+         <Directory "/path/to/django-project/askbot/upfiles">
+            Order deny,allow
+            Allow from all
+         </Directory>
+         #must be a distinct name within your apache configuration
+         WSGIDaemonProcess askbot2
+         WSGIProcessGroup askbot2
+         WSGIScriptAlias / /path/to/django-project/django.wsgi
+         #make all admin stuff except media go through secure connection
+         <LocationMatch "/admin(?!/media)">
+         RewriteEngine on
+             RewriteRule /admin(.*)$ https://example.com/admin$1 [L,R=301]
+             </LocationMatch>
+         CustomLog /var/log/httpd/askbot/access_log common
+         ErrorLog /var/log/httpd/askbot/error_log
+         LogLevel debug
     </VirtualHost>
-    #(optional) run admin interface under https
-    <VirtualHost ..your ip..:443>
-        ServerAdmin forum@example.com
-        DocumentRoot /path/to/askbot-site
-        ServerName example.com
-        SSLEngine on
-        SSLCertificateFile /path/to/ssl-certificate/server.crt
-        SSLCertificateKeyFile /path/to/ssl-certificate/server.key
-        WSGIScriptAlias / /path/to/askbot-site/django.wsgi
-        CustomLog /var/log/httpd/askbot/access_log common
-        ErrorLog /var/log/httpd/askbot/error_log
-        DirectoryIndex index.html
+    #again, replace the IP address
+    <VirtualHost 127.0.0.1:443>
+         ServerAdmin you@example.com
+         DocumentRoot /path/to/django-project
+         ServerName example.com
+         <LocationMatch "^(?!/admin)">
+             RewriteEngine on
+             RewriteRule django.wsgi(.*)$ http://example.com$1 [L,R=301]
+         </LocationMatch>
+         SSLEngine on
+         #your SSL keys
+         SSLCertificateFile /etc/httpd/ssl.crt/server.crt
+         SSLCertificateKeyFile /etc/httpd/ssl.key/server.key
+         Alias /admin/media/ /usr/local/lib/python2.6/site-packages/django/contrib/admin/media/
+         WSGIScriptAlias / /path/to/django-project/django.wsgi
+         CustomLog /var/log/httpd/askbot/access_log common
+         ErrorLog /var/log/httpd/askbot/error_log
     </VirtualHost>
 
 Database configuration
@@ -202,6 +220,7 @@ can be created manually (provided that you have a mysql account with
 a sufficient privilege)
 
 The relevant MySQL the commands are::
+
  create database askbot DEFAULT CHARACTER SET UTF8 COLLATE utf8_general_ci;
  grant all privileges on dbname.* to dbuser@localhost identified by 'dbpassword';
 
@@ -256,3 +275,5 @@ will have be indexing your site more efficiently.
 .. _django.wsgi: http://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/django.wsgi
 .. _forum: http://askbot.org
 .. _askbot_cron_job: http://github.com/ASKBOT/askbot-devel/blob/master/askbot/cron/askbot_cron_job
+.. _Django: http://djangoproject.com
+.. _`easy_install`: http://pypi.python.org/pypi/setuptools

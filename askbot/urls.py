@@ -188,7 +188,6 @@ urlpatterns = patterns('',
         app.commands.read_message,
         name='read_message'
     ),
-    #(r'^admin/doc/' % _('admin/doc'),include('django.contrib.admindocs.urls')),
     url(
         r'^feeds/(?P<url>.*)/$', 
         'django.contrib.syndication.views.feed',
@@ -201,4 +200,10 @@ urlpatterns = patterns('',
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
+    url(
+        r'^doc/(?P<path>.*)$', 
+        'django.views.static.serve',
+        {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
+        name='askbot_media',
+    ),
 )
