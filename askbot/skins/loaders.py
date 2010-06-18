@@ -26,7 +26,6 @@ def load_template_source(name, dirs=None):
         return filesystem.load_template_source(tname,dirs)
     except:
         tname = os.path.join('default','templates',name)
-        print tname
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
 

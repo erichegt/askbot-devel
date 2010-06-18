@@ -323,7 +323,7 @@ def send_instant_notifications_about_activity_in_post(
                         [user.email]
                     )
             #msg.send()
-            print text
+            #print text
             EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
             email_activity = Activity(
                                     user = user,

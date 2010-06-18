@@ -155,6 +155,9 @@ INSTALLED_APPS = (
 #setup memcached for production use!
 #see http://docs.djangoproject.com/en/1.1/topics/cache/ for details
 CACHE_BACKEND = 'locmem://'
+#needed for django-keyedcache
+CACHE_TIMEOUT = 6000
+CACHE_PREFIX = 'askbot' #make this unique
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
 

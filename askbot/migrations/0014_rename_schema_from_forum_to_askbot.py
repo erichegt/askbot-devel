@@ -11,24 +11,24 @@ class Migration(SchemaMigration):
     
     def forwards(self, orm):
         try:
-            db.rename_table('forum_anonymousanswer', 'forum_anonymousanswer')
-            db.rename_table('forum_anonymousquestion', 'forum_anonymousquestion')
-            db.rename_table('forum_emailfeedsetting', 'forum_emailfeedsetting')
-            db.rename_table('forum_markedtag', 'forum_markedtag')
-            db.rename_table('forum_questionview', 'forum_questionview')
-            db.rename_table('forum_validationhash', 'forum_validationhash')
+            db.rename_table('forum_anonymousanswer', 'askbot_anonymousanswer')
+            db.rename_table('forum_anonymousquestion', 'askbot_anonymousquestion')
+            db.rename_table('forum_emailfeedsetting', 'askbot_emailfeedsetting')
+            db.rename_table('forum_markedtag', 'askbot_markedtag')
+            db.rename_table('forum_questionview', 'askbot_questionview')
+            db.rename_table('forum_validationhash', 'askbot_validationhash')
         except:
             pass
     
     
     def backwards(self, orm):
         if app_dirname == 'forum':
-            db.rename_table('forum_anonymousanswer', 'forum_anonymousanswer')
-            db.rename_table('forum_anonymousquestion', 'forum_anonymousquestion')
-            db.rename_table('forum_emailfeedsetting', 'forum_emailfeedsetting')
-            db.rename_table('forum_markedtag', 'forum_markedtag')
-            db.rename_table('forum_questionview', 'forum_questionview')
-            db.rename_table('forum_validationhash', 'forum_validationhash')
+            db.rename_table('askbot_anonymousanswer', 'forum_anonymousanswer')
+            db.rename_table('askbot_anonymousquestion', 'forum_anonymousquestion')
+            db.rename_table('askbot_emailfeedsetting', 'forum_emailfeedsetting')
+            db.rename_table('askbot_markedtag', 'forum_markedtag')
+            db.rename_table('askbot_questionview', 'forum_questionview')
+            db.rename_table('askbot_validationhash', 'forum_validationhash')
     
     
     if app_dir_name == 'forum':

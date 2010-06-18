@@ -5,6 +5,7 @@
 {% load humanize %}
 {% load extra_filters %}
 {% load smart_if %}
+{% load cache %}
 {% block title %}{% spaceless %}{% trans "Questions" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
@@ -185,7 +186,9 @@
         </div>
 {% endif %}
 <div id="listA">
+{% cache 600 questions search_tags scope sort query %}
     {% include "question_list.html" %}
+{% endcache %}
         {% comment %}todo: fix css here{% endcomment %}
         {% if questions_count == 0 %}
             {% comment %}todo: add tips to widen selection{% endcomment%}
