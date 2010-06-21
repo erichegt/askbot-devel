@@ -26,6 +26,7 @@
        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
+{% get_current_language as LANGUAGE_CODE %}
 {% cache 600 "scope_sort_tabs" search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
 <div class="tabBar">
     <div class="tabsC">
@@ -225,6 +226,7 @@
     {% endblock %}
 
 {% block sidebar %}
+    {% get_current_language as LANGUAGE_CODE %}
     {% if contributors %}
         {% cache 600 contributors search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
         <div class="boxC">
