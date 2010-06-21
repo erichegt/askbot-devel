@@ -6,7 +6,7 @@ Code of Askbot grew out of CNPROG_ project originally written by
 `Mike Chen <http://cn.linkedin.com/in/mikegangchen>`_ and Sailing Cai.
 
 If you have any questions installing or tweaking askbot - please do not hesitate to ask
-at the forum_ or email to admin@askbot.org.
+at the forum_ or by email at admin@askbot.org.
 
 Prerequisites
 ======================

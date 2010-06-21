@@ -25,6 +25,7 @@ from askbot import const
 from askbot import auth
 from askbot.utils.forms import get_next_url
 from askbot.utils.functions import not_a_robot_request
+from askbot.utils.decorators import profile
 from askbot.search.state_manager import SearchState
 
 # used in index page

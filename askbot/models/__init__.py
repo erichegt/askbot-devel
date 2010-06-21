@@ -22,7 +22,7 @@ from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment, FlaggedItem
-from askbot.models.user import Activity, ValidationHash, EmailFeedSetting
+from askbot.models.user import Activity, EmailFeedSetting
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import Badge, Award, Repute
@@ -383,18 +383,19 @@ def record_post_update_activity(
         user.save()
 
     #todo: weird thing is that only comments need the receiving_users
+    #todo: debug these calls and then uncomment in the repo
     #argument to this call
-    notification_subscribers = post.get_instant_notification_subscribers(
-                                    potential_subscribers = receiving_users,
-                                    mentioned_users = newly_mentioned_users,
-                                    exclude_list = [updated_by, ]
-                                )
+    #notification_subscribers = post.get_instant_notification_subscribers(
+    #                                potential_subscribers = receiving_users,
+    #                                mentioned_users = newly_mentioned_users,
+    #                                exclude_list = [updated_by, ]
+    #                            )
 
-    send_instant_notifications_about_activity_in_post(
-                            update_activity = update_activity,
-                            post = post,
-                            receiving_users = notification_subscribers,
-                        )
+    #send_instant_notifications_about_activity_in_post(
+    #                        update_activity = update_activity,
+    #                        post = post,
+    #                        receiving_users = notification_subscribers,
+    #                    )
 
 
 def record_award_event(instance, created, **kwargs):
@@ -661,7 +662,6 @@ Repute = Repute
 
 Activity = Activity
 EmailFeedSetting = EmailFeedSetting
-ValidationHash = ValidationHash
 #AuthKeyUserAssociation = AuthKeyUserAssociation
 
 __all__ = [
@@ -689,7 +689,6 @@ __all__ = [
 
         'Activity',
         'EmailFeedSetting',
-        'ValidationHash',
         #'AuthKeyUserAssociation',
 
         'User',

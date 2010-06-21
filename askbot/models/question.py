@@ -172,7 +172,7 @@ class QuestionManager(models.Manager):
             meta_data['interesting_tag_names'] = pt.filter(reason='good').values_list('tag__name', flat=True)
             meta_data['ignored_tag_names'] = pt.filter(reason='bad').values_list('tag__name', flat=True)
 
-        qs = qs.select_related(depth=1)
+        #qs = qs.select_related(depth=1)
         #todo: fix orderby here
         orderby = QUESTION_ORDER_BY_MAP[sort_method]
         if orderby:
@@ -187,9 +187,8 @@ class QuestionManager(models.Manager):
     def get_question_and_answer_contributors(self, question_list):
         answer_list = []
         question_list = list(question_list)#important for MySQL, b/c it does not support
-        #the query in return statement below
-        for q in question_list:
-            answer_list.extend(list(q.answers.all()))
+        from askbot.models.answer import Answer
+        answer_list = Answer.objects.filter(question__in = question_list)
         contributors = User.objects.filter(
                                     models.Q(questions__in=question_list) \
                                     | models.Q(answers__in=answer_list)
