@@ -1,4 +1,4 @@
-# English translation for CNPROG package.
+# Finnish translation for CNPROG package.
 # Copyright (C) 2009 Gang Chen, 2010 Askbot
 # This file is distributed under the same license as the CNPROG package.
 # Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-17 05:42+0300\n"
+"POT-Creation-Date: 2010-06-19 07:05+0300\n"
 "PO-Revision-Date: 2010-06-17 05:57+0200\n"
 "Last-Translator: Pekka Järvinen <pekka.jarvinen@gmail.com>\n"
 "Language-Team: Finnish <finnish@askbot.org>\n"
@@ -42,8 +42,7 @@ msgstr " - "
 msgid "latest questions"
 msgstr "uusimmat kysymykset"
 
-#: forms.py:23
-#: skins/default/templates/answer_edit_tips.html:35
+#: forms.py:23 skins/default/templates/answer_edit_tips.html:35
 #: skins/default/templates/answer_edit_tips.html:39
 #: skins/default/templates/question_edit_tips.html:32
 #: skins/default/templates/question_edit_tips.html:37
@@ -66,17 +65,18 @@ msgstr "sisältö"
 msgid "question content must be > 10 characters"
 msgstr "kysymyksen sisällön tulee olla vähintään kymmenen merkkiä pitkä"
 
-#: forms.py:53
-#: skins/default/templates/header.html:43
+#: forms.py:53 skins/default/templates/header.html:43
 msgid "tags"
 msgstr "tagit"
 
 #: forms.py:55
-msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
-msgstr "Tagit ovat lyhyitä apusanoja, joissa ei ole välilyöntejä. Viisi tagia voi syöttää maksimissaan."
+msgid ""
+"Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgstr ""
+"Tagit ovat lyhyitä apusanoja, joissa ei ole välilyöntejä. Viisi tagia voi "
+"syöttää maksimissaan."
 
-#: forms.py:62
-#: skins/default/templates/question_retag.html:39
+#: forms.py:62 skins/default/templates/question_retag.html:39
 msgid "tags are required"
 msgstr "tagit ovat pakollisia"
 
@@ -84,38 +84,45 @@ msgstr "tagit ovat pakollisia"
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "käytä vähintään %(tag_count)d tagia"
+msgstr[1] "käytä vähintään yhtä tagia"
 
 #: forms.py:80
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "jokaisen tagin tulee olla vähintään %(max_chars)d merkin pituinen"
+msgstr[1] "jokaisen tagin tulee olla vähintään yhden merkin pituinen"
 
 #: forms.py:88
 msgid "use-these-chars-in-tags"
 msgstr "käytä-näitä-merkkejä-tageissa"
 
-#: forms.py:98
-#: skins/default/templates/post_contributor_info.html:7
+#: forms.py:98 skins/default/templates/post_contributor_info.html:7
 #: skins/default/templates/question_summary_list_roll.html:26
 #: skins/default/templates/question_summary_list_roll.html:38
 msgid "community wiki"
 msgstr "yhteisön muokattavissa"
 
 #: forms.py:99
-msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
-msgstr "jos valitset yhteisön muokattavissa olevan asetuksen, kysymykset ja vastaukset eivät anna pisteitä kirjoittajalle eikä kirjoittajan nimeä näy"
+msgid ""
+"if you choose community wiki option, the question and answer do not generate "
+"points and name of author will not be shown"
+msgstr ""
+"jos valitset yhteisön muokattavissa olevan asetuksen, kysymykset ja "
+"vastaukset eivät anna pisteitä kirjoittajalle eikä kirjoittajan nimeä näy"
 
 #: forms.py:115
 msgid "update summary:"
 msgstr "päivitysvedos:"
 
 #: forms.py:116
-msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
-msgstr "kirjoita lyhyt yhteenveto mitä teit (esim. kirjotusvirheiden korjaus, paranneltiin tekstisijoittelua, jne. Ei pakollinen.)"
+msgid ""
+"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
+"improved style, this field is optional)"
+msgstr ""
+"kirjoita lyhyt yhteenveto mitä teit (esim. kirjotusvirheiden korjaus, "
+"paranneltiin tekstisijoittelua, jne. Ei pakollinen.)"
 
 #: forms.py:119
 msgid "Automatically accept user's contributions for the email updates"
@@ -135,7 +142,7 @@ msgstr "Viesti:"
 
 #: forms.py:295
 msgid "this email does not have to be linked to gravatar"
-msgstr ""
+msgstr "tämä sähköpostiosoite ei ole linkitetty gravatariin"
 
 #: forms.py:297
 msgid "Screen name"
@@ -161,14 +168,12 @@ msgstr "Syntymäpäivä"
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "ei näytetä, käytetään iän laskemiseen, muoto: VVVV-KK-PP"
 
-#: forms.py:302
-#: skins/default/templates/account_settings.html:21
+#: forms.py:302 skins/default/templates/account_settings.html:21
 #: skins/default/templates/authopenid/settings.html:21
 msgid "Profile"
 msgstr "Profiili"
 
-#: forms.py:333
-#: forms.py:334
+#: forms.py:333 forms.py:334
 msgid "this email has already been registered, please use another one"
 msgstr "sähköpostiosoite on jo tietokannassa"
 
@@ -190,7 +195,7 @@ msgstr "Yksittäin valittu"
 
 #: forms.py:388
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Koko keskustelupalsta (tagi-suodatettu)"
 
 #: forms.py:392
 msgid "Comments and posts mentioning me"
@@ -216,8 +221,7 @@ msgstr "laheta-tiedostoja/"
 msgid "about/"
 msgstr "sivusta/"
 
-#: urls.py:44
-#: conf/site_settings.py:75
+#: urls.py:44 conf/site_settings.py:75
 msgid "faq/"
 msgstr "ukk/"
 
@@ -229,42 +233,24 @@ msgstr "yksityisyys/"
 msgid "logout/"
 msgstr "kirjaudu-ulos/"
 
-#: urls.py:48
-#: urls.py:53
-#: urls.py:58
-#: urls.py:121
+#: urls.py:48 urls.py:53 urls.py:58 urls.py:121
 msgid "answers/"
 msgstr "vastaukset/"
 
-#: urls.py:48
-#: urls.py:103
-#: urls.py:114
-#: urls.py:121
+#: urls.py:48 urls.py:103 urls.py:114 urls.py:121
 msgid "comments/"
 msgstr "kommentit/"
 
-#: urls.py:53
-#: urls.py:73
-#: urls.py:167
-#: skins/default/templates/user_info.html:44
+#: urls.py:53 urls.py:73 urls.py:167 skins/default/templates/user_info.html:44
 msgid "edit/"
 msgstr "muokkaa/"
 
-#: urls.py:58
-#: urls.py:98
+#: urls.py:58 urls.py:98
 msgid "revisions/"
 msgstr "revisiot/"
 
-#: urls.py:63
-#: urls.py:68
-#: urls.py:73
-#: urls.py:78
-#: urls.py:83
-#: urls.py:88
-#: urls.py:93
-#: urls.py:98
-#: urls.py:103
-#: urls.py:114
+#: urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83 urls.py:88
+#: urls.py:93 urls.py:98 urls.py:103 urls.py:114
 msgid "questions/"
 msgstr "kysymykset/"
 
@@ -292,14 +278,11 @@ msgstr "aanesta/"
 msgid "command/"
 msgstr "komento/"
 
-#: urls.py:114
-#: urls.py:121
-#: deps/django_authopenid/urls.py:43
+#: urls.py:114 urls.py:121 deps/django_authopenid/urls.py:43
 msgid "delete/"
 msgstr "poista/"
 
-#: urls.py:128
-#: views/readers.py:257
+#: urls.py:128 views/readers.py:257
 msgid "question/"
 msgstr "kysymys/"
 
@@ -307,8 +290,7 @@ msgstr "kysymys/"
 msgid "tags/"
 msgstr "tagit/"
 
-#: urls.py:138
-#: urls.py:144
+#: urls.py:138 urls.py:144
 msgid "mark-tag/"
 msgstr "merkitse-tagi/"
 
@@ -324,9 +306,7 @@ msgstr "hylatyt/"
 msgid "unmark-tag/"
 msgstr "poista-tagi/"
 
-#: urls.py:156
-#: urls.py:167
-#: urls.py:172
+#: urls.py:156 urls.py:167 urls.py:172
 msgid "users/"
 msgstr "kayttajat/"
 
@@ -334,8 +314,7 @@ msgstr "kayttajat/"
 msgid "moderate-user/"
 msgstr "hallitse-kayttajaa/"
 
-#: urls.py:177
-#: urls.py:182
+#: urls.py:177 urls.py:182
 msgid "badges/"
 msgstr "kunniamerkit/"
 
@@ -347,20 +326,19 @@ msgstr "viestit/"
 msgid "markread/"
 msgstr "merkkaa-luetuksi/"
 
-#: urls.py:198
+#: urls.py:197
 msgid "upload/"
 msgstr "laheta/"
 
-#: urls.py:199
+#: urls.py:198
 msgid "search/"
 msgstr "haku"
 
-#: urls.py:200
+#: urls.py:199
 msgid "feedback/"
 msgstr "palaute/"
 
-#: urls.py:201
-#: setup_templates/settings.py:194
+#: urls.py:200 setup_templates/settings.py:197
 msgid "account/"
 msgstr "tunnus/"
 
@@ -374,18 +352,23 @@ msgstr ""
 
 #: conf/email.py:30
 msgid "Default news notification frequency"
-msgstr ""
+msgstr "Vakio aikaväli sähköpostien lähetyksessä"
 
 #: conf/email.py:32
-msgid "This option currently defines default frequency of emailed updates in the following five categories: questions asked by user, answered by user, individually selected, entire forum (per person tag filter applies) and posts mentioning the user and comment responses"
+msgid ""
+"This option currently defines default frequency of emailed updates in the "
+"following five categories: questions asked by user, answered by user, "
+"individually selected, entire forum (per person tag filter applies) and "
+"posts mentioning the user and comment responses"
 msgstr ""
 
 #: conf/email.py:47
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "Vaadi sähköpostiosoitteen tarkistus ennen hyväksyntää"
 
 #: conf/email.py:48
-msgid "Active email verification is done by sending a verification key in email"
+msgid ""
+"Active email verification is done by sending a verification key in email"
 msgstr ""
 
 #: conf/email.py:57
@@ -399,6 +382,8 @@ msgstr "Sähköpostiosoite anonyymeille käyttäjille"
 #: conf/email.py:67
 msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
+"Käytä tätä asetusta kontrolloidaksesi käyttäjien gravataria, joilla ei ole "
+"sähköpostiosoitetta"
 
 #: conf/external_keys.py:11
 msgid "Keys to connect the site with external services like Facebook, etc."
@@ -410,7 +395,9 @@ msgstr ""
 
 #: conf/external_keys.py:20
 #, python-format
-msgid "This key helps google index your site please obtain is at <a href=\"%(google_webmasters_tools_url)s\">google webmasters tools site</a>"
+msgid ""
+"This key helps google index your site please obtain is at <a href=\"%"
+"(google_webmasters_tools_url)s\">google webmasters tools site</a>"
 msgstr ""
 
 #: conf/external_keys.py:34
@@ -419,16 +406,26 @@ msgstr "Google Analytics -palvelun avain"
 
 #: conf/external_keys.py:36
 #, python-format
-msgid "Obtain is at <a href=\"%(ga_site)s\">Google Analytics</a> site, if you wish to use Google Analytics to monitor your site"
+msgid ""
+"Obtain is at <a href=\"%(ga_site)s\">Google Analytics</a> site, if you wish "
+"to use Google Analytics to monitor your site"
 msgstr ""
+"Hae <a href=\"%(ga_site)s\">Google Analytics</a> -palvelun avain, jos haluat "
+"käyttää sitä sivustollasi"
 
 #: conf/external_keys.py:49
 msgid "Recaptcha private key"
 msgstr "Recaptcha-palvelun yksityinen avain (private key)"
 
 #: conf/external_keys.py:52
-msgid "Recaptcha is a tool that helps distinguish real people from annoying spam robots. Please get this and a public key at the <a href=\"http://recaptcha.net\">recaptcha.net</a>"
-msgstr "Recaptcha on työkalu, joka auttaa erottamaan robotit ihmisistä. Käyttö on suositeltavaa. Saat avaimen osoitteesta <a href=\"http://recaptcha.net\">recaptcha.net</a>."
+msgid ""
+"Recaptcha is a tool that helps distinguish real people from annoying spam "
+"robots. Please get this and a public key at the <a href=\"http://recaptcha."
+"net\">recaptcha.net</a>"
+msgstr ""
+"Recaptcha on työkalu, joka auttaa erottamaan robotit ihmisistä. Käyttö on "
+"suositeltavaa. Saat avaimen osoitteesta <a href=\"http://recaptcha.net"
+"\">recaptcha.net</a>."
 
 #: conf/external_keys.py:65
 msgid "Recaptcha public key"
@@ -439,7 +436,10 @@ msgid "Facebook public API key"
 msgstr "Facebook-rajapinnan julkinen avain (public key)"
 
 #: conf/external_keys.py:76
-msgid "Facebook API key and Facebook secret allow to use Facebook Connect login method at your site. Please obtain these keys at <a href=\"http://www.facebook.com/developers/createapp.php\">facebook create app</a> site"
+msgid ""
+"Facebook API key and Facebook secret allow to use Facebook Connect login "
+"method at your site. Please obtain these keys at <a href=\"http://www."
+"facebook.com/developers/createapp.php\">facebook create app</a> site"
 msgstr ""
 
 #: conf/external_keys.py:91
@@ -452,18 +452,23 @@ msgstr ""
 
 #: conf/flatpages.py:17
 msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
+msgstr "Teksti sivuston tietoa-sivua varten (HTML-muodossa)"
 
 #: conf/flatpages.py:20
-msgid "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on the \"about\" page to check your input."
+msgid ""
+"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
+"the \"about\" page to check your input."
 msgstr ""
+"Tallenna ja <a href=\"http://validator.w3.org/\">validoi</a> tietoa-sivu"
 
 #: conf/flatpages.py:30
 msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr ""
+msgstr "Teksti yksityisyyttä koskevaa sivua varten (HTML-muodossa)"
 
 #: conf/flatpages.py:33
-msgid "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on the \"privacy\" page to check your input."
+msgid ""
+"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
+"the \"privacy\" page to check your input."
 msgstr ""
 
 #: conf/forum_data_rules.py:12
@@ -472,11 +477,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:20
 msgid "Check to enable community wiki feature"
-msgstr "Yhteisölle jaettu"
+msgstr "Yhteisölle jaettu -toiminto päälle"
 
 #: conf/forum_data_rules.py:29
 msgid "Maximum length of tag (number of characters)"
-msgstr ""
+msgstr "Maksimi tagin koko merkkeinä"
 
 #: conf/forum_data_rules.py:38
 msgid "Maximum number of tags per question"
@@ -484,16 +489,15 @@ msgstr "Maksimi määrä tageja per kysymys"
 
 #: conf/forum_data_rules.py:50
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr "Kysymyksien määrä sivulla vakiona"
 
 #: conf/forum_data_rules.py:60
-#, fuzzy
 msgid "What should \"unanswered question\" mean?"
-msgstr ""
+msgstr "Mitä \"vastaamattomien kysymysten\" tulisi tarkoittaa?"
 
 #: conf/minimum_reputation.py:11
 msgid "Minimum reputation required to perform actions"
-msgstr ""
+msgstr "Pienin äänimäärä, jollavoi suorittaa toimenpiteitä"
 
 #: conf/minimum_reputation.py:20
 msgid "Upvote"
@@ -525,7 +529,7 @@ msgstr "Sulje oma kysymys"
 
 #: conf/minimum_reputation.py:83
 msgid "Retag questions posted by other people"
-msgstr ""
+msgstr "Uudelleentagita muiden postauksia"
 
 #: conf/minimum_reputation.py:92
 msgid "Reopen own questions"
@@ -541,7 +545,7 @@ msgstr "Muokkaa muiden postauksia"
 
 #: conf/minimum_reputation.py:119
 msgid "View offensive flags"
-msgstr "Näytä loukkaavat"
+msgstr "Näytä loukkaavat merkit"
 
 #: conf/minimum_reputation.py:128
 msgid "Disable nofollow directive on links"
@@ -557,23 +561,23 @@ msgstr "Lukitse postauksia"
 
 #: conf/reputation_changes.py:12
 msgid "Reputaion loss and gain rules"
-msgstr ""
+msgstr "Maineen lisäämiseen ja poistamiseen liittyvät säännöt"
 
 #: conf/reputation_changes.py:21
 msgid "Maximum daily reputation gain per user"
-msgstr ""
+msgstr "Maksimi päivittäinen maineen lisäämismäärä per käyttäjä"
 
 #: conf/reputation_changes.py:30
 msgid "Gain for receiving an upvote"
-msgstr ""
+msgstr "Lisää saamalla ääniä"
 
 #: conf/reputation_changes.py:39
 msgid "Gain for the author of accepted answer"
-msgstr ""
+msgstr "Lisää vastaajalle hyväksytystä vastauksesta"
 
 #: conf/reputation_changes.py:48
 msgid "Gain for accepting best answer"
-msgstr ""
+msgstr "Lisää valitsemalla paras vastaus"
 
 #: conf/reputation_changes.py:57
 msgid "Gain for post owner on canceled downvote"
@@ -625,7 +629,7 @@ msgstr ""
 
 #: conf/site_settings.py:30
 msgid "Comma separated list of Q&A site keywords"
-msgstr ""
+msgstr "Pilkulla erotellut hakusanat sivustoa varten"
 
 #: conf/site_settings.py:39
 msgid "Copyright message to show in the footer"
@@ -633,7 +637,7 @@ msgstr ""
 
 #: conf/site_settings.py:48
 msgid "Site description for the search engines"
-msgstr ""
+msgstr "Sivuston kuvaus hakurobotteja varten"
 
 #: conf/site_settings.py:56
 msgid "Askbot"
@@ -641,7 +645,7 @@ msgstr "Askbot"
 
 #: conf/site_settings.py:58
 msgid "Short name for your Q&A forum"
-msgstr ""
+msgstr "Lyhyt nimi sivustolle"
 
 #: conf/site_settings.py:67
 msgid "Base URL for your Q&A forum, must start with http or https"
@@ -649,10 +653,12 @@ msgstr ""
 
 #: conf/site_settings.py:77
 msgid "Link shown in the greeting message shown to the anonymous user"
-msgstr ""
+msgstr "Linkki, joka näytetään tervetuloviestissä tuntemattomalle käyttäjälle"
 
 #: conf/site_settings.py:78
-msgid "If you change this url from the default - then you will also probably want to adjust translation of the following string: "
+msgid ""
+"If you change this url from the default - then you will also probably want "
+"to adjust translation of the following string: "
 msgstr ""
 
 #: conf/site_settings.py:91
@@ -675,26 +681,16 @@ msgstr ""
 msgid "Background color for votes = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:29
-#: conf/skin_counter_settings.py:39
-#: conf/skin_counter_settings.py:49
-#: conf/skin_counter_settings.py:59
-#: conf/skin_counter_settings.py:69
-#: conf/skin_counter_settings.py:81
-#: conf/skin_counter_settings.py:100
-#: conf/skin_counter_settings.py:110
-#: conf/skin_counter_settings.py:120
-#: conf/skin_counter_settings.py:132
-#: conf/skin_counter_settings.py:142
-#: conf/skin_counter_settings.py:154
-#: conf/skin_counter_settings.py:175
-#: conf/skin_counter_settings.py:185
-#: conf/skin_counter_settings.py:195
-#: conf/skin_counter_settings.py:205
-#: conf/skin_counter_settings.py:217
-#: conf/skin_counter_settings.py:227
-#: conf/skin_counter_settings.py:239
-#: conf/skin_counter_settings.py:249
+#: conf/skin_counter_settings.py:29 conf/skin_counter_settings.py:39
+#: conf/skin_counter_settings.py:49 conf/skin_counter_settings.py:59
+#: conf/skin_counter_settings.py:69 conf/skin_counter_settings.py:81
+#: conf/skin_counter_settings.py:100 conf/skin_counter_settings.py:110
+#: conf/skin_counter_settings.py:120 conf/skin_counter_settings.py:132
+#: conf/skin_counter_settings.py:142 conf/skin_counter_settings.py:154
+#: conf/skin_counter_settings.py:175 conf/skin_counter_settings.py:185
+#: conf/skin_counter_settings.py:195 conf/skin_counter_settings.py:205
+#: conf/skin_counter_settings.py:217 conf/skin_counter_settings.py:227
+#: conf/skin_counter_settings.py:239 conf/skin_counter_settings.py:249
 msgid "HTML color name of hex value"
 msgstr ""
 
@@ -704,7 +700,7 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:48
 msgid "Background color for votes = 1"
-msgstr ""
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
 #: conf/skin_counter_settings.py:58
 msgid "Foreground color for votes = 1"
@@ -712,7 +708,7 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:68
 msgid "Background color for votes = MAX"
-msgstr ""
+msgstr "Taustakuvan väri äänille, kun ääniä on maksimimäärä"
 
 #: conf/skin_counter_settings.py:80
 msgid "Foreground color for votes = MAX"
@@ -788,29 +784,32 @@ msgstr ""
 
 #: conf/skin_general_settings.py:20
 msgid "Select skin"
-msgstr ""
+msgstr "Valitse teema"
 
 #: conf/skin_general_settings.py:29
 msgid "Skin media revision number"
 msgstr ""
 
 #: conf/skin_general_settings.py:31
-msgid "Increment this number when you change image in skin media or stylesheet. This helps avoid showing your users outdated images from their browser cache."
+msgid ""
+"Increment this number when you change image in skin media or stylesheet. "
+"This helps avoid showing your users outdated images from their browser cache."
 msgstr ""
 
 #: conf/user_settings.py:10
-#, fuzzy
 msgid "User policy settings"
-msgstr "Järjestelmä käyttää hyväkseen keksejä ylläpitäessään kirjautuneita käyttäjiä. Sinulla tulee olla keksit päällä selaimessasi, jotta sivusto toimii."
-
+msgstr ""
+"Järjestelmä käyttää hyväkseen keksejä ylläpitäessään kirjautuneita "
+"käyttäjiä. Sinulla tulee olla keksit päällä selaimessasi, jotta sivusto "
+"toimii."
 
 #: conf/user_settings.py:18
 msgid "Allow editing user screen name"
-msgstr ""
+msgstr "Hyväksy tunnuksen nimen muokkaaminen"
 
 #: conf/user_settings.py:28
 msgid "Minimum allowed length for screen name"
-msgstr ""
+msgstr "Minimi tunnuksen pituus"
 
 #: conf/vote_rules.py:13
 msgid "Limits applicable to votes and moderation flags"
@@ -818,7 +817,7 @@ msgstr ""
 
 #: conf/vote_rules.py:22
 msgid "Number of votes a user can cast per day"
-msgstr ""
+msgstr "Käyttäjän äänimäärä päivittäin"
 
 #: conf/vote_rules.py:31
 msgid "Maximum number of flags per user per day"
@@ -876,26 +875,22 @@ msgstr "roskapostia tai mainostusta"
 msgid "too localized"
 msgstr "liian paikallinen"
 
-#: const/__init__.py:38
-#: skins/default/templates/questions.html:70
-#: skins/default/templates/questions.html:75
+#: const/__init__.py:38 skins/default/templates/questions.html:71
+#: skins/default/templates/questions.html:76
 msgid "newest"
 msgstr "uusin"
 
-#: const/__init__.py:39
-#: skins/default/templates/questions.html:64
+#: const/__init__.py:39 skins/default/templates/questions.html:65
 #: skins/default/templates/users.html:28
 msgid "oldest"
 msgstr "vanhin"
 
-#: const/__init__.py:40
-#: skins/default/templates/questions.html:89
-#: skins/default/templates/questions.html:94
+#: const/__init__.py:40 skins/default/templates/questions.html:90
+#: skins/default/templates/questions.html:95
 msgid "active"
 msgstr "aktiivinen"
 
-#: const/__init__.py:41
-#: skins/default/templates/questions.html:83
+#: const/__init__.py:41 skins/default/templates/questions.html:84
 msgid "inactive"
 msgstr "inaktiivinen"
 
@@ -917,20 +912,17 @@ msgstr "vähiten äänestetetyin"
 
 #: const/__init__.py:46
 msgid "relevance"
-msgstr "relevansis"
+msgstr "merkitys"
 
-#: const/__init__.py:53
-#: skins/default/templates/questions.html:52
+#: const/__init__.py:53 skins/default/templates/questions.html:53
 msgid "all"
 msgstr "kaikki"
 
-#: const/__init__.py:54
-#: skins/default/templates/questions.html:53
+#: const/__init__.py:54 skins/default/templates/questions.html:54
 msgid "unanswered"
 msgstr "vastaamaton"
 
-#: const/__init__.py:55
-#: skins/default/templates/questions.html:55
+#: const/__init__.py:55 skins/default/templates/questions.html:56
 msgid "favorite"
 msgstr "suosikki"
 
@@ -1008,11 +1000,11 @@ msgstr "valitsi suosikiksi"
 
 #: const/__init__.py:123
 msgid "completed user profile"
-msgstr ""
+msgstr "täydensi käyttäjäprofiilin"
 
 #: const/__init__.py:124
 msgid "email update sent to user"
-msgstr ""
+msgstr "sähköpostipäivitys lähetettiin käyttäjälle"
 
 #: const/__init__.py:125
 msgid "mentioned in the post"
@@ -1042,9 +1034,7 @@ msgstr "[suljettu]"
 msgid "[deleted]"
 msgstr "[poistettu]"
 
-#: const/__init__.py:185
-#: views/readers.py:443
-#: views/readers.py:464
+#: const/__init__.py:185 views/readers.py:443 views/readers.py:464
 msgid "initial version"
 msgstr "ensimmäinen versio"
 
@@ -1079,10 +1069,10 @@ msgstr "ei sähköpostia"
 #: const/message_keys.py:19
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
-msgstr "Ensimmäistä kertaa täällä? Katso <a href=\"%s\">Usein Kysytyt Kysymykset</a>!"
+msgstr ""
+"Ensimmäistä kertaa täällä? Katso <a href=\"%s\">Usein Kysytyt Kysymykset</a>!"
 
-#: deps/django_authopenid/forms.py:72
-#: deps/django_authopenid/views.py:134
+#: deps/django_authopenid/forms.py:72 deps/django_authopenid/views.py:134
 msgid "i-names are not supported"
 msgstr "i-nimet eivät ole tuetut"
 
@@ -1092,14 +1082,15 @@ msgstr "Tämän niminen tunnus on jo olemassa"
 
 #: deps/django_authopenid/forms.py:136
 msgid "can't have two logins to the same account yet, sorry."
-msgstr "sinulla ei voi olla kahta kirjautumispalvelua samalle käyttäjätunnukselle vielä."
+msgstr ""
+"sinulla ei voi olla kahta kirjautumispalvelua samalle käyttäjätunnukselle "
+"vielä."
 
 #: deps/django_authopenid/forms.py:158
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr "Syötä käyttäjätunnus ja salasana."
 
-#: deps/django_authopenid/forms.py:161
-#: deps/django_authopenid/forms.py:211
+#: deps/django_authopenid/forms.py:161 deps/django_authopenid/forms.py:211
 msgid "This account is inactive."
 msgstr "Tämä tunnus ei ole käytössä."
 
@@ -1120,7 +1111,9 @@ msgid "Please enter user name"
 msgstr "Syötä käyttäjätunnuksesi"
 
 #: deps/django_authopenid/forms.py:207
-msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
+msgid ""
+"Please enter a valid                     username and password. Note that "
+"both fields are                     case-sensitive."
 msgstr ""
 
 #: deps/django_authopenid/forms.py:230
@@ -1128,7 +1121,9 @@ msgid "Current password"
 msgstr "Nykyinen salasana"
 
 #: deps/django_authopenid/forms.py:241
-msgid "Old password is incorrect.                     Please enter the correct password."
+msgid ""
+"Old password is incorrect.                     Please enter the correct "
+"password."
 msgstr ""
 
 #: deps/django_authopenid/forms.py:306
@@ -1139,11 +1134,9 @@ msgstr "Käyttäjätunnuksesi (<i>pakollinen</i>)"
 msgid "Incorrect username."
 msgstr "Virheellinen tunnus"
 
-#: deps/django_authopenid/urls.py:23
-#: deps/django_authopenid/urls.py:24
-#: deps/django_authopenid/urls.py:25
-#: deps/django_authopenid/urls.py:27
-#: setup_templates/settings.py:194
+#: deps/django_authopenid/urls.py:23 deps/django_authopenid/urls.py:24
+#: deps/django_authopenid/urls.py:25 deps/django_authopenid/urls.py:27
+#: setup_templates/settings.py:197
 msgid "signin/"
 msgstr "kirjautuminen/"
 
@@ -1175,8 +1168,7 @@ msgstr "luo-tunnus/"
 msgid "sendpw/"
 msgstr "nollaa-salasana/"
 
-#: deps/django_authopenid/urls.py:33
-#: deps/django_authopenid/urls.py:37
+#: deps/django_authopenid/urls.py:33 deps/django_authopenid/urls.py:37
 msgid "password/"
 msgstr "salasana/"
 
@@ -1184,10 +1176,8 @@ msgstr "salasana/"
 msgid "confirm/"
 msgstr "hyvaksy/"
 
-#: deps/django_authopenid/urls.py:38
-#: deps/django_authopenid/urls.py:39
-#: deps/django_authopenid/urls.py:40
-#: deps/django_authopenid/urls.py:41
+#: deps/django_authopenid/urls.py:38 deps/django_authopenid/urls.py:39
+#: deps/django_authopenid/urls.py:40 deps/django_authopenid/urls.py:41
 msgid "email/"
 msgstr "sahkoposti/"
 
@@ -1232,11 +1222,12 @@ msgstr "Tervetuloa"
 msgid "Password changed."
 msgstr "Salasana vaihdettu."
 
-#: deps/django_authopenid/views.py:734
-#: deps/django_authopenid/views.py:740
+#: deps/django_authopenid/views.py:734 deps/django_authopenid/views.py:740
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
-msgstr "Your email needs to be validated. Please see details <a id='validate_email_alert' href='%(details_url)s'>here</a>."
+msgstr ""
+"Your email needs to be validated. Please see details <a "
+"id='validate_email_alert' href='%(details_url)s'>here</a>."
 
 #: deps/django_authopenid/views.py:761
 msgid "Email verification subject line"
@@ -1246,14 +1237,12 @@ msgstr "Verification Email from Q&A forum"
 msgid "your email was not changed"
 msgstr "sähköpostiosoitettasi ei muutettu"
 
-#: deps/django_authopenid/views.py:900
-#: deps/django_authopenid/views.py:1058
+#: deps/django_authopenid/views.py:900 deps/django_authopenid/views.py:1058
 #, python-format
 msgid "No OpenID %s found associated in our database"
 msgstr ""
 
-#: deps/django_authopenid/views.py:904
-#: deps/django_authopenid/views.py:1065
+#: deps/django_authopenid/views.py:904 deps/django_authopenid/views.py:1065
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
 msgstr ""
@@ -1264,7 +1253,7 @@ msgstr "Sähköpostiosoite vaihdettu."
 
 #: deps/django_authopenid/views.py:990
 msgid "This OpenID is already associated with another account."
-msgstr ""
+msgstr "Tämä OpenID on jo kiinnitetty toiselle tunnukselle."
 
 #: deps/django_authopenid/views.py:995
 #, python-format
@@ -1285,11 +1274,15 @@ msgstr ""
 
 #: deps/django_authopenid/views.py:1166
 #, python-format
-msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgid ""
+"Could not change password. Confirmation key '%s'                is not "
+"registered."
 msgstr ""
 
 #: deps/django_authopenid/views.py:1176
-msgid "Can not change password. User don't exist anymore                 in our database."
+msgid ""
+"Can not change password. User don't exist anymore                 in our "
+"database."
 msgstr ""
 
 #: deps/django_authopenid/views.py:1186
@@ -1297,8 +1290,7 @@ msgstr ""
 msgid "Password changed for %s. You may now sign in."
 msgstr ""
 
-#: deps/livesettings/models.py:101
-#: deps/livesettings/models.py:140
+#: deps/livesettings/models.py:101 deps/livesettings/models.py:140
 msgid "Site"
 msgstr "Sivusto"
 
@@ -1353,7 +1345,6 @@ msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:22
 #: deps/livesettings/templates/livesettings/site_settings.html:50
-#, fuzzy
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Korjaa allaoleva virheet:"
@@ -1370,7 +1361,6 @@ msgid "You don't have permission to edit values."
 msgstr "Ei oikeuksia"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:68
-#, fuzzy
 msgid "Setting groups"
 msgstr ""
 
@@ -1389,19 +1379,17 @@ msgstr ""
 #: deps/livesettings/templates/livesettings/site_settings.html:66
 #, python-format
 msgid "Group settings: %(name)s"
-msgstr ""
+msgstr "Ryhmäasetukset: %(name)s"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
 msgid "Uncollapse all"
-msgstr ""
+msgstr "Luhista kaikki"
 
-#: deps/recaptcha_django/__init__.py:19
-#: deps/recaptcha_django/__init__.py:80
+#: deps/recaptcha_django/__init__.py:19 deps/recaptcha_django/__init__.py:80
 msgid "Unknown error."
 msgstr "Tuntematon virhe."
 
-#: deps/recaptcha_django/__init__.py:20
-#: deps/recaptcha_django/__init__.py:21
+#: deps/recaptcha_django/__init__.py:20 deps/recaptcha_django/__init__.py:21
 msgid "ReCAPTCHA is wrongly configured."
 msgstr "ReCAPTCHA ei ole konfiguroitu oikein."
 
@@ -1419,11 +1407,11 @@ msgstr ""
 
 #: deps/recaptcha_django/__init__.py:25
 msgid "Provided reCAPTCHA API keys are not valid for this domain."
-msgstr ""
+msgstr "reCAPTCHA-palvelun avaimet ovat väärät."
 
 #: deps/recaptcha_django/__init__.py:26
 msgid "ReCAPTCHA could not be reached."
-msgstr ""
+msgstr "reCAPTCHA-palveluun ei saatu yhteyttä."
 
 #: deps/recaptcha_django/__init__.py:73
 msgid "Invalid request"
@@ -1433,8 +1421,7 @@ msgstr "Tuntematon pyyntö"
 msgid "Congratulations, you are now an Administrator"
 msgstr "Onnittelut, olet nyt pääkäyttäjä"
 
-#: management/commands/send_email_alerts.py:388
-#: models/__init__.py:309
+#: management/commands/send_email_alerts.py:388 models/__init__.py:309
 msgid "email update message subject"
 msgstr "news from Q&A forum"
 
@@ -1450,37 +1437,55 @@ msgid "new question"
 msgstr "uusi kysymys"
 
 #: management/commands/send_email_alerts.py:424
-msgid "Please visit the askbot and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
+msgid ""
+"Please visit the askbot and see what's new! Could you spread the word about "
+"it - can somebody you know help answering those questions or benefit from "
+"posting one?"
 msgstr ""
 
 #: management/commands/send_email_alerts.py:436
-msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the askbot administrator."
+msgid ""
+"Your most frequent subscription setting is 'daily' on selected questions. If "
+"you are receiving more than one email per dayplease tell about this issue to "
+"the askbot administrator."
 msgstr ""
 
 #: management/commands/send_email_alerts.py:442
-msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the askbot administrator."
+msgid ""
+"Your most frequent subscription setting is 'weekly' if you are receiving "
+"this email more than once a week please report this issue to the askbot "
+"administrator."
 msgstr ""
 
 #: management/commands/send_email_alerts.py:448
-msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
+msgid ""
+"There is a chance that you may be receiving links seen before - due to a "
+"technicality that will eventually go away. "
 msgstr ""
 
 #: management/commands/send_email_alerts.py:463
 #, fuzzy, python-format
-msgid "go to %(email_settings_link)s to change frequency of email updates or %(admin_email)s administrator"
-msgstr "<p>Please remember that you can always <a href='%(link)s'>adjust</a> frequency of the email updates or turn them off entirely.<br/>If you believe that this message was sent in an error, please email about it the forum administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum server.</p>"
+msgid ""
+"go to %(email_settings_link)s to change frequency of email updates or %"
+"(admin_email)s administrator"
+msgstr ""
+"<p>Please remember that you can always <a href='%(link)s'>adjust</a> "
+"frequency of the email updates or turn them off entirely.<br/>If you believe "
+"that this message was sent in an error, please email about it the forum "
+"administrator at %(email)s.</p><p>Sincerely,</p><p>Your friendly Q&A forum "
+"server.</p>"
 
 #: migrations/0005_install_badges.py:11
 msgid "Disciplined"
-msgstr ""
+msgstr "Kurinalainen"
 
 #: migrations/0005_install_badges.py:11
 msgid "disciplined"
-msgstr ""
+msgstr "kurinalainen"
 
 #: migrations/0005_install_badges.py:11
 msgid "Deleted own post with score of 3 or higher"
-msgstr ""
+msgstr "Poisti oman postauksen jolla oli kolme tai yli kolme ääntä"
 
 #: migrations/0005_install_badges.py:12
 msgid "Peer Pressure"
@@ -1492,7 +1497,7 @@ msgstr "ryhma-painostus"
 
 #: migrations/0005_install_badges.py:12
 msgid "Deleted own post with score of -3 or lower"
-msgstr ""
+msgstr "Poisti oman postauksen, jolla oli -3 tai vähemmän ääniä"
 
 #: migrations/0005_install_badges.py:13
 msgid "Nice answer"
@@ -1500,7 +1505,7 @@ msgstr "Hyvä vastaus"
 
 #: migrations/0005_install_badges.py:13
 msgid "nice-answer"
-msgstr ""
+msgstr "hyva-vastaus"
 
 #: migrations/0005_install_badges.py:13
 msgid "Answer voted up 10 times"
@@ -1512,7 +1517,7 @@ msgstr "Hyvä kysymys"
 
 #: migrations/0005_install_badges.py:14
 msgid "nice-question"
-msgstr ""
+msgstr "hyva-kysymys"
 
 #: migrations/0005_install_badges.py:14
 msgid "Question voted up 10 times"
@@ -1576,7 +1581,7 @@ msgstr "kriitikko"
 
 #: migrations/0005_install_badges.py:19
 msgid "First down vote"
-msgstr ""
+msgstr "Ensimmäinen alasäänestys"
 
 #: migrations/0005_install_badges.py:20
 msgid "Editor"
@@ -1652,15 +1657,15 @@ msgstr "Vastasi ensimmäiseen kysymykseen bvähintään yhdellä äänellä"
 
 #: migrations/0005_install_badges.py:26
 msgid "Autobiographer"
-msgstr ""
+msgstr "Elämänkerran kirjoittaja"
 
 #: migrations/0005_install_badges.py:26
 msgid "autobiographer"
-msgstr ""
+msgstr "elamankerta"
 
 #: migrations/0005_install_badges.py:26
 msgid "Completed all user profile fields"
-msgstr ""
+msgstr "Täytti kaikki profiilinsa kentät"
 
 #: migrations/0005_install_badges.py:27
 msgid "Self-Learner"
@@ -1672,7 +1677,7 @@ msgstr "itseoppija"
 
 #: migrations/0005_install_badges.py:27
 msgid "Answered your own question with at least 3 up votes"
-msgstr ""
+msgstr "Vastasi omaan kysymykseensä, joka sai vähintään 3 ääntä"
 
 #: migrations/0005_install_badges.py:28
 msgid "Great Answer"
@@ -1700,11 +1705,11 @@ msgstr "Kysymystä äänestetty sata kertaa"
 
 #: migrations/0005_install_badges.py:30
 msgid "Stellar Question"
-msgstr ""
+msgstr "Tähtikysymys"
 
 #: migrations/0005_install_badges.py:30
 msgid "stellar-question"
-msgstr ""
+msgstr "tahtikysymys"
 
 #: migrations/0005_install_badges.py:30
 msgid "Question favorited by 100 users"
@@ -1720,7 +1725,7 @@ msgstr "tunnettu-kysymys"
 
 #: migrations/0005_install_badges.py:31
 msgid "Asked a question with 10,000 views"
-msgstr ""
+msgstr "Kysyi kysymyksen, joka sai kymmenentuhatta katselukertaa"
 
 #: migrations/0005_install_badges.py:32
 msgid "Alpha"
@@ -1744,7 +1749,7 @@ msgstr "pateva-vastaus"
 
 #: migrations/0005_install_badges.py:33
 msgid "Answer voted up 25 times"
-msgstr ""
+msgstr "Vastausta äänestetty 25 kertaa"
 
 #: migrations/0005_install_badges.py:34
 msgid "Good Question"
@@ -1752,11 +1757,11 @@ msgstr "Pätevä kysymys"
 
 #: migrations/0005_install_badges.py:34
 msgid "good-question"
-msgstr ""
+msgstr "pateva-kysymys"
 
 #: migrations/0005_install_badges.py:34
 msgid "Question voted up 25 times"
-msgstr ""
+msgstr "Kysymystä äänestettiin vähintään 25 kertaa"
 
 #: migrations/0005_install_badges.py:35
 msgid "Favorite Question"
@@ -1772,11 +1777,11 @@ msgstr "25 käyttäjää lisäsi kysymyksen suosikikseen"
 
 #: migrations/0005_install_badges.py:36
 msgid "Civic duty"
-msgstr ""
+msgstr "Kansalaisvelvollisuus"
 
 #: migrations/0005_install_badges.py:36
 msgid "civic-duty"
-msgstr ""
+msgstr "kansalaisvelvollisuus"
 
 #: migrations/0005_install_badges.py:36
 msgid "Voted 300 times"
@@ -1804,7 +1809,7 @@ msgstr "yleistaja"
 
 #: migrations/0005_install_badges.py:38
 msgid "Active in many different tags"
-msgstr ""
+msgstr "Aktiivinen monen tagin alla"
 
 #: migrations/0005_install_badges.py:39
 msgid "Expert"
@@ -1840,7 +1845,7 @@ msgstr "huomattava-kysymys"
 
 #: migrations/0005_install_badges.py:41
 msgid "Asked a question with 2,500 views"
-msgstr ""
+msgstr "Kysyi kysymyksen, joka sai vähintään 2500 katselijaa"
 
 #: migrations/0005_install_badges.py:42
 msgid "Enlightened"
@@ -1880,15 +1885,15 @@ msgstr ""
 
 #: migrations/0005_install_badges.py:45
 msgid "Necromancer"
-msgstr ""
+msgstr "Kuolleistaherättäjä"
 
 #: migrations/0005_install_badges.py:45
 msgid "necromancer"
-msgstr ""
+msgstr "kuolleistaherattaja"
 
 #: migrations/0005_install_badges.py:45
 msgid "Answered a question more than 60 days later with at least 5 votes"
-msgstr ""
+msgstr "Vastasi kysymykseen 60 päivää myöhemmin ja sai vähintään viisi ääntä"
 
 #: migrations/0005_install_badges.py:46
 msgid "Taxonomist"
@@ -1927,18 +1932,15 @@ msgstr "%(people)s kommentoi vastauksia"
 msgid "%(people)s commented an answer"
 msgstr "%(people)s kommentoi vastausta"
 
-#: models/repute.py:16
-#: skins/default/templates/badges.html:54
+#: models/repute.py:16 skins/default/templates/badges.html:54
 msgid "gold"
 msgstr "kulta"
 
-#: models/repute.py:17
-#: skins/default/templates/badges.html:62
+#: models/repute.py:17 skins/default/templates/badges.html:62
 msgid "silver"
 msgstr "hopea"
 
-#: models/repute.py:18
-#: skins/default/templates/badges.html:69
+#: models/repute.py:18 skins/default/templates/badges.html:69
 msgid "bronze"
 msgstr "bronssi"
 
@@ -1964,7 +1966,7 @@ msgstr "Omat vastaukseni"
 
 #: models/user.py:179
 msgid "Individually selected questions"
-msgstr ""
+msgstr "Valikoidut kysymykset"
 
 #: models/user.py:180
 msgid "Mentions and comment responses"
@@ -1972,7 +1974,7 @@ msgstr ""
 
 #: models/user.py:183
 msgid "Instantly"
-msgstr ""
+msgstr "Heti"
 
 #: models/user.py:184
 msgid "Daily"
@@ -2003,8 +2005,12 @@ msgid "url has error - please check it;"
 msgstr "URL-osoitteessa on virhe;"
 
 #: skins/default/templates/404.html:30
-msgid "the page you tried to visit is protected or you don't have sufficient points, see"
-msgstr "sivu jota yritit käyttää on suojattu tai sinulla ei ole tarpeeksi ääniä, katso"
+msgid ""
+"the page you tried to visit is protected or you don't have sufficient "
+"points, see"
+msgstr ""
+"sivu jota yritit käyttää on suojattu tai sinulla ei ole tarpeeksi ääniä, "
+"katso"
 
 #: skins/default/templates/404.html:31
 msgid "if you believe this error 404 should not have occured, please"
@@ -2014,13 +2020,12 @@ msgstr "jos uskot, että tämä 404-sivu on aiheeton, ole hyvä"
 msgid "report this problem"
 msgstr "kerro tästä ongelmasta"
 
-#: skins/default/templates/404.html:41
-#: skins/default/templates/500.html:27
+#: skins/default/templates/404.html:41 skins/default/templates/500.html:27
 msgid "back to previous page"
 msgstr "takaisin edelliselle sivulle"
 
 #: skins/default/templates/404.html:42
-#: skins/default/templates/questions.html:52
+#: skins/default/templates/questions.html:53
 msgid "see all questions"
 msgstr "näytä kaikki kysymykset"
 
@@ -2034,7 +2039,8 @@ msgstr "järjestelmävirhe"
 
 #: skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
-msgstr "järjestelmävirhe on lisätty logeihimme, virhe korjataan mahdollisimman pian"
+msgstr ""
+"järjestelmävirhe on lisätty logeihimme, virhe korjataan mahdollisimman pian"
 
 #: skins/default/templates/500.html:25
 msgid "please report the error to the site administrators if you wish"
@@ -2048,10 +2054,9 @@ msgstr "katso uusimmat kysymykset"
 msgid "see tags"
 msgstr "näytä tagit"
 
-#: skins/default/templates/about.html:6
-#: skins/default/templates/about.html:11
+#: skins/default/templates/about.html:6 skins/default/templates/about.html:11
 msgid "About"
-msgstr "Sivusta"
+msgstr "Tietoa sivustosta"
 
 #: skins/default/templates/account_settings.html:4
 #: skins/default/templates/authopenid/settings.html:4
@@ -2071,7 +2076,7 @@ msgstr "Vaihda sähköpostiosoite"
 #: skins/default/templates/account_settings.html:33
 #: skins/default/templates/authopenid/settings.html:32
 msgid "Add or update the email address associated with your account."
-msgstr ""
+msgstr "Lisää tai päivitä sähköpostiosoite, joka on kiinnitetty tunnukseesi."
 
 #: skins/default/templates/account_settings.html:35
 #: skins/default/templates/authopenid/changeopenid.html:4
@@ -2103,8 +2108,7 @@ msgstr "Muokkaa vastausta"
 
 #: skins/default/templates/answer_edit.html:25
 #: skins/default/templates/answer_edit.html:28
-#: skins/default/templates/ask.html:26
-#: skins/default/templates/ask.html:29
+#: skins/default/templates/ask.html:26 skins/default/templates/ask.html:29
 #: skins/default/templates/question.html:48
 #: skins/default/templates/question.html:51
 #: skins/default/templates/question_edit.html:25
@@ -2178,7 +2182,7 @@ msgstr "Vastausvinkkejä"
 
 #: skins/default/templates/answer_edit_tips.html:7
 msgid "please make your answer relevant to this community"
-msgstr ""
+msgstr "vastaus käsittelee tämän sivuston aihealuita"
 
 #: skins/default/templates/answer_edit_tips.html:10
 msgid "try to give an answer, rather than engage into a discussion"
@@ -2186,7 +2190,7 @@ msgstr "yritä vastata kysymykseen mielummin, kuin että osallistut keskusteluun
 
 #: skins/default/templates/answer_edit_tips.html:13
 msgid "please try to provide details"
-msgstr "anna yksityiskohtia"
+msgstr "anna yksityiskohtia, sillä emme omista kristallipalloa"
 
 #: skins/default/templates/answer_edit_tips.html:16
 #: skins/default/templates/question_edit_tips.html:13
@@ -2245,15 +2249,19 @@ msgstr "perus HTML-tagit ovat myös tuetut"
 msgid "learn more about Markdown"
 msgstr "opi lisää Markdownista"
 
-#: skins/default/templates/ask.html:5
-#: skins/default/templates/ask.html:62
+#: skins/default/templates/ask.html:5 skins/default/templates/ask.html:62
 msgid "Ask a question"
 msgstr "Kysy"
 
 #: skins/default/templates/ask.html:69
 #: skins/default/templates/ask_form.html:11
 msgid "login to post question info"
-msgstr "<span class=\"strong big\">You are welcome to start submitting your question anonymously</span>. When you submit the post, you will be redirected to the login/signup page. Your question will be saved in the current session and will be published after you log in. Login/signup process is very simple. Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your question "
+"anonymously</span>. When you submit the post, you will be redirected to the "
+"login/signup page. Your question will be saved in the current session and "
+"will be published after you log in. Login/signup process is very simple. "
+"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/ask.html:75
 #, python-format
@@ -2261,7 +2269,12 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                            see %(email_validation_faq_url)s\n"
 "                            "
-msgstr "<span class='strong big'>Looks like your email address, %(email)s has not yet been validated.</span> To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>.<br>You can submit your question now and validate email after that. Your question will saved as pending meanwhile. "
+msgstr ""
+"<span class='strong big'>Looks like your email address, %(email)s has not "
+"yet been validated.</span> To post messages you must verify your email, "
+"please see <a href='%(email_validation_faq_url)s'>more details here</a>."
+"<br>You can submit your question now and validate email after that. Your "
+"question will saved as pending meanwhile. "
 
 #: skins/default/templates/ask.html:113
 #: skins/default/templates/ask_form.html:54
@@ -2284,22 +2297,26 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                                see %(email_validation_faq_url)s\n"
 "                                "
-msgstr "<span class='strong big'>Looks like your email address, %(email)s has not yet been validated.</span> To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>.<br>You can submit your question now and validate email after that. Your question will saved as pending meanwhile. "
+msgstr ""
+"<span class='strong big'>Looks like your email address, %(email)s has not "
+"yet been validated.</span> To post messages you must verify your email, "
+"please see <a href='%(email_validation_faq_url)s'>more details here</a>."
+"<br>You can submit your question now and validate email after that. Your "
+"question will saved as pending meanwhile. "
 
-#: skins/default/templates/badge.html:6
-#: skins/default/templates/badge.html:17
+#: skins/default/templates/badge.html:6 skins/default/templates/badge.html:17
 msgid "Badge"
 msgstr "Kunniamerkki"
 
 #: skins/default/templates/badge.html:26
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "käyttäjää sai tämän kunniamerkin:"
+msgstr[1] "käyttäjä sai tämän kunniamerkin:"
 
 #: skins/default/templates/badges.html:6
 msgid "Badges summary"
-msgstr ""
+msgstr "Kunniamerkkien yhteenveto"
 
 #: skins/default/templates/badges.html:17
 msgid "Badges"
@@ -2307,17 +2324,21 @@ msgstr "Kunniamerkit"
 
 #: skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr "If your questions and answers are highly voted, your contribution to this Q&amp;A community will be recognized with the variety of badges."
+msgstr ""
+"If your questions and answers are highly voted, your contribution to this "
+"Q&amp;A community will be recognized with the variety of badges."
 
 #: skins/default/templates/badges.html:22
 #, python-format
 msgid ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
+"    of times each type of badge has been awarded. Give us feedback at %"
+"(feedback_faq_url)s.\n"
 "    "
 msgstr ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Have ideas about fun badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>"
+"    of times each type of badge has been awarded. Have ideas about fun "
+"badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>"
 
 #: skins/default/templates/badges.html:51
 msgid "Community badges"
@@ -2325,11 +2346,15 @@ msgstr "Kunniamerkit"
 
 #: skins/default/templates/badges.html:57
 msgid "gold badge description"
-msgstr "Gold badge is the highest award in this community. To obtain it have to show profound knowledge and ability in addition to your active participation."
+msgstr ""
+"Gold badge is the highest award in this community. To obtain it have to show "
+"profound knowledge and ability in addition to your active participation."
 
 #: skins/default/templates/badges.html:65
 msgid "silver badge description"
-msgstr "Obtaining silver badge requires significant patience. If you have received one, that means you have greatly contributed to this community."
+msgstr ""
+"Obtaining silver badge requires significant patience. If you have received "
+"one, that means you have greatly contributed to this community."
 
 #: skins/default/templates/badges.html:68
 msgid "bronze badge: often given as a special honor"
@@ -2337,11 +2362,11 @@ msgstr ""
 
 #: skins/default/templates/badges.html:72
 msgid "bronze badge description"
-msgstr "If you are an active participant in this community, you will be recognized with this badge."
+msgstr "Jos olet aktiivinen osallistuja sivustolla, saat tämän kunniamerkin."
 
 #: skins/default/templates/book.html:7
 msgid "reading channel"
-msgstr ""
+msgstr "luetaan kanavaa"
 
 #: skins/default/templates/book.html:26
 msgid "[author]"
@@ -2395,14 +2420,12 @@ msgstr "lukijoiden kysymykset"
 msgid "ask the author"
 msgstr "kysy"
 
-#: skins/default/templates/book.html:88
-#: skins/default/templates/book.html:93
+#: skins/default/templates/book.html:88 skins/default/templates/book.html:93
 #: skins/default/templates/users_questions.html:18
 msgid "this question was selected as favorite"
-msgstr ""
+msgstr "tämä kysymys valittiin suosikiksi"
 
-#: skins/default/templates/book.html:88
-#: skins/default/templates/book.html:93
+#: skins/default/templates/book.html:88 skins/default/templates/book.html:93
 #: skins/default/templates/users_questions.html:11
 #: skins/default/templates/users_questions.html:18
 msgid "number of times"
@@ -2415,7 +2438,7 @@ msgstr "äänet"
 
 #: skins/default/templates/book.html:108
 msgid "the answer has been accepted to be correct"
-msgstr ""
+msgstr "tämä vastaus on hyväksytty oikeaksi"
 
 #: skins/default/templates/book.html:110
 msgid "answer"
@@ -2444,8 +2467,7 @@ msgstr ""
 msgid "subscribe to the questions feed"
 msgstr ""
 
-#: skins/default/templates/close.html:6
-#: skins/default/templates/close.html:16
+#: skins/default/templates/close.html:6 skins/default/templates/close.html:16
 msgid "Close question"
 msgstr "Sulje kysymys"
 
@@ -2467,35 +2489,52 @@ msgstr "koti"
 
 #: skins/default/templates/faq.html:12
 msgid "Frequently Asked Questions "
-msgstr "Usein kysytyt kysymykset"
+msgstr "Usein Kysytyt Kysymykset"
 
 #: skins/default/templates/faq.html:17
 msgid "What kinds of questions can I ask here?"
 msgstr "Minkälaisia kysymyksiä voin kysyä täällä?"
 
 #: skins/default/templates/faq.html:18
-msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
+msgid ""
+"Most importanly - questions should be <strong>relevant</strong> to this "
+"community."
 msgstr "Kaikista tärkeintä on, että kysymykset ovat tätä sivustoa vastaavia"
 
 #: skins/default/templates/faq.html:19
-msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
-msgstr "Ennen kuin kysyt, käytä hakua avuksesi, sillä joku on voinut jo vastata kysymykseesi."
+msgid ""
+"Before asking the question - please make sure to use search to see whether "
+"your question has alredy been answered."
+msgstr ""
+"Ennen kuin kysyt, käytä hakua avuksesi, sillä joku on voinut jo vastata "
+"kysymykseesi."
 
 #: skins/default/templates/faq.html:22
 msgid "What questions should I avoid asking?"
 msgstr "Minkälaisia kysymyksiä minun pitäisi välttää?"
 
 #: skins/default/templates/faq.html:23
-msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
-msgstr "Yritä välttää kysymyksiä, jotka eivät liity tähän sivustoon, ovat liian subjektiivisia ja väittelyä hakevia."
+msgid ""
+"Please avoid asking questions that are not relevant to this community, too "
+"subjective and argumentative."
+msgstr ""
+"Yritä välttää kysymyksiä, jotka eivät liity tähän sivustoon, ovat liian "
+"subjektiivisia ja väittelyä hakevia."
 
 #: skins/default/templates/faq.html:28
 msgid "What should I avoid in my answers?"
 msgstr "Mitä minun pitäisi välttää vastauksissani?"
 
 #: skins/default/templates/faq.html:29
-msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
-msgstr "on <strong>kysymys ja vastaus</strong> -sivu - <strong>se ei ole keskustelupalsta tai -ryhmä</strong>. Vältä kysymyksiä, jotka yrittävät nostaa pintaan väittelyä. Käytä kommentteja pieniin lisäkysymyksiin tai vastauksiin."
+msgid ""
+"is a Q&A site, not a discussion group. Therefore - please avoid having "
+"discussions in your answers, comment facility allows some space for brief "
+"discussions."
+msgstr ""
+"on <strong>kysymys ja vastaus</strong> -sivusto - <strong>se ei ole "
+"keskustelupalsta tai -ryhmä</strong>. Vältä kysymyksiä, jotka yrittävät "
+"nostaa pintaan väittelyä. Käytä kommentteja pieniin lisäkysymyksiin tai "
+"vastauksiin."
 
 #: skins/default/templates/faq.html:33
 msgid "Who moderates this community?"
@@ -2510,8 +2549,11 @@ msgid "This website is moderated by the users."
 msgstr "Tätä sivua hallinnoivat käyttäjät itse."
 
 #: skins/default/templates/faq.html:36
-msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
-msgstr "Mainejärjestelmä antaa käyttäjille oikeudet tehdä tietynlaisia toimenpiteitä."
+msgid ""
+"The reputation system allows users earn the authorization to perform a "
+"variety of moderation tasks."
+msgstr ""
+"Mainejärjestelmä antaa käyttäjille oikeudet tehdä tietynlaisia toimenpiteitä."
 
 #: skins/default/templates/faq.html:41
 msgid "How does reputation system work?"
@@ -2519,11 +2561,23 @@ msgstr "Miten mainejärjestelmä toimii?"
 
 #: skins/default/templates/faq.html:42
 msgid "Rep system summary"
-msgstr "When a question or answer is upvoted, the user who posted them will gain some points, which are called \"karma points\". These points serve as a rough measure of the community trust to him/her. Various moderation tasks are gradually assigned to the users based on those points."
+msgstr ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
 
 #: skins/default/templates/faq.html:43
 #, python-format
-msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against will subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. There is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> points that can be accumulated for a question or answer per day. The table below explains reputation point requirements for each type of moderation task."
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate <strong>%"
+"(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against will "
+"subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. There "
+"is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> points that "
+"can be accumulated for a question or answer per day. The table below "
+"explains reputation point requirements for each type of moderation task."
 msgstr ""
 
 #: skins/default/templates/faq.html:53
@@ -2570,24 +2624,54 @@ msgstr "How to validate email and why?"
 
 #: skins/default/templates/faq.html:97
 #, python-format
-msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
-msgstr "<form style='margin:0;padding:0;' action='%(send_email_key_url)s'><p><span class=\"bigger strong\">How?</span> If you have just set or changed your email address - <strong>check your email and click the included link</strong>.<br>The link contains a key generated specifically for you. You can also <button style='display:inline' type='submit'><strong>get a new key</strong></button> and check your email again.</p></form><span class=\"bigger strong\">Why?</span> Email validation is required to make sure that <strong>only you can post messages</strong> on your behalf and to <strong>minimize spam</strong> posts.<br>With email you can <strong>subscribe for updates</strong> on the most interesting questions. Also, when you sign up for the first time - create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> personal image.</p>"
+msgid ""
+"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr ""
+"<form style='margin:0;padding:0;' action='%(send_email_key_url)s'><p><span "
+"class=\"bigger strong\">How?</span> If you have just set or changed your "
+"email address - <strong>check your email and click the included link</"
+"strong>.<br>The link contains a key generated specifically for you. You can "
+"also <button style='display:inline' type='submit'><strong>get a new key</"
+"strong></button> and check your email again.</p></form><span class=\"bigger "
+"strong\">Why?</span> Email validation is required to make sure that "
+"<strong>only you can post messages</strong> on your behalf and to "
+"<strong>minimize spam</strong> posts.<br>With email you can "
+"<strong>subscribe for updates</strong> on the most interesting questions. "
+"Also, when you sign up for the first time - create a unique <a href='%"
+"(gravatar_faq_url)s'><strong>gravatar</strong></a> personal image.</p>"
 
 #: skins/default/templates/faq.html:102
 msgid "what is gravatar"
-msgstr "Miten vaihdan profiilissani olevan kuvan (gravatar) ja mikä on gravatar?"
+msgstr "Miten vaihdan profiilissani olevan kuvan (gravatar)?"
 
 #: skins/default/templates/faq.html:103
 msgid "gravatar faq info"
-msgstr "<p>Kuva joka esiintyy käyttäjien profiilissa on nimeltään <strong>gravatar</strong> (<strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong>).</p><p>Here is how it works: a <strong>cryptographic key</strong> (unbreakable code) is calculated from your email address. You upload your picture (or your favorite alter ego image) the website <a href='http://gravatar.com'><strong>gravatar.com</strong></a> from where we later retreive your image using the key.</p><p>This way all the websites you trust can show your image next to your posts and your email address remains private.</p><p>Please <strong>personalize your account</strong> with an image - just register at <a href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please be sure to use the same email address that you used to register with us). Default image that looks like a kitchen tile is generated automatically.</p>"
+msgstr ""
+"<p>Kuva joka esiintyy käyttäjien profiilissa on nimeltään <strong>gravatar</"
+"strong> (<strong>g</strong>lobally <strong>r</strong>ecognized "
+"<strong>avatar</strong>).</p><p>Here is how it works: a "
+"<strong>cryptographic key</strong> (unbreakable code) is calculated from "
+"your email address. You upload your picture (or your favorite alter ego "
+"image) the website <a href='http://gravatar.com'><strong>gravatar.com</"
+"strong></a> from where we later retreive your image using the key.</"
+"p><p>This way all the websites you trust can show your image next to your "
+"posts and your email address remains private.</p><p>Please "
+"<strong>personalize your account</strong> with an image - just register at "
+"<a href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please "
+"be sure to use the same email address that you used to register with us). "
+"Default image that looks like a kitchen tile is generated automatically.</p>"
 
 #: skins/default/templates/faq.html:106
 msgid "To register, do I need to create new password?"
 msgstr "Tarvitseeko minun luoda erillinen tunnus jotta voin rekisteröityä?"
 
 #: skins/default/templates/faq.html:107
-msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr "Ei. Voit kirjautua suoraan sivulle kenen tahansa OpenID-palveluntarjoajan välityksellä, esim. Google, Yahoo, AOL, jne."
+msgid ""
+"No, you don't have to. You can login through any service that supports "
+"OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr ""
+"Ei. Voit kirjautua suoraan sivulle kenen tahansa OpenID-palveluntarjoajan "
+"välityksellä, esim. Google, Yahoo, AOL, jne."
 
 #: skins/default/templates/faq.html:108
 msgid "Login now!"
@@ -2602,12 +2686,17 @@ msgid "Goal of this site is..."
 msgstr "Tämän sivuston tavoite on..."
 
 #: skins/default/templates/faq.html:114
-msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgid ""
+"So questions and answers can be edited like wiki pages by experienced users "
+"of this site and this improves the overall quality of the knowledge base "
+"content."
 msgstr ""
+"Kokeneet käyttäjät voivat muokata vastauksia ja kysymyksiä kuten wikiä. Tämä "
+"nostaa sivuston laatua."
 
 #: skins/default/templates/faq.html:115
 msgid "If this approach is not for you, we respect your choice."
-msgstr ""
+msgstr "Jos et pidä tästä, kunnioitamme valintaasi."
 
 #: skins/default/templates/faq.html:119
 msgid "Still have questions?"
@@ -2615,11 +2704,14 @@ msgstr "Vieläkin kysymyksiä?"
 
 #: skins/default/templates/faq.html:120
 #, python-format
-msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "<a href='%(ask_question_url)s'>Kysy kysymyksesi</a> ja tee sivustamme entistäkin parempi!"
+msgid ""
+"Please ask your question at %(ask_question_url)s, help make our community "
+"better!"
+msgstr ""
+"<a href='%(ask_question_url)s'>Kysy kysymyksesi</a> ja tee sivustamme "
+"entistäkin parempi!"
 
-#: skins/default/templates/faq.html:122
-#: skins/default/templates/header.html:42
+#: skins/default/templates/faq.html:122 skins/default/templates/header.html:42
 msgid "questions"
 msgstr "kysymykset"
 
@@ -2639,7 +2731,8 @@ msgstr "Anna meille palautettasi!"
 #, python-format
 msgid ""
 "\n"
-"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look "
+"forward to hearing your feedback. \n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -2647,7 +2740,8 @@ msgstr ""
 #: skins/default/templates/feedback.html:24
 msgid ""
 "\n"
-"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to "
+"hearing your feedback.\n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -2704,16 +2798,16 @@ msgid "give feedback"
 msgstr "anna palautetta"
 
 #: skins/default/templates/header.html:13
-#, fuzzy, python-format
+#, python-format
 msgid "responses for %(username)s"
-msgstr ""
+msgstr "vastauksia käyttäjälle %(username)s"
 
 #: skins/default/templates/header.html:16
 #, python-format
 msgid "you have a new response"
 msgid_plural "you nave %(response_count)s new responses"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "sinulla on %(response_count)s uutta vastausta"
+msgstr[1] "sinulla on yksi uusi vastaus"
 
 #: skins/default/templates/header.html:19
 msgid "no new responses yet"
@@ -2804,15 +2898,14 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"<p>Please note - you can easily <a href=\"%(user_subscriptions_url)s\">change</a>\n"
+"<p>Please note - you can easily <a href=\"%(user_subscriptions_url)s"
+"\">change</a>\n"
 "how often you receive these notifications.</p>\n"
 msgstr ""
 
 #: skins/default/templates/instant_notification.html:46
-#, fuzzy
 msgid "<p>Sincerely,<br/>Forum Administrator</p>"
-msgstr ""
-"Ylläpito"
+msgstr "Toivoo ylläpito"
 
 #: skins/default/templates/logout.html:6
 #: skins/default/templates/logout.html:16
@@ -2820,8 +2913,13 @@ msgid "Logout"
 msgstr "Kirjaudu ulos"
 
 #: skins/default/templates/logout.html:19
-msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
-msgstr "Clicking <strong>Logout</strong> will log you out from the forumbut will not sign you off from your OpenID provider.</p><p>If you wish to sign off completely - please make sure to log out from your OpenID provider as well."
+msgid ""
+"As a registered user you can login with your OpenID, log out of the site or "
+"permanently remove your account."
+msgstr ""
+"Clicking <strong>Logout</strong> will log you out from the forumbut will not "
+"sign you off from your OpenID provider.</p><p>If you wish to sign off "
+"completely - please make sure to log out from your OpenID provider as well."
 
 #: skins/default/templates/logout.html:20
 msgid "Logout now"
@@ -2859,11 +2957,11 @@ msgid "next page"
 msgstr "seuraava sivu"
 
 #: skins/default/templates/post_contributor_info.html:9
-#, fuzzy, python-format
+#, python-format
 msgid "%(rev_count)s revision"
 msgid_plural "%(rev_count)s revisions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(rev_count)s revisiota"
+msgstr[1] "%(rev_count)s revisio"
 
 #: skins/default/templates/post_contributor_info.html:15
 msgid "asked"
@@ -2909,12 +3007,12 @@ msgstr "en pidä tästä (klikkaa uudestaan peruaksesi)"
 #: skins/default/templates/question.html:111
 #: skins/default/templates/question.html:112
 msgid "mark this question as favorite (click again to cancel)"
-msgstr ""
+msgstr "merkkaa suosikiksi (klikkaa uudestaan peruaksesi)"
 
 #: skins/default/templates/question.html:118
 #: skins/default/templates/question.html:119
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr "poista suosikkimerkintä"
+msgstr "poista suosikkimerkintä (klikkaa uudestaan peruaksesi)"
 
 #: skins/default/templates/question.html:143
 #: skins/default/templates/question.html:290
@@ -2933,8 +3031,11 @@ msgstr "sulje"
 
 #: skins/default/templates/question.html:158
 #: skins/default/templates/question.html:295
-msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
-msgstr "merkkaa loukkaavaksi (esim. sisältää spammia, mainostusta tai ilkeää tekstiä)"
+msgid ""
+"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgstr ""
+"merkkaa loukkaavaksi (sisältää esim. roskapostia, mainostusta tai loukkaavaa "
+"tekstiä)"
 
 #: skins/default/templates/question.html:159
 #: skins/default/templates/question.html:296
@@ -2971,12 +3072,13 @@ msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
 "                                            "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "katso vielä <strong>%(counter)s</strong> kommenttia"
+msgstr[1] "katso vielä yksi kommentti"
 
 #: skins/default/templates/question.html:215
 #, python-format
-msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
+msgid ""
+"The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr ""
 
 #: skins/default/templates/question.html:217
@@ -2985,7 +3087,7 @@ msgid "close date %(closed_at)s"
 msgstr "sulkemispäivä %(closed_at)s"
 
 #: skins/default/templates/question.html:225
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                    %(counter)s Answer:\n"
@@ -2994,6 +3096,16 @@ msgid_plural ""
 "\n"
 "                    %(counter)s Answers:\n"
 "                    "
+msgstr[0] ""
+"\n"
+"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
+"posted once you log in.</span>"
+msgstr[1] ""
+"\n"
+"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
+"posted once you log in.</span>"
 
 #: skins/default/templates/question.html:233
 msgid "oldest answers will be shown first"
@@ -3017,7 +3129,7 @@ msgstr "eniten ääniä saaneet vastaukset näytetään ensin"
 
 #: skins/default/templates/question.html:237
 msgid "popular answers"
-msgstr "most voted"
+msgstr "äänestetyimmät"
 
 #: skins/default/templates/question.html:251
 #: skins/default/templates/question.html:252
@@ -3045,7 +3157,7 @@ msgstr "vastauksen linkki"
 
 #: skins/default/templates/question.html:285
 msgid "permanent link"
-msgstr "linkki"
+msgstr "pysyväislinkki"
 
 #: skins/default/templates/question.html:307
 msgid "undelete"
@@ -3054,20 +3166,28 @@ msgstr "palauta"
 #: skins/default/templates/question.html:366
 #: skins/default/templates/question.html:369
 msgid "Notify me once a day when there are any new answers"
-msgstr "<strong>Notify me</strong> once a day by email when there are any new answers or updates"
+msgstr ""
+"<strong>Notify me</strong> once a day by email when there are any new "
+"answers or updates"
 
 #: skins/default/templates/question.html:372
 msgid "Notify me weekly when there are any new answers"
-msgstr "<strong>Notify me</strong> weekly when there are any new answers or updates"
+msgstr ""
+"<strong>Notify me</strong> weekly when there are any new answers or updates"
 
 #: skins/default/templates/question.html:377
 #, python-format
-msgid "You can always adjust frequency of email updates from your %(profile_url)s"
-msgstr "(note: you can always <strong><a href='%(profile_url)s?sort=email_subscriptions'>change</a></strong> how often you receive updates)"
+msgid ""
+"You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr ""
+"(note: you can always <strong><a href='%(profile_url)s?"
+"sort=email_subscriptions'>change</a></strong> how often you receive updates)"
 
 #: skins/default/templates/question.html:382
 msgid "once you sign in you will be able to subscribe for any updates here"
-msgstr "<span class='strong'>Here</span> (once you log in) you will be able to sign up for the periodic email updates about this question."
+msgstr ""
+"<span class='strong'>Here</span> (once you log in) you will be able to sign "
+"up for the periodic email updates about this question."
 
 #: skins/default/templates/question.html:393
 msgid "Your answer"
@@ -3079,15 +3199,32 @@ msgstr "Ole ensimmäinen vastaaja!"
 
 #: skins/default/templates/question.html:401
 msgid "you can answer anonymously and then login"
-msgstr "<span class='strong big'>Please start posting your answer anonymously</span> - your answer will be saved within the current session and published after you log in or create a new account. Please try to give a <strong>substantial answer</strong>, for discussions, <strong>please use comments</strong> and <strong>please do remember to vote</strong> (after you log in)!"
+msgstr ""
+"<span class='strong big'>Please start posting your answer anonymously</span> "
+"- your answer will be saved within the current session and published after "
+"you log in or create a new account. Please try to give a <strong>substantial "
+"answer</strong>, for discussions, <strong>please use comments</strong> and "
+"<strong>please do remember to vote</strong> (after you log in)!"
 
 #: skins/default/templates/question.html:405
 msgid "answer your own question only to give an answer"
-msgstr "<span class='big strong'>You are welcome to answer your own question</span>, but please make sure to give an <strong>answer</strong>. Remember that you can always <strong>revise your original question</strong>. Please <strong>use comments for discussions</strong>  and <strong>please don't forget to vote :)</strong> for the answers that you liked (or perhaps did not like)! "
+msgstr ""
+"<span class='big strong'>You are welcome to answer your own question</span>, "
+"but please make sure to give an <strong>answer</strong>. Remember that you "
+"can always <strong>revise your original question</strong>. Please "
+"<strong>use comments for discussions</strong>  and <strong>please don't "
+"forget to vote :)</strong> for the answers that you liked (or perhaps did "
+"not like)! "
 
 #: skins/default/templates/question.html:407
 msgid "please only give an answer, no discussions"
-msgstr "<span class='big strong'>Please try to give a substantial answer</span>. If you wanted to comment on the question or answer, just <strong>use the commenting tool</strong>. Please remember that you can always <strong>revise your answers</strong> - no need to answer the same question twice. Also, please <strong>don't forget to vote</strong> - it really helps to select the best questions and answers!"
+msgstr ""
+"<span class='big strong'>Please try to give a substantial answer</span>. If "
+"you wanted to comment on the question or answer, just <strong>use the "
+"commenting tool</strong>. Please remember that you can always <strong>revise "
+"your answers</strong> - no need to answer the same question twice. Also, "
+"please <strong>don't forget to vote</strong> - it really helps to select the "
+"best questions and answers!"
 
 #: skins/default/templates/question.html:443
 msgid "Login/Signup to Post Your Answer"
@@ -3106,7 +3243,7 @@ msgid "Question tags"
 msgstr "Tagit"
 
 #: skins/default/templates/question.html:467
-#: skins/default/templates/questions.html:261
+#: skins/default/templates/questions.html:265
 #: skins/default/templates/tag_selector.html:11
 #: skins/default/templates/tag_selector.html:28
 #, python-format
@@ -3147,7 +3284,11 @@ msgid_plural ""
 "        votes\n"
 "        "
 msgstr[0] ""
+"\n"
+"ääntä"
 msgstr[1] ""
+"\n"
+"ääni"
 
 #: skins/default/templates/question_counter_widget.html:21
 msgid "this answer has been accepted to be correct"
@@ -3163,7 +3304,11 @@ msgid_plural ""
 "        answers \n"
 "        "
 msgstr[0] ""
+"\n"
+"vastausta"
 msgstr[1] ""
+"\n"
+"vastaus"
 
 #: skins/default/templates/question_counter_widget.html:39
 msgid ""
@@ -3175,7 +3320,11 @@ msgid_plural ""
 "        views\n"
 "        "
 msgstr[0] ""
+"\n"
+"katsojaa"
 msgstr[1] ""
+"\n"
+"katsoja"
 
 #: skins/default/templates/question_edit.html:5
 #: skins/default/templates/question_edit.html:66
@@ -3210,110 +3359,111 @@ msgstr "Miksi käyttää ja muokata tageja?"
 #: skins/default/templates/question_retag.html:86
 msgid "tags help us keep Questions organized"
 msgstr ""
+"tagit auttavat kysymysten pitämistä järjestyksessä ja helpottavat hakua"
 
 #: skins/default/templates/question_retag.html:94
 msgid "tag editors receive special awards from the community"
-msgstr ""
+msgstr "tagien muokkaajat saavat erikoispalkintoja yhteisöltä"
 
 #: skins/default/templates/question_summary_list_roll.html:13
 msgid "answers"
 msgstr "vastaukset"
 
-#: skins/default/templates/questions.html:8
+#: skins/default/templates/questions.html:9
 msgid "Questions"
 msgstr "Kysymykset"
 
-#: skins/default/templates/questions.html:32
+#: skins/default/templates/questions.html:33
 msgid "Found by tags"
 msgstr "Tagged questions"
 
-#: skins/default/templates/questions.html:36
+#: skins/default/templates/questions.html:37
 msgid "Search results"
 msgstr "Hakutulokset"
 
-#: skins/default/templates/questions.html:38
+#: skins/default/templates/questions.html:39
 msgid "Found by title"
 msgstr "Löytyi otsikon mukaan"
 
-#: skins/default/templates/questions.html:42
+#: skins/default/templates/questions.html:43
 msgid "Unanswered questions"
 msgstr "Vastaamattomat"
 
-#: skins/default/templates/questions.html:44
+#: skins/default/templates/questions.html:45
 msgid "All questions"
 msgstr "Kaikki kysymykset"
 
-#: skins/default/templates/questions.html:51
+#: skins/default/templates/questions.html:52
 msgid "In:"
 msgstr "Näytä:"
 
-#: skins/default/templates/questions.html:53
+#: skins/default/templates/questions.html:54
 msgid "see unanswered questions"
 msgstr "näytä vastaamattomat kysymykset"
 
-#: skins/default/templates/questions.html:55
+#: skins/default/templates/questions.html:56
 msgid "see your favorite questions"
 msgstr "näytä suosikit"
 
-#: skins/default/templates/questions.html:59
+#: skins/default/templates/questions.html:60
 msgid "Sort by:"
 msgstr "Järjestys:"
 
-#: skins/default/templates/questions.html:64
-#: skins/default/templates/questions.html:75
+#: skins/default/templates/questions.html:65
+#: skins/default/templates/questions.html:76
 msgid "click to see the newest questions"
 msgstr "klikkaa nähdäksesi uusimmat kysymykset"
 
-#: skins/default/templates/questions.html:70
+#: skins/default/templates/questions.html:71
 msgid "click to see the oldest questions"
 msgstr "klikkaa nähdäksesi vanhimmat kysymykset"
 
-#: skins/default/templates/questions.html:83
-#: skins/default/templates/questions.html:94
+#: skins/default/templates/questions.html:84
+#: skins/default/templates/questions.html:95
 msgid "click to see the most recently updated questions"
 msgstr "klikkaa nähdäksesi viimeksi päivitetyt kysymykset"
 
-#: skins/default/templates/questions.html:89
+#: skins/default/templates/questions.html:90
 msgid "click to see the least recently updated questions"
 msgstr "klikkaa nähdäksesi vanhimmat päivitetyt kysymykset"
 
-#: skins/default/templates/questions.html:102
-#: skins/default/templates/questions.html:113
+#: skins/default/templates/questions.html:103
+#: skins/default/templates/questions.html:114
 msgid "click to see hottest questions"
 msgstr "questions with most answers"
 
-#: skins/default/templates/questions.html:102
+#: skins/default/templates/questions.html:103
 msgid "less answers"
 msgstr "vähemmän vastauksia"
 
-#: skins/default/templates/questions.html:108
+#: skins/default/templates/questions.html:109
 msgid "click to see coldest questions"
 msgstr "questions with fewest answers"
 
-#: skins/default/templates/questions.html:108
-#: skins/default/templates/questions.html:113
+#: skins/default/templates/questions.html:109
+#: skins/default/templates/questions.html:114
 msgid "more answers"
 msgstr "eniten vastauksia"
 
-#: skins/default/templates/questions.html:121
-#: skins/default/templates/questions.html:132
+#: skins/default/templates/questions.html:122
+#: skins/default/templates/questions.html:133
 msgid "click to see most voted questions"
 msgstr "klikkaa nähdäksesi äänestetyimmät kysymykset"
 
-#: skins/default/templates/questions.html:121
+#: skins/default/templates/questions.html:122
 msgid "unpopular"
 msgstr "epäsuosittu"
 
-#: skins/default/templates/questions.html:127
+#: skins/default/templates/questions.html:128
 msgid "click to see least voted questions"
 msgstr "least voted questions"
 
-#: skins/default/templates/questions.html:127
-#: skins/default/templates/questions.html:132
+#: skins/default/templates/questions.html:128
+#: skins/default/templates/questions.html:133
 msgid "popular"
 msgstr "suosittu"
 
-#: skins/default/templates/questions.html:141
+#: skins/default/templates/questions.html:142
 #, python-format
 msgid ""
 "\n"
@@ -3324,97 +3474,103 @@ msgid_plural ""
 "                %(q_num)s questions found\n"
 "            "
 msgstr[0] ""
+"\n"
+"%(q_num)s kysymystä löytyi"
 msgstr[1] ""
+"\n"
+"yksi kysymys löytyi"
 
-#: skins/default/templates/questions.html:147
+#: skins/default/templates/questions.html:148
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
+msgstr[0] "%(q_num)s kysymystä"
+msgstr[1] "kysymys"
 
-#: skins/default/templates/questions.html:151
+#: skins/default/templates/questions.html:152
 #, python-format
 msgid "with %(author_name)s's contributions"
 msgstr ""
 
-#: skins/default/templates/questions.html:155
+#: skins/default/templates/questions.html:156
 msgid "tagged"
 msgstr "tagattu"
 
-#: skins/default/templates/questions.html:161
+#: skins/default/templates/questions.html:162
 msgid "Search tips:"
 msgstr "Hakuvinkkejä:"
 
-#: skins/default/templates/questions.html:165
+#: skins/default/templates/questions.html:166
 msgid "reset author"
 msgstr "nollaa tekijä"
 
-#: skins/default/templates/questions.html:169
+#: skins/default/templates/questions.html:170
 msgid "reset tags"
 msgstr "nollaa tagit"
 
-#: skins/default/templates/questions.html:173
-#: skins/default/templates/questions.html:177
+#: skins/default/templates/questions.html:174
+#: skins/default/templates/questions.html:178
 msgid "start over"
 msgstr "aloita alusta"
 
-#: skins/default/templates/questions.html:179
+#: skins/default/templates/questions.html:180
 msgid " - to expand, or dig in by adding more tags and revising the query."
-msgstr ""
+msgstr " laajentaaksesi tai lisää enemmän tageja hakuusi."
 
-#: skins/default/templates/questions.html:182
+#: skins/default/templates/questions.html:183
 msgid "Search tip:"
 msgstr "Hakuvinkki:"
 
-#: skins/default/templates/questions.html:182
+#: skins/default/templates/questions.html:183
 msgid "add tags and a query to focus your search"
 msgstr "lisää tageja ja hakusanoja täsmentääksesi hakuasi"
 
-#: skins/default/templates/questions.html:194
+#: skins/default/templates/questions.html:198
 msgid "There are no unanswered questions here"
 msgstr "Ei vastaamattomia kysymyksiä"
 
-#: skins/default/templates/questions.html:197
+#: skins/default/templates/questions.html:201
 msgid "No favorite questions here. "
 msgstr "Ei suosikkeja."
 
-#: skins/default/templates/questions.html:198
+#: skins/default/templates/questions.html:202
 msgid "Please start (bookmark) some questions when you visit them"
 msgstr ""
 
-#: skins/default/templates/questions.html:203
+#: skins/default/templates/questions.html:207
 msgid "You can expand your search by "
 msgstr "Voit laajentaa hakuasi seuraavasti"
 
-#: skins/default/templates/questions.html:207
+#: skins/default/templates/questions.html:211
 msgid "resetting author"
 msgstr "nollataan"
 
-#: skins/default/templates/questions.html:211
+#: skins/default/templates/questions.html:215
 msgid "resetting tags"
 msgstr "nollataan tagit"
 
-#: skins/default/templates/questions.html:215
 #: skins/default/templates/questions.html:219
+#: skins/default/templates/questions.html:223
 msgid "starting over"
 msgstr "aloitetaan alusta"
 
-#: skins/default/templates/questions.html:224
+#: skins/default/templates/questions.html:228
 msgid "Please always feel free to ask your question!"
 msgstr "Olet aina tervetullut kysymään!"
 
-#: skins/default/templates/questions.html:228
+#: skins/default/templates/questions.html:232
 msgid "Did not find what you were looking for?"
 msgstr "Et löytänyt etsimääsi?"
 
-#: skins/default/templates/questions.html:229
+#: skins/default/templates/questions.html:233
 msgid "Please, post your question!"
 msgstr "Ole hyvä ja kysy kysymyksesi!"
 
-#: skins/default/templates/questions.html:245
+#: skins/default/templates/questions.html:249
 msgid "Contributors"
 msgstr "Ihmiset"
 
-#: skins/default/templates/questions.html:258
+#: skins/default/templates/questions.html:262
 msgid "Related tags"
 msgstr "Tagit"
 
@@ -3466,7 +3622,7 @@ msgstr "Mielenkiintoiset tagit"
 #: skins/default/templates/tag_selector.html:15
 #, python-format
 msgid "remove '%(tag_name)s' from the list of interesting tags"
-msgstr ""
+msgstr "poista tagi '%(tag_name)s' mielenkiintoisista"
 
 #: skins/default/templates/tag_selector.html:21
 #: skins/default/templates/tag_selector.html:38
@@ -3480,14 +3636,13 @@ msgstr "Hylätyt tagit"
 #: skins/default/templates/tag_selector.html:32
 #, python-format
 msgid "remove '%(tag_name)s' from the list of ignored tags"
-msgstr ""
+msgstr "poista tagi '%(tag_name)s' hylätyistä"
 
 #: skins/default/templates/tag_selector.html:41
 msgid "keep ignored questions hidden"
-msgstr ""
+msgstr "pidä hylätyt piilotettuina"
 
-#: skins/default/templates/tags.html:6
-#: skins/default/templates/tags.html:30
+#: skins/default/templates/tags.html:6 skins/default/templates/tags.html:30
 msgid "Tag list"
 msgstr "Tagilista"
 
@@ -3501,7 +3656,7 @@ msgstr "nimen mukaan"
 
 #: skins/default/templates/tags.html:33
 msgid "sorted by frequency of tag use"
-msgstr ""
+msgstr "taginkäytön mukaan"
 
 #: skins/default/templates/tags.html:33
 msgid "by popularity"
@@ -3509,7 +3664,8 @@ msgstr "suosituksen mukaan"
 
 #: skins/default/templates/tags.html:39
 #, python-format
-msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgid ""
+"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
 msgstr ""
 
 #: skins/default/templates/tags.html:42
@@ -3549,7 +3705,12 @@ msgstr ""
 
 #: skins/default/templates/user_email_subscriptions.html:9
 msgid "email subscription settings info"
-msgstr "<span class='big strong'>Adjust frequency of email updates.</span> Receive updates on interesting questions by email, <strong><br/>help the community</strong> by answering questions of your colleagues. If you do not wish to receive emails - select 'no email' on all items below.<br/>Updates are only sent when there is any new activity on selected items."
+msgstr ""
+"<span class='big strong'>Adjust frequency of email updates.</span> Receive "
+"updates on interesting questions by email, <strong><br/>help the community</"
+"strong> by answering questions of your colleagues. If you do not wish to "
+"receive emails - select 'no email' on all items below.<br/>Updates are only "
+"sent when there is any new activity on selected items."
 
 #: skins/default/templates/user_email_subscriptions.html:21
 msgid "Stop sending email"
@@ -3560,10 +3721,9 @@ msgid "change picture"
 msgstr "vaihda kuva"
 
 #: skins/default/templates/user_info.html:22
-#: skins/default/templates/users.html:26
-#: views/users.py:911
+#: skins/default/templates/users.html:26 views/users.py:911
 msgid "reputation"
-msgstr "karma"
+msgstr "maine"
 
 #: skins/default/templates/user_info.html:32
 msgid "Moderate this user"
@@ -3579,7 +3739,7 @@ msgstr "nimi"
 
 #: skins/default/templates/user_info.html:59
 msgid "member for"
-msgstr "member since"
+msgstr "liittynyt"
 
 #: skins/default/templates/user_info.html:64
 msgid "last seen"
@@ -3622,15 +3782,15 @@ msgstr ""
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Question"
 msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span class=\"count\">%(counter)s</span> kysymystä"
+msgstr[1] "<span class=\"count\">%(counter)s</span> kysymys"
 
 #: skins/default/templates/user_stats.html:16
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Answer"
 msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span class=\"count\">%(counter)s</span> vastausta"
+msgstr[1] "<span class=\"count\">%(counter)s</span> vastaus"
 
 #: skins/default/templates/user_stats.html:24
 #, python-format
@@ -3645,15 +3805,15 @@ msgstr "tämä vastaus on valittu oikeaksi"
 #, python-format
 msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "vastausta kommentoitiin %(comment_count)s kertaa"
+msgstr[1] "vastausta kommentoitiin kerran"
 
 #: skins/default/templates/user_stats.html:44
 #, python-format
 msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span class=\"count\">%(cnt)s</span> ääntä"
+msgstr[1] "yksi ääni"
 
 #: skins/default/templates/user_stats.html:50
 msgid "thumb up"
@@ -3675,42 +3835,39 @@ msgstr ""
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span class=\"count\">%(counter)s</span> tagia"
+msgstr[1] "yksi tagi"
 
 #: skins/default/templates/user_stats.html:72
 #, python-format
-msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgid ""
+"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr ""
 
 #: skins/default/templates/user_stats.html:86
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<span class=\"count\">%(counter)s</span> kunniamerkkiä"
+msgstr[1] "yksi arvomerkki"
 
 #: skins/default/templates/user_tabs.html:7
 msgid "User profile"
 msgstr "Profiili"
 
-#: skins/default/templates/user_tabs.html:7
-#: views/users.py:885
+#: skins/default/templates/user_tabs.html:7 views/users.py:885
 msgid "overview"
 msgstr "yhteenveto"
 
-#: skins/default/templates/user_tabs.html:9
-#: views/users.py:893
+#: skins/default/templates/user_tabs.html:9 views/users.py:893
 msgid "recent activity"
 msgstr "uusimmat"
 
-#: skins/default/templates/user_tabs.html:12
-#: views/users.py:903
+#: skins/default/templates/user_tabs.html:12 views/users.py:903
 msgid "comments and answers to others questions"
-msgstr ""
+msgstr "kommentteja ja vastauksia muihin kysymyksiin"
 
-#: skins/default/templates/user_tabs.html:13
-#: views/users.py:902
+#: skins/default/templates/user_tabs.html:13 views/users.py:902
 msgid "responses"
 msgstr "vastaukset"
 
@@ -3722,36 +3879,31 @@ msgstr "Graph of user karma"
 msgid "reputation history"
 msgstr "karma history"
 
-#: skins/default/templates/user_tabs.html:20
-#: views/users.py:929
+#: skins/default/templates/user_tabs.html:20 views/users.py:929
 msgid "user vote record"
 msgstr "äänihistoria"
 
-#: skins/default/templates/user_tabs.html:20
-#: views/users.py:928
+#: skins/default/templates/user_tabs.html:20 views/users.py:928
 msgid "casted votes"
 msgstr "votes"
 
 #: skins/default/templates/user_tabs.html:23
 msgid "questions that user selected as his/her favorite"
-msgstr ""
+msgstr "kysymyksiä, joita tämä käyttäjä on valinnut suosikikseen"
 
 #: skins/default/templates/user_tabs.html:24
 msgid "favorites"
 msgstr "suosikit"
 
-#: skins/default/templates/user_tabs.html:27
-#: views/users.py:938
+#: skins/default/templates/user_tabs.html:27 views/users.py:938
 msgid "email subscription settings"
 msgstr ""
 
-#: skins/default/templates/user_tabs.html:28
-#: views/users.py:937
+#: skins/default/templates/user_tabs.html:28 views/users.py:937
 msgid "email subscriptions"
 msgstr ""
 
-#: skins/default/templates/users.html:6
-#: skins/default/templates/users.html:24
+#: skins/default/templates/users.html:6 skins/default/templates/users.html:24
 msgid "Users"
 msgstr "Käyttäjät"
 
@@ -3797,33 +3949,48 @@ msgstr "Tallenna sähköpostiosoitteesi"
 #: skins/default/templates/authopenid/changeemail.html:16
 #, python-format
 msgid "change %(email)s info"
-msgstr "<span class=\"strong big\">Enter your new email into the box below</span> if you'd like to use another email for <strong>update subscriptions</strong>.<br>Currently you are using <strong>%(email)s</strong>"
+msgstr ""
+"<span class=\"strong big\">Enter your new email into the box below</span> if "
+"you'd like to use another email for <strong>update subscriptions</strong>."
+"<br>Currently you are using <strong>%(email)s</strong>"
 
 #: skins/default/templates/authopenid/changeemail.html:18
 #, python-format
 msgid "here is why email is required, see %(gravatar_faq_url)s"
-msgstr "<span class='strong big'>Please enter your email address in the box below.</span> Valid email address is required on this Q&amp;A forum. If you like, you can <strong>receive updates</strong> on interesting questions or entire forum via email. Also, your email is used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your account. Email addresses are never shown or otherwise shared with anybody else."
+msgstr ""
+"<span class='strong big'>Please enter your email address in the box below.</"
+"span> Valid email address is required on this Q&amp;A forum. If you like, "
+"you can <strong>receive updates</strong> on interesting questions or entire "
+"forum via email. Also, your email is used to create a unique <a href='%"
+"(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your account. "
+"Email addresses are never shown or otherwise shared with anybody else."
 
 #: skins/default/templates/authopenid/changeemail.html:31
 msgid "Your new Email"
-msgstr "<strong>Your new Email:</strong> (will <strong>not</strong> be shown to anyone, must be valid)"
+msgstr "Uusi sähköpostiosoite"
 
 #: skins/default/templates/authopenid/changeemail.html:31
 msgid "Your Email"
-msgstr "<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
+msgstr "Sähköpostiosoite"
 
 #: skins/default/templates/authopenid/changeemail.html:38
 msgid "Save Email"
-msgstr "Tallenna sähköposti"
+msgstr "Tallenna sähköpostiosoite"
 
 #: skins/default/templates/authopenid/changeemail.html:49
 msgid "Validate email"
-msgstr ""
+msgstr "Tarkistuta sähköpostiosoite"
 
 #: skins/default/templates/authopenid/changeemail.html:52
 #, python-format
 msgid "validate %(email)s info or go to %(change_email_url)s"
-msgstr "<span class=\"strong big\">An email with a validation link has been sent to %(email)s.</span> Please <strong>follow the emailed link</strong> with your web browser. Email validation is necessary to help insure the proper use of email on <span class=\"orange\">Q&amp;A</span>. If you would like to use <strong>another email</strong>, please <a href='%(change_email_url)s'><strong>change it again</strong></a>."
+msgstr ""
+"<span class=\"strong big\">An email with a validation link has been sent to %"
+"(email)s.</span> Please <strong>follow the emailed link</strong> with your "
+"web browser. Email validation is necessary to help insure the proper use of "
+"email on <span class=\"orange\">Q&amp;A</span>. If you would like to use "
+"<strong>another email</strong>, please <a href='%(change_email_url)"
+"s'><strong>change it again</strong></a>."
 
 #: skins/default/templates/authopenid/changeemail.html:57
 msgid "Email not changed"
@@ -3832,7 +3999,11 @@ msgstr "Sähköpostia ei vaihdettu"
 #: skins/default/templates/authopenid/changeemail.html:60
 #, python-format
 msgid "old %(email)s kept, if you like go to %(change_email_url)s"
-msgstr "<span class=\"strong big\">Your email address %(email)s has not been changed.</span> If you decide to change it later - you can always do it by editing it in your user profile or by using the <a href='%(change_email_url)s'><strong>previous form</strong></a> again."
+msgstr ""
+"<span class=\"strong big\">Your email address %(email)s has not been changed."
+"</span> If you decide to change it later - you can always do it by editing "
+"it in your user profile or by using the <a href='%(change_email_url)"
+"s'><strong>previous form</strong></a> again."
 
 #: skins/default/templates/authopenid/changeemail.html:65
 msgid "Email changed"
@@ -3841,15 +4012,24 @@ msgstr "Sähköposti muutettu"
 #: skins/default/templates/authopenid/changeemail.html:68
 #, python-format
 msgid "your current %(email)s can be used for this"
-msgstr "<span class='big strong'>Your email address is now set to %(email)s.</span> Updates on the questions that you like most will be sent to this address. Email notifications are sent once a day or less frequently - only when there are any news."
+msgstr ""
+"<span class='big strong'>Your email address is now set to %(email)s.</span> "
+"Updates on the questions that you like most will be sent to this address. "
+"Email notifications are sent once a day or less frequently - only when there "
+"are any news."
 
 #: skins/default/templates/authopenid/changeemail.html:73
 msgid "Email verified"
-msgstr ""
+msgstr "Sähköpostiosoite hyväksytty"
 
 #: skins/default/templates/authopenid/changeemail.html:76
 msgid "thanks for verifying email"
-msgstr "<span class=\"big strong\">Thank you for verifying your email!</span> Now you can <strong>ask</strong> and <strong>answer</strong> questions. Also if you find a very interesting question you can <strong>subscribe for the updates</strong> - then will be notified about changes <strong>once a day</strong> or less frequently."
+msgstr ""
+"<span class=\"big strong\">Thank you for verifying your email!</span> Now "
+"you can <strong>ask</strong> and <strong>answer</strong> questions. Also if "
+"you find a very interesting question you can <strong>subscribe for the "
+"updates</strong> - then will be notified about changes <strong>once a day</"
+"strong> or less frequently."
 
 #: skins/default/templates/authopenid/changeemail.html:81
 msgid "email key not sent"
@@ -3858,15 +4038,20 @@ msgstr "Validation email not sent"
 #: skins/default/templates/authopenid/changeemail.html:84
 #, python-format
 msgid "email key not sent %(email)s change email here %(change_link)s"
-msgstr "<span class='big strong'>Your current email address %(email)s has been validated before</span> so the new key was not sent. You can <a href='%(change_link)s'>change</a> email used for update subscriptions if necessary."
+msgstr ""
+"<span class='big strong'>Your current email address %(email)s has been "
+"validated before</span> so the new key was not sent. You can <a href='%"
+"(change_link)s'>change</a> email used for update subscriptions if necessary."
 
 #: skins/default/templates/authopenid/changeopenid.html:8
 msgid "Account: change OpenID URL"
 msgstr "Tunnus: vaihda OpenID-palvelun URL-osoite"
 
 #: skins/default/templates/authopenid/changeopenid.html:12
-msgid "This is where you can change your OpenID URL. Make sure you remember it!"
+msgid ""
+"This is where you can change your OpenID URL. Make sure you remember it!"
 msgstr ""
+"Tästä voit vaihtaa OpenID-palvelun URL-osoitteen. Pidä osoite mielessäsi!"
 
 #: skins/default/templates/authopenid/changeopenid.html:14
 #: skins/default/templates/authopenid/delete.html:14
@@ -3884,7 +4069,9 @@ msgstr "Vaihda salasanasi"
 
 #: skins/default/templates/authopenid/changepw.html:8
 msgid "This is where you can change your password. Make sure you remember it!"
-msgstr "<span class='strong'>To change your password</span> please fill out and submit this form"
+msgstr ""
+"<span class='strong'>To change your password</span> please fill out and "
+"submit this form"
 
 #: skins/default/templates/authopenid/complete.html:19
 msgid "Connect your OpenID with this site"
@@ -3897,29 +4084,59 @@ msgstr "Kirjautuminen"
 #: skins/default/templates/authopenid/complete.html:27
 #, python-format
 msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr "<p><span class=\"big strong\">You are here for the first time with your %(provider)s login.</span> Please create your <strong>screen name</strong> and save your <strong>email</strong> address. Saved email address will let you <strong>subscribe for the updates</strong> on the most interesting questions and will be used to create and retrieve your unique avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your %"
+"(provider)s login.</span> Please create your <strong>screen name</strong> "
+"and save your <strong>email</strong> address. Saved email address will let "
+"you <strong>subscribe for the updates</strong> on the most interesting "
+"questions and will be used to create and retrieve your unique avatar image - "
+"<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
 
 #: skins/default/templates/authopenid/complete.html:31
 #, python-format
 msgid ""
 "%(username)s already exists, choose another name for \n"
-"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
+"                            %(provider)s. Email is required too, see %"
+"(gravatar_faq_url)s\n"
 "                        "
-msgstr "<p><span class='strong big'>Oops... looks like screen name %(username)s is already used in another account.</span></p><p>Please choose another screen name to use with your %(provider)s login. Also, a valid email address is required on the <span class='orange'>Q&amp;A</span> forum. Your email is used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your account. If you like, you can <strong>receive updates</strong> on the interesting questions or entire forum by email. Email addresses are never shown or otherwise shared with anybody else.</p>"
+msgstr ""
+"<p><span class='strong big'>Oops... looks like screen name %(username)s is "
+"already used in another account.</span></p><p>Please choose another screen "
+"name to use with your %(provider)s login. Also, a valid email address is "
+"required on the <span class='orange'>Q&amp;A</span> forum. Your email is "
+"used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</"
+"strong></a> image for your account. If you like, you can <strong>receive "
+"updates</strong> on the interesting questions or entire forum by email. "
+"Email addresses are never shown or otherwise shared with anybody else.</p>"
 
 #: skins/default/templates/authopenid/complete.html:35
 #, python-format
-msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr "<p><span class=\"big strong\">You are here for the first time with your %(provider)s login.</span></p><p>You can either keep your <strong>screen name</strong> the same as your %(provider)s login name  or choose some other nickname.</p><p>Also, please save a valid <strong>email</strong> address. With the email you can <strong>subscribe for the updates</strong> on the most interesting questions. Email address is also used to create and retrieve your unique avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgid ""
+"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your %"
+"(provider)s login.</span></p><p>You can either keep your <strong>screen "
+"name</strong> the same as your %(provider)s login name  or choose some other "
+"nickname.</p><p>Also, please save a valid <strong>email</strong> address. "
+"With the email you can <strong>subscribe for the updates</strong> on the "
+"most interesting questions. Email address is also used to create and "
+"retrieve your unique avatar image - <a href='%(gravatar_faq_url)"
+"s'><strong>gravatar</strong></a>.</p>"
 
 #: skins/default/templates/authopenid/complete.html:38
 #, python-format
 msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
-msgstr "<p><span class=\"big strong\">You are here for the first time with your Facebook login.</span> Please create your <strong>screen name</strong> and save your <strong>email</strong> address. Saved email address will let you <strong>subscribe for the updates</strong> on the most interesting questions and will be used to create and retrieve your unique avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your "
+"Facebook login.</span> Please create your <strong>screen name</strong> and "
+"save your <strong>email</strong> address. Saved email address will let you "
+"<strong>subscribe for the updates</strong> on the most interesting questions "
+"and will be used to create and retrieve your unique avatar image - <a href='%"
+"(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
 
 #: skins/default/templates/authopenid/complete.html:42
 msgid "This account already exists, please use another."
-msgstr ""
+msgstr "Tämä tunnus on jo käytössä."
 
 #: skins/default/templates/authopenid/complete.html:57
 msgid "Sorry, looks like we have some errors:"
@@ -3927,16 +4144,21 @@ msgstr "Virheitä havaittiin:"
 
 #: skins/default/templates/authopenid/complete.html:82
 msgid "Screen name label"
-msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
+msgstr "Käyttäjätunnus"
 
 #: skins/default/templates/authopenid/complete.html:89
 msgid "Email address label"
-msgstr "<strong>Email Address</strong> (<i>will <strong>not</strong> be shared with anyone, must be valid</i>)"
+msgstr "Sähköpostiosoite"
 
 #: skins/default/templates/authopenid/complete.html:95
 #: skins/default/templates/authopenid/signup.html:18
 msgid "receive updates motivational blurb"
-msgstr "<strong>Receive forum updates by email</strong> - this will help our community grow and become more useful.<br/>By default <span class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest per week</strong>  - only when there is anything new.<br/>If you like, please adjust this now or any time later from your user account."
+msgstr ""
+"<strong>Receive forum updates by email</strong> - this will help our "
+"community grow and become more useful.<br/>By default <span "
+"class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest per "
+"week</strong>  - only when there is anything new.<br/>If you like, please "
+"adjust this now or any time later from your user account."
 
 #: skins/default/templates/authopenid/complete.html:99
 #: skins/default/templates/authopenid/signup.html:22
@@ -3978,7 +4200,7 @@ msgstr ""
 
 #: skins/default/templates/authopenid/confirm_email.txt:4
 msgid "Your account details are:"
-msgstr ""
+msgstr "Tunnuksen tiedot:"
 
 #: skins/default/templates/authopenid/confirm_email.txt:6
 msgid "Username:"
@@ -3999,21 +4221,21 @@ msgstr "Kirjaudu täällä:"
 msgid ""
 "Sincerely,\n"
 "Forum Administrator"
-msgstr ""
-"Sincerely,\n"
-"Q&A Forum Administrator"
+msgstr "Terveisin ylläpito"
 
 #: skins/default/templates/authopenid/delete.html:8
 msgid "Account: delete account"
 msgstr "Tunnus: poista tunnus"
 
 #: skins/default/templates/authopenid/delete.html:12
-msgid "Note: After deleting your account, anyone will be able to register this username."
+msgid ""
+"Note: After deleting your account, anyone will be able to register this "
+"username."
 msgstr ""
 
 #: skins/default/templates/authopenid/delete.html:16
 msgid "Check confirm box, if you want delete your account."
-msgstr ""
+msgstr "Ruksita hyväksymislaatikko, jos haluat poistaa tunnuksesi."
 
 #: skins/default/templates/authopenid/delete.html:31
 msgid "I am sure I want to delete my account."
@@ -4033,7 +4255,7 @@ msgstr "Poista tunnus lopullisesti"
 
 #: skins/default/templates/authopenid/email_validation.txt:2
 msgid "Greetings from the Q&A forum"
-msgstr "Terveiset kysy ja vastaa keskustelupalstalta"
+msgstr "Terveiset"
 
 #: skins/default/templates/authopenid/email_validation.txt:4
 msgid "To make use of the Forum, please follow the link below:"
@@ -4057,21 +4279,29 @@ msgstr "Perinteisen kirjautumisen tiedot"
 
 #: skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
-msgid "how to login with password through external login website or use %(feedback_url)s"
+msgid ""
+"how to login with password through external login website or use %"
+"(feedback_url)s"
 msgstr ""
 
 #: skins/default/templates/authopenid/sendpw.html:4
 #: skins/default/templates/authopenid/sendpw.html:7
 msgid "Send new password"
-msgstr "Recover password"
+msgstr "Lähetä salasana"
 
 #: skins/default/templates/authopenid/sendpw.html:10
 msgid "password recovery information"
-msgstr "<span class='big strong'>Forgot you password? No problems - just get a new one!</span><br/>Please follow the following steps:<br/>&bull; submit your user name below and check your email<br/>&bull; <strong>follow the activation link</strong> for the new password - sent to you by email and login with the suggested password<br/>&bull; at this you might want to change your password to something you can remember better"
+msgstr ""
+"<span class='big strong'>Forgot you password? No problems - just get a new "
+"one!</span><br/>Please follow the following steps:<br/>&bull; submit your "
+"user name below and check your email<br/>&bull; <strong>follow the "
+"activation link</strong> for the new password - sent to you by email and "
+"login with the suggested password<br/>&bull; at this you might want to "
+"change your password to something you can remember better"
 
 #: skins/default/templates/authopenid/sendpw.html:21
 msgid "Reset password"
-msgstr "Send me a new password"
+msgstr "Nollaa salasana"
 
 #: skins/default/templates/authopenid/sendpw.html:22
 msgid "return to login"
@@ -4104,11 +4334,14 @@ msgstr "Kirjautuminen"
 #, python-format
 msgid ""
 "\n"
-"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
+"                Your answer to %(title)s %(summary)s will be posted once you "
+"log in\n"
 "                "
 msgstr ""
 "\n"
-"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be posted once you log in.</span>"
+"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
+"posted once you log in.</span>"
 
 #: skins/default/templates/authopenid/signin.html:35
 #, python-format
@@ -4116,11 +4349,19 @@ msgid ""
 "Your question \n"
 "                %(title)s %(summary)s will be posted once you log in\n"
 "                "
-msgstr "<span class=\"strong big\">Your question</span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be posted once you log in.</span>"
+msgstr ""
+"<span class=\"strong big\">Your question</span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
+"posted once you log in.</span>"
 
 #: skins/default/templates/authopenid/signin.html:42
 msgid "Click to sign in through any of these services."
-msgstr "<p><span class=\"big strong\">Please select your favorite login method below.</span></p><p><font color=\"gray\">External login services use <a href=\"http://openid.net\"><b>OpenID</b></a> technology, where your password always stays confidential between you and your login provider and you don't have to remember another one.</font></p>"
+msgstr ""
+"<p><span class=\"big strong\">Please select your favorite login method below."
+"</span></p><p><font color=\"gray\">External login services use <a href="
+"\"http://openid.net\"><b>OpenID</b></a> technology, where your password "
+"always stays confidential between you and your login provider and you don't "
+"have to remember another one.</font></p>"
 
 # msgid "Click to sign in through any of these services."
 # msgstr ""
@@ -4133,11 +4374,19 @@ msgstr "<p><span class=\"big strong\">Please select your favorite login method b
 # "password entered here.</font></p>"
 #: skins/default/templates/authopenid/signin.html:144
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
-msgstr "<span class=\"big strong\">Enter your </span><span id=\"enter_your_what\" class='big strong'>Provider user name</span><br/><span class='grey'>(or select another login method above)</span>"
+msgstr ""
+"<span class=\"big strong\">Enter your </span><span id=\"enter_your_what\" "
+"class='big strong'>Provider user name</span><br/><span class='grey'>(or "
+"select another login method above)</span>"
 
 #: skins/default/templates/authopenid/signin.html:151
-msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
-msgstr "<span class=\"big strong\">Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address</span><br/><span class='grey'>(or choose another login method above)</span>"
+msgid ""
+"Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
+"web address"
+msgstr ""
+"<span class=\"big strong\">Enter your <a class=\"openid_logo\" href=\"http://"
+"openid.net\">OpenID</a> web address</span><br/><span class='grey'>(or choose "
+"another login method above)</span>"
 
 #: skins/default/templates/authopenid/signin.html:153
 #: skins/default/templates/authopenid/signin.html:166
@@ -4146,7 +4395,9 @@ msgstr "Kirjautuminen"
 
 #: skins/default/templates/authopenid/signin.html:157
 msgid "Enter your login name and password"
-msgstr "<span class='big strong'>Enter your Askbot login and password</span><br/><span class='grey'>(or select your OpenID provider above)</span>"
+msgstr ""
+"<span class='big strong'>Enter your Askbot login and password</span><br/"
+"><span class='grey'>(or select your OpenID provider above)</span>"
 
 #: skins/default/templates/authopenid/signin.html:161
 msgid "Login name"
@@ -4174,11 +4425,14 @@ msgstr "You can safely re-use the same login for all OpenID-enabled websites."
 
 #: skins/default/templates/authopenid/signin.html:187
 msgid "openid is widely adopted"
-msgstr "There are > 160,000,000 OpenID account in use. Over 10,000 sites are OpenID-enabled."
+msgstr ""
+"Maailmanlaajuisesti OpenID:tä käyttää yli 160 miljoonaa ihmistä. "
+"Kymmenettuhannet sivustot käyttävät OpenID-palvelua kirjautumisessa "
+"hyväkseen."
 
 #: skins/default/templates/authopenid/signin.html:190
 msgid "openid is supported open standard"
-msgstr "OpenID is based on an open standard, supported by many organizations."
+msgstr "OpenID on avoin standardi, jota käyttää moni yritys ja organisaatio."
 
 #: skins/default/templates/authopenid/signin.html:195
 msgid "Find out more"
@@ -4198,10 +4452,17 @@ msgstr "Luo tunnus ja salasana"
 
 #: skins/default/templates/authopenid/signup.html:10
 msgid "Traditional signup info"
-msgstr "<span class='strong big'>If you prefer, create your forum login name and password here. However</span>, please keep in mind that we also support <strong>OpenID</strong> login method. With <strong>OpenID</strong> you can simply reuse your external login (e.g. Gmail or AOL) without ever sharing your login details with anyone and having to remember yet another password."
+msgstr ""
+"<span class='strong big'>If you prefer, create your forum login name and "
+"password here. However</span>, please keep in mind that we also support "
+"<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can "
+"simply reuse your external login (e.g. Gmail or AOL) without ever sharing "
+"your login details with anyone and having to remember yet another password."
 
 #: skins/default/templates/authopenid/signup.html:25
-msgid "Please read and type in the two words below to help us prevent automated account creation."
+msgid ""
+"Please read and type in the two words below to help us prevent automated "
+"account creation."
 msgstr ""
 
 #: skins/default/templates/authopenid/signup.html:27
@@ -4219,7 +4480,7 @@ msgstr "palaa OpenID-palvelun kirjautumiseen"
 #: skins/default/templates/fbconnect/xd_receiver.html:5
 #, python-format
 msgid "Connect to %(settings.APP_SHORT_NAME)s with Facebook!"
-msgstr ""
+msgstr "Yhdistä %(settings.APP_SHORT_NAME)s -sivustoon Facebookin avulla!"
 
 #: templatetags/extra_filters.py:100
 msgid "no items in counter"
@@ -4234,19 +4495,18 @@ msgstr "käyttäjän %(username)s gravatar-kuva"
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
 msgid_plural "%(badge_count)d %(badge_level)s badges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(badge_count)d %(badge_level)s kunniamerkkiä"
+msgstr[1] "%(badge_count)d %(badge_level)s kunniamerkki"
 
-#: templatetags/extra_tags.py:187
-#: templatetags/extra_tags.py:234
+#: templatetags/extra_tags.py:187 templatetags/extra_tags.py:234
 #: templatetags/extra_tags.py:238
 msgid "reputation points"
-msgstr "karma"
+msgstr "maine"
 
 #: templatetags/extra_tags.py:230
 #, python-format
 msgid "your karma is %(reputation)s"
-msgstr ""
+msgstr "maineesi on %(reputation)s"
 
 #: templatetags/extra_tags.py:246
 msgid "badges: "
@@ -4255,7 +4515,7 @@ msgstr "kunniamerkit:"
 #: templatetags/extra_tags.py:317
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #: templatetags/extra_tags.py:321
 msgid "2 days ago"
@@ -4269,15 +4529,15 @@ msgstr "eilen"
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hr)d tuntia sitten"
+msgstr[1] "tunti sitten"
 
 #: templatetags/extra_tags.py:327
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(min)d minuuttia sitten"
+msgstr[1] "minuutti sitten"
 
 #: utils/forms.py:32
 msgid "this field is required"
@@ -4309,7 +4569,9 @@ msgstr ""
 
 #: utils/forms.py:57
 msgid "user name can only consist of letters, empty space and underscore"
-msgstr "käyttäjätunnus voi koostua aakkosista (a-z), välilyönneistä ( ) ja alaviivoista (_)"
+msgstr ""
+"käyttäjätunnus voi koostua aakkosista (a-z), välilyönneistä ( ) ja "
+"alaviivoista (_)"
 
 #: utils/forms.py:118
 msgid "your email address"
@@ -4350,7 +4612,9 @@ msgstr ""
 #: views/commands.py:218
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
-msgstr "Your subscription is saved, but email address %(email)s needs to be validated, please see <a href='%(details_url)s'>more details here</a>"
+msgstr ""
+"Your subscription is saved, but email address %(email)s needs to be "
+"validated, please see <a href='%(details_url)s'>more details here</a>"
 
 #: views/commands.py:226
 msgid "email update frequency has been set to daily"
@@ -4368,8 +4632,7 @@ msgstr "Kiitos palautteestasi!"
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: views/users.py:845
-#: views/users.py:849
+#: views/users.py:845 views/users.py:849
 msgid "changes saved"
 msgstr "muutokset talletettu"
 
@@ -4431,7 +4694,8 @@ msgstr "sorry, file uploading requires karma >60"
 
 #: views/writers.py:69
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "hyväksytyt tiedostotyypit ovat 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+msgstr ""
+"hyväksytyt tiedostotyypit ovat 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 
 #: views/writers.py:71
 #, python-format
@@ -4440,61 +4704,82 @@ msgstr "maksimi tiedostonkoko on %s kilotavua"
 
 #: views/writers.py:73
 #, python-format
-msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
-msgstr "Tiedoston lähetyksessä tapahtui virhe. Ota yhteyttä sivuston ylläpitäjiin. Kiitos. %s"
+msgid ""
+"Error uploading file. Please contact the site administrator. Thank you. %s"
+msgstr ""
+"Tiedoston lähetyksessä tapahtui virhe. Ota yhteyttä sivuston ylläpitäjiin. "
+"Kiitos. %s"
 
 #~ msgid "question"
 #~ msgstr "kysymys"
+
 #~ msgid "unanswered/"
 #~ msgstr "vastaaamattomat/"
+
 #~ msgid "nimda/"
 #~ msgstr "hallinta/"
+
 #~ msgid "open any closed question"
 #~ msgstr "avaa mikä tahansa suljettu kysymys"
+
 #~ msgid "books"
 #~ msgstr "kirjat"
+
 #~ msgid "general message about privacy"
 #~ msgstr ""
 #~ "Respecting users privacy is an important core principle of this Q&amp;A "
 #~ "forum. Information on this page details how this forum protects your "
 #~ "privacy, and what type of information is collected."
+
 #~ msgid "Site Visitors"
 #~ msgstr "Sivuston kävijät"
+
 #~ msgid "what technical information is collected about visitors"
 #~ msgstr ""
 #~ "Information on question views, revisions of questions and answers - both "
 #~ "times and content are recorded for each user in order to correctly count "
 #~ "number of views, maintain data integrity and report relevant updates."
+
 #~ msgid "Personal Information"
 #~ msgstr "Henkilökohtaiset tiedot"
+
 #~ msgid "details on personal information policies"
 #~ msgstr ""
 #~ "Members of this community may choose to display personally identifiable "
 #~ "information in their profiles. Forum will never display such information "
 #~ "without a request from the user."
+
 #~ msgid "Other Services"
 #~ msgstr "Muut palvelut"
+
 #~ msgid "details on sharing data with third parties"
 #~ msgstr ""
 #~ "None of the data that is not openly shown on the forum by the choice of "
 #~ "the user is shared with any third party."
+
 #~ msgid "Policy Changes"
 #~ msgstr "Säännönmuutokset"
+
 #~ msgid "how privacy policies can be changed"
 #~ msgstr ""
 #~ "These policies may be adjusted to improve protection of user's privacy. "
 #~ "Whenever such changes occur, users will be notified via the internal "
 #~ "messaging system. "
+
 #~ msgid "Email Validation"
 #~ msgstr "Sähköpostin tarkistus"
+
 #~ msgid "Thank you, your email is now validated."
 #~ msgstr "Sähköpostiosoitteesi on nyt tarkistettu."
+
 #~ msgid "Your password was changed"
 #~ msgstr "Salasanasi vaihdettiin"
+
 #~ msgid "New password set"
 #~ msgstr "Uusi salasana asetettu"
+
 #~ msgid "Welcome back %s, you are now logged in"
 #~ msgstr "Tervetuloa takaisin %s, olet nyt kirjautuneena sisään"
+
 #~ msgid "books/"
 #~ msgstr "kirjat/"
-
