@@ -17,9 +17,9 @@
         {% endspaceless %}
     {% endfor %}
     </div>
-    <input id="interestingTagInput" autocomplete="off" type="text"/>
+    <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
     <input id="interestingTagAdd" type="submit" value="{% trans "Add" %}"/>
-	<h3 class="subtitle">{% trans "Ignored tags" %}</h3>
+    <h3 class="subtitle">{% trans "Ignored tags" %}</h3>
     <div class="tags ignored marked-tags">
     {% for tag_name in ignored_tag_names %}
         {% spaceless %}
@@ -34,10 +34,10 @@
         {% endspaceless %}
     {% endfor %}
     </div>
-    <input id="ignoredTagInput" autocomplete="off" type="text"/>
+    <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
     <input id="ignoredTagAdd" type="submit" value="{% trans "Add" %}"/>
     <p id="hideIgnoredTagsControl">
-    <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />
+    <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />&nbsp;
     <label id="hideIgnoredTagsLabel" for="hideIgnoredTagsCb">{% trans "keep ignored questions hidden" %}</label>
     <p>
 </div>

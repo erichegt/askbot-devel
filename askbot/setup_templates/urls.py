@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     #(r'^cache/', include('keyedcache.urls')), - broken views disable for now
     (r'^settings/', include('askbot.deps.livesettings.urls')),
+    (r'^robots.txt$', include('robots.urls')),
 )
 
 if 'rosetta' in settings.INSTALLED_APPS:

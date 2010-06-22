@@ -113,12 +113,12 @@
                 <strong>{{ form.tags.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br/>
                 {{ form.tags }}  {{ form.tags.errors }}
             </div>
-			<p class="title-desc">
-				{{ form.tags.help_text }}
-			</p>
+            <p class="title-desc">
+                {{ form.tags.help_text }}
+            </p>
             {% if not request.user.is_authenticated %}
             <input type="submit" value="{% trans "Login/signup to post your question" %}" class="submit" />
-			{% else %}
+            {% else %}
             <input type="submit" value="{% trans "Ask your question" %}" class="submit" />
             {% endif %}
         </form>

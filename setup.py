@@ -13,6 +13,7 @@ install_requires = [
     'python-openid',
     'django-keyedcache',
     'django-threaded-multihost',
+    'django-robots',
 ]
 WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
@@ -20,7 +21,7 @@ if sys.platform not in WIN_PLATFORMS:
 
 setup(
     name = "askbot",
-    version = "0.6.3",
+    version = "0.6.4",
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
@@ -42,6 +43,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Natural Language :: English',
+        'Natural Language :: Finnish',
         'Natural Language :: German',
         'Natural Language :: Russian',
         'Natural Language :: Serbian',

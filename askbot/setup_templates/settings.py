@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'south',
     'askbot.deps.livesettings',
     'keyedcache',
+    'robots',
 )
 
 

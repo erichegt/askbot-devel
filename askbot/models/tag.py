@@ -51,18 +51,9 @@ class TagManager(models.Manager):
         transaction.commit_unless_managed()
 
     def get_tags_by_questions(self, questions):
-        question_ids = []
-        if len(questions) == 0:
-            return []
-        for question in questions:
-            question_ids.append(question.id)
-
-        question_ids_str = ','.join([str(id) for id in question_ids])
-        related_tags = self.extra(
-                tables=['tag', 'question_tags'],
-                where=["tag.id = question_tags.tag_id AND question_tags.question_id IN (" + question_ids_str + ")"]
-        ).distinct()
-
+        related_tags = self.filter(
+                            questions__in = list(questions)
+                        ).distinct()
         return related_tags
 
 class Tag(DeletableContent):

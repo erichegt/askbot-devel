@@ -3315,11 +3315,7 @@ msgid_plural ""
 "                %(q_num)s questions found\n"
 "            "
 msgstr[0] ""
-"\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>question</p>"
 msgstr[1] ""
-"\n"
-"<div class=\"questions-count\">%(q_num)s</div><p>questions<p>"
 
 #: forum/skins/default/templates/questions.html:147
 #, python-format

@@ -37,58 +37,56 @@
                     <th></th>
                 </tr>
                 <tr style="height:35px">
-	            	<td>{% trans "Screen Name" %}:</td>
-	            	<td>
-                    {% if settings.EDITABLE_SCREEN_NAME %}
-                        {{ form.username }}
-                    {% else %}
-                        {{ request.user.username }}
-                    {% endif %}
-                    <span class="form-error"></span> {{ form.username.errors }} </td>
-	            </tr>
-                
-	            <tr style="height:35px">
-	            	<td>{{ form.email.label_tag }}:</td>
-	            	<td>{{ form.email }} <span class="form-error"></span> {{ form.email.errors }} </td>
-	            </tr>
+                <td>{% trans "Screen Name" %}:</td>
+                <td>
+                {% if settings.EDITABLE_SCREEN_NAME %}
+                    {{ form.username }}
+                {% else %}
+                    {{ request.user.username }}
+                {% endif %}
+                <span class="form-error"></span> {{ form.username.errors }} </td>
+                </tr>
                 <tr style="height:35px">
-	            	<td></td>
-	            	<td class="title-desc">{{ form.email.help_text }}</td>
-	            </tr>
+                    <td>{{ form.email.label_tag }}:</td>
+                    <td>{{ form.email }} <span class="form-error"></span> {{ form.email.errors }} </td>
+                </tr>
                 <tr style="height:35px">
-	            	<td>{{ form.realname.label_tag }}:</td>
-	            	<td>{{ form.realname }} <span class="form-error"></span> {{ form.realname.errors }} </td>
-	            </tr>
+                    <td></td>
+                    <td class="title-desc">{{ form.email.help_text }}</td>
+                </tr>
                 <tr style="height:35px">
-	            	<td>{{ form.website.label_tag }}:</td>
-	            	<td>{{ form.website }} <span class="form-error"></span> {{ form.website.errors }} </td>
-	            </tr>
+                    <td>{{ form.realname.label_tag }}:</td>
+                    <td>{{ form.realname }} <span class="form-error"></span> {{ form.realname.errors }} </td>
+                </tr>
                 <tr style="height:35px">
-	            	<td>{{ form.city.label_tag }}:</td>
-	            	<td>{{ form.city }} <span class="form-error"></span> {{ form.city.errors }} </td>
-	            </tr>
+                    <td>{{ form.website.label_tag }}:</td>
+                    <td>{{ form.website }} <span class="form-error"></span> {{ form.website.errors }} </td>
+                </tr>
                 <tr style="height:35px">
-	            	<td>{{ form.birthday.label_tag }}:</td>
-	            	<td>{{ form.birthday }} <span class="form-error"></span> {{ form.birthday.errors }} </td>
-	            </tr>
+                    <td>{{ form.city.label_tag }}:</td>
+                    <td>{{ form.city }} <span class="form-error"></span> {{ form.city.errors }} </td>
+                </tr>
                 <tr style="height:35px">
-	            	<td></td>
-	            	<td class="title-desc">{{ form.birthday.help_text }}</td>
-	            </tr>
+                    <td>{{ form.birthday.label_tag }}:</td>
+                    <td>{{ form.birthday }} <span class="form-error"></span> {{ form.birthday.errors }} </td>
+                </tr>
+                <tr style="height:35px">
+                    <td></td>
+                    <td class="title-desc">{{ form.birthday.help_text }}</td>
+                </tr>
                 <tr style="height:10px">
                     <td colspan="2">
                     </td>
                 </tr>
                 <tr>
-	            	<td style="vertical-align:top">{{ form.about.label_tag }}:</td>
-	            	<td>{{ form.about }} <span class="form-error"></span> {{ form.about.errors }} </td>
-	            </tr>
-	            
+                    <td style="vertical-align:top">{{ form.about.label_tag }}:</td>
+                    <td>{{ form.about }} <span class="form-error"></span> {{ form.about.errors }} </td>
+                </tr>
+                
             </table>
             <div style="margin:30px 0 60px 0">
-                <input type="submit" value="{% trans "Update" %}" class="submit" >
+                <input type="submit" value="{% trans "Update" %}" class="submit" >&nbsp;
                 <input id="cancel" type="button" value="{% trans "Cancel" %}" class="submit" >
-          
             </div>
         </div>
     </form>

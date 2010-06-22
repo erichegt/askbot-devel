@@ -189,7 +189,7 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     url(
-        r'^feeds/(?P<url>.*)/$', 
+        r'^feeds/rss/$', 
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},
         name='feeds'
@@ -199,7 +199,7 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('feedback/'), app.meta.feedback, name='feedback'),
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
+    #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
         'django.views.static.serve',
