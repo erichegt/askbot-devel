@@ -172,11 +172,9 @@
     </div>
 {% endif %}
 <div id="listA">
-    {% include "question_list.html" %}
-    {% comment %}
 {% cache 600 questions search_tags scope sort query context.page context.page_size %}
+    {% include "question_list.html" %}
 {% endcache %}
- {% endcomment %}
         {% comment %}todo: fix css here{% endcomment %}
         {% if questions_count == 0 %}
             {% comment %}todo: add tips to widen selection{% endcomment%}
@@ -247,7 +245,7 @@
     {% endif %}
 
     {% if tags %}
-        {% comment%} {% cache 600 tags search_tags scope sort query context.page context.page_size %} {% endcomment %}
+        {% cache 600 tags search_tags scope sort query context.page context.page_size %}
         <div class="boxC">
             <h3 class="subtitle">{% trans "Related tags" %}</h3>
             <div class="tags">
@@ -261,6 +259,7 @@
                 {% endfor %}
             </div>
         </div>
+        {% endcache %}
     {% endif %}
 {% endblock %}
 <!-- end questions.html -->
