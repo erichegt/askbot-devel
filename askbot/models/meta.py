@@ -1,4 +1,5 @@
 import datetime
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from askbot import const
 from askbot.models import base
@@ -192,12 +193,35 @@ class Comment(base.MetaContent, base.UserContent):
         return self.added_at
 
     def delete(self, **kwargs):
+        """deletes comment and concomitant response activity
+        records, as well as mention records, while preserving
+        integrity or response counts for the users
+        """
         #todo: not very good import in models of other models
         #todo: potentially a circular import
         from askbot.models.user import Activity
-        Activity.objects.get_mentions(
-                            mentioned_in = self
-                        ).delete()
+        comment_content_type = ContentType.objects.get_for_model(self)
+        comment_id = self.id
+
+        #on these activities decrement response counter
+        #todo: implement a custom delete method on these
+        #all this should pack into Activity.responses.filter( somehow ).delete()
+        response_activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activities = Activity.objects.filter(
+                            content_type = comment_content_type,
+                            object_id = comment_id,
+                            activity_type__in = response_activity_types
+                        )
+        for activity in activities:
+            for user in activity.receiving_users.all():
+                user.decrement_response_count()
+                user.save()
+        activities.delete()
+
+        #mentions - simply delete
+        mentions = Activity.objects.get_mentions(mentioned_in = self)
+        mentions.delete()
+            
         super(Comment,self).delete(**kwargs)
 
     def get_absolute_url(self):

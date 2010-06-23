@@ -189,7 +189,7 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     url(
-        r'^feeds/rss/$', 
+        r'^feeds/(?P<url>.*)/$', 
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},
         name='feeds'

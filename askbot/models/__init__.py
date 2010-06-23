@@ -226,6 +226,24 @@ def flag_post(user, post, timestamp=None, cancel=False):
             )
         auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
+def user_increment_response_count(user):
+    """increment response counter for user
+    by one
+    """
+    user.response_count += 1
+
+def user_decrement_response_count(user):
+    """decrement response count for the user 
+    by one, log critical error if count would go below zero
+    but limit decrementation at zero exactly
+    """
+    if user.response_count > 0:
+        user.response_count -= 1
+    else:
+        logging.critical(
+                'response count wanted to go below zero'
+            )
+
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
             'get_q_sel_email_feed_frequency',
@@ -241,6 +259,8 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('decrement_response_count', user_decrement_response_count)
+User.add_to_class('increment_response_count', user_increment_response_count)
 
 #todo: move this to askbot/utils ??
 def format_instant_notification_body(
@@ -379,7 +399,7 @@ def record_post_update_activity(
     assert(updated_by not in receiving_users)
 
     for user in set(receiving_users) | set(newly_mentioned_users):
-        user.response_count += 1
+        user.increment_response_count()
         user.save()
 
     #todo: weird thing is that only comments need the receiving_users

@@ -12,7 +12,6 @@ from django.utils.translation import ugettext as _
 from askbot import const
 from askbot.utils import functions
 
-
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
         response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY

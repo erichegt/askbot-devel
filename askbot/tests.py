@@ -129,6 +129,95 @@ class UpdateNotificationTests(TestCase):
                             comment = 'comment33'
                         )
 
+    def post_then_delete_answer_comment(self):
+        pass
+
+    def post_then_delete_answer(self):
+        pass
+
+    def post_then_delete_question_comment(self):
+        pass
+
+    def post_mention_in_question_then_delete(self):
+        pass
+
+    def post_mention_in_answer_then_delete(self):
+        pass
+
+    def post_mention_in_question_then_edit_out(self):
+        pass
+
+    def post_mention_in_answer_then_edit_out(self):
+        pass
+
+    def test_post_mention_in_question_comment_then_delete(self):
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        comment = self.question.add_comment(
+                            user = self.u11,
+                            comment = '@user12 howyou doin?',
+                            added_at = timestamp
+                        )
+        comment.delete()
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 0)
+        self.reload_users()
+        self.assertEqual(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            [
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+            ]
+        )
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        comment = self.answer1.add_comment(
+                            user = self.u21,
+                            comment = 'hey @user22 blah',
+                            added_at = timestamp
+                        )
+        comment.delete()
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 0)
+        self.reload_users()
+        self.assertEqual(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            [
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+                 0, 0, 0, 0,
+            ]
+        )
+
     def test_self_comments(self):
         self.reset_response_counts()
         time.sleep(1)
@@ -636,7 +725,7 @@ class AnonymousVisitorTests(TestCase):
         def try_url(
                 url_name, status_code=200, template=None, 
                 kwargs={}, redirect_url=None, follow=False,
-                data = {}
+                data = {},
             ):
             url = reverse(url_name, kwargs = kwargs)
             url_info = 'getting url %s' % url
@@ -656,6 +745,7 @@ class AnonymousVisitorTests(TestCase):
                 self.assertEqual(r.template[0].name, template)
 
         try_url('sitemap')
+        try_url('feeds', kwargs={'url':'rss'})
         try_url('about', template='about.html')
         try_url('privacy', template='privacy.html')
         try_url('logout', template='logout.html')
