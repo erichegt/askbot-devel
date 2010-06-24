@@ -2,10 +2,10 @@ fieldset { border-style:none; }
 img {border-style:none;}
 
 .logo_box {width:90px;height:40px;background:white;border:1px solid #dddddd;}
-.openid_box img {margin-top:6px;}
-.aol_box img {margin-top:6px;}
-.yahoo_box img {margin-top:13px;}
-.google_box img {margin-top:6px;}
+.openid_box img {margin:6px 0 0 3px;}
+.aol_box img {margin:6px 0 0 5px;}
+.yahoo_box img {margin:13px 0 0 4px;}
+.google_box img {margin:6px 0 0 6px;}
 .local_login_box img {margin-top:2px;margin-left:-3px;}
 
 form.openid ul{ margin:0;padding:0;text-align:center; list-style-type:none; display:block;}
