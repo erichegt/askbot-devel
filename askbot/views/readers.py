@@ -120,8 +120,11 @@ def questions(request):
                         )
 
     objects_list = Paginator(qs, search_state.page_size)
-    questions = objects_list.page(search_state.page)
 
+    if objects_list.num_pages < search_state.page:
+        raise Http404
+
+    questions = objects_list.page(search_state.page)
     #todo maybe do this search on query the set instead
     related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
 
