@@ -26,7 +26,8 @@
        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
-{% cache 600 "scope_sort_tabs" search_tags scope sort query context.page context.page_size %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 600 "scope_sort_tabs" search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
 <div class="tabBar">
     <div class="tabsC">
         <span class="label">{% trans "In:" %}</span>
@@ -172,7 +173,8 @@
     </div>
 {% endif %}
 <div id="listA">
-{% cache 600 questions search_tags scope sort query context.page context.page_size %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 600 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
     {% include "question_list.html" %}
 {% endcache %}
         {% comment %}todo: fix css here{% endcomment %}
@@ -230,7 +232,8 @@
 
 {% block sidebar %}
     {% if contributors %}
-        {% cache 600 contributors search_tags scope sort query context.page context.page_size %}
+        {% get_current_language as LANGUAGE_CODE %}
+        {% cache 600 contributors search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
         <div class="boxC">
         <h3 class="subtitle">{% trans "Contributors" %}</h3>
         {% for person in contributors %}
@@ -245,7 +248,8 @@
     {% endif %}
 
     {% if tags %}
-        {% cache 600 tags search_tags scope sort query context.page context.page_size %}
+        {% get_current_language as LANGUAGE_CODE %}
+        {% cache 600 tags search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
         <div class="boxC">
             <h3 class="subtitle">{% trans "Related tags" %}</h3>
             <div class="tags">
