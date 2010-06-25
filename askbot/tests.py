@@ -1,3 +1,12 @@
+"""
+.. _tests:
+
+:mod:`tests` -- Module for testing Askbot 
+==========================================
+
+.. automodule:: tests 
+  .. moduleauthor:: Evgeny Fadeev <evgeny.fadeev@gmail.com>
+"""
 import datetime
 import time
 from django.test import TestCase
@@ -8,6 +17,8 @@ from askbot.models import EmailFeedSetting
 from askbot import const
 
 def create_user(username = None, email = None):
+    """Creates a user and sets default update subscription
+    settings"""
     user = User.objects.create_user(username, email)
     for feed_type in EmailFeedSetting.FEED_TYPES:
         feed = EmailFeedSetting(

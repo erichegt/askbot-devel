@@ -1,3 +1,11 @@
+"""
+.. _askbot.views.meta:
+
+:mod:`askbot.views.meta` - "secondary" views for askbot
+===============================================================
+
+This module contains a collection of views displaying all sorts of secondary and mostly static content.
+"""
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext

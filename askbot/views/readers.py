@@ -1,4 +1,14 @@
 # encoding:utf-8
+"""
+.. _askbot.views.readers:
+
+:mod:`askbot.views.readers` - read-only views for main textual content
+========================================================================
+
+By main textual content is meant - text of Questions, Answers and Comments.
+The "read-only" requirement here is not 100% strict, as for example "question" view does
+allow adding new comments via Ajax form post.
+"""
 import datetime
 import logging
 from urllib import unquote

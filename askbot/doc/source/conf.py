@@ -17,6 +17,27 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('.'))
+def parent_dir(start_path, levels_up = 1):
+    """returns path of a directory
+    levels_up relative to the start_path
+    """
+    if os.path.isfile(start_path):
+        start_path = os.path.dirname(start_path)
+    for i in range(levels_up):
+        start_path = os.path.dirname(start_path)
+    out_path = start_path
+    return out_path
+
+PROJECT_DIR = parent_dir(__file__, 3)
+PROJECT_MODULE = os.path.basename(PROJECT_DIR)
+os.environ['DJANGO_SETTINGS_MODULE'] = PROJECT_MODULE + '.settings'
+
+sys.path.append(PROJECT_DIR)
+#and a parent to project dir
+sys.path.append(parent_dir(__file__, 4))
+sys.path.append(parent_dir(__file__, 2))
+
+print sys.path
 
 # -- General configuration -----------------------------------------------------
 
@@ -41,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Askbot'
-copyright = u'2010, Evgeny Fadeev'
+copyright = u'2010, Askbot Project'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -78,13 +99,13 @@ exclude_patterns = []
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
-#show_authors = False
+show_authors = True 
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
-#modindex_common_prefix = []
+modindex_common_prefix = ['askbot.']
 
 
 # -- Options for HTML output ---------------------------------------------------

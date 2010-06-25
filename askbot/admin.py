@@ -1,7 +1,15 @@
-"""
-linking of askbot modules to admin interface
-"""
 # -*- coding: utf-8 -*-
+"""
+.. _askbot.admin:
+
+:mod:`askbot.admin` - connector to standard Django admin interface
+===================================================================
+
+Add more classes subclassing ``django.contrib.admin.Model``
+
+Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must 
+exactly match name of the model used in the project
+"""
 from django.contrib import admin
 from askbot import models
 
@@ -14,7 +22,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     """Tag admin class"""
 
-class Answerdmin(admin.ModelAdmin):
+class AnswerAdmin(admin.ModelAdmin):
     """Answer admin class"""
 
 class CommentAdmin(admin.ModelAdmin):
@@ -58,7 +66,7 @@ class ActivityAdmin(admin.ModelAdmin):
     
 admin.site.register(models.Question, QuestionAdmin)
 admin.site.register(models.Tag, TagAdmin)
-admin.site.register(models.Answer, Answerdmin)
+admin.site.register(models.Answer, AnswerAdmin)
 admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.FlaggedItem, FlaggedItemAdmin)

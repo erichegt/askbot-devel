@@ -1,4 +1,12 @@
 # encoding:utf-8
+"""
+.. _askbot.views.writers:
+
+:mod:`askbot.views.writers` - views diplaying and processing post forms
+=========================================================================
+
+This module contains views that allow adding, editing, and deleting main textual content.
+"""
 import os.path
 import time, datetime, random
 from django.core.files.storage import default_storage

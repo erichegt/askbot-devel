@@ -1,3 +1,13 @@
+"""
+.. _askbot.views.commands:
+
+:mod:`askbot.views.commands` - most ajax processors for askbot
+===============================================================
+
+This module contains most (but not all) processors for Ajax requests. 
+Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
+is not always very clean.
+"""
 import datetime
 #todo: maybe eliminate usage of django.settings
 from django.conf import settings
@@ -16,10 +26,10 @@ from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_method, ajax_login_required
 import logging
 
-def vote(request, id):#todo: pretty incomprehensible view used by various ajax calls
-#issues: this subroutine is too long, contains many magic numbers and other issues
-#it's called "vote" but many actions processed here have nothing to do with voting
+def vote(request, id):
     """
+    todo: this subroutine needs serious refactoring it's too long and is hard to understand
+
     vote_type:
         acceptAnswer : 0,
         questionUpVote : 1,
