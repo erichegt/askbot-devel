@@ -1,15 +1,14 @@
-==================
-Upgrading with git
-==================
+.. _upgrading-with-git:
+
+===============================================
+Upgrading Askbot (and other software) with git
+===============================================
 
 Git makes it easy to upgrade software, especially if your version is customized.
 
-Below is a description of a typical upgrade git session. The document assumes
-that your code is already managed with git.
-
 Upgrading with git consists of three steps:
 
-#. preparing your local repository for merge
+#. preparing your local repository for the merge
 #. bringing the latest version of the code onto your system
 #. merging the latest code with your work
 
