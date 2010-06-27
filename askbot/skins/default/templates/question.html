@@ -456,7 +456,8 @@
 {% endblock %}
 
 {% block sidebar %}
-{% cache 600 questions_tags question.id %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 600 questions_tags question.id LANGUAGE_CODE %}
 <div class="boxC">
     <p>
 		{% trans "Question tags" %}:
@@ -480,7 +481,7 @@
     </p>
 </div>
 {% endcache %}
-{% cache 1800 related_questions question.id %}
+{% cache 1800 related_questions question.id LANGUAGE_CODE %}
 <div class="boxC">
     <h3 class="subtitle">{% trans "Related questions" %}</h3>
     <div class="questions-related">
