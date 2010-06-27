@@ -1,6 +1,11 @@
 # Django settings for ASKBOT enabled project.
 import os.path
 import logging
+import sys
+import askbot
+
+#this line is added so that we can import pre-packaged askbot dependencies
+sys.path.append(os.path.join(os.path.dirname(askbot.__file__), 'deps'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

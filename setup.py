@@ -10,7 +10,6 @@ install_requires = [
     'recaptcha-client',
     'markdown2',
     'html5lib',
-    'python-openid',
     'django-keyedcache',
     'django-threaded-multihost',
     'django-robots',
