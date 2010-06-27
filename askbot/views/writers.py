@@ -1,9 +1,6 @@
 # encoding:utf-8
 """
-.. _askbot.views.writers:
-
-:mod:`askbot.views.writers` - views diplaying and processing post forms
-=========================================================================
+:synopsis: views diplaying and processing main content post forms
 
 This module contains views that allow adding, editing, and deleting main textual content.
 """

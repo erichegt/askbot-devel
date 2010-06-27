@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-.. _askbot.admin:
+:synopsis: connector to standard Django admin interface
 
-:mod:`askbot.admin` - connector to standard Django admin interface
-===================================================================
-
-Add more classes subclassing ``django.contrib.admin.Model``
+To make more models accessible in the Django admin interface, add more classes subclassing ``django.contrib.admin.Model``
 
 Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must 
 exactly match name of the model used in the project

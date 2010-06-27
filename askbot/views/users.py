@@ -1,8 +1,5 @@
 """
-.. _askbot.views.users:
-
-:mod:`askbot.views.users` - user-centric views for askbot
-===========================================================
+:synopsis: user-centric views for askbot
 
 This module includes all views that are specific to a given user - his or her profile, 
 and other views showing profile-related information.

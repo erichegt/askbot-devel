@@ -1,8 +1,5 @@
 """
-.. _askbot.views.commands:
-
-:mod:`askbot.views.commands` - most ajax processors for askbot
-===============================================================
+:synopsis: most ajax processors for askbot
 
 This module contains most (but not all) processors for Ajax requests. 
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views

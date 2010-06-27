@@ -1,8 +1,5 @@
 """
-.. _askbot.views.meta:
-
-:mod:`askbot.views.meta` - "secondary" views for askbot
-===============================================================
+:synopsis: remaining "secondary" views for askbot
 
 This module contains a collection of views displaying all sorts of secondary and mostly static content.
 """
