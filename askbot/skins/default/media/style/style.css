@@ -335,9 +335,9 @@ blockquote {
     border-right: 1px solid #820000;
     border-top: 1px solid #d40000;
     border-left: 1px solid #d40000; /*background:#A31E39; */
-    background: #a40000;
+    background: #b03a48;
     color: #FFF;
-    font-weight: 600;
+    font-weight: 800;
     text-decoration: none
 }
 
@@ -587,9 +587,16 @@ blockquote {
 }
 
 .short-summary .counts .item-count {
-    padding-top:4px;
+    border:1px solid #cccccc; 
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    padding:0px 5px 0px 5px;
     font-size: 17px;
     font-weight: 800;
+}
+
+.short-summary .counts .votes div {
+    padding-top:1px;
 }
 
 .short-summary .votes,

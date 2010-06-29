@@ -17,7 +17,7 @@
                 <div class="favorites-count-off">
                     <img title="{% trans "this question was selected as favorite" %}{{question.favourite_count}} {% trans "number of times" %}" 
                         alt="{% trans "thumb-up off" %}"
-						src="{% media  "/media/images/vote-favorite-off.png" %}"/>
+                        src="{% media  "/media/images/vote-favorite-off.png" %}"/>
                     <div><b>{{question.favourite_count|intcomma}}</b></div>
                 </div>
             {% endif %}
@@ -25,7 +25,53 @@
             <div class="favorites-empty"> </div>
         {% endif %}
     <div id="question-summary-{{question.id}}" class="short-summary narrow">
-        {% question_counter_widget question %}
+    <div class="counts">
+        <div class="votes">
+            <span 
+                class="item-count"
+                style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
+            >{{question.score|humanize_counter}}</span>
+            <div>
+            {% blocktrans count question.score as cnt %}
+            vote
+            {% plural %}
+            votes
+            {% endblocktrans %}
+            </div>
+        </div >
+        {% comment %}
+        <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
+        {% endcomment %}
+        <div class="votes"> 
+            <span 
+                class="item-count"
+                {% if question.answer_accepted %}
+                style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                {% else %}
+                style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                {% endif %}
+            >{{question.answer_count|humanize_counter}}</span>
+            <div>
+            {% blocktrans count question.answer_count as cnt %}
+            answer 
+            {% plural %}
+            answers 
+            {% endblocktrans %}
+            </div>
+        </div>
+        <div class="votes">
+             <span class="item-count"
+                style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
+             >{{question.view_count|humanize_counter}}</span>
+            <div>
+            {% blocktrans count question.view_count as cnt %}
+            view
+            {% plural %}
+            views
+            {% endblocktrans %}
+            </div>
+        </div>
+    </div>
         <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
         <div class="tags">
             {% convert2tagname_list question %}

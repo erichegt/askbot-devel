@@ -120,10 +120,13 @@
 {% if questions_count > 0 %}
     <div style="clear:both">
         <p style="float:right;margin:3px 3px 0 0;">
-            (<a style=text-decoration:none;" 
+            (<a style="text-decoration:none;" 
                 href="{{settings.APP_URL}}/feeds/rss/"
                 title="{% trans "subscribe to the questions feed" %}"
-                ><img style="vertical-align:middle;" src="{% media "/media/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
+                ><img 
+                    style="vertical-align:middle;"
+                    alt="{% trans "subscribe to the questions feed" %}"
+                src="{% media "/media/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
         </p>
         <p class="search-result-summary">
         {% if author_name or search_tags or query %}
@@ -174,20 +177,15 @@
 {% endif %}
 <div id="listA">
 {% get_current_language as LANGUAGE_CODE %}
-{% cache 0 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
-    {% comment %}
-    {% include "question_list.html" %}
-    {% endcomment %}
+{% cache 60 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
     {% for question in questions.object_list %}
     <div class="short-summary">
         <div class="counts">
-            <div class="votes" 
-                style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
-                title="{% trans "Please decide if you like this question or not by voting" %}">
-                {% spaceless %}
-                <div class="item-count">
-                    {{question.score|humanize_counter}}
-                </div>
+            <div class="votes">
+                <span 
+                    class="item-count"
+                    style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
+                >{{question.score|humanize_counter}}</span>
                 <div>
                 {% blocktrans count question.score as cnt %}
                 vote
@@ -195,18 +193,19 @@
                 votes
                 {% endblocktrans %}
                 </div>
-                {% endspaceless %}
             </div >
             {% comment %}
             <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
             {% endcomment %}
-            {% if question.answer_accepted %}
-            <div class="votes" style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}">
-            {% else %}
-            <div class="votes" style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}">
-            {% endif %}
-                <div class="item-count">{{question.answer_count|humanize_counter}}</div>
-                {% spaceless %}
+            <div class="votes"> 
+                <span 
+                    class="item-count"
+                    {% if question.answer_accepted %}
+                    style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                    {% else %}
+                    style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                    {% endif %}
+                >{{question.answer_count|humanize_counter}}</span>
                 <div>
                 {% blocktrans count question.answer_count as cnt %}
                 answer 
@@ -214,19 +213,18 @@
                 answers 
                 {% endblocktrans %}
                 </div>
-                {% endspaceless %}
             </div>
-            <div class="views" style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}">
-                {% spaceless %}
-                 <div class="item-count">{{question.view_count|humanize_counter}}</div>
-                 <div>
+            <div class="votes">
+                 <span class="item-count"
+                    style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
+                 >{{question.view_count|humanize_counter}}</span>
+                <div>
                 {% blocktrans count question.view_count as cnt %}
                 view
                 {% plural %}
                 views
                 {% endblocktrans %}
                 </div>
-                {% endspaceless %}
             </div>
         </div>
         <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
@@ -311,7 +309,7 @@
     {% endif %}
 
     {% if request.user.is_authenticated %} 
-        {% include "tag_selector.html" %}
+       {% include "tag_selector.html" %}
     {% endif %}
 
     {% if tags %}
