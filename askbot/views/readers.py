@@ -140,7 +140,8 @@ def questions(request):
     contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
     #todo: organize variables by type
-    return render_to_response('questions.html', {
+    before = datetime.datetime.now()
+    output = render_to_response('questions.html', {
         'view_name': 'questions',
         'active_tab': 'questions',
         'questions' : questions,
@@ -168,6 +169,9 @@ def questions(request):
             'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
             'page_size' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
+    after = datetime.datetime.now()
+    print 'time to render %s' % (after - before)
+    return output
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages

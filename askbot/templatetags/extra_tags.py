@@ -20,6 +20,7 @@ from django.core.urlresolvers import reverse
 from askbot import skins
 from askbot.utils import colors
 from askbot.utils.functions import get_from_dict_or_object
+from askbot.templatetags import extra_filters
 
 register = template.Library()
 
@@ -471,13 +472,18 @@ def fullmedia(url):
     path = media(url)
     return "%s%s" % (domain, path)
 
-@register.inclusion_tag("question_counter_widget.html")
+@register.inclusion_tag('question_counter_widget.html') #too slow
 def question_counter_widget(question):
+    """returns colorized counter widget for a question
 
-    view_count = get_from_dict_or_object(question,'view_count')
-    answer_count = get_from_dict_or_object(question,'answer_count')
-    vote_count = get_from_dict_or_object(question,'score')
-    answer_accepted = get_from_dict_or_object(question,'answer_accepted')
+    .. versionchanged:: 0.6.6
+        switched from inclusion tag style to in-code template string
+        for the better speed of the front page rendering
+    """
+    view_count = get_from_dict_or_object(question, 'view_count')
+    answer_count = get_from_dict_or_object(question, 'answer_count')
+    vote_count = get_from_dict_or_object(question, 'score')
+    answer_accepted = get_from_dict_or_object(question, 'answer_accepted')
 
     #background and foreground colors for each item
     (views_fg, views_bg) = colors.get_counter_colors(
@@ -490,6 +496,8 @@ def question_counter_widget(question):
                 max_bg = askbot_settings.COLORS_VIEW_COUNTER_MAX_BG,
                 max_fg = askbot_settings.COLORS_VIEW_COUNTER_MAX_FG,
             )
+    #views_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
+    #views_bg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
 
     (answers_fg, answers_bg) = colors.get_counter_colors(
                 answer_count,
@@ -501,6 +509,8 @@ def question_counter_widget(question):
                 max_bg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_BG,
                 max_fg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_FG,
             )
+    #answers_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
+    #answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
     if answer_accepted:
         #todo: maybe recalculate the foreground color too
         answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
@@ -516,8 +526,9 @@ def question_counter_widget(question):
                 max_bg = askbot_settings.COLORS_VOTE_COUNTER_MAX_BG,
                 max_fg = askbot_settings.COLORS_VOTE_COUNTER_MAX_FG,
             )
+    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
+    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
 
-    #returns a dictionary with keys like 'votes_bg', etc
     return locals()
 
 class IsManyNode(template.Node):

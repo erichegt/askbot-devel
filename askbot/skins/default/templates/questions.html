@@ -175,7 +175,26 @@
 <div id="listA">
 {% get_current_language as LANGUAGE_CODE %}
 {% cache 600 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+    {% comment %}
     {% include "question_list.html" %}
+    {% endcomment %}
+    {% for question in questions.object_list %}
+    <div class="short-summary">
+        {% question_counter_widget question %}
+        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <div class="userinfo">
+            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+            {% if question.last_activity_by %}
+            &nbsp;<a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a>&nbsp;{% get_score_badge question.last_activity_by %}
+            {% endif %}
+        </div>
+        <div class="tags">
+            {% for tag in question.tagname_list %}
+            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{%endblocktrans %}" rel="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
 {% endcache %}
         {% comment %}todo: fix css here{% endcomment %}
         {% if questions_count == 0 %}

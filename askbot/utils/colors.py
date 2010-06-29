@@ -1,6 +1,8 @@
 from askbot.deps.grapefruit import Color
+import keyedcache
 import math
 
+@keyedcache.cache_function(length=6000)
 def get_counter_colors(count, counter_max=10, empty_bg='white', empty_fg='black', 
                         zero_bg='white', zero_fg='black',
                         min_bg='white', min_fg='black',
