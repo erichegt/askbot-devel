@@ -10,7 +10,7 @@ import logging
 
 log = logging.getLogger('configuration.views')
 
-def group_settings(request, group, template='askbot.deps.livesettings/group_settings.html'):
+def group_settings(request, group, template='livesettings/group_settings.html'):
     # Determine what set of settings this editor is used for
     
     use_db, overrides = get_overrides();
@@ -62,7 +62,7 @@ def site_settings(request):
     mgr = ConfigurationSettings()
     default_group= mgr.groups()[0].key
     return HttpResponseRedirect(reverse('group_settings', args=[default_group]))
-    #return group_settings(request, group=None, template='askbot.deps.livesettings/site_settings.html')
+    #return group_settings(request, group=None, template='livesettings/site_settings.html')
     
 def export_as_python(request):
     """Export site settings as a dictionary of dictionaries"""
