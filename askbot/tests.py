@@ -7,23 +7,38 @@
 .. automodule:: tests 
   .. moduleauthor:: Evgeny Fadeev <evgeny.fadeev@gmail.com>
 """
+import copy
 import datetime
 import time
+import django.core.mail
+from django.conf import settings as django_settings
 from django.test import TestCase
 from django.template import defaultfilters
+from django.core import management
 from django.core.urlresolvers import reverse
 from askbot.models import User, Question, Answer, Activity
 from askbot.models import EmailFeedSetting
 from askbot import const
 
-def create_user(username = None, email = None):
+def create_user(
+            username = None, 
+            email = None, 
+            notification_schedule = None,
+            date_joined = None
+        ):
     """Creates a user and sets default update subscription
     settings"""
     user = User.objects.create_user(username, email)
-    for feed_type in EmailFeedSetting.FEED_TYPES:
+    if date_joined is not None:
+        user.date_joined = date_joined
+        user.save()
+    if notification_schedule == None:
+        notification_schedule = EmailFeedSetting.NO_EMAIL_SCHEDULE
+        
+    for feed_type, frequency in notification_schedule.items():
         feed = EmailFeedSetting(
-                        feed_type = feed_type[0],
-                        frequency = 'n',
+                        feed_type = feed_type,
+                        frequency = frequency,
                         subscriber = user
                     )
         feed.save()
@@ -36,7 +51,247 @@ def get_re_notif_after(timestamp):
         )
     return notifications
 
-class UpdateNotificationTests(TestCase):
+class EmailAlertTests(TestCase):
+    """Base class for testing delayed Email notifications 
+    that are triggered by the send_email_alerts
+    command
+
+    this class tests cases where target user has no subscriptions
+    that is all subscriptions off
+
+    subclasses should redefine initial data via the static
+    class member    this class tests cases where target user has no subscriptions
+    that is all subscriptions off
+
+    this class also defines a few utility methods that do
+    not run any tests themselves
+
+    class variables:
+
+    * notification_schedule
+    * setup_timestamp
+    * visit_timestamp
+    * expected_results
+
+    should be set in subclasses to reuse testing code
+    """
+
+    def send_alerts(self):
+        """runs the send_email_alerts management command
+        and makes a shortcut access to the outbox
+        """
+        #make sure tha we are not sending email for real
+        #this setting must be present in settings.py
+        assert(
+            django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
+        )
+        management.call_command('send_email_alerts')
+
+    def setUp(self):
+        """generic pre-test setup method:
+        
+        * creates user who is to post stuff
+        * creates user who is targeted for this update
+        * subclass must subscribe receiving user
+          with frequency that is to be tested
+          in addition making to any other specific setup
+          manipulations
+        """
+        #empty email subscription schedule
+        #no email is sent
+        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
+        #timestamp to use for the setup
+        #functions
+        self.setup_timestamp = datetime.datetime.now()
+
+        #must call this after setting up the notification schedule
+        #and only in this class, any subclasses
+        #must call this setUp() first thing
+        #before setting their own notification schedule
+        #and after that - setUpUsers()
+        self.setUpUsers()
+        
+        #timestamp to use for the question visit
+        #by the target user
+        #if this timestamp is None then there will be no visit
+        #otherwise question will be visited by the target user
+        #at that time
+        self.visit_timestamp = None
+
+        #dictionary to hols expected results for each test
+        #actual data@is initialized in the code just before the function
+        #or in the body of the subclass
+        self.expected_results = dict()
+
+        #fill out expected result for each test
+        self.expected_results['q_ask'] = { 'message_count': 0, }
+        self.expected_results['question_comment'] = { 'message_count': 0, }
+
+    def setUpUsers(self):
+        self.other_user = create_user(
+            username = 'other', 
+            email = 'other@domain.com',
+            date_joined = self.setup_timestamp
+        )
+        self.target_user = create_user(
+            username = 'target',
+            email = 'target@domain.com',
+            notification_schedule = self.notification_schedule,
+            date_joined = self.setup_timestamp
+        )
+
+    def post_comment(
+                self,
+                author = None,
+                parent_post = None,
+                body_text = 'dummy test comment',
+                timestamp = None
+            ):
+        """posts and returns a comment to parent post, uses 
+        now timestamp if not given, dummy body_text 
+        author is required
+        """
+        comment = author.post_comment(
+                        parent_post = parent_post,
+                        body_text = body_text,
+                        timestamp = timestamp,
+                    )
+        return comment
+
+    def post_question(
+                self, 
+                author = None, 
+                timestamp = None,
+                title = 'test question title',
+                body_text = 'test question body',
+                tags = 'test',
+            ):
+        """post a question with dummy content
+        and return it
+        """
+        return author.post_question(
+                            title = 'test question',
+                            body_text = 'test question body',
+                            tags = 'test',
+                            timestamp = timestamp
+                        )
+
+    def maybe_visit_question(self, user = None):
+        """visits question on behalf of a given user and applies 
+        a timestamp set in the class attribute ``visit_timestamp``
+
+        if ``visit_timestamp`` is None, then visit is skipped
+
+        parameter ``user`` is optional if not given, the visit will occur
+        on behalf of the user stored in the class attribute ``target_user``
+        """
+        if self.visit_timestamp:
+            if user is None:
+                user = self.target_user
+
+            user.visit_post(
+                        question = question,
+                        timestamp = self.visit_timestamp
+                    )
+
+    def post_answer(
+                self,
+                question = None,
+                author = None,
+                body_text = 'test answer body',
+                timestamp = None
+            ):
+        """post answer with dummy content and return it
+        """
+        return author.post_answer(
+                    question = question,
+                    body_text = body_text,
+                    timestamp = timestamp
+                )
+
+    def check_results(self, test_key = None):
+        if test_key is None:
+            raise ValueError('test_key parameter is required')
+        expected = self.expected_results[test_key]
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), expected['message_count'])
+        if expected['message_count'] > 0:
+            if len(outbox) > 0:
+                self.assertEqual(
+                            outbox[0].recipients()[0], 
+                            self.target_user.email
+                        )
+
+    def test_question_comment(self):
+        """target user posts question other user posts a comment
+        target user does or does not receive email notification
+        depending on the setup parameters
+
+        in the base class user does not receive a notification
+        """
+        question = self.post_question(
+                    author = self.target_user,
+                    timestamp = self.setup_timestamp,
+                )
+        self.post_comment(
+                    author = self.other_user,
+                    parent_post = question,
+                    timestamp = self.setup_timestamp
+                )
+        self.maybe_visit_question(question)
+        self.send_alerts()
+        self.check_results('question_comment')
+
+    def test_q_ask(self):
+        """target user posts question
+        other user answer the question
+        """
+        question = self.post_question(
+                    author = self.target_user,
+                    timestamp = self.setup_timestamp,
+                )
+        answer = self.post_answer(
+                    question = question,
+                    author = self.other_user,
+                    timestamp = self.setup_timestamp + datetime.timedelta(1)
+                )
+        self.maybe_visit_question(question)
+        self.send_alerts()
+        self.check_results('q_ask')
+
+class WeeklyQAskEmailAlertTests(EmailAlertTests):
+    def setUp(self):
+        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
+        self.notification_schedule['q_ask'] = 'w'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+
+        self.setUpUsers() #must call create_users after super.setUp() and schedule
+
+        self.visit_timestamp = None
+
+        self.expected_results = dict()
+        self.expected_results['q_ask'] = {'message_count': 1}
+        self.expected_results['question_comment'] = {'message_count': 0}
+
+class WeeklyMentionsAndCommentsEmailAlertTests(EmailAlertTests):
+    def setUp(self):
+        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
+        self.notification_schedule['m_and_c'] = 'w'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+
+        self.setUpUsers()
+
+        self.visit_timestamp = None
+
+        self.expected_results = dict()
+        self.expected_results['q_ask'] = {'message_count': 0}
+        self.expected_results['question_comment'] = {'message_count': 1}
+
+class OnScreenUpdateNotificationTests(TestCase):
+    """Test update notifications that are displayed on
+    screen in the user profile responses view
+    and "the red envelope"
+    """
 
     def reset_response_counts(self):
         self.reload_users()

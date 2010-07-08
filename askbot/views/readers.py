@@ -344,47 +344,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
             question.view_count += 1
             question.save()
 
-        #2) question view count per user
+        #2) question view count per user and clear response displays
         if request.user.is_authenticated():
 
             #get response notifications
-            ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-            ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
-            response_activities = Activity.objects.filter(
-                                        receiving_users = request.user,
-                                        activity_type__in = ACTIVITY_TYPES,
-                                    )
-            try:
-                question_view = QuestionView.objects.get(
-                                                who=request.user,
-                                                question=question
-                                            )
-                response_activities = response_activities.filter(
-                                            active_at__gt = question_view.when
-                                        )
-            except QuestionView.DoesNotExist:
-                question_view = QuestionView(
-                                        who=request.user, 
-                                        question=question
-                                    )
-            question_view.when = datetime.datetime.now()
-            question_view.save()
-
-            #filter response activities (already directed to the qurrent user
-            #as per the query in the beginning of this if branch)
-            #that refer to the children of the currently
-            #viewed question and clear them for the current user
-            for activity in response_activities:
-                post = activity.content_object
-                if hasattr(post, 'get_origin_post'):
-                    if question == post.get_origin_post():
-                        activity.receiving_users.remove(request.user)
-                        request.user.decrement_response_count()
-                        request.user.save()
-                else:
-                    logging.critical(
-                        'activity content object has no get_origin_post method'
-                    )
+            request.user.visit_question()
 
     return render_to_response('question.html', {
         'view_name': 'question',

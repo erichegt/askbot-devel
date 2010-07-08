@@ -12,7 +12,16 @@ from askbot import const
 
 
 class AnswerManager(models.Manager):
-    def create_new(self, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
+    def create_new(
+                self, 
+                question=None, 
+                author=None, 
+                added_at=None, 
+                wiki=False, 
+                text='', 
+                email_notify=False
+            ):
+
         answer = Answer(
             question = question,
             author = author,

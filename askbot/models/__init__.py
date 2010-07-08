@@ -59,6 +59,131 @@ User.add_to_class('tag_filter_setting',
                  )
 User.add_to_class('response_count', models.IntegerField(default=0))
 
+def user_post_comment(
+                    self,
+                    parent_post = None,
+                    body_text = None,
+                    timestamp = None,
+                ):
+    """post a comment on behalf of the user
+    to parent_post
+    """
+    if body_text is None:
+        raise ValueError('body_text is required to post comment')
+    if parent_post is None:
+        raise ValueError('parent_post is required to post question')
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
+    comment = parent_post.add_comment(
+                    user = self,
+                    comment = body_text,
+                    added_at = timestamp,
+                )
+    #print comment
+    #print 'comment id is %s' % comment.id
+    #print len(Comment.objects.all())
+    return comment
+
+def user_post_question(
+                    self,
+                    title = None,
+                    body_text = None,
+                    tags = None,
+                    wiki = False,
+                    timestamp = None
+                ):
+    if title is None:
+        raise ValueError('Title is required to post question')
+    if  body_text is None:
+        raise ValueError('Text body is required to post question')
+    if tags is None:
+        raise ValueError('Tags are required to post question')
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
+
+    question = Question.objects.create_new(
+                                    author = self,
+                                    title = title,
+                                    text = body_text,
+                                    tagnames = tags,
+                                    added_at = timestamp,
+                                    wiki = wiki
+                                )
+    return question
+
+def user_post_answer(
+                    self,
+                    question = None,
+                    body_text = None,
+                    follow = False,
+                    timestamp = None
+                ):
+    if not isinstance(question, Question):
+        raise TypeError('question argument must be provided')
+    if body_text is None:
+        raise ValueError('Body text is required to post answer')
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
+    answer = Answer.objects.create_new(
+                                    question = question,
+                                    author = self,
+                                    text = body_text,
+                                    added_at = timestamp,
+                                    email_notify = follow
+                                )
+    return answer
+
+def user_visit_question(self, question = None, timestamp = None):
+    """create a QuestionView record
+    on behalf of the user represented by the self object
+    and mark it as taking place at timestamp time
+
+    and remove pending on-screen notifications about anything in 
+    the post - question, answer or comments
+    """
+    if not isinstance(question, Question):
+        raise TypeError('question type expected')
+    if timestamp is None:
+        timestamp = datetime.datetime.now()
+
+    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
+    response_activities = Activity.objects.filter(
+                                receiving_users = self,
+                                activity_type__in = ACTIVITY_TYPES,
+                            )
+    try:
+        question_view = QuestionView.objects.get(
+                                        who = self,
+                                        question = question
+                                    )
+        response_activities = response_activities.filter(
+                                    active_at__gt = question_view.when
+                                )
+    except QuestionView.DoesNotExist:
+        question_view = QuestionView(
+                                who = self, 
+                                question = question
+                            )
+    question_view.when = timestamp
+    question_view.save()
+
+    #filter response activities (already directed to the qurrent user
+    #as per the query in the beginning of this if branch)
+    #that refer to the children of the currently
+    #viewed question and clear them for the current user
+    for activity in response_activities:
+        post = activity.content_object
+        if hasattr(post, 'get_origin_post'):
+            if question == post.get_origin_post():
+                activity.receiving_users.remove(self)
+                self.decrement_response_count()
+        else:
+            logging.critical(
+                'activity content object has no get_origin_post method'
+            )
+    self.save()
+
 def user_is_username_taken(cls,username):
     try:
         cls.objects.get(username=username)
@@ -250,6 +375,10 @@ User.add_to_class(
             user_get_q_sel_email_feed_frequency
         )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
+User.add_to_class('post_question', user_post_question)
+User.add_to_class('post_answer', user_post_answer)
+User.add_to_class('post_comment', user_post_comment)
+User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)

@@ -15,9 +15,8 @@ class Command(NoArgsCommand):
 
     def subscribe_everyone(self):
 
-        feed_type_info = EmailFeedSetting.FEED_TYPES
         for user in User.objects.all():
-            for feed_type in feed_type_info:
+            for feed_type in EmailFeedSetting.FEED_TYPES:
                 try:
                     feed_setting = EmailFeedSetting.objects.get(
                                                 subscriber=user,
