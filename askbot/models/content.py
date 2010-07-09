@@ -86,7 +86,10 @@ class Content(models.Model):
         comment class has it's own variant which does have quite a bit
         of duplicated code at the moment
         """
+        #print '------------------'
+        #print 'in content function'
         subscriber_set = set()
+        #print 'potential subscribers: ', potential_subscribers
 
         #1) mention subscribers - common to questions and answers
         if mentioned_users:
@@ -99,17 +102,18 @@ class Content(models.Model):
 
         origin_post = self.get_origin_post()
 
+        #print origin_post
+
         #2) individually selected - make sure that users
         #are individual subscribers to this question
         selective_subscribers = origin_post.followed_by.all()
-        #print [s for s in selective_subscribers]
+        #print 'question followers are ', [s for s in selective_subscribers]
         if selective_subscribers:
             selective_subscribers = EmailFeedSetting.filter_subscribers(
                                 potential_subscribers = selective_subscribers,
                                 feed_type = 'q_sel',
                                 frequency = 'i'
                             )
-            #print 'selective_subscribers filtereed are ', selective_subscribers
             for subscriber in selective_subscribers:
                 if origin_post.passes_tag_filter_for_user(subscriber):
                     #print subscriber, ' passes tag filter'
@@ -117,6 +121,7 @@ class Content(models.Model):
                 else:
                     #print 'does not pass tag filter'
                     pass
+            #print 'selective subscribers: ', selective_subscribers
 
             #subscriber_set.update(selective_subscribers)
 
@@ -147,12 +152,13 @@ class Content(models.Model):
             answer_authors.update(authors)
 
         if answer_authors:
-            answer_authors = EmailFeedSetting.filter_subscribers(
+            answer_subscribers = EmailFeedSetting.filter_subscribers(
                                     potential_subscribers = answer_authors,
                                     frequency = 'i',
                                     feed_type = 'q_ans',
                                 )
-            subscriber_set.update(answer_authors)
+            subscriber_set.update(answer_subscribers)
+            #print 'answer subscribers: ', answer_subscribers
 
         #print 'exclude_list is ', exclude_list
         subscriber_set -= set(exclude_list)

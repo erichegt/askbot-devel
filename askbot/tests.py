@@ -67,8 +67,11 @@ def setup_email_alert_tests(setup_func):
 
         #fill out expected result for each test
         test_object.expected_results['q_ask'] = {'message_count': 0, }
+        test_object.expected_results['q_ask_delete_answer'] = {'message_count': 0, }
         test_object.expected_results['question_comment'] = {'message_count': 0, }
+        test_object.expected_results['question_comment_delete'] = {'message_count': 0, }
         test_object.expected_results['answer_comment'] = {'message_count': 0, }
+        test_object.expected_results['answer_delete_comment'] = {'message_count': 0, }
         test_object.expected_results['mention_in_question'] = {'message_count': 0, }
         test_object.expected_results['mention_in_answer'] = {'message_count': 0, }
         test_object.expected_results['question_edit'] = {'message_count': 0, }
@@ -263,16 +266,27 @@ class EmailAlertTests(TestCase):
                 question = None,
                 author = None,
                 body_text = 'test answer body',
-                timestamp = None
+                timestamp = None,
+                follow = None,#None - do nothing, True/False - follow/unfollow
             ):
         """post answer with dummy content and return it
         """
         if timestamp is None:
             timestamp = self.setup_timestamp
+
+        if follow is None:
+            if author.is_following(question):
+                follow = True
+            else:
+                follow = False
+        elif follow not in (True, False):
+            raise ValueError('"follow" may be only None, True or False')
+
         return author.post_answer(
                     question = question,
                     body_text = body_text,
-                    timestamp = timestamp
+                    timestamp = timestamp,
+                    follow = follow,
                 )
 
     def check_results(self, test_key = None):
@@ -295,10 +309,8 @@ class EmailAlertTests(TestCase):
                             error_message
                         )
 
-    @email_alert_test
-    def test_answer_comment(self):
-        """target user posts answer and other user posts a comment
-        to the answer
+    def proto_post_answer_comment(self):
+        """base method for use in some tests
         """
         question = self.post_question(
                             author = self.other_user
@@ -307,11 +319,23 @@ class EmailAlertTests(TestCase):
                             question = question,
                             author = self.target_user
                         )
-        self.post_comment(
+        comment = self.post_comment(
                     parent_post = answer,
                     author = self.other_user,
                 )
-        self.question = question
+        return comment
+
+    @email_alert_test
+    def test_answer_comment(self):
+        """target user posts answer and other user posts a comment
+        to the answer
+        """
+        self.proto_post_answer_comment()
+
+    @email_alert_test
+    def test_answer_delete_comment(self):
+        comment = self.proto_post_answer_comment()
+        comment.user.delete_post(comment)
 
     @email_alert_test
     def test_question_edit(self):
@@ -350,6 +374,16 @@ class EmailAlertTests(TestCase):
                             )
         self.question = question
 
+    def proto_question_comment(self):
+        question = self.post_question(
+                    author = self.target_user,
+                )
+        comment = self.post_comment(
+                    author = self.other_user,
+                    parent_post = question,
+                )
+        return comment
+
     @email_alert_test
     def test_question_comment(self):
         """target user posts question other user posts a comment
@@ -358,19 +392,23 @@ class EmailAlertTests(TestCase):
 
         in the base class user does not receive a notification
         """
-        question = self.post_question(
-                    author = self.target_user,
-                )
-        self.post_comment(
-                    author = self.other_user,
-                    parent_post = question,
-                )
-        self.question = question
+        self.proto_question_comment()
 
     @email_alert_test
-    def test_q_ask(self):
-        """target user posts question
-        other user answer the question
+    def test_question_comment_delete(self):
+        """target user posts question other user posts a comment
+        target user does or does not receive email notification
+        depending on the setup parameters
+
+        in the base class user does not receive a notification
+        """
+        comment = self.proto_question_comment()
+        comment.user.delete_post(comment)
+
+    def proto_test_q_ask(self):
+        """base method for tests that
+        have name containing q_ask - i.e. target asks other answers
+        answer is returned
         """
         question = self.post_question(
                     author = self.target_user,
@@ -378,9 +416,20 @@ class EmailAlertTests(TestCase):
         answer = self.post_answer(
                     question = question,
                     author = self.other_user,
-                    #timestamp = self.setup_timestamp + datetime.timedelta(1)
                 )
-        self.question = question
+        return answer
+
+    @email_alert_test
+    def test_q_ask(self):
+        """target user posts question
+        other user answer the question
+        """
+        self.proto_test_q_ask()
+
+    @email_alert_test
+    def test_q_ask_delete_answer(self):
+        answer = self.proto_test_q_ask()
+        self.other_user.delete_post(answer)
 
     @email_alert_test
     def test_q_ans(self):
@@ -441,8 +490,45 @@ class WeeklyQAskEmailAlertTests(EmailAlertTests):
         self.notification_schedule['q_ask'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
         self.expected_results['q_ask'] = {'message_count': 1}
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 0}
         self.expected_results['question_edit'] = {'message_count': 1, }
         self.expected_results['answer_edit'] = {'message_count': 1, }
+
+        #local tests
+        self.expected_results['question_edit_reedited_recently'] = \
+                                                    {'message_count': 1}
+        self.expected_results['answer_edit_reedited_recently'] = \
+                                                    {'message_count': 1}
+
+    @email_alert_test
+    def test_question_edit_reedited_recently(self):
+        question = self.post_question(
+                        author = self.target_user
+                    )
+        self.edit_post(
+                    post = question,
+                    author = self.other_user,
+                )
+        self.edit_post(
+                    post = question,
+                    author = self.other_user,
+                    timestamp = datetime.datetime.now() - datetime.timedelta(1)
+                )
+
+    @email_alert_test
+    def test_answer_edit_reedited_recently(self):
+        question = self.post_question(
+                        author = self.target_user
+                    )
+        answer = self.post_answer(
+                    question = question,
+                    author = self.other_user,
+                )
+        self.edit_post(
+                    post = answer,
+                    author = self.other_user,
+                    timestamp = datetime.datetime.now() - datetime.timedelta(1)
+                )
 
 class WeeklyMentionsAndCommentsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
@@ -450,7 +536,9 @@ class WeeklyMentionsAndCommentsEmailAlertTests(EmailAlertTests):
         self.notification_schedule['m_and_c'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
         self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 0, }
         self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
         self.expected_results['mention_in_question'] = {'message_count': 1, }
         self.expected_results['mention_in_answer'] = {'message_count': 1, }
 
@@ -468,6 +556,7 @@ class InstantQAskEmailAlertTests(EmailAlertTests):
         self.notification_schedule['q_ask'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.expected_results['q_ask'] = {'message_count': 1}
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
         self.expected_results['question_edit'] = {'message_count': 1, }
         self.expected_results['answer_edit'] = {'message_count': 1, }
 
@@ -478,8 +567,11 @@ class InstantWholeForumEmailAlertTests(EmailAlertTests):
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
 
         self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
         self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
         self.expected_results['answer_comment'] = {'message_count': 2, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 2, }
         self.expected_results['mention_in_question'] = {'message_count': 1, }
         self.expected_results['mention_in_answer'] = {'message_count': 2, }
         self.expected_results['question_edit'] = {'message_count': 1, }
@@ -519,8 +611,11 @@ class LiveWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
         self.follow_question = True
 
         self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 0}
         self.expected_results['question_comment'] = {'message_count': 0, }
+        self.expected_results['question_comment_delete'] = {'message_count': 0, }
         self.expected_results['answer_comment'] = {'message_count': 0, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
         self.expected_results['mention_in_question'] = {'message_count': 1, }
         self.expected_results['mention_in_answer'] = {'message_count': 1, }
         self.expected_results['question_edit'] = {'message_count': 1, }
@@ -540,14 +635,17 @@ class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
         self.follow_question = True
 
         self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
         self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
         self.expected_results['answer_comment'] = {'message_count': 1, }
-        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 0, }
         self.expected_results['mention_in_answer'] = {'message_count': 1, }
         self.expected_results['question_edit'] = {'message_count': 1, }
         self.expected_results['answer_edit'] = {'message_count': 1, }
         self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
-        self.expected_results['q_ans'] = {'message_count': 1, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
         self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
@@ -556,9 +654,26 @@ class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
         self.notification_schedule['m_and_c'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
         self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 1, }
         self.expected_results['mention_in_question'] = {'message_count': 1, }
         self.expected_results['mention_in_answer'] = {'message_count': 1, }
+
+        #specialized local test case
+        self.expected_results['question_edited_mention_stays'] = {'message_count': 1}
+
+    @email_alert_test
+    def test_question_edited_mention_stays(self):
+        question = self.post_question(
+                        author = self.other_user,
+                        body_text = 'hey @target check this one',
+                    )
+        self.edit_post(
+                    post = question,
+                    author = self.other_user,
+                    body_text = 'yoyo @target do look here'
+                )
 
 class InstantQAnsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests

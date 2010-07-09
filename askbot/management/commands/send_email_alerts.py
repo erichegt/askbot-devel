@@ -365,14 +365,16 @@ class Command(NoArgsCommand):
                 
             new_ans = Answer.objects.filter(
                                             question=q,
-                                            added_at__gt=emailed_at
+                                            added_at__gt=emailed_at,
+                                            deleted=False,
                                         )
 
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
             ans_rev = AnswerRevision.objects.filter(
-                                            answer__question=q,
-                                            revised_at__gt=emailed_at
+                                            answer__question = q,
+                                            answer__deleted = False,
+                                            revised_at__gt = emailed_at
                                         )
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
@@ -380,11 +382,14 @@ class Command(NoArgsCommand):
             comments = meta_data.get('comments', 0)
             mentions = meta_data.get('mentions', 0)
 
+            #print meta_data
             #finally skip question if there are no news indeed
             if len(q_rev) + len(new_ans) + len(ans_rev) + comments + mentions == 0:
                 meta_data['skip'] = True
+                #print 'skipping'
             else:
                 meta_data['skip'] = False
+                #print 'not skipping'
                 update_info.active_at = datetime.datetime.now() 
                 if DEBUG_THIS_COMMAND == False:
                     update_info.save() #save question email update activity 

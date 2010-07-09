@@ -136,6 +136,8 @@ class Comment(base.MetaContent, base.UserContent):
 
         argument potential_subscribers is required as it saves on db hits
         """
+        #print 'in meta function'
+        #print 'potential subscribers: ', potential_subscribers
 
         subscriber_set = set()
 
@@ -154,6 +156,7 @@ class Comment(base.MetaContent, base.UserContent):
                                         frequency = 'i'
                                     )
             subscriber_set.update(comment_subscribers)
+            #print 'comment subscribers: ', comment_subscribers
 
         origin_post = self.get_origin_post()
         selective_subscribers = origin_post.followed_by.all()
@@ -168,15 +171,21 @@ class Comment(base.MetaContent, base.UserContent):
                     subscriber_set.add(subscriber)
 
             subscriber_set.update(selective_subscribers)
+            #print 'selective subscribers: ', selective_subscribers
 
         global_subscribers = EmailFeedSetting.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
                                         )
+        #print 'global subscribers: ', global_subscribers
 
         subscriber_set.update(global_subscribers)
+
+        #print 'exclude list is: ', exclude_list
         if exclude_list:
             subscriber_set -= set(exclude_list)
+
+        #print 'final list of subscribers:', subscriber_set
 
         return list(subscriber_set)
 

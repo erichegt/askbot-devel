@@ -84,6 +84,16 @@ def user_post_comment(
     #print len(Comment.objects.all())
     return comment
 
+def user_delete_post(
+                    self,
+                    post = None,
+                    timestamp = None
+                ):
+    if isinstance(post, Comment):
+        post.delete()
+    else:
+        auth.onDeleted(post, self, timestamp = timestamp)
+
 def user_post_question(
                     self,
                     title = None,
@@ -110,6 +120,19 @@ def user_post_question(
                                     wiki = wiki
                                 )
     return question
+
+def user_is_following(self, followed_item):
+    if isinstance(followed_item, Question):
+        followers = User.objects.filter(
+                                id = self.id,
+                                followed_questions = followed_item,
+                            )
+        if self in followers:
+            return True
+        else:
+            return False
+    else:
+        raise NotImplementedError('function only works for questions so far')
 
 def user_post_answer(
                     self,
@@ -386,6 +409,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('post_comment', user_post_comment)
+User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
@@ -398,6 +422,7 @@ User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
+User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 
@@ -441,7 +466,9 @@ def format_instant_notification_body(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    return template.render(Context(update_data))
+    output = template.render(Context(update_data))
+    #print output
+    return output
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
