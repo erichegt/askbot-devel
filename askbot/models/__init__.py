@@ -316,6 +316,14 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
         else:
             auth.onDownVoted(vote, post, user, timestamp)
 
+def user_unfollow_question(self, question = None):
+    if self in question.followed_by.all():
+        question.followed_by.remove(self)
+
+def user_follow_question(self, question = None):
+    if self not in question.followed_by.all():
+        question.followed_by.add(self)
+
 def upvote(self, post, timestamp=None, cancel=False):
     _process_vote(
         self,post,
@@ -388,6 +396,8 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('follow_question', user_follow_question)
+User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 
@@ -425,9 +435,11 @@ def format_instant_notification_body(
 
     update_data = {
         'update_author_name': from_user.username,
+        'receiving_user_name': to_user.username,
+        'update_type': update_type,
         'post_url': site_url + post.get_absolute_url(),
         'origin_post_title': origin_post.title,
-        'user_subscriptions_url': user_subscriptions_url
+        'user_subscriptions_url': user_subscriptions_url,
     }
     return template.render(Context(update_data))
 
@@ -435,13 +447,16 @@ def format_instant_notification_body(
 def send_instant_notifications_about_activity_in_post(
                                                 update_activity = None,
                                                 post = None,
-                                                receiving_users = [],
+                                                receiving_users = None,
                                             ):
     """
     function called when posts are updated
     newly mentioned users are carried through to reduce
     database hits
     """
+
+    if receiving_users is None:
+        return
 
     acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
 
@@ -471,7 +486,7 @@ def send_instant_notifications_about_activity_in_post(
                         django_settings.DEFAULT_FROM_EMAIL,
                         [user.email]
                     )
-            #msg.send()
+            msg.send()
             #print text
             EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
             email_activity = Activity(
@@ -534,17 +549,17 @@ def record_post_update_activity(
     #todo: weird thing is that only comments need the receiving_users
     #todo: debug these calls and then uncomment in the repo
     #argument to this call
-    #notification_subscribers = post.get_instant_notification_subscribers(
-    #                                potential_subscribers = receiving_users,
-    #                                mentioned_users = newly_mentioned_users,
-    #                                exclude_list = [updated_by, ]
-    #                            )
+    notification_subscribers = post.get_instant_notification_subscribers(
+                                    potential_subscribers = receiving_users,
+                                    mentioned_users = newly_mentioned_users,
+                                    exclude_list = [updated_by, ]
+                                )
 
-    #send_instant_notifications_about_activity_in_post(
-    #                        update_activity = update_activity,
-    #                        post = post,
-    #                        receiving_users = notification_subscribers,
-    #                    )
+    send_instant_notifications_about_activity_in_post(
+                            update_activity = update_activity,
+                            post = post,
+                            receiving_users = notification_subscribers,
+                        )
 
 
 def record_award_event(instance, created, **kwargs):

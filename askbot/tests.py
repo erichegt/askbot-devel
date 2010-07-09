@@ -10,6 +10,7 @@
 import copy
 import datetime
 import time
+import functools
 import django.core.mail
 from django.conf import settings as django_settings
 from django.test import TestCase
@@ -19,6 +20,70 @@ from django.core.urlresolvers import reverse
 from askbot.models import User, Question, Answer, Activity
 from askbot.models import EmailFeedSetting
 from askbot import const
+
+def email_alert_test(test_func):
+    """decorator for test methods in EmailAlertTests
+    wraps tests with a generic sequence of testing
+    email alerts on updates to anything relating to
+    given question
+    """
+    @functools.wraps(test_func)
+    def wrapped_test(test_object, *args, **kwargs):
+        func_name = test_func.__name__
+        if func_name.startswith('test_'):
+            test_name = func_name.replace('test_', '', 1)
+            test_func(test_object)
+            test_object.maybe_visit_question()
+            test_object.send_alerts()
+            test_object.check_results(test_name)
+        else:
+            raise ValueError('test method names must have prefix "test_"')
+    return wrapped_test 
+
+def setup_email_alert_tests(setup_func):
+    @functools.wraps(setup_func)
+    def wrapped_setup(test_object, *args, **kwargs):
+        #empty email subscription schedule
+        #no email is sent
+        test_object.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
+        #timestamp to use for the setup
+        #functions
+        test_object.setup_timestamp = datetime.datetime.now()
+
+        #timestamp to use for the question visit
+        #by the target user
+        #if this timestamp is None then there will be no visit
+        #otherwise question will be visited by the target user
+        #at that time
+        test_object.visit_timestamp = None
+
+        #dictionary to hols expected results for each test
+        #actual data@is initialized in the code just before the function
+        #or in the body of the subclass
+        test_object.expected_results = dict()
+
+        #do not follow by default (do not use q_sel type subscription)
+        test_object.follow_question = False
+
+        #fill out expected result for each test
+        test_object.expected_results['q_ask'] = {'message_count': 0, }
+        test_object.expected_results['question_comment'] = {'message_count': 0, }
+        test_object.expected_results['answer_comment'] = {'message_count': 0, }
+        test_object.expected_results['mention_in_question'] = {'message_count': 0, }
+        test_object.expected_results['mention_in_answer'] = {'message_count': 0, }
+        test_object.expected_results['question_edit'] = {'message_count': 0, }
+        test_object.expected_results['answer_edit'] = {'message_count': 0, }
+        test_object.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        test_object.expected_results['q_ans'] = {'message_count': 0, }
+        test_object.expected_results['q_ans_new_answer'] = {'message_count': 0, }
+
+        #this function is expected to contain a difference between this
+        #one and the desired setup within the concrete test
+        setup_func(test_object)
+        #must call this after setting up the notification schedule
+        #because it is needed in setUpUsers() function
+        test_object.setUpUsers()
+    return wrapped_setup
 
 def create_user(
             username = None, 
@@ -87,45 +152,18 @@ class EmailAlertTests(TestCase):
         )
         management.call_command('send_email_alerts')
 
+    @setup_email_alert_tests
     def setUp(self):
         """generic pre-test setup method:
         
-        * creates user who is to post stuff
-        * creates user who is targeted for this update
-        * subclass must subscribe receiving user
-          with frequency that is to be tested
-          in addition making to any other specific setup
-          manipulations
+        this function is empty - because it's intendend content is
+        entirely defined by the decorator
+
+        the ``setUp()`` function in any subclass must only enter differences
+        between the default version (defined in the decorator) and the
+        desired version in the "real" test
         """
-        #empty email subscription schedule
-        #no email is sent
-        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
-        #timestamp to use for the setup
-        #functions
-        self.setup_timestamp = datetime.datetime.now()
-
-        #must call this after setting up the notification schedule
-        #and only in this class, any subclasses
-        #must call this setUp() first thing
-        #before setting their own notification schedule
-        #and after that - setUpUsers()
-        self.setUpUsers()
-        
-        #timestamp to use for the question visit
-        #by the target user
-        #if this timestamp is None then there will be no visit
-        #otherwise question will be visited by the target user
-        #at that time
-        self.visit_timestamp = None
-
-        #dictionary to hols expected results for each test
-        #actual data@is initialized in the code just before the function
-        #or in the body of the subclass
-        self.expected_results = dict()
-
-        #fill out expected result for each test
-        self.expected_results['q_ask'] = { 'message_count': 0, }
-        self.expected_results['question_comment'] = { 'message_count': 0, }
+        pass
 
     def setUpUsers(self):
         self.other_user = create_user(
@@ -151,12 +189,34 @@ class EmailAlertTests(TestCase):
         now timestamp if not given, dummy body_text 
         author is required
         """
+        if timestamp is None:
+            timestamp = self.setup_timestamp
         comment = author.post_comment(
                         parent_post = parent_post,
                         body_text = body_text,
                         timestamp = timestamp,
                     )
         return comment
+
+    def edit_post(
+                self,
+                author = None,
+                post = None,
+                timestamp = None,
+                body_text = 'edited body text',
+            ):
+        """todo: this method may also edit other stuff
+        like post title and tags - in the case when post is
+        of type question
+        """
+        if timestamp is None:
+            timestamp = self.setup_timestamp
+        post.apply_edit(
+                    edited_by = author,
+                    edited_at = timestamp,
+                    text = body_text,
+                    comment = 'nothing serious'
+                )
 
     def post_question(
                 self, 
@@ -169,12 +229,17 @@ class EmailAlertTests(TestCase):
         """post a question with dummy content
         and return it
         """
-        return author.post_question(
-                            title = 'test question',
-                            body_text = 'test question body',
-                            tags = 'test',
+        if timestamp is None:
+            timestamp = self.setup_timestamp
+        self.question = author.post_question(
+                            title = title,
+                            body_text = body_text,
+                            tags = tags,
                             timestamp = timestamp
                         )
+        if self.follow_question:
+            self.target_user.follow_question(self.question)
+        return self.question
 
     def maybe_visit_question(self, user = None):
         """visits question on behalf of a given user and applies 
@@ -188,9 +253,8 @@ class EmailAlertTests(TestCase):
         if self.visit_timestamp:
             if user is None:
                 user = self.target_user
-
             user.visit_post(
-                        question = question,
+                        question = self.question,
                         timestamp = self.visit_timestamp
                     )
 
@@ -203,6 +267,8 @@ class EmailAlertTests(TestCase):
             ):
         """post answer with dummy content and return it
         """
+        if timestamp is None:
+            timestamp = self.setup_timestamp
         return author.post_answer(
                     question = question,
                     body_text = body_text,
@@ -214,14 +280,77 @@ class EmailAlertTests(TestCase):
             raise ValueError('test_key parameter is required')
         expected = self.expected_results[test_key]
         outbox = django.core.mail.outbox
-        self.assertEqual(len(outbox), expected['message_count'])
+        error_message =  'emails_sent=%d, expected=%d, function=%s.test_%s' % (
+                                                    len(outbox),
+                                                    expected['message_count'],
+                                                    self.__class__.__name__,
+                                                    test_key,
+                                                )
+        self.assertEqual(len(outbox), expected['message_count'], error_message)
         if expected['message_count'] > 0:
             if len(outbox) > 0:
                 self.assertEqual(
                             outbox[0].recipients()[0], 
-                            self.target_user.email
+                            self.target_user.email,
+                            error_message
                         )
 
+    @email_alert_test
+    def test_answer_comment(self):
+        """target user posts answer and other user posts a comment
+        to the answer
+        """
+        question = self.post_question(
+                            author = self.other_user
+                        )
+        answer = self.post_answer(
+                            question = question,
+                            author = self.target_user
+                        )
+        self.post_comment(
+                    parent_post = answer,
+                    author = self.other_user,
+                )
+        self.question = question
+
+    @email_alert_test
+    def test_question_edit(self):
+        question = self.post_question(
+                                author = self.target_user
+                            )
+        self.edit_post(
+                    post = question,
+                    author = self.other_user
+                )
+        self.question = question
+
+    @email_alert_test
+    def test_answer_edit(self):
+        question = self.post_question(
+                                author = self.target_user
+                            )
+        answer = self.post_answer(
+                                question = question,
+                                author = self.target_user
+                            )
+        self.edit_post(
+                    post = answer,
+                    author = self.other_user
+                )
+        self.question = question
+
+    @email_alert_test
+    def test_question_and_answer_by_target(self):
+        question = self.post_question(
+                                author = self.target_user
+                            )
+        answer = self.post_answer(
+                                question = question,
+                                author = self.target_user
+                            )
+        self.question = question
+
+    @email_alert_test
     def test_question_comment(self):
         """target user posts question other user posts a comment
         target user does or does not receive email notification
@@ -231,61 +360,213 @@ class EmailAlertTests(TestCase):
         """
         question = self.post_question(
                     author = self.target_user,
-                    timestamp = self.setup_timestamp,
                 )
         self.post_comment(
                     author = self.other_user,
                     parent_post = question,
-                    timestamp = self.setup_timestamp
                 )
-        self.maybe_visit_question(question)
-        self.send_alerts()
-        self.check_results('question_comment')
+        self.question = question
 
+    @email_alert_test
     def test_q_ask(self):
         """target user posts question
         other user answer the question
         """
         question = self.post_question(
                     author = self.target_user,
-                    timestamp = self.setup_timestamp,
                 )
         answer = self.post_answer(
                     question = question,
                     author = self.other_user,
-                    timestamp = self.setup_timestamp + datetime.timedelta(1)
+                    #timestamp = self.setup_timestamp + datetime.timedelta(1)
                 )
-        self.maybe_visit_question(question)
-        self.send_alerts()
-        self.check_results('q_ask')
+        self.question = question
+
+    @email_alert_test
+    def test_q_ans(self):
+        """other user posts question
+        target user post answer
+        """
+        question = self.post_question(
+                                author = self.other_user,
+                            )
+        self.post_answer(
+                    question = question,
+                    author = self.target_user
+                )
+        self.question = question
+
+    @email_alert_test
+    def test_q_ans_new_answer(self):
+        """other user posts question
+        target user post answer and other user
+        posts another answer
+        """
+        question = self.post_question(
+                                author = self.other_user,
+                            )
+        self.post_answer(
+                    question = question,
+                    author = self.target_user
+                )
+        self.post_answer(
+                    question = question,
+                    author = self.other_user
+                )
+        self.question = question
+
+    @email_alert_test
+    def test_mention_in_question(self):
+        question = self.post_question(
+                                author = self.other_user,
+                                body_text = 'hey @target get this'
+                            )
+        self.question = question
+
+    @email_alert_test
+    def test_mention_in_answer(self):
+        question = self.post_question(
+                                author = self.other_user,
+                            )
+        self.post_answer(
+                    question = question,
+                    author = self.other_user,
+                    body_text = 'hey @target check this out'
+                )
+        self.question = question
 
 class WeeklyQAskEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
     def setUp(self):
-        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
         self.notification_schedule['q_ask'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
-
-        self.setUpUsers() #must call create_users after super.setUp() and schedule
-
-        self.visit_timestamp = None
-
-        self.expected_results = dict()
         self.expected_results['q_ask'] = {'message_count': 1}
-        self.expected_results['question_comment'] = {'message_count': 0}
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
 
 class WeeklyMentionsAndCommentsEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
     def setUp(self):
-        self.notification_schedule = copy.deepcopy(EmailFeedSetting.NO_EMAIL_SCHEDULE)
         self.notification_schedule['m_and_c'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
 
-        self.setUpUsers()
+class WeeklyQAnsEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_ans'] = 'w'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
-        self.visit_timestamp = None
+class InstantQAskEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_ask'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.expected_results['q_ask'] = {'message_count': 1}
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
 
-        self.expected_results = dict()
-        self.expected_results['q_ask'] = {'message_count': 0}
-        self.expected_results['question_comment'] = {'message_count': 1}
+class InstantWholeForumEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_all'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 2, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 2, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 2, }
+
+class BlankWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
+    """blank means that this is testing for the absence of email
+    because questions are not followed as set by default in the
+    parent class
+    """
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_sel'] = 'w'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+
+class BlankInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
+    """blank means that this is testing for the absence of email
+    because questions are not followed as set by default in the
+    parent class
+    """
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_sel'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+
+class LiveWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
+    """live means that this is testing for the presence of email
+    as all questions are automatically followed by user here
+    """
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_sel'] = 'w'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+        self.follow_question = True
+
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['question_comment'] = {'message_count': 0, }
+        self.expected_results['answer_comment'] = {'message_count': 0, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
+
+class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
+    """live means that this is testing for the presence of email
+    as all questions are automatically followed by user here
+    """
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_sel'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.follow_question = True
+
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
+
+class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['m_and_c'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
+
+class InstantQAnsEmailAlertTests(EmailAlertTests):
+    @setup_email_alert_tests
+    def setUp(self):
+        self.notification_schedule['q_ans'] = 'i'
+        self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class OnScreenUpdateNotificationTests(TestCase):
     """Test update notifications that are displayed on

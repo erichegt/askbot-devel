@@ -90,48 +90,46 @@ class Content(models.Model):
 
         #1) mention subscribers - common to questions and answers
         if mentioned_users:
-            mention_subscribers = EmailFeedSetting.objects.filter(
-                                            subscriber__in = mentioned_users,
+            mention_subscribers = EmailFeedSetting.filter_subscribers(
+                                            potential_subscribers = mentioned_users,
                                             feed_type = 'm_and_c',
                                             frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
                                         )
             subscriber_set.update(mention_subscribers)
 
-        origin_post = self.get_origin_post()#handy to make generic method
+        origin_post = self.get_origin_post()
 
         #2) individually selected - make sure that users
         #are individual subscribers to this question
         selective_subscribers = origin_post.followed_by.all()
+        #print [s for s in selective_subscribers]
         if selective_subscribers:
-            selective_subscribers = EmailFeedSetting.objects.filter(
-                                                subscriber__in = selective_subscribers,
-                                                feed_type = 'q_sel',
-                                                frequency = 'i'
-                                            ).values_list(
-                                                    'subscriber', 
-                                                    flat=True
-                                            )
+            selective_subscribers = EmailFeedSetting.filter_subscribers(
+                                potential_subscribers = selective_subscribers,
+                                feed_type = 'q_sel',
+                                frequency = 'i'
+                            )
+            #print 'selective_subscribers filtereed are ', selective_subscribers
             for subscriber in selective_subscribers:
                 if origin_post.passes_tag_filter_for_user(subscriber):
+                    #print subscriber, ' passes tag filter'
                     subscriber_set.add(subscriber)
+                else:
+                    #print 'does not pass tag filter'
+                    pass
 
-            subscriber_set.update(selective_subscribers)
+            #subscriber_set.update(selective_subscribers)
 
-        #3) whole askbot subscibers
-        global_subscribers = EmailFeedSetting.objects.filter(
+        #3) whole forum subscibers
+        global_subscribers = EmailFeedSetting.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
                                         )
+
         #todo: apply tag filters here
         subscriber_set.update(global_subscribers)
 
-        #4) question asked by me
+        #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
         if EmailFeedSetting.objects.filter(
                                             subscriber = question_author,
@@ -149,17 +147,17 @@ class Content(models.Model):
             answer_authors.update(authors)
 
         if answer_authors:
-            answer_authors = EmailFeedSetting.objects.filter(
-                                            subscriber__in = answer_authors,
-                                            frequency = 'i',
-                                            feed_type = 'q_ans',
-                                        ).values_list(
-                                            'subscriber',
-                                            flat=True
-                                        )
+            answer_authors = EmailFeedSetting.filter_subscribers(
+                                    potential_subscribers = answer_authors,
+                                    frequency = 'i',
+                                    feed_type = 'q_ans',
+                                )
             subscriber_set.update(answer_authors)
+
+        #print 'exclude_list is ', exclude_list
         subscriber_set -= set(exclude_list)
 
+        #print 'final subscriber set is ', subscriber_set
         return list(subscriber_set)
 
     def passes_tag_filter_for_user(user):
@@ -213,13 +211,24 @@ class Content(models.Model):
     def passes_tag_filter_for_user(self, user):
         tags = self.get_origin_post().tags.all()
 
-        if self.tag_filter_setting == 'interesting':
+        if user.tag_filter_setting == 'interesting':
             #at least some of the tags must be marked interesting
-            return self.tag_selections.exists(tag__in = tags, reason = 'good')
+            interesting_selections = self.tag_selections.exists(
+                                        tag__in = tags, 
+                                        reason = 'good'
+                                    )
+            if interesting_selections.count() > 1:
+                return True
+            else:
+                return False
 
-        elif self.tag_filter_setting == 'ignored':
+        elif user.tag_filter_setting == 'ignored':
             #at least one tag must be ignored
-            if self.tag_selections.exists(tag__in = tags, reason = 'bad'):
+            ignored_selections = user.tag_selections.filter(
+                                                tag__in = tags, 
+                                                reason = 'bad'
+                                            )
+            if ignored_selections.count() > 1:
                 return False
             else:
                 return True

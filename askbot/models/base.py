@@ -123,13 +123,16 @@ def parse_and_save_post(post, author = None, **kwargs):
     #because generic relation needs primary key of the related object
     super(post.__class__, post).save(**kwargs)
 
+    timestamp = post.get_time_of_last_edit()
+
     #create new mentions
     for u in newly_mentioned_users:
         from askbot.models.user import Activity
         Activity.objects.create_new_mention(
                                 mentioned_whom = u,
                                 mentioned_in = post,
-                                mentioned_by = author 
+                                mentioned_by = author,
+                                mentioned_at = timestamp
                             )
 
     #todo: this is handled in signal because models for posts
@@ -139,7 +142,7 @@ def parse_and_save_post(post, author = None, **kwargs):
                     post = post, 
                     updated_by = author,
                     newly_mentioned_users = newly_mentioned_users,
-                    timestamp = post.get_time_of_last_edit(),
+                    timestamp = timestamp,
                     created = created,
                     sender = post.__class__
                 )

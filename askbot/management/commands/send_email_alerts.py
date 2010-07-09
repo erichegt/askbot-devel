@@ -89,7 +89,11 @@ class Command(NoArgsCommand):
         views
         """
 
-        user_feeds = EmailFeedSetting.objects.filter(subscriber=user).exclude(frequency='n')
+        user_feeds = EmailFeedSetting.objects.filter(
+                                                subscriber=user
+                                            ).exclude(
+                                                frequency__in=('n', 'i')
+                                            )
 
         should_proceed = False
         for feed in user_feeds:
@@ -240,13 +244,10 @@ class Command(NoArgsCommand):
                                             user = user
                                         )
                 q_commented = list() 
-                i = 0
                 for c in comments:
                     post = c.content_object
                     if post.author != user:
                         continue
-                    else:
-                        i += 1
 
                     #skip is post was seen by the user after
                     #the comment posting time
@@ -260,9 +261,15 @@ class Command(NoArgsCommand):
                             )
 
                 mentions = Activity.objects.get_mentions(
-                                                    mentioned_at__gt = cutoff_time,
+                                                    mentioned_at__lt = cutoff_time,
                                                     mentioned_whom = user
                                                 )
+
+                #print 'have %d mentions' % len(mentions)
+                #MM = Activity.objects.filter(activity_type = const.TYPE_ACTIVITY_MENTION)
+                #print 'have %d total mentions' % len(MM)
+                #for m in MM:
+                #    print m
 
                 mention_posts = get_all_origin_posts(mentions)
                 q_mentions_id = [q.id for q in mention_posts]

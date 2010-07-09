@@ -148,39 +148,30 @@ class Comment(base.MetaContent, base.UserContent):
             potential_subscribers.update(mentioned_users)
 
         if potential_subscribers:
-            comment_subscribers = EmailFeedSetting.objects.filter(
-                                            subscriber__in = potential_subscribers,
-                                            feed_type = 'm_and_c',
-                                            frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
-                                        )
+            comment_subscribers = EmailFeedSetting.filter_subscribers(
+                                        potential_subscribers = potential_subscribers,
+                                        feed_type = 'm_and_c',
+                                        frequency = 'i'
+                                    )
             subscriber_set.update(comment_subscribers)
 
         origin_post = self.get_origin_post()
         selective_subscribers = origin_post.followed_by.all()
         if selective_subscribers:
-            selective_subscribers = EmailFeedSetting.objects.filter(
-                                                subscriber__in = selective_subscribers,
-                                                feed_type = 'q_sel',
-                                                frequency = 'i'
-                                            ).values_list(
-                                                    'subscriber', 
-                                                    flat=True
-                                            )
+            selective_subscribers = EmailFeedSetting.filter_subscribers(
+                                    potential_subscribers = selective_subscribers,
+                                    feed_type = 'q_sel',
+                                    frequency = 'i'
+                                )
             for subscriber in selective_subscribers:
                 if origin_post.passes_tag_filter_for_user(subscriber):
                     subscriber_set.add(subscriber)
 
             subscriber_set.update(selective_subscribers)
 
-        global_subscribers = EmailFeedSetting.objects.filter(
+        global_subscribers = EmailFeedSetting.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
                                         )
 
         subscriber_set.update(global_subscribers)

@@ -90,7 +90,7 @@ class ActivityManager(models.Manager):
                 mentioned_at = None,
                 mentioned_in = None,
                 reported = None,
-                mentioned_at__gt = None,
+                mentioned_at__lt = None,
             ):
         """extract mention-type activity objects
         todo: implement better rich field lookups
@@ -101,10 +101,10 @@ class ActivityManager(models.Manager):
         kwargs['activity_type'] = const.TYPE_ACTIVITY_MENTION
 
         if mentioned_at:
-            #todo: handle cases with rich lookups here like __lt
+            #todo: handle cases with rich lookups here like __lt, __gt and others
             kwargs['active_at'] = mentioned_at
-        elif mentioned_at__gt:
-            kwargs['active_at__gt'] = mentioned_at__gt
+        elif mentioned_at__lt:
+            kwargs['active_at__lt'] = mentioned_at__lt
 
         if mentioned_by:
             kwargs['user'] = mentioned_by
@@ -189,7 +189,7 @@ class EmailFeedSetting(models.Model):
         'm_and_c': 'n'
     }
     FEED_TYPE_CHOICES = (
-                    ('q_all',_('Entire askbot')),
+                    ('q_all',_('Entire forum')),
                     ('q_ask',_('Questions that I asked')),
                     ('q_ans',_('Questions that I answered')),
                     ('q_sel',_('Individually selected questions')),
@@ -235,6 +235,37 @@ class EmailFeedSetting(models.Model):
         if len(similar) > 0:
             raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
+
+    @classmethod
+    def filter_subscribers(
+                        cls,
+                        potential_subscribers = None,
+                        feed_type = None,
+                        frequency = None
+                    ):
+        """returns set of users who have matching subscriptions
+        and if potential_subscribers is not none, search will
+        be limited to only potential subscribers,
+
+        otherwise search is unrestricted
+
+        todo: when EmailFeedSetting is merged into user table
+        this method may become unnecessary
+        """
+        matching_feeds = cls.objects.filter(
+                                        feed_type = feed_type,
+                                        frequency = frequency
+                                    )
+        if potential_subscribers is not None:
+            matching_feeds.filter(
+                            subscriber__in = potential_subscribers
+                        )
+        subscriber_set = set()
+        for feed in matching_feeds:
+            subscriber_set.add(feed.subscriber)
+
+        return subscriber_set
+
 
     def get_previous_report_cutoff_time(self):
         now = datetime.datetime.now()

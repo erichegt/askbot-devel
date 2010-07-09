@@ -217,7 +217,7 @@ def vote(request, id):
                 user = request.user
                 if user.is_authenticated():
                     if user not in question.followed_by.all():
-                        question.followed_by.add(user)
+                        user.follow_question(question)
                         if askbot_settings.EMAIL_VALIDATION == True \
                             and user.email_isvalid == False:
 
@@ -240,8 +240,7 @@ def vote(request, id):
             elif vote_type == '12':#unsubscribe q updates
                 user = request.user
                 if user.is_authenticated():
-                    if user in question.followed_by.all():
-                        question.followed_by.remove(user)
+                    user.unfollow_question(question)
         else:
             response_data['success'] = 0
             response_data['message'] = u'Request mode is not supported. Please try again.'
