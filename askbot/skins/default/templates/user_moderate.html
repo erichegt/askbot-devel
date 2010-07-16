@@ -1,0 +1,21 @@
+{% extends "user.html" %}
+<!-- user_moderate.html -->
+{% load i18n %}
+{% load smart_if %}
+{% block usercontent %}
+{% if request.user != view_user %}
+    <p>{% blocktrans with view_user.username as username and view_user.get_status_display as status %}{{username}}'s current status is "{{status}}"{% endblocktrans %}
+    </p>
+    <form method="post">
+    <input type="hidden" name="sort" value="moderate"/>
+    {{ change_user_status_form.as_table }}<br/>
+    <input type="submit" class="submit" name="change_status" value="{% trans "Save" %}" />
+    </form>
+{% endif %}
+
+<!---
+{{ change_user_reputation_form.as_table }}
+<input type="submit" class="submit" name="subtract" value="{% trans "Subtract" %}" />&nbsp;
+<input type="submit" class="submit" name="add" value="{% trans "Add" %}" />
+-->
+{% endblock %}

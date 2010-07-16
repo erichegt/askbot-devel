@@ -1501,6 +1501,14 @@ table.form-as-table th {
     font-weight: normal;
 }
 
+table.ab-subscr-form {
+    width: 45em;
+}
+
+table.ab-tag-filter-form {
+    width: 45em;
+}
+
 /*.form-row li label {
     display: inline
 }*/

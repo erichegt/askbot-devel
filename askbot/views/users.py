@@ -22,6 +22,7 @@ from askbot.utils.html import sanitize_html
 from askbot import auth
 from askbot import forms
 import calendar
+import functools
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
@@ -45,6 +46,18 @@ comment_type_id = comment_type.id
 question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
+
+def owner_or_moderator_required(f):
+    @functools.wraps(f)
+    def wrapped_func(request, profile_owner):
+        if profile_owner == request.user:
+            pass
+        elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
+            pass
+        else:
+            raise Http404 #todo: change to access forbidden?
+        return f(request, profile_owner)
+    return wrapped_func 
 
 def users(request):
     is_paginated = True
@@ -113,28 +126,42 @@ def users(request):
                     context_instance=RequestContext(request)
                 )
 
-@login_required
-def moderate_user(request, id):
-    """ajax handler of user moderation
+def user_moderate(request, subject):
+    """user subview for moderation 
     """
-    if not auth.can_moderate_users(request.user) or request.method != 'POST':
+    moderator = request.user
+
+    if not moderator.can_moderate_user(subject):
         raise Http404
-    if not request.is_ajax():
-        return HttpResponseForbidden(mimetype="application/json")
 
-    user = get_object_or_404(models.User, id=id)
-    form = forms.ModerateUserForm(request.POST, instance=user)
+    if request.method == 'POST':
+        if 'change_status' in request.POST:
+            user_status_form = forms.ChangeUserStatusForm(
+                                                    request.POST,
+                                                    moderator = moderator,
+                                                    subject = subject
+                                                )
+            if user_status_form.is_valid():
+                subject.set_status( user_status_form.cleaned_data['user_status'] )
 
-    if form.is_valid():
-        form.save()
-        logging.debug('data saved')
-        response = HttpResponse(
-                            simplejson.dumps(''), 
-                            mimetype="application/json"
-                        )
-    else:
-        response = HttpResponseForbidden(mimetype="application/json")
-    return response
+    #need to re-initialize the form even if it was posted, because
+    #initial values will most likely be different from the previous
+    user_status_form = forms.ChangeUserStatusForm(
+                                        moderator = moderator,
+                                        subject = subject
+                                    )
+    return render_to_response(
+                    'user_moderate.html',
+                    {
+                        'active_tab': 'users',
+                        'tab_name': 'moderation',
+                        'tab_description': _('moderate this user'),
+                        'page_title': _('moderate user'),
+                        'view_user': subject,
+                        'change_user_status_form': user_status_form,
+                    }, 
+                    context_instance=RequestContext(request)
+                )
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -147,8 +174,11 @@ def set_new_email(user, new_email, nomessage=False):
 
 @login_required
 def edit_user(request, id):
+    """View that allows to edit user profile.
+    This view is accessible to profile owners or site administrators
+    """
     user = get_object_or_404(models.User, id=id)
-    if request.user != user:
+    if request.user != user or not request.user.is_superuser:
         raise Http404
     if request.method == "POST":
         form = forms.EditUserForm(user, request.POST)
@@ -192,8 +222,8 @@ def edit_user(request, id):
                         context_instance=RequestContext(request)
                     )
 
-def user_stats(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
+def user_stats(request, user):
+
     questions = models.Question.objects.extra(
         select={
             'score' : 'question.score',
@@ -205,10 +235,10 @@ def user_stats(request, user_id, user_view):
             'la_user_bronze' : 'auth_user.bronze',
             'la_user_reputation' : 'auth_user.reputation'
             },
-        select_params=[user_id],
+        select_params=[user.id],
         tables=['question', 'auth_user'],
         where=['question.deleted=False AND question.author_id=%s AND question.last_activity_by_id = auth_user.id'],
-        params=[user_id],
+        params=[user.id],
         order_by=['-score', '-last_activity_at']
     ).values('score',
              'favorited_myself',
@@ -245,9 +275,9 @@ def user_stats(request, user_id, user_view):
             },
         tables=['question', 'answer'],
         where=['answer.deleted=False AND question.deleted=False AND answer.author_id=%s AND answer.question_id=question.id'],
-        params=[user_id],
+        params=[user.id],
         order_by=['-answer_score', '-answer_id'],
-        select_params=[user_id]
+        select_params=[user.id]
     ).distinct().values('comment_count',
                         'id',
                         'answer_id',
@@ -311,36 +341,42 @@ def user_stats(request, user_id, user_view):
         )
         user_tags.query.group_by = ['name']
 
-    if auth.can_moderate_users(request.user):
-        moderate_user_form = forms.ModerateUserForm(instance=user)
+    if user.is_administrator():
+        user_status = _('Site Adminstrator')
+    elif user.is_moderator():
+        user_status = _('Forum Moderator')
+    elif user.is_suspended():
+        user_status = _('Suspended User')
+    elif user.is_blocked():
+        user_status = _('Blocked User')
     else:
-        moderate_user_form = None
+        user_status = _('Registered User')
 
     return render_to_response(
-                        user_view.template_file,
+                        'user_stats.html',
                         {
                             'active_tab':'users',
-                            'moderate_user_form': moderate_user_form,
-                            "tab_name" : user_view.id,
-                            "tab_description" : user_view.tab_description,
-                            "page_title" : user_view.page_title,
-                            "view_user" : user,
-                            "questions" : questions,
-                            "answered_questions" : answered_questions,
-                            "up_votes" : up_votes,
-                            "down_votes" : down_votes,
-                            "total_votes": up_votes + down_votes,
-                            "votes_today_left": votes_total-votes_today,
-                            "votes_total_per_day": votes_total,
-                            "user_tags" : user_tags[:50],
-                            "awards": awards,
-                            "total_awards" : total_awards,
+                            'tab_name' : 'stats',
+                            'tab_description' : _('user profile'),
+                            'page_title' : _('user profile overview'),
+                            'view_user' : user,
+                            'user_status_for_display': user.get_status_display(soft = True),
+                            'questions' : questions,
+                            'answered_questions' : answered_questions,
+                            'up_votes' : up_votes,
+                            'down_votes' : down_votes,
+                            'total_votes': up_votes + down_votes,
+                            'votes_today_left': votes_total-votes_today,
+                            'votes_total_per_day': votes_total,
+                            'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
+                            'awards': awards,
+                            'total_awards' : total_awards,
                         }, 
                         context_instance=RequestContext(request)
                     )
 
-def user_recent(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
+def user_recent(request, user):
+
     def get_type_name(type_id):
         for item in const.TYPE_ACTIVITY:
             if type_id in item:
@@ -380,7 +416,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = ' +
             'question.id AND question.deleted=False AND activity.user_id = %s AND activity.activity_type = %s'],
-        params=[question_type_id, user_id, const.TYPE_ACTIVITY_ASK_QUESTION],
+        params=[question_type_id, user.id, const.TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -417,7 +453,7 @@ def user_recent(request, user_id, user_view):
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
             'answer.question_id=question.id AND answer.deleted=False AND activity.user_id=%s AND '+ 
             'activity.activity_type=%s AND question.deleted=False'],
-        params=[answer_type_id, user_id, const.TYPE_ACTIVITY_ANSWER],
+        params=[answer_type_id, user.id, const.TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -445,7 +481,7 @@ def user_recent(request, user_id, user_view):
             'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
             'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
             'question.deleted=False'],
-        params=[comment_type_id, question_type_id, user_id, const.TYPE_ACTIVITY_COMMENT_QUESTION],
+        params=[comment_type_id, question_type_id, user.id, const.TYPE_ACTIVITY_COMMENT_QUESTION],
         order_by=['-comment.added_at']
     ).values(
             'title',
@@ -475,7 +511,7 @@ def user_recent(request, user_id, user_view):
             'comment.content_type_id=%s AND question.id = answer.question_id AND '+
             'activity.user_id = %s AND activity.activity_type=%s AND '+
             'answer.deleted=False AND question.deleted=False'],
-        params=[comment_type_id, answer_type_id, user_id, const.TYPE_ACTIVITY_COMMENT_ANSWER],
+        params=[comment_type_id, answer_type_id, user.id, const.TYPE_ACTIVITY_COMMENT_ANSWER],
         order_by=['-comment.added_at']
     ).values(
             'title',
@@ -504,7 +540,7 @@ def user_recent(request, user_id, user_view):
             'question_revision.id=question.id AND question.deleted=False AND '+
             'activity.user_id = question_revision.author_id AND activity.user_id = %s AND '+
             'activity.activity_type=%s'],
-        params=[question_revision_type_id, user_id, const.TYPE_ACTIVITY_UPDATE_QUESTION],
+        params=[question_revision_type_id, user.id, const.TYPE_ACTIVITY_UPDATE_QUESTION],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -536,7 +572,7 @@ def user_recent(request, user_id, user_view):
             'answer_revision.answer_id=answer.id AND answer.question_id = question.id AND '+
             'question.deleted=False AND answer.deleted=False AND '+
             'activity.activity_type=%s'],
-        params=[answer_revision_type_id, user_id, const.TYPE_ACTIVITY_UPDATE_ANSWER],
+        params=[answer_revision_type_id, user.id, const.TYPE_ACTIVITY_UPDATE_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -565,7 +601,7 @@ def user_recent(request, user_id, user_view):
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
             'answer.deleted=False AND question.deleted=False AND '+
             'answer.question_id=question.id AND activity.activity_type=%s'],
-        params=[answer_type_id, user_id, const.TYPE_ACTIVITY_MARK_ANSWER],
+        params=[answer_type_id, user.id, const.TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
     ).values(
             'title',
@@ -587,7 +623,7 @@ def user_recent(request, user_id, user_view):
         tables=['activity', 'award', 'badge'],
         where=['activity.user_id = award.user_id AND activity.user_id = %s AND '+
             'award.badge_id=badge.id AND activity.object_id=award.id AND activity.activity_type=%s'],
-        params=[user_id, const.TYPE_ACTIVITY_PRIZE],
+        params=[user.id, const.TYPE_ACTIVITY_PRIZE],
         order_by=['-activity.active_at']
     ).values(
             'badge_id',
@@ -600,55 +636,51 @@ def user_recent(request, user_id, user_view):
 
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
-    return render_to_response(user_view.template_file,{
-                                    'active_tab':'users',
-                                    "tab_name" : user_view.id,
-                                    "tab_description" : user_view.tab_description,
-                                    "page_title" : user_view.page_title,
+    return render_to_response('user_recent.html',
+                                 {
+                                    'active_tab': 'users',
+                                    "tab_name" : 'recent',
+                                    "tab_description" : _('recent user activity'),
+                                    "page_title" : _('profile - recent activity'),
                                     "view_user" : user,
-                                    "activities" : activities[:user_view.data_size]
+                                    "activities" : activities[:const.USER_VIEW_DATA_SIZE]
                                 }, context_instance=RequestContext(request))
 
-class Response:
-    """class that abstracts any kind of response
-    answer, comment, mention, post edits, etc.
-    """
-    def __init__(
-            self, type, title, question_id, 
-            answer_id, time, username, 
-            user_id, content):
+#class Response:
+#    """class that abstracts any kind of response
+#    answer, comment, mention, post edits, etc.
+#    """
+#    def __init__(
+#            self, type, title, question_id, 
+#            answer_id, time, username, 
+#            user_id, content):
+#
+#        self.type = type
+#        self.title = title
+#        self.titlelink = reverse(
+#                            'question', 
+#                            args=[question_id]) \
+#                                    + u'%s#%s' % (slugify(title), 
+#                            answer_id
+#                        )
+#        self.time = time
+#        self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
+#        self.username = username
+#        self.content = u'%s ...' % strip_tags(content)[:300]
 
-        self.type = type
-        self.title = title
-        self.titlelink = reverse(
-                            'question', 
-                            args=[question_id]) \
-                                    + u'%s#%s' % (slugify(title), 
-                            answer_id
-                        )
-        self.time = time
-        self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
-        self.username = username
-        self.content = u'%s ...' % strip_tags(content)[:300]
+#    def __unicode__(self):
+#        return u'%s %s' % (self.type, self.titlelink)
 
-    def __unicode__(self):
-        return u'%s %s' % (self.type, self.titlelink)
-
-def user_responses(request, user_id, user_view):
+@owner_or_moderator_required
+def user_responses(request, user):
     """
     We list answers for question, comments, and 
     answer accepted by others for this user.
     as well as mentions of the user
 
-    user_id - id of the profile owner
-    user_view - id of the user who is looking at the
-                page
+    user - the profile owner
     """
-    user = get_object_or_404(models.User, id=user_id)
-    if request.user != user:
-        raise Http404
 
-    user = get_object_or_404(models.User, id=user_id)
     response_list = []
 
     activities = list()
@@ -671,22 +703,21 @@ def user_responses(request, user_id, user_view):
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
     return render_to_response(
-                    user_view.template_file,
+                    'user_responses.html',
                     {
                         'active_tab':'users',
-                        'tab_name' : user_view.id,
-                        'tab_description' : user_view.tab_description,
-                        'page_title' : user_view.page_title,
+                        'tab_name' : 'responses',
+                        'tab_description' : _('comments and answers to others questions'),
+                        'page_title' : _('profile - responses'),
                         'view_user' : user,
-                        'responses' : response_list[:user_view.data_size],
+                        'responses' : response_list[:const.USER_VIEW_DATA_SIZE],
                     }, 
                     context_instance=RequestContext(request)
                 )
 
-def user_votes(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
-    if not auth.can_view_user_votes(request.user, user):
-        raise Http404
+@owner_or_moderator_required
+def user_votes(request, user):
+
     votes = []
     question_votes = models.Vote.objects.extra(
         select={
@@ -696,11 +727,11 @@ def user_votes(request, user_id, user_view):
             'voted_at' : 'vote.voted_at',
             'vote' : 'vote',
             },
-        select_params=[user_id],
+        select_params=[user.id],
         tables=['vote', 'question', 'auth_user'],
         where=['vote.content_type_id = %s AND vote.user_id = %s AND vote.object_id = question.id '+
             'AND vote.user_id=auth_user.id'],
-        params=[question_type_id, user_id],
+        params=[question_type_id, user.id],
         order_by=['-vote.id']
     ).values(
             'title',
@@ -720,11 +751,11 @@ def user_votes(request, user_id, user_view):
             'voted_at' : 'vote.voted_at',
             'vote' : 'vote',
             },
-        select_params=[user_id],
+        select_params=[user.id],
         tables=['vote', 'answer', 'question', 'auth_user'],
         where=['vote.content_type_id = %s AND vote.user_id = %s AND vote.object_id = answer.id '+
             'AND answer.question_id = question.id AND vote.user_id=auth_user.id'],
-        params=[answer_type_id, user_id],
+        params=[answer_type_id, user.id],
         order_by=['-vote.id']
     ).values(
             'title',
@@ -736,18 +767,17 @@ def user_votes(request, user_id, user_view):
     if(len(answer_votes) > 0):
         votes.extend(answer_votes)
     votes.sort(lambda x,y: cmp(y['voted_at'], x['voted_at']))
-    return render_to_response(user_view.template_file,{
-        'active_tab':'users',
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "view_user" : user,
-        "votes" : votes[:user_view.data_size]
 
+    return render_to_response('user_votes.html', {
+        'active_tab':'users',
+        "tab_name" : 'votes',
+        "tab_description" : _('user vote record'),
+        "page_title" : _('profile - votes'),
+        "view_user" : user,
+        "votes" : votes[:const.USER_VIEW_DATA_SIZE]
     }, context_instance=RequestContext(request))
 
-def user_reputation(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
+def user_reputation(request, user):
     try:
         from django.db.models import Sum
         reputation = models.Repute.objects.extra(
@@ -777,18 +807,17 @@ def user_reputation(request, user_id, user_view):
     reps = ','.join(rep_list)
     reps = '[%s]' % reps
 
-    return render_to_response(user_view.template_file, {
+    return render_to_response('user_reputation.html', {
                               'active_tab':'users',
-                              "tab_name": user_view.id,
-                              "tab_description": user_view.tab_description,
-                              "page_title": user_view.page_title,
+                              "tab_name": 'reputation',
+                              "tab_description": _('user reputation in the community'),
+                              "page_title": _('profile - user reputation'),
                               "view_user": user,
                               "reputation": reputation,
                               "reps": reps
                               }, context_instance=RequestContext(request))
 
-def user_favorites(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
+def user_favorites(request, user):
     questions = models.Question.objects.extra(
         select={
             'score' : 'question.vote_up_count + question.vote_down_count',
@@ -801,11 +830,11 @@ def user_favorites(request, user_id, user_view):
             'la_user_bronze' : 'auth_user.bronze',
             'la_user_reputation' : 'auth_user.reputation'
             },
-        select_params=[user_id],
+        select_params=[user.id],
         tables=['question', 'auth_user', 'favorite_question'],
         where=['question.deleted=False AND question.last_activity_by_id = auth_user.id '+
             'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
-        params=[user_id],
+        params=[user.id],
         order_by=['-score', '-question.id']
     ).values('score',
              'favorited_myself',
@@ -829,19 +858,19 @@ def user_favorites(request, user_id, user_view):
              'la_user_silver',
              'la_user_bronze',
              'la_user_reputation')
-    return render_to_response(user_view.template_file,{
+
+    return render_to_response('user_favorites.html',{
         'active_tab':'users',
-        "tab_name" : user_view.id,
-        "tab_description" : user_view.tab_description,
-        "page_title" : user_view.page_title,
-        "questions" : questions[:user_view.data_size],
+        "tab_name" : 'favorites',
+        "tab_description" : _('users favorite questions'),
+        "page_title" : _('profile - favorite questions'),
+        "questions" : questions[:const.USER_VIEW_DATA_SIZE],
         "view_user" : user
     }, context_instance=RequestContext(request))
 
-def user_email_subscriptions(request, user_id, user_view):
-    user = get_object_or_404(models.User, id=user_id)
-    if request.user != user:
-        raise Http404
+@owner_or_moderator_required
+def user_email_subscriptions(request, user):
+
     if request.method == 'POST':
         email_feeds_form = forms.EditUserEmailFeedsForm(request.POST)
         tag_filter_form = forms.TagFilterSelectionForm(request.POST, instance=user)
@@ -866,100 +895,51 @@ def user_email_subscriptions(request, user_id, user_view):
         email_feeds_form.set_initial_values(user)
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
         action_status = None
-    return render_to_response(user_view.template_file,{
-        'active_tab':'users',
-        'tab_name':user_view.id,
-        'tab_description':user_view.tab_description,
-        'page_title':user_view.page_title,
-        'view_user':user,
-        'email_feeds_form':email_feeds_form,
-        'tag_filter_selection_form':tag_filter_form,
-        'action_status':action_status,
+
+    return render_to_response('user_email_subscriptions.html',{
+        'active_tab': 'users',
+        'tab_name': 'email_subscriptions',
+        'tab_description': _('email subscription settings'),
+        'page_title': _('profile - email subscriptions'),
+        'view_user': user,
+        'email_feeds_form': email_feeds_form,
+        'tag_filter_selection_form': tag_filter_form,
+        'action_status': action_status,
     }, context_instance=RequestContext(request))
 
-class UserView:
-    def __init__(self, id, tab_title, tab_description, page_title, view_func, template_file, data_size=0):
-        self.id = id
-        self.tab_title = tab_title
-        self.tab_description = tab_description
-        self.page_title = page_title
-        self.view_func = view_func 
-        self.template_file = template_file
-        self.data_size = data_size
-        
-USER_TEMPLATE_VIEWS = (
-    UserView(
-        id = 'stats',
-        tab_title = _('overview'),
-        tab_description = _('user profile'),
-        page_title = _('user profile overview'),
-        view_func = user_stats,
-        template_file = 'user_stats.html'
-    ),
-    UserView(
-        id = 'recent',
-        tab_title = _('recent activity'),
-        tab_description = _('recent user activity'),
-        page_title = _('profile - recent activity'),
-        view_func = user_recent,
-        template_file = 'user_recent.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'responses',
-        tab_title = _('responses'),
-        tab_description = _('comments and answers to others questions'),
-        page_title = _('profile - responses'),
-        view_func = user_responses,
-        template_file = 'user_responses.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'reputation',
-        tab_title = _('reputation'),
-        tab_description = _('user reputation in the community'),
-        page_title = _('profile - user reputation'),
-        view_func = user_reputation,
-        template_file = 'user_reputation.html'
-    ),
-    UserView(
-        id = 'favorites',
-        tab_title = _('favorite questions'),
-        tab_description = _('users favorite questions'),
-        page_title = _('profile - favorite questions'),
-        view_func = user_favorites,
-        template_file = 'user_favorites.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'votes',
-        tab_title = _('casted votes'),
-        tab_description = _('user vote record'),
-        page_title = _('profile - votes'),
-        view_func = user_votes,
-        template_file = 'user_votes.html',
-        data_size = 50
-    ),
-    UserView(
-        id = 'email_subscriptions',
-        tab_title = _('email subscriptions'),
-        tab_description = _('email subscription settings'),
-        page_title = _('profile - email subscriptions'),
-        view_func = user_email_subscriptions,
-        template_file = 'user_email_subscriptions.html'
-    )
-)
-
+user_view_call_table = {
+    'stats': user_stats,
+    'recent': user_recent,
+    'responses': user_responses,
+    'reputation': user_reputation,
+    'favorites': user_favorites,
+    'votes': user_votes,
+    'email_subscriptions': user_email_subscriptions,
+    'moderation': user_moderate,
+}
 #todo: rename this function - variable named user is everywhere
 def user(request, id, slug=None):
-    sort = request.GET.get('sort', 'stats')
-    user_view = dict(
-                        (v.id, v) for v in USER_TEMPLATE_VIEWS
-                    ).get(
-                            sort, USER_TEMPLATE_VIEWS[0]
-                        )
-    func = user_view.view_func
-    return func(request, id, user_view)
+    """Main user view function that works as a switchboard
+
+    id - id of the profile owner
+
+    todo: decide what to do with slug - it is not used
+    in the code in any way
+    """
+
+    profile_owner = get_object_or_404(models.User, id = id)
+
+    #sort CGI parameter tells us which tab in the user
+    #profile to show, the default one is 'stats'
+    tab_name = request.GET.get('sort', 'stats')
+
+    if tab_name in user_view_call_table:
+        #get the actual view function
+        user_view_func = user_view_call_table[tab_name]
+    else:
+        user_view_func = user_stats
+
+    return user_view_func(request, profile_owner)
 
 @login_required
 def account_settings(request):#todo: is this actually used?

@@ -157,11 +157,6 @@ urlpatterns = patterns('',
         app.users.users, 
         name='users'
     ),
-    url(
-        r'^%s(?P<id>\d+)/$' % _('moderate-user/'), 
-        app.users.moderate_user, 
-        name='moderate_user'
-    ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),

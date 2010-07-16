@@ -15,9 +15,6 @@ import logging
 
 from askbot.conf import settings as askbot_settings
 
-def can_moderate_users(user):
-    return user.is_superuser
-
 def can_vote_up(user):
     """Determines if a User can vote Questions and Answers up."""
     return user.is_authenticated() and (

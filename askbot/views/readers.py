@@ -346,9 +346,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         #2) question view count per user and clear response displays
         if request.user.is_authenticated():
-
             #get response notifications
-            request.user.visit_question()
+            request.user.visit_question(question)
 
     return render_to_response('question.html', {
         'view_name': 'question',

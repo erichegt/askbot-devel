@@ -7,13 +7,13 @@
 {% block usercontent %}
     <h2>{% trans "Email subscription settings" %}</h2>
     <p class="message">{% trans "email subscription settings info" %}</p>
-    <div class='inline-block'>
+    <div><!-- class='inline-block'-->
     {% if action_status %}
     <p class="action-status"><span>{{action_status}}</span></p>
     {% endif %}
     <form method="post" action=""> 
         {% include "edit_user_email_feeds_form.html" %}
-        <table class='form-as-table'>
+        <table class='form-as-table ab-tag-filter-form'>
         {{tag_filter_selection_form}}
         </table>
         <div class="submit-row text-align-right">

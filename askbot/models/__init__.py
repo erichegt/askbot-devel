@@ -29,6 +29,16 @@ from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
 
 User.add_to_class('is_approved', models.BooleanField(default=False))
+
+User.add_to_class(
+            'status', 
+            models.CharField(
+                        max_length = 2,
+                        default = const.DEFAULT_USER_STATUS,
+                        choices = const.USER_STATUS_CHOICES
+                    )
+        )
+
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
@@ -38,10 +48,10 @@ User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
 User.add_to_class('questions_per_page',
-                  models.SmallIntegerField(
-                                choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
-                                default=10)
-                            )
+              models.SmallIntegerField(
+                            choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
+                            default=10)
+            )
 User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
@@ -165,7 +175,7 @@ def user_visit_question(self, question = None, timestamp = None):
     the post - question, answer or comments
     """
     if not isinstance(question, Question):
-        raise TypeError('question type expected')
+        raise TypeError('question type expected, have %s' % type(question))
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
@@ -214,6 +224,79 @@ def user_is_username_taken(cls,username):
     except cls.MultipleObjectsReturned:
         return True
     except cls.DoesNotExist:
+        return False
+
+def user_is_administrator(self):
+    return (self.is_superuser or self.is_staff)
+
+def user_is_moderator(self):
+    return (self.status == 'm' and self.is_administrator() == False)
+
+def user_is_suspended(self):
+    return (self.status == 's')
+
+def user_is_blocked(self):
+    return (self.status == 'b')
+
+def user_is_watched(self):
+    return (self.status == 'w')
+
+def user_is_approved(self):
+    return (self.status == 'a')
+
+def user_set_status(self, new_status):
+    """sets new status to user
+
+    this method understands that administrator status is
+    stored in the User.is_superuser field, but
+    everything else in User.status field
+
+    there is a slight aberration - administrator status
+    can be removed, but not added yet
+
+    if new status is applied to user, then the record is 
+    committed to the database
+    """
+    assert(new_status in ('m','s','b','w','a'))
+    if new_status == self.status:
+        return
+
+    #clear admin status if user was an administrator
+    if self.is_administrator:
+        self.is_superuser = False
+        self.is_staff = False
+
+    self.status = new_status
+    self.save()
+
+def user_get_status_display(self, soft = False):
+    if self.is_administrator():
+        return _('Site Adminstrator')
+    elif self.is_moderator():
+        return _('Forum Moderator')
+    elif self.is_suspended():
+        return  _('Suspended User')
+    elif self.is_blocked():
+        return _('Blocked User')
+    elif soft == True:
+        return _('Registered User')
+    elif self.is_watched():
+        return _('Watched User')
+    elif self.is_approved():
+        return _('Approved User')
+    else:
+        raise ValueError('Unknown user status')
+
+
+def user_can_moderate_user(self, other):
+    if self.is_administrator():
+        return True
+    elif self.is_moderator():
+        if other.is_moderator() or other.is_administrator():
+            return False
+        else:
+            return True
+    else:
         return False
 
 def user_get_q_sel_email_feed_frequency(self):
@@ -425,6 +508,15 @@ User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
+User.add_to_class('is_administrator', user_is_administrator)
+User.add_to_class('is_moderator', user_is_moderator)
+User.add_to_class('is_approved', user_is_approved)
+User.add_to_class('is_watched', user_is_watched)
+User.add_to_class('is_suspended', user_is_suspended)
+User.add_to_class('is_blocked', user_is_blocked)
+User.add_to_class('can_moderate_user', user_can_moderate_user)
+User.add_to_class('set_status', user_set_status)
+User.add_to_class('get_status_display', user_get_status_display)
 
 #todo: move this to askbot/utils ??
 def format_instant_notification_body(

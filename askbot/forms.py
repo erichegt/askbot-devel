@@ -11,6 +11,30 @@ from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
+def filter_choices(remove_choices = None, from_choices = None):
+    """a utility function that will remove choice tuples
+    usable for the forms.ChoicesField from
+    ``from_choices``, the removed ones will be those given
+    by the ``remove_choice`` list
+
+    there is no error checking, ``from_choices`` tuple must be as expected
+    to work with the forms.ChoicesField
+    """
+
+    if not isinstance(remove_choices, list):
+        raise TypeError('remove_choices must be a list')
+
+    filtered_choices = tuple()
+    for choice_to_test in from_choices:
+        remove = False
+        for choice in remove_choices:
+            if choice == choice_to_test[0]:
+                remove = True
+                break
+        if remove == False:
+            filtered_choices += ( choice_to_test, )
+
+    return filtered_choices
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -115,18 +139,102 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
-class ModerateUserForm(forms.ModelForm):
-    is_approved = forms.BooleanField(label=_("Automatically accept user's contributions for the email updates"),
-                                     required=False)
+class ChangeUserReputationForm(forms.Form):
+    reputation_change_points = forms.IntegerField(
+                            label=_('Add or subtract reputation'), 
+                            required = False
+                        )
+    #this comment must be required with arbitrary karma changes
+    reputation_change_reason = forms.CharField(
+                            label=_('Because ...'),
+                            required = False
+                        )
 
-    def clean_is_approved(self):
-        if 'is_approved' not in self.cleaned_data:
-            self.cleaned_data['is_approved'] = False
-        return self.cleaned_data['is_approved']
+MODERATOR_STATUS_CHOICES = (
+                                ('a', _('approved')),
+                                ('w', _('watched')),
+                                ('s', _('suspended')),
+                                ('b', _('blocked')),
+                           )
+ADMINISTRATOR_STATUS_CHOICES = (('m', _('moderator')), ) \
+                               + MODERATOR_STATUS_CHOICES
 
-    class Meta:
-        model = User
-        fields = ('is_approved',)
+class ChangeUserStatusForm(forms.Form):
+    user_status = forms.ChoiceField(
+                            label = _('Change status to'),
+                        )
+
+    def __init__(self, *arg, **kwarg):
+
+        moderator = kwarg.pop('moderator')
+        subject = kwarg.pop('subject')
+
+        super(ChangeUserStatusForm, self).__init__(*arg, **kwarg)
+
+        #select user_status_choices depending on status of the moderator
+        if moderator.is_administrator():
+            user_status_choices = ADMINISTRATOR_STATUS_CHOICES
+        elif moderator.is_moderator():
+            user_status_choices = MODERATOR_STATUS_CHOICES
+            if subject.is_moderator() and subject != moderator:
+                raise ValueError('moderator cannot moderate another moderator')
+        else:
+            raise ValueError('moderator or admin expected from "moderator"')
+
+        #remove current status of the "subject" user from choices
+        user_status_choices = filter_choices(
+                                        remove_choices = [subject.status, ],
+                                        from_choices = user_status_choices
+                                    )
+
+        #add prompt option
+        user_status_choices = ( ('select', _('which one?')), ) \
+                                + user_status_choices
+
+        self.fields['user_status'].choices = user_status_choices
+
+        #set prompt option as default
+        self.fields['user_status'].default = 'select' 
+        self.moderator = moderator
+        self.subject = subject
+
+    def clean(self):
+        #if moderator is looking at own profile - do not
+        #let change status
+        if 'user_status' in self.cleaned_data:
+
+            user_status = self.cleaned_data['user_status']
+
+            #does not make sense to change own user status
+            #if necessary, this can be done from the Django admin interface
+            if self.moderator == self.subject:
+                del self.cleaned_data['user_status']
+                raise forms.ValidationError(_('Cannot change own status'))
+
+            #do not let moderators turn other users into moderators
+            if self.moderator.is_moderator() and user_status == 'moderator':
+                del self.cleanded_data['user_status']
+                raise forms.ValidationError(
+                                _('Cannot turn other user to moderator')
+                            )
+
+            #do not allow moderator to change status of other moderators
+            if self.moderator.is_moderator() and self.subject.is_moderator():
+                del self.cleaned_data['user_status']
+                raise forms.ValidationError(
+                                _('Cannot change status of another moderator')
+                            )
+
+            if user_status == 'select':
+                del self.cleaned_data['user_status']
+                msg = _(
+                        'If you wish to change %(username)s\'s status, ' \
+                        + 'please make a meaningful selection.'
+                    ) % {'username': self.subject.username }
+                raise forms.ValidationError(msg)
+
+        return self.cleaned_data
+
 
 class AdvancedSearchForm(forms.Form):
     #nothing must be required in this form

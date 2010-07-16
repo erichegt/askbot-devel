@@ -4,13 +4,13 @@
 {% load extra_tags %}
 {% load extra_filters %}
 {% load humanize %}
-		{% block usercontent %}
+    {% block usercontent %}
         {% include "user_info.html" %}
         <a name="questions"></a>
         {% spaceless %}
             <h2>{% blocktrans count questions|length as counter %}<span class="count">{{counter}}</span> Question{% plural %}<span class="count">{{counter}}</span> Questions{% endblocktrans %}</h2>
         {% endspaceless %}
-		{% include "users_questions.html" %}
+    {% include "users_questions.html" %}
         <a name="answers"></a>
         {% spaceless %}
             <h2>{% blocktrans count answered_questions|length as counter %}<span class="count">{{counter}}</span> Answer{% plural %}<span class="count">{{counter}}</span> Answers{% endblocktrans %}</h2>
@@ -21,7 +21,7 @@
                 <a title="{{answered_question.summary|collapse}}" 
                     href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
                     <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
-						title="{% blocktrans with answered_question.answer_score as answer_score %}the answer has been voted for {{ answer_score }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
+                          title="{% blocktrans with answered_question.answer_score as answer_score %}the answer has been voted for {{ answer_score }} times{% endblocktrans %} {% if answered_question.accepted %}{% trans "this answer has been selected as correct" %}{%endif%}">
                         {{ answered_question.answer_score }}
                     </span>
                 </a>

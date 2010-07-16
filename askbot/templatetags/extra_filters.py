@@ -12,8 +12,10 @@ def collapse(input):
     return ' '.join(input.split())
 
 @register.filter
-def can_moderate_users(user):
-    return auth.can_moderate_users(user)
+def can_moderate_user(user, other_user):
+    if user.is_authenticated() and user.can_moderate_user(other_user):
+        return True
+    return False
 
 @register.filter
 def can_vote_up(user):
