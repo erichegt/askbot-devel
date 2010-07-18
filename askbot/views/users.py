@@ -6,6 +6,7 @@ and other views showing profile-related information.
 
 Also this module includes the view listing all forum users.
 """
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.defaultfilters import slugify
@@ -23,6 +24,7 @@ from askbot import auth
 from askbot import forms
 import calendar
 import functools
+import datetime
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
@@ -143,6 +145,32 @@ def user_moderate(request, subject):
                                                 )
             if user_status_form.is_valid():
                 subject.set_status( user_status_form.cleaned_data['user_status'] )
+            user_rep_form = forms.ChangeUserReputationForm()
+        else:
+            reputation_change_type = None
+            if 'subtract_reputation' in request.POST:
+                rep_change_type = 'subtract'
+            elif 'add_reputation' in request.POST:
+                rep_change_type = 'add'
+            else:
+                raise Http404
+
+            user_rep_form = forms.ChangeUserReputationForm(request.POST)
+            if user_rep_form.is_valid():
+                rep_delta = user_rep_form.cleaned_data['user_reputation_delta']
+                comment = user_rep_form.cleaned_data['comment']
+
+                if rep_change_type == 'subtract':
+                    rep_delta = -1 * rep_delta
+
+                moderator.moderate_user_reputation(
+                                    user = subject,
+                                    reputation_change = rep_delta,
+                                    comment = comment,
+                                    timestamp = datetime.datetime.now(),
+                                )
+    else:
+        user_rep_form = forms.ChangeUserReputationForm()
 
     #need to re-initialize the form even if it was posted, because
     #initial values will most likely be different from the previous
@@ -150,6 +178,7 @@ def user_moderate(request, subject):
                                         moderator = moderator,
                                         subject = subject
                                     )
+
     return render_to_response(
                     'user_moderate.html',
                     {
@@ -159,6 +188,7 @@ def user_moderate(request, subject):
                         'page_title': _('moderate user'),
                         'view_user': subject,
                         'change_user_status_form': user_status_form,
+                        'change_user_reputation_form': user_rep_form,
                     }, 
                     context_instance=RequestContext(request)
                 )
@@ -778,30 +808,27 @@ def user_votes(request, user):
     }, context_instance=RequestContext(request))
 
 def user_reputation(request, user):
-    try:
-        from django.db.models import Sum
-        reputation = models.Repute.objects.extra(
-                                          select={'question_id':'question_id',
-                                          'title': 'question.title'},
-                                          tables=['repute', 'question'],
-                                          order_by=['-reputed_at'],
-                                          where=['user_id=%s AND question_id=question.id'],
-                                          params=[user.id]
-                                          ).values('question_id', 'title', 'reputed_at', 'reputation')
-        reputation = reputation.annotate(positive=Sum("positive"), negative=Sum("negative"))
-    except ImportError:
-        reputation = models.Repute.objects.extra(
-                                          select={'positive':'sum(positive)', 'negative':'sum(negative)', 'question_id':'question_id',
-                                          'title': 'question.title'},
-                                          tables=['repute', 'question'],
-                                          order_by=['-reputed_at'],
-                                          where=['user_id=%s AND question_id=question.id'],
-                                          params=[user.id]
-                                          ).values('positive', 'negative', 'question_id', 'title', 'reputed_at', 'reputation')
-        reputation.query.group_by = ['question_id']
+    reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
+    #select_related() adds stuff needed for the query
+    reputes = reputes.select_related(
+                            'question__title', 
+                            'question__id', 
+                            'user__username'
+                        )
+    #reputes = reputates.annotate(positive=Sum("positive"), negative=Sum("negative"))
 
+    #prepare data for the graph
     rep_list = []
-    for rep in models.Repute.objects.filter(user=user).order_by('reputed_at'):
+    #last values go in first
+    rep_list.append('[%s,%s]' % (
+                            calendar.timegm(
+                                        datetime.datetime.now().timetuple()
+                                    ) * 1000,
+                            user.reputation
+                        )
+                    )
+    #ret remaining values in
+    for rep in reputes:
         dic = '[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation)
         rep_list.append(dic)
     reps = ','.join(rep_list)
@@ -813,7 +840,7 @@ def user_reputation(request, user):
                               "tab_description": _('user reputation in the community'),
                               "page_title": _('profile - user reputation'),
                               "view_user": user,
-                              "reputation": reputation,
+                              "reputation": reputes,
                               "reps": reps
                               }, context_instance=RequestContext(request))
 

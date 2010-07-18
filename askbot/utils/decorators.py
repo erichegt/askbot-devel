@@ -1,9 +1,26 @@
 import hotshot
 import time
 import os
+import functools
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
+
+def auto_now_timestamp(func):
+    """decorator that will automatically set
+    argument named timestamp to the "now" value if timestamp == None
+
+    if there is no timestamp argument, then exception is raised
+    """
+    @functools.wraps(func)
+    def decorated_func(*arg, **kwarg):
+        if 'timestamp' in kwarg:
+            if kwarg['timestamp'] is None:
+                kwarg['timestamp'] = datetime.datetime.now()
+            return func(*arg, **kwarg)
+        else:
+            raise ValueError('timestamp argument is required')
+    return decorated_func
 
 
 def ajax_login_required(view_func):

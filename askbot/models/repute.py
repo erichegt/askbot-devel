@@ -114,12 +114,19 @@ class ReputeManager(models.Manager):
 class Repute(models.Model):
     """The reputation histories for user"""
     user     = models.ForeignKey(User)
+    #todo: combine positive and negative to one value
     positive = models.SmallIntegerField(default=0)
     negative = models.SmallIntegerField(default=0)
-    question = models.ForeignKey('Question')
+    #FK must be to Post() - in the future
+    question = models.ForeignKey('Question', null=True, blank=True)
     reputed_at = models.DateTimeField(default=datetime.datetime.now)
     reputation_type = models.SmallIntegerField(choices=const.TYPE_REPUTATION)
     reputation = models.IntegerField(default=1)
+
+    #comment that must be used if reputation_type == 10
+    #assigned_by_moderator - so that reason can be displayed
+    #in that case Question field will be blank
+    comment = models.CharField(max_length=128, null=True)
     
     objects = ReputeManager()
 
@@ -129,3 +136,40 @@ class Repute(models.Model):
     class Meta:
         app_label = 'askbot'
         db_table = u'repute'
+
+    def get_explanation_snippet(self):
+        """returns HTML snippet with a link to related question
+        or a text description for a the reason of the reputation change
+
+        in the implementation description is returned only 
+        for Repute.reputation_type == 10 - "assigned by the moderator"
+
+        part of the purpose of this method is to hide this idiosyncracy
+        """
+        if self.reputation_type == 10:#todo: hide magic number
+            return  _('<em>Changed by moderator. Reason:</em> %(reason)s') \
+                                                    % {'reason':self.comment}
+        else:
+            delta = self.positive - self.negative
+            link_title_data = {
+                                'points': abs(delta),
+                                'username': self.user.username,
+                                'question_title': self.question.title
+                            }
+            if delta > 0:
+                link_title = _(
+                                '%(points)s points were added for %(username)s\'s '
+                                + 'contribution to question %(question_title)s'
+                            ) % link_title_data
+            else:
+                link_title = _(
+                                '%(points)s points were subtracted for %(username)s\'s '
+                                + 'contribution to question %(question_title)s'
+                            ) % link_title_data
+
+            return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
+                            % {
+                               'url': self.question.get_absolute_url(), 
+                               'question_title': self.question.title,
+                               'link_title': link_title
+                            }

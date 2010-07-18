@@ -1,27 +1,27 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        """populates User.status field.
-        """
-        for user in orm['auth.user'].objects.all():
-            if user.is_superuser or user.is_staff:
-                #moderator
-                user.status = 'm'
-            else:
-                #approved user
-                user.status = 'a'
-            user.save()
-    
+        
+        # Adding field 'Repute.comment'
+        db.add_column(u'repute', 'comment', self.gf('django.db.models.fields.CharField')(max_length=128, null=True), keep_default=False)
+
+        # Changing field 'Repute.question'
+        db.alter_column(u'repute', 'question_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Question'], null=True, blank=True))
     
     def backwards(self, orm):
-        "Backwards migration is meaningless here"
-        pass
+        
+        # Deleting field 'Repute.comment'
+        db.delete_column(u'repute', 'comment')
+
+        # Changing field 'Repute.question'
+        db.alter_column(u'repute', 'question_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Question']))
+    
     
     models = {
         'askbot.activity': {
@@ -218,10 +218,11 @@ class Migration(DataMigration):
         },
         'askbot.repute': {
             'Meta': {'object_name': 'Repute', 'db_table': "u'repute'"},
+            'comment': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'negative': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'positive': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
-            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']"}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']", 'null': 'True', 'blank': 'True'}),
             'reputation': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'reputation_type': ('django.db.models.fields.SmallIntegerField', [], {}),
             'reputed_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),

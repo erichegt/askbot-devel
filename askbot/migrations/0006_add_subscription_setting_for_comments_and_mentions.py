@@ -6,11 +6,13 @@ from south.v2 import DataMigration
 from django.db import models
 try:
     from forum import const
+    email_feed_setting_model = 'forum.EmailFeedSetting'
 except ImportError:
     from askbot import const
+    email_feed_setting_model = 'askbot.EmailFeedSetting'
 
 class Migration(DataMigration):
-    
+
     def forwards(self, orm):
         "Write your forwards methods here."
         print ''
@@ -86,7 +88,6 @@ class Migration(DataMigration):
                 'hide_ignored_questions': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
                 'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
-                'is_approved': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -417,7 +418,6 @@ class Migration(DataMigration):
                 'hide_ignored_questions': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
                 'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
-                'is_approved': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
                 'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),

@@ -139,16 +139,29 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
+
 class ChangeUserReputationForm(forms.Form):
-    reputation_change_points = forms.IntegerField(
-                            label=_('Add or subtract reputation'), 
-                            required = False
-                        )
-    #this comment must be required with arbitrary karma changes
-    reputation_change_reason = forms.CharField(
-                            label=_('Because ...'),
-                            required = False
-                        )
+    """Form that allows moderators and site administrators
+    to adjust reputation of users.
+
+    this form internally verifies that user who claims to
+    be a moderator acually is
+    """
+
+    user_reputation_delta = forms.IntegerField(
+                                    min_value = 1,
+                                    label = _('Enter number of points to add or subtract')
+                                )
+    comment = forms.CharField(max_length = 128)
+
+    def clean_comment(self):
+        if 'comment' in  self.cleaned_data:
+            comment = self.cleaned_data['comment'].strip()
+            if comment == '':
+                del self.cleaned_data['comment']
+                raise forms.ValidationError('Please enter non-empty comment')
+            self.cleaned_data['comment'] = comment
+            return comment
 
 MODERATOR_STATUS_CHOICES = (
                                 ('a', _('approved')),
@@ -159,7 +172,22 @@ MODERATOR_STATUS_CHOICES = (
 ADMINISTRATOR_STATUS_CHOICES = (('m', _('moderator')), ) \
                                + MODERATOR_STATUS_CHOICES
 
+
 class ChangeUserStatusForm(forms.Form):
+    """form that allows moderators to change user's status
+
+    the type of options displayed depend on whether user
+    is a moderator or a site administrator as well as
+    what is the current status of the moderated user
+
+    for example moderators cannot moderate other moderators
+    and admins. Admins can take away admin status, but cannot
+    add it (that can be done through the Django Admin interface
+
+    this form is to be displayed in the user profile under
+    "moderation" tab
+    """
+
     user_status = forms.ChoiceField(
                             label = _('Change status to'),
                         )

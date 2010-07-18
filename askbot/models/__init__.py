@@ -27,8 +27,7 @@ from askbot.models import signals
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
-
-User.add_to_class('is_approved', models.BooleanField(default=False))
+from askbot.utils.decorators import auto_now_timestamp
 
 User.add_to_class(
             'status', 
@@ -269,6 +268,51 @@ def user_set_status(self, new_status):
     self.status = new_status
     self.save()
 
+@auto_now_timestamp
+def user_moderate_user_reputation(
+                                self,
+                                user = None,
+                                reputation_change = 0,
+                                comment = None,
+                                timestamp = None
+                            ):
+    """add or subtract reputation of other user
+    """
+    if reputation_change == 0:
+        return
+    if comment == None:
+        raise ValueError('comment is required to moderate user reputation')
+
+    new_rep = user.reputation + reputation_change
+    if new_rep < 1:
+        new_rep = 1 #todo: magic number
+        reputation_change = 1 - user.reputation
+
+    user.reputation = new_rep
+    user.save()
+
+    #any question. This is necessary because reputes are read in the
+    #user_reputation view with select_related('question__title') and it fails if 
+    #ForeignKey is nullable even though it should work (according to the manual)
+    #probably a bug in the Django ORM
+    #fake_question = Question.objects.all()[:1][0]
+    #so in cases where reputation_type == 10
+    #question record is fake and is ignored
+    #this bug is hidden in call Repute.get_explanation_snippet()
+    repute = Repute(
+                        user = user,
+                        comment = comment,
+                        #question = fake_question,
+                        reputed_at = timestamp,
+                        reputation_type = 10, #todo: fix magic number
+                        reputation = user.reputation
+                    )
+    if reputation_change < 0:
+        repute.negative = -1 * reputation_change
+    else:
+        repute.positive = reputation_change
+    repute.save()
+
 def user_get_status_display(self, soft = False):
     if self.is_administrator():
         return _('Site Adminstrator')
@@ -281,10 +325,12 @@ def user_get_status_display(self, soft = False):
     elif soft == True:
         return _('Registered User')
     elif self.is_watched():
+        print 'watched'
         return _('Watched User')
     elif self.is_approved():
         return _('Approved User')
     else:
+        print 'vot blin'
         raise ValueError('Unknown user status')
 
 
@@ -515,6 +561,7 @@ User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
+User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_status_display', user_get_status_display)
 

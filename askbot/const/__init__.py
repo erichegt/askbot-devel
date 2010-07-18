@@ -31,6 +31,8 @@ TYPE_REPUTATION = (
     (-6, 'lose_by_flagged_lastrevision_3_times'),
     (-7, 'lose_by_flagged_lastrevision_5_times'),
     (-8, 'lose_by_upvote_canceled'),
+    #for reputation type 10 Repute.comment field is required
+    (10, 'assigned_by_moderator'),
 )
 
 #do not translate these!!!

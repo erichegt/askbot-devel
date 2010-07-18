@@ -35,7 +35,7 @@
                 <p>
                     <span class="karma-gained">{{ rep.positive }}</span>
                     <span class="karma-lost">{{ rep.negative }}</span>
-                    <a href="{% url question rep.question_id %}{{ rep.title|slugify }}">{{ rep.title }}</a> 
+                    {{ rep.get_explanation_snippet|safe }}
                     <span class="small">({% diff_date rep.reputed_at %})</span>                    
                 </p>
                 {% endfor %}
