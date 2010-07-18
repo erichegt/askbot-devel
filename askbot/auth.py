@@ -17,9 +17,15 @@ from askbot.conf import settings as askbot_settings
 
 def can_vote_up(user):
     """Determines if a User can vote Questions and Answers up."""
-    return user.is_authenticated() and (
-        user.reputation >= askbot_settings.MIN_REP_TO_VOTE_UP or
-        user.is_superuser)
+    if user.is_authenticated():
+        if user.reputation >= askbot_settings.MIN_REP_TO_VOTE_UP:
+            if user.is_blocked():
+                return False
+            else:
+                return True
+        if user.is_administrator() or user.is_moderator():
+            return True
+    return False
 
 def can_flag_offensive(user):
     """Determines if a User can flag Questions and Answers as offensive."""
@@ -64,13 +70,16 @@ def can_edit_post(user, post):
     """Determines if a User can edit the given Question or Answer."""
     if user.is_authenticated():
         if user.id == post.author_id:
-            return True
+            if user.is_blocked():
+                return False
+            else:
+                return True
         if post.wiki:
             if user.reputation >= askbot_settings.MIN_REP_TO_EDIT_WIKI:
                 return True
         if user.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
             return True
-        if user.is_superuser:
+        if user.is_administrator() or user.is_moderator():
             return True
     return False
 
@@ -156,9 +165,15 @@ def can_view_user_edit(request_user, target_user):
     return (request_user.is_authenticated() and request_user == target_user)
 
 def can_upload_files(request_user):
-    if request_user.is_superuser:
-        return True
     if request_user.is_authenticated():
+        if request_user.is_suspended():
+            return False
+        elif request_user.is_blocked():
+            return False
+        elif request_user.is_moderator():
+            return True
+        elif request_user.is_administrator():
+            return True
         if request_user.reputation >= askbot_settings.MIN_REP_TO_UPLOAD_FILES:
             return True
     return False
