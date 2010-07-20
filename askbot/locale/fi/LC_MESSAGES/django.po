@@ -34,6 +34,23 @@ msgstr "Kysymys ja kaikki sen vastaukset on poistettu"
 msgid "The question has been deleted"
 msgstr "Kysymys on poistettu"
 
+msgid "anonymous users cannot vote"
+msgstr "kirjaudu sisään, jotta voit käyttää tätä ominaisuutta"
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "tarvitset >%(points)s points äänestämiseen "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr ">%(points)s mainetta tarvitaan"
+
+msgid "cannot vote for own posts"
+msgstr "et voi äänestää omia postauksia"
+
+msgid "cannot revoke old vote"
+msgstr "vanhoja ääniä ei voi muuttaa"
+
 #: feed.py:22
 msgid " - "
 msgstr " - "

@@ -57,16 +57,13 @@ var Vote = function(){
 
     var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
                     + "?next=" + scriptUrl + $.i18n._("question/") + "{{QuestionID}}/{{questionSlug}}'>"
-					+ $.i18n._('please login') + "</a>";
+                    + $.i18n._('please login') + "</a>";
 
     var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
 
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions');
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
-    var upVoteRequiredScoreMessage = $.i18n._('>15 points requried to upvote') + pleaseSeeFAQ;
-    var downVoteRequiredScoreMessage = $.i18n._('>100 points required to downvote') + pleaseSeeFAQ;
-    var voteOwnDeniedMessage = $.i18n._('cannot vote for own posts');
-    var voteRequiredMoreVotes = $.i18n._('daily vote cap exhausted') + pleaseSeeFAQ;
+    //there were a couple of more messages...
     var voteDenyCancelMessage = $.i18n._('cannot revoke old vote') + pleaseSeeFAQ;
     var offensiveConfirmation = $.i18n._('please confirm offensive');
     var offensiveAnonymousMessage = $.i18n._('anonymous users cannot flag offensive posts') + pleaseLogin;
@@ -235,6 +232,7 @@ var Vote = function(){
     };
     
     var submit = function(object, voteType, callback) {
+        //this function submits votes
         $.ajax({
             type: "POST",
             cache: false,
@@ -305,27 +303,25 @@ var Vote = function(){
     };
         
     var callback_vote = function(object, voteType, data){
-        if(data.allowed == "0" && data.success == "0"){
-            showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId));
+        if (data.success == '0'){
+            showMessage(object, data.message);
+            return;
         }
-        else if (data.allowed == "-3"){
-            showMessage(object, voteRequiredMoreVotes);
-        }
-        else if (data.allowed == "-2"){
-            if (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote){
-                showMessage(object, upVoteRequiredScoreMessage);
+        else {
+            if (data.status == '1'){
+                setVoteImage(voteType, true, object);
             }
-            else if (voteType == VoteType.questionDownVote || voteType == VoteType.answerDownVote){
-                showMessage(object, downVoteRequiredScoreMessage);
+            else {
+                setVoteImage(voteType, false, object);
             }
+            setVoteNumber(object, data.count);
+            if (data.message.length > 0){
+                showMessage(object, data.message);
+            }
+            return;
         }
-        else if (data.allowed == "-1"){
-            showMessage(object, voteOwnDeniedMessage);
-        }
-        else if (data.status == "2"){
-            showMessage(object, voteDenyCancelMessage);
-        }
-        else if (data.status == "1"){
+        //may need to take a look at this again
+        if (data.status == "1"){
             setVoteImage(voteType, true, object);
             setVoteNumber(object, data.count);
         }     
@@ -389,12 +385,12 @@ var Vote = function(){
             bindEvents();
         },
         
-        // Accept answer public function
+        //accept answer
         accept: function(object){
             postId = object.attr("id").substring(imgIdPrefixAccept.length);
             submit(object, VoteType.acceptAnswer, callback_accept);
         },
-        
+        //mark question as favorite
         favorite: function(object){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
@@ -405,9 +401,9 @@ var Vote = function(){
             
         vote: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId).replace("{{questionSlug}}", questionSlug));
-                return false;   
+                showMessage($(object), voteAnonymousMessage);
             }
+            // up and downvote processor
             if (voteType == VoteType.answerUpVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVoteup.length);
             }
@@ -417,7 +413,7 @@ var Vote = function(){
             
             submit(object, voteType, callback_vote);
         },
-        
+        //flag offensive
         offensive: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage($(object), offensiveAnonymousMessage.replace("{{QuestionID}}", questionId));
@@ -428,7 +424,7 @@ var Vote = function(){
                 submit(object, voteType, callback_offensive);
             }
         },
-            
+        //delete question or answer (comments are deleted separately)
         remove: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
                 showMessage($(object), removeAnonymousMessage.replace("{{QuestionID}}", questionId));

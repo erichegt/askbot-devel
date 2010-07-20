@@ -28,6 +28,23 @@ msgstr "Hesap bu adla zaten forum var"
 msgid "can't have two logins to the same account yet, sorry."
 msgstr "Üzgünüm.. Bir hesaba aynı anda iki giriş mümkün değil."
 
+msgid "anonymous users cannot vote"
+msgstr "üye girişi yapmadan oy kullanamazsınız"
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "beğeninizi göstermek için en az %(points)s puan toplamalısınız "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "beğenmediğinizi göstermek için en az %(points)s puan toplamalısınız"
+
+msgid "cannot vote for own posts"
+msgstr "kendi yazılarınıza oy veremezsiniz"
+
+msgid "cannot revoke old vote"
+msgstr "verilen bir oyu iptal edemezsiniz"
+
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr "Lütfen) geçerli kullanıcı adı ve şifre (hem harf duyarlıdır girin."

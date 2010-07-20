@@ -24,6 +24,23 @@ msgstr ""
 msgid "Account with this name already exists on the forum"
 msgstr ""
 
+msgid "anonymous users cannot vote"
+msgstr "sorry, anonymous users cannot vote "
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr ">%(points)s points required to upvote "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr ">%(points)s points required to downvote "
+
+msgid "cannot vote for own posts"
+msgstr "sorry, you cannot vote for your own posts"
+
+msgid "cannot revoke old vote"
+msgstr "sorry, but older votes cannot be revoked"
+
 #: django_authopenid/forms.py:136
 msgid "can't have two logins to the same account yet, sorry."
 msgstr ""

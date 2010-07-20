@@ -56,6 +56,27 @@ class Vote(base.MetaContent, base.UserContent):
         assert(vote_type in (self.VOTE_UP, self.VOTE_DOWN))
         return self.vote != vote_type
 
+    def cancel(self):
+        """cancel the vote
+        while taking into account whether vote was up
+        or down
+
+        return change in score on the post
+        """
+        #importing locally because of circular dependency
+        from askbot import auth
+        score_before = self.content_object.score
+        if self.vote > 0:
+            # cancel upvote
+            auth.onUpVotedCanceled(self, self.content_object, self.user)
+
+        else:
+            # cancel downvote
+            auth.onDownVotedCanceled(self, self.content_object, self.user)
+        score_after = self.content_object.score
+
+        return score_after - score_before
+
 
 class FlaggedItemManager(models.Manager):
     def get_flagged_items_count_today(self, user):

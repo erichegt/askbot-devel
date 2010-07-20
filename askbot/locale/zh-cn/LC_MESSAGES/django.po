@@ -19,9 +19,26 @@ msgstr ""
 msgid "i-names are not supported"
 msgstr "基本的HTML标签也是支持的"
 
+#, python-format
+msgid ">%(points)s points requried to upvote"
+msgstr "需要+%(points)s积分才能投支持票。"
+
 #: django_authopenid/forms.py:134
 msgid "Account with this name already exists on the forum"
 msgstr ""
+
+msgid "anonymous users cannot vote"
+msgstr "匿名用户不能投票"
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "需要+%(points)s积分才能投反对票。"
+
+msgid "cannot vote for own posts"
+msgstr "不能给自己的帖子投票"
+
+msgid "cannot revoke old vote"
+msgstr "这个投票已经过时，不能撤销。"
 
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."

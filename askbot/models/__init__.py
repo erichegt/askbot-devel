@@ -29,6 +29,9 @@ from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 
+class PermissionError(Exception):
+    pass
+
 User.add_to_class(
             'status', 
             models.CharField(
@@ -67,6 +70,95 @@ User.add_to_class('tag_filter_setting',
                                      )
                  )
 User.add_to_class('response_count', models.IntegerField(default=0))
+
+
+def user_assert_can_vote_for_post(
+                                self, 
+                                post = None,
+                                direction = None,
+                            ):
+    """raises PermissionError exception
+    if user can't in fact upvote
+
+    :param:direction can be 'up' or 'down'
+    :param:post can be instance of question or answer
+    """
+    if self.is_blocked():
+        raise PermissionError(
+                _(
+                    'Sorry your account appears to be blocked ' +
+                    'and you cannot vote - please contact the ' +
+                    'site administrator to resolve the issue'
+                )
+            )
+    if self.is_suspended():
+        raise PermissionError(
+                _(
+                    'Sorry your account appears to be suspended ' +
+                    'and you cannot vote - please contact the ' +
+                    'site administrator to resolve the issue'
+                )
+            )
+    if self.is_moderator() or self.is_administrator():
+        return
+
+    if direction == 'up':
+        if self.reputation < askbot_settings.MIN_REP_TO_VOTE_UP:
+            msg = _(">%(points)s points required to upvote, bitch") % \
+                    {'points': askbot_settings.MIN_REP_TO_VOTE_UP}
+            raise PermissionError(msg)
+    else:
+        if self.reputation < askbot_settings.MIN_REP_TO_VOTE_DOWN:
+            msg = _(">%(points)s points required to downvote") % \
+                    {'points': askbot_settings.MIN_REP_TO_VOTE_DOWN}
+            raise PermissionError(msg)
+
+    if self == post.author:
+        raise PermissionError('cannot vote for own posts')
+
+
+def user_get_old_vote_for_post(self, post):
+    """returns previous vote for this post
+    by the user or None, if does not exist
+
+    raises assertion_error is number of old votes is > 1
+    which is illegal
+    """
+    post_content_type = ContentType.objects.get_for_model(post)
+    old_votes = Vote.objects.filter(
+                                user = self,
+                                content_type = post_content_type,
+                                object_id = post.id
+                            )
+    if len(old_votes) == 0:
+        return None
+    else:
+        assert(len(old_votes) == 1)
+
+    return old_votes[0]
+
+def user_assert_can_revoke_old_vote(self, vote):
+    """raises PermissionError if old vote 
+    cannot be revoked due to age of the vote
+    """
+    if (datetime.datetime.now().day - vote.voted_at.day) \
+        >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
+        raise PermissionError(_('cannot revoke old vote'))
+
+def user_get_unused_votes_today(self):
+    """returns number of votes that are
+    still available to the user today
+    """
+    today = datetime.date.today()
+    one_day_interval = (today, today + datetime.timedelta(1))
+
+    used_votes = Vote.objects.filter(
+                                user = self, 
+                                voted_at__range = one_day_interval
+                            ).count()
+
+    available_votes = askbot_settings.MAX_VOTES_PER_USER_PER_DAY - used_votes
+    return max(0, available_votes)
 
 def user_post_comment(
                     self,
@@ -417,6 +509,7 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
     Question.objects.update_favorite_count(question)
     return result
 
+@auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     """"private" wrapper function that applies post upvotes/downvotes
     and cancelations
@@ -460,13 +553,17 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     if vote_type == Vote.VOTE_UP:
         if cancel:
             auth.onUpVotedCanceled(vote, post, user, timestamp)
+            return None
         else:
             auth.onUpVoted(vote, post, user, timestamp)
+            return vote
     elif vote_type == Vote.VOTE_DOWN:
         if cancel:
             auth.onDownVotedCanceled(vote, post, user, timestamp)
+            return None
         else:
             auth.onDownVoted(vote, post, user, timestamp)
+            return vote
 
 def user_unfollow_question(self, question = None):
     if self in question.followed_by.all():
@@ -477,7 +574,7 @@ def user_follow_question(self, question = None):
         question.followed_by.add(self)
 
 def upvote(self, post, timestamp=None, cancel=False):
-    _process_vote(
+    return _process_vote(
         self,post,
         timestamp=timestamp,
         cancel=cancel,
@@ -485,7 +582,7 @@ def upvote(self, post, timestamp=None, cancel=False):
     )
 
 def downvote(self, post, timestamp=None, cancel=False):
-    _process_vote(
+    return _process_vote(
         self,post,
         timestamp=timestamp,
         cancel=cancel,
@@ -564,6 +661,10 @@ User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_status_display', user_get_status_display)
+User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
+User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
+User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
+User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 
 #todo: move this to askbot/utils ??
 def format_instant_notification_body(
@@ -996,6 +1097,8 @@ EmailFeedSetting = EmailFeedSetting
 
 __all__ = [
         'signals',
+
+        'PermissionError',
 
         'Question',
         'QuestionRevision',

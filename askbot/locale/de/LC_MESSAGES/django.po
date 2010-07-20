@@ -28,6 +28,23 @@ msgstr "Ein Zugang dieses Namens existiert bereits!"
 msgid "can't have two logins to the same account yet, sorry."
 msgstr "Zwei Logins für den selben Zugang sind leider noch nicht möglich."
 
+msgid "anonymous users cannot vote"
+msgstr "Gastbenutzer können nicht abstimmen"
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "Positiv bewerten benötigt mindestens %(points)s Punkte "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "Negativ bewerten benötigt mindestens %(points)s Punkte"
+
+msgid "cannot vote for own posts"
+msgstr "Über selbst verfaßte Beiträge kann nicht abgestimmt werden"
+
+msgid "cannot revoke old vote"
+msgstr "Bewertung kann nicht mehr zurückgenommen werden"
+
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr ""

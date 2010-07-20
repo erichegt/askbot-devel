@@ -31,9 +31,26 @@ msgstr ""
 msgid "can't have two logins to the same account yet, sorry."
 msgstr ""
 
+msgid "anonymous users cannot vote"
+msgstr "usuarios anónimos no pueden votar"
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr ">%(points)s puntos requeridos para votar positivamente "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr ">%(points)s puntos requeridos para votar negativamente"
+
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr "Ingrese su nombre de usuario y contraseña (sensible a las mayusculas)"
+
+msgid "cannot vote for own posts"
+msgstr "no se puede votar por sus propias publicaciones"
+
+msgid "cannot revoke old vote"
+msgstr "no puede revocar un voto viejo"
 
 #: django_authopenid/forms.py:160 django_authopenid/forms.py:210
 msgid "This account is inactive."

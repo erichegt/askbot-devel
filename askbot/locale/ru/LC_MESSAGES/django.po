@@ -29,6 +29,23 @@ msgstr "аккаунт с таким именем уже существует н
 msgid "can't have two logins to the same account yet, sorry."
 msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
 
+msgid "anonymous users cannot vote"
+msgstr "неавторизированные пользователи не могут голосовать "
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "для повышения рейтинга требуется минимум %(points)s баллов "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "для понижения рейтинга требуется минимум %(points)s баллов"
+
+msgid "cannot vote for own posts"
+msgstr "нельзя голосовать за собственные сообщения"
+
+msgid "cannot revoke old vote"
+msgstr "голос не может быть отозван"
+
 #: django_authopenid/forms.py:158
 msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
