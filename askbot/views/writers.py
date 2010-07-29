@@ -50,8 +50,11 @@ def upload(request):#ajax upload file to a question or answer
     error = ''
     new_file_name = ''
     try:
-
         #may raise exceptions.PermissionDenied
+        if request.user.is_anonymous():
+            msg = _('Sorry, anonymous users cannot upload files')
+            raise exceptions.PermissionDenied(msg)
+
         request.user.assert_can_upload_file()
 
         # check file type
