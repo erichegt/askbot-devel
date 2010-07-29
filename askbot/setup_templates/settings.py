@@ -58,11 +58,6 @@ LANGUAGE_CODE = 'en'
 # Example: "/home/media/media.lawrence.com/"
 ASKBOT_FILE_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
 
-# URL that handles the media served from ASKBOT_FILE_UPLOAD_DIR. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-ASKBOT_FILE_UPLOAD_URL = ''#set this to serve uploaded files correctly
-
 PROJECT_ROOT = os.path.dirname(__file__)
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
