@@ -10,7 +10,7 @@ from askbot import const
 import logging
 import urllib
 
-DEFAULT_NEXT = '/' + getattr(settings, 'FORUM_SCRIPT_ALIAS')
+DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
 def clean_next(next):
     if next is None:
         return DEFAULT_NEXT

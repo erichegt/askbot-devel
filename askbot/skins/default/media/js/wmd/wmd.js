@@ -252,7 +252,10 @@ Attacklab.wmdBase = function(){
 				text = text.replace('http://ftp://', 'ftp://');
 				
 				if (text.indexOf('http://') === -1 && text.indexOf('ftp://') === -1) {
-					text = 'http://' + text;
+            if (type == 0){
+                //add http only to urls
+                text = 'http://' + text;
+            }
 				}
 			}
 			

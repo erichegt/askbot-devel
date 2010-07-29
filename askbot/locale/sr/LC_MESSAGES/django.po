@@ -4055,13 +4055,15 @@ msgid "profile - email subscriptions"
 msgstr "профил - претплата е-поштом"
 
 #: forum/views/writers.py:70
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "нажалост, слање датотека на сервер захтева да имате карму >60"
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "нажалост, слање датотека на сервер захтева да имате карму >%(min_rep)s"
 
 #: forum/views/writers.py:72
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
 msgstr ""
-"дозвољени типови датотека су 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+"дозвољени типови датотека су '%(file_types)s'"
 
 #: forum/views/writers.py:74
 #, python-format

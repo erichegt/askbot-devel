@@ -4706,13 +4706,15 @@ msgid "profile - email subscriptions"
 msgstr "profiili - sähköpostitilaukset"
 
 #: views/writers.py:67
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "sorry, file uploading requires karma >60"
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "sorry, file uploading requires karma >%(min_rep)s"
 
 #: views/writers.py:69
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
 msgstr ""
-"hyväksytyt tiedostotyypit ovat 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+"hyväksytyt tiedostotyypit ovat '%(file_types)s'"
 
 #: views/writers.py:71
 #, python-format

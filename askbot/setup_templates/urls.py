@@ -8,7 +8,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^%s' % settings.FORUM_SCRIPT_ALIAS, include('askbot.urls')),
+    (r'%s' % settings.ASKBOT_URL, include('askbot.urls')),
     (r'^admin/', include(admin.site.urls)),
     #(r'^cache/', include('keyedcache.urls')), - broken views disable for now
     (r'^settings/', include('askbot.deps.livesettings.urls')),

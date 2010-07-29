@@ -14,6 +14,7 @@ from django.utils.safestring import mark_safe
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
+from django.core import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Question, QuestionRevision
@@ -28,9 +29,9 @@ from askbot.models import signals
 from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.startup_tests import run_startup_tests
 
-class PermissionError(Exception):
-    pass
+run_startup_tests()
 
 User.add_to_class(
             'status', 
@@ -77,14 +78,14 @@ def user_assert_can_vote_for_post(
                                 post = None,
                                 direction = None,
                             ):
-    """raises PermissionError exception
+    """raises exceptions.PermissionDenied exception
     if user can't in fact upvote
 
     :param:direction can be 'up' or 'down'
     :param:post can be instance of question or answer
     """
     if self.is_blocked():
-        raise PermissionError(
+        raise exceptions.PermissionDenied(
                 _(
                     'Sorry your account appears to be blocked ' +
                     'and you cannot vote - please contact the ' +
@@ -92,7 +93,7 @@ def user_assert_can_vote_for_post(
                 )
             )
     if self.is_suspended():
-        raise PermissionError(
+        raise exceptions.PermissionDenied(
                 _(
                     'Sorry your account appears to be suspended ' +
                     'and you cannot vote - please contact the ' +
@@ -104,17 +105,17 @@ def user_assert_can_vote_for_post(
 
     if direction == 'up':
         if self.reputation < askbot_settings.MIN_REP_TO_VOTE_UP:
-            msg = _(">%(points)s points required to upvote, bitch") % \
+            msg = _(">%(points)s points required to upvote") % \
                     {'points': askbot_settings.MIN_REP_TO_VOTE_UP}
-            raise PermissionError(msg)
+            raise exceptions.PermissionDenied(msg)
     else:
         if self.reputation < askbot_settings.MIN_REP_TO_VOTE_DOWN:
             msg = _(">%(points)s points required to downvote") % \
                     {'points': askbot_settings.MIN_REP_TO_VOTE_DOWN}
-            raise PermissionError(msg)
+            raise exceptions.PermissionDenied(msg)
 
     if self == post.author:
-        raise PermissionError('cannot vote for own posts')
+        raise exceptions.PermissionDenied('cannot vote for own posts')
 
 
 def user_get_old_vote_for_post(self, post):
@@ -137,13 +138,39 @@ def user_get_old_vote_for_post(self, post):
 
     return old_votes[0]
 
+
+def user_assert_can_upload_file(request_user):
+
+    if request_user.is_authenticated():
+        if request_user.is_suspended():
+            raise exceptions.PermissionDenied(
+                        _('Sorry, suspended users cannot upload files')
+                    )
+        elif request_user.is_blocked():
+            raise exceptions.PermissionDenied(
+                        _('Sorry, blocked users cannot upload files')
+                    )
+        elif request_user.is_moderator():
+            return
+        elif request_user.is_administrator():
+            return
+        if request_user.reputation < askbot_settings.MIN_REP_TO_UPLOAD_FILES:
+            msg = _(
+                    'uploading images is limited to users ' + 
+                    'with >%(min_rep)s reputation points'
+                ) % {'min_rep': askbot_settings.MIN_REP_TO_UPLOAD_FILES }
+            raise exceptions.PermissionDenied(msg)
+    else:
+        raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot upload files'))
+
+
 def user_assert_can_revoke_old_vote(self, vote):
-    """raises PermissionError if old vote 
+    """raises exceptions.PermissionDenied if old vote 
     cannot be revoked due to age of the vote
     """
     if (datetime.datetime.now().day - vote.voted_at.day) \
         >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
-        raise PermissionError(_('cannot revoke old vote'))
+        raise exceptions.PermissionDenied(_('cannot revoke old vote'))
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -437,6 +464,7 @@ def user_can_moderate_user(self, other):
     else:
         return False
 
+
 def user_get_q_sel_email_feed_frequency(self):
     #print 'looking for frequency for user %s' % self
     try:
@@ -664,6 +692,7 @@ User.add_to_class('get_status_display', user_get_status_display)
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
+User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 
 #todo: move this to askbot/utils ??
@@ -1097,8 +1126,6 @@ EmailFeedSetting = EmailFeedSetting
 
 __all__ = [
         'signals',
-
-        'PermissionError',
 
         'Question',
         'QuestionRevision',

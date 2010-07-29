@@ -269,7 +269,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        pattern = r'/%s%s%d/([\w-]+)' % (settings.FORUM_SCRIPT_ALIAS,_('question/'), question.id)
+        pattern = r'/%s%s%d/([\w-]+)' % (settings.ASKBOT_URL,_('question/'), question.id)
         path_re = re.compile(pattern)
         logging.debug(pattern)
         logging.debug(request.path)

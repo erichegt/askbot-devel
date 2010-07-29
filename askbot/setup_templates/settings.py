@@ -56,12 +56,12 @@ LANGUAGE_CODE = 'en'
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+ASKBOT_FILE_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# URL that handles the media served from ASKBOT_FILE_UPLOAD_DIR. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''#set this to serve uploaded files correctly
+ASKBOT_FILE_UPLOAD_URL = ''#set this to serve uploaded files correctly
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
@@ -118,8 +118,8 @@ FILE_UPLOAD_HANDLERS = (
     'django.core.files.uploadhandler.MemoryFileUploadHandler',
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
-ALLOW_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
-ALLOW_MAX_FILE_SIZE = 1024 * 1024 #result in bytes
+ASKBOT_ALLOWED_UPLOAD_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
+ASKBOT_MAX_UPLOAD_FILE_SIZE = 1024 * 1024 #result in bytes
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
@@ -196,8 +196,8 @@ logging.basicConfig(
 #
 #   this will allow running your forum with url like http://site.com/forum
 #
-#   FORUM_SCRIPT_ALIAS = 'forum/'
+#   ASKBOT_URL = 'forum/'
 #
-FORUM_SCRIPT_ALIAS = '' #no leading slash, default = '' empty string
+ASKBOT_URL = '' #no leading slash, default = '' empty string
 _ = lambda v:v #fake translation function for the login url
-LOGIN_URL = '/%s%s%s' % (FORUM_SCRIPT_ALIAS,_('account/'),_('signin/'))
+LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))

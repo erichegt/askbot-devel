@@ -164,20 +164,6 @@ def can_view_user_preferences(request_user, target_user):
 def can_view_user_edit(request_user, target_user):
     return (request_user.is_authenticated() and request_user == target_user)
 
-def can_upload_files(request_user):
-    if request_user.is_authenticated():
-        if request_user.is_suspended():
-            return False
-        elif request_user.is_blocked():
-            return False
-        elif request_user.is_moderator():
-            return True
-        elif request_user.is_administrator():
-            return True
-        if request_user.reputation >= askbot_settings.MIN_REP_TO_UPLOAD_FILES:
-            return True
-    return False
-
 ###########################################
 ## actions and reputation changes event
 ###########################################

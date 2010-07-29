@@ -349,7 +349,7 @@ def get_latest_changed_timestamp():
 def media(url):
     url = skins.loaders.find_media_source(url)
     if url:
-        url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
+        url = '///' + settings.ASKBOT_URL + '/m/' + url
         return os.path.normpath(url) + '?v=%d' \
                 % askbot_settings.MEDIA_RESOURCE_REVISION
     else:
@@ -424,7 +424,7 @@ class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
-        prefix = '///' + settings.FORUM_SCRIPT_ALIAS + 'm/'
+        prefix = '///' + settings.ASKBOT_URL + 'm/'
         url = ''
         if self.items:
             url += '/'     

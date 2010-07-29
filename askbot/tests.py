@@ -12,14 +12,17 @@ import datetime
 import time
 import functools
 import django.core.mail
+from django.core import exceptions
 from django.conf import settings as django_settings
 from django.test import TestCase
 from django.template import defaultfilters
 from django.core import management
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import AnonymousUser
 from askbot.models import User, Question, Answer, Activity
 from askbot.models import EmailFeedSetting
 from askbot import const
+from askbot.conf import settings as askbot_settings
 
 def email_alert_test(test_func):
     """decorator for test methods in EmailAlertTests
@@ -118,6 +121,62 @@ def get_re_notif_after(timestamp):
             active_at__gte = timestamp
         )
     return notifications
+
+
+class UploadPermissionTests(TestCase):
+    """Tests permissions for file uploads
+    """
+
+    def setUp(self):
+        self.user = create_user(
+                            username = 'test',
+                            email = 'test@test.com'
+                        )
+        self.min_rep = askbot_settings.MIN_REP_TO_UPLOAD_FILES
+
+    def test_suspended_user_cannot_upload(self):
+        self.user.set_status('s')
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.assert_can_upload_file
+                )
+
+    def test_blocked_user_cannot_upload(self):
+        self.user.set_status('b')
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.assert_can_upload_file
+                )
+    def test_low_rep_user_cannot_upload(self):
+        self.user.reputation = self.min_rep - 1
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.assert_can_upload_file
+                )
+
+    def test_high_rep_user_can_upload(self):
+        self.user.reputation = self.min_rep
+        try:
+            self.user.assert_can_upload_file()
+        except exceptions.PermissionDenied:
+            fail('high rep user must be able to upload')
+
+    def test_low_rep_moderator_can_upload(self):
+        assert(self.user.reputation < self.min_rep)
+        self.user.set_status('m')
+        try:
+            self.user.assert_can_upload_file()
+        except exceptions.PermissionDenied:
+            fail('high rep user must be able to upload')
+
+    def test_low_rep_administrator_can_upload(self):
+        assert(self.user.reputation < self.min_rep)
+        self.user.is_superuser = True
+        try:
+            self.user.assert_can_upload_file()
+        except exceptions.PermissionDenied:
+            fail('high rep user must be able to upload')
+
 
 class EmailAlertTests(TestCase):
     """Base class for testing delayed Email notifications 

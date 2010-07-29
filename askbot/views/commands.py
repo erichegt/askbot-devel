@@ -10,6 +10,7 @@ import datetime
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
+from django.core import exceptions
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render_to_response
@@ -35,7 +36,7 @@ def process_vote(user = None, vote_direction = None, post = None):
     """
 
     if user.is_anonymous():
-        raise PermissionError(_('anonymous users cannot vote'))
+        raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
 
     user.assert_can_vote_for_post(
                                     post = post, 
@@ -54,7 +55,7 @@ def process_vote(user = None, vote_direction = None, post = None):
         #this is a new vote
         votes_left = user.get_unused_votes_today()
         if votes_left <= 0:
-            raise PermissionError(
+            raise exceptions.PermissionDenied(
                             _('Sorry you ran out of votes for today')
                         )
 

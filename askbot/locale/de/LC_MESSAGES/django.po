@@ -4154,12 +4154,14 @@ msgid "profile - email subscriptions"
 msgstr "E-Mail-Abonnements"
 
 #: forum/views/writers.py:70
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "Das Hochladen von Dateien benötigt 60 Punkte oder mehr"
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "Das Hochladen von Dateien benötigt %(min_rep)s Punkte oder mehr"
 
 #: forum/views/writers.py:72
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "Erlaubte Dateitypen: 'jpg', 'jpeg', 'gif', 'bmp', 'png' und 'tiff'"
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr "Erlaubte Dateitypen: '%(file_types)s'"
 
 #: forum/views/writers.py:74
 #, python-format

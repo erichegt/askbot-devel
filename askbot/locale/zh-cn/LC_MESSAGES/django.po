@@ -4050,13 +4050,15 @@ msgid "profile - email subscriptions"
 msgstr "收藏 - 用户资料"
 
 #: forum/views/writers.py:70
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "上传图片只限于积分+60以上注册用户!"
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "上传图片只限于积分+%(min_rep)s以上注册用户!"
 
 # todo take these out of settings
 #: forum/views/writers.py:72
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "只允许上传'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'类型的文件！"
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr "只允许上传'%(file_types)s'类型的文件！"
 
 #: forum/views/writers.py:74
 #, python-format

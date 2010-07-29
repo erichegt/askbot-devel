@@ -4279,12 +4279,14 @@ msgid "profile - email subscriptions"
 msgstr "профиль - email подписки"
 
 #: forum/views/writers.py:69
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "загрузка изображений доступна только пользователям с репутацией > 60"
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "загрузка изображений доступна только пользователям с репутацией > %(min_rep)s"
 
 #: forum/views/writers.py:71
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "допустимые типы файлов: 'JPG ',' JPEG ',' GIF ',' BMP ',' PNG ',' TIFF'"
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr "допустимые типы файлов: '%(file_types)s'"
 
 #: forum/views/writers.py:73
 #, python-format

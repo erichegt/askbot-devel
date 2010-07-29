@@ -5,8 +5,11 @@
 This module contains views that allow adding, editing, and deleting main textual content.
 """
 import os.path
-import time, datetime, random
-from django.core.files.storage import default_storage
+import time
+import datetime
+import random
+import logging
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -15,7 +18,7 @@ from django.utils import simplejson
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+from django.core import exceptions
 from django.conf import settings
 
 from askbot import auth
@@ -35,49 +38,69 @@ QUESTIONS_PAGE_SIZE = 10
 ANSWERS_PAGE_SIZE = 10
 
 def upload(request):#ajax upload file to a question or answer 
-    class FileTypeNotAllow(Exception):
-        pass
-    class FileSizeNotAllow(Exception):
-        pass
-    class UploadPermissionNotAuthorized(Exception):
-        pass
+    """view that handles file upload via Ajax
+    """
 
     #<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>
     xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
 
+    f = request.FILES['file-upload']
+    # check upload permission
+    result = ''
+    error = ''
+    new_file_name = ''
     try:
-        f = request.FILES['file-upload']
-        # check upload permission
-        if not auth.can_upload_files(request.user):
-            raise UploadPermissionNotAuthorized
+
+        #may raise exceptions.PermissionDenied
+        request.user.assert_can_upload_file()
 
         # check file type
-        file_name_suffix = os.path.splitext(f.name)[1].lower()
-        if not file_name_suffix in settings.ALLOW_FILE_TYPES:
-            raise FileTypeNotAllow
+        file_extension = os.path.splitext(f.name)[1].lower()
+        if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
+            msg = _("allowed file types are '%(file_types)s'") % \
+                    "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
+            raise exceptions.PermissionDenied(msg)
 
         # generate new file name
-        new_file_name = str(time.time()).replace('.', str(random.randint(0,100000))) + file_name_suffix
+        new_file_name = str(
+                            time.time()
+                        ).replace(
+                            '.', 
+                            str(random.randint(0,100000))
+                        ) + file_extension
+
+        file_storage = FileSystemStorage(
+                                location = settings.ASKBOT_FILE_UPLOAD_DIR,
+                                base_url = reverse('uploaded_file', kwargs = {'path':''}),
+                            )
         # use default storage to store file
-        default_storage.save(new_file_name, f)
+        file_storage.save(new_file_name, f)
         # check file size
         # byte
-        size = default_storage.size(new_file_name)
-        if size > settings.ALLOW_MAX_FILE_SIZE:
-            default_storage.delete(new_file_name)
-            raise FileSizeNotAllow
+        size = file_storage.size(new_file_name)
+        if size > settings.ASKBOT_MAX_UPLOAD_FILE_SIZE:
+            file_storage.delete(new_file_name)
+            msg = _("maximum upload file size is %(file_size)sK") % \
+                    {'file_size': settings.ASKBOT_MAX_UPLOAD_FILE_SIZE}
+            raise exceptions.PermissionDenied(msg)
 
-        result = xml_template % ('Good', '', default_storage.url(new_file_name))
-    except UploadPermissionNotAuthorized:
-        result = xml_template % ('', _('uploading images is limited to users with >60 reputation points'), '')
-    except FileTypeNotAllow:
-        result = xml_template % ('', _("allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"), '')
-    except FileSizeNotAllow:
-        result = xml_template % ('', _("maximum upload file size is %sK") % settings.ALLOW_MAX_FILE_SIZE / 1024, '')
-    except Exception:
-        result = xml_template % ('', _('Error uploading file. Please contact the site administrator. Thank you. %s' % Exception), '')
+    except exceptions.PermissionDenied, e:
+        error = str(e)
+    except Exception, e:
+        logging.critical(str(e))
+        error = _('Error uploading file. Please contact the site administrator. Thank you.')
 
-    return HttpResponse(result, mimetype="application/xml")
+    if error == '':
+        result = 'Good'
+        file_url = file_storage.url(new_file_name)
+    else:
+        result = ''
+        file_url = ''
+
+    xml = xml_template % (result, error, file_url)
+    print xml
+
+    return HttpResponse(xml, mimetype="application/xml")
 
 #@login_required #actually you can post anonymously, but then must register
 def ask(request):#view used to ask a new question
@@ -87,6 +110,7 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
+
     if request.method == "POST":
         form = forms.AskForm(request.POST)
         if form.is_valid():
@@ -391,4 +415,4 @@ def delete_comment(request, object_id='', comment_id='', commented_object_type=N
             obj.save()
             user = request.user
             return __generate_comments_json(obj, user)
-    raise PermissionDenied()
+    raise exceptions.PermissionDenied()
