@@ -41,9 +41,6 @@ def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
 
-    #<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>
-    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
-
     f = request.FILES['file-upload']
     # check upload permission
     result = ''
@@ -100,8 +97,9 @@ def upload(request):#ajax upload file to a question or answer
         result = ''
         file_url = ''
 
+    #<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>
+    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
     xml = xml_template % (result, error, file_url)
-    print xml
 
     return HttpResponse(xml, mimetype="application/xml")
 
@@ -118,7 +116,7 @@ def ask(request):#view used to ask a new question
         form = forms.AskForm(request.POST)
         if form.is_valid():
 
-            added_at = datetime.datetime.now()
+            timestamp = datetime.datetime.now()
             #todo: move this to clean_title
             title = form.cleaned_data['title'].strip()
             wiki = form.cleaned_data['wiki']
@@ -126,23 +124,22 @@ def ask(request):#view used to ask a new question
             tagnames = form.cleaned_data['tags'].strip()
             text = form.cleaned_data['text']
 
-            #todo: move this to AskForm.clean_text
-            #todo: make custom MarkDownField
-            text = form.cleaned_data['text']
-
             if request.user.is_authenticated():
-                author = request.user 
 
-                question = models.Question.objects.create_new(
-                    title            = title,
-                    author           = author, 
-                    added_at         = added_at,
-                    wiki             = wiki,
-                    tagnames         = tagnames,
-                    text = text,
-                )
+                try:
+                    question = request.user.post_question(
+                                                    self,
+                                                    title = title,
+                                                    body_text = text,
+                                                    tags = tagnames,
+                                                    wiki = wiki,
+                                                    timestamp = timestamp
+                                                )
+                    return HttpResponseRedirect(question.get_absolute_url())
+                except exceptions.PermissionDenied, e:
+                    request.user.message_set.create(message = str(e))
+                    return HttpResponseRedirect(reverse('index'))
 
-                return HttpResponseRedirect(question.get_absolute_url())
             else:
                 request.session.flush()
                 session_key = request.session.session_key
@@ -154,7 +151,7 @@ def ask(request):#view used to ask a new question
                     wiki = wiki,
                     text = text,
                     summary = summary,
-                    added_at = added_at,
+                    added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
@@ -307,6 +304,13 @@ def edit_answer(request, id):
 
 #todo: rename this function to post_new_answer
 def answer(request, id):#process a new answer
+    """view that posts new answer
+
+    anonymous users post into anonymous storage
+    and redirected to login page
+
+    authenticated users post directly
+    """
     question = get_object_or_404(models.Question, id=id)
     if request.method == "POST":
         form = forms.AnswerForm(question, request.user, request.POST)
@@ -316,14 +320,18 @@ def answer(request, id):#process a new answer
             update_time = datetime.datetime.now()
 
             if request.user.is_authenticated():
-                models.Answer.objects.create_new(
-                                  question=question,
-                                  author=request.user,
-                                  added_at=update_time,
-                                  wiki=wiki,
-                                  text=text,
-                                  email_notify=form.cleaned_data['email_notify']
-                                  )
+                try:
+                    follow = form.cleaned_data['email_notify']
+                    answer = request.user.post_answer(
+                                        question = question,
+                                        body_text = text,
+                                        follow = follow,
+                                        wiki = wiki,
+                                        timestamp = update_time,
+                                    )
+                    return HttpResponseRedirect(answer.get_absolute_url())
+                except exceptions.PermissionDenied, e:
+                    request.user.message_set.create(message = str(e))
             else:
                 request.session.flush()
                 anon = models.AnonymousAnswer(
@@ -392,14 +400,17 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
         if request.method == "GET":
             response = __generate_comments_json(obj, user)
         elif request.method == "POST":
-            if auth.can_add_comments(user, obj):
-                obj.add_comment(
-                    comment = request.POST.get('comment'),
-                    user = request.user,
-                )
+            try:
+                user.post_comment(
+                            parent_post = obj,
+                            body_text = request.POST.get('comment')
+                        )
                 response = __generate_comments_json(obj, user)
-            else:
-                response = HttpResponseForbidden(mimetype="application/json")
+            except exceptions.PermissionDenied, e:
+                response = HttpResponseForbidden(
+                                        str(e),
+                                        mimetype="application/json"
+                                    )
         return response
 
 def delete_comment(request, object_id='', comment_id='', commented_object_type=None):#ajax handler to delete comment

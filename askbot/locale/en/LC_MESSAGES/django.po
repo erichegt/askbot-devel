@@ -27,6 +27,19 @@ msgstr ""
 msgid "anonymous users cannot vote"
 msgstr "sorry, anonymous users cannot vote "
 
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ">%(points)s points required to upvote "

@@ -164,6 +164,52 @@ def user_assert_can_upload_file(request_user):
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot upload files'))
 
 
+def user_assert_can_post_question(self):
+    """raises exceptions.PermissionDenied with
+    text that has the reason for the denial
+    """
+
+    if self.is_suspended():
+        raise exceptions.PermissionDenied(_('suspended users cannot post'))
+    if self.is_blocked():
+        raise exceptions.PermissionDenied(_('blocked users cannot post'))
+
+def user_assert_can_post_answer(self):
+    """same as user_can_post_question
+    """
+    self.assert_can_post_question()
+
+def user_assert_can_post_comment(self, parent_post):
+    """raises exceptions.PermissionDenied if
+    user cannot post comment
+
+    the reason will be in text of exception
+    """
+    if self.is_authenticated():
+        if self.is_blocked():
+            error_message = _('blocked users cannot post')
+        elif self == parent_post.author:
+            return
+        elif self.is_suspended():
+            error_message = _(
+                        'Sorry, since your account is suspended ' + \
+                        'you can comment only you own posts'
+                    )
+        elif self.is_administrator() or self.is_moderator():
+            return
+        elif self.reputation < askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
+            error_message = _(
+                        'Sorry, to comment any post a minimum reputation of ' + \
+                        '%(min_rep)s points is required.'
+                    ) % {'min_rep': askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
+        else:
+            return
+    else:
+        error_message = _('anonymous users cannot comment %(sign_in_url)s') % \
+                        {'sign_in_url': reverse('user_signin')}
+    raise exceptions.PermissionDenied(error_message)
+
+
 def user_assert_can_revoke_old_vote(self, vote):
     """raises exceptions.PermissionDenied if old vote 
     cannot be revoked due to age of the vote
@@ -196,12 +242,16 @@ def user_post_comment(
     """post a comment on behalf of the user
     to parent_post
     """
+
     if body_text is None:
         raise ValueError('body_text is required to post comment')
     if parent_post is None:
-        raise ValueError('parent_post is required to post question')
+        raise ValueError('parent_post is required to post comment')
     if timestamp is None:
         timestamp = datetime.datetime.now()
+
+    self.assert_can_post_comment(parent_post = parent_post)
+
     comment = parent_post.add_comment(
                     user = self,
                     comment = body_text,
@@ -230,6 +280,9 @@ def user_post_question(
                     wiki = False,
                     timestamp = None
                 ):
+
+    self.assert_can_post_question()
+
     if title is None:
         raise ValueError('Title is required to post question')
     if  body_text is None:
@@ -267,8 +320,12 @@ def user_post_answer(
                     question = None,
                     body_text = None,
                     follow = False,
+                    wiki = False,
                     timestamp = None
                 ):
+
+    self.assert_can_post_answer()
+
     if not isinstance(question, Question):
         raise TypeError('question argument must be provided')
     if body_text is None:
@@ -280,7 +337,8 @@ def user_post_answer(
                                     author = self,
                                     text = body_text,
                                     added_at = timestamp,
-                                    email_notify = follow
+                                    email_notify = follow,
+                                    wiki = wiki
                                 )
     return answer
 
@@ -693,6 +751,9 @@ User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
 User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
+User.add_to_class('assert_can_post_question', user_assert_can_post_question)
+User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
+User.add_to_class('assert_can_post_comment', user_assert_can_post_comment)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 
 #todo: move this to askbot/utils ??
@@ -1056,11 +1117,18 @@ def post_stored_anonymous_content(
             aa.author = user
             aa.save()
         #maybe add pending posts message?
-    else: #just publish the questions
-        for aq in aq_list:
-            aq.publish(user)
-        for aa in aa_list:
-            aa.publish(user)
+    else:
+        if user.is_blocked():
+            msg = _('blocked users cannot post')
+            user.message_set.create(message = msg)
+        elif user.is_suspended():
+            msg = _('suspended users cannot post')
+            user.message_set.create(message = msg)
+        else:
+            for aq in aq_list:
+                aq.publish(user)
+            for aa in aa_list:
+                aa.publish(user)
 
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)

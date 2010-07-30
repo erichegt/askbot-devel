@@ -26,6 +26,21 @@ msgstr "Kysymyksesi ja kaikki sen vastaukset on poistettu"
 msgid "Your question has been deleted"
 msgstr "Kysymyksesi on poistettu"
 
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
 #: auth.py:535
 msgid "The question and all of it's answers have been deleted"
 msgstr "Kysymys ja kaikki sen vastaukset on poistettu"

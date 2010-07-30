@@ -24,6 +24,21 @@ msgstr "i-names werden nicht unterstützt."
 msgid "Account with this name already exists on the forum"
 msgstr "Ein Zugang dieses Namens existiert bereits!"
 
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."
 msgstr "Zwei Logins für den selben Zugang sind leider noch nicht möglich."

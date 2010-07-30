@@ -28,6 +28,22 @@ msgstr "Hesap bu adla zaten forum var"
 msgid "can't have two logins to the same account yet, sorry."
 msgstr "Üzgünüm.. Bir hesaba aynı anda iki giriş mümkün değil."
 
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
+
 msgid "anonymous users cannot vote"
 msgstr "üye girişi yapmadan oy kullanamazsınız"
 

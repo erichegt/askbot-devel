@@ -19,7 +19,7 @@ from django.template import defaultfilters
 from django.core import management
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import AnonymousUser
-from askbot.models import User, Question, Answer, Activity
+from askbot.models import User, Question, Answer, Activity, Comment
 from askbot.models import EmailFeedSetting
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -122,8 +122,149 @@ def get_re_notif_after(timestamp):
         )
     return notifications
 
+class CommentPermissionAssertionTests(TestCase):
 
-class UploadPermissionTests(TestCase):
+    def setUp(self):
+        self.user = create_user(
+                            username = 'test',
+                            email = 'test@test.com'
+                        )
+        self.min_rep = askbot_settings.MIN_REP_TO_LEAVE_COMMENTS
+
+    def create_other_user(self):
+        return create_user(
+                        username = 'other',
+                        email = 'other@test.com'
+                    )
+
+    def post_question(self, author = None):
+        if author is None:
+            author = self.user
+        return author.post_question(
+                            title = 'test question title',
+                            body_text = 'test question body',
+                            tags = 'test'
+                        )
+
+    def post_answer(self, question = None, author = None):
+        if author is None:
+            author = self.user
+        return author.post_answer(
+                        question = question,
+                        body_text = 'test answer'
+                    )
+
+    def test_blocked_user_cannot_comment_own_question(self):
+        question = self.post_question()
+
+        self.user.set_status('b')
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.post_comment,
+                    parent_post = question,
+                    body_text = 'test comment'
+                )
+
+    def test_blocked_user_cannot_comment_own_answer(self):
+        question = self.post_question()
+        answer = self.post_answer(question)
+
+        self.user.set_status('b')
+
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.post_comment,
+                    parent_post = answer,
+                    body_text = 'test comment'
+                )
+
+    def test_low_rep_user_cannot_comment_others(self):
+        other_user = create_user(
+                            username = 'other',
+                            email = 'other@test.com'
+                        )
+        question = self.post_question(
+                            author = other_user
+                        )
+        assert(self.user.reputation < self.min_rep)
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    self.user.post_comment,
+                    parent_post = question,
+                    body_text = 'test comment'
+                )
+
+    def test_low_rep_user_can_comment_others_answer_to_own_question(self):
+        question = self.post_question()
+        assert(self.user.reputation < self.min_rep)
+        other_user = self.create_other_user()
+        answer = other_user.post_answer(
+                        question = question,
+                        body_text = 'test answer'
+                    )
+        comment = other_user.post_comment(
+                                    parent_post = answer,
+                                    body_text = 'test comment'
+                                )
+        self.assertTrue(isinstance(comment, Comment))
+
+    def test_high_rep_user_can_comment(self):
+        other_user = self.create_other_user()
+        question = self.post_question(
+                            author = other_user
+                        )
+        self.user.reputation = self.min_rep
+        comment = self.user.post_comment(
+                            parent_post = question,
+                            body_text = 'test comment'
+                        )
+        self.assertTrue(isinstance(comment, Comment))
+
+    def test_suspended_user_cannot_comment_others_question(self):
+        other_user = self.create_other_user()
+        question = self.post_question(author = other_user)
+        self.user.set_status('s')
+        self.assertRaises(
+                exceptions.PermissionDenied,
+                self.user.post_comment,
+                parent_post = question,
+                body_text = 'test comment'
+            )
+
+    def test_suspended_user_can_comment_own_question(self):
+        question = self.post_question()
+        self.user.set_status('s')
+        comment = self.user.post_comment(
+                            parent_post = question,
+                            body_text = 'test comment'
+                        )
+        self.assertTrue(isinstance(comment, Comment))
+
+    def test_low_rep_admin_can_comment_others_question(self):
+        question = self.post_question()
+        other_user = self.create_other_user()
+        other_user.is_superuser = True
+        assert(other_user.is_administrator())
+        assert(other_user.reputation < self.min_rep)
+        comment = other_user.post_comment(
+                            parent_post = question,
+                            body_text = 'test comment'
+                        )
+        self.assertTrue(isinstance(comment, Comment))
+
+    def test_low_rep_moderator_can_comment_others_question(self):
+        question = self.post_question()
+        other_user = self.create_other_user()
+        other_user.set_status('m')
+        assert(other_user.is_moderator())
+        assert(other_user.reputation < self.min_rep)
+        comment = other_user.post_comment(
+                            parent_post = question,
+                            body_text = 'test comment'
+                        )
+        self.assertTrue(isinstance(comment, Comment))
+
+class UploadPermissionAssertionTests(TestCase):
     """Tests permissions for file uploads
     """
 
@@ -239,6 +380,11 @@ class EmailAlertTests(TestCase):
             notification_schedule = self.notification_schedule,
             date_joined = self.setup_timestamp
         )
+        #moderators to avoid permission issues
+        self.other_user.set_status('m')
+        self.other_user.save()
+        self.target_user.set_status('m')
+        self.target_user.save()
 
     def post_comment(
                 self,
