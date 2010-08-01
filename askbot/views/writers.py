@@ -128,7 +128,6 @@ def ask(request):#view used to ask a new question
 
                 try:
                     question = request.user.post_question(
-                                                    self,
                                                     title = title,
                                                     body_text = text,
                                                     tags = tagnames,
