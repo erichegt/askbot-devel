@@ -1,5 +1,7 @@
 from django import template
+from django.core import exceptions
 from askbot import auth
+from askbot import models
 from askbot.deps.grapefruit import Color
 from django.utils.translation import ugettext as _
 import logging
@@ -18,20 +20,12 @@ def can_moderate_user(user, other_user):
     return False
 
 @register.filter
-def can_vote_up(user):
-    return auth.can_vote_up(user)
-
-@register.filter
 def can_flag_offensive(user):
     return auth.can_flag_offensive(user)
 
 @register.filter
-def can_add_comments(user,subject):
-    return auth.can_add_comments(user,subject)
-
-@register.filter
-def can_vote_down(user):
-    return auth.can_vote_down(user)
+def can_add_comments(user, subject):
+    return auth.can_add_comments(user, subject)
 
 @register.filter
 def can_retag_questions(user):
@@ -43,7 +37,13 @@ def can_edit_post(user, post):
 
 @register.filter
 def can_delete_comment(user, comment):
-    return auth.can_delete_comment(user, comment)
+    if user.is_anonymous():
+        return False
+    try:
+        user.assert_can_delete_comment(comment)
+        return True
+    except exceptions.PermissionDenied:
+        return False
 
 @register.filter
 def can_view_offensive_flags(user):
@@ -67,7 +67,19 @@ def can_reopen_question(user, question):
 
 @register.filter
 def can_delete_post(user, post):
-    return auth.can_delete_post(user, post)
+    if user.is_anonymous():
+        return False
+    try:
+        if isinstance(post, models.Question):
+            user.assert_can_delete_question(question = post)
+            return True
+        elif isinstance(post, models.Answer):
+            user.assert_can_delete_answer(answer = post)
+            return True
+        else:
+            return False
+    except exceptions.PermissionDenied:
+        return False
     
 @register.filter
 def can_view_user_edit(request_user, target_user):

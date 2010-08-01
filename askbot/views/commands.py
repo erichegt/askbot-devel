@@ -253,21 +253,26 @@ def vote(request, id):
                     item = FlaggedItem(user=request.user, content_object=post, flagged_at=datetime.datetime.now())
                     auth.onFlaggedItem(item, post, request.user)
                     response_data['count'] = post.offensive_flag_count
+
             elif vote_type in ['9', '10']:
+                #delete question or answer
                 post = question
                 post_id = id
                 if vote_type == '10':
                     post_id = request.POST.get('postId')
                     post = get_object_or_404(Answer, id=post_id)
 
-                if not auth.can_delete_post(request.user, post):
-                    response_data['allowed'] = -2
-                elif post.deleted == True:
+                if post.deleted == True:
                     logging.debug('debug restoring post in view')
                     auth.onDeleteCanceled(post, request.user)
                     response_data['status'] = 1
                 else:
-                    auth.onDeleted(post, request.user)
+                    try:
+                        request.user.delete_post(post = post)
+                    except exceptions.PermissionDenied, e:
+                        response_data['allowed'] = -2
+                        request.user.message_set.create(message = str(e))
+
             elif vote_type == '11':#subscribe q updates
                 user = request.user
                 if user.is_authenticated():

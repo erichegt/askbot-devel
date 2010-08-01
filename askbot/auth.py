@@ -1,8 +1,11 @@
 """
 Authorisation related functions.
 
-The actions a User is authorised to perform are dependent on their reputation
-and superuser status.
+This entire module will be removed some time in
+the future
+
+Many of these functions are being replaced with assertions:
+User.assert_can...
 """
 import datetime
 from django.utils.translation import ugettext as _
@@ -14,18 +17,6 @@ from askbot.models import signals
 import logging
 
 from askbot.conf import settings as askbot_settings
-
-def can_vote_up(user):
-    """Determines if a User can vote Questions and Answers up."""
-    if user.is_authenticated():
-        if user.reputation >= askbot_settings.MIN_REP_TO_VOTE_UP:
-            if user.is_blocked():
-                return False
-            else:
-                return True
-        if user.is_administrator() or user.is_moderator():
-            return True
-    return False
 
 def can_flag_offensive(user):
     """Determines if a User can flag Questions and Answers as offensive."""
@@ -45,15 +36,6 @@ def can_add_comments(user, subject):
         if isinstance(subject, Answer):
             if subject.question.author.id == user.id:
                 return True
-    return False
-
-def can_vote_down(user):
-    """Determines if a User can vote Questions and Answers down."""
-    if user.is_authenticated():
-        if user.reputation >= askbot_settings.MIN_REP_TO_VOTE_DOWN:
-            return True
-        if user.is_superuser:
-            return True
     return False
 
 def can_retag_questions(user):
@@ -130,23 +112,6 @@ def can_reopen_question(user, question):
         if user.reputation >= askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS:
             return True
     return False
-
-def can_delete_post(user, post):
-    if user.is_superuser:
-        return True
-    elif user.is_authenticated() and user == post.author:
-        if isinstance(post, Answer):
-            return True
-        elif isinstance(post, Question):
-            answers = post.answers.all()
-            for answer in answers:
-                if user != answer.author and answer.deleted == False:
-                    return False
-            return True
-        else:
-            return False
-    else:
-        return False
 
 def can_view_deleted_post(user, post):
     return user.is_superuser
@@ -541,7 +506,7 @@ def onDeleted(post, user, timestamp=None):
     elif isinstance(post, Answer):
         Question.objects.update_answer_count(post.question)
         logging.debug('updated answer count to %d' % post.question.answer_count)
-    signals.delete_post_or_answer.send(
+    signals.delete_question_or_answer.send(
         sender=post.__class__,
         instance=post,
         delete_by=user

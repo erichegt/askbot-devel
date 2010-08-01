@@ -60,6 +60,15 @@ settings.register(
 settings.register(
                 IntegerValue(
                     MIN_REP,
+                    'MIN_REP_TO_DELETE_OTHERS_POSTS',
+                    default=5000,
+                    description=_('Delete questions and answers posted by others')
+                )
+            )
+
+settings.register(
+                IntegerValue(
+                    MIN_REP,
                     'MIN_REP_TO_UPLOAD_FILES',
                     default=60,
                     description=_('Upload files')

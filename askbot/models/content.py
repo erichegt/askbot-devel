@@ -195,6 +195,9 @@ class Content(models.Model):
         else:
             return self.added_at
 
+    def get_owner(self):
+        return self.author
+
     def get_author_list(
                     self,
                     include_comments = False, 

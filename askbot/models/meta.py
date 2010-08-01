@@ -125,6 +125,9 @@ class Comment(base.MetaContent, base.UserContent):
     def set_text(self, text):
         self.comment = text
 
+    def get_owner(self):
+        return self.user
+
     def get_updated_activity_data(self, created = False):
         if self.content_object.__class__.__name__ == 'Question':
             return const.TYPE_ACTIVITY_COMMENT_QUESTION, self

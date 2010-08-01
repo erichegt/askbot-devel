@@ -6,7 +6,7 @@ tags_updated = django.dispatch.Signal(providing_args=['question'])
 edit_question_or_answer = django.dispatch.Signal(
                                     providing_args=['instance', 'modified_by']
                                 )
-delete_post_or_answer = django.dispatch.Signal(
+delete_question_or_answer = django.dispatch.Signal(
                                     providing_args=['instance', 'deleted_by']
                                 )
 mark_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
