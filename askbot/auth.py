@@ -18,26 +18,6 @@ import logging
 
 from askbot.conf import settings as askbot_settings
 
-def can_flag_offensive(user):
-    """Determines if a User can flag Questions and Answers as offensive."""
-    return user.is_authenticated() and (
-        user.reputation >= askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE or
-        user.is_superuser)
-
-def can_add_comments(user, subject):
-    """Determines if a User can add comments to Questions and Answers."""
-    if user.is_authenticated():
-        if user.id == subject.author.id:
-            return True
-        if user.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
-            return True
-        if user.is_superuser:
-            return True
-        if isinstance(subject, Answer):
-            if subject.question.author.id == user.id:
-                return True
-    return False
-
 def can_retag_questions(user):
     """Determines if a User can retag Questions."""
     if user.is_authenticated():
@@ -65,18 +45,11 @@ def can_edit_post(user, post):
             return True
     return False
 
-def can_delete_comment(user, comment):
-    """Determines if a User can delete the given Comment."""
-    return user.is_authenticated() and (
-        user.id == comment.user_id or
-        user.reputation >= askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS or
-        user.is_superuser)
-
 def can_view_offensive_flags(user):
     """Determines if a User can view offensive flag counts."""
     return user.is_authenticated() and (
         user.reputation >= askbot_settings.MIN_REP_TO_VIEW_OFFENSIVE_FLAGS or
-        user.is_superuser)
+        user.is_superuser or user.is_moderator())
 
 def can_close_question(user, question):
     """Determines if a User can close the given Question."""
@@ -150,7 +123,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
 
     post.author.reputation = calculate_reputation(
                                 post.author.reputation,
-                                askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+                                askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
                             )
     post.author.save()
 
@@ -160,7 +133,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
 
     reputation = Repute(
                     user=post.author,
-                    negative=askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
+                    negative=askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG,
                     question=question, reputed_at=timestamp,
                     reputation_type=-4,
                     reputation=post.author.reputation
@@ -212,7 +185,7 @@ def onFlaggedItem(item, post, user, timestamp=None):
         #post.deleted_at = timestamp
         #post.deleted_by = Admin
         post.save()
-        signals.mark_offensive.send(
+        signals.flag_offensive.send(
             sender=post.__class__, 
             instance=post, 
             mark_by=user

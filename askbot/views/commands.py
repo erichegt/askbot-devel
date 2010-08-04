@@ -192,6 +192,20 @@ def vote(request, id):
                                             post = post
                                         )
 
+        elif vote_type in ['7', '8']:
+            #flag question or answer
+            if vote_type == '7':
+                post_id = id
+                post = get_object_or_404(Question, id=id)
+            if vote_type == '8':
+                post_id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id=post_id)
+
+            request.user.flag_post(post)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+
         elif request.is_ajax() and request.method == 'POST':
 
             if not request.user.is_authenticated():
@@ -202,33 +216,7 @@ def vote(request, id):
             vote_type = request.POST.get('type')
 
             #accept answer
-            if vote_type == '00':
-                answer_id = request.POST.get('postId')
-                answer = get_object_or_404(Answer, id=answer_id)
-                # make sure question author is current user
-                if question.author == request.user:
-                    # answer user who is also question author is not allow to accept answer
-                    if answer.author == question.author:
-                        response_data['success'] = 0
-                        response_data['allowed'] = -1
-                    # check if answer has been accepted already
-                    elif answer.accepted:
-                        auth.onAnswerAcceptCanceled(answer, request.user)
-                        response_data['status'] = 1
-                    else:
-                        # set other answers in this question not accepted first
-                        for answer_of_question in Answer.objects.get_answers_from_question(question, request.user):
-                            if answer_of_question != answer and answer_of_question.accepted:
-                                auth.onAnswerAcceptCanceled(answer_of_question, request.user)
-
-                        #make sure retrieve data again after above author changes, they may have related data
-                        answer = get_object_or_404(Answer, id=answer_id)
-                        auth.onAnswerAccept(answer, request.user)
-                else:
-                    response_data['allowed'] = 0
-                    response_data['success'] = 0
-            # favorite
-            elif vote_type == '4':
+            if vote_type == '4':
                 has_favorited = False
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = FavoriteQuestion.objects.filter(
@@ -236,23 +224,6 @@ def vote(request, id):
                                         ).count()
                 if fave == False:
                     response_data['status'] = 1
-            elif vote_type in ['7', '8']:
-                post = question
-                post_id = id
-                if vote_type == '8':
-                    post_id = request.POST.get('postId')
-                    post = get_object_or_404(Answer, id=post_id)
-
-                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
-                    response_data['allowed'] = -3
-                elif not auth.can_flag_offensive(request.user):
-                    response_data['allowed'] = -2
-                elif post.flagged_items.filter(user=request.user).count() > 0:
-                    response_data['status'] = 1
-                else:
-                    item = FlaggedItem(user=request.user, content_object=post, flagged_at=datetime.datetime.now())
-                    auth.onFlaggedItem(item, post, request.user)
-                    response_data['count'] = post.offensive_flag_count
 
             elif vote_type in ['9', '10']:
                 #delete question or answer

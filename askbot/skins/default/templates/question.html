@@ -153,12 +153,12 @@
                                     {% endif %}
                                     {% endif %}
                                 {% separator %}
-                                    {% if request.user|can_flag_offensive %}
+                                    {% if request.user|can_flag_offensive:question %}
                                     <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
                                         title="{% trans "report as offensive (i.e containing spam, advertising, malicious text, etc.)" %}">
                                         <a>{% trans "flag offensive" %}</a>
-                                        {% if request.user|can_view_offensive_flags and question.offensive_flag_count %}
-                                        <span class="darkred">({{ question.offensive_flag_count }})</span>
+                                        {% if request.user|can_view_offensive_flags %}
+                                            <span class="darkred">{% if question.offensive_flag_count %}({{ question.offensive_flag_count }}){% endif %}</span>
                                         {% endif %}
                                     </span>
                                     {% endif %}
@@ -178,7 +178,7 @@
                                     {{comment.html|safe}} 
                                     - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                     {% spaceless %}
-                                    <span class="comment-age">({% diff_date comment.added_at %})</span>
+                                    <span class="comment-age">&nbsp;({% diff_date comment.added_at %})</span>
                                     {% if request.user|can_delete_comment:comment %}
                                         <img class="delete-icon" 
                                             src="{% media  "/media/images/close-small.png" %}"
@@ -189,14 +189,14 @@
                             {% endfor %}
                             </div>
                             <div class="post-comments" style="margin-bottom:20px">
-                                <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_add_comments:question }}"/>
-                                {% if request.user|can_add_comments:question or question.comment_count > 5 %}
+                                <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_post_comment:question }}"/>
+                                {% if request.user|can_post_comment:question or question.comment_count > 5 %}
                                     <a id="comments-link-question-{{question.id}}" class="comments-link">
-                                    {% if request.user|can_add_comments:question %}
+                                    {% if request.user|can_post_comment:question %}
                                         {% trans "add comment" %}
                                     {% endif %}
                                     {% if question.comment_count > 5 %}
-                                        {% if request.user|can_add_comments:question %}/
+                                        {% if request.user|can_post_comment:question %}/
                                             {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                         {% else %}
                                             {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more comment{% plural %}see <strong>{{counter}}</strong> more comments
@@ -290,12 +290,12 @@
                                                 <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans 'edit' %}</a></span>
                                                 {% endif %}
                                             {% separator %}
-                                                {% if request.user|can_flag_offensive %}
+                                                {% if request.user|can_flag_offensive:answer %}
                                                 <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
                                                     title="{% trans "report as offensive (i.e containing spam, advertising, malicious text, etc.)" %}">
                                                     <a>{% trans "flag offensive" %}</a>
-                                                    {% if request.user|can_view_offensive_flags and answer.offensive_flag_count %}
-                                                    <span class="darkred">({{ answer.offensive_flag_count }})</span>
+                                                    {% if request.user|can_view_offensive_flags %}
+                                                        <span class="darkred">{% if answer.offensive_flag_count %}({{ answer.offensive_flag_count }}){% endif %}</span>
                                                     {% endif %}
                                                 </span>
                                                 {% endif %}
@@ -320,7 +320,7 @@
                                                 {{comment.html|safe}} 
                                                 - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                                 {% spaceless %}
-                                                <span class="comment-age">({% diff_date comment.added_at %})</span>
+                                                <span class="comment-age">&nbsp;({% diff_date comment.added_at %})</span>
                                                 {% if request.user|can_delete_comment:comment %}
                                                     <img class="delete-icon" 
                                                         src="{% media  "/media/images/close-small.png" %}"
@@ -331,14 +331,14 @@
                                         {% endfor %}
                                         </div>
                                         <div class="post-comments" style="margin-bottom:20px">
-                                            <input id="can-post-comments-answer-{{answer.id}}" type="hidden" value="{{ request.user|can_add_comments:answer}}"/>
-                                            {% if request.user|can_add_comments:answer or answer.comment_count > 5 %}
+                                            <input id="can-post-comments-answer-{{answer.id}}" type="hidden" value="{{ request.user|can_post_comment:answer}}"/>
+                                            {% if request.user|can_post_comment:answer or answer.comment_count > 5 %}
                                                 <a id="comments-link-answer-{{answer.id}}" class="comments-link">
-                                                {% if request.user|can_add_comments:answer %}
+                                                {% if request.user|can_post_comment:answer %}
                                                     {% trans "add comment" %}
                                                 {% endif %}
                                                 {% if answer.comment_count > 5 %}
-                                                    {% if request.user|can_add_comments:answer %}/
+                                                    {% if request.user|can_post_comment:answer %}/
                                                         {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                                     {% else %}
                                                         {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more comment{% plural %} see <strong>{{counter}}</strong> more comments{% endblocktrans %}

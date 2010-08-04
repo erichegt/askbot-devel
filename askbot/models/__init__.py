@@ -14,7 +14,8 @@ from django.utils.safestring import mark_safe
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
-from django.core import exceptions
+from django.core import exceptions as django_exceptions
+from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Question, QuestionRevision
@@ -32,12 +33,6 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()
-
-class InsufficientReputation(exceptions.PermissionDenied):
-    """exception class to indicate that permission
-    was denied due to insufficient reputation
-    """
-    pass
 
 User.add_to_class(
             'status', 
@@ -126,10 +121,10 @@ def _assert_user_can(
         return
     elif low_rep_error_message and user.reputation < min_rep_setting:
         error_message = low_rep_error_message % {'min_rep': min_rep_setting}
-        raise InsufficientReputation(error_message)
+        raise askbot_exceptions.InsufficientReputation(error_message)
     else:
         return
-    raise exceptions.PermissionDenied(error_message)
+    raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_assert_can_vote_for_post(
@@ -145,7 +140,7 @@ def user_assert_can_vote_for_post(
     """
 
     if self == post.author:
-        raise exceptions.PermissionDenied('cannot vote for own posts')
+        raise django_exceptions.PermissionDenied('cannot vote for own posts')
 
     blocked_error_message = _(
                 'Sorry your account appears to be blocked ' +
@@ -243,7 +238,7 @@ def user_assert_can_post_comment(self, parent_post = None):
             min_rep_setting = askbot_settings.MIN_REP_TO_LEAVE_COMMENTS,
             low_rep_error_message = low_rep_error_message,
         )
-    except InsufficientReputation, e:
+    except askbot_exceptions.InsufficientReputation, e:
         if isinstance(parent_post, Answer):
             if self == parent_post.question.author:
                 return
@@ -344,21 +339,21 @@ def user_assert_can_close_question(self, question = None):
     )
 
 
-def user_assert_can_flag_offensive(self):
+def user_assert_can_flag_offensive(self, post = None):
 
-    blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
-                'you cannot flag posts as offensive'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
-                'you cannot flag posts as offensive'
-            )
-    low_rep_error_message = _(
-                'Sorry, to flag posts as offensive a minimum ' + \
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
+    assert(post is not None)
+
+    double_flagging_error_message = _('cannot flag message as offensive twice')
+
+    if post.flagged_items.filter(user = self).count() > 0:
+        raise askbot_exceptions.DuplicateCommand(double_flagging_error_message)
+
+    blocked_error_message = _('blocked users cannot flag posts')
+
+    suspended_error_message = _('suspended users cannot flag posts')
+
+    low_rep_error_message = _('need > %(min_rep)s points to flag spam') % \
+                        {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
 
     _assert_user_can(
@@ -369,6 +364,21 @@ def user_assert_can_flag_offensive(self):
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting
     )
+    #one extra assertion
+    if self.is_administrator() or self.is_moderator():
+        return
+    else:
+        flag_count_today = FlaggedItem.objects.get_flagged_items_count_today(
+                                                                            self
+                                                                        )
+        if flag_count_today >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
+            flags_exceeded_error_message = _(
+                                '%(max_flags_per_day)s exceeded'
+                            ) % {
+                                    'max_flags_per_day': \
+                                    askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
+                                }
+            raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
 
 def user_assert_can_retag_questions(self):
@@ -432,7 +442,7 @@ def user_assert_can_revoke_old_vote(self, vote):
     """
     if (datetime.datetime.now().day - vote.voted_at.day) \
         >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
-        raise exceptions.PermissionDenied(_('cannot revoke old vote'))
+        raise django_exceptions.PermissionDenied(_('cannot revoke old vote'))
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -757,7 +767,6 @@ def user_get_status_display(self, soft = False):
     elif soft == True:
         return _('Registered User')
     elif self.is_watched():
-        print 'watched'
         return _('Watched User')
     elif self.is_approved():
         return _('Approved User')
@@ -936,18 +945,18 @@ def accept_answer(self, answer, timestamp=None, cancel=False):
     else:
         auth.onAnswerAccept(answer, self, timestamp=timestamp)
 
+@auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False):
     if cancel:#todo: can't unflag?
         return
-    if post.flagged_items.filter(user=user).count() > 0:
-        return
-    else:
-        flag = FlaggedItem(
-                user = user,
-                content_object = post,
-                flagged_at = timestamp,
-            )
-        auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
+
+    user.assert_can_flag_offensive(post = post)
+    flag = FlaggedItem(
+            user = user,
+            content_object = post,
+            flagged_at = timestamp,
+        )
+    auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
 
 def user_increment_response_count(user):
     """increment response counter for user
@@ -1316,7 +1325,7 @@ def record_delete_question(instance, delete_by, **kwargs):
     #no need to set receiving user here
     activity.save()
 
-def record_mark_offensive(instance, mark_by, **kwargs):
+def record_flag_offensive(instance, mark_by, **kwargs):
     activity = Activity(
                     user=mark_by, 
                     active_at=datetime.datetime.now(), 
@@ -1415,8 +1424,8 @@ django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 #change this to real m2m_changed with Django1.2
 signals.delete_question_or_answer.connect(record_delete_question, sender=Question)
 signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
-signals.mark_offensive.connect(record_mark_offensive, sender=Question)
-signals.mark_offensive.connect(record_mark_offensive, sender=Answer)
+signals.flag_offensive.connect(record_flag_offensive, sender=Question)
+signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags, sender=Question)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)

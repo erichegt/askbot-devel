@@ -1227,22 +1227,6 @@ a:hover.medal {
     color: #777;
 }
 
-.vote-notification {
-    z-index: 1;
-    cursor: pointer;
-    display: none;
-    position: absolute;
-    padding: 15px;
-    color: White;
-    background-color: darkred;
-    text-align: center;
-}
-
-.vote-notification a {
-    color: White;
-    text-decoration: underline;
-}
-
 .offensive-flag a {
     color: #777;
     padding: 3px;
@@ -2677,3 +2661,20 @@ p.signup_p {
 img.gravatar {
     margin:2px;
 }
+
+.vote-notification {
+    z-index: 1;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    padding: 15px;
+    color: white;
+    background-color: darkred;
+    text-align: center;
+}
+
+.vote-notification a {
+    color: white;
+    text-decoration: underline;
+}
+

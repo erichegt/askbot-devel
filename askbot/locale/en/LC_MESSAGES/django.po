@@ -27,6 +27,24 @@ msgstr ""
 msgid "anonymous users cannot vote"
 msgstr "sorry, anonymous users cannot vote "
 
+msgid "cannot flag message as offensive twice"
+msgstr "You have flagged this question before and "
+"cannot do it more than once"
+
+msgid "blocked users cannot flag posts"
+msgstr "Sorry, since your account is blocked "
+"you cannot flag posts as offensive"
+
+#, python-format
+msgid "need > %(min_rep)s points to flag spam"
+msgstr "Sorry, to flag posts as offensive a minimum "
+"reputation of %(min_rep)s is required"
+
+#, python-format
+msgid "%(max_flags_per_day)s exceeded"
+msgstr "Sorry, you have exhausted the maximum number "
+"of %(max_flags_per_day)s offensive flags per day."
+
 msgid "blocked users cannot post"
 msgstr "Sorry, your account appears to be blocked and you " 
 "cannot make new posts until this issue is resolved. "

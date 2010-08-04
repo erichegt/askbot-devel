@@ -1,5 +1,6 @@
 from django import template
-from django.core import exceptions
+from django.core import exceptions as django_exceptions
+from askbot import exceptions as askbot_exceptions
 from askbot import auth
 from askbot import models
 from askbot.deps.grapefruit import Color
@@ -13,19 +14,57 @@ register = template.Library()
 def collapse(input):
     return ' '.join(input.split())
 
+def make_test_from_permission_assertion(
+                                assertion_name = None,
+                                allowed_exception = None
+                            ):
+    """a decorator-like function that will create a True/False test from
+    permission assertion
+    """
+    def test_function(user, post):
+        if user.is_anonymous():
+            return False
+
+        assertion = getattr(user, assertion_name)
+        if allowed_exception:
+            try:
+                assertion(post)
+                return True
+            except allowed_exception:
+                return True
+            except django_exceptions.PermissionDenied:
+                return False
+        else:
+            try:
+                assertion(post)
+                return True
+            except django_exceptions.PermissionDenied:
+                return False
+
+    return test_function 
+
+
 @register.filter
 def can_moderate_user(user, other_user):
     if user.is_authenticated() and user.can_moderate_user(other_user):
         return True
     return False
 
-@register.filter
-def can_flag_offensive(user):
-    return auth.can_flag_offensive(user)
+can_flag_offensive = make_test_from_permission_assertion(
+                        assertion_name = 'assert_can_flag_offensive',
+                        allowed_exception = askbot_exceptions.DuplicateCommand
+                    )
+register.filter('can_flag_offensive', can_flag_offensive)
 
-@register.filter
-def can_add_comments(user, subject):
-    return auth.can_add_comments(user, subject)
+can_post_comment = make_test_from_permission_assertion(
+                        assertion_name = 'assert_can_post_comment'
+                    )
+register.filter('can_post_comment', can_post_comment)
+
+can_delete_comment = make_test_from_permission_assertion(
+                        assertion_name = 'assert_can_delete_comment'
+                    )
+register.filter('can_delete_comment', can_delete_comment)
 
 @register.filter
 def can_retag_questions(user):
@@ -34,16 +73,6 @@ def can_retag_questions(user):
 @register.filter
 def can_edit_post(user, post):
     return auth.can_edit_post(user, post)
-
-@register.filter
-def can_delete_comment(user, comment):
-    if user.is_anonymous():
-        return False
-    try:
-        user.assert_can_delete_comment(comment)
-        return True
-    except exceptions.PermissionDenied:
-        return False
 
 @register.filter
 def can_view_offensive_flags(user):
@@ -78,7 +107,7 @@ def can_delete_post(user, post):
             return True
         else:
             return False
-    except exceptions.PermissionDenied:
+    except django_exceptions.PermissionDenied:
         return False
     
 @register.filter

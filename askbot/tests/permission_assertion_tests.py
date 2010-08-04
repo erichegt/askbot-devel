@@ -3,6 +3,7 @@ from django.core import exceptions
 from askbot.tests import utils
 from askbot.conf import settings as askbot_settings
 from askbot import models
+from askbot.templatetags import extra_filters as template_filters
 
 class PermissionAssertionTestCase(TestCase):
     """base TestCase class for permission
@@ -44,6 +45,180 @@ class PermissionAssertionTestCase(TestCase):
                         body_text = 'test answer'
                     )
 
+class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
+
+    def extraSetUp(self):
+        self.min_rep = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
+        self.question = self.post_question()
+        self.answer = self.post_answer(question = self.question)
+
+    def assert_user_cannot_flag(self):
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.question
+        )
+        self.assertFalse(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.question
+            )
+        )
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.answer
+        )
+        self.assertFalse(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.answer
+            )
+        )
+
+    def assert_user_can_flag(self):
+        self.user.flag_post(post = self.question)
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.question
+            )
+        )
+        self.user.flag_post(post = self.answer)
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.answer
+            )
+        )
+
+    def setup_high_rep(self):
+        #there is a catch - assert_user_can_flag
+        #flags twice and each time user reputation
+        #suffers a hit, so test may actually fail
+        #set amply high reputation
+        extra_rep = -100 * askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
+        #NB: REP_LOSS is negative
+        self.user.reputation = self.min_rep + extra_rep
+        self.user.save()
+
+    def test_high_rep_user_cannot_exceed_max_flags_per_day(self):
+        max_flags = askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
+        other_user = self.create_other_user()
+        other_user.reputation = self.min_rep
+        for i in range(max_flags):
+            question = self.post_question()
+            other_user.flag_post(question)
+        question = self.post_question()
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            other_user.flag_post,
+            question
+        )
+
+    def test_admin_has_no_limit_for_flags_per_day(self):
+        max_flags = askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
+        other_user = self.create_other_user()
+        other_user.is_superuser = True
+        for i in range(max_flags + 1):
+            question = self.post_question()
+            other_user.flag_post(question)
+
+    def test_moderator_has_no_limit_for_flags_per_day(self):
+        max_flags = askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
+        other_user = self.create_other_user()
+        other_user.set_status('m')
+        for i in range(max_flags + 1):
+            question = self.post_question()
+            other_user.flag_post(question)
+
+    def test_low_rep_user_cannot_flag(self):
+        assert(self.user.reputation < self.min_rep)
+        self.assert_user_cannot_flag()
+
+    def test_high_rep_blocked_or_suspended_user_cannot_flag(self):
+        self.setup_high_rep()
+        self.user.set_status('b')
+        self.assert_user_cannot_flag()
+        self.user.set_status('s')
+        self.assert_user_cannot_flag()
+
+    def test_high_rep_user_can_flag(self):
+        self.setup_high_rep()
+        self.assert_user_can_flag()
+
+    def test_low_rep_moderator_can_flag(self):
+        assert(self.user.reputation < self.min_rep)
+        self.user.set_status('m')
+        self.assert_user_can_flag()
+
+    def low_rep_administrator_can_flag(self):
+        assert(self.user.reputation < self.min_rep)
+        self.user.is_superuser = True
+        self.assert_user_can_flag()
+
+    def test_superuser_cannot_flag_question_twice(self):
+        self.user.is_superuser = True
+        self.user.flag_post(post = self.question)
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.question
+        )
+        #here is a deviation - the link will still be shown
+        #in templates
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.question
+            )
+        )
+
+    def test_superuser_cannot_flag_answer_twice(self):
+        self.user.is_superuser = True
+        self.user.flag_post(post = self.answer)
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.answer
+        )
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.answer
+            )
+        )
+
+    def test_high_rep_user_cannot_flag_question_twice(self):
+        self.user.reputation = self.min_rep
+        self.user.flag_post(post = self.question)
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.question
+        )
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.question
+            )
+        )
+
+    def test_high_rep_user_cannot_flag_answer_twice(self):
+        self.user.reputation = self.min_rep
+        self.user.flag_post(post = self.answer)
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.flag_post,
+            post = self.answer
+        )
+        self.assertTrue(
+            template_filters.can_flag_offensive(
+                self.user,
+                self.answer
+            )
+        )
+
 
 class CommentPermissionAssertionTests(PermissionAssertionTestCase):
 
@@ -61,6 +236,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     parent_post = question,
                     body_text = 'test comment'
                 )
+        self.assertFalse(
+                template_filters.can_post_comment(
+                    self.user,
+                    question
+                )
+            )
 
     def test_blocked_user_cannot_comment_own_answer(self):
         question = self.post_question()
@@ -74,6 +255,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     parent_post = answer,
                     body_text = 'test comment'
                 )
+        self.assertFalse(
+                template_filters.can_post_comment(
+                        self.user,
+                        answer
+                    )
+            )
 
     def test_blocked_user_cannot_delete_own_comment(self):
         question = self.post_question()
@@ -86,6 +273,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
             exceptions.PermissionDenied,
             self.user.delete_post,
             post = comment
+        )
+        self.assertFalse(
+            template_filters.can_delete_comment(
+                self.user, 
+                comment
+            )
         )
 
     def test_low_rep_user_cannot_delete_others_comment(self):
@@ -103,6 +296,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
             self.other_user.delete_post,
             post = comment
         )
+        self.assertFalse(
+            template_filters.can_delete_comment(
+                self.other_user, 
+                comment
+            )
+        )
 
     def test_high_rep_user_can_delete_comment(self):
         question = self.post_question()
@@ -114,6 +313,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
             askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
         self.other_user.delete_comment(comment)
+        self.assertTrue(
+            template_filters.can_delete_comment(
+                self.other_user, 
+                comment
+            )
+        )
 
     def test_low_rep_user_can_delete_own_comment(self):
         question = self.post_question()
@@ -130,6 +335,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
             askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
         )
         self.user.delete_comment(comment)
+        self.assertTrue(
+            template_filters.can_delete_comment(
+                self.user, 
+                comment
+            )
+        )
 
     def test_moderator_can_delete_comment(self):
         question = self.post_question()
@@ -139,6 +350,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     )
         self.other_user.set_status('m')
         self.other_user.delete_comment(comment)
+        self.assertTrue(
+            template_filters.can_delete_comment(
+                self.other_user, 
+                comment
+            )
+        )
 
     def test_admin_can_delete_comment(self):
         question = self.post_question()
@@ -148,6 +365,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     )
         self.other_user.is_superuser = True
         self.other_user.delete_comment(comment)
+        self.assertTrue(
+            template_filters.can_delete_comment(
+                self.other_user, 
+                comment
+            )
+        )
 
     def test_high_rep_suspended_user_cannot_delete_others_comment(self):
         question = self.post_question()
@@ -163,6 +386,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                 self.other_user.delete_post,
                 post = comment
             )
+        self.assertFalse(
+            template_filters.can_delete_comment(
+                self.other_user, 
+                comment
+            )
+        )
 
     def test_suspended_user_can_delete_own_comment(self):
         question = self.post_question()
@@ -172,6 +401,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     )
         self.user.set_status('s')
         self.user.delete_comment(comment)
+        self.assertTrue(
+            template_filters.can_delete_comment(
+                self.user, 
+                comment
+            )
+        )
 
     def test_low_rep_user_cannot_comment_others(self):
         question = self.post_question(
@@ -184,6 +419,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                     parent_post = question,
                     body_text = 'test comment'
                 )
+        self.assertFalse(
+                template_filters.can_post_comment(
+                    self.user,
+                    question
+                )
+            )
 
     def test_low_rep_user_can_comment_others_answer_to_own_question(self):
         question = self.post_question()
@@ -197,6 +438,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                                     body_text = 'test comment'
                                 )
         self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(
+            template_filters.can_post_comment(
+                self.user,
+                answer
+            )
+        )
 
     def test_high_rep_user_can_comment(self):
         question = self.post_question(
@@ -208,6 +455,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             body_text = 'test comment'
                         )
         self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(
+            template_filters.can_post_comment(
+                self.user,
+                question
+            )
+        )
 
     def test_suspended_user_cannot_comment_others_question(self):
         question = self.post_question(author = self.other_user)
@@ -218,6 +471,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                 parent_post = question,
                 body_text = 'test comment'
             )
+        self.assertFalse(
+            template_filters.can_post_comment(
+                self.user,
+                question
+            )
+        )
 
     def test_suspended_user_can_comment_own_question(self):
         question = self.post_question()
@@ -227,6 +486,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             body_text = 'test comment'
                         )
         self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(
+            template_filters.can_post_comment(
+                self.user,
+                question
+            )
+        )
 
     def test_low_rep_admin_can_comment_others_question(self):
         question = self.post_question()
@@ -238,6 +503,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             body_text = 'test comment'
                         )
         self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(
+            template_filters.can_post_comment(
+                self.other_user,
+                question
+            )
+        )
 
     def test_low_rep_moderator_can_comment_others_question(self):
         question = self.post_question()
@@ -249,6 +520,12 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             body_text = 'test comment'
                         )
         self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(
+            template_filters.can_post_comment(
+                self.other_user,
+                question
+            )
+        )
 
 #def user_assert_can_post_comment(self, parent_post):
 #def user_assert_can_delete_comment(self, comment = None):

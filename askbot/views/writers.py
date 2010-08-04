@@ -354,29 +354,35 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     json_comments = []
     from askbot.templatetags.extra_tags import diff_date
     for comment in comments:
-        comment_user = comment.user
-        delete_url = ""
-        if user != None and auth.can_delete_comment(user, comment):
-            #/posts/392845/comments/219852/delete
-            #todo translate this url
-            if isinstance(comment.content_object, models.Answer):
-                delete_comment_view = 'delete_answer_comment'
-            elif isinstance(comment.content_object, models.Question):
-                delete_comment_view = 'delete_question_comment'
-            delete_url = reverse(
-                            delete_comment_view,
-                            kwargs = {
-                                    'object_id': obj.id, 
-                                    'comment_id': comment.id
-                                }
-                        )
-        json_comments.append({"id" : comment.id,
-            "object_id" : obj.id,
-            "comment_age" : diff_date(comment.added_at),
-            "text" : comment.html,
-            "user_display_name" : comment_user.username,
-            "user_url" : comment_user.get_profile_url(),
-            "delete_url" : delete_url
+
+        if user != None and user.is_authenticated():
+            try:
+                user.assert_can_delete_comment(comment)
+                #/posts/392845/comments/219852/delete
+                #todo translate this url
+                if isinstance(comment.content_object, models.Answer):
+                    delete_comment_view = 'delete_answer_comment'
+                elif isinstance(comment.content_object, models.Question):
+                    delete_comment_view = 'delete_question_comment'
+                delete_url = reverse(
+                                delete_comment_view,
+                                kwargs = {
+                                        'object_id': obj.id, 
+                                        'comment_id': comment.id
+                                    }
+                            )
+            except exceptions.PermissionDenied:
+                delete_url = ''
+        else:
+            delete_url = ''
+
+        json_comments.append({'id' : comment.id,
+            'object_id' : obj.id,
+            'comment_age' : diff_date(comment.added_at),
+            'text' : comment.html,
+            'user_display_name' : comment.get_owner().username,
+            'user_url' : comment.get_owner().get_profile_url(),
+            'delete_url' : delete_url
         })
 
     data = simplejson.dumps(json_comments)
@@ -400,6 +406,12 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
             response = __generate_comments_json(obj, user)
         elif request.method == "POST":
             try:
+                if user.is_anonymous():
+                    msg = _('Sorry, you appear to be logged out and ' + \
+                            'cannot post comments. Please ' + \
+                            '<a href="%(sign_in_url)s">sign in</a>.') % \
+                            {'sign_in_url': reverse('user_signin')}
+                    raise exceptions.PermissionDenied(msg)
                 user.post_comment(
                             parent_post = obj,
                             body_text = request.POST.get('comment')
@@ -411,21 +423,49 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
                                         mimetype="application/json"
                                     )
         return response
+    else:
+        raise Http404
 
-def delete_comment(request, object_id='', comment_id='', commented_object_type=None):#ajax handler to delete comment
+def delete_comment(
+                request, 
+                object_id='', 
+                comment_id='', 
+                commented_object_type=None):
+    """ajax handler to delete comment
+    """
+
     commented_object = None
     if commented_object_type == 'question':
         commented_object = models.Question
     elif commented_object_type == 'answer':
         commented_object = models.Answer
 
-    if request.is_ajax():
-        comment = get_object_or_404(models.Comment, id=comment_id)
-        if auth.can_delete_comment(request.user, comment):
+    try:
+        if request.user.is_anonymous():
+            msg = _('Sorry, you appear to be logged out and ' + \
+                    'cannot delete comments. Please ' + \
+                    '<a href="%(sign_in_url)s">sign in</a>.') % \
+                    {'sign_in_url': reverse('user_signin')}
+            raise exceptions.PermissionDenied(msg)
+        if request.is_ajax():
+            comment = get_object_or_404(models.Comment, id=comment_id)
+
+            request.user.assert_can_delete_comment(comment)
+
             obj = get_object_or_404(commented_object, id=object_id)
+            #todo: are the removed comments actually deleted?
             obj.comments.remove(comment)
+            #attn: recalc denormalized field
             obj.comment_count = obj.comment_count - 1
             obj.save()
-            user = request.user
-            return __generate_comments_json(obj, user)
-    raise exceptions.PermissionDenied()
+
+            return __generate_comments_json(obj, request.user)
+
+        raise exceptions.PermissionDenied(
+                    _('sorry, we seem to have some technical difficulties')
+                )
+    except exceptions.PermissionDenied, e:
+        return HttpResponseForbidden(
+                    str(e),
+                    mimetype = 'application/json'
+                )
