@@ -329,24 +329,32 @@ def close(request, id):#close question
     question close
     """
     question = get_object_or_404(Question, id=id)
-    if not auth.can_close_question(request.user, question):
-        return HttpResponse('Permission denied.')
-    if request.method == 'POST':
-        form = CloseForm(request.POST)
-        if form.is_valid():
-            reason = form.cleaned_data['reason']
-            question.closed = True
-            question.closed_by = request.user
-            question.closed_at = datetime.datetime.now()
-            question.close_reason = reason
-            question.save()
+    try:
+        if request.method == 'POST':
+            form = CloseForm(request.POST)
+            if form.is_valid():
+                reason = form.cleaned_data['reason']
+
+                request.user.close_question(
+                                        question = question,
+                                        reason = reason
+                                    )
+            return HttpResponseRedirect(question.get_absolute_url())
+        else:
+            request.user.assert_can_close_question(question)
+            form = CloseForm()
+            response = render_to_response(
+                            'close.html', 
+                            {
+                                'form' : form,
+                                'question' : question,
+                            }, 
+                            context_instance=RequestContext(request)
+                        )
+            return response
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = str(e))
         return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        form = CloseForm()
-        return render_to_response('close.html', {
-            'form' : form,
-            'question' : question,
-            }, context_instance=RequestContext(request))
 
 @login_required
 def reopen(request, id):#re-open question

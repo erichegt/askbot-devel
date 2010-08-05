@@ -4,6 +4,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot import auth
 from askbot import models
 from askbot.deps.grapefruit import Color
+from askbot.conf import settings as askbot_settings
 from django.utils.translation import ugettext as _
 import logging
 
@@ -14,14 +15,15 @@ register = template.Library()
 def collapse(input):
     return ' '.join(input.split())
 
-def make_test_from_permission_assertion(
+def make_template_filter_from_permission_assertion(
                                 assertion_name = None,
+                                filter_name = None,
                                 allowed_exception = None
                             ):
     """a decorator-like function that will create a True/False test from
     permission assertion
     """
-    def test_function(user, post):
+    def filter_function(user, post):
         if user.is_anonymous():
             return False
 
@@ -41,7 +43,8 @@ def make_test_from_permission_assertion(
             except django_exceptions.PermissionDenied:
                 return False
 
-    return test_function 
+    register.filter(filter_name, filter_function)
+    return filter_function
 
 
 @register.filter
@@ -50,21 +53,26 @@ def can_moderate_user(user, other_user):
         return True
     return False
 
-can_flag_offensive = make_test_from_permission_assertion(
+can_flag_offensive = make_template_filter_from_permission_assertion(
                         assertion_name = 'assert_can_flag_offensive',
+                        filter_name = 'can_flag_offensive',
                         allowed_exception = askbot_exceptions.DuplicateCommand
                     )
-register.filter('can_flag_offensive', can_flag_offensive)
 
-can_post_comment = make_test_from_permission_assertion(
-                        assertion_name = 'assert_can_post_comment'
+can_post_comment = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_post_comment',
+                        filter_name = 'can_post_comment'
                     )
-register.filter('can_post_comment', can_post_comment)
 
-can_delete_comment = make_test_from_permission_assertion(
-                        assertion_name = 'assert_can_delete_comment'
+can_delete_comment = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_delete_comment',
+                        filter_name = 'can_delete_comment'
                     )
-register.filter('can_delete_comment', can_delete_comment)
+
+can_close_question = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_close_question',
+                        filter_name = 'can_close_question'
+                    )
 
 @register.filter
 def can_retag_questions(user):
@@ -75,12 +83,28 @@ def can_edit_post(user, post):
     return auth.can_edit_post(user, post)
 
 @register.filter
-def can_view_offensive_flags(user):
-    return auth.can_view_offensive_flags(user)
+def can_see_offensive_flags(user, post):
+    """Determines if a User can view offensive flag counts.
+    there is no assertion like this User.assert_can...
+    so all of the code is here
 
-@register.filter
-def can_close_question(user, question):
-    return auth.can_close_question(user, question)
+    user can see flags on own posts
+    otherwise enough rep is required
+    or being a moderator or administrator
+
+    suspended or blocked users cannot see flags
+    """
+    if user.is_authenticated():
+        if user == post.get_owner():
+            return True
+        if user.reputation >= askbot_settings.MIN_REP_TO_VIEW_OFFENSIVE_FLAGS:
+            return True
+        elif user.is_administrator() or user.is_moderator():
+            return True
+        else:
+            return False
+    else:
+        return False
 
 @register.filter
 def can_lock_posts(user):

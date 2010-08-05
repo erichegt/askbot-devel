@@ -8,11 +8,13 @@ def create_user(
             email = None, 
             notification_schedule = None,
             date_joined = None,
-            status = 'a'
+            status = 'a',
+            reputation = 1
         ):
     """Creates a user and sets default update subscription
     settings"""
     user = models.User.objects.create_user(username, email)
+    user.reputation = reputation
     if date_joined is not None:
         user.date_joined = date_joined
         user.save()

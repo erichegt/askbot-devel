@@ -157,7 +157,7 @@
                                     <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
                                         title="{% trans "report as offensive (i.e containing spam, advertising, malicious text, etc.)" %}">
                                         <a>{% trans "flag offensive" %}</a>
-                                        {% if request.user|can_view_offensive_flags %}
+                                        {% if request.user|can_see_offensive_flags:question %}
                                             <span class="darkred">{% if question.offensive_flag_count %}({{ question.offensive_flag_count }}){% endif %}</span>
                                         {% endif %}
                                     </span>
@@ -294,7 +294,7 @@
                                                 <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
                                                     title="{% trans "report as offensive (i.e containing spam, advertising, malicious text, etc.)" %}">
                                                     <a>{% trans "flag offensive" %}</a>
-                                                    {% if request.user|can_view_offensive_flags %}
+                                                    {% if request.user|can_see_offensive_flags:answer %}
                                                         <span class="darkred">{% if answer.offensive_flag_count %}({{ answer.offensive_flag_count }}){% endif %}</span>
                                                     {% endif %}
                                                 </span>

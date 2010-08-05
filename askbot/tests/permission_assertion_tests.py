@@ -45,6 +45,211 @@ class PermissionAssertionTestCase(TestCase):
                         body_text = 'test answer'
                     )
 
+class SeeOffensiveFlagsPermissionAssertionTests(utils.AskbotTestCase):
+
+    def setUp(self):
+        super(SeeOffensiveFlagsPermissionAssertionTests, self).setUp()
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.min_rep = askbot_settings.MIN_REP_TO_VIEW_OFFENSIVE_FLAGS
+
+    def setup_answer(self):
+        question = self.post_question()
+        answer = self.post_answer(question = question)
+        return answer
+
+    def test_low_rep_user_cannot_see_flags(self):
+        question = self.post_question()
+        assert(self.other_user.reputation < self.min_rep)
+        self.assertFalse(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                question
+            )
+        )
+
+    def test_high_rep_user_can_see_flags(self):
+        question = self.post_question()
+        self.other_user.reputation = self.min_rep
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                question
+            )
+        )
+
+    def test_low_rep_owner_can_see_flags(self):
+        question = self.post_question()
+        assert(self.user.reputation < self.min_rep)
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.user,
+                question
+            )
+        )
+
+    def test_admin_can_see_flags(self):
+        question = self.post_question()
+        self.other_user.is_superuser = True
+        assert(self.other_user.reputation < self.min_rep)
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                question
+            )
+        )
+
+    def test_moderator_can_see_flags(self):
+        question = self.post_question()
+        self.other_user.set_status('m')
+        assert(self.other_user.reputation < self.min_rep)
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                question
+            )
+        )
+
+    #tests below test answers only
+    def test_suspended_owner_can_see_flags(self):
+        answer = self.setup_answer()
+        self.user.set_status('s')
+        assert(self.user.reputation < self.min_rep)
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.user,
+                answer
+            )
+        )
+
+    def test_blocked_owner_can_see_flags(self):
+        answer = self.setup_answer()
+        self.user.set_status('b')
+        assert(self.user.reputation < self.min_rep)
+        self.assertTrue(
+            template_filters.can_see_offensive_flags(
+                self.user,
+                answer
+            )
+        )
+
+    def test_suspended_user_cannot_see_flags(self):
+        answer = self.setup_answer()
+        self.other_user.set_status('s')
+        self.assertFalse(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                answer
+            )
+        )
+
+    def test_blocked_user_cannot_see_flags(self):
+        answer = self.setup_answer()
+        self.other_user.set_status('b')
+        self.assertFalse(
+            template_filters.can_see_offensive_flags(
+                self.other_user,
+                answer
+            )
+        )
+
+
+class CloseQuestionPermissionAssertionTests(utils.AskbotTestCase):
+    
+    def setUp(self):
+        super(CloseQuestionPermissionAssertionTests, self).setUp()
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+        self.min_rep = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
+        self.min_rep_own = askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS
+
+    def assert_can_close(self, user = None):
+        user.assert_can_close_question(self.question)
+        self.assertTrue(
+            template_filters.can_close_question(
+                user,
+                self.question
+            )
+        )
+
+    def assert_cannot_close(self, user = None):
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            user.assert_can_close_question,
+            self.question
+        )
+        self.assertFalse(
+            template_filters.can_close_question(
+                user,
+                self.question
+            )
+        )
+
+    def test_low_rep_admin_can_close(self):
+        self.other_user.is_superuser = True
+        assert(self.other_user.reputation < self.min_rep)
+        self.assert_can_close(user = self.other_user)
+
+    def test_low_rep_moderator_can_close(self):
+        self.other_user.set_status('m')
+        assert(self.other_user.reputation < self.min_rep)
+        self.assert_can_close(user = self.other_user)
+
+    def test_low_rep_owner_cannot_close(self):
+        assert(self.user.reputation < self.min_rep)
+        assert(self.user.reputation < self.min_rep_own)
+        self.assert_cannot_close(user = self.user)
+
+    def test_high_rep_owner_can_close(self):
+        self.user.reputation = self.min_rep_own
+        self.assert_can_close(user = self.user)
+
+    def test_high_rep_other_can_close(self):
+        self.other_user.reputation = self.min_rep
+        self.assert_can_close(user = self.other_user)
+
+    def test_low_rep_blocked_cannot_close(self):
+        self.other_user.set_status('b')
+        assert(self.other_user.reputation < self.min_rep)
+        self.assert_cannot_close(user = self.other_user)
+
+    def test_high_rep_blocked_cannot_close(self):
+        self.other_user.set_status('b')
+        self.other_user.reputation = self.min_rep
+        self.assert_cannot_close(user = self.other_user)
+
+    def test_medium_rep_blocked_owner_cannot_close(self):
+        self.user.set_status('b')
+        self.user.reputation = self.min_rep_own
+        self.assert_cannot_close(user = self.user)
+
+    def test_high_rep_blocked_owner_cannot_close(self):
+        self.user.set_status('b')
+        self.user.reputation = self.min_rep
+        self.assert_cannot_close(user = self.user)
+
+    def test_low_rep_suspended_cannot_close(self):
+        self.other_user.set_status('s')
+        assert(self.other_user.reputation < self.min_rep)
+        self.assert_cannot_close(user = self.other_user)
+
+    def test_high_rep_suspended_cannot_close(self):
+        self.other_user.set_status('s')
+        self.other_user.reputation = self.min_rep
+        self.assert_cannot_close(user = self.other_user)
+
+    def test_medium_rep_suspended_owner_cannot_close(self):
+        self.user.set_status('s')
+        self.user.reputation = self.min_rep_own
+        self.assert_cannot_close(user = self.user)
+
+    def test_high_rep_suspended_owner_cannot_close(self):
+        self.user.set_status('s')
+        self.user.reputation = self.min_rep
+        self.assert_cannot_close(user = self.user)
+
+
 class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
 
     def extraSetUp(self):

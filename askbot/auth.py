@@ -45,12 +45,6 @@ def can_edit_post(user, post):
             return True
     return False
 
-def can_view_offensive_flags(user):
-    """Determines if a User can view offensive flag counts."""
-    return user.is_authenticated() and (
-        user.reputation >= askbot_settings.MIN_REP_TO_VIEW_OFFENSIVE_FLAGS or
-        user.is_superuser or user.is_moderator())
-
 def can_close_question(user, question):
     """Determines if a User can close the given Question."""
     return user.is_authenticated() and (

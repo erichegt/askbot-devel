@@ -323,7 +323,7 @@ def user_assert_can_close_question(self, question = None):
                 'you cannot close questions'
             )
     low_rep_error_message = _(
-                'Sorry, to deleted other people\' posts, a minimum ' + \
+                'Sorry, to close other people\' posts, a minimum ' + \
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS}
@@ -331,12 +331,24 @@ def user_assert_can_close_question(self, question = None):
 
     _assert_user_can(
         user = self,
-        post = post,
+        post = question,
+        owner_can = True,
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting
     )
+
+    #exception - owner needs some rep to do this
+    if self == question.get_owner():
+        if self.is_suspended():
+            raise django_exceptions.PermissionDenied(suspended_error_message)
+        if self.reputation < askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS:
+            error_message = _(
+                        'Sorry, to close own question ' +\
+                        'minimum reputation of %(min_rep)s is required'
+                    )
+            raise askbot_exceptions.InsufficientReputation(error_message)
 
 
 def user_assert_can_flag_offensive(self, post = None):
@@ -513,6 +525,18 @@ def user_delete_question(
     self.assert_can_delete_question(question = question)
     #todo - move onDeleted method to a fitting class
     auth.onDeleted(question, self, timestamp = timestamp)
+
+def user_close_question(
+                    self,
+                    question = None,
+                    reason = None,
+                ):
+    self.assert_can_close_question(question)
+    question.closed = True
+    question.closed_by = self
+    question.closed_at = datetime.datetime.now()
+    question.close_reason = reason
+    question.save()
 
 def user_delete_post(
                     self,
@@ -1016,6 +1040,7 @@ User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 User.add_to_class('delete_comment', user_delete_comment)
 User.add_to_class('delete_question', user_delete_question)
 User.add_to_class('delete_answer', user_delete_answer)
+User.add_to_class('close_question', user_close_question)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
