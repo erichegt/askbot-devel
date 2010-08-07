@@ -24,6 +24,10 @@ def make_template_filter_from_permission_assertion(
     permission assertion
     """
     def filter_function(user, post):
+
+        if askbot_settings.ALWAYS_SHOW_ALL_UI_FUNCTIONS:
+            return True
+
         if user.is_anonymous():
             return False
 
@@ -64,14 +68,20 @@ can_post_comment = make_template_filter_from_permission_assertion(
                         filter_name = 'can_post_comment'
                     )
 
+can_close_question = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_close_question',
+                        filter_name = 'can_close_question'
+                    )
+
 can_delete_comment = make_template_filter_from_permission_assertion(
                         assertion_name = 'assert_can_delete_comment',
                         filter_name = 'can_delete_comment'
                     )
 
-can_close_question = make_template_filter_from_permission_assertion(
-                        assertion_name = 'assert_can_close_question',
-                        filter_name = 'can_close_question'
+#this works for questions, answers and comments
+can_delete_post = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_delete_post',
+                        filter_name = 'can_delete_post'
                     )
 
 @register.filter
@@ -118,22 +128,6 @@ def can_accept_answer(user, question, answer):
 def can_reopen_question(user, question):
     return auth.can_reopen_question(user, question)
 
-@register.filter
-def can_delete_post(user, post):
-    if user.is_anonymous():
-        return False
-    try:
-        if isinstance(post, models.Question):
-            user.assert_can_delete_question(question = post)
-            return True
-        elif isinstance(post, models.Answer):
-            user.assert_can_delete_answer(answer = post)
-            return True
-        else:
-            return False
-    except django_exceptions.PermissionDenied:
-        return False
-    
 @register.filter
 def can_view_user_edit(request_user, target_user):
     return auth.can_view_user_edit(request_user, target_user)

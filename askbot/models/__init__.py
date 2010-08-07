@@ -8,6 +8,7 @@ from askbot.search.indexer import create_fulltext_indexes
 from django.db.models import signals as django_signals
 from django.template import loader, Context
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
@@ -275,9 +276,56 @@ def user_assert_can_edit_post(self, post = None):
         min_rep_setting = min_rep_setting
     )
 
-
 def user_assert_can_delete_post(self, post = None):
-    #todo: move here advanced logic to authorize deletion
+    if isinstance(post, Question):
+        self.assert_can_delete_question(question = post)
+    elif isinstance(post, Answer):
+        self.assert_can_delete_answer(answer = post)
+    elif isinstance(post, Comment):
+        self.assert_can_delete_comment(comment = post)
+
+def user_assert_can_restore_post(self, post = None):
+    """can_restore_rule is the same as can_delete
+    """
+    self.assert_can_delete_post(post = post)
+
+def user_assert_can_delete_question(self, question = None):
+    """rules are the same as to delete answer,
+    except if question has answers already, when owner
+    cannot delete unless s/he is and adinistrator or moderator
+    """
+
+    #cheating here. can_delete_answer wants argument named
+    #"question", so the argument name is skipped
+    self.assert_can_delete_answer(question)
+    if self == question.get_owner():
+        #if there are answers by other people,
+        #then deny, unless user in admin or moderator
+        answer_count = question.answers.exclude(
+                                            author = self,
+                                        ).exclude(
+                                            score__lte = 0
+                                        ).count()
+
+        if answer_count > 0:
+            if self.is_administrator() or self.is_moderator():
+                return
+            else:
+                msg = ungettext(
+                    'Sorry, cannot delete your question since it ' + \
+                    'has an upvoted answer posted by someone else',
+                    'Sorry, cannot delete your question since it ' + \
+                    'has some upvoted answers posted by other users',
+                    answer_count
+                )
+                raise django_exceptions.PermissionDenied(msg)
+
+
+def user_assert_can_delete_answer(self, answer = None):
+    """intentionally use "post" word in the messages
+    instead of "answer", because this logic also applies to 
+    assert on deleting question (in addition to some special rules)
+    """
     blocked_error_message = _(
                 'Sorry, since your account is blocked ' + \
                 'you cannot delete posts'
@@ -295,21 +343,13 @@ def user_assert_can_delete_post(self, post = None):
 
     _assert_user_can(
         user = self,
-        post = post,
+        post = answer,
         owner_can = True,
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting
     )
-
-
-def user_assert_can_delete_question(self, question = None):
-    self.assert_can_delete_post(post = question)
-
-
-def user_assert_can_delete_answer(self, answer = None):
-    self.assert_can_delete_post(post = answer)
 
 
 def user_assert_can_close_question(self, question = None):
@@ -555,6 +595,17 @@ def user_delete_post(
         self.delete_question(question = post, timestamp = timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
+
+def user_restore_post(
+                    self,
+                    post = None,
+                    timestamp = None
+                ):
+    self.assert_can_restore_post(post)
+    if isinstance(post, Question) or isinstance(post, Answer):
+        auth.onDeleteCanceled(self, post, timestamp)
+    else:
+        raise NotImplementedError()
 
 def user_post_question(
                     self,
@@ -1040,6 +1091,7 @@ User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 User.add_to_class('delete_comment', user_delete_comment)
 User.add_to_class('delete_question', user_delete_question)
 User.add_to_class('delete_answer', user_delete_answer)
+User.add_to_class('restore_post', user_restore_post)
 User.add_to_class('close_question', user_close_question)
 
 #assertions
@@ -1055,6 +1107,7 @@ User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
 User.add_to_class('assert_can_retag_questions', user_assert_can_retag_questions)
 #todo: do we need assert_can_delete_post
 User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
+User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)
 User.add_to_class('assert_can_delete_comment', user_assert_can_delete_comment)
 User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)

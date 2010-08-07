@@ -195,16 +195,27 @@ def vote(request, id):
         elif vote_type in ['7', '8']:
             #flag question or answer
             if vote_type == '7':
-                post_id = id
                 post = get_object_or_404(Question, id=id)
             if vote_type == '8':
-                post_id = request.POST.get('postId')
-                post = get_object_or_404(Answer, id=post_id)
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id=id)
 
             request.user.flag_post(post)
 
             response_data['count'] = post.offensive_flag_count
             response_data['success'] = 1
+
+        elif vote_type in ['9', '10']:
+            #delete question or answer
+            post = get_object_or_404(Question, id = id) 
+            if vote_type == '10':
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id = id)
+
+            if post.deleted == True:
+                request.user.restore_post(post = post)
+            else:
+                request.user.delete_post(post = post)
 
         elif request.is_ajax() and request.method == 'POST':
 
@@ -224,25 +235,6 @@ def vote(request, id):
                                         ).count()
                 if fave == False:
                     response_data['status'] = 1
-
-            elif vote_type in ['9', '10']:
-                #delete question or answer
-                post = question
-                post_id = id
-                if vote_type == '10':
-                    post_id = request.POST.get('postId')
-                    post = get_object_or_404(Answer, id=post_id)
-
-                if post.deleted == True:
-                    logging.debug('debug restoring post in view')
-                    auth.onDeleteCanceled(post, request.user)
-                    response_data['status'] = 1
-                else:
-                    try:
-                        request.user.delete_post(post = post)
-                    except exceptions.PermissionDenied, e:
-                        response_data['allowed'] = -2
-                        request.user.message_set.create(message = str(e))
 
             elif vote_type == '11':#subscribe q updates
                 user = request.user

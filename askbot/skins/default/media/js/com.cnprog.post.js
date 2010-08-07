@@ -356,19 +356,7 @@ var Vote = function(){
     };
         
     var callback_remove = function(object, voteType, data){
-        if (data.allowed == "0" && data.success == "0"){
-            showMessage(
-                object,
-                removeAnonymousMessage.replace(
-                        "{{QuestionID}}",
-                        questionId
-                    ).replace(
-                        '{{questionSlug}}',
-                        ''
-                    )
-            );
-        }
-        else if (data.success == "1"){
+        if (data.success == "1"){
             if (voteType == VoteType.removeQuestion){
                 window.location.href = scriptUrl + $.i18n._("questions/");
             }
@@ -384,7 +372,10 @@ var Vote = function(){
                     showMessage(object, recoveredMessage);
                 }
             }
-		}
+        }
+        else {
+            showMessage(object, data.message)
+        }
     };
         
     return {
@@ -721,6 +712,7 @@ function createComments(type) {
                         par.remove();
                     }, 
                     error: function(xhr, textStatus, exception) {
+                        jImg.show();
                         showMessage(jImg, xhr.responseText);
                     },
                     dataType: "json"

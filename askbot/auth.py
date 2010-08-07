@@ -418,14 +418,12 @@ def onDeleteCanceled(post, user, timestamp=None):
     post.deleted_by = None 
     post.deleted_at = None 
     post.save()
-    logging.debug('now restoring something')
     if isinstance(post, Answer):
-        logging.debug(
-                    'updated answer count on undelete, have %d' \
-                    % post.question.answer_count
-                )
         Question.objects.update_answer_count(post.question)
     elif isinstance(post, Question):
+        #todo: make sure that these tags actually exist
+        #some may have since been deleted for good 
+        #or merged into others
         for tag in list(post.tags.all()):
             if tag.used_count == 1 and tag.deleted:
                 tag.deleted = False

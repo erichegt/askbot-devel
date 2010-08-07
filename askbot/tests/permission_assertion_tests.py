@@ -153,6 +153,156 @@ class SeeOffensiveFlagsPermissionAssertionTests(utils.AskbotTestCase):
             )
         )
 
+class DeleteAnswerPermissionAssertionTests(utils.AskbotTestCase):
+    
+    def setUp(self):
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+        self.min_rep = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
+
+    def post_answer(self, user = None):
+        if user is None:
+            user = self.user
+        self.answer = super(
+                            DeleteAnswerPermissionAssertionTests,
+                            self
+                        ).post_answer(
+                            question = self.question,
+                            user = user
+                        )
+
+    def assert_can_delete(self):
+        self.user.assert_can_delete_answer(self.answer)
+
+    def assert_cannot_delete(self):
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.assert_can_delete_answer,
+            answer = self.answer
+        )
+
+    def test_low_rep_user_cannot_delete(self):
+        self.post_answer(user = self.other_user)
+        assert(self.user.reputation < self.min_rep)
+        self.assert_cannot_delete()
+
+    def test_high_rep_user_can_delete(self):
+        self.post_answer(user = self.other_user)
+        self.user.reputation = self.min_rep
+        self.assert_can_delete()
+
+    def test_low_rep_owner_can_delete(self):
+        self.post_answer()
+        assert(self.user.reputation < self.min_rep)
+        self.assert_can_delete()
+
+    def test_suspended_owner_can_delete(self):
+        self.post_answer()
+        assert(self.user.reputation < self.min_rep)
+        self.user.set_status('s')
+        self.assert_can_delete()
+
+    def test_blocked_owner_cannot_delete(self):
+        self.post_answer()
+        assert(self.user.reputation < self.min_rep)
+        self.user.set_status('b')
+        self.assert_cannot_delete()
+
+    def test_blocked_user_cannot_delete(self):
+        self.post_answer(user = self.other_user)
+        self.user.set_status('b')
+        self.assert_cannot_delete()
+
+    def test_high_rep_blocked_owner_cannot_delete(self):
+        self.post_answer()
+        self.user.set_status('b')
+        self.user.reputation = 100000
+        self.assert_cannot_delete()
+
+    def test_low_rep_admin_can_delete(self):
+        self.post_answer(user = self.other_user)
+        self.user.is_superuser = True
+        assert(self.user.reputation < self.min_rep)
+        self.assert_can_delete()
+
+    def test_low_rep_moderator_can_delete(self):
+        self.post_answer(user = self.other_user)
+        self.user.set_status('m')
+        assert(self.user.reputation < self.min_rep)
+        self.assert_can_delete()
+
+class DeleteQuestionPermissionAssertionTests(utils.AskbotTestCase):
+    """These specifically test cases where user is
+    owner of the question
+
+    all other cases are the same as DeleteAnswer...
+    """
+
+    def setUp(self):
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+
+    def assert_can_delete(self):
+        self.user.assert_can_delete_question(
+                                question = self.question
+                            )
+
+    def assert_cannot_delete(self):
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.user.assert_can_delete_question,
+            question = self.question
+        )
+
+    def upvote_answer(self, answer = None, user = None):
+        if user is None:
+            user = self.user
+        user.reputation = askbot_settings.MIN_REP_TO_VOTE_UP
+        user.upvote(answer)
+
+    def test_owner_can_delete_question_with_nonvoted_answer_by_other(self):
+        self.post_answer(
+                    user = self.other_user,
+                    question = self.question
+                )
+        self.assert_can_delete()
+
+    def test_owner_can_delete_question_with_upvoted_answer_posted_by_self(self):
+        answer = self.post_answer(
+                    user = self.user,
+                    question = self.question
+                )
+        self.upvote_answer(
+                    answer = answer,
+                    user = self.other_user
+                )
+        self.assert_can_delete()
+
+    def test_owner_cannot_delete_question_with_upvoted_answer_posted_by_other(self):
+        answer = self.post_answer(
+                    user = self.other_user,
+                    question = self.question
+                )
+        self.upvote_answer(
+                    answer = answer,
+                    user = self.user
+                )
+        self.assert_cannot_delete()
+
+    def test_owner_can_delete_question_without_answers(self):
+        self.assert_can_delete()
+
+    def test_moderator_can_delete_question_with_upvoted_answer_by_other(self):
+        self.user.set_status('m')
+        answer = self.post_answer(
+                    user = self.other_user,
+                    question = self.question
+                )
+        self.user.upvote(answer)
+        self.assert_can_delete()
+
 
 class CloseQuestionPermissionAssertionTests(utils.AskbotTestCase):
     
