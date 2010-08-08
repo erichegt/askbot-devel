@@ -400,6 +400,78 @@ class CloseQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_cannot_close(user = self.user)
 
 
+class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
+    """rules to reo
+        user = self,
+        post = question,
+        admin_or_moderator_required = True,
+        owner_can = True,
+        owner_min_rep_setting = owner_min_rep_setting,
+        owner_low_rep_error_message = owner_low_rep_error_message,
+        general_error_message = general_error_message
+    """
+
+    def setUp(self):
+        self.min_rep = askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+        self.user.set_status('m')
+        self.user.close_question(self.question)
+        self.user.set_status('a')
+
+    def assert_can_reopen(self, user = None):
+        if user == None:
+            user = self.user
+
+        user.assert_can_reopen_question(self.question)
+
+    def assert_cannot_reopen(self, user = None):
+        if user == None:
+            user = self.user
+
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            user.assert_can_reopen_question,
+            question = self.question
+        )
+
+
+    def test_high_rep_nonowner_cannot_reopen(self):
+        self.other_user.reputation = 1000000
+        self.assert_cannot_reopen(user = self.other_user)
+
+    def test_low_rep_admin_can_reopen(self):
+        self.other_user.is_superuser = True
+        self.assert_can_reopen(user = self.other_user)
+
+    def test_low_rep_moderator_can_reopen(self):
+        self.other_user.set_status('m')
+        self.assert_can_reopen(user = self.other_user)
+
+    def test_low_rep_owner_cannot_reopen(self):
+        self.assert_cannot_reopen()
+
+    def test_high_rep_owner_can_reopen(self):
+        self.user.reputation = self.min_rep
+        self.assert_can_reopen()
+
+    def test_high_rep_suspended_owner_cannot_reopen(self):
+        self.user.reputation = self.min_rep
+        self.user.set_status('s')
+        self.assert_cannot_reopen()
+
+    def test_high_rep_blocked_cannot_reopen(self):
+        self.other_user.reputation = self.min_rep
+        self.other_user.set_status('b')
+        self.assert_cannot_reopen(user = self.other_user)
+
+    def test_high_rep_suspended_cannot_reopen(self):
+        self.other_user.reputation = self.min_rep
+        self.other_user.set_status('s')
+        self.assert_cannot_reopen(user = self.other_user)
+
+
 class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
 
     def extraSetUp(self):

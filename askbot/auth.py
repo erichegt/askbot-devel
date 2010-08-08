@@ -71,15 +71,6 @@ def can_accept_answer(user, question, answer):
             return True
     return False
 
-# now only support to reopen own question except superuser
-def can_reopen_question(user, question):
-    if user.is_superuser:
-        return True
-    if user.is_authenticated() and user.id == question.author_id:
-        if user.reputation >= askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS:
-            return True
-    return False
-
 def can_view_deleted_post(user, post):
     return user.is_superuser
 

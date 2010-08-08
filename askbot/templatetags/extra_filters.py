@@ -84,6 +84,11 @@ can_delete_post = make_template_filter_from_permission_assertion(
                         filter_name = 'can_delete_post'
                     )
 
+can_reopen_question = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_reopen_question',
+                        filter_name = 'can_reopen_question'
+                    )
+
 @register.filter
 def can_retag_questions(user):
     return auth.can_retag_questions(user)
@@ -124,10 +129,6 @@ def can_lock_posts(user):
 def can_accept_answer(user, question, answer):
     return auth.can_accept_answer(user, question, answer)
     
-@register.filter
-def can_reopen_question(user, question):
-    return auth.can_reopen_question(user, question)
-
 @register.filter
 def can_view_user_edit(request_user, target_user):
     return auth.can_view_user_edit(request_user, target_user)

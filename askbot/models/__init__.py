@@ -98,11 +98,16 @@ def user_get_old_vote_for_post(self, post):
 def _assert_user_can(
                         user = None,
                         post = None, #related post (may be parent)
+                        admin_or_moderator_required = False,
                         owner_can = False,
+                        suspended_owner_cannot = False,
+                        owner_min_rep_setting = None,
                         blocked_error_message = None,
                         suspended_error_message = None,
                         min_rep_setting = None,
                         low_rep_error_message = None,
+                        owner_low_rep_error_message = None,
+                        general_error_message = None
                     ):
     """generic helper assert for use in several
     User.assert_can_XYZ() calls regarding changing content
@@ -115,16 +120,39 @@ def _assert_user_can(
     if blocked_error_message and user.is_blocked():
         error_message = blocked_error_message
     elif post and owner_can and user == post.get_owner():
+        if owner_min_rep_setting:
+            if post.get_owner().reputation < owner_min_rep_setting:
+                if user.is_moderator() or user.is_administrator():
+                    return
+                else:
+                    assert(owner_low_rep_error_message is not None)
+                    raise askbot_exceptions.InsufficientReputation(
+                                                owner_low_rep_error_message
+                                            )
+        if suspended_owner_cannot and user.is_suspended():
+            if suspended_error_message:
+                error_message = suspended_error_message
+            else:
+                error_message = general_error_message
+            assert(error_message is not None)
+            raise django_exceptions.PermissionDenied(error_message)
+        else:
+            return
         return
     elif suspended_error_message and user.is_suspended():
         error_message = suspended_error_message
     elif user.is_administrator() or user.is_moderator():
         return
     elif low_rep_error_message and user.reputation < min_rep_setting:
-        error_message = low_rep_error_message % {'min_rep': min_rep_setting}
-        raise askbot_exceptions.InsufficientReputation(error_message)
+        raise askbot_exceptions.InsufficientReputation(low_rep_error_message)
     else:
-        return
+        if admin_or_moderator_required == False:
+            return
+
+    #if admin or moderator is required, then substitute the message
+    if admin_or_moderator_required:
+        error_message = general_error_message
+    assert(error_message is not None)
     raise django_exceptions.PermissionDenied(error_message)
 
 
@@ -226,7 +254,8 @@ def user_assert_can_post_comment(self, parent_post = None):
             )
     low_rep_error_message = _(
                 'Sorry, to comment any post a minimum reputation of ' + \
-                '%(min_rep)s points is required.'
+                '%(min_rep)s points is required. You can still comment ' +\
+                'your own posts and answers to your questions'
             ) % {'min_rep': askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
 
     try:
@@ -369,26 +398,53 @@ def user_assert_can_close_question(self, question = None):
             {'min_rep': askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS}
     min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
 
+    owner_min_rep_setting =  askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS
+
+    owner_low_rep_error_message = _(
+                        'Sorry, to close own question ' + \
+                        'a minimum reputation of %(min_rep)s is required'
+                    ) % {'min_rep': owner_min_rep_setting}
+
     _assert_user_can(
         user = self,
         post = question,
         owner_can = True,
+        suspended_owner_cannot = True,
+        owner_min_rep_setting = owner_min_rep_setting,
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
+        owner_low_rep_error_message = owner_low_rep_error_message,
         min_rep_setting = min_rep_setting
     )
 
-    #exception - owner needs some rep to do this
-    if self == question.get_owner():
-        if self.is_suspended():
-            raise django_exceptions.PermissionDenied(suspended_error_message)
-        if self.reputation < askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS:
-            error_message = _(
-                        'Sorry, to close own question ' +\
-                        'minimum reputation of %(min_rep)s is required'
-                    )
-            raise askbot_exceptions.InsufficientReputation(error_message)
+
+def user_assert_can_reopen_question(self, question = None):
+    assert(isinstance(question, Question) == True)
+
+    owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
+
+    general_error_message = _(
+                        'Sorry, only administrators, moderators ' + \
+                        'or post owners with reputation > %(min_rep)s ' + \
+                        'can reopen questions.'
+                    ) % {'min_rep': owner_min_rep_setting }
+
+    owner_low_rep_error_message = _(
+                        'Sorry, to reopen own question ' + \
+                        'a minimum reputation of %(min_rep)s is required'
+                    ) % {'min_rep': owner_min_rep_setting}
+
+    _assert_user_can(
+        user = self,
+        post = question,
+        admin_or_moderator_required = True,
+        owner_can = True,
+        suspended_owner_cannot = True,
+        owner_min_rep_setting = owner_min_rep_setting,
+        owner_low_rep_error_message = owner_low_rep_error_message,
+        general_error_message = general_error_message
+    )
 
 
 def user_assert_can_flag_offensive(self, post = None):
@@ -566,16 +622,31 @@ def user_delete_question(
     #todo - move onDeleted method to a fitting class
     auth.onDeleted(question, self, timestamp = timestamp)
 
+@auto_now_timestamp
 def user_close_question(
                     self,
                     question = None,
                     reason = None,
+                    timestamp = None
                 ):
     self.assert_can_close_question(question)
     question.closed = True
     question.closed_by = self
-    question.closed_at = datetime.datetime.now()
+    question.closed_at = timestamp
     question.close_reason = reason
+    question.save()
+
+@auto_now_timestamp
+def user_reopen_question(
+                    self,
+                    question = None,
+                    timestamp = None
+                ):
+    self.assert_can_reopen_question(question)
+    question.closed = False
+    question.closed_by = self
+    question.closed_at = timestamp
+    question.close_reason = None
     question.save()
 
 def user_delete_post(
@@ -1093,6 +1164,7 @@ User.add_to_class('delete_question', user_delete_question)
 User.add_to_class('delete_answer', user_delete_answer)
 User.add_to_class('restore_post', user_restore_post)
 User.add_to_class('close_question', user_close_question)
+User.add_to_class('reopen_question', user_reopen_question)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
@@ -1103,6 +1175,7 @@ User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
 User.add_to_class('assert_can_post_comment', user_assert_can_post_comment)
 User.add_to_class('assert_can_edit_post', user_assert_can_edit_post)
 User.add_to_class('assert_can_close_question', user_assert_can_close_question)
+User.add_to_class('assert_can_reopen_question', user_assert_can_reopen_question)
 User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
 User.add_to_class('assert_can_retag_questions', user_assert_can_retag_questions)
 #todo: do we need assert_can_delete_post

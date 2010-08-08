@@ -16,12 +16,13 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.translation import ugettext as _
 from django.template import RequestContext
-from askbot.models import *
+from askbot.models import * #todo: clean this up
 from askbot.forms import CloseForm
 from askbot import auth
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_method, ajax_login_required
+from askbot.templatetags import extra_filters as template_filters
 import logging
 
 def process_vote(user = None, vote_direction = None, post = None):
@@ -352,19 +353,32 @@ def close(request, id):#close question
 def reopen(request, id):#re-open question
     """view to initiate and process 
     question close
+
+    this is not an ajax view
     """
+
     question = get_object_or_404(Question, id=id)
     # open question
-    if not auth.can_reopen_question(request.user, question):
-        return HttpResponse('Permission denied.')
-    if request.method == 'POST' :
-        Question.objects.filter(id=question.id).update(closed=False,
-            closed_by=None, closed_at=None, close_reason=None)
+    try:
+        if request.method == 'POST' :
+            request.user.reopen_question(question)
+            return HttpResponseRedirect(question.get_absolute_url())
+        else:
+            request.user.assert_can_reopen_question(question)
+            closed_by_profile_url = question.closed_by.get_profile_url()
+            closed_by_username = question.closed_by.username
+            return render_to_response(
+                            'reopen.html', 
+                            {
+                                'question' : question,
+                                'closed_by_profile_url': closed_by_profile_url,
+                                'closed_by_username': closed_by_username,
+                            },
+                            context_instance=RequestContext(request)
+                        )
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = str(e))
         return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        return render_to_response('reopen.html', {
-            'question' : question,
-            }, context_instance=RequestContext(request))
 
 #askbot-user communication system
 def read_message(request):#marks message a read

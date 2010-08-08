@@ -1,0 +1,9 @@
+python manage.py test askbot.SeeOffensiveFlagsPermissionAssertionTests \
+ askbot.DeleteAnswerPermissionAssertionTests \
+ askbot.DeleteQuestionPermissionAssertionTests \
+ askbot.CloseQuestionPermissionAssertionTests \
+ askbot.ReopenQuestionPermissionAssertionTests \
+ askbot.FlagOffensivePermissionAssertionTests \
+ askbot.CommentPermissionAssertionTests \
+ askbot.VotePermissionAssertionTests \
+ askbot.UploadPermissionAssertionTests

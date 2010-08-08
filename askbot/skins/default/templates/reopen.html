@@ -13,18 +13,28 @@
 {% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
-	{% trans "Reopen question" %}
+    {% trans "Reopen question" %}
 </div>
 <div id="main-body" style="width:100%">
-    <p>{% trans "Open the previously closed question" %}: <a href="{{ question.get_absolute_url }}"><span class="big">{{ question.get_question_title }}</span></a>
-    
-    </p>   
-    <p><strong>{% trans "The question was closed for the following reason " %}"{{ question.get_close_reason_display }}"{% trans "reason - leave blank in english" %} <a href="{{ question.closed_by.get_profile_url }}">{{ question.closed_by.username }}</a> {% trans "on "%} {% diff_date question.closed_at %}<font class="darkred">{% trans "date closed" %}</font>
-        </strong>
+    <p>{% trans "Title" %}: 
+        <a href="{{ question.get_absolute_url }}">
+            <span class="big">{{ question.get_question_title }}</span>
+        </a>
     </p>
-    
+    <p>{% blocktrans %}This question has been closed by 
+        <a href="{{closed_by_profile_url}}">{{closed_by_username}}</a>
+    {% endblocktrans %}
+    </p>
+    <p>
+        {% trans "Close reason:" %} "<strong>{{question.get_close_reason_display}}</strong>".
+    </p>
+    <p>
+        {% trans "When:" %} {% diff_date question.closed_at %}
+    </p>
+    <p>
+        {% trans "Reopen this question?" %}
+    </p>
     <form id="fmclose" action="{% url reopen question.id %}" method="post" >
-
         <div id="" style="padding:20px 0 20px 0">
             <input type="submit" value="{% trans "Reopen this question" %}" class="submit" />&nbsp;
             <input id="btBack" type="button" value="{% trans "Cancel" %}"  class="submit"  />
