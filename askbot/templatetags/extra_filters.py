@@ -89,13 +89,15 @@ can_reopen_question = make_template_filter_from_permission_assertion(
                         filter_name = 'can_reopen_question'
                     )
 
-@register.filter
-def can_retag_questions(user):
-    return auth.can_retag_questions(user)
+can_edit_post = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_edit_post',
+                        filter_name = 'can_edit_post'
+                    )
 
-@register.filter
-def can_edit_post(user, post):
-    return auth.can_edit_post(user, post)
+can_retag_question = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_retag_question',
+                        filter_name = 'can_retag_question'
+                    )
 
 @register.filter
 def can_see_offensive_flags(user, post):

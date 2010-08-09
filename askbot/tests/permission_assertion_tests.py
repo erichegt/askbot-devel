@@ -471,6 +471,233 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.other_user.set_status('s')
         self.assert_cannot_reopen(user = self.other_user)
 
+class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
+    
+    def setUp(self):
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.post = self.post_question()
+        self.min_rep = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
+        self.min_rep_wiki = askbot_settings.MIN_REP_TO_EDIT_WIKI
+
+    def assert_user_can(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        user.assert_can_edit_post(self.post)
+        self.assertTrue(
+            template_filters.can_edit_post(user, self.post)
+        )
+
+    def assert_user_cannot(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    user.assert_can_edit_post,
+                    self.post
+                )
+        self.assertFalse(
+            template_filters.can_edit_post(user, self.post)
+        )
+
+    def assert_other_can(self):
+        self.assert_user_can(user = self.other_user)
+
+    def assert_other_cannot(self):
+        self.assert_user_cannot(user = self.other_user)
+
+    def test_admin_can_edit(self):
+        self.other_user.is_superuser = True
+        self.assert_other_can()
+
+    def test_admin_can_edit_deleted(self):
+        self.post.deleted = True
+        self.other_user.is_superuser = True
+        self.assert_other_can()
+
+    def test_mod_can_edit(self):
+        self.other_user.set_status('m')
+        self.assert_other_can()
+
+    def test_low_rep_user_cannot_edit_others_post(self):
+        assert(self.other_user.reputation < self.min_rep)
+        self.assert_other_cannot()
+
+    def test_low_rep_user_cannot_edit_others_wiki(self):
+        self.post.wiki = True
+        assert(self.other_user.reputation < self.min_rep_wiki)
+        self.assert_other_cannot()
+
+    def test_low_rep_user_can_edit_own_wiki(self):
+        self.post.wiki = True
+        self.assert_user_can()
+
+    def test_medium_rep_user_can_edit_others_wiki(self):
+        self.post.wiki = True
+        self.other_user.reputation = self.min_rep_wiki
+        self.assert_other_can()
+
+    def test_high_rep_user_can_edit_others_post(self):
+        self.other_user.reputation = self.min_rep
+        self.assert_other_can()
+
+    #def test_medium_rep_user_can_edit_others_wiki(self):
+    #def test_low_rep_user_can_edit_own_wiki(self):
+    #def test_low_rep_user_cannot_edit_others_wiki(self):
+    #def test_high_rep_blocked_cannot_edit_others_wiki(self):
+    def test_medium_rep_user_cannot_edit_others_post(self):
+        self.other_user.reputation = self.min_rep_wiki
+        self.assert_other_cannot()
+
+    def test_high_rep_user_cannot_edit_others_deleted_post(self):
+        self.other_user.reputation = self.min_rep
+        self.post.deleted = True
+        self.assert_other_cannot()
+
+    def test_high_rep_user_cannot_edit_others_deleted_wiki(self):
+        self.other_user.reputation = self.min_rep
+        self.post.deleted = True
+        self.post.wiki = True
+        self.assert_other_cannot()
+
+    def test_low_rep_suspended_can_edit_own_post(self):
+        self.user.set_status('s')
+        assert(self.user.reputation < self.min_rep)
+        self.assert_user_can()
+
+    def test_low_rep_suspended_can_edit_own_deleted_post(self):
+        self.user.set_status('s')
+        self.post.deleted = True
+        self.assert_user_can()
+
+    def test_high_rep_suspended_cannot_edit_others_deleted_post(self):
+        self.other_user.reputation = self.min_rep
+        self.other_user.set_status('s')
+        self.post.deleted = True
+        self.assert_other_cannot()
+
+    def test_high_rep_suspended_cannot_edit_others_post(self):
+        self.other_user.set_status('s')
+        self.other_user.reputation = self.min_rep
+        self.assert_other_cannot()
+
+    def test_high_rep_blocked_cannot_edit_own_post(self):
+        self.user.set_status('b')
+        self.user.reputation = self.min_rep
+        self.assert_user_cannot()
+
+    def test_high_rep_blocked_cannot_edit_others_post(self):
+        self.user.set_status('b')
+        self.user.reputation = self.min_rep
+        self.assert_user_cannot()
+
+    def test_high_rep_blocked_cannot_edit_others_deleted_post(self):
+        self.other_user.set_status('b')
+        self.other_user.reputation = self.min_rep
+        self.post.deleted = True
+        self.assert_other_cannot()
+
+    def test_high_rep_blocked_cannot_edit_others_wiki(self):
+        self.other_user.set_status('b')
+        self.other_user.reputation = self.min_rep
+        self.post.wiki = True
+        self.assert_other_cannot()
+
+class EditAnswerPermissionAssertionTests(
+            EditQuestionPermissionAssertionTests
+        ):
+    def setUp(self):
+        super(
+                EditAnswerPermissionAssertionTests,
+                self,
+            ).setUp()
+        self.post = self.post_answer(question = self.post)
+
+    def assert_user_can(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        user.assert_can_edit_answer(self.post)
+        self.assertTrue(
+            template_filters.can_edit_post(user, self.post)
+        )
+
+    def assert_user_cannot(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    user.assert_can_edit_answer,
+                    self.post
+                )
+        self.assertFalse(
+            template_filters.can_edit_post(user, self.post)
+        )
+
+
+class RetagQuestionPermissionAssertionTests(
+            EditQuestionPermissionAssertionTests
+        ):
+
+    def setUp(self):
+        super(
+                RetagQuestionPermissionAssertionTests,
+                self,
+            ).setUp()
+        self.min_rep = askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
+
+    def assert_user_can(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        user.assert_can_retag_question(self.post)
+        self.assertTrue(
+            template_filters.can_retag_question(user, self.post)
+        )
+
+    def assert_user_cannot(
+                    self,
+                    user = None,
+                ):
+        if user is None:
+            user = self.user
+
+        self.assertRaises(
+                    exceptions.PermissionDenied,
+                    user.assert_can_retag_question,
+                    self.post
+                )
+        self.assertFalse(
+            template_filters.can_edit_post(user, self.post)
+        )
+    def test_medium_rep_user_can_edit_others_wiki(self):
+        pass
+    def test_low_rep_user_can_edit_own_wiki(self):
+        pass
+    def test_low_rep_user_cannot_edit_others_wiki(self):
+        pass
+    def test_high_rep_blocked_cannot_edit_others_wiki(self):
+        pass
+    def test_medium_rep_user_cannot_edit_others_post(self):
+        pass
 
 class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
 

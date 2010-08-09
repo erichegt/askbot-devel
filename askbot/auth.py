@@ -18,41 +18,6 @@ import logging
 
 from askbot.conf import settings as askbot_settings
 
-def can_retag_questions(user):
-    """Determines if a User can retag Questions."""
-    if user.is_authenticated():
-        if user.reputation >= askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS:
-            if user.reputation < askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
-                return True
-        if user.is_superuser:
-            return True
-    return False
-
-def can_edit_post(user, post):
-    """Determines if a User can edit the given Question or Answer."""
-    if user.is_authenticated():
-        if user.id == post.author_id:
-            if user.is_blocked():
-                return False
-            else:
-                return True
-        if post.wiki:
-            if user.reputation >= askbot_settings.MIN_REP_TO_EDIT_WIKI:
-                return True
-        if user.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
-            return True
-        if user.is_administrator() or user.is_moderator():
-            return True
-    return False
-
-def can_close_question(user, question):
-    """Determines if a User can close the given Question."""
-    return user.is_authenticated() and (
-        (user.id == question.author_id and
-         user.reputation >= askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS) or
-        user.reputation >= askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS or
-        user.is_superuser)
-
 def can_lock_posts(user):
     """Determines if a User can lock Questions or Answers."""
     return user.is_authenticated() and (
@@ -70,9 +35,6 @@ def can_accept_answer(user, question, answer):
         if question.author != answer.author and question.author == user:
             return True
     return False
-
-def can_view_deleted_post(user, post):
-    return user.is_superuser
 
 # user preferences view permissions
 def is_user_self(request_user, target_user):

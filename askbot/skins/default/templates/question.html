@@ -140,7 +140,15 @@
                                 </div>
                                 {% joinitems using '<span class="action-link-separator">|</span>' %}    
                                     {% if request.user|can_edit_post:question %}
-                                    <span class="action-link"><a href="{% url edit_question question.id %}">{% trans 'edit' %}</a></span>
+                                    <span class="action-link">
+                                        <a href="{% url edit_question question.id %}">{% trans 'edit' %}</a>
+                                    </span>
+                                    {% else %}
+                                        {% if request.user|can_retag_question:question %}
+                                        <span class="action-link">
+                                            <a href="{% url retag_question question.id %}">{% trans 'retag' %}</a>
+                                        </span>
+                                        {% endif %}
                                     {% endif %}
                                 {% separator %}
                                     {% if question.closed %}

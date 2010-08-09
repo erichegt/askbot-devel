@@ -75,6 +75,11 @@ urlpatterns = patterns('',
         name='edit_question'
     ),
     url(
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
+        app.writers.retag_question, 
+        name='retag_question'
+    ),
+    url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
         app.commands.close, 
         name='close'

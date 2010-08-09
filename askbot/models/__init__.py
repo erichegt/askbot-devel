@@ -274,11 +274,39 @@ def user_assert_can_post_comment(self, parent_post = None):
                 return
         raise e
 
+def user_assert_can_see_deleted_post(self, post = None):
+
+    error_message = _(
+                        'This post has been deleted and can be seen only ' + \
+                        'by post ownwers, site administrators and moderators'
+                    )
+    _assert_user_can(
+        user = self,
+        post = post,
+        admin_or_moderator_required = True,
+        owner_can = True,
+        general_error_message = error_message
+    )
+
+def user_assert_can_edit_deleted_post(self, post = None):
+    assert(post.deleted == True)
+    try:
+        self.assert_can_see_deleted_post(post)
+    except django_exceptions.PermissionDenied, e:
+        error_message = _(
+                    'Sorry, only moderators, site administrators ' + \
+                    'and post owners can edit deleted posts'
+                )
+        raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_edit_post(self, post = None):
     """assertion that raises exceptions.PermissionDenied
     when user is not authorised to edit this post
     """
+
+    if post.deleted == True:
+        self.assert_can_edit_deleted_post(post)
+        return
 
     blocked_error_message = _(
                 'Sorry, since your account is blocked ' + \
@@ -288,12 +316,20 @@ def user_assert_can_edit_post(self, post = None):
                 'Sorry, since your account is suspended ' + \
                 'you can edit only your own posts'
             )
-    low_rep_error_message = _(
-                'Sorry, to edit other people\' posts, a minimum ' + \
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}
-    min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
+    if post.wiki == True:
+        low_rep_error_message = _(
+                    'Sorry, to edit wiki\' posts, a minimum ' + \
+                    'reputation of %(min_rep)s is required'
+                ) % \
+                {'min_rep': askbot_settings.MIN_REP_TO_EDIT_WIKI}
+        min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_WIKI
+    else:
+        low_rep_error_message = _(
+                    'Sorry, to edit other people\' posts, a minimum ' + \
+                    'reputation of %(min_rep)s is required'
+                ) % \
+                {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}
+        min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
 
     _assert_user_can(
         user = self,
@@ -304,6 +340,17 @@ def user_assert_can_edit_post(self, post = None):
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting
     )
+
+
+def user_assert_can_edit_question(self, question = None):
+    assert(isinstance(question, Question))
+    self.assert_can_edit_post(question)
+
+
+def user_assert_can_edit_answer(self, answer = None):
+    assert(isinstance(answer, Answer))
+    self.assert_can_edit_post(answer)
+
 
 def user_assert_can_delete_post(self, post = None):
     if isinstance(post, Question):
@@ -489,7 +536,18 @@ def user_assert_can_flag_offensive(self, post = None):
             raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
 
-def user_assert_can_retag_questions(self):
+def user_assert_can_retag_question(self, question = None):
+
+    if question.deleted == True:
+        try:
+            self.assert_can_edit_deleted_post(question)
+        except django_exceptions.PermissionDenied:
+            error_message = _(
+                            'Sorry, only question owners, ' + \
+                            'site administrators and moderators ' + \
+                            'can retag deleted questions'
+                        )
+            raise django_exceptions.PermissionDenied(error_message)
 
     blocked_error_message = _(
                 'Sorry, since your account is blocked ' + \
@@ -503,12 +561,12 @@ def user_assert_can_retag_questions(self):
                 'Sorry, to retag questions a minimum ' + \
                 'reputation of %(min_rep)s is required'
             ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_RETAG_QUESTIONS}
-    min_rep_setting = askbot_settings.MIN_REP_TO_RETAG_QUESTIONS
+            {'min_rep': askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}
+    min_rep_setting = askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
 
     _assert_user_can(
         user = self,
-        post = post,
+        post = question,
         owner_can = True,
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
@@ -595,6 +653,20 @@ def user_post_comment(
     #print 'comment id is %s' % comment.id
     #print len(Comment.objects.all())
     return comment
+
+@auto_now_timestamp
+def user_retag_question(
+                    self,
+                    question = None,
+                    tags = None,
+                    timestamp = None,
+                ):
+    self.assert_can_retag_question(question)
+    question.retag(
+        retagged_by = self,
+        retagged_at = timestamp,
+        tagnames = tags,
+    )
 
 def user_delete_comment(
                     self,
@@ -707,6 +779,47 @@ def user_post_question(
                                     wiki = wiki
                                 )
     return question
+
+@auto_now_timestamp
+def user_edit_question(
+                    self,
+                    question = None,
+                    title = None,
+                    body_text = None,
+                    revision_comment = None,
+                    tags = None,
+                    wiki = False,
+                    timestamp = None
+                ):
+    self.assert_can_edit_question(question)
+    question.apply_edit(
+        edited_at = timestamp,
+        edited_by = self,
+        title = title,
+        text = body_text,
+        #todo: summary name clash in question and question revision
+        comment = revision_comment,
+        tags = tags,
+        wiki = wiki,
+    )
+
+@auto_now_timestamp
+def user_edit_answer(
+                    self,
+                    answer = None,
+                    body_text = None,
+                    revision_comment = None,
+                    wiki = False,
+                    timestamp = None
+                ):
+    self.assert_can_edit_answer(answer)
+    answer.apply_edit(
+        edited_at = timestamp,
+        edited_by = self,
+        text = body_text,
+        comment = revision_comment,
+        wiki = wiki,
+    )
 
 def user_is_following(self, followed_item):
     if isinstance(followed_item, Question):
@@ -1129,7 +1242,10 @@ User.add_to_class(
         )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('post_question', user_post_question)
+User.add_to_class('edit_question', user_edit_question)
+User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
+User.add_to_class('edit_answer', user_edit_answer)
 User.add_to_class('post_comment', user_post_comment)
 User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
@@ -1174,10 +1290,14 @@ User.add_to_class('assert_can_post_question', user_assert_can_post_question)
 User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
 User.add_to_class('assert_can_post_comment', user_assert_can_post_comment)
 User.add_to_class('assert_can_edit_post', user_assert_can_edit_post)
+User.add_to_class('assert_can_edit_deleted_post', user_assert_can_edit_deleted_post)
+User.add_to_class('assert_can_see_deleted_post', user_assert_can_see_deleted_post)
+User.add_to_class('assert_can_edit_question', user_assert_can_edit_question)
+User.add_to_class('assert_can_edit_answer', user_assert_can_edit_answer)
 User.add_to_class('assert_can_close_question', user_assert_can_close_question)
 User.add_to_class('assert_can_reopen_question', user_assert_can_reopen_question)
 User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
-User.add_to_class('assert_can_retag_questions', user_assert_can_retag_questions)
+User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
 #todo: do we need assert_can_delete_post
 User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
 User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)

@@ -160,38 +160,38 @@ def vote(request, id):
                         answer = get_object_or_404(Answer, id=answer_id)
                         auth.onAnswerAccept(answer, request.user)
                 else:
-                    raise Exception(
+                    raise exceptions.PermissionDenied(
                             'Sorry, only question owner can accept the answer'
                         )
             else:
-                raise Exception(
+                raise exceptions.PermissionDenied(
                         _('Sorry, but anonymous users cannot accept answers')
                     )
 
         elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
 
-                ###############################
-                # all this can be avoided with
-                # better query parameters
-                vote_direction = 'up'
-                if vote_type in ('2','6'):
-                    vote_direction = 'down'
+            ###############################
+            # all this can be avoided with
+            # better query parameters
+            vote_direction = 'up'
+            if vote_type in ('2','6'):
+                vote_direction = 'down'
 
-                if vote_type in ('5', '6'):
-                    #todo: fix this weirdness - why postId here 
-                    #and not with question?
-                    id = request.POST.get('postId')
-                    post = get_object_or_404(Answer, id=id)
-                else:
-                    post = get_object_or_404(Question, id=id)
-                #
-                ######################
+            if vote_type in ('5', '6'):
+                #todo: fix this weirdness - why postId here 
+                #and not with question?
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id=id)
+            else:
+                post = get_object_or_404(Question, id=id)
+            #
+            ######################
 
-                response_data = process_vote(
-                                            user = request.user,
-                                            vote_direction = vote_direction,
-                                            post = post
-                                        )
+            response_data = process_vote(
+                                        user = request.user,
+                                        vote_direction = vote_direction,
+                                        post = post
+                                    )
 
         elif vote_type in ['7', '8']:
             #flag question or answer

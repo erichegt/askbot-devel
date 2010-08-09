@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- question_retag.html -->
 {% load extra_tags %}
+{% load i18n %}
 {% block title %}{% spaceless %}{% trans "Change tags" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
     <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
@@ -53,7 +54,7 @@
 </div>
 <div id="main-body" class="ask-body">
     <div id="askform">
-        <form id="fmretag" action="{% url edit_question question.id %}" method="post" >
+        <form id="fmretag" action="{% url retag_question question.id %}" method="post" >
             <h3>
                 {{ question.get_question_title }}
             </h3>
@@ -70,7 +71,7 @@
                 </div>
             </div>
             <div class="error" ></div>
-            <input type="submit" value="{% trans "Save edit" %}" class="submit" />&nbsp;
+            <input type="submit" value="{% trans "Retag" %}" class="submit" />&nbsp;
             <input type="button" value="{% trans "Cancel" %}" class="submit" onclick="history.back(-1);" />
         </form>
     </div>

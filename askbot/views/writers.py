@@ -178,10 +178,11 @@ def ask(request):#view used to ask a new question
         }, context_instance=RequestContext(request))
 
 @login_required
-def edit_question(request, id):#edit or retag a question
+def old_edit_question(request, id):#edit or retag a question
     """view to edit question
     """
     question = get_object_or_404(models.Question, id=id)
+
     if question.deleted and not auth.can_view_deleted_post(request.user, question):
         raise Http404
     if auth.can_edit_post(request.user, question):
@@ -191,115 +192,141 @@ def edit_question(request, id):#edit or retag a question
     else:
         raise Http404
 
-def _retag_question(request, question):#non-url subview of edit question - just retag
-    """retag question sub-view used by
-    view "edit_question"
+@login_required
+def retag_question(request, id):
+    """retag question view
     """
-    if request.method == 'POST':
-        form = forms.RetagQuestionForm(question, request.POST)
-        if form.is_valid():
-            if form.has_changed():
-                question.retag(
-                    retagged_by = request.user,
-                    retagged_at = datetime.datetime.now(),
-                    tagnames = form.cleaned_data['tags'],
-                )
-            return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        form = forms.RetagQuestionForm(question)
-    return render_to_response('question_retag.html', {
-        'active_tab': 'questions',
-        'question': question,
-        'form' : form,
-        'tags' : _get_tags_cache_json(),
-    }, context_instance=RequestContext(request))
+    question = get_object_or_404(models.Question, id = id)
 
-def _edit_question(request, question):#non-url subview of edit_question - just edit the body/title
-    latest_revision = question.get_latest_revision()
-    revision_form = None
-    if request.method == 'POST':
-        if 'select_revision' in request.POST:#revert-type edit
-            # user has changed revistion number
-            revision_form = forms.RevisionForm(question, latest_revision, request.POST)
-            if revision_form.is_valid():
-                # Replace with those from the selected revision
-                form = forms.EditQuestionForm(question,
-                    models.QuestionRevision.objects.get(question=question,
-                        revision=revision_form.cleaned_data['revision']))
-            else:
-                form = forms.EditQuestionForm(question, latest_revision, request.POST)
-        else:#new content edit
-            # Always check modifications against the latest revision
-            form = forms.EditQuestionForm(question, latest_revision, request.POST)
+    try:
+        request.user.assert_can_retag_question(question)
+        if request.method == 'POST':
+            form = forms.RetagQuestionForm(question, request.POST)
             if form.is_valid():
                 if form.has_changed():
-                    edited_at = datetime.datetime.now()
-                    edited_by = request.user
-                    question.apply_edit(
-                        edited_at = edited_at,
-                        edited_by = edited_by,
-                        title = form.cleaned_data['title'],
-                        text = form.cleaned_data['text'],
-                        #todo: summary name clash in question and question revision
-                        comment = form.cleaned_data['summary'],
-                        tags = form.cleaned_data['tags'],
-                        wiki = form.cleaned_data.get('wiki',False),
-                    )
-
+                    request.user.retag_question(
+                                        question = question,
+                                        tags = form.cleaned_data['tags']
+                                    )
                 return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        revision_form = forms.RevisionForm(question, latest_revision)
-        form = forms.EditQuestionForm(question, latest_revision)
-    return render_to_response('question_edit.html', {
-        'active_tab': 'questions',
-        'question': question,
-        'revision_form': revision_form,
-        'form' : form,
-        'tags' : _get_tags_cache_json()
-    }, context_instance=RequestContext(request))
+        else:
+            form = forms.RetagQuestionForm(question)
+        return render_to_response('question_retag.html', {
+            'active_tab': 'questions',
+            'question': question,
+            'form' : form,
+            'tags' : _get_tags_cache_json(),
+        }, context_instance=RequestContext(request))
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = str(e))
+        return HttpResponseRedirect(question.get_absolute_url())
+
+@login_required
+def edit_question(request, id):
+    """edit question view
+    """
+    question = get_object_or_404(models.Question, id = id)
+    latest_revision = question.get_latest_revision()
+    revision_form = None
+    try:
+        request.user.assert_can_edit_question(question)
+        if request.method == 'POST':
+            print request.POST
+            if 'select_revision' in request.POST:#revert-type edit
+                # user has changed revistion number
+                revision_form = forms.RevisionForm(question, latest_revision, request.POST)
+                if revision_form.is_valid():
+                    # Replace with those from the selected revision
+                    form = forms.EditQuestionForm(question,
+                        models.QuestionRevision.objects.get(question=question,
+                            revision=revision_form.cleaned_data['revision']))
+                else:
+                    form = forms.EditQuestionForm(question, latest_revision, request.POST)
+            else:#new content edit
+                # Always check modifications against the latest revision
+                form = forms.EditQuestionForm(question, latest_revision, request.POST)
+                if form.is_valid():
+                    if form.has_changed():
+                        request.user.edit_question(
+                                            question = question,
+                                            title = form.cleaned_data['title'],
+                                            body_text = form.cleaned_data['text'],
+                                            revision_comment = form.cleaned_data['summary'],
+                                            tags = form.cleaned_data['tags'],
+                                            wiki = form.cleaned_data['wiki']
+                                        )
+                    return HttpResponseRedirect(question.get_absolute_url())
+        else:
+            revision_form = forms.RevisionForm(question, latest_revision)
+            form = forms.EditQuestionForm(question, latest_revision)
+
+        return render_to_response('question_edit.html', {
+            'active_tab': 'questions',
+            'question': question,
+            'revision_form': revision_form,
+            'form' : form,
+            'tags' : _get_tags_cache_json()
+        }, context_instance=RequestContext(request))
+
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = str(e))
+        return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
 def edit_answer(request, id):
     answer = get_object_or_404(models.Answer, id=id)
-    if answer.deleted and not auth.can_view_deleted_post(request.user, answer):
-        raise Http404
-    elif not auth.can_edit_post(request.user, answer):
-        raise Http404
-    else:
+    try:
+        request.user.assert_can_edit_answer(answer)
         latest_revision = answer.get_latest_revision()
         if request.method == "POST":
             if 'select_revision' in request.POST:
                 # user has changed revistion number
-                revision_form = forms.RevisionForm(answer, latest_revision, request.POST)
+                revision_form = forms.RevisionForm(
+                                                answer, 
+                                                latest_revision,
+                                                request.POST
+                                            )
                 if revision_form.is_valid():
                     # Replace with those from the selected revision
-                    form = forms.EditAnswerForm(answer,
-                                          models.AnswerRevision.objects.get(answer=answer,
-                                          revision=revision_form.cleaned_data['revision']))
+                    rev = revision_form.cleaned_data['revision']
+                    selected_revision = models.AnswerRevision.objects.get(
+                                                            answer = answer,
+                                                            revision = rev
+                                                        )
+                    form = forms.EditAnswerForm(answer, selected_revision)
                 else:
-                    form = forms.EditAnswerForm(answer, latest_revision, request.POST)
+                    form = forms.EditAnswerForm(
+                                            answer,
+                                            latest_revision,
+                                            request.POST
+                                        )
             else:
                 form = forms.EditAnswerForm(answer, latest_revision, request.POST)
                 if form.is_valid():
                     if form.has_changed():
-                        edited_at = datetime.datetime.now()
-                        answer.apply_edit(
-                            edited_at = edited_at,
-                            edited_by = request.user,
-                            text = form.cleaned_data['text'],
-                            comment = form.cleaned_data['summary'],
-                            wiki = False,#todo: fix this there is no "wiki" field on "edit answer"
-                        )
+                        request.user.edit_answer(
+                                answer = answer,
+                                body_text = form.cleaned_data['text'],
+                                revision_comment = form.cleaned_data['summary'],
+                                wiki = False,#todo: add wiki field to form
+                            )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
-        return render_to_response('answer_edit.html', {
-                                  'active_tab': 'questions',
-                                  'answer': answer,
-                                  'revision_form': revision_form,
-                                  'form': form,
-                                  }, context_instance=RequestContext(request))
+        return render_to_response(
+                            'answer_edit.html',
+                            {
+                                'active_tab': 'questions',
+                                'answer': answer,
+                                'revision_form': revision_form,
+                                'form': form,
+                            },
+                            context_instance=RequestContext(request)
+                        )
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = str(e))
+        return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
 def answer(request, id):#process a new answer

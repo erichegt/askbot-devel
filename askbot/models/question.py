@@ -369,13 +369,14 @@ class Question(content.Content, DeletableContent):
         self.last_activity_at = retagged_at
         self.last_edited_by = retagged_by
         self.last_activity_by = retagged_by
+        self.save()
 
         # Update the Question's tag associations
-        signals.tags_updated = self.objects.update_tags(
-                                        self,
-                                        tagnames,
-                                        retagged_by
-                                    )
+        tags_updated = Question.objects.update_tags(
+                                                self,
+                                                tagnames,
+                                                retagged_by
+                                            )
 
         # Create a new revision
         latest_revision = self.get_latest_revision()
@@ -388,8 +389,6 @@ class Question(content.Content, DeletableContent):
             summary    = const.POST_STATUS['retagged'],
             text       = latest_revision.text
         )
-        # send tags updated singal
-        signals.tags_updated.send(sender=Question, question=self)
 
     def get_origin_post(self):
         return self
