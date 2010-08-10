@@ -138,31 +138,14 @@ def vote(request, id):
         if vote_type == '0':
             if request.user.is_authenticated():
                 answer_id = request.POST.get('postId')
-                answer = get_object_or_404(Answer, id=answer_id)
+                answer = get_object_or_404(Answer, id = answer_id)
                 question = answer.question
                 # make sure question author is current user
-                if question.author == request.user:
-                    # answer user who is also question author is not allow to accept answer
-                    if answer.author == question.author:
-                        response_data['success'] = 0
-                        response_data['allowed'] = -1
-                    # check if answer has been accepted already
-                    elif answer.accepted:
-                        auth.onAnswerAcceptCanceled(answer, request.user)
-                        response_data['status'] = 1
-                    else:
-                        # set other answers in this question not accepted first
-                        for answer_of_question in Answer.objects.get_answers_from_question(question, request.user):
-                            if answer_of_question != answer and answer_of_question.accepted:
-                                auth.onAnswerAcceptCanceled(answer_of_question, request.user)
-
-                        #make sure retrieve data again after above author changes, they may have related data
-                        answer = get_object_or_404(Answer, id=answer_id)
-                        auth.onAnswerAccept(answer, request.user)
+                if answer.accepted:
+                    request.user.unaccept_best_answer(answer)
+                    response_data['status'] = 1 #cancelation
                 else:
-                    raise exceptions.PermissionDenied(
-                            'Sorry, only question owner can accept the answer'
-                        )
+                    request.user.accept_best_answer(answer)
             else:
                 raise exceptions.PermissionDenied(
                         _('Sorry, but anonymous users cannot accept answers')

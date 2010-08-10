@@ -7,23 +7,31 @@ from askbot.tests.utils import AskbotTestCase
 
 class DBApiTests(AskbotTestCase):
 
-    def test_flag_question(self):
+    def setUp(self):
         self.create_user()
-        question = self.post_question()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+
+    def test_flag_question(self):
         self.user.set_status('m')
-        self.user.flag_post(question)
+        self.user.flag_post(self.question)
         self.assertEquals(
             len(self.user.flaggeditems.all()),
             1
         )
 
     def test_flag_answer(self):
-        self.create_user()
-        question = self.post_question()
-        answer = self.post_answer(question = question)
+        answer = self.post_answer(question = self.question)
         self.user.set_status('m')
         self.user.flag_post(answer)
         self.assertEquals(
             len(self.user.flaggeditems.all()),
             1
         )
+
+    def test_accept_best_answer(self):
+        answer = self.post_answer(
+                            question = self.question,
+                            user = self.other_user
+                        )
+        self.user.accept_best_answer(answer)

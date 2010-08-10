@@ -1197,6 +1197,89 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
 #def user_assert_can_close_question(self, question = None):
 #def user_assert_can_retag_questions(self):
 
+class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
+
+    def setUp(self):
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+
+    def other_post_answer(self):
+        self.answer = self.post_answer(
+                                question = self.question,
+                                user = self.other_user
+                            )
+
+    def user_post_answer(self):
+        self.answer = self.post_answer(
+                                question = self.question,
+                                user = self.user
+                            )
+
+    def assert_user_can(self, user = None):
+        if user is None:
+            user = self.user
+        user.assert_can_accept_best_answer(self.answer)
+
+    def assert_user_cannot(self, user = None):
+        if user is None:
+            user = self.user
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            user.assert_can_accept_best_answer,
+            answer = self.answer
+        )
+
+    def test_question_owner_can_accept_others_answer(self):
+        self.other_post_answer()
+        self.assert_user_can()
+
+    def test_suspended_question_owner_cannot_accept_others_answer(self):
+        self.other_post_answer()
+        self.user.set_status('s')
+        self.assert_user_cannot()
+
+    def test_blocked_question_owner_cannot_accept_others_answer(self):
+        self.other_post_answer()
+        self.user.set_status('b')
+        self.assert_user_cannot()
+
+    def test_answer_owner_cannot_accept_answer(self):
+        self.other_post_answer()
+        self.assert_user_cannot(user = self.other_user)
+
+    def test_question_and_answer_owner_cannot_accept_answer(self):
+        self.user_post_answer()
+        self.assert_user_cannot()
+
+    def test_high_rep_other_user_cannot_accept_answer(self):
+        self.other_post_answer()
+        self.create_user(username = 'third_user')
+        self.third_user.reputation = 1000000
+        self.assert_user_cannot(user = self.third_user)
+
+    def test_moderator_cannot_accept_others_answer(self):
+        self.other_post_answer()
+        self.create_user(username = 'third_user')
+        self.third_user.set_status('m')
+        self.assert_user_cannot(user = self.third_user)
+
+    def test_moderator_cannot_accept_own_answer(self):
+        self.other_post_answer()
+        self.other_user.set_status('m')
+        self.assert_user_cannot(user = self.other_user)
+
+    def test_admin_cannot_accept_others_answer(self):
+        self.other_post_answer()
+        self.create_user(username = 'third_user')
+        self.third_user.is_superuser = True
+        self.assert_user_cannot(user = self.third_user)
+
+    def test_admin_cannot_accept_own_answer(self):
+        self.other_post_answer()
+        self.other_user.is_superuser = True
+        self.assert_user_cannot(user = self.other_user)
+
 class VotePermissionAssertionTests(PermissionAssertionTestCase):
     """Tests permission for voting
     """

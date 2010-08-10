@@ -74,6 +74,7 @@ class AnswerManager(models.Manager):
         Retrieves visibile answers for the given question. Delete answers
         are only visibile to the person who deleted them.
         """
+        #todo: there is this odd query used?
 
         if user is None or not user.is_authenticated():
             return self.filter(question=question, deleted=False)

@@ -155,6 +155,37 @@ def _assert_user_can(
     assert(error_message is not None)
     raise django_exceptions.PermissionDenied(error_message)
 
+def user_assert_can_unaccept_best_answer(self, answer = None):
+    assert(isinstance(answer, Answer))
+    if self.is_blocked():
+        error_message = _(
+                'Sorry, you cannot accept or unaccept best answers ' + \
+                'because your account is blocked'
+            )
+    elif self.is_suspended():
+        error_message = _(
+                'Sorry, you cannot accept or unaccept best answers ' + \
+                'because your account is suspended'
+            )
+    elif self == answer.question.get_owner():
+        if self == answer.get_owner():
+            error_message = _(
+                'Sorry, you cannot accept or unaccept your own answer ' + \
+                'to your own question'
+                )
+        else:
+            return #assertion success
+    else:
+        error_message = _(
+                'Sorry, only original author of the question ' + \
+                ' - %(username)s - can accept the best answer'
+                ) % {'username': answer.get_owner().username}
+
+    raise django_exceptions.PermissionDenied(error_message)
+
+def user_assert_can_accept_best_answer(self, answer = None):
+    assert(isinstance(answer, Answer))
+    self.assert_can_unaccept_best_answer(answer)
 
 def user_assert_can_vote_for_post(
                                 self, 
@@ -668,6 +699,26 @@ def user_retag_question(
         tagnames = tags,
     )
 
+@auto_now_timestamp
+def user_accept_best_answer(self, answer = None, timestamp = None):
+    self.assert_can_accept_best_answer(answer)
+    if answer.accepted == True:
+        return
+
+    prev_accepted_answers = answer.question.answers.filter(accepted = True)
+    for prev_answer in prev_accepted_answers:
+        auth.onAnswerAcceptCanceled(prev_answer, self)
+
+    auth.onAnswerAccept(answer, self)
+
+@auto_now_timestamp
+def user_unaccept_best_answer(self, answer = None, timestamp = None):
+    self.assert_can_unaccept_best_answer(answer)
+    if answer.accepted == False:
+        return
+    auth.onAnswerAcceptCanceled(answer, self)
+
+@auto_now_timestamp
 def user_delete_comment(
                     self,
                     comment = None,
@@ -676,6 +727,7 @@ def user_delete_comment(
     self.assert_can_delete_comment(comment = comment)
     comment.delete()
 
+@auto_now_timestamp
 def user_delete_answer(
                     self,
                     answer = None,
@@ -685,6 +737,7 @@ def user_delete_answer(
     #todo - move onDeleted method where appropriate
     auth.onDeleted(answer, self, timestamp = timestamp)
 
+@auto_now_timestamp
 def user_delete_question(
                     self,
                     question = None,
@@ -1281,6 +1334,8 @@ User.add_to_class('delete_answer', user_delete_answer)
 User.add_to_class('restore_post', user_restore_post)
 User.add_to_class('close_question', user_close_question)
 User.add_to_class('reopen_question', user_reopen_question)
+User.add_to_class('accept_best_answer', user_accept_best_answer)
+User.add_to_class('unaccept_best_answer', user_unaccept_best_answer)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
@@ -1304,6 +1359,11 @@ User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)
 User.add_to_class('assert_can_delete_comment', user_assert_can_delete_comment)
 User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)
+User.add_to_class('assert_can_accept_best_answer', user_assert_can_accept_best_answer)
+User.add_to_class(
+        'assert_can_unaccept_best_answer',
+        user_assert_can_unaccept_best_answer
+    )
 
 #todo: move this to askbot/utils ??
 def format_instant_notification_body(
