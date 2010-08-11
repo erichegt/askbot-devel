@@ -18,23 +18,9 @@ import logging
 
 from askbot.conf import settings as askbot_settings
 
-def can_lock_posts(user):
-    """Determines if a User can lock Questions or Answers."""
-    return user.is_authenticated() and (
-        user.reputation >= askbot_settings.MIN_REP_TO_LOCK_POSTS or
-        user.is_superuser)
-
 def can_follow_url(user):
     """Determines if the URL link can be followed by Google search engine."""
     return user.reputation >= askbot_settings.MIN_REP_TO_DISABLE_URL_NOFOLLOW
-
-def can_accept_answer(user, question, answer):
-    if user.is_superuser:
-        return True
-    if user.is_authenticated():
-        if question.author != answer.author and question.author == user:
-            return True
-    return False
 
 # user preferences view permissions
 def is_user_self(request_user, target_user):
@@ -364,68 +350,3 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
                    reputation_type=5,
                    reputation=user.reputation)
         reputation.save()
-
-#here timestamp is not used, I guess added for consistency
-def onDeleteCanceled(post, user, timestamp=None):
-    post.deleted = False
-    post.deleted_by = None 
-    post.deleted_at = None 
-    post.save()
-    if isinstance(post, Answer):
-        Question.objects.update_answer_count(post.question)
-    elif isinstance(post, Question):
-        #todo: make sure that these tags actually exist
-        #some may have since been deleted for good 
-        #or merged into others
-        for tag in list(post.tags.all()):
-            if tag.used_count == 1 and tag.deleted:
-                tag.deleted = False
-                tag.deleted_by = None
-                tag.deleted_at = None 
-                tag.save()
-
-def onDeleted(post, user, timestamp=None):
-    if timestamp is None:
-        timestamp = datetime.datetime.now()
-    post.deleted = True
-    post.deleted_by = user
-    post.deleted_at = timestamp
-    post.save()
-
-    if isinstance(post, Question):
-        for tag in list(post.tags.all()):
-            if tag.used_count == 1:
-                tag.deleted = True
-                tag.deleted_by = user
-                tag.deleted_at = timestamp
-            else:
-                tag.used_count = tag.used_count - 1 
-            tag.save()
-
-        answers = post.answers.all()
-        if user == post.author:
-            if len(answers) > 0:
-                msg = _(
-                    'Your question and all of it\'s answers have been deleted'
-                    )
-            else:
-                msg = _('Your question has been deleted')
-        else:
-            if len(answers) > 0:
-                msg = _(
-                    'The question and all of it\'s answers have been deleted'
-                    )
-            else:
-                msg = _('The question has been deleted')
-        user.message_set.create(message=msg)
-        logging.debug('posted a message %s' % msg)
-        for answer in answers:
-            onDeleted(answer, user)
-    elif isinstance(post, Answer):
-        Question.objects.update_answer_count(post.question)
-        logging.debug('updated answer count to %d' % post.question.answer_count)
-    signals.delete_question_or_answer.send(
-        sender=post.__class__,
-        instance=post,
-        delete_by=user
-    )

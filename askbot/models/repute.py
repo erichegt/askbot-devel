@@ -159,12 +159,12 @@ class Repute(models.Model):
             if delta > 0:
                 link_title = _(
                                 '%(points)s points were added for %(username)s\'s '
-                                + 'contribution to question %(question_title)s'
+                                'contribution to question %(question_title)s'
                             ) % link_title_data
             else:
                 link_title = _(
                                 '%(points)s points were subtracted for %(username)s\'s '
-                                + 'contribution to question %(question_title)s'
+                                'contribution to question %(question_title)s'
                             ) % link_title_data
 
             return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \

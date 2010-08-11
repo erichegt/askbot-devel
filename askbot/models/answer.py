@@ -68,20 +68,6 @@ class AnswerManager(models.Manager):
             authors.update(answer.get_author_list(**kwargs))
         return list(authors)
 
-    #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
-    def get_answers_from_question(self, question, user=None):
-        """
-        Retrieves visibile answers for the given question. Delete answers
-        are only visibile to the person who deleted them.
-        """
-        #todo: there is this odd query used?
-
-        if user is None or not user.is_authenticated():
-            return self.filter(question=question, deleted=False)
-        else:
-            return self.filter(models.Q(question=question),
-                               models.Q(deleted=False) | models.Q(deleted_by=user))
-
     #todo: I think this method is not being used anymore, I'll just comment it for now
     #def get_answers_from_questions(self, user_id):
     #    """

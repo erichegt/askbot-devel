@@ -178,21 +178,6 @@ def ask(request):#view used to ask a new question
         }, context_instance=RequestContext(request))
 
 @login_required
-def old_edit_question(request, id):#edit or retag a question
-    """view to edit question
-    """
-    question = get_object_or_404(models.Question, id=id)
-
-    if question.deleted and not auth.can_view_deleted_post(request.user, question):
-        raise Http404
-    if auth.can_edit_post(request.user, question):
-        return _edit_question(request, question)
-    elif auth.can_retag_questions(request.user):
-        return _retag_question(request, question)
-    else:
-        raise Http404
-
-@login_required
 def retag_question(request, id):
     """retag question view
     """
@@ -434,8 +419,8 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
         elif request.method == "POST":
             try:
                 if user.is_anonymous():
-                    msg = _('Sorry, you appear to be logged out and ' + \
-                            'cannot post comments. Please ' + \
+                    msg = _('Sorry, you appear to be logged out and '
+                            'cannot post comments. Please '
                             '<a href="%(sign_in_url)s">sign in</a>.') % \
                             {'sign_in_url': reverse('user_signin')}
                     raise exceptions.PermissionDenied(msg)
@@ -469,8 +454,8 @@ def delete_comment(
 
     try:
         if request.user.is_anonymous():
-            msg = _('Sorry, you appear to be logged out and ' + \
-                    'cannot delete comments. Please ' + \
+            msg = _('Sorry, you appear to be logged out and '
+                    'cannot delete comments. Please '
                     '<a href="%(sign_in_url)s">sign in</a>.') % \
                     {'sign_in_url': reverse('user_signin')}
             raise exceptions.PermissionDenied(msg)

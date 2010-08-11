@@ -99,6 +99,11 @@ can_retag_question = make_template_filter_from_permission_assertion(
                         filter_name = 'can_retag_question'
                     )
 
+can_accept_best_answer = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_accept_best_answer',
+                        filter_name = 'can_accept_best_answer'
+                    )
+
 @register.filter
 def can_see_offensive_flags(user, post):
     """Determines if a User can view offensive flag counts.
@@ -123,14 +128,6 @@ def can_see_offensive_flags(user, post):
     else:
         return False
 
-@register.filter
-def can_lock_posts(user):
-    return auth.can_lock_posts(user)
-    
-@register.filter
-def can_accept_answer(user, question, answer):
-    return auth.can_accept_answer(user, question, answer)
-    
 @register.filter
 def can_view_user_edit(request_user, target_user):
     return auth.can_view_user_edit(request_user, target_user)

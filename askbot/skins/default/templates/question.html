@@ -266,7 +266,7 @@
                                             alt="{% trans "i dont like this answer (click again to cancel)" %}"
                                             title="{% trans "i dont like this answer (click again to cancel)" %}" />
                                      
-                                        {% ifequal request.user question.author  %}
+                                        {% if request.user == question.author %}
                                         <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
                                             src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
                                             alt="{% trans "mark this answer as favorite (click again to undo)" %}"
@@ -275,10 +275,10 @@
                                             {% if answer.accepted %}
                                             <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
                                                 src="{% blockmedia %}/media/images/vote-accepted{% if answer.accepted %}-on{% endif %}.png{% endblockmedia %}" 
-                                                alt="{% trans "the author of the question has selected this answer as correct" %}"
-                                                title="{% trans "the author of the question has selected this answer as correct" %}" />
+                                                alt="{% blocktrans with question.author.username as question_author %}{{question_author}} has selected this answer as correct{% endblocktrans %}"
+                                                title="{% blocktrans with question.author.username as question_author %}{{question_author}} has selected this answer as correct{% endblocktrans %}"
                                             {% endif %}
-                                        {% endifequal %}
+                                        {% endif %}
                                     </div>
                                 </td>
                                 <td>

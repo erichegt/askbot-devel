@@ -55,7 +55,7 @@ var Vote = function(){
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
-    var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
+    var pleaseLogin = " <a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
                     + "?next=" + scriptUrl + $.i18n._("question/") + "{{QuestionID}}/{{questionSlug}}'>"
                     + $.i18n._('please login') + "</a>";
 
@@ -357,20 +357,15 @@ var Vote = function(){
         
     var callback_remove = function(object, voteType, data){
         if (data.success == "1"){
-            if (voteType == VoteType.removeQuestion){
-                window.location.href = scriptUrl + $.i18n._("questions/");
+            if (removeActionType == 'delete'){
+                postNode.addClass('deleted');
+                postRemoveLink.innerHTML = $.i18n._('undelete');
+                showMessage(object, deletedMessage);
             }
-            else {
-                if (removeActionType == 'delete'){
-                    postNode.addClass('deleted');
-                    postRemoveLink.innerHTML = $.i18n._('undelete');
-                    showMessage(object, deletedMessage);
-                }
-                else if (removeActionType == 'undelete') {
-                    postNode.removeClass('deleted');
-                    postRemoveLink.innerHTML = $.i18n._('delete');
-                    showMessage(object, recoveredMessage);
-                }
+            else if (removeActionType == 'undelete') {
+                postNode.removeClass('deleted');
+                postRemoveLink.innerHTML = $.i18n._('delete');
+                showMessage(object, recoveredMessage);
             }
         }
         else {
@@ -422,6 +417,7 @@ var Vote = function(){
                             questionSlug
                         )
                 );
+                return false;
             }
             // up and downvote processor
             if (voteType == VoteType.answerUpVote){
@@ -475,17 +471,17 @@ var Vote = function(){
             var do_proceed = false; 
             if (postType == 'answer'){
                 postNode = $('#answer-container-' + postId);
-                postRemoveLink = object;
-                if (postNode.hasClass('deleted')){
-                    removeActionType = 'undelete';
-                    do_proceed = true;
-                }
-                else {
-                    removeActionType = 'delete';
-                    do_proceed = confirm(removeConfirmation);
-                }
+            }
+            else if (postType == 'question'){
+                postNode = $('#question-table');
+            }
+            postRemoveLink = object;
+            if (postNode.hasClass('deleted')){
+                removeActionType = 'undelete';
+                do_proceed = true;
             }
             else {
+                removeActionType = 'delete';
                 do_proceed = confirm(removeConfirmation);
             }
             if (do_proceed) {

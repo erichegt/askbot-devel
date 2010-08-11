@@ -184,14 +184,14 @@
             <div class="votes">
                 <span 
                     class="item-count"
+                    {% if question.score == 0 %}
+                    style="background:{{settings.COLORS_VOTE_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VOTE_COUNTER_EMPTY_FG}}"
+                    {% else %}
                     style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
+                    {% endif %}
                 >{{question.score|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.score as cnt %}
-                vote
-                {% plural %}
-                votes
-                {% endblocktrans %}
+                {% blocktrans count question.score as cnt %}vote{% plural %}votes{% endblocktrans %}
                 </div>
             </div >
             {% comment %}
@@ -200,30 +200,30 @@
             <div class="votes"> 
                 <span 
                     class="item-count"
-                    {% if question.answer_accepted %}
-                    style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                    {% if question.answer_count == 0 %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_EMPTY_BG}};color:{{settings.COLORS_ANSWER_COUNTER_EMPTY_FG}}"
                     {% else %}
-                    style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                        {% if question.answer_accepted %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                        {% else %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                        {% endif %}
                     {% endif %}
                 >{{question.answer_count|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.answer_count as cnt %}
-                answer 
-                {% plural %}
-                answers 
-                {% endblocktrans %}
+                {% blocktrans count question.answer_count as cnt %}answer{% plural %}answers{% endblocktrans %}
                 </div>
             </div>
             <div class="votes">
                  <span class="item-count"
+                 {% if question.view_count == 0 %}
+                    style="background:{{settings.COLORS_VIEW_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VIEW_COUNTER_EMPTY_FG}}"
+                 {% else %}
                     style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
+                 {% endif %}
                  >{{question.view_count|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.view_count as cnt %}
-                view
-                {% plural %}
-                views
-                {% endblocktrans %}
+                {% blocktrans count question.view_count as cnt %}view{% plural %}views{% endblocktrans %}
                 </div>
             </div>
         </div>

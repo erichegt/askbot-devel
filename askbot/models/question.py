@@ -247,12 +247,7 @@ class QuestionManager(models.Manager):
         Executes an UPDATE query to update denormalised data with the
         number of answers the given question has.
         """
-
-        # for some reasons, this Answer class failed to be imported,
-        # although we have imported all classes from models on top.
-        from askbot.models.answer import Answer
-        self.filter(id=question.id).update(
-            answer_count=Answer.objects.get_answers_from_question(question).filter(deleted=False).count())
+        question.answer_count = question.get_answers().count()
 
     def update_view_count(self, question):
         """
@@ -330,6 +325,22 @@ class Question(content.Content, DeletableContent):
             ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
+
+    def get_answers(self, user = None):
+        """returns query set for answers to this question
+        that may be shown to the given user
+        """
+
+        if user is None or user.is_anonymous():
+            return self.answers.filter(deleted=False)
+        else:
+            if user.is_administrator() or user.is_moderator():
+                return self.answers.all()
+            else:
+                return self.answers.filter(
+                                models.Q(deleted = False) | models.Q(author = user) \
+                                | models.Q(deleted_by = user)
+                            )
 
     def get_updated_activity_data(self, created = False):
         if created:

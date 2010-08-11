@@ -21,6 +21,7 @@ from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
+from django.core import exceptions as django_exceptions
 
 from askbot.utils.html import sanitize_html
 from markdown2 import Markdown
@@ -283,10 +284,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
     except:
         return HttpResponseRedirect(question.get_absolute_url())
 
-    if question.deleted and not auth.can_view_deleted_post(request.user, question):
-        raise Http404
+    if question.deleted:
+        try:
+            if request.user.is_anonymous():
+                msg = _(
+                        'Sorry, this question has been '
+                        'deleted and is no longer accessible'
+                    )
+                raise django_exceptions.PermissionDenied(msg)
+            request.user.assert_can_see_deleted_post(question)
+        except django_exceptions.PermissionDenied, e:
+            request.user.message_set.create(message = str(e))
+            return HttpResponseRedirect(reverse('index'))
+
     answer_form = AnswerForm(question,request.user)
-    answers = Answer.objects.get_answers_from_question(question, request.user)
+    answers = question.get_answers(user = request.user)
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)

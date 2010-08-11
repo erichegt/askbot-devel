@@ -159,25 +159,25 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
     assert(isinstance(answer, Answer))
     if self.is_blocked():
         error_message = _(
-                'Sorry, you cannot accept or unaccept best answers ' + \
+                'Sorry, you cannot accept or unaccept best answers '
                 'because your account is blocked'
             )
     elif self.is_suspended():
         error_message = _(
-                'Sorry, you cannot accept or unaccept best answers ' + \
+                'Sorry, you cannot accept or unaccept best answers '
                 'because your account is suspended'
             )
     elif self == answer.question.get_owner():
         if self == answer.get_owner():
             error_message = _(
-                'Sorry, you cannot accept or unaccept your own answer ' + \
+                'Sorry, you cannot accept or unaccept your own answer '
                 'to your own question'
                 )
         else:
             return #assertion success
     else:
         error_message = _(
-                'Sorry, only original author of the question ' + \
+                'Sorry, only original author of the question '
                 ' - %(username)s - can accept the best answer'
                 ) % {'username': answer.get_owner().username}
 
@@ -200,7 +200,7 @@ def user_assert_can_vote_for_post(
     """
 
     if self == post.author:
-        raise django_exceptions.PermissionDenied('cannot vote for own posts')
+        raise django_exceptions.PermissionDenied(_('cannot vote for own posts'))
 
     blocked_error_message = _(
                 'Sorry your account appears to be blocked ' +
@@ -242,7 +242,7 @@ def user_assert_can_upload_file(request_user):
     blocked_error_message = _('Sorry, blocked users cannot upload files')
     suspended_error_message = _('Sorry, suspended users cannot upload files')
     low_rep_error_message = _(
-                        'uploading images is limited to users ' + \
+                        'uploading images is limited to users '
                         'with >%(min_rep)s reputation points'
                     ) % {'min_rep': askbot_settings.MIN_REP_TO_UPLOAD_FILES }
 
@@ -280,12 +280,12 @@ def user_assert_can_post_comment(self, parent_post = None):
     """
 
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you can comment only your own posts'
             )
     low_rep_error_message = _(
-                'Sorry, to comment any post a minimum reputation of ' + \
-                '%(min_rep)s points is required. You can still comment ' +\
+                'Sorry, to comment any post a minimum reputation of '
+                '%(min_rep)s points is required. You can still comment '
                 'your own posts and answers to your questions'
             ) % {'min_rep': askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
 
@@ -307,8 +307,12 @@ def user_assert_can_post_comment(self, parent_post = None):
 
 def user_assert_can_see_deleted_post(self, post = None):
 
+    """attn: this assertion is independently coded in
+    Question.get_answers call
+    """
+
     error_message = _(
-                        'This post has been deleted and can be seen only ' + \
+                        'This post has been deleted and can be seen only '
                         'by post ownwers, site administrators and moderators'
                     )
     _assert_user_can(
@@ -325,7 +329,7 @@ def user_assert_can_edit_deleted_post(self, post = None):
         self.assert_can_see_deleted_post(post)
     except django_exceptions.PermissionDenied, e:
         error_message = _(
-                    'Sorry, only moderators, site administrators ' + \
+                    'Sorry, only moderators, site administrators '
                     'and post owners can edit deleted posts'
                 )
         raise django_exceptions.PermissionDenied(error_message)
@@ -340,23 +344,23 @@ def user_assert_can_edit_post(self, post = None):
         return
 
     blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
+                'Sorry, since your account is blocked '
                 'you cannot edit posts'
             )
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you can edit only your own posts'
             )
     if post.wiki == True:
         low_rep_error_message = _(
-                    'Sorry, to edit wiki\' posts, a minimum ' + \
+                    'Sorry, to edit wiki\' posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_WIKI}
         min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_WIKI
     else:
         low_rep_error_message = _(
-                    'Sorry, to edit other people\' posts, a minimum ' + \
+                    'Sorry, to edit other people\' posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}
@@ -419,9 +423,9 @@ def user_assert_can_delete_question(self, question = None):
                 return
             else:
                 msg = ungettext(
-                    'Sorry, cannot delete your question since it ' + \
+                    'Sorry, cannot delete your question since it '
                     'has an upvoted answer posted by someone else',
-                    'Sorry, cannot delete your question since it ' + \
+                    'Sorry, cannot delete your question since it '
                     'has some upvoted answers posted by other users',
                     answer_count
                 )
@@ -434,15 +438,15 @@ def user_assert_can_delete_answer(self, answer = None):
     assert on deleting question (in addition to some special rules)
     """
     blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
+                'Sorry, since your account is blocked '
                 'you cannot delete posts'
             )
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you can delete only your own posts'
             )
     low_rep_error_message = _(
-                'Sorry, to deleted other people\' posts, a minimum ' + \
+                'Sorry, to deleted other people\' posts, a minimum '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
@@ -462,15 +466,15 @@ def user_assert_can_delete_answer(self, answer = None):
 def user_assert_can_close_question(self, question = None):
     assert(isinstance(question, Question) == True)
     blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
+                'Sorry, since your account is blocked '
                 'you cannot close questions'
             )
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you cannot close questions'
             )
     low_rep_error_message = _(
-                'Sorry, to close other people\' posts, a minimum ' + \
+                'Sorry, to close other people\' posts, a minimum '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS}
@@ -479,7 +483,7 @@ def user_assert_can_close_question(self, question = None):
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS
 
     owner_low_rep_error_message = _(
-                        'Sorry, to close own question ' + \
+                        'Sorry, to close own question '
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
@@ -503,13 +507,13 @@ def user_assert_can_reopen_question(self, question = None):
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
 
     general_error_message = _(
-                        'Sorry, only administrators, moderators ' + \
-                        'or post owners with reputation > %(min_rep)s ' + \
+                        'Sorry, only administrators, moderators '
+                        'or post owners with reputation > %(min_rep)s '
                         'can reopen questions.'
                     ) % {'min_rep': owner_min_rep_setting }
 
     owner_low_rep_error_message = _(
-                        'Sorry, to reopen own question ' + \
+                        'Sorry, to reopen own question '
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
@@ -574,22 +578,22 @@ def user_assert_can_retag_question(self, question = None):
             self.assert_can_edit_deleted_post(question)
         except django_exceptions.PermissionDenied:
             error_message = _(
-                            'Sorry, only question owners, ' + \
-                            'site administrators and moderators ' + \
+                            'Sorry, only question owners, '
+                            'site administrators and moderators '
                             'can retag deleted questions'
                         )
             raise django_exceptions.PermissionDenied(error_message)
 
     blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
+                'Sorry, since your account is blocked '
                 'you cannot retag questions'
             )
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you can retag only your own questions'
             )
     low_rep_error_message = _(
-                'Sorry, to retag questions a minimum ' + \
+                'Sorry, to retag questions a minimum '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}
@@ -608,15 +612,15 @@ def user_assert_can_retag_question(self, question = None):
 
 def user_assert_can_delete_comment(self, comment = None):
     blocked_error_message = _(
-                'Sorry, since your account is blocked ' + \
+                'Sorry, since your account is blocked '
                 'you cannot delete comment'
             )
     suspended_error_message = _(
-                'Sorry, since your account is suspended ' + \
+                'Sorry, since your account is suspended '
                 'you can delete only your own comments'
             )
     low_rep_error_message = _(
-                'Sorry, to delete comments ' + \
+                'Sorry, to delete comments '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}
@@ -734,8 +738,19 @@ def user_delete_answer(
                     timestamp = None
                 ):
     self.assert_can_delete_answer(answer = answer)
-    #todo - move onDeleted method where appropriate
-    auth.onDeleted(answer, self, timestamp = timestamp)
+    answer.deleted = True
+    answer.deleted_by = self 
+    answer.deleted_at = timestamp
+    answer.save()
+
+    Question.objects.update_answer_count(answer.question)
+    logging.debug('updated answer count to %d' % answer.question.answer_count)
+
+    signals.delete_question_or_answer.send(
+        sender = answer.__class__,
+        instance = answer,
+        delete_by = self
+    )
 
 @auto_now_timestamp
 def user_delete_question(
@@ -744,8 +759,26 @@ def user_delete_question(
                     timestamp = None
                 ):
     self.assert_can_delete_question(question = question)
-    #todo - move onDeleted method to a fitting class
-    auth.onDeleted(question, self, timestamp = timestamp)
+
+    question.deleted = True
+    question.deleted_by = self 
+    question.deleted_at = timestamp
+    question.save()
+
+    for tag in list(question.tags.all()):
+        if tag.used_count == 1:
+            tag.deleted = True
+            tag.deleted_by = self 
+            tag.deleted_at = timestamp
+        else:
+            tag.used_count = tag.used_count - 1 
+        tag.save()
+
+    signals.delete_question_or_answer.send(
+        sender = question.__class__,
+        instance = question,
+        delete_by = self
+    )
 
 @auto_now_timestamp
 def user_close_question(
@@ -797,9 +830,25 @@ def user_restore_post(
                     post = None,
                     timestamp = None
                 ):
+    #here timestamp is not used, I guess added for consistency
     self.assert_can_restore_post(post)
     if isinstance(post, Question) or isinstance(post, Answer):
-        auth.onDeleteCanceled(self, post, timestamp)
+        post.deleted = False
+        post.deleted_by = None 
+        post.deleted_at = None 
+        post.save()
+        if isinstance(post, Answer):
+            Question.objects.update_answer_count(post.question)
+        elif isinstance(post, Question):
+            #todo: make sure that these tags actually exist
+            #some may have since been deleted for good 
+            #or merged into others
+            for tag in list(post.tags.all()):
+                if tag.used_count == 1 and tag.deleted:
+                    tag.deleted = False
+                    tag.deleted_by = None
+                    tag.deleted_at = None 
+                    tag.save()
     else:
         raise NotImplementedError()
 
@@ -1563,9 +1612,12 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
-        msg = (u"Congratulations, you have received a badge '%s'. " \
-                + u"Check out <a href=\"%s\">your profile</a>.") \
-                % (instance.badge.name, user.get_profile_url())
+        msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
+                u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
+                % {
+                    'badge_name':instance.badge.name, 
+                    'user_profile':user.get_profile_url()
+                } 
 
         user.message_set.create(message=msg)
 
