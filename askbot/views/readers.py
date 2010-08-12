@@ -266,7 +266,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             view_id = "votes"
             orderby = "-score"
 
-    logging.debug('view_id=' + str(view_id))
+    logging.debug('view_id=' + unicode(view_id))
 
     question = get_object_or_404(Question, id=id)
     try:
@@ -294,7 +294,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                 raise django_exceptions.PermissionDenied(msg)
             request.user.assert_can_see_deleted_post(question)
         except django_exceptions.PermissionDenied, e:
-            request.user.message_set.create(message = str(e))
+            request.user.message_set.create(message = unicode(e))
             return HttpResponseRedirect(reverse('index'))
 
     answer_form = AnswerForm(question,request.user)

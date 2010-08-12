@@ -208,7 +208,7 @@ def edit_user(request, id):
     This view is accessible to profile owners or site administrators
     """
     user = get_object_or_404(models.User, id=id)
-    if request.user != user or not request.user.is_superuser:
+    if not(request.user == user or request.user.is_superuser):
         raise Http404
     if request.method == "POST":
         form = forms.EditUserForm(user, request.POST)

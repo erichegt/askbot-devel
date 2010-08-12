@@ -85,9 +85,9 @@ def upload(request):#ajax upload file to a question or answer
             raise exceptions.PermissionDenied(msg)
 
     except exceptions.PermissionDenied, e:
-        error = str(e)
+        error = unicode(e)
     except Exception, e:
-        logging.critical(str(e))
+        logging.critical(unicode(e))
         error = _('Error uploading file. Please contact the site administrator. Thank you.')
 
     if error == '':
@@ -136,7 +136,7 @@ def ask(request):#view used to ask a new question
                                                 )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
-                    request.user.message_set.create(message = str(e))
+                    request.user.message_set.create(message = unicode(e))
                     return HttpResponseRedirect(reverse('index'))
 
             else:
@@ -203,7 +203,7 @@ def retag_question(request, id):
             'tags' : _get_tags_cache_json(),
         }, context_instance=RequestContext(request))
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = str(e))
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
@@ -254,7 +254,7 @@ def edit_question(request, id):
         }, context_instance=RequestContext(request))
 
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = str(e))
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
@@ -310,7 +310,7 @@ def edit_answer(request, id):
                             context_instance=RequestContext(request)
                         )
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = str(e))
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
@@ -342,7 +342,7 @@ def answer(request, id):#process a new answer
                                     )
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except exceptions.PermissionDenied, e:
-                    request.user.message_set.create(message = str(e))
+                    request.user.message_set.create(message = unicode(e))
             else:
                 request.session.flush()
                 anon = models.AnonymousAnswer(
@@ -431,7 +431,7 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
                 response = __generate_comments_json(obj, user)
             except exceptions.PermissionDenied, e:
                 response = HttpResponseForbidden(
-                                        str(e),
+                                        unicode(e),
                                         mimetype="application/json"
                                     )
         return response
@@ -478,6 +478,6 @@ def delete_comment(
                 )
     except exceptions.PermissionDenied, e:
         return HttpResponseForbidden(
-                    str(e),
+                    unicode(e),
                     mimetype = 'application/json'
                 )

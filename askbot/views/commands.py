@@ -255,7 +255,7 @@ def vote(request, id):
         data = simplejson.dumps(response_data)
 
     except Exception, e:
-        response_data['message'] = str(e)
+        response_data['message'] = unicode(e)
         response_data['success'] = 0
         data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
@@ -329,7 +329,7 @@ def close(request, id):#close question
                         )
             return response
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = str(e))
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
@@ -360,7 +360,7 @@ def reopen(request, id):#re-open question
                             context_instance=RequestContext(request)
                         )
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = str(e))
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
 #askbot-user communication system
