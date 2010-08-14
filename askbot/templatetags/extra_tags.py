@@ -17,7 +17,7 @@ from askbot.conf import settings as askbot_settings
 from django.template.defaulttags import url as default_url
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
-from askbot import skins
+from askbot.skins import utils as skin_utils
 from askbot.utils import colors
 from askbot.utils.functions import get_from_dict_or_object
 from askbot.templatetags import extra_filters
@@ -347,11 +347,9 @@ def get_latest_changed_timestamp():
 
 @register.simple_tag
 def media(url):
-    url = skins.loaders.find_media_source(url)
+    url = skin_utils.get_media_url(url)
     if url:
-        url = '///' + settings.ASKBOT_URL + '/m/' + url
-        return os.path.normpath(url) + '?v=%d' \
-                % askbot_settings.MEDIA_RESOURCE_REVISION
+        return url
     else:
         return '' #todo: raise exception here?
 
@@ -424,17 +422,14 @@ class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
-        prefix = '///' + settings.ASKBOT_URL + 'm/'
         url = ''
         if self.items:
             url += '/'     
         for item in self.items:
             url += item.render(context)
 
-        url = skins.loaders.find_media_source(url)
-        url = prefix + url
-        out = os.path.normpath(url) + '?v=%d' % askbot_settings.MEDIA_RESOURCE_REVISION
-        return out.replace(' ','')
+        url = skin_utils.get_media_url(url)
+        return url.replace(' ','')
 
 @register.tag(name='blockmedia')
 def blockmedia(parser,token):

@@ -85,12 +85,12 @@
                 {% if question.favourite_count %}
                     {% if question.favorited_myself %}
                         <div class="favorites-count">
-                            <img title="{% trans "this question was selected as favorite" %} {{question.favourite_count}} {% trans "number of times" %}" src="{% media  "/media/images/vote-favorite-on.png" %}">
+                            <img title="{% trans "this question was selected as favorite" %} {{question.favourite_count}} {% trans "number of times" %}" src="{% media  "/images/vote-favorite-on.png" %}">
                             <div><b>{{question.favourite_count|intcomma}}</b></div>
                         </div>
                     {% else %}
                         <div class="favorites-count-off">
-                            <img title="{% trans "this question was selected as favorite" %} {{question.favourite_count}} {% trans "number of times" %}" src="{% media  "/media/images/vote-favorite-off.png" %}">
+                            <img title="{% trans "this question was selected as favorite" %} {{question.favourite_count}} {% trans "number of times" %}" src="{% media  "/images/vote-favorite-off.png" %}">
                             <div><b>{{question.favourite_count|intcomma}}</b></div>
                         </div>
                     {% endif %}

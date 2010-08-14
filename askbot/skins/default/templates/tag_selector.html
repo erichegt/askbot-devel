@@ -11,7 +11,7 @@
                 title="{% blocktrans %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"
                 href="{% url questions %}?tags={{tag_name|urlencode}}">{{tag_name}}</a>
             <img class="delete-icon" 
-                src="{% media  "/media/images/close-small-dark.png" %}"
+                src="{% media  "/images/close-small-dark.png" %}"
                 title="{% blocktrans %}remove '{{tag_name}}' from the list of interesting tags{% endblocktrans %}"/>
         </span>
         {% endspaceless %}
@@ -28,7 +28,7 @@
                 title="{% blocktrans %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"
                 href="{% url questions %}?tags={{tag_name|urlencode}}">{{tag_name}}</a>
             <img class="delete-icon" 
-                src="{% media  "/media/images/close-small-dark.png" %}"
+                src="{% media  "/images/close-small-dark.png" %}"
                 title="{% blocktrans %}remove '{{tag_name}}' from the list of ignored tags{% endblocktrans %}"/>
         </span>
         {% endspaceless %}

@@ -561,6 +561,13 @@ class LongStringValue(Value):
 
     to_editor = to_python
 
+#class ImageValue(Value):
+#
+#    class field(dddd.forms.ImageField):
+#        def __init__(self, *args, **kwargs):
+#            kwargs['required'] = False
+#            kwargs['widget'] = ddd.forms.ImageInput()
+#            ddd.forms.ImageField.__init__(self, *args, **kwargs)
 
 class MultipleStringValue(Value):
 

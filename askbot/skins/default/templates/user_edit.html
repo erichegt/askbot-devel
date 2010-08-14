@@ -24,7 +24,7 @@
             {% if request.user.email %}
             {% gravatar request.user 128 %}
             {% else %}
-            <img src="{% media  "/media/images/nophoto.png" %}">
+            <img src="{% media  "/images/nophoto.png" %}">
             {% endif %}
             <h1><a href="{% url faq %}#gravatar">change picture</a><h1>
         </div>

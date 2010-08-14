@@ -1,4 +1,6 @@
 import os
+import logging
+from django.conf import settings as django_settings
 
 def get_skin_dirs():
     #todo: handle case of multiple skin directories
@@ -26,4 +28,53 @@ def get_skin_choices():
             skin_list.append(i)
 
     return [(i,i) for i in skin_list]
+
+def get_media_url(url):
+    """returns url prefixed with the skin name
+    of the first skin that contains the file 
+    directories are searched in this order:
+    askbot_settings.ASKBOT_DEFAULT_SKIN, then 'default', then 'commmon'
+    if file is not found - returns None
+    and logs an error message
+    """
+    while url[0] == '/': url = url[1:]
+    #todo: handles case of multiple skin directories
+    skins = get_skin_dirs()[0]
+
+    #purpose of this try statement is to determine
+    #which skin is currently used
+    try:
+        #this import statement must be hidden here
+        #because at startup time this branch will fail
+        #due to an import error
+        from askbot.conf import settings as askbot_settings
+        use_skin = askbot_settings.ASKBOT_DEFAULT_SKIN
+        resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
+    except ImportError:
+        use_skin = 'default'
+        resouce_revision = None
+
+    #see if file exists, if not, try skins 'default', then 'common'
+    file_path = os.path.join(skins, use_skin, 'media', url)
+    if not os.path.isfile(file_path):
+        file_path = os.path.join(skins, 'default', 'media', url)
+        if os.path.isfile(file_path):
+            use_skin = 'default'
+        else:
+            file_path = os.path.join(skins, 'common', 'media', url)
+            if os.path.isfile(file_path):
+                use_skin = 'common'
+            else:
+                logging.critical('could not find media for %s' % url)
+                use_skin = ''
+                return None
+
+    url = use_skin + '/media/' + url
+    url = '///' + django_settings.ASKBOT_URL + 'm/' + url
+    url = os.path.normpath(url)
+    
+    if resource_revision:
+        url +=  '?v=%d' % resource_revision
+
+    return url
 

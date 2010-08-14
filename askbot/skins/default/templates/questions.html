@@ -22,8 +22,8 @@
                Hilite.debug_referrer = location.href;
            });
        </script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 {% get_current_language as LANGUAGE_CODE %}
@@ -126,7 +126,7 @@
                 ><img 
                     style="vertical-align:middle;"
                     alt="{% trans "subscribe to the questions feed" %}"
-                src="{% media "/media/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
+                src="{% media "/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
         </p>
         <p class="search-result-summary">
         {% if author_name or search_tags or query %}

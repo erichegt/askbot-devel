@@ -12,10 +12,10 @@
                     <img 
                         alt="{%blocktrans with request.user.username as username %}responses for {{username}}{% endblocktrans %}"
                         {% if request.user.response_count > 0 %}
-                        src="{% media "/media/images/mail-envelope-full.png" %}"
+                        src="{% media "/images/mail-envelope-full.png" %}"
                         title="{% blocktrans count request.user.response_count as response_count %}you have a new response{% plural %}you nave {{response_count}} new responses{% endblocktrans %}"
                         {% else %}
-                        src="{% media "/media/images/mail-envelope-empty.png" %}"
+                        src="{% media "/images/mail-envelope-empty.png" %}"
                         title="{% trans "no new responses yet" %}"
                         {% endif %}
                     />
@@ -34,7 +34,7 @@
     <td id="logoContainer">
         <div id="logo">
             <a href="{% url questions %}?start_over=true"><img 
-                src="{% media  "/media/images/logo.gif" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
+                src="{% media  "/images/logo.gif" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
         </div>
     </td>
     <td id="navTabContainer" valign="bottom" align="left">

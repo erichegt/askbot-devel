@@ -4,12 +4,12 @@
 {% load extra_tags %}
 {% block title %}{% spaceless %}{% trans "Edit question" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.post.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/media/js/jquery.validate.pack.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/media/js/wmd/showdown.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/media/js/wmd/wmd.js" %}'></script>
-        <link rel="stylesheet" type="text/css" href="{% media  "/media/js/wmd/wmd.css" %}" />
+        <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/com.cnprog.post.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/wmd/showdown.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/wmd/wmd.js" %}'></script>
+        <link rel="stylesheet" type="text/css" href="{% media  "/js/wmd/wmd.css" %}" />
         <script type="text/javascript">
         //todo move javascript out
         $().ready(function(){

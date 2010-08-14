@@ -14,8 +14,8 @@
 {% block forejs %}
     {% if request.user|can_moderate_user:view_user %}
         <!-- todo: add condition that scripts are loaded for admins only -->
-        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.admin.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/media/js/jquery.form.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/com.cnprog.admin.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/js/jquery.form.js" %}'></script>
     {% endif %}
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
