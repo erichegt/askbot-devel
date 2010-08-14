@@ -132,15 +132,6 @@ settings.register(
 settings.register(
                 IntegerValue(
                     MIN_REP,
-                    'MIN_REP_TO_DISABLE_URL_NOFOLLOW',
-                    default=2000,
-                    description=_('Disable nofollow directive on links')
-                )
-            )
-
-settings.register(
-                IntegerValue(
-                    MIN_REP,
                     'MIN_REP_TO_CLOSE_OTHERS_QUESTIONS',
                     default=2000,
                     description=_('Close questions asked by others')

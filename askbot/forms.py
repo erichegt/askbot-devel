@@ -263,6 +263,22 @@ class ChangeUserStatusForm(forms.Form):
 
         return self.cleaned_data
 
+class SendMessageForm(forms.Form):
+    subject_line = forms.CharField(
+                            label = _('Subject line'),
+                            max_length = 64,
+                            widget = forms.TextInput(
+                                            attrs = {'size':64},
+                                        )
+                        )
+    body_text = forms.CharField(
+                            label = _('Message text'),
+                            max_length = 1600,
+                            widget = forms.Textarea(
+                                            attrs = {'cols':64}
+                                        )
+                        )
+
 
 class AdvancedSearchForm(forms.Form):
     #nothing must be required in this form

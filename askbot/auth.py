@@ -18,10 +18,6 @@ import logging
 
 from askbot.conf import settings as askbot_settings
 
-def can_follow_url(user):
-    """Determines if the URL link can be followed by Google search engine."""
-    return user.reputation >= askbot_settings.MIN_REP_TO_DISABLE_URL_NOFOLLOW
-
 # user preferences view permissions
 def is_user_self(request_user, target_user):
     return (request_user.is_authenticated() and request_user == target_user)

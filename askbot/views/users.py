@@ -9,6 +9,7 @@ Also this module includes the view listing all forum users.
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core import mail
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
@@ -19,6 +20,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from django.utils import simplejson
+from django.conf import settings as django_settings
 from askbot.utils.html import sanitize_html
 from askbot import auth
 from askbot import forms
@@ -136,6 +138,12 @@ def user_moderate(request, subject):
     if not moderator.can_moderate_user(subject):
         raise Http404
 
+    user_rep_changed = False
+    user_status_changed = False
+    message_sent = False
+
+    user_rep_form = forms.ChangeUserReputationForm()
+    send_message_form = forms.SendMessageForm()
     if request.method == 'POST':
         if 'change_status' in request.POST:
             user_status_form = forms.ChangeUserStatusForm(
@@ -145,7 +153,25 @@ def user_moderate(request, subject):
                                                 )
             if user_status_form.is_valid():
                 subject.set_status( user_status_form.cleaned_data['user_status'] )
-            user_rep_form = forms.ChangeUserReputationForm()
+            user_status_changed = True
+        elif 'send_message' in request.POST:
+            send_message_form = forms.SendMessageForm(request.POST)
+            if send_message_form.is_valid():
+                subject_line = send_message_form.cleaned_data['subject_line']
+                body_text = send_message_form.cleaned_data['body_text']
+                message = mail.EmailMessage(
+                                    subject_line,
+                                    body_text,
+                                    django_settings.DEFAULT_FROM_EMAIL,
+                                    [subject.email,],
+                                    headers={'Reply-to':moderator.email}
+                                )
+                try:
+                    message.send()
+                    message_sent = True
+                except Exception, e:
+                    logging.critical(unicode(e))
+                send_message_form = forms.SendMessageForm()
         else:
             reputation_change_type = None
             if 'subtract_reputation' in request.POST:
@@ -169,8 +195,9 @@ def user_moderate(request, subject):
                                     comment = comment,
                                     timestamp = datetime.datetime.now(),
                                 )
-    else:
-        user_rep_form = forms.ChangeUserReputationForm()
+                #reset form to preclude accidentally repeating submission
+                user_rep_form = forms.ChangeUserReputationForm()
+                user_rep_changed = True
 
     #need to re-initialize the form even if it was posted, because
     #initial values will most likely be different from the previous
@@ -178,7 +205,6 @@ def user_moderate(request, subject):
                                         moderator = moderator,
                                         subject = subject
                                     )
-
     return render_to_response(
                     'user_moderate.html',
                     {
@@ -189,6 +215,10 @@ def user_moderate(request, subject):
                         'view_user': subject,
                         'change_user_status_form': user_status_form,
                         'change_user_reputation_form': user_rep_form,
+                        'send_message_form': send_message_form,
+                        'message_sent': message_sent,
+                        'user_rep_changed': user_rep_changed,
+                        'user_status_changed': user_status_changed
                     }, 
                     context_instance=RequestContext(request)
                 )
