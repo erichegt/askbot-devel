@@ -26,3 +26,5 @@ askbot/fixtures
 dist
 *.egg-info
 build
+askbot/upfiles/*.jpg
+askbot/upfiles/*.gif
