@@ -311,7 +311,9 @@ var i18nDe = {
     'mark-tag/':'tag-markieren/',
     'interesting/':'interessant/',
     'command/':'befehl/',
-    'moderate-user/': 'benutzer-moderieren/'
+    'moderate-user/': 'benutzer-moderieren/',
+    'account/': 'zugang/',
+    'signin/': 'einloggen/'
 }
 
 
