@@ -17,7 +17,7 @@ GENERAL_SKIN_SETTINGS = ConfigurationGroup(
 settings.register(
     ImageValue(
         GENERAL_SKIN_SETTINGS,
-        'SITE_LOGO',
+        'SITE_LOGO_URL',
         description = _('Q&A site logo'),
         help_text = _(
                         'To change the logo, select new file, '
