@@ -9,16 +9,20 @@ from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
 from django.utils.translation import gettext, ugettext_lazy as _
+from django.core.files import storage
 from askbot.deps.livesettings.models import find_setting, LongSetting, Setting, SettingNotSet
 from askbot.deps.livesettings.overrides import get_overrides
 from askbot.deps.livesettings.utils import load_module, is_string_like, is_list_or_tuple
+from askbot.deps.livesettings.widgets import ImageInput
 import datetime
 import logging
 import signals
+import tempfile
+import os
 
 __all__ = ['BASE_GROUP', 'ConfigurationGroup', 'Value', 'BooleanValue', 'DecimalValue', 'DurationValue',
       'FloatValue', 'IntegerValue', 'ModuleValue', 'PercentValue', 'PositiveIntegerValue', 'SortedDotDict',
-      'StringValue', 'LongStringValue', 'MultipleStringValue']
+      'StringValue', 'ImageValue', 'LongStringValue', 'MultipleStringValue']
 
 _WARN = {}
 
@@ -561,13 +565,54 @@ class LongStringValue(Value):
 
     to_editor = to_python
 
-#class ImageValue(Value):
-#
-#    class field(dddd.forms.ImageField):
-#        def __init__(self, *args, **kwargs):
-#            kwargs['required'] = False
-#            kwargs['widget'] = ddd.forms.ImageInput()
-#            ddd.forms.ImageField.__init__(self, *args, **kwargs)
+class ImageValue(StringValue):
+
+    def __init__(self, *args, **kwargs):
+        self.upload_directory = kwargs['upload_directory']
+        self.upload_url = kwargs['upload_url']
+        del kwargs['upload_directory']
+        del kwargs['upload_url']
+        super(ImageValue, self).__init__(*args, **kwargs)
+
+    class field(forms.FileField):
+        def __init__(self, *args, **kwargs):
+            kwargs['required'] = False
+            kwargs['widget'] = ImageInput
+            forms.FileField.__init__(self, *args, **kwargs)
+
+        def clean(self, file_data, file_name):
+            (base_name, ext) = os.path.splitext(file_name)
+            image_extensions = ('.jpg', '.gif', '.png')
+            if ext.lower() not in image_extensions:
+                error_message = _('Allowed image file types are %(types)s') \
+                        % {'types': ', '.join(image_extensions)}
+                raise forms.ValidationError(error_message)
+
+    def update(self, uploaded_file):
+        """uploaded_file is an instance of
+        django UploadedFile object
+        """
+        #1) come up with a file name
+
+        file_storage = storage.FileSystemStorage(
+                                    location = self.upload_directory,
+                                    base_url = self.upload_url
+                                )
+
+        #todo: need better function here to calc name
+        file_name = file_storage.get_available_name(uploaded_file.name)
+        file_storage.save(file_name, uploaded_file)
+        url = file_storage.url(file_name)
+
+        old_file = self.value
+        old_file = old_file.replace(self.upload_url, '', 1)
+        old_file_path = os.path.join(self.upload_directory, old_file)
+        if os.path.isfile(old_file_path):
+            os.unlink(old_file_path)
+
+        #saved file path is relative to the upload_directory
+        #so that things could be easily relocated
+        super(ImageValue, self).update(url)
 
 class MultipleStringValue(Value):
 

@@ -1,5 +1,5 @@
 from django import forms
-from askbot.deps.livesettings import *
+from askbot.deps.livesettings import ConfigurationGroup
 import logging
 
 log = logging.getLogger('configuration')
@@ -18,7 +18,7 @@ class SettingsEditor(forms.Form):
                     flattened.append(s)
             else:
                 flattened.append(setting)
-                    
+
         for setting in flattened:
             # Add the field to the customized field list
             kw = {
@@ -28,8 +28,9 @@ class SettingsEditor(forms.Form):
                 'initial': setting.editor_value
             }
             field = setting.make_field(**kw)
-            
+
             k = '%s__%s' % (setting.group.key, setting.key)
+            
             self.fields[k] = field
             if not setting.group in groups:
                 groups.append(setting.group)

@@ -4,8 +4,9 @@ General skin settings
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import StringValue, IntegerValue, BooleanValue
-#from askbot.deps.livesettings import ImageValue
+from askbot.deps.livesettings import ImageValue
 from django.utils.translation import ugettext as _
+from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
@@ -13,21 +14,20 @@ GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     _('Skin and User Interface settings'),
                 )
 
-#settings.register(
-#    ImageValue(
-#        GENERAL_SKIN_SETTINGS,
-#        'SITE_LOGO',
-#        description = _('Q&A site logo'),
-#        help_text = _(
-#                        'To change logo, click "change button", '
-#                        'select new logo file, then submit this '
-#                        'whole form.'
-#                    ),
-#        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
-#        default_image_url = skin_utils.get_media_url('logo.gif')
-#    )
-#)
-print skin_utils.get_media_url('/images/logo.gif')
+settings.register(
+    ImageValue(
+        GENERAL_SKIN_SETTINGS,
+        'SITE_LOGO',
+        description = _('Q&A site logo'),
+        help_text = _(
+                        'To change the logo, select new file, '
+                        'then submit this whole form.'
+                    ),
+        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
+        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
+        default = skin_utils.get_media_url('/images/logo.gif')
+    )
+)
 
 settings.register(
     BooleanValue(

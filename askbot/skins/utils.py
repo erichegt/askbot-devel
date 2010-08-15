@@ -39,7 +39,24 @@ def get_media_url(url):
     """
     while url[0] == '/': url = url[1:]
     #todo: handles case of multiple skin directories
-    skins = get_skin_dirs()[0]
+
+    #if file is in upfiles directory, then give that
+    url_copy = url
+    if url_copy.startswith(django_settings.ASKBOT_UPLOADED_FILES_URL):
+        file_path = url_copy.replace(
+                                django_settings.ASKBOT_UPLOADED_FILES_URL,
+                                '',
+                                1
+                            )
+        file_path = os.path.join(
+                            django_settings.ASKBOT_FILE_UPLOAD_DIR,
+                            file_path
+                        )
+        if os.path.isfile(file_path):
+            url_copy = os.path.normpath('///' + url_copy)
+            return url_copy
+
+    #2) if it does not exist - look in skins
 
     #purpose of this try statement is to determine
     #which skin is currently used
@@ -52,7 +69,9 @@ def get_media_url(url):
         resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
     except ImportError:
         use_skin = 'default'
-        resouce_revision = None
+        resource_revision = None
+
+    skins = get_skin_dirs()[0]
 
     #see if file exists, if not, try skins 'default', then 'common'
     file_path = os.path.join(skins, use_skin, 'media', url)
@@ -77,4 +96,3 @@ def get_media_url(url):
         url +=  '?v=%d' % resource_revision
 
     return url
-

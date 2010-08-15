@@ -35,7 +35,7 @@ urlpatterns = patterns('',
         name='askbot_media',
     ),
     url(
-        r'^%s(?P<path>.*)$' % _('upfiles/'), 
+        r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
         'django.views.static.serve',
         {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
         name='uploaded_file',

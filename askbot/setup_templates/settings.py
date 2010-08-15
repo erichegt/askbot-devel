@@ -196,3 +196,5 @@ logging.basicConfig(
 ASKBOT_URL = '' #no leading slash, default = '' empty string
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
+#note - it is important that upload dir url is NOT translated!!!
+ASKBOT_UPLOADED_FILES_URL = '/%s%s' % (ASKBOT_URL, 'upfiles/')

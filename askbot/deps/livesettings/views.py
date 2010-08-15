@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from askbot.deps.livesettings import ConfigurationSettings, forms
+from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
 import logging
 
@@ -28,16 +29,23 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
         if request.method == 'POST':
             # Populate the form with user-submitted data
             data = request.POST.copy()
-            form = forms.SettingsEditor(data, settings=settings)
+            form = forms.SettingsEditor(data, request.FILES, settings=settings)
             if form.is_valid():
                 form.full_clean()
                 for name, value in form.cleaned_data.items():
                     group, key = name.split('__')
                     cfg = mgr.get_config(group, key)
-                    if cfg.update(value):
 
+                    if isinstance(cfg, ImageValue):
+                        if request.FILES:
+                            value = request.FILES[name]
+                        else:
+                            continue
+
+                    if cfg.update(value):
                         # Give user feedback as to which settings were changed
-                        request.user.message_set.create(message='Updated %s on %s' % (cfg.key, cfg.group.key))
+                        message='Updated %s on %s' % (cfg.key, cfg.group.key)
+                        request.user.message_set.create(message = message)
 
                 return HttpResponseRedirect(request.path)
         else:
