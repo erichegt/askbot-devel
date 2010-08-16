@@ -91,3 +91,4 @@ class DBApiTests(AskbotTestCase):
         answer = self.question.answers.all()[0]
         self.assert_post_is_not_deleted(answer)
         self.assertTrue(answer_count == 1)
+        self.assertTrue(self.question.answer_count == 1)

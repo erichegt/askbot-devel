@@ -47,8 +47,8 @@ class AnswerManager(models.Manager):
         #update question data
         question.last_activity_at = added_at
         question.last_activity_by = author
+        question.answer_count +=1
         question.save()
-        Question.objects.update_answer_count(question)
 
         #set notification/delete
         if email_notify:

@@ -19,10 +19,11 @@ from django.utils.translation import ugettext as _
 
 xml_read_order = (
         'VoteTypes','UserTypes','Users','Users2Votes',
-        'Badges','Users2Badges','CloseReasons','FlatPages',
+        'Badges','Users2Badges','CloseReasons',#'FlatPages',
         'MessageTypes','PostHistoryTypes','PostTypes','SchemaVersion',
         'Settings','SystemMessages','ThemeResources','ThemeTextResources',
-        'ThrottleBucket','UserHistoryTypes','UserHistory',
+        #'ThrottleBucket',
+        'UserHistoryTypes','UserHistory',
         'Users2Badges','VoteTypes','Users2Votes','MessageTypes',
         'Posts','Posts2Votes','PostHistory','PostComments',
         'ModeratorMessages','Messages','Comments2Votes',
@@ -34,7 +35,7 @@ xml_read_order = (
 USER = {}#SE User.id --> django(ASKBOT) User.id
 QUESTION = {}
 ANSWER = {}
-NAMESAKE_COUNT = {}# number of times user name was used - for X.get_screen_name
+NUMBERED_NAME_RE = re.compile(r'^(.*)\*(\d+)\*$')
 
 class X(object):#
     """class with methods for handling some details
@@ -180,31 +181,33 @@ class X(object):#
         return tags
 
     @classmethod
-    def get_screen_name(cls, name):
+    def get_screen_name(cls, se_user):
         """always returns unique screen name
         even if there are multiple users in SE 
         with the same exact screen name
         """
+
+        name = se_user.display_name
+
         if name is None:
             name = 'anonymous'
         name = name.strip()
         name = re.subn(r'\s+',' ',name)[0]#remove repeating spaces
-        
-        try:
-            u = askbot.User.objects.get(username = name)
+
+        name_key = name.lower()#mysql seems to be case insensitive for uniqueness
+
+        while True:
             try:
-                if u.location:
-                    name += ', %s' % u.location
-                if name in NAMESAKE_COUNT:
-                    NAMESAKE_COUNT[name] += 1
-                    name += ' %d' % NAMESAKE_COUNT[name]
+                u = askbot.User.objects.get(username = name)
+                matches = NUMBERED_NAME_RE.search(name)
+                if matches:
+                    base_name = matches.group(1)
+                    number = int(matches.group(2))
+                    name = '%s*%d*' % (base_name, number + 1)
                 else:
-                    NAMESAKE_COUNT[name] = 1
+                    name = name + ' *1*'
             except askbot.User.DoesNotExist:
-                pass
-        except askbot.User.DoesNotExist:
-            NAMESAKE_COUNT[name] = 1
-        return name
+                return name
 
     @classmethod
     def get_email(cls, email):#todo: fix fringe case - user did not give email!
@@ -374,24 +377,22 @@ class Command(BaseCommand):
 
         post_type = rev_group[0].post.post_type.name
         if post_type == 'Question':
-            q = askbot.Question.objects.create_new(
-                title            = title,
-                author           = author,
-                added_at         = added_at,
-                wiki             = wiki,
-                tagnames         = tags,
-                text = text
-            )
+            q = author.post_question(
+                        title = title,
+                        body_text = text,
+                        tags = tags,
+                        wiki = wiki,
+                        timestamp = added_at
+                    )
             QUESTION[rev_group[0].post.id] = q
         elif post_type == 'Answer':
             q = X.get_post(rev_group[0].post.parent)
-            a = askbot.Answer.objects.create_new(
-                question = q,
-                author = author,
-                added_at = added_at,
-                wiki = wiki,
-                text = text,
-            )
+            a = author.post_answer(
+                        question = q,
+                        body_text = text,
+                        wiki = wiki,
+                        timestamp = added_at
+                    )
             ANSWER[rev_group[0].post.id] = a
         else:
             post_id = rev_group[0].post.id
@@ -421,14 +422,14 @@ class Command(BaseCommand):
 
         if post_type == 'Question':
             q = X.get_post(rev0.post)
-            q.apply_edit(
-                edited_at = edited_at,
-                edited_by = edited_by,
-                title = title,
-                text = text,
-                comment = comment,
-                tags = tags,
-            )
+            edited_by.edit_question(
+                            question = q,
+                            title = title,
+                            body_text = text,
+                            tags = tags,
+                            revision_comment = comment,
+                            timestamp = edited_at
+                        )
         elif post_type == 'Answer':
             a = X.get_post(rev0.post)
             a.apply_edit(
@@ -504,7 +505,7 @@ class Command(BaseCommand):
                     p.closed = True
                     p.closed_at = t
                     p.closed_by = u
-                    p.close_reason = X.get_close_reason(rev.text)
+                    p.close_reason = X.get_close_reason(rev.comment)
                 elif rev_type == 'Post Reopened':
                     p.closed = False 
                     p.closed_at = None
@@ -596,10 +597,7 @@ class Command(BaseCommand):
                 print 'Warning deleted comment %d dropped' % se_c.id
                 continue
             se_post = se_c.post
-            if se_post.post_type.name == 'Question':
-                askbot_post = QUESTION[se_post.id]
-            elif se_post.post_type.name == 'Answer':
-                askbot_post = ANSWER[se_post.id]
+            askbot_post = X.get_post(se_post)
 
             askbot_post.add_comment(
                 comment = se_c.text,
@@ -725,8 +723,8 @@ class Command(BaseCommand):
 
     def transfer_users(self):
         for se_u in se.User.objects.all():
-            if se_u.id < 1:#skip the Community user
-                continue
+            #if se_u.id == -1:#skip the Community user
+            #    continue
             u = askbot.User()
             u_type = se_u.user_type.name
             if u_type == 'Administrator':
@@ -740,10 +738,14 @@ class Command(BaseCommand):
             #we do not allow posting by users who are not authenticated
             #probably they'll just have to "recover" their account by email
             if u_type != 'Unregistered':
-                assert(se_u.open_id)#everybody must have open_id
-                u_openid = askbot_openid.UserAssociation()
-                u_openid.openid_url = se_u.open_id
-                u_openid.user = u
+                try:
+                    assert(se_u.open_id)#everybody must have open_id
+                    u_openid = askbot_openid.UserAssociation()
+                    u_openid.openid_url = se_u.open_id
+                    u_openid.user = u
+                except AssertionError:
+                    print 'User %s (id=%d) does not have openid' % \
+                            (se_u.display_name, se_u.id)
 
             if se_u.open_id is None and se_u.email is None:
                 print 'Warning: SE user %d is not recoverable (no email or openid)'
@@ -755,11 +757,14 @@ class Command(BaseCommand):
             u.date_of_birth = se_u.birthday #dattime -> date
             u.website = X.blankable(se_u.website_url)
             u.about = X.blankable(se_u.about_me)
-            u.last_login = se_u.last_login_date
+            if se_u.last_login_date is None:
+                u.last_login = se_u.creation_date
+            else:
+                u.last_login = se_u.last_login_date
             u.date_joined = se_u.creation_date
             u.is_active = True #todo: this may not be the case
 
-            u.username = X.get_screen_name(se_u.display_name)
+            u.username = X.get_screen_name(se_u)
             u.real_name = X.blankable(se_u.real_name)
 
             (gold,silver,bronze) = X.parse_badge_summary(se_u.badge_summary)
@@ -787,6 +792,11 @@ class Command(BaseCommand):
             #last_email_date - this translates directly to EmailFeedSetting.reported_at
 
             #save the data
+            try:
+                other = askbot.User.objects.get(username = u.username)
+                print 'alert - have a second user with name %s' % u.username
+            except askbot.User.DoesNotExist:
+                pass
             u.save()
             form = EditUserEmailFeedsForm()
             form.reset()
