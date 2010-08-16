@@ -56,6 +56,7 @@ class QuestionManager(models.Manager):
             question.wikified_at = added_at
 
         question.parse_and_save(author = author)
+        question.update_tags(tagnames, author)
 
         question.add_revision(
             author=author,
@@ -206,39 +207,6 @@ class QuestionManager(models.Manager):
             authors.update(question.get_author_list(**kwargs))
         return list(authors)
 
-    def update_tags(self, question, tagnames, user):
-        """
-        Updates Tag associations for a question to match the given
-        tagname string.
-
-        Returns ``True`` if tag usage counts were updated as a result,
-        ``False`` otherwise.
-        """
-
-        current_tags = list(question.tags.all())
-        current_tagnames = set(t.name for t in current_tags)
-        updated_tagnames = set(t for t in tagnames.split(' ') if t)
-        modified_tags = []
-
-        removed_tags = [t for t in current_tags
-                        if t.name not in updated_tagnames]
-        if removed_tags:
-            modified_tags.extend(removed_tags)
-            question.tags.remove(*removed_tags)
-
-        added_tagnames = updated_tagnames - current_tagnames
-        if added_tagnames:
-            added_tags = Tag.objects.get_or_create_multiple(added_tagnames,
-                                                            user)
-            modified_tags.extend(added_tags)
-            question.tags.add(*added_tags)
-
-        if modified_tags:
-            Tag.objects.update_use_counts(modified_tags)
-            return True
-
-        return False
-
     #todo: why not make this into a method of Question class?
     #      also it is actually strange - why do we need the answer_count
     #      field if the count depends on who is requesting this?
@@ -319,6 +287,41 @@ class Question(content.Content, DeletableContent):
     parse = parse_post_text
     parse_and_save = parse_and_save_post
 
+    def update_tags(self, tagnames, user):
+        """
+        Updates Tag associations for a question to match the given
+        tagname string.
+
+        Returns ``True`` if tag usage counts were updated as a result,
+        ``False`` otherwise.
+        """
+
+        current_tags = list(self.tags.all())
+        current_tagnames = set(t.name for t in current_tags)
+        updated_tagnames = set(t for t in tagnames.split(' ') if t)
+        modified_tags = []
+
+        removed_tags = [t for t in current_tags
+                        if t.name not in updated_tagnames]
+        if removed_tags:
+            modified_tags.extend(removed_tags)
+            self.tags.remove(*removed_tags)
+
+        added_tagnames = updated_tagnames - current_tagnames
+        if added_tagnames:
+            added_tags = Tag.objects.get_or_create_multiple(
+                                                    added_tagnames,
+                                                    user
+                                                )
+            modified_tags.extend(added_tags)
+            self.tags.add(*added_tags)
+
+        if modified_tags:
+            Tag.objects.update_use_counts(modified_tags)
+            return True
+
+        return False
+
     def delete(self):
         super(Question, self).delete()
         try:
@@ -383,11 +386,7 @@ class Question(content.Content, DeletableContent):
         self.save()
 
         # Update the Question's tag associations
-        tags_updated = Question.objects.update_tags(
-                                                self,
-                                                tagnames,
-                                                retagged_by
-                                            )
+        tags_updated = self.update_tags(tagnames, retagged_by)
 
         # Create a new revision
         latest_revision = self.get_latest_revision()
@@ -439,7 +438,7 @@ class Question(content.Content, DeletableContent):
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
-            tags_updated = Question.objects.update_tags(self, tags, edited_by)
+            tags_updated = self.update_tags(tags, edited_by)
 
         # Create a new revision
         self.add_revision(
