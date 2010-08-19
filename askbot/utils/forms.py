@@ -85,7 +85,7 @@ class UserNameField(StrippedNonEmptyCharField):
         except forms.ValidationError:
             raise forms.ValidationError(self.error_messages['required'])
 
-        username_regex = re.compile(const.USERNAME_REGEX_STRING)
+        username_regex = re.compile(const.USERNAME_REGEX_STRING, re.UNICODE)
         if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:

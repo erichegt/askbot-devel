@@ -444,14 +444,49 @@ class EditAnswerForm(forms.Form):
         self.fields['text'].initial = revision.text
 
 class EditUserForm(forms.Form):
-    email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=True, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+    email = forms.EmailField(
+                    label=u'Email',
+                    help_text=_('this email does not have to be linked to gravatar'),
+                    required=True,
+                    max_length=255,
+                    widget=forms.TextInput(attrs={'size' : 35})
+                )
+
     if askbot_settings.EDITABLE_SCREEN_NAME:
         username = UserNameField(label=_('Screen name'))
-    realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    city = forms.CharField(label=_('Location'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    birthday = forms.DateField(label=_('Date of birth'), help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'), required=False, widget=forms.TextInput(attrs={'size' : 35}))
-    about = forms.CharField(label=_('Profile'), required=False, widget=forms.Textarea(attrs={'cols' : 60}))
+    realname = forms.CharField(
+                        label=_('Real name'), 
+                        required=False, 
+                        max_length=255, 
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    website = forms.URLField(
+                        label=_('Website'), 
+                        required=False, 
+                        max_length=255, 
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    city = forms.CharField(
+                        label=_('Location'),
+                        required=False,
+                        max_length=255,
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    birthday = forms.DateField(
+                        label=_('Date of birth'),
+                        help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'),
+                        required=False,
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    about = forms.CharField(
+                        label=_('Profile'),
+                        required=False,
+                        widget=forms.Textarea(attrs={'cols' : 60})
+                    )
 
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
@@ -466,8 +501,7 @@ class EditUserForm(forms.Form):
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth
-        else:
-            self.fields['birthday'].initial = '1990-01-01'
+
         self.fields['about'].initial = user.about
         self.user = user
 

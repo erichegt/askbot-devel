@@ -253,11 +253,7 @@ def edit_user(request, id):
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
-            user.date_of_birth = sanitize_html(form.cleaned_data['birthday'])
-
-            if len(user.date_of_birth) == 0:
-                user.date_of_birth = '1900-01-01'
-
+            user.date_of_birth = form.cleaned_data.get('birthday', None)
             user.about = sanitize_html(form.cleaned_data['about'])
 
             user.save()
