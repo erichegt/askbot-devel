@@ -222,7 +222,7 @@ class Content(models.Model):
 
         if user.tag_filter_setting == 'interesting':
             #at least some of the tags must be marked interesting
-            interesting_selections = self.tag_selections.exists(
+            interesting_selections = user.tag_selections.exists(
                                         tag__in = tags, 
                                         reason = 'good'
                                     )
@@ -245,7 +245,7 @@ class Content(models.Model):
         else:
             raise ValueError(
                         'unexpected User.tag_filter_setting %s' \
-                        % self.tag_filter_setting
+                        % user.tag_filter_setting
                     )
 
     def post_get_last_update_info(self):#todo: rename this subroutine
