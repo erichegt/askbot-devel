@@ -302,6 +302,7 @@ var i18nDe = {
     'undo': 'Rückgängig', 
     'upload image': 'Bild hochladen', 
     'questions/': 'fragen/', 
+    'question/': 'frage/',
     'delete/': 'loeschen/', 
     'comments/': 'kommentare/', 
     'answers/': 'antworten/', 
