@@ -29,9 +29,9 @@ SERVER_EMAIL = ''
 DEFAULT_FROM_EMAIL = ''
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
-EMAIL_SUBJECT_PREFIX = '[ASKBOT] '
-EMAIL_HOST='askbot.org'
-EMAIL_PORT='25'
+EMAIL_SUBJECT_PREFIX = ''
+EMAIL_HOST=''
+EMAIL_PORT=''
 EMAIL_USE_TLS=False
 
 # Local time zone for this installation. Choices can be found here:
