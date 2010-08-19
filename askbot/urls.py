@@ -204,6 +204,6 @@ urlpatterns = patterns('',
         r'^doc/(?P<path>.*)$', 
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
-        name='askbot_media',
+        name='askbot_docs',
     ),
 )

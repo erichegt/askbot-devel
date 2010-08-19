@@ -25,7 +25,8 @@ settings.register(
                     ),
         upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
         upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
-        default = skin_utils.get_media_url('/images/logo.gif')
+        default = '/images/logo.gif',
+        url_resolver = skin_utils.get_media_url
     )
 )
 

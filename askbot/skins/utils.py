@@ -55,6 +55,8 @@ def get_media_url(url):
         if os.path.isfile(file_path):
             url_copy = os.path.normpath('///' + url_copy)
             return url_copy
+        else:
+            logging.critical('missing media resource %s' % url)
 
     #2) if it does not exist - look in skins
 
@@ -84,7 +86,9 @@ def get_media_url(url):
             if os.path.isfile(file_path):
                 use_skin = 'common'
             else:
-                logging.critical('could not find media for %s' % url)
+                log_message = 'missing media resource %s in skin %s' \
+                                % (url, use_skin)
+                logging.critical(log_message)
                 use_skin = ''
                 return None
 

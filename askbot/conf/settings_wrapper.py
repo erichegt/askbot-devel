@@ -21,6 +21,7 @@ at run time
 askbot.deps.livesettings is a module developed for satchmo project
 """
 from askbot.deps.livesettings import SortedDotDict, config_register
+from askbot.deps.livesettings.functions import config_get
 
 class ConfigSettings(object):
     """A very simple Singleton wrapper for settings
@@ -29,6 +30,7 @@ class ConfigSettings(object):
     to different settings groups
     """
     __instance = None
+    __group_map = {}
 
     def __init__(self):
         """assigns SortedDotDict to self.__instance if not set"""
@@ -44,6 +46,10 @@ class ConfigSettings(object):
         depending on django.conf.settings to askbot.deps.livesettings
         """
         return getattr(self.__instance, key).value
+
+    def update(self, key, value):
+        setting = config_get(self.__group_map[key], key) 
+        setting.update(value)
 
     def register(self, value):
         """registers the setting
@@ -65,6 +71,7 @@ class ConfigSettings(object):
             raise Exception('setting %s is already registered' % key)
         else:
             self.__instance[key] = config_register(value)
+            self.__group_map[key] = group_key
 
     def as_dict(self):
         out = dict()

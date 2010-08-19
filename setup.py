@@ -20,7 +20,7 @@ if sys.platform not in WIN_PLATFORMS:
 
 setup(
     name = "askbot",
-    version = "0.6.7",
+    version = "0.6.8",
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',

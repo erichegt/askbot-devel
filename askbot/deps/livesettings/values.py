@@ -568,16 +568,16 @@ class LongStringValue(Value):
 class ImageValue(StringValue):
 
     def __init__(self, *args, **kwargs):
-        self.upload_directory = kwargs['upload_directory']
-        self.upload_url = kwargs['upload_url']
-        del kwargs['upload_directory']
-        del kwargs['upload_url']
+        self.upload_directory = kwargs.pop('upload_directory')
+        self.upload_url = kwargs.pop('upload_url')
+        self.url_resolver = kwargs.pop('url_resolver', None)
         super(ImageValue, self).__init__(*args, **kwargs)
 
     class field(forms.FileField):
         def __init__(self, *args, **kwargs):
             kwargs['required'] = False
-            kwargs['widget'] = ImageInput
+            url_resolver = kwargs.pop('url_resolver')
+            kwargs['widget'] = ImageInput(url_resolver = url_resolver)
             forms.FileField.__init__(self, *args, **kwargs)
 
         def clean(self, file_data, file_name):
@@ -587,6 +587,10 @@ class ImageValue(StringValue):
                 error_message = _('Allowed image file types are %(types)s') \
                         % {'types': ', '.join(image_extensions)}
                 raise forms.ValidationError(error_message)
+
+    def make_field(self, **kwargs):
+        kwargs['url_resolver'] = self.url_resolver
+        return super(StringValue, self).make_field(**kwargs)
 
     def update(self, uploaded_file):
         """uploaded_file is an instance of
