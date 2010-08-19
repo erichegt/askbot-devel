@@ -53,7 +53,13 @@ def get_media_url(url):
                             file_path
                         )
         if os.path.isfile(file_path):
-            url_copy = os.path.normpath('///' + url_copy)
+            url_copy = os.path.normpath(
+                                    '///' + url_copy
+                                ).replace(
+                                    '\\', '/'
+                                ).replace(
+                                    '///', '/'
+                                )
             return url_copy
         else:
             logging.critical('missing media resource %s' % url)
@@ -94,7 +100,11 @@ def get_media_url(url):
 
     url = use_skin + '/media/' + url
     url = '///' + django_settings.ASKBOT_URL + 'm/' + url
-    url = os.path.normpath(url)
+    url = os.path.normpath(url).replace(
+                                    '\\', '/'
+                                ).replace(
+                                    '///', '/'
+                                )
     
     if resource_revision:
         url +=  '?v=%d' % resource_revision
