@@ -18,9 +18,11 @@ WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
     install_requires.append('mysql-python')
 
+import askbot
+
 setup(
     name = "askbot",
-    version = "0.6.8",
+    version = askbot.get_version(),
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
