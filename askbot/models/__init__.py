@@ -1492,6 +1492,7 @@ def send_instant_notifications_about_activity_in_post(
                         django_settings.DEFAULT_FROM_EMAIL,
                         [user.email]
                     )
+            msg.content_subtype = 'html'
             msg.send()
             #print text
             EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
