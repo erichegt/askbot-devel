@@ -73,6 +73,11 @@ class DBApiTests(AskbotTestCase):
         self.post_answer(question = self.question)
         self.user.delete_answer(self.answer)
         self.assert_post_is_deleted(self.answer)
+        saved_question = models.Question.objects.get(id = self.question.id)
+        self.assertEquals(
+                saved_question.answer_count,
+                0
+            )
 
     def test_restore_answer(self):
         self.post_answer()
@@ -91,4 +96,5 @@ class DBApiTests(AskbotTestCase):
         answer = self.question.answers.all()[0]
         self.assert_post_is_not_deleted(answer)
         self.assertTrue(answer_count == 1)
-        self.assertTrue(self.question.answer_count == 1)
+        saved_question = models.Question.objects.get(id = self.question.id)
+        self.assertTrue(saved_question.answer_count == 1)

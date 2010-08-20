@@ -207,16 +207,6 @@ class QuestionManager(models.Manager):
             authors.update(question.get_author_list(**kwargs))
         return list(authors)
 
-    #todo: why not make this into a method of Question class?
-    #      also it is actually strange - why do we need the answer_count
-    #      field if the count depends on who is requesting this?
-    def update_answer_count(self, question):
-        """
-        Executes an UPDATE query to update denormalised data with the
-        number of answers the given question has.
-        """
-        question.answer_count = question.get_answers().count()
-
     def update_view_count(self, question):
         """
         update counter+1 when user browse question page
@@ -228,31 +218,6 @@ class QuestionManager(models.Manager):
         update favourite_count for given question
         """
         self.filter(id=question.id).update(favourite_count = FavoriteQuestion.objects.filter(question=question).count())
-
-    def get_similar_questions(self, question):
-        """
-        Get 10 similar questions for given one.
-        This will search the same tag list for give question(by exactly same string) first.
-        Questions with the individual tags will be added to list if above questions are not full.
-        """
-        #print datetime.datetime.now()
-
-        manager = self
-
-        def get_data():
-            questions = list(manager.filter(tagnames = question.tagnames, deleted=False).all())
-
-            tags_list = question.tags.all()
-            for tag in tags_list:
-                extend_questions = manager.filter(tags__id = tag.id, deleted=False)[:50]
-                for item in extend_questions:
-                    if item not in questions and len(questions) < 10:
-                        questions.append(item)
-
-            #print datetime.datetime.now()
-            return questions
-
-        return LazyList(get_data)
 
 class Question(content.Content, DeletableContent):
     title    = models.CharField(max_length=300)
@@ -286,6 +251,59 @@ class Question(content.Content, DeletableContent):
 
     parse = parse_post_text
     parse_and_save = parse_and_save_post
+
+    def update_answer_count(self, save = True):
+        """updates the denormalized field 'answer_count'
+        on the question
+        """
+        self.answer_count = self.get_answers().count()
+        if save: 
+            self.save()
+
+
+    def get_similar_questions(self):
+        """
+        Get 10 similar questions for given one.
+        Questions with the individual tags will be added to list if above questions are not full.
+
+        This function has a limitation that it will
+        retrieve only 100 records then select 10 most similar
+        from that list as querying entire database may
+        be very expensive - this function will benefit from
+        some sort of optimization
+        """
+        #print datetime.datetime.now()
+
+        def get_data():
+
+            tags_list = self.tags.all()
+            similar_questions = self.__class__.objects.filter(
+                                            tags__in = self.tags.all()
+                                        ).exclude(
+                                            id = self.id
+                                        )[:100]
+            similar_questions = list(similar_questions)
+            output = list()
+            for question in similar_questions:
+                question.similarity = self.get_similarity(
+                                                    other_question = question
+                                                )
+            #sort in reverse order - x and y are interchanged in cmp() call
+            similar_questions.sort(lambda x,y: cmp(y.similarity, x.similarity))
+            if len(similar_questions) > 10:
+                return similar_questions[:10]
+            else:
+                return similar_questions
+
+        return LazyList(get_data)
+
+    def get_similarity(self, other_question = None):
+        """return number of tags in the other question
+        that overlap with the current question (self)
+        """
+        my_tags = set(self.tagnames.split(' '))
+        others_tags = set(other_question.tagnames.split(' '))
+        return len(my_tags & others_tags)
 
     def update_tags(self, tagnames, user):
         """

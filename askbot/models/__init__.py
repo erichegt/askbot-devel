@@ -684,9 +684,6 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
-    #print comment
-    #print 'comment id is %s' % comment.id
-    #print len(Comment.objects.all())
     return comment
 
 @auto_now_timestamp
@@ -743,7 +740,7 @@ def user_delete_answer(
     answer.deleted_at = timestamp
     answer.save()
 
-    Question.objects.update_answer_count(answer.question)
+    answer.question.update_answer_count()
     logging.debug('updated answer count to %d' % answer.question.answer_count)
 
     signals.delete_question_or_answer.send(
@@ -838,7 +835,7 @@ def user_restore_post(
         post.deleted_at = None 
         post.save()
         if isinstance(post, Answer):
-            Question.objects.update_answer_count(post.question)
+            post.question.update_answer_count()
         elif isinstance(post, Question):
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good 
@@ -1132,7 +1129,6 @@ def user_get_status_display(self, soft = False):
     elif self.is_approved():
         return _('Approved User')
     else:
-        print 'vot blin'
         raise ValueError('Unknown user status')
 
 
@@ -1149,16 +1145,13 @@ def user_can_moderate_user(self, other):
 
 
 def user_get_q_sel_email_feed_frequency(self):
-    #print 'looking for frequency for user %s' % self
     try:
         feed_setting = EmailFeedSetting.objects.get(
                                         subscriber=self,
                                         feed_type='q_sel'
                                     )
     except Exception, e:
-        #print 'have error %s' % e.message
         raise e
-    #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
 
 def get_messages(self):
@@ -1454,9 +1447,7 @@ def format_instant_notification_body(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    output = template.render(Context(update_data))
-    #print output
-    return output
+    return template.render(Context(update_data))
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -1650,7 +1641,7 @@ def update_last_seen(instance, created, **kwargs):
     if instance.activity_type == const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT:
         return
     user = instance.user
-    user.last_seen = datetime.datetime.now()
+    user.last_seen = instance.active_at
     user.save()
 
 

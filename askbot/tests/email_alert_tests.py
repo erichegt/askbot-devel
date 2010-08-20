@@ -262,6 +262,8 @@ class EmailAlertTests(TestCase):
         self.assertEqual(len(outbox), expected['message_count'], error_message)
         if expected['message_count'] > 0:
             if len(outbox) > 0:
+                error_message = 'expected recipient %s found %s' % \
+                    (self.target_user.email, outbox[0].recipients()[0])
                 self.assertEqual(
                             outbox[0].recipients()[0], 
                             self.target_user.email,

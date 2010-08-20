@@ -37,8 +37,6 @@ sys.path.append(PROJECT_DIR)
 sys.path.append(parent_dir(__file__, 4))
 sys.path.append(parent_dir(__file__, 2))
 
-print sys.path
-
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

@@ -25,7 +25,4 @@ class Command(NoArgsCommand):
         self.remove_save_signals()
         questions = models.Question.objects.all()
         for question in questions:
-            #todo: must be simply
-            #question.update_answer_count()
-            models.Question.objects.update_answer_count(question)
-            question.save()
+            question.update_answer_count()

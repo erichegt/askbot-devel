@@ -133,7 +133,7 @@
                                 {% comment %}todo: here we have important case to reset search state{% endcomment %}
                                 <div id="question-tags" class="tags">
                                     {% for tag in question.tagname_list %}
-                                        <a href="{% url questions %}?tags={{tag|urlencode}}&start_over=true" 
+                                        <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
                                             class="post-tag"
                                             title="{% blocktrans %}see questions tagged '{{tag}}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
                                     {% endfor %}
@@ -472,7 +472,7 @@
     </p>
     <p class="tags" >
         {% for tag in tags %}
-        <a href="{% url questions %}?tags={{tag.name|urlencode}}&start_over=true" 
+        <a href="{% url questions %}?tags={{tag.name|urlencode}}&amp;start_over=true" 
             title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{tag_name}}'{% endblocktrans %}" 
             rel="tag">{{ tag.name }}</a> 
             <span class="tag-number">&#215;{{ tag.used_count|intcomma }}</span><br/>
@@ -489,20 +489,22 @@
     </p>
 </div>
 {% endcache %}
-{% cache 1800 related_questions question.id LANGUAGE_CODE %}
-<div class="boxC">
-    <h3 class="subtitle">{% trans "Related questions" %}</h3>
-    <div class="questions-related">
+{% if similar_questions.data %}
+    {% cache 1800 related_questions question.id LANGUAGE_CODE %}
+    <div class="boxC">
+        <h3 class="subtitle">{% trans "Related questions" %}</h3>
+        <div class="questions-related">
 
-        {% for question in similar_questions.data %}
-        <p>
-            <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>
-        </p>
-        {% endfor %}
+            {% for question in similar_questions.data %}
+            <p>
+                <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>
+            </p>
+            {% endfor %}
 
+        </div>
     </div>
-</div>
-{% endcache %}
+    {% endcache %}
+{% endif %}
 
 {% endblock %}
 

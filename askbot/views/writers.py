@@ -216,7 +216,6 @@ def edit_question(request, id):
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
-            print request.POST
             if 'select_revision' in request.POST:#revert-type edit
                 # user has changed revistion number
                 revision_form = forms.RevisionForm(question, latest_revision, request.POST)
