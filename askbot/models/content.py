@@ -222,7 +222,7 @@ class Content(models.Model):
 
         if user.tag_filter_setting == 'interesting':
             #at least some of the tags must be marked interesting
-            interesting_selections = user.tag_selections.exists(
+            interesting_selections = user.tag_selections.filter(
                                         tag__in = tags, 
                                         reason = 'good'
                                     )
