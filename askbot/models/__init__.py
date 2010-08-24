@@ -353,14 +353,14 @@ def user_assert_can_edit_post(self, post = None):
             )
     if post.wiki == True:
         low_rep_error_message = _(
-                    'Sorry, to edit wiki\' posts, a minimum '
+                    'Sorry, to edit wiki posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_WIKI}
         min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_WIKI
     else:
         low_rep_error_message = _(
-                    'Sorry, to edit other people\' posts, a minimum '
+                    'Sorry, to edit other people\'s posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}

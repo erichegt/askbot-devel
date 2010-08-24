@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 
 REP_CHANGES = ConfigurationGroup(
                     'REP_CHANGES',
-                    _('Reputaion loss and gain rules'),
+                    _('Reputation loss and gain rules'),
                     ordering=2
                 )
 
