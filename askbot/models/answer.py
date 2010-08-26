@@ -38,7 +38,7 @@ class AnswerManager(models.Manager):
         answer.parse_and_save(author = author)
 
         answer.add_revision(
-            revised_by = author,
+            author = author,
             revised_at = added_at,
             text = text,
             comment = const.POST_STATUS['default_version'],
@@ -116,19 +116,20 @@ class Answer(content.Content, DeletableContent):
         self.parse_and_save(author = edited_by)
 
         self.add_revision(
-            revised_by=edited_by,
-            revised_at=edited_at,
-            text=text,
-            comment=comment
+            author = edited_by,
+            revised_at = edited_at,
+            text = text,
+            comment = comment
         )
 
         self.question.last_activity_at = edited_at
         self.question.last_activity_by = edited_by
         self.question.save()
 
-    def add_revision(self, revised_by=None, revised_at=None, text=None, comment=None):
-        if None in (revised_by, revised_at, text):
-            raise Exception('arguments revised_by, revised_at and text are required')
+    def add_revision(self, author=None, revised_at=None, text=None, comment=None):
+        #todo: this may be identical to Question.add_revision
+        if None in (author, revised_at, text):
+            raise Exception('arguments author, revised_at and text are required')
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
@@ -137,7 +138,7 @@ class Answer(content.Content, DeletableContent):
                 comment = 'No.%s Revision' % rev_no
         return AnswerRevision.objects.create(
                                   answer=self,
-                                  author=revised_by,
+                                  author=author,
                                   revised_at=revised_at,
                                   text=text,
                                   summary=comment,

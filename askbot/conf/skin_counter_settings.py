@@ -27,7 +27,7 @@ settings.register(
         'COLORS_VOTE_COUNTER_EMPTY_BG',
         default='white',
         description=_('Background color for votes = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -38,7 +38,7 @@ settings.register(
         'COLORS_VOTE_COUNTER_EMPTY_FG',
         default='gray',
         description=_('Foreground color for votes = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -49,7 +49,7 @@ settings.register(
         'COLORS_VOTE_COUNTER_MIN_BG',
         default='#a3d0ff',
         description=_('Background color for votes'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -59,7 +59,7 @@ settings.register(
         'COLORS_VOTE_COUNTER_MIN_FG',
         default='#4a4a4a',
         description=_('Foreground color for votes'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -69,7 +69,7 @@ settings.register(
         'COLORS_VOTE_COUNTER_MAX_BG',
         default='#a9d0f5',
         description=_('Background color for votes = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -82,7 +82,7 @@ settings.register(
                                 settings.COLORS_VOTE_COUNTER_MAX_BG
                             ).DarkerColor(0.7).html,
         description=_('Foreground color for votes = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -103,7 +103,7 @@ settings.register(
         'COLORS_VIEW_COUNTER_EMPTY_BG',
         default='gray',
         description=_('Background color for views = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -114,7 +114,7 @@ settings.register(
         'COLORS_VIEW_COUNTER_EMPTY_FG',
         default='white',
         description=_('Foreground color for views = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -125,7 +125,7 @@ settings.register(
         'COLORS_VIEW_COUNTER_MIN_BG',
         default='#ff8c8c',
         description=_('Background color for views'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -135,7 +135,7 @@ settings.register(
         'COLORS_VIEW_COUNTER_MIN_FG',
         default='#4a4a4a',
         description=_('Foreground color for views'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -145,7 +145,7 @@ settings.register(
         'COLORS_VIEW_COUNTER_MAX_BG',
         default='#FF8000',
         description=_('Background color for views = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -158,7 +158,7 @@ settings.register(
                                     settings.COLORS_VIEW_COUNTER_MAX_BG
                                 ).DarkerColor(0.7).html,
         description=_('Foreground color for views = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -181,7 +181,7 @@ settings.register(
                                 Color.NewFromHtml('white'),0.8
                             ).html,
         description=_('Background color for answers = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -192,7 +192,7 @@ settings.register(
         'COLORS_ANSWER_COUNTER_EMPTY_FG',
         default='yellow',
         description=_('Foreground color for answers = 0'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -203,7 +203,7 @@ settings.register(
         'COLORS_ANSWER_COUNTER_MIN_BG',
         default='#ffed9c',
         description=_('Background color for answers'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -213,7 +213,7 @@ settings.register(
         'COLORS_ANSWER_COUNTER_MIN_FG',
         default='#a4a4a4',
         description=_('Foreground color for answers'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -225,7 +225,7 @@ settings.register(
                             Color.NewFromHtml('white'),0.75
                                                     ).html,
         description=_('Background color for answers = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -236,7 +236,7 @@ settings.register(
         'COLORS_ANSWER_COUNTER_MAX_FG',
         default='#ffff00',
         description=_('Foreground color for answers = MAX'),
-        help_text=_('HTML color name of hex value'),
+        help_text=_('HTML color name or hex value'),
         hidden=True,
     )
 )
@@ -249,7 +249,7 @@ settings.register(
                                     Color.NewFromHtml('white'),0.8
                                                     ).html,
         description=_('Background color for accepted'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
 
@@ -259,6 +259,6 @@ settings.register(
         'COLORS_ANSWER_COUNTER_ACCEPTED_FG',
         default='#D0F5A9',
         description=_('Foreground color for accepted answer'),
-        help_text=_('HTML color name of hex value')
+        help_text=_('HTML color name or hex value')
     )
 )
