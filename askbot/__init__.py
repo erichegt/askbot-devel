@@ -43,8 +43,8 @@ def send_mail(
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
-    print subject_line
-    print body_text
+    #print subject_line
+    #print body_text
     try:
         msg = mail.EmailMessage(
                         subject_line, 

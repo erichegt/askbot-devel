@@ -154,7 +154,6 @@ def ask_openid(
         auth_request.addExtension(sreg_request)
     redirect_url = auth_request.redirectURL(trust_root, redirect_to)
     logging.debug('redirecting to %s' % redirect_url)
-    print 'redirecting to %s' % redirect_url
     return HttpResponseRedirect(redirect_url)
 
 def complete(request, on_success=None, on_failure=None, return_to=None):
@@ -232,13 +231,9 @@ def signin(
     openid_login_form = forms.OpenidSigninForm(initial = initial_data)
     password_login_form = forms.ClassicLoginForm(initial = initial_data)
 
-    print request.method
-    
     if request.method == 'POST':
-        print 'have post'
         #'blogin' - password login
         if 'blogin' in request.POST:
-            print 'blogin'
             logging.debug('processing classic login form submission')
             password_login_form = forms.ClassicLoginForm(request.POST)
             if password_login_form.is_valid():
@@ -336,11 +331,9 @@ def signin(
                 raise Http404
         
         elif 'bsignin' in request.POST or 'openid_username' in request.POST:
-            print request.POST
             logging.debug('processing signin with openid submission')
             openid_login_form = forms.OpenidSigninForm(request.POST)
             if openid_login_form.is_valid():
-                print 'openid form is valid'
                 logging.debug('OpenidSigninForm is valid')
                 next = openid_login_form.cleaned_data['next']
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
@@ -355,7 +348,6 @@ def signin(
                         on_failure=signin_failure, 
                         sreg_request=sreg_req)
             else:
-                print 'openid form is not valid'
                 logging.debug('OpenidSigninForm is NOT valid! -> redisplay login view')
 
     if request.method == 'GET' and request.user.is_authenticated():
@@ -464,9 +456,7 @@ def signin_success(request, identity_url, openid_response):
         logging.debug('trying to get user associated with this openid...')
         rel = UserAssociation.objects.get(openid_url__exact = str(openid_))
         logging.debug('success')
-        print 'found openid in database'
         if request.user.is_authenticated() and rel.user != request.user:
-            print 'thief'
             logging.critical(
                     'possible account theft attempt by %s,%d to %s %d' % \
                     (
@@ -478,29 +468,23 @@ def signin_success(request, identity_url, openid_response):
                 )
             raise Http404
         else:
-            print 'good'
             logging.debug('success')
     except UserAssociation.DoesNotExist:
         if request.user.is_anonymous():
-            print 'need to register'
             logging.debug('failed --> try to register brand new user')
             # try to register this new user
             return register(request)
         else:
             #store openid association
-            print 'was logged in, but no stored openid yet'
             try:
                 user_assoc = UserAssociation.objects.get(user = request.user)
                 user_assoc.openid_url = str(openid_)
-                print 'found matching user with other openid'
             except UserAssociation.DoesNotExist:
-                print 'creatin new openid method'
                 user_assoc = UserAssociation(
                                         user = request.user,
                                         openid_url = openid_
                                     )
             user_assoc.save()
-            print 'saved association'
             message = _('New login method saved. Thanks!')
             request.user.message_set.create(message = message)
             #set "account recovered" message

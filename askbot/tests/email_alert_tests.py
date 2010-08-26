@@ -663,7 +663,6 @@ class DelayedAlertSubjectLineTests(TestCase):
                 }
         from askbot.management.commands import send_email_alerts as cmd
         subject = cmd.get_update_subject_line(q_dict)
-        print subject
 
         self.assertTrue('one' not in subject)
         self.assertTrue('two' in subject)

@@ -32,7 +32,6 @@ class PageLoadTests(PageLoadTestCase):
 
     def test_index(self):
         #todo: merge this with all reader url tests
-        print 'trying to reverse index'
         response = self.client.get(reverse('index'), follow=True)
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
@@ -40,7 +39,6 @@ class PageLoadTests(PageLoadTestCase):
         c = response.context[0]
         t = response.template[0]
         self.assertEqual(t.name, 'questions.html')
-        print 'index works'
 
     def proto_test_non_user_urls(self):
         """test all reader views thoroughly
