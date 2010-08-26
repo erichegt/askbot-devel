@@ -241,7 +241,7 @@ class ChangePasswordForm(SetPasswordForm):
             raise forms.ValidationError(_("Old password is incorrect. \
                     Please enter the correct password."))
         return self.cleaned_data['oldpw']
-        
+
 class ChangeEmailForm(forms.Form):
     """ change email form """
     email = UserEmailField(skip_clean=True)
@@ -270,6 +270,14 @@ class ChangeEmailForm(forms.Form):
                     in our database. Please choose another.')
             else:
                 return self.cleaned_data['email']
+
+class AccountRecoveryForm(forms.Form):
+    """with this form user enters email address and
+    receives an account recovery link in email
+
+    this form merely checks that entered email
+    """
+    email = forms.EmailField()
         
 class ChangeopenidForm(forms.Form):
     """ change openid form """

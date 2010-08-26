@@ -5,12 +5,15 @@ views calling this template:
 * django_authopenid.views.register with login_type='openid'
 * django_authopenid.views.signin - with login_type='legacy'
 
+purpose of this template is to allow user enter his/her name
+email and sign up for email alerts at the initial registratio
+
 parameters:
 * provider 
 * login_type openid|legacy
 * username (same as screen name or username in the models, and nickname in openid sreg)
-* form1 - OpenidRegisterForm
-* form2 - OpenidVerifyForm not clear what this form is supposed to do, not used for legacy
+* openid_register_form
+* openid_verify_form - not clear what this form is supposed to do, not used for legacy
 * email_feeds_form forum.forms.SimpleEmailSubscribeForm
 * openid_username_exists
 {% endcomment %}
@@ -19,9 +22,9 @@ parameters:
 {% block title %}{% spaceless %}{% trans "Connect your OpenID with this site" %}{% endspaceless %}{% endblock %}
 {% block content %}
     <div id="main-bar" class="headNormal">
-		{% trans "Connect your OpenID with your account on this site" %}
+        {% trans "Connect your OpenID with your account on this site" %}
     </div>      
-	<div id="completetxt" >
+    <div id="completetxt" >
         <div class="message">
             {% ifequal login_type 'openid' %}
                 {% blocktrans %}register new {{provider}} account info, see {{gravatar_faq_url}}{% endblocktrans %}
@@ -39,35 +42,35 @@ parameters:
                 {% endifequal %}
             {% endifequal %}
         </div>
-    	<p style="display:none">{% trans "This account already exists, please use another." %}</p>
-	</div>
+        <p style="display:none">{% trans "This account already exists, please use another." %}</p>
+    </div>
 
-	{% if form1.errors %}
+    {% if openid_register_form.errors %}
         <ul class="errorlist">
-        {% if form1.non_field_errors %}
-            {% for error in form1.non_field_errors %}
+        {% if openid_register_form.non_field_errors %}
+            {% for error in openid_register_form.non_field_errors %}
                 <li>{{error}}</li>
             {% endfor %}
         {% endif %}
         </ul>
-	{% endif %}
+    {% endif %}
     {% comment %}
-	{% if form2.errors %}<!--form2 is dysfunctional so commented out -->
-	<div class="errors">
+    {% if openid_verify_form.errors %}<!--openid_verify_form is dysfunctional so commented out -->
+    <div class="errors">
         <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
         <ul class="error-list">
-		{% if form2.username.errors %} 
-			<li><span class="error">{{ form2.username.errors|join:", " }}</span></li>
-		{% endif %}
-		{% if form2.password.errors %} 
-			<li><span class="error">{{ form2.password.errors|join:", " }}</span></li>
-		{% endif %}
+        {% if openid_verify_form.username.errors %} 
+            <li><span class="error">{{ openid_verify_form.username.errors|join:", " }}</span></li>
+        {% endif %}
+        {% if openid_verify_form.password.errors %} 
+            <li><span class="error">{{ openid_verify_form.password.errors|join:", " }}</span></li>
+        {% endif %}
        </ul>
-	</div>
-	{% endif %}
+    </div>
+    {% endif %}
     {% endcomment %}
 
-	<div class="login">
+    <div class="login">
         {% ifequal login_type 'openid' %}
         <form name="fregister" action="{% url user_register %}" method="POST">
         {% else %}
@@ -77,20 +80,20 @@ parameters:
             <form name="fregister" action="{% url user_signin %}" method="POST">
             {% endifequal %}
         {% endifequal %}
-            {{ form1.next }}
+            {{ openid_register_form.next }}
             <div class="form-row-vertical">
                 <label for="id_username">{% trans "Screen name label" %}</label>
-                {% if form1.username.errors %} 
-                    <p class="error">{{ form1.username.errors|join:", " }}</p>
+                {% if openid_register_form.username.errors %} 
+                    <p class="error">{{ openid_register_form.username.errors|join:", " }}</p>
                 {% endif %}
-                {{ form1.username }}
+                {{ openid_register_form.username }}
             </div>
             <div class="form-row-vertical margin-bottom">
                 <label for="id_email">{% trans "Email address label" %}</label>
-                {% if form1.email.errors %} 
-                    <p class="error">{{ form1.email.errors|join:", " }}</p>
+                {% if openid_register_form.email.errors %} 
+                    <p class="error">{{ openid_register_form.email.errors|join:", " }}</p>
                 {% endif %}
-                {{ form1.email }}
+                {{ openid_register_form.email }}
             </div>
             <p>{% trans "receive updates motivational blurb" %}</p>
             <div class='simple-subscribe-options'>
@@ -101,29 +104,29 @@ parameters:
             </div>
             <p class='space-above'>{% trans "Tag filter tool will be your right panel, once you log in." %}</p>
             <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"/></div>
-		</form>
-	</div>
+        </form>
+    </div>
     {% comment %}<!-- this form associates openID with an existing password-protected account, not yet functional -->
-    {% if form2 %}
-	<div class="login" style="display:none">
+    {% if openid_verify_form %}
+    <div class="login" style="display:none">
         <form name="fverify" action="{% url user_register %}" method="POST">
-            {{ form2.next }}
-			<fieldset style="padding:10px">
-				<legend class="big">{% trans "Existing account" %}</legend>
-				<div class="form-row"><label for="id_username">{% trans "user name" %}</label><br/>{{ form2.username }}</div>
-				<div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br/>{{ form2.password }}</div>
+            {{ openid_verify_form.next }}
+            <fieldset style="padding:10px">
+                <legend class="big">{% trans "Existing account" %}</legend>
+                <div class="form-row"><label for="id_username">{% trans "user name" %}</label><br/>{{ openid_verify_form.username }}</div>
+                <div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br/>{{ openid_verify_form.password }}</div>
                 <p><span class='big strong'>(Optional) receive updates by email</span> - only sent when there are any.</p>
                 <div class='simple-subscribe-options'>
                 {{email_feeds_form.subscribe}}
                 </div>
-				<!--todo double check translation from chinese 确认 = "Register" -->
-				<div class="submit-row">
-					<input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"/> 
-					<a href="{% url user_sendpw %}">{% trans "Forgot your password?" %}</a>
-				</div>
-			</fieldset>
-		</form>
-	</div>
+                <!--todo double check translation from chinese 确认 = "Register" -->
+                <div class="submit-row">
+                <input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"/> 
+                <a href="{% url user_sendpw %}">{% trans "Forgot your password?" %}</a>
+                </div>
+            </fieldset>
+        </form>
+    </div>
     {% endif %}
     {% endcomment %}
 {% endblock %}

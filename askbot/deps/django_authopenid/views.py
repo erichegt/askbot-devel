@@ -61,12 +61,10 @@ except ImportError:
 import re
 import urllib
 
-from askbot.forms import SimpleEmailSubscribeForm 
+from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response
 from askbot.deps.django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
-from askbot.deps.django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRegisterForm, \
-        OpenidVerifyForm, ClassicRegisterForm, ChangePasswordForm, ChangeEmailForm, \
-        ChangeopenidForm, DeleteForm, EmailPasswordForm
+from askbot.deps.django_authopenid import forms
 import logging
 from askbot.utils.forms import get_next_url
 
@@ -79,6 +77,9 @@ def login(request,user):
 
     if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
         EXTERNAL_LOGIN_APP.api.login(request,user)
+
+    if not hasattr(user, 'backend'):
+        user.backend = "django.contrib.auth.backends.ModelBackend"
 
     #1) get old session key
     session_key = request.session.session_key
@@ -119,8 +120,13 @@ def get_url_host(request):
 def get_full_url(request):
     return get_url_host(request) + request.get_full_path()
 
-def ask_openid(request, openid_url, redirect_to, on_failure=None,
-        sreg_request=None):
+def ask_openid(
+            request,
+            openid_url,
+            redirect_to,
+            on_failure=None,
+            sreg_request=None
+        ):
     """ basic function to ask openid and return response """
     request.encoding = 'UTF-8'
     on_failure = on_failure or signin_failure
@@ -132,7 +138,7 @@ def ask_openid(request, openid_url, redirect_to, on_failure=None,
             settings, 'OPENID_DISALLOW_INAMES', False
     ):
         msg = _("i-names are not supported")
-        logging.debug('openid failed becaise i-names are not supported')
+        logging.debug('openid failed because i-names are not supported')
         return on_failure(request, msg)
     consumer = Consumer(request.session, DjangoOpenIDStore())
     try:
@@ -148,6 +154,7 @@ def ask_openid(request, openid_url, redirect_to, on_failure=None,
         auth_request.addExtension(sreg_request)
     redirect_url = auth_request.redirectURL(trust_root, redirect_to)
     logging.debug('redirecting to %s' % redirect_url)
+    print 'redirecting to %s' % redirect_url
     return HttpResponseRedirect(redirect_url)
 
 def complete(request, on_success=None, on_failure=None, return_to=None):
@@ -203,8 +210,12 @@ def not_authenticated(func):
         return func(request, *args, **kwargs)
     return decorated
 
-@not_authenticated
-def signin(request,newquestion=False,newanswer=False):
+#@not_authenticated
+def signin(
+        request,
+        newquestion = False,
+        newanswer = False,
+    ):
     """
     signin page. It manages the legacy authentification (user/password) 
     and openid authentification
@@ -216,23 +227,27 @@ def signin(request,newquestion=False,newanswer=False):
     logging.debug('in signin view')
     request.encoding = 'UTF-8'
     on_failure = signin_failure
-    email_feeds_form = SimpleEmailSubscribeForm()
-    next = get_next_url(request)
-    form_signin = OpenidSigninForm(initial={'next':next})
-    form_auth = ClassicLoginForm(initial={'next':next})
+    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
+    initial_data = {'next': get_next_url(request)}
+    openid_login_form = forms.OpenidSigninForm(initial = initial_data)
+    password_login_form = forms.ClassicLoginForm(initial = initial_data)
+
+    print request.method
     
     if request.method == 'POST':
+        print 'have post'
         #'blogin' - password login
-        if 'blogin' in request.POST.keys():
+        if 'blogin' in request.POST:
+            print 'blogin'
             logging.debug('processing classic login form submission')
-            form_auth = ClassicLoginForm(request.POST)
-            if form_auth.is_valid():
+            password_login_form = forms.ClassicLoginForm(request.POST)
+            if password_login_form.is_valid():
                 #have login and password and need to login through external website
                 if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-                    username = form_auth.cleaned_data['username']
-                    password = form_auth.cleaned_data['password']
-                    next = form_auth.cleaned_data['next']
-                    if form_auth.get_user() == None:
+                    username = password_login_form.cleaned_data['username']
+                    password = password_login_form.cleaned_data['password']
+                    next = password_login_form.cleaned_data['next']
+                    if password_login_form.get_user() == None:
                         #need to create internal user
                         
                         #1) save login and password temporarily in session
@@ -247,9 +262,9 @@ def signin(request,newquestion=False,newanswer=False):
                         #if so, we have to prompt the user to pick a different name
                         username_taken = User.is_username_taken(screen_name)
                         
-                        email_feeds_form = SimpleEmailSubscribeForm()
+                        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
                         form_data = {'username':screen_name,'email':email,'next':next}
-                        form = OpenidRegisterForm(initial=form_data)
+                        form = forms.OpenidRegisterForm(initial=form_data)
                         template_data = {'form1':form,'username':screen_name,\
                                         'email_feeds_form':email_feeds_form,\
                                         'provider':mark_safe(settings.EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME),\
@@ -260,23 +275,23 @@ def signin(request,newquestion=False,newanswer=False):
                                 context_instance=RequestContext(request))
                     else:
                         #user existed, external password is ok
-                        user = form_auth.get_user()
+                        user = password_login_form.get_user()
                         login(request,user)
                         response = HttpResponseRedirect(get_next_url(request))
                         EXTERNAL_LOGIN_APP.api.set_login_cookies(response,user)
                         return response
                 else:
                     #regular password authentication
-                    user = form_auth.get_user()
+                    user = password_login_form.get_user()
                     login(request, user)
                     return HttpResponseRedirect(get_next_url(request))
         
-        elif 'bnewaccount' in request.POST.keys():
+        elif 'bnewaccount' in request.POST:
             logging.debug('processing classic (login/password) create account form submission')
             #register externally logged in password user with a new local account
             if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-                form = OpenidRegisterForm(request.POST) 
-                email_feeds_form = SimpleEmailSubscribeForm(request.POST)
+                form = forms.OpenidRegisterForm(request.POST) 
+                email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
                 form1_is_valid = form.is_valid()
                 form2_is_valid = email_feeds_form.is_valid()
                 if form1_is_valid and form2_is_valid:
@@ -306,6 +321,8 @@ def signin(request,newquestion=False,newanswer=False):
                             del request.session['external_password']
                         return HttpResponseServerError()
                 else:
+                    #register after authenticating with external login
+                    #provider
                     username = request.POST.get('username',None)
                     provider = mark_safe(settings.EXTERNAL_LEGACY_LOGIN_PROVIDER_NAME)
                     username_taken = User.is_username_taken(username)
@@ -318,12 +335,14 @@ def signin(request,newquestion=False,newanswer=False):
             else:
                 raise Http404
         
-        elif 'bsignin' in request.POST.keys() or 'openid_username' in request.POST.keys():
+        elif 'bsignin' in request.POST or 'openid_username' in request.POST:
+            print request.POST
             logging.debug('processing signin with openid submission')
-            form_signin = OpenidSigninForm(request.POST)
-            if form_signin.is_valid():
+            openid_login_form = forms.OpenidSigninForm(request.POST)
+            if openid_login_form.is_valid():
+                print 'openid form is valid'
                 logging.debug('OpenidSigninForm is valid')
-                next = form_signin.cleaned_data['next']
+                next = openid_login_form.cleaned_data['next']
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
@@ -331,42 +350,94 @@ def signin(request,newquestion=False,newanswer=False):
                         urllib.urlencode({'next':next})
                 )
                 return ask_openid(request, 
-                        form_signin.cleaned_data['openid_url'], 
+                        openid_login_form.cleaned_data['openid_url'], 
                         redirect_to, 
                         on_failure=signin_failure, 
                         sreg_request=sreg_req)
             else:
+                print 'openid form is not valid'
                 logging.debug('OpenidSigninForm is NOT valid! -> redisplay login view')
-    
+
+    if request.method == 'GET' and request.user.is_authenticated():
+        view_subtype = 'change_openid'
+    else:
+        view_subtype = 'default'
+
+    return show_signin_view(
+                        request,
+                        password_login_form = password_login_form,
+                        openid_login_form = openid_login_form,
+                        view_subtype = view_subtype
+                    )
+
+def show_signin_view(
+                request,
+                password_login_form = None,
+                openid_login_form = None,
+                account_recovery_form = None,
+                account_recovery_message = None,
+                view_subtype = 'default'
+            ):
+    """url-less utility function that populates
+    context of template 'authopenid/signin.html'
+    and returns its rendered output
+    """
+
+    allowed_subtypes = ('default', 'add_openid', 'email_sent', 'change_openid')
+    assert(view_subtype in allowed_subtypes) 
+
+    initial_data = {'next': get_next_url(request)}
+
+    if password_login_form is None:
+        password_login_form = forms.ClassicLoginForm(initial = initial_data)
+    if openid_login_form is None:
+        openid_login_form = forms.OpenidSigninForm(initial = initial_data)
+    if account_recovery_form is None:
+        account_recovery_form = forms.AccountRecoveryForm()#initial = initial_data)
+
     #if request is GET
     if request.method == 'GET':
         logging.debug('request method was GET')
-    question = None
-    if newquestion == True:
-        from askbot.models import AnonymousQuestion as AQ
-        session_key = request.session.session_key
-        logging.debug('retrieving anonymously posted question associated with session %s' % session_key)
-        qlist = AQ.objects.filter(session_key=session_key).order_by('-added_at')
-        if len(qlist) > 0:
-            question = qlist[0]
-    answer = None
-    if newanswer == True:
-        from askbot.models import AnonymousAnswer as AA
-        session_key = request.session.session_key
-        logging.debug('retrieving posted answer associated with session %s' % session_key)
-        alist = AA.objects.filter(session_key=session_key).order_by('-added_at')
-        if len(alist) > 0:
-            answer = alist[0]
+
+    #todo: this sthuff must be executed on some signal
+    #because askbot should have nothing to do with the login app
+    from askbot.models import AnonymousQuestion as AQ
+    session_key = request.session.session_key
+    logging.debug('retrieving anonymously posted question associated with session %s' % session_key)
+    qlist = AQ.objects.filter(session_key=session_key).order_by('-added_at')
+    if len(qlist) > 0:
+        question = qlist[0]
+    else:
+        question = None
+
+    from askbot.models import AnonymousAnswer as AA
+    session_key = request.session.session_key
+    logging.debug('retrieving posted answer associated with session %s' % session_key)
+    alist = AA.objects.filter(session_key=session_key).order_by('-added_at')
+    if len(alist) > 0:
+        answer = alist[0]
+    else:
+        answer = None
+
+    if view_subtype == 'default' or view_subtype == 'email_sent':
+        page_title = _('Please click any of the icons below to sign in')
+    elif view_subtype == 'change_openid':
+        page_title = _('If you wish, please change your login method')
+    elif view_subtype == 'add_openid':
+        page_title = _('Please wait a second! Your account is recovered, but ...')
     
     logging.debug('showing signin view')
     return render_to_response('authopenid/signin.html', {
+        'page_class': 'openid-signin',
+        'view_subtype': view_subtype, #add_openid|default
+        'page_title': page_title,
         'question':question,
         'answer':answer,
-        'form1': form_auth,
-        'form2': form_signin,
-        'msg':  request.GET.get('msg',''),
-        'sendpw_url': reverse('user_sendpw'),
-        'fb_api_key': askbot_settings.FB_API_KEY, 
+        'password_login_form': password_login_form,
+        'openid_login_form': openid_login_form,
+        'account_recovery_form': account_recovery_form,
+        'openid_error_message':  request.REQUEST.get('msg',''),
+        'account_recovery_message': account_recovery_message,
     }, context_instance=RequestContext(request))
 
 def complete_signin(request):
@@ -393,10 +464,47 @@ def signin_success(request, identity_url, openid_response):
         logging.debug('trying to get user associated with this openid...')
         rel = UserAssociation.objects.get(openid_url__exact = str(openid_))
         logging.debug('success')
-    except:
-        logging.debug('failed --> try to register brand new user')
-        # try to register this new user
-        return register(request)
+        print 'found openid in database'
+        if request.user.is_authenticated() and rel.user != request.user:
+            print 'thief'
+            logging.critical(
+                    'possible account theft attempt by %s,%d to %s %d' % \
+                    (
+                        request.user.username,
+                        request.user.id,
+                        rel.user.username,
+                        rel.user.id
+                    )
+                )
+            raise Http404
+        else:
+            print 'good'
+            logging.debug('success')
+    except UserAssociation.DoesNotExist:
+        if request.user.is_anonymous():
+            print 'need to register'
+            logging.debug('failed --> try to register brand new user')
+            # try to register this new user
+            return register(request)
+        else:
+            #store openid association
+            print 'was logged in, but no stored openid yet'
+            try:
+                user_assoc = UserAssociation.objects.get(user = request.user)
+                user_assoc.openid_url = str(openid_)
+                print 'found matching user with other openid'
+            except UserAssociation.DoesNotExist:
+                print 'creatin new openid method'
+                user_assoc = UserAssociation(
+                                        user = request.user,
+                                        openid_url = openid_
+                                    )
+            user_assoc.save()
+            print 'saved association'
+            message = _('New login method saved. Thanks!')
+            request.user.message_set.create(message = message)
+            #set "account recovered" message
+            return HttpResponseRedirect(get_next_url(request))
     user_ = rel.user
     if user_.is_active:
         user_.backend = "django.contrib.auth.backends.ModelBackend"
@@ -413,7 +521,7 @@ def is_association_exist(openid_url):
     is_exist = True
     try:
         uassoc = UserAssociation.objects.get(openid_url__exact = openid_url)
-    except:
+    except UserAssociation.DoesNotExist:
         is_exist = False
     logging.debug(str(is_exist))
     return is_exist
@@ -423,8 +531,8 @@ def register(request):
     """
     register an openid.
     
-    If user is already a member he can associate its openid with 
-    its account.
+    If user is already a member he can associate their openid with 
+    their account.
     
     A new account could also be created and automaticaly associated
     to the openid.
@@ -443,16 +551,16 @@ def register(request):
     
     nickname = openid_.sreg.get('nickname', '')
     email = openid_.sreg.get('email', '')
-    form1 = OpenidRegisterForm(initial={
+    openid_register_form = forms.OpenidRegisterForm(initial={
         'next': next,
         'username': nickname,
         'email': email,
     }) 
-    form2 = OpenidVerifyForm(initial={
+    openid_verify_form = forms.OpenidVerifyForm(initial={
         'next': next,
         'username': nickname,
     })
-    email_feeds_form = SimpleEmailSubscribeForm()
+    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     
     user_ = None
     is_redirect = False
@@ -460,20 +568,21 @@ def register(request):
     if request.method == 'POST':
         if 'bnewaccount' in request.POST.keys():
             logging.debug('trying to create new account associated with openid')
-            form1 = OpenidRegisterForm(request.POST)
-            email_feeds_form = SimpleEmailSubscribeForm(request.POST)
-            if not form1.is_valid():
+            openid_register_form = forms.OpenidRegisterForm(request.POST)
+            email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
+            if not openid_register_form.is_valid():
                 logging.debug('OpenidRegisterForm is INVALID')
             elif not email_feeds_form.is_valid():
                 logging.debug('SimpleEmailSubscribeForm is INVALID')
             else:
                 logging.debug('OpenidRegisterForm and SimpleEmailSubscribeForm are valid')
-                next = form1.cleaned_data['next']
+                next = openid_register_form.cleaned_data['next']
                 is_redirect = True
-                logging.debug('creatng new django user %s ...' % form1.cleaned_data['username'])
+                logging.debug('creatng new django user %s ...' % \
+                                openid_register_form.cleaned_data['username'])
                 tmp_pwd = User.objects.make_random_password()
-                user_ = User.objects.create_user(form1.cleaned_data['username'],
-                         form1.cleaned_data['email'], tmp_pwd)
+                user_ = User.objects.create_user(openid_register_form.cleaned_data['username'],
+                         openid_register_form.cleaned_data['email'], tmp_pwd)
                 
                 user_.set_unusable_password()
                 # make association with openid
@@ -490,12 +599,12 @@ def register(request):
                 email_feeds_form.save(user_)
         elif 'bverify' in request.POST.keys():
             logging.debug('processing OpenidVerify form')
-            form2 = OpenidVerifyForm(request.POST)
-            if form2.is_valid():
+            openid_verify_form = forms.OpenidVerifyForm(request.POST)
+            if openid_verify_form.is_valid():
                 logging.debug('form is valid')
                 is_redirect = True
-                next = form2.cleaned_data['next']
-                user_ = form2.get_user()
+                next = openid_verify_form.cleaned_data['next']
+                user_ = openid_verify_form.get_user()
                 logging.debug('creating new openid user association %s <--> %s' \
                             % (user_.username, str(openid_)))
                 uassoc = UserAssociation(openid_url=str(openid_),
@@ -542,8 +651,8 @@ def register(request):
     
     logging.debug('printing authopenid/complete.html output')
     return render_to_response('authopenid/complete.html', {
-        'form1': form1,
-        'form2': form2,
+        'openid_register_form': openid_register_form,
+        'openid_verify_form': openid_verify_form,
         'email_feeds_form': email_feeds_form,
         'provider':mark_safe(provider_logo),
         'username': nickname,
@@ -560,13 +669,13 @@ def signin_failure(request, message):
     """
     logging.debug('')
     next = get_next_url(request)
-    form_signin = OpenidSigninForm(initial={'next': next})
-    form_auth = ClassicLoginForm(initial={'next': next})
+    openid_login_form = forms.OpenidSigninForm(initial={'next': next})
+    password_login_form = forms.ClassicLoginForm(initial={'next': next})
     
     return render_to_response('authopenid/signin.html', {
         'msg': message,
-        'form1': form_auth,
-        'form2': form_signin,
+        'password_login_form': password_login_form,
+        'openid_login_form': openid_login_form,
     }, context_instance=RequestContext(request))
 
 @not_authenticated
@@ -585,8 +694,8 @@ def signup(request):
     next = get_next_url(request)
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
-        form = ClassicRegisterForm(request.POST)
-        email_feeds_form = SimpleEmailSubscribeForm(request.POST)
+        form = forms.ClassicRegisterForm(request.POST)
+        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
         
         #validation outside if to remember form values
         logging.debug('validating classic register form')
@@ -630,8 +739,8 @@ def signup(request):
         else:
             logging.debug('create classic account forms were invalid')
     else:
-        form = ClassicRegisterForm(initial={'next':next})
-        email_feeds_form = SimpleEmailSubscribeForm()
+        form = forms.ClassicRegisterForm(initial={'next':next})
+        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
     return render_to_response('authopenid/signup.html', {
         'form': form, 
@@ -715,7 +824,7 @@ def changepw(request):
         raise Http404
     
     if request.POST:
-        form = ChangePasswordForm(request.POST, user=user_)
+        form = forms.ChangePasswordForm(request.POST, user=user_)
         if form.is_valid():
             user_.set_password(form.cleaned_data['password1'])
             user_.save()
@@ -725,7 +834,7 @@ def changepw(request):
                     urlquote_plus(msg))
             return HttpResponseRedirect(redirect)
     else:
-        form = ChangePasswordForm(user=user_)
+        form = forms.ChangePasswordForm(user=user_)
 
     return render_to_response('authopenid/changepw.html', {'form': form },
                                 context_instance=RequestContext(request))
@@ -762,7 +871,10 @@ def _send_email_key(user):
     message_template = loader.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
-    'validation_link': askbot_settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
+    'validation_link': askbot_settings.APP_URL + reverse(
+                                                    'user_account_recover',
+                                                    kwargs={'key':user.email_key}
+                                                )
     })
     message = message_template.render(message_context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
@@ -802,6 +914,69 @@ def send_email_key(request):
             return validation_email_sent(request)
     else:
         raise Http404
+
+def account_recover(request, key = None):
+    """view similar to send_email_key, except
+    it allows user to recover an account by entering
+    his/her email address
+
+    this view will both - send the recover link and
+    process it
+
+    url name 'user_account_recover'
+    """
+    if request.method == 'POST':
+        form = forms.AccountRecoveryForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email = email)
+                send_new_email_key(user, nomessage = True)
+                message = _(
+                        'Please check your email and visit the enclosed link.'
+                    )
+                return show_signin_view(
+                                request,
+                                account_recovery_message = message,
+                                view_subtype = 'email_sent'
+                            )
+            except User.DoesNotExist:
+                message = _(
+                        'Sorry we cound not find this email it our database. '
+                        'If you think that this is an error - please contact '
+                        'the site administrator'
+                    )
+                return show_signin_view(
+                                request,
+                                account_recovery_message = message,
+                                account_recovery_form = form
+                            )
+        else:
+            message = _('Please enter a valid email address')
+            return show_signin_view(
+                            request,
+                            account_recovery_message = message,
+                            account_recovery_form = form
+                        )
+    else:
+        if key is None:
+            raise Http404
+        try:
+            user = User.objects.get(email_key = key)
+            user.email_key = None #delete the key so that nobody could use it again
+            #todo: add email_key_timestamp field
+            #and check key age
+            login(request, user)
+            return show_signin_view(request, view_subtype = 'add_openid')
+
+        except User.DoesNotExist:
+            message = _('Sorry this account recovery key has '
+                    'expired or is invalid, please request a new one'
+                    )
+            return show_signin_view(
+                            request,
+                            account_recovery_message = message,
+                        )
    
 
 #internal server view used as return value by other views
@@ -852,7 +1027,7 @@ def changeemail(request, action='change'):
             msg = _('your email was not changed')
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))
-        form = ChangeEmailForm(request.POST, user=user_)
+        form = forms.ChangeEmailForm(request.POST, user=user_)
         if form.is_valid():
             new_email = form.cleaned_data['email']
             if new_email != user_.email:
@@ -869,7 +1044,7 @@ def changeemail(request, action='change'):
         return complete(request, emailopenid_success, 
                 emailopenid_failure, redirect_to) 
     else:
-        form = ChangeEmailForm(initial={'email': user_.email},
+        form = forms.ChangeEmailForm(initial={'email': user_.email},
                 user=user_)
     
     output = render_to_response('authopenid/changeemail.html', {
@@ -949,7 +1124,7 @@ def changeopenid(request):
     
     redirect_to = get_url_host(request) + reverse('user_changeopenid')
     if request.POST and has_openid:
-        form = ChangeopenidForm(request.POST, user=user_)
+        form = forms.ChangeopenidForm(request.POST, user=user_)
         if form.is_valid():
             return ask_openid(request, form.cleaned_data['openid_url'],
                     redirect_to, on_failure=changeopenid_failure)
@@ -958,7 +1133,7 @@ def changeopenid(request):
             return complete(request, changeopenid_success,
                     changeopenid_failure, redirect_to)    
 
-    form = ChangeopenidForm(initial={'openid_url': openid_url }, user=user_)
+    form = forms.ChangeopenidForm(initial={'openid_url': openid_url }, user=user_)
     return render_to_response('authopenid/changeopenid.html', {
         'form': form,
         'has_openid': has_openid, 
@@ -1024,7 +1199,7 @@ def delete(request):
     
     redirect_to = get_url_host(request) + reverse('user_delete') 
     if request.POST:
-        form = DeleteForm(request.POST, user=user_)
+        form = forms.DeleteForm(request.POST, user=user_)
         if form.is_valid():
             if not form.test_openid:
                 user_.delete() 
@@ -1036,7 +1211,7 @@ def delete(request):
         return complete(request, deleteopenid_success, deleteopenid_failure,
                 redirect_to) 
     
-    form = DeleteForm(user=user_)
+    form = forms.DeleteForm(user=user_)
     
     msg = request.GET.get('msg','')
     return render_to_response('authopenid/delete.html', {
@@ -1100,7 +1275,7 @@ def sendpw(request):
     msg = request.GET.get('msg','')
     logging.debug('request method is %s' % request.method)
     if request.method == 'POST':
-        form = EmailPasswordForm(request.POST)
+        form = forms.EmailPasswordForm(request.POST)
         if form.is_valid():
             logging.debug('EmailPasswordForm is valid')
             new_pw = User.objects.make_random_password()
@@ -1133,7 +1308,7 @@ def sendpw(request):
                     [form.user_cache.email])
             msg = _("A new password and the activation link were sent to your email address.")
     else:
-        form = EmailPasswordForm()
+        form = forms.EmailPasswordForm()
     
     logging.debug('showing reset password form')
     return render_to_response('authopenid/sendpw.html', {

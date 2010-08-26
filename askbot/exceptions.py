@@ -12,3 +12,9 @@ class DuplicateCommand(exceptions.PermissionDenied):
     """
     pass
 
+class EmailNotSent(exceptions.ImproperlyConfigured):
+    """raised when email cannot be sent
+    due to some mis-configurations on the server
+    """
+    pass
+

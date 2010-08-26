@@ -103,7 +103,7 @@ $.fn.openid = function() {
   $usrfs.hide();
   $idfs.hide();
   $localfs.hide();
-  $this.find('td:eq(0)').click();
+  //$this.find('td:eq(0)').click();
 
   return this;
 };

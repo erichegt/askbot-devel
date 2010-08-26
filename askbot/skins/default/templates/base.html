@@ -69,7 +69,11 @@
         {% block forejs %}
         {% endblock %}
     </head>
+    {% if page_class %}
+    <body class="{{page_class}}">
+    {% else %}
     <body>
+    {% endif %}
         <div class="notify" style="display:none">
             {% autoescape off %}
                 {% if user_messages %}

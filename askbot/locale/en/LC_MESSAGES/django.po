@@ -4759,8 +4759,8 @@ msgstr ""
 #: skins/default/templates/authopenid/signin.html:42
 msgid "Click to sign in through any of these services."
 msgstr ""
-"<p><span class=\"big strong\">Please select your favorite login method below."
-"</span></p><p><font color=\"gray\">External login services use <a href="
+"<h2>Please click any of the icons below to sign in.</h2>"
+"<font color=\"gray\">External login services use <a href="
 "\"http://openid.net\"><b>OpenID</b></a> technology, where your password "
 "always stays confidential between you and your login provider and you don't "
 "have to remember another one.</font></p>"
@@ -4777,23 +4777,23 @@ msgstr ""
 #: skins/default/templates/authopenid/signin.html:144
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr ""
-"<span class=\"big strong\">Enter your </span><span id=\"enter_your_what\" "
-"class='big strong'>Provider user name</span><br/><span class='grey'>(or "
-"select another login method above)</span>"
+"<h2>Please, enter your </span><span id=\"enter_your_what\" "
+">Provider user name</span>, then sign in.</h2><p><span class='grey'>(or "
+"select another login method above)</span></p>"
 
 #: skins/default/templates/authopenid/signin.html:151
 msgid ""
 "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
 "web address"
 msgstr ""
-"<span class=\"big strong\">Enter your <a class=\"openid_logo\" href=\"http://"
-"openid.net\">OpenID</a> web address</span><br/><span class='grey'>(or choose "
-"another login method above)</span>"
+"<h2>Please, enter your <a class=\"openid_logo\" href=\"http://"
+"openid.net\">OpenID</a> url, then sign in</h2><p><span class='grey'>(or choose "
+"another login method above)</span></p>"
 
 #: skins/default/templates/authopenid/signin.html:153
 #: skins/default/templates/authopenid/signin.html:166
 msgid "Login"
-msgstr ""
+msgstr "Sign in"
 
 #: skins/default/templates/authopenid/signin.html:157
 msgid "Enter your login name and password"

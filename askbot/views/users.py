@@ -6,10 +6,13 @@ and other views showing profile-related information.
 
 Also this module includes the view listing all forum users.
 """
+import calendar
+import functools
+import datetime
+import logging
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.core import mail
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
@@ -21,17 +24,15 @@ from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from django.utils import simplejson
 from django.conf import settings as django_settings
+import askbot
 from askbot.utils.html import sanitize_html
 from askbot import auth
 from askbot import forms
-import calendar
-import functools
-import datetime
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
+from askbot import exceptions
 from askbot.models import signals
-import logging
 
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
@@ -141,6 +142,7 @@ def user_moderate(request, subject):
     user_rep_changed = False
     user_status_changed = False
     message_sent = False
+    email_error_message = None
 
     user_rep_form = forms.ChangeUserReputationForm()
     send_message_form = forms.SendMessageForm()
@@ -159,18 +161,18 @@ def user_moderate(request, subject):
             if send_message_form.is_valid():
                 subject_line = send_message_form.cleaned_data['subject_line']
                 body_text = send_message_form.cleaned_data['body_text']
-                message = mail.EmailMessage(
-                                    subject_line,
-                                    body_text,
-                                    django_settings.DEFAULT_FROM_EMAIL,
-                                    [subject.email,],
-                                    headers={'Reply-to':moderator.email}
-                                )
+                
                 try:
-                    message.send()
+                    askbot.send_mail(
+                                subject_line = subject_line,
+                                body_text = body_text,
+                                recipient_list = [subject.email],
+                                headers={'Reply-to':moderator.email},
+                                raise_on_failure = True
+                            )
                     message_sent = True
-                except Exception, e:
-                    logging.critical(unicode(e))
+                except exceptions.EmailNotSent, e:
+                    email_error_message = unicode(e)
                 send_message_form = forms.SendMessageForm()
         else:
             reputation_change_type = None
@@ -217,6 +219,7 @@ def user_moderate(request, subject):
                         'change_user_reputation_form': user_rep_form,
                         'send_message_form': send_message_form,
                         'message_sent': message_sent,
+                        'email_error_message': email_error_message,
                         'user_rep_changed': user_rep_changed,
                         'user_status_changed': user_status_changed
                     }, 

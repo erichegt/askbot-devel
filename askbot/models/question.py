@@ -297,12 +297,15 @@ class Question(content.Content, DeletableContent):
 
         return LazyList(get_data)
 
+    def get_tag_names(self):
+        return self.tagnames.split(' ')
+
     def get_similarity(self, other_question = None):
         """return number of tags in the other question
         that overlap with the current question (self)
         """
-        my_tags = set(self.tagnames.split(' '))
-        others_tags = set(other_question.tagnames.split(' '))
+        my_tags = set(self.get_tag_names())
+        others_tags = set(other_question.get_tag_names())
         return len(my_tags & others_tags)
 
     def update_tags(self, tagnames, user):

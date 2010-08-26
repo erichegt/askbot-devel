@@ -3,7 +3,6 @@ import re
 import hashlib
 import datetime
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
 from askbot.search.indexer import create_fulltext_indexes
 from django.db.models import signals as django_signals
 from django.template import loader, Context
@@ -16,6 +15,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
+import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -1408,7 +1408,7 @@ User.add_to_class(
     )
 
 #todo: move this to askbot/utils ??
-def format_instant_notification_body(
+def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
@@ -1417,6 +1417,8 @@ def format_instant_notification_body(
                                     ):
     """
     returns text of the instant notification body
+    and subject line
+
     that is built when post is updated
     only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     are supported
@@ -1431,13 +1433,37 @@ def format_instant_notification_body(
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
+        subject_line = _(
+                    'new question comment about: "%(title)s"'
+                ) % {'title': origin_post.title}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
-    elif update_type in ('answer_update', 'new_answer'):
+        subject_line = _(
+                    'new answer comment about: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
-    elif update_type in ('question_update', 'new_question'):
+        subject_line = _(
+                    'answer modified for: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'new_answer':
+        assert(isinstance(post, Answer))
+        subject_line = _(
+                    'new answer for: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'question_update':
         assert(isinstance(post, Question))
+        subject_line = _(
+                    'question modified: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'new_question':
+        assert(isinstance(post, Question))
+        subject_line = _(
+                    'new question: "%(title)s"'
+                ) % {'title': origin_post.title}
+    else:
+        raise ValueError('unexpected update_type %s' % update_type)
 
     update_data = {
         'update_author_name': from_user.username,
@@ -1447,7 +1473,7 @@ def format_instant_notification_body(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    return template.render(Context(update_data))
+    return subject_line, template.render(Context(update_data))
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -1476,8 +1502,7 @@ def send_instant_notifications_about_activity_in_post(
 
     for user in receiving_users:
 
-            subject = _('email update message subject')
-            text = format_instant_notification_body(
+            subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
@@ -1486,22 +1511,13 @@ def send_instant_notifications_about_activity_in_post(
                         )
             #todo: this could be packaged as an "action" - a bundle
             #of executive function with the activity log recording
-            msg = EmailMessage(
-                        subject,
-                        text,
-                        django_settings.DEFAULT_FROM_EMAIL,
-                        [user.email]
-                    )
-            msg.content_subtype = 'html'
-            msg.send()
-            #print text
-            EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-            email_activity = Activity(
-                                    user = user,
-                                    content_object = post.get_origin_post(),
-                                    activity_type = EMAIL_UPDATE_ACTIVITY
-                                )
-            email_activity.save()
+            askbot.send_mail(
+                    subject_line = subject_line,
+                    body_text = body_text,
+                    recipient_list = [user.email],
+                    related_object = post.get_origin_post(),
+                    activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+                )
 
 
 #todo: move to utils

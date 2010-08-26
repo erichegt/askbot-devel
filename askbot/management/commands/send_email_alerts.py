@@ -1,13 +1,14 @@
+import logging
+import datetime
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
+import askbot
 from askbot.models import User, Question, Answer, Tag, QuestionRevision
 from askbot.models import AnswerRevision, Activity, EmailFeedSetting
 from askbot.models import Comment
-from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
-import datetime
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict 
@@ -71,6 +72,51 @@ def extend_question_list(
 def format_action_count(string, number, output):
     if number > 0:
         output.append(_(string) % {'num':number})
+
+def get_update_subject_line(question_dict):
+    """forms a subject line based on up to five most
+    frequently used tags in the question_dict
+
+    question_dict is an instance of SortedDict,
+    where questions are keys and values are meta_data
+    accumulated during the question filtering
+    """
+    #todo: in python 2.6 there is collections.Counter() thing
+    #which would be very useful here
+    tag_counts = dict()
+    updated_questions = question_dict.keys()
+    for question in updated_questions:
+        tag_names = question.get_tag_names()
+        for tag_name in tag_names:
+            if tag_name in tag_counts:
+                tag_counts[tag_name] += 1
+            else:
+                tag_counts[tag_name] = 1
+    tag_list = tag_counts.keys()
+    #sort in descending order
+    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
+
+    question_count = len(updated_questions)
+    #note that double quote placement is important here
+    if len(tag_list) == 1:
+        last_topic = ''
+    elif len(tag_list) <= 5:
+        last_topic = _('" and "%s"') % tag_list.pop()
+    else:
+        tag_list = tag_list[:5]
+        last_topic = _('" and more')
+
+    topics = '"' + '", "'.join(tag_list) + last_topic
+
+    subject_line = ungettext(
+                    '%(question_count)d updated question about %(topics)s',
+                    '%(question_count)d updated questions about %(topics)s',
+                    question_count
+                ) % {
+                        'question_count': question_count,
+                        'topics': topics
+                    }
+    return subject_line
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -407,15 +453,14 @@ class Command(NoArgsCommand):
             if len(q_list.keys()) == 0:
                 continue
             num_q = 0
-            num_moot = 0
-            for meta_data in q_list.values():
+            for question, meta_data in q_list.items():
                 if meta_data['skip']:
-                    num_moot = True
+                    del q_list[question]
                 else:
                     num_q += 1
             if num_q > 0:
                 url_prefix = askbot_settings.APP_URL
-                subject = _('email update message subject')
+                subject_line = get_update_subject_line(q_list)
                 #todo: send this to special log
                 #print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for %(num)d question', 
@@ -479,26 +524,17 @@ class Command(NoArgsCommand):
                             'There is a chance that you may be receiving links seen '
                             'before - due to a technicality that will eventually go away. '
                         )
-                #    text += '</p>'
-                #if num_moot > 0:
-                #    text += '<p></p>'
-                #    text += ungettext('There is also one question which was recently '\
-                #                +'updated but you might not have seen its latest version.',
-                #            'There are also %(num)d more questions which were recently updated '\
-                #            +'but you might not have seen their latest version.',num_moot) \
-                #                % {'num':num_moot,}
-                #    text += _('Perhaps you could look up previously sent askbot reminders in your mailbox.')
-                #    text += '</p>'
 
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
                 text += _('go to %(email_settings_link)s to change frequency of email updates or %(admin_email)s administrator') \
                                 % {'email_settings_link':link, 'admin_email':settings.ADMINS[0][1]}
-                if DEBUG_THIS_COMMAND == False:
-                    msg = EmailMessage(
-                                    subject, 
-                                    text, 
-                                    settings.DEFAULT_FROM_EMAIL, 
-                                    [user.email]
-                                )
-                    msg.content_subtype = 'html'
-                    msg.send()
+                if DEBUG_THIS_COMMAND == True:
+                    recipient_email = settings.ADMINS[0][1]
+                else:
+                    recipient_email = user.email
+
+                askbot.send_mail(
+                            subject_line = subject_line,
+                            body_text = text,
+                            recipient_list = [recipient_email]
+                        )

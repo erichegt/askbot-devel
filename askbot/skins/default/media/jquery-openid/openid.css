@@ -18,12 +18,13 @@ input[name=openid_username] {width:8em}
 input[name=openid_identifier] {width:18em}
 form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #FD6}
 form.openid fieldset div {
-    -moz-border-radius:4px; 
-    -webkit-border-radius:4px; 
-    background: #DCDCDC;
+    /*-moz-border-radius:4px; */
+    /*-webkit-border-radius:4px; */
+    /*background: #DCDCDC;*/
     padding:10px;
     float:left;
 }
+.openid-signin h2 {margin-top:10px;}
 form.openid p {margin-bottom:4px;}
 form.openid fieldset div p {padding:0px;margin:0px;}
 form.openid fieldset div p.login {padding:0px;margin:0 0 10px 0;}

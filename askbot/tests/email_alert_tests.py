@@ -643,3 +643,41 @@ class InstantQAnsEmailAlertTests(EmailAlertTests):
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.expected_results['answer_edit'] = {'message_count': 1, }
         self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
+
+class DelayedAlertSubjectLineTests(TestCase):
+    def test_topics_in_subject_line(self):
+        q1 = models.Question(id=1, tagnames='one two three four five')
+        q2 = models.Question(id=2, tagnames='two three four five')
+        q3 = models.Question(id=3, tagnames='three four five')
+        q4 = models.Question(id=4, tagnames='four five')
+        q5 = models.Question(id=5, tagnames='five')
+        q6 = models.Question(id=6, tagnames='six')
+        q7 = models.Question(id=7, tagnames='six')
+        q8 = models.Question(id=8, tagnames='six')
+        q9 = models.Question(id=9, tagnames='six')
+        q10 = models.Question(id=10, tagnames='six')
+        q11 = models.Question(id=11, tagnames='six')
+        q_dict = {
+                    q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
+                    q8:'', q9:'', q10:'', q11:'',
+                }
+        from askbot.management.commands import send_email_alerts as cmd
+        subject = cmd.get_update_subject_line(q_dict)
+        print subject
+
+        self.assertTrue('one' not in subject)
+        self.assertTrue('two' in subject)
+        self.assertTrue('three' in subject)
+        self.assertTrue('four' in subject)
+        self.assertTrue('five' in subject)
+        self.assertTrue('six' in subject)
+        i2 = subject.index('two')
+        i3 = subject.index('three')
+        i4 = subject.index('four')
+        i5 = subject.index('five')
+        i6 = subject.index('six')
+        order = [i6, i5, i4, i3, i2]
+        self.assertEquals(
+                order,
+                sorted(order)
+            )
