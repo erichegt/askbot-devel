@@ -26,6 +26,11 @@
             var i18nLang = '{{settings.LANGUAGE_CODE}}';
             var scriptUrl = '/{{settings.ASKBOT_URL}}'
             var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
+            {% if settings.ENABLE_MATHJAX %}
+            var enableMathJax = true;
+            {% else %}
+            var enableMathJax = false;
+            {% endif %}
         </script>
         <script type='text/javascript' src='{% media "/js/com.cnprog.i18n.js" %}'></script>
         <script type='text/javascript' src='{% media "/js/jquery.i18n.js" %}'></script>

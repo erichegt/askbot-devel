@@ -568,6 +568,9 @@ function createComments(type) {
             }
             jDiv.children().show();
         }
+        if (enableMathJax === true){
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+        }
     };
 
     var renderDeleteCommentIcon = function(post_id, delete_url){
