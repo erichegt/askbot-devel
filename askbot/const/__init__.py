@@ -224,5 +224,9 @@ DEFAULT_USER_STATUS = 'w'
 #number of items to show in user views
 USER_VIEW_DATA_SIZE = 50
 
+DEPENDENCY_URLS = {
+    'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
+}
+
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

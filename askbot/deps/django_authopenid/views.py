@@ -748,6 +748,8 @@ def signout(request):
         pass
     logout(request)
     logging.debug('user logged out')
+    response = HttpResponseRedirect(get_next_url(request))
+    #todo: here some extra cookies may be deleted
     return HttpResponseRedirect(get_next_url(request))
     
 def xrdf(request):
