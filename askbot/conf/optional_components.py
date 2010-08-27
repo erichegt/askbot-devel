@@ -44,10 +44,11 @@ settings.register(
         'MATHJAX_BASE_URL',
         description=_('Base url of MathJax deployment'),
         help_text=_(
-                    'Note - MathJax is not included with '
-                    'askbot - you should deploy it yourself '
-                    'and enter url pointing to the "mathjax" directory '
-                    '(for example: http://mysite.com/mathjax'
+                    'Note - <strong>MathJax is not included with '
+                    'askbot</strong> - you should deploy it yourself, '
+                    'preferably at a separate domain and enter url '
+                    'pointing to the "mathjax" directory '
+                    '(for example: http://mysite.com/mathjax)'
                     ),
         default = ''
     )
