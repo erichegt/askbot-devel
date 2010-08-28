@@ -221,8 +221,8 @@ def get_score_badge_by_details(rep, gold_count, silver_count, bronze_count):
 #this one is used for the header next to user profile and logout links
 REP_TEMPLATE2 = '<a class="ab-nav-karma" href="%(karma_graph_url)s" ' \
                 + ' title="%(karma_phrase)s">' \
-                + '%(rep_word)s: %(reputation)s</a>&nbsp;'
-BADGE_TEMPLATE2 = '<a class="ab-nav-badges" href="%(user_badges_url)s">' \
+                + '%(rep_word)s: %(reputation)s</a>'
+BADGE_TEMPLATE2 = '&nbsp;<a class="ab-nav-badges" href="%(user_badges_url)s">' \
                 + '%(badge_counters)s</a>'
 @register.simple_tag
 def get_long_score_and_badge_report(user):

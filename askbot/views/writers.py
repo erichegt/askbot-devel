@@ -237,7 +237,7 @@ def edit_question(request, id):
                                             body_text = form.cleaned_data['text'],
                                             revision_comment = form.cleaned_data['summary'],
                                             tags = form.cleaned_data['tags'],
-                                            wiki = form.cleaned_data['wiki']
+                                            wiki = form.cleaned_data.get('wiki', question.wiki)
                                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
@@ -292,7 +292,8 @@ def edit_answer(request, id):
                                 answer = answer,
                                 body_text = form.cleaned_data['text'],
                                 revision_comment = form.cleaned_data['summary'],
-                                wiki = False,#todo: add wiki field to form
+                                wiki = form.cleaned_data.get('wiki', answer.wiki),
+                                #todo: add wiki field to form
                             )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
