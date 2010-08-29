@@ -11,6 +11,13 @@ from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
+def cleanup_dict(dictionary, key, empty_value):
+    """deletes key from dictionary if it exists
+    and the corresponding value equals the empty_value
+    """
+    if key in dictionary and dictionary[key] == empty_value:
+        del dictionary[key]
+
 def filter_choices(remove_choices = None, from_choices = None):
     """a utility function that will remove choice tuples
     usable for the forms.ChoicesField from
@@ -331,29 +338,19 @@ class AdvancedSearchForm(forms.Form):
 
     def clean(self):
         #todo rewrite
-        if self.cleaned_data['scope'] == '':
-            del self.cleaned_data['scope']
-        if self.cleaned_data['tags'] is None:
-            del self.cleaned_data['tags']
-        if self.cleaned_data['sort'] == '':
-            del self.cleaned_data['sort']
-        if self.cleaned_data['query'] == None:
-            del self.cleaned_data['query']
-        if self.cleaned_data['reset_tags'] == False:
-            del self.cleaned_data['reset_tags']
-        if self.cleaned_data['reset_author'] == False:
-            del self.cleaned_data['reset_author']
-        if self.cleaned_data['reset_query'] == False:
-            del self.cleaned_data['reset_query']
-        if self.cleaned_data['start_over'] == False:
-            del self.cleaned_data['start_over']
-        if self.cleaned_data['author'] is None:
-            del self.cleaned_data['author']
-        if self.cleaned_data['page'] is None:
-            del self.cleaned_data['page']
-        if self.cleaned_data['page_size'] is None:
-            del self.cleaned_data['page_size']
-        return self.cleaned_data
+        data = self.cleaned_data
+        cleanup_dict(data, 'scope', '')
+        cleanup_dict(data, 'tags', None)
+        cleanup_dict(data, 'sort', '')
+        cleanup_dict(data, 'query', None)
+        cleanup_dict(data, 'reset_tags', False)
+        cleanup_dict(data, 'reset_author', False)
+        cleanup_dict(data, 'reset_query', False)
+        cleanup_dict(data, 'start_over', False)
+        cleanup_dict(data, 'author', None)
+        cleanup_dict(data, 'page', None)
+        cleanup_dict(data, 'page_size', None)
+        return data
 
 class NotARobotForm(forms.Form):
     recaptcha = ReCaptchaField()
