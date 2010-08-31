@@ -92,8 +92,7 @@ var g_html_blocks;
 // (see _ProcessListItems() for details):
 var g_list_level = 0;
 
-
-this.makeHtml = function(text) {
+var makeHtmlBase = function(text) {
 //
 // Main function. The order in which other subs are called here is
 // essential. Link and image substitutions need to happen before
@@ -154,6 +153,22 @@ this.makeHtml = function(text) {
 
 	return text;
 }
+
+this.makeHtml = function(text){
+    if (enableMathJax === false){
+        return makeHtmlBase(text);
+    } 
+    else {
+        MathJax.Hub.queue.Push(
+            function(){
+                $('#previewer').html(makeHtmlBase(text));
+            }
+        );
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'previewer']);
+        return $('#previewer').html();
+    }
+}
+
 
 var _StripLinkDefinitions = function(text) {
 //
