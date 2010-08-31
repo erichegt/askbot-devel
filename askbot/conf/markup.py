@@ -12,7 +12,7 @@ import os
 
 MARKUP = ConfigurationGroup(
                     'MARKUP',
-                    _('Input markup formatting')
+                    _('Markup formatting')
                 )
 
 mathjax_dir = os.path.join(

@@ -26,7 +26,7 @@ For Apache, a following line in the configuration file (maybe within a VirtualHo
 
     Alias /mathjax/ /filesystem/path/to/mathjax/
 
-Finally, enable MathJax in Askbot: "settings" -> "Optional components", check "Enable MathJax" and
+Finally, enable MathJax in Askbot: "settings" -> "Markup formatting", check "Enable MathJax" and
 enter url `http://example.com/mathjax` (link "settings" is available to site administrators in the upper right corner of the forum pages).
 
 .. note::
