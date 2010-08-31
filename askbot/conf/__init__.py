@@ -10,7 +10,7 @@ import askbot.conf.external_keys
 import askbot.conf.skin_counter_settings
 import askbot.conf.skin_general_settings
 import askbot.conf.user_settings
-import askbot.conf.optional_components
+import askbot.conf.markup
 
 #import main settings object
 from askbot.conf.settings_wrapper import settings

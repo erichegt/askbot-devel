@@ -10,7 +10,7 @@
                 {% trans "please try provide enough details" %}
             </li>
             <li>
-				{% trans "be clear and concise" %}
+                {% trans "be clear and concise" %}
             </li>
         </ul>
         <p class='info-box-follow-up-links'>
@@ -22,12 +22,21 @@
 <div class="boxC">
     <p class="subtitle">{% trans "Markdown tips" %}</p>
     <ul class="list-item">
+        {% if settings.MARKDUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
         <li>
-            {% trans "*italic* or __italic__" %}
+            {% trans "*italic*" %}
         </li>
         <li>
-			{% trans "**bold** or __bold__" %}
+            {% trans "**bold**" %}
         </li>
+        {% else %}
+        <li>
+            {% trans "*italic* or _italic_" %}
+        </li>
+        <li>
+            {% trans "**bold** or __bold__" %}
+        </li>
+        {% endif %}
         <li>
             <b>{% trans "link" %}</b>:[{% trans "text" %}](http://url.com/ "{% trans "title" %}")
 
@@ -38,12 +47,12 @@
 
         </li>
         <li>
-			{% trans "numbered list:" %}
+            {% trans "numbered list:" %}
             1.  Foo
             2.  Bar
         </li>
         <li>
-			{% trans "basic HTML tags are also supported" %}
+            {% trans "basic HTML tags are also supported" %}
         </li>
     </ul>
     <p class='info-box-follow-up-links'>

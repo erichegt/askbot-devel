@@ -72,7 +72,7 @@ Attacklab.wmdBase = function(){
 	var helpLink = "http://wmd-editor.com/";
 	var helpHoverTitle = "WMD website";
 	var helpTarget = "_blank";
-	
+
 	// -------------------------------------------------------------------
 	//  END OF YOUR CHANGES
 	// -------------------------------------------------------------------
@@ -1237,11 +1237,13 @@ Attacklab.wmdBase = function(){
 			
 			var callback = function(){
 				inputBox.value = text;
+        //value is assigned here
 			};
 			
 			if (!/markdown/.test(wmd.wmd_env.output.toLowerCase())) {
 				if (markdownConverter) {
 					inputBox.value = markdownConverter.makeHtml(text);
+          //value is assigned here
 					top.setTimeout(callback, 0);
 				}
 			}
@@ -1391,6 +1393,7 @@ Attacklab.wmdBase = function(){
 		
 			if (stateObj.text !== undefined && stateObj.text != inputArea.value) {
 				inputArea.value = stateObj.text;
+        //value is assigned here
 			}
 			this.setInputAreaSelection();
 			inputArea.scrollTop = stateObj.scrollTop;
@@ -1952,6 +1955,7 @@ Attacklab.wmdBase = function(){
 				// The value property is only defined if the output is a textarea.
 				if (wmd.panels.output.value !== undefined) {
 					wmd.panels.output.value = text;
+          //value is assigned here
 					wmd.panels.output.readOnly = true;
 				}
 				// Otherwise we are just replacing the text in a div.

@@ -2,11 +2,19 @@
 <!-- template ask.html -->
 {% load i18n %}
 {% load extra_tags %}
+{% load smart_if %}
 {% block title %}{% spaceless %}{% trans "Ask a question" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
         <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
         <script type='text/javascript' src='{% media  "/js/com.cnprog.post.js" %}'></script>
         <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
+        <script type='text/javascript'>
+            {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
+                var codeFriendlyMarkdown = true;
+            {% else %}
+                var codeFriendlyMarkdown = false;
+            {% endif %}
+        </script>
         <script type='text/javascript' src='{% media  "/js/wmd/showdown.js" %}'></script>
         <script type='text/javascript' src='{% media  "/js/wmd/wmd.js" %}'></script>
         <link rel="stylesheet" type="text/css" href="{% media  "/js/wmd/wmd.css" %}" />

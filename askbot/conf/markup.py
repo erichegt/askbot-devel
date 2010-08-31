@@ -1,6 +1,7 @@
 """
-External service key settings
+Settings that modify processing of user text input
 """
+
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue, StringValue
@@ -9,9 +10,9 @@ import askbot
 from askbot import const
 import os
 
-OPTIONAL_COMPONENTS = ConfigurationGroup(
-                    'OPTIONAL_COMPONENTS',
-                    _('Optional components')
+MARKUP = ConfigurationGroup(
+                    'MARKUP',
+                    _('Input markup formatting')
                 )
 
 mathjax_dir = os.path.join(
@@ -23,7 +24,24 @@ mathjax_dir = os.path.join(
 
 settings.register(
     BooleanValue(
-        OPTIONAL_COMPONENTS,
+        MARKUP,
+        'MARKUP_CODE_FRIENDLY',
+        description = _('Enable code-friendly Markdown'),
+        help_text = _(
+            'If checked, underscore characters will not '
+            'trigger italic or bold formatting - '
+            'bold and italic text can still be marked up '
+            'with asterisks. Note that "MathJax support" '
+            'implicitly turns this feature on, because '
+            'underscores are heavily used in LaTeX input.'
+        ),
+        default = False
+    )
+)
+
+settings.register(
+    BooleanValue(
+        MARKUP,
         'ENABLE_MATHJAX',
         description=_('Mathjax support (rendering of LaTeX)'),
         help_text=_(
@@ -40,7 +58,7 @@ settings.register(
 
 settings.register(
     StringValue(
-        OPTIONAL_COMPONENTS,
+        MARKUP,
         'MATHJAX_BASE_URL',
         description=_('Base url of MathJax deployment'),
         help_text=_(

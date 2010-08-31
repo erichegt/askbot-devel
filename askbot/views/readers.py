@@ -24,13 +24,13 @@ from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 
 from askbot.utils.html import sanitize_html
-from markdown2 import Markdown
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import *
 from askbot.models import *
 from askbot import const
 from askbot import auth
+from askbot.utils import markup
 from askbot.utils.forms import get_next_url
 from askbot.utils.functions import not_a_robot_request
 from askbot.utils.decorators import profile
@@ -46,8 +46,6 @@ DEFAULT_PAGE_SIZE = 60
 # used in questions
 # used in answers
 ANSWERS_PAGE_SIZE = 10
-
-markdowner = Markdown(html4tags=True)
 
 #system to display main content
 def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space
@@ -393,6 +391,7 @@ def question_revisions(request, id):
     post = get_object_or_404(Question, id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
+    markdowner = markup.get_parser()
     for i, revision in enumerate(revisions):
         revision.html = QUESTION_REVISION_TEMPLATE % {
             'title': revision.title,
@@ -422,6 +421,7 @@ def answer_revisions(request, id):
     post = get_object_or_404(Answer, id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
+    markdowner = markup.get_parser()
     for i, revision in enumerate(revisions):
         revision.html = ANSWER_REVISION_TEMPLATE % {
             'html': sanitize_html(markdowner.convert(revision.text))

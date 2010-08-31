@@ -1,4 +1,14 @@
 from askbot import const
+from askbot.conf import settings as askbot_settings
+from markdown2 import Markdown
+
+def get_parser():
+    if askbot_settings.ENABLE_MATHJAX or \
+        askbot_settings.MARKUP_CODE_FRIENDLY:
+        return Markdown(html4tags=True, extras=['code-friendly',])
+    else:
+        return Markdown(html4tags=True)
+
 
 def format_mention_in_html(mentioned_user):
     url = mentioned_user.get_profile_url()
