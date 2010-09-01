@@ -62,7 +62,7 @@ import re
 import urllib
 
 from askbot import forms as askbot_forms
-from askbot.deps.django_authopenid.util import OpenID, DjangoOpenIDStore, from_openid_response
+from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
 from askbot.deps.django_authopenid import forms
 import logging
@@ -140,7 +140,7 @@ def ask_openid(
         msg = _("i-names are not supported")
         logging.debug('openid failed because i-names are not supported')
         return on_failure(request, msg)
-    consumer = Consumer(request.session, DjangoOpenIDStore())
+    consumer = Consumer(request.session, util.DjangoOpenIDStore())
     try:
         auth_request = consumer.begin(openid_url)
     except DiscoveryFailure:
@@ -163,7 +163,7 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
     
     logging.debug('in askbot.deps.django_authopenid.complete')
     
-    consumer = Consumer(request.session, DjangoOpenIDStore())
+    consumer = Consumer(request.session, util.DjangoOpenIDStore())
     # make sure params are encoded in utf8
     params = dict((k,smart_unicode(v)) for k, v in request.GET.items())
     openid_response = consumer.complete(params, return_to)
@@ -188,7 +188,7 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
 def default_on_success(request, identity_url, openid_response):
     """ default action on openid signin success """
     logging.debug('')
-    request.session['openid'] = from_openid_response(openid_response)
+    request.session['openid'] = util.from_openid_response(openid_response)
     logging.debug('performing default action on openid success %s' % get_next_url(request))
     return HttpResponseRedirect(get_next_url(request))
 
@@ -450,13 +450,15 @@ def signin_success(request, identity_url, openid_response):
     """
 
     logging.debug('')
-    openid_ = from_openid_response(openid_response) #create janrain OpenID object
+    openid_ = util.from_openid_response(openid_response) #create janrain OpenID object
     request.session['openid'] = openid_
     try:
         logging.debug('trying to get user associated with this openid...')
         rel = UserAssociation.objects.get(openid_url__exact = str(openid_))
+        print 'have openid, and logged in - success'
         logging.debug('success')
         if request.user.is_authenticated() and rel.user != request.user:
+            print 'stealing openid'
             logging.critical(
                     'possible account theft attempt by %s,%d to %s %d' % \
                     (
@@ -470,23 +472,42 @@ def signin_success(request, identity_url, openid_response):
         else:
             logging.debug('success')
     except UserAssociation.DoesNotExist:
+        print 'openid %s not found' % str(openid_)
         if request.user.is_anonymous():
+            print 'registering new user, because he is anonymous'
             logging.debug('failed --> try to register brand new user')
             # try to register this new user
             return register(request)
         else:
             #store openid association
+            provider_name = util.get_provider_name(str(openid_))
             try:
-                user_assoc = UserAssociation.objects.get(user = request.user)
+                print 'recovering association via user and provider name'
+                user_assoc = UserAssociation.objects.get(
+                                                user = request.user,
+                                                provider_name = provider_name
+                                            )
+                print 'have %s replacing with new' % user_assoc.openid_url
                 user_assoc.openid_url = str(openid_)
+                #association changed
             except UserAssociation.DoesNotExist:
+                print 'creating a brand new association with this openid'
                 user_assoc = UserAssociation(
                                         user = request.user,
-                                        openid_url = openid_
+                                        openid_url = str(openid_),
+                                        provider_name = provider_name
                                     )
+                #new association created
+            except UserAssociation.MultipleObjectsReturned, error:
+                msg = 'user %s (id=%d) has > 1 %s logins' % \
+                        (request.user.username, request.user.id, provider_name)
+                logging.critical(message)
+                raise error 
+
             user_assoc.save()
             message = _('New login method saved. Thanks!')
             request.user.message_set.create(message = message)
+            print message
             #set "account recovered" message
             return HttpResponseRedirect(get_next_url(request))
     user_ = rel.user
@@ -615,11 +636,7 @@ def register(request):
                 logging.debug('have really strange error')
                 raise Exception('openid login failed')#should not ever get here
     
-    openid_str = str(openid_)
-    bits = openid_str.split('/')
-    base_url = bits[2] #assume this is base url
-    url_bits = base_url.split('.')
-    provider_name = url_bits[-2].lower()
+    provider_name = util.get_provider_name(str(openid_))
     
     providers = {'yahoo':'<font color="purple">Yahoo!</font>',
                 'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
@@ -1047,7 +1064,7 @@ def changeemail(request, action='change'):
 
 def emailopenid_success(request, identity_url, openid_response):
     logging.debug('')
-    openid_ = from_openid_response(openid_response)
+    openid_ = util.from_openid_response(openid_response)
 
     user_ = request.user
     try:
@@ -1126,7 +1143,7 @@ def changeopenid(request):
 
 def changeopenid_success(request, identity_url, openid_response):
     logging.error('never tested this worflow')
-    openid_ = from_openid_response(openid_response)
+    openid_ = util.from_openid_response(openid_response)
     is_exist = True
     try:
         uassoc = UserAssociation.objects.get(openid_url__exact=identity_url)
@@ -1205,7 +1222,7 @@ def delete(request):
 
 def deleteopenid_success(request, identity_url, openid_response):
     logging.error('never tested this')
-    openid_ = from_openid_response(openid_response)
+    openid_ = util.from_openid_response(openid_response)
 
     user_ = request.user
     try:

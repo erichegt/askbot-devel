@@ -133,3 +133,12 @@ def from_openid_response(openid_response):
         openid_response.identity_url, issued, openid_response.signed_fields, 
          dict(sreg_resp)
     )
+
+def get_provider_name(openid_url):
+    """returns provider name from the openid_url
+    """
+    openid_str = openid_url
+    bits = openid_str.split('/')
+    base_url = bits[2] #assume this is base url
+    url_bits = base_url.split('.')
+    return url_bits[-2].lower()

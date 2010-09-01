@@ -6,6 +6,7 @@ basic actions on behalf of the forum application
 """
 import os
 import smtplib
+import logging
 from django.core import mail
 from django.conf import settings as django_settings
 from askbot import exceptions

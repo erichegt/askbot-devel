@@ -742,7 +742,9 @@ class Command(BaseCommand):
                     assert(se_u.open_id)#everybody must have open_id
                     u_openid = askbot_openid.UserAssociation()
                     u_openid.openid_url = se_u.open_id
+                    u.save()
                     u_openid.user = u
+                    u_openid.save()
                 except AssertionError:
                     print 'User %s (id=%d) does not have openid' % \
                             (se_u.display_name, se_u.id)
