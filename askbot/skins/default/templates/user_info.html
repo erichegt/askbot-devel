@@ -29,9 +29,14 @@
                 {% if request.user|can_view_user_edit:view_user %}
                 <tr>
                     <td class="user-profile-tool-links" align="left" colspan="2">
-                        {% if request.user|can_view_user_edit:view_user %}
-                        <span class="user-edit-link"><a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">{% trans "update profile" %}</a></span>
+                        {% if request.user == view_user %}
+                            <a href="{% url user_signin %}?next={% url user_signin %}">
+                                {% trans "manage login methods" %}
+                            </a> |
                         {% endif %}
+                        <a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">
+                            {% trans "update profile" %}
+                        </a>
                     </td>
                 </tr>  
                 {% endif %}

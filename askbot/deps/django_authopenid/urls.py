@@ -26,22 +26,27 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
         name='user_complete_signin'),
-    url(r'^%s$' % _('register/'), 'register', name='user_register'),
-    url(r'^%s$' % _('signup/'), 'signup', name='user_signup'),
+    #url(r'^%s$' % _('register/'), 'register', name='user_register'),
+    #url(r'^%s$' % _('signup/'), 'signup', name='user_signup'),
     #disable current sendpw function
-    url(r'^%s$' % _('sendpw/'), 'sendpw', name='user_sendpw'),
-    url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', name='user_confirmchangepw'),
+    #url(r'^%s$' % _('sendpw/'), 'sendpw', name='user_sendpw'),
+    #url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', name='user_confirmchangepw'),
 
     # manage account settings
-    url(r'^$', 'account_settings', name='user_account_settings'),
-    url(r'^%s$' % _('password/'), 'changepw', name='user_changepw'),
-    url(r'^%s%s$' % (_('email/'),_('validate/')), 'changeemail', name='user_validateemail',kwargs = {'action':'validate'}),
-    url(r'^%s%s$' % (_('email/'), _('change/')), 'changeemail', name='user_changeemail'),
-    url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
+    #url(r'^$', 'account_settings', name='user_account_settings'),
+    #url(r'^%s$' % _('password/'), 'changepw', name='user_changepw'),
+    #url(r'^%s%s$' % (_('email/'),_('validate/')), 'changeemail', name='user_validateemail',kwargs = {'action':'validate'}),
+    #url(r'^%s%s$' % (_('email/'), _('change/')), 'changeemail', name='user_changeemail'),
+    #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
     url(r'^%s(?P<key>[\dabcdef]{32})?$' % _('recover/'), 'account_recover', name='user_account_recover'),
-    url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),
-    url(r'^%s$' % _('openid/'), 'changeopenid', name='user_changeopenid'),
-    url(r'^%s$' % _('delete/'), 'delete', name='user_delete'),
+    #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),
+    #url(r'^%s$' % _('openid/'), 'changeopenid', name='user_changeopenid'),
+    #url(r'^%s$' % _('delete/'), 'delete', name='user_delete'),
+    url(
+        r'^%s$' % _('delete_login_method/'),#thid method is ajax only
+        'delete_login_method',
+        name ='delete_login_method'
+    ),
 )
 
 #todo move these out of this file completely 

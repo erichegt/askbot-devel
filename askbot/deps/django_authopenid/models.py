@@ -40,9 +40,13 @@ class UserAssociation(models.Model):
     #association with a Provider record
     #to hold things like login badge, etc
     provider_name = models.CharField(max_length=64, default='unknown')
+    last_used_timestamp = models.DateTimeField(null=True)
 
     class Meta(object):
-        unique_together = (('user','provider_name'),)
+        unique_together = (
+                                ('user','provider_name'),
+                                ('openid_url', 'provider_name')
+                            )
     
     def __unicode__(self):
         return "Openid %s with user %s" % (self.openid_url, self.user)

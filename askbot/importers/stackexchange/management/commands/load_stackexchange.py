@@ -744,6 +744,7 @@ class Command(BaseCommand):
                     u_openid.openid_url = se_u.open_id
                     u.save()
                     u_openid.user = u
+                    u_openid.last_used_timestamp = se_u.last_login_date
                     u_openid.save()
                 except AssertionError:
                     print 'User %s (id=%d) does not have openid' % \

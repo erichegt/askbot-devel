@@ -30,8 +30,11 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import datetime
+from django.utils import simplejson
 from django.http import HttpResponseRedirect, get_host, Http404, \
                          HttpResponseServerError
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
@@ -212,8 +215,8 @@ def not_authenticated(func):
 #@not_authenticated
 def signin(
         request,
-        newquestion = False,
-        newanswer = False,
+        newquestion = False,#todo: not needed
+        newanswer = False,#todo: not needed
     ):
     """
     signin page. It manages the legacy authentification (user/password) 
@@ -228,6 +231,7 @@ def signin(
     on_failure = signin_failure
     email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     initial_data = {'next': get_next_url(request)}
+    logging.debug('next url is %s' % get_next_url(request))
     openid_login_form = forms.OpenidSigninForm(initial = initial_data)
     password_login_form = forms.ClassicLoginForm(initial = initial_data)
 
@@ -336,11 +340,23 @@ def signin(
             if openid_login_form.is_valid():
                 logging.debug('OpenidSigninForm is valid')
                 next = openid_login_form.cleaned_data['next']
+                print next
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
+
+                if next == reverse('user_signin'):
+                    #if next was explicitly set to the url of this function
+                    #that means user wants to stay on this page indefinitely
+                    #so we need to double-up the "next"
+                    #alternatively, next parameter must be set explicitly everywhere
+                    #to the url of the referer page (except the signin page)
+                    url_encoded_next_url = urllib.urlencode({'next':'%s?next=%s' % (next, next)})
+                else:
+                    url_encoded_next_url = urllib.urlencode({'next': next})
+
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
                         reverse('user_complete_signin'), 
-                        urllib.urlencode({'next':next})
+                        url_encoded_next_url
                 )
                 return ask_openid(request, 
                         openid_login_form.cleaned_data['openid_url'], 
@@ -414,12 +430,16 @@ def show_signin_view(
     if view_subtype == 'default' or view_subtype == 'email_sent':
         page_title = _('Please click any of the icons below to sign in')
     elif view_subtype == 'change_openid':
-        page_title = _('If you wish, please change your login method')
+        existing_login_methods = UserAssociation.objects.filter(user = request.user)
+        if len(existing_login_methods) == 0:
+            page_title = _('Please add one or more login methods.')
+        else:
+            page_title = _('If you wish, please add, remove or re-validate your login methods')
     elif view_subtype == 'add_openid':
         page_title = _('Please wait a second! Your account is recovered, but ...')
     
     logging.debug('showing signin view')
-    return render_to_response('authopenid/signin.html', {
+    data = {
         'page_class': 'openid-signin',
         'view_subtype': view_subtype, #add_openid|default
         'page_title': page_title,
@@ -430,7 +450,40 @@ def show_signin_view(
         'account_recovery_form': account_recovery_form,
         'openid_error_message':  request.REQUEST.get('msg',''),
         'account_recovery_message': account_recovery_message,
-    }, context_instance=RequestContext(request))
+    }
+
+    if view_subtype == 'change_openid' and request.user.is_authenticated():
+        data['existing_login_methods'] = existing_login_methods
+
+    return render_to_response(
+                'authopenid/signin.html',
+                data,
+                context_instance=RequestContext(request)
+            )
+
+@login_required
+def delete_login_method(request):
+    if request.is_ajax() and request.method == 'POST':
+        provider_name = request.POST['provider_name']
+        try:
+            login_method = UserAssociation.objects.get(
+                                                user = request.user,
+                                                provider_name = provider_name
+                                            )
+            login_method.delete()
+            return HttpResponse('', mimetype = 'application/json')
+        except UserAssociation.DoesNotExist:
+            #error response
+            message = _('Login method %(provider_name)s does not exist')
+            return HttpResponse(message, status=500, mimetype = 'application/json')
+        except UserAssociation.MultipleObjectsReturned:
+            logging.critical(
+                    'have multiple %(provider)s logins for user %(id)s'
+                ) % {'provider':provider_name, 'id': request.user.id}
+            message = _('Sorry, there was some error, we will look at it')
+            return HttpResponse(message, status=500, mimetype = 'application/json')
+    else:
+        raise Http404
 
 def complete_signin(request):
     """ in case of complete signin with openid """
@@ -454,27 +507,25 @@ def signin_success(request, identity_url, openid_response):
     request.session['openid'] = openid_
     try:
         logging.debug('trying to get user associated with this openid...')
-        rel = UserAssociation.objects.get(openid_url__exact = str(openid_))
-        print 'have openid, and logged in - success'
-        logging.debug('success')
-        if request.user.is_authenticated() and rel.user != request.user:
+        user_assoc = UserAssociation.objects.get(openid_url__exact = str(openid_))
+        logging.debug('have openid, and logged in - success')
+        if request.user.is_authenticated() and user_assoc.user != request.user:
             print 'stealing openid'
             logging.critical(
                     'possible account theft attempt by %s,%d to %s %d' % \
                     (
                         request.user.username,
                         request.user.id,
-                        rel.user.username,
-                        rel.user.id
+                        user_assoc.user.username,
+                        user_assoc.user.id
                     )
                 )
             raise Http404
         else:
             logging.debug('success')
     except UserAssociation.DoesNotExist:
-        print 'openid %s not found' % str(openid_)
+        logging.debug('openid %s not found' % str(openid_))
         if request.user.is_anonymous():
-            print 'registering new user, because he is anonymous'
             logging.debug('failed --> try to register brand new user')
             # try to register this new user
             return register(request)
@@ -482,12 +533,12 @@ def signin_success(request, identity_url, openid_response):
             #store openid association
             provider_name = util.get_provider_name(str(openid_))
             try:
-                print 'recovering association via user and provider name'
+                logging.debug('recovering association via user and provider name')
                 user_assoc = UserAssociation.objects.get(
                                                 user = request.user,
                                                 provider_name = provider_name
                                             )
-                print 'have %s replacing with new' % user_assoc.openid_url
+                logging.debug('have %s replacing with new' % user_assoc.openid_url)
                 user_assoc.openid_url = str(openid_)
                 #association changed
             except UserAssociation.DoesNotExist:
@@ -504,20 +555,32 @@ def signin_success(request, identity_url, openid_response):
                 logging.critical(message)
                 raise error 
 
+            user_assoc.last_used_timestamp = datetime.datetime.now()
             user_assoc.save()
-            message = _('New login method saved. Thanks!')
+            message = _('Your %(provider)s login method saved.') % {'provider': provider_name}
             request.user.message_set.create(message = message)
-            print message
             #set "account recovered" message
+            logging.debug('redirecting to %s' % get_next_url(request))
+            logging.debug('redirecting to %s' % get_next_url(request))
             return HttpResponseRedirect(get_next_url(request))
-    user_ = rel.user
-    if user_.is_active:
-        user_.backend = "django.contrib.auth.backends.ModelBackend"
+    except Exception, e:
+        logging.critical(unicode(e))
+
+    user_assoc.last_used_timestamp = datetime.datetime.now()
+    if user_assoc.user.is_active:
+        #this is a substitute for the "authenticate" function
+        #todo - build a recular authenticate func and backend
+        user_assoc.user.backend = "django.contrib.auth.backends.ModelBackend"
         logging.debug('user is active --> attached django auth ModelBackend --> calling login')
-        login(request, user_)
+        login(request, user_assoc.user)
         logging.debug('success')
     else:
+        msg = _( 'Sorry, your account is inactive and you '
+                 'cannot sign in - please contact the site '
+                 'administrator.')
         logging.debug('user is inactive, do not log them in')
+        request.user.message_set.create(message=msg)
+
     logging.debug('redirecting to %s' % get_next_url(request))
     return HttpResponseRedirect(get_next_url(request))
 

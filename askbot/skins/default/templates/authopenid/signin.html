@@ -34,17 +34,21 @@
         </div>
     {% endif %}
     <form id="openid_form" name="openid_form" class="openid" method="post" action="{% url user_signin %}"> 
+    <p id='ab-login-method-prompt'>
     {% if view_subtype == 'default' or view_subtype == 'email_sent' %}
-    <p>
         {% trans "You can use your favorite service from those listed below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one." %}
-    </p>
     {% endif %}
     {% if view_subtype == 'add_openid' %}
-    <p>{% trans "Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time. All of the services listed below provide a secure sign-in method based on OpenID or similar technology." %}</p>
+        {% trans "Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time. All of the services listed below provide a secure sign-in method based on OpenID or similar technology." %}
     {% endif %}
     {% if view_subtype == 'change_openid' %}
-    <p>{% trans "You are already signed in, but if you want to change the login method for the future use - just click on one of the icons below." %}</p>
+        {% if existing_login_methods %}
+            {% trans "Click on one of the icons below to add a new login method or re-validate an existing one." %}
+        {% else %}
+            {% trans "You don't have a method to log in right now, please add one or more by clicking any of the icons below." %}
+        {% endif %}
     {% endif %}
+    </p>
     {% if openid_error_message %}
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
@@ -200,6 +204,91 @@
         {{ account_recovery_form.email }}
         <input type="submit" value="{% trans "Recover your account via email" %}"/>
     </form>
+    {% endif %}
+    {% if view_subtype == 'change_openid' %}
+        {% if existing_login_methods %}
+            <h2 id='ab-show-login-methods'>
+                {% trans "Here are your current login methods" %}
+            </h2>
+            <table id='ab-existing-login-methods'>
+                <tr>
+                    <th>{% trans "provider" %}</th>
+                    <th>{% trans "last used" %}</th>
+                    <th>{% trans "delete, if you like" %}</th>
+                </tr>
+                {% for login_method in existing_login_methods %}
+                <tr class="ab-provider-row">
+                    <td class="ab-provider-name">
+                        {{login_method.provider_name}}
+                    </td>
+                    <td>
+                        {% if login_method.last_used_timestamp %}
+                            {% diff_date login_method.last_used_timestamp %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button>{% trans "delete" %}</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <script type="text/javascript">
+            $(document).ready(
+                function(){
+                    var provider_count = {{existing_login_methods|length}};
+                    $('.ab-provider-row').each(
+                        function(i, provider_row){
+                            var provider_name = $(
+                                                provider_row
+                                            ).find(
+                                                '.ab-provider-name'
+                                            ).html().trim();
+                            var remove_button = $(
+                                                provider_row
+                                            ).find('button');
+                            remove_button.click(
+                                function(){
+                                    var message = $.i18n._(
+                                                            'Are you sure you want to remove ' +
+                                                            'your {provider} login?'
+                                                        ).replace(
+                                                            '{provider}', 
+                                                            provider_name
+                                                        );
+                                    if (confirm(message)){
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '{% url delete_login_method %}',
+                                            data: {provider_name: provider_name},
+                                            success: function(data, text_status, xhr){
+                                                $(provider_row).remove();
+                                                provider_count -=1;
+                                                if (provider_count < 0){
+                                                    provider_count === 0;
+                                                }
+                                                if (provider_count === 0){
+                                                    $('#ab-existing-login-methods').remove();
+                                                    $('#ab-show-login-methods').remove();
+                                                    $('h1').html(
+                                                        $.i18n._("Please add one or more login methods.")
+                                                    );
+                                                    $('#ab-login-method-prompt').html(
+                                                        $.i18n._("You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.")
+                                                    );
+                                                    alert($.i18n._('You have deleted all login methods, please add at least one'));
+                                                }
+                                            },
+
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+            </script>
+        {% endif %}
     {% endif %}
 {% endblock %}
 

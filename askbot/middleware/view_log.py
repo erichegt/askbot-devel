@@ -62,6 +62,7 @@ class ViewLogMiddleware(object):
         else:
             user_name = request.META['REMOTE_ADDR']
         logging.debug('user %s, view %s' % (request.user.username, view_str))
+        logging.debug('next url is %s' % request.REQUEST.get('next','nothing'))
 
         if 'view_log' in request.session:
             view_log = request.session['view_log']

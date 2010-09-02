@@ -78,3 +78,12 @@ ul.providers {
 ul.providers {
     display: block;
 }
+
+.openid-signin th {
+    color: #555;
+    font-weight: normal;
+}
+
+.openid-signin .ab-provider-name {
+    font-weight: bold;
+}
