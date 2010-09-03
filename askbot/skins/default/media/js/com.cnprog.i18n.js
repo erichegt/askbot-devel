@@ -369,7 +369,7 @@ var i18nDe = {
     'moderate-user/': 'benutzer-moderieren/',
     'account/': 'zugang/',
     'signin/': 'einloggen/'
-}
+};
 
 
 var i18nRu = {
@@ -435,7 +435,75 @@ var i18nRu = {
     'interesting/':'интересная/',
     'command/':'комманда/',
     'moderate-user/': 'модерировать-пользователя/'
-}
+};
+
+var i18nFr = {
+    "anonymous users cannot vote":"les utilisateurs anonyment ne peuvent pas voter ",
+    'add a comment': 'Ajouter un commentaire', 
+    'add comment': 'OK', 
+    'anonymous users cannot delete/undelete': 'Les utilisateurs anonymes ne peuvent pas supprimer/restaurer', 
+    'anonymous users cannot flag offensive posts': 'Les utilisateurs anonymes ne peuvent pas signaler les messages à contenu abusif', 
+    'anonymous users cannot select favorite questions': 'Les utilisateurs anonymes ne peuvent pas sélectionner leurs questions favorites', 
+    'bold': 'gras', 
+    'bulleted list': 'liste', 
+    'can write': 'peut écrire ', 
+    'cannot flag message as offensive twice': 'Vous ne pouvez pas signaler deux fois un message à contenu abusif', 
+    'cannot pick own answer as best': 'Vous ne pouvez pas désigner une de vos propres réponses comme étant la meilleure réponse', 
+    'characters': 'caractères', 
+    'click to close': 'cliquez pour fermer', 
+    'comments': 'commentaires', 
+    'community karma points': ' Points de karma - ', 
+    'confirm delete': 'Confirmer la suppression', 
+    'confirm delete comment': 'Confirmer la suppression du commentaire', 
+    'content cannot be empty': 'Le contenu ne doit pas être vide', 
+    'content minchars': 'Veuillez saisir au moins {0} caractères', 
+    'daily vote cap exhausted': 'Votre quota journalier de votes est atteint', 
+    'delete': 'supprimer', 
+    'delete this comment': 'supprimer ce commentaire', 
+    'enter image url': 'Veuillez saisir une URL menant à une image, par exemple <br />http://www.votre-domaine.com/nom-image.jpg', 
+    'enter url': 'Entrez une URL, par exemple <br />http://www.askbot.org/ </p>', 
+    'flag offensive cap exhausted': 'Votre quota journalier de signalements de contenus abusifs a été atteint', 
+    'heading': 'Titre', 
+    'hide comments': 'Masquer les commentaires', 
+    'horizontal bar': 'Barre horizontale', 
+    'image': 'Image', 
+    'insufficient privilege': 'Privilèges insuffisants', 
+    'italic': 'italique', 
+    'link': 'lien', 
+    'loading...': 'Chargement en cours...', 
+    'need >15 points to report spam': 'Vous devez avoir au moins 15 points de réputation pour signaler du spam', 
+    'numbered list': 'liste numérotée', 
+    'please confirm offensive': 'Veuillez confirmer que le contenu est abusif', 
+    'please enter title': 'Veuillez saisir un titre', 
+    'please login': 'Veuillez vous authentifier', 
+    'please see': 'Pour en savoir plus', 
+    'post deleted': 'Message supprimé', 
+    'post recovered': 'Message restauré', 
+    'preformatted text': 'Texte préformaté', 
+    'quote': 'Citer', 
+    'redo': 'Rétablir', 
+    "tablimits info": "Jusqu'à cinq mots-clés (tags), chacun comportant jusqu'à 20 caractères", 
+    'tags cannot be empty': 'Les mots-clés ne doivent pas être vides', 
+    'title minchars': 'Veuillez saisir au moins {0} caractères', 
+    "to comment, need": "Pour faire des commentaires sur les commentaires d'autres utilisateurs, vous devez avoir au moins ", 
+    'undelete': 'Restaurer', 
+    'undo': 'Annuler', 
+    'upload image': 'Charger une image', 
+    'questions/': 'questions/', 
+    'question/': 'question/',
+    'delete/': 'supprimer/', 
+    'comments/': 'commentaires/', 
+    'answers/': 'reponses/', 
+    'vote/': 'voter/',
+    'unmark-tag/':'retirer-un-tag/',
+    'ignored/':'ignoree/',
+    'mark-tag/':'marquer-avec-un-tag/',
+    'interesting/':'interessant/',
+    'command/':'commande/',
+    'moderate-user/': 'moderer-utilisateur/',
+    'account/': 'compte/',
+    'signin/': 'connexion/'
+};
 
 var i18n = {
     'en':i18nEn,
@@ -444,7 +512,9 @@ var i18n = {
     'tr':i18nTr,
     'de':i18nDe,
     'ru':i18nRu,
+    'fr':i18nFr,
     'zh-tw':i18nZhtw
 };
 
 var i18n_dict = i18n[i18nLang];
+
