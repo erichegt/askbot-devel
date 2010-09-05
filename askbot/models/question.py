@@ -89,14 +89,14 @@ class QuestionManager(models.Manager):
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
-            try:
+            if settings.DATABASE_ENGINE == 'mysql':
                 qs = qs.filter( 
                             models.Q(title__search = search_query) \
                            | models.Q(text__search = search_query) \
                            | models.Q(tagnames__search = search_query) \
                            | models.Q(answers__text__search = search_query)
                         )
-            except:
+            else:
                 #fallback to dumb title match search
                 qs = qs.extra(
                                 where=['title like %s'], 
