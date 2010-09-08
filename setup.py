@@ -75,7 +75,7 @@ if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
 print '**************************************************************'
 print '*                                                            *'
 print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >startforum                      *'
+print '*  To start deploying type: >python startforum               *'
 print '*  Please take a look at the manual askbot/doc/INSTALL       *'
 print '*  And please do not hesitate to ask your questions at       *'
 print '*  at http://askbot.org                                      *'
