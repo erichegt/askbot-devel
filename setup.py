@@ -3,9 +3,12 @@ ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 import sys
 
+#NOTE: if you want to develop askbot
+#you might want to install django-debug-toolbar as well
+
 install_requires = [
     'django==1.1.2',
-    'django-debug-toolbar==0.7.0',
+    #'django-debug-toolbar==0.7.0',
     'South>=0.7.1',
     'recaptcha-client',
     'markdown2',
@@ -65,7 +68,7 @@ setup(
     """,
 )
 
-if sys.platform in WIN_PLATFORMS:
+if WIN_PLATFORM in locals() and sys.platform in WIN_PLATFORMS:
     print 'ATTENTION!! please install windows binary mysql-python package'
     print 'at http://www.codegood.com/archives/4'
 
