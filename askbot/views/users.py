@@ -296,7 +296,7 @@ def user_stats(request, user):
             },
         select_params=[user.id],
         tables=['question', 'auth_user'],
-        where=['question.deleted=False AND question.author_id=%s AND question.last_activity_by_id = auth_user.id'],
+        where=['question.author_id=%s AND question.last_activity_by_id = auth_user.id AND NOT question.deleted'],
         params=[user.id],
         order_by=['-score', '-last_activity_at']
     ).values('score',
@@ -333,7 +333,7 @@ def user_stats(request, user):
             'comment_count' : 'answer.comment_count'
             },
         tables=['question', 'answer'],
-        where=['answer.deleted=False AND question.deleted=False AND answer.author_id=%s AND answer.question_id=question.id'],
+        where=['NOT answer.deleted AND NOT question.deleted AND answer.author_id=%s AND answer.question_id=question.id'],
         params=[user.id],
         order_by=['-answer_score', '-answer_id'],
         select_params=[user.id]
@@ -474,7 +474,7 @@ def user_recent(request, user):
             },
         tables=['activity', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = ' +
-            'question.id AND question.deleted=False AND activity.user_id = %s AND activity.activity_type = %s'],
+            'question.id AND activity.user_id = %s AND activity.activity_type = %s AND NOT question.deleted'],
         params=[question_type_id, user.id, const.TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
@@ -510,8 +510,8 @@ def user_recent(request, user):
             },
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
-            'answer.question_id=question.id AND answer.deleted=False AND activity.user_id=%s AND '+ 
-            'activity.activity_type=%s AND question.deleted=False'],
+            'answer.question_id=question.id AND NOT answer.deleted AND activity.user_id=%s AND '+ 
+            'activity.activity_type=%s AND NOT question.deleted'],
         params=[answer_type_id, user.id, const.TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
     ).values(
@@ -539,7 +539,7 @@ def user_recent(request, user):
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
             'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
             'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
-            'question.deleted=False'],
+            'NOT question.deleted'],
         params=[comment_type_id, question_type_id, user.id, const.TYPE_ACTIVITY_COMMENT_QUESTION],
         order_by=['-comment.added_at']
     ).values(
@@ -569,7 +569,7 @@ def user_recent(request, user):
             'activity.user_id = comment.user_id AND comment.object_id=answer.id AND '+
             'comment.content_type_id=%s AND question.id = answer.question_id AND '+
             'activity.user_id = %s AND activity.activity_type=%s AND '+
-            'answer.deleted=False AND question.deleted=False'],
+            'NOT answer.deleted AND NOT question.deleted'],
         params=[comment_type_id, answer_type_id, user.id, const.TYPE_ACTIVITY_COMMENT_ANSWER],
         order_by=['-comment.added_at']
     ).values(
@@ -596,7 +596,7 @@ def user_recent(request, user):
             },
         tables=['activity', 'question_revision', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = question_revision.id AND '+
-            'question_revision.id=question.id AND question.deleted=False AND '+
+            'question_revision.id=question.id AND NOT question.deleted AND '+
             'activity.user_id = question_revision.author_id AND activity.user_id = %s AND '+
             'activity.activity_type=%s'],
         params=[question_revision_type_id, user.id, const.TYPE_ACTIVITY_UPDATE_QUESTION],
@@ -629,7 +629,7 @@ def user_recent(request, user):
         where=['activity.content_type_id = %s AND activity.object_id = answer_revision.id AND '+
             'activity.user_id = answer_revision.author_id AND activity.user_id = %s AND '+
             'answer_revision.answer_id=answer.id AND answer.question_id = question.id AND '+
-            'question.deleted=False AND answer.deleted=False AND '+
+            'NOT question.deleted AND NOT answer.deleted AND '+
             'activity.activity_type=%s'],
         params=[answer_revision_type_id, user.id, const.TYPE_ACTIVITY_UPDATE_ANSWER],
         order_by=['-activity.active_at']
@@ -658,7 +658,7 @@ def user_recent(request, user):
         tables=['activity', 'answer', 'question'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND '+
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
-            'answer.deleted=False AND question.deleted=False AND '+
+            'NOT answer.deleted AND NOT question.deleted AND '+
             'answer.question_id=question.id AND activity.activity_type=%s'],
         params=[answer_type_id, user.id, const.TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
@@ -888,7 +888,7 @@ def user_favorites(request, user):
             },
         select_params=[user.id],
         tables=['question', 'auth_user', 'favorite_question'],
-        where=['question.deleted=False AND question.last_activity_by_id = auth_user.id '+
+        where=['NOT question.deleted AND question.last_activity_by_id = auth_user.id '+
             'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
         params=[user.id],
         order_by=['-score', '-question.id']
@@ -1019,4 +1019,3 @@ def account_settings(request):#todo: is this actually used?
         'msg': msg,
         'is_openid': is_openid
         }, context_instance=RequestContext(request))
-
