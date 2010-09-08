@@ -68,7 +68,7 @@ setup(
     """,
 )
 
-if WIN_PLATFORM in locals() and sys.platform in WIN_PLATFORMS:
+if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
     print 'ATTENTION!! please install windows binary mysql-python package'
     print 'at http://www.codegood.com/archives/4'
 
