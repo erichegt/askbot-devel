@@ -130,14 +130,20 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url(
                 'question',
                 kwargs={'id':1},
+                follow=True,
+                template='question.html'
             )
         self.try_url(
                 'question',
                 kwargs={'id':2},
+                follow=True,
+                template='question.html'
             )
         self.try_url(
                 'question',
                 kwargs={'id':3},
+                follow=True,
+                template='question.html'
             )
         self.try_url(
                 'question_revisions',

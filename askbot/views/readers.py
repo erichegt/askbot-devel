@@ -267,18 +267,16 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        pattern = r'/%s%s%d/([\w-]+)' % (settings.ASKBOT_URL,_('question/'), question.id)
-        path_re = re.compile(pattern)
-        logging.debug(pattern)
-        logging.debug(request.path)
-        m = path_re.match(request.path)
-        if m:
-            slug = m.group(1)
-            logging.debug('have slug %s' % slug)
-            assert(slug == slugify(question.title))
-        else:
-            logging.debug('no match!')
-    except:
+        path_prefix = r'/%s%s%d/' % (settings.ASKBOT_URL,_('question/'), question.id)
+        if not request.path.startswith(path_prefix):
+            logging.critical('bad request path %s' % request_path)
+            raise Http404
+        slug = request.path.replace(path_prefix, '', 1)
+        logging.debug('have slug %s' % slug)
+        logging.debug('requestion path is %s' % request.path)
+        assert(slug == slugify(question.title))
+    except AssertionError:
+        logging.debug('no slug match!')
         return HttpResponseRedirect(question.get_absolute_url())
 
     if question.deleted:

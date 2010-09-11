@@ -3,18 +3,18 @@ Q&A website settings - title, desctiption, basic urls
 keywords
 """
 from askbot.conf.settings_wrapper import settings
-from askbot.deps.livesettings import ConfigurationGroup, StringValue
+from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from askbot import const
 
-QA_SITE_SETTINGS = ConfigurationGroup(
+QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
                     'QA_SITE_SETTINGS',
                     _('Q&A forum website parameters and urls')
                 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_TITLE',
         default=u'ASKBOT: Open Source Q&A Forum',
@@ -23,7 +23,7 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_KEYWORDS',
         default=u'ASKBOT,CNPROG,forum,community',
@@ -32,25 +32,27 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_COPYRIGHT',
-        default='Copyright ASKBOT, 2010. Some rights reserved under creative commons license.',
+        default='Copyright ASKBOT, 2010. Some rights reserved ' + \
+                'under creative commons license.',
         description=_('Copyright message to show in the footer')
     )
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_DESCRIPTION',
-        default='Open source question and answer forum written in Python and Django',
+        default='Open source question and answer forum written in ' +\
+                'Python and Django',
         description=_('Site description for the search engines')
     )
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_SHORT_NAME',
         default=_('Askbot'),
@@ -60,21 +62,27 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_URL',
         default='http://askbot.org',
-        description=_('Base URL for your Q&A forum, must start with http or https'),
+        description=_(
+                'Base URL for your Q&A forum, must start with '
+                'http or https'
+            ),
     )
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'GREETING_URL',
-        default='/' + _('faq/'),#cannot reverse url here, unfortunately, must be absolute also
+        default='/' + _('faq/'),#cannot reverse url here, must be absolute also
         hidden=True,
-        description=_('Link shown in the greeting message shown to the anonymous user'),
+        description=_(
+                'Link shown in the greeting message '
+                'shown to the anonymous user'
+            ),
         help_text=_('If you change this url from the default - '
                     'then you will also probably want to adjust translation of '
                     'the following string: ') + '"' 
@@ -85,10 +93,29 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         QA_SITE_SETTINGS,
         'FEEDBACK_SITE_URL',
         description=_('Feedback site URL'),
-        help_text=_('If left empty, a simple internal feedback form will be used instead')
+        help_text=_(
+                'If left empty, a simple internal feedback form '
+                'will be used instead'
+            )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        QA_SITE_SETTINGS,
+        'USE_ASCII_ONLY_SLUGS',
+        description=_(
+                'Use slugs made only of ASCII characters '
+                'in the page urls'
+            ),
+        help_text=_('Slugs are human-readable parts of the url '
+                'consisting of the page keywords, that are '
+                'typically composed from the page title.'
+            ),
+        default = True
     )
 )

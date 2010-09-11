@@ -7,6 +7,7 @@ import sys
 #you might want to install django-debug-toolbar as well
 
 install_requires = [
+    'django==1.1.2',
     'South>=0.7.1',
     'recaptcha-client',
     'markdown2',
@@ -18,6 +19,10 @@ install_requires = [
 ]
 
 import askbot
+
+WIN_PLATFORMS = ('win32', 'cygwin',)
+if sys.platform not in WIN_PLATFORMS:
+    install_requires.append('mysql-python')
 
 setup(
     name = "askbot",
