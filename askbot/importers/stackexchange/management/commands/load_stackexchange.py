@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.template.defaultfilters import slugify #todo: adopt unicode-aware slugify
 #todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
 import os
 import re
@@ -14,6 +13,7 @@ from askbot.forms import EditUserEmailFeedsForm
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
+from askbot.utils.slug import slugify
 #from markdown2 import Markdown
 #markdowner = Markdown(html4tags=True)
 

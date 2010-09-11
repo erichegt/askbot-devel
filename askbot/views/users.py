@@ -13,7 +13,6 @@ import logging
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404
@@ -25,6 +24,7 @@ from django.utils.html import strip_tags
 from django.utils import simplejson
 from django.conf import settings as django_settings
 import askbot
+from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot import auth
 from askbot import forms

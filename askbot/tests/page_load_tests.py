@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.template import defaultfilters
 from django.core.urlresolvers import reverse
 from askbot import models
+from askbot.utils.slug import slugify
 
 class PageLoadTestCase(TestCase):
     def try_url(
@@ -223,7 +224,7 @@ class PageLoadTests(PageLoadTestCase):
 
     def test_user_urls(self):
         user = models.User.objects.get(id=2)
-        name_slug = defaultfilters.slugify(user.username)
+        name_slug = slugify(user.username)
         self.try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},

@@ -18,11 +18,11 @@ from django.utils.html import *
 from django.utils import simplejson
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 
+from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff

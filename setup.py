@@ -14,6 +14,7 @@ install_requires = [
     'django-keyedcache',
     'django-threaded-multihost',
     'django-robots',
+    'unidecode',
 ]
 
 import askbot
