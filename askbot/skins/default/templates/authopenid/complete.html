@@ -54,22 +54,6 @@ parameters:
         {% endif %}
         </ul>
     {% endif %}
-    {% comment %}
-    {% if openid_verify_form.errors %}<!--openid_verify_form is dysfunctional so commented out -->
-    <div class="errors">
-        <span class="big">{% trans "Sorry, looks like we have some errors:" %}</span><br/>
-        <ul class="error-list">
-        {% if openid_verify_form.username.errors %} 
-            <li><span class="error">{{ openid_verify_form.username.errors|join:", " }}</span></li>
-        {% endif %}
-        {% if openid_verify_form.password.errors %} 
-            <li><span class="error">{{ openid_verify_form.password.errors|join:", " }}</span></li>
-        {% endif %}
-       </ul>
-    </div>
-    {% endif %}
-    {% endcomment %}
-
     <div class="login">
         {% ifequal login_type 'openid' %}
         <form name="fregister" action="{% url user_register %}" method="POST">
@@ -106,28 +90,5 @@ parameters:
             <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans "create account" %}"/></div>
         </form>
     </div>
-    {% comment %}<!-- this form associates openID with an existing password-protected account, not yet functional -->
-    {% if openid_verify_form %}
-    <div class="login" style="display:none">
-        <form name="fverify" action="{% url user_register %}" method="POST">
-            {{ openid_verify_form.next }}
-            <fieldset style="padding:10px">
-                <legend class="big">{% trans "Existing account" %}</legend>
-                <div class="form-row"><label for="id_username">{% trans "user name" %}</label><br/>{{ openid_verify_form.username }}</div>
-                <div class="form-row"><label for="id_passwordl">{% trans "password" %}</label><br/>{{ openid_verify_form.password }}</div>
-                <p><span class='big strong'>(Optional) receive updates by email</span> - only sent when there are any.</p>
-                <div class='simple-subscribe-options'>
-                {{email_feeds_form.subscribe}}
-                </div>
-                <!--todo double check translation from chinese 确认 = "Register" -->
-                <div class="submit-row">
-                <input type="submit" class="submit" name="bverify" value="{% trans "Register" %}"/> 
-                <a href="{% url user_sendpw %}">{% trans "Forgot your password?" %}</a>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-    {% endif %}
-    {% endcomment %}
 {% endblock %}
 <!-- end complete.html -->

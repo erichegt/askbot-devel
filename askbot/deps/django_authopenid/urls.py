@@ -26,15 +26,19 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
         name='user_complete_signin'),
+    url(
+        r'^%s%s$' % (_('signin/'), _('complete-oauth/')),
+        'complete_oauth_signin', 
+        name='user_complete_oauth_signin'
+    ),
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
-    #url(r'^%s$' % _('signup/'), 'signup', name='user_signup'),
-    #disable current sendpw function
-    #url(r'^%s$' % _('sendpw/'), 'sendpw', name='user_sendpw'),
-    #url(r'^%s%s$' % (_('password/'), _('confirm/')), 'confirmchangepw', name='user_confirmchangepw'),
-
+    url(
+        r'^%s$' % _('signup/'),
+        'signup_with_password',
+        name='user_signup_with_password'
+    ),
     # manage account settings
     #url(r'^$', 'account_settings', name='user_account_settings'),
-    #url(r'^%s$' % _('password/'), 'changepw', name='user_changepw'),
     #url(r'^%s%s$' % (_('email/'),_('validate/')), 'changeemail', name='user_validateemail',kwargs = {'action':'validate'}),
     #url(r'^%s%s$' % (_('email/'), _('change/')), 'changeemail', name='user_changeemail'),
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
@@ -43,26 +47,8 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     #url(r'^%s$' % _('openid/'), 'changeopenid', name='user_changeopenid'),
     #url(r'^%s$' % _('delete/'), 'delete', name='user_delete'),
     url(
-        r'^%s$' % _('delete_login_method/'),#thid method is ajax only
+        r'^delete_login_method/$',#this method is ajax only
         'delete_login_method',
         name ='delete_login_method'
     ),
 )
-
-#todo move these out of this file completely 
-if settings.USE_EXTERNAL_LEGACY_LOGIN:
-    from askbot.forms import NotARobotForm
-    EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
-    urlpatterns += patterns('',
-        url('^%s$' % _('external-login/forgot-password/'),\
-            'askbot.deps.django_authopenid.views.external_legacy_login_info', \
-            name='user_external_legacy_login_issues'),
-        url('^%s$' % _('external-login/signup/'), \
-            EXTERNAL_LOGIN_APP.views.signup,\
-            name='user_external_legacy_login_signup'),
-#        url('^%s$' % _('external-login/signup/'), \
-#            EXTERNAL_LOGIN_APP.forms.RegisterFormWizard( \
-#                [EXTERNAL_LOGIN_APP.forms.RegisterForm, \
-#                NotARobotForm]),\
-#            name='user_external_legacy_login_signup'),
-    )

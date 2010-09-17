@@ -156,7 +156,7 @@ class Comment(base.MetaContent, base.UserContent):
                                     exclude_list = None
                                 ):
         """get list of users who want instant notifications
-        about this post
+        about this comment
 
         argument potential_subscribers is required as it saves on db hits
         """

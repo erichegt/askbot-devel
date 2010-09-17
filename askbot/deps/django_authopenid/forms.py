@@ -30,14 +30,16 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+import types
+import re
+import logging
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
-import types
-import re
+from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
@@ -50,12 +52,55 @@ except ImportError:
     from yadis import xri
     
 from askbot.utils.forms import clean_next
+from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid.models import ExternalLoginData
 
-__all__ = ['OpenidSigninForm', 'ClassicLoginForm', 'OpenidVerifyForm',
-        'OpenidRegisterForm', 'ClassicRegisterForm', 'ChangePasswordForm',
-        'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
-        'ChangeOpenidForm']
+__all__ = [
+    'OpenidSigninForm','OpenidRegisterForm',
+    'ClassicRegisterForm', 'ChangePasswordForm',
+    'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
+    'ChangeOpenidForm'
+]
+
+class LoginProviderField(forms.CharField):
+    """char field where value must 
+    be one of login providers
+    """
+    widget = forms.widgets.HiddenInput()
+
+    def __init__(self, *args, **kwargs):
+        kwargs['max_length'] = 64
+        super(LoginProviderField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        """makes sure that login provider name
+        exists is in the list of accepted providers
+        """
+        providers = util.get_login_providers()
+        if value in providers:
+            return value
+        else:
+            error_message = 'unknown provider name %s' % value
+            logging.critical(error_message)
+            raise forms.ValidationError(error_message)
+
+class PasswordLoginProviderField(LoginProviderField):
+    """char field where value must 
+    be one of login providers using username/password
+    method for authentication
+    """
+    def clean(self, value):
+        """make sure that value is name of
+        one of the known password login providers
+        """
+        value = super(PasswordLoginProviderField, self).clean(value)
+        providers = util.get_login_providers()
+        if providers[value]['type'] != 'password':
+            raise forms.ValidationError(
+                    'provider %s must accept password' % value
+                )
+        return value
+
 
 class OpenidSigninForm(forms.Form):
     """ signin form """
@@ -72,109 +117,201 @@ class OpenidSigninForm(forms.Form):
                 raise forms.ValidationError(_('i-names are not supported'))
             return self.cleaned_data['openid_url']
 
-class ClassicLoginForm(forms.Form):
-    """ legacy account signin form """
+class LoginForm(forms.Form):
+    """All-inclusive login form.
+
+    handles the following:
+
+    * password login
+    * change of password
+    * openid login (of all types - direct, usename, generic url-based)
+    * oauth login
+    * facebook login (javascript-based facebook's sdk)
+    """
     next = NextUrlField()
-    username = UserNameField(required=False,skip_clean=True)
-    password = forms.CharField(max_length=128, 
-            widget=forms.widgets.PasswordInput(attrs={'class':'required login'}), 
-            required=False)
+    login_provider_name = LoginProviderField()
+    openid_login_token = forms.CharField(
+                            max_length=256,
+                            required = False,
+                        )
+    username = UserNameField(required=False, skip_clean=True)
+    password = forms.CharField(
+                    max_length=128, 
+                    widget=forms.widgets.PasswordInput(
+                                            attrs={'class':'required login'}
+                                        ), 
+                    required=False
+                )
+    password_action = forms.CharField(
+                            max_length=32,
+                            required=False,
+                            widget=forms.widgets.HiddenInput()
+                        )
+    new_password = forms.CharField(
+                    max_length=128, 
+                    widget=forms.widgets.PasswordInput(
+                                            attrs={'class':'required login'}
+                                        ), 
+                    required=False
+                )
+    new_password_retyped = forms.CharField(
+                    max_length=128, 
+                    widget=forms.widgets.PasswordInput(
+                                            attrs={'class':'required login'}
+                                        ), 
+                    required=False
+                )
 
-    def __init__(self, data=None, files=None, auto_id='id_%s',
-            prefix=None, initial=None): 
-        super(ClassicLoginForm, self).__init__(data, files, auto_id,
-                prefix, initial)
-        self.user_cache = None
+    def set_error_if_missing(self, field_name, error_message):
+        """set's error message on a field
+        if the field is not present in the cleaned_data dictionary
+        """
+        if field_name not in self.cleaned_data:
+            self._errors[field_name] = self.error_class([error_message])
 
-    def _clean_nonempty_field(self,field):
-        value = None
-        if field in self.cleaned_data:
-            value = str(self.cleaned_data[field]).strip()
-            if value == '':
-                value = None
-        self.cleaned_data[field] = value
-        return value 
+    def set_password_login_error(self):
+        """sets a parameter flagging that login with
+        password had failed
+        """
+        #add monkey-patch parameter
+        #this is used in the signin.html template
+        self.password_login_failed = True
 
-    def clean_username(self):
-        return self._clean_nonempty_field('username')
+    def set_password_change_error(self):
+        """sets a parameter flagging that
+        password change failed
+        """
+        #add monkey-patch parameter
+        #this is used in the signin.html template
+        self.password_change_failed = True
 
-    def clean_password(self):
-        return self._clean_nonempty_field('password')
 
     def clean(self):
-        """ 
-        this clean function actually cleans username and password
+        """besides input data takes data from the
+        login provider settings
+        and stores final digested data into
+        the cleaned_data
 
-        test if password is valid for this username 
-        this is really the "authenticate" function
-        also openid_auth is not an authentication backend
-        since it's written in a way that does not comply with
-        the Django convention
+        the idea is that cleaned data can be used directly
+        to enact the signin action, without post-processing
+        of the data
+
+        contents of cleaned_data depends on the type
+        of login
         """
+        providers = util.get_login_providers()
 
-        error_list = []
-        username = self.cleaned_data['username']
-        password = self.cleaned_data['password']
+        if 'login_provider_name' in self.cleaned_data:
+            provider_name = self.cleaned_data['login_provider_name']
+        else:
+            raise forms.ValidationError('no login provider specified')
 
-        self.user_cache = None
-        if username and password: 
-            if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-                pw_ok = False
-                try:
-                    pw_ok = EXTERNAL_LOGIN_APP.api.check_password(username,password)
-                except forms.ValidationError, e:
-                    error_list.extend(e.messages)
-                if pw_ok:
-                    external_user = ExternalLoginData.objects.get(external_username=username)
-                    if external_user.user == None:
-                        return self.cleaned_data
-                    user = external_user.user
-                    openid_logins = user.userassociation_set.all()
-                    
-                    if len(openid_logins) > 0:
-                        msg1 = _('Account with this name already exists on the forum')
-                        msg2 = _('can\'t have two logins to the same account yet, sorry.')
-                        error_list.append(msg1)
-                        error_list.append(msg2)
-                        self._errors['__all__'] = forms.util.ErrorList(error_list)
-                        return self.cleaned_data
-                    else:
-                        #synchronize password with external login
-                        user.set_password(password)
-                        user.save()
-                        #this auth will always succeed
-                        self.user_cache = authenticate(username=user.username,\
-                                                        password=password)
-                else:
-                    #keep self.user_cache == None
-                    #nothing to do, error message will be set below
-                    pass
-            else:
-                self.user_cache = authenticate(username=username, password=password)
+        provider_data = providers[provider_name]
 
-            if self.user_cache is None:
-                del self.cleaned_data['username']
-                del self.cleaned_data['password']
-                error_list.insert(0,(_("Please enter valid username and password "
-                                    "(both are case-sensitive).")))
-            elif self.user_cache.is_active == False:
-                error_list.append(_("This account is inactive."))
-            if len(error_list) > 0:
-                error_list.insert(0,_('Login failed.'))
-        elif password == None and username == None:
-            error_list.append(_('Please enter username and password'))
-        elif password == None:
-            error_list.append(_('Please enter your password'))
-        elif username == None:
-            error_list.append(_('Please enter user name'))
-        if len(error_list) > 0:
-            self._errors['__all__'] = forms.util.ErrorList(error_list)
+        provider_type = provider_data['type']
+
+        if provider_type == 'password':
+            self.do_clean_password_fields()
+            self.cleaned_data['login_type'] = 'password'
+        elif provider_type.startswith('openid'):
+            self.do_clean_openid_fields(provider_data)
+            self.cleaned_data['login_type'] = 'openid'
+        elif provider_type == 'oauth':
+            self.cleaned_data['login_type'] = 'oauth'
+            pass
+        elif provider_type == 'facebook':
+            self.cleaned_data['login_type'] = 'facebook'
+            #self.do_clean_oauth_fields()
+
+        print 'returning cleaned data'
+
         return self.cleaned_data
 
-    def get_user(self):
-        """ get authenticated user """
-        return self.user_cache
-            
+    def do_clean_openid_fields(self, provider_data):
+        """returns fake openid_url value
+        created based on provider_type (subtype of openid)
+        and the
+        """
+        openid_endpoint = provider_data['openid_endpoint']
+        openid_type = provider_data['type']
+        if openid_type == 'openid-direct':
+            openid_url = openid_endpoint
+        else:
+            error_message = _('Please enter your %(username_token)s') % \
+                    {'username_token': provider_data['extra_token_name']}
+            self.set_error_if_missing('openid_login_token', error_message)
+            if 'openid_login_token' in self.cleaned_data:
+                openid_login_token = self.cleaned_data['openid_login_token']
+
+                if openid_type == 'openid-username':
+                    openid_url = openid_endpoint % {'username': openid_login_token}
+                elif openid_type == 'openid-generic':
+                    openid_url = openid_login_token
+                else:
+                    raise ValueError('unknown openid type %s' % openid_type)
+
+        self.cleaned_data['openid_url'] = openid_url
+
+    def do_clean_password_fields(self):
+        """cleans password fields appropriate for
+        the selected password_action, which can be either
+        "login" or "change_password"
+        new password is checked for minimum length and match to initial entry
+        """
+        password_action = self.cleaned_data.get('password_action', None)
+        if password_action == 'login':
+            #if it's login with password - password and user name are required
+            self.set_error_if_missing(
+                'username',
+                _('Please, enter your user name')
+            )
+            self.set_error_if_missing(
+                'password',
+                _('Please, enter your password')
+            )
+
+        elif password_action == 'change_password':
+            #if it's change password - new_password and new_password_retyped
+            self.set_error_if_missing(
+                'new_password',
+                 _('Please, enter your new password')
+            ) 
+            self.set_error_if_missing(
+                'new_password_retyped',
+                _('Please, enter your new password')
+            )
+            field_set = set(('new_password', 'new_password_retyped'))
+            if field_set.issubset(self.cleaned_data.keys()):
+                new_password = self.cleaned_data[
+                                                'new_password'
+                                            ].strip()
+                new_password_retyped = self.cleaned_data[
+                                                'new_password_retyped'
+                                            ].strip()
+                if new_password != new_password_retyped:
+                    error_message = _('Passwords did not match')
+                    error = self.error_class([error_message])
+                    self._errors['new_password_retyped'] = error
+                    self.set_password_change_error()
+                    del self.cleaned_data['new_password']
+                    del self.cleaned_data['new_password_retyped']
+                else:
+                    #validate password
+                    if len(new_password) < askbot_const.PASSWORD_MIN_LENGTH:
+                        del self.cleaned_data['new_password']
+                        del self.cleaned_data['new_password_retyped']
+                        error_message = _(
+                                    'Please choose password > %(len)s characters'
+                                ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
+                        error = self.error_class([error_message])
+                        self._errors['new_password'] = error
+                        self.set_password_change_error()
+        else:
+            error_message = 'unknown password action'
+            logging.critical(error_message)
+            self._errors['password_action'] = self.error_class([error_message])
+            raise forms.ValidationError(error_message)
+        print 'password fields were cleaned'
 
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
@@ -182,45 +319,13 @@ class OpenidRegisterForm(forms.Form):
     username = UserNameField()
     email = UserEmailField()
 
-class OpenidVerifyForm(forms.Form):
-    """ openid verify form (associate an openid with an account) """
-    next = NextUrlField()
-    username = UserNameField(must_exist=True)
-    password = forms.CharField(max_length=128, 
-            widget=forms.widgets.PasswordInput(attrs={'class':'required login'}))
-    
-    def __init__(self, data=None, files=None, auto_id='id_%s',
-            prefix=None, initial=None): 
-        super(OpenidVerifyForm, self).__init__(data, files, auto_id,
-                prefix, initial)
-        self.user_cache = None
-
-    def clean_password(self):
-        """ test if password is valid for this user """
-        if 'username' in self.cleaned_data and \
-                'password' in self.cleaned_data:
-            self.user_cache =  authenticate(
-                    username = self.cleaned_data['username'], 
-                    password = self.cleaned_data['password']
-            )
-            if self.user_cache is None:
-                raise forms.ValidationError(_("Please enter a valid \
-                    username and password. Note that both fields are \
-                    case-sensitive."))
-            elif self.user_cache.is_active == False:
-                raise forms.ValidationError(_("This account is inactive."))
-            return self.cleaned_data['password']
-
-    def get_user(self):
-        """ get authenticated user """
-        return self.user_cache
-
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
 
     next = NextUrlField()
     username = UserNameField()
     email = UserEmailField()
+    login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
     recaptcha = ReCaptchaField()
 
@@ -278,6 +383,22 @@ class AccountRecoveryForm(forms.Form):
     this form merely checks that entered email
     """
     email = forms.EmailField()
+
+    def clean_email(self):
+        """check if email exists in the database
+        and if so, populate 'user' field in the cleaned data
+        with the user object
+        """
+        if 'email' in self.cleaned_data:
+            email = self.cleaned_data['email']
+            print 'got email "%s"' % email
+            try:
+                user = User.objects.get(email=email)
+                self.cleaned_data['user'] = user
+            except User.DoesNotExist:
+                del self.cleaned_data['email']
+                message = _('Sorry, we don\'t have this email address in the database')
+                raise forms.ValidationError(message)
         
 class ChangeopenidForm(forms.Form):
     """ change openid form """

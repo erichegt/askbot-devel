@@ -5,17 +5,41 @@
 {% load smart_if %}
 {% block title %}{% spaceless %}{% trans "User login" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{% media  "/jquery-openid/openid.css" %}"/>
     <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
-
-        <link rel="stylesheet" type="text/css" media="screen" href="{% media  "/jquery-openid/openid.css" %}"/>
-        <script type="text/javascript" src="{% media  "/jquery-openid/jquery.openid.js" %}"></script>
-        <script type="text/javascript">  $().ready( function() { $("form.openid:eq(0)").openid(); })</script>
-        <!--<script type="text/javascript">
-        $().ready(function(){
-            openid.init('id_openid_url');
-            setupFormValidation("#openid_form", {bsignin:{required: true}});
-        });
-        </script>-->
+    <script type="text/javascript" src="{% media  "/jquery-openid/jquery.openid.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready( function() { $("body").authenticator(); })
+            var extra_token_name = {};
+            var create_pw_text = {};
+            var change_pw_text = {};
+            var authUrl = '/{% trans "account/" %}';
+            var siteName = '{{settings.APP_SHORT_NAME}}';
+            var provider_count = {{existing_login_methods|length}};
+            {% for login_provider in major_login_providers %}
+                {% if login_provider.extra_token_name %}
+                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+                {% endif %}
+                {% if login_provider.type == 'password' %}
+                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+                {% endif %}
+            {% endfor %}
+            {% for login_provider in minor_login_providers %}
+                {% if login_provider.extra_token_name %}
+                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+                {% endif %}
+                {% if login_provider.type == 'password' %}
+                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+                {% endif %}
+            {% endfor %}
+            {% if user.is_authenticated %}
+                var userIsAuthenticated = true;
+            {% else %}
+                var userIsAuthenticated = false;
+            {% endif %}
+    </script>
 {% endblock %}
 {% block content %}
 <h1>{{page_title}}</h1>
@@ -33,13 +57,16 @@
         {% endblocktrans %}
         </div>
     {% endif %}
-    <form id="openid_form" name="openid_form" class="openid" method="post" action="{% url user_signin %}"> 
-    <p id='ab-login-method-prompt'>
-    {% if view_subtype == 'default' or view_subtype == 'email_sent' %}
-        {% trans "You can use your favorite service from those listed below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one." %}
+    <p id='login-intro'>
+    {% if view_subtype == 'default' %}
+        {% trans "Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one." %}
     {% endif %}
     {% if view_subtype == 'add_openid' %}
-        {% trans "Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time. All of the services listed below provide a secure sign-in method based on OpenID or similar technology." %}
+        {% if existing_login_methods %}
+            {% trans "It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods." %}
+        {% else %}
+            {% trans "Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time." %}
+        {% endif %}
     {% endif %}
     {% if view_subtype == 'change_openid' %}
         {% if existing_login_methods %}
@@ -48,165 +75,120 @@
             {% trans "You don't have a method to log in right now, please add one or more by clicking any of the icons below." %}
         {% endif %}
     {% endif %}
+    {% if view_subtype == 'email_sent' %}
+        {% trans "Please check your email and visit the enclosed link to re-connect to your account" %}
+    {% endif %}
     </p>
     {% if openid_error_message %}
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
-    <table> 
-        {% comment %}
-        <li class="local" title="Local login">
-            <div class="logo_box local_login_box">
-                <img src="{% media  "/jquery-openid/images/logo-small.gif" %}" 
-                    alt="your icon here" /> 
-            </div>
-        <span></span>
-        </li> 
-       {% endcomment %}
-        <tr class="providers">
-            <td class="username" title="OpenID URL"> 
-                <div class="logo_box openid_box">
-                    <img src="{% media  "/jquery-openid/images/openid.gif" %}" alt="icon" />
-                    <span>http://<strong>username</strong></span>
-                </div>
-            </td> 
-            <td class="direct" title="Google"> 
-                <div class="logo_box google_box">
-                    <img src="{% media  "/jquery-openid/images/google.gif" %}" alt="icon" />
-                    <span>https://www.google.com/accounts/o8/id</span>
-                </div>
-            </td>
-                <td class="direct" title="Yahoo"> 
-                    <div class="logo_box yahoo_box">
-                        <img src="{% media  "/jquery-openid/images/yahoo.gif" %}" alt="icon" />
-                        <span>http://yahoo.com/</span>
-                    </div>
-                </td>
-                <td class="username" title="AOL screen name"> 
-                    <div class="logo_box aol_box">
-                        <img src="{% media  "/jquery-openid/images/aol.gif" %}" alt="icon" />
-                        <span>http://openid.aol.com/<strong>username</strong></span>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <table>
-            <tr id="openid_small_providers" class="providers"> 
-                {% comment %}
-                <li class="openid" title="OpenID">
-                    <div class="logo_box openid_box">
-                    <img src="/jquery-openid/images/openid.gif" alt="icon" /> 
-                    </div>
-                    <span><strong>http://{your-openid-url}</strong></span>
+    {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
+        <form id="signin-form" method="post" action="{% url user_signin %}">
+        {{login_form.login_provider_name}}
+        <div id="login-icons">
+            <ul class="login-icons large">
+                {% for login_provider in major_login_providers %}
+                <li>
+                    <input
+                        name="{{login_provider.name}}"
+                        type="image"
+                        class="{{login_provider.type}}"
+                        src="{% media login_provider.icon_media_path %}"
+                        alt="{{login_provider.tooltip_text}}"
+                        title="{{login_provider.tooltip_text}}"
+                    />
                 </li>
-                <li class="first_tiny_li facebook" title="Facebook Connect">
-                    {% if question %}
-                    <fb:login-button onlogin="window.location = '{% url fb_signin_new_question %}'"></fb:login-button>
-                    {% else %}
-                        {% if answer %}
-                        <fb:login-button onlogin="window.location = '{% url fb_signin_new_answer %}'"></fb:login-button>
-                        {% else %}
-                        <fb:login-button onlogin="window.location = '{% url fb_signin %}'"></fb:login-button>
-                        {% endif %}
-                    {% endif %}                    
+                {% endfor %}
+            </ul>
+            <ul class="login-icons small">
+                {% for login_provider in minor_login_providers %}
+                <li>
+                    <input
+                        name="{{login_provider.name}}"
+                        type="image"
+                        class="{{login_provider.type}}"
+                        src="{% media login_provider.icon_media_path %}"
+                        alt="{{login_provider.tooltip_text}}"
+                        title="{{login_provider.tooltip_text}}"
+                    />
                 </li>
-                <li class="openid first_tiny_li" title="OpenID URL"> 
-                    <img src="{% media  "/jquery-openid/images/openidico16.png" %}" alt="icon" />
-                    <span>http://{your-openid-url}
-                </li> 
-                {% endcomment %}
-                <td class="username first_tiny_li" title="MyOpenID user name"> 
-                    <img src="{% media  "/jquery-openid/images/myopenid-2.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.myopenid.com/</span>
-                </td> 
-                <td class="username" title="Flickr user name"> 
-                    <img src="{% media  "/jquery-openid/images/flickr.png" %}" alt="icon" />
-                    <span>http://flickr.com/<strong>username</strong>/</span>
-                </td> 
-                <td class="username" title="Technorati user name"> 
-                    <img src="{% media  "/jquery-openid/images/technorati-1.png" %}" alt="icon" />
-                    <span>http://technorati.com/people/technorati/<strong>username</strong>/</span>
-                </td> 
-                <td class="username" title="Wordpress blog name"> 
-                    <img src="{% media  "/jquery-openid/images/wordpress.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.wordpress.com</span>
-                </td> 
-                <td class="username" title="Blogger blog name"> 
-                    <img src="{% media  "/jquery-openid/images/blogger-1.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.blogspot.com/</span>
-                </td> 
-                <td class="username" title="LiveJournal blog name"> 
-                    <img src="{% media  "/jquery-openid/images/livejournal-1.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.livejournal.com</span>
-                </td> 
-                <td class="username" title="ClaimID user name"> 
-                    <img src="{% media  "/jquery-openid/images/claimid-0.png" %}" alt="icon" />
-                    <span>http://claimid.com/<strong>username</strong></span>
-                </td> 
-                <td class="username" title="Vidoop user name"> 
-                    <img src="{% media  "/jquery-openid/images/vidoop.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.myvidoop.com/</span>
-                </td> 
-                <td class="username" title="Verisign user name"> 
-                    <img src="{% media  "/jquery-openid/images/verisign-2.png" %}" alt="icon" />
-                    <span>http://<strong>username</strong>.pip.verisignlabs.com/</span>
-                </td> 
-            </tr>
-        </table>
-        {{ openid_login_form.next }}
-        <fieldset style="display:none;"> 
-            <p id="provider_name_slot">{% trans 'Enter your <span id="enter_your_what">Provider user name</span>' %}</p> 
-            <div><p><span></span>
-                <input id="openid_username" type="text" name="openid_username" /><span></span> 
-                <input type="submit" value="{% trans "Login" %}" />
-            </p></div>
-        </fieldset> 
-        <fieldset style="display:none"> 
-            <p>{% trans 'Enter your <a class="openid_logo" href="http://openid.net">OpenID</a> web address' %}</p> 
-            <div><p><input id="openid_url" type="text" value="http://" name="openid_url" /> 
-            <input id="bsignin" name="bsignin" type="submit" value="{% trans "Login" %}" /></p></div> 
-        </fieldset> 
-        {% comment %}
-        <fieldset id='local_login_fs'>
-            <p>{% trans 'Enter your login name and password' %}</p> 
-            {% if password_login_form.errors %}
-            {{password_login_form.non_field_errors.as_ul}}
+                {% endfor %}
+            </ul>
+        </div>
+        {{ login_form.next }}
+        <fieldset 
+            id="openid-fs" 
+            {% if not login_form.openid_login_token.errors %}
+                style="display:none;"
             {% endif %}
-            <div>
-                <p class="login">
+        >
+            <h2 id="openid-heading">{% trans "Please enter your <span>user name</span>, then sign in" %}</h2>
+            <p class="hint">{% trans "(or select another login method above)" %}</p>
+            <input type="text" name="openid_login_token" />
+            <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans "Sign in" %}"/>
+        </fieldset> 
+        {% if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET %}
+        <fieldset 
+            id="password-fs"
+            {% if user.is_anonymous %}
+                {% if not login_form.username.errors and not login_form.password_login_failed %}
+                    style="display:none;"
+                {% endif %}
+            {% else %}
+                {% if not login_form.new_password.errors and not login_form.new_password_retyped.errors %}
+                    style="display:none;"
+                {% endif %}
+            {% endif %}
+        >
+            {{login_form.password_action}}
+            {% if user.is_anonymous %}
+                <h2 id="password-heading">
+                    {% trans "Please enter your <span>user name and password</span>, then sign in" %}
+                </h2>
+                <p class="hint">{% trans "(or select another login method above)" %}</p>
+                {% if login_form.password_login_failed %}
+                    <p class="error">{% trans "Login failed, please try again" %}</p>
+                {% endif %}
+                <p>
                     <label for="id_username">{% trans "Login name" %}</label>
-                    {{password_login_form.username}}
+                    {{login_form.username}}
                 </p>
-                <p class="login">
+                <p>
                     <label for="id_password">{% trans "Password" %}</label>
-                    {{password_login_form.password}}
+                    {{login_form.password}}
                 </p>
                 <p id="local_login_buttons">
-                    <input id="blogin" name="blogin" type="submit" value="{% trans "Login" %}" />
-                    <a href="{% url user_signup %}">{% trans "Create account" %}</a><br/>
-                    <a href="{% url user_sendpw %}">{% trans "Forgot your password?" %}</a>
+                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans "Login" %}" />
+                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans "Create a password-protected account" %}</a>
                 </p>
-            </div>
+            {% else %}
+                <h2 id="password-heading">
+                    {% trans "To change your password - please enter the new one twice, then submit" %}
+                </h2>
+                <p>
+                    <label for="id_new_password">{% trans "New password" %}</label>
+                    {{login_form.new_password}}
+                    <span class="error">{{login_form.new_password.errors.0}}</span>
+                </p>
+                <p>
+                    <label for="id_new_password_retyped">{% trans "Please, retype" %}</label>
+                    {{login_form.new_password_retyped}}
+                    <span class="error">{{login_form.new_password_retyped.errors.0}}</span>
+                </p>
+                <p id="local_login_buttons">
+                    <input class="submit-b" name="change_password" type="submit" value="{% trans "Change password" %}" />
+                </p>
+            {% endif %}
         </fieldset>
-        {% endcomment %}
-    </form>
-    {% if view_subtype == 'default' or view_subtype == 'email_sent' %}
-    <form action="{% url user_account_recover %}" method="post">
-        {% if view_subtype == 'email_sent' %}
-            <h2>{% trans "Account recovery email sent" %}</h2>
-        {% else %}
-            <h2>{% trans "Still have trouble accessing your account?" %}</h2>
         {% endif %}
-        {% if account_recovery_message %}
-            <p>{{account_recovery_message}}</p>
-        {% else %}
-            <p>{% trans "Please, enter your email address below to recover" %}</p>
-        {% endif %}
-        {{ account_recovery_form.email }}
-        <input type="submit" value="{% trans "Recover your account via email" %}"/>
-    </form>
-    {% endif %}
-    {% if view_subtype == 'change_openid' %}
-        {% if existing_login_methods %}
+        </form>
+        {% if user.is_authenticated and existing_login_methods %}
+        <div 
+            id='existing-login-methods'
+            {% if login_form.password_change_failed %}
+                style="display:none";
+            {% endif %}
+        >
             <h2 id='ab-show-login-methods'>
                 {% trans "Here are your current login methods" %}
             </h2>
@@ -232,62 +214,41 @@
                 </tr>
                 {% endfor %}
             </table>
-            <script type="text/javascript">
-            $(document).ready(
-                function(){
-                    var provider_count = {{existing_login_methods|length}};
-                    $('.ab-provider-row').each(
-                        function(i, provider_row){
-                            var provider_name = $(
-                                                provider_row
-                                            ).find(
-                                                '.ab-provider-name'
-                                            ).html().trim();
-                            var remove_button = $(
-                                                provider_row
-                                            ).find('button');
-                            remove_button.click(
-                                function(){
-                                    var message = $.i18n._(
-                                                            'Are you sure you want to remove ' +
-                                                            'your {provider} login?'
-                                                        ).replace(
-                                                            '{provider}', 
-                                                            provider_name
-                                                        );
-                                    if (confirm(message)){
-                                        $.ajax({
-                                            type: 'POST',
-                                            url: '{% url delete_login_method %}',
-                                            data: {provider_name: provider_name},
-                                            success: function(data, text_status, xhr){
-                                                $(provider_row).remove();
-                                                provider_count -=1;
-                                                if (provider_count < 0){
-                                                    provider_count === 0;
-                                                }
-                                                if (provider_count === 0){
-                                                    $('#ab-existing-login-methods').remove();
-                                                    $('#ab-show-login-methods').remove();
-                                                    $('h1').html(
-                                                        $.i18n._("Please add one or more login methods.")
-                                                    );
-                                                    $('#ab-login-method-prompt').html(
-                                                        $.i18n._("You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.")
-                                                    );
-                                                    alert($.i18n._('You have deleted all login methods, please add at least one'));
-                                                }
-                                            },
-
-                                        });
-                                    }
-                                }
-                            );
-                        }
-                    );
-                }
-            );
-            </script>
+        </div>
+        {% endif %}
+    {% endif %}
+    {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
+        {% if user.is_anonymous %}
+        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">
+            {% if view_subtype != 'bad_key' %}
+                <h2 id='account-recovery-heading'>{% trans "Still have trouble signing in?" %}</h2>
+            {% endif %}
+            <p class="hint">
+                <span class="text">
+                {% if view_subtype == 'bad_key' %}
+                    {% trans "Please, enter your email address below and obtain a new key" %}
+                {% else %}
+                    {% trans "Please, enter your email address below to recover your account" %}
+                {% endif %}
+                </span>
+                <span style="display:none" class="link"> - <a href="#">{% trans "recover your account via email" %}</a></span>
+            </p>
+            <fieldset id='email-input-fs'>
+                {% if account_recovery_form.email.errors %}
+                <p class="error">{{account_recovery_form.email.errors.0}}</p>
+                {% endif %}
+                {{ account_recovery_form.email }}
+                <input
+                    class="submit-b"
+                    type="submit"
+                    {% if view_subtype == 'bad_key' %}
+                    value="{% trans "Send a new recovery key" %}"
+                    {% else %}
+                    value="{% trans "Recover your account via email" %}"
+                    {% endif %}
+                />
+            </fieldset>
+        </form>
         {% endif %}
     {% endif %}
 {% endblock %}
@@ -315,11 +276,22 @@
         <a href="http://openid.net/get/" target="_blank">{% trans "Get OpenID" %} »</a>
     </p>
 </div>
-{% comment %}
-<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script>
-<script type="text/javascript">  FB.init("{{ settings.FB_API_KEY }}","{% url  xd_receiver %}");</script> 
-{% endcomment %}
+{% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<script>
+    $(document).ready(function(){
+        FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
+        FB.Event.subscribe('auth.sessionChange', function(response){
+                if (response.session) {
+                // A user has logged in, and a new cookie has been saved
+                    $('#signin-form').submit();
+                } else {
+                // The user has logged out, and the cookie has been cleared
+                }
+        });
+    });
+</script>
+{% endif %}
 {% endblock%}
-
-<script type="text/javascript">  $( function() { $("form.openid:eq(0)").openid(); })</script>
 <!-- end signin.html -->

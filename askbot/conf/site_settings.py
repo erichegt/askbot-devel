@@ -54,7 +54,6 @@ settings.register(
         QA_SITE_SETTINGS,
         'APP_SHORT_NAME',
         default=_('Askbot'),
-        hidden=True,
         description=_('Short name for your Q&A forum')
     )
 )

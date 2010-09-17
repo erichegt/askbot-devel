@@ -93,7 +93,7 @@ MIDDLEWARE_CLASSES = (
     'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
     'askbot.middleware.cancel.CancelActionMiddleware',
-    #'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
+    'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'askbot.middleware.view_log.ViewLogMiddleware',

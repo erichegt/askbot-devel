@@ -13,6 +13,7 @@ When you will be suggested to create a superuser, answer **no**.
 Then run::
 
     python manage.py migrate askbot
+    python manage.py migrate django_authopenid #embedded login application
 
 .. note::
 

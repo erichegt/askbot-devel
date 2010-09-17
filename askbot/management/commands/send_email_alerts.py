@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
-from django.utils.datastructures import SortedDict 
+from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
 

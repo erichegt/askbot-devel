@@ -1,80 +1,27 @@
-fieldset { border-style:none; }
-img {border-style:none;}
+div#login-icons {margin:10px 0 0 0;padding:0}
+ul.login-icons {width: 450px; margin:0;padding:0;text-align:left; list-style-type:none; display:block;}
+ul.login-icons li {display:inline;} 
+ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
+.openid-signin h2 {margin-top:15px;}
+.openid-signin h2#account-recovery-heading {margin-bottom:2px;}
+#account-recovery-form p.hint a {color:blue; text-decoration: underline;}
+.openid-signin fieldset { border-style:none;margin:0;padding:0;}
+.openid-signin p {margin:0;padding:0};
+.openid-signin p.hint {color: #555;}
+.openid-signin #password-fs label {float:left; width:100px;margin-top:5px;text-align:left;}
+.openid-signin #password-fs .hint {margin-bottom:5px}
+#password-fs a {padding-left:5px;}
+/*#signin-form #account-recovery-form input {cursor:pointer;}
+#signin-form #account-recovery-form input.text {cursor:default;}*/
 
-.logo_box {width:90px;height:40px;background:white;border:1px solid #dddddd;}
-.openid_box img {margin:6px 0 0 3px;}
-.aol_box img {margin:6px 0 0 5px;}
-.yahoo_box img {margin:13px 0 0 4px;}
-.google_box img {margin:6px 0 0 6px;}
-.local_login_box img {margin-top:2px;margin-left:-3px;}
-
-form.openid ul{ margin:0;padding:0;text-align:center; list-style-type:none; display:block;}
-form.openid ul li {padding:4px;} 
-form.openid ul li span {padding:0 1em 0 3px}
-form.openid ul li.first_tiny_li {clear:left;}
-form.openid fieldset {clear:both;padding:10px 0px 0px 0px;}
-form.openid div+fieldset {display:none}
-input[name=openid_username] {width:8em}
-input[name=openid_identifier] {width:18em}
-form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #FD6}
-form.openid fieldset div {
-    /*-moz-border-radius:4px; */
-    /*-webkit-border-radius:4px; */
-    /*background: #DCDCDC;*/
-    padding:10px;
-    float:left;
-}
-.openid-signin h2 {margin-top:10px;}
-form.openid p {margin-bottom:4px;}
-form.openid fieldset div p {padding:0px;margin:0px;}
-form.openid fieldset div p.login {padding:0px;margin:0 0 10px 0;}
-form.openid label {
-    display:inline-block;
-    font-weight:normal;
-    width:6em;
-    text-align:right;
-}
-#local_login_fs div {
-    padding-bottom:4px;
-}
-#local_login_buttons {
-    text-align:center;
-    line-height:1.8em;
-    margin-top:3px;
-}
-/*form.openid input[type='submit'] {margin-left:1em;}*/
-#openid_username {background:#ffffa0;}
-#openid_url {background:#ffffa0;}
-
-.openid_logo{color:#F7931E;padding:6px 0px 8px 28px; 
-background: url(images/openidico.png) no-repeat;
+.openid-signin .submit-b {
+    cursor: pointer; /*letter-spacing:1px;*/
+    margin: 0 0 2px 0;
+    vertical-align: middle;
 }
 
-#openid_login {float:left; width:30%; margin:2em 1em; text-align:center}
-#openid_login div{margin-top:0.5em}
+.openid-signin .highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #FD6}
 
-form.openid ul.errorlist {
-    border: none;
-    list-style-position:inside;
-    list-style-type: disc;
-    margin-bottom:5px;
-}
-form.openid ul.errorlist li {
-    text-align: left;
-    margin: 5px;
-    float: none;
-    color:blue;
-}
-ul.providers {
-    clear:left;
-    float:left;
-}
-#openid_small_providers li {
-    margin-top:4px;
-}
-#openid_small_providers li.facebook {
-    margin-top:0px;
-}
 ul.providers {
     display: block;
 }

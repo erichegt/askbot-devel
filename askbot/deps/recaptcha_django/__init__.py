@@ -37,7 +37,7 @@ class ReCaptchaWidget(Widget):
         final_attrs = self.build_attrs(attrs)
         error = final_attrs.get('error', None)
         html = captcha.displayhtml(
-                            askbot_settings.RECAPTCHA_PUBLIC_KEY, 
+                            askbot_settings.RECAPTCHA_KEY, 
                             error=error
                         )
         options = u',\n'.join([u'%s: "%s"' % (k, conditional_escape(v)) \
@@ -73,7 +73,7 @@ class ReCaptchaField(Field):
             raise ValidationError(_('Invalid request'))
         resp = captcha.submit(value.get('challenge', None),
                               value.get('response', None),
-                              askbot_settings.RECAPTCHA_PRIVATE_KEY,
+                              askbot_settings.RECAPTCHA_SECRET,
                               value.get('ip', None))
         if not resp.is_valid:
             self.widget.attrs['error'] = resp.error_code 

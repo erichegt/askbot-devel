@@ -34,6 +34,8 @@ class UserAssociation(models.Model):
     """ 
     model to manage association between openid and user 
     """
+    #todo: rename this field so that it sounds good for other methods
+    #for exaple, for password provider this will hold password
     openid_url = models.CharField(blank=False, max_length=255)
     user = models.ForeignKey(User)
     #in the future this must be turned into an 

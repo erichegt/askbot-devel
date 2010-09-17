@@ -375,7 +375,11 @@ def user_stats(request, user):
 
         total_awards = awards.count()
         awards = awards.annotate(count = Count('badge__id'))
-        user_tags = user_tags.annotate(user_tag_usage_count=Count('name'))
+        user_tags = user_tags.annotate(
+                                user_tag_usage_count=Count('name')
+                            ).order_by(
+                                '-user_tag_usage_count'
+                            )
 
     except ImportError:
         #todo: remove all old django stuff, e.g. with '.group_by = ' pattern

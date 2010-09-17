@@ -45,9 +45,16 @@ settings.register(
 settings.register(
     StringValue(
         EXTERNAL_KEYS,
-        'RECAPTCHA_PRIVATE_KEY',
-        description=_('Recaptcha private key') + ' - does not work yet',
-        hidden=True,
+        'RECAPTCHA_KEY',
+        description=_('Recaptcha public key')
+    )
+)
+
+settings.register(
+    StringValue(
+        EXTERNAL_KEYS,
+        'RECAPTCHA_SECRET',
+        description=_('Recaptcha private key'),
         help_text=_(
                         'Recaptcha is a tool that helps distinguish '
                         'real people from annoying spam robots. '
@@ -57,21 +64,12 @@ settings.register(
     )
 )
 
-settings.register(
-    StringValue(
-        EXTERNAL_KEYS,
-        'RECAPTCHA_PUBLIC_KEY',
-        hidden=True,
-        description=_('Recaptcha public key') + ' - does not work yet'
-    )
-)
 
 settings.register(
     StringValue(
         EXTERNAL_KEYS,
-        'FB_API_KEY',
-        description=_('Facebook public API key') + ' - does not work yet',
-        hidden=True,
+        'FACEBOOK_KEY',
+        description=_('Facebook public API key'),
         help_text=_(
                      'Facebook API key and Facebook secret '
                      'allow to use Facebook Connect login method '
@@ -80,14 +78,54 @@ settings.register(
                      'facebook create app</a> site'
                     )
     )
-
 )
 
 settings.register(
     StringValue(
         EXTERNAL_KEYS,
-        'FB_SECRET',
-        hidden=True,
-        description=_('Facebook secret key') + ' - does not work yet'
+        'FACEBOOK_SECRET',
+        description=_('Facebook secret key')
+    )
+)
+
+settings.register(
+    StringValue(
+        EXTERNAL_KEYS,
+        'TWITTER_KEY',
+        description=_('Twitter consumer key'),
+        help_text=_(
+            'Please register your forum at <a href="http://dev.twitter.com/apps/">'
+            'twitter applications site</a>'
+        ),
+
+    )
+)
+
+settings.register(
+    StringValue(
+        EXTERNAL_KEYS,
+        'TWITTER_SECRET',
+        description=_('Twitter consumer secret'),
+    )
+)
+
+settings.register(
+    StringValue(
+        EXTERNAL_KEYS,
+        'LINKEDIN_KEY',
+        description=_('LinkedIn consumer key'),
+        help_text=_(
+            'Please register your forum at <a href="http://dev.twitter.com/apps/">'
+            'twitter applications site</a>'
+        ),
+
+    )
+)
+
+settings.register(
+    StringValue(
+        EXTERNAL_KEYS,
+        'LINKEDIN_SECRET',
+        description=_('LinkedIn consumer secret'),
     )
 )

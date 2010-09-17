@@ -205,7 +205,7 @@ USERS_PAGE_SIZE = 28#todo: move it to settings?
 USERNAME_REGEX_STRING = r'^[\w \-]+$'
 
 #chars that can go before or after @mention
-TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;,.!?<>'
+TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;:,.!?<>'
 
 COMMENT_HARD_MAX_LENGTH = 2048
 
@@ -226,7 +226,10 @@ USER_VIEW_DATA_SIZE = 50
 
 DEPENDENCY_URLS = {
     'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
+    'favicon': 'http://en.wikipedia.org/wiki/Favicon'
 }
+
+PASSWORD_MIN_LENGTH = 8
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *
