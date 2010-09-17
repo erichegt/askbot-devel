@@ -342,7 +342,6 @@ def signin(
                         request.user.message_set.create(
                                         message = _('Your new password saved')
                                     )
-                        print 'password changed'
                         return HttpResponseRedirect(next_url)
                 else:
                     logging.critical(

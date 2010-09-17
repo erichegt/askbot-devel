@@ -223,8 +223,6 @@ class LoginForm(forms.Form):
             self.cleaned_data['login_type'] = 'facebook'
             #self.do_clean_oauth_fields()
 
-        print 'returning cleaned data'
-
         return self.cleaned_data
 
     def do_clean_openid_fields(self, provider_data):
@@ -311,7 +309,6 @@ class LoginForm(forms.Form):
             logging.critical(error_message)
             self._errors['password_action'] = self.error_class([error_message])
             raise forms.ValidationError(error_message)
-        print 'password fields were cleaned'
 
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
@@ -391,7 +388,6 @@ class AccountRecoveryForm(forms.Form):
         """
         if 'email' in self.cleaned_data:
             email = self.cleaned_data['email']
-            print 'got email "%s"' % email
             try:
                 user = User.objects.get(email=email)
                 self.cleaned_data['user'] = user
