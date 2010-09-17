@@ -9,7 +9,6 @@ from django.template import loader, Context
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
 from django.utils.safestring import mark_safe
 from django.db import models
 from django.conf import settings as django_settings
@@ -31,6 +30,7 @@ from askbot.models import signals
 from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.utils.slug import slugify
 from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()

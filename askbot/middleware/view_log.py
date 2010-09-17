@@ -51,11 +51,12 @@ class ViewLogMiddleware(object):
 
         if settings.DEBUG == True:
             #todo: dependency!
-            from debug_toolbar.views import debug_media as debug_media_view
-            if view_func == debug_media_view:
-                return
-            else:
-                view_str = view_func.__name__
+            try:
+                from debug_toolbar.views import debug_media as debug_media_view
+                if view_func == debug_media_view:
+                    return
+            except ImportError:
+                pass
 
         if request.user.is_authenticated():
             user_name = request.user.username

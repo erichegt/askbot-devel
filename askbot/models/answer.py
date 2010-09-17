@@ -1,7 +1,6 @@
 import datetime
 from django.db import models
 from django.utils.http import urlquote  as django_urlquote
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from askbot.models.base import AnonymousContent, DeletableContent
 from askbot.models.base import ContentRevision
@@ -9,6 +8,7 @@ from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
 from askbot.models.question import Question
 from askbot import const
+from askbot.utils.slug import slugify
 
 
 class AnswerManager(models.Manager):

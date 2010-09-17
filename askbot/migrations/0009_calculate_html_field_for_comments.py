@@ -5,8 +5,8 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from django.utils.html import urlize
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from askbot.utils.slug import slugify
 try:
     from forum import const
 except ImportError:

@@ -6,7 +6,6 @@ from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.http import urlquote as django_urlquote
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
@@ -17,6 +16,7 @@ from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
 from askbot import const
 from askbot.utils.lists import LazyList
+from askbot.utils.slug import slugify
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {

@@ -15,11 +15,11 @@ from django.utils.translation import ungettext
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.template.defaulttags import url as default_url
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from askbot.skins import utils as skin_utils
 from askbot.utils import colors
 from askbot.utils.functions import get_from_dict_or_object
+from askbot.utils.slug import slugify
 from askbot.templatetags import extra_filters
 
 register = template.Library()

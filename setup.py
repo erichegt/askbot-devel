@@ -3,9 +3,11 @@ ez_setup.use_setuptools()
 from setuptools import setup, find_packages
 import sys
 
+#NOTE: if you want to develop askbot
+#you might want to install django-debug-toolbar as well
+
 install_requires = [
     'django==1.1.2',
-    'django-debug-toolbar==0.7.0',
     'South>=0.7.1',
     'recaptcha-client',
     'markdown2',
@@ -13,12 +15,14 @@ install_requires = [
     'django-keyedcache',
     'django-threaded-multihost',
     'django-robots',
+    'unidecode',
 ]
+
+import askbot
+
 WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
     install_requires.append('mysql-python')
-
-import askbot
 
 setup(
     name = "askbot",
@@ -65,14 +69,14 @@ setup(
     """,
 )
 
-if sys.platform in WIN_PLATFORMS:
+if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
     print 'ATTENTION!! please install windows binary mysql-python package'
     print 'at http://www.codegood.com/archives/4'
 
 print '**************************************************************'
 print '*                                                            *'
 print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >startforum                      *'
+print '*  To start deploying type: >python startforum               *'
 print '*  Please take a look at the manual askbot/doc/INSTALL       *'
 print '*  And please do not hesitate to ask your questions at       *'
 print '*  at http://askbot.org                                      *'
