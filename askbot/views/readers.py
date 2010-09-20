@@ -13,7 +13,9 @@ from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import RequestContext
+from django.template import RequestContext, Context
+from django.template import loader
+from django.template import defaultfilters
 from django.utils.html import *
 from django.utils import simplejson
 from django.db.models import Q
@@ -21,6 +23,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
+from django.contrib.humanize.templatetags import humanize
 
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
@@ -35,6 +38,9 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.functions import not_a_robot_request
 from askbot.utils.decorators import profile
 from askbot.search.state_manager import SearchState
+from askbot.templatetags import extra_tags
+from askbot.templatetags import extra_filters
+from askbot.conf import settings as askbot_settings
 
 # used in index page
 #todo: - take these out of const or settings
@@ -130,16 +136,164 @@ def questions(request):
         raise Http404
 
     questions = objects_list.page(search_state.page)
+
     #todo maybe do this search on query the set instead
     related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
+    contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
+
+    paginator_context = {
+        'is_paginated' : True,
+        'pages': objects_list.num_pages,
+        'page': search_state.page,
+        'has_previous': questions.has_previous(),
+        'has_next': questions.has_next(),
+        'previous': questions.previous_page_number(),
+        'next': questions.next_page_number(),
+        'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
+        'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+    }
+
+    if request.is_ajax():
+        q_count = objects_list.count
+        question_counter = ungettext(
+                                '%(q_num)s question',
+                                '%(q_num)s questions',
+                                q_count
+                            ) % {
+                                'q_num': humanize.intcomma(q_count),
+                            }
+
+        paginator_tpl = loader.get_template('paginator.html')
+        paginator_html = paginator_tpl.render(
+                                    Context(
+                                        extra_tags.cnprog_paginator(
+                                                        paginator_context
+                                                    )
+                                    )
+                                )
+
+        ajax_data = {
+            #current page is 1 by default now
+            #because ajax is only called by update in the search button
+            'paginator': paginator_html,
+            'question_counter': question_counter,
+            'questions': list(),
+            'related_tags': list(),
+            'faces': list()
+        }
+
+        badge_levels = dict(Badge.TYPE_CHOICES)
+        def pluralize_badge_count(count, level):
+            return ungettext(
+                '%(badge_count)d %(badge_level)s badge',
+                '%(badge_count)d %(badge_level)s badges',
+                count
+            ) % {
+                'badge_count': count, 
+                'badge_level': badge_levels[level]
+            }
+
+        gold_badge_css_class = Badge.CSS_CLASSES[Badge.GOLD],
+        silver_badge_css_class = Badge.CSS_CLASSES[Badge.SILVER],
+        bronze_badge_css_class = Badge.CSS_CLASSES[Badge.BRONZE],
+
+        for tag in related_tags:
+            tag_data = {
+                'name': tag.name,
+                'used_count': humanize.intcomma(tag.used_count)
+            }
+            ajax_data['related_tags'].append(tag_data)
+
+        for contributor in contributors:
+            ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
+
+        for question in questions.object_list:
+            timestamp = question.last_activity_at
+            author = question.last_activity_by
+            #'u_gold_title': pluralized_gold_badge_title,
+            #'u_silver': author.silver,
+            #'u_silver_title': pluralized_silver_badge_title,
+            #'u_bronze': author.bronze,
+            #'u_bronze_title': pluralized_bronze_badge_title,
+            if question.score == 0:
+                votes_color = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
+                votes_bgcolor = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
+            else:
+                votes_color = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG
+                votes_bgcolor = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG
+
+            if question.answer_count == 0:
+                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
+                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
+            elif question.answer_accepted:
+                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
+                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+            else:
+                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG
+                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG
+
+            if question.view_count == 0:
+                views_color = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
+                views_bgcolor = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
+            else:
+                views_color = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG
+                views_bgcolor = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG
+
+            question_data = {
+                'title': question.title,
+                'summary': question.summary,
+                'url': question.get_absolute_url(),
+                'tags': question.get_tag_names(),
+                'votes': extra_filters.humanize_counter(question.score),
+                'votes_color': votes_color,
+                'votes_bgcolor': votes_bgcolor,
+                'votes_word': ungettext('vote', 'votes', question.score),
+                'answers': extra_filters.humanize_counter(question.answer_count),
+                'answers_color': answers_color,
+                'answers_bgcolor': answers_bgcolor,
+                'answers_word': ungettext('answer', 'answers', question.answer_count),
+                'views': extra_filters.humanize_counter(question.view_count),
+                'views_color': views_color,
+                'views_bgcolor': views_bgcolor,
+                'views_word': ungettext('view', 'views', question.view_count),
+                'timestamp': unicode(timestamp),
+                'timesince': extra_tags.diff_date(timestamp),
+                'u_url': author.get_absolute_url(),
+                'u_name': author.username,
+                'u_rep': author.reputation,
+                'u_gold': author.gold,
+                'u_gold_title': pluralize_badge_count(
+                                                author.gold,
+                                                Badge.GOLD
+                                            ),
+                'u_gold_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_gold_css_class': gold_badge_css_class,
+                'u_silver': author.silver,
+                'u_silver_title': pluralize_badge_count(
+                                            author.silver,
+                                            Badge.SILVER
+                                        ),
+                'u_silver_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_silver_css_class': silver_badge_css_class,
+                'u_bronze': author.bronze,
+                'u_bronze_title': pluralize_badge_count(
+                                            author.bronze,
+                                            Badge.BRONZE
+                                        ),
+                'u_bronze_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_bronze_css_class': bronze_badge_css_class,
+            }
+            ajax_data['questions'].append(question_data)
+
+        return HttpResponse(
+                    simplejson.dumps(ajax_data),
+                    mimetype = 'application/json'
+                )
 
     tags_autocomplete = _get_tags_cache_json()
 
-    contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
-    #todo: organize variables by type
-    #before = datetime.datetime.now()
-    output = render_to_response('questions.html', {
+    template_context = RequestContext(request, {
         'view_name': 'questions',
         'active_tab': 'questions',
         'questions' : questions,
@@ -156,20 +310,21 @@ def questions(request):
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
         'sort': search_state.sort,
         'scope': search_state.scope,
-        'context' : {
-            'is_paginated' : True,
-            'pages': objects_list.num_pages,
-            'page': search_state.page,
-            'has_previous': questions.has_previous(),
-            'has_next': questions.has_next(),
-            'previous': questions.previous_page_number(),
-            'next': questions.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
-            'page_size' : search_state.page_size,#todo in T pagesize -> page_size
-        }}, context_instance=RequestContext(request))
+        'context' : paginator_context,
+        })
+
+    #todo: organize variables by type
+    if request.is_ajax():
+        template = loader.get_template('questions_ajax.html')
+        question_snippet = template.render(template_context)
+        output = {'question_snippet': question_snippet}
+        #print simplejson.dumps(output)
+        return HttpResponse(simplejson.dumps(output), mimetype='application/json')
+    else:
+        template = loader.get_template('questions.html')
+        return HttpResponse(template.render(template_context))
     #after = datetime.datetime.now()
     #print 'time to render %s' % (after - before)
-    return output
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages
@@ -267,9 +422,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        path_prefix = r'/%s%s%d/' % (settings.ASKBOT_URL,_('question/'), question.id)
+        path_prefix = r'/%s%s%d/' % (
+                                        settings.ASKBOT_URL,
+                                        _('question/'),
+                                        question.id
+                                    )
         if not request.path.startswith(path_prefix):
-            logging.critical('bad request path %s' % request_path)
+            logging.critical('bad request path %s' % request.path)
             raise Http404
         slug = request.path.replace(path_prefix, '', 1)
         logging.debug('have slug %s' % slug)

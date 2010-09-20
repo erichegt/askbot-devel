@@ -1,0 +1,118 @@
+<!-- questions_ajax.html -->
+{% load extra_tags %}
+{% load i18n %}
+{% load humanize %}
+{% load extra_filters %}
+{% load smart_if %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 60 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+    {% for question in questions.object_list %}
+    <div class="short-summary">
+        <div class="counts">
+            <div class="votes">
+                <span 
+                    class="item-count"
+                    {% if question.score == 0 %}
+                    style="background:{{settings.COLORS_VOTE_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VOTE_COUNTER_EMPTY_FG}}"
+                    {% else %}
+                    style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
+                    {% endif %}
+                >{{question.score|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.score as cnt %}vote{% plural %}votes{% endblocktrans %}
+                </div>
+            </div >
+            {% comment %}
+            <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
+            {% endcomment %}
+            <div class="votes"> 
+                <span 
+                    class="item-count"
+                    {% if question.answer_count == 0 %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_EMPTY_BG}};color:{{settings.COLORS_ANSWER_COUNTER_EMPTY_FG}}"
+                    {% else %}
+                        {% if question.answer_accepted %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                        {% else %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                        {% endif %}
+                    {% endif %}
+                >{{question.answer_count|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.answer_count as cnt %}answer{% plural %}answers{% endblocktrans %}
+                </div>
+            </div>
+            <div class="votes">
+                 <span class="item-count"
+                 {% if question.view_count == 0 %}
+                    style="background:{{settings.COLORS_VIEW_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VIEW_COUNTER_EMPTY_FG}}"
+                 {% else %}
+                    style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
+                 {% endif %}
+                 >{{question.view_count|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.view_count as cnt %}view{% plural %}views{% endblocktrans %}
+                </div>
+            </div>
+        </div>
+        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <div class="userinfo">
+            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+            {% if question.last_activity_by %}
+            <a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
+            {% endif %}
+        </div>
+        <div class="tags">
+            {% for tag in question.tagname_list %}
+            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{%endblocktrans %}" rel="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endcache %}
+        {% comment %}todo: fix css here{% endcomment %}
+        {% if questions_count == 0 %}
+            {% comment %}todo: add tips to widen selection{% endcomment%}
+            <p class="evenMore" style="padding-top:30px;text-align:center;">
+            {% if scope == "unanswered" %}
+                {% trans "There are no unanswered questions here" %}
+            {% endif %}
+            {% if scope == "favorite" %}
+                {% trans "No favorite questions here. " %}
+                {% trans "Please start (bookmark) some questions when you visit them" %}
+            {% endif %}
+            </p>
+            {% if query or search_tags or author_name %}
+            <p class="evenMore" style="text-align:center">
+                {% trans "You can expand your search by " %}
+                {% ifmany query search_tags author_name %}
+                    {% joinitems using ', ' ' or ' %}
+                        {% if author_name %}
+                        <a href="{% url questions %}?reset_author=true">{% trans "resetting author" %}</a>
+                        {% endif %}
+                    {% separator %}
+                        {% if search_tags %}
+                            <a href="{% url questions %}?reset_tags=true">{% trans "resetting tags" %}</a>
+                        {% endif %}
+                    {% separator %}
+                        {% ifmany query search_tags author_name %}
+                            <a href="{% url questions %}?start_over=true">{% trans "starting over" %}</a>
+                        {% endifmany %}
+                    {% endjoinitems %}
+                {% else %}
+                    <a href="{% url questions %}?start_over=true">{% trans "starting over" %}</a>
+                {% endifmany %}
+            </p>
+            {% endif %}
+            <p class="evenMore" style="text-align:center">
+            <a href="{% url ask %}">{% trans "Please always feel free to ask your question!" %}</a>
+            </p>
+        {% else %}
+            <p class="evenMore" style="padding-left:9px">
+                {% trans "Did not find what you were looking for?" %} 
+                <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
+            </p>
+        {% endif %}
+</div>
+<!-- end questions_ajax.html -->

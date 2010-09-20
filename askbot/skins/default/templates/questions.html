@@ -27,7 +27,7 @@
 {% endblock %}
 {% block content %}
 {% get_current_language as LANGUAGE_CODE %}
-{% cache 600 "scope_sort_tabs" search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size LANGUAGE_CODE %}
 <div class="tabBar">
     <div class="tabsC">
         <span class="label">{% trans "In:" %}</span>
@@ -128,7 +128,7 @@
                     alt="{% trans "subscribe to the questions feed" %}"
                 src="{% media "/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
         </p>
-        <p class="search-result-summary">
+        <p id="question-count" class="search-result-summary">
         {% if author_name or search_tags or query %}
             {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
                 {{q_num}} question found
@@ -231,7 +231,7 @@
         <div class="userinfo">
             <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
             {% if question.last_activity_by %}
-            &nbsp;<a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a>&nbsp;{% get_score_badge question.last_activity_by %}
+            <a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
             {% endif %}
         </div>
         <div class="tags">
@@ -286,11 +286,12 @@
             </p>
         {% endif %}
 </div>
+<script type="text/javascript" src="{% media "/js/live_search.js" %}"></script>
 {% endblock %}
 
     {% block tail %}
             {% if questions_count > 10 %}{%comment%}todo: remove magic number{%endcomment%}
-                <div class="pager">{% cnprog_paginator context %}</div>
+                <div id="pager" class="pager">{% cnprog_paginator context %}</div>
                 <div class="pagesize">{% cnprog_pagesize context %}</div>
             {% endif %}
     {% endblock %}
@@ -299,7 +300,7 @@
     {% if contributors %}
         {% get_current_language as LANGUAGE_CODE %}
         {% cache 600 contributors search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
-        <div class="boxC">
+        <div id="contrib-users" class="boxC">
         <h3 class="subtitle">{% trans "Contributors" %}</h3>
         {% for person in contributors %}
             {% gravatar person 48 %}
@@ -317,7 +318,7 @@
         {% cache 600 tags search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
         <div class="boxC">
             <h3 class="subtitle">{% trans "Related tags" %}</h3>
-            <div class="tags">
+            <div id="related-tags" class="tags">
                 {% for tag in tags %}
                     <a 
                         rel="tag" 

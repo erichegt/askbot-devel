@@ -205,7 +205,7 @@ USERS_PAGE_SIZE = 28#todo: move it to settings?
 USERNAME_REGEX_STRING = r'^[\w \-]+$'
 
 #chars that can go before or after @mention
-TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;:,.!?<>'
+TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;:,.!?<>"\''
 
 COMMENT_HARD_MAX_LENGTH = 2048
 

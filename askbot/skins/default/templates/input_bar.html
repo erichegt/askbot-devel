@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load smart_if %}
 {% if active_tab != "ask" %}
+{% spaceless %}
 <div id="searchBar">
     {% comment %}url action depends on which tab is active{% endcomment %}
     <form 
@@ -22,12 +23,11 @@
                 name="query" 
                 id="keywords"/>
             {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
-            <input type="button" 
-                value="x" 
-                name="reset_query" 
+            <input type="button"
+                value="x"
+                name="reset_query"
                 {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
-                onclick="window.location.href='{% url questions %}?reset_query=true'" 
-                value="true" 
+                onclick="window.location.href='{% url questions %}?reset_query=true'"
                 class="cancelSearchBtn"/>
             {% endif %}
             <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" />
@@ -40,6 +40,7 @@
             {% endif %}
     </form>
 </div>
+{% endspaceless %}
 {% else %}
     {% include "ask_form.html" %}
 {% endif %}
