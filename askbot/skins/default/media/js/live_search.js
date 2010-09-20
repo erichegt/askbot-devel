@@ -69,7 +69,9 @@ $(document).ready(function(){
     var render_title = function(result){
         return '<h2>' +
                     '<a title="' + result['summary'] + '" ' +
-                        'href="' + result['url'] + '"' +
+                        'href="' + scriptUrl + 
+                                $.i18n._('question/') + result['id'] + 
+                            '/"' +
                     '>' +
                         result['title'] +
                     '</a>' +
@@ -77,9 +79,11 @@ $(document).ready(function(){
     };
 
     var render_user_link = function(result){
-        if (result['u_url'] !== false){
+        if (result['u_id'] !== false){
+            var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
             return '<a ' +
-                        'href="' + result['u_url'] + '"' +
+                        'href="' + scriptUrl + $.i18n._('users/') + result['u_id'] + 
+                            '/' + u_slug + '/"' +
                     '>' +
                         result['u_name'] +
                     '</a> ';

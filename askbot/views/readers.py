@@ -154,6 +154,7 @@ def questions(request):
     }
 
     if request.is_ajax():
+
         q_count = objects_list.count
         question_counter = ungettext(
                                 '%(q_num)s question',
@@ -171,7 +172,6 @@ def questions(request):
                                                     )
                                     )
                                 )
-
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button
@@ -207,42 +207,53 @@ def questions(request):
         for contributor in contributors:
             ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
 
+        votes_color_empty_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
+        votes_bgcolor_empty = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
+        votes_color_min_fg = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG
+        votes_bgcolor_min = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG
+        answers_color_empty_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
+        answers_bgcolor_empty = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
+        answers_color_accepted_fg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
+        answers_bgcolor_accepted = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+        answers_color_min_fg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG
+        answers_bgcolor_min = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG
+        views_color_empty_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
+        views_bgcolor_empty = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
+        views_color_min_fg = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG
+        views_bgcolor_min = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG
+
         for question in questions.object_list:
             timestamp = question.last_activity_at
             author = question.last_activity_by
-            #'u_gold_title': pluralized_gold_badge_title,
-            #'u_silver': author.silver,
-            #'u_silver_title': pluralized_silver_badge_title,
-            #'u_bronze': author.bronze,
-            #'u_bronze_title': pluralized_bronze_badge_title,
+
             if question.score == 0:
-                votes_color = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
-                votes_bgcolor = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
+                votes_color = votes_color_empty_fg 
+                votes_bgcolor = votes_bgcolor_empty
             else:
-                votes_color = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG
-                votes_bgcolor = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG
+                votes_color = votes_color_min_fg 
+                votes_bgcolor = votes_bgcolor_min 
 
             if question.answer_count == 0:
-                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
-                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
+                answers_color = answers_color_empty_fg
+                answers_bgcolor = answers_bgcolor_empty
             elif question.answer_accepted:
-                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
-                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+                answers_color = answers_color_accepted_fg
+                answers_bgcolor = answers_bgcolor_accepted 
             else:
-                answers_color = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG
-                answers_bgcolor = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG
+                answers_color = answers_color_min_fg
+                answers_bgcolor = answers_bgcolor_min
 
             if question.view_count == 0:
-                views_color = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
-                views_bgcolor = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
+                views_color = views_color_empty_fg
+                views_bgcolor = views_bgcolor_empty
             else:
-                views_color = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG
-                views_bgcolor = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG
+                views_color = views_color_min_fg
+                views_bgcolor = views_bgcolor_min
 
             question_data = {
                 'title': question.title,
                 'summary': question.summary,
-                'url': question.get_absolute_url(),
+                'id': question.id,
                 'tags': question.get_tag_names(),
                 'votes': extra_filters.humanize_counter(question.score),
                 'votes_color': votes_color,
@@ -258,7 +269,7 @@ def questions(request):
                 'views_word': ungettext('view', 'views', question.view_count),
                 'timestamp': unicode(timestamp),
                 'timesince': extra_tags.diff_date(timestamp),
-                'u_url': author.get_absolute_url(),
+                'u_id': author.id,
                 'u_name': author.username,
                 'u_rep': author.reputation,
                 'u_gold': author.gold,
