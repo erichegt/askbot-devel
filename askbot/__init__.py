@@ -22,7 +22,7 @@ def get_version():
     """returns version of the askbot app
     this version is meaningful for pypi only
     """
-    return '0.6.10'
+    return '0.6.11'
 
 def send_mail(
             subject_line = None,

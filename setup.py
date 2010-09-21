@@ -9,6 +9,7 @@ import sys
 install_requires = [
     'django==1.1.2',
     'South>=0.7.1',
+    'oauth2',
     'recaptcha-client',
     'markdown2',
     'html5lib',
