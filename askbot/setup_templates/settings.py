@@ -163,7 +163,10 @@ CACHE_PREFIX = 'askbot' #make this unique
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'askbot.deps.django_authopenid.backends.AuthBackend',
+)
 
 #this needs to go
 USE_EXTERNAL_LEGACY_LOGIN = False #DO NOT USE, and do not delete this line, will be removed later
