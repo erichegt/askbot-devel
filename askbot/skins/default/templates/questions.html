@@ -302,9 +302,11 @@
         {% cache 600 contributors search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
         <div id="contrib-users" class="boxC">
         <h3 class="subtitle">{% trans "Contributors" %}</h3>
-        {% for person in contributors %}
-            {% gravatar person 48 %}
-        {% endfor %}
+        {% spaceless %}
+            {% for person in contributors %}
+                {% gravatar person 48 %}
+            {% endfor %}
+        {% endspaceless %}
         </div>
         {% endcache %}
     {% endif %}

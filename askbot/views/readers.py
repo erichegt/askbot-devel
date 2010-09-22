@@ -25,7 +25,6 @@ from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
-from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
@@ -433,18 +432,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        path_prefix = r'/%s%s%d/' % (
-                                        settings.ASKBOT_URL,
-                                        _('question/'),
-                                        question.id
-                                    )
-        if not request.path.startswith(path_prefix):
-            logging.critical('bad request path %s' % request.path)
-            raise Http404
-        slug = request.path.replace(path_prefix, '', 1)
-        logging.debug('have slug %s' % slug)
-        logging.debug('requestion path is %s' % request.path)
-        assert(slug == slugify(question.title))
+        assert(request.path == question.get_absolute_url())
     except AssertionError:
         logging.debug('no slug match!')
         return HttpResponseRedirect(question.get_absolute_url())

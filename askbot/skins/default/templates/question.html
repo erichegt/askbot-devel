@@ -187,9 +187,10 @@
                                     {% post_contributor_info question "original_author" %}
                                     {% post_contributor_info question "last_updater" %}
                             </div>
+                            {% spaceless %}
                             <div class="comments-container" id="comments-container-question-{{question.id}}">
                             {% for comment in question.get_comments|slice:":5" %}
-                                <p class="comment" id="comment-{{comment.id}}">
+                                <div class="comment" id="comment-{{comment.id}}">
                                     {{comment.html|safe}} 
                                     - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                     {% spaceless %}
@@ -200,9 +201,10 @@
                                             title="{% trans "delete this comment" %}"/>
                                     {% endif %}
                                     {% endspaceless %}
-                                </p>
+                                </div>
                             {% endfor %}
                             </div>
+                            {% endspaceless %}
                             <div class="post-comments" style="margin-bottom:20px">
                                 <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_post_comment:question }}"/>
                                 {% if request.user|can_post_comment:question or question.comment_count > 5 %}
@@ -329,9 +331,10 @@
                                                 {% post_contributor_info answer "original_author" %}
                                                 {% post_contributor_info answer "last_updater" %}
                                         </div>
+                                        {% spaceless %}
                                         <div class="comments-container" id="comments-container-answer-{{answer.id}}">
                                         {% for comment in answer.get_comments|slice:":5" %}
-                                            <p id="comment-{{comment.id}}" class="comment">
+                                            <div id="comment-{{comment.id}}" class="comment">
                                                 {{comment.html|safe}} 
                                                 - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                                 {% spaceless %}
@@ -342,9 +345,10 @@
                                                         title="{% trans "delete this comment" %}"/>
                                                 {% endif %}
                                                 {% endspaceless %}
-                                            </p>
+                                            </div>
                                         {% endfor %}
                                         </div>
+                                        {% endspaceless %}
                                         <div class="post-comments" style="margin-bottom:20px">
                                             <input id="can-post-comments-answer-{{answer.id}}" type="hidden" value="{{ request.user|can_post_comment:answer}}"/>
                                             {% if request.user|can_post_comment:answer or answer.comment_count > 5 %}
@@ -501,7 +505,6 @@
     <div class="boxC">
         <h3 class="subtitle">{% trans "Related questions" %}</h3>
         <div class="questions-related">
-
             {% for question in similar_questions.data %}
             <p>
                 <a href="{{ question.get_absolute_url }}">{{ question.get_question_title }}</a>

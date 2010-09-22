@@ -9,10 +9,10 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from askbot.forms import FeedbackForm
 from django.core.urlresolvers import reverse
-from django.core.mail import mail_admins
 from django.utils.translation import ugettext as _
 from askbot.utils.forms import get_next_url
 from askbot.models import Badge, Award
+import askbot
 
 def about(request):
     return render_to_response('about.html', context_instance=RequestContext(request))
@@ -37,7 +37,7 @@ def feedback(request):
             data['message'] = form.cleaned_data['message']
             data['name'] = form.cleaned_data.get('name',None)
             message = render_to_response('feedback_email.txt',data,context_instance=RequestContext(request))
-            mail_admins(_('Q&A forum feedback'), message)
+            askbot.mail_moderators(_('Q&A forum feedback'), message)
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))

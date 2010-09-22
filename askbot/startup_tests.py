@@ -8,6 +8,10 @@ the main function is run_startup_tests
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
+#todo:
+#
+# *validate emails in settings.py
+
 def run_startup_tests():
     """main function that runs
     all startup tests

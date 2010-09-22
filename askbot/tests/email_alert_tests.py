@@ -4,7 +4,9 @@ import copy
 from django.conf import settings as django_settings
 from django.core import management
 import django.core.mail
+from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
 
@@ -680,3 +682,35 @@ class DelayedAlertSubjectLineTests(TestCase):
                 order,
                 sorted(order)
             )
+
+class FeedbackTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.create_user(username = 'user1', status='m')
+        self.create_user(username = 'user2', status='m')
+        u3 = self.create_user(username = 'user3')
+        u3.is_superuser = True
+        u3.save()
+
+    def assert_feedback_works(self):
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 3)
+
+    def test_feedback_post_form(self):
+        client = Client()
+        data = {
+            'email': 'evgeny.fadeev@gmail.com',
+            'text': 'hi this is a test case',
+            'subject': 'subject line'
+        }
+        response = client.post(reverse('feedback'), data)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.template[0].name, 'feedback.html')
+
+    def test_mail_moderators(self):
+        """tests askbot.mail_moderators()
+        """
+        import askbot
+        askbot.mail_moderators('subject', 'text')
+        self.assert_feedback_works()
+

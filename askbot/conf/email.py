@@ -67,3 +67,12 @@ settings.register(
         help_text=_('Use this setting to control gravatar for email-less user')
     )
 )
+
+settings.register(
+    StringValue(
+        EMAIL,
+        'EMAIL_SUBJECT_PREFIX',
+        default='',
+        description=_('Prefix for the email subject line'),
+    )
+)

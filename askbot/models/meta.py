@@ -1,6 +1,7 @@
 import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils import html as html_utils
 from askbot import const
 from askbot.models import base
 from askbot.models.user import EmailFeedSetting
@@ -99,6 +100,7 @@ class FlaggedItem(base.MetaContent, base.UserContent):
     def __unicode__(self):
         return '[%s] flagged at %s' %(self.user, self.flagged_at)
 
+#todo: move this class to content
 class Comment(base.MetaContent, base.UserContent):
     comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
     added_at = models.DateTimeField(default = datetime.datetime.now)
@@ -124,6 +126,12 @@ class Comment(base.MetaContent, base.UserContent):
 
     def set_text(self, text):
         self.comment = text
+
+    def get_snippet(self):
+        """returns an abbreviated snippet of the content
+        todo: remove this if comment model unites with Q&A
+        """
+        return html_utils.strip_tags(self.html)[:120] + ' ...'
 
     def get_owner(self):
         return self.user

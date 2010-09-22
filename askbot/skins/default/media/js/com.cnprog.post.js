@@ -593,7 +593,7 @@ function createComments(type) {
 
     // {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     var renderComment = function(jDiv, json) {
-        var html = '<p id="comment-' + json.id + '" class="comment" style="display:none">' + json.text;
+        var html = '<div id="comment-' + json.id + '" class="comment" style="display:none">' + json.text;
         html += json.user_url ? ' - <a href="' + json.user_url + '"' : '<span';
         html += ' class="comment-user">' + json.user_display_name + (json.user_url ? '</a>' : '</span>');
         html += ' (' + json.comment_age + ')';
@@ -605,7 +605,7 @@ function createComments(type) {
         if (json.delete_url) {
         }
 
-        html += '</p>';
+        html += '</div>';
 
         jDiv.append(html);
     };

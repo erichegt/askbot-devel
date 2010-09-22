@@ -1434,33 +1434,33 @@ def format_instant_notification_email(
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
         subject_line = _(
-                    'new question comment about: "%(title)s"'
+                    'Re: "%(title)s"'
                 ) % {'title': origin_post.title}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
         subject_line = _(
-                    'new answer comment about: "%(title)s"'
+                    'Re: "%(title)s"'
                 ) % {'title': origin_post.title}
     elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
         subject_line = _(
-                    'answer modified for: "%(title)s"'
+                    'Re: "%(title)s"'
                 ) % {'title': origin_post.title}
     elif update_type == 'new_answer':
         assert(isinstance(post, Answer))
         subject_line = _(
-                    'new answer for: "%(title)s"'
+                    'Re: "%(title)s"'
                 ) % {'title': origin_post.title}
     elif update_type == 'question_update':
         assert(isinstance(post, Question))
         subject_line = _(
-                    'question modified: "%(title)s"'
+                    'Question: "%(title)s"'
                 ) % {'title': origin_post.title}
     elif update_type == 'new_question':
         assert(isinstance(post, Question))
         subject_line = _(
-                    'new question: "%(title)s"'
+                    'Question: "%(title)s"'
                 ) % {'title': origin_post.title}
     else:
         raise ValueError('unexpected update_type %s' % update_type)
@@ -1468,6 +1468,7 @@ def format_instant_notification_email(
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
+        'content_preview': post.get_snippet(),
         'update_type': update_type,
         'post_url': site_url + post.get_absolute_url(),
         'origin_post_title': origin_post.title,
@@ -1500,6 +1501,7 @@ def send_instant_notifications_about_activity_in_post(
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
 
+    origin_post = post.get_origin_post()
     for user in receiving_users:
 
             subject_line, body_text = format_instant_notification_email(
@@ -1515,7 +1517,7 @@ def send_instant_notifications_about_activity_in_post(
                     subject_line = subject_line,
                     body_text = body_text,
                     recipient_list = [user.email],
-                    related_object = post.get_origin_post(),
+                    related_object = origin_post,
                     activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
                 )
 

@@ -287,8 +287,10 @@ class Question(content.Content, DeletableContent):
             similar_questions = self.__class__.objects.filter(
                                             tags__in = self.tags.all()
                                         ).exclude(
-                                            id = self.id
-                                        )[:100]
+                                            id = self.id,
+                                        ).exclude(
+                                            deleted = True
+                                        ).distinct()[:100]
             similar_questions = list(similar_questions)
             output = list()
             for question in similar_questions:

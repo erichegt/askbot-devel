@@ -6,6 +6,7 @@ from django.contrib.sitemaps import ping_google
 from django.db import models
 from askbot.models.meta import Comment, Vote, FlaggedItem
 from askbot.models.user import EmailFeedSetting
+from django.utils import html as html_utils
 
 class Content(models.Model):
     """
@@ -52,6 +53,11 @@ class Content(models.Model):
     def get_text(self):
         return self.text
 
+    def get_snippet(self):
+        """returns an abbreviated snippet of the content
+        """
+        return html_utils.strip_tags(self.html)[:120] + ' ...'
+
     def add_comment(self, comment=None, user=None, added_at=None):
         if added_at is None:
             added_at = datetime.datetime.now()
@@ -68,6 +74,23 @@ class Content(models.Model):
         comment.parse_and_save(author = user)
         self.comment_count = self.comment_count + 1
         self.save()
+
+        #tried to add this to bump updated question
+        #in most active list, but it did not work
+        #becase delayed email updates would be triggered
+        #for cases where user did not subscribe for them
+        #
+        #need to redo the delayed alert sender
+        #
+        #origin_post = self.get_origin_post()
+        #if origin_post == self:
+        #    self.last_activity_at = added_at
+        #    self.last_activity_by = user
+        #else:
+        #    origin_post.last_activity_at = added_at
+        #    origin_post.last_activity_by = user
+        #    origin_post.save()
+
         return comment
 
     def get_instant_notification_subscribers(

@@ -3,14 +3,12 @@
 {% blocktrans %}<p>Dear {{receiving_user_name}},</p>{% endblocktrans %}
     {% if update_type == 'question_comment' %}
 {% blocktrans %}
-<p>{{update_author_name}} left a <a href="%{{post_url}}">new comment</a>
-for question "{{origin_post_title}}"</p>
+<p>{{update_author_name}} left a <a href="{{post_url}}">new comment</a>:</p>
 {% endblocktrans %}
     {% endif %}
     {% if update_type == 'answer_comment' %}
 {% blocktrans %}
-<p>{{update_author_name}} left a <a href="{{post_url}}">new comment</a>
- for an answer to question "{{origin_post_title}}"</p>
+<p>{{update_author_name}} left a <a href="{{post_url}}">new comment</a></p>
 {% endblocktrans %}
     {% endif %}
     {% if update_type == 'new_answer' %}
@@ -39,6 +37,7 @@ for question "{{origin_post_title}}"</p>
     {% endif %}
 <p></p>
 {% blocktrans %}
+<div>{{content_preview}}</div>
 <p>Please note - you can easily <a href="{{user_subscriptions_url}}">change</a>
 how often you receive these notifications or unsubscribe. Thank you for your interest in our forum!</p>
 {% endblocktrans %}

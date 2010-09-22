@@ -250,10 +250,10 @@ $(document).ready(function(){
             new_list.attr('id', q_list_sel);
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
+            render_faces(data['faces']);
+            render_related_tags(data['related_tags']);
+            query.focus();
         }
-        render_faces(data['faces']);
-        render_related_tags(data['related_tags']);
-        query.focus();
         //show new div
     }
 
