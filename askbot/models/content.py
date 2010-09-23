@@ -39,6 +39,7 @@ class Content(models.Model):
     flagged_items = generic.GenericRelation(FlaggedItem)
 
     _use_markdown = True
+    _escape_html = False #markdow does the escaping
     _urlize = False
 
     class Meta:
