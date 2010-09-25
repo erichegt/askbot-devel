@@ -76,6 +76,7 @@
             <table style="width:100%;" id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
                 <tr>
                     <td style="width:30px;vertical-align:top">
+                        {% spaceless %}
                         <div class="vote-buttons">
                             {% if question_vote %}
                             <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
@@ -105,9 +106,7 @@
                                 src="{% media  "/images/vote-arrow-up.png" %}" 
                                 title="{% trans "i like this post (click again to cancel)" %}" />
                             <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-                                title="{% trans "current number of votes" %}">
-                                {{ question.score }}
-                            </div>
+                                title="{% trans "current number of votes" %}">{{ question.score }}</div>
                             <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
                                 src="{% media  "/images/vote-arrow-down.png" %}"
                                 alt="{% trans "i dont like this post (click again to cancel)" %}"
@@ -117,9 +116,8 @@
                             <img class="question-img-favorite" src="{% media  "/images/vote-favorite-on.png" %}"
                                 alt="{% trans "mark this question as favorite (click again to cancel)" %}"
                                 title="{% trans "mark this question as favorite (click again to cancel)" %}" />
-                            <div id="favorite-number" class="favorite-number my-favorite-number">
-                                {{ question.favourite_count }}
-                            </div>
+                            <div id="favorite-number" class="favorite-number my-favorite-number"
+                            >{{ question.favourite_count }}</div>
                             {% else %}
                             <img class="question-img-favorite" src="{% media  "/images/vote-favorite-off.png" %}"
                                 alt="{% trans "remove favorite mark from this question (click again to restore mark)" %}"
@@ -130,6 +128,7 @@
                             {% endif %}
                             
                         </div>
+                        {% endspaceless %}
                     </td>
                     <td>
                         <div id="item-right">
@@ -262,7 +261,8 @@
                         <table style="width:100%;">
                             <tr>
                                 <td style="width:30px;vertical-align:top">
-                                    <div class="vote-buttons">
+                                    {% spaceless %}
+                                    <div class="vote-buttons"
                                         <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
                                                 src="{% blockmedia %}/images/vote-arrow-up{% get_user_vote_image user_answer_votes answer.id 1 %}.png{% endblockmedia %}" 
                                                 alt="{% trans "i like this answer (click again to cancel)" %}"
@@ -289,6 +289,7 @@
                                             {% endif %}
                                         {% endif %}
                                     </div>
+                                    {% endspaceless %}
                                 </td>
                                 <td>
                                     <div class="item-right">
