@@ -5,6 +5,8 @@ from askbot import auth
 from askbot import models
 from askbot.deps.grapefruit import Color
 from askbot.conf import settings as askbot_settings
+from askbot.skins import utils as skin_utils
+from askbot.utils import functions
 from django.utils.translation import ugettext as _
 import logging
 
@@ -14,6 +16,22 @@ register = template.Library()
 @register.filter
 def collapse(input):
     return ' '.join(input.split())
+
+@template.defaultfilters.stringfilter
+@register.filter
+def media(url):
+    """media filter - same as media tag, but
+    to be used as a filter in jinja templates
+    like so {{'/some/url.gif'|media}}
+    """
+    if url:
+        return skin_utils.get_media_url(url)
+    else:
+        return ''
+
+diff_date = register.filter(functions.diff_date)
+
+setup_paginator = register.filter(function.setup_paginator)
 
 def make_template_filter_from_permission_assertion(
                                 assertion_name = None,

@@ -1,5 +1,3 @@
-{% load i18n %}
-{% load smart_if %}
 {% if active_tab != "ask" %}
 {% spaceless %}
 <div id="searchBar">
@@ -20,7 +18,7 @@
                 {% endif %}
                 type="text" 
                 autocomplete="off"
-                value="{{ query|default_if_none:"" }}" 
+                value="{{ query|default_if_none('') }}" 
                 name="query" 
                 id="keywords"/>
             {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
@@ -43,5 +41,5 @@
 </div>
 {% endspaceless %}
 {% else %}
-    {% include "ask_form.html" %}
+    {% include "ask_form.jinja.html" %}
 {% endif %}

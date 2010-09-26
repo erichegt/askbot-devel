@@ -20,6 +20,7 @@ from django.utils.html import *
 from django.utils import simplejson
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils import translation
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
@@ -40,6 +41,7 @@ from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 from askbot.conf import settings as askbot_settings
+from askbot.skins.loaders import ENV #jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings
@@ -302,8 +304,16 @@ def questions(request):
 
     tags_autocomplete = _get_tags_cache_json()
 
+    reset_method_count = 0
+    if search_state.query:
+        reset_method_count += 1
+    if search_state.tags:
+        reset_method_count += 1
+    if meta_data.get('author_name',None):
+        reset_method_count += 1
 
     template_context = RequestContext(request, {
+        'language_code': translation.get_language(),
         'view_name': 'questions',
         'active_tab': 'questions',
         'questions' : questions,
@@ -325,13 +335,15 @@ def questions(request):
 
     #todo: organize variables by type
     if request.is_ajax():
+        #this branch should be dead now
+        raise NotImplementedError()
         template = loader.get_template('questions_ajax.html')
         question_snippet = template.render(template_context)
         output = {'question_snippet': question_snippet}
         #print simplejson.dumps(output)
         return HttpResponse(simplejson.dumps(output), mimetype='application/json')
     else:
-        template = loader.get_template('questions.html')
+        template = ENV.get_template('questions.jinja.html')
         return HttpResponse(template.render(template_context))
     #after = datetime.datetime.now()
     #print 'time to render %s' % (after - before)

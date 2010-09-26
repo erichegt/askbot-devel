@@ -1180,6 +1180,50 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
+def user_get_karma_summary(self):
+    """returns human readable sentence about
+    status of user's karma"""
+    return _("%(username)s karma is %(reputation)s") % \
+            {'username': self.username, 'reputation': self.reputation}
+
+def user_get_badge_summary(self):
+    """returns human readable sentence about
+    number of badges of different levels earned
+    by the user. It is assumed that user has some badges"""
+    badge_bits = list()
+    if self.gold:
+        bit = ungettext(
+                'one gold badge',
+                '%(count)d gold badges',
+                self.gold
+            ) % {'count': self.gold}
+        badge_bits.append(bit)
+    if self.silver:
+        bit = ungettext(
+                'one silver badge',
+                '%(count)d silver badges',
+                self.gold
+            ) % {'count': self.silver}
+        badge_bits.append(bit)
+    if self.silver:
+        bit = ungettext(
+                'one bronze badge',
+                '%(count)d bronze badges',
+                self.gold
+            ) % {'count': self.bronze}
+        badge_bits.append(bit)
+
+    if len(badge_bits) == 1:
+        badge_str = badge_bits[0]
+    elif len(badge_bits) > 1:
+        last_bit = badge_bits.pop()
+        badge_str = ', '.join(badge_bits)
+        badge_str = _('%(item1)s and %(item2)s') % \
+                    {'item1': badge_str, 'item2': last_bit}
+    else:
+        raise ValueError('user must have badges to call this function')
+    return _("%(user)s has %(badges)s") % {'user': self.username, 'badges':badge_str}
+
 #series of methods for user vote-type commands
 #same call signature func(self, post, timestamp=None, cancel=None)
 #note that none of these have business logic checks internally

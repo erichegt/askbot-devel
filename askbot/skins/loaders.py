@@ -1,10 +1,9 @@
-from django.template import loader
 from django.template.loaders import filesystem
 import os.path
-import os
-import logging
-from askbot.skins import utils
 from askbot.conf import settings as askbot_settings
+from django.conf import settings as django_settings
+from coffin.common import CoffinEnvironment
+from jinja2 import loaders as jinja_loaders
 
 #module for skinning askbot
 #via ASKBOT_DEFAULT_SKIN configureation variable (not django setting)
@@ -15,6 +14,8 @@ from askbot.conf import settings as askbot_settings
 ASKBOT_SKIN_COLLECTION_DIR = os.path.dirname(__file__)
 
 def load_template_source(name, dirs=None):
+    """Django template loader
+    """
     if dirs is None:
         dirs = (ASKBOT_SKIN_COLLECTION_DIR, )
     else:
@@ -28,3 +29,27 @@ def load_template_source(name, dirs=None):
         tname = os.path.join('default','templates',name)
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
+
+class SkinEnvironment(CoffinEnvironment):
+    """Jinja template environment
+    that loads templates from askbot skins
+    """
+
+    def _get_loaders(self):
+        """over-ridden function _get_loaders that creates
+        the loader for the skin templates
+        """
+        loaders = list()
+        skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
+        skin_dirs = django_settings.TEMPLATE_DIRS + (ASKBOT_SKIN_COLLECTION_DIR,)
+
+        template_dirs = list()
+        for dir in skin_dirs:
+            template_dirs.append(os.path.join(dir, skin_name, 'templates'))
+        for dir in skin_dirs:
+            template_dirs.append(os.path.join(dir, 'default', 'templates'))
+
+        loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
+        return loaders
+
+ENV = SkinEnvironment(extensions=['jinja2.ext.i18n'])
