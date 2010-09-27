@@ -203,3 +203,4 @@ LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
 ASKBOT_UPLOADED_FILES_URL = '%s%s' % (ASKBOT_URL, 'upfiles/')
+ALLOW_UNICODE_SLUGS = False

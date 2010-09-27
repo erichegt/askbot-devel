@@ -7,14 +7,14 @@ slug will be simply equal to the input text
 """
 from unidecode import unidecode
 from django.template import defaultfilters
-from askbot.conf import settings as askbot_settings
+from django.conf import settings
 
 
 def slugify(input_text, max_length=50):
     """custom slugify function that
     removes diacritic modifiers from the characters
     """
-    if askbot_settings.USE_ASCII_ONLY_SLUGS == True:
+    if getattr(settings, 'ALLOW_UNICODE_SLUGS', False) == False:
         if input_text == '':
             return input_text
         slug = defaultfilters.slugify(unidecode(input_text))

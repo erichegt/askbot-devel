@@ -1,5 +1,5 @@
 <!-- template header.jinja.html -->
-{% import "macros.html" %}
+{% import "macros.html" as macros %}
 <div id="roof">
     <div id="navBar">
         <div id="top">
@@ -35,7 +35,7 @@
     <td id="logoContainer">
         <div id="logo">
             <a href="{% url questions %}?start_over=true"><img 
-                src="{% media settings.SITE_LOGO_URL %}" 
+                src="{{ settings.SITE_LOGO_URL|media }}" 
                 title="{% trans %}back to home page{% endtrans %}"
                 alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/></a>
         </div>

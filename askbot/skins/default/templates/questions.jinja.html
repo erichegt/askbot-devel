@@ -205,11 +205,11 @@
         <h2><a title="{{question.summary}}" href="{{ question.get_absolute_url() }}">{{question.title}}</a></h2>
         <div class="userinfo">
             <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-            {{question.last_activity_by.get_profile_link()}}
+            <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
             {{macros.user_score_and_badge_summary(question.last_activity_by)}}
         </div>
         <div class="tags">
-            {% for tag in question.tagname_list %}
+            {% for tag in question.tagname_list() %}
             <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
             {% endfor %}
         </div>
@@ -262,7 +262,7 @@
     {% block tail %}
             {% if questions_count > 10 %}{# todo: remove magic number #}
                 <div id="pager" class="pager">{{ macros.paginator(context|setup_paginator) }}</div>
-                <div class="pagesize">{{ macros.page_size_switch(context) }}</div>
+                <div class="pagesize">{{ macros.pagesize_switch(context) }}</div>
             {% endif %}
     {% endblock %}
 
@@ -273,7 +273,7 @@
         <h3 class="subtitle">{% trans %}Contributors{% endtrans %}</h3>
         {% spaceless %}
             {% for person in contributors %}
-                {% gravatar person 48 %}
+                {{ macros.gravatar(person,48) }}
             {% endfor %}
         {% endspaceless %}
         </div>

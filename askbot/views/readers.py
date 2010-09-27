@@ -343,8 +343,12 @@ def questions(request):
         #print simplejson.dumps(output)
         return HttpResponse(simplejson.dumps(output), mimetype='application/json')
     else:
+        before = datetime.datetime.now()
         template = ENV.get_template('questions.jinja.html')
-        return HttpResponse(template.render(template_context))
+        response = HttpResponse(template.render(template_context))
+        after = datetime.datetime.now()
+        print after - before
+        return response
     #after = datetime.datetime.now()
     #print 'time to render %s' % (after - before)
 

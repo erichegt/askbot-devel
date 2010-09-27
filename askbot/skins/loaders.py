@@ -52,4 +52,5 @@ class SkinEnvironment(CoffinEnvironment):
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
 
-ENV = SkinEnvironment(extensions=['jinja2.ext.i18n'])
+ENV = SkinEnvironment(autoescape=False, extensions=['jinja2.ext.i18n'])
+ENV.install_null_translations()

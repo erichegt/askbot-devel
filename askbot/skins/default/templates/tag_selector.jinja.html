@@ -1,4 +1,4 @@
-{% comment %}todo - maybe disable navigation from ignored tags here when "hide" is on - with js?{%endcomment%}
+{# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
 <div id="tagSelector" class="boxC">
     <h3 class="subtitle">{% trans %}Interesting tags{% endtrans %}</h3>
     <div class="tags interesting marked-tags">
@@ -23,10 +23,10 @@
         {% spaceless %}
         <span class="deletable-tag" id="ignored-tag-{{tag_name}}">
             <a rel="tag" 
-                title="{% trans %}see questions tagged '{{ tag_name }}'{% endbtrans %}"
+                title="{% trans %}see questions tagged '{{ tag_name }}'{% endtrans %}"
                 href="{% url questions %}?tags={{tag_name|urlencode}}">{{tag_name}}</a>
             <img class="delete-icon" 
-                src="{{'/images/close-small-dark.png|media{% endtrans %}"
+                src="{{'/images/close-small-dark.png'|media}}"
                 title="{% trans %}remove '{{tag_name}}' from the list of ignored tags{% endtrans %}"/>
         </span>
         {% endspaceless %}

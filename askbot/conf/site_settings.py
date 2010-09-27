@@ -102,19 +102,3 @@ settings.register(
             )
     )
 )
-
-settings.register(
-    livesettings.BooleanValue(
-        QA_SITE_SETTINGS,
-        'USE_ASCII_ONLY_SLUGS',
-        description=_(
-                'Use slugs made only of ASCII characters '
-                'in the page urls'
-            ),
-        help_text=_('Slugs are human-readable parts of the url '
-                'consisting of the page keywords, that are '
-                'typically composed from the page title.'
-            ),
-        default = True
-    )
-)

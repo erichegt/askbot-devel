@@ -56,7 +56,7 @@
         </script>
         {% endif %}
         {% if active_tab != "tags" and active_tab != "users" %}
-        {% comment %}start asking question with title from search query{% endcomment %}
+        {# start asking question with title from search query #}
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#nav_ask').click(
@@ -69,7 +69,7 @@
                 );
             });
         </script>
-        {% comment %}focus input on the search bar{% endcomment %}
+        {# focus input on the search bar endcomment #}
         <script type="text/javascript">
             $(document).ready(function() {
                 {% if active_tab != "ask" %}
@@ -89,13 +89,11 @@
     <body>
     {% endif %}
         <div class="notify" style="display:none">
-            {% autoescape off %}
                 {% if user_messages %}
                     {% for message in user_messages %}
                           <p class="darkred">{{ message }}</p>
                     {% endfor %}
                 {% endif %}
-            {% endautoescape %}
             <a id="close-notify" onclick="notify.close(true)">&times;</a>
         </div>
         {% include "header.jinja.html" %}
@@ -118,7 +116,7 @@
             </div>
             <div class="spacer3"></div>
         </div>
-        {% include "footer.html" %}
+        {% include "footer.jinja.html" %}
         {% block endjs %}
         {% endblock %}
     </body>

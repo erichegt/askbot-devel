@@ -1,7 +1,7 @@
 {% if active_tab != "ask" %}
 {% spaceless %}
 <div id="searchBar">
-    {% comment %}url action depends on which tab is active{% endcomment %}
+    {# url action depends on which tab is active #}
     <form 
         {% if active_tab == "tags" or active_tab == "users" %}
             action="{% url search %}" 
@@ -9,7 +9,7 @@
             action="{% url questions %}" 
         {% endif %}
         method="get">
-            {% comment %} class was searchInput {% endcomment %}
+            {# class was searchInput #}
             <input 
                 {% if query %}
                 class="searchInputCancelable"
@@ -21,15 +21,15 @@
                 value="{{ query|default_if_none('') }}" 
                 name="query" 
                 id="keywords"/>
-            {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
+            {% if query %}{# query is only defined by questions view #}
             <input type="button"
                 value="x"
                 name="reset_query"
-                {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
+                {# todo - make sure it works on Enter keypress #}
                 onclick="window.location.href='{% url questions %}?reset_query=true'"
                 class="cancelSearchBtn"/>
             {% endif %}
-            <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" />
+            <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" />
             {% if active_tab == "tags" %}
                 <input type="hidden" name="t" value="tag"/>
             {% else %}
