@@ -314,6 +314,7 @@ def questions(request):
 
     template_context = RequestContext(request, {
         'language_code': translation.get_language(),
+        'reset_method_count': reset_method_count,
         'view_name': 'questions',
         'active_tab': 'questions',
         'questions' : questions,

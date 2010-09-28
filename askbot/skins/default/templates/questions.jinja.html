@@ -21,7 +21,7 @@
        <script type='text/javascript' src='{{"/js/com.cnprog.tag_selector.js"|media}}'></script>
 {% endblock %}
 {% block content %}
-{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size current_language %}
+{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
 <div class="tabBar">
     <div class="tabsC">
         <span class="label">{% trans %}In:{% endtrans %}</span>
