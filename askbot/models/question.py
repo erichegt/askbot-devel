@@ -182,10 +182,10 @@ class QuestionManager(models.Manager):
         qs = qs.distinct()
         qs = qs.select_related(
                         'last_activity_by__id',
-                        'last_activity_by__username'
-                        'last_activity_by__reputation'
-                        'last_activity_by__gold'
-                        'last_activity_by__silver'
+                        'last_activity_by__username',
+                        'last_activity_by__reputation',
+                        'last_activity_by__gold',
+                        'last_activity_by__silver',
                         'last_activity_by__bronze'
                     )
         return qs, meta_data
