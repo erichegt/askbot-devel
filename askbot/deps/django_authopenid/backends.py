@@ -68,16 +68,13 @@ class AuthBackend(object):
 
         elif method == 'openid':
             provider_name = util.get_provider_name(openid_url)
-            if login_providers[provider_name]['type'].startswith('openid'):
-                try:
-                    assoc = UserAssociation.objects.get(
-                                                openid_url = openid_url,
-                                                provider_name = provider_name
-                                            )
-                    user = assoc.user
-                except UserAssociation.DoesNotExist:
-                    return None
-            else:
+            try:
+                assoc = UserAssociation.objects.get(
+                                            openid_url = openid_url,
+                                            provider_name = provider_name
+                                        )
+                user = assoc.user
+            except UserAssociation.DoesNotExist:
                 return None
 
         elif method == 'email':
