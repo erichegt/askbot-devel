@@ -526,6 +526,7 @@ def show_signin_view(
         'account_recovery_form': account_recovery_form,
         'openid_error_message':  request.REQUEST.get('msg',''),
         'account_recovery_message': account_recovery_message,
+        'use_password_login': util.use_password_login(),
     }
 
     major_login_providers = util.get_major_login_providers()
@@ -841,9 +842,14 @@ def signup_with_password(request):
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
+    if askbot_settings.USE_RECAPTCHA:
+        RegisterForm = forms.SafeClassicRegisterForm
+    else:
+        RegisterForm = forms.ClassicRegisterForm
+
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
-        form = forms.ClassicRegisterForm(request.POST)
+        form = RegisterForm(request.POST)
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
         
         #validation outside if to remember form values
@@ -904,12 +910,12 @@ def signup_with_password(request):
             logging.debug('create classic account forms were invalid')
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = forms.ClassicRegisterForm(
-                                initial={
-                                    'next':next,
-                                    'login_provider': provider_name
-                                }
-                            )
+        form = RegisterForm(
+                        initial={
+                            'next':next,
+                            'login_provider': provider_name
+                        }
+                    )
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
     context_data = {
