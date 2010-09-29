@@ -1,4 +1,4 @@
-﻿//var i18nLang;
+//var i18nLang;
 var i18nZh = {
     'insufficient privilege':'用户权限不在操作范围',
     'cannot pick own answer as best':'不能设置自己的回答为最佳答案',
@@ -505,6 +505,74 @@ var i18nFr = {
     'signin/': 'connexion/'
 };
 
+var i18nIt = {
+    "anonymous users cannot vote":"Gli utenti anonimi non possono votare ",
+    'add a comment': 'Aggiungi un commento', 
+    'add comment': 'OK', 
+    'anonymous users cannot delete/undelete': 'Gli utenti anonimi non possono cancellare/annullare la cancellazione', 
+    'anonymous users cannot flag offensive posts': 'Gli utenti anonimi non possono flaggare come offensivo questo post', 
+    'anonymous users cannot select favorite questions': 'Gli utenti anonimi non possono aggiungere domande ai preferiti',
+    'bold': 'grassetto', 
+    'bulleted list': 'Lista', 
+    'can write': 'può scrivere ', 
+    'cannot flag message as offensive twice': 'non è possibile flaggare come offensivo più di una volta ',
+    'cannot pick own answer as best': 'non è possibile assegnare come miglior risposta ad una propria domanda una propria risposta', 
+    'characters': 'caratteri rimanenti',
+    'click to close': 'clicca per chiudere', 
+    'comments': 'commenti', 
+    'community karma points': ' punti reputazione - ',
+    'confirm delete': 'conferma la cancellazione', 
+    'confirm delete comment': 'Vuoi davvero cancellare il commento?', 
+    'content cannot be empty': 'il contenuto non può essere vuoto', 
+    'content minchars': 'per favore inserisci più di {0} caratteri', 
+    'daily vote cap exhausted': 'Spiacente, hai raggiunto il limite odierno massimo di voti',
+    'delete': 'elimina',
+    'delete this comment': 'Elimina questo commento',
+    'enter image url': 'inserisci l\'URL dell\'immagine, es. http://www.example.com/immagine.jpg \"titolo immagine\"',
+    'enter url': 'inserisci l\'indirizzo web, e.g. <br />http://www.askbot.org/ </p>',
+    'flag offensive cap exhausted': 'spiacente, hai raggiunto il limite odierno massimo di flag offensivi ',
+    'heading': 'Titolo',
+    'hide comments': 'Nascondi i commenti',
+    'horizontal bar': 'barra orizzontale',
+    'image': 'Immagine',
+    'insufficient privilege': 'privilegi non sufficienti',
+    'italic': 'corsivo',
+    'link': 'Link',
+    'loading...': 'Caricamento...',
+    'need >15 points to report spam': 'Servono almeno 15 punti reputazione per segnalare come spam',
+    'numbered list': 'Lista numerata',
+    'please confirm offensive': 'sei certo che questo post sia offensivo, contenga spam, pubblicità, osservazioni poco idonee, ecc.?',
+    'please enter title': 'Per favore inserisci il titolo',
+    'please login': 'Per favore effettua il login',
+    'please see': 'Per favore guarda',
+    'post deleted': 'Post eliminato',
+    'post recovered': 'Post recuperato',
+    'preformatted text': 'Testo preformattato',
+    'quote': 'cita',
+    'redo': 'Esegui nuovamente',
+    'tablimits info': 'fino a 5 tags, non più di 20 caratteri ognuno',
+    'tags cannot be empty': 'Il campo Tags non può essere vuoto',
+    'title minchars': 'per favore inserisci almeno {0} caratteri',
+    'to comment, need': '(per commentare post di altre persone, la reputazione ',
+    'undelete': 'elimina', 
+    'undo': 'annulla', 
+    'upload image': 'carica immagine', 
+    'questions/': 'domande/', 
+    'question/': 'domanda/',
+    'delete/': 'elimina/', 
+    'comments/': 'commenti/', 
+    'answers/': 'risposte/', 
+    'vote/': 'voti/',
+    'unmark-tag/':'unmark-tag/',
+    'ignored/':'ignorato/',
+    'mark-tag/':'mark-tag/',
+    'interesting/':'interessante/',
+    'command/':'command/',
+    'moderate-user/': 'modera-utente/',
+    'account/': 'account/',
+    'signin/': 'accedi/'
+};
+
 var i18n = {
     'en':i18nEn,
     'zh-cn':i18nZh,
@@ -513,6 +581,7 @@ var i18n = {
     'de':i18nDe,
     'ru':i18nRu,
     'fr':i18nFr,
+    'it':i18nIt,
     'zh-tw':i18nZhtw
 };
 
