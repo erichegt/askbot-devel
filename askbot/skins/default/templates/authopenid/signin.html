@@ -127,7 +127,7 @@
             <input type="text" name="openid_login_token" />
             <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans "Sign in" %}"/>
         </fieldset> 
-        {% if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET %}
+        {% if use_password_login %}
         <fieldset 
             id="password-fs"
             {% if user.is_anonymous %}
