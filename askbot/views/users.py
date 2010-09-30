@@ -33,6 +33,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models import signals
+from askbot.skins.loaders import ENV
 
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
@@ -956,7 +957,8 @@ def user_email_subscriptions(request, user):
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
         action_status = None
 
-    return render_to_response('user_email_subscriptions.html',{
+    template = ENV.get_template('user_email_subscriptions.html')
+    data = {
         'active_tab': 'users',
         'tab_name': 'email_subscriptions',
         'tab_description': _('email subscription settings'),
@@ -965,7 +967,9 @@ def user_email_subscriptions(request, user):
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
-    }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 user_view_call_table = {
     'stats': user_stats,
@@ -1000,26 +1004,3 @@ def user(request, id, slug=None):
         user_view_func = user_stats
 
     return user_view_func(request, profile_owner)
-
-@login_required
-def account_settings(request):#todo: is this actually used?
-    """
-    index pages to changes some basic account settings :
-     - change password
-     - change email
-     - associate a new openid
-     - delete account
-
-    url : /
-
-    template : authopenid/settings.html
-    """
-    logging.debug('')
-    msg = request.GET.get('msg', '')
-    is_openid = False
-
-    return render_to_response('account_settings.html', {
-        'active_tab':'users',
-        'msg': msg,
-        'is_openid': is_openid
-        }, context_instance=RequestContext(request))

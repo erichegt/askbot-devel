@@ -1,9 +1,6 @@
 <div id="askform">
     <form id="fmask" action="" method="post" >
         <div class="form-item">
-            {% comment %}
-            <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> 
-            {% endcomment %}
             <div id="askFormBar">
                 {% if not request.user.is_authenticated() %}
                     <p>{% trans %}login to post question info{% endtrans %}</p>
@@ -32,11 +29,11 @@
                 <table>
                     <tr>
                         <td>
-                            <span id="pre-collapse" title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans "toggle preview{% endtrans %}</span>
+                            <span id="pre-collapse" title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans %}toggle preview{% endtrans %}</span>
                         </td>
                         {% if settings.WIKI_ON %}
                         <td style="text-align:right;">
-                            {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag }} </span>
+                            {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag() }} </span>
                         </td>
                         {% endif %}
                     </tr>
@@ -47,7 +44,7 @@
             <span class="form-error"></span>
         </div>
         <div class="form-item">
-            <strong>{{ form.tags.label_tag }}:</strong> {% trans %}(required){% endtrans %} <span class="form-error"></span><br/>
+            <strong>{{ form.tags.label_tag() }}:</strong> {% trans %}(required){% endtrans %} <span class="form-error"></span><br/>
             {{ form.tags }}  {{ form.tags.errors }}
         </div>
         <p class="title-desc">

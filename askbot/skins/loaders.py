@@ -1,5 +1,6 @@
-from django.template.loaders import filesystem
 import os.path
+from django.template.loaders import filesystem
+from django.utils import translation
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from coffin.common import CoffinEnvironment
@@ -52,5 +53,14 @@ class SkinEnvironment(CoffinEnvironment):
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
 
+    def set_language(self, language_code):
+        """hooks up translation objects from django to jinja2
+        environment.
+        note: not so sure about thread safety here
+        """
+        trans = translation.trans_real.translation(language_code)
+        self.install_gettext_translations(trans)
+
+
 ENV = SkinEnvironment(autoescape=False, extensions=['jinja2.ext.i18n'])
-ENV.install_null_translations()
+ENV.set_language(django_settings.LANGUAGE_CODE)

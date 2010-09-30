@@ -1,65 +1,63 @@
 <!-- template answer_edit_tips.html -->
-{% load i18n %}
-{% load smart_if %}
 <div class="boxC">
-    <p class="subtitle darkred">{% trans "answer tips" %}</p>
+    <h3>{% trans %}answer tips{% endtrans %}</h3>
     <div>
         <ul class="list-item">
-            <li> <b>{% trans "please make your answer relevant to this community" %}</b>
+            <li> <b>{% trans %}please make your answer relevant to this community{% endtrans %}</b>
             </li>
             <li>
-                {% trans  "try to give an answer, rather than engage into a discussion" %}
+                {% trans  %}try to give an answer, rather than engage into a discussion{% endtrans %}
             </li>
             <li>
-                {% trans "please try to provide details" %}
+                {% trans %}please try to provide details{% endtrans %}
             </li>
             <li>
-                {% trans "be clear and concise" %}
+                {% trans %}be clear and concise{% endtrans %}
             </li>
         </ul>
         <p class='info-box-follow-up-links'>
-            <a href="{% url faq %}" target="_blank" title="{% trans "see frequently asked questions" %}">faq »</a>
+            <a href="{% url faq %}" target="_blank" title="{% trans %}see frequently asked questions{% endtrans %}">faq »</a>
         </p>
     </div>
 </div>
 
 <div class="boxC">
-    <p class="subtitle">{% trans "Markdown tips" %}</p>
+    <h3>{% trans %}Markdown tips{% endtrans %}</h3>
     <ul class="list-item">
         {% if settings.MARKUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
         <li>
-            {% trans "*italic*" %}
+            {% trans %}*italic*{% endtrans %}
         </li>
         <li>
-            {% trans "**bold**" %}
+            {% trans %}**bold**{% endtrans %}
         </li>
         {% else %}
         <li>
-            {% trans "*italic* or _italic_" %}
+            {% trans %}*italic* or _italic_{% endtrans %}
         </li>
         <li>
-            {% trans "**bold** or __bold__" %}
+            {% trans %}**bold** or __bold__{% endtrans %}
         </li>
         {% endif %}
         <li>
-            <b>{% trans "link" %}</b>:[{% trans "text" %}](http://url.com/ "{% trans "title" %}")
+            <b>{% trans %}link{% endtrans %}</b>:[{% trans %}text{% endtrans %}](http://url.com/ "{% trans %}title{% endtrans %}")
 
         </li>
         <li>
-            <b>{% trans "image" %}</b>:![alt {% trans "text" %}](/path/img.jpg "{% trans "title" %}")
+            <b>{% trans %}image{% endtrans %}</b>:![alt {% trans %}text{% endtrans %}](/path/img.jpg "{% trans %}title{% endtrans %}")
 
         </li>
         <li>
-        {% trans "numbered list:" %}
+        {% trans %}numbered list:{% endtrans %}
             1.  Foo
             2.  Bar
         </li>
         <li>
-        {% trans "basic HTML tags are also supported" %}
+        {% trans %}basic HTML tags are also supported{% endtrans %}
         </li>
     </ul>
     <p class='info-box-follow-up-links'>
-        <a href="http://en.wikipedia.org/wiki/Markdown" target="_blank">{% trans "learn more about Markdown" %} »</a>
+        <a href="http://en.wikipedia.org/wiki/Markdown" target="_blank">{% trans %}learn more about Markdown{% endtrans %} »</a>
     </p>
 </div>
 <!-- end template answer_edit_tips.html -->

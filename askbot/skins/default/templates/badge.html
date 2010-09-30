@@ -1,34 +1,42 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
+{% import "macros.html" as macros %}
 <!-- template badge.html -->
-{% load i18n %}
-{% load extra_tags %}
-{% load humanize %}
-{% block title %}{% spaceless %}{% trans badge.name %} - {% trans "Badge" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans name=badge.name %}{{name}}{% endtrans %} - {% trans %}Badge{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-       <script type="text/javascript">
+    <script type="text/javascript">
         $().ready(function(){
             $("#nav_badges").attr('className',"on");
         });
-         
-        </script>
+    </script>
 {% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
-	{% trans "Badge" %}
+{% trans %}Badge{% endtrans %}
 </div>
 <div id="main-body" style="width:100%;margin-bottom:20px">
     <p>
-        <a href="{{badge.get_absolute_url}}" title="{{ badge.get_type_display }} : {% trans badge.description %}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans badge.name %}</a> {% trans badge.description %}
+        <a href="{{badge.get_absolute_url()}}" title="{{ badge.get_type_display() }} : {% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans name=badge.name%}{{name}}{% endtrans %}</a> {% trans description=badge.description %}{{description}}{% endtrans %}
     </p>
     <div>
         {% if badge.awarded_count %}
         <p style="float:left"><span class="count">{{ awards|length|intcomma }}</span>
-        <strong>{% blocktrans count awards|length as num_awardees %}user received this badge:{% plural %}users received this badge:{% endblocktrans %}</strong></p>
+        <strong>{% trans num_awardees=awards|length %}user received this badge:{% pluralize %}users received this badge:{% endtrans %}</strong></p>
         {% endif %}
     </div>
     <div id="award-list" style="clear:both;margin-left:20px;line-height:25px;">
         {% for award in awards %}
-        <p style="width:180px;float:left"><a href="{% url users %}{{ award.id }}/{{ award.name }}">{{ award.name }}</a> {% get_score_badge_by_details award.rep award.gold award.silver award.bronze %}</p>
+        <p style="width:180px;float:left"><a href="{% url users %}{{ award.id }}/{{ award.name }}">{{ award.name }}</a> 
+        {{ 
+            macros.user_score_and_badge_summary(
+                {
+                    'reputation':award.rep, 
+                    'gold': award.gold,
+                    'silver': award.silver,
+                    'bronze': award.bronze
+                }
+            ) 
+        }}
+        </p>
         {% endfor %}
     </div>
 

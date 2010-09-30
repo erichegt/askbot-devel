@@ -1,13 +1,10 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
 <!-- template ask.html -->
-{% load i18n %}
-{% load extra_tags %}
-{% load smart_if %}
-{% block title %}{% spaceless %}{% trans "Ask a question" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Ask a question{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-        <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/com.cnprog.post.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
+        <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/jquery.validate.pack.js"|media}}'></script>
         <script type='text/javascript'>
             {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
                 var codeFriendlyMarkdown = true;
@@ -15,9 +12,9 @@
                 var codeFriendlyMarkdown = false;
             {% endif %}
         </script>
-        <script type='text/javascript' src='{% media  "/js/wmd/showdown.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/wmd/wmd.js" %}'></script>
-        <link rel="stylesheet" type="text/css" href="{% media  "/js/wmd/wmd.css" %}" />
+        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+        <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
         <script type="text/javascript">
         $().ready(function(){
             //set current module button style
@@ -31,10 +28,10 @@
             //toggle preview of editor
             //todo remove copy-paste
             var display = true;
-            var txt = "[{% trans "hide preview" %}]";
+            var txt = "[{% trans %}hide preview{% endtrans %}]";
             $('#pre-collapse').text(txt);
             $('#pre-collapse').bind('click', function(){
-                txt = display ? "[{% trans "show preview" %}]" : "[{% trans "hide preview" %}]";
+                txt = display ? "[{% trans %}show preview{% endtrans %}]" : "[{% trans %}hide preview{% endtrans %}]";
                 display = !display;
                 $('#previewer').toggle();
                 $('#pre-collapse').text(txt);
@@ -63,78 +60,7 @@
         });
         </script>
 {% endblock %}
-
-{% comment %}
-{% block content %}
-<div id="main-bar" class="headNormal">
-	{% trans "Ask a question" %}
-</div>
-<div id="main-body" class="ask-body">
-    <div id="askform">
-        <form id="fmask" action="" method="post" >
-			{% if not request.user.is_authenticated %}
-            <div class="message">
-			    <p>{% trans "login to post question info" %}</p>
-            </div>
-            {% else %}
-                {% if settings.EMAIL_VALIDATION %}
-                    {% if not request.user.email_isvalid %}
-                        <div class="message">
-                            {% blocktrans with request.user.email as email %}must have valid {{email}} to post, 
-                            see {{email_validation_faq_url}}
-                            {% endblocktrans %}
-                        </div>
-                    {% endif %}
-                {% endif %}
-			{% endif %}
-            <div class="form-item">
-                <label for="id_title" ><strong>{{ form.title.label_tag }}:</strong></label> <span class="form-error"></span><br/>
-                {{ form.title }} {{ form.title.errors }}
-                <div class="title-desc">
-                    {{ form.title.help_text }}
-                </div>
-            </div>
-
-            <div class="form-item">
-                <div id="wmd-button-bar" class="wmd-panel"></div>
-                {{ form.text }}
-
-                <div class="preview-toggle">
-                    <table width="100%">
-                        <tr>
-                            <td>
-                                <span id="pre-collapse" title="{% trans "Toggle the real time Markdown editor preview" %}">{% trans "toggle preview" %}</span>
-                            </td>
-                            {% if settings.WIKI_ON %}
-                            <td style="text-align:right;">
-                                {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag }} </span>
-                            </td>
-                            {% endif %}
-                        </tr>
-
-                    </table>
-                </div>
-                <div id="previewer" class="wmd-preview"></div>
-                <span class="form-error"></span>
-            </div>
-            <div class="form-item">
-                <strong>{{ form.tags.label_tag }}:</strong> {% trans "(required)" %} <span class="form-error"></span><br/>
-                {{ form.tags }}  {{ form.tags.errors }}
-            </div>
-            <p class="title-desc">
-                {{ form.tags.help_text }}
-            </p>
-            {% if not request.user.is_authenticated %}
-            <input type="submit" value="{% trans "Login/signup to post your question" %}" class="submit" />
-            {% else %}
-            <input type="submit" value="{% trans "Ask your question" %}" class="submit" />
-            {% endif %}
-        </form>
-    </div>
-</div>
-{% endblock %}
-{% endcomment %}
-
+{# main contents of ask form is in the template input_bar #}
 {% block sidebar %}
 {% include "question_edit_tips.html" %}
 {% endblock %}

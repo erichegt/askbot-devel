@@ -1,46 +1,39 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
 <!-- template faq.html -->
-{% load extra_tags %}
-{% load extra_filters %}
-{% load humanize %}
-{% load i18n %}
-{% block title %}{% spaceless %}FAQ{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}FAQ{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
 {% endblock %}
 {% block content %}
 <div class="headNormal">
-    {% trans "Frequently Asked Questions " %}(FAQ)
+    {% trans %}Frequently Asked Questions {% endtrans %}({% trans %}FAQ{% endtrans %})
 </div>
 <div id="main-body" class="about" style="width:100%">
 
         <div class="first">
-            <h3 class="subtitle">{% trans "What kinds of questions can I ask here?" %}</h3>
-            <p>{% trans "Most importanly - questions should be <strong>relevant</strong> to this community." %}
-            {% trans "Before asking the question - please make sure to use search to see whether your question has alredy been answered."%}
+            <h3 class="subtitle">{% trans %}What kinds of questions can I ask here?{% endtrans %}</h3>
+            <p>{% trans %}Most importanly - questions should be <strong>relevant</strong> to this community.{% endtrans %}
+            {% trans %}Before asking the question - please make sure to use search to see whether your question has alredy been answered.{% endtrans %}
             </p>
-            
-                <h3 class="subtitle">{% trans "What questions should I avoid asking?" %}</h3>
-            <p>{% trans "Please avoid asking questions that are not relevant to this community, too subjective and argumentative." %}
+            <h3 class="subtitle">{% trans %}What questions should I avoid asking?{% endtrans %}</h3>
+            <p>{% trans %}Please avoid asking questions that are not relevant to this community, too subjective and argumentative.{% endtrans %}
             </p>
         </div>
-    
         <div>
-            <h3 class="subtitle">{% trans "What should I avoid in my answers?" %}</h3>
-            <p>{{ settings.APP_TITLE }} {% trans "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions." %}</p>
+            <h3 class="subtitle">{% trans %}What should I avoid in my answers?{% endtrans %}</h3>
+            <p>{{ settings.APP_TITLE }} {% trans %}is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions.{% endtrans %}</p>
         </div>
-    
         <div>
-            <h3 class="subtitle">{% trans "Who moderates this community?" %}</h3>
-            <p>{% trans "The short answer is: <strong>you</strong>." %}
-            {% trans "This website is moderated by the users." %}
-            {% trans "The reputation system allows users earn the authorization to perform a variety of moderation tasks." %} 
+            <h3 class="subtitle">{% trans %}Who moderates this community?{% endtrans %}</h3>
+            <p>{% trans %}The short answer is: <strong>you</strong>.{% endtrans %}
+            {% trans %}This website is moderated by the users.{% endtrans %}
+            {% trans %}The reputation system allows users earn the authorization to perform a variety of moderation tasks.{% endtrans %} 
             </p>
         </div>
 
         <div>
-            <h3 class="subtitle">{% trans "How does reputation system work?" %}</h3>
-            <p>{% trans "Rep system summary" %}</p>
-            <p>{% blocktrans with settings.MAX_REP_GAIN_PER_USER_PER_DAY as MAX_REP_GAIN_PER_USER_PER_DAY and settings.REP_GAIN_FOR_RECEIVING_UPVOTE as REP_GAIN_FOR_RECEIVING_UPVOTE and settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE|absolute_value as REP_LOSS_FOR_RECEIVING_DOWNVOTE%}For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>{{REP_GAIN_FOR_RECEIVING_UPVOTE}}</strong> points, each vote against will subtract <strong>{{REP_LOSS_FOR_RECEIVING_DOWNVOTE}}</strong> points. There is a limit of <strong>{{MAX_REP_GAIN_PER_USER_PER_DAY}}</strong> points that can be accumulated for a question or answer per day. The table below explains reputation point requirements for each type of moderation task.{% endblocktrans %}
+            <h3 class="subtitle">{% trans %}How does reputation system work?{% endtrans %}</h3>
+            <p>{% trans %}Rep system summary{% endtrans %}</p>
+            <p>{% trans MAX_REP_GAIN_PER_USER_PER_DAY=settings.MAX_REP_GAIN_PER_USER_PER_DAY, REP_GAIN_FOR_RECEIVING_UPVOTE=settings.REP_GAIN_FOR_RECEIVING_UPVOTE, REP_LOSS_FOR_RECEIVING_DOWNVOTE=settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE|absolute_value %}For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>{{REP_GAIN_FOR_RECEIVING_UPVOTE}}</strong> points, each vote against will subtract <strong>{{REP_LOSS_FOR_RECEIVING_DOWNVOTE}}</strong> points. There is a limit of <strong>{{MAX_REP_GAIN_PER_USER_PER_DAY}}</strong> points that can be accumulated for a question or answer per day. The table below explains reputation point requirements for each type of moderation task.{% endtrans %}
             </p>
 
             <table style="font-family:arial;" cellspacing="3" cellpadding="3">
@@ -50,76 +43,75 @@
                 </tr>
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_VOTE_UP}}</strong></td>
-                    <td>{% trans "upvote" %}</td>
+                    <td>{% trans %}upvote{% endtrans %}</td>
                 </tr>
                 <!--
                 <tr>
                     <td class="faq-rep-item"><strong>15</strong></td>
-                    <td>{% trans "use tags" %}</td>
+                    <td>{% trans %}use tags{% endtrans %}</td>
                 </tr>
                 -->
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_LEAVE_COMMENTS}}</strong></td>
-                    <td>{% trans "add comments" %}</td>
+                    <td>{% trans %}add comments{% endtrans %}</td>
                 </tr>
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_VOTE_DOWN}}</strong></td>
-                    <td>{% trans "downvote" %}</td>
+                    <td>{% trans %}downvote{% endtrans %}</td>
                 </tr><tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS}}</strong></td>
-                    <td>{% trans "open and close own questions" %}</td>
+                    <td>{% trans %}open and close own questions{% endtrans %}</td>
                 </tr>
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}</strong></td>
-                    <td>{% trans "retag other's questions" %}</td>
+                    <td>{% trans %}retag other's questions{% endtrans %}</td>
                 </tr>
                 {% if settings.WIKI_ON %}
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_EDIT_WIKI}}</strong></td>
-                    <td>{% trans "edit community wiki questions" %}</td>
+                    <td>{% trans %}edit community wiki questions{% endtrans %}</td>
                 </tr>
                 {% endif %}
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}</strong></td>
-                    <td>{% trans "edit any answer" %}</td>
+                    <td>{% trans %}"edit any answer{% endtrans %}</td>
                 </tr>
                 <tr>
                     <td class="faq-rep-item"><strong>{{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}</strong></td>
-                    <td>{% trans "delete any comment" %}</td>
+                    <td>{% trans %}"delete any comment{% endtrans %}</td>
                 </tr>
             </table>
         </div>
-        {% comment %}
+        {# 
         {% if settings.EMAIL_VALIDATION %}
         <div>
-            <a id='validate'></a><h3 class="subtitle">{% trans "how to validate email title" %}</h3>
+            <a id='validate'></a><h3 class="subtitle">{% trans %}how to validate email title{% endtrans %}</h3>
             <!--special case here message must contain paragraphs-->
-            {% blocktrans %}how to validate email info with {{send_email_key_url}} {{gravatar_faq_url}}{% endblocktrans %}
+            {% trans %}how to validate email info with {{send_email_key_url}} {{gravatar_faq_url}}{% endtrans %}
         </div>
         {% endif %}
-        {% endcomment %}
+        #}
         <div>
-            <a id='gravatar'></a><h3 class="subtitle">{% trans "what is gravatar" %}</h3>
-            {% trans "gravatar faq info" %}
+            <a id='gravatar'></a><h3 class="subtitle">{% trans %}what is gravatar{% endtrans %}</h3>
+            {% trans %}gravatar faq info{% endtrans %}
         </div>
         <div>
-            <h3 class="subtitle">{% trans "To register, do I need to create new password?" %}</h3>
-            <p>{% trans "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc." %}
-            <strong><a href="{% url user_signin %}">{% trans "Login now!" %}</a> »</strong> 
-            </p>
-        </div>
-    
-        <div>
-            <h3 class="subtitle">{% trans "Why other people can edit my questions/answers?" %}</h3>
-            <p> {% trans "Goal of this site is..." %} {% trans "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content." %}
-            {% trans "If this approach is not for you, we respect your choice." %}
+            <h3 class="subtitle">{% trans %}To register, do I need to create new password?{% endtrans %}</h3>
+            <p>{% trans %}No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."{% endtrans %}
+            <strong><a href="{% url user_signin %}">{% trans %}"Login now!"{% endtrans %}</a> »</strong> 
             </p>
         </div>
         <div>
-            <h3 class="subtitle">{% trans "Still have questions?" %}</h3>
-            <p>{% blocktrans %}Please ask your question at {{ask_question_url}}, help make our community better!{% endblocktrans %} 
+            <h3 class="subtitle">{% trans %}Why other people can edit my questions/answers?{% endtrans %}</h3>
+            <p> {% trans %}Goal of this site is...{% endtrans %} {% trans %}So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content.{% endtrans %}
+            {% trans %}If this approach is not for you, we respect your choice.{% endtrans %}
+            </p>
+        </div>
+        <div>
+            <h3 class="subtitle">{% trans %}Still have questions?{% endtrans %}</h3>
+            <p>{% trans %}Please ask your question at {{ask_question_url}}, help make our community better!{% endtrans %} 
             <!--
-            <a href="{% url tags %}faq" class="big">{{ settings.APP_TITLE }} {% trans "questions" %}</a>{% trans "." %}
+            <a href="{% url tags %}faq" class="big">{{ settings.APP_TITLE }} {% trans %}questions{% endtrans %}</a>{% trans %}.{% endtrans %}
             -->
             </p>
         </div>

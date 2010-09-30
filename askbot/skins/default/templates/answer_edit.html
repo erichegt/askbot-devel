@@ -1,13 +1,10 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
 <!-- template answer_edit.html -->
-{% load i18n %}
-{% load extra_tags %}
-{% load smart_if %}
-{% block title %}{% spaceless %}{% trans "Edit answer" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-    <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
-    <script type='text/javascript' src='{% media  "/js/com.cnprog.post.js" %}'></script>
-    <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.pack.js"|media}}'></script>
     <script type='text/javascript'>
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
             var codeFriendlyMarkdown = true;
@@ -15,9 +12,9 @@
             var codeFriendlyMarkdown = false;
         {% endif %}
     </script>
-    <script type='text/javascript' src='{% media  "/js/wmd/showdown.js" %}'></script>
-    <script type='text/javascript' src='{% media  "/js/wmd/wmd.js" %}'></script>
-    <link rel="stylesheet" type="text/css" href="{% media  "/js/wmd/wmd.css" %}" />
+    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
     <script type="text/javascript">
     
     $().ready(function(){
@@ -30,10 +27,10 @@
                          
         //toggle preview of editor
         var display = true;
-        var txt = "{% trans "hide preview" %}";
+        var txt = "{% trans %}hide preview{% endtrans %}";
         $('#pre-collapse').text(txt);
         $('#pre-collapse').bind('click', function(){
-            txt = display ? "{% trans "show preview" %}" : "{% trans "hide preview" %}";
+            txt = display ? "{% trans %}show preview{% endtrans %}" : "{% trans %}hide preview{% endtrans %}";
             display = !display;
             $('#previewer').toggle();
             $('#pre-collapse').text(txt);
@@ -53,32 +50,32 @@
         
 {% block content %}
 <div id="main-bar" class="headNormal">
-    {% trans "Edit answer" %} [<a href="{{ answer.question.get_absolute_url }}#{{ answer.id }}">{% trans "back" %}</a>]
+    {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.question.get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]
 </div>
 <div id="main-body" class="ask-body">
     <div id="askform">
         <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >
-            <label for="id_revision" ><strong>{% trans "revision" %}:</strong></label> <br/> 
-            {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul }}{% endif %}
+            <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/> 
+            {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
             <div style="vertical-align:middle">
-            {{ revision_form.revision }} <input type="submit" style="display:none" id="select_revision" name="select_revision" value="{% trans "select revision" %}">
+            {{ revision_form.revision }} <input type="submit" style="display:none" id="select_revision" name="select_revision" value="{% trans %}select revision{% endtrans %}">
             </div>
             <div class="form-item">
                 <div id="wmd-button-bar" class="wmd-panel"></div>
                 {{ form.text }}
                 <span class="form-error"></span>
                 <div class="preview-toggle"><span id="pre-collapse" 
-					title="{% trans "Toggle the real time Markdown editor preview" %}">{% trans "toggle preview" %}</span></div>
+                    title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans %}toggle preview{% endtrans %}</span></div>
                 <div id="previewer" class="wmd-preview"></div>
             </div>
             
-            <strong>{{ form.summary.label_tag }}</strong> <br/>
+            <strong>{{ form.summary.label_tag() }}</strong> <br/>
             {{ form.summary }}  {{ form.summary.errors }}
             <div class="title-desc">
                 {{ form.summary.help_text }}
             </div>
-            <input type="submit" value="{% trans "Save edit" %}" class="submit" />&nbsp;
-            <input type="button" value="{% trans "Cancel" %}" class="submit" onclick="history.back(-1);" />
+            <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
+            <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
         </form>
     </div>
 </div>
