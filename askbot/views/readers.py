@@ -344,14 +344,12 @@ def questions(request):
         #print simplejson.dumps(output)
         return HttpResponse(simplejson.dumps(output), mimetype='application/json')
     else:
-        before = datetime.datetime.now()
+        #before = datetime.datetime.now()
         template = ENV.get_template('questions.jinja.html')
         response = HttpResponse(template.render(template_context))
-        after = datetime.datetime.now()
-        print after - before
+        #after = datetime.datetime.now()
+        #print after - before
         return response
-    #after = datetime.datetime.now()
-    #print 'time to render %s' % (after - before)
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages

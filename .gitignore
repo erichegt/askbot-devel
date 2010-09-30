@@ -29,3 +29,4 @@ build
 askbot/upfiles/*.jpg
 askbot/upfiles/*.gif
 askbot/skins/common/media/mathjax/
+/jinja2
