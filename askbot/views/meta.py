@@ -50,11 +50,15 @@ def feedback(request):
         form = FeedbackForm(initial={'next':get_next_url(request)})
 
     data['form'] = form
-    return render_to_response('feedback.html', data, context_instance=RequestContext(request))
+    context = RequestContext(request, data)
+    template = ENV.get_template('feedback.html')
+    return HttpResponse(template.render(context))
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    return render_to_response('privacy.html', {'view_name':'privacy'}, context_instance=RequestContext(request))
+    context = RequestContext(request, {'view_name':'privacy'})
+    template = ENV.get_template('privacy.html')
+    return HttpResponse(template.render(context)) 
 
 def logout(request):#refactor/change behavior?
 #currently you click logout and you get
@@ -64,10 +68,13 @@ def logout(request):#refactor/change behavior?
 #however it might be a little annoying
 #why not just show a message: you are logged out of forum, but
 #if you really want to log out -> go to your openid provider
-    return render_to_response('logout.html', {
+    data = {
         'view_name':'logout',
         'next' : get_next_url(request),
-    }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('logout.html')
+    return HttpResponse(template.render(context))
 
 def badges(request):#user status/reputation system
     badges = Badge.objects.all().order_by('name')

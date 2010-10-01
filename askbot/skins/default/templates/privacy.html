@@ -1,17 +1,14 @@
-{% extends "base_content.html" %}
+{% extends "base_content.jinja.html" %}
 <!-- privacy.html -->
-{% load extra_tags %}
-{% load i18n %}
-{% load humanize %}
-{% block title %}{% spaceless %}{% trans "Privacy policy" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Privacy policy{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
 {% endblock %}
 {% block content %}
 <div class="headNormal">
-	{% trans "Privacy policy" %}
+    {% trans %}Privacy policy{% endtrans %}
 </div>
 <div id="main-body" style="width:100%">
-    {{settings.FORUM_PRIVACY|safe}}
+    {{settings.FORUM_PRIVACY}}
 </div>
 {% endblock %}
 <!-- end privacy.html -->

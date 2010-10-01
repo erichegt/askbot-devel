@@ -5,7 +5,7 @@ import datetime
 from django.core.urlresolvers import reverse
 from askbot.search.indexer import create_fulltext_indexes
 from django.db.models import signals as django_signals
-from django.template import loader, Context
+from django.template import Context
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
@@ -1540,7 +1540,8 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
-    template = loader.get_template('instant_notification.html')
+    from askbot.skins.loaders import ENV
+    template = ENV.get_template('instant_notification.html')
 
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]

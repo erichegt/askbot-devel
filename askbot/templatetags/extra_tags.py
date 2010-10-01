@@ -446,7 +446,10 @@ def fullmedia(url):
 
 @register.inclusion_tag('question_counter_widget.html') #too slow
 def question_counter_widget(question):
-    """returns colorized counter widget for a question
+    """todo: maybe worth trying again. it could have been too slow
+    because of all the calls to the askbot_settings
+
+    returns colorized counter widget for a question
 
     .. versionchanged:: 0.6.6
         switched from inclusion tag style to in-code template string

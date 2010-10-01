@@ -202,7 +202,7 @@
                 </div>
             </div>
         </div>
-        <h2><a title="{{question.summary}}" href="{{ question.get_absolute_url() }}">{{question.title}}</a></h2>
+        <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.title|escape}}</a></h2>
         <div class="userinfo">
             <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
             <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>

@@ -11,7 +11,7 @@
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />
         {% endif %}
-        <link rel="shortcut icon" href="{"/images/favicon.gif"|media}}" />
+        <link rel="shortcut icon" href="{{"/images/favicon.gif"|media}}" />
         <link href="{{"/style/style.css"|media}}" rel="stylesheet" type="text/css" />
         {% spaceless %}
         {% block forestyle %}{% endblock %}

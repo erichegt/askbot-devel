@@ -118,3 +118,53 @@
 /></a>
 {% endspaceless %}
 {%- endmacro -%}
+
+{%- macro post_contributor_info(post, contributor_type, is_wiki) -%}
+<div class='post-update-info'>
+{% if contributor_type=="original_author" %}
+    {% if is_wiki %}
+        <p>{% trans %}community wiki{% endtrans %}</p>
+        <p>
+            {% trans rev_count=post.revisions.all()|length %}{{rev_count}} revision{% pluralize %}{{rev_count}} revisions{% endtrans %}
+        </p>
+        <p>{{post.author.get_profile_link()}}</p>
+    {% else %}
+        <p style="line-height:12px;">
+            {# todo: access to class names needs to be removed here #}
+            {% if post.__class__.__name__=="Question" %}
+                {% trans %}asked{% endtrans %}
+            {% elif post.__class__.name__=="Answer" %}
+                {% trans %}answered{% endtrans %}
+            {% else %}
+                {% trans %}posted{% endtrans %}
+            {% endif %}
+            {% if post.__class__.__name__ in ('QuestionRevision', 'AnswerRevision') %}
+                <strong>{{post.revised_at|diff_date}}</strong>
+            {% else %}
+                <strong>{{post.added_at|diff_date}}</strong>
+            {% endif %}
+        </p>
+        {{ gravatar(post.author, 32) }}
+        <p>{{post.author.get_profile_link()}}<br/>
+        {{ user_score_and_badge_summary(post.author) }}</p>
+    {% endif %}
+{% else %}
+    {% if post.last_edited_at %}
+        <p style="line-height:12px;">
+            <a 
+        {% if post.__class__.__name__ == 'Question' %}
+            href="{% url question_revisions post.id %}"
+        {% else %}
+            href="{% url answer_revisions post.id %}"
+        {% endif %}
+            >{% trans %}updated{% endtrans %} <strong>{{ post.last_edited_at|diff_date }}</strong></a>
+        </p>
+        {% if post.author != post.last_edited_by or is_wiki %}
+            {{ gravatar(post.last_edited_by, 32) }}
+            <p style="float:left">{{post.last_edited_by.get_profile_link()}}<br/>
+            {{ user_score_and_badge_summary(post.last_edited_by) }}</p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+</div>
+{%- endmacro -%}

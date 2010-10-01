@@ -1,14 +1,11 @@
-{% load extra_filters %}
-{% load extra_tags %}
-{% load i18n %}
-
+{# this template is not used yet #}
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <link href="{% fullmedia  "/style/style.css" %}" rel="stylesheet" type="text/css" />
+        <link href="{{"/style/style.css"|fullmedia}}" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <a href="{% fullurl index %}">
-            <img src="{% fullmedia  "/images/logo.png" %}" title="{% trans "home" %}" alt="{{settings.APP_TITLE}} logo"/>
+        <a href="{{settings.APP_URL}}{% url index %}">
+            <img src="{{"/images/logo.png"|fullmedia}}" title="{% trans %}home{% endtrans %}" alt="{{settings.APP_TITLE}} logo"/>
         </a>
         <br />
         <p>{{ settings.APP_TITLE }}</p>

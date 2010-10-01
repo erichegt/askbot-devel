@@ -31,6 +31,13 @@ def media(url):
     else:
         return ''
 
+@register.filter
+def fullmedia(url):
+    domain = askbot_settings.APP_URL
+    #protocol = getattr(settings, "PROTOCOL", "http")
+    path = media(url)
+    return "%s%s" % (domain, path)
+
 diff_date = register.filter(functions.diff_date)
 
 setup_paginator = register.filter(functions.setup_paginator)

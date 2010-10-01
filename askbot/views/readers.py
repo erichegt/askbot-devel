@@ -143,14 +143,14 @@ def questions(request):
     contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
     paginator_context = {
-        'is_paginated' : True,
+        'is_paginated' : (objects_list.count > search_state.page_size),
         'pages': objects_list.num_pages,
         'page': search_state.page,
         'has_previous': questions.has_previous(),
         'has_next': questions.has_next(),
         'previous': questions.previous_page_number(),
         'next': questions.next_page_number(),
-        'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
+        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
@@ -166,6 +166,8 @@ def questions(request):
                             }
 
         paginator_tpl = loader.get_template('paginator.html')
+        #todo: remove this patch on context after all templates are moved to jinja
+        paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
         paginator_html = paginator_tpl.render(
                                     Context(
                                         extra_tags.cnprog_paginator(
@@ -529,7 +531,20 @@ def question(request, id):#refactor - long subroutine. display question body, an
             #get response notifications
             request.user.visit_question(question)
 
-    return render_to_response('question.html', {
+    paginator_data = {
+        'is_paginated' : (objects_list.count > ANSWERS_PAGE_SIZE),
+        'pages': objects_list.num_pages,
+        'page': page,
+        'has_previous': page_objects.has_previous(),
+        'has_next': page_objects.has_next(),
+        'previous': page_objects.previous_page_number(),
+        'next': page_objects.next_page_number(),
+        'base_url' : request.path + '?sort=%s&amp;' % view_id,
+        'extend_url' : "#sort-top"
+    }
+    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+
+    data = {
         'view_name': 'question',
         'active_tab': 'questions',
         'question' : question,
@@ -542,18 +557,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'tab_id' : view_id,
         'favorited' : favorited,
         'similar_questions' : question.get_similar_questions(),
-        'context' : {
-            'is_paginated' : True,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': page_objects.has_previous(),
-            'has_next': page_objects.has_next(),
-            'previous': page_objects.previous_page_number(),
-            'next': page_objects.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'extend_url' : "#sort-top"
-        }
-        }, context_instance=RequestContext(request))
+        'language_code': translation.get_language(),
+        'paginator_context' : paginator_context
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('question.html')
+    return HttpResponse(template.render(context))
 
 QUESTION_REVISION_TEMPLATE = ('<h1>%(title)s</h1>\n'
                               '<div class="text">%(html)s</div>\n'
