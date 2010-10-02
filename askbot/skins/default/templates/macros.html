@@ -121,6 +121,8 @@
 
 {%- macro post_contributor_info(post, contributor_type, is_wiki) -%}
 <div class='post-update-info'>
+{# there is a whole bunch of trickery here, probably indicative of 
+poor design of the data or methods on data objects #}
 {% if contributor_type=="original_author" %}
     {% if is_wiki %}
         <p>{% trans %}community wiki{% endtrans %}</p>
@@ -149,7 +151,16 @@
         {{ user_score_and_badge_summary(post.author) }}</p>
     {% endif %}
 {% else %}
-    {% if post.last_edited_at %}
+    {% if post.__class__.__name__ in ('Question', 'Answer') %}
+        {% set last_edited_at = post.last_edited_at %}
+        {% set original_author = post.author %}
+        {% set update_author = post.last_edited_by %}
+    {% elif post.__class__.__name__ in ('QuestionRevision', 'AnswerRevision') %}
+        {% set last_edited_at = post.revised_at %}
+        {% set original_author = None %}{# fake value to force display widget in the revision views #}
+        {% set update_author = post.author %}
+    {% endif %}
+    {% if last_edited_at %}
         <p style="line-height:12px;">
             <a 
         {% if post.__class__.__name__ == 'Question' %}
@@ -157,12 +168,12 @@
         {% else %}
             href="{% url answer_revisions post.id %}"
         {% endif %}
-            >{% trans %}updated{% endtrans %} <strong>{{ post.last_edited_at|diff_date }}</strong></a>
+            >{% trans %}updated{% endtrans %} <strong>{{ last_edited_at|diff_date }}</strong></a>
         </p>
-        {% if post.author != post.last_edited_by or is_wiki %}
-            {{ gravatar(post.last_edited_by, 32) }}
-            <p style="float:left">{{post.last_edited_by.get_profile_link()}}<br/>
-            {{ user_score_and_badge_summary(post.last_edited_by) }}</p>
+        {% if original_author != display_author or is_wiki %}
+            {{ gravatar(update_author, 32) }}
+            <p style="float:left">{{update_author.get_profile_link()}}<br/>
+            {{ user_score_and_badge_summary(update_author) }}</p>
         {% endif %}
     {% endif %}
 {% endif %}

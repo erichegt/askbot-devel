@@ -64,7 +64,7 @@
             {% endif %}
         </div>
         <div class="tags">
-            {% for tag in question.tagname_list %}
+            {% for tag in question.get_tag_names %}
             <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{%endblocktrans %}" rel="tag">{{ tag }}</a>
             {% endfor %}
         </div>

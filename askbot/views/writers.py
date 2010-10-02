@@ -200,12 +200,15 @@ def retag_question(request, id):
                 return HttpResponseRedirect(question.get_absolute_url())
         else:
             form = forms.RetagQuestionForm(question)
-        return render_to_response('question_retag.html', {
+        data = {
             'active_tab': 'questions',
             'question': question,
             'form' : form,
             'tags' : _get_tags_cache_json(),
-        }, context_instance=RequestContext(request))
+        }
+        context = RequestContext(request, data)
+        template = ENV.get_template('question_retag.html')
+        return HttpResponse(template.render(context))
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())

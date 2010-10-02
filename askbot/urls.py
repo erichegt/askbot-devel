@@ -56,7 +56,8 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
-        app.readers.answer_revisions, 
+        app.readers.revisions, 
+        kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
     url(
@@ -101,7 +102,8 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
-        app.readers.question_revisions, 
+        app.readers.revisions, 
+        kwargs = {'object_name': 'Question'},
         name='question_revisions'
     ),
     url(

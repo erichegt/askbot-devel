@@ -1,14 +1,8 @@
-{% extends "user.html" %}
+{% extends "user.jinja.html" %}
 <!-- user_reputation.html -->
-{% load extra_tags %}
-{% load extra_filters %}
-{% load humanize %}
-{% load i18n %}
-{% load smart_if %}
 {% block userjs %}
-       <script type='text/javascript' src='{% media  "/js/excanvas.min.js" %}'></script>
-       <script type='text/javascript' src='{% media  "/js/jquery.flot.min.js" %}'></script>
-       
+       <script type='text/javascript' src='{{"/js/excanvas.min.js"|media}}'></script>
+       <script type='text/javascript' src='{{"/js/jquery.flot.min.js"|media}}'></script>
        <script type="text/javascript">
         $().ready(function(){
             var d = {{ reps }};
@@ -19,24 +13,23 @@
                 lines: { show: true }
             });
         });
-
         </script>
 {% endblock %}
 {% block usercontent %}
         <div class="karma-summary">
             <div id="diagram" class="karma-diagram"></div>
             {% if view_user.id == user.id %}
-            <h3>{% trans "Your karma change log." %}</h3>
+            <h3>{% trans %}Your karma change log.{% endtrans %}</h3>
             {% else %}
-            <h3>{% blocktrans with view_user.username as user_name %}{{user_name}}'s karma change log{% endblocktrans %}</h3>
+            <h3>{% trans user_name=view_user.username %}{{user_name}}'s karma change log{% endtrans %}</h3>
             {% endif %}
             <div class="karma-details">
                 {% for rep in reputation %}
                 <p>
                     <span class="karma-gained">{{ rep.positive }}</span>
                     <span class="karma-lost">{{ rep.negative }}</span>
-                    {{ rep.get_explanation_snippet|safe }}
-                    <span class="small">({% diff_date rep.reputed_at %})</span>                    
+                    {{ rep.get_explanation_snippet() }}
+                    <span class="small">({{rep.reputed_at|diff_date}})</span>                    
                 </p>
                 {% endfor %}
             </div>

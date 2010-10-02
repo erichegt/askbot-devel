@@ -1,23 +1,20 @@
-{% extends "user.html" %}
+{% extends "user.jinja.html" %}
 <!-- user_recent.html -->
-{% load extra_tags %}
-{% load humanize %}
-{% load i18n %}
 {% block usercontent %}
         <div style="padding-top:5px;font-size:13px;">
         {% for act in activities %}
             <div style="clear:both;line-height:20px" >
-                <div style="width:180px;float:left">{% diff_date act.time 3 %}</div>
+                <div style="width:180px;float:left">{{ act.time|diff_date(3) }}</div>
                 <div style="width:150px;float:left">
                 <span class="user-action-{{ act.type_id }}">{{ act.type }}</span>
                 </div>
                 <div style="float:left;overflow:hidden;">
-                    {% ifequal act.type_id 7 %}
-                    <a href="{{act.badge.get_absolute_url}}" title="{{ act.badge.get_type_display }} : {% trans act.badge.description %}" class="medal"><span class="badge{{ act.badge.type }}">&#9679;</span>&nbsp;{% trans act.badge.name %}</a>
+                    {% if act.type_id==7 %}
+                    <a href="{{act.badge.get_absolute_url()}}" title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.description %}{{description}}{% endtrans %}" class="medal"><span class="badge{{ act.badge.type }}">&#9679;</span>&nbsp;{% trans name=act.badge.name %}{{name}}{% endtrans %}</a>
                     {% else %}
-                    <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title }}</a></span>
-                    {% if act.summary %}<span class="revision-summary">{{ act.summary }}</span>{% endif %}
-                    {% endifequal %}
+                    <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title|escape }}</a></span>
+                    {% if act.summary %}<span class="revision-summary">{{ act.summary|escape }}</span>{% endif %}
+                    {% endif %}
                     <div style="height:5px"></div>
                 </div>
             </div>

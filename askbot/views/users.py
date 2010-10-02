@@ -34,6 +34,7 @@ from askbot import models
 from askbot import exceptions
 from askbot.models import signals
 from askbot.skins.loaders import ENV
+from askbot.templatetags import extra_tags
 
 question_type = ContentType.objects.get_for_model(models.Question)
 answer_type = ContentType.objects.get_for_model(models.Answer)
@@ -110,27 +111,28 @@ def users(request):
     except (EmptyPage, InvalidPage):
         users_page = objects_list.page(objects_list.num_pages)
 
-    return render_to_response(
-                    'users.html', 
-                    {
-                        'active_tab': 'users',
-                        'users' : users_page,
-                        'suser' : suser,
-                        'keywords' : suser,
-                        'tab_id' : sortby,
-                        'context' : {
-                            'is_paginated' : is_paginated,
-                            'pages': objects_list.num_pages,
-                            'page': page,
-                            'has_previous': users_page.has_previous(),
-                            'has_next': users_page.has_next(),
-                            'previous': users_page.previous_page_number(),
-                            'next': users_page.next_page_number(),
-                            'base_url' : base_url
-                        }
-                    }, 
-                    context_instance=RequestContext(request)
-                )
+    paginator_data = {
+        'is_paginated' : is_paginated,
+        'pages': objects_list.num_pages,
+        'page': page,
+        'has_previous': users_page.has_previous(),
+        'has_next': users_page.has_next(),
+        'previous': users_page.previous_page_number(),
+        'next': users_page.next_page_number(),
+        'base_url' : base_url
+    }
+    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+    data = {
+        'active_tab': 'users',
+        'users' : users_page,
+        'suser' : suser,
+        'keywords' : suser,
+        'tab_id' : sortby,
+        'paginator_context' : paginator_context
+    }
+    template = ENV.get_template('users.html')
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 def user_moderate(request, subject):
     """user subview for moderation 
@@ -208,24 +210,23 @@ def user_moderate(request, subject):
                                         moderator = moderator,
                                         subject = subject
                                     )
-    return render_to_response(
-                    'user_moderate.html',
-                    {
-                        'active_tab': 'users',
-                        'tab_name': 'moderation',
-                        'tab_description': _('moderate this user'),
-                        'page_title': _('moderate user'),
-                        'view_user': subject,
-                        'change_user_status_form': user_status_form,
-                        'change_user_reputation_form': user_rep_form,
-                        'send_message_form': send_message_form,
-                        'message_sent': message_sent,
-                        'email_error_message': email_error_message,
-                        'user_rep_changed': user_rep_changed,
-                        'user_status_changed': user_status_changed
-                    }, 
-                    context_instance=RequestContext(request)
-                )
+    data = {
+        'active_tab': 'users',
+        'tab_name': 'moderation',
+        'tab_description': _('moderate this user'),
+        'page_title': _('moderate user'),
+        'view_user': subject,
+        'change_user_status_form': user_status_form,
+        'change_user_reputation_form': user_rep_form,
+        'send_message_form': send_message_form,
+        'message_sent': message_sent,
+        'email_error_message': email_error_message,
+        'user_rep_changed': user_rep_changed,
+        'user_status_changed': user_status_changed
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_moderate.html')
+    return HttpResponse(template.render(context))
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -272,15 +273,14 @@ def edit_user(request, id):
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)
-    return render_to_response(
-                        'user_edit.html', 
-                        {
-                            'active_tab': 'users',
-                            'form' : form,
-                            'gravatar_faq_url' : reverse('faq') + '#gravatar',
-                        }, 
-                        context_instance=RequestContext(request)
-                    )
+    data = {
+        'active_tab': 'users',
+        'form' : form,
+        'gravatar_faq_url' : reverse('faq') + '#gravatar',
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_edit.html')
+    return HttpResponse(template.render(context))
 
 def user_stats(request, user):
 
@@ -416,28 +416,27 @@ def user_stats(request, user):
     else:
         user_status = _('Registered User')
 
-    return render_to_response(
-                        'user_stats.html',
-                        {
-                            'active_tab':'users',
-                            'tab_name' : 'stats',
-                            'tab_description' : _('user profile'),
-                            'page_title' : _('user profile overview'),
-                            'view_user' : user,
-                            'user_status_for_display': user.get_status_display(soft = True),
-                            'questions' : questions,
-                            'answered_questions' : answered_questions,
-                            'up_votes' : up_votes,
-                            'down_votes' : down_votes,
-                            'total_votes': up_votes + down_votes,
-                            'votes_today_left': votes_total-votes_today,
-                            'votes_total_per_day': votes_total,
-                            'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
-                            'awards': awards,
-                            'total_awards' : total_awards,
-                        }, 
-                        context_instance=RequestContext(request)
-                    )
+    data = {
+        'active_tab':'users',
+        'tab_name' : 'stats',
+        'tab_description' : _('user profile'),
+        'page_title' : _('user profile overview'),
+        'view_user' : user,
+        'user_status_for_display': user.get_status_display(soft = True),
+        'questions' : questions,
+        'answered_questions' : answered_questions,
+        'up_votes' : up_votes,
+        'down_votes' : down_votes,
+        'total_votes': up_votes + down_votes,
+        'votes_today_left': votes_total-votes_today,
+        'votes_total_per_day': votes_total,
+        'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
+        'awards': awards,
+        'total_awards' : total_awards,
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_stats.html')
+    return HttpResponse(template.render(context))
 
 def user_recent(request, user):
 
@@ -700,40 +699,17 @@ def user_recent(request, user):
 
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
-    return render_to_response('user_recent.html',
-                                 {
-                                    'active_tab': 'users',
-                                    "tab_name" : 'recent',
-                                    "tab_description" : _('recent user activity'),
-                                    "page_title" : _('profile - recent activity'),
-                                    "view_user" : user,
-                                    "activities" : activities[:const.USER_VIEW_DATA_SIZE]
-                                }, context_instance=RequestContext(request))
-
-#class Response:
-#    """class that abstracts any kind of response
-#    answer, comment, mention, post edits, etc.
-#    """
-#    def __init__(
-#            self, type, title, question_id, 
-#            answer_id, time, username, 
-#            user_id, content):
-#
-#        self.type = type
-#        self.title = title
-#        self.titlelink = reverse(
-#                            'question', 
-#                            args=[question_id]) \
-#                                    + u'%s#%s' % (slugify(title), 
-#                            answer_id
-#                        )
-#        self.time = time
-#        self.userlink = reverse('users') + u'%s/%s/' % (user_id, username)
-#        self.username = username
-#        self.content = u'%s ...' % strip_tags(content)[:300]
-
-#    def __unicode__(self):
-#        return u'%s %s' % (self.type, self.titlelink)
+    data = {
+        'active_tab': 'users',
+        'tab_name' : 'recent',
+        'tab_description' : _('recent user activity'),
+        'page_title' : _('profile - recent activity'),
+        'view_user' : user,
+        'activities' : activities[:const.USER_VIEW_DATA_SIZE]
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_recent.html')
+    return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
 def user_responses(request, user):
@@ -766,18 +742,17 @@ def user_responses(request, user):
 
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    return render_to_response(
-                    'user_responses.html',
-                    {
-                        'active_tab':'users',
-                        'tab_name' : 'responses',
-                        'tab_description' : _('comments and answers to others questions'),
-                        'page_title' : _('profile - responses'),
-                        'view_user' : user,
-                        'responses' : response_list[:const.USER_VIEW_DATA_SIZE],
-                    }, 
-                    context_instance=RequestContext(request)
-                )
+    data = {
+        'active_tab':'users',
+        'tab_name' : 'responses',
+        'tab_description' : _('comments and answers to others questions'),
+        'page_title' : _('profile - responses'),
+        'view_user' : user,
+        'responses' : response_list[:const.USER_VIEW_DATA_SIZE],
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_responses.html')
+    return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
 def user_votes(request, user):
@@ -832,14 +807,17 @@ def user_votes(request, user):
         votes.extend(answer_votes)
     votes.sort(lambda x,y: cmp(y['voted_at'], x['voted_at']))
 
-    return render_to_response('user_votes.html', {
+    data = {
         'active_tab':'users',
-        "tab_name" : 'votes',
-        "tab_description" : _('user vote record'),
-        "page_title" : _('profile - votes'),
-        "view_user" : user,
-        "votes" : votes[:const.USER_VIEW_DATA_SIZE]
-    }, context_instance=RequestContext(request))
+        'tab_name' : 'votes',
+        'tab_description' : _('user vote record'),
+        'page_title' : _('profile - votes'),
+        'view_user' : user,
+        'votes' : votes[:const.USER_VIEW_DATA_SIZE]
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_votes.html')
+    return HttpResponse(template.render(context))
 
 def user_reputation(request, user):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
@@ -868,15 +846,18 @@ def user_reputation(request, user):
     reps = ','.join(rep_list)
     reps = '[%s]' % reps
 
-    return render_to_response('user_reputation.html', {
-                              'active_tab':'users',
-                              "tab_name": 'reputation',
-                              "tab_description": _('user reputation in the community'),
-                              "page_title": _('profile - user reputation'),
-                              "view_user": user,
-                              "reputation": reputes,
-                              "reps": reps
-                              }, context_instance=RequestContext(request))
+    data = {
+        'active_tab':'users',
+        'tab_name': 'reputation',
+        'tab_description': _('user reputation in the community'),
+        'page_title': _('profile - user reputation'),
+        'view_user': user,
+        'reputation': reputes,
+        'reps': reps
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_reputation.html')
+    return HttpResponse(template.render(context))
 
 def user_favorites(request, user):
     questions = models.Question.objects.extra(
@@ -920,14 +901,17 @@ def user_favorites(request, user):
              'la_user_bronze',
              'la_user_reputation')
 
-    return render_to_response('user_favorites.html',{
+    data = {
         'active_tab':'users',
-        "tab_name" : 'favorites',
-        "tab_description" : _('users favorite questions'),
-        "page_title" : _('profile - favorite questions'),
-        "questions" : questions[:const.USER_VIEW_DATA_SIZE],
-        "view_user" : user
-    }, context_instance=RequestContext(request))
+        'tab_name' : 'favorites',
+        'tab_description' : _('users favorite questions'),
+        'page_title' : _('profile - favorite questions'),
+        'questions' : questions[:const.USER_VIEW_DATA_SIZE],
+        'view_user' : user
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('user_favorites.html')
+    return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
 def user_email_subscriptions(request, user):

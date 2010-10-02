@@ -1,9 +1,7 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
+{% import "macros.html" as macros %}
 <!-- tags.html -->
-{% load i18n %}
-{% load extra_tags %}
-{% load humanize %}
-{% block title %}{% spaceless %}{% trans "Tag list" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Tag list{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
        /*<![CDATA[*/
@@ -27,19 +25,19 @@
 {% block content %}
 <!-- Tabs -->
 <div class="tabBar">
-    <div class="headUsers">{% trans "Tag list" %}</div>
+    <div class="headUsers">{% trans %}Tag list{% endtrans %}</div>
     <div class="tabsA">
-        <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans "sorted alphabetically" %}">{% trans "by name" %}</a>
-        <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans "sorted by frequency of tag use" %}">{% trans "by popularity" %}</a>
+        <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans %}sorted alphabetically{% endtrans %}">{% trans %}by name{% endtrans %}</a>
+        <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans %}sorted by frequency of tag use{% endtrans %}">{% trans %}by popularity{% endtrans %}</a>
     </div>
 </div>
 <div id="searchtags">
 <p>
 {% if stag %}
-    {% blocktrans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endblocktrans %}:
+    {% trans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endtrans %}:
 {% endif %}
 {% if not tags.object_list %}
-    <span>{% trans "Nothing found" %}</span>
+    <span>{% trans %}Nothing found{% endtrans %}</span>
 {% endif %}
 </p>
 {% if tags.object_list %}
@@ -47,12 +45,11 @@
 {% for tag in tags.object_list %}
    <li>
     <a href="{% url questions %}?tags={{tag|urlencode}}" 
-        title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">
+        title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">
         {{ tag }}
     </a>&nbsp;
     <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
     <br/>
-
     </li>
 {% endfor %}
 </ul>
@@ -62,7 +59,7 @@
 {% endblock %}
 {% block tail %}
 <div class="pager">
-    {% cnprog_paginator context %}
+    {{macros.paginator(paginator_context)}}
 </div>              
 {% endblock %}
 <!-- end tags.html -->

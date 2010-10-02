@@ -9,7 +9,8 @@ from askbot.models import content
 from askbot.models.question import Question
 from askbot import const
 from askbot.utils.slug import slugify
-
+from askbot.utils import markup
+from askbot.utils.html import sanitize_html
 
 class AnswerManager(models.Manager):
     def create_new(
@@ -205,6 +206,10 @@ class AnswerRevision(ContentRevision):
 
     def get_question_title(self):
         return self.answer.question.title
+
+    def as_html(self):
+        markdowner = markup.get_parser()
+        return sanitize_html(markdowner.convert(self.text))
 
     class Meta(ContentRevision.Meta):
         db_table = u'answer_revision'

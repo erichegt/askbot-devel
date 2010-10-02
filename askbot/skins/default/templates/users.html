@@ -1,12 +1,10 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
+{% import "macros.html" as macros %}
 <!-- users.html -->
-{% load extra_tags %}
-{% load humanize %}
-{% load i18n %}
-{% block title %}{% spaceless %}{% trans "Users" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
-	   //todo move javascript out
+        //todo move javascript out
         $().ready(function(){
             $("#nav_users").attr('className',"on");
             $("#type-user").attr('checked',true);
@@ -21,43 +19,40 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-    <div class="headUsers">{% trans "Users" %}</div>
+    <div class="headUsers">{% trans %}Users{% endtrans %}</div>
     <div class="tabsA">
-        <a id="sort_reputation" href="{% url users %}?sort=reputation" class="off" title="{% trans "reputation" %}">{% trans "reputation" %}</a>
-        <a id="sort_newest" href="{% url users %}?sort=newest" class="off" title="{% trans "recent" %}">{% trans "recent" %}</a>
-        <a id="sort_last" href="{% url users %}?sort=last" class="off" title="{% trans "oldest" %}">{% trans "oldest" %}</a>
-        <a id="sort_user" href="{% url users %}?sort=user" class="off" title="{% trans "by username" %}">{% trans "by username" %}</a>
+        <a id="sort_reputation" href="{% url users %}?sort=reputation" class="off" title="{% trans %}reputation{% endtrans %}">{% trans %}reputation{% endtrans %}</a>
+        <a id="sort_newest" href="{% url users %}?sort=newest" class="off" title="{% trans %}recent{% endtrans %}">{% trans %}recent{% endtrans %}</a>
+        <a id="sort_last" href="{% url users %}?sort=last" class="off" title="{% trans %}oldest{% endtrans %}">{% trans %}oldest{% endtrans %}</a>
+        <a id="sort_user" href="{% url users %}?sort=user" class="off" title="{% trans %}by username{% endtrans %}">{% trans %}by username{% endtrans %}</a>
     </div>
 </div>
 <div id="main-body" style="width:100%">
-    <p>        
+    <p>
         {% if suser %}
-			{% blocktrans %}users matching query {{suser}}:{% endblocktrans %}
+            {% trans %}users matching query {{suser}}:{% endtrans %}
         {% endif %}
-    
         {% if not users.object_list %}
-            <span>{% trans "Nothing found." %}</span>
+            <span>{% trans %}Nothing found.{% endtrans %}</span>
         {% endif %}
     </p>
     <div class="userList">
         <table class="list-table">
-            <tr>    
+            <tr>
                 <td class="list-td">
                     {% for user in users.object_list %}
-                    
                     <div class="user">
                         <ul>
-                                <li class="thumb">{% gravatar user 32 %}</li>
-                                <li><a href="{% url user_profile user.id user.username|slugify %}">{{user.username}}</a></li>
-                                <li>{% get_score_badge user %}</li>
+                                <li class="thumb">{{ macros.gravatar(user, 32) }}</li>
+                                <li><a href="{% url user_profile user.id, user.username|slugify %}">{{user.username}}</a></li>
+                                <li>{{ macros.user_score_and_badge_summary(user) }}</li>
                             </ul>
                     </div>
                     
-            {% if forloop.counter|divisibleby:"7" %}
+            {% if loop.index is divisibleby 7 %}
                 </td>
                 <td>
             {% endif %}
-
                     {% endfor %}
                 </td>
             </tr>   
@@ -67,7 +62,7 @@
 {% endblock %}
 {% block tail %}
 <div class="pager">
-    {% cnprog_paginator context %}
+    {{ macros.paginator(paginator_context) }}
 </div>              
 {% endblock %}
 <!-- end users.html -->

@@ -1,9 +1,6 @@
-{% extends "base_content.html" %}
+{% extends "base.jinja.html" %}
 <!-- reopen.html -->
-{% load extra_tags %}
-{% load i18n %}
-{% load humanize %}
-{% block title %}{% spaceless %}{% trans "Reopen question" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Reopen question{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
         $().ready(function(){
@@ -13,34 +10,32 @@
 {% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
-    {% trans "Reopen question" %}
+    {% trans %}Reopen question{% endtrans %}
 </div>
 <div id="main-body" style="width:100%">
-    <p>{% trans "Title" %}: 
-        <a href="{{ question.get_absolute_url }}">
-            <span class="big">{{ question.get_question_title }}</span>
+    <p>{% trans %}Title{% endtrans %}: 
+        <a href="{{ question.get_absolute_url() }}">
+            <span class="big">{{ question.get_question_title() }}</span>
         </a>
     </p>
-    <p>{% blocktrans %}This question has been closed by 
+    <p>{% trans %}This question has been closed by 
         <a href="{{closed_by_profile_url}}">{{closed_by_username}}</a>
-    {% endblocktrans %}
+    {% endtrans %}
     </p>
     <p>
-        {% trans "Close reason:" %} "<strong>{{question.get_close_reason_display}}</strong>".
+        {% trans %}Close reason:{% endtrans %} "<strong>{{question.get_close_reason_display()}}</strong>".
     </p>
     <p>
-        {% trans "When:" %} {% diff_date question.closed_at %}
+        {% trans %}When:{% endtrans %} {{question.closed_at|diff_date}}
     </p>
     <p>
-        {% trans "Reopen this question?" %}
+        {% trans %}Reopen this question?{% endtrans %}
     </p>
     <form id="fmclose" action="{% url reopen question.id %}" method="post" >
         <div id="" style="padding:20px 0 20px 0">
-            <input type="submit" value="{% trans "Reopen this question" %}" class="submit" />&nbsp;
-            <input id="btBack" type="button" value="{% trans "Cancel" %}"  class="submit"  />
-            
+            <input type="submit" value="{% trans %}Reopen this question{% endtrans %}" class="submit" />&nbsp;
+            <input id="btBack" type="button" value="{% trans %}Cancel{% endtrans %}"  class="submit"  />
         </div>
-        
     </form>
 </div>
 {% endblock %}

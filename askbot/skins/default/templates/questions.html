@@ -1,12 +1,7 @@
-{% extends "base.html" %}
+{% extends "base.jinja.html" %}
 <!-- questions.html -->
-{% load extra_tags %}
-{% load i18n %}
-{% load humanize %}
-{% load extra_filters %}
-{% load smart_if %}
-{% load cache %}
-{% block title %}{% spaceless %}{% trans "Questions" %}{% endspaceless %}{% endblock %}
+{% import "macros.html" as macros %}
+{% block title %}{% spaceless %}{% trans %}Questions{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
            var tags = {{ tags_autocomplete|safe }};
@@ -22,97 +17,88 @@
                Hilite.debug_referrer = location.href;
            });
        </script>
-       <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
-       <script type='text/javascript' src='{% media  "/js/com.cnprog.tag_selector.js" %}'></script>
+       <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+       <script type='text/javascript' src='{{"/js/com.cnprog.tag_selector.js"|media}}'></script>
 {% endblock %}
 {% block content %}
-{% get_current_language as LANGUAGE_CODE %}
-{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size LANGUAGE_CODE %}
+{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
 <div class="tabBar">
     <div class="tabsC">
-        <span class="label">{% trans "In:" %}</span>
-        <a id="all" class="off" href="?scope=all" title="{% trans "see all questions" %}">{% trans "all" %}</a>
-        <a id="unanswered" class="off" href="?scope=unanswered&amp;sort=coldest" title="{% trans "see unanswered questions" %}">{% trans "unanswered" %}</a>
-        {% if request.user.is_authenticated %} 
-        <a id="favorite" class="off" href="?scope=favorite" title="{% trans "see your favorite questions" %}">{% trans "favorite" %}</a>
+        <span class="label">{% trans %}In:{% endtrans %}</span>
+        <a id="all" class="off" href="?scope=all" title="{% trans %}see all questions{% endtrans %}">{% trans %}all{% endtrans %}</a>
+        <a id="unanswered" class="off" href="?scope=unanswered&amp;sort=coldest" title="{% trans %}see unanswered questions{% endtrans %}">{% trans %}unanswered{% endtrans %}</a>
+        {% if request.user.is_authenticated() %} 
+        <a id="favorite" class="off" href="?scope=favorite" title="{% trans %}see your favorite questions{% endtrans %}">{% trans %}favorite{% endtrans %}</a>
         {% endif %}
     </div>
     <div class="tabsA">
-        <span class="label">{% trans "Sort by:" %}</span>
+        <span class="label">{% trans %}Sort by:{% endtrans %}</span>
         {% if sort == "oldest" %}
         <a id="oldest" 
             href="?sort=latest" 
             class="off" 
-            title="{% trans "click to see the newest questions" %}">{% trans "oldest" %}</a>
+            title="{% trans %}click to see the newest questions{% endtrans %}">{% trans %}oldest{% endtrans %}</a>
+        {% elif sort == "latest" %}
+            <a id="latest" 
+                href="?sort=oldest" 
+                class="off" 
+                title="{% trans %}click to see the oldest questions{% endtrans %}">{% trans %}newest{% endtrans %}</a>
         {% else %}
-                {% if sort == "latest" %}
-                    <a id="latest" 
-                        href="?sort=oldest" 
-                        class="off" 
-                        title="{% trans "click to see the oldest questions" %}">{% trans "newest" %}</a>
-                {% else %}
-                    <a id="latest" 
-                        href="?sort=latest" 
-                        class="off" 
-                        title="{% trans "click to see the newest questions" %}">{% trans "newest" %}</a>
-                {% endif %}
+            <a id="latest" 
+                href="?sort=latest" 
+                class="off" 
+                title="{% trans %}click to see the newest questions{% endtrans %}">{% trans %}newest{% endtrans %}</a>
         {% endif %}
 
         {% if sort == "inactive" %}
         <a id="inactive" 
             href="?sort=active" 
             class="off" 
-            title="{% trans "click to see the most recently updated questions" %}">{% trans "inactive" %}</a>
+            title="{% trans %}click to see the most recently updated questions{% endtrans %}">{% trans %}inactive{% endtrans %}</a>
+        {% elif sort == "active" %}
+            <a id="active" 
+                href="?sort=inactive" 
+                class="off" 
+                title="{% trans %}click to see the least recently updated questions{% endtrans %}">{% trans %}active{% endtrans %}</a>
         {% else %}
-            {% if sort == "active" %}
-                <a id="active" 
-                    href="?sort=inactive" 
-                    class="off" 
-                    title="{% trans "click to see the least recently updated questions" %}">{% trans "active" %}</a>
-            {% else %}
-                <a id="active" 
-                    href="?sort=active" 
-                    class="off" 
-                    title="{% trans "click to see the most recently updated questions" %}">{% trans "active" %}</a>
-            {% endif %}
+            <a id="active" 
+                href="?sort=active" 
+                class="off" 
+                title="{% trans %}click to see the most recently updated questions{% endtrans %}">{% trans %}active{% endtrans %}</a>
         {% endif %}
 
         {% if sort == "coldest" %}
         <a id="coldest" 
             href="?sort=hottest" 
             class="off" 
-            title="{% trans "click to see hottest questions" %}">{% trans "less answers" %}</a>
+            title="{% trans %}click to see hottest questions{% endtrans %}">{% trans %}less answers{% endtrans %}</a>
+        {% elif sort == "hottest" %}
+            <a id="hottest" 
+                href="?sort=coldest" 
+                class="off" 
+                title="{% trans %}click to see coldest questions{% endtrans %}">{% trans %}more answers{% endtrans %}</a>
         {% else %}
-            {% if sort == "hottest" %}
-                <a id="hottest" 
-                    href="?sort=coldest" 
-                    class="off" 
-                    title="{% trans "click to see coldest questions" %}">{% trans "more answers" %}</a>
-            {% else %}
-                <a id="hottest" 
-                    href="?sort=hottest" 
-                    class="off" 
-                    title="{% trans "click to see hottest questions" %}">{% trans "more answers" %}</a>
-            {% endif %}
+            <a id="hottest" 
+                href="?sort=hottest" 
+                class="off" 
+                title="{% trans %}click to see hottest questions{% endtrans %}">{% trans %}more answers{% endtrans %}</a>
         {% endif %}
 
         {% if sort == "leastvoted" %}
         <a id="leastvoted" 
             href="?sort=mostvoted" 
             class="off" 
-            title="{% trans "click to see most voted questions" %}">{% trans "unpopular" %}</a>    
+            title="{% trans %}click to see most voted questions{% endtrans %}">{% trans %}unpopular{% endtrans %}</a>    
+        {% elif sort == "mostvoted" %}
+            <a id="mostvoted" 
+                href="?sort=leastvoted" 
+                class="off" 
+                title="{% trans %}click to see least voted questions{% endtrans %}">{% trans %}popular{% endtrans %}</a>    
         {% else %}
-            {% if sort == "mostvoted" %}
-                <a id="mostvoted" 
-                    href="?sort=leastvoted" 
-                    class="off" 
-                    title="{% trans "click to see least voted questions" %}">{% trans "popular" %}</a>    
-            {% else %}
-                <a id="mostvoted" 
-                    href="?sort=mostvoted" 
-                    class="off" 
-                    title="{% trans "click to see most voted questions" %}">{% trans "popular" %}</a>    
-            {% endif %}
+            <a id="mostvoted" 
+                href="?sort=mostvoted" 
+                class="off" 
+                title="{% trans %}click to see most voted questions{% endtrans %}">{% trans %}popular{% endtrans %}</a>    
         {% endif %}
     </div>
 </div>
@@ -122,62 +108,54 @@
         <p style="float:right;margin:3px 3px 0 0;">
             (<a style="text-decoration:none;" 
                 href="{{settings.APP_URL}}/feeds/rss/"
-                title="{% trans "subscribe to the questions feed" %}"
+                title="{% trans %}subscribe to the questions feed{% endtrans %}"
                 ><img 
                     style="vertical-align:middle;"
-                    alt="{% trans "subscribe to the questions feed" %}"
-                src="{% media "/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
+                    alt="{% trans %}subscribe to the questions feed{% endtrans %}"
+                src="{{"/images/feed-icon-small.png"|media}}"/> {% trans %}rss feed{% endtrans %}</a>)
         </p>
         <p id="question-count" class="search-result-summary">
         {% if author_name or search_tags or query %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+            {% trans cnt=questions_count, q_num=questions_count|intcomma %}
                 {{q_num}} question found
-            {% plural %}
+            {% pluralize %}
                 {{q_num}} questions found
-            {% endblocktrans %}
+            {% endtrans %}
         {% else %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}{{q_num}} question{% plural %}{{q_num}} questions{% endblocktrans %}
+            {% trans cnt=questions_count, q_num=questions_count|intcomma %}{{q_num}} question{% pluralize %}{{q_num}} questions{% endtrans %}
         {% endif %}
-        {% joinitems using ', ' %}
-            {% if author_name %}
-                {% blocktrans %}with {{author_name}}'s contributions{% endblocktrans %}
-            {% endif %}
-        {% separator %}
-            {% if search_tags %}
-                {% trans "tagged" %}
-                "{{ search_tags|join:"\", \"" }}"
-            {% endif %}
-        {% endjoinitems %}
+        {% if author_name %}
+            {% trans %}with {{author_name}}'s contributions{% endtrans %}
+        {% endif %}
+        {% if search_tags %}{% if author_name %}, {% endif %}
+            {% trans %}tagged{% endtrans %}
+            "{{ search_tags|join('", "') }}"
+        {% endif %}
         </p>
         {% if author_name or search_tags or query %}
-            <p class="search-tips">{% trans "Search tips:" %}
-            {% ifmany query search_tags author_name %}
-                {% joinitems using ', ' ' or ' %}
-                    {% if author_name %}
-                    <a href="{% url questions %}?reset_author=true">{% trans "reset author" %}</a>
-                    {% endif %}
-                {% separator %}
-                    {% if search_tags %}
-                        <a href="{% url questions %}?reset_tags=true">{% trans "reset tags" %}</a>
-                    {% endif %}
-                {% separator %}
-                    {% ifmany query search_tags author_name %}
-                        <a href="{% url questions %}?start_over=true">{% trans "start over" %}</a>
-                    {% endifmany %}
-                {% endjoinitems %}
+            <p class="search-tips">{% trans %}Search tips:{% endtrans %}
+            {% if reset_method_count > 1 %}
+                {% if author_name %}
+                <a href="{% url questions %}?reset_author=true">{% trans %}reset author{% endtrans %}</a>
+                {% endif %}
+                {% if search_tags %}{% if author_name and query %}, {% elif author_name %}{% trans %} or {% endtrans %}{% endif %}
+                    <a href="{% url questions %}?reset_tags=true">{% trans %}reset tags{% endtrans %}</a>
+                {% endif %}
+                {% if query %}{% trans %} or {% endtrans %}
+                    <a href="{% url questions %}?start_over=true">{% trans %}start over{% endtrans %}</a>
+                {% endif %}
             {% else %}
-                <a href="{% url questions %}?start_over=true">{% trans "start over" %}</a>
-            {% endifmany %}
-            {% trans " - to expand, or dig in by adding more tags and revising the query." %}
+                <a href="{% url questions %}?start_over=true">{% trans %}start over{% endtrans %}</a>
+            {% endif %}
+            {% trans %} - to expand, or dig in by adding more tags and revising the query.{% endtrans %}
             </p>
         {% else %}
-            <p class="search-tips">{% trans "Search tip:" %} {% trans "add tags and a query to focus your search" %}</p>
+            <p class="search-tips">{% trans %}Search tip:{% endtrans %} {% trans %}add tags and a query to focus your search{% endtrans %}</p>
         {% endif %}
     </div>
 {% endif %}
 <div id="listA">
-{% get_current_language as LANGUAGE_CODE %}
-{% cache 60 questions search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+{% cache 60 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
     {% for question in questions.object_list %}
     <div class="short-summary">
         <div class="counts">
@@ -191,12 +169,9 @@
                     {% endif %}
                 >{{question.score|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.score as cnt %}vote{% plural %}votes{% endblocktrans %}
+                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div >
-            {% comment %}
-            <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
-            {% endcomment %}
             <div class="votes"> 
                 <span 
                     class="item-count"
@@ -211,7 +186,7 @@
                     {% endif %}
                 >{{question.answer_count|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.answer_count as cnt %}answer{% plural %}answers{% endblocktrans %}
+                {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
                 </div>
             </div>
             <div class="votes">
@@ -223,108 +198,101 @@
                  {% endif %}
                  >{{question.view_count|humanize_counter}}</span>
                 <div>
-                {% blocktrans count question.view_count as cnt %}view{% plural %}views{% endblocktrans %}
+                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
                 </div>
             </div>
         </div>
-        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.title|escape}}</a></h2>
         <div class="userinfo">
-            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
-            {% if question.last_activity_by %}
-            <a href="{% url user_profile question.last_activity_by.id question.last_activity_by.username|slugify %}">{{ question.last_activity_by }}</a> {% get_score_badge question.last_activity_by %}
-            {% endif %}
+            <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
+            <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
+            {{macros.user_score_and_badge_summary(question.last_activity_by)}}
         </div>
         <div class="tags">
-            {% for tag in question.tagname_list %}
-            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{%endblocktrans %}" rel="tag">{{ tag }}</a>
+            {% for tag in question.get_tag_names() %}
+            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
             {% endfor %}
         </div>
     </div>
     {% endfor %}
 {% endcache %}
-        {% comment %}todo: fix css here{% endcomment %}
+        {# comment todo: fix css here #}
         {% if questions_count == 0 %}
-            {% comment %}todo: add tips to widen selection{% endcomment%}
+            {# todo: add tips to widen selection #}
             <p class="evenMore" style="padding-top:30px;text-align:center;">
             {% if scope == "unanswered" %}
-                {% trans "There are no unanswered questions here" %}
+                {% trans %}There are no unanswered questions here{% endtrans %}
             {% endif %}
             {% if scope == "favorite" %}
-                {% trans "No favorite questions here. " %}
-                {% trans "Please start (bookmark) some questions when you visit them" %}
+                {% trans %}No favorite questions here. {% endtrans %}
+                {% trans %}Please start (bookmark) some questions when you visit them{% endtrans %}
             {% endif %}
             </p>
             {% if query or search_tags or author_name %}
             <p class="evenMore" style="text-align:center">
-                {% trans "You can expand your search by " %}
-                {% ifmany query search_tags author_name %}
-                    {% joinitems using ', ' ' or ' %}
-                        {% if author_name %}
-                        <a href="{% url questions %}?reset_author=true">{% trans "resetting author" %}</a>
-                        {% endif %}
-                    {% separator %}
-                        {% if search_tags %}
-                            <a href="{% url questions %}?reset_tags=true">{% trans "resetting tags" %}</a>
-                        {% endif %}
-                    {% separator %}
-                        {% ifmany query search_tags author_name %}
-                            <a href="{% url questions %}?start_over=true">{% trans "starting over" %}</a>
-                        {% endifmany %}
-                    {% endjoinitems %}
+                {% trans %}You can expand your search by {% endtrans %}
+                {% if reset_method_count > 1 %}
+                    {% if author_name %}
+                    <a href="{% url questions %}?reset_author=true">{% trans %}resetting author{% endtrans %}</a>
+                    {% endif %}
+                    {% if search_tags %}{% if author_name and query %}, {% elif author_name %}{% trans %} or {% endtrans %}{% endif %}
+                        <a href="{% url questions %}?reset_tags=true">{% trans %}resetting tags{% endtrans %}</a>
+                    {% endif %}
+                    {% if query %}{% trans %} or {% endtrans %}
+                        <a href="{% url questions %}?start_over=true">{% trans %}starting over{% endtrans %}</a>
+                    {% endif %}
                 {% else %}
-                    <a href="{% url questions %}?start_over=true">{% trans "starting over" %}</a>
-                {% endifmany %}
+                    <a href="{% url questions %}?start_over=true">{% trans %}starting over{% endtrans %}</a>
+                {% endif %}
             </p>
             {% endif %}
             <p class="evenMore" style="text-align:center">
-            <a href="{% url ask %}">{% trans "Please always feel free to ask your question!" %}</a>
+            <a href="{% url ask %}">{% trans %}Please always feel free to ask your question!{% endtrans %}</a>
             </p>
         {% else %}
             <p class="evenMore" style="padding-left:9px">
-                {% trans "Did not find what you were looking for?" %} 
-                <a href="{% url ask %}">{% trans "Please, post your question!" %}</a>
+                {% trans %}Did not find what you were looking for?{% endtrans %} 
+                <a href="{% url ask %}">{% trans %}Please, post your question!{% endtrans %}</a>
             </p>
         {% endif %}
 </div>
-<script type="text/javascript" src="{% media "/js/live_search.js" %}"></script>
+<script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
 {% endblock %}
 
     {% block tail %}
-            {% if questions_count > 10 %}{%comment%}todo: remove magic number{%endcomment%}
-                <div id="pager" class="pager">{% cnprog_paginator context %}</div>
-                <div class="pagesize">{% cnprog_pagesize context %}</div>
+            {% if questions_count > 10 %}{# todo: remove magic number #}
+                <div id="pager" class="pager">{{ macros.paginator(context|setup_paginator) }}</div>
+                <div class="pagesize">{{ macros.pagesize_switch(context) }}</div>
             {% endif %}
     {% endblock %}
 
 {% block sidebar %}
     {% if contributors %}
-        {% get_current_language as LANGUAGE_CODE %}
-        {% cache 600 contributors search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+        {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
         <div id="contrib-users" class="boxC">
-        <h3 class="subtitle">{% trans "Contributors" %}</h3>
+        <h3 class="subtitle">{% trans %}Contributors{% endtrans %}</h3>
         {% spaceless %}
             {% for person in contributors %}
-                {% gravatar person 48 %}
+                {{ macros.gravatar(person,48) }}
             {% endfor %}
         {% endspaceless %}
         </div>
         {% endcache %}
     {% endif %}
 
-    {% if request.user.is_authenticated %} 
-       {% include "tag_selector.html" %}
+    {% if request.user.is_authenticated() %} 
+       {% include "tag_selector.jinja.html" %}
     {% endif %}
 
     {% if tags %}
-        {% get_current_language as LANGUAGE_CODE %}
-        {% cache 600 tags search_tags scope sort query context.page context.page_size LANGUAGE_CODE %}
+        {% cache 600 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
         <div class="boxC">
-            <h3 class="subtitle">{% trans "Related tags" %}</h3>
+            <h3 class="subtitle">{% trans %}Related tags{% endtrans %}</h3>
             <div id="related-tags" class="tags">
                 {% for tag in tags %}
                     <a 
                         rel="tag" 
-                        title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  
+                        title="{% trans tag_name=tag.name %}see questions tagged '{{ tag_name }}'{% endtrans %}"  
                         href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
                     <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
                     <br />

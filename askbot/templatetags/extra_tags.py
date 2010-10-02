@@ -124,18 +124,6 @@ def cnprog_paginator(context):
             "extend_url" : extend_url
         }
 
-@register.inclusion_tag("pagesize.html")
-def cnprog_pagesize(context):
-    """
-    display the pagesize selection boxes for paginator
-    """
-    if (context["is_paginated"]):
-        return {
-            "base_url": context["base_url"],
-            "page_size" : context["page_size"],
-            "is_paginated": context["is_paginated"]
-        }
-
 @register.inclusion_tag("post_contributor_info.html")
 def post_contributor_info(post,contributor_type='original_author'):
     """contributor_type: original_author|last_updater
@@ -268,15 +256,6 @@ def get_user_vote_image(dic, key, arrow):
     return ''
         
 @register.simple_tag
-def get_age(birthday):
-    current_time = datetime.datetime(*time.localtime()[0:6])
-    year = birthday.year
-    month = birthday.month
-    day = birthday.day
-    diff = current_time - datetime.datetime(year,month,day,0,0,0)
-    return diff.days / 365
-
-@register.simple_tag
 def get_total_count(up_count, down_count):
     return up_count + down_count
 
@@ -296,11 +275,6 @@ def format_number(value):
         strValue = first + ',' + second
         m = re.match(pattern, strValue)
     return first + result
-
-@register.simple_tag
-def convert2tagname_list(question):
-    question['tagnames'] = [name for name in question['tagnames'].split(u' ')]
-    return ''
 
 diff_date = register.simple_tag(functions.diff_date)
 

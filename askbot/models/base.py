@@ -193,6 +193,12 @@ class ContentRevision(models.Model):
         abstract = True
         app_label = 'askbot'
 
+    def as_html(self):
+        """should return html representation of
+        the revision
+        """
+        raise NotImplementedError()
+
 
 class AnonymousContent(models.Model):
     """

@@ -57,7 +57,7 @@ class PageLoadTests(PageLoadTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        self.assertEquals(response.template.name, 'questions.jinja.html')
+        self.assertEquals(response.template.name, 'questions.html')
 
     def proto_test_non_user_urls(self):
         """test all reader views thoroughly
@@ -66,7 +66,7 @@ class PageLoadTests(PageLoadTestCase):
 
         self.try_url('sitemap')
         self.try_url('feeds', kwargs={'url':'rss'})
-        self.try_url('about', template='about.html')
+        self.try_url('about', template='about.jinja.html')
         self.try_url('privacy', template='privacy.html')
         self.try_url('logout', template='logout.html')
         self.try_url('user_signin', template='authopenid/signin.html')
@@ -77,73 +77,73 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('badges', template='badges.html')
         self.try_url(
                 'answer_revisions', 
-                template='revisions_answer.html',
+                template='revisions.html',
                 kwargs={'id':38}
             )
         #todo: test different sort methods and scopes
         self.try_url(
                 'questions',
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'start_over':'true'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'all'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'favorite'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'latest'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'oldest'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'active'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'inactive'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'hottest'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'coldest'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'mostvoted'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'leastvoted'},
-                template='questions.jinja.html'
+                template='questions.html'
             )
         self.try_url(
                 'question',
@@ -166,7 +166,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url(
                 'question_revisions',
                 kwargs={'id':17},
-                template='revisions_question.html'
+                template='revisions.html'
             )
         self.try_url('users', template='users.html')
         #todo: really odd naming conventions for sort methods

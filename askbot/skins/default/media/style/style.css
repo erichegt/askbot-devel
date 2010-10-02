@@ -1630,10 +1630,6 @@ span.form-error {
 
 /*修订记录*/
 
-#revisions {
-    width: 950px;
-}
-
 .revision {
     margin: 10px 0 10px 0;
     width: 100%;

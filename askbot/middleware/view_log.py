@@ -4,13 +4,13 @@ from askbot.views.readers import questions as questions_view
 from askbot.views.commands import vote
 from django.views.static import serve
 from askbot.views.writers import delete_comment, question_comments, answer_comments
-from askbot.views.readers import question_revisions, answer_revisions
+from askbot.views.readers import revisions
 
 #todo: the list is getting bigger and bigger - maybe there is a better way to
 #trigger reset of sarch state?
 IGNORED_VIEWS = (serve, vote, delete_comment, 
                 question_comments, answer_comments,
-                question_revisions, answer_revisions)
+                revisions)
 
 class ViewLog(object):
     """must be modified only in this middlware

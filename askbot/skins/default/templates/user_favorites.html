@@ -1,8 +1,6 @@
-{% extends "user.html" %}
+{% extends "user.jinja.html" %}
 <!-- user_favorites.html -->
-{% load extra_tags %}
-{% load humanize %}
 {% block usercontent %}
-		{% include "users_questions.html" %}
+{% include "users_questions.html" %}
 {% endblock %}
 <!-- end user_favorites.html -->

@@ -1,41 +1,37 @@
 <!-- user_info.html -->
-{% load extra_tags %}
-{% load extra_filters %}
-{% load humanize %}
-{% load smart_if %}
-{% load i18n %}
+{% import "macros.html" as macros %}
 <table class="user-info-table">
     <tr>
         <td width="180" style="vertical-align:middle;text-align:center;">
             <table width="100%">
                 <tr>
                     <td>
-                        {% gravatar view_user 128 %}
+                        {{ macros.gravatar(view_user, 128) }}
                         {% if request.user == view_user %}
-                        <h1><a href="{% url faq %}#gravatar">{% trans "change picture" %}</a></h1>
+                        <h1><a href="{% url faq %}#gravatar">{% trans %}change picture{% endtrans %}</a></h1>
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td align="center">
                         <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
-                        <p><b style="color:#777;">{% trans "reputation" %}</b></p>
+                        <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
                     </td>
                 </tr>
             </table>
         </td>
         <td width="360" style="vertical-align: top;">
             <table class="user-details">
-                {% if request.user|can_view_user_edit:view_user %}
+                {% if request.user|can_view_user_edit(view_user) %}
                 <tr>
                     <td class="user-profile-tool-links" align="left" colspan="2">
                         {% if request.user == view_user %}
                             <a href="{% url user_signin %}?next={% url user_signin %}">
-                                {% trans "manage login methods" %}
+                                {% trans %}manage login methods{% endtrans %}
                             </a> |
                         {% endif %}
-                        <a href="{% url users %}{{ view_user.id }}/{% trans "edit/" %}">
-                            {% trans "update profile" %}
+                        <a href="{% url edit_user view_user.id %}">
+                            {% trans %}update profile{% endtrans %}
                         </a>
                     </td>
                 </tr>  
@@ -47,53 +43,55 @@
                 </tr>
                 {% if view_user.real_name %}
                 <tr>
-                    <td>{% trans "real name" %}</td>
+                    <td>{% trans %}real name{% endtrans %}</td>
                     <td><b>{{view_user.real_name}}</b></td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <td>{% trans "member for" %}</td>
-                    <td><strong>{% diff_date view_user.date_joined %}</strong></td>
+                    <td>{% trans %}member for{% endtrans %}</td>
+                    <td><strong>{{ view_user.date_joined|diff_date }}</strong></td>
                 </tr>
                 {% if view_user.last_seen %}
                 <tr>
-                    <td>{% trans "last seen" %}</td>
-                    <td><strong title="{{ view_user.last_seen }}">{% diff_date view_user.last_seen %}</strong></td>
+                    <td>{% trans %}last seen{% endtrans %}</td>
+                    <td><strong title="{{ view_user.last_seen }}">{{view_user.last_seen|diff_date}}</strong></td>
                 </tr>
                 {% endif %}
                 {% if view_user.website %}
                 <tr>
-                    <td>{% trans "user website" %}</td>
+                    <td>{% trans %}user website{% endtrans %}</td>
                     <td><a rel="nofollow" target="_blank" href="{{view_user.website}}">{{view_user.website}}</a></td>
                 </tr>
                 {% endif  %}
                 {% if view_user.location %}
                 <tr>
-                    <td>{% trans "location" %}</td>
+                    <td>{% trans %}location{% endtrans %}</td>
                     <td>{{view_user.location}}</td>
                 </tr>
                 {% endif %}
                 {% if view_user.date_of_birth%}
                 <tr>
-					<!--todo  - redo this with blocktrans -->
-                    <td>{% trans "age" %}</td>
-                    <td>{% get_age view_user.date_of_birth %} {% trans "age unit" %}</td>
+                <!--todo  - redo this with whole sentence translation -->
+                    <td>{% trans %}age{% endtrans %}</td>
+                    <td>{{view_user.date_of_birth|get_age}} {% trans %}age unit{% endtrans %}</td>
                 </tr>
                 {% endif %}
-				<!--
+                {#
+        <!--
                 {% if votes_today_left %}
                 <tr>
                     <td>{% trans "todays unused votes" %}</td>
                     <td><strong class="darkred">{{ votes_today_left }}</strong> {% trans "votes left" %}</td>
                 </tr>
                 {% endif %}
-				-->
+        -->
+                #}
             </table>
         </td>
         <td width="380">
             <div class="user-about">
             {% if view_user.about %}
-                {{view_user.about|safe|linebreaks}}
+                {{view_user.about|linebreaks}}
             {% endif %}
             </div>
         </td>

@@ -2,11 +2,11 @@
 <!-- base_content.html -->
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE }}</title>
+        <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS}}" />
+        <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
         {% block meta_description %}
-        <meta name="description" content="{{settings.APP_DESCRIPTION}}" />
+        <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
         {% endblock %}
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />

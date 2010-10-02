@@ -346,15 +346,15 @@ def reopen(request, id):#re-open question
             request.user.assert_can_reopen_question(question)
             closed_by_profile_url = question.closed_by.get_profile_url()
             closed_by_username = question.closed_by.username
-            return render_to_response(
-                            'reopen.html', 
-                            {
-                                'question' : question,
-                                'closed_by_profile_url': closed_by_profile_url,
-                                'closed_by_username': closed_by_username,
-                            },
-                            context_instance=RequestContext(request)
-                        )
+            data = {
+                'question' : question,
+                'closed_by_profile_url': closed_by_profile_url,
+                'closed_by_username': closed_by_username,
+            }
+            context = RequestContext(request, data)
+            template = ENV.get_template('reopen.html')
+            return HttpResponse(template.render(context))
+            
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())

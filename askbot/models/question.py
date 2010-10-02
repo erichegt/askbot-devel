@@ -17,6 +17,8 @@ from askbot.models import content
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
+from askbot.utils import markup
+from askbot.utils.html import sanitize_html
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
@@ -47,6 +49,7 @@ class QuestionManager(models.Manager):
             #summary field is denormalized in .save() call
         )
         if question.wiki:
+            #DATED COMMENT
             #todo: this is confusing - last_edited_at field
             #is used as an indicator whether question has been edited
             #in template askbot/skins/default/templates/post_contributor_info.html
@@ -314,9 +317,6 @@ class Question(content.Content, DeletableContent):
 
         return LazyList(get_data)
 
-    def get_tag_names(self):
-        return self.tagnames.split(' ')
-
     def get_similarity(self, other_question = None):
         """return number of tags in the other question
         that overlap with the current question (self)
@@ -521,18 +521,18 @@ class Question(content.Content, DeletableContent):
 
         if initial_addition:
             tags = Tag.objects.get_or_create_multiple(
-                                       self.tagname_list(),
+                                       self.get_tag_names(),
                                        self.author
                                     )
             self.tags.add(*tags)
             Tag.objects.update_use_counts(tags)
 
-    def tagname_list(self):
+    def get_tag_names(self):
         """Creates a list of Tag names from the ``tagnames`` attribute."""
-        return [name for name in self.tagnames.split(u' ')]
+        return self.tagnames.split(u' ')
 
     def tagname_meta_generator(self):
-        return u','.join([unicode(tag) for tag in self.tagname_list()])
+        return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
     def get_absolute_url(self):
         return '%s%s' % (
@@ -660,6 +660,9 @@ class FavoriteQuestion(models.Model):
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
+QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
+                              '<div class="text">%(html)s</div>\n'
+                              '<div class="tags">%(tags)s</div>')
 class QuestionRevision(ContentRevision):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -676,6 +679,15 @@ class QuestionRevision(ContentRevision):
     def get_absolute_url(self):
         #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
+
+    def as_html(self):
+        markdowner = markup.get_parser()
+        return QUESTION_REVISION_TEMPLATE % {
+            'title': self.title,
+            'html': sanitize_html(markdowner.convert(self.text)),
+            'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
+                              for tag in self.tagnames.split(' ')]),
+        }
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""

@@ -132,7 +132,7 @@
                             <div id="question-controls" class="post-controls">
                                 {#todo: here we have important case to reset search state #}
                                 <div id="question-tags" class="tags">
-                                    {% for tag in question.tagname_list() %}
+                                    {% for tag in question.get_tag_names() %}
                                         <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
                                             class="post-tag"
                                             title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>

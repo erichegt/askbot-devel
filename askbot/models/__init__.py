@@ -35,6 +35,9 @@ from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()
 
+def get_model(model_name):
+    return models.get_model('askbot', model_name)
+
 User.add_to_class(
             'status', 
             models.CharField(
@@ -1936,4 +1939,6 @@ __all__ = [
         #'AuthKeyUserAssociation',
 
         'User',
+
+        'get_model'
 ]

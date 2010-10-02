@@ -1,25 +1,22 @@
 <!-- users_questions.html -->
-{% load extra_tags %}
-{% load extra_filters %}
-{% load humanize %}
-{% load i18n %}
+{% import "macros.html" as macros %}
 <div class="user-stats-table">
     {% for question in questions %}
         {% if question.favourite_count %}
             {% if question.favorited_myself %}
                 <div class="favorites-count">
                     <img 
-                        title="{% blocktrans count question.favorite_count as cnt %}this questions was selected as favorite {{question.favourite_count}} time{% plural %}this questions was selected as favorite {{cnt}} times{% endblocktrans %}"
-                        alt="{% trans "thumb-up on" %}"
-                        src="{% media  "/images/vote-favorite-on.png" %}"/>
+                        title="{% trans cnt=question.favorite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
+                        alt="{% trans %}thumb-up on{% endtrans %}"
+                        src="{{"/images/vote-favorite-on.png"|media}}"/>
                     <div><b>{{question.favourite_count|intcomma}}</b></div>
                 </div>
             {% else %}
                 <div class="favorites-count-off">
                     <img 
-                        title="{% blocktrans count question.favorite_count as cnt %}this questions was selected as favorite {{question.favourite_count}} time{% plural %}this questions was selected as favorite {{cnt}} times{% endblocktrans %}"
-                        alt="{% trans "thumb-up off" %}"
-                        src="{% media  "/images/vote-favorite-off.png" %}"/>
+                        title="{% trans cnt=question.favorite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
+                        alt="{% trans %}thumb-up off{% endtrans %}"
+                        src="{{"/images/vote-favorite-off.png"|media}}"/>
                     <div><b>{{question.favourite_count|intcomma}}</b></div>
                 </div>
             {% endif %}
@@ -34,16 +31,16 @@
                 style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
             >{{question.score|humanize_counter}}</span>
             <div>
-            {% blocktrans count question.score as cnt %}
+            {% trans cnt=question.score %}
             vote
-            {% plural %}
+            {% pluralize %}
             votes
-            {% endblocktrans %}
+            {% endtrans %}
             </div>
         </div >
-        {% comment %}
-        <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
-        {% endcomment %}
+        {#
+        <div {% if question.answer_accepted %}title="{% trans %}this answer has been accepted to be correct{% endtrans %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% if question.answer_count==0 %}unanswered{% endif %}{% if question.answer_count!=0 %}answered{% endif %}">
+        #}
         <div class="votes"> 
             <span 
                 class="item-count"
@@ -54,11 +51,11 @@
                 {% endif %}
             >{{question.answer_count|humanize_counter}}</span>
             <div>
-            {% blocktrans count question.answer_count as cnt %}
+            {% trans cnt=question.answer_count %}
             answer 
-            {% plural %}
+            {% pluralize %}
             answers 
-            {% endblocktrans %}
+            {% endtrans %}
             </div>
         </div>
         <div class="votes">
@@ -66,26 +63,36 @@
                 style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
              >{{question.view_count|humanize_counter}}</span>
             <div>
-            {% blocktrans count question.view_count as cnt %}
+            {% trans cnt=question.view_count %}
             view
-            {% plural %}
+            {% pluralize %}
             views
-            {% endblocktrans %}
+            {% endtrans %}
             </div>
         </div>
     </div>
-        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <h2><a title="{{question.summary|escape}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title|escape}}</a></h2>
         <div class="tags">
-            {% convert2tagname_list question %}
-            {% for tag in question.tagnames %}
-                <!--todo - move trans below to blocktrans -->
-                <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
+            {% for tag in question.tagnames|split(' ') %}
+                <!--todo - move trans below to trans -->
+                <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
             {% endfor %}
         </div>
         <div class="started">
-            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+            <span class="relativetime" title="{{question.last_activity_at}}">{{question.last_activity_at|diff_date}}</span>
             {% if question.la_username %}
-                <a href="{% url users %}{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
+                <a 
+                    href="{% url users %}{{question.la_user_id}}/{{question.la_username}}"
+                >{{question.la_username}}</a>
+                {{ macros.user_score_and_badge_summary(
+                        {
+                            'reputation': question.la_user_reputaion,
+                            'gold': question.la_user_gold,
+                            'silver': question.la_user_silver,
+                            'bronze': question.la_user_bronze,
+                        }
+                    )
+                }}
             {% endif %}
         </div>
     </div>
