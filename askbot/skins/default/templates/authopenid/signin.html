@@ -88,16 +88,16 @@
         <div id="login-icons">
             <ul class="login-icons large">
                 {% for login_provider in major_login_providers %}
-                <li>
-                    <input
-                        name="{{login_provider.name}}"
-                        type="image"
-                        class="{{login_provider.type}}"
-                        src="{% media login_provider.icon_media_path %}"
-                        alt="{{login_provider.tooltip_text}}"
-                        title="{{login_provider.tooltip_text}}"
-                    />
-                </li>
+                    <li>
+                        <input
+                            name="{{login_provider.name}}"
+                            type="image"
+                            class="{{login_provider.type}}"
+                            src="{% media login_provider.icon_media_path %}"
+                            alt="{{login_provider.tooltip_text}}"
+                            title="{{login_provider.tooltip_text}}"
+                        />
+                    </li>
                 {% endfor %}
             </ul>
             <ul class="login-icons small">
@@ -159,25 +159,34 @@
                 </p>
                 <p id="local_login_buttons">
                     <input class="submit-b" name="login_with_password" type="submit" value="{% trans "Login" %}" />
-                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans "Create a password-protected account" %}</a>
+                    {% if not settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
+                        <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans "Create a password-protected account" %}</a>
+                    {% endif %}
                 </p>
             {% else %}
-                <h2 id="password-heading">
-                    {% trans "To change your password - please enter the new one twice, then submit" %}
-                </h2>
-                <p>
-                    <label for="id_new_password">{% trans "New password" %}</label>
-                    {{login_form.new_password}}
-                    <span class="error">{{login_form.new_password.errors.0}}</span>
-                </p>
-                <p>
-                    <label for="id_new_password_retyped">{% trans "Please, retype" %}</label>
-                    {{login_form.new_password_retyped}}
-                    <span class="error">{{login_form.new_password_retyped.errors.0}}</span>
-                </p>
-                <p id="local_login_buttons">
-                    <input class="submit-b" name="change_password" type="submit" value="{% trans "Change password" %}" />
-                </p>
+                {% if not settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
+                    <h2 id="password-heading">
+                        {% trans "To change your password - please enter the new one twice, then submit" %}
+                    </h2>
+                    <p>
+                        <label for="id_new_password">{% trans "New password" %}</label>
+                        {{login_form.new_password}}
+                        <span class="error">{{login_form.new_password.errors.0}}</span>
+                    </p>
+                    <p>
+                        <label for="id_new_password_retyped">{% trans "Please, retype" %}</label>
+                        {{login_form.new_password_retyped}}
+                        <span class="error">{{login_form.new_password_retyped.errors.0}}</span>
+                    </p>
+                    <p id="local_login_buttons">
+                        <input class="submit-b" name="change_password" type="submit" value="{% trans "Change password" %}" />
+                    </p>
+                {% else %}
+                    <h2 id="password-heading">
+                        {% blocktrans with settings.LDAP_PROVIDER_NAME as provider%}"How to change {{provider}} password"{% endblocktrans %}
+                    </h2>
+                    {{settings.HOW_TO_CHANGE_LDAP_PASSWORD}}
+                {% endif %}
             {% endif %}
         </fieldset>
         {% endif %}

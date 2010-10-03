@@ -137,3 +137,36 @@ settings.register(
         description=_('LinkedIn consumer secret'),
     )
 )
+
+settings.register(
+    livesettings.BooleanValue(
+        EXTERNAL_KEYS,
+        'USE_LDAP_FOR_PASSWORD_LOGIN',
+        description=_('User LDAP authentication for the password login'),
+        defaut=False
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'LDAP_PROVIDER_NAME',
+        description=_('LDAP service provider name')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'LDAP_URL',
+        description=_('URL for the LDAP service')
+    )
+)
+
+settings.register(
+    livesettings.LongStringValue(
+        EXTERNAL_KEYS,
+        'HOW_TO_CHANGE_LDAP_PASSWORD',
+        description=_('Explain how to change LDAP password')
+    )
+)

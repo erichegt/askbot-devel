@@ -1,4 +1,3 @@
-//jQuery OpenID Plugin 1.1 Copyright 2009 Jarrett Vance http://jvance.com/pages/jQueryOpenIdPlugin.xhtml
 $.fn.authenticator = function() {
     var signin_page = $(this);
     var signin_form = $('#signin-form');
@@ -302,15 +301,17 @@ $.fn.authenticator = function() {
             var password_button = $('input[name=login_with_password]');
             var submit_action = submit_login_with_password;
             var create_pw_link = $('a.create-password-account')
-            create_pw_link.html($.i18n._('Create a password-protected account'));
-            var url = create_pw_link.attr('href');
-            if (url.indexOf('?') !== -1){
-                url = url.replace(/\?.*$/,'?login_provider=' + provider_name);
+            if (create_pw_link.length > 0){
+                create_pw_link.html($.i18n._('Create a password-protected account'));
+                var url = create_pw_link.attr('href');
+                if (url.indexOf('?') !== -1){
+                    url = url.replace(/\?.*$/,'?login_provider=' + provider_name);
+                }
+                else{
+                    url += '?login_provider=' + provider_name;
+                }
+                create_pw_link.attr('href', url);
             }
-            else{
-                url += '?login_provider=' + provider_name;
-            }
-            create_pw_link.attr('href', url);
             password_action_input.val('login');
         }
         password_input_fields.show();

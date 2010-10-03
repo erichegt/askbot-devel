@@ -589,3 +589,14 @@ def get_facebook_user_id(request):
         return fb_response['uid'] 
     except Exception, e:
         raise FacebookError(e)
+
+def ldap_check_password(username, password):
+    import ldap
+    try:
+        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
+        ldap_session.simple_bind_s(username, password)
+        ldap_session.unbind_s()
+        return True
+    except ldap.LDAPError, e:
+        logging.critical(unicode(e))
+        return False
