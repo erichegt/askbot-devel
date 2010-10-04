@@ -330,7 +330,6 @@ def signin(
                                         provider_name = ldap_provider_name,
                                         method = 'ldap'
                                     )
-                        print user
                         if user is not None:
                             login(request, user)
                             return HttpResponseRedirect(next_url)
