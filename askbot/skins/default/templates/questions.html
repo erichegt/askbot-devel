@@ -155,7 +155,7 @@
     </div>
 {% endif %}
 <div id="listA">
-{% cache 60 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
+{% cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
     {% for question in questions.object_list %}
     <div class="short-summary">
         <div class="counts">
@@ -294,7 +294,7 @@
                         rel="tag" 
                         title="{% trans tag_name=tag.name %}see questions tagged '{{ tag_name }}'{% endtrans %}"  
                         href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
-                    <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+                    <span class="tag-number">&#215; {{ tag.local_used_count|intcomma }}</span>
                     <br />
                 {% endfor %}
             </div>

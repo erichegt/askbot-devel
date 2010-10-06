@@ -70,18 +70,30 @@ class QuestionManager(models.Manager):
         return question
 
     def run_advanced_search(
-                            self,
-                            request_user = None,
-                            scope_selector = const.DEFAULT_POST_SCOPE,#unanswered/all/favorite (for logged in)
-                            search_query = None,
-                            tag_selector = None,
-                            author_selector = None,#???question or answer author or just contributor
-                            sort_method = const.DEFAULT_POST_SORT_METHOD
-                            ):
+                        self,
+                        request_user = None,
+                        search_state = None
+                    ):
         """all parameters are guaranteed to be clean
         however may not relate to database - in that case
         a relvant filter will be silently dropped
         """
+
+        scope_selector = getattr(
+                            search_state,
+                            'scope',
+                            const.DEFAULT_POST_SCOPE
+                        )
+
+        search_query = search_state.query
+        tag_selector = search_state.tags
+        author_selector = search_state.author
+
+        sort_method = getattr(
+                            search_state, 
+                            'sort',
+                            const.DEFAULT_POST_SORT_METHOD
+                        )
 
         qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
 
@@ -125,6 +137,7 @@ class QuestionManager(models.Manager):
         #user contributed questions & answers
         if author_selector:
             try:
+                #todo maybe support selection by multiple authors
                 u = User.objects.get(id=int(author_selector))
                 qs = qs.filter(
                             models.Q(author=u, deleted=False) \
@@ -135,46 +148,63 @@ class QuestionManager(models.Manager):
                 meta_data['author_name'] = None
 
         #get users tag filters
+        ignored_tag_names = None
         if request_user and request_user.is_authenticated():
             uid_str = str(request_user.id)
             #mark questions tagged with interesting tags
-            qs = qs.extra(
-                select = SortedDict([
-                    (
-                        'interesting_score', 
-                        'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-                         + 'WHERE askbot_markedtag.user_id = %s '
-                         + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                         + 'AND askbot_markedtag.reason = \'good\' '
-                         + 'AND question_tags.question_id = question.id'
-                    ),
-                        ]),
-                select_params = (uid_str,),
-             )
-            if request_user.hide_ignored_questions:
-                #exclude ignored tags if the user wants to
-                ignored_tags = Tag.objects.filter(user_selections__reason='bad',
-                                                user_selections__user = request_user)
-                qs = qs.exclude(tags__in=ignored_tags)
-            else:
-                #annotate questions tagged with ignored tags
-                qs = qs.extra(
-                            select = SortedDict([
-                                (
-                                    'ignored_score', 
-                                    'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-                                      + 'WHERE askbot_markedtag.user_id = %s '
-                                      + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                                      + 'AND askbot_markedtag.reason = \'bad\' '
-                                      + 'AND question_tags.question_id = question.id'
+            #a kind of fancy annotation, would be nice to avoid it
+            interesting_tags = Tag.objects.filter(
+                                    user_selections__user=request_user,
+                                    user_selections__reason='good'
                                 )
-                                    ]),
-                            select_params = (uid_str, )
-                         )
+            ignored_tags = Tag.objects.filter(
+                                    user_selections__user=request_user,
+                                    user_selections__reason='bad'
+                                )
+
+            meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
+
+            ignored_tag_names = [tag.name for tag in ignored_tags]
+            meta_data['ignored_tag_names'] = ignored_tag_names
+
+            if interesting_tags:
+                #expensive query
+                qs = qs.extra(
+                    select = SortedDict([
+                        (
+                            'interesting_score', 
+                            'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
+                             + 'WHERE askbot_markedtag.user_id = %s '
+                             + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+                             + 'AND askbot_markedtag.reason = \'good\' '
+                             + 'AND question_tags.question_id = question.id'
+                        ),
+                            ]),
+                    select_params = (uid_str,),
+                 )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
-            pt = MarkedTag.objects.filter(user=request_user)
-            meta_data['interesting_tag_names'] = pt.filter(reason='good').values_list('tag__name', flat=True)
-            meta_data['ignored_tag_names'] = pt.filter(reason='bad').values_list('tag__name', flat=True)
+
+            if ignored_tags:
+                if request_user.hide_ignored_questions:
+                    #exclude ignored tags if the user wants to
+                    qs = qs.exclude(tags__in=ignored_tags)
+                else:
+                    #annotate questions tagged with ignored tags
+                    #expensive query
+                    qs = qs.extra(
+                        select = SortedDict([
+                            (
+                                'ignored_score', 
+                                'SELECT COUNT(1) '
+                                  + 'FROM askbot_markedtag, question_tags '
+                                  + 'WHERE askbot_markedtag.user_id = %s '
+                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+                                  + 'AND askbot_markedtag.reason = \'bad\' '
+                                  + 'AND question_tags.question_id = question.id'
+                            )
+                                ]),
+                        select_params = (uid_str, )
+                     )
 
         #qs = qs.select_related(depth=1)
         #todo: fix orderby here
@@ -191,7 +221,13 @@ class QuestionManager(models.Manager):
                         'last_activity_by__silver',
                         'last_activity_by__bronze'
                     )
-        return qs, meta_data
+
+        related_tags = Tag.objects.get_related_to_search(
+                                                questions = qs,
+                                                search_state = search_state
+                                            )
+
+        return qs, meta_data, related_tags
 
     #todo: this function is similar to get_response_receivers
     #profile this function against the other one
@@ -200,7 +236,11 @@ class QuestionManager(models.Manager):
         answer_list = []
         #question_list = list(question_list)#important for MySQL, b/c it does not support
         from askbot.models.answer import Answer
-        q_id = list(question_list.values_list('id', flat=True))
+        if isinstance(question_list, list):
+            q_id = [question.id for question in question_list]
+        else:
+            q_id = list(question_list.values_list('id', flat=True))
+
         a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
         u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
         u_id = u_id.union(

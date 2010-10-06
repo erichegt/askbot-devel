@@ -42,6 +42,21 @@ class SearchState(object):
         out += 'logged_in=%s\n' % str(self.logged_in)
         return out
 
+    def is_default(self):
+        """True if search state is default
+        False otherwise, but with a few exceptions
+        notably page_size has no effect here
+        """
+        if self.scope != const.DEFAULT_POST_SCOPE:
+            return False
+        if self.author:
+            return False
+        if self.query:
+            return False
+        if self.tags:
+            return False
+        return True
+
     def set_logged_out(self):
         if self.scope == 'favorite':
             self.scope = None

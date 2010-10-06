@@ -50,11 +50,42 @@ class TagManager(models.Manager):
         cursor.execute(query, [tag.id for tag in tags])
         transaction.commit_unless_managed()
 
-    def get_tags_by_questions(self, questions):
-        related_tags = self.filter(
-                            questions__in = list(questions)
-                        ).distinct()
-        return related_tags
+    def get_related_to_search(
+                            self,
+                            questions=None,
+                            search_state=None
+                        ):
+        """must return at least tag names, along with use counts
+        handle several cases to optimize the query performance
+        """
+
+        if search_state.is_default() or \
+                questions.count() > search_state.page_size * 3:
+            """if we have too many questions or 
+            search query is the most common - just return a list
+            of top tags"""
+            cheating = True
+            tags = Tag.objects.all().order_by('-used_count')
+        else:
+            cheating = False
+            #getting id's is necessary to avoid hitting a heavy query
+            #on entire selection of questions. We actually want
+            #the big questions query to hit only the page to be displayed
+            q_id_list = questions.values_list('id', flat=True)
+            tags = self.filter(
+                    questions__id__in = q_id_list
+                ).annotate(
+                    local_used_count=models.Count('id')
+                ).order_by(
+                    '-local_used_count'
+                )
+
+        tags = tags[:50]#magic number
+        if cheating:
+            for tag in tags:
+                tag.local_used_count = tag.used_count
+
+        return tags
 
 class Tag(DeletableContent):
     name            = models.CharField(max_length=255, unique=True)

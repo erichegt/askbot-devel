@@ -6,7 +6,7 @@
             {% if question.favorited_myself %}
                 <div class="favorites-count">
                     <img 
-                        title="{% trans cnt=question.favorite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
+                        title="{% trans cnt=question.favourite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
                         alt="{% trans %}thumb-up on{% endtrans %}"
                         src="{{"/images/vote-favorite-on.png"|media}}"/>
                     <div><b>{{question.favourite_count|intcomma}}</b></div>
@@ -14,7 +14,7 @@
             {% else %}
                 <div class="favorites-count-off">
                     <img 
-                        title="{% trans cnt=question.favorite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
+                        title="{% trans cnt=question.favourite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
                         alt="{% trans %}thumb-up off{% endtrans %}"
                         src="{{"/images/vote-favorite-off.png"|media}}"/>
                     <div><b>{{question.favourite_count|intcomma}}</b></div>
