@@ -35,7 +35,7 @@ from django.utils import simplejson
 from django.http import HttpResponseRedirect, get_host, Http404, \
                          HttpResponseServerError
 from django.http import HttpResponse
-from django.template import RequestContext, loader, Context
+from django.template import RequestContext, Context
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
@@ -852,7 +852,7 @@ def signup_with_password(request):
             
             # send email
             #subject = _("Welcome email subject line")
-            #message_template = loader.get_template(
+            #message_template = ENV.get_template(
             #        'authopenid/confirm_email.txt'
             #)
             #message_context = Context({ 
@@ -953,7 +953,7 @@ def _send_email_key(user):
     to user's email address
     """
     subject = _("Email verification subject line")
-    message_template = loader.get_template('authopenid/email_validation.txt')
+    message_template = ENV.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
     'validation_link': askbot_settings.APP_URL + reverse(
