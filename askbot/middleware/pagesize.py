@@ -1,6 +1,11 @@
 import logging
 import traceback
 import sys
+from django.http import HttpResponse, Http404
+from django.template import RequestContext
+from django.conf import settings
+from askbot.skins.loaders import ENV
+
 # used in questions
 QUESTIONS_PAGE_SIZE = 10
 class QuestionsPageSizeMiddleware(object):
@@ -33,7 +38,17 @@ class QuestionsPageSizeMiddleware(object):
         request.session["page_size"] = page_size
 
     def process_exception(self, request, exception):
+        #todo: move this to separate middleware
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        logging.debug(''.join(traceback.format_tb(exc_traceback)))
-        logging.debug(exc_type)
-        logging.debug(exc_value)
+        logging.critical(''.join(traceback.format_tb(exc_traceback)))
+        logging.critical(exc_type)
+        logging.critical(exc_value)
+        if exc_type == Http404:
+            return None
+        if getattr(settings, 'DEBUG', False) == True:
+            return None
+        else:
+            #todo - we have a strange requirement - maybe remove 
+            #500.html needs RequestContext, while handler500 only receives Context
+            template = ENV.get_template('500.jinja.html')
+            return HttpResponse(template.render(RequestContext(request)))

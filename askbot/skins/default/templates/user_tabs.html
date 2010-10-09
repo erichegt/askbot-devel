@@ -1,40 +1,37 @@
 <!-- user_tabs.html -->
-{% load extra_filters %}
-{% load i18n %}
-{% load smart_if %}
 <div class="tabBar">
     <div class="tabsA">
-        <a id="stats" {% ifequal tab_name "stats" %}class="on"{% endifequal %} 
-            title="{% trans "User profile" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=stats">{% trans "overview" %}</a>
-        <a id="recent" {% ifequal tab_name "recent" %}class="on"{% endifequal %} 
-            title="{% trans "recent activity" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=recent">{% trans "activity" %}</a>
-        {% if request.user == view_user or request.user|can_moderate_user:view_user %}
-        <a id="responses" {% ifequal tab_name "responses" %}class="on"{% endifequal %} 
-            title="{% trans "comments and answers to others questions" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=responses">{% trans "responses" %}</a>
+        <a id="stats" {% if tab_name=="stats" %}class="on"{% endif %} 
+            title="{% trans %}User profile{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=stats">{% trans %}overview{% endtrans %}</a>
+        <a id="recent" {% if tab_name=="recent" %}class="on"{% endif %} 
+            title="{% trans %}recent activity{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=recent">{% trans %}activity{% endtrans %}</a>
+        {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
+        <a id="responses" {% if tab_name=="responses" %}class="on"{% endif %} 
+            title="{% trans %}comments and answers to others questions{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=responses">{% trans %}responses{% endtrans %}</a>
         {% endif %}
-        <a id="reputation" {% ifequal tab_name "reputation" %}class="on"{% endifequal %} 
-            title="{% trans "graph of user reputation" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=reputation">{% trans "reputation history" %}</a>
-        {% if request.user == view_user or request.user|can_moderate_user:view_user %}
-        <a id="votes" {% ifequal tab_name "votes" %}class="on"{% endifequal %} 
-            title="{% trans "user vote record" %}"
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=votes">{% trans "casted votes" %}</a>
+        <a id="reputation" {% if tab_name=="reputation" %}class="on"{% endif %} 
+            title="{% trans %}graph of user reputation{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=reputation">{% trans %}reputation history{% endtrans %}</a>
+        {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
+        <a id="votes" {% if tab_name=="votes" %}class="on"{% endif %} 
+            title="{% trans %}user vote record{% endtrans %}"
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=votes">{% trans %}casted votes{% endtrans %}</a>
         {% endif %}
-        <a id="favorites" {% ifequal tab_name "favorites" %}class="on"{% endifequal %} 
-            title="{% trans "questions that user selected as his/her favorite" %}"
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=favorites">{% trans "favorites" %}</a>
-        {% if request.user == view_user or request.user|can_moderate_user:view_user %}
-        <a id="email_subscriptions" {% ifequal tab_name "email_subscriptions" %}class="on"{% endifequal %} 
-            title="{% trans "email subscription settings" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=email_subscriptions">{% trans "subscriptions" %}</a>
+        <a id="favorites" {% if tab_name=="favorites" %}class="on"{% endif %} 
+            title="{% trans %}questions that user selected as his/her favorite{% endtrans %}"
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=favorites">{% trans %}favorites{% endtrans %}</a>
+        {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
+        <a id="email_subscriptions" {% if tab_name=="email_subscriptions" %}class="on"{% endif %} 
+            title="{% trans %}email subscription settings{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=email_subscriptions">{% trans %}subscriptions{% endtrans %}</a>
         {% endif %}  
-        {% if request.user|can_moderate_user:view_user %}
-        <a id="moderation" {% ifequal tab_name "moderation" %}class="on"{% endifequal %} 
-            title="{% trans "moderate this user" %}" 
-            href="{% url user_profile view_user.id view_user.username|slugify %}?sort=moderation">{% trans "moderation" %}</a>
+        {% if request.user|can_moderate_user(view_user) %}
+        <a id="moderation" {% if tab_name=="moderation" %}class="on"{% endif %} 
+            title="{% trans %}moderate this user{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=moderation">{% trans %}moderation{% endtrans %}</a>
         {% endif %}
     </div>
 </div>

@@ -15,10 +15,20 @@ from askbot.models import Badge, Award
 from askbot.skins.loaders import ENV
 import askbot
 
-def about(request):
-    template = ENV.get_template('about.jinja.html')
+def generic_view(request, template = None):
+    print 'in generic view'
+    template = ENV.get_template(template)
     context = RequestContext(request)
     return HttpResponse(template.render(context))
+
+def about(request, template='about.html'):
+    return generic_view(request, template) 
+
+def page_not_found(request, template='404.html'):
+    return generic_view(request, template) 
+
+def server_error(request, template='500.html'):
+    return generic_view(request, template) 
 
 def faq(request):
     template = ENV.get_template('faq.html')

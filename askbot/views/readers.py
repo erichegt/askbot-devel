@@ -14,7 +14,6 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext, Context
-from django.template import loader
 from django.template import defaultfilters
 from django.utils.html import *
 from django.utils import simplejson
@@ -158,16 +157,13 @@ def questions(request):
                                 'q_num': humanize.intcomma(q_count),
                             }
 
-        paginator_tpl = loader.get_template('paginator.html')
+        paginator_tpl = ENV.get_template('paginator.html')
         #todo: remove this patch on context after all templates are moved to jinja
         paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
-        paginator_html = paginator_tpl.render(
-                                    Context(
-                                        extra_tags.cnprog_paginator(
-                                                        paginator_context
-                                                    )
-                                    )
-                                )
+        data = {
+            'paginator_context': extra_tags.cnprog_paginator(paginator_context)
+        }
+        paginator_html = paginator_tpl.render(Context(data))
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button
@@ -196,7 +192,7 @@ def questions(request):
         for tag in related_tags:
             tag_data = {
                 'name': tag.name,
-                'used_count': humanize.intcomma(tag.used_count)
+                'used_count': humanize.intcomma(tag.local_used_count)
             }
             ajax_data['related_tags'].append(tag_data)
 
@@ -329,22 +325,15 @@ def questions(request):
         'context' : paginator_context,
         })
 
-    #todo: organize variables by type
-    if request.is_ajax():
-        #this branch should be dead now
-        raise NotImplementedError()
-        template = loader.get_template('questions_ajax.html')
-        question_snippet = template.render(template_context)
-        output = {'question_snippet': question_snippet}
-        #print simplejson.dumps(output)
-        return HttpResponse(simplejson.dumps(output), mimetype='application/json')
-    else:
-        #before = datetime.datetime.now()
-        template = ENV.get_template('questions.html')
-        response = HttpResponse(template.render(template_context))
-        #after = datetime.datetime.now()
-        #print after - before
-        return response
+    assert(request.is_ajax() == False)
+    #ajax request is handled in a separate branch above
+
+    #before = datetime.datetime.now()
+    template = ENV.get_template('questions.html')
+    response = HttpResponse(template.render(template_context))
+    #after = datetime.datetime.now()
+    #print after - before
+    return response
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages

@@ -35,7 +35,6 @@ from django.utils import simplejson
 from django.http import HttpResponseRedirect, get_host, Http404, \
                          HttpResponseServerError
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
@@ -50,6 +49,8 @@ from django.utils.http import urlquote_plus
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from django.views.defaults import server_error
+
+from askbot.skins.loaders import ENV
 
 from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -74,15 +75,10 @@ from django import forms as django_forms
 import logging
 from askbot.utils.forms import get_next_url
 
-EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
-
 #todo: decouple from askbot
 def login(request,user):
     from django.contrib.auth import login as _login
     from askbot.models import signals
-
-    if settings.USE_EXTERNAL_LEGACY_LOGIN == True:
-        EXTERNAL_LOGIN_APP.api.login(request,user)
 
     #1) get old session key
     session_key = request.session.session_key
@@ -159,8 +155,8 @@ def ask_openid(
 
 def complete(request, on_success=None, on_failure=None, return_to=None):
     """ complete openid signin """
-    on_success = on_success or default_on_success
-    on_failure = on_failure or default_on_failure
+    assert(on_success is not None)
+    assert(on_failure is not None)
     
     logging.debug('in askbot.deps.django_authopenid.complete')
     
@@ -193,21 +189,6 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
     else:
         logging.debug('BAD OPENID STATUS')
         assert False, "Bad openid status: %s" % openid_response.status
-
-def default_on_success(request, identity_url, openid_response):
-    """ default action on openid signin success """
-    logging.debug('')
-    request.session['openid'] = util.from_openid_response(openid_response)
-    logging.debug('performing default action on openid success %s' % get_next_url(request))
-    return HttpResponseRedirect(get_next_url(request))
-
-def default_on_failure(request, message):
-    """ default failure action on signin """
-    logging.debug('default openid failure action')
-    return render_to_response('openid_failure.html', {
-        'message': message
-    })
-
 
 def not_authenticated(func):
     """ decorator that redirect user to next page if
@@ -550,11 +531,9 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render_to_response(
-                'authopenid/signin.html',
-                data,
-                context_instance=RequestContext(request)
-            )
+    template = ENV.get_template('authopenid/signin.html')
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 @login_required
 def delete_login_method(request):
@@ -682,17 +661,6 @@ def finalize_generic_signin(
             logging.debug('login success')
             return HttpResponseRedirect(redirect_url)
 
-
-def is_association_exist(openid_url):
-    """ test if an openid is already in database """
-    is_exist = True
-    try:
-        uassoc = UserAssociation.objects.get(openid_url__exact = openid_url)
-    except UserAssociation.DoesNotExist:
-        is_exist = False
-    logging.debug(str(is_exist))
-    return is_exist
-
 @not_authenticated
 def register(request, provider_name = None):
     """
@@ -809,19 +777,18 @@ def register(request, provider_name = None):
         provider_logo = providers[provider_name]
     
     logging.debug('printing authopenid/complete.html output')
-    return render_to_response(
-                'authopenid/complete.html',
-                {
-                    'openid_register_form': register_form,
-                    'email_feeds_form': email_feeds_form,
-                    'provider':mark_safe(provider_logo),
-                    'username': username,
-                    'email': email,
-                    'login_type':'openid',
-                    'gravatar_faq_url':reverse('faq') + '#gravatar',
-                }, 
-                context_instance=RequestContext(request)
-            )
+    template = ENV.get_template('authopenid/complete.html')
+    data = {
+        'openid_register_form': register_form,
+        'email_feeds_form': email_feeds_form,
+        'provider':mark_safe(provider_logo),
+        'username': username,
+        'email': email,
+        'login_type':'openid',
+        'gravatar_faq_url':reverse('faq') + '#gravatar',
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 def signin_failure(request, message):
     """
@@ -916,10 +883,9 @@ def signup_with_password(request):
                 'form': form, 
                 'email_feeds_form': email_feeds_form 
             }
-    return render_to_response(
-                'authopenid/signup_with_password.html', 
-                context_data,
-                context_instance=RequestContext(request))
+    template = ENV.get_template('authopenid/signup_with_password.html')
+    context = RequestContext(request, context_data)
+    return HttpResponse(template.render(context))
     #what if request is not posted?
 
 @login_required
@@ -939,46 +905,24 @@ def signout(request):
     logout(request)
     logging.debug('user logged out')
     return HttpResponseRedirect(get_next_url(request))
+
+XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
+<xrds:XRDS
+   xmlns:xrds='xri://$xrds'
+   xmlns:openid='http://openid.net/xmlns/1.0'
+   xmlns='xri://$xrd*($v*2.0)'>
+ <XRD>
+   <Service>
+     <Type>http://specs.openid.net/auth/2.0/return_to</Type>
+     <URI>%(return_to)s</URI>
+   </Service>
+ </XRD>
+</xrds:XRDS>"""
     
 def xrdf(request):
     url_host = get_url_host(request)
-    logging.debug('what does this do??')
-    return_to = [
-        "%s%s" % (url_host, reverse('user_complete_signin'))
-    ]
-    return render_to_response('authopenid/yadis.xrdf', { 
-        'return_to': return_to 
-        }, context_instance=RequestContext(request))
-
-@login_required
-def account_settings(request):
-    """
-    index pages to changes some basic account settings :
-     - change password
-     - change email
-     - associate a new openid
-     - delete account
-
-    url : /
-
-    template : authopenid/settings.html
-    """
-    logging.debug('')
-    msg = request.GET.get('msg', '')
-    is_openid = True
-
-    try:
-        uassoc = UserAssociation.objects.get(
-                user__username__exact=request.user.username
-        )
-    except:
-        is_openid = False
-
-
-    return render_to_response('authopenid/settings.html', {
-        'msg': msg,
-        'is_openid': is_openid
-        }, context_instance=RequestContext(request))
+    return_to = "%s%s" % (url_host, reverse('user_complete_signin'))
+    return HttpResponse(XRDF_TEMPLATE % {'return_to': return_to})
 
 def find_email_validation_messages(user):
     msg_text = _('your email needs to be validated see %(details_url)s') \
@@ -1041,15 +985,16 @@ def send_email_key(request):
     if current email is valid shows 'key_not_sent' view of 
     authopenid/changeemail.html template
     """
-
     if askbot_settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
-            return render_to_response('authopenid/changeemail.html',
-                            { 'email': request.user.email, 
-                              'action_type': 'key_not_sent', 
-                              'change_link': reverse('user_changeemail')},
-                              context_instance=RequestContext(request)
-                              )
+            template = ENV.get_template('authopenid/changeemail.html')
+            data = {
+                'email': request.user.email, 
+                'action_type': 'key_not_sent', 
+                'change_link': reverse('user_changeemail')
+            }
+            context = RequestContext(request, data)
+            return HttpResponse(template.render(context))
         else:
             send_new_email_key(request.user)
             return validation_email_sent(request)
@@ -1108,12 +1053,18 @@ def account_recover(request, key = None):
 
 #internal server view used as return value by other views
 def validation_email_sent(request):
+    """this function is called only if EMAIL_VALIDATION setting is
+    set to True bolean value, basically dead now"""
+    assert(askbot_settings.EMAIL_VALIDATION == True)
     logging.debug('')
-    return render_to_response('authopenid/changeemail.html',
-                    { 'email': request.user.email, 
-                    'change_email_url': reverse('user_changeemail'),
-                    'action_type': 'validate', }, 
-                     context_instance=RequestContext(request))
+    template = ENV.get_template('authopenid/changeemail.html')
+    data = {
+        'email': request.user.email,
+        'change_email_url': reverse('user_changeemail'),
+        'action_type': 'validate'
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 def verifyemail(request,id=None,key=None):
     """
@@ -1121,277 +1072,17 @@ def verifyemail(request,id=None,key=None):
     url = /email/verify/{{user.id}}/{{user.email_key}}/
     """
     logging.debug('')
-    if askbot.settings.EMAIL_VALIDATION == True:
+    if askbot_settings.EMAIL_VALIDATION == True:
         user = User.objects.get(id=id)
         if user:
             if user.email_key == key:
                 user.email_isvalid = True
                 clear_email_validation_message(user)
                 user.save()
-                return render_to_response('authopenid/changeemail.html', {
-                    'action_type': 'validation_complete',
-                    }, context_instance=RequestContext(request))
+                template = ENV.get_template('authopenid/changeemail.html')
+                data = {'action_type': 'validation_complete'}
+                context = RequestContext(request, data)
+                return HttpResponse(template.render(context))
             else:
                 logging.error('hmm, no user found for email validation message - foul play?')
     raise Http404
-
-@login_required
-def changeemail(request, action='change'):
-    """ 
-    changeemail view. requires openid with request type GET
-
-    url: /email/*
-
-    template : authopenid/changeemail.html
-    """
-    logging.debug('')
-    msg = request.GET.get('msg', None)
-    extension_args = {}
-    user_ = request.user
-
-    if request.POST:
-        if 'cancel' in request.POST:
-            msg = _('your email was not changed')
-            request.user.message_set.create(message=msg)
-            return HttpResponseRedirect(get_next_url(request))
-        form = forms.ChangeEmailForm(request.POST, user=user_)
-        if form.is_valid():
-            new_email = form.cleaned_data['email']
-            if new_email != user_.email:
-                if askbot_settings.EMAIL_VALIDATION == True:
-                    action = 'validate'
-                else:
-                    action = 'done_novalidate'
-                set_new_email(user_, new_email,nomessage=True)
-            else:
-                action = 'keep'
-
-    elif not request.POST and 'openid.mode' in request.GET:
-        redirect_to = get_url_host(request) + reverse('user_changeemail')
-        return complete(
-                    request,
-                    on_success = emailopenid_success,
-                    on_failure = emailopenid_failure,
-                    return_to = redirect_to
-                )
-    else:
-        form = forms.ChangeEmailForm(initial={'email': user_.email},
-                user=user_)
-    
-    output = render_to_response('authopenid/changeemail.html', {
-        'form': form,
-        'email': user_.email,
-        'action_type': action,
-        'gravatar_faq_url': reverse('faq') + '#gravatar',
-        'change_email_url': reverse('user_changeemail'),
-        'msg': msg 
-        }, context_instance=RequestContext(request))
-
-    if action == 'validate':
-        set_email_validation_message(user_)
-
-    return output
-
-def emailopenid_success(request, identity_url, openid_response):
-    logging.debug('')
-    openid_ = util.from_openid_response(openid_response)
-
-    user_ = request.user
-    try:
-        uassoc = UserAssociation.objects.get(
-                openid_url__exact=identity_url
-        )
-    except:
-        return emailopenid_failure(request, 
-                _("No OpenID %s found associated in our database" % identity_url))
-
-    if uassoc.user.username != request.user.username:
-        return emailopenid_failure(request, 
-                _("The OpenID %s isn't associated to current user logged in" % 
-                    identity_url))
-    
-    new_email = request.session.get('new_email', '')
-    if new_email:
-        user_.email = new_email
-        user_.save()
-        del request.session['new_email']
-    msg = _("Email Changed.")
-
-    redirect = "%s?msg=%s" % (reverse('user_account_settings'),
-            urlquote_plus(msg))
-    return HttpResponseRedirect(redirect)
-    
-
-def emailopenid_failure(request, message):
-    logging.debug('')
-    redirect_to = "%s?msg=%s" % (
-            reverse('user_changeemail'), urlquote_plus(message))
-    return HttpResponseRedirect(redirect_to)
- 
-@login_required
-def changeopenid(request):
-    """
-    change openid view. Allow user to change openid 
-    associated to its username.
-
-    url : /changeopenid/
-
-    template: authopenid/changeopenid.html
-    """
-    logging.error('change openid view - never tested it yet!!!')
-
-    extension_args = {}
-    openid_url = ''
-    has_openid = True
-    msg = request.GET.get('msg', '')
-        
-    user_ = request.user
-
-    try:
-        uopenid = UserAssociation.objects.get(user=user_)
-        openid_url = uopenid.openid_url
-    except:
-        has_openid = False
-    
-    redirect_to = get_url_host(request) + reverse('user_changeopenid')
-    if request.POST and has_openid:
-        form = forms.ChangeopenidForm(request.POST, user=user_)
-        if form.is_valid():
-            return ask_openid(request, form.cleaned_data['openid_url'],
-                    redirect_to, on_failure=changeopenid_failure)
-    elif not request.POST and has_openid:
-        if 'openid.mode' in request.GET:
-            return complete(
-                        request,
-                        on_success = changeopenid_success,
-                        on_failure = changeopenid_failure,
-                        return_to = redirect_to
-                    )    
-
-    form = forms.ChangeopenidForm(initial={'openid_url': openid_url }, user=user_)
-    return render_to_response('authopenid/changeopenid.html', {
-        'form': form,
-        'has_openid': has_openid, 
-        'msg': msg 
-        }, context_instance=RequestContext(request))
-
-def changeopenid_success(request, identity_url, openid_response):
-    logging.error('never tested this worflow')
-    openid_ = util.from_openid_response(openid_response)
-    is_exist = True
-    try:
-        uassoc = UserAssociation.objects.get(openid_url__exact=identity_url)
-    except:
-        is_exist = False
-        
-    if not is_exist:
-        try:
-            uassoc = UserAssociation.objects.get(
-                    user__username__exact=request.user.username
-            )
-            uassoc.openid_url = identity_url
-            uassoc.save()
-        except:
-            uassoc = UserAssociation(user=request.user, 
-                    openid_url=identity_url)
-            uassoc.save()
-    elif uassoc.user.username != request.user.username:
-        return changeopenid_failure(request, 
-                _('This OpenID is already associated with another account.'))
-
-    request.session['openids'] = []
-    request.session['openids'].append(openid_)
-
-    msg = _("OpenID %s is now associated with your account." % identity_url) 
-    redirect = "%s?msg=%s" % (
-            reverse('user_account_settings'), 
-            urlquote_plus(msg))
-    return HttpResponseRedirect(redirect)
-    
-
-def changeopenid_failure(request, message):
-    logging.error('never tested this workflow')
-    redirect_to = "%s?msg=%s" % (
-            reverse('user_changeopenid'), 
-            urlquote_plus(message))
-    return HttpResponseRedirect(redirect_to)
-  
-@login_required
-def delete(request):
-    """
-    delete view. Allow user to delete its account. Password/openid are required to 
-    confirm it. He should also check the confirm checkbox.
-    
-    url : /delete
-    
-    template : authopenid/delete.html
-    """
-    logging.error('deleting account - never tested this')
-    
-    extension_args = {}
-    
-    user_ = request.user
-    
-    redirect_to = get_url_host(request) + reverse('user_delete') 
-    if request.POST:
-        form = forms.DeleteForm(request.POST, user=user_)
-        if form.is_valid():
-            if not form.test_openid:
-                user_.delete() 
-                return signout(request)
-            else:
-                return ask_openid(request, form.cleaned_data['password'],
-                        redirect_to, on_failure=deleteopenid_failure)
-    elif not request.POST and 'openid.mode' in request.GET:
-        return complete(
-                    request,
-                    on_success = deleteopenid_success,
-                    on_failure = deleteopenid_failure,
-                    return_to = redirect_to
-                )
-    
-    form = forms.DeleteForm(user=user_)
-    
-    msg = request.GET.get('msg','')
-    return render_to_response('authopenid/delete.html', {
-        'form': form, 
-        'msg': msg, 
-        }, context_instance=RequestContext(request))
-
-def deleteopenid_success(request, identity_url, openid_response):
-    logging.error('never tested this')
-    openid_ = util.from_openid_response(openid_response)
-
-    user_ = request.user
-    try:
-        uassoc = UserAssociation.objects.get(
-                openid_url__exact=identity_url
-        )
-    except:
-        return deleteopenid_failure(request,
-                _("No OpenID %s found associated in our database" % identity_url))
-
-    if uassoc.user.username == user_.username:
-        user_.delete()
-        return signout(request)
-    else:
-        return deleteopenid_failure(request,
-                _("The OpenID %s isn't associated to current user logged in" % 
-                    identity_url))
-    
-    msg = _("Account deleted.") 
-    redirect = reverse('index') + u"/?msg=%s" % (urlquote_plus(msg))
-    return HttpResponseRedirect(redirect)
-    
-
-def deleteopenid_failure(request, message):
-    logging.error('never tested this')
-    redirect_to = "%s?msg=%s" % (reverse('user_delete'), urlquote_plus(message))
-    return HttpResponseRedirect(redirect_to)
-
-def external_legacy_login_info(request):
-    logging.debug('maybe this view does not belong in this library')
-    feedback_url = reverse('feedback')
-    return render_to_response('authopenid/external_legacy_login_info.html', 
-                    {'feedback_url':feedback_url}, 
-                    context_instance=RequestContext(request))

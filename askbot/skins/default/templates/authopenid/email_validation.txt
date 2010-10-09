@@ -1,15 +1,14 @@
-{% load i18n %}
-{% trans "Greetings from the Q&A forum" %},
+{% trans %}Greetings from the Q&A forum{% endtrans %},
 
-{% trans "To make use of the Forum, please follow the link below:" %}
+{% trans %}To make use of the Forum, please follow the link below:{% endtrans %}
 
 {{validation_link}}
 
-{% trans "Following the link above will help us verify your email address." %}
+{% trans %}Following the link above will help us verify your email address.{% endtrans %}
 
-{% blocktrans %}If you beleive that this message was sent in mistake - 
+{% trans %}If you beleive that this message was sent in mistake - 
 no further action is needed. Just ingore this email, we apologize
-for any inconvenience{% endblocktrans %}
+for any inconvenience{% endtrans %}
 
-{% blocktrans %}Sincerely,
-Forum Administrator{% endblocktrans %}
+{% trans %}Sincerely,
+Forum Administrator{% endtrans %}

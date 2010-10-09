@@ -1,24 +1,24 @@
-==todo==
-question_retag.html - todo debug
-404.html
-500.html
-paginator.html - still used in questions ajax
+==TODO==
+yadis.xrdf - inline into .py file
+signup_with_password.html - create password protected account - a variation of complete.html
 
-==unused==
-notarobot.html
-user_recent.html
-question_counter_widget.html
-email_base.html
-question_list.html
-questions_ajax.html
-question_summary_list_roll.html
-user_favorites.html
-users_questions.html
-user_footer.html
-user_responses.html
-users.html
+==not used yet, but are linked to in code==
+confirm_email.txt - new user greeting - not used yet
+email_validation.txt - not used now
+changeemail.html - used only is EMAIL_VALIDATION == True, but the setting is disabled now
 
 ==done==
+authopenid/signin.html - main signin template
+authopenid/complete.html - main registration template
+404.html
+500.html
+question_retag.html
+paginator.html
+user_responses.html
+users_questions.html
+users.html
+user_favorites.html
+user_recent.html
 user_info.html
 user_reputation.html
 user_moderate.html
@@ -31,13 +31,13 @@ revisions.html
 reopen.html
 question_edit.html
 privacy.html
-tag_selector.jinja.html
-questions.jinja.html
-ask_form.jinja.html
-base.jinja.html
-footer.jinja.html
-header.jinja.html
-input_bar.jinja.html
+tag_selector..html
+questions..html
+ask_form..html
+base..html
+footer..html
+header..html
+input_bar..html
 answer_edit_tips.html
 answer_edit.html
 ask.html
@@ -53,3 +53,4 @@ instant_notification.html
 macros.html
 question_edit_tips.html
 question.html
+

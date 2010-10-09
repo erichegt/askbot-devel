@@ -21,6 +21,7 @@ from askbot.utils import colors
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 from askbot.templatetags import extra_filters
+from askbot.skins.loaders import ENV
 
 register = template.Library()
 
@@ -369,6 +370,33 @@ def joinitems(parser,token):
 
     return JoinItemListNode(separator=sep_node,last_separator=last_sep_node,items=nodelist)
 
+class IncludeJinja(template.Node):
+    """http://www.mellowmorning.com/2010/08/24/"""
+    def __init__(self, filename):
+        self.filename = filename
+    def render(self, context):
+        jinja_template = ENV.get_template(self.filename)
+        return jinja_template.render(context)
+
+@register.tag
+def include_jinja(parser, token):
+    bits = token.contents.split()
+
+    #Check if a filename was given
+    if len(bits) != 2:
+        error_message = '%r tag requires the name of the ' + \
+                        'template to be included included'
+        raise template.TemplateSyntaxError(error_message % bits[0])
+    filename = bits[1]
+
+    #Remove quotes or raise error
+    if filename[0] in ('"', "'") and filename[-1] == filename[0]:
+        filename = filename[1:-1]
+    else:
+        raise template.TemplateSyntaxError('file name must be quoted')
+
+    return IncludeJinja(filename)
+
 class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
@@ -417,68 +445,6 @@ def fullmedia(url):
     #protocol = getattr(settings, "PROTOCOL", "http")
     path = media(url)
     return "%s%s" % (domain, path)
-
-@register.inclusion_tag('question_counter_widget.html') #too slow
-def question_counter_widget(question):
-    """todo: maybe worth trying again. it could have been too slow
-    because of all the calls to the askbot_settings
-
-    returns colorized counter widget for a question
-
-    .. versionchanged:: 0.6.6
-        switched from inclusion tag style to in-code template string
-        for the better speed of the front page rendering
-    """
-    view_count = functions.get_from_dict_or_object(question, 'view_count')
-    answer_count = functions.get_from_dict_or_object(question, 'answer_count')
-    vote_count = functions.get_from_dict_or_object(question, 'score')
-    answer_accepted = functions.get_from_dict_or_object(question, 'answer_accepted')
-
-    #background and foreground colors for each item
-    (views_fg, views_bg) = colors.get_counter_colors(
-                view_count,
-                counter_max = askbot_settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
-                zero_bg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG,
-                zero_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG,
-                min_bg = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG,
-                min_fg = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG,
-                max_bg = askbot_settings.COLORS_VIEW_COUNTER_MAX_BG,
-                max_fg = askbot_settings.COLORS_VIEW_COUNTER_MAX_FG,
-            )
-    #views_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
-    #views_bg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
-
-    (answers_fg, answers_bg) = colors.get_counter_colors(
-                answer_count,
-                counter_max = askbot_settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
-                zero_bg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
-                zero_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
-                min_bg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG,
-                min_fg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG,
-                max_bg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_BG,
-                max_fg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_FG,
-            )
-    #answers_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
-    #answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
-    if answer_accepted:
-        #todo: maybe recalculate the foreground color too
-        answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
-        answers_fg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
-
-    (votes_fg, votes_bg) = colors.get_counter_colors(
-                vote_count,
-                counter_max = askbot_settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
-                zero_bg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG,
-                zero_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG,
-                min_bg = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG,
-                min_fg = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG,
-                max_bg = askbot_settings.COLORS_VOTE_COUNTER_MAX_BG,
-                max_fg = askbot_settings.COLORS_VOTE_COUNTER_MAX_FG,
-            )
-    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
-    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
-
-    return locals()
 
 class IsManyNode(template.Node):
     def __init__(self, test_items, true_nodelist, false_nodelist):

@@ -1,0 +1,119 @@
+{% comment %}
+this template was at one point used with the following template tag
+for the django templates
+the tag was removed from use because it was slowing down the template
+rendering partly because of parsing the template many times over
+and partly because of too many calls into askbot_settings
+which added up to the total time
+
+
+@register.inclusion_tag('question_counter_widget.html') #too slow
+def question_counter_widget(question):
+    """todo: maybe worth trying again. it could have been too slow
+    because of all the calls to the askbot_settings
+
+    returns colorized counter widget for a question
+
+    .. versionchanged:: 0.6.6
+        switched from inclusion tag style to in-code template string
+        for the better speed of the front page rendering
+    """
+    view_count = functions.get_from_dict_or_object(question, 'view_count')
+    answer_count = functions.get_from_dict_or_object(question, 'answer_count')
+    vote_count = functions.get_from_dict_or_object(question, 'score')
+    answer_accepted = functions.get_from_dict_or_object(question, 'answer_accepted')
+
+    #background and foreground colors for each item
+    (views_fg, views_bg) = colors.get_counter_colors(
+                view_count,
+                counter_max = askbot_settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG,
+                zero_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG,
+                min_bg = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG,
+                min_fg = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG,
+                max_bg = askbot_settings.COLORS_VIEW_COUNTER_MAX_BG,
+                max_fg = askbot_settings.COLORS_VIEW_COUNTER_MAX_FG,
+            )
+    #views_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
+    #views_bg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
+
+    (answers_fg, answers_bg) = colors.get_counter_colors(
+                answer_count,
+                counter_max = askbot_settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
+                zero_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
+                min_bg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG,
+                min_fg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG,
+                max_bg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_BG,
+                max_fg = askbot_settings.COLORS_ANSWER_COUNTER_MAX_FG,
+            )
+    #answers_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
+    #answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
+    if answer_accepted:
+        #todo: maybe recalculate the foreground color too
+        answers_bg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+        answers_fg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
+
+    (votes_fg, votes_bg) = colors.get_counter_colors(
+                vote_count,
+                counter_max = askbot_settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG,
+                zero_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG,
+                min_bg = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG,
+                min_fg = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG,
+                max_bg = askbot_settings.COLORS_VOTE_COUNTER_MAX_BG,
+                max_fg = askbot_settings.COLORS_VOTE_COUNTER_MAX_FG,
+            )
+    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
+    votes_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
+
+    return locals()
+{% endcomment %}
+
+{% load extra_filters %}
+{% load i18n %}
+<div class="counts">
+    <div class="votes" 
+        style="background:{{votes_bg}};color:{{votes_fg}}"
+        title="{% trans "Please decide if you like this question or not by voting" %}">
+        {% spaceless %}
+        <div class="item-count">
+            {{question.score|humanize_counter}}
+        </div>
+        <div>
+        {% blocktrans count question.score as cnt %}
+        vote
+        {% plural %}
+        votes
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div >
+    {% comment %}
+    <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
+    {% endcomment %}
+    <div class="votes" style="background:{{answers_bg}};color:{{answers_fg}}">
+        <div class="item-count">{{question.answer_count|humanize_counter}}</div>
+        {% spaceless %}
+        <div>
+        {% blocktrans count question.answer_count as cnt %}
+        answer 
+        {% plural %}
+        answers 
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div>
+    <div class="views" style="background:{{views_bg}};color:{{views_fg}}">
+        {% spaceless %}
+         <div class="item-count">{{question.view_count|humanize_counter}}</div>
+         <div>
+        {% blocktrans count question.view_count as cnt %}
+        view
+        {% plural %}
+        views
+        {% endblocktrans %}
+        </div>
+        {% endspaceless %}
+    </div>
+</div>

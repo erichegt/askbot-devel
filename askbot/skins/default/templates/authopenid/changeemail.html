@@ -1,88 +1,80 @@
 {% extends "base_content.html" %}
-{% load i18n %}
-{% block title %}{% spaceless %}{% trans "Change email" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Change email{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <!-- changeemail.html action_type={{action_type}}-->
-{% ifequal action_type "change" %}
+{% if action_type=="change" %}
     <div id="main-bar" class="headNormal">
         {% if user.email %}
-            {% trans "Change email" %}
+            {% trans %}Change email{% endtrans %}
         {% else %}
-            {% trans "Save your email address" %}
+            {% trans %}Save your email address{% endtrans %}
         {% endif %}
     </div>
     <p class="message">
         {% if user.email %}
-            {% blocktrans %}change {{email}} info{% endblocktrans %}
+            {% trans %}change {{email}} info{% endtrans %}
         {% else %}
-            {% blocktrans %}here is why email is required, see {{gravatar_faq_url}}{% endblocktrans %}
+            {% trans %}here is why email is required, see {{gravatar_faq_url}}{% endtrans %}
         {% endif %}
     </p>
     {% if msg %}
     <p class="error">{{ msg }}</p>
     {% endif %}
-
     <div class="aligned">
         <form action="." method="post" accept-charset="utf-8">
             {% if next %}
                 <input type="hidden" name="next" value="{{next}}"/>
             {% endif %}
             <div class="form-row-vertical">
-                <label for="id_email">{% if user.email %}{% trans "Your new Email" %}{% else %}{% trans "Your Email" %}{% endif %}</label>
+                <label for="id_email">{% if user.email %}{% trans %}Your new Email{% endtrans %}{% else %}{% trans %}Your Email{% endtrans %}{% endif %}</label>
                 {% if form.email.errors %}
-                <p class="error">{{form.email.errors|join:", "}}</p>
+                <p class="error">{{form.email.errors|join(", ")}}</p>
                 {% endif %}
                 {{ form.email }}
             </div>
             <div class="submit-row">
-                <input class="submit" type="submit" name="change_email" value="{% if user.email %}{% trans "Change email" %}{% else %}{% trans "Save Email" %}{% endif %}">
+                <input class="submit" type="submit" name="change_email" value="{% if user.email %}{% trans %}Change email{% endtrans %}{% else %}{% trans %}Save Email{% endtrans %}{% endif %}">
                 {% if user.email %}
-                <input class="submit" type="submit" name="cancel" value="{% trans "Cancel" %}">
+                <input class="submit" type="submit" name="cancel" value="{% trans %}Cancel{% endtrans %}">
                 {% endif %}
             </div>
-
         </form>
     </div>
-{% endifequal %}
-{% ifequal action_type "validate" %}
+{% elif action_type=="validate" %}
     <div id="main-bar" class="headNormal">
-        {% trans "Validate email" %}
+        {% trans %}Validate email{% endtrans %}
     </div>
     <p class="message">
-        {% blocktrans %}validate {{email}} info or go to {{change_email_url}}{% endblocktrans %}
+        {% trans %}validate {{email}} info or go to {{change_email_url}}{% endtrans %}
     </p>
-{% endifequal %}
-{% ifequal action_type "keep" %}
+{% elif action_type=="keep" %}
     <div id="main-bar" class="headNormal">
-        {% trans "Email not changed" %}
+        {% trans %}Email not changed{% endtrans %}
     </div>
     <p class="message">
-        {% blocktrans %}old {{email}} kept, if you like go to {{change_email_url}}{% endblocktrans %}
+        {% trans %}old {{email}} kept, if you like go to {{change_email_url}}{% endtrans %}
     </p>
-{% endifequal %}
-{% ifequal action_type "done_novalidate" %}
+{% elif action_type=="done_novalidate" %}
     <div id="main-bar" class="headNormal">
-        {% trans "Email changed" %}
+        {% trans %}Email changed{% endtrans %}
     </div>
     <p class="message">
-        {% blocktrans %}your current {{email}} can be used for this{% endblocktrans %}
+        {% trans %}your current {{email}} can be used for this{% endtrans %}
     </p>
-{% endifequal %}
-{% ifequal action_type "validation_complete" %}
+{% elif action_type=="validation_complete" %}
     <div id="main-bar" class="headNormal">
-        {% trans "Email verified" %}
+        {% trans %}Email verified{% endtrans %}
     </div>
     <p class="message">
-        {% trans "thanks for verifying email" %}
+        {% trans %}thanks for verifying email{% endtrans %}
     </p>
-{% endifequal %}
-{% ifequal action_type "key_not_sent" %}
+{% elif action_type=="key_not_sent" %}
     <div id="main-bar" class="headNormal">
-        {% trans "email key not sent" %}
+        {% trans %}email key not sent{% endtrans %}
     </div>
     <p class="message">
-        {% blocktrans %}email key not sent {{email}} change email here {{change_link}}{% endblocktrans %}
+        {% trans %}email key not sent {{email}} change email here {{change_link}}{% endtrans %}
     </p>
-{% endifequal %}
+{% endif %}
 {% endblock %}
 <!-- end changeemail.html -->

@@ -168,21 +168,6 @@ AUTHENTICATION_BACKENDS = (
     'askbot.deps.django_authopenid.backends.AuthBackend',
 )
 
-#this needs to go
-USE_EXTERNAL_LEGACY_LOGIN = False #DO NOT USE, and do not delete this line, will be removed later
-if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
-    INSTALLED_APPS += (EXTERNAL_LEGACY_LOGIN_MODULE,)
-
-    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND' in locals():
-        AUTHENTICATION_BACKENDS += (EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_BACKEND,)
-    if 'EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE' in locals():
-        MIDDLEWARE_CLASSES += (EXTERNAL_LEGACY_LOGIN_AUTHENTICATION_MIDDLEWARE,)
-    def LOAD_EXTERNAL_LOGIN_APP():
-        return __import__(EXTERNAL_LEGACY_LOGIN_MODULE, [], [], ['api','forms','views'])
-else:
-    LOAD_EXTERNAL_LOGIN_APP = lambda: None
-
-
 #logging settings
 LOG_FILENAME = 'askbot.log'
 logging.basicConfig(

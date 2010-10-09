@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+<!-- template 500.html -->
+{% block title %}{% spaceless %}{% trans %}Internal server error{% endtrans %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+        <script type="text/javascript">
+        $().ready(function(){
+            $("#linkPrevious").bind("click", back=function(){history.go(-1);})            
+        });
+         
+        </script>
+{% endblock %}
+{% block content %}
+<div id="main-bar" class="">
+    <h3>{% trans %}Internal server error{% endtrans %}</h3>
+</div>
+<div id="main-body" class="headNormal">
+    <div style="padding:5px 0px 10px 0;line-height:25px">
+        {% trans %}system error log is recorded, error will be fixed as soon as possible{% endtrans %}<br/>
+        {% trans %}please report the error to the site administrators if you wish{% endtrans %}
+        <ul>
+            <li><a href="#" id="linkPrevious">{% trans %}back to previous page{% endtrans %}</li>
+            <li><a href="{% url questions %}">{% trans %}see latest questions{% endtrans %}</a></li>
+            <li><a href="{% url tags %}">{% trans %}see tags{% endtrans %}</a></li>
+        </u>
+    </div>
+</div>
+{% endblock %}
+<!-- end template 500.html -->

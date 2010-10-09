@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 <!-- user.html -->
-{% load extra_tags %}
-{% load extra_filters %}
-{% load humanize %}
-{% load i18n %}
 {% block title %}{% spaceless %}{{ page_title }}{% endspaceless %}{% endblock %}
 {% block forestyle%}
 <style type="text/css">
@@ -12,10 +8,10 @@
 </style>
 {% endblock %}
 {% block forejs %}
-    {% if request.user|can_moderate_user:view_user %}
+    {% if request.user|can_moderate_user(view_user) %}
         <!-- todo: add condition that scripts are loaded for admins only -->
-        <script type='text/javascript' src='{% media  "/js/com.cnprog.admin.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/jquery.form.js" %}'></script>
+        <script type='text/javascript' src='{{"/js/com.cnprog.admin.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
     {% endif %}
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
@@ -30,14 +26,13 @@
     <div id="mainbar-full">
         <div id="subheader" class="headUser">
             {% spaceless %}
-            <a href="{% url user_profile view_user.id view_user.username|slugify %}">
-            {% blocktrans with view_user.username as username %}{{username}}'s profile{% endblocktrans %}
+            <a href="{% url user_profile view_user.id, view_user.username|slugify %}">
+            {% trans username=view_user.username %}{{username}}'s profile{% endtrans %}
             </a>
             {% endspaceless %}
         </div>
         {% include "user_tabs.html" %}
         {% block usercontent %}
         {% endblock %}
-        {%comment%}{% include "user_footer.html" %}{%endcomment%}
     </div>
 {% endblock %}<!-- end user.html -->

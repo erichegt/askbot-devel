@@ -1,4 +1,4 @@
-{% extends "base.jinja.html" %}
+{% extends "base.html" %}
 {% import "macros.html" as macros %}
 <!-- question.html -->
 {% block title %}{% spaceless %}{{ question.get_question_title() }}{% endspaceless %}{% endblock %}
@@ -143,12 +143,10 @@
                                     <span class="action-link">
                                         <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
                                     </span>
-                                {% else %}
-                                    {% if request.user|can_retag_question(question) %}
+                                {% elif request.user|can_retag_question(question) %}
                                     <span class="action-link">
                                         <a href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
                                     </span>
-                                    {% endif %}
                                 {% endif %}
                                 {% if question.closed %}
                                     {% if request.user|can_reopen_question(question) %}{{ pipe() }}

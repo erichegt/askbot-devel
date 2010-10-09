@@ -1,4 +1,4 @@
-{% extends "base.jinja.html" %}
+{% extends "base.html" %}
 <!-- question_retag.html -->
 {% block title %}{% spaceless %}{% trans %}Change tags{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
@@ -73,13 +73,14 @@
             <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
         </form>
     </div>
+</div>
 {% endblock %}
 
 {% block sidebar %}
 <div class="boxC">
-    <p class="subtitle">{% trans %}Why use and modify tags?{% endtrans %}</p>
+    <h3>{% trans %}Why use and modify tags?{% endtrans %}</h3>
     <ul class="list-item">
-        <li>
+        <li>{% trans %}Tags help to keep the content better organized and searchable{% endtrans %}</li>
         <li>
             {% trans %}tag editors receive special awards from the community{% endtrans %}
         </li>

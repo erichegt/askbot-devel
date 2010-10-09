@@ -1,7 +1,6 @@
-{% extends "user.jinja.html" %}
+{% extends "user.html" %}
 {% import "macros.html" as macros %}
 <!-- user_responses.html -->
-
 {#
 This template accepts a list of response list
 they are a generalized form of any response and 
@@ -14,7 +13,6 @@ response_url - link to the question
 response_title - title of the question
 response_snippet - abbreviated content of the response
 #}
-
 {% block usercontent %}
     <div style="padding-top:5px;font-size:13px;">
     {% for response in responses %}

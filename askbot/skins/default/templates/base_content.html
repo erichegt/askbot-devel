@@ -1,20 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- base_content.html -->
-{% load i18n %}
-{% load extra_tags %}
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE }}</title>
+        <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS}}" />
+        <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
         {% block meta_description %}
-        <meta name="description" content="{{settings.APP_DESCRIPTION}}" />
+        <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
         {% endblock %}
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{ settings.GOOGLE_SITEMAP_CODE }}" />
         {% endif %}
-        <link rel="shortcut icon" href="{% media  "/images/favicon.gif" %}" />
-        <link href="{% media  "/style/style.css" %}" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="{{"/images/favicon.gif"|media}}" />
+        <link href="{{"/style/style.css"|media}}" rel="stylesheet" type="text/css" />
         {% spaceless %}
         {% block forestyle %}{% endblock %}
         {% endspaceless %}
@@ -30,9 +28,9 @@
             var enableMathJax = false;
             {% endif %}
         </script>
-        <script type='text/javascript' src='{% media  "/js/com.cnprog.i18n.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/jquery.i18n.js" %}'></script>
-        <script type='text/javascript' src='{% media  "/js/com.cnprog.utils.js" %}'></script>
+        <script type='text/javascript' src='{{"/js/com.cnprog.i18n.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/jquery.i18n.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/com.cnprog.utils.js"|media}}'></script>
         {% if settings.ENABLE_MATHJAX %}
             <script type='text/javascript' src='{{settings.MATHJAX_BASE_URL}}/MathJax.js'>
                 MathJax.Hub.Config({
@@ -54,19 +52,16 @@
             });
         </script>
         {% endif %}
-      
         {% block forejs %}
         {% endblock %}
     </head>
     <body>
         <div class="notify" style="display:none">
-            {% autoescape off %}
                 {% if user_messages %}
                     {% for message in user_messages %}
                           <p class="darkred">{{ message }}</p>
                     {% endfor %}
                 {% endif %}
-            {% endautoescape %}
             <a id="close-notify" onclick="notify.close(true)">&times;</a>
         </div>
         {% include "header.html" %}
@@ -76,7 +71,6 @@
                     {% include "input_bar.html" %}
                     {% block content%}
                     {% endblock%}
-
                 </div>
                 <div id="tail" style="clear:both;">
                     {% block tail %}

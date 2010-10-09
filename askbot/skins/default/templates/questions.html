@@ -1,4 +1,4 @@
-{% extends "base.jinja.html" %}
+{% extends "base.html" %}
 <!-- questions.html -->
 {% import "macros.html" as macros %}
 {% block title %}{% spaceless %}{% trans %}Questions{% endtrans %}{% endspaceless %}{% endblock %}
@@ -281,7 +281,7 @@
     {% endif %}
 
     {% if request.user.is_authenticated() %} 
-       {% include "tag_selector.jinja.html" %}
+       {% include "tag_selector.html" %}
     {% endif %}
 
     {% if tags %}

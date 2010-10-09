@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 <!-- signin.html -->
-{% load i18n %}
-{% load extra_tags %}
-{% load smart_if %}
-{% block title %}{% spaceless %}{% trans "User login" %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{% media  "/jquery-openid/openid.css" %}"/>
-    <script type='text/javascript' src='{% media  "/js/jquery.validate.pack.js" %}'></script>
-    <script type="text/javascript" src="{% media  "/jquery-openid/jquery.openid.js" %}"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
+    <script type='text/javascript' src='{{"/js/jquery.validate.pack.js"|media}}'></script>
+    <script type="text/javascript" src="{{"/jquery-openid/jquery.openid.js"|media}}"></script>
     <script type="text/javascript">
         $(document).ready( function() { $("body").authenticator(); })
             var extra_token_name = {};
             var create_pw_text = {};
             var change_pw_text = {};
-            var authUrl = '/{% trans "account/" %}';
+            var authUrl = '/{% trans %}account/{% endtrans %}';
             var siteName = '{{settings.APP_SHORT_NAME}}';
             var provider_count = {{existing_login_methods|length}};
             {% for login_provider in major_login_providers %}
@@ -34,7 +31,7 @@
                     change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
                 {% endif %}
             {% endfor %}
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated() %}
                 var userIsAuthenticated = true;
             {% else %}
                 var userIsAuthenticated = false;
@@ -45,44 +42,42 @@
 <h1>{{page_title}}</h1>
     {% if answer %}
         <div class="message">
-        {% blocktrans with answer.question.title as title and answer.summary as summary %}
+        {% trans title=answer.question.title, summary=answer.summary %}
         Your answer to {{title}} {{summary}} will be posted once you log in
-        {% endblocktrans %}
+        {% endtrans %}
         </div>
     {% endif %}
     {% if question %}
         <div class="message">
-        {% blocktrans with question.title as title and question.summary as summary %}Your question 
+        {% trans title=question.title, summary=question.summary %}Your question 
         {{title}} {{summary}} will be posted once you log in
-        {% endblocktrans %}
+        {% endtrans %}
         </div>
     {% endif %}
     <p id='login-intro'>
     {% if view_subtype == 'default' %}
-        {% trans "Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one." %}
-    {% endif %}
-    {% if view_subtype == 'add_openid' %}
+        {% trans %}Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
+    {% elif view_subtype == 'add_openid' %}
         {% if existing_login_methods %}
-            {% trans "It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods." %}
+            {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
         {% else %}
-            {% trans "Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time." %}
+            {% trans %}Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time.{% endtrans %}
         {% endif %}
-    {% endif %}
-    {% if view_subtype == 'change_openid' %}
+    {% elif view_subtype == 'change_openid' %}
         {% if existing_login_methods %}
-            {% trans "Click on one of the icons below to add a new login method or re-validate an existing one." %}
+            {% trans %}Click on one of the icons below to add a new login method or re-validate an existing one.{% endtrans %}
         {% else %}
-            {% trans "You don't have a method to log in right now, please add one or more by clicking any of the icons below." %}
+            {% trans %}You don't have a method to log in right now, please add one or more by clicking any of the icons below.{% endtrans %}
         {% endif %}
-    {% endif %}
-    {% if view_subtype == 'email_sent' %}
-        {% trans "Please check your email and visit the enclosed link to re-connect to your account" %}
+    {% elif view_subtype == 'email_sent' %}
+        {% trans %}Please check your email and visit the enclosed link to re-connect to your account{% endtrans %}
     {% endif %}
     </p>
     {% if openid_error_message %}
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
     {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
+        {# in this branch we display the login icons #}
         <form id="signin-form" method="post" action="{% url user_signin %}">
         {{login_form.login_provider_name}}
         <div id="login-icons">
@@ -93,7 +88,7 @@
                         name="{{login_provider.name}}"
                         type="image"
                         class="{{login_provider.type}}"
-                        src="{% media login_provider.icon_media_path %}"
+                        src="{{login_provider.icon_media_path|media}}"
                         alt="{{login_provider.tooltip_text}}"
                         title="{{login_provider.tooltip_text}}"
                     />
@@ -107,7 +102,7 @@
                         name="{{login_provider.name}}"
                         type="image"
                         class="{{login_provider.type}}"
-                        src="{% media login_provider.icon_media_path %}"
+                        src="{{login_provider.icon_media_path|media}}"
                         alt="{{login_provider.tooltip_text}}"
                         title="{{login_provider.tooltip_text}}"
                     />
@@ -122,15 +117,15 @@
                 style="display:none;"
             {% endif %}
         >
-            <h2 id="openid-heading">{% trans "Please enter your <span>user name</span>, then sign in" %}</h2>
-            <p class="hint">{% trans "(or select another login method above)" %}</p>
+            <h2 id="openid-heading">{% trans %}Please enter your <span>user name</span>, then sign in{% endtrans %}</h2>
+            <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
             <input type="text" name="openid_login_token" />
-            <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans "Sign in" %}"/>
+            <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans %}Sign in{% endtrans %}"/>
         </fieldset> 
         {% if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET %}
         <fieldset 
             id="password-fs"
-            {% if user.is_anonymous %}
+            {% if user.is_anonymous() %}
                 {% if not login_form.username.errors and not login_form.password_login_failed %}
                     style="display:none;"
                 {% endif %}
@@ -141,48 +136,48 @@
             {% endif %}
         >
             {{login_form.password_action}}
-            {% if user.is_anonymous %}
+            {% if user.is_anonymous() %}
                 <h2 id="password-heading">
-                    {% trans "Please enter your <span>user name and password</span>, then sign in" %}
+                    {% trans %}Please enter your <span>user name and password</span>, then sign in{% endtrans %}
                 </h2>
-                <p class="hint">{% trans "(or select another login method above)" %}</p>
+                <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
                 {% if login_form.password_login_failed %}
-                    <p class="error">{% trans "Login failed, please try again" %}</p>
+                    <p class="error">{% trans %}Login failed, please try again{% endtrans %}</p>
                 {% endif %}
                 <p>
-                    <label for="id_username">{% trans "Login name" %}</label>
+                    <label for="id_username">{% trans %}Login name{% endtrans %}</label>
                     {{login_form.username}}
                 </p>
                 <p>
-                    <label for="id_password">{% trans "Password" %}</label>
+                    <label for="id_password">{% trans %}Password{% endtrans %}</label>
                     {{login_form.password}}
                 </p>
                 <p id="local_login_buttons">
-                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans "Login" %}" />
-                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans "Create a password-protected account" %}</a>
+                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Login{% endtrans %}" />
+                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans %}Create a password-protected account{% endtrans %}</a>
                 </p>
             {% else %}
                 <h2 id="password-heading">
-                    {% trans "To change your password - please enter the new one twice, then submit" %}
+                    {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
                 <p>
-                    <label for="id_new_password">{% trans "New password" %}</label>
+                    <label for="id_new_password">{% trans %}New password{% endtrans %}</label>
                     {{login_form.new_password}}
-                    <span class="error">{{login_form.new_password.errors.0}}</span>
+                    <span class="error">{{login_form.new_password.errors[0]}}</span>
                 </p>
                 <p>
-                    <label for="id_new_password_retyped">{% trans "Please, retype" %}</label>
+                    <label for="id_new_password_retyped">{% trans %}Please, retype{% endtrans %}</label>
                     {{login_form.new_password_retyped}}
-                    <span class="error">{{login_form.new_password_retyped.errors.0}}</span>
+                    <span class="error">{{login_form.new_password_retyped.errors[0]}}</span>
                 </p>
                 <p id="local_login_buttons">
-                    <input class="submit-b" name="change_password" type="submit" value="{% trans "Change password" %}" />
+                    <input class="submit-b" name="change_password" type="submit" value="{% trans %}Change password{% endtrans %}" />
                 </p>
             {% endif %}
         </fieldset>
         {% endif %}
         </form>
-        {% if user.is_authenticated and existing_login_methods %}
+        {% if user.is_authenticated() and existing_login_methods %}
         <div 
             id='existing-login-methods'
             {% if login_form.password_change_failed %}
@@ -190,13 +185,13 @@
             {% endif %}
         >
             <h2 id='ab-show-login-methods'>
-                {% trans "Here are your current login methods" %}
+                {% trans %}Here are your current login methods{% endtrans %}
             </h2>
             <table id='ab-existing-login-methods'>
                 <tr>
-                    <th>{% trans "provider" %}</th>
-                    <th>{% trans "last used" %}</th>
-                    <th>{% trans "delete, if you like" %}</th>
+                    <th>{% trans %}provider{% endtrans %}</th>
+                    <th>{% trans %}last used{% endtrans %}</th>
+                    <th>{% trans %}delete, if you like{% endtrans %}</th>
                 </tr>
                 {% for login_method in existing_login_methods %}
                 <tr class="ab-provider-row">
@@ -205,11 +200,11 @@
                     </td>
                     <td>
                         {% if login_method.last_used_timestamp %}
-                            {% diff_date login_method.last_used_timestamp %}
+                            {{login_method.last_used_timestamp|diff_date}}
                         {% endif %}
                     </td>
                     <td>
-                        <button>{% trans "delete" %}</button>
+                        <button>{% trans %}delete{% endtrans %}</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -218,33 +213,33 @@
         {% endif %}
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
-        {% if user.is_anonymous %}
+        {% if user.is_anonymous() %}
         <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">
             {% if view_subtype != 'bad_key' %}
-                <h2 id='account-recovery-heading'>{% trans "Still have trouble signing in?" %}</h2>
+                <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>
             {% endif %}
             <p class="hint">
                 <span class="text">
                 {% if view_subtype == 'bad_key' %}
-                    {% trans "Please, enter your email address below and obtain a new key" %}
+                    {% trans %}Please, enter your email address below and obtain a new key{% endtrans %}
                 {% else %}
-                    {% trans "Please, enter your email address below to recover your account" %}
+                    {% trans %}Please, enter your email address below to recover your account{% endtrans %}
                 {% endif %}
                 </span>
-                <span style="display:none" class="link"> - <a href="#">{% trans "recover your account via email" %}</a></span>
+                <span style="display:none" class="link"> - <a href="#">{% trans %}recover your account via email{% endtrans %}</a></span>
             </p>
             <fieldset id='email-input-fs'>
                 {% if account_recovery_form.email.errors %}
-                <p class="error">{{account_recovery_form.email.errors.0}}</p>
+                <p class="error">{{account_recovery_form.email.errors[0]}}</p>
                 {% endif %}
                 {{ account_recovery_form.email }}
                 <input
                     class="submit-b"
                     type="submit"
                     {% if view_subtype == 'bad_key' %}
-                    value="{% trans "Send a new recovery key" %}"
+                    value="{% trans %}Send a new recovery key{% endtrans %}"
                     {% else %}
-                    value="{% trans "Recover your account via email" %}"
+                    value="{% trans %}Recover your account via email{% endtrans %}"
                     {% endif %}
                 />
             </fieldset>
@@ -255,25 +250,24 @@
 
 {% block sidebar %}
 <div class="boxC">
-    <h3 class="subtitle">{% trans "Why use OpenID?" %}</h3>
+    <h3 class="subtitle">{% trans %}Why use OpenID?{% endtrans %}</h3>
     <ul class="list-item">
         <li>
-            {% trans "with openid it is easier" %}
+            {% trans %}with openid it is easier{% endtrans %}
         </li>
         <li>
-            {% trans "reuse openid" %}
+            {% trans %}reuse openid{% endtrans %}
         </li>
         <li>
-            {% trans "openid is widely adopted" %}
+            {% trans %}openid is widely adopted{% endtrans %}
         </li>
         <li>
-            {% trans "openid is supported open standard" %}
+            {% trans %}openid is supported open standard{% endtrans %}
         </li>
-        
     </ul>
     <p class="info-box-follow-up-links">
-        <a href="http://openid.net/what/" target="_blank">{% trans "Find out more" %} »</a><br/>
-        <a href="http://openid.net/get/" target="_blank">{% trans "Get OpenID" %} »</a>
+        <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
+        <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
     </p>
 </div>
 {% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}

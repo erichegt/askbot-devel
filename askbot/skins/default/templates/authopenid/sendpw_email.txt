@@ -1,9 +1,0 @@
-{% load i18n %}
-{% blocktrans%}Someone has requested to reset your password on {{site_url}}.
-If it were not you, it is safe to ignore this email.{% endblocktrans %}
-
-{% blocktrans %}email explanation how to use new {{password}} for {{username}}
-with the {{key_link}}{% endblocktrans %}
-
-{% blocktrans %}Sincerely,
-Forum Administrator{% endblocktrans %}
