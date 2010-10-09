@@ -158,7 +158,10 @@ class Activity(models.Model):
     def get_mentioned_user(self):
         assert(self.activity_type == const.TYPE_ACTIVITY_MENTION)
         user_qs = self.receiving_users.all()
-        assert(len(user_qs) == 1)
+        user_count = len(user_qs)
+        if user_count == 0:
+            return None
+        assert(user_count == 1)
         return user_qs[0]
 
     def get_absolute_url(self):

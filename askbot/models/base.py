@@ -78,6 +78,8 @@ def parse_post_text(post):
             for prev_mention in prev_mention_qs:
 
                 user = prev_mention.get_mentioned_user()
+                if user is None:
+                    continue
                 if user in new_set:
                     #don't report mention twice
                     new_set.remove(user)
