@@ -1,5 +1,7 @@
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
+import datetime
+
 def application_settings(context):
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = settings.LANGUAGE_CODE

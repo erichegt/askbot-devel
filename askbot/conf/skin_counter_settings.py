@@ -79,8 +79,8 @@ settings.register(
         SKIN_COUNTER_SETTINGS,
         'COLORS_VOTE_COUNTER_MAX_FG',
         default=Color.NewFromHtml(
-                                settings.COLORS_VOTE_COUNTER_MAX_BG
-                            ).DarkerColor(0.7).html,
+                        '#a9d0f5'
+                    ).DarkerColor(0.7).html,
         description=_('Foreground color for votes = MAX'),
         help_text=_('HTML color name or hex value'),
         hidden=True,
@@ -155,8 +155,10 @@ settings.register(
         SKIN_COUNTER_SETTINGS,
         'COLORS_VIEW_COUNTER_MAX_FG',
         default=Color.NewFromHtml(
-                                    settings.COLORS_VIEW_COUNTER_MAX_BG
-                                ).DarkerColor(0.7).html,
+                            '#ff8000'
+                        ).DarkerColor(
+                            0.7
+                        ).html,
         description=_('Foreground color for views = MAX'),
         help_text=_('HTML color name or hex value'),
         hidden=True,

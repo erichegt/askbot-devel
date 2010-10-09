@@ -156,6 +156,20 @@ def get_provider_name(openid_url):
     url_bits = base_url.split('.')
     return url_bits[-2].lower()
 
+def use_password_login():
+    """password login is activated
+    either if USE_RECAPTCHA is false
+    of if recaptcha keys are set correctly
+    """
+    if askbot_settings.USE_RECAPTCHA:
+        if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
+            return True
+        else:
+            logging.critical('if USE_RECAPTCHA == True, set recaptcha keys!!!')
+            return False
+    else:
+        return True
+
 def get_major_login_providers():
     """returns a tuple with data about login providers
     whose icons are to be shown in large format
@@ -176,7 +190,8 @@ def get_major_login_providers():
       describes name of required extra token - e.g. "XYZ user name"
     """
     data = SortedDict()
-    if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
+
+    if use_password_login():
         data['local'] = {
             'name': 'local',
             'display_name': askbot_settings.APP_SHORT_NAME,
@@ -186,6 +201,7 @@ def get_major_login_providers():
             'change_password_prompt': _('Change your password'),
             'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
         }
+
     if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
         data['facebook'] = {
             'name': 'facebook',
@@ -573,3 +589,14 @@ def get_facebook_user_id(request):
         return fb_response['uid'] 
     except Exception, e:
         raise FacebookError(e)
+
+def ldap_check_password(username, password):
+    import ldap
+    try:
+        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
+        ldap_session.simple_bind_s(username, password)
+        ldap_session.unbind_s()
+        return True
+    except ldap.LDAPError, e:
+        logging.critical(unicode(e))
+        return False

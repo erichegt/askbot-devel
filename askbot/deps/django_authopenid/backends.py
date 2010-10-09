@@ -29,6 +29,7 @@ class AuthBackend(object):
                 email_key = None,
                 oauth_user_id = None,#used with oauth
                 facebook_user_id = None,#user with facebook
+                ldap_user_id = None,#for ldap
                 method = None,#requried parameter
             ):
         """this authentication function supports many login methods
@@ -105,9 +106,20 @@ class AuthBackend(object):
 
         elif method == 'facebook':
             try:
+                assert(provider_name == 'facebook')
                 assoc = UserAssociation.objects.get(
                                             openid_url = facebook_user_id,
-                                            provider_name = 'facebook'
+                                            provider_name = provider_name
+                                        )
+                user = assoc.user
+            except UserAssociation.DoesNotExist:
+                return None
+
+        elif method == 'ldap':
+            try:
+                assoc = UserAssociation.objects.get(
+                                            openid_url = ldap_user_id,
+                                            provider_name = provider_name
                                         )
                 user = assoc.user
             except UserAssociation.DoesNotExist:

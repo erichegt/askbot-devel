@@ -298,37 +298,66 @@ def signin(
             if login_form.cleaned_data['login_type'] == 'password':
 
                 password_action = login_form.cleaned_data['password_action']
-                if password_action == 'login':
-                    user = authenticate(
+                if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
+                    assert(password_action == 'login')
+                    ldap_provider_name = askbot_settings.LDAP_PROVIDER_NAME
+                    username = login_form.cleaned_data['username']
+                    if util.ldap_check_password(
+                                username,
+                                login_form.cleaned_data['password']
+                            ):
+                        user = authenticate(
+                                        ldap_user_id = username,
+                                        provider_name = ldap_provider_name,
+                                        method = 'ldap'
+                                    )
+                        if user is not None:
+                            login(request, user)
+                            return HttpResponseRedirect(next_url)
+                        else:
+                            request.session['login_provider_name'] = ldap_provider_name
+                            request.session['user_identifier'] = username
+                            request.method = 'GET'
+                            return finalize_generic_signin(
+                                    request = request,
+                                    user = user,
+                                    user_identifier = username,
+                                    login_provider_name = ldap_provider_name,
+                                    redirect_url = next_url
+                                )
+                else:
+                    if password_action == 'login':
+                        user = authenticate(
                                 username = login_form.cleaned_data['username'],
                                 password = login_form.cleaned_data['password'],
                                 provider_name = provider_name,
                                 method = 'password'
                             )
-                    if user is None:
-                        login_form.set_password_login_error()
-                    else:
-                        login(request, user)
-                        #todo: here we might need to set cookies
-                        #for external login sites
-                        return HttpResponseRedirect(next_url)
-                elif password_action == 'change_password':
-                    if request.user.is_authenticated():
-                        new_password = login_form.cleaned_data['new_password']
-                        AuthBackend.set_password(
-                                        user=request.user,
-                                        password=new_password,
-                                        provider_name=provider_name
-                                    )
-                        request.user.message_set.create(
+                        if user is None:
+                            login_form.set_password_login_error()
+                        else:
+                            login(request, user)
+                            #todo: here we might need to set cookies
+                            #for external login sites
+                            return HttpResponseRedirect(next_url)
+                    elif password_action == 'change_password':
+                        if request.user.is_authenticated():
+                            new_password = \
+                                login_form.cleaned_data['new_password']
+                            AuthBackend.set_password(
+                                            user=request.user,
+                                            password=new_password,
+                                            provider_name=provider_name
+                                        )
+                            request.user.message_set.create(
                                         message = _('Your new password saved')
                                     )
-                        return HttpResponseRedirect(next_url)
-                else:
-                    logging.critical(
-                        'unknown password action %s' % password_action
-                    )
-                    raise Http404
+                            return HttpResponseRedirect(next_url)
+                    else:
+                        logging.critical(
+                            'unknown password action %s' % password_action
+                        )
+                        raise Http404
 
             elif login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process
@@ -393,7 +422,7 @@ def signin(
                                     request = request,
                                     user = user,
                                     user_identifier = user_id,
-                                    login_provider_name = 'facebook',
+                                    login_provider_name = provider_name,
                                     redirect_url = next_url
                                 )
 
@@ -507,6 +536,7 @@ def show_signin_view(
         'account_recovery_form': account_recovery_form,
         'openid_error_message':  request.REQUEST.get('msg',''),
         'account_recovery_message': account_recovery_message,
+        'use_password_login': util.use_password_login(),
     }
 
     major_login_providers = util.get_major_login_providers()
@@ -808,9 +838,14 @@ def signup_with_password(request):
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
+    if askbot_settings.USE_RECAPTCHA:
+        RegisterForm = forms.SafeClassicRegisterForm
+    else:
+        RegisterForm = forms.ClassicRegisterForm
+
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
-        form = forms.ClassicRegisterForm(request.POST)
+        form = RegisterForm(request.POST)
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
         
         #validation outside if to remember form values
@@ -871,12 +906,12 @@ def signup_with_password(request):
             logging.debug('create classic account forms were invalid')
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = forms.ClassicRegisterForm(
-                                initial={
-                                    'next':next,
-                                    'login_provider': provider_name
-                                }
-                            )
+        form = RegisterForm(
+                        initial={
+                            'next':next,
+                            'login_provider': provider_name
+                        }
+                    )
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
     context_data = {

@@ -108,6 +108,7 @@ class Comment(base.MetaContent, base.UserContent):
 
     _urlize = True
     _use_markdown = False
+    _escape_html = True
 
     class Meta(base.MetaContent.Meta):
         ordering = ('-added_at',)

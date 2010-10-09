@@ -323,6 +323,11 @@ class ClassicRegisterForm(SetPasswordForm):
     email = UserEmailField()
     login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
+
+class SafeClassicRegisterForm(ClassicRegisterForm):
+    """this form uses recaptcha in addition
+    to the base register form
+    """
     recaptcha = ReCaptchaField()
 
 class ChangePasswordForm(SetPasswordForm):
