@@ -222,6 +222,7 @@ def complete_oauth_signin(request):
 
         oauth_provider_name = request.session['oauth_provider_name']
         logging.debug('have saved provider name')
+        del request.session['oauth_provider_name']
 
         oauth = util.OAuthConnection(oauth_provider_name)
 
@@ -241,8 +242,6 @@ def complete_oauth_signin(request):
 
         request.session['email'] = ''#todo: pull from profile
         request.session['username'] = ''#todo: pull from profile
-        request.session['user_identifier'] = user_id
-        request.session['login_provider_name'] = oauth_provider_name
 
         return finalize_generic_signin(
                             request = request,
@@ -315,9 +314,6 @@ def signin(
                             login(request, user)
                             return HttpResponseRedirect(next_url)
                         else:
-                            request.session['login_provider_name'] = ldap_provider_name
-                            request.session['user_identifier'] = username
-                            request.method = 'GET'
                             return finalize_generic_signin(
                                     request = request,
                                     user = user,
@@ -533,6 +529,7 @@ def show_signin_view(
         'question':question,
         'answer':answer,
         'login_form': login_form,
+        'use_password_login': util.use_password_login(),
         'account_recovery_form': account_recovery_form,
         'openid_error_message':  request.REQUEST.get('msg',''),
         'account_recovery_message': account_recovery_message,
@@ -626,8 +623,6 @@ def signin_success(request, identity_url, openid_response):
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('username', '')
-    request.session['user_identifier'] = openid_url
-    request.session['login_provider_name'] = provider_name
 
     return finalize_generic_signin(
                         request = request,
@@ -684,27 +679,29 @@ def finalize_generic_signin(
     else:
         if user is None:
             #need to register
-            return register(request)
+            request.method = 'GET'#this is not a good thing to do
+            #but necessary at the moment to reuse the register()
+            #method
+            return register(
+                        request,
+                        login_provider_name=login_provider_name,
+                        user_identifier=user_identifier
+                    )
         else:
-            #authentication branch
+            #login branch
             login(request, user)
             logging.debug('login success')
             return HttpResponseRedirect(redirect_url)
 
 @not_authenticated
-def register(request, provider_name = None):
+def register(request, login_provider_name=None, user_identifier=None):
     """
-    register view that processes
-    new user registratioins using openid or oauth
-    this function is also called directly from "signin_succes"
-    
-    If user is already a member he can associate their openid with 
-    their account.
-    
-    A new account could also be created and automaticaly associated
-    to the openid.
-    
-    url : /complete/
+    this function is used via it's own url with request.method=POST
+    or as a simple function call from "finalize_generic_signin"
+    in which case request.method must ge 'GET'
+    and login_provider_name and user_identifier arguments must not be None
+
+    this function may need to be refactored to simplify the usage pattern
     
     template : authopenid/complete.html
     """
@@ -712,11 +709,6 @@ def register(request, provider_name = None):
     logging.debug('')
 
     next_url = get_next_url(request)
-
-    if 'login_provider_name' not in request.session \
-        or 'user_identifier' not in request.session:
-        logging.critical('illegal attempt to register')
-        return HttpResponseRedirect(reverse('user_signin'))
 
     user = None
     is_redirect = False
@@ -733,7 +725,24 @@ def register(request, provider_name = None):
             )
     email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        assert(login_provider_name is not None)
+        assert(user_identifier is not None)
+        #store this data into the session
+        #to persist for the post request
+        request.session['login_provider_name'] = login_provider_name
+        request.session['user_identifier'] = user_identifier
+
+    elif request.method == 'POST':
+
+        if 'login_provider_name' not in request.session \
+            or 'user_identifier' not in request.session:
+            logging.critical('illegal attempt to register')
+            return HttpResponseRedirect(reverse('user_signin'))
+
+        #load this data from the session
+        user_identifier = request.session['user_identifier']
+        login_provider_name = request.session['login_provider_name']
 
         logging.debug('trying to create new account associated with openid')
         register_form = forms.OpenidRegisterForm(request.POST)
@@ -753,23 +762,24 @@ def register(request, provider_name = None):
             logging.debug('creating new openid user association for %s')
 
             UserAssociation(
-                openid_url = request.session['user_identifier'],
+                openid_url = user_identifier,
                 user = user,
-                provider_name = request.session['login_provider_name'],
+                provider_name = login_provider_name,
                 last_used_timestamp = datetime.datetime.now()
             ).save()
 
             del request.session['user_identifier']
             del request.session['login_provider_name']
             
-            # login 
             logging.debug('logging the user in')
 
             user = authenticate(method = 'force', user_id = user.id)
             if user is None:
-                raise Exception('this does not make any sense')
+                error_message = 'please make sure that ' + \
+                                'askbot.deps.django_authopenid.backends.AuthBackend' + \
+                                'is in your settings.AUTHENTICATION_BACKENDS'
+                raise Exception(error_message)
 
-            user.backend = 'askbot.deps.django_authopenid.backends.AuthBackend'
             login(request, user)
 
             logging.debug('saving email feed settings')
@@ -800,11 +810,11 @@ def register(request, provider_name = None):
             'aol':'<font color="#31658e">AOL</font>',
             'myopenid':'MyOpenID',
         }
-    if provider_name not in providers:
-        provider_logo = provider_name
-        logging.error('openid provider named "%s" has no pretty customized logo' % provider_name)
+    if login_provider_name not in providers:
+        provider_logo = login_provider_name
+        logging.error('openid provider named "%s" has no pretty customized logo' % login_provider_name)
     else:
-        provider_logo = providers[provider_name]
+        provider_logo = providers[login_provider_name]
     
     logging.debug('printing authopenid/complete.html output')
     template = ENV.get_template('authopenid/complete.html')

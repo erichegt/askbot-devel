@@ -122,7 +122,7 @@
             <input type="text" name="openid_login_token" />
             <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans %}Sign in{% endtrans %}"/>
         </fieldset> 
-        {% if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET %}
+        {% if use_password_login==True %}
         <fieldset 
             id="password-fs"
             {% if user.is_anonymous() %}
@@ -154,9 +154,11 @@
                 </p>
                 <p id="local_login_buttons">
                     <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Login{% endtrans %}" />
+                    {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
                     <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans %}Create a password-protected account{% endtrans %}</a>
+                    {% endif %}
                 </p>
-            {% else %}
+            {% elif settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>

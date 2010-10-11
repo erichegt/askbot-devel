@@ -106,10 +106,10 @@ class AuthBackend(object):
 
         elif method == 'facebook':
             try:
-                assert(provider_name == 'facebook')
+                #assert(provider_name == 'facebook')
                 assoc = UserAssociation.objects.get(
                                             openid_url = facebook_user_id,
-                                            provider_name = provider_name
+                                            provider_name = 'facebook'
                                         )
                 user = assoc.user
             except UserAssociation.DoesNotExist:

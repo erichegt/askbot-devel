@@ -53,7 +53,8 @@ class TagManager(models.Manager):
     def get_related_to_search(
                             self,
                             questions=None,
-                            search_state=None
+                            search_state=None,
+                            ignored_tag_names=None
                         ):
         """must return at least tag names, along with use counts
         handle several cases to optimize the query performance
@@ -79,6 +80,9 @@ class TagManager(models.Manager):
                 ).order_by(
                     '-local_used_count'
                 )
+
+        if ignored_tag_names:
+            tags = tags.exclude(name__in=ignored_tag_names)
 
         tags = tags[:50]#magic number
         if cheating:

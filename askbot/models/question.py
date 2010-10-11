@@ -223,9 +223,10 @@ class QuestionManager(models.Manager):
                     )
 
         related_tags = Tag.objects.get_related_to_search(
-                                                questions = qs,
-                                                search_state = search_state
-                                            )
+                                        questions = qs,
+                                        search_state = search_state,
+                                        ignored_tag_names = ignored_tag_names
+                                    )
 
         return qs, meta_data, related_tags
 
