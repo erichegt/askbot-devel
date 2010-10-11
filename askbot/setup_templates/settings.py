@@ -168,7 +168,7 @@ AUTHENTICATION_BACKENDS = (
 LOG_FILENAME = 'askbot.log'
 logging.basicConfig(
     filename=os.path.join(os.path.dirname(__file__), 'log', LOG_FILENAME),
-    level=logging.DEBUG,
+    level=logging.CRITICAL,
     format='%(pathname)s TIME: %(asctime)s MSG: %(filename)s:%(funcName)s:%(lineno)d %(message)s',
 )
 
