@@ -22,7 +22,7 @@ def get_version():
     """returns version of the askbot app
     this version is meaningful for pypi only
     """
-    return '0.6.15'
+    return '0.6.17'
 
 #todo: maybe send_mail functions belong to models
 #or the future API
