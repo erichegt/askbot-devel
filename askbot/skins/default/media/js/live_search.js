@@ -54,16 +54,17 @@ $(document).ready(function(){
         });
     }
 
-    var render_counter = function(count, word, color, bgcolor){
-        return '<div class="votes"' +
-                    '<span class="item-count" ' + 
-                        'style="color:' + color +
-                        ';background:' + bgcolor + '"' +
-                    '>' +
-                        count +
-                    '</span>' +
+    var render_counter = function(count, word, counter_class){
+        var output = '<div class="votes"' +
+                    '<span class="item-count ' + counter_class + '">' +
+                        count;
+        if (counter_class == 'accepted'){
+            output += '&#10003;'
+        }
+        output +=   '</span>' +
                     '<div>' + word + '</div>' +
                 '</div>';
+        return output;
     }
 
     var render_title = function(result){
@@ -167,20 +168,17 @@ $(document).ready(function(){
                 render_counter(
                     question['votes'],
                     question['votes_word'],
-                    question['votes_color'],
-                    question['votes_bgcolor']
+                    question['votes_class']
                 ) +
                 render_counter(
                     question['answers'],
                     question['answers_word'],
-                    question['answers_color'],
-                    question['answers_bgcolor']
+                    question['answers_class']
                 ) +
                 render_counter(
                     question['views'],
                     question['views_word'],
-                    question['views_color'],
-                    question['views_bgcolor']
+                    question['views_class']
                 ) +
             '</div>' + 
             render_title(question) +

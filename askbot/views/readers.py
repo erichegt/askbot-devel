@@ -199,48 +199,26 @@ def questions(request):
         for contributor in contributors:
             ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
 
-        votes_color_empty_fg = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_FG
-        votes_bgcolor_empty = askbot_settings.COLORS_VOTE_COUNTER_EMPTY_BG
-        votes_color_min_fg = askbot_settings.COLORS_VOTE_COUNTER_MIN_FG
-        votes_bgcolor_min = askbot_settings.COLORS_VOTE_COUNTER_MIN_BG
-        answers_color_empty_fg = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_FG
-        answers_bgcolor_empty = askbot_settings.COLORS_ANSWER_COUNTER_EMPTY_BG
-        answers_color_accepted_fg = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
-        answers_bgcolor_accepted = askbot_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
-        answers_color_min_fg = askbot_settings.COLORS_ANSWER_COUNTER_MIN_FG
-        answers_bgcolor_min = askbot_settings.COLORS_ANSWER_COUNTER_MIN_BG
-        views_color_empty_fg = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_FG
-        views_bgcolor_empty = askbot_settings.COLORS_VIEW_COUNTER_EMPTY_BG
-        views_color_min_fg = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG
-        views_bgcolor_min = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG
-
         for question in page.object_list:
             timestamp = question.last_activity_at
             author = question.last_activity_by
 
             if question.score == 0:
-                votes_color = votes_color_empty_fg 
-                votes_bgcolor = votes_bgcolor_empty
+                votes_class = 'no-votes'
             else:
-                votes_color = votes_color_min_fg 
-                votes_bgcolor = votes_bgcolor_min 
+                votes_class = 'some-votes'
 
             if question.answer_count == 0:
-                answers_color = answers_color_empty_fg
-                answers_bgcolor = answers_bgcolor_empty
+                answers_class = 'no-answers'
             elif question.answer_accepted:
-                answers_color = answers_color_accepted_fg
-                answers_bgcolor = answers_bgcolor_accepted 
+                answers_class = 'accepted'
             else:
-                answers_color = answers_color_min_fg
-                answers_bgcolor = answers_bgcolor_min
+                answers_class = 'some-answers'
 
             if question.view_count == 0:
-                views_color = views_color_empty_fg
-                views_bgcolor = views_bgcolor_empty
+                views_class = 'no-views'
             else:
-                views_color = views_color_min_fg
-                views_bgcolor = views_bgcolor_min
+                views_class = 'some-views'
 
             question_data = {
                 'title': question.title,
@@ -248,16 +226,13 @@ def questions(request):
                 'id': question.id,
                 'tags': question.get_tag_names(),
                 'votes': extra_filters.humanize_counter(question.score),
-                'votes_color': votes_color,
-                'votes_bgcolor': votes_bgcolor,
+                'votes_class': votes_class,
                 'votes_word': ungettext('vote', 'votes', question.score),
                 'answers': extra_filters.humanize_counter(question.answer_count),
-                'answers_color': answers_color,
-                'answers_bgcolor': answers_bgcolor,
+                'answers_class': answers_class,
                 'answers_word': ungettext('answer', 'answers', question.answer_count),
                 'views': extra_filters.humanize_counter(question.view_count),
-                'views_color': views_color,
-                'views_bgcolor': views_bgcolor,
+                'views_class': views_class,
                 'views_word': ungettext('view', 'views', question.view_count),
                 'timestamp': unicode(timestamp),
                 'timesince': extra_tags.diff_date(timestamp),
