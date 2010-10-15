@@ -33,6 +33,16 @@ settings.register(
 settings.register(
     IntegerValue(
         FORUM_DATA_RULES,
+        'MIN_SEARCH_WORD_LENGTH',
+        default=4,
+        description=_('Minimum length of search term for Ajax search'),
+        help_text=_('Must match the corresponding database backend setting'),
+    )
+)
+
+settings.register(
+    IntegerValue(
+        FORUM_DATA_RULES,
         'MAX_TAGS_PER_POST',
         default=5,
         description=_('Maximum number of tags per question')

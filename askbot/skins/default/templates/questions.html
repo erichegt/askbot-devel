@@ -5,6 +5,7 @@
 {% block forejs %}
        <script type="text/javascript">
            var tags = {{ tags_autocomplete|safe }};
+           var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
            $().ready(function(){
                var sort_tab_id = "{{ sort }}";
                $("#"+sort_tab_id).attr('className',"on");

@@ -29,7 +29,7 @@ $(document).ready(function(){
     var eval_query = function(){
         cur_text = $.trim(query.val());
         if (cur_text != prev_text && running === false){
-            if (cur_text.length > 3){
+            if (cur_text.length >= minSearchWordLength){
                 send_query(cur_text);
                 running = true;
             }
