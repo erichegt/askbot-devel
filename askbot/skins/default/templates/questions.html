@@ -158,63 +158,7 @@
 <div id="listA">
 {% cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
     {% for question in questions.object_list %}
-    <div class="short-summary">
-        <div class="counts">
-            <div class="votes">
-                <span 
-                    class="item-count"
-                    {% if question.score == 0 %}
-                    style="background:{{settings.COLORS_VOTE_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VOTE_COUNTER_EMPTY_FG}}"
-                    {% else %}
-                    style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
-                    {% endif %}
-                >{{question.score|humanize_counter}}</span>
-                <div>
-                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
-                </div>
-            </div >
-            <div class="votes"> 
-                <span 
-                    class="item-count"
-                    {% if question.answer_count == 0 %}
-                        style="background:{{settings.COLORS_ANSWER_COUNTER_EMPTY_BG}};color:{{settings.COLORS_ANSWER_COUNTER_EMPTY_FG}}"
-                    {% else %}
-                        {% if question.answer_accepted %}
-                        style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
-                        {% else %}
-                        style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
-                        {% endif %}
-                    {% endif %}
-                >{{question.answer_count|humanize_counter}}</span>
-                <div>
-                {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
-                </div>
-            </div>
-            <div class="votes">
-                 <span class="item-count"
-                 {% if question.view_count == 0 %}
-                    style="background:{{settings.COLORS_VIEW_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VIEW_COUNTER_EMPTY_FG}}"
-                 {% else %}
-                    style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
-                 {% endif %}
-                 >{{question.view_count|humanize_counter}}</span>
-                <div>
-                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
-                </div>
-            </div>
-        </div>
-        <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.title|escape}}</a></h2>
-        <div class="userinfo">
-            <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-            <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
-            {{macros.user_score_and_badge_summary(question.last_activity_by)}}
-        </div>
-        <div class="tags">
-            {% for tag in question.get_tag_names() %}
-            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
-            {% endfor %}
-        </div>
-    </div>
+        {{macros.question_summary(question)}}
     {% endfor %}
 {% endcache %}
         {# comment todo: fix css here #}

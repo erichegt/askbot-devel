@@ -21,11 +21,13 @@
 {%- endmacro -%}
 
 {%- macro user_long_score_and_badge_summary(user) -%}
-    <span class="reputation-score"
-          title="{{user.get_karma_summary}}"
-    >{% trans %}karma:{% endtrans %} {{user.reputation}}</span>
+    <a class="user-micro-info" 
+       href="{{user.get_absolute_url()}}?sort=reputation"
+    >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
     {% if user.gold or user.silver or user.bronze %}
-    <span title="{{user.get_badge_summary}}">{% trans %}badges:{% endtrans %}
+    <a class="user-micro-info"
+       href="{{user.get_absolute_url()}}#badges"
+    ><span title="{{user.get_badge_summary}}">{% trans %}badges:{% endtrans %}
         {% if user.gold %}
         <span class='badge1'>&#9679;</span>
         <span class="badgecount">{{user.gold}}</span>
@@ -38,7 +40,7 @@
         <span class='badge3'>&#9679;</span>
         <span class="badgecount">{{user.bronze}}</span>
         {% endif %}
-    </span>
+    </span></a>
     {% endif %}
 {%- endmacro -%}
 
@@ -119,17 +121,29 @@
 {% endspaceless %}
 {%- endmacro -%}
 
-{%- macro post_contributor_info(post, contributor_type, is_wiki) -%}
+{%- macro post_contributor_info(post, contributor_type, is_wiki, wiki_min_rep) -%}
 <div class='post-update-info'>
 {# there is a whole bunch of trickery here, probably indicative of 
 poor design of the data or methods on data objects #}
 {% if contributor_type=="original_author" %}
     {% if is_wiki %}
-        <p>{% trans %}community wiki{% endtrans %}</p>
-        <p>
-            {% trans rev_count=post.revisions.all()|length %}{{rev_count}} revision{% pluralize %}{{rev_count}} revisions{% endtrans %}
+        <p style="line-height:12px">
+           {%- if post.__class__.__name__ == 'Question' -%}
+                {%- trans %}asked{% endtrans %}
+           {% elif post.__class__.__name__ == 'Answer' %}
+                {%- trans %}answered{% endtrans %}
+           {% else %}
+                {%- trans %}posted{% endtrans %}
+           {% endif %}
+           <strong>{{post.added_at|diff_date}}</strong>
         </p>
-        <p>{{post.author.get_profile_link()}}</p>
+        <img 
+            src="{{'/images/wiki.png'|media}}"
+            alt="{% trans %}this post is marked as community wiki{% endtrans %}"
+            style="float:left"
+        />
+        <p class="tip">{% trans %}This post is a wiki.
+        Anyone with karma &gt;{{wiki_min_rep}} is welcome to improve it.{% endtrans %}</p>
     {% else %}
         <p style="line-height:12px;">
             {# todo: access to class names needs to be removed here #}
@@ -170,7 +184,7 @@ poor design of the data or methods on data objects #}
         {% endif %}
             >{% trans %}updated{% endtrans %} <strong>{{ last_edited_at|diff_date }}</strong></a>
         </p>
-        {% if original_author != display_author or is_wiki %}
+        {% if original_author != update_author or is_wiki %}
             {{ gravatar(update_author, 32) }}
             <p style="float:left">{{update_author.get_profile_link()}}<br/>
             {{ user_score_and_badge_summary(update_author) }}</p>
@@ -178,4 +192,64 @@ poor design of the data or methods on data objects #}
     {% endif %}
 {% endif %}
 </div>
+{%- endmacro -%}
+
+{%- macro question_summary(question, extra_class=None) -%}
+    <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
+        <div class="counts">
+            <div class="votes">
+                <span 
+                    class="item-count 
+                        {% if question.score == 0 -%}
+                            no-votes
+                        {% else -%}
+                            some-votes
+                        {%- endif -%}"
+                >{{question.score|humanize_counter}}</span>
+                <div>
+                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
+                </div>
+            </div>
+            <div class="votes"> 
+                <span 
+                    class="item-count
+                    {% if question.answer_count == 0 -%}
+                        no-answers
+                    {% else -%}
+                        {%- if question.answer_accepted -%}
+                            accepted
+                        {%- else -%}
+                            some-answers
+                        {%- endif -%}
+                    {%- endif -%}"
+                >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}&#10003;{% endif %}</span>
+                <div>
+                {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
+                </div>
+            </div>
+            <div class="votes">
+                 <span class="item-count
+                 {% if question.view_count == 0 -%}
+                    no-views
+                 {% else -%}
+                    some-views
+                 {%- endif -%}"
+                 >{{question.view_count|humanize_counter}}</span>
+                <div>
+                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
+                </div>
+            </div>
+        </div>
+        <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.title|escape}}</a></h2>
+        <div class="userinfo">
+            <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
+            <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
+            {{user_score_and_badge_summary(question.last_activity_by)}}
+        </div>
+        <div class="tags">
+            {% for tag in question.get_tag_names() %}
+            <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+    </div>
 {%- endmacro -%}

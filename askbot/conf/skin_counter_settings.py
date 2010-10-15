@@ -184,7 +184,6 @@ settings.register(
                             ).html,
         description=_('Background color for answers = 0'),
         help_text=_('HTML color name or hex value'),
-        hidden=True,
     )
 )
 
@@ -195,7 +194,6 @@ settings.register(
         default='yellow',
         description=_('Foreground color for answers = 0'),
         help_text=_('HTML color name or hex value'),
-        hidden=True,
     )
 )
 

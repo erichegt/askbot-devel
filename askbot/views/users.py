@@ -284,44 +284,23 @@ def edit_user(request, id):
 
 def user_stats(request, user):
 
-    questions = models.Question.objects.extra(
-        select={
-            'score' : 'question.score',
-            'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s AND f.question_id = question.id',
-            'la_user_id' : 'auth_user.id',
-            'la_username' : 'auth_user.username',
-            'la_user_gold' : 'auth_user.gold',
-            'la_user_silver' : 'auth_user.silver',
-            'la_user_bronze' : 'auth_user.bronze',
-            'la_user_reputation' : 'auth_user.reputation'
-            },
-        select_params=[user.id],
-        tables=['question', 'auth_user'],
-        where=['question.author_id=%s AND question.last_activity_by_id = auth_user.id AND NOT question.deleted'],
-        params=[user.id],
-        order_by=['-score', '-last_activity_at']
-    ).values('score',
-             'favorited_myself',
-             'id',
-             'title',
-             'author_id',
-             'added_at',
-             'answer_accepted',
-             'answer_count',
-             'comment_count',
-             'view_count',
-             'favourite_count',
-             'summary',
-             'tagnames',
-             'vote_up_count',
-             'vote_down_count',
-             'last_activity_at',
-             'la_user_id',
-             'la_username',
-             'la_user_gold',
-             'la_user_silver',
-             'la_user_bronze',
-             'la_user_reputation')[:100]
+    questions = models.Question.objects.filter(
+                                    author = user
+                                ).order_by(
+                                    '-score', '-last_activity_at'
+                                ).select_related(
+                                    'last_activity_by__id',
+                                    'last_activity_by__username',
+                                    'last_activity_by__reputation',
+                                    'last_activity_by__gold',
+                                    'last_activity_by__silver',
+                                    'last_activity_by__bronze'
+                                )[:100]
+    questions = list(questions)
+    favorited_myself = models.FavoriteQuestion.objects.filter(
+                                    question__in = questions,
+                                    user = user
+                                ).values_list('question__id', flat=True)
 
     #this is meant for the questions answered by the user (or where answers were edited by him/her?)
     answered_questions = models.Question.objects.extra(
@@ -356,7 +335,7 @@ def user_stats(request, user):
 
     question_id_set = set()
     #todo: there may be a better way to do these queries
-    question_id_set.update([q['id'] for q in questions])
+    question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
     try:
@@ -424,6 +403,7 @@ def user_stats(request, user):
         'view_user' : user,
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
+        'favorited_myself': favorited_myself,
         'answered_questions' : answered_questions,
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -860,53 +840,28 @@ def user_reputation(request, user):
     return HttpResponse(template.render(context))
 
 def user_favorites(request, user):
-    questions = models.Question.objects.extra(
-        select={
-            'score' : 'question.vote_up_count + question.vote_down_count',
-            'favorited_myself' : 'SELECT count(*) FROM favorite_question f WHERE f.user_id = %s '+
-                'AND f.question_id = question.id',
-            'la_user_id' : 'auth_user.id',
-            'la_username' : 'auth_user.username',
-            'la_user_gold' : 'auth_user.gold',
-            'la_user_silver' : 'auth_user.silver',
-            'la_user_bronze' : 'auth_user.bronze',
-            'la_user_reputation' : 'auth_user.reputation'
-            },
-        select_params=[user.id],
-        tables=['question', 'auth_user', 'favorite_question'],
-        where=['NOT question.deleted AND question.last_activity_by_id = auth_user.id '+
-            'AND favorite_question.question_id = question.id AND favorite_question.user_id = %s'],
-        params=[user.id],
-        order_by=['-score', '-question.id']
-    ).values('score',
-             'favorited_myself',
-             'id',
-             'title',
-             'author_id',
-             'added_at',
-             'answer_accepted',
-             'answer_count',
-             'comment_count',
-             'view_count',
-             'favourite_count',
-             'summary',
-             'tagnames',
-             'vote_up_count',
-             'vote_down_count',
-             'last_activity_at',
-             'la_user_id',
-             'la_username',
-             'la_user_gold',
-             'la_user_silver',
-             'la_user_bronze',
-             'la_user_reputation')
-
+    favorited_q_id_list= models.FavoriteQuestion.objects.filter(
+                                    user = user
+                                ).values_list('question__id', flat=True)
+    questions = models.Question.objects.filter(
+                                    id__in=favorited_q_id_list
+                                ).order_by(
+                                    '-score', '-last_activity_at'
+                                ).select_related(
+                                    'last_activity_by__id',
+                                    'last_activity_by__username',
+                                    'last_activity_by__reputation',
+                                    'last_activity_by__gold',
+                                    'last_activity_by__silver',
+                                    'last_activity_by__bronze'
+                                )[:const.USER_VIEW_DATA_SIZE]
     data = {
         'active_tab':'users',
         'tab_name' : 'favorites',
         'tab_description' : _('users favorite questions'),
         'page_title' : _('profile - favorite questions'),
-        'questions' : questions[:const.USER_VIEW_DATA_SIZE],
+        'questions' : questions,
+        'favorited_myself': favorited_q_id_list,
         'view_user' : user
     }
     context = RequestContext(request, data)

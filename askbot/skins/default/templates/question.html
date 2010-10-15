@@ -172,17 +172,19 @@
                             <div class="post-update-info-container">
                                     {{ 
                                         macros.post_contributor_info(
-                                                                question,
-                                                                "original_author",
-                                                                question.wiki
-                                                            )
+                                                        question,
+                                                        "original_author",
+                                                        question.wiki,
+                                                        settings.MIN_REP_TO_EDIT_WIKI
+                                                    )
                                     }}
                                     {{ 
                                         macros.post_contributor_info(
-                                                                question,
-                                                                "last_updter",
-                                                                question.wiki
-                                                            )
+                                                        question,
+                                                        "last_updater",
+                                                        question.wiki,
+                                                        settings.MIN_REP_TO_EDIT_WIKI,
+                                                    )
                                     }}
                             </div>
                             {% spaceless %}
@@ -340,17 +342,19 @@
                                         <div class="post-update-info-container">
                                                 {{
                                                     macros.post_contributor_info(
-                                                                            answer,
-                                                                            "original_author",
-                                                                            answer.wiki
-                                                                        )
+                                                        answer,
+                                                        "original_author",
+                                                        answer.wiki,
+                                                        settings.MIN_REP_TO_EDIT_WIKI
+                                                    )
                                                 }}
                                                 {{ 
                                                     macros.post_contributor_info(
-                                                                            answer,
-                                                                            "last_updater",
-                                                                            answer.wiki
-                                                                        )
+                                                        answer,
+                                                        "last_updater",
+                                                        answer.wiki,
+                                                        settings.MIN_REP_TO_EDIT_WIKI
+                                                    )
                                                 }}
                                         </div>
                                         {% spaceless %}

@@ -7,8 +7,8 @@ import askbot
 #this line is added so that we can import pre-packaged askbot dependencies
 sys.path.append(os.path.join(os.path.dirname(askbot.__file__), 'deps'))
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False#set to True to enable debugging
+TEMPLATE_DEBUG = False#keep false when debugging jinja2 templates
 INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
