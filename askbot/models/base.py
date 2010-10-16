@@ -151,7 +151,9 @@ def parse_and_save_post(post, author = None, **kwargs):
                 )
 
     try:
-        ping_google()
+        from askbot.conf import settings as askbot_settings
+        if askbot_settings.GOOGLE_SITEMAP_CODE != '':
+            ping_google()
     except Exception:
         logging.debug('cannot ping google - did you register with them?')
 

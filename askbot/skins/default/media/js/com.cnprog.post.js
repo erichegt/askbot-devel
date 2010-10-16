@@ -519,7 +519,8 @@ function createComments(type) {
         if (canPostComments(id)) {
             if (jDiv.find("#" + formId).length === 0) {
                 var form = '<form id="' + formId + '" class="post-comments"><div>';
-                form += '<textarea name="comment" cols="60" rows="5" maxlength="300" onblur="' +
+                form += '<textarea name="comment" cols="60" rows="5" ' +
+                        'maxlength="' + maxCommentLength + '" onblur="' +
                         objectType +'Comments.updateTextCounter(this)" ';
                 form += 'onfocus="' + objectType +
                         'Comments.updateTextCounter(this)" onkeyup="' + objectType +
@@ -721,10 +722,18 @@ function createComments(type) {
 
         updateTextCounter: function(textarea) {
             var length = textarea.value ? textarea.value.length : 0;
-            var color = length > 270 ? "#f00" : length > 200 ? "#f60" : "#999";
+            var length1 = maxCommentLength - 100;
+            if (length1 < 0){
+                length1 = Math.round(0.7*maxCommentLength);
+            }
+            var length2 = maxCommentLength - 30;
+            if (length2 < 0){
+                length2 = Math.round(0.9*maxCommentLength);
+            }
+            var color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
             var jSpan = $(textarea).siblings("span.text-counter");
             jSpan.html($.i18n._('can write') +
-                        (300 - length) + ' ' +
+                        (maxCommentLength - length) + ' ' +
                         $.i18n._('characters')).css("color", color);
         }
     };

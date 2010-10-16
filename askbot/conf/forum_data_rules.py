@@ -33,6 +33,17 @@ settings.register(
 settings.register(
     IntegerValue(
         FORUM_DATA_RULES,
+        'MAX_COMMENT_LENGTH',
+        default=300,
+        description=_(
+                'Maximum comment length, must be < %(max_len)s'
+            ) % {'max_len': const.COMMENT_HARD_MAX_LENGTH }
+    )
+)
+
+settings.register(
+    IntegerValue(
+        FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
         default=4,
         description=_('Minimum length of search term for Ajax search'),

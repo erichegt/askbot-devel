@@ -404,7 +404,9 @@ class Question(content.Content, DeletableContent):
     def delete(self):
         super(Question, self).delete()
         try:
-            ping_google()
+            from askbot.conf import settings as askbot_settings
+            if askbot_settings.GOOGLE_SITEMAP_CODE != '':
+                ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
