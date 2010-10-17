@@ -188,41 +188,13 @@
                                                     )
                                     }}
                             </div>
-                            {% spaceless %}
-                            <div class="comments-container" id="comments-container-question-{{question.id}}">
-                            {% for comment in question.get_comments()[:5] %}
-                                <div class="comment" id="comment-{{comment.id}}">
-                                    {{comment.html}} 
-                                    - <a class="comment-user" href="{{comment.user.get_profile_url()}}">{{comment.user.username}}</a>
-                                    {% spaceless %}
-                                    <span class="comment-age">&nbsp;({{comment.added_at|diff_date}})</span>
-                                    {% if request.user|can_delete_comment(comment) %}
-                                        <img class="delete-icon" 
-                                            src="{{"/images/close-small.png"|media}}"
-                                            title="{% trans %}delete this comment{% endtrans %}"/>
-                                    {% endif %}
-                                    {% endspaceless %}
-                                </div>
-                            {% endfor %}
-                            </div>
-                            {% endspaceless %}
-                            <div class="post-comments" style="margin-bottom:20px">
-                                <input id="can-post-comments-question-{{question.id}}" type="hidden" value="{{ request.user|can_post_comment(question) }}"/>
-                                {% if request.user|can_post_comment(question) or question.comment_count > 5 %}
-                                    <a id="comments-link-question-{{question.id}}" class="comments-link">
-                                    {% if request.user|can_post_comment(question) %}
-                                        {% trans %}add comment{% endtrans %}
-                                    {% endif %}
-                                    {% if question.comment_count > 5 %}
-                                        {% if request.user|can_post_comment(question) %}/
-                                            {% trans counter=question.get_comments()[5:]|length %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
-                                        {% else %}
-                                            {% trans counter=question.get_comments()[5:]|length %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
-                                            {% endtrans %}
-                                        {% endif %}
-                                    {% endif %}</a>
-                                {% endif %}
-                            </div>
+                            {{
+                                macros.post_comments_widget(
+                                        post = question,
+                                        user = request.user,
+                                        max_comments = settings.MAX_COMMENTS_TO_SHOW
+                                    )
+                            }}
                         </div>
                     </td>
                 </tr>
@@ -358,42 +330,13 @@
                                                     )
                                                 }}
                                         </div>
-                                        {% spaceless %}
-                                        <div class="comments-container" id="comments-container-answer-{{answer.id}}">
-                                        {% for comment in answer.get_comments()[:5] %}
-                                            <div id="comment-{{comment.id}}" class="comment">
-                                                {{comment.html}} 
-                                                - <a class="comment-user" href="{{comment.user.get_profile_url()}}">{{comment.user}}</a>
-                                                <span class="comment-age">&nbsp;({{comment.added_at|diff_date}})</span>
-                                                {% if request.user|can_delete_comment(comment) %}
-                                                    <img class="delete-icon" 
-                                                        src="{{"/images/close-small.png"|media}}"
-                                                        title="{% trans %}delete this comment{% endtrans %}"/>
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
-                                        </div>
-                                        {% endspaceless %}
-                                        <div class="post-comments" style="margin-bottom:20px">
-                                            <input 
-                                                id="can-post-comments-answer-{{answer.id}}"
-                                                type="hidden"
-                                                value="{{ request.user|can_post_comment(answer)}}"
-                                            />
-                                            {% if request.user|can_post_comment(answer) or answer.comment_count > 5 %}
-                                                <a id="comments-link-answer-{{answer.id}}" class="comments-link">
-                                                {% if request.user|can_post_comment(answer) %}
-                                                    {% trans %}add comment{% endtrans %}
-                                                {% endif %}
-                                                {% if answer.comment_count > 5 %}
-                                                    {% if request.user|can_post_comment(answer) %}/
-                                                        {% trans counter=answer.get_comments()[5:]|length %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
-                                                    {% else %}
-                                                        {% trans counter=answer.get_comments()[5:]|length %}see <strong>{{counter}}</strong> more comment{% pluralize %} see <strong>{{counter}}</strong> more comments{% endtrans %}
-                                                    {% endif %}
-                                                {% endif %}</a>
-                                            {% endif %}
-                                        </div>
+                                        {{
+                                            macros.post_comments_widget(
+                                                    post = answer,
+                                                    user = request.user,
+                                                    max_comments = settings.MAX_COMMENTS_TO_SHOW
+                                                )
+                                        }}
                                     </div>
                                 </td>
                             </tr>

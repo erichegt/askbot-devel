@@ -253,3 +253,45 @@ poor design of the data or methods on data objects #}
         </div>
     </div>
 {%- endmacro -%}
+
+{%- macro post_comments_widget(post=None, user=None, max_comments=None) -%}
+    {% set comments = post.get_comments()[:max_comments] %}
+    {% spaceless %}
+    <div class="comments-container" id="comments-container-{{post.post_type}}-{{post.id}}">
+    {% for comment in comments %}
+        <div class="comment" id="comment-{{comment.id}}">
+            {{comment.html}} 
+            - <a class="comment-user" href="{{user.get_profile_url()}}">{{comment.user.username}}</a>
+            <span class="comment-age">&nbsp;({{comment.added_at|diff_date}})</span>
+            {% if user|can_delete_comment(comment) %}
+                <img class="delete-icon" 
+                    src="{{"/images/close-small.png"|media}}"
+                    title="{% trans %}delete this comment{% endtrans %}"/>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    {% endspaceless %}
+    <div class="post-comments" style="margin-bottom:20px">
+        <input 
+            id="can-post-comments-{{post.post_type}}-{{post.id}}"
+            type="hidden"
+            value="{{ user|can_post_comment(post) }}"
+        />
+        {% if user|can_post_comment(post) or post.comment_count > max_comments %}
+            <a id="comments-link-{{post.post_type}}-{{post.id}}" class="comments-link">
+            {% if user|can_post_comment(post) %}
+                {% trans %}add comment{% endtrans %}
+            {% endif %}
+            {% if post.comment_count > max_comments %}
+                {% set remaining_comments = post.comment_count - max_comments %}
+                {% if user|can_post_comment(question) %}/
+                    {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
+                {% else %}
+                    {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
+                    {% endtrans %}
+                {% endif %}
+            {% endif %}</a>
+        {% endif %}
+    </div>
+{%- endmacro -%}

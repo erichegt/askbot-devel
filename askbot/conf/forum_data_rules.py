@@ -33,6 +33,17 @@ settings.register(
 settings.register(
     IntegerValue(
         FORUM_DATA_RULES,
+        'MAX_COMMENTS_TO_SHOW',
+        default=5,
+        description=_(
+            'Default max number of comments to display under posts'
+        )
+    )
+)
+
+settings.register(
+    IntegerValue(
+        FORUM_DATA_RULES,
         'MAX_COMMENT_LENGTH',
         default=300,
         description=_(

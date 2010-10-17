@@ -79,6 +79,7 @@ class AnswerManager(models.Manager):
     #    return cursor.fetchall()
 
 class Answer(content.Content, DeletableContent):
+    post_type = 'answer'
     question = models.ForeignKey('Question', related_name='answers')
     accepted    = models.BooleanField(default=False)
     accepted_at = models.DateTimeField(null=True, blank=True)

@@ -102,9 +102,11 @@ class FlaggedItem(base.MetaContent, base.UserContent):
 
 #todo: move this class to content
 class Comment(base.MetaContent, base.UserContent):
+    post_type = 'comment'
     comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
     added_at = models.DateTimeField(default = datetime.datetime.now)
     html = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH, default='')
+    score = models.IntegerField(default = 0)
 
     _urlize = True
     _use_markdown = False

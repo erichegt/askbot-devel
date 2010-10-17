@@ -279,6 +279,7 @@ class QuestionManager(models.Manager):
         self.filter(id=question.id).update(favourite_count = FavoriteQuestion.objects.filter(question=question).count())
 
 class Question(content.Content, DeletableContent):
+    post_type = 'question'
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
     answer_accepted = models.BooleanField(default=False)
