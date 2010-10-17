@@ -1515,7 +1515,7 @@ def format_instant_notification_email(
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
-        'content_preview': post.get_snippet(),
+        'content_preview': post.html,#post.get_snippet()
         'update_type': update_type,
         'post_url': site_url + post.get_absolute_url(),
         'origin_post_title': origin_post.title,
