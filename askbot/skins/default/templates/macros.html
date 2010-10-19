@@ -261,7 +261,7 @@ poor design of the data or methods on data objects #}
     {% for comment in comments %}
         <div class="comment" id="comment-{{comment.id}}">
             {{comment.html}} 
-            - <a class="comment-user" href="{{user.get_profile_url()}}">{{comment.user.username}}</a>
+            - <a class="comment-user" href="{{comment.user.get_profile_url()}}">{{comment.user.username}}</a>
             <span class="comment-age">&nbsp;({{comment.added_at|diff_date}})</span>
             {% if user|can_delete_comment(comment) %}
                 <img class="delete-icon" 
