@@ -62,7 +62,7 @@
                 $('#nav_ask').click(
                     function(){
                         var starting_title = $('#keywords').attr('value');
-                        var new_url = $(this).attr('href') + '?title=' + starting_title;
+                        var new_url = $(this).attr('href') + '?title=' + encodeURIComponent(starting_title);
                         window.location.href = new_url;
                         return false;
                     }
