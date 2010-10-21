@@ -1575,7 +1575,8 @@ def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
     if kwargs.get('raw', False):
         return
-    instance.gravatar = hashlib.md5(instance.email).hexdigest()
+    clean_email = instance.email.strip().lower()
+    instance.gravatar = hashlib.md5(clean_email).hexdigest()
 
 
 def record_post_update_activity(
