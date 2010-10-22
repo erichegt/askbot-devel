@@ -17,15 +17,33 @@ $.fn.authenticator = function() {
     var account_recovery_question_text = account_recovery_heading.html();
     var account_recovery_prompt_text = account_recovery_text_span.html();
 
-    var setup_event_handlers = function(elements, handler_function){
+    var setup_click_handler = function(elements, handler_function){
         elements.unbind('click').click(handler_function); 
-        elements.unbind('keypress').keypress(
-            function(e){
-                if ((e.which && e.which == 13)||(e.keyCode && e.keyCode == 13)){
-                    return handler_function();
-                }
+    };
+
+    var setup_enter_key_handler = function(elements, handler_function){
+        elements.each(
+            function(index, element){
+                $(element).unbind('keypress').keypress(
+                    function(e){
+                        if ((e.which && e.which == 13)||(e.keyCode && e.keyCode == 13)){
+                            if (handler_function){
+                                return handler_function();
+                            }
+                            else {
+                                element.click();
+                                return false;
+                            }
+                        }
+                    }
+                );
             }
         );
+    };
+
+    var setup_event_handlers = function(elements, handler_function){
+        setup_click_handler(elements, handler_function);
+        setup_enter_key_handler(elements);
     };
 
     var read_existing_login_methods = function(){
@@ -97,6 +115,7 @@ $.fn.authenticator = function() {
     var submit_login_with_password = function(){
         var username = $('#id_username');
         var password = $('#id_password');
+
         if (username.val().length < 1){
             username.focus();
             return false;
@@ -237,6 +256,15 @@ $.fn.authenticator = function() {
     var start_login_with_extra_openid_token = function() {
         show_openid_input_fields($(this).attr('name'));
         set_provider_name($(this));
+        
+        setup_enter_key_handler(
+            openid_login_token_input,
+            function(){
+                openid_submit_button.click();
+                return false;
+            }
+        );
+
         setup_event_handlers(
             openid_submit_button,
             function(){
@@ -295,6 +323,8 @@ $.fn.authenticator = function() {
             )
             password_button.val(password_button_text);
             password_action_input.val('change_password');
+            var focus_input = $('#id_new_password');
+            var submittable_input = $('#id_new_password_retyped');
         }
         else{
             $('#password-heading>span').html(token_name);
@@ -313,18 +343,24 @@ $.fn.authenticator = function() {
                 create_pw_link.attr('href', url);
             }
             password_action_input.val('login');
+            var focus_input = $('#id_username');
+            var submittable_input = $('#id_password');
         }
         password_input_fields.show();
-        setup_event_handlers(
-            password_button,
-            function(){
-                signin_form.unbind(
-                                'submit'
-                            ).submit(
-                                submit_action
-                            );
+        focus_input.focus();
+
+        var submit_password_login = function(){
+            signin_form.unbind('submit').submit(submit_action);
+        };
+
+        setup_enter_key_handler(
+            submittable_input,
+            function() {
+                password_button.click();
+                return false;
             }
         );
+        setup_event_handlers(password_button, submit_password_login);
         return false;
     };
 
@@ -343,42 +379,46 @@ $.fn.authenticator = function() {
         $('#id_new_password_retyped').val('');
     };
 
-    setup_event_handlers(
-        signin_page.find('input.openid-direct'),
-        start_simple_login
-    );
+    var setup_default_handlers = function(){
+        setup_event_handlers(
+            signin_page.find('input.openid-direct'),
+            start_simple_login
+        );
 
-    setup_event_handlers(
-        signin_page.find('input.openid-username'),
-        start_login_with_extra_openid_token
-    );
+        setup_event_handlers(
+            signin_page.find('input.openid-username'),
+            start_login_with_extra_openid_token
+        );
 
-    setup_event_handlers(
-        signin_page.find('input.openid-generic'),
-        start_login_with_extra_openid_token
-    );
+        setup_event_handlers(
+            signin_page.find('input.openid-generic'),
+            start_login_with_extra_openid_token
+        );
 
-    setup_event_handlers(
-        signin_page.find('input.facebook'),
-        start_facebook_login
-    );
+        setup_event_handlers(
+            signin_page.find('input.facebook'),
+            start_facebook_login
+        );
 
-    setup_event_handlers(
-        signin_page.find('input.oauth'),
-        start_simple_login
-    );
+        setup_event_handlers(
+            signin_page.find('input.oauth'),
+            start_simple_login
+        );
 
-    setup_event_handlers( 
-        signin_page.find('input.password'),
-        start_password_login_or_change
-    );
+        setup_event_handlers( 
+            signin_page.find('input.password'),
+            start_password_login_or_change
+        );
 
-    setup_event_handlers(account_recovery_link, start_account_recovery);
-    if (userIsAuthenticated){
-        read_existing_login_methods();
-        setup_login_method_deleters();
-    }
+        setup_event_handlers(account_recovery_link, start_account_recovery);
 
+        if (userIsAuthenticated){
+            read_existing_login_methods();
+            setup_login_method_deleters();
+        }
+    };
+
+    setup_default_handlers();
     clear_password_fields();
     return this;
 };
