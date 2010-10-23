@@ -87,3 +87,9 @@ def mail_moderators(subject_line, body_text):
         logging.critical(unicode(e))
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(e))
+
+def should_show_sort_by_relevance():
+    """True if configuration support sorting
+    questions by search relevance
+    """
+    return (django_settings.DATABASE_ENGINE == 'posgresql_psycopg2')

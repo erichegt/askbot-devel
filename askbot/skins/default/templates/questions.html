@@ -34,6 +34,19 @@
     </div>
     <div class="tabsA">
         <span class="label">{% trans %}Sort by:{% endtrans %}</span>
+        {% if show_sort_by_relevance %}
+            {% if sort == "relevant" %}
+                <a id="oldest" 
+                    href="?sort=relevant" 
+                    class="on"
+                    title="{% trans %}click to see most relevant questions{% endtrans %}">{% trans %}relevance{% endtrans %}</a>
+            {% elif query %}
+                <a id="oldest" 
+                    href="?sort=relevant" 
+                    class="off"
+                    title="{% trans %}most relevant questions{% endtrans %}">{% trans %}relevance{% endtrans %}</a>
+            {% endif %}
+        {% endif %}
         {% if sort == "oldest" %}
         <a id="oldest" 
             href="?sort=latest" 

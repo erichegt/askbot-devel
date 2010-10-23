@@ -24,6 +24,7 @@ from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
+import askbot
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
@@ -278,6 +279,8 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
+    print search_state.sort
+
     template_context = RequestContext(request, {
         'language_code': translation.get_language(),
         'reset_method_count': reset_method_count,
@@ -296,6 +299,7 @@ def questions(request):
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
         'sort': search_state.sort,
+        'show_sort_by_relevance': askbot.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
         })
