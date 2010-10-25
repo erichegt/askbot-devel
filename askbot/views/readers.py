@@ -279,8 +279,6 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
-    print search_state.sort
-
     template_context = RequestContext(request, {
         'language_code': translation.get_language(),
         'reset_method_count': reset_method_count,

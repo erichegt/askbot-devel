@@ -295,3 +295,42 @@ poor design of the data or methods on data objects #}
         {% endif %}
     </div>
 {%- endmacro -%}
+
+{%- macro reversible_sort_button(button_sort_criterium=None, asc_tooltip=None, asc_label=None, 
+            desc_tooltip=None, desc_label=None, current_sort_method=None) -%}
+{# 
+    sort button where descending sort is default
+    and the search method is togglable between ascending and descending 
+    buttons are rendered as links with id constructed as
+    "by_" + button_sort_criterium
+    class "on" is added when current_sort_method is one of
+    button_sort_criterium + "asc" or "desc"
+#}
+    {% set key_name = button_sort_criterium %}
+    {% set sort = current_sort_method %}
+    {% if sort == key_name + "-asc" %}{# "worst" first #}
+    <a id="by_{{key_name}}" 
+        href="?sort={{key_name}}-desc" 
+        class="on" 
+        title="{{desc_tooltip}}">{{asc_label}}</a>
+    {% elif sort == key_name + "-desc" %}{# "best first" #}
+    <a id="by_{{key_name}}"
+        href="?sort={{key_name}}-asc" 
+        class="on"
+        title="{{asc_tooltip}}">{{desc_label}}</a>
+    {% else %}{# default, when other button is active #}
+    <a id="by_{{key_name}}"
+        href="?sort={{key_name}}-desc" 
+        class="off"
+        title="{{desc_tooltip}}">{{desc_label}}</a>
+    {% endif %}
+    <script type="text/javascript">{# need to pass on text translations to js #}
+        var sortButtonData = sortButtonData || {};
+        sortButtonData["{{key_name}}"] = {
+            asc_tooltip: "{{asc_tooltip}}",
+            asc_label: "{{asc_label}}",
+            desc_tooltip: "{{desc_tooltip}}",
+            desc_label: "{{desc_label}}"
+        };
+    </script>
+{%- endmacro %}

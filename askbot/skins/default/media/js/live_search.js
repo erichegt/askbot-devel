@@ -1,3 +1,4 @@
+var prevSortMethod = sortMethod;
 $(document).ready(function(){
     var query = $('input#keywords');
     var prev_text = $.trim(query.val());
@@ -14,7 +15,10 @@ $(document).ready(function(){
                 x_button.click(
                     function(){
                         query.val('');
-                        reset_query();
+                        if (sortMethod == 'relevance-desc'){
+                            sortMethod = prevSortMethod;
+                        }
+                        reset_query(sortMethod);
                     }
                 );
                 query.after(x_button);
@@ -30,11 +34,20 @@ $(document).ready(function(){
         cur_text = $.trim(query.val());
         if (cur_text != prev_text && running === false){
             if (cur_text.length >= minSearchWordLength){
-                send_query(cur_text);
+                if (prev_text.length === 0 && showSortByRelevance){
+                    if (sortMethod == 'activity-desc'){
+                        prevSortMethod = sortMethod;
+                        sortMethod = 'relevance-desc';
+                    }
+                }
+                send_query(cur_text, sortMethod);
                 running = true;
             }
             else if (cur_text.length === 0){
-                reset_query();
+                if (sortMethod == 'relevance-desc'){
+                    sortMethod = prevSortMethod;
+                }
+                reset_query(sortMethod);
                 running = true;
             }
         }
@@ -234,7 +247,67 @@ $(document).ready(function(){
 
     var set_question_count = function(count_html){
         $('#question-count').html(count_html);
+    };
+
+    var set_active_sort_tab = function(sort_method){
+        $('#sort_tabs>a').attr('class', 'off');
+        $('#' + sortMethod).attr('class', 'on');
+    };
+
+    var create_relevance_tab = function(){
+        relevance_tab = $('<a></a>');
+        relevance_tab.attr('href', '?sort=relevance-desc');
+        relevance_tab.attr('id', 'by_relevance');
+        relevance_tab.html($.i18n._('relevance'));
+        return relevance_tab;
     }
+
+    var set_active_sort_tab = function(sort_method){
+        var tabs = $('#sort_tabs>a');
+        tabs.attr('class', 'off');
+        tabs.each(function(index, element){
+            var tab = $(element);
+            var tab_name = tab.attr('id').replace(/^by_/,'');
+            if (tab_name in sortButtonData){
+                tab.attr(
+                    'href',
+                    '?sort=' + tab_name + '-desc'
+                );
+                tab.attr(
+                    'title',
+                    sortButtonData[tab_name]['desc_tooltip']
+                );
+                tab.html(sortButtonData[tab_name]['desc_label']);
+            }
+        });
+        var bits = sort_method.split('-', 2);
+        var name = bits[0];
+        var sense = bits[1];//sense of sort
+        var antisense = (sense == 'asc' ? 'desc':'asc');
+        var active_tab = $('#by_' + name);
+        active_tab.attr('class', 'on');
+        active_tab.attr('title', sortButtonData[name][antisense + '_tooltip']);
+        active_tab.html(sortButtonData[name][sense + '_label']);
+    };
+
+    var render_relevance_sort_tab = function(){
+        if (showSortByRelevance === false){
+            return;
+        }
+        var relevance_tab = $('#by_relevance');
+        if (prev_text && prev_text.length > 0){
+            if (relevance_tab.length == 0){
+                relevance_tab = create_relevance_tab();
+                $('#sort_tabs>span').after(relevance_tab);
+            }
+        }
+        else {
+            if (relevance_tab.length > 0){
+                relevance_tab.remove();
+            }
+        }
+        set_active_sort_tab(sortMethod);
+    };
 
     var render_result = function(data, text_status, xhr){
         var old_list = $('#' + q_list_sel);
@@ -250,6 +323,7 @@ $(document).ready(function(){
             set_question_count(data['question_counter']);
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
+            render_relevance_sort_tab();
             query.focus();
         }
         //show new div
@@ -260,10 +334,11 @@ $(document).ready(function(){
         eval_query();
     }
 
-    var send_query = function(query_text){
+    var send_query = function(query_text, sort_method){
+        var post_data = {query: query_text};
         $.ajax({
             url: scriptUrl + $.i18n._('questions/'), 
-            data: {query: query_text},
+            data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
             complete: try_again,
@@ -271,11 +346,11 @@ $(document).ready(function(){
         prev_text = query_text;
     }
 
-    var reset_query = function(){
+    var reset_query = function(sort_method){
         refresh_x_button();
         $.ajax({
             url: scriptUrl + $.i18n._('questions/'), 
-            data: {reset_query: true},
+            data: {reset_query: true, sort: sort_method},
             dataType: 'json',
             success: render_result,
             complete: try_again,

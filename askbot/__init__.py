@@ -92,4 +92,4 @@ def should_show_sort_by_relevance():
     """True if configuration support sorting
     questions by search relevance
     """
-    return (django_settings.DATABASE_ENGINE == 'posgresql_psycopg2')
+    return (django_settings.DATABASE_ENGINE == 'postgresql_psycopg2')

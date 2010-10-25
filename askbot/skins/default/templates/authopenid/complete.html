@@ -43,11 +43,9 @@ parameters:
     </div>
     {% if openid_register_form.errors %}
         <ul class="errorlist">
-        {% if openid_register_form.non_field_errors %}
-            {% for error in openid_register_form.non_field_errors %}
-                <li>{{error}}</li>
-            {% endfor %}
-        {% endif %}
+        {% for error in openid_register_form.non_field_errors() %}
+            <li>{{error}}</li>
+        {% endfor %}
         </ul>
     {% endif %}
     <div class="login">

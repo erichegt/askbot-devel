@@ -23,15 +23,15 @@ from askbot.utils.html import sanitize_html
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
-    'latest': '-added_at',
-    'oldest': 'added_at',
-    'active': '-last_activity_at',
-    'inactive': 'last_activity_at',
-    'hottest': '-answer_count',
-    'coldest': 'answer_count',
-    'mostvoted': '-score',
-    'leastvoted': 'score',
-    'relevant': None#this is a special case for postges only
+    'age-desc': '-added_at',
+    'age-asc': 'added_at',
+    'activity-desc': '-last_activity_at',
+    'activity-asc': 'last_activity_at',
+    'answers-desc': '-answer_count',
+    'answers-asc': 'answer_count',
+    'votes-desc': '-score',
+    'votes-asc': 'score',
+    'relevance-desc': None#this is a special case for postges only
 }
 
 class QuestionManager(models.Manager):
@@ -121,7 +121,7 @@ class QuestionManager(models.Manager):
                     'params': ["'" + search_query + "'"]
                 }
                 if askbot.should_show_sort_by_relevance():
-                    if sort_method == 'relevant':
+                    if sort_method == 'relevance-desc':
                         extra_kwargs['order_by'] = ['-relevance',]
 
                 qs = qs.extra(**extra_kwargs)
@@ -220,7 +220,7 @@ class QuestionManager(models.Manager):
                         select_params = (uid_str, )
                      )
 
-        if sort_method != 'relevant':
+        if sort_method != 'relevance-desc':
             #relevance sort is set in the extra statement
             #only for postgresql
             orderby = QUESTION_ORDER_BY_MAP[sort_method]
