@@ -9,6 +9,7 @@ from django.utils.http import urlquote as django_urlquote
 from django.core.urlresolvers import reverse
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
+import askbot
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models import signals
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
@@ -22,15 +23,15 @@ from askbot.utils.html import sanitize_html
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
-    'latest': '-added_at',
-    'oldest': 'added_at',
-    'active': '-last_activity_at',
-    'inactive': 'last_activity_at',
-    'hottest': '-answer_count',
-    'coldest': 'answer_count',
-    'mostvoted': '-score',
-    'leastvoted': 'score',
-    'relevant': None #this is a special case
+    'age-desc': '-added_at',
+    'age-asc': 'added_at',
+    'activity-desc': '-last_activity_at',
+    'activity-asc': 'last_activity_at',
+    'answers-desc': '-answer_count',
+    'answers-asc': 'answer_count',
+    'votes-desc': '-score',
+    'votes-asc': 'score',
+    'relevance-desc': None#this is a special case for postges only
 }
 
 class QuestionManager(models.Manager):
@@ -111,6 +112,19 @@ class QuestionManager(models.Manager):
                            | models.Q(tagnames__search = search_query) \
                            | models.Q(answers__text__search = search_query)
                         )
+            elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+                rank_clause = "ts_rank(question.text_search_vector, to_tsquery('%s'))";
+                search_query = '&'.join(search_query.split())
+                extra_kwargs = {
+                    'select': {'relevance': rank_clause % search_query},
+                    'where': ['text_search_vector @@ to_tsquery(%s)'],
+                    'params': ["'" + search_query + "'"]
+                }
+                if askbot.should_show_sort_by_relevance():
+                    if sort_method == 'relevance-desc':
+                        extra_kwargs['order_by'] = ['-relevance',]
+
+                qs = qs.extra(**extra_kwargs)
             else:
                 #fallback to dumb title match search
                 qs = qs.extra(
@@ -206,12 +220,12 @@ class QuestionManager(models.Manager):
                         select_params = (uid_str, )
                      )
 
-        #qs = qs.select_related(depth=1)
-        #todo: fix orderby here
-        orderby = QUESTION_ORDER_BY_MAP[sort_method]
-        if orderby:
-            #relevance will be ignored here
+        if sort_method != 'relevance-desc':
+            #relevance sort is set in the extra statement
+            #only for postgresql
+            orderby = QUESTION_ORDER_BY_MAP[sort_method]
             qs = qs.order_by(orderby)
+
         qs = qs.distinct()
         qs = qs.select_related(
                         'last_activity_by__id',
@@ -227,7 +241,6 @@ class QuestionManager(models.Manager):
                                         search_state = search_state,
                                         ignored_tag_names = ignored_tag_names
                                     )
-
         return qs, meta_data, related_tags
 
     #todo: this function is similar to get_response_receivers
@@ -237,11 +250,7 @@ class QuestionManager(models.Manager):
         answer_list = []
         #question_list = list(question_list)#important for MySQL, b/c it does not support
         from askbot.models.answer import Answer
-        if isinstance(question_list, list):
-            q_id = [question.id for question in question_list]
-        else:
-            q_id = list(question_list.values_list('id', flat=True))
-
+        q_id = [question.id for question in question_list]
         a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
         u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
         u_id = u_id.union(

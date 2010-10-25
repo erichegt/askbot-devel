@@ -1,6 +1,7 @@
 #search state manager object
 #that lives in the session and takes care of the state
 #persistece during the search session
+import askbot
 from askbot import const
 from askbot.conf import settings as askbot_settings
 import logging
@@ -139,20 +140,21 @@ class SearchState(object):
 
         if 'query' in input_dict:
             self.update_value('query', input_dict)
-            self.sort = 'relevant'
+            self.sort = 'relevance-desc'
         elif 'search' in unprocessed_input:#a case of use nulling search query by hand
             self.reset_query()
             return
 
         if 'sort' in input_dict:
-            if input_dict['sort'] == 'relevant' and self.query is None:
+            if input_dict['sort'] == 'relevance-desc' and self.query is None:
                 self.reset_sort()
             else:
                 self.update_value('sort', input_dict)
 
         #todo: plug - mysql has no relevance sort
-        if self.sort == 'relevant':
-            self.reset_sort()
+        if not askbot.should_show_sort_by_relevance():
+            if self.sort == 'relevance-desc':
+                self.reset_sort()
 
     def reset_page(self):
         self.page = 1
@@ -161,7 +163,7 @@ class SearchState(object):
         if self.query:
             self.query = None
             self.reset_page()
-            if self.sort == 'relevant':
+            if self.sort == 'relevance-desc':
                 self.reset_sort()
 
     def reset_sort(self):

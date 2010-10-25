@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.utils.http import urlquote  as django_urlquote
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from askbot.models.base import AnonymousContent, DeletableContent
 from askbot.models.base import ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
@@ -146,6 +147,12 @@ class Answer(content.Content, DeletableContent):
                                   summary=comment,
                                   revision=rev_no
                                   )
+
+    def save(self, *args, **kwargs):
+        super(Answer, self).save(*args, **kwargs);
+        if 'postgres' in settings.DATABASE_ENGINE:
+            #hit the database to trigger update of full text search vector
+            self.question.save()
 
     def get_origin_post(self):
         return self.question

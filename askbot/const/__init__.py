@@ -35,28 +35,29 @@ TYPE_REPUTATION = (
     (10, 'assigned_by_moderator'),
 )
 
-#do not translate these!!!
+#do not translate keys
 POST_SORT_METHODS = (
-                     ('latest', _('newest')),
-                     ('oldest', _('oldest')),
-                     ('active', _('active')),
-                     ('inactive', _('inactive')),
-                     ('hottest', _('hottest')),
-                     ('coldest', _('coldest')),
-                     ('mostvoted', _('most voted')),
-                     ('leastvoted', _('least voted')),
-                     ('relevant', _('relevance')),
-                    )
+    ('age-desc', _('newest')),
+    ('age-asc', _('oldest')),
+    ('activity-desc', _('active')),
+    ('activity-asc', _('inactive')),
+    ('answers-desc', _('hottest')),
+    ('answers-asc', _('coldest')),
+    ('votes-desc', _('most voted')),
+    ('votes-asc', _('least voted')),
+    ('relevance-desc', _('relevance')),
+)
 #todo: add assertion here that all sort methods are unique
 #because they are keys to the hash used in implementations of Q.run_advanced_search
 
-DEFAULT_POST_SORT_METHOD = 'active'
+DEFAULT_POST_SORT_METHOD = 'activity-desc'
 POST_SCOPE_LIST = (
-                    ('all', _('all')),
-                    ('unanswered', _('unanswered')),
-                    ('favorite', _('favorite')),
-                   )
+    ('all', _('all')),
+    ('unanswered', _('unanswered')),
+    ('favorite', _('favorite')),
+)
 DEFAULT_POST_SCOPE = 'all'
+
 PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
 #todo: remove this duplication
 QUESTIONS_PER_PAGE_USER_CHOICES = (
