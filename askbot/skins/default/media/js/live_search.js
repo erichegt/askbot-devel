@@ -203,11 +203,10 @@ $(document).ready(function(){
 
     var render_question_list = function(questions){
         var output = '';
-        //alert(questions.length);
         for (var i=0; i<questions.length; i++){
             output += render_question(questions[i]);
         }
-        return output;//render_question(questions[2]);
+        return output;
     };
 
     var render_faces = function(faces){
@@ -219,7 +218,6 @@ $(document).ready(function(){
         for (var i=0; i<faces.length; i++){
             html += faces[i];
         }
-        //alert(html);
         $('#contrib-users').append(html);
     };
 
@@ -249,16 +247,11 @@ $(document).ready(function(){
         $('#question-count').html(count_html);
     };
 
-    var set_active_sort_tab = function(sort_method){
-        $('#sort_tabs>a').attr('class', 'off');
-        $('#' + sortMethod).attr('class', 'on');
-    };
-
     var create_relevance_tab = function(){
         relevance_tab = $('<a></a>');
         relevance_tab.attr('href', '?sort=relevance-desc');
         relevance_tab.attr('id', 'by_relevance');
-        relevance_tab.html($.i18n._('relevance'));
+        relevance_tab.html(sortButtonData['relevance']['desc_label']);
         return relevance_tab;
     }
 
@@ -306,7 +299,6 @@ $(document).ready(function(){
                 relevance_tab.remove();
             }
         }
-        set_active_sort_tab(sortMethod);
     };
 
     var render_result = function(data, text_status, xhr){
@@ -324,6 +316,7 @@ $(document).ready(function(){
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
             render_relevance_sort_tab();
+            set_active_sort_tab(sortMethod);
             query.focus();
         }
         //show new div
