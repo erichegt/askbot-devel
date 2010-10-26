@@ -1519,14 +1519,13 @@ def format_instant_notification_email(
         assert(len(revisions) == 2)
         content_preview = htmldiff(
                             revisions[1].as_html(),
-                            revisions[0].as_html()
+                            revisions[0].as_html(),
+                            ins_start = '<b><u style="background-color:#cfc">',
+                            ins_end = '</u></b>',
+                            del_start = '<del style="color:#600;background-color:#fcc">',
+                            del_end = '</del>'
                         )
         #todo: remove hardcoded style
-        content_preview += """<style type ="text/css">
-        del {color: #ff5f5f};
-        ins {background-color: #97ff97};
-        </style>
-        """
     else:
         content_preview = post.html
 
