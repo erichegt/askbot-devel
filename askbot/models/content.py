@@ -138,25 +138,22 @@ class Content(models.Model):
                                 feed_type = 'q_sel',
                                 frequency = 'i'
                             )
-            for subscriber in selective_subscribers:
-                if origin_post.passes_tag_filter_for_user(subscriber):
-                    #print subscriber, ' passes tag filter'
-                    subscriber_set.add(subscriber)
-                else:
-                    #print 'does not pass tag filter'
-                    pass
+            subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
 
-            #subscriber_set.update(selective_subscribers)
 
         #3) whole forum subscibers
         global_subscribers = EmailFeedSetting.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
                                         )
-
-        #todo: apply tag filters here
-        subscriber_set.update(global_subscribers)
+        for subscriber in global_subscribers:
+            if origin_post.passes_tag_filter_for_user(subscriber):
+                #print subscriber, ' passes tag filter'
+                subscriber_set.add(subscriber)
+            else:
+                #print 'does not pass tag filter'
+                pass
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
@@ -250,7 +247,7 @@ class Content(models.Model):
                                         tag__in = tags, 
                                         reason = 'good'
                                     )
-            if interesting_selections.count() > 1:
+            if interesting_selections.count() > 0:
                 return True
             else:
                 return False
@@ -261,7 +258,7 @@ class Content(models.Model):
                                                 tag__in = tags, 
                                                 reason = 'bad'
                                             )
-            if ignored_selections.count() > 1:
+            if ignored_selections.count() > 0:
                 return False
             else:
                 return True
