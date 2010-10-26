@@ -58,8 +58,9 @@ def upload(request):#ajax upload file to a question or answer
         # check file type
         file_extension = os.path.splitext(f.name)[1].lower()
         if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
+            file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
             msg = _("allowed file types are '%(file_types)s'") % \
-                    "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
+                    {'file_types': file_types}
             raise exceptions.PermissionDenied(msg)
 
         # generate new file name
@@ -71,9 +72,9 @@ def upload(request):#ajax upload file to a question or answer
                         ) + file_extension
 
         file_storage = FileSystemStorage(
-                                location = settings.ASKBOT_FILE_UPLOAD_DIR,
-                                base_url = reverse('uploaded_file', kwargs = {'path':''}),
-                            )
+                    location = settings.ASKBOT_FILE_UPLOAD_DIR,
+                    base_url = reverse('uploaded_file', kwargs = {'path':''}),
+                )
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size

@@ -33,6 +33,7 @@ Attacklab.wmdBase = function(){
     var toolbar_blockquote_label = $.i18n._('quote') + " <blockquote> Ctrl-.";
     var toolbar_code_label = $.i18n._('preformatted text') + " <pre><code> Ctrl-K";
     var toolbar_image_label = $.i18n._('image') + " <img> Ctrl-G";
+    var toolbar_attachment_label = $.i18n._('attachment') + " Ctrl-F";
     var toolbar_numbered_label = $.i18n._('numbered list') + " <ol> Ctrl-O";
     var toolbar_bulleted_label = $.i18n._('bulleted list') + " <ul> Ctrl-U";
     var toolbar_heading_label = $.i18n._('heading') + " <h1>/<h2> Ctrl-H";
@@ -51,11 +52,7 @@ Attacklab.wmdBase = function(){
 	// entering links.
 	var imageDialogText = "<p style='margin-top: 0px'>" + $.i18n._('enter image url') + '</p>';
 	var linkDialogText = "<p style='margin-top: 0px'>" + $.i18n._('enter url') + '</p>';
-	var uploadImageHTML ="<div>" + $.i18n._('upload image') + "</div>" + 
-        "<input type=\"file\" name=\"file-upload\" id=\"file-upload\" size=\"26\" "+
-        "onchange=\"return ajaxFileUpload($('#image-url'));\"/><br>" +
-        "<img id=\"loading\" src=\"" + mediaUrl("media/images/indicator.gif") + "\" style=\"display:none;\"/>";
-    
+    var fileDialogText = "<p>" + $.i18n._('upload file attachment') + '</p>';
 	// The default text that appears in the dialog input box when entering
 	// links.
 	var imageDefaultText = "http://";
@@ -72,6 +69,7 @@ Attacklab.wmdBase = function(){
 	var helpLink = "http://wmd-editor.com/";
 	var helpHoverTitle = "WMD website";
 	var helpTarget = "_blank";
+  var localUploadFileName = null;
 
 	// -------------------------------------------------------------------
 	//  END OF YOUR CHANGES
@@ -203,233 +201,248 @@ Attacklab.wmdBase = function(){
 	};
 	
 
-	// This simulates a modal dialog box and asks for the URL when you
-	// click the hyperlink or image buttons.
-	//
-	// text: The html for the input box.
-	// defaultInputText: The default value that appears in the input box.
-	// makeLinkMarkdown: The function which is executed when the prompt is dismissed, either via OK or Cancel
-	util.prompt = function(text, defaultInputText, makeLinkMarkdown){
-	
-		// These variables need to be declared at this level since they are used
-		// in multiple functions.
-		var dialog;			// The dialog box.
-		var background;		// The background beind the dialog box.
-		var input;			// The text box where you enter the hyperlink.
-        var type = 0;
-        // The dialog box type(0: Link, 1: Image)
-        if(arguments.length == 4){
-            type = arguments[3];
+// This simulates a modal dialog box and asks for the URL when you
+// click the hyperlink or image buttons.
+//
+// text: The html for the input box.
+// defaultInputText: The default value that appears in the input box.
+// makeLinkMarkdown: The function which is executed when the prompt is dismissed, either via OK or Cancel
+util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
+
+    // These variables need to be declared at this level since they are used
+    // in multiple functions.
+    var dialog;// The dialog box.
+    var background;// The background beind the dialog box.
+    var input;// The text box where you enter the hyperlink.
+
+    if (defaultInputText === undefined) {
+        defaultInputText = "";
+    }
+    
+    // Used as a keydown event handler. Esc dismisses the prompt.
+    // Key code 27 is ESC.
+    var checkEscape = function(key){
+        var code = (key.charCode || key.keyCode);
+        if (code === 27) {
+            close(true);
+        }
+    };
+    
+    // Dismisses the hyperlink input box.
+    // isCancel is true if we don't care about the input text.
+    // isCancel is false if we are going to keep the text.
+    var close = function(isCancel){
+        util.removeEvent(doc.body, "keydown", checkEscape);
+        var text = input.value;
+
+        if (isCancel){
+            text = null;
+        }
+        else{
+            // Fixes common pasting errors.
+            text = text.replace('http://http://', 'http://');
+            text = text.replace('http://https://', 'https://');
+            text = text.replace('http://ftp://', 'ftp://');
+            
+            if (text.indexOf('http://') === -1 && text.indexOf('ftp://') === -1) {
+                if (dialogType == 'link'){
+                    //add http only to urls
+                    text = 'http://' + text;
+                }
+            }
+        }
+        
+        dialog.parentNode.removeChild(dialog);
+        background.parentNode.removeChild(background);
+        makeLinkMarkdown(text);
+        return false;
+    };
+    
+    // Creates the background behind the hyperlink text entry box.
+    // Most of this has been moved to CSS but the div creation and
+    // browser-specific hacks remain here.
+    var createBackground = function(){
+    
+        background = doc.createElement("div");
+        background.className = "wmd-prompt-background";
+        style = background.style;
+        style.position = "absolute";
+        style.top = "0";
+        
+        style.zIndex = "1000";
+        
+        // Some versions of Konqueror don't support transparent colors
+        // so we make the whole window transparent.
+        //
+        // Is this necessary on modern konqueror browsers?
+        if (global.isKonqueror){
+            style.backgroundColor = "transparent";
+        }
+        else if (global.isIE){
+            style.filter = "alpha(opacity=50)";
+        }
+        else {
+            style.opacity = "0.5";
+        }
+        
+        var pageSize = position.getPageSize();
+        style.height = pageSize[1] + "px";
+        
+        if(global.isIE){
+            style.left = doc.documentElement.scrollLeft;
+            style.width = doc.documentElement.clientWidth;
+        }
+        else {
+            style.left = "0";
+            style.width = "100%";
+        }
+        
+        doc.body.appendChild(background);
+    };
+    
+    // Create the text input box form/window.
+    var createDialog = function(){
+    
+        // The main dialog box.
+        dialog = doc.createElement("div");
+        dialog.className = "wmd-prompt-dialog";
+        dialog.style.padding = "10px;";
+        dialog.style.position = "fixed";
+        dialog.style.width = "400px";
+        dialog.style.zIndex = "1001";
+        
+        // The dialog text.
+        var question = doc.createElement("div");
+        question.innerHTML = text;
+        question.style.padding = "5px";
+        dialog.appendChild(question);
+        
+        // The web form container for the text box and buttons.
+        var form = doc.createElement("form");
+        form.onsubmit = function(){ return close(false); };
+        style = form.style;
+        style.padding = "0";
+        style.margin = "0";
+        style.cssFloat = "left";
+        style.width = "100%";
+        style.textAlign = "center";
+        style.position = "relative";
+        dialog.appendChild(form);
+        
+        // The input text box
+        input = doc.createElement("input");
+        if(dialogType == 'image' || dialogType == 'file'){
+            input.id = "image-url";
+        }
+        input.type = "text";
+        if (dialogType == 'file'){
+            input.disabled = "disabled";
+        };
+
+        input.value = defaultInputText;
+        style = input.style;
+        style.display = "block";
+        style.width = "80%";
+        style.marginLeft = style.marginRight = "auto";
+        form.appendChild(input);
+
+        // The upload file input
+        if(dialogType == 'image' || dialogType == 'file'){
+            var upload_container = $('<div></div>');
+            var upload_input = $('<input type="file" />');
+            upload_input.attr('name', 'file-upload');
+            upload_input.attr('id', 'file-upload');
+            upload_input.attr('size', 26);
+
+            upload_input.change(function(){
+                localUploadFileName = $(this).val();
+                return ajaxFileUpload($('#image-url'));
+            });
+
+
+            upload_container.append(upload_input);
+            upload_container.append($('<br/>'));
+
+            var spinner = $('<img />');
+            spinner.attr('id', 'loading');
+            spinner.attr('src', mediaUrl("media/images/indicator.gif"));
+            spinner.css('display', 'none');
+
+            upload_container.append(spinner);
+            upload_container.css('padding', '5px');
+            $(form).append(upload_container);   
         }
 
-		if (defaultInputText === undefined) {
-			defaultInputText = "";
-		}
-		
-		// Used as a keydown event handler. Esc dismisses the prompt.
-		// Key code 27 is ESC.
-		var checkEscape = function(key){
-			var code = (key.charCode || key.keyCode);
-			if (code === 27) {
-				close(true);
-			}
-		};
-		
-		// Dismisses the hyperlink input box.
-		// isCancel is true if we don't care about the input text.
-		// isCancel is false if we are going to keep the text.
-		var close = function(isCancel){
-			util.removeEvent(doc.body, "keydown", checkEscape);
-			var text = input.value;
+        // The ok button
+        var okButton = doc.createElement("input");
+        okButton.type = "button";
+        okButton.onclick = function(){ return close(false); };
+        okButton.value = "OK";
+        style = okButton.style;
+        style.margin = "10px";
+        style.display = "inline";
+        style.width = "7em";
 
-			if (isCancel){
-				text = null;
-			}
-			else{
-				// Fixes common pasting errors.
-				text = text.replace('http://http://', 'http://');
-				text = text.replace('http://https://', 'https://');
-				text = text.replace('http://ftp://', 'ftp://');
-				
-				if (text.indexOf('http://') === -1 && text.indexOf('ftp://') === -1) {
-            if (type == 0){
-                //add http only to urls
-                text = 'http://' + text;
-            }
-				}
-			}
-			
-			dialog.parentNode.removeChild(dialog);
-			background.parentNode.removeChild(background);
-			makeLinkMarkdown(text);
-			return false;
-		};
-		
-		// Creates the background behind the hyperlink text entry box.
-		// Most of this has been moved to CSS but the div creation and
-		// browser-specific hacks remain here.
-		var createBackground = function(){
-		
-			background = doc.createElement("div");
-			background.className = "wmd-prompt-background";
-			style = background.style;
-			style.position = "absolute";
-			style.top = "0";
-			
-			style.zIndex = "1000";
-			
-			// Some versions of Konqueror don't support transparent colors
-			// so we make the whole window transparent.
-			//
-			// Is this necessary on modern konqueror browsers?
-			if (global.isKonqueror){
-				style.backgroundColor = "transparent";
-			}
-			else if (global.isIE){
-				style.filter = "alpha(opacity=50)";
-			}
-			else {
-				style.opacity = "0.5";
-			}
-			
-			var pageSize = position.getPageSize();
-			style.height = pageSize[1] + "px";
-			
-			if(global.isIE){
-				style.left = doc.documentElement.scrollLeft;
-				style.width = doc.documentElement.clientWidth;
-			}
-			else {
-				style.left = "0";
-				style.width = "100%";
-			}
-			
-			doc.body.appendChild(background);
-		};
-		
-		// Create the text input box form/window.
-		var createDialog = function(){
-		
-			// The main dialog box.
-			dialog = doc.createElement("div");
-			dialog.className = "wmd-prompt-dialog";
-			dialog.style.padding = "10px;";
-			dialog.style.position = "fixed";
-			dialog.style.width = "400px";
-			dialog.style.zIndex = "1001";
-			
-			// The dialog text.
-			var question = doc.createElement("div");
-			question.innerHTML = text;
-			question.style.padding = "5px";
-			dialog.appendChild(question);
-			
-			// The web form container for the text box and buttons.
-			var form = doc.createElement("form");
-			form.onsubmit = function(){ return close(false); };
-			style = form.style;
-			style.padding = "0";
-			style.margin = "0";
-			style.cssFloat = "left";
-			style.width = "100%";
-			style.textAlign = "center";
-			style.position = "relative";
-			dialog.appendChild(form);
-			
-			// The input text box
-			input = doc.createElement("input");
-            if(type == 1){
-                input.id = "image-url";
-            }
-			input.type = "text";
-			input.value = defaultInputText;
-			style = input.style;
-			style.display = "block";
-			style.width = "80%";
-			style.marginLeft = style.marginRight = "auto";
-			form.appendChild(input);
-			
-            // The upload file input
-            if(type == 1){
-                var upload = doc.createElement("div");
-                upload.innerHTML = uploadImageHTML;
-                upload.style.padding = "5px";
-                form.appendChild(upload);   
-            }
-            
-			// The ok button
-			var okButton = doc.createElement("input");
-			okButton.type = "button";
-			okButton.onclick = function(){ return close(false); };
-			okButton.value = "OK";
-			style = okButton.style;
-			style.margin = "10px";
-			style.display = "inline";
-			style.width = "7em";
+        // The cancel button
+        var cancelButton = doc.createElement("input");
+        cancelButton.type = "button";
+        cancelButton.onclick = function(){ return close(true); };
+        cancelButton.value = "Cancel";
+        style = cancelButton.style;
+        style.margin = "10px";
+        style.display = "inline";
+        style.width = "7em";
 
-			
-			// The cancel button
-			var cancelButton = doc.createElement("input");
-			cancelButton.type = "button";
-			cancelButton.onclick = function(){ return close(true); };
-			cancelButton.value = "Cancel";
-			style = cancelButton.style;
-			style.margin = "10px";
-			style.display = "inline";
-			style.width = "7em";
+        // The order of these buttons is different on macs.
+        if (/mac/.test(nav.platform.toLowerCase())) {
+            form.appendChild(cancelButton);
+            form.appendChild(okButton);
+        }
+        else {
+            form.appendChild(okButton);
+            form.appendChild(cancelButton);
+        }
 
-			// The order of these buttons is different on macs.
-			if (/mac/.test(nav.platform.toLowerCase())) {
-				form.appendChild(cancelButton);
-				form.appendChild(okButton);
-			}
-			else {
-				form.appendChild(okButton);
-				form.appendChild(cancelButton);
-			}
-
-			util.addEvent(doc.body, "keydown", checkEscape);
-			dialog.style.top = "50%";
-			dialog.style.left = "50%";
-			dialog.style.display = "block";
-			if(global.isIE_5or6){
-				dialog.style.position = "absolute";
-				dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
-				dialog.style.left = "50%";
-			}
-			doc.body.appendChild(dialog);
-			
-			// This has to be done AFTER adding the dialog to the form if you
-			// want it to be centered.
-			dialog.style.marginTop = -(position.getHeight(dialog) / 2) + "px";
-			dialog.style.marginLeft = -(position.getWidth(dialog) / 2) + "px";
-			
-		};
-		
-		createBackground();
-		
-		// Why is this in a zero-length timeout?
-		// Is it working around a browser bug?
-		top.setTimeout(function(){
-		
-			createDialog();
-
-			var defTextLen = defaultInputText.length;
-			if (input.selectionStart !== undefined) {
-				input.selectionStart = 0;
-				input.selectionEnd = defTextLen;
-			}
-			else if (input.createTextRange) {
-				var range = input.createTextRange();
-				range.collapse(false);
-				range.moveStart("character", -defTextLen);
-				range.moveEnd("character", defTextLen);
-				range.select();
-			}
-			
-			input.focus();
-		}, 0);
-	};
+        util.addEvent(doc.body, "keydown", checkEscape);
+        dialog.style.top = "50%";
+        dialog.style.left = "50%";
+        dialog.style.display = "block";
+        if(global.isIE_5or6){
+            dialog.style.position = "absolute";
+            dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
+            dialog.style.left = "50%";
+        }
+        doc.body.appendChild(dialog);
+        
+        // This has to be done AFTER adding the dialog to the form if you
+        // want it to be centered.
+        dialog.style.marginTop = -(position.getHeight(dialog) / 2) + "px";
+        dialog.style.marginLeft = -(position.getWidth(dialog) / 2) + "px";
+        
+    };
+    
+    createBackground();
+    
+    // Why is this in a zero-length timeout?
+    // Is it working around a browser bug?
+    top.setTimeout(function(){
+        createDialog();
+        var defTextLen = defaultInputText.length;
+        if (input.type == 'text' && input.selectionStart !== undefined) {
+            input.selectionStart = 0;
+            input.selectionEnd = defTextLen;
+        }
+        else if (input.createTextRange) {
+            var range = input.createTextRange();
+            range.collapse(false);
+            range.moveStart("character", -defTextLen);
+            range.moveEnd("character", defTextLen);
+            range.select();
+        }
+        
+        input.focus();
+    }, 0);
+};
 	
 	
 	// UNFINISHED
@@ -978,7 +991,7 @@ Attacklab.wmdBase = function(){
 			linkButton.title = toolbar_hyperlink_label;
 			linkButton.XShift = "-40px";
 			linkButton.textOp = function(chunk, postProcessing){
-				return command.doLinkOrImage(chunk, postProcessing, false);
+				return command.doLinkOrImage(chunk, postProcessing, 'link');
 			};
 			setupButton(linkButton, true);
 			buttonRow.appendChild(linkButton);
@@ -1007,10 +1020,21 @@ Attacklab.wmdBase = function(){
 			imageButton.title = toolbar_image_label;
 			imageButton.XShift = "-100px";
 			imageButton.textOp = function(chunk, postProcessing){
-				return command.doLinkOrImage(chunk, postProcessing, true);
+				return command.doLinkOrImage(chunk, postProcessing, 'image');
 			};
 			setupButton(imageButton, true);
 			buttonRow.appendChild(imageButton);
+
+    var attachmentButton = document.createElement("li");
+    attachmentButton.className = "wmd-button";
+    attachmentButton.id = "wmd-attachment-button";
+    attachmentButton.title = toolbar_attachment_label;
+    attachmentButton.XShift = "-120px";
+    attachmentButton.textOp = function(chunk, postProcessing){
+        return command.doLinkOrImage(chunk, postProcessing, 'file');
+    };
+    setupButton(attachmentButton, true);
+    buttonRow.appendChild(attachmentButton);
 
 			var spacer2 = document.createElement("li");
 			spacer2.className = "wmd-spacer";
@@ -1021,7 +1045,7 @@ Attacklab.wmdBase = function(){
 			olistButton.className = "wmd-button";
 			olistButton.id = "wmd-olist-button";
 			olistButton.title = toolbar_numbered_label;
-			olistButton.XShift = "-120px";
+			olistButton.XShift = "-140px";
 			olistButton.textOp = function(chunk, postProcessing){
 				command.doList(chunk, postProcessing, true);
 			};
@@ -1032,7 +1056,7 @@ Attacklab.wmdBase = function(){
 			ulistButton.className = "wmd-button";
 			ulistButton.id = "wmd-ulist-button";
 			ulistButton.title = toolbar_bulleted_label;
-			ulistButton.XShift = "-140px";
+			ulistButton.XShift = "-160px";
 			ulistButton.textOp = function(chunk, postProcessing){
 				command.doList(chunk, postProcessing, false);
 			};
@@ -1043,7 +1067,7 @@ Attacklab.wmdBase = function(){
 			headingButton.className = "wmd-button";
 			headingButton.id = "wmd-heading-button";
 			headingButton.title = toolbar_heading_label;
-			headingButton.XShift = "-160px";
+			headingButton.XShift = "-180px";
 			headingButton.textOp = command.doHeading;
 			setupButton(headingButton, true);
 			buttonRow.appendChild(headingButton); 
@@ -1052,7 +1076,7 @@ Attacklab.wmdBase = function(){
 			hrButton.className = "wmd-button";
 			hrButton.id = "wmd-hr-button";
 			hrButton.title = toolbar_horizontal_label;
-			hrButton.XShift = "-180px";
+			hrButton.XShift = "-200px";
 			hrButton.textOp = command.doHorizontalRule;
 			setupButton(hrButton, true);
 			buttonRow.appendChild(hrButton); 
@@ -1066,7 +1090,7 @@ Attacklab.wmdBase = function(){
 			undoButton.className = "wmd-button";
 			undoButton.id = "wmd-undo-button";
 			undoButton.title = toolbar_undo_label;
-			undoButton.XShift = "-200px";
+			undoButton.XShift = "-220px";
 			undoButton.execute = function(manager){
 				manager.undo();
 			};
@@ -1084,7 +1108,7 @@ Attacklab.wmdBase = function(){
 				// mac and other non-Windows platforms
 				redoButton.title = $.i18n._('redo') + " - Ctrl+Shift+Z";
 			}
-			redoButton.XShift = "-220px";
+			redoButton.XShift = "-240px";
 			redoButton.execute = function(manager){
 				manager.redo();
 			};
@@ -1710,7 +1734,7 @@ Attacklab.wmdBase = function(){
 		return refOut;
 	};
 	
-	command.doLinkOrImage = function(chunk, postProcessing, isImage){
+	command.doLinkOrImage = function(chunk, postProcessing, itemType){
 	
 		chunk.trimWhitespace();
 		chunk.findTags(/\s*!?\[/, /\][ ]?(?:\n[ ]*)?(\[.*?\])?/);
@@ -1731,39 +1755,51 @@ Attacklab.wmdBase = function(){
 			
 			// The function to be executed when you enter a link and press OK or Cancel.
 			// Marks up the link and adds the ref.
-			var makeLinkMarkdown = function(link){
-			
-				if (link !== null) {
-				
-					chunk.startTag = chunk.endTag = "";
-					var linkDef = " [999]: " + link;
-					
-					var num = command.addLinkDef(chunk, linkDef);
-					chunk.startTag = isImage ? "![" : "[";
-					chunk.endTag = "][" + num + "]";
-					
-					if (!chunk.selection) {
-						if (isImage) {
-							chunk.selection = "alt text";
-						}
-						else {
-							chunk.selection = "link text";
-						}
-					}
-				}
-				postProcessing();
-			};
-			
-			if (isImage) {
-                // add forth param to identify image window
-				util.prompt(imageDialogText, imageDefaultText, makeLinkMarkdown, 1);
-			}
-			else {
-				util.prompt(linkDialogText, linkDefaultText, makeLinkMarkdown);
-			}
-			return true;
-		}
-	};
+    var makeLinkMarkdown = function(link){
+
+        if (link !== null) {
+        
+            chunk.startTag = chunk.endTag = "";
+            //var linkDef = " [999]: " + link;
+            
+            //var num = command.addLinkDef(chunk, linkDef);
+            chunk.startTag = (itemType == 'image') ? "![" : "[";
+            chunk.endTag = "](" + link + ")";
+            
+            if (!chunk.selection) {
+                if (itemType == 'image') {
+                    chunk.selection = $.i18n._("image description");
+                }
+                else if (itemType == 'file'){
+                    chunk.selection = localUploadFileName || $.i18n._("file name");
+                    localUploadFileName = null;
+                }
+                else {
+                    chunk.selection = $.i18n._("link text");
+                }
+            }
+        }
+        else {
+            if (itemType == 'image' || itemType == 'file'){
+                return;
+            }
+        }
+        postProcessing();
+    };
+        
+    if (itemType == 'image') {
+        // add forth param to identify image window
+        util.prompt(imageDialogText, imageDefaultText, makeLinkMarkdown, 'image');
+    }
+    else if (itemType == 'file'){
+        util.prompt(fileDialogText, '', makeLinkMarkdown, 'file');
+    }
+    else {
+        util.prompt(linkDialogText, linkDefaultText, makeLinkMarkdown, 'link');
+    }
+    return true;
+    }
+};
 	
 	util.makeAPI = function(){
 		wmd.wmd = {};
