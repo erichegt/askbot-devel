@@ -116,14 +116,16 @@ class Answer(content.Content, DeletableContent):
         #self.html is denormalized in save()
         self.text = text
         #todo: bug wiki has no effect here
-        self.parse_and_save(author = edited_by)
 
+        #must add revision before saving the answer
         self.add_revision(
             author = edited_by,
             revised_at = edited_at,
             text = text,
             comment = comment
         )
+
+        self.parse_and_save(author = edited_by)
 
         self.question.last_activity_at = edited_at
         self.question.last_activity_by = edited_by

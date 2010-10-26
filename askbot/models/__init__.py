@@ -31,6 +31,7 @@ from askbot.models.repute import Badge, Award, Repute
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.diff import textDiff as htmldiff
 from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()
@@ -1512,10 +1513,27 @@ def format_instant_notification_email(
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
+    if update_type.endswith('update'):
+        assert('comment' not in update_type)
+        revisions = post.revisions.all()[:2]
+        assert(len(revisions) == 2)
+        content_preview = htmldiff(
+                            revisions[1].as_html(),
+                            revisions[0].as_html()
+                        )
+        #todo: remove hardcoded style
+        content_preview += """<style type ="text/css">
+        del {color: #ff5f5f};
+        ins {background-color: #97ff97};
+        </style>
+        """
+    else:
+        content_preview = post.html
+
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
-        'content_preview': post.html,#post.get_snippet()
+        'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
         'post_url': site_url + post.get_absolute_url(),
         'origin_post_title': origin_post.title,

@@ -525,8 +525,6 @@ class Question(content.Content, DeletableContent):
         if self.wiki == False and wiki == True:
             self.wiki = True
 
-        self.parse_and_save(author = edited_by)
-
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
             tags_updated = self.update_tags(tags, edited_by)
@@ -538,6 +536,8 @@ class Question(content.Content, DeletableContent):
             revised_at = edited_at,
             comment = comment,
         )
+
+        self.parse_and_save(author = edited_by)
 
     def add_revision(self,author=None, text=None, comment=None, revised_at=None):
         if None in (author, text, comment):
