@@ -334,3 +334,33 @@ poor design of the data or methods on data objects #}
         };
     </script>
 {%- endmacro %}
+
+{%- macro wmd_editor(post_form, wiki_on) -%}
+    <div id="wmd-button-bar" class="wmd-panel"></div>
+    <span class="form-error">{{ post_form.text.errors }}</span>
+    {{ post_form.text }}
+    <div class="preview-toggle">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span 
+                        id="pre-collapse" 
+                        title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
+                    >
+                        {% trans %}toggle preview{% endtrans %}
+                    </span>
+                </td>
+                {% if wiki_on %}
+                <td style="text-align:right;">
+                    {{ post_form.wiki }} 
+                    <span style="font-weight:normal;cursor:help" 
+                        title="{{post_form.wiki.help_text}}">
+                            {{ post_form.wiki.label_tag() }} 
+                    </span>
+                </td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+    <div id="previewer" class="wmd-preview"></div>
+{%- endmacro -%}

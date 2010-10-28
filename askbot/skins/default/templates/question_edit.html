@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros.html" as macros %}
 <!-- question_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit question{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
@@ -55,7 +56,11 @@
                 
             });
             
-            setupFormValidation("#fmedit", CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+            setupFormValidation(
+                        "#fmedit",
+                        CPValidator.getQuestionFormRules(),
+                        CPValidator.getQuestionFormMessages()
+            );
             
             $('#id_revision').unbind().change(function(){
                 $("#select_revision").click();
@@ -70,59 +75,40 @@
     {% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
 </div>
 <div id="main-body" class="ask-body">
-    <div id="askform">
-        <form id="fmedit" action="{% url edit_question question.id %}" method="post" >
-            <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/>
-            {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
-            <div style="vertical-align:middle">
-            {{ revision_form.revision }} <input type="submit" style="display:none"
-                                                id="select_revision" name="select_revision" 
-                                                value="{% trans %}select revision{% endtrans %}">
-            </div> 
-            <div class="form-item">
-                <label for="id_title" ><strong>{{ form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
-                {{ form.title }} {{ form.title.errors }}
-                <div class="title-desc">
-                    {{ form.title.help_text }}
-                </div>     
-            </div>
-            <div class="form-item">
-                <div id="wmd-button-bar" class="wmd-panel"></div>
-                {{ form.text }}
-                <span class="form-error"></span>
-                <div class="preview-toggle">
-                    <table width="100%">
-                        <tr>
-                            <td>
-                                <span id="pre-collapse" title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans %}toggle preview{% endtrans %}</span>
-                            </td>
-                            {% if settings.WIKI_ON and 'wiki' in form %}
-                            <td style="text-align:right;">
-                                {{ form.wiki }} <span style="color:#000;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag() }} </span>
-                            </td>
-                            {% endif %}
-                        </tr>
-                    </table>
-                </div>
-                <div id="previewer" class="wmd-preview"></div>
-            </div>
-            <div class="form-item">
-                <strong>{{ form.tags.label_tag() }}:</strong> <span class="form-error"></span><br/>
-                {{ form.tags }}  {{ form.tags.errors }}
-                <div class="title-desc">
-                    {{ form.tags.help_text }}
-                </div>
-            </div>
-            <strong>{{ form.summary.label_tag() }}</strong> <br/>
-            {{ form.summary }}  {{ form.summary.errors }}
+    <form id="fmedit" action="{% url edit_question question.id %}" method="post" >
+        <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/>
+        {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
+        <div style="vertical-align:middle">
+        {{ revision_form.revision }} <input type="submit" style="display:none"
+                                            id="select_revision" name="select_revision" 
+                                            value="{% trans %}select revision{% endtrans %}">
+        </div> 
+        <div class="form-item">
+            <label for="id_title" ><strong>{{ form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
+            {{ form.title }} {{ form.title.errors }}
             <div class="title-desc">
-                {{ form.summary.help_text }}
+                {{ form.title.help_text }}
+            </div>     
+        </div>
+        <div class="form-item">
+            {{macros.wmd_editor(form, settings.WIKI_ON and question.wiki == False)}}
+        </div>
+        <div class="form-item">
+            <strong>{{ form.tags.label_tag() }}:</strong> <span class="form-error"></span><br/>
+            {{ form.tags }}  {{ form.tags.errors }}
+            <div class="title-desc">
+                {{ form.tags.help_text }}
             </div>
-            <div class="error" ></div>
-            <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
-            <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
-        </form>
-    </div>
+        </div>
+        <strong>{{ form.summary.label_tag() }}</strong> <br/>
+        {{ form.summary }}  {{ form.summary.errors }}
+        <div class="title-desc">
+            {{ form.summary.help_text }}
+        </div>
+        <div class="error" ></div>
+        <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
+        <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
+    </form>
 </div>
 {% endblock %}
 

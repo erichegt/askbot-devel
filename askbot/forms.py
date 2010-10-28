@@ -126,6 +126,7 @@ class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
         super(WikiField, self).__init__(*args, **kwargs)
         self.required = False
+        self.initial = False
         self.label  = _('community wiki')
         self.help_text = _('if you choose community wiki option, the question and answer do not generate points and name of author will not be shown')
     def clean(self, value):
@@ -421,24 +422,26 @@ class EditQuestionForm(forms.Form):
     text   = EditorField()
     tags   = TagNamesField()
     summary = SummaryField()
+    wiki = WikiField()
 
     #todo: this is odd that this form takes question as an argument
     def __init__(self, question, revision, *args, **kwargs):
+        """populate EditQuestionForm with initial data"""
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
-        # Once wiki mode is enabled, it can't be disabled
-        if not question.wiki:
-            self.fields['wiki'] = WikiField()
+        self.fields['wiki'].initial = question.wiki
 
 class EditAnswerForm(forms.Form):
     text = EditorField()
     summary = SummaryField()
+    wiki = WikiField()
 
     def __init__(self, answer, revision, *args, **kwargs):
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         self.fields['text'].initial = revision.text
+        self.fields['wiki'].initial = answer.wiki
 
 class EditUserForm(forms.Form):
     email = forms.EmailField(

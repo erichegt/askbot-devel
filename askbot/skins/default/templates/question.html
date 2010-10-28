@@ -394,33 +394,7 @@
                     </p>
                 {% endif %}
                 <div id="description" class="" >
-                    <div id="wmd-button-bar" class="wmd-panel"></div>
-                    {{ answer.text }}
-                    <div class="preview-toggle">
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <span 
-                                        id="pre-collapse" 
-                                        title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
-                                    >
-                                        {% trans %}toggle preview{% endtrans %}
-                                    </span>
-                                </td>
-                                {% if settings.WIKI_ON %}
-                                <td style="text-align:right;">
-                                    {{ answer.wiki }} 
-                                    <span style="font-weight:normal;cursor:help" 
-                                        title="{{answer.wiki.help_text}}">
-                                            {{ answer.wiki.label_tag() }} 
-                                    </span>
-                                </td>
-                                {% endif %}
-                            </tr>
-                        </table>
-                    </div>
-                    <div id="previewer" class="wmd-preview"></div>
-                    {{ answer.text.errors }}
+                    {{macros.wmd_editor(answer, settings.WIKI_ON)}}
                 </div>
                 <p><span class="form-error"></span></p>
                 <input type="submit" 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "macros.html" as macros %}
 <!-- template answer_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
@@ -61,14 +62,8 @@
             {{ revision_form.revision }} <input type="submit" style="display:none" id="select_revision" name="select_revision" value="{% trans %}select revision{% endtrans %}">
             </div>
             <div class="form-item">
-                <div id="wmd-button-bar" class="wmd-panel"></div>
-                {{ form.text }}
-                <span class="form-error"></span>
-                <div class="preview-toggle"><span id="pre-collapse" 
-                    title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans %}toggle preview{% endtrans %}</span></div>
-                <div id="previewer" class="wmd-preview"></div>
+                {{macros.wmd_editor(form, settings.WIKI_ON and answer.wiki == False)}}
             </div>
-            
             <strong>{{ form.summary.label_tag() }}</strong> <br/>
             {{ form.summary }}  {{ form.summary.errors }}
             <div class="title-desc">

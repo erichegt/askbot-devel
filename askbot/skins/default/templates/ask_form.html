@@ -1,3 +1,4 @@
+{% import "macros.html" as macros %}
 <div id="askform">
     <form id="fmask" action="" method="post" >
         <div class="form-item">
@@ -23,25 +24,7 @@
             </div>
         </div>
         <div class="form-item">
-            <div id="wmd-button-bar" class="wmd-panel"></div>
-            {{ form.text }}
-            <div class="preview-toggle">
-                <table>
-                    <tr>
-                        <td>
-                            <span id="pre-collapse" title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}">{% trans %}toggle preview{% endtrans %}</span>
-                        </td>
-                        {% if settings.WIKI_ON %}
-                        <td style="text-align:right;">
-                            {{ form.wiki }} <span style="font-weight:normal;cursor:help" title="{{form.wiki.help_text}}">{{ form.wiki.label_tag() }} </span>
-                        </td>
-                        {% endif %}
-                    </tr>
-
-                </table>
-            </div>
-            <div id="previewer" class="wmd-preview"></div>
-            <span class="form-error"></span>
+            {{macros.wmd_editor(form, settings.WIKI_ON)}}
         </div>
         <div class="form-item">
             <strong>{{ form.tags.label_tag() }}:</strong> {% trans %}(required){% endtrans %} <span class="form-error"></span><br/>
