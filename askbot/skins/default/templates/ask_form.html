@@ -16,9 +16,8 @@
                 {% endif %}
                 <input id="id_title" class="questionTitleInput" name="title" 
                     value="{% if form.initial.title %}{{form.initial.title}}{% endif %}"/>
+                <span class="form-error">{{ form.title.errors }}</span>
             </div>
-            {{ form.title.errors }}
-            <span class="form-error"></span><br/>
             <div class="title-desc">
                 {{ form.title.help_text }}
             </div>
@@ -27,8 +26,8 @@
             {{macros.wmd_editor(form, settings.WIKI_ON)}}
         </div>
         <div class="form-item">
-            <strong>{{ form.tags.label_tag() }}:</strong> {% trans %}(required){% endtrans %} <span class="form-error"></span><br/>
-            {{ form.tags }}  {{ form.tags.errors }}
+            <strong>{{ form.tags.label_tag() }}:</strong> {% trans %}(required){% endtrans %} <span class="form-error">{{ form.tags.errors }}</span><br/>
+            {{ form.tags }}
         </div>
         <p class="title-desc">
             {{ form.tags.help_text }}

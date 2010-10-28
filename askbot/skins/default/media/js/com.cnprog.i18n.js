@@ -587,4 +587,3 @@ var i18n = {
 };
 
 var i18n_dict = i18n[i18nLang];
-

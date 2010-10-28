@@ -3,7 +3,7 @@
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
-    <script type='text/javascript' src='{{"/js/jquery.validate.pack.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type="text/javascript" src="{{"/jquery-openid/jquery.openid.js"|media}}"></script>
     <script type="text/javascript">
         $(document).ready( function() { $("body").authenticator(); })

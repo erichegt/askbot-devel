@@ -320,7 +320,7 @@ var Vote = function(){
                 setVoteImage(voteType, false, object);
             }
             setVoteNumber(object, data.count);
-            if (data.message.length > 0){
+            if (data.message && data.message.length > 0){
                 showMessage(object, data.message);
             }
             return;
@@ -732,7 +732,7 @@ function createComments(type) {
             }
             var color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
             var jSpan = $(textarea).siblings("span.text-counter");
-            jSpan.html($.i18n._('can write') +
+            jSpan.html($.i18n._('can write') + ' ' + 
                         (maxCommentLength - length) + ' ' +
                         $.i18n._('characters')).css("color", color);
         }

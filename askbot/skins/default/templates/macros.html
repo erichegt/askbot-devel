@@ -337,8 +337,9 @@ poor design of the data or methods on data objects #}
 
 {%- macro wmd_editor(post_form, wiki_on) -%}
     <div id="wmd-button-bar" class="wmd-panel"></div>
-    <span class="form-error">{{ post_form.text.errors }}</span>
-    {{ post_form.text }}
+    {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
+    <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    {# need label element for resizable input, b/c form validation won't find span #}
     <div class="preview-toggle">
         <table width="100%">
             <tr>

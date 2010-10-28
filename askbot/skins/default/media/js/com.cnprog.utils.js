@@ -74,7 +74,12 @@ function setupFormValidation(formSelector, validationRules, validationMessages, 
         errorPlacement: function(error, element) {
             var span = element.next().find("span.form-error");
             if (span.length === 0) {
-                span = element.parent().find("span.form-error");
+                var span = element.parent().find("span.form-error");
+                if (span.length === 0){
+                    //for resizable textarea
+                    var element_id = element.attr('id');
+                    span = $("label[for='" + element_id + "']");
+                }
             }
             span.replaceWith(error);
         },
@@ -117,11 +122,11 @@ var CPValidator = function(){
                 },
                 text: {
                     required: " " + $.i18n._('content cannot be empty'),
-                    minlength: $.format(' ' + $.i18n._('content minchars'))
+                    minlength: $.i18n._('content minchars').replace('{0}', 10)
                 },
                 title: {
                     required: " " + $.i18n._('please enter title'),
-                    minlength: $.format(' ' + $.i18n._('title minchars'))
+                    minlength: $.i18n._('title minchars').replace('{0}', 10)
                 }
             };
         }
