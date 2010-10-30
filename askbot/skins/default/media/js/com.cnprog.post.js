@@ -491,6 +491,240 @@ var Vote = function(){
     };
 } ();
 
+var questionRetagger = function(){
+
+    var oldTagsHTML = '';
+    var tagInput = null;
+    var tagsDiv = null;
+    var retagLink = null;
+
+    var restoreEventHandlers = function(){
+        $(document).unbind('click');
+    };
+
+    var cancelRetag = function(){
+        tagInput.unautocomplete();//removes dropdown if open
+        tagsDiv.html(oldTagsHTML);
+        tagsDiv.removeClass('post-retag');
+        tagsDiv.addClass('post-tags');
+        restoreEventHandlers();
+        initRetagger();
+    };
+
+    var render_tag = function(tag_name){
+        //copy-paste from live search!!!
+        var url = scriptUrl + 
+                    $.i18n._('questions/') + 
+                    '?tags=' + encodeURI(tag_name);
+        var tag_title = $.i18n._(
+                            "see questions tagged '{tag}'"
+                        ).replace(
+                            '{tag}',
+                            tag_name
+                        );
+        return '<a ' +
+                    'href="' + url + '" ' + 
+                    'title="' + tag_title + '" rel="tag"' +
+                '>' + tag_name + '</a>';
+    };
+
+    var drawNewTags = function(new_tags){
+        new_tags = new_tags.split(/\s+/);
+        var tags_html = ''
+        $.each(new_tags, function(index, name){
+            if (index === 0){
+                tags_html = render_tag(name);
+            }
+            else {
+                tags_html += ' ' + render_tag(name);
+            }
+        });
+        tagsDiv.html(tags_html);
+    };
+
+    var doRetag = function(){
+        $.ajax({
+            type: "POST",
+            url: retagUrl,
+            dataType: "json",
+            data: { tags: getUniqueTags().join(' ') },
+            success: function(json) {
+                if (json['success'] === true){
+                    new_tags = getUniqueTags();
+                    oldTagsHtml = '';
+                    cancelRetag();
+                    drawNewTags(new_tags.join(' '));
+                }
+                else {
+                    cancelRetag();
+                    showMessage(tagsDiv, json['message']);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                showMessage(tagsDiv, 'sorry, somethin is not right here');
+                cancelRetag();
+            }
+        });
+        return false;
+    }
+
+    var setupInputEventHandlers = function(input){
+        input.keydown(function(e){
+            if ((e.which && e.which == 27) || (e.keyCode && e.keyCode == 27)){
+                cancelRetag();
+            }
+        });
+        $(document).unbind('click').click(cancelRetag, false);
+        input.click(function(){return false});
+    };
+
+    var setupButtonEventHandlers = function(button){
+        button.keydown(function(e){
+            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)){
+                doRetag();
+                return false;
+            }
+        });
+        button.click(doRetag);
+    };
+
+    var getUniqueTags = function(){
+        return $.unique($.trim(tagInput.val()).split(/\s+/));
+    };
+
+    //todo pull from django
+    var validateTagLength = function(){
+        var tags = getUniqueTags();
+        var are_tags_ok = true;
+        $.each(tags, function(index, value){
+            if (value.length > askbot['settings']['maxTagLength']){
+                are_tags_ok = false;
+            }
+        });
+        return are_tags_ok;
+    };
+
+    var validateTagCount = function(){
+        var tags = getUniqueTags();
+        return (tags.length <= askbot['settings']['maxTagsPerPost']);
+    };
+
+    var createRetagForm = function(old_tags_string){
+        var div = $('<form method="post"></form>');
+        tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
+        //var tagLabel = $('<label for="retag_tags" class="error"></label>');
+        tagInput.val(old_tags_string);
+        //populate input
+        //todo: make autocomplete work
+        tagInput.autocomplete(tags_autocomplete, {
+                minChars: 1,
+                matchContains: true,
+                selectFirst: false,
+                max: 20,
+                multiple: true,
+                multipleSeparator: " ",
+                formatItem: function(row, i, max) {
+                    return row.n + " ("+ row.c +")";
+                },
+                formatResult: function(row, i, max){
+                    return row.n;
+                }
+        });
+
+        div.append(tagInput);
+        //div.append(tagLabel);
+        setupInputEventHandlers(tagInput);
+
+        //button = $('<input type="submit" />');
+        //button.val($.i18n._('save tags'));
+        //div.append(button);
+        //setupButtonEventHandlers(button);
+
+        $.validator.addMethod('limit_tag_count', validateTagCount);
+        $.validator.addMethod('limit_tag_length', validateTagLength);
+        div.validate({//copy-paste from utils.js
+            rules: {
+                tags: {
+                    required: true,
+                    maxlength: askbot['settings']['maxTagsPerPost'] * askbot['settings']['maxTagLength'],
+                    limit_tag_count: true,
+                    limit_tag_length: true,
+                }
+            },
+            messages: {
+                tags: {
+                    required: $.i18n._('tags cannot be empty'),
+                    maxlength: askbot['messages']['tagLimits'],
+                    limit_tag_count: askbot['messages']['maxTagsPerPost'],
+                    limit_tag_length: askbot['messages']['maxTagLength']
+                }
+            },
+            submitHandler: doRetag,
+            errorClass: "retag-error",
+        });
+
+        return div;
+    };
+
+    var getTagsAsString = function(tags_div){
+        var links = tags_div.find('a');
+        var tags_str = '';
+        links.each(function(index, element){
+            if (index === 0){
+                tags_str = $(element).html();
+            }
+            else {
+                tags_str += ' ' + $(element).html();
+            }
+        });
+        return tags_str;
+    };
+
+    var noopHandler = function(){
+        tagInput.focus();
+        return false;
+    };
+
+    var deactivateRetagLink = function(){
+        retagLink.unbind('click').click(noopHandler);
+        retagLink.unbind('keypress').keypress(noopHandler);
+    };
+
+    var startRetag = function(){
+        tagsDiv = $('#question-tags');
+        oldTagsHTML = tagsDiv.html();//save to restore on cancel
+        var old_tags_string = getTagsAsString(tagsDiv);
+        var retag_form = createRetagForm(old_tags_string);
+        tagsDiv.html('');
+        tagsDiv.append(retag_form);
+        tagsDiv.removeClass('post-tags');
+        tagsDiv.addClass('post-retag');
+        tagInput.focus();
+        deactivateRetagLink();
+        return false;
+    };
+
+    var setupClickAndEnterHandler = function(element, callback){
+        element.unbind('click').click(callback);
+        element.unbind('keypress').keypress(function(e){
+            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)){
+                callback();
+            }
+        });
+    }
+
+    var initRetagger = function(){
+        setupClickAndEnterHandler(retagLink, startRetag);
+    };
+
+    return {
+        init: function(){
+            retagLink = $('#retag');
+            initRetagger();
+        }
+    };
+}();
+
 var questionComments = createComments('question');
 var answerComments = createComments('answer');
 var commentsFactory = {'question' : questionComments, 'answer' : answerComments};
@@ -533,7 +767,8 @@ function createComments(type) {
 
                 setupFormValidation("#" + formId,
                     { comment: { required: true, minlength: 10} }, '',
-                    function() { postComment(id, formId); });
+                    function() { postComment(id, formId); })
+                ;
             }
         }
         else {
@@ -741,6 +976,7 @@ function createComments(type) {
 
 $(document).ready(function() {
     questionComments.init();
+    questionRetagger.init();
     answerComments.init();
 });
 

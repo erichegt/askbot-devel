@@ -129,32 +129,31 @@
                             <div class="question-body">
                                 {{question.html}}
                             </div>
+                            <div id="question-tags" class="post-tags tags">
+                                {% for tag in question.get_tag_names() %}
+                                    <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
+                                        class="post-tag"
+                                        title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
+                                {% endfor %}
+                            </div>
                             <div id="question-controls" class="post-controls">
-                                {#todo: here we have important case to reset search state #}
-                                <div id="question-tags" class="tags">
-                                    {% for tag in question.get_tag_names() %}
-                                        <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
-                                            class="post-tag"
-                                            title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
-                                    {% endfor %}
-                                </div>
-                                {% set pipe=joiner('<span class="action-link-separator">|</span>') %}
+                                {% set pipe=joiner('<span class="sep">|</span>') %}
                                 {% if request.user|can_edit_post(question) %}{{ pipe() }}
-                                    <span class="action-link">
-                                        <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
-                                    </span>
-                                {% elif request.user|can_retag_question(question) %}
-                                    <span class="action-link">
-                                        <a href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
-                                    </span>
+                                    <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
+                                {% endif %}
+                                {% if request.user|can_retag_question(question) %}{{ pipe() }}
+                                    <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
+                                    <script type="text/javascript">
+                                        var retagUrl = "{% url retag_question question.id %}";
+                                    </script>
                                 {% endif %}
                                 {% if question.closed %}
                                     {% if request.user|can_reopen_question(question) %}{{ pipe() }}
-                                    <span class="action-link"><a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a></span>
+                                    <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
                                     {% endif %}
                                 {% else %}
                                     {% if request.user|can_close_question(question) %}{{ pipe() }}
-                                    <span class="action-link"><a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a></span>
+                                    <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
                                     {% endif %}
                                 {% endif %}
                                 {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
@@ -167,8 +166,9 @@
                                 </span>
                                 {% endif %}
                                 {% if request.user|can_delete_post(question) %}{{ pipe() }}
-                                <span class="action-link"><a id="question-delete-link-{{question.id}}">{% trans %}delete{% endtrans %}</a></span>
+                                    <a id="question-delete-link-{{question.id}}">{% trans %}delete{% endtrans %}</a>
                                 {% endif %}
+                                </div>
                             </div>
                             <div class="post-update-info-container">
                                     {{ 
@@ -455,5 +455,19 @@
 {% endif %}
 {% endblock %}
 {% block endjs %}
+    {% if request.user|can_retag_question(question) %}
+    <script type="text/javascript">
+        var tags_autocomplete = {{tags_autocomplete|safe}};
+        var askbot = askbot || {};
+        askbot['settings'] = askbot['settings'] || {};
+        askbot['messages'] = askbot['messages'] || {};
+        askbot['settings']['maxTagLength'] = {{settings.MAX_TAG_LENGTH}};
+                                'each tag must be shorter than %(max_chars)d characters',
+        askbot['messages']['maxTagLength'] = '{% trans max_chars = settings.MAX_TAG_LENGTH %}each tag must be shorter that {{max_chars}} character{% pluralize %}each tag must be shorter than {{max_chars}} characters{% endtrans %}';
+        askbot['settings']['maxTagsPerPost'] = {{settings.MAX_TAGS_PER_POST}};
+        askbot['messages']['maxTagsPerPost'] = '{% trans tag_count = settings.MAX_TAGS_PER_POST %}please use {{tag_count}} tag{% pluralize %}please use {{tag_count}} tags or less{% endtrans %}';
+        askbot['messages']['tagLimits'] = '{% trans tag_count=settings.MAX_TAGS_PER_POST, max_chars=settings.MAX_TAG_LENGTH %}please use up to {{tag_count}} tags, less than {{max_chars}} characters each{% endtrans %}'; 
+    </script>
+    {% endif %}
 {% endblock %}
 <!-- end question.html -->

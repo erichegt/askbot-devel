@@ -198,9 +198,22 @@ def retag_question(request, id):
                                         question = question,
                                         tags = form.cleaned_data['tags']
                                     )
-                return HttpResponseRedirect(question.get_absolute_url())
+                if request.is_ajax():
+                    response_data = {'success': True}
+                    data = simplejson.dumps(response_data)
+                    return HttpResponse(data, mimetype="application/json")
+                else:
+                    return HttpResponseRedirect(question.get_absolute_url())
+            elif request.is_ajax():
+                response_data = {
+                    'message': unicode(form.errors['tags']),
+                    'success': False
+                }
+                data = simplejson.dumps(response_data)
+                return HttpResponse(data, mimetype="application/json")
         else:
             form = forms.RetagQuestionForm(question)
+
         data = {
             'active_tab': 'questions',
             'question': question,
@@ -211,8 +224,16 @@ def retag_question(request, id):
         template = ENV.get_template('question_retag.html')
         return HttpResponse(template.render(context))
     except exceptions.PermissionDenied, e:
-        request.user.message_set.create(message = unicode(e))
-        return HttpResponseRedirect(question.get_absolute_url())
+        if request.is_ajax():
+            response_data = {
+                'message': unicode(e),
+                'success': False
+            }
+            data = simplejson.dumps(response_data)
+            return HttpResponse(data, mimetype="application/json")
+        else:
+            request.user.message_set.create(message = unicode(e))
+            return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
 def edit_question(request, id):

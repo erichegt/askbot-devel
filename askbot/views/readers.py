@@ -524,6 +524,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context
     }
+    if request.user.is_authenticated():
+        data['tags_autocomplete'] = _get_tags_cache_json()
     context = RequestContext(request, data)
     template = ENV.get_template('question.html')
     return HttpResponse(template.render(context))
