@@ -4,18 +4,6 @@
 {% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
-    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
-    <script type='text/javascript'>
-        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-            var codeFriendlyMarkdown = true;
-        {% else %}
-            var codeFriendlyMarkdown = false;
-        {% endif %}
-    </script>
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
 {% endblock %}
         
 {% block content %}
@@ -46,6 +34,18 @@
 
 {% block endjs %}
     {% include "editor_data.html" %}
+    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+    <script type='text/javascript'>
+        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
+            var codeFriendlyMarkdown = true;
+        {% else %}
+            var codeFriendlyMarkdown = false;
+        {% endif %}
+    </script>
+    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
     <script type="text/javascript">
         $().ready(function(){
             $("#nav_questions").attr('className',"on");
