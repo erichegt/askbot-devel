@@ -27,6 +27,7 @@ dist
 *.egg-info
 build
 askbot/upfiles/*.jpg
+askbot/upfiles/*.jpeg
 askbot/upfiles/*.gif
 askbot/skins/common/media/mathjax/
 /jinja2

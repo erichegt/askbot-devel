@@ -7,58 +7,8 @@
 {% endblock %}
 {% block keywords %}{{question.tagname_meta_generator()}}{% endblock %}
 {% block forejs %}
-        <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url()}}" />
-        {% if not question.closed %}
-        <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-        <script type='text/javascript'>
-            {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-            var codeFriendlyMarkdown = true;
-            {% else %}
-            var codeFriendlyMarkdown = false;
-            {% endif %}
-            var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
-        </script>
-        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
-        <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
-        {% endif %}
-        <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
-        <script type="text/javascript">
-        // define reputation needs for comments
-        var repNeededForComments = 50;
-        $().ready(function(){
-            $("#nav_questions").attr('className',"on");
-            var answer_sort_tab = "{{ tab_id }}";
-            $("#" + answer_sort_tab).attr('className',"on");
-            
-            Vote.init({{ question.id }}, '{{ question.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
-            
-            {% if not question.closed and request.user.is_authenticated %}initEditor();{% endif %}
-            
-            lanai.highlightSyntax();
-            $('#btLogin').bind('click', function(){window.location.href='{% url user_signin %}'; } )
-        });
-        
-        function initEditor(){
-            $('#editor').TextAreaResizer();
-            //highlight code synctax when editor has new text
-            $("#editor").typeWatch({highlight: false, wait: 3000,
-                             captureLength: 5, callback: lanai.highlightSyntax});
-                             
-            var display = true;
-            var txt = "[{% trans %}hide preview{% endtrans %}]";
-            $('#pre-collapse').text(txt);
-            $('#pre-collapse').bind('click', function(){
-                txt = display ? "[{% trans %}show preview{% endtrans %}]" : "[{% trans %}hide preview{% endtrans %}]";
-                display = !display;
-                $('#previewer').toggle();
-                $('#pre-collapse').text(txt);
-            });
-            setupFormValidation("#fmanswer", CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
-        }
-         
-        </script>
+    <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url()}}" />
+    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
         
 {% block content %}
@@ -283,7 +233,7 @@
                                             {{ answer.html }}
                                         </div>
                                         <div class="answer-controls post-controls">
-                                            {% set pipe=joiner('<span class="action-link-separator">|</span>') %}
+                                            {% set pipe=joiner('<span class="sep">|</span>') %}
                                             <span class="linksopt">{{ pipe() }}
                                                 <a 
                                                     href="#{{ answer.id }}" 
@@ -393,10 +343,7 @@
                         {% endif %}
                     </p>
                 {% endif %}
-                <div id="description" class="" >
-                    {{macros.wmd_editor(answer, settings.WIKI_ON)}}
-                </div>
-                <p><span class="form-error"></span></p>
+                {{macros.edit_post(answer, settings.WIKI_ON)}}
                 <input type="submit" 
                     {% if user.is_anonymous() %}
                         value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
@@ -407,7 +354,7 @@
                             value="{% trans %}Answer the question{% endtrans %}" 
                         {% endif %}
                     {% endif %}
-                    class="submit" style="float:left"/>
+                    class="submit after-editor" style="float:left"/>
             {% endif %}
         </form>
     </div>
@@ -455,19 +402,56 @@
 {% endif %}
 {% endblock %}
 {% block endjs %}
-    {% if request.user|can_retag_question(question) %}
+    {% if not question.closed %}
+        <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+        <script type='text/javascript'>
+            {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
+            var codeFriendlyMarkdown = true;
+            {% else %}
+            var codeFriendlyMarkdown = false;
+            {% endif %}
+            var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
+        </script>
+        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% endif %}
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
     <script type="text/javascript">
         var tags_autocomplete = {{tags_autocomplete|safe}};
-        var askbot = askbot || {};
-        askbot['settings'] = askbot['settings'] || {};
-        askbot['messages'] = askbot['messages'] || {};
-        askbot['settings']['maxTagLength'] = {{settings.MAX_TAG_LENGTH}};
-                                'each tag must be shorter than %(max_chars)d characters',
-        askbot['messages']['maxTagLength'] = '{% trans max_chars = settings.MAX_TAG_LENGTH %}each tag must be shorter that {{max_chars}} character{% pluralize %}each tag must be shorter than {{max_chars}} characters{% endtrans %}';
-        askbot['settings']['maxTagsPerPost'] = {{settings.MAX_TAGS_PER_POST}};
-        askbot['messages']['maxTagsPerPost'] = '{% trans tag_count = settings.MAX_TAGS_PER_POST %}please use {{tag_count}} tag{% pluralize %}please use {{tag_count}} tags or less{% endtrans %}';
-        askbot['messages']['tagLimits'] = '{% trans tag_count=settings.MAX_TAGS_PER_POST, max_chars=settings.MAX_TAG_LENGTH %}please use up to {{tag_count}} tags, less than {{max_chars}} characters each{% endtrans %}'; 
+        // define reputation needs for comments
+        var repNeededForComments = 50;
+        $().ready(function(){
+            $("#nav_questions").attr('className',"on");
+            var answer_sort_tab = "{{ tab_id }}";
+            $("#" + answer_sort_tab).attr('className',"on");
+            
+            Vote.init({{ question.id }}, '{{ question.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
+            
+            {% if not question.closed and request.user.is_authenticated %}initEditor();{% endif %}
+            
+            lanai.highlightSyntax();
+            $('#btLogin').bind('click', function(){window.location.href='{% url user_signin %}'; } )
+        });
+        
+        function initEditor(){
+            $('#editor').TextAreaResizer();
+            //highlight code synctax when editor has new text
+            $("#editor").typeWatch({highlight: false, wait: 3000,
+                             captureLength: 5, callback: lanai.highlightSyntax});
+                             
+            var display = true;
+            var txt = "[{% trans %}hide preview{% endtrans %}]";
+            $('#pre-collapse').text(txt);
+            $('#pre-collapse').bind('click', function(){
+                txt = display ? "[{% trans %}show preview{% endtrans %}]" : "[{% trans %}hide preview{% endtrans %}]";
+                display = !display;
+                $('#previewer').toggle();
+                $('#pre-collapse').text(txt);
+            });
+            setupFormValidation("#fmanswer", CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+        }
     </script>
-    {% endif %}
+     {% include "editor_data.html" %}
 {% endblock %}
 <!-- end question.html -->

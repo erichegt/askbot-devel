@@ -3,21 +3,6 @@
 {% import "macros.html" as macros %}
 {% block title %}{% spaceless %}{% trans %}Questions{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forejs %}
-       <script type="text/javascript">
-           var tags = {{ tags_autocomplete|safe }};
-           var sortMethod = '{{sort}}';
-           var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
-           var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
-           $().ready(function(){
-               var on_tab = '#nav_questions';
-               $(on_tab).attr('className','on');
-               Hilite.exact = false;
-               Hilite.elementid = "listA";
-               Hilite.debug_referrer = location.href;
-           });
-       </script>
-       <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-       <script type='text/javascript' src='{{"/js/com.cnprog.tag_selector.js"|media}}'></script>
 {% endblock %}
 {% block content %}
 {% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
@@ -203,7 +188,6 @@
             </p>
         {% endif %}
 </div>
-<script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
 {% endblock %}
 
     {% block tail %}
@@ -248,5 +232,23 @@
         </div>
         {% endcache %}
     {% endif %}
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+        var tags = {{ tags_autocomplete|safe }};
+        var sortMethod = '{{sort}}';
+        var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
+        var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
+        $().ready(function(){
+            var on_tab = '#nav_questions';
+            $(on_tab).attr('className','on');
+            Hilite.exact = false;
+            Hilite.elementid = "listA";
+            Hilite.debug_referrer = location.href;
+        });
+    </script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.tag_selector.js"|media}}'></script>
+    <script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
 {% endblock %}
 <!-- end questions.html -->

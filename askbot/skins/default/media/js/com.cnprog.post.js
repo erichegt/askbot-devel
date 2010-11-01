@@ -24,6 +24,127 @@ var lanai =
     }
 };
 
+var getUniqueWords = function(value){
+    return $.unique($.trim(value).split(/\s+/));
+};
+
+function appendLoader(containerSelector) {
+    $(containerSelector).append('<img class="ajax-loader" ' +
+        'src="' + mediaUrl("media/images/indicator.gif") + '" title="' +
+        $.i18n._('loading...') +
+        '" alt="' +
+        $.i18n._('loading...') +
+    '" />');
+}
+
+function removeLoader() {
+    $("img.ajax-loader").remove();
+}
+
+function setSubmitButtonDisabled(formSelector, isDisabled) { 
+    $(formSelector).find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
+}
+
+function enableSubmitButton(formSelector) {
+    setSubmitButtonDisabled(formSelector, false);
+}
+
+function disableSubmitButton(formSelector) {
+    setSubmitButtonDisabled(formSelector, true);
+}
+
+function setupFormValidation(formSelector, validationRules, validationMessages, onSubmitCallback) {
+    enableSubmitButton(formSelector);
+    $(formSelector).validate({
+        debug: true,
+        rules: (validationRules ? validationRules : {}),
+        messages: (validationMessages ? validationMessages : {}),
+        errorElement: "span",
+        errorClass: "form-error",
+        errorPlacement: function(error, element) {
+            var span = element.next().find("span.form-error");
+            if (span.length === 0) {
+                var span = element.parent().find("span.form-error");
+                if (span.length === 0){
+                    //for resizable textarea
+                    var element_id = element.attr('id');
+                    span = $("label[for='" + element_id + "']");
+                }
+            }
+            span.replaceWith(error);
+        },
+        submitHandler: function(form) {
+            disableSubmitButton(formSelector);
+            
+            if (onSubmitCallback){
+                onSubmitCallback();
+            } 
+            else{
+                form.submit();
+            }
+        }
+    });
+}
+
+var validateTagLength = function(value){
+    var tags = getUniqueWords(value);
+    var are_tags_ok = true;
+    $.each(tags, function(index, value){
+        if (value.length > askbot['settings']['maxTagLength']){
+            are_tags_ok = false;
+        }
+    });
+    return are_tags_ok;
+};
+var validateTagCount = function(value){
+    var tags = getUniqueWords(value);
+    return (tags.length <= askbot['settings']['maxTagsPerPost']);
+};
+
+$.validator.addMethod('limit_tag_count', validateTagCount);
+$.validator.addMethod('limit_tag_length', validateTagLength);
+
+var CPValidator = function(){
+    return {
+        getQuestionFormRules : function(){
+            return {
+                tags: {
+                    required: true,
+                    maxlength: 105,
+                    limit_tag_count: true,
+                    limit_tag_length: true,
+                },  
+                text: {
+                    required: true,
+                    minlength: 10
+                },
+                title: {
+                    required: true,
+                    minlength: 10
+                }
+            };
+        },
+        getQuestionFormMessages: function(){
+            return {
+                tags: {
+                    required: " " + $.i18n._('tags cannot be empty'),
+                    maxlength: askbot['messages']['tagLimits'],
+                    limit_tag_count: askbot['messages']['maxTagsPerPost'],
+                    limit_tag_length: askbot['messages']['maxTagLength']
+                },
+                text: {
+                    required: " " + $.i18n._('content cannot be empty'),
+                    minlength: $.i18n._('content minchars').replace('{0}', 10)
+                },
+                title: {
+                    required: " " + $.i18n._('please enter title'),
+                    minlength: $.i18n._('title minchars').replace('{0}', 10)
+                }
+            };
+        }
+    };
+}();
+
 var Vote = function(){
     // All actions are related to a question
     var questionId;
@@ -547,10 +668,10 @@ var questionRetagger = function(){
             type: "POST",
             url: retagUrl,
             dataType: "json",
-            data: { tags: getUniqueTags().join(' ') },
+            data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function(json) {
                 if (json['success'] === true){
-                    new_tags = getUniqueTags();
+                    new_tags = getUniqueWords(tagInput.val());
                     oldTagsHtml = '';
                     cancelRetag();
                     drawNewTags(new_tags.join(' '));
@@ -588,27 +709,6 @@ var questionRetagger = function(){
         button.click(doRetag);
     };
 
-    var getUniqueTags = function(){
-        return $.unique($.trim(tagInput.val()).split(/\s+/));
-    };
-
-    //todo pull from django
-    var validateTagLength = function(){
-        var tags = getUniqueTags();
-        var are_tags_ok = true;
-        $.each(tags, function(index, value){
-            if (value.length > askbot['settings']['maxTagLength']){
-                are_tags_ok = false;
-            }
-        });
-        return are_tags_ok;
-    };
-
-    var validateTagCount = function(){
-        var tags = getUniqueTags();
-        return (tags.length <= askbot['settings']['maxTagsPerPost']);
-    };
-
     var createRetagForm = function(old_tags_string){
         var div = $('<form method="post"></form>');
         tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
@@ -639,9 +739,6 @@ var questionRetagger = function(){
         //button.val($.i18n._('save tags'));
         //div.append(button);
         //setupButtonEventHandlers(button);
-
-        $.validator.addMethod('limit_tag_count', validateTagCount);
-        $.validator.addMethod('limit_tag_length', validateTagLength);
         div.validate({//copy-paste from utils.js
             rules: {
                 tags: {

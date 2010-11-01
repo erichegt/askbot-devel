@@ -335,33 +335,57 @@ poor design of the data or methods on data objects #}
     </script>
 {%- endmacro %}
 
-{%- macro wmd_editor(post_form, wiki_on) -%}
+{%- macro edit_post(post_form, wiki_on, post_type=None, edit_title=False) -%}
+    {% if edit_title %}
+        <div class="form-item">
+            <label for="id_title" ><strong>{{ post_form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
+            {{ post_form.title }} {{ post_form.title.errors }}
+            <div class="title-desc">
+                {{ post_form.title.help_text }}
+            </div>
+        </div>
+    {% endif %}
     <div id="wmd-button-bar" class="wmd-panel"></div>
-    {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
-    <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    <div class="form-item">
+        {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
+        {% if wiki_on %}
+            <div style="margin-right:5px;float:right;font-weight:normal;cursor:help" 
+                title="{{post_form.wiki.help_text}}">
+                {{ post_form.wiki }} 
+                {{ post_form.wiki.label_tag() }} 
+            </div>
+        {% endif %}
+        <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    </div>
     {# need label element for resizable input, b/c form validation won't find span #}
+    {% if post_type == 'question' %}
+        <div class="form-item">
+            <strong>{{ post_form.tags.label_tag() }}:</strong>
+            {% trans %}(required){% endtrans %}
+            <span class="form-error">{{ post_form.tags.errors }}</span><br/>
+            {{ post_form.tags }}
+            <div class="title-desc">
+                {{ post_form.tags.help_text }}
+            </div>
+        </div>
+    {% endif %}
+    {% if 'summary' in post_form['fields'] %}
+        <div class="form-item">
+            <strong>{{ post_form.summary.label_tag() }}</strong> <br/>
+            {{ post_form.summary }}
+            <div class="title-desc">
+                {{ post_form.summary.help_text }}
+            </div>
+            <div class="form-error" >{{ post_form.summary.errors }}</div>
+        </div>
+    {% endif %}
     <div class="preview-toggle">
-        <table width="100%">
-            <tr>
-                <td>
-                    <span 
-                        id="pre-collapse" 
-                        title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
-                    >
-                        {% trans %}toggle preview{% endtrans %}
-                    </span>
-                </td>
-                {% if wiki_on %}
-                <td style="text-align:right;">
-                    {{ post_form.wiki }} 
-                    <span style="font-weight:normal;cursor:help" 
-                        title="{{post_form.wiki.help_text}}">
-                            {{ post_form.wiki.label_tag() }} 
-                    </span>
-                </td>
-                {% endif %}
-            </tr>
-        </table>
+        <span 
+            id="pre-collapse" 
+            title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
+        >
+            [{% trans %}hide preview{% endtrans %}]
+        </span>
     </div>
     <div id="previewer" class="wmd-preview"></div>
 {%- endmacro -%}
