@@ -27,17 +27,17 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
         #editor = forms.customized_editor(settings)
 
         if request.method == 'POST':
+
             # Populate the form with user-submitted data
             data = request.POST.copy()
             form = forms.SettingsEditor(data, request.FILES, settings=settings)
             if form.is_valid():
-                form.full_clean()
                 for name, value in form.cleaned_data.items():
                     group, key = name.split('__')
                     cfg = mgr.get_config(group, key)
 
                     if isinstance(cfg, ImageValue):
-                        if request.FILES:
+                        if request.FILES and name in request.FILES:
                             value = request.FILES[name]
                         else:
                             continue

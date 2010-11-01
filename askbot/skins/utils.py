@@ -37,6 +37,7 @@ def get_media_url(url):
     if file is not found - returns None
     and logs an error message
     """
+    url = unicode(url)
     while url[0] == '/': url = url[1:]
     #todo: handles case of multiple skin directories
 
