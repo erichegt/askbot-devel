@@ -4,13 +4,14 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from django.core import management
+from django.conf import settings
 
 class Migration(DataMigration):
     
     def forwards(self, orm):
         "Write your forwards methods here."
-        management.call_command('init_postgresql_full_text_search')
-    
+        if settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+            management.call_command('init_postgresql_full_text_search')
     
     def backwards(self, orm):
         "Write your backwards methods here."
