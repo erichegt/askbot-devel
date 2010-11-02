@@ -21,7 +21,7 @@ class SettingsEditor(forms.Form):
 
         for setting in flattened:
             # Add the field to the customized field list
-            kw = {
+            kw = {#todo: maybe move into the make_field call
                 'label': setting.description,
                 'help_text': setting.help_text,
                 # Provide current setting values for initializing the form
@@ -30,7 +30,7 @@ class SettingsEditor(forms.Form):
             field = setting.make_field(**kw)
 
             k = '%s__%s' % (setting.group.key, setting.key)
-            
+
             self.fields[k] = field
             if not setting.group in groups:
                 groups.append(setting.group)

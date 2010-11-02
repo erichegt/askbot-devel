@@ -580,8 +580,10 @@ class ImageValue(StringValue):
             kwargs['widget'] = ImageInput(url_resolver = url_resolver)
             forms.FileField.__init__(self, *args, **kwargs)
 
-        def clean(self, file_data, file_name):
-            (base_name, ext) = os.path.splitext(file_name)
+        def clean(self, file_data, initial=None):
+            if not file_data and initial:
+                return initial
+            (base_name, ext) = os.path.splitext(file_data.name)
             image_extensions = ('.jpg', '.gif', '.png')
             if ext.lower() not in image_extensions:
                 error_message = _('Allowed image file types are %(types)s') \

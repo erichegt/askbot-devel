@@ -10,6 +10,8 @@ settings.py
 .idea
 *.iml
 env
+django
+django/*
 nbproject
 pip-log.txt
 tmp/*
@@ -29,5 +31,6 @@ build
 askbot/upfiles/*.jpg
 askbot/upfiles/*.jpeg
 askbot/upfiles/*.gif
+askbot/upfiles/*.png
 askbot/skins/common/media/mathjax/
 /jinja2
