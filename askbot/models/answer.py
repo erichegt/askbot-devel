@@ -188,7 +188,7 @@ class Answer(content.Content, DeletableContent):
         return list(receiving_users)
 
     def get_user_vote(self, user):
-        if user.__class__.__name__ == "AnonymousUser":
+        if user.is_anonymous():
             return None
 
         votes = self.votes.filter(user=user)

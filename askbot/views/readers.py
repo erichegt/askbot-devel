@@ -16,6 +16,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext, Context
 from django.template import defaultfilters
 from django.utils.html import *
+from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils import translation
@@ -326,9 +327,9 @@ def search(request): #generates listing of questions matching a search query - i
         except ValueError:
             page = 1
         if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?q=%s&page=%s' % (query.strip(), page))
+            return HttpResponseRedirect(reverse('tags') + '?' + urlencode({'q':query.strip(),'page': page}))
         elif search_type == 'user':
-            return HttpResponseRedirect(reverse('users') + '?q=%s&page=%s' % (query.strip(), page))
+            return HttpResponseRedirect(reverse('users') + '?' + urlencode({'q':query.strip(),'page': page}))
         else:
             raise Http404
     else:

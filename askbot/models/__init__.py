@@ -988,9 +988,6 @@ def user_visit_question(self, question = None, timestamp = None):
                                         who = self,
                                         question = question
                                     )
-        response_activities = response_activities.filter(
-                                    active_at__gt = question_view.when
-                                )
     except QuestionView.DoesNotExist:
         question_view = QuestionView(
                                 who = self, 

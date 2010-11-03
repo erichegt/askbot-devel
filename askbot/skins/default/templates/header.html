@@ -11,7 +11,7 @@
                         alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
                         {% if request.user.response_count > 0 %}
                         src="{{ "/images/mail-envelope-full.png"|media }}"
-                        title="{% trans response_count=request.user.response %}you have a new response{% pluralize %}you nave {{response_count}} new responses{% endtrans %}"
+                        title="{% trans response_count=request.user.response_count %}you have a new response{% pluralize %}you nave {{response_count}} new responses{% endtrans %}"
                         {% else %}
                         src="{{ "/images/mail-envelope-empty.png"|media }}"
                         title="{% trans %}no new responses yet{% endtrans %}"
