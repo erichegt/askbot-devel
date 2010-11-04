@@ -169,23 +169,23 @@ class Answer(content.Content, DeletableContent):
         the response
         """
         assert(exclude_list is not None)
-        receiving_users = set()
-        receiving_users.update(
+        recipients = set()
+        recipients.update(
                             self.get_author_list(
                                 include_comments = True 
                             )
                         )
-        receiving_users.update(
+        recipients.update(
                             self.question.get_author_list(
                                     include_comments = True
                                 )
                         )
         for answer in self.question.answers.all():
-            receiving_users.update(answer.get_author_list())
+            recipients.update(answer.get_author_list())
 
-        receiving_users -= set(exclude_list)
+        recipients -= set(exclude_list)
 
-        return list(receiving_users)
+        return list(recipients)
 
     def get_user_vote(self, user):
         if user.is_anonymous():

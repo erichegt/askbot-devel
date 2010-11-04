@@ -89,6 +89,13 @@ class OnScreenUpdateNotificationTests(TestCase):
         self.reload_users()
 
         #pre-populate askbot with some content
+        #create a question and two answers, each post gets two comments
+        #users have two digit codes. What users do in the setup code
+        #is explained below (x is a variable that takes integer values of [1-3])
+        #user x1 makes a post, users x2 and x3 add comments to that post
+        #users 1x work on question, 2x and 3x on the answers
+        #users x4 do not do anyting in the setup code
+
         self.question = models.Question.objects.create_new(
                             title = 'test question',
                             author = self.u11,
@@ -134,6 +141,27 @@ class OnScreenUpdateNotificationTests(TestCase):
                             comment = 'comment33'
                         )
 
+    def assertResponseCountsEqual(self, counts_vector):
+        self.reload_users()
+        self.assertEquals(
+            [
+                self.u11.response_count,
+                self.u12.response_count,
+                self.u13.response_count,
+                self.u14.response_count,
+                self.u21.response_count,
+                self.u22.response_count,
+                self.u23.response_count,
+                self.u24.response_count,
+                self.u31.response_count,
+                self.u32.response_count,
+                self.u33.response_count,
+                self.u34.response_count,
+            ],
+            counts_vector
+        )
+
+
     def post_then_delete_answer_comment(self):
         pass
 
@@ -167,22 +195,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         comment.delete()
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 0)
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 0, 0, 0,
@@ -200,22 +213,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         comment.delete()
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 0)
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 0, 0, 0,
@@ -235,25 +233,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -271,25 +254,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u22, self.u23]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 1, 1, 0,
@@ -309,25 +277,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -347,25 +300,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -385,31 +323,62 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u22, self.u23]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 1, 1, 0,
                  0, 0, 0, 0,
             ]
         )
+
+    def test_responses_clear_after_visit(self):
+        """user 14 posts comment under question
+        user 11, 12, 21, and 22 visit the question
+        user 13 does not
+        the expected outcome is that 11 and 12 have
+        0 responses and 13 still has one
+        remaining users still have notifications
+        """
+        self.reset_response_counts()
+        time.sleep(1)
+        timestamp = datetime.datetime.now()
+        self.question.add_comment(
+            user = self.u14,
+            comment = 'dudududududu',
+            added_at = timestamp
+        )
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(
+            set(notifications[0].recipients.all()),
+            set([self.u11, self.u12, self.u13])#all users are notified
+        )
+        self.assertResponseCountsEqual(
+            [
+                1, 1, 1, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+            ]
+        )
+        self.u11.visit_question(self.question)
+        self.u12.visit_question(self.question)
+        notifications = get_re_notif_after(timestamp)
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(#visitors are not notified
+            set(notifications[0].recipients.all()),
+            set([self.u13])
+        )
+        self.assertResponseCountsEqual(
+            [
+                0, 0, 1, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+            ]
+        )
+
 
     def test_comments_to_post_authors(self):
         self.question.apply_edit(
@@ -428,25 +397,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u11, self.u13, self.u14]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  1, 0, 1, 1,
                  0, 0, 0, 0,
@@ -469,25 +423,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u21, self.u23, self.u24]),
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  1, 0, 1, 1,
@@ -511,25 +450,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u11, self.u12, self.u13, self.u21, self.u31])
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 0, 0, 0,
@@ -547,25 +471,10 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set([self.u11, self.u12, self.u13, self.u14, self.u21])
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  1, 1, 1, 1,
                  1, 0, 0, 0,
@@ -587,7 +496,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set(
                 [
                     self.u11, self.u12, self.u13, 
@@ -596,22 +505,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 1, 1, 0,
@@ -633,7 +527,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set(
                 [
                     self.u12, self.u13, 
@@ -641,22 +535,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  1, 0, 0, 0,
@@ -675,7 +554,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 1)
         self.assertEqual(
-            set(notifications[0].receiving_users.all()),
+            set(notifications[0].recipients.all()),
             set(
                 [
                     self.u11, self.u12, self.u13, 
@@ -683,22 +562,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.reload_users()
-        self.assertEqual(
-            [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
-            ],
+        self.assertResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 0, 0, 0,

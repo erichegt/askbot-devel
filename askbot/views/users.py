@@ -704,9 +704,7 @@ def user_responses(request, user):
     response_list = []
 
     activities = list()
-    activities = models.Activity.responses_and_mentions.filter(
-                                                        receiving_users = user
-                                                    )
+    activities = models.Activity.responses_and_mentions.filter(recipients=user)
 
     for act in activities:
         origin_post = act.content_object.get_origin_post()

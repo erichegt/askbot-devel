@@ -452,18 +452,18 @@ class Question(content.Content, DeletableContent):
         author of the update so the he/she is not notified about the update
         """
         assert(exclude_list != None)
-        receiving_users = set()
-        receiving_users.update(
+        recipients = set()
+        recipients.update(
                             self.get_author_list(
                                     include_comments = True
                                 )
                         )
         #do not include answer commenters here
         for a in self.answers.all():
-            receiving_users.update(a.get_author_list())
+            recipients.update(a.get_author_list())
 
-        receiving_users -= set(exclude_list)
-        return receiving_users
+        recipients -= set(exclude_list)
+        return recipients
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
         if None in (retagged_by, retagged_at, tagnames):

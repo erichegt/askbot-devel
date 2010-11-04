@@ -73,13 +73,12 @@ class ActivityManager(models.Manager):
             kwargs['is_auditted'] = False
 
         mention_activity = Activity(**kwargs)
+        mention_activity.question = mentioned_in.get_origin_post()
         mention_activity.save()
 
         if mentioned_whom:
-            if functions.is_iterable(mentioned_whom):
-                raise NotImplementedError('cannot yet mention multiple people at once')
-            else:
-                mention_activity.receiving_users.add(mentioned_whom)
+            assert(isinstance(mentioned_whom, User))
+            mention_activity.add_recipients([mentioned_whom])
 
         return mention_activity
 
@@ -111,9 +110,9 @@ class ActivityManager(models.Manager):
 
         if mentioned_whom:
             if functions.is_iterable(mentioned_whom):
-                kwargs['receiving_users__in'] = mentioned_whom
+                kwargs['recipients__in'] = mentioned_whom
             else:
-                kwargs['receiving_users__in'] = (mentioned_whom,)
+                kwargs['recipients__in'] = (mentioned_whom,)
 
         if mentioned_in:
             if functions.is_iterable(mentioned_in):
@@ -132,17 +131,38 @@ class ActivityManager(models.Manager):
         return self.filter(**kwargs)
 
 
+class ActivityAuditStatus(models.Model):
+    """bridge "through" relation between activity and users"""
+    STATUS_NEW = 0
+    STATUS_SEEN = 1
+    STATUS_CHOICES = (
+        (STATUS_NEW, 'new'),
+        (STATUS_SEEN, 'seen')
+    )
+    user = models.ForeignKey(User)
+    activity = models.ForeignKey('Activity')
+    status = models.SmallIntegerField(choices=STATUS_CHOICES, default=STATUS_NEW)
+
+    class Meta:
+        unique_together = ('user', 'activity')
+        app_label = 'askbot'
+        db_table = 'askbot_activityauditstatus'
+
+
 class Activity(models.Model):
     """
     We keep some history data for user activities
     """
     user = models.ForeignKey(User)
     receiving_users = models.ManyToManyField(User, related_name='received_activity')
+    recipients = models.ManyToManyField(User, through=ActivityAuditStatus, related_name='incoming_activity')
     activity_type = models.SmallIntegerField(choices = const.TYPE_ACTIVITY)
     active_at = models.DateTimeField(default=datetime.datetime.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
+    #todo: remove this denorm question field when Post model is set up
+    question = models.ForeignKey('Question', null=True)
     is_auditted = models.BooleanField(default=False)
 
     objects = ActivityManager()
@@ -155,9 +175,18 @@ class Activity(models.Model):
         app_label = 'askbot'
         db_table = u'activity'
 
+    def add_recipients(self, recipients):
+        """have to use a special method, because django does not allow
+        auto-adding to M2M with "through" model
+        """
+        for recipient in recipients:
+            #todo: may optimize for bulk addition
+            aas = ActivityAuditStatus(user = recipient, activity = self)
+            aas.save()
+
     def get_mentioned_user(self):
         assert(self.activity_type == const.TYPE_ACTIVITY_MENTION)
-        user_qs = self.receiving_users.all()
+        user_qs = self.recipients.all()
         user_count = len(user_qs)
         if user_count == 0:
             return None

@@ -248,7 +248,7 @@ class Comment(base.MetaContent, base.UserContent):
                             activity_type__in = response_activity_types
                         )
         for activity in activities:
-            for user in activity.receiving_users.all():
+            for user in activity.recipients.all():
                 user.decrement_response_count()
                 user.save()
         activities.delete()

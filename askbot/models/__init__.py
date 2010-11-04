@@ -24,7 +24,7 @@ from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment, FlaggedItem
-from askbot.models.user import Activity, EmailFeedSetting
+from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import Badge, Award, Repute
@@ -980,8 +980,9 @@ def user_visit_question(self, question = None, timestamp = None):
     ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
     ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
     response_activities = Activity.objects.filter(
-                                receiving_users = self,
+                                recipients = self,
                                 activity_type__in = ACTIVITY_TYPES,
+                                question = question
                             )
     try:
         question_view = QuestionView.objects.get(
@@ -1000,17 +1001,17 @@ def user_visit_question(self, question = None, timestamp = None):
     #as per the query in the beginning of this if branch)
     #that refer to the children of the currently
     #viewed question and clear them for the current user
-    for activity in response_activities:
-        post = activity.content_object
-        if hasattr(post, 'get_origin_post'):
-            if question == post.get_origin_post():
-                activity.receiving_users.remove(self)
-                self.decrement_response_count()
-        else:
-            logging.critical(
-                'activity content object has no get_origin_post method'
-            )
-    self.save()
+    need_to_save_user = False
+
+    audit_records = ActivityAuditStatus.objects.filter(
+                                        activity__in = response_activities,
+                                        user = self
+                                    )
+    if len(audit_records) > 0:
+        self.decrement_response_count(len(audit_records))
+        self.save()
+        #todo: set status to seen and call update
+        audit_records.delete()
 
 def user_is_username_taken(cls,username):
     try:
@@ -1363,14 +1364,16 @@ def user_increment_response_count(user):
     """
     user.response_count += 1
 
-def user_decrement_response_count(user):
+def user_decrement_response_count(user, amount=1):
     """decrement response count for the user 
     by one, log critical error if count would go below zero
     but limit decrementation at zero exactly
     """
-    if user.response_count > 0:
-        user.response_count -= 1
+    assert(amount > 0)
+    if user.response_count >= amount:
+        user.response_count -= amount
     else:
+        user.response_count = 0
         logging.critical(
                 'response count wanted to go below zero'
             )
@@ -1541,7 +1544,7 @@ def format_instant_notification_email(
 def send_instant_notifications_about_activity_in_post(
                                                 update_activity = None,
                                                 post = None,
-                                                receiving_users = None,
+                                                recipients = None,
                                             ):
     """
     function called when posts are updated
@@ -1549,7 +1552,7 @@ def send_instant_notifications_about_activity_in_post(
     database hits
     """
 
-    if receiving_users is None:
+    if recipients is None:
         return
 
     acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
@@ -1564,7 +1567,7 @@ def send_instant_notifications_about_activity_in_post(
     update_type = update_type_map[update_activity.activity_type]
 
     origin_post = post.get_origin_post()
-    for user in receiving_users:
+    for user in recipients:
 
             subject_line, body_text = format_instant_notification_email(
                             to_user = user,
@@ -1614,7 +1617,8 @@ def record_post_update_activity(
                     user = updated_by,
                     active_at = timestamp, 
                     content_object = post, 
-                    activity_type = activity_type
+                    activity_type = activity_type,
+                    question = post.get_origin_post()
                 )
     update_activity.save()
 
@@ -1622,23 +1626,23 @@ def record_post_update_activity(
     #for example for question - all Q&A contributors
     #are included, for comments only authors of comments and parent 
     #post are included
-    receiving_users = post.get_response_receivers(
+    recipients = post.get_response_receivers(
                                 exclude_list = [updated_by, ]
                             )
 
-    update_activity.receiving_users.add(*receiving_users)
+    update_activity.add_recipients(recipients)
 
-    assert(updated_by not in receiving_users)
+    assert(updated_by not in recipients)
 
-    for user in set(receiving_users) | set(newly_mentioned_users):
+    for user in set(recipients) | set(newly_mentioned_users):
         user.increment_response_count()
         user.save()
 
-    #todo: weird thing is that only comments need the receiving_users
+    #todo: weird thing is that only comments need the recipients
     #todo: debug these calls and then uncomment in the repo
     #argument to this call
     notification_subscribers = post.get_instant_notification_subscribers(
-                                    potential_subscribers = receiving_users,
+                                    potential_subscribers = recipients,
                                     mentioned_users = newly_mentioned_users,
                                     exclude_list = [updated_by, ]
                                 )
@@ -1646,7 +1650,7 @@ def record_post_update_activity(
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
                             post = post,
-                            receiving_users = notification_subscribers,
+                            recipients = notification_subscribers,
                         )
 
 
@@ -1665,7 +1669,7 @@ def record_award_event(instance, created, **kwargs):
                         activity_type=const.TYPE_ACTIVITY_PRIZE
                     )
         activity.save()
-        activity.receiving_users.add(instance.user)
+        activity.add_recipients([instance.user])
 
         instance.badge.awarded_count += 1
         instance.badge.save()
@@ -1704,13 +1708,14 @@ def record_answer_accepted(instance, created, **kwargs):
                         user=instance.question.author,
                         active_at=datetime.datetime.now(),
                         content_object=instance,
-                        activity_type=const.TYPE_ACTIVITY_MARK_ANSWER
+                        activity_type=const.TYPE_ACTIVITY_MARK_ANSWER,
+                        question=instance.question
                     )
         activity.save()
-        receiving_users = instance.get_author_list(
+        recipients = instance.get_author_list(
                                     exclude_list = [instance.question.author]
                                 )
-        activity.receiving_users.add(*receiving_users)
+        activity.add_recipients(recipients)
 
 
 def update_last_seen(instance, created, **kwargs):
@@ -1776,7 +1781,8 @@ def record_delete_question(instance, delete_by, **kwargs):
                     user=delete_by, 
                     active_at=datetime.datetime.now(), 
                     content_object=instance, 
-                    activity_type=activity_type
+                    activity_type=activity_type,
+                    question = instance.get_origin_post()
                 )
     #no need to set receiving user here
     activity.save()
@@ -1786,13 +1792,14 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                     user=mark_by, 
                     active_at=datetime.datetime.now(), 
                     content_object=instance, 
-                    activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE
+                    activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                    question=instance.get_origin_post()
                 )
     activity.save()
-    receiving_users = instance.get_author_list(
+    recipients = instance.get_author_list(
                                         exclude_list = [mark_by]
                                     )
-    activity.receiving_users.add(*receiving_users)
+    activity.add_recipients(recipients)
 
 def record_update_tags(question, **kwargs):
     """
@@ -1802,7 +1809,8 @@ def record_update_tags(question, **kwargs):
                     user=question.author,
                     active_at=datetime.datetime.now(),
                     content_object=question,
-                    activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS,
+                    question = question
                 )
     activity.save()
 
@@ -1815,13 +1823,14 @@ def record_favorite_question(instance, created, **kwargs):
                         user=instance.user, 
                         active_at=datetime.datetime.now(), 
                         content_object=instance, 
-                        activity_type=const.TYPE_ACTIVITY_FAVORITE
+                        activity_type=const.TYPE_ACTIVITY_FAVORITE,
+                        question=instance.question
                     )
         activity.save()
-        receiving_users = instance.question.get_author_list(
+        recipients = instance.question.get_author_list(
                                             exclude_list = [instance.user]
                                         )
-        activity.receiving_users.add(*receiving_users)
+        activity.add_recipients(recipients)
 
 def record_user_full_updated(instance, **kwargs):
     activity = Activity(
@@ -1872,7 +1881,7 @@ django_signals.post_save.connect(record_answer_accepted, sender=Answer)
 django_signals.post_save.connect(update_last_seen, sender=Activity)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(
-                            record_favorite_question, 
+                            record_favorite_question,
                             sender=FavoriteQuestion
                         )
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
@@ -1923,6 +1932,7 @@ Award = Award
 Repute = Repute
 
 Activity = Activity
+ActivityAuditStatus = ActivityAuditStatus
 EmailFeedSetting = EmailFeedSetting
 #AuthKeyUserAssociation = AuthKeyUserAssociation
 
@@ -1950,6 +1960,7 @@ __all__ = [
         'Repute',
 
         'Activity',
+        'ActivityAuditStatus',
         'EmailFeedSetting',
         #'AuthKeyUserAssociation',
 

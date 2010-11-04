@@ -69,6 +69,12 @@ def onFlaggedItem(item, post, user, timestamp=None):
                 )
     reputation.save()
 
+    signals.flag_offensive.send(
+        sender=post.__class__, 
+        instance=post, 
+        mark_by=user
+    )
+
     #todo: These should be updated to work on same revisions.
     if post.offensive_flag_count ==  askbot_settings.MIN_FLAGS_TO_HIDE_POST:
         post.author.reputation = \
@@ -114,11 +120,6 @@ def onFlaggedItem(item, post, user, timestamp=None):
         #post.deleted_at = timestamp
         #post.deleted_by = Admin
         post.save()
-        signals.flag_offensive.send(
-            sender=post.__class__, 
-            instance=post, 
-            mark_by=user
-        )
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):
