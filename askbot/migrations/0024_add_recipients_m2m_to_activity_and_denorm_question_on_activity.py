@@ -52,6 +52,8 @@ class Migration(DataMigration):
             print 'Migration is now complete, but there were some errors:'
             print '\n'.join(errors)
             print 'problematic activity objects are: ' + ','.join(bad_ids)
+            print 'This is most likely not a big issue, but if you save this error message'
+            print 'and email to admin@askbot.org, that would help. Thanks.'
 
     def get_orm(self):
         return self._orm_for_askbot
@@ -71,11 +73,15 @@ class Migration(DataMigration):
             except orm.FavoriteQuestion.DoesNotExist:
                 #ignore this issue for now
                 return None
+        elif model == 'answerrevision':
+            return orm.AnswerRevision.objects.get(id=id).answer.question
+        elif model == 'questionrevision':
+            return orm.QuestionRevision.objects.get(id=id).question
         elif model == 'comment':
             comment = orm.Comment.objects.get(id=id)
             return self.get_question_from_generic_relation(comment)
         else:
-            print 'dropped migration of activity in %s' % model
+            #print 'dropped migration of activity in %s' % model
             return None
     
     def backwards(self, orm):
