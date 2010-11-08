@@ -191,6 +191,11 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     url(
+        r'^manage_inbox/$',
+        app.commands.manage_inbox,
+        name='manage_inbox'
+    ),
+    url(
         r'^feeds/(?P<url>.*)/$', 
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},

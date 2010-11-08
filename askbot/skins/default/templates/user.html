@@ -7,21 +7,6 @@
     .user-stats-table { margin-left:50px; }
 </style>
 {% endblock %}
-{% block forejs %}
-    {% if request.user|can_moderate_user(view_user) %}
-        <!-- todo: add condition that scripts are loaded for admins only -->
-        <script type='text/javascript' src='{{"/js/com.cnprog.admin.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
-    {% endif %}
-    <script type="text/javascript">
-        var viewUserID = {{view_user.id}};
-        $().ready(function(){
-            $("#nav_users").attr('className',"on");
-        }); 
-    </script>
-    {% block userjs %}
-    {% endblock %}
-{% endblock %}
 {% block content %}
     <div id="mainbar-full">
         <div id="subheader" class="headUser">
@@ -36,3 +21,19 @@
         {% endblock %}
     </div>
 {% endblock %}<!-- end user.html -->
+{% block endjs %}
+    {% if request.user|can_moderate_user(view_user) %}
+        <!-- todo: add condition that scripts are loaded for admins only -->
+        <script type='text/javascript' src='{{"/js/com.cnprog.admin.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
+    {% endif %}
+    <script type="text/javascript">
+        var viewUserID = {{view_user.id}};
+        $().ready(function(){
+            $("#nav_users").attr('className',"on");
+        }); 
+    </script>
+    {% block userjs %}
+    {% endblock %}
+{% endblock %}
+<!-- end of user.html -->

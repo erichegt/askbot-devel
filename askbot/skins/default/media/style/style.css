@@ -949,7 +949,7 @@ a:hover.medal {
     border-right: 1px solid #D1CA3D;
 }
 
-/*Tab栏*/
+/*Tabs*/
 .tabBar {
     background-color: #FFF;
     border-bottom: 1px solid white;
@@ -2730,6 +2730,38 @@ img.gravatar {
 .vote-notification a {
     color: white;
     text-decoration: underline;
+}
+
+#responses {
+    clear:both;
+    line-height:18px;
+    margin-bottom:15px;
+}
+
+#responses div.face {
+    float:left;
+    text-align: center;
+    width: 54px;
+    padding: 3px;
+    overflow:hidden;
+}
+
+.re {
+    min-height: 57px;
+    clear: both;
+}
+
+#responses input {
+    float:left;
+}
+#re_tools {
+    margin-bottom:10px;
+}
+#re_sections {
+    margin-bottom:6px;
+}
+#re_sections .on {
+    font-weight:bold;
 }
 
 /* Pretty printing styles. Used with prettify.js. */

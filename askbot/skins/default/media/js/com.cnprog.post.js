@@ -699,16 +699,6 @@ var questionRetagger = function(){
         input.click(function(){return false});
     };
 
-    var setupButtonEventHandlers = function(button){
-        button.keydown(function(e){
-            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)){
-                doRetag();
-                return false;
-            }
-        });
-        button.click(doRetag);
-    };
-
     var createRetagForm = function(old_tags_string){
         var div = $('<form method="post"></form>');
         tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');

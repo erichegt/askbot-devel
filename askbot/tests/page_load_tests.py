@@ -264,7 +264,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'responses'}, 
+            data={'sort':'inbox'}, 
             status_code=404,
             template='404.html'
         )

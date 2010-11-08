@@ -2,16 +2,6 @@
 {% import "macros.html" as macros %}
 <!-- user_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit user profile{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-        <script type="text/javascript">
-            $().ready(function(){
-                $("#nav_profile").attr('className',"on");
-                $("#cancel").bind('click', function(){history.go(-1);})
-            });     
-        </script>
-        {% block userjs %}
-        {% endblock %}
-{% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
     {{ request.user.username }} - {% trans %}edit profile{% endtrans %}
@@ -87,5 +77,15 @@
         </div>
     </form>
 </div>
+{% endblock %}
+{% block endjs %}
+        <script type="text/javascript">
+            $().ready(function(){
+                $("#nav_profile").attr('className',"on");
+                $("#cancel").bind('click', function(){history.go(-1);})
+            });     
+        </script>
+        {% block userjs %}
+        {% endblock %}
 {% endblock %}
 <!-- end user_edit.html -->

@@ -1245,11 +1245,8 @@ msgid "Please, enter your password"
 msgstr "Send me a new password"
 
 #: deps/django_authopenid/forms.py:274 deps/django_authopenid/forms.py:278
-#, fuzzy
 msgid "Please, enter your new password"
 msgstr ""
-"<span class='big strong'>Enter your Askbot login and password</span><br/"
-"><span class='grey'>(or select your OpenID provider above)</span>"
 
 #: deps/django_authopenid/forms.py:289
 msgid "Passwords did not match"
@@ -1428,9 +1425,8 @@ msgid ""
 msgstr ""
 
 #: deps/django_authopenid/views.py:349
-#, fuzzy
 msgid "Your new password saved"
-msgstr "New password created"
+msgstr ""
 
 #: deps/django_authopenid/views.py:511
 msgid "Please click any of the icons below to sign in"
@@ -2409,26 +2405,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: models/__init__.py:1207
-#, fuzzy, python-format
+#, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] ""
-"Obtaining silver badge requires significant patience. If you have received "
-"one, that means you have greatly contributed to this community."
 msgstr[1] ""
-"Obtaining silver badge requires significant patience. If you have received "
-"one, that means you have greatly contributed to this community."
 
 #: models/__init__.py:1214
-#, fuzzy, python-format
+#, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] ""
-"If you are an active participant in this community, you will be recognized "
-"with this badge."
 msgstr[1] ""
-"If you are an active participant in this community, you will be recognized "
-"with this badge."
 
 #: models/__init__.py:1225
 #, python-format
@@ -2447,9 +2435,9 @@ msgid "Re: \"%(title)s\""
 msgstr ""
 
 #: models/__init__.py:1506 models/__init__.py:1511
-#, fuzzy, python-format
+#, python-format
 msgid "Question: \"%(title)s\""
-msgstr "Tags"
+msgstr ""
 
 #: models/__init__.py:1691
 #, python-format
@@ -2607,9 +2595,8 @@ msgstr ""
 
 #: skins/default/templates/404.jinja.html:41
 #: skins/default/templates/questions.html:30
-#, fuzzy
 msgid "see all questions"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:42
 msgid "see all tags"
@@ -2629,14 +2616,12 @@ msgid "please report the error to the site administrators if you wish"
 msgstr ""
 
 #: skins/default/templates/500.jinja.html:22
-#, fuzzy
 msgid "see latest questions"
-msgstr "questions with most answers"
+msgstr ""
 
 #: skins/default/templates/500.jinja.html:23
-#, fuzzy
 msgid "see tags"
-msgstr "Tags"
+msgstr ""
 
 #: skins/default/templates/about.html:3 skins/default/templates/about.html:8
 msgid "About"
@@ -2644,9 +2629,8 @@ msgstr ""
 
 #: skins/default/templates/answer_edit.html:4
 #: skins/default/templates/answer_edit.html:23
-#, fuzzy
 msgid "Edit answer"
-msgstr "oldest"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:23
 #: skins/default/templates/question_edit.html:22
@@ -2703,7 +2687,6 @@ msgid "answer tips"
 msgstr "Tips"
 
 #: skins/default/templates/answer_edit_tips.html:6
-#, fuzzy
 msgid "please make your answer relevant to this community"
 msgstr "ask a question interesting to this community"
 
@@ -2719,7 +2702,6 @@ msgstr ""
 "best questions and answers!"
 
 #: skins/default/templates/answer_edit_tips.html:12
-#, fuzzy
 msgid "please try to provide details"
 msgstr "provide enough details"
 
@@ -2760,9 +2742,8 @@ msgstr ""
 
 #: skins/default/templates/answer_edit_tips.html:43
 #: skins/default/templates/question_edit_tips.html:40
-#, fuzzy
 msgid "link"
-msgstr "Hi, there! Please sign in"
+msgstr ""
 
 #: skins/default/templates/answer_edit_tips.html:43
 #: skins/default/templates/answer_edit_tips.html:47
@@ -2792,9 +2773,8 @@ msgid "learn more about Markdown"
 msgstr ""
 
 #: skins/default/templates/ask.html:3
-#, fuzzy
 msgid "Ask a question"
-msgstr "Ask Your Question"
+msgstr ""
 
 #: skins/default/templates/ask_form.html:7
 msgid "login to post question info"
@@ -3067,9 +3047,8 @@ msgid "upvote"
 msgstr ""
 
 #: skins/default/templates/faq.html:51
-#, fuzzy
 msgid "use tags"
-msgstr "people"
+msgstr ""
 
 #: skins/default/templates/faq.html:56
 #, fuzzy

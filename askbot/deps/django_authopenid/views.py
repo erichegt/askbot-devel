@@ -581,7 +581,7 @@ def delete_login_method(request):
             logging.critical(
                     'have multiple %(provider)s logins for user %(id)s'
                 ) % {'provider':provider_name, 'id': request.user.id}
-            message = _('Sorry, there was some error, we will look at it')
+            message = _('Oops, sorry - there was some error - please try again')
             return HttpResponse(message, status=500, mimetype = 'application/json')
     else:
         raise Http404

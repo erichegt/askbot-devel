@@ -76,7 +76,9 @@ User.add_to_class('tag_filter_setting',
                                         default='ignored'
                                      )
                  )
-User.add_to_class('response_count', models.IntegerField(default=0))
+User.add_to_class('new_response_count', models.IntegerField(default=0))
+User.add_to_class('seen_response_count', models.IntegerField(default=0))
+
 
 def user_get_old_vote_for_post(self, post):
     """returns previous vote for this post
@@ -977,13 +979,6 @@ def user_visit_question(self, question = None, timestamp = None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
-    response_activities = Activity.objects.filter(
-                                recipients = self,
-                                activity_type__in = ACTIVITY_TYPES,
-                                question = question
-                            )
     try:
         question_view = QuestionView.objects.get(
                                         who = self,
@@ -997,21 +992,36 @@ def user_visit_question(self, question = None, timestamp = None):
     question_view.when = timestamp
     question_view.save()
 
-    #filter response activities (already directed to the qurrent user
-    #as per the query in the beginning of this if branch)
+    #filter memo objects on response activities directed to the qurrent user
     #that refer to the children of the currently
     #viewed question and clear them for the current user
-    need_to_save_user = False
+    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
 
     audit_records = ActivityAuditStatus.objects.filter(
-                                        activity__in = response_activities,
-                                        user = self
-                                    )
-    if len(audit_records) > 0:
-        self.decrement_response_count(len(audit_records))
+                        user = self,
+                        status = ActivityAuditStatus.STATUS_NEW,
+                        activity__question = question
+                    )
+
+    cleared_record_count = audit_records.filter(
+                                activity__activity_type__in = ACTIVITY_TYPES
+                            ).update(
+                                status=ActivityAuditStatus.STATUS_SEEN
+                            )
+    if cleared_record_count > 0:
+        self.decrement_response_count(cleared_record_count)
         self.save()
-        #todo: set status to seen and call update
-        audit_records.delete()
+
+    #finally, mark admin memo objects if applicable
+    #the admin response counts are not denormalized b/c they are easy to obtain
+    if self.is_moderator() or self.is_administrator():
+        audit_records.filter(
+                activity__activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE
+        ).update(
+            status=ActivityAuditStatus.STATUS_SEEN
+        )
+
 
 def user_is_username_taken(cls,username):
     try:
@@ -1362,7 +1372,7 @@ def user_increment_response_count(user):
     """increment response counter for user
     by one
     """
-    user.response_count += 1
+    user.new_response_count += 1
 
 def user_decrement_response_count(user, amount=1):
     """decrement response count for the user 
@@ -1370,10 +1380,11 @@ def user_decrement_response_count(user, amount=1):
     but limit decrementation at zero exactly
     """
     assert(amount > 0)
-    if user.response_count >= amount:
-        user.response_count -= amount
+    user.seen_response_count += amount
+    if user.new_response_count >= amount:
+        user.new_response_count -= amount
     else:
-        user.response_count = 0
+        user.new_response_count = 0
         logging.critical(
                 'response count wanted to go below zero'
             )
@@ -1796,9 +1807,13 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                     question=instance.get_origin_post()
                 )
     activity.save()
-    recipients = instance.get_author_list(
-                                        exclude_list = [mark_by]
-                                    )
+#   todo: report authors that their post is flagged offensive
+#    recipients = instance.get_author_list(
+#                                        exclude_list = [mark_by]
+#                                    )
+    recipients = User.objects.filter(
+                    models.Q(is_superuser=True) | models.Q(status='m')
+                )
     activity.add_recipients(recipients)
 
 def record_update_tags(question, **kwargs):

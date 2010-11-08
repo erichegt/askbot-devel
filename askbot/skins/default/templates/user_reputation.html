@@ -1,20 +1,5 @@
 {% extends "user.html" %}
 <!-- user_reputation.html -->
-{% block userjs %}
-       <script type='text/javascript' src='{{"/js/excanvas.min.js"|media}}'></script>
-       <script type='text/javascript' src='{{"/js/jquery.flot.min.js"|media}}'></script>
-       <script type="text/javascript">
-        $().ready(function(){
-            var d = {{ reps }};
-            var placeholder = $("#diagram");
-            var plot = $.plot(placeholder, [d], {
-                xaxis: { mode: "time" },
-                points: { show: true },
-                lines: { show: true }
-            });
-        });
-        </script>
-{% endblock %}
 {% block usercontent %}
         <div class="karma-summary">
             <div id="diagram" class="karma-diagram"></div>
@@ -34,4 +19,19 @@
                 {% endfor %}
             </div>
         </div>
+{% endblock %}
+{% block userjs %}
+       <script type='text/javascript' src='{{"/js/excanvas.min.js"|media}}'></script>
+       <script type='text/javascript' src='{{"/js/jquery.flot.min.js"|media}}'></script>
+       <script type="text/javascript">
+            $().ready(function(){
+                var d = {{ reps }};
+                var placeholder = $("#diagram");
+                var plot = $.plot(placeholder, [d], {
+                    xaxis: { mode: "time" },
+                    points: { show: true },
+                    lines: { show: true }
+                });
+            });
+        </script>
 {% endblock %}<!-- end user_reputation.html -->

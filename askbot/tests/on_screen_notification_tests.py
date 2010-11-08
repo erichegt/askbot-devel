@@ -34,8 +34,10 @@ class OnScreenUpdateNotificationTests(TestCase):
 
     def reset_response_counts(self):
         self.reload_users()
+        models.ActivityAuditStatus.objects.all().delete()
         for user in self.users:
-            user.response_count = 0
+            user.new_response_count = 0
+            user.seen_response_count = 0
             user.save()
 
     def reload_users(self):
@@ -141,22 +143,42 @@ class OnScreenUpdateNotificationTests(TestCase):
                             comment = 'comment33'
                         )
 
-    def assertResponseCountsEqual(self, counts_vector):
+    def assertNewResponseCountsEqual(self, counts_vector):
         self.reload_users()
         self.assertEquals(
             [
-                self.u11.response_count,
-                self.u12.response_count,
-                self.u13.response_count,
-                self.u14.response_count,
-                self.u21.response_count,
-                self.u22.response_count,
-                self.u23.response_count,
-                self.u24.response_count,
-                self.u31.response_count,
-                self.u32.response_count,
-                self.u33.response_count,
-                self.u34.response_count,
+                self.u11.new_response_count,
+                self.u12.new_response_count,
+                self.u13.new_response_count,
+                self.u14.new_response_count,
+                self.u21.new_response_count,
+                self.u22.new_response_count,
+                self.u23.new_response_count,
+                self.u24.new_response_count,
+                self.u31.new_response_count,
+                self.u32.new_response_count,
+                self.u33.new_response_count,
+                self.u34.new_response_count,
+            ],
+            counts_vector
+        )
+
+    def assertSeenResponseCountsEqual(self, counts_vector):
+        self.reload_users()
+        self.assertEquals(
+            [
+                self.u11.seen_response_count,
+                self.u12.seen_response_count,
+                self.u13.seen_response_count,
+                self.u14.seen_response_count,
+                self.u21.seen_response_count,
+                self.u22.seen_response_count,
+                self.u23.seen_response_count,
+                self.u24.seen_response_count,
+                self.u31.seen_response_count,
+                self.u32.seen_response_count,
+                self.u33.seen_response_count,
+                self.u34.seen_response_count,
             ],
             counts_vector
         )
@@ -195,7 +217,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         comment.delete()
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 0)
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 0, 0, 0,
@@ -213,7 +235,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         comment.delete()
         notifications = get_re_notif_after(timestamp)
         self.assertEqual(len(notifications), 0)
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 0, 0, 0,
@@ -236,7 +258,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -257,7 +279,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u22, self.u23]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 1, 1, 0,
@@ -280,7 +302,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -303,7 +325,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u12, self.u13]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  0, 0, 0, 0,
@@ -326,7 +348,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u22, self.u23]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  0, 1, 1, 0,
@@ -356,9 +378,16 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u11, self.u12, self.u13])#all users are notified
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                 1, 1, 1, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+            ]
+        )
+        self.assertSeenResponseCountsEqual(
+            [
+                0, 0, 0, 0,
                 0, 0, 0, 0,
                 0, 0, 0, 0,
             ]
@@ -369,11 +398,30 @@ class OnScreenUpdateNotificationTests(TestCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(#visitors are not notified
             set(notifications[0].recipients.all()),
-            set([self.u13])
+            set([self.u11, self.u12, self.u13])
         )
-        self.assertResponseCountsEqual(
+        self.assertEqual(
+            self.u11.activityauditstatus_set.all()[0].status,
+            models.ActivityAuditStatus.STATUS_SEEN
+        )
+        self.assertEqual(
+            self.u12.activityauditstatus_set.all()[0].status,
+            models.ActivityAuditStatus.STATUS_SEEN
+        )
+        self.assertEqual(
+            self.u13.activityauditstatus_set.all()[0].status,
+            models.ActivityAuditStatus.STATUS_NEW
+        )
+        self.assertNewResponseCountsEqual(
             [
                 0, 0, 1, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+            ]
+        )
+        self.assertSeenResponseCountsEqual(
+            [
+                1, 1, 0, 0,
                 0, 0, 0, 0,
                 0, 0, 0, 0,
             ]
@@ -400,7 +448,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u11, self.u13, self.u14]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  1, 0, 1, 1,
                  0, 0, 0, 0,
@@ -426,7 +474,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u21, self.u23, self.u24]),
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 0, 0, 0,
                  1, 0, 1, 1,
@@ -453,7 +501,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u11, self.u12, self.u13, self.u21, self.u31])
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 0, 0, 0,
@@ -474,7 +522,7 @@ class OnScreenUpdateNotificationTests(TestCase):
             set(notifications[0].recipients.all()),
             set([self.u11, self.u12, self.u13, self.u14, self.u21])
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  1, 1, 1, 1,
                  1, 0, 0, 0,
@@ -505,7 +553,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 1, 1, 0,
@@ -535,7 +583,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  0, 1, 1, 0,
                  1, 0, 0, 0,
@@ -562,7 +610,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                 ]
             )
         )
-        self.assertResponseCountsEqual(
+        self.assertNewResponseCountsEqual(
             [
                  1, 1, 1, 0,
                  1, 0, 0, 0,

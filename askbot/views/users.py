@@ -20,7 +20,6 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
-from django.utils.html import strip_tags
 from django.utils import simplejson
 from django.conf import settings as django_settings
 import askbot
@@ -701,20 +700,46 @@ def user_responses(request, user):
     user - the profile owner
     """
 
-    response_list = []
+    section = 'forum'
+    if request.user.is_moderator() or request.user.is_administrator():
+        if 'section' in request.GET and request.GET['section'] == 'flags':
+            section = 'flags'
 
-    activities = list()
-    activities = models.Activity.responses_and_mentions.filter(recipients=user)
+    if section == 'forum':
+        activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activity_types += (const.TYPE_ACTIVITY_MENTION,)
+    else:
+        assert(section == 'flags')
+        activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
 
-    for act in activities:
-        origin_post = act.content_object.get_origin_post()
+    memo_set = models.ActivityAuditStatus.objects.filter(
+                    user = request.user,
+                    activity__activity_type__in = activity_types
+                ).select_related(
+                    'activity__active_at',
+                    'activity__object_id',
+                    'activity__content_type',
+                    'activity__question__title',
+                    'activity__user__username',
+                    'activity__user__id',
+                    'activity__user__gravatar',
+                ).order_by(
+                    '-activity__active_at'
+                )[:const.USER_VIEW_DATA_SIZE]
+
+    #todo: insert pagination code here
+
+    response_list = list()
+    for memo in memo_set:
         response = {
-            'timestamp': act.active_at,
-            'user': act.user,
-            'response_url': act.get_absolute_url(),
-            'response_snippet': strip_tags(act.content_object.html)[:300],
-            'response_title': origin_post.title,
-            'response_type': act.get_activity_type_display(),
+            'id': memo.id,
+            'timestamp': memo.activity.active_at,
+            'user': memo.activity.user,
+            'is_new': memo.is_new(),
+            'response_url': memo.activity.get_absolute_url(),
+            'response_snippet': memo.activity.get_preview(),
+            'response_title': memo.activity.question.title,
+            'response_type': memo.activity.get_activity_type_display(),
         }
         response_list.append(response)
 
@@ -722,14 +747,15 @@ def user_responses(request, user):
 
     data = {
         'active_tab':'users',
-        'tab_name' : 'responses',
+        'tab_name' : 'inbox',
+        'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
         'view_user' : user,
-        'responses' : response_list[:const.USER_VIEW_DATA_SIZE],
+        'responses' : response_list,
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_responses.html')
+    template = ENV.get_template('user_inbox.html')
     return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
@@ -911,7 +937,7 @@ def user_email_subscriptions(request, user):
 user_view_call_table = {
     'stats': user_stats,
     'recent': user_recent,
-    'responses': user_responses,
+    'inbox': user_responses,
     'reputation': user_reputation,
     'favorites': user_favorites,
     'votes': user_votes,

@@ -3,62 +3,56 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from askbot import const
 from askbot.migrations_api.version1 import API
+from askbot import const
 
-#some of activities are not related to question, so they are not processed here
-APPROPRIATE_ACTIVITIES = (
-    const.TYPE_ACTIVITY_ASK_QUESTION,
-    const.TYPE_ACTIVITY_UPDATE_QUESTION,
-    const.TYPE_ACTIVITY_DELETE_QUESTION,
-    const.TYPE_ACTIVITY_UPDATE_TAGS,
-    const.TYPE_ACTIVITY_ANSWER,
-    const.TYPE_ACTIVITY_UPDATE_ANSWER,
-    const.TYPE_ACTIVITY_DELETE_ANSWER,
-    const.TYPE_ACTIVITY_MARK_ANSWER,
-    const.TYPE_ACTIVITY_COMMENT_QUESTION,
-    const.TYPE_ACTIVITY_COMMENT_ANSWER,
-    const.TYPE_ACTIVITY_MARK_OFFENSIVE,
-    const.TYPE_ACTIVITY_MENTION,
-    const.TYPE_ACTIVITY_FAVORITE,
-)
+OFFENSIVE = const.TYPE_ACTIVITY_MARK_OFFENSIVE
 
 class Migration(DataMigration):
     
     def forwards(self, orm):
+        """find all FlaggedItems and the corresponding Activity
+        transfer content object to Activity
+        add moderators and admins to the activity recipients
+        and set the denormalized value of question to the origin post
+        of the flagged item
+        """
         api = API(orm)
-        #1) fill in audit status values
-        activities = orm.Activity.objects.exclude(receiving_users=None)
-
-        have_problems = False
-        errors = set()
-        bad_ids = list()
-        for act in activities:
-            users = act.receiving_users.all()
-            for user in users:
-                orm.ActivityAuditStatus(user = user, activity = act).save()
-
-        #2) save question value into the activity 
-        for act in orm.Activity.objects.all():
-            if act.activity_type in APPROPRIATE_ACTIVITIES:
-                try:
-                    act.question = api.get_origin_post_from_content_object(act)
-                    act.save()
-                except Exception, e:
-                    have_problems = True
-                    errors.add(unicode(e))
-                    bad_ids.append(str(act.id))
-
-        if have_problems:
-            print 'Migration is now complete, but there were some errors:'
-            print '\n'.join(errors)
-            print 'problematic activity objects are: ' + ','.join(bad_ids)
-            print 'This is most likely not a big issue, but if you save this error message'
-            print 'and email to admin@askbot.org, that would help. Thanks.'
-
-    def backwards(self, orm):
-        orm.ActivityAuditStatus.objects.all().delete()
+        moderators = api.get_moderators_and_admins()
+        for flag in orm.FlaggedItem.objects.all():
+            activity_items = api.get_activity_items_for_object(flag)
+            if len(activity_items) == 0:#fix a glitch
+                activity = orm.Activity(
+                    user = flag.user,
+                    active_at = flag.flagged_at,
+                    activity_type = OFFENSIVE
+                )
+            elif len(activity_items) == 1:
+                activity = activity_items[0]
+            else:
+                raise ValueError('cannot have >1 flagged items per activity')
+            assert(activity.user==flag.user)
+            assert(activity.content_type==flag.content_type)
+            assert(activity.object_id==flag.object_id)
+            activity.question = api.get_origin_post_from_content_object(flag)
+            activity.save()
+            api.add_recipients_to_activity(moderators, activity)
+            flag.delete()
     
+    def backwards(self, orm):
+        """there is a side-effect that activity recipients are not removed
+        question reference is not deleted either
+        """
+        activity_items = orm.Activity.objects.filter(activity_type=OFFENSIVE)
+        api = API(orm)
+        for activity in activity_items:
+            flag = orm.FlaggedItem(
+                user = activity.user,
+                flagged_at = activity.active_at,
+                object_id = activity.object_id,
+                content_type = activity.content_type
+            )
+            flag.save()
     
     models = {
         'askbot.activity': {
@@ -69,9 +63,9 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_auditted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']", 'null':'True'}),
-            'receiving_users': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'received_activity'", 'symmetrical': 'False', 'to': "orm['auth.User']"}),
-            'recipients': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'incoming_activity'", 'symmetrical': 'False', 'through': "'ActivityAuditStatus'", 'to': "orm['auth.User']"}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']", 'null': 'True'}),
+            'receiving_users': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'received_activity'", 'to': "orm['auth.User']"}),
+            'recipients': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'incoming_activity'", 'through': "'ActivityAuditStatus'", 'to': "orm['auth.User']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'askbot.activityauditstatus': {
@@ -155,7 +149,7 @@ class Migration(DataMigration):
         'askbot.badge': {
             'Meta': {'unique_together': "(('name', 'type'),)", 'object_name': 'Badge', 'db_table': "u'badge'"},
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'symmetrical': 'False', 'through': "'Award'", 'to': "orm['auth.User']"}),
+            'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'through': "'Award'", 'to': "orm['auth.User']"}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'multiple': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
@@ -219,9 +213,9 @@ class Migration(DataMigration):
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_questions'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'favorited_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'favorite_questions'", 'symmetrical': 'False', 'through': "'FavoriteQuestion'", 'to': "orm['auth.User']"}),
+            'favorited_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'favorite_questions'", 'through': "'FavoriteQuestion'", 'to': "orm['auth.User']"}),
             'favourite_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'followed_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'followed_questions'", 'symmetrical': 'False', 'to': "orm['auth.User']"}),
+            'followed_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'followed_questions'", 'to': "orm['auth.User']"}),
             'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'last_activity_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -235,7 +229,7 @@ class Migration(DataMigration):
             'score': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'summary': ('django.db.models.fields.CharField', [], {'max_length': '180'}),
             'tagnames': ('django.db.models.fields.CharField', [], {'max_length': '125'}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'questions'", 'symmetrical': 'False', 'to': "orm['askbot.Tag']"}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'questions'", 'to': "orm['askbot.Tag']"}),
             'text': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             'view_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
@@ -298,7 +292,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Group'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
+            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'blank': 'True'})
         },
         'auth.permission': {
             'Meta': {'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
@@ -319,7 +313,7 @@ class Migration(DataMigration):
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'gold': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'gravatar': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'blank': 'True'}),
             'hide_ignored_questions': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
@@ -337,7 +331,7 @@ class Migration(DataMigration):
             'silver': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
             'tag_filter_setting': ('django.db.models.fields.CharField', [], {'default': "'ignored'", 'max_length': '16'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
             'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
