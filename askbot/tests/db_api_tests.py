@@ -40,7 +40,7 @@ class DBApiTests(AskbotTestCase):
         self.user.set_status('m')
         self.user.flag_post(self.question)
         self.assertEquals(
-            len(self.user.flaggeditems.all()),
+            self.user.get_flags().count(),
             1
         )
 
@@ -49,7 +49,7 @@ class DBApiTests(AskbotTestCase):
         self.user.set_status('m')
         self.user.flag_post(self.answer)
         self.assertEquals(
-            len(self.user.flaggeditems.all()),
+            self.user.get_flags().count(),
             1
         )
 

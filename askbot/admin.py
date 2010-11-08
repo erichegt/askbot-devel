@@ -28,9 +28,6 @@ class CommentAdmin(admin.ModelAdmin):
 class VoteAdmin(admin.ModelAdmin):
     """  admin class"""
 
-class FlaggedItemAdmin(admin.ModelAdmin):
-    """  admin class"""
-
 class FavoriteQuestionAdmin(admin.ModelAdmin):
     """  admin class"""
 
@@ -66,7 +63,6 @@ admin.site.register(models.Tag, TagAdmin)
 admin.site.register(models.Answer, AnswerAdmin)
 admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Vote, VoteAdmin)
-admin.site.register(models.FlaggedItem, FlaggedItemAdmin)
 admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
 admin.site.register(models.QuestionRevision, QuestionRevisionAdmin)
 admin.site.register(models.AnswerRevision, AnswerRevisionAdmin)

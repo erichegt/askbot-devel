@@ -42,11 +42,10 @@ def calculate_reputation(origin, offset):
         return 1
 
 @transaction.commit_on_success
-def onFlaggedItem(item, post, user, timestamp=None):
+def onFlaggedItem(post, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    item.save()
     post.offensive_flag_count = post.offensive_flag_count + 1
     post.save()
 
@@ -56,15 +55,14 @@ def onFlaggedItem(item, post, user, timestamp=None):
                             )
     post.author.save()
 
-    question = post
-    if isinstance(post, Answer):
-        question = post.question
+    question = post.get_origin_post()
 
     reputation = Repute(
                     user=post.author,
                     negative=askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG,
-                    question=question, reputed_at=timestamp,
-                    reputation_type=-4,
+                    question=question,
+                    reputed_at=timestamp,
+                    reputation_type=-4,#todo: clean up magic number
                     reputation=post.author.reputation
                 )
     reputation.save()

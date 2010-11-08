@@ -167,7 +167,7 @@ class UserContent(models.Model):
 
 class MetaContent(models.Model):
     """
-        Base class for Vote, Comment and FlaggedItem
+        Base class for Vote and Comment
     """
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()

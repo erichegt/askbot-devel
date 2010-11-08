@@ -79,27 +79,6 @@ class Vote(base.MetaContent, base.UserContent):
         return score_after - score_before
 
 
-class FlaggedItemManager(models.Manager):
-    def get_flagged_items_count_today(self, user):
-        if user is not None:
-            today = datetime.date.today()
-            return self.filter(user=user, flagged_at__range=(today, today + datetime.timedelta(1))).count()
-        else:
-            return 0
-
-class FlaggedItem(base.MetaContent, base.UserContent):
-    """A flag on a Question or Answer indicating offensive content."""
-    flagged_at     = models.DateTimeField(default=datetime.datetime.now)
-
-    objects = FlaggedItemManager()
-
-    class Meta(base.MetaContent.Meta):
-        unique_together = ('content_type', 'object_id', 'user')
-        db_table = u'flagged_item'
-
-    def __unicode__(self):
-        return '[%s] flagged at %s' %(self.user, self.flagged_at)
-
 #todo: move this class to content
 class Comment(base.MetaContent, base.UserContent):
     post_type = 'comment'

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.sitemaps import ping_google
 from django.db import models
-from askbot.models.meta import Comment, Vote, FlaggedItem
+from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
 from django.utils import html as html_utils
 
@@ -36,7 +36,6 @@ class Content(models.Model):
     text = models.TextField(null=True)#denormalized copy of latest revision
     comments = generic.GenericRelation(Comment)
     votes = generic.GenericRelation(Vote)
-    flagged_items = generic.GenericRelation(FlaggedItem)
 
     _use_markdown = True
     _escape_html = False #markdow does the escaping

@@ -23,7 +23,7 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.meta import Vote, Comment, FlaggedItem
+from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
@@ -541,7 +541,7 @@ def user_assert_can_flag_offensive(self, post = None):
 
     double_flagging_error_message = _('cannot flag message as offensive twice')
 
-    if post.flagged_items.filter(user = self).count() > 0:
+    if self.get_flags_for_post(post).count() > 0:
         raise askbot_exceptions.DuplicateCommand(double_flagging_error_message)
 
     blocked_error_message = _('blocked users cannot flag posts')
@@ -564,9 +564,7 @@ def user_assert_can_flag_offensive(self, post = None):
     if self.is_administrator() or self.is_moderator():
         return
     else:
-        flag_count_today = FlaggedItem.objects.get_flagged_items_count_today(
-                                                                            self
-                                                                        )
+        flag_count_today = self.get_flag_count_posted_today()
         if flag_count_today >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
             flags_exceeded_error_message = _(
                                 '%(max_flags_per_day)s exceeded'
@@ -1361,12 +1359,31 @@ def flag_post(user, post, timestamp=None, cancel=False):
         return
 
     user.assert_can_flag_offensive(post = post)
-    flag = FlaggedItem(
-            user = user,
-            content_object = post,
-            flagged_at = timestamp,
-        )
-    auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
+    auth.onFlaggedItem(post, user, timestamp=timestamp)
+
+def user_get_flags(self):
+    """return flag Activity query set
+    for all flags set by te user"""
+    return Activity.objects.filter(
+                        user = self,
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE
+                    )
+
+def user_get_flag_count_posted_today(self):
+    """return number of flags the user has posted
+    within last 24 hours"""
+    today = datetime.date.today()
+    time_frame = (today, today + datetime.timedelta(1))
+    flags = self.get_flags()
+    return flags.filter(active_at__range = time_frame).count()
+
+def user_get_flags_for_post(self, post):
+    """return query set for flag Activity items
+    posted by users for a given post obeject
+    """
+    post_content_type = ContentType.objects.get_for_model(post)
+    flags = self.get_flags()
+    return flags.filter(content_type = post_content_type, object_id=post.id)
 
 def user_increment_response_count(user):
     """increment response counter for user
@@ -1416,6 +1433,9 @@ User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)
 User.add_to_class('flag_post', flag_post)
+User.add_to_class('get_flags', user_get_flags)
+User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
+User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
@@ -1949,7 +1969,6 @@ AnonymousAnswer = AnonymousAnswer
 Tag = Tag
 Comment = Comment
 Vote = Vote
-FlaggedItem = FlaggedItem
 MarkedTag = MarkedTag
 
 Badge = Badge
@@ -1977,7 +1996,6 @@ __all__ = [
         'Tag',
         'Comment',
         'Vote',
-        'FlaggedItem',
         'MarkedTag',
 
         'Badge',
