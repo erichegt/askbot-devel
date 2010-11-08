@@ -112,25 +112,24 @@ def manage_inbox(request):
                     if action_type == 'delete':
                         user.new_response_count -= new_memos.count()
                         user.seen_response_count -= seen_memos.count()
-                        assert(user.new_response_count >= 0)
-                        assert(user.seen_response_count >= 0)
+                        user.clean_response_counts()
                         user.save()
                         memo_set.delete()
                     elif action_type == 'mark_new':
                         user.new_response_count += seen_memos.count()
                         user.seen_response_count -= seen_memos.count()
-                        assert(user.seen_response_count >= 0)
+                        user.clean_response_counts()
                         user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
                     elif action_type == 'mark_seen':
                         user.new_response_count -= new_memos.count()
                         user.seen_response_count += new_memos.count()
-                        assert(user.new_response_count >= 0)
+                        user.clean_response_counts()
                         user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
                     else:
                         raise exceptions.PermissionDenied(
-                                    _('Oops, sorry - there was some error - please try again')
+                                    _('Oops, apologies - there was some error')
                                 )
                     response_data['success'] = True
                     data = simplejson.dumps(response_data)
@@ -145,7 +144,10 @@ def manage_inbox(request):
             #todo: show error page but no-one is likely to get here
             return HttpResponseRedirect(reverse('index'))
     except Exception, e:
-        response_data['message'] = unicode(e)
+        message = unicode(e)
+        if message == '':
+            message = _('Oops, apologies - there was some error')
+        response_data['message'] = message
         response_data['success'] = False
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")

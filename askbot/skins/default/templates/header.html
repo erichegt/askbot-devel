@@ -8,6 +8,8 @@
                 {% spaceless %}
                 {% if request.user.new_response_count > 0 or request.user.seen_response_count > 0 %}
                 <a class='ab-responses-envelope' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
+                    new {{request.user.new_response_count}}
+                    old {{request.user.seen_response_count}}
                     <img 
                         alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
                         {% if request.user.new_response_count > 0 %}

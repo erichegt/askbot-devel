@@ -205,7 +205,7 @@ class OnScreenUpdateNotificationTests(TestCase):
     def post_mention_in_answer_then_edit_out(self):
         pass
 
-    def test_post_mention_in_question_comment_then_delete(self):
+    def test_post_mention_in_comments_then_delete(self):
         self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()

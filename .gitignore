@@ -34,4 +34,4 @@ askbot/upfiles/*.gif
 askbot/upfiles/*.png
 askbot/skins/common/media/mathjax/
 /jinja2
-*.tag.tz
+*.tar.tz

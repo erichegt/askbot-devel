@@ -241,11 +241,12 @@ class Comment(base.MetaContent, base.UserContent):
         #on these activities decrement response counter
         #todo: implement a custom delete method on these
         #all this should pack into Activity.responses.filter( somehow ).delete()
-        response_activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activity_types += (const.TYPE_ACTIVITY_MENTION,)
         activities = Activity.objects.filter(
                             content_type = comment_content_type,
                             object_id = comment_id,
-                            activity_type__in = response_activity_types
+                            activity_type__in = activity_types
                         )
         for activity in activities:
             for user in activity.recipients.all():

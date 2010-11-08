@@ -1383,10 +1383,19 @@ def user_decrement_response_count(user, amount=1):
     user.seen_response_count += amount
     if user.new_response_count >= amount:
         user.new_response_count -= amount
-    else:
+    user.clean_response_counts()
+
+def user_clean_response_counts(user):
+    ""
+    if user.new_response_count < 0:
         user.new_response_count = 0
         logging.critical(
-                'response count wanted to go below zero'
+                'new response count wanted to go below zero for %s' % user.username
+            )
+    if user.seen_response_count < 0:
+        user.seen_response_count = 0
+        logging.critical(
+                'seen response count wanted to go below zero form %s' % user.username
             )
 
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
@@ -1417,6 +1426,7 @@ User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
+User.add_to_class('clean_response_counts', user_clean_response_counts)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
