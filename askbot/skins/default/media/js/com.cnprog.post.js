@@ -1061,11 +1061,56 @@ function createComments(type) {
     };
 }
 
+var socialSharing = function(){
+
+    var SERVICE_DATA = {
+        //url - template for the sharing service url, params are for the popup
+        twitter: {
+            url: "http://twitter.com/share?url={URL}&ref=twitbtn&text={TEXT}",
+            params: "width=820,height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
+        facebook: {
+            url: "http://www.facebook.com/sharer.php?u={URL}&ref=fbshare&t={TEXT}",
+            params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
+        }
+    };
+    var URL = "";
+    var TEXT = "";
+
+    var share_page = function(service_name){
+        if (SERVICE_DATA[service_name]){
+            var url = SERVICE_DATA[service_name]['url'];
+            url = url.replace('{URL}', URL);
+            url = url.replace('{TEXT}', TEXT);
+            alert(url);
+            var params = SERVICE_DATA[service_name]['params'];
+            if(!window.open(url, "sharing", params)){
+                window.location.href=share_url;
+            }
+        }
+    }
+
+    return{
+        init: function(page_url, text_to_share){
+            URL = window.location.href;
+            TEXT = escape($('div.headNormal > a').html());
+            var fb = $('a.fb-share')
+            var tw = $('a.twitter-share');
+            copyAltToTitle(fb);
+            copyAltToTitle(tw);
+            setupButtonEventHandlers(fb, function(){share_page("facebook")});
+            setupButtonEventHandlers(tw, function(){share_page("twitter")});
+        },
+    }
+}(); 
+
 $(document).ready(function() {
     questionComments.init();
     questionRetagger.init();
     answerComments.init();
+    socialSharing.init();
 });
+
 
 /*
 Prettify

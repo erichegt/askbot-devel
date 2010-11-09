@@ -3,6 +3,10 @@ var mediaUrl = function(resource){
     return scriptUrl + 'm/' + askbotSkin + '/' + resource;
 };
 
+var copyAltToTitle = function(sel){
+    sel.attr('title', sel.attr('alt'));
+};
+
 var showMessage = function(object, msg) {
     var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
     $.i18n._('click to close') + ')</div>');

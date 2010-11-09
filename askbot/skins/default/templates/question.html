@@ -71,7 +71,10 @@
                                {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
                             </div>
                             {% endif %}
-                            
+                            {% if settings.ENABLE_SOCIAL_SHARING %}
+                            <a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>
+                            <a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>
+                            {% endif %}
                         </div>
                     </td>
                     <td>

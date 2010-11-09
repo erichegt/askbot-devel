@@ -2764,6 +2764,20 @@ img.gravatar {
     font-weight:bold;
 }
 
+.fb-share, .twitter-share {
+    background: url(../images/sprite.png) no-repeat;
+    text-indent:-100em;
+    width:25px;
+    height:25px;
+    display:block;
+}
+.fb-share {
+    background-position: -25px 0px;
+}
+.twitter-share {
+    margin-top:10px;
+    background-position: 0px 0px;
+}
 /* Pretty printing styles. Used with prettify.js. */
 
 .str { color: #080; }
