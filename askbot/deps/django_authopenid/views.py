@@ -52,13 +52,13 @@ from django.views.defaults import server_error
 
 from askbot.skins.loaders import ENV
 
-from openid.consumer.consumer import Consumer, \
+from askbot.deps.openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
-from openid.consumer.discover import DiscoveryFailure
-from openid.extensions import sreg
+from askbot.deps.openid.consumer.discover import DiscoveryFailure
+from askbot.deps.openid.extensions import sreg
 # needed for some linux distributions like debian
 try:
-    from openid.yadis import xri
+    from askbot.deps.openid.yadis import xri
 except ImportError:
     from yadis import xri
 

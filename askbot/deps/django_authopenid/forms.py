@@ -46,7 +46,7 @@ from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetP
 
 # needed for some linux distributions like debian
 try:
-    from openid.yadis import xri
+    from askbot.deps.openid.yadis import xri
 except ImportError:
     from yadis import xri
     
