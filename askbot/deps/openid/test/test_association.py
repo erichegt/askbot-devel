@@ -1,11 +1,11 @@
-from openid.test import datadriven
+from askbot.deps.openid.test import datadriven
 
 import unittest
 
-from openid.message import Message, BARE_NS, OPENID_NS, OPENID2_NS
-from openid import association
+from askbot.deps.openid.message import Message, BARE_NS, OPENID_NS, OPENID2_NS
+from askbot.deps.openid import association
 import time
-from openid import cryptutil
+from askbot.deps.openid import cryptutil
 import warnings
 
 class AssociationSerializationTest(unittest.TestCase):
@@ -22,17 +22,17 @@ class AssociationSerializationTest(unittest.TestCase):
         self.failUnlessEqual(assoc.lifetime, assoc2.lifetime)
         self.failUnlessEqual(assoc.assoc_type, assoc2.assoc_type)
 
-from openid.server.server import \
+from askbot.deps.openid.server.server import \
      DiffieHellmanSHA1ServerSession, \
      DiffieHellmanSHA256ServerSession, \
      PlainTextServerSession
 
-from openid.consumer.consumer import \
+from askbot.deps.openid.consumer.consumer import \
      DiffieHellmanSHA1ConsumerSession, \
      DiffieHellmanSHA256ConsumerSession, \
      PlainTextConsumerSession
 
-from openid.dh import DiffieHellman
+from askbot.deps.openid.dh import DiffieHellman
 
 def createNonstandardConsumerDH():
     nonstandard_dh = DiffieHellman(1315291, 2)

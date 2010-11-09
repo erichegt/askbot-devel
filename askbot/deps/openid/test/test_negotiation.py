@@ -2,10 +2,10 @@
 import unittest
 from support import CatchLogs
 
-from openid.message import Message, OPENID2_NS, OPENID1_NS, OPENID_NS
-from openid import association
-from openid.consumer.consumer import GenericConsumer, ServerError
-from openid.consumer.discover import OpenIDServiceEndpoint, OPENID_2_0_TYPE
+from askbot.deps.openid.message import Message, OPENID2_NS, OPENID1_NS, OPENID_NS
+from askbot.deps.openid import association
+from askbot.deps.openid.consumer.consumer import GenericConsumer, ServerError
+from askbot.deps.openid.consumer.discover import OpenIDServiceEndpoint, OPENID_2_0_TYPE
 
 class ErrorRaisingConsumer(GenericConsumer):
     """

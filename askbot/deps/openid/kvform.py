@@ -1,6 +1,6 @@
 __all__ = ['seqToKV', 'kvToSeq', 'dictToKV', 'kvToDict']
 
-from openid import oidutil
+from askbot.deps.openid import oidutil
 
 import types
 

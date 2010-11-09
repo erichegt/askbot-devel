@@ -15,17 +15,17 @@ __all__ = [
 
 import urlparse
 
-from openid import oidutil, fetchers, urinorm
+from askbot.deps.openid import oidutil, fetchers, urinorm
 
-from openid import yadis
-from openid.yadis.etxrd import nsTag, XRDSError, XRD_NS_2_0
-from openid.yadis.services import applyFilter as extractServices
-from openid.yadis.discover import discover as yadisDiscover
-from openid.yadis.discover import DiscoveryFailure
-from openid.yadis import xrires, filters
-from openid.yadis import xri
+from askbot.deps.openid import yadis
+from askbot.deps.openid.yadis.etxrd import nsTag, XRDSError, XRD_NS_2_0
+from askbot.deps.openid.yadis.services import applyFilter as extractServices
+from askbot.deps.openid.yadis.discover import discover as yadisDiscover
+from askbot.deps.openid.yadis.discover import DiscoveryFailure
+from askbot.deps.openid.yadis import xrires, filters
+from askbot.deps.openid.yadis import xri
 
-from openid.consumer import html_parse
+from askbot.deps.openid.consumer import html_parse
 
 OPENID_1_0_NS = 'http://openid.net/xmlns/1.0'
 OPENID_IDP_2_0_TYPE = 'http://specs.openid.net/auth/2.0/server'
@@ -33,8 +33,8 @@ OPENID_2_0_TYPE = 'http://specs.openid.net/auth/2.0/signon'
 OPENID_1_1_TYPE = 'http://openid.net/signon/1.1'
 OPENID_1_0_TYPE = 'http://openid.net/signon/1.0'
 
-from openid.message import OPENID1_NS as OPENID_1_0_MESSAGE_NS
-from openid.message import OPENID2_NS as OPENID_2_0_MESSAGE_NS
+from askbot.deps.openid.message import OPENID1_NS as OPENID_1_0_MESSAGE_NS
+from askbot.deps.openid.message import OPENID2_NS as OPENID_2_0_MESSAGE_NS
 
 class OpenIDServiceEndpoint(object):
     """Object representing an OpenID service endpoint.

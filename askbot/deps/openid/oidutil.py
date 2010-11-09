@@ -87,7 +87,7 @@ def log(message, level=0):
 
     To install your own logging hook::
 
-      from openid import oidutil
+      from askbot.deps.openid import oidutil
 
       def myLoggingFunction(message, level):
           ...

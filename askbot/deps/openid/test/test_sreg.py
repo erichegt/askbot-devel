@@ -1,6 +1,6 @@
-from openid.extensions import sreg
-from openid.message import NamespaceMap, Message, registerNamespaceAlias
-from openid.server.server import OpenIDRequest, OpenIDResponse
+from askbot.deps.openid.extensions import sreg
+from askbot.deps.openid.message import NamespaceMap, Message, registerNamespaceAlias
+from askbot.deps.openid.server.server import OpenIDRequest, OpenIDResponse
 
 import unittest
 

@@ -11,9 +11,9 @@ import urlparse
 import re
 import types
 
-from openid.yadis.discover import discover, DiscoveryFailure
+from askbot.deps.openid.yadis.discover import discover, DiscoveryFailure
 
-from openid import fetchers
+from askbot.deps.openid import fetchers
 
 import discoverdata
 

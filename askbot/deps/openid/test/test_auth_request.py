@@ -1,9 +1,9 @@
 import cgi
 import unittest
 
-from openid.consumer import consumer
-from openid import message
-from openid.test import support
+from askbot.deps.openid.consumer import consumer
+from askbot.deps.openid import message
+from askbot.deps.openid.test import support
 
 class DummyEndpoint(object):
     preferred_namespace = None

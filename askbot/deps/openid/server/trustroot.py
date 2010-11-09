@@ -17,9 +17,9 @@ __all__ = [
     'verifyReturnTo',
     ]
 
-from openid import oidutil
-from openid import urinorm
-from openid.yadis import services
+from askbot.deps.openid import oidutil
+from askbot.deps.openid import urinorm
+from askbot.deps.openid.yadis import services
 
 from urlparse import urlparse, urlunparse
 import re

@@ -1,5 +1,5 @@
-from openid import extension
-from openid import message
+from askbot.deps.openid import extension
+from askbot.deps.openid import message
 
 import unittest
 

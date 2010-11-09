@@ -24,7 +24,7 @@ import random
 from datetime import datetime
 from time import strptime
 
-from openid.oidutil import importElementTree
+from askbot.deps.openid.oidutil import importElementTree
 ElementTree = importElementTree()
 
 # the different elementtree modules don't have a common exception
@@ -40,7 +40,7 @@ except (SystemExit, MemoryError, AssertionError, ImportError):
 except:
     XMLError = sys.exc_info()[0]
 
-from openid.yadis import xri
+from askbot.deps.openid.yadis import xri
 
 class XRDSError(Exception):
     """An error with the XRDS document."""

@@ -1,6 +1,6 @@
-from openid import message
-from openid import oidutil
-from openid.extensions import sreg
+from askbot.deps.openid import message
+from askbot.deps.openid import oidutil
+from askbot.deps.openid.extensions import sreg
 
 import urllib
 import cgi

@@ -1,8 +1,8 @@
 import unittest
-from openid.consumer.discover import \
+from askbot.deps.openid.consumer.discover import \
      OpenIDServiceEndpoint, OPENID_1_1_TYPE, OPENID_1_0_TYPE
 
-from openid.yadis.services import applyFilter
+from askbot.deps.openid.yadis.services import applyFilter
 
 
 XRDS_BOILERPLATE = '''\

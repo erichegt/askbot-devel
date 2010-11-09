@@ -2,8 +2,8 @@
 import urlparse
 import os.path
 
-from openid.yadis.discover import DiscoveryResult, DiscoveryFailure
-from openid.yadis.constants import YADIS_HEADER_NAME
+from askbot.deps.openid.yadis.discover import DiscoveryResult, DiscoveryFailure
+from askbot.deps.openid.yadis.constants import YADIS_HEADER_NAME
 
 tests_dir = os.path.dirname(__file__)
 data_path = os.path.join(tests_dir, 'data')

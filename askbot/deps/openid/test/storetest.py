@@ -1,6 +1,6 @@
-from openid.association import Association
-from openid.cryptutil import randomString
-from openid.store.nonce import mkNonce, split
+from askbot.deps.openid.association import Association
+from askbot.deps.openid.cryptutil import randomString
+from askbot.deps.openid.store.nonce import mkNonce, split
 
 import unittest
 import string
@@ -194,7 +194,7 @@ def testStore(store):
     old_nonce2 = mkNonce(now - 10000)
     recent_nonce = mkNonce(now - 600)
 
-    from openid.store import nonce as nonceModule
+    from askbot.deps.openid.store import nonce as nonceModule
     orig_skew = nonceModule.SKEW
     try:
         nonceModule.SKEW = 0
@@ -221,7 +221,7 @@ def testStore(store):
 
 
 def test_filestore():
-    from openid.store import filestore
+    from askbot.deps.openid.store import filestore
     import tempfile
     import shutil
     try:
@@ -241,7 +241,7 @@ def test_filestore():
         shutil.rmtree(temp_dir)
 
 def test_sqlite():
-    from openid.store import sqlstore
+    from askbot.deps.openid.store import sqlstore
     try:
         from pysqlite2 import dbapi2 as sqlite
     except ImportError:
@@ -253,7 +253,7 @@ def test_sqlite():
         testStore(store)
 
 def test_mysql():
-    from openid.store import sqlstore
+    from askbot.deps.openid.store import sqlstore
     try:
         import MySQLdb
     except ImportError:
@@ -318,7 +318,7 @@ def test_postgresql():
 
     - To the 'template1' database once more, to drop the test database
     """
-    from openid.store import sqlstore
+    from askbot.deps.openid.store import sqlstore
     try:
         import psycopg
     except ImportError:
@@ -370,7 +370,7 @@ def test_postgresql():
         conn_remove.close()
 
 def test_memstore():
-    from openid.store import memstore
+    from askbot.deps.openid.store import memstore
     testStore(memstore.MemoryStore())
 
 test_functions = [

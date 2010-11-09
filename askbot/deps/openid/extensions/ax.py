@@ -12,9 +12,9 @@ __all__ = [
     'StoreResponse',
     ]
 
-from openid import extension
-from openid.server.trustroot import TrustRoot
-from openid.message import NamespaceMap, OPENID_NS
+from askbot.deps.openid import extension
+from askbot.deps.openid.server.trustroot import TrustRoot
+from askbot.deps.openid.message import NamespaceMap, OPENID_NS
 
 # Use this as the 'count' value for an attribute in a FetchRequest to
 # ask for as many values as the OP can provide.

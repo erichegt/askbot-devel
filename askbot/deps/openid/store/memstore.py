@@ -1,6 +1,6 @@
 """A simple store using only in-process memory."""
 
-from openid.store import nonce
+from askbot.deps.openid.store import nonce
 
 import copy
 import time

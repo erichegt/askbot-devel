@@ -1,5 +1,5 @@
 import unittest
-from openid.yadis import services, etxrd, xri
+from askbot.deps.openid.yadis import services, etxrd, xri
 import os.path
 
 def datapath(filename):

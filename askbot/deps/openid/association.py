@@ -34,10 +34,10 @@ __all__ = [
 
 import time
 
-from openid import cryptutil
-from openid import kvform
-from openid import oidutil
-from openid.message import OPENID_NS
+from askbot.deps.openid import cryptutil
+from askbot.deps.openid import kvform
+from askbot.deps.openid import oidutil
+from askbot.deps.openid.message import OPENID_NS
 
 all_association_types = [
     'HMAC-SHA1',

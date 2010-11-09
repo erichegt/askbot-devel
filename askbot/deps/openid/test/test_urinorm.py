@@ -1,6 +1,6 @@
 import os
 import unittest
-import openid.urinorm
+from askbot.deps.openid import urinorm
 
 class UrinormTest(unittest.TestCase):
     def __init__(self, desc, case, expected):
@@ -14,7 +14,7 @@ class UrinormTest(unittest.TestCase):
 
     def runTest(self):
         try:
-            actual = openid.urinorm.urinorm(self.case)
+            actual = urinorm.urinorm(self.case)
         except ValueError, why:
             self.assertEqual(self.expected, 'fail', why)
         else:

@@ -1,6 +1,6 @@
 import unittest
 
-from openid import oidutil
+from askbot.deps.openid import oidutil
 
 class SymbolTest(unittest.TestCase):
     def test_selfEquality(self):

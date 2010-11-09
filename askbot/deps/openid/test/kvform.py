@@ -1,5 +1,5 @@
-from openid import kvform
-from openid import oidutil
+from askbot.deps.openid import kvform
+from askbot.deps.openid import oidutil
 import unittest
 
 class KVBaseTest(unittest.TestCase):

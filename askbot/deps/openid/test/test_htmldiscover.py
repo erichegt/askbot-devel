@@ -1,4 +1,4 @@
-from openid.consumer.discover import OpenIDServiceEndpoint
+from askbot.deps.openid.consumer.discover import OpenIDServiceEndpoint
 import datadriven
 
 class BadLinksTestCase(datadriven.DataDrivenTestCase):

@@ -2,7 +2,7 @@ import unittest
 import codecs
 import string
 import random
-from openid import oidutil
+from askbot.deps.openid import oidutil
 
 def test_base64():
     allowed_s = string.ascii_letters + string.digits + '+/='

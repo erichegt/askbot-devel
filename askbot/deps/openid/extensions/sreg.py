@@ -35,10 +35,10 @@ OpenID providers.
     namespace and XRD Type value
 """
 
-from openid.message import registerNamespaceAlias, \
+from askbot.deps.openid.message import registerNamespaceAlias, \
      NamespaceAliasRegistrationError
-from openid.extension import Extension
-from openid import oidutil
+from askbot.deps.openid.extension import Extension
+from askbot.deps.openid import oidutil
 
 try:
     basestring #pylint:disable-msg=W0104

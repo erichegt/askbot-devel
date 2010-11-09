@@ -2,4 +2,4 @@
 
 __all__ = ['ax', 'pape', 'sreg']
 
-from openid.extensions.draft import pape5 as pape
+from askbot.deps.openid.extensions.draft import pape5 as pape

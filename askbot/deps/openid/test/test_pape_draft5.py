@@ -1,7 +1,7 @@
 
-from openid.extensions.draft import pape5 as pape
-from openid.message import *
-from openid.server import server
+from askbot.deps.openid.extensions.draft import pape5 as pape
+from askbot.deps.openid.message import *
+from askbot.deps.openid.server import server
 
 import warnings
 warnings.filterwarnings('ignore', module=__name__,

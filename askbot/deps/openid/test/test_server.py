@@ -1,10 +1,10 @@
 """Tests for openid.server.
 """
-from openid.server import server
-from openid import association, cryptutil, oidutil
-from openid.message import Message, OPENID_NS, OPENID2_NS, OPENID1_NS, \
+from askbot.deps.openid.server import server
+from askbot.deps.openid import association, cryptutil, oidutil
+from askbot.deps.openid.message import Message, OPENID_NS, OPENID2_NS, OPENID1_NS, \
      IDENTIFIER_SELECT, no_default, OPENID1_URL_LIMIT
-from openid.store import memstore
+from askbot.deps.openid.store import memstore
 import cgi
 
 import unittest
@@ -1424,8 +1424,8 @@ class TestAssociate(unittest.TestCase):
 
     def test_dhSHA1(self):
         self.assoc = self.signatory.createAssociation(dumb=False, assoc_type='HMAC-SHA1')
-        from openid.dh import DiffieHellman
-        from openid.server.server import DiffieHellmanSHA1ServerSession
+        from askbot.deps.openid.dh import DiffieHellman
+        from askbot.deps.openid.server.server import DiffieHellmanSHA1ServerSession
         consumer_dh = DiffieHellman.fromDefaults()
         cpub = consumer_dh.public
         server_dh = DiffieHellman.fromDefaults()
@@ -1452,8 +1452,8 @@ class TestAssociate(unittest.TestCase):
         def test_dhSHA256(self):
             self.assoc = self.signatory.createAssociation(
                 dumb=False, assoc_type='HMAC-SHA256')
-            from openid.dh import DiffieHellman
-            from openid.server.server import DiffieHellmanSHA256ServerSession
+            from askbot.deps.openid.dh import DiffieHellman
+            from askbot.deps.openid.server.server import DiffieHellmanSHA256ServerSession
             consumer_dh = DiffieHellman.fromDefaults()
             cpub = consumer_dh.public
             server_dh = DiffieHellman.fromDefaults()
@@ -1474,7 +1474,7 @@ class TestAssociate(unittest.TestCase):
             self.failUnlessEqual(secret, self.assoc.secret)
 
         def test_protoError256(self):
-            from openid.consumer.consumer import \
+            from askbot.deps.openid.consumer.consumer import \
                  DiffieHellmanSHA256ConsumerSession
 
             s256_session = DiffieHellmanSHA256ConsumerSession()
@@ -1499,7 +1499,7 @@ class TestAssociate(unittest.TestCase):
                                       message)
 
     def test_protoError(self):
-        from openid.consumer.consumer import DiffieHellmanSHA1ConsumerSession
+        from askbot.deps.openid.consumer.consumer import DiffieHellmanSHA1ConsumerSession
 
         s1_session = DiffieHellmanSHA1ConsumerSession()
 

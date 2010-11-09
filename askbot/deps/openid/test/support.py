@@ -1,5 +1,5 @@
-from openid import message
-from openid import oidutil
+from askbot.deps.openid import message
+from askbot.deps.openid import oidutil
 
 class OpenIDTestMixin(object):
     def failUnlessOpenIDValueEquals(self, msg, key, expected, ns=None):

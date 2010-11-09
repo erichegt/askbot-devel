@@ -12,8 +12,8 @@ import time
 import cStringIO
 import sys
 
-import openid
-import openid.urinorm
+from askbot.deps import openid
+import askbot.deps.openid.urinorm
 
 # Try to import httplib2 for caching support
 # http://bitworking.org/projects/httplib2/
@@ -324,7 +324,7 @@ class CurlHTTPFetcher(HTTPFetcher):
                 c.setopt(pycurl.WRITEFUNCTION, write_data)
                 c.setopt(pycurl.HEADERFUNCTION, response_header_data.write)
                 c.setopt(pycurl.TIMEOUT, off)
-                c.setopt(pycurl.URL, openid.urinorm.urinorm(url))
+                c.setopt(pycurl.URL, askbot.deps.openid.urinorm.urinorm(url))
 
                 c.perform()
 

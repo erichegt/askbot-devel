@@ -11,7 +11,7 @@ __all__ = [
     'CompoundFilter',
     ]
 
-from openid.yadis.etxrd import expandService
+from askbot.deps.openid.yadis.etxrd import expandService
 
 class BasicServiceEndpoint(object):
     """Generic endpoint object that contains parsed service

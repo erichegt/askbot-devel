@@ -4,7 +4,7 @@ import sys
 import urllib2
 import socket
 
-from openid import fetchers
+from askbot.deps.openid import fetchers
 
 # XXX: make these separate test cases
 

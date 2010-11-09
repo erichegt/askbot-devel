@@ -6,9 +6,9 @@ from cStringIO import StringIO
 
 import twill.commands, twill.parse, twill.unit
 
-from openid.consumer.discover import \
+from askbot.deps.openid.consumer.discover import \
      OpenIDServiceEndpoint, OPENID_1_1_TYPE
-from openid.consumer.consumer import AuthRequest
+from askbot.deps.openid.consumer.consumer import AuthRequest
 
 class TwillTest(twill.unit.TestInfo):
     """Variant of twill.unit.TestInfo that runs a function as a test script,

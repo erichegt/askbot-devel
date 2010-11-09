@@ -2,7 +2,7 @@ import sys
 import random
 import os.path
 
-from openid import cryptutil
+from askbot.deps.openid import cryptutil
 
 # Most of the purpose of this test is to make sure that cryptutil can
 # find a good source of randomness on this machine.

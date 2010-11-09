@@ -3,28 +3,28 @@ import cgi
 import time
 import warnings
 
-from openid.message import Message, OPENID_NS, OPENID2_NS, IDENTIFIER_SELECT, \
+from askbot.deps.openid.message import Message, OPENID_NS, OPENID2_NS, IDENTIFIER_SELECT, \
      OPENID1_NS, BARE_NS
-from openid import cryptutil, dh, oidutil, kvform
-from openid.store.nonce import mkNonce, split as splitNonce
-from openid.consumer.discover import OpenIDServiceEndpoint, OPENID_2_0_TYPE, \
+from askbot.deps.openid import cryptutil, dh, oidutil, kvform
+from askbot.deps.openid.store.nonce import mkNonce, split as splitNonce
+from askbot.deps.openid.consumer.discover import OpenIDServiceEndpoint, OPENID_2_0_TYPE, \
      OPENID_1_1_TYPE
-from openid.consumer.consumer import \
+from askbot.deps.openid.consumer.consumer import \
      AuthRequest, GenericConsumer, SUCCESS, FAILURE, CANCEL, SETUP_NEEDED, \
      SuccessResponse, FailureResponse, SetupNeededResponse, CancelResponse, \
      DiffieHellmanSHA1ConsumerSession, Consumer, PlainTextConsumerSession, \
      SetupNeededError, DiffieHellmanSHA256ConsumerSession, ServerError, \
      ProtocolError, _httpResponseToMessage
-from openid import association
-from openid.server.server import \
+from askbot.deps.openid import association
+from askbot.deps.openid.server.server import \
      PlainTextServerSession, DiffieHellmanSHA1ServerSession
-from openid.yadis.manager import Discovery
-from openid.yadis.discover import DiscoveryFailure
-from openid.dh import DiffieHellman
+from askbot.deps.openid.yadis.manager import Discovery
+from askbot.deps.openid.yadis.discover import DiscoveryFailure
+from askbot.deps.openid.dh import DiffieHellman
 
-from openid.fetchers import HTTPResponse, HTTPFetchingError
-from openid import fetchers
-from openid.store import memstore
+from askbot.deps.openid.fetchers import HTTPResponse, HTTPFetchingError
+from askbot.deps.openid import fetchers
+from askbot.deps.openid.store import memstore
 
 from support import CatchLogs
 
@@ -1459,13 +1459,13 @@ class ConsumerTest(unittest.TestCase):
 
             getNextService = dummy_getNextService
 
-        import openid.consumer.consumer
-        old_discovery = openid.consumer.consumer.Discovery
+        from askbot.deps.openid.consumer import consumer
+        old_discovery = consumer.Discovery
         try:
-            openid.consumer.consumer.Discovery = DummyDisco
+            consumer.Discovery = DummyDisco
             callable()
         finally:
-            openid.consumer.consumer.Discovery = old_discovery
+            consumer.Discovery = old_discovery
 
     def test_beginHTTPError(self):
         """Make sure that the discovery HTTP failure case behaves properly
@@ -2035,7 +2035,7 @@ class TestDiscoverAndVerify(unittest.TestCase):
             'http://claimed.id/', [self.to_match])
         self.failUnlessEqual(matching_endpoint, result)
 
-from openid.extension import Extension
+from askbot.deps.openid.extension import Extension
 class SillyExtension(Extension):
     ns_uri = 'http://silly.example.com/'
     ns_alias = 'silly'
@@ -2059,7 +2059,7 @@ class TestKVPost(unittest.TestCase):
         self.server_url = 'http://unittest/%s' % (self.id(),)
 
     def test_200(self):
-        from openid.fetchers import HTTPResponse
+        from askbot.deps.openid.fetchers import HTTPResponse
         response = HTTPResponse()
         response.status = 200
         response.body = "foo:bar\nbaz:quux\n"

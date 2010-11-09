@@ -4,7 +4,7 @@ __all__ = [
     'checkTimestamp',
     ]
 
-from openid import cryptutil
+from askbot.deps.openid import cryptutil
 from time import strptime, strftime, gmtime, time
 from calendar import timegm
 import string

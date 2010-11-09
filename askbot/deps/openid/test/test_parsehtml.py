@@ -1,4 +1,4 @@
-from openid.yadis.parsehtml import YadisHTMLParser, ParseDone
+from askbot.deps.openid.yadis.parsehtml import YadisHTMLParser, ParseDone
 from HTMLParser import HTMLParseError
 
 import os.path, unittest, sys

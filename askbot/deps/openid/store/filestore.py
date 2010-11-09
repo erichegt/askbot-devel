@@ -33,10 +33,10 @@ except ImportError:
 
         raise RuntimeError('Failed to get temp file after 5 attempts')
 
-from openid.association import Association
-from openid.store.interface import OpenIDStore
-from openid.store import nonce
-from openid import cryptutil, oidutil
+from askbot.deps.openid.association import Association
+from askbot.deps.openid.store.interface import OpenIDStore
+from askbot.deps.openid.store import nonce
+from askbot.deps.openid import cryptutil, oidutil
 
 _filename_allowed = string.ascii_letters + string.digits + '.'
 try:

@@ -1,7 +1,7 @@
 import unittest
 
-from openid.yadis import services
-from openid.yadis.discover import DiscoveryFailure, DiscoveryResult
+from askbot.deps.openid.yadis import services
+from askbot.deps.openid.yadis.discover import DiscoveryFailure, DiscoveryResult
 
 
 class TestGetServiceEndpoints(unittest.TestCase):

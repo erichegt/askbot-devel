@@ -350,7 +350,7 @@ def get_minor_login_providers():
         'type': 'openid-username',
         'extra_token_name': _('ClaimID user name'),
         'icon_media_path': '/jquery-openid/images/claimid-0.png',
-        'openid_endpoint': 'http://%(username)s.livejournal.com'
+        'openid_endpoint': 'http://claimid.com/%(username)s/'
     }
     data['vidoop'] = {
         'name': 'vidoop',

@@ -1,9 +1,9 @@
-from openid.test import datadriven
+from askbot.deps.openid.test import datadriven
 import time
 import unittest
 import re
 
-from openid.store.nonce import \
+from askbot.deps.openid.store.nonce import \
      mkNonce, \
      split as splitNonce, \
      checkTimestamp

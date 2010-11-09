@@ -17,7 +17,7 @@ __all__ = [
     'LEVELS_JISA',
     ]
 
-from openid.extension import Extension
+from askbot.deps.openid.extension import Extension
 import warnings
 import re
 

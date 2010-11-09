@@ -3,14 +3,14 @@
 This duplicates some things that are covered by test_consumer, but
 this works for now.
 """
-from openid import oidutil
-from openid.test.test_consumer import CatchLogs
-from openid.message import Message, OPENID2_NS, OPENID_NS, no_default
-from openid.server.server import DiffieHellmanSHA1ServerSession
-from openid.consumer.consumer import GenericConsumer, \
+from askbot.deps.openid import oidutil
+from askbot.deps.openid.test.test_consumer import CatchLogs
+from askbot.deps.openid.message import Message, OPENID2_NS, OPENID_NS, no_default
+from askbot.deps.openid.server.server import DiffieHellmanSHA1ServerSession
+from askbot.deps.openid.consumer.consumer import GenericConsumer, \
      DiffieHellmanSHA1ConsumerSession, ProtocolError
-from openid.consumer.discover import OpenIDServiceEndpoint, OPENID_1_1_TYPE, OPENID_2_0_TYPE
-from openid.store import memstore
+from askbot.deps.openid.consumer.discover import OpenIDServiceEndpoint, OPENID_1_1_TYPE, OPENID_2_0_TYPE
+from askbot.deps.openid.store import memstore
 import unittest
 
 # Some values we can use for convenience (see mkAssocResponse)

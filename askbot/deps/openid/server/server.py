@@ -119,16 +119,16 @@ From 1.1 to 2.0
 import time, warnings
 from copy import deepcopy
 
-from openid import cryptutil
-from openid import oidutil
-from openid import kvform
-from openid.dh import DiffieHellman
-from openid.store.nonce import mkNonce
-from openid.server.trustroot import TrustRoot, verifyReturnTo
-from openid.association import Association, default_negotiator, getSecretSize
-from openid.message import Message, InvalidOpenIDNamespace, \
+from askbot.deps.openid import cryptutil
+from askbot.deps.openid import oidutil
+from askbot.deps.openid import kvform
+from askbot.deps.openid.dh import DiffieHellman
+from askbot.deps.openid.store.nonce import mkNonce
+from askbot.deps.openid.server.trustroot import TrustRoot, verifyReturnTo
+from askbot.deps.openid.association import Association, default_negotiator, getSecretSize
+from askbot.deps.openid.message import Message, InvalidOpenIDNamespace, \
      OPENID_NS, OPENID2_NS, IDENTIFIER_SELECT, OPENID1_URL_LIMIT
-from openid.urinorm import urinorm
+from askbot.deps.openid.urinorm import urinorm
 
 HTTP_OK = 200
 HTTP_REDIRECT = 302

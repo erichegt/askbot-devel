@@ -1,6 +1,6 @@
 import unittest
 import os.path
-from openid.yadis import accept
+from askbot.deps.openid.yadis import accept
 
 def getTestData():
     """Read the test data off of disk

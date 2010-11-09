@@ -4,14 +4,14 @@ various SQL databases to back them.
 
 Example of how to initialize a store database::
 
-    python -c 'from openid.store import sqlstore; import pysqlite2.dbapi2; sqlstore.SQLiteStore(pysqlite2.dbapi2.connect("cstore.db")).createTables()'
+    python -c 'from askbot.deps.openid.store import sqlstore; import pysqlite2.dbapi2; sqlstore.SQLiteStore(pysqlite2.dbapi2.connect("cstore.db")).createTables()'
 """
 import re
 import time
 
-from openid.association import Association
-from openid.store.interface import OpenIDStore
-from openid.store import nonce
+from askbot.deps.openid.association import Association
+from askbot.deps.openid.store.interface import OpenIDStore
+from askbot.deps.openid.store import nonce
 
 def _inTxn(func):
     def wrapped(self, *args, **kwargs):

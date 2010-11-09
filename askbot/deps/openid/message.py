@@ -8,8 +8,8 @@ import copy
 import warnings
 import urllib
 
-from openid import oidutil
-from openid import kvform
+from askbot.deps.openid import oidutil
+from askbot.deps.openid import kvform
 try:
     ElementTree = oidutil.importElementTree()
 except ImportError:

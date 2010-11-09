@@ -2,14 +2,14 @@ import sys
 import unittest
 import datadriven
 import os.path
-from openid import fetchers
-from openid.fetchers import HTTPResponse
-from openid.yadis.discover import DiscoveryFailure
-from openid.consumer import discover
-from openid.yadis import xrires
-from openid.yadis.xri import XRI
+from askbot.deps.openid import fetchers
+from askbot.deps.openid.fetchers import HTTPResponse
+from askbot.deps.openid.yadis.discover import DiscoveryFailure
+from askbot.deps.openid.consumer import discover
+from askbot.deps.openid.yadis import xrires
+from askbot.deps.openid.yadis.xri import XRI
 from urlparse import urlsplit
-from openid import message
+from askbot.deps.openid import message
 
 ### Tests for conditions that trigger DiscoveryFailure
 

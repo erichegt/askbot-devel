@@ -3,11 +3,11 @@ __all__ = ['discover', 'DiscoveryResult', 'DiscoveryFailure']
 
 from cStringIO import StringIO
 
-from openid import fetchers
+from askbot.deps.openid import fetchers
 
-from openid.yadis.constants import \
+from askbot.deps.openid.yadis.constants import \
      YADIS_HEADER_NAME, YADIS_CONTENT_TYPE, YADIS_ACCEPT_HEADER
-from openid.yadis.parsehtml import MetaNotFound, findHTMLMeta
+from askbot.deps.openid.yadis.parsehtml import MetaNotFound, findHTMLMeta
 
 class DiscoveryFailure(Exception):
     """Raised when a YADIS protocol error occurs in the discovery process"""

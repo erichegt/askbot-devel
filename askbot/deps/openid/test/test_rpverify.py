@@ -3,10 +3,10 @@
 
 __all__ = ['TestBuildDiscoveryURL']
 
-from openid.yadis.discover import DiscoveryResult, DiscoveryFailure
-from openid.yadis import services
-from openid.server import trustroot
-from openid.test.support import CatchLogs
+from askbot.deps.openid.yadis.discover import DiscoveryResult, DiscoveryFailure
+from askbot.deps.openid.yadis import services
+from askbot.deps.openid.server import trustroot
+from askbot.deps.openid.test.support import CatchLogs
 import unittest
 
 # Too many methods does not apply to unit test objects
