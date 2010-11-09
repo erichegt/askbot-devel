@@ -14,7 +14,7 @@ settings.register(
     BooleanValue(
         SOCIAL_SHARING,
         'ENABLE_SOCIAL_SHARING',
-        default=False,
+        default=True,
         description=_('Check to enable sharing of questions on Twitter and Facebook')
     )
 )
