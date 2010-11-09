@@ -1082,7 +1082,6 @@ var socialSharing = function(){
             var url = SERVICE_DATA[service_name]['url'];
             url = url.replace('{URL}', URL);
             url = url.replace('{TEXT}', TEXT);
-            alert(url);
             var params = SERVICE_DATA[service_name]['params'];
             if(!window.open(url, "sharing", params)){
                 window.location.href=share_url;
