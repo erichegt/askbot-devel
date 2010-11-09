@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import urlparse
+import cgi
 import urllib
 from askbot.deps.openid.store.interface import OpenIDStore
 from askbot.deps.openid.association import Association as OIDAssociation
@@ -505,7 +505,7 @@ class OAuthConnection(object):
 
         response, content = client.request(url, method, **kwargs)
         if response['status'] == '200':
-            return dict(urlparse.parse_qsl(content))
+            return dict(cgi.parse_qsl(content))
         else:
             raise OAuthError('response is %s' % response)
 
@@ -569,7 +569,7 @@ def get_facebook_user_id(request):
         secret = askbot_settings.FACEBOOK_SECRET
 
         fb_cookie = request.COOKIES['fbs_%s' % key]
-        fb_response = dict(urlparse.parse_qsl(fb_cookie))
+        fb_response = dict(cgi.parse_qsl(fb_cookie))
 
         signature = None
         payload = ''
