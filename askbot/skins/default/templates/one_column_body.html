@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+<div id="wrapper">
+    <div id="room">
+        <div id="CAFull">
+            {% include "input_bar.html" %}
+            {% block content%}
+            {% endblock%}
+        </div>
+        <div id="tail" style="clear:both;">
+            {% block tail %}
+            {% endblock %}
+        </div>
+    </div>
+    <div class="spacer3"></div>
+</div>
+{% endblock %}
