@@ -95,6 +95,7 @@ def badges(request):#user status/reputation system
 
     template = ENV.get_template('badges.html')
     data = {
+        'active_tab': 'badges',
         'badges' : badges,
         'view_name': 'badges',
         'mybadges' : my_badges,
@@ -120,6 +121,7 @@ def badge(request, id):
     template = ENV.get_template('badge.html')
     data = {
         'view_name': badge,
+        'active_tab': 'badges',
         'awards' : awards,
         'badge' : badge,
     }
