@@ -186,15 +186,13 @@
             </p>
         {% endif %}
 </div>
+{% if questions_count > 10 %}{# todo: remove magic number #}
+    <div id="pager" class="pager">
+        {{ macros.paginator(context|setup_paginator, position='left') }}
+        {{ macros.pagesize_switch(context, position='right') }}
+    </div>
+{% endif %}
 {% endblock %}
-
-    {% block tail %}
-            {% if questions_count > 10 %}{# todo: remove magic number #}
-                <div id="pager" class="pager">{{ macros.paginator(context|setup_paginator) }}</div>
-                <div class="pagesize">{{ macros.pagesize_switch(context) }}</div>
-            {% endif %}
-    {% endblock %}
-
 {% block sidebar %}
     {% if contributors %}
         {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
@@ -239,9 +237,9 @@
         var sortMethod = '{{sort}}';
         var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
         var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
-        $().ready(function(){
-            var on_tab = '#nav_questions';
-            $(on_tab).attr('className','on');
+        $(document).ready(function(){
+            /*var on_tab = '#nav_questions';
+            $(on_tab).attr('className','on');*/
             Hilite.exact = false;
             Hilite.elementid = "listA";
             Hilite.debug_referrer = location.href;

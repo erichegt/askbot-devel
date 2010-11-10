@@ -238,7 +238,12 @@ $(document).ready(function(){
 
     var render_paginator = function(paginator){
         var pager = $('#pager');
-        if (! pager.is(':empty')){
+        if (paginator === ''){
+            pager.hide();
+            return;
+        }
+        else {
+            pager.show();
             pager.html(paginator);
         }
     };

@@ -44,10 +44,10 @@
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro paginator(p) -%}{# p is paginator context dictionary #}
+{%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div class="paginator">
+        <div class="paginator" style="float:{{position}}">
         {% if p.has_previous %}
             <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ p.extend_url }}" title="{% trans %}previous{% endtrans %}">
         &laquo; {% trans %}previous{% endtrans %}</a></span>
@@ -81,10 +81,10 @@
 {% endspaceless %}
 {%- endmacro -%}
 
-{%- macro pagesize_switch(p) -%}{# p is paginator context #}
+{%- macro pagesize_switch(p, position='left') -%}{# p is paginator context #}
 {% spaceless %}
 {% if p.is_paginated %}
-    <div class="paginator">
+    <div class="paginator" style="float:{{position}}">
         <span class="text">{% trans %}posts per page{% endtrans %}</span>
         {% if p.page_size == 10 %}
             <span class="curr">10</span>

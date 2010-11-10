@@ -9,7 +9,7 @@
     {% include "users_questions.html" %}
         <a name="answers"></a>
         {% spaceless %}
-            <h2>{% trans counter=answered_questions|length %}<span class="count">{{counter}}</span> Answer{% pluralize %}<span class="count">{{counter}}</span> Answers{% endtrans %}</h2>
+            <h2 style="clear:both;">{% trans counter=answered_questions|length %}<span class="count">{{counter}}</span> Answer{% pluralize %}<span class="count">{{counter}}</span> Answers{% endtrans %}</h2>
         {% endspaceless %}
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}

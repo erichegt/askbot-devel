@@ -27,7 +27,6 @@ function pickedTags(){
         $.ajax(call_settings);
     };
 
-
     var unpickTag = function(from_target ,tagname, reason, send_ajax){
         //send ajax request to delete tag
         var deleteTagLocally = function(){
@@ -40,7 +39,6 @@ function pickedTags(){
         else {
             deleteTagLocally();
         }
-
     };
 
     var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){

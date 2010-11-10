@@ -159,13 +159,16 @@ def questions(request):
                                 'q_num': humanize.intcomma(q_count),
                             }
 
-        paginator_tpl = ENV.get_template('paginator.html')
-        #todo: remove this patch on context after all templates are moved to jinja
-        paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
-        data = {
-            'paginator_context': extra_tags.cnprog_paginator(paginator_context)
-        }
-        paginator_html = paginator_tpl.render(Context(data))
+        if q_count > search_state.page_size:
+            paginator_tpl = ENV.get_template('paginator.html')
+            #todo: remove this patch on context after all templates are moved to jinja
+            paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
+            data = {
+                'paginator_context': extra_tags.cnprog_paginator(paginator_context)
+            }
+            paginator_html = paginator_tpl.render(Context(data))
+        else:
+            paginator_html = ''
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button

@@ -22,31 +22,29 @@
     </div>
 </div>
 <div id="searchtags">
-<p>
-{% if stag %}
-    {% trans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endtrans %}:
-{% endif %}
-{% if not tags.object_list %}
-    <span>{% trans %}Nothing found{% endtrans %}</span>
-{% endif %}
-</p>
-{% if tags.object_list %}
-<ul class="tagsList tags">
-{% for tag in tags.object_list %}
-   <li>
-    <a href="{% url questions %}?tags={{tag|urlencode}}" 
-        title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">
-        {{ tag }}
-    </a>&nbsp;
-    <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
-    <br/>
-    </li>
-{% endfor %}
-</ul>
-{% endif %}
+    <p>
+        {% if stag %}
+            {% trans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endtrans %}:
+        {% endif %}
+        {% if not tags.object_list %}
+            <span>{% trans %}Nothing found{% endtrans %}</span>
+        {% endif %}
+    </p>
+    {% if tags.object_list %}
+    <ul class="tagsList tags">
+    {% for tag in tags.object_list %}
+       <li>
+        <a href="{% url questions %}?tags={{tag|urlencode}}" 
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">
+            {{ tag }}
+        </a>&nbsp;
+        <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+        <br/>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
 </div>
-{% endblock %}
-{% block tail %}
 <div class="pager">
     {{macros.paginator(paginator_context)}}
 </div>              

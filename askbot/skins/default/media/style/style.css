@@ -220,7 +220,6 @@ blockquote {
 #room {
     padding: 0 0 10px 0;
     background-color: #FFF;
-    border-bottom: 1px solid #777;
 }
 
 #CALeft {
@@ -447,7 +446,7 @@ blockquote {
 #listA {
     float: left;
     background-color: #FFF;
-    padding: 0 0px 0 0px;
+    padding: 0;
     width: 100%;
 }
 
@@ -752,11 +751,11 @@ blockquote {
     margin: 0;
 }
 
-/*分页*/
 .pager {
+    clear:both;
+    border-top: 1px solid #777;
     margin-top: 10px;
     margin-bottom: 16px;
-    float: left;
 }
 
 .pagesize {
@@ -1465,7 +1464,6 @@ a.comment-user:hover {
     margin: 0;
     list-style-type: none;
     padding: 0px;
-    min-height: 360px;
 }
 
 .tagsList li {
