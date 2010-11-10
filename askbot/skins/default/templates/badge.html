@@ -1,14 +1,7 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- template badge.html -->
 {% block title %}{% spaceless %}{% trans name=badge.name %}{{name}}{% endtrans %} - {% trans %}Badge{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-    <script type="text/javascript">
-        $().ready(function(){
-            $("#nav_badges").attr('className',"on");
-        });
-    </script>
-{% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
 {% trans %}Badge{% endtrans %}
@@ -41,5 +34,12 @@
     </div>
 
 </div>
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+        $().ready(function(){
+            $("#nav_badges").attr('className',"on");
+        });
+    </script>
 {% endblock %}
 <!-- end template badge.html -->

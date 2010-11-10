@@ -1,27 +1,7 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- tags.html -->
 {% block title %}{% spaceless %}{% trans %}Tag list{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-       <script type="text/javascript">
-       /*<![CDATA[*/
-        $().ready(function(){
-            $("#nav_tags").attr('className',"on");
-            $("#ipSearchTag").focus();
-
-            var orderby = "{{ tab_id }}";
-            if(orderby != "used" && orderby != "name")
-                orderby = "used";
-            $("#sort_" + orderby).attr('className',"on");
-            $("#type-tag").attr('checked',true);
-
-            Hilite.exact = false;
-            Hilite.elementid = "searchtags";
-            Hilite.debug_referrer = location.href;
-        });
-        /*]]>*/
-        </script>
-{% endblock %}
 {% block content %}
 <!-- Tabs -->
 <div class="tabBar">
@@ -55,11 +35,30 @@
 </ul>
 {% endif %}
 </div>
-
 {% endblock %}
 {% block tail %}
 <div class="pager">
     {{macros.paginator(paginator_context)}}
 </div>              
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $().ready(function(){
+            $("#nav_tags").attr('className',"on");
+            $("#ipSearchTag").focus();
+
+            var orderby = "{{ tab_id }}";
+            if(orderby != "used" && orderby != "name")
+                orderby = "used";
+            $("#sort_" + orderby).attr('className',"on");
+            $("#type-tag").attr('checked',true);
+
+            Hilite.exact = false;
+            Hilite.elementid = "searchtags";
+            Hilite.debug_referrer = location.href;
+        });
+    /*]]>*/
+    </script>
 {% endblock %}
 <!-- end tags.html -->

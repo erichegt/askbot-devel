@@ -1,22 +1,7 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- users.html -->
 {% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-       <script type="text/javascript">
-        //todo move javascript out
-        $().ready(function(){
-            $("#nav_users").attr('className',"on");
-            $("#type-user").attr('checked',true);
-            var orderby = "{{ tab_id }}";
-            $("#sort_" + orderby).attr('className',"on");
-            
-            Hilite.exact = false;
-            Hilite.elementid = "main-body";
-            Hilite.debug_referrer = location.href;
-        });
-        </script>
-{% endblock %}
 {% block content %}
 <div class="tabBar">
     <div class="headUsers">{% trans %}Users{% endtrans %}</div>
@@ -64,5 +49,20 @@
 <div class="pager">
     {{ macros.paginator(paginator_context) }}
 </div>              
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+        //todo move javascript out
+        $().ready(function(){
+            $("#nav_users").attr('className',"on");
+            $("#type-user").attr('checked',true);
+            var orderby = "{{ tab_id }}";
+            $("#sort_" + orderby).attr('className',"on");
+            
+            Hilite.exact = false;
+            Hilite.elementid = "main-body";
+            Hilite.debug_referrer = location.href;
+        });
+    </script>
 {% endblock %}
 <!-- end users.html -->

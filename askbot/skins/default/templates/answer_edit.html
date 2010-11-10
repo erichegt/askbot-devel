@@ -1,11 +1,10 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- template answer_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
-        
 {% block content %}
 <div id="main-bar" class="headNormal">
     {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.question.get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]

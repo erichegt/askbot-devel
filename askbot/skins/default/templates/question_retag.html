@@ -1,50 +1,6 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 <!-- question_retag.html -->
 {% block title %}{% spaceless %}{% trans %}Change tags{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
-    <script type="text/javascript">
-
-    $().ready(function(){
-        $("#nav_questions").attr('className',"on");
-        //Tags autocomplete action
-        var tags = {{ tags }};
-    $("#id_tags").autocomplete(tags, {
-        minChars: 1,
-        matchContains: true,
-        max: 20,
-        multiple: true,
-        multipleSeparator: " ",
-        formatItem: function(row, i, max) {
-            return row.n + " ("+ row.c +")";
-        },
-        formatResult: function(row, i, max){
-            return row.n;
-        }
-        
-    });
-     $("#fmretag").validate({
-        rules: {
-            tags: {
-                required: true,
-                maxength: 105
-            }
-        },
-        messages: {
-            tags: {
-                    required: "{% trans %}tags are required{% endtrans %}",
-                    maxlength: "{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}"
-                }
-            }
-            
-        });
-        lanai.highlightSyntax();
-    });
-    </script>
-{% endblock %}
-        
 {% block content %}
 <div id="main-bar" class="headNormal">
     {% trans %}Change tags{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
@@ -88,5 +44,45 @@
 </div>
 {% endblock %}
 {% block endjs %}
+    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type="text/javascript">
+        $().ready(function(){
+            $("#nav_questions").attr('className',"on");
+            //Tags autocomplete action
+            var tags = {{ tags }};
+        $("#id_tags").autocomplete(tags, {
+            minChars: 1,
+            matchContains: true,
+            max: 20,
+            multiple: true,
+            multipleSeparator: " ",
+            formatItem: function(row, i, max) {
+                return row.n + " ("+ row.c +")";
+            },
+            formatResult: function(row, i, max){
+                return row.n;
+            }
+            
+        });
+         $("#fmretag").validate({
+            rules: {
+                tags: {
+                    required: true,
+                    maxength: 105
+                }
+            },
+            messages: {
+                tags: {
+                        required: "{% trans %}tags are required{% endtrans %}",
+                        maxlength: "{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}"
+                    }
+                }
+                
+            });
+            lanai.highlightSyntax();
+        });
+    </script>
 {% endblock %}
 <!-- end question_retag.html -->

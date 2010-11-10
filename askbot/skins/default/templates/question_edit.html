@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- question_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit question{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}

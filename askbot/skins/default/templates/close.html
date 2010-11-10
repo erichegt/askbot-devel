@@ -1,13 +1,6 @@
-{% extends "base_content.html" %}
+{% extends "one_column_body.html" %}
 <!-- template close.html -->
 {% block title %}{% spaceless %}{% trans %}Close question{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-       <script type="text/javascript">
-        $().ready(function(){
-            $('#btBack').bind('click', function(){ history.back(); });
-        });
-        </script>
-{% endblock %}
 {% block content %}
 <div id="main-bar" class="headNormal">
     {% trans %}Close question{% endtrans %}
@@ -27,5 +20,12 @@
         </div>
     </form>
 </div>
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+        $().ready(function(){
+            $('#btBack').bind('click', function(){ history.back(); });
+        });
+    </script>
 {% endblock %}
 <!-- end template close.html -->

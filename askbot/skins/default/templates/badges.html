@@ -1,14 +1,6 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 <!-- template badges.html -->
 {% block title %}{% spaceless %}{% trans %}Badges summary{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-       <script type="text/javascript">
-        $().ready(function(){
-            $("#nav_badges").attr('className',"on");
-        });
-         
-        </script>
-{% endblock %}
 {% block content %}
 <div class="headlineA">
         <span class="headMedals">{% trans %}Badges{% endtrans %}</span>
@@ -71,5 +63,13 @@
     </p>
     </div>
 </div>
+{% endblock %}
+{% block endjs %}
+       <script type="text/javascript">
+        $().ready(function(){
+            $("#nav_badges").attr('className',"on");
+        });
+         
+        </script>
 {% endblock %}
 <!-- end template badges.html -->

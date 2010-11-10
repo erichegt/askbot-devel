@@ -1,9 +1,7 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 <!-- questions.html -->
 {% import "macros.html" as macros %}
 {% block title %}{% spaceless %}{% trans %}Questions{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-{% endblock %}
 {% block content %}
 {% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
 <div class="tabBar">

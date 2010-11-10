@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- question.html -->
 {% block title %}{% spaceless %}{{ question.get_question_title() }}{% endspaceless %}{% endblock %}
@@ -6,11 +6,10 @@
         <meta name="description" content="{{question.summary}}" />
 {% endblock %}
 {% block keywords %}{{question.tagname_meta_generator()}}{% endblock %}
-{% block forejs %}
+{% block forestyle %}
     <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
-        
 {% block content %}
 <div class="headNormal">
     <a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a>

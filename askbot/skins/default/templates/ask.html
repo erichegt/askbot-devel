@@ -1,14 +1,13 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 <!-- template ask.html -->
 {% block title %}{% spaceless %}{% trans %}Ask a question{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {# main contents of ask form is in the template input_bar #}
 {% block sidebar %}
 {% include "question_edit_tips.html" %}
 {% endblock %}
-
 {% block endjs %}
     <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/jquery.validate.js"|media}}'></script>

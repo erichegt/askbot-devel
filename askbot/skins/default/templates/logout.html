@@ -1,12 +1,28 @@
-{% extends "base_content.html" %}
+{% extends "one_column_body.html" %}
 <!-- template logout.html -->
 {% block title %}{% spaceless %}{% trans %}Logout{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block content %}
+<div  class="headNormal">
+    {% trans %}Logout{% endtrans %} 
+</div>
+<div id="main-body" style="width:100%">
+    <p>{% trans %}As a registered user you can login with your OpenID, log out of the site or permanently remove your account.{% endtrans %}</p>
+    <input id="btLogout" type="button" class="submit" value="{% trans %}Logout now{% endtrans %}"><!-- style="width:150px">-->
+</div>
+{% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
+    <div id="fb-root"></div>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+        FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
+    </script>
+{% endif %}
+{% endblock %}
+{% block endjs %}
     <script type="text/javascript">
     var sign_out = function(){
         window.location.href='{% url user_signout %}?next={{ next }}';
     }
-    $().ready(function(){
+    $(document).ready(function(){
         $('#btLogout').bind('click', function(){
             if (typeof FB != 'undefined'){
                 FB.getLoginStatus(function(response){
@@ -26,21 +42,5 @@
         });
     });
     </script>
-{% endblock %}
-{% block content %}
-<div  class="headNormal">
-    {% trans %}Logout{% endtrans %} 
-</div>
-<div id="main-body" style="width:100%">
-    <p>{% trans %}As a registered user you can login with your OpenID, log out of the site or permanently remove your account.{% endtrans %}</p>
-    <input id="btLogout" type="button" class="submit" value="{% trans %}Logout now{% endtrans %}"><!-- style="width:150px">-->
-</div>
-{% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_US/all.js"></script>
-<script>
-    FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
-</script>
-{% endif %}
 {% endblock %}
 <!-- end logout.html -->

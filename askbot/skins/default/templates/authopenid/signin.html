@@ -1,42 +1,8 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block forestyle %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
-    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
-    <script type="text/javascript" src="{{"/jquery-openid/jquery.openid.js"|media}}"></script>
-    <script type="text/javascript">
-        $(document).ready( function() { $("body").authenticator(); })
-            var extra_token_name = {};
-            var create_pw_text = {};
-            var change_pw_text = {};
-            var authUrl = '/{% trans %}account/{% endtrans %}';
-            var siteName = '{{settings.APP_SHORT_NAME}}';
-            var provider_count = {{existing_login_methods|length}};
-            {% for login_provider in major_login_providers %}
-                {% if login_provider.extra_token_name %}
-                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
-                {% endif %}
-                {% if login_provider.type == 'password' %}
-                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
-                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
-                {% endif %}
-            {% endfor %}
-            {% for login_provider in minor_login_providers %}
-                {% if login_provider.extra_token_name %}
-                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
-                {% endif %}
-                {% if login_provider.type == 'password' %}
-                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
-                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
-                {% endif %}
-            {% endfor %}
-            {% if user.is_authenticated() %}
-                var userIsAuthenticated = true;
-            {% else %}
-                var userIsAuthenticated = false;
-            {% endif %}
-    </script>
 {% endblock %}
 {% block content %}
 <h1>{{page_title}}</h1>
@@ -272,22 +238,58 @@
         <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
     </p>
 </div>
-{% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_US/all.js"></script>
-<script>
-    $(document).ready(function(){
-        FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
-        FB.Event.subscribe('auth.sessionChange', function(response){
-                if (response.session) {
-                // A user has logged in, and a new cookie has been saved
-                    $('#signin-form').submit();
-                } else {
-                // The user has logged out, and the cookie has been cleared
-                }
-        });
-    });
-</script>
-{% endif %}
 {% endblock%}
+{% block endjs %}
+    {% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
+    <div id="fb-root"></div>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+        $(document).ready(function(){
+            FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
+            FB.Event.subscribe('auth.sessionChange', function(response){
+                    if (response.session) {
+                    // A user has logged in, and a new cookie has been saved
+                        $('#signin-form').submit();
+                    } else {
+                    // The user has logged out, and the cookie has been cleared
+                    }
+            });
+        });
+    </script>
+    {% endif %}
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type="text/javascript" src="{{"/jquery-openid/jquery.openid.js"|media}}"></script>
+    <script type="text/javascript">
+        $(document).ready( function() { $("body").authenticator(); })
+            var extra_token_name = {};
+            var create_pw_text = {};
+            var change_pw_text = {};
+            var authUrl = '/{% trans %}account/{% endtrans %}';
+            var siteName = '{{settings.APP_SHORT_NAME}}';
+            var provider_count = {{existing_login_methods|length}};
+            {% for login_provider in major_login_providers %}
+                {% if login_provider.extra_token_name %}
+                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+                {% endif %}
+                {% if login_provider.type == 'password' %}
+                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+                {% endif %}
+            {% endfor %}
+            {% for login_provider in minor_login_providers %}
+                {% if login_provider.extra_token_name %}
+                    extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+                {% endif %}
+                {% if login_provider.type == 'password' %}
+                    create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                    change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+                {% endif %}
+            {% endfor %}
+            {% if user.is_authenticated() %}
+                var userIsAuthenticated = true;
+            {% else %}
+                var userIsAuthenticated = false;
+            {% endif %}
+    </script>
+{% endblock %}
 <!-- end signin.html -->

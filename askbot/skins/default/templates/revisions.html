@@ -1,38 +1,7 @@
-{% extends "base.html" %}
+{% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- revisions.html -->
 {% block title %}{% spaceless %}{% trans %}Revision history{% endtrans %}{% endspaceless %}{% endblock %}
-{% block forejs %}
-        <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
-        <script type="text/javascript">
-        //todo - take this out into .js file 
-        $().ready(function(){
-            $("#nav_questions").attr('className',"on");
-            $('div.revision div[id^=rev-header-]').bind('click', function(){
-                var revId = this.id.substr(11);
-                toggleRev(revId); 
-            
-            });
-            lanai.highlightSyntax();
-        });
-        
-        function toggleRev(id) {
-            var arrow = $("#rev-arrow-" + id);
-            var visible = arrow.attr("src").indexOf("hide") > -1;
-            var path = mediaUrl(
-                                "media/images/expander-arrow-" + 
-                                (visible ? "show" : "hide") + 
-                                ".gif" + 
-                                "?v={{settings.MEDIA_RESOURCE_REVISION}}"
-                            );
-            arrow.attr("src", path);
-            $("#rev-body-" + id).slideToggle("fast");
-        }
-        
-        </script>
-{% endblock %}
-        
 {% block content %}
 <div id="main-bar" class="headNormal">
     {% trans %}Revision history{% endtrans %} [<a href="{{ post.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
@@ -97,5 +66,32 @@
 {% endblock %}
 
 {% block endjs %}
+    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+    <script type="text/javascript">
+    //todo - take this out into .js file 
+    $().ready(function(){
+        $("#nav_questions").attr('className',"on");
+        $('div.revision div[id^=rev-header-]').bind('click', function(){
+            var revId = this.id.substr(11);
+            toggleRev(revId); 
+        
+        });
+        lanai.highlightSyntax();
+    });
+
+    function toggleRev(id) {
+        var arrow = $("#rev-arrow-" + id);
+        var visible = arrow.attr("src").indexOf("hide") > -1;
+        var path = mediaUrl(
+                            "media/images/expander-arrow-" + 
+                            (visible ? "show" : "hide") + 
+                            ".gif" + 
+                            "?v={{settings.MEDIA_RESOURCE_REVISION}}"
+                        );
+        arrow.attr("src", path);
+        $("#rev-body-" + id).slideToggle("fast");
+    }
+</script>
 {% endblock %}
 <!-- end revisions.html -->
