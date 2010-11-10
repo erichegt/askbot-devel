@@ -6,10 +6,30 @@
 <div class="tabBar">
     <div class="headUsers">{% trans %}Users{% endtrans %}</div>
     <div class="tabsA">
-        <a id="sort_reputation" href="{% url users %}?sort=reputation" class="off" title="{% trans %}reputation{% endtrans %}">{% trans %}reputation{% endtrans %}</a>
-        <a id="sort_newest" href="{% url users %}?sort=newest" class="off" title="{% trans %}recent{% endtrans %}">{% trans %}recent{% endtrans %}</a>
-        <a id="sort_last" href="{% url users %}?sort=last" class="off" title="{% trans %}oldest{% endtrans %}">{% trans %}oldest{% endtrans %}</a>
-        <a id="sort_user" href="{% url users %}?sort=user" class="off" title="{% trans %}by username{% endtrans %}">{% trans %}by username{% endtrans %}</a>
+        <a 
+            id="sort_reputation"
+            href="{% url users %}?sort=reputation"
+            {% if tab_id == 'reputation' %}class="on"{% endif %}
+            title="{% trans %}reputation{% endtrans %}"
+        >{% trans %}reputation{% endtrans %}</a>
+        <a 
+            id="sort_newest"
+            href="{% url users %}?sort=newest"
+            {% if tab_id == 'newest' %}class="on"{% endif %}
+            class="off" title="{% trans %}recent{% endtrans %}"
+        >{% trans %}recent{% endtrans %}</a>
+        <a 
+            id="sort_last"
+            href="{% url users %}?sort=last"
+            {% if tab_id == 'last' %}class="on"{% endif %}
+            class="off" title="{% trans %}oldest{% endtrans %}"
+        >{% trans %}oldest{% endtrans %}</a>
+        <a 
+            id="sort_user"
+            href="{% url users %}?sort=user"
+            {% if tab_id == 'user' %}class="on"{% endif %}
+            title="{% trans %}by username{% endtrans %}"
+        >{% trans %}by username{% endtrans %}</a>
     </div>
 </div>
 <div id="main-body" style="width:100%">
@@ -54,11 +74,6 @@
     <script type="text/javascript">
         //todo move javascript out
         $().ready(function(){
-            $("#nav_users").attr('className',"on");
-            $("#type-user").attr('checked',true);
-            var orderby = "{{ tab_id }}";
-            $("#sort_" + orderby).attr('className',"on");
-            
             Hilite.exact = false;
             Hilite.elementid = "main-body";
             Hilite.debug_referrer = location.href;

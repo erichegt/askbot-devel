@@ -8,8 +8,6 @@
                 {% spaceless %}
                 {% if request.user.new_response_count > 0 or request.user.seen_response_count > 0 %}
                 <a class='ab-responses-envelope' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
-                    new {{request.user.new_response_count}}
-                    old {{request.user.seen_response_count}}
                     <img 
                         alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
                         {% if request.user.new_response_count > 0 %}
@@ -73,11 +71,31 @@
     </td>
     <td id="navTabContainer" valign="bottom" align="left">
         <div class="nav">
-            <a id="nav_questions" href="{% url questions %}" >{% trans %}questions{% endtrans %}</a>
-            <a id="nav_tags" href="{% url tags %}">{% trans %}tags{% endtrans %}</a>
-            <a id="nav_users" href="{% url users %}">{% trans %}users{% endtrans %}</a>
-            <a id="nav_badges" href="{% url badges %}">{% trans %}badges{% endtrans %}</a>
-            <a id="nav_ask" href="{% url ask %}" class="special">{% trans %}ask a question{% endtrans %}</a>
+            <a 
+                id="nav_questions"
+                href="{% url questions %}"
+                {% if active_tab == 'questions' %}class="on"{% endif %}
+            >{% trans %}questions{% endtrans %}</a>
+            <a 
+                id="nav_tags"
+                href="{% url tags %}"
+                {% if active_tab == 'tags' %}class="on"{% endif %}
+            >{% trans %}tags{% endtrans %}</a>
+            <a 
+                id="nav_users"
+                href="{% url users %}"
+                {% if active_tab == 'users' %}class="on"{% endif %}
+            >{% trans %}users{% endtrans %}</a>
+            <a 
+                id="nav_badges"
+                href="{% url badges %}"
+                {% if active_tab == 'badges' %}class="on"{% endif %}
+            >{% trans %}badges{% endtrans %}</a>
+            <a 
+                id="nav_ask"
+                href="{% url ask %}"
+                class="{% if active_tab == 'ask' %}on{% else %}special{% endif %}"
+            >{% trans %}ask a question{% endtrans %}</a>
         </div>
     </td>
           </tr>

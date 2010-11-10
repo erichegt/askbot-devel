@@ -7,8 +7,18 @@
 <div class="tabBar">
     <div class="headUsers">{% trans %}Tag list{% endtrans %}</div>
     <div class="tabsA">
-        <a id="sort_name" href="{% url tags %}?sort=name" class="off" title="{% trans %}sorted alphabetically{% endtrans %}">{% trans %}by name{% endtrans %}</a>
-        <a id="sort_used" href="{% url tags %}?sort=used" class="off" title="{% trans %}sorted by frequency of tag use{% endtrans %}">{% trans %}by popularity{% endtrans %}</a>
+        <a
+            id="sort_name"
+            href="{% url tags %}?sort=name"
+            {% if tab_id == 'name' %}class="on"{% endif %}
+            title="{% trans %}sorted alphabetically{% endtrans %}"
+        >{% trans %}by name{% endtrans %}</a>
+        <a
+            id="sort_used"
+            href="{% url tags %}?sort=used"
+            {% if tab_id == 'used' %}class="on"{% endif %}
+            title="{% trans %}sorted by frequency of tag use{% endtrans %}"
+        >{% trans %}by popularity{% endtrans %}</a>
     </div>
 </div>
 <div id="searchtags">
@@ -45,15 +55,8 @@
     <script type="text/javascript">
     /*<![CDATA[*/
         $().ready(function(){
-            $("#nav_tags").attr('className',"on");
             $("#ipSearchTag").focus();
-
-            var orderby = "{{ tab_id }}";
-            if(orderby != "used" && orderby != "name")
-                orderby = "used";
-            $("#sort_" + orderby).attr('className',"on");
             $("#type-tag").attr('checked',true);
-
             Hilite.exact = false;
             Hilite.elementid = "searchtags";
             Hilite.debug_referrer = location.href;
