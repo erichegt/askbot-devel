@@ -66,11 +66,11 @@
 {% endblock %}
 
 {% block endjs %}
-    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
     <script type="text/javascript">
     //todo - take this out into .js file 
-    $().ready(function(){
+    $(document).ready(function(){
         $("#nav_questions").attr('className',"on");
         $('div.revision div[id^=rev-header-]').bind('click', function(){
             var revId = this.id.substr(11);

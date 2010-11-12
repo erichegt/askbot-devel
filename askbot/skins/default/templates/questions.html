@@ -245,9 +245,9 @@
             Hilite.debug_referrer = location.href;
         });
     </script>
-    <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     {% if request.user.is_authenticated() %}
-    <script type='text/javascript' src='{{"/js/com.cnprog.tag_selector.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
     {% endif %}
     <script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
 {% endblock %}

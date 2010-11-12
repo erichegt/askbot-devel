@@ -23,7 +23,7 @@
 {% block endjs %}
     {% if request.user|can_moderate_user(view_user) %}
         <!-- todo: add condition that scripts are loaded for admins only -->
-        <script type='text/javascript' src='{{"/js/com.cnprog.admin.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/admin.js"|media}}'></script>
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
     {% endif %}
     <script type="text/javascript">

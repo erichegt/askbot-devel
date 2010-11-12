@@ -5,7 +5,7 @@
     and generates an empty template containing all the keys 
     for new translations.
     
-    Is included by org.askbot.output-words.html.
+    Is included by output-words.html.
    
    @author      Pekka Gaiser <post@pekkagaiser.com>
    @package     Part of the ASKBOT project <www.askbot.org>
