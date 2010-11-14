@@ -45,11 +45,6 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('privacy/'), app.meta.privacy, name='privacy'),
     url(r'^%s$' % _('logout/'), app.meta.logout, name='logout'),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('comments/')), 
-        app.writers.answer_comments, 
-        name='answer_comments'
-    ),
-    url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
         app.writers.edit_answer, 
         name='edit_answer'
@@ -107,9 +102,9 @@ urlpatterns = patterns('',
         name='question_revisions'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('comments/')), 
-        app.writers.question_comments, 
-        name='question_comments'
+        r'^post_comments/$', 
+        app.writers.post_comments, 
+        name='post_comments'
     ),
     url(
         r'^%s$' % _('command/'), 
@@ -117,18 +112,14 @@ urlpatterns = patterns('',
         name='call_ajax'
     ),
     url(
-        r'^%s(?P<object_id>\d+)/%s(?P<comment_id>\d+)/%s$'\
-            % (_('questions/'), _('comments/'),_('delete/')), 
+        r'^comment/delete/$',
         app.writers.delete_comment, 
-        kwargs={'commented_object_type':'question'}, 
-        name='delete_question_comment'
+        name='delete_comment'
     ),
     url(
-        r'^%s(?P<object_id>\d+)/%s(?P<comment_id>\d+)/%s$'\
-        % (_('answers/'), _('comments/'),_('delete/')), 
-        app.writers.delete_comment, 
-        kwargs={'commented_object_type':'answer'}, 
-        name='delete_answer_comment'
+        r'^comment/get_text/$',
+        app.commands.get_comment_text, 
+        name='get_comment_text'
     ),
     #place general question item in the end of other operations
     url(

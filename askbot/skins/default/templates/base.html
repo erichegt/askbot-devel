@@ -42,6 +42,18 @@
             var scriptUrl = '/{{settings.ASKBOT_URL}}'
             var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
             var enableMathJax = {% if settings.ENABLE_MATHJAX %}true{% else %}false{% endif %};
+            var askbot = askbot || {};
+            askbot['data'] = askbot['data'] || {};
+            {% if request.user.is_authenticated() %}
+                askbot['data']['userIsAuthenticated'] = true;
+                askbot['data']['userId'] = {{request.user.id}};
+                askbot['data']['userIsAdminOrMod'] = {% if 
+                                                        request.user.is_administrator()
+                                                        or request.user.is_moderator()
+                                                    %}true{% else %}false{% endif %};
+            {% else %}
+                askbot['data']['userIsAuthenticated'] = false;
+            {% endif %}
         </script>
         <script 
             type="text/javascript"

@@ -404,29 +404,21 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
                 user.assert_can_delete_comment(comment)
                 #/posts/392845/comments/219852/delete
                 #todo translate this url
-                if isinstance(comment.content_object, models.Answer):
-                    delete_comment_view = 'delete_answer_comment'
-                elif isinstance(comment.content_object, models.Question):
-                    delete_comment_view = 'delete_question_comment'
-                delete_url = reverse(
-                                delete_comment_view,
-                                kwargs = {
-                                        'object_id': obj.id, 
-                                        'comment_id': comment.id
-                                    }
-                            )
+                is_deletable = True
             except exceptions.PermissionDenied:
-                delete_url = ''
+                is_deletable = False
         else:
-            delete_url = ''
+            is_deletable = False
 
+        comment_owner = comment.get_owner()
         json_comments.append({'id' : comment.id,
-            'object_id' : obj.id,
-            'comment_age' : diff_date(comment.added_at),
-            'text' : comment.html,
-            'user_display_name' : comment.get_owner().username,
-            'user_url' : comment.get_owner().get_profile_url(),
-            'delete_url' : delete_url
+            'object_id': obj.id,
+            'comment_age': diff_date(comment.added_at),
+            'text': comment.html,
+            'user_display_name': comment_owner.username,
+            'user_url': comment_owner.get_profile_url(),
+            'user_id': comment_owner.id,
+            'is_deletable': is_deletable,
         })
 
     data = simplejson.dumps(json_comments)
@@ -470,20 +462,9 @@ def __comments(request, obj):#non-view generic ajax handler to load comments to 
     else:
         raise Http404
 
-def delete_comment(
-                request, 
-                object_id='', 
-                comment_id='', 
-                commented_object_type=None):
+def delete_comment(request, object_id='', comment_id=''):
     """ajax handler to delete comment
     """
-
-    commented_object = None
-    if commented_object_type == 'question':
-        commented_object = models.Question
-    elif commented_object_type == 'answer':
-        commented_object = models.Answer
-
     try:
         if request.user.is_anonymous():
             msg = _('Sorry, you appear to be logged out and '
@@ -496,7 +477,7 @@ def delete_comment(
 
             request.user.assert_can_delete_comment(comment)
 
-            obj = get_object_or_404(commented_object, id=object_id)
+            obj = comment.content_object
             #todo: are the removed comments actually deleted?
             obj.comments.remove(comment)
             #attn: recalc denormalized field

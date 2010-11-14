@@ -133,6 +133,8 @@ var i18nEn = {
     'title minchars':"please enter at least {0} characters",
     'characters':'characters left',
     'cannot flag message as offensive twice':'cannot flag message as offensive twice ',
+    'edit':'edit',
+    'click to edit this comment':'click to edit this comment',
 };
 
 var i18nFi = {
