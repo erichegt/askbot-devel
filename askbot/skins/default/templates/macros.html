@@ -257,7 +257,7 @@ poor design of the data or methods on data objects #}
 {%- macro post_comments_widget(post=None, user=None, max_comments=None) -%}
     {% set comments = post.get_comments()[:max_comments] %}
     {% spaceless %}
-    {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id %}
+    {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
             {% for comment in comments %}

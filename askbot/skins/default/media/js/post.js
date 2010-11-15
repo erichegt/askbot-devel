@@ -931,6 +931,47 @@ EditCommentForm.prototype.makeCounterUpdater = function(){
     return handler;
 };
 
+EditCommentForm.prototype.canCancel = function(){
+    if (this._element === null){
+        return true;
+    }
+    if ($.trim(this._textarea.val()) == ''){
+        return true;
+    }
+    else if (this.confirmAbandon()){
+        return true;
+    }
+    this._textarea.focus();
+    return false;
+}
+
+EditCommentForm.prototype.makeEscapeHandler = function(){
+    var form = this;
+    return function(e){
+        if ((e.which && e.which == 27) || (e.keyCode && e.keyCode == 27)){
+            if (form.canCancel()){
+                form.detach();
+            }
+            return false;
+        }
+    };
+};
+
+EditCommentForm.prototype.detach = function(){
+    if (this._comment === null){
+        return;
+    }
+    this._comment.getContainerWidget().showButton();
+    if (this._comment.isBlank()){
+        this._comment.dispose();
+    }
+    else {
+        this._comment.getElement().show();
+    }
+    this.reset();
+    this._element = this._element.detach();
+};
+
 EditCommentForm.prototype.createDom = function(){
     this._element = $('<form></form>');
     this._element.attr('class', 'post-comments');
@@ -952,6 +993,7 @@ EditCommentForm.prototype.createDom = function(){
     div.append('<span class="form-error"></span>');
 
     var update_counter = this.makeCounterUpdater();
+    var escape_handler = this.makeEscapeHandler();
     this._textarea.attr('name', 'comment')
             .attr('cols', 60)
             .attr('rows', 5)
@@ -959,6 +1001,7 @@ EditCommentForm.prototype.createDom = function(){
             .blur(update_counter)
             .focus(update_counter)
             .keyup(update_counter)
+            .keyup(escape_handler);
 
     setupFormValidation(
         this._element,
@@ -966,10 +1009,6 @@ EditCommentForm.prototype.createDom = function(){
         '',
         this.save
     );
-};
-
-EditCommentForm.prototype.activate = function(){
-    this._textarea.focus();
 };
 
 EditCommentForm.prototype.enableButtons = function(){
@@ -982,51 +1021,15 @@ EditCommentForm.prototype.disableButtons = function(){
     this._cancel_btn.attr('disabled', 'disabled');
 };
 
-EditCommentForm.prototype.set_submit_button_text = function(text){
-    this._submit_btn.val(text);
-};
-
-EditCommentForm.prototype.set_text = function(text){
-    this._textarea.html(text);
-};
-
 EditCommentForm.prototype.reset = function(){
     this._comment = null;
     this._textarea.val('');
 };
 
-EditCommentForm.prototype.isFree = function(){
-    if (this._comment){
-        if (this._comment.isBlank()){
-            this._comment.dispose();
-            return true;
-        }
-        this._textarea.focus();
-        if (confirm($.i18n._('confirm abandon comment'))){
-            this._comment.getElement().show();
-            this.reset();
-            return true;
-        }
-        return false;
-    }
-    else {
-        return true;
-    }
+EditCommentForm.prototype.confirmAbandon = function(){
+    this._textarea.focus();
+    return confirm($.i18n._('confirm abandon comment'));
 };
-
-EditCommentForm.prototype.userConfirmAbandon = function(){
-    return confirm('want to abandon this comment?');
-};
-
-EditCommentForm.prototype.getCBoxElement = function(){
-    var post_type = this._parent_post_type;
-    var post_id = this._parent_post_id;
-    return $('#comments-link-' + post_type + "-" + post_id).parent();
-}
-
-EditCommentForm.prototype.getId = function(){
-    return this._element.attr('id');
-}
 
 EditCommentForm.prototype.save = function(){
 
@@ -1053,7 +1056,7 @@ EditCommentForm.prototype.save = function(){
             if (this._type == 'add'){
                 var comment = new Comment(json);
                 comment.setEditForm(this)
-                this.getCBoxElement.append(comment.getElement());
+                this._cbox.append(comment.getElement());
             }
             else {
                 this._comment.setContent(json);
@@ -1184,7 +1187,10 @@ Comment.prototype.loadText = function(on_load_handler){
         type: "GET",
         url: askbot['urls']['commentGetText'],
         data: {id: this._data['id']},
-        success: on_load_handler
+        success: function(json){
+            this._data['text'] = json['text'];
+            on_load_handler()
+        }
     });
 };
 
@@ -1204,7 +1210,8 @@ Comment.prototype.getEditHandler = function(){
     return function(){
         comment.loadText(
             function(){
-                if (editCommentForm.isFree()){
+                if (editCommentForm.canCancel()){
+                    editCommentForm.detach();
                     editCommentForm.attachTo(comment);
                 }
             }
@@ -1300,7 +1307,8 @@ PostCommentsWidget.prototype.needToReload = function(){
 PostCommentsWidget.prototype.getActivateHandler = function(){
     var me = this;
     return function() {
-        if (editCommentForm.isFree()){
+        if (editCommentForm.canCancel()){
+            editCommentForm.detach();
             if (me.needToReload()){
                 me.reloadAllComments(function(json){
                     me.reRenderComments(json);

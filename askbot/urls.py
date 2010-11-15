@@ -119,7 +119,7 @@ urlpatterns = patterns('',
     #url(
     #    r'^comment/get_text/$',
     #    app.commands.get_comment_text, 
-    #    name='get_comment_text'
+    #    name='comment_get_text'
     #),
     #place general question item in the end of other operations
     url(
