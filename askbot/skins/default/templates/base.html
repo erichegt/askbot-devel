@@ -20,6 +20,11 @@
             body { margin-top:2.4em; }
         </style>
         {% endif %}
+        <script type="text/javascript">
+            var askbot = {};
+            askbot['data'] = {};
+            askbot['urls'] = {};
+        </script>
         {% block forejs %}
         {% endblock %}
     </head>
@@ -42,8 +47,6 @@
             var scriptUrl = '/{{settings.ASKBOT_URL}}'
             var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
             var enableMathJax = {% if settings.ENABLE_MATHJAX %}true{% else %}false{% endif %};
-            var askbot = askbot || {};
-            askbot['data'] = askbot['data'] || {};
             {% if request.user.is_authenticated() %}
                 askbot['data']['userIsAuthenticated'] = true;
                 askbot['data']['userId'] = {{request.user.id}};

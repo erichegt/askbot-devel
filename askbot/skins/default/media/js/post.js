@@ -41,21 +41,21 @@ function removeLoader() {
     $("img.ajax-loader").remove();
 }
 
-function setSubmitButtonDisabled(formSelector, isDisabled) { 
-    $(formSelector).find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
+function setSubmitButtonDisabled(form, isDisabled) { 
+    form.find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
 }
 
-function enableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, false);
+function enableSubmitButton(form) {
+    setSubmitButtonDisabled(form, false);
 }
 
-function disableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, true);
+function disableSubmitButton(form) {
+    setSubmitButtonDisabled(form, true);
 }
 
-function setupFormValidation(formSelector, validationRules, validationMessages, onSubmitCallback) {
-    enableSubmitButton(formSelector);
-    $(formSelector).validate({
+function setupFormValidation(form, validationRules, validationMessages, onSubmitCallback) {
+    enableSubmitButton(form);
+    form.validate({
         debug: true,
         rules: (validationRules ? validationRules : {}),
         messages: (validationMessages ? validationMessages : {}),
@@ -74,7 +74,7 @@ function setupFormValidation(formSelector, validationRules, validationMessages, 
             span.replaceWith(error);
         },
         submitHandler: function(form) {
-            disableSubmitButton(formSelector);
+            disableSubmitButton(form);
             
             if (onSubmitCallback){
                 onSubmitCallback();
@@ -888,22 +888,33 @@ DeleteIcon.prototype.createDom = function(){
 var EditCommentForm = function(){
     WrappedElement.call(this);
     this._comment = null;
-    this._text = '';
+    this._comment_widget = null;
     this._element = null;
+    this._text = '';
 };
 inherits(EditCommentForm, WrappedElement);
 
 EditCommentForm.prototype.setComment = function(comment, text){
-    self._comment = comment;
-    self._text = text || '';
+};
+
+EditCommentForm.prototype.attachTo = function(comment){
+    var form = editCommentForm.setComment(comment);
+    this._comment = comment;
+    this._comment_widget = comment.getContainerWidget();
+    this._text = comment.getText();
+    comment.getElement().after(this.getElement());
+    comment.getElement().hide();
+    this._comment_widget.hideButton();
+    this.getElement().show();
+    this._textarea.focus();
 };
 
 EditCommentForm.prototype.makeCounterUpdater = function(){
     //returns event handler
     var counter = this._text_counter;
     var handler = function(){
-        var text_area = $(this);
-        var length = text_area.val() ? textarea.val().length : 0;
+        var textarea = $(this);
+        var length = textarea.val() ? textarea.val().length : 0;
         var length1 = maxCommentLength - 100;
         if (length1 < 0){
             length1 = Math.round(0.7*maxCommentLength);
@@ -949,9 +960,8 @@ EditCommentForm.prototype.createDom = function(){
             .focus(update_counter)
             .keyup(update_counter)
 
-    this.setId(post_id);
     setupFormValidation(
-        "#" + this.getId(),
+        this._element,
         { comment: { required: true, minlength: 10} },
         '',
         this.save
@@ -959,7 +969,7 @@ EditCommentForm.prototype.createDom = function(){
 };
 
 EditCommentForm.prototype.activate = function(){
-    this._text_area.focus();
+    this._textarea.focus();
 };
 
 EditCommentForm.prototype.enableButtons = function(){
@@ -980,14 +990,32 @@ EditCommentForm.prototype.set_text = function(text){
     this._textarea.html(text);
 };
 
-EditCommentForm.prototype.userConfirmAbandon = function(){
-    return confirm('want to abandon this comment?');
+EditCommentForm.prototype.reset = function(){
+    this._comment = null;
+    this._textarea.val('');
 };
 
-EditCommentForm.prototype.setId = function(post_id){
-    this._parent_post_id = post_id;
-    var id = 'form-comments-' + this._post_type + '-' + post_id;
-    this._element.attr('id', id);
+EditCommentForm.prototype.isFree = function(){
+    if (this._comment){
+        if (this._comment.isBlank()){
+            this._comment.dispose();
+            return true;
+        }
+        this._textarea.focus();
+        if (confirm($.i18n._('confirm abandon comment'))){
+            this._comment.getElement().show();
+            this.reset();
+            return true;
+        }
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
+EditCommentForm.prototype.userConfirmAbandon = function(){
+    return confirm('want to abandon this comment?');
 };
 
 EditCommentForm.prototype.getCBoxElement = function(){
@@ -1043,10 +1071,12 @@ EditCommentForm.prototype.save = function(){
 //a single instance to reuse
 var editCommentForm = new EditCommentForm();
 
-var Comment = function(data){
+var Comment = function(widget, data){
     WrappedElement.call(this);
+    this._container_widget = widget;
     this._data = data;
-    this._blank = true;
+    this._blank = true;//set to false by setContent
+    this._element = null;
     this._delete_prompt = $.i18n._('delete this comment');
     if (data && data['is_deletable']){
         this._deletable = data['is_deletable'];
@@ -1060,11 +1090,11 @@ var Comment = function(data){
 inherits(Comment, WrappedElement);
 
 Comment.prototype.decorate = function(element){
-    this._element = element;
-    var parent_type = element.parent().attr('id').split('-')[2];
-    var comment_id = element.attr('id').replace('comment-','');
+    this._element = $(element);
+    var parent_type = this._element.parent().parent().attr('id').split('-')[2];
+    var comment_id = this._element.attr('id').replace('comment-','');
     this._data = {id: comment_id};
-    var delete_img = element.find('img.delete-icon');
+    var delete_img = this._element.find('img.delete-icon');
     if (delete_img.length > 0){
         this._deletable = true;
         this._editable = true;
@@ -1079,22 +1109,30 @@ Comment.prototype.decorate = function(element){
     }
 };
 
+Comment.prototype.isBlank = function(){
+    return this._blank;
+};
+
+Comment.prototype.getContainerWidget = function(){
+    return this._container_widget;
+};
+
 Comment.prototype.setContent = function(data){
     this._data = data;
     this._element.html('');
-    this._element.attr('class', 'comment').css('display:none');
+    this._element.attr('class', 'comment');
     this._element.attr('id', 'comment-' + this._data['id']);
 
     this._element.append(data['text']);
     this._element.append(' - ');
 
-    this._user_link = $('<a></a>').attr('class', 'comment-user');
+    this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
     this._user_link.html(this._data['user_display_name']);
     this._element.append(this._user_link);
 
     this._element.append(' (');
-    this._comment_age = $('<span></span>');
+    this._comment_age = $('<span class="age"></span>');
     this._comment_age.html(this._data['comment_age']);
     this._element.append(this._comment_age);
     this._element.append(')');
@@ -1106,15 +1144,20 @@ Comment.prototype.setContent = function(data){
     if (this._editable){
         this._edit_link = new EditLink(this.getEditHandler());
         this._element.append(this._edit_link.getElement());
-        this._element.mouseover(function(){this._edit_link.getElement().show()});
-        this._element.mouseout(function(){this._edit_link.getElement().hide()});
+        var edit_link = this._edit_link;
+        this._element.mouseover(function(){edit_link.getElement().show()});
+        this._element.mouseout(function(){edit_link.getElement().hide()});
     }
     this._blank = false;
 };
 
 Comment.prototype.dispose = function(){
-    this._user_link.remove();
-    this._comment_age.remove();
+    if (this._user_link){
+        this._user_link.remove();
+    }
+    if (this._comment_age){
+        this._comment_age.remove();
+    }
     if (this._delete_icon){
         this._delete_icon.dispose();
     }
@@ -1145,21 +1188,24 @@ Comment.prototype.loadText = function(on_load_handler){
     });
 };
 
+Comment.prototype.getText = function(){
+    if (!this.isBlank()){
+        if ('text' in this._data){
+            return this._data['text'];
+        }
+    }
+    return '';
+}
+
 Comment.prototype.getEditHandler = function(){
     var comment_id = this._data['id'];
     var parent_post_id = this._data['post_id'];
     var comment = this;
     return function(){
         comment.loadText(
-            function(text){
+            function(){
                 if (editCommentForm.isFree()){
-                    editCommentForm.setComment(comment, text);
-                    comment.getElement().after(editCommentForm.getElement());
-                    comment.getElement().hide();
-                    editCommentForm.activate();
-                }
-                else {
-                    editCommentForm.getElement().focus();
+                    editCommentForm.attachTo(comment);
                 }
             }
         );
@@ -1194,50 +1240,81 @@ var PostCommentsWidget = function(){
 };
 inherits(PostCommentsWidget, WrappedElement);
 
-var PostCommentsWidget.prototype.decorate = function(element){
-    var can_post_input = element.find('[id^="can-post-comments"]') + objectType + '-' + id);
-    this._user_can_post = (can_post_input.val().toLowerCase() == 'true');
-    this._activate_button = element.find('a[id^="comments-link"]');
+PostCommentsWidget.prototype.decorate = function(element){
+    var element = $(element);
+    this._element = element;
 
-    if (this.user_can_post == false){
-        setupButtonEventHandlers(this._activate_button, this.getDenyHandler());
+    var widget_id = element.attr('id');
+    var id_bits = widget_id.split('-');
+    this._post_id = id_bits[3];
+    this._post_type = id_bits[2];
+    this._is_truncated = askbot['data'][widget_id]['truncated'];
+    this._user_can_post = askbot['data'][widget_id]['can_post'];
+
+    //see if user can comment here
+    var controls = element.find('.controls');
+    this._activate_button = controls.find('.button');
+
+    if (this._user_can_post == false){
+        setupButtonEventHandlers(
+            this._activate_button,
+            this.getDenyHandler()
+        );
+    }
+    else {
+        setupButtonEventHandlers(
+            this._activate_button,
+            this.getActivateHandler()
+        );
     }
 
-    this._element = element;
-    var id = element.attr('id');
-    this._post_type = id.split('-')[2];
-    setupButtonEventHandlers(this._activate_button, this.getActivateHandler());
-
-    this._cbox = element.find('[id^="comments-container"]');
+    this._cbox = element.find('.content');
     var comments = new Array();
-    this._cbox.each(function(index, element)){
-        var comment = new Comment();
+    var me = this;
+    this._cbox.children().each(function(index, element){
+        var comment = new Comment(me);
         comments.push(comment)
         comment.decorate(element);
     });
     this._comments = comments;
 };
 
-var PostCommentsWidget.prototype.getActivateHandler = function(){
+PostCommentsWidget.prototype.hideButton = function(){
+    this._activate_button.hide();
+};
+
+PostCommentsWidget.prototype.showButton = function(){
+    this._activate_button.show();
+}
+
+PostCommentsWidget.prototype.startNewComment = function(){
+    var comment = new Comment(this);
+    this._cbox.append(comment.getElement());
+    editCommentForm.attachTo(comment);
+};
+
+PostCommentsWidget.prototype.needToReload = function(){
+    return this._is_truncated;
+};
+
+PostCommentsWidget.prototype.getActivateHandler = function(){
     var me = this;
     return function() {
         if (editCommentForm.isFree()){
-            me.reloadAllComments(function(json){
-                me.reRenderComments(json);
-                var comment = new Comment();
-                var form = editCommentForm.setComment(comment);
-                me._cbox.append(form.getElement());
-                me._activate_button.hide();
-                editCommentForm.getElement().focus();
-            });
-        }
-        else {
-            editCommentForm.getElement().focus();
+            if (me.needToReload()){
+                me.reloadAllComments(function(json){
+                    me.reRenderComments(json);
+                    me.startNewComment();
+                });
+            }
+            else {
+                me.startNewComment();
+            }
         }
     };
 };
 
-var PostCommentsWidget.prototype.getDenyHandler = function(){
+PostCommentsWidget.prototype.getDenyHandler = function(){
     var me = this;
     return function(){
         if (me._denied == false){
@@ -1247,14 +1324,14 @@ var PostCommentsWidget.prototype.getDenyHandler = function(){
                 '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
                 $.i18n._('please see') + 'faq</a></span>'
             );
-            me._cbox.append(denial);
+            me._controls.append(denial);
         }
         me._denied = true;
     };
 };
 
 
-var PostCommentsWidget.prototype.reloadAllComments = function(callback){
+PostCommentsWidget.prototype.reloadAllComments = function(callback){
     var post_data = {post_id: this._post_id, post_type: this._post_type};
     $.ajax({
         type: "GET",
@@ -1265,15 +1342,16 @@ var PostCommentsWidget.prototype.reloadAllComments = function(callback){
     });
 };
 
-var PostCommentsWidget.prototype.reRenderComments = function(json){
+PostCommentsWidget.prototype.reRenderComments = function(json){
     $.each(this._comments, function(i, item){
         item.dispose();
     });
     this._comments = new Array();
+    var me = this;
     $.each(json, function(i, item){
-        var comment = new Comment(item);
-        this._comments.push(comment);
-        this._element.prepend(comment.getElement());
+        var comment = new Comment(me, item);
+        me._cbox.append(comment.getElement());
+        me._comments.push(comment);
     });
 };
 
@@ -1321,7 +1399,7 @@ var socialSharing = function(){
 }(); 
 
 $(document).ready(function() {
-    $('id^=comments-container-').each(function(index, element){
+    $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();
         comments.decorate(element);
     });

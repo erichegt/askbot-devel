@@ -425,19 +425,27 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     return HttpResponse(data, mimetype="application/json")
 
 def question_comments(request, id):#ajax handler for loading comments to question
-    question = get_object_or_404(models.Question, id=id)
     user = request.user
     return __comments(request, question)
 
 def answer_comments(request, id):#ajax handler for loading comments on answer
-    answer = get_object_or_404(models.Answer, id=id)
     user = request.user
     return __comments(request, answer)
 
-def __comments(request, obj):#non-view generic ajax handler to load comments to an object
+def post_comments(request):#non-view generic ajax handler to load comments to an object
     # only support get post comments by ajax now
     user = request.user
     if request.is_ajax():
+        post_type = request.REQUEST['post_type']
+        id = request.REQUEST['post_id']
+        if post_type == 'question':
+            post_model = models.Question
+        elif post_type == 'answer':
+            post_model = models.Answer
+        else:
+            raise Http404
+
+        obj = get_object_or_404(post_model, id=id)
         if request.method == "GET":
             response = __generate_comments_json(obj, user)
         elif request.method == "POST":

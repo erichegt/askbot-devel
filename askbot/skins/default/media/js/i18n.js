@@ -135,6 +135,7 @@ var i18nEn = {
     'cannot flag message as offensive twice':'cannot flag message as offensive twice ',
     'edit':'edit',
     'click to edit this comment':'click to edit this comment',
+    'confirm abandon comment':'Are you sure you do not want to post this comment?'
 };
 
 var i18nFi = {

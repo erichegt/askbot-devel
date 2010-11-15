@@ -116,11 +116,11 @@ urlpatterns = patterns('',
         app.writers.delete_comment, 
         name='delete_comment'
     ),
-    url(
-        r'^comment/get_text/$',
-        app.commands.get_comment_text, 
-        name='get_comment_text'
-    ),
+    #url(
+    #    r'^comment/get_text/$',
+    #    app.commands.get_comment_text, 
+    #    name='get_comment_text'
+    #),
     #place general question item in the end of other operations
     url(
         r'^%s(?P<id>\d+)/' % _('question/'), 

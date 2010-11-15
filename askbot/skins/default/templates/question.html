@@ -413,6 +413,7 @@
             var codeFriendlyMarkdown = false;
             {% endif %}
             var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
+            askbot['urls']['post_comments'] = '{% url post_comments %}';
         </script>
         <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
         <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
@@ -453,7 +454,7 @@
                 $('#previewer').toggle();
                 $('#pre-collapse').text(txt);
             });
-            setupFormValidation("#fmanswer", CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+            setupFormValidation($("#fmanswer"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
         }
     </script>
     {% include "editor_data.html" %}

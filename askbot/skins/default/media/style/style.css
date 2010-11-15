@@ -1304,29 +1304,35 @@ a:hover.medal {
     font-size: 90%;
 }
 
-div.comments {
-    line-height: 150%;
-    padding: 10px 0;
-}
-
-div.post-comments {
+.comments div.controls {
     clear: both;
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
     width: 100%;
     padding-left: 12px;
-    margin: 3px 0 10px 0;
+    margin: 3px 0 20px 0;
 }
 
-form.post-comments textarea {
+.comments textarea {
     height: 6em;
     margin-bottom: 4px;
 }
 
-form.post-comments input {
+.comments input {
     margin-left: 10px;
     margin-top: 1px;
     vertical-align: top;
     width: 100px;
+}
+
+.comments .controls a {
+    color: #888888;
+    padding: 0 3px 2px;
+}
+
+.comments .controls a:hover {
+    background-color: #777777;
+    color: white;
+    text-decoration: none;
 }
 
 span.text-counter {
@@ -1344,27 +1350,16 @@ p.form-item {
     margin: 0px;
 }
 
-div.comments-container, div.comments-container-accepted, div.comments-container-owner, div.comments-container-deleted {
+div.comments {
     padding: 0;
 }
 
-.post-comments a {
-    color: #888888;
-    padding: 0 3px 2px;
-}
-
-a.comments-link, a.comments-link-accepted, a.comments-link-owner, a.comments-link-deleted {
+.comments .button {
     color: black;
     font-size: 11px;
     background: #eeeeee;
     padding: 3px;
     cursor: pointer;
-}
-
-.post-comments a:hover {
-    background-color: #777777;
-    color: white;
-    text-decoration: none;
 }
 
 .comment a {
@@ -1373,13 +1368,13 @@ a.comments-link, a.comments-link-accepted, a.comments-link-owner, a.comments-lin
     padding: 0;
 }
 
-a.comment-user, a.comment-user:hover {
+.comment a.author, a.author:hover {
     background-color: inherit;
     color: blue;
     padding: 0;
 }
 
-a.comment-user:hover {
+.comment a.author:hover {
     text-decoration: underline;
 }
 
@@ -1408,11 +1403,11 @@ a.comment-user:hover {
     border-bottom-color: #9BD59B;
 }
 
-.accepted-answer .comments-link {
+.accepted-answer .comments .button {
     background-color: #CCFFBF;
 }
 
-.accepted-answer .comments-container {
+.accepted-answer .comments {
     background-color: #CCFFBF;
 }
 
@@ -1435,11 +1430,11 @@ a.comment-user:hover {
     background: #E9E9FF;
 }
 
-.answered-by-owner .comments-link {
+.answered-by-owner .comments .button {
     background-color: #E6ECFF;
 }
 
-.answered-by-owner .comments-container {
+.answered-by-owner .comments {
     background-color: #E6ECFF;
 }
 
@@ -2570,7 +2565,7 @@ ul.form-horizontal-rows li input {
     margin: 4px 8px 0 0;
 }
 
-.comments-container {
+.comments {
     clear: both;
 }
 
