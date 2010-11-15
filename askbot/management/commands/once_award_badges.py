@@ -12,6 +12,7 @@
 # Licence:     GPL V2
 #-------------------------------------------------------------------------------
 
+import logging
 from datetime import datetime, date
 from django.db import connection
 from django.shortcuts import get_object_or_404
@@ -93,19 +94,23 @@ BADGE_AWARD_TYPE_FIRST = {
 
 class Command(BaseCommand):
     def handle_noargs(self, **options):
+        badge_calls = (
+            self.alpha_user,
+            self.beta_user,
+            self.first_type_award,
+            self.first_ask_be_voted,
+            self.first_answer_be_voted,
+            self.first_answer_be_voted_10,
+            self.vote_count_300,
+            self.edit_count_100,
+            self.comment_count_10
+        )
         try:
-            try:
-                self.alpha_user()
-                self.beta_user()
-                self.first_type_award()
-                self.first_ask_be_voted()
-                self.first_answer_be_voted()
-                self.first_answer_be_voted_10()
-                self.vote_count_300()
-                self.edit_count_100()
-                self.comment_count_10()
-            except Exception, e:
-                print e
+            for badge_call in badge_calls:
+                try:
+                    badge_call()
+                except Exception, e:
+                    logging.critical('badge award error ' + unicode(e) + 'in ' + badge_call.__name__)
         finally:
             connection.close()
 

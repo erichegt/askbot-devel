@@ -14,6 +14,7 @@
 """
 #!/usr/bin/env python
 
+import logging
 from django.db import connection
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
@@ -24,29 +25,33 @@ from askbot.management.commands.base_command import BaseCommand
 
 class Command(BaseCommand):
     def handle_noargs(self, **options):
+        badge_calls = (
+            self.delete_question_be_voted_up_3,
+            self.delete_answer_be_voted_up_3,
+            self.delete_question_be_vote_down_3,
+            self.delete_answer_be_voted_down_3,
+            self.answer_be_voted_up_10,
+            self.question_be_voted_up_10,
+            self.question_view_1000,
+            self.answer_self_question_be_voted_up_3,
+            self.answer_be_voted_up_100,
+            self.question_be_voted_up_100,
+            self.question_be_favorited_100,
+            self.question_view_10000,
+            self.answer_be_voted_up_25,
+            self.question_be_voted_up_25,
+            self.question_be_favorited_25,
+            self.question_view_2500,
+            self.answer_be_accepted_and_voted_up_40,
+            self.question_be_answered_after_60_days_and_be_voted_up_5,
+            self.created_tag_be_used_in_question_50
+        )
         try:
-            try:
-                self.delete_question_be_voted_up_3()
-                self.delete_answer_be_voted_up_3()
-                self.delete_question_be_vote_down_3()
-                self.delete_answer_be_voted_down_3()
-                self.answer_be_voted_up_10()
-                self.question_be_voted_up_10()
-                self.question_view_1000()
-                self.answer_self_question_be_voted_up_3()
-                self.answer_be_voted_up_100()
-                self.question_be_voted_up_100()
-                self.question_be_favorited_100()
-                self.question_view_10000()
-                self.answer_be_voted_up_25()
-                self.question_be_voted_up_25()
-                self.question_be_favorited_25()
-                self.question_view_2500()
-                self.answer_be_accepted_and_voted_up_40()
-                self.question_be_answered_after_60_days_and_be_voted_up_5()
-                self.created_tag_be_used_in_question_50()
-            except Exception, e:
-                print e
+            for badge_call in badge_calls:
+                try:
+                    badge_call()
+                except Exception, e:
+                    logging.critical('badge award error ' + unicode(e) + 'in ' + badge_call.__name__)
         finally:
             connection.close()
     
