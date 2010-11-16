@@ -452,8 +452,6 @@ class EditUserForm(forms.Form):
                     widget=forms.TextInput(attrs={'size' : 35})
                 )
 
-    if askbot_settings.EDITABLE_SCREEN_NAME:
-        username = UserNameField(label=_('Screen name'))
     realname = forms.CharField(
                         label=_('Real name'), 
                         required=False, 
@@ -492,6 +490,7 @@ class EditUserForm(forms.Form):
         super(EditUserForm, self).__init__(*args, **kwargs)
         logging.debug('initializing the form')
         if askbot_settings.EDITABLE_SCREEN_NAME:
+            self.fields['username'] = UserNameField(label=_('Screen name'))
             self.fields['username'].initial = user.username
             self.fields['username'].user_instance = user
         self.fields['email'].initial = user.email
