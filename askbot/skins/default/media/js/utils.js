@@ -29,6 +29,18 @@ var setupButtonEventHandlers = function(button, callback){
     button.click(callback);
 };
 
+var putCursorAtEnd = function(element){
+    var el = element.get()[0];
+    if (el.setSelectionRange){
+        var len = element.val().length * 2;
+        el.setSelectionRange(len, len);
+    }
+    else{
+        element.val(element.val());
+    }
+    element.scrollTop = 999999;
+};
+
 var setCheckBoxesIn = function(selector, value){
     return $(selector + '> input[type=checkbox]').attr('checked', value);
 };
