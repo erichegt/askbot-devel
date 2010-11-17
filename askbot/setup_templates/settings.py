@@ -115,10 +115,9 @@ ASKBOT_MAX_UPLOAD_FILE_SIZE = 1024 * 1024 #result in bytes
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
-TEMPLATE_DIRS = (
-    #specific to askbot
-    os.path.join(os.path.dirname(__file__),'askbot','skins').replace('\\','/'),
-)
+#TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
+#ASKBOT_EXTRA_SKIN_DIRS = (,)#path to your skin collection
+#take a look here http://askbot.org/en/question/207/
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
