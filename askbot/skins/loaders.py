@@ -43,14 +43,8 @@ class SkinEnvironment(CoffinEnvironment):
         """
         loaders = list()
         skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_dirs = utils.get_skin_dirs()
-
-        template_dirs = list()
-        for dir in skin_dirs:
-            template_dirs.append(os.path.join(dir, skin_name, 'templates'))
-        if skin_name != 'default':
-            for dir in skin_dirs:
-                template_dirs.append(os.path.join(dir, 'default', 'templates'))
+        skin_dirs = utils.get_available_skins(selected = skin_name).values()
+        template_dirs = [os.path.join(skin_dir, 'templates') for skin_dir in skin_dirs]
 
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders

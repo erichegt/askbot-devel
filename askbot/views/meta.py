@@ -7,12 +7,14 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
-from askbot.forms import FeedbackForm
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.views import static
+from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.models import Badge, Award
 from askbot.skins.loaders import ENV
+from askbot import skins
 import askbot
 
 def generic_view(request, template = None):
@@ -128,3 +130,13 @@ def badge(request, id):
     context = RequestContext(request, data)
     return HttpResponse(template.render(context))
 
+def media(request, skin, resource):
+    """view that serves static media from any skin
+    uses django static serve view, where document root is
+    adjusted according to the current skin selection
+
+    in production this views should be by-passed via server configuration
+    for the better efficiency of serving static files
+    """
+    dir = skins.utils.get_path_to_skin(skin)
+    return static.serve(request, '/media/' + resource, document_root = dir)
