@@ -103,9 +103,9 @@
         <p id="question-count" class="search-result-summary">
         {% if author_name or search_tags or query %}
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}
-                {{q_num}} question found
+                {{q_num}} question
             {% pluralize %}
-                {{q_num}} questions found
+                {{q_num}} questions
             {% endtrans %}
         {% else %}
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}{{q_num}} question{% pluralize %}{{q_num}} questions{% endtrans %}

@@ -43,11 +43,11 @@ class Command(makemessages.Command):
         # Extend the regular expressions that are used to detect
         # translation blocks with an "OR jinja-syntax" clause.
         trans_real.endblock_re = re.compile(
-            trans_real.endblock_re.pattern + '|' + r"""^\s*endtrans$""")
+            trans_real.endblock_re.pattern + '|' + r"""^\s*endtrans\s*-?$""")
         trans_real.block_re = re.compile(
-            trans_real.block_re.pattern + '|' + r"""^\s*trans(?:\s+|$)""")
+            trans_real.block_re.pattern + '|' + r"""^\s*trans(?:\s*|$)""")
         trans_real.plural_re = re.compile(
-            trans_real.plural_re.pattern + '|' + r"""^\s*pluralize(\s+\w+)?$""")
+            trans_real.plural_re.pattern + '|' + r"""^\s*pluralize(\s+\w+)?-?$""")
 
         try:
             super(Command, self).handle(*args, **options)
