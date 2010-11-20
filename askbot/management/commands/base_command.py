@@ -20,6 +20,6 @@ class BaseCommand(NoArgsCommand):
     def update_activities_auditted(self, cursor, activity_ids):
         # update processed rows to auditted
         if len(activity_ids):
-            query = "UPDATE activity SET is_auditted = 1 WHERE id in (%s)"\
+            query = "UPDATE activity SET is_auditted = True WHERE id in (%s)"\
                     % ','.join('%s' % item for item in activity_ids)
             cursor.execute(query)

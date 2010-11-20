@@ -15,7 +15,7 @@
 #!/usr/bin/env python
 
 import logging
-from django.db import connection
+from django.db import connection, transaction
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
@@ -24,6 +24,7 @@ from askbot import const
 from askbot.management.commands.base_command import BaseCommand
 
 class Command(BaseCommand):
+    @transaction.commit_manually
     def handle_noargs(self, **options):
         badge_calls = (
             self.delete_question_be_voted_up_3,
@@ -50,6 +51,7 @@ class Command(BaseCommand):
             for badge_call in badge_calls:
                 try:
                     badge_call()
+                    transaction.commit()
                 except Exception, e:
                     logging.critical('badge award error ' + unicode(e) + 'in ' + badge_call.__name__)
         finally:
@@ -62,7 +64,7 @@ class Command(BaseCommand):
         query = "SELECT act.id, act.user_id, act.object_id FROM activity act, question q WHERE act.object_id = q.id AND\
                 act.activity_type = %s AND\
                 q.vote_up_count >=3 AND \
-                act.is_auditted = 0" % (const.TYPE_ACTIVITY_DELETE_QUESTION)
+                act.is_auditted = False" % (const.TYPE_ACTIVITY_DELETE_QUESTION)
         self.__process_activities_badge(query, 1, Question)
         
     def delete_answer_be_voted_up_3(self):
@@ -72,7 +74,7 @@ class Command(BaseCommand):
         query = "SELECT act.id, act.user_id, act.object_id FROM activity act, answer an WHERE act.object_id = an.id AND\
                 act.activity_type = %s AND\
                 an.vote_up_count >=3 AND \
-                act.is_auditted = 0" % (const.TYPE_ACTIVITY_DELETE_ANSWER)
+                act.is_auditted = False" % (const.TYPE_ACTIVITY_DELETE_ANSWER)
         self.__process_activities_badge(query, 1, Answer)
         
     def delete_question_be_vote_down_3(self):
@@ -82,7 +84,7 @@ class Command(BaseCommand):
         query = "SELECT act.id, act.user_id, act.object_id FROM activity act, question q WHERE act.object_id = q.id AND\
                 act.activity_type = %s AND\
                 q.vote_down_count >=3 AND \
-                act.is_auditted = 0" % (const.TYPE_ACTIVITY_DELETE_QUESTION)
+                act.is_auditted = False" % (const.TYPE_ACTIVITY_DELETE_QUESTION)
         content_type = ContentType.objects.get_for_model(Question)
         self.__process_activities_badge(query, 2, Question)
 
@@ -93,7 +95,7 @@ class Command(BaseCommand):
         query = "SELECT act.id, act.user_id, act.object_id FROM activity act, answer an WHERE act.object_id = an.id AND\
                 act.activity_type = %s AND\
                 an.vote_down_count >=3 AND \
-                act.is_auditted = 0" % (const.TYPE_ACTIVITY_DELETE_ANSWER)
+                act.is_auditted = False" % (const.TYPE_ACTIVITY_DELETE_ANSWER)
         self.__process_activities_badge(query, 2, Answer)
         
     def answer_be_voted_up_10(self):
@@ -104,7 +106,7 @@ class Command(BaseCommand):
                     activity act, answer a WHERE act.object_id = a.id AND\
                     act.activity_type = %s AND \
                     a.vote_up_count >= 10 AND\
-                    act.is_auditted = 0" % (const.TYPE_ACTIVITY_ANSWER)
+                    act.is_auditted = False" % (const.TYPE_ACTIVITY_ANSWER)
         self.__process_activities_badge(query, 3, Answer)
         
     def question_be_voted_up_10(self):
@@ -115,7 +117,7 @@ class Command(BaseCommand):
                     activity act, question q WHERE act.object_id = q.id AND\
                     act.activity_type = %s AND \
                     q.vote_up_count >= 10 AND\
-                    act.is_auditted = 0" % (const.TYPE_ACTIVITY_ASK_QUESTION)
+                    act.is_auditted = False" % (const.TYPE_ACTIVITY_ASK_QUESTION)
         self.__process_activities_badge(query, 4, Question)
     
     def question_view_1000(self):
@@ -222,7 +224,7 @@ class Command(BaseCommand):
         (34, '导师', 2, '导师', '被指定为最佳答案并且赞成票40以上', 1, 0),
         """
         query = "SELECT a.id, a.author_id FROM answer a WHERE a.vote_up_count >= 40 AND\
-                    a.accepted = 1 AND\
+                    a.accepted = True AND\
                     a.id NOT IN \
                     (SELECT object_id FROM award WHERE award.badge_id = %s)" % (34)
         
