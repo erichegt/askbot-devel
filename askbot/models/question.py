@@ -60,7 +60,7 @@ class QuestionManager(models.Manager):
             question.wikified_at = added_at
 
         question.parse_and_save(author = author)
-        question.update_tags(tagnames, author)
+        question.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
 
         question.add_revision(
             author=author,
@@ -376,35 +376,67 @@ class Question(content.Content, DeletableContent):
         others_tags = set(other_question.get_tag_names())
         return len(my_tags & others_tags)
 
-    def update_tags(self, tagnames, user):
+    def update_tags(self, tagnames = None, user = None, timestamp = None):
         """
         Updates Tag associations for a question to match the given
         tagname string.
-
-        Returns ``True`` if tag usage counts were updated as a result,
-        ``False`` otherwise.
         """
 
-        current_tags = list(self.tags.all())
-        current_tagnames = set(t.name for t in current_tags)
-        updated_tagnames = set(t for t in tagnames.split(' ') if t)
-        modified_tags = []
+        previous_tags = list(self.tags.all())
 
-        removed_tags = [t for t in current_tags
-                        if t.name not in updated_tagnames]
-        if removed_tags:
-            modified_tags.extend(removed_tags)
+        previous_tagnames = set([tag.name for tag in previous_tags])
+        updated_tagnames = set(t for t in tagnames.split(' '))
+
+        removed_tagnames = previous_tagnames - updated_tagnames
+        added_tagnames = updated_tagnames - previous_tagnames
+
+        modified_tags = list()
+        #remove tags from the question's tags many2many relation
+        if removed_tagnames:
+            removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
             self.tags.remove(*removed_tags)
 
-        added_tagnames = updated_tagnames - current_tagnames
-        if added_tagnames:
-            added_tags = Tag.objects.get_or_create_multiple(
-                                                    added_tagnames,
-                                                    user
-                                                )
-            modified_tags.extend(added_tags)
-            self.tags.add(*added_tags)
+            #if any of the removed tags reached use count == 1 that means they must be deleted
+            for tag in removed_tags:
+                if tag.used_count == 1:
+                    #we won't modify used count b/c it's done below anyway
+                    removed_tags.remove(tag)
+                    tag.delete()#auto-delete tags whose use count dwindled
 
+            #remember modified tags, we'll need to update use counts on them
+            modified_tags = removed_tags
+
+        #add new tags to the relation
+        if added_tagnames:
+            #find reused tags
+            reused_tags = Tag.objects.filter(name__in = added_tagnames)
+            #undelete them, because we are using them
+            reused_count = reused_tags.update(
+                                    deleted = False,
+                                    deleted_by = None,
+                                    deleted_at = None
+                                )
+            #if there are brand new tags, create them and finalize the added tag list
+            if reused_count < len(added_tagnames):
+                added_tags = list(reused_tags)
+
+                reused_tagnames = set([tag.name for tag in reused_tags])
+                new_tagnames = added_tagnames - reused_tagnames
+                for name in new_tagnames:
+                    new_tag = Tag.objects.create(
+                                            name = name,
+                                            created_by = user,
+                                            used_count = 1
+                                        )
+                    added_tags.append(new_tag)
+            else:
+                added_tags = reused_tags
+
+            #finally add tags to the relation and extend the modified list
+            self.tags.add(*added_tags)
+            modified_tags.extend(added_tags)
+
+        #if there are any modified tags, update their use counts
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
             return True
@@ -477,7 +509,7 @@ class Question(content.Content, DeletableContent):
         self.save()
 
         # Update the Question's tag associations
-        tags_updated = self.update_tags(tagnames, retagged_by)
+        self.update_tags(tagnames = tagnames, user = retagged_by, timestamp = retagged_at)
 
         # Create a new revision
         latest_revision = self.get_latest_revision()
@@ -527,7 +559,7 @@ class Question(content.Content, DeletableContent):
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
-            tags_updated = self.update_tags(tags, edited_by)
+            self.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
 
         # Create a new revision
         self.add_revision(
@@ -560,25 +592,25 @@ class Question(content.Content, DeletableContent):
             text       = text
         )
 
-    def save(self, **kwargs):
-        """
-        Overridden to manually manage addition of tags when the object
-        is first saved.
-
-        This is required as we're using ``tagnames`` as the sole means of
-        adding and editing tags.
-        """
-        initial_addition = (self.pk is None)
-
-        super(Question, self).save(**kwargs)
-
-        if initial_addition:
-            tags = Tag.objects.get_or_create_multiple(
-                                       self.get_tag_names(),
-                                       self.author
-                                    )
-            self.tags.add(*tags)
-            Tag.objects.update_use_counts(tags)
+#    def save(self, **kwargs):
+#        """
+#        Overridden to manually manage addition of tags when the object
+#        is first saved.
+#
+#        This is required as we're using ``tagnames`` as the sole means of
+#        adding and editing tags.
+#        """
+#        initial_addition = (self.pk is None)
+#
+#        super(Question, self).save(**kwargs)
+#
+#        if initial_addition:
+#            tags = Tag.objects.get_or_create_multiple(
+#                                       self.get_tag_names(),
+#                                       self.author
+#                                    )
+#            self.tags.add(*tags)
+#            Tag.objects.update_use_counts(tags)
 
     def get_tag_names(self):
         """Creates a list of Tag names from the ``tagnames`` attribute."""

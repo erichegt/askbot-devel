@@ -304,7 +304,7 @@ def questions(request):
         'show_sort_by_relevance': askbot.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
-        })
+    })
 
     assert(request.is_ajax() == False)
     #ajax request is handled in a separate branch above

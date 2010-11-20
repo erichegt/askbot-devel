@@ -364,7 +364,7 @@
 {% endblock %}
 
 {% block sidebar %}
-{% cache 600 "questions_tags" questions_tags question.id language_code %}
+{% cache 0 "questions_tags" questions_tags question.id language_code %}
 <div class="boxC">
     <p>
         {% trans %}Question tags{% endtrans %}:

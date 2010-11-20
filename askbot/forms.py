@@ -395,7 +395,7 @@ class CloseForm(forms.Form):
     reason = forms.ChoiceField(choices=const.CLOSE_REASONS)
 
 class RetagQuestionForm(forms.Form):
-    tags   = TagNamesField()
+    tags = TagNamesField()
     # initialize the default values
     def __init__(self, question, *args, **kwargs):
         super(RetagQuestionForm, self).__init__(*args, **kwargs)
