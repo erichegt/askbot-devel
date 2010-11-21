@@ -10,8 +10,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
 import askbot
+import askbot.conf
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models import signals
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
@@ -120,7 +120,7 @@ class QuestionManager(models.Manager):
                     'where': ['text_search_vector @@ to_tsquery(%s)'],
                     'params': ["'" + search_query + "'"]
                 }
-                if askbot.should_show_sort_by_relevance():
+                if askbot.conf.should_show_sort_by_relevance():
                     if sort_method == 'relevance-desc':
                         extra_kwargs['order_by'] = ['-relevance',]
 
@@ -591,26 +591,6 @@ class Question(content.Content, DeletableContent):
             summary    = comment,
             text       = text
         )
-
-#    def save(self, **kwargs):
-#        """
-#        Overridden to manually manage addition of tags when the object
-#        is first saved.
-#
-#        This is required as we're using ``tagnames`` as the sole means of
-#        adding and editing tags.
-#        """
-#        initial_addition = (self.pk is None)
-#
-#        super(Question, self).save(**kwargs)
-#
-#        if initial_addition:
-#            tags = Tag.objects.get_or_create_multiple(
-#                                       self.get_tag_names(),
-#                                       self.author
-#                                    )
-#            self.tags.add(*tags)
-#            Tag.objects.update_use_counts(tags)
 
     def get_tag_names(self):
         """Creates a list of Tag names from the ``tagnames`` attribute."""

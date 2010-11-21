@@ -2,6 +2,7 @@
 #that lives in the session and takes care of the state
 #persistece during the search session
 import askbot
+import askbot.conf
 from askbot import const
 from askbot.conf import settings as askbot_settings
 import logging
@@ -152,7 +153,7 @@ class SearchState(object):
                 self.update_value('sort', input_dict)
 
         #todo: plug - mysql has no relevance sort
-        if not askbot.should_show_sort_by_relevance():
+        if not askbot.conf.should_show_sort_by_relevance():
             if self.sort == 'relevance-desc':
                 self.reset_sort()
 

@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from django.views import static
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
+from askbot.utils.mail import mail_moderators
 from askbot.models import Badge, Award
 from askbot.skins.loaders import ENV
 from askbot import skins
@@ -54,7 +55,7 @@ def feedback(request):
             data['message'] = form.cleaned_data['message']
             data['name'] = form.cleaned_data.get('name',None)
             message = render_to_response('feedback_email.txt',data,context_instance=RequestContext(request))
-            askbot.mail_moderators(_('Q&A forum feedback'), message)
+            mail_moderators(_('Q&A forum feedback'), message)
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))

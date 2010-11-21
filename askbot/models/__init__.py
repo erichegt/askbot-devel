@@ -32,6 +32,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.mail import send_mail
 from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()
@@ -1619,13 +1620,13 @@ def send_instant_notifications_about_activity_in_post(
                         )
             #todo: this could be packaged as an "action" - a bundle
             #of executive function with the activity log recording
-            askbot.send_mail(
-                    subject_line = subject_line,
-                    body_text = body_text,
-                    recipient_list = [user.email],
-                    related_object = origin_post,
-                    activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-                )
+            send_mail(
+                subject_line = subject_line,
+                body_text = body_text,
+                recipient_list = [user.email],
+                related_object = origin_post,
+                activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            )
 
 
 #todo: move to utils

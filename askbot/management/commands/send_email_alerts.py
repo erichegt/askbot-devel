@@ -14,6 +14,7 @@ from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
+from askbot.utils.mail import send_mail 
 
 DEBUG_THIS_COMMAND = False
 
@@ -533,8 +534,8 @@ class Command(NoArgsCommand):
                 else:
                     recipient_email = user.email
 
-                askbot.send_mail(
-                            subject_line = subject_line,
-                            body_text = text,
-                            recipient_list = [recipient_email]
-                        )
+                send_mail(
+                    subject_line = subject_line,
+                    body_text = text,
+                    recipient_list = [recipient_email]
+                )

@@ -25,6 +25,7 @@ from django.conf import settings as django_settings
 import askbot
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
+from askbot.utils.mail import send_mail
 from askbot import auth
 from askbot import forms
 from askbot import const
@@ -165,13 +166,13 @@ def user_moderate(request, subject):
                 body_text = send_message_form.cleaned_data['body_text']
                 
                 try:
-                    askbot.send_mail(
-                                subject_line = subject_line,
-                                body_text = body_text,
-                                recipient_list = [subject.email],
-                                headers={'Reply-to':moderator.email},
-                                raise_on_failure = True
-                            )
+                    send_mail(
+                            subject_line = subject_line,
+                            body_text = body_text,
+                            recipient_list = [subject.email],
+                            headers={'Reply-to':moderator.email},
+                            raise_on_failure = True
+                        )
                     message_sent = True
                 except exceptions.EmailNotSent, e:
                     email_error_message = unicode(e)
