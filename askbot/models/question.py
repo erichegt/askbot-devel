@@ -497,15 +497,16 @@ class Question(content.Content, DeletableContent):
         recipients -= set(exclude_list)
         return recipients
 
-    def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
+    def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
         # Update the Question itself
         self.tagnames = tagnames
-        self.last_edited_at = retagged_at
-        self.last_activity_at = retagged_at
-        self.last_edited_by = retagged_by
-        self.last_activity_by = retagged_by
+        if silent == False:
+            self.last_edited_at = retagged_at
+            self.last_activity_at = retagged_at
+            self.last_edited_by = retagged_by
+            self.last_activity_by = retagged_by
         self.save()
 
         # Update the Question's tag associations
@@ -595,6 +596,13 @@ class Question(content.Content, DeletableContent):
     def get_tag_names(self):
         """Creates a list of Tag names from the ``tagnames`` attribute."""
         return self.tagnames.split(u' ')
+
+    def set_tag_names(self, tag_names):
+        """expects some iterable of unicode string tag names
+        joins the names with a space and assigns to self.tagnames
+        does not save the object
+        """
+        self.tagnames = u' '.join(tag_names)
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])

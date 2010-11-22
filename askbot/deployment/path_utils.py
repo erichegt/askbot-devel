@@ -115,11 +115,19 @@ def deploy_into(directory, new_project = None):
     assert(new_project is not None)
     if new_project:
         copy_files = ('__init__.py', 'settings.py', 'manage.py', 'urls.py')
-        print 'copying files: ',
+        blank_files = ('__init__.py', 'manage.py')
+        print 'Copying files: '
         for file_name in copy_files:
             src = os.path.join(SOURCE_DIR, 'setup_templates', file_name)
-            print '%s ' % file_name,
-            shutil.copy(src, directory)
+            if os.path.exists(os.path.join(directory, file_name)):
+                if file_name in blank_files:
+                    continue
+                else:
+                    print '* %s' % file_name,
+                    print "- you already have one, please add contents of %s" % src
+            else:
+                print '* %s ' % file_name
+                shutil.copy(src, directory)
         #copy log directory
         src = os.path.join(SOURCE_DIR, 'setup_templates', 'log')
         dst = os.path.join(directory, 'log')

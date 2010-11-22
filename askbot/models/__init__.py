@@ -697,12 +697,14 @@ def user_retag_question(
                     question = None,
                     tags = None,
                     timestamp = None,
+                    silent = False
                 ):
     self.assert_can_retag_question(question)
     question.retag(
         retagged_by = self,
         retagged_at = timestamp,
         tagnames = tags,
+        silent = silent
     )
 
 @auto_now_timestamp

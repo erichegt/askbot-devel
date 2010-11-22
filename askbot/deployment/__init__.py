@@ -2,8 +2,8 @@
 module for deploying askbot
 """
 import os.path
+from askbot.utils import console
 from askbot.deployment import messages
-from askbot.deployment import dialogs
 from askbot.deployment import path_utils
 
 def startforum():
@@ -41,9 +41,10 @@ def startforum():
                                                         {
                                                             'path': directory 
                                                         }
-                        should_add_app = dialogs.multiple_choice_input(
+                        should_add_app = console.choice_dialog(
                                                 message,
-                                                options = ['yes','no']
+                                                choices = ['yes','no'],
+                                                invalid_phrase = messages.INVALID_INPUT
                                             )
                         if should_add_app == 'yes':
                             assert(create_new == False)
@@ -71,9 +72,10 @@ def startforum():
                     continue
             else:
                 message = messages.format_msg_create(directory) 
-                should_create_new = dialogs.multiple_choice_input(
+                should_create_new = console.choice_dialog(
                                     message, 
-                                    options = ['yes','no']
+                                    choices = ['yes','no'],
+                                    invalid_phrase = messages.INVALID_INPUT
                                 )
                 if should_create_new == 'yes':
                     if path_utils.dir_name_acceptable(directory):
