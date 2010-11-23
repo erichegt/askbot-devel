@@ -73,14 +73,14 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
             }
             span.replaceWith(error);
         },
-        submitHandler: function(form) {
-            disableSubmitButton(form);
+        submitHandler: function(form_dom) {
+            disableSubmitButton($(form_dom));
             
             if (onSubmitCallback){
                 onSubmitCallback();
             } 
             else{
-                form.submit();
+                form_dom.submit();
             }
         }
     });
@@ -901,8 +901,9 @@ EditCommentForm.prototype.getElement = function(){
     return this._element;
 };
 
-EditCommentForm.prototype.attachTo = function(comment){
+EditCommentForm.prototype.attachTo = function(comment, mode){
     this._comment = comment;
+    this._type = mode;
     this._comment_widget = comment.getContainerWidget();
     this._text = comment.getText();
     comment.getElement().after(this.getElement());
@@ -1014,7 +1015,7 @@ EditCommentForm.prototype.createDom = function(){
         this._element,
         { comment: { required: true, minlength: 10} },
         '',
-        this.save
+        this.getSaveHandler()
     );
 };
 
@@ -1032,11 +1033,11 @@ EditCommentForm.prototype.reset = function(){
     this._comment = null;
     this._text = '';
     this._textarea.val('');
+    this.enableButtons();
 };
 
 EditCommentForm.prototype.confirmAbandon = function(){
     this.focus();
-    debugger;
     this._textarea.addClass('highlight');
     var answer = confirm($.i18n._('confirm abandon comment'));
     this._textarea.removeClass('highlight');
@@ -1048,49 +1049,55 @@ EditCommentForm.prototype.focus = function(){
     window.location.hash = this._id;
 };
 
-EditCommentForm.prototype.save = function(){
+EditCommentForm.prototype.getSaveHandler = function(){
 
-    var post_data = {comment: this._textarea.val()};
+    var me = this;
+    return function(){
+        var post_data = {
+            comment: me._textarea.val(),
+        };
 
-    if (this._type == 'edit'){
-        var post_url = askbot['urls']['editComment'];
-        post_data['comment_id'] = this._comment_id;
-    }
-    else {
-        var post_url = askbot['urls']['addComment'];
-        post_data['parent_type'] = this._parent_post_type;
-        post_data['parent_id'] = this._parent_post_id;
-    }
-
-    this.disableButtons();
-
-    /*$.ajax({
-        type: "POST",
-        url: post_url,
-        dataType: "json",
-        data: post_data,
-        success: function(json) {
-            if (this._type == 'add'){
-                var comment = new Comment(json);
-                comment.setEditForm(this)
-                this._cbox.append(comment.getElement());
-            }
-            else {
-                this._comment.setContent(json);
-                this._comment.getElement.show();
-            }
-            this.detach();
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            showMessage(this._element, xhr.responseText);
-            this.enableButtons();
+        if (me._type == 'edit'){
+            post_data['comment_id'] = me._comment.getId();
+            post_url = askbot['urls']['editComment'];
         }
-    });*/
+        else {
+            post_data['post_type'] = me._comment.getParentType();
+            post_data['post_id'] = me._comment.getParentId();
+            post_url = askbot['urls']['postComments'];
+        }
+
+        me.disableButtons();
+
+        $.ajax({
+            type: "POST",
+            url: post_url,
+            dataType: "json",
+            data: post_data,
+            success: function(json) {
+                if (me._type == 'add'){
+                    me._comment.dispose();
+                    me._comment.getContainerWidget().reRenderComments(json);
+                }
+                else {
+                    me._comment.setContent(json);
+                    me._comment.getElement().show();
+                }
+                me.detach();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                me._comment.getElement().show();
+                showMessage(me._comment.getElement(), xhr.responseText, 'after');
+                me.detach();
+                me.enableButtons();
+            }
+        });
+    };
 };
 
 EditCommentForm.prototype.editComment = function(comment){
     this.detach();
-    this.attachTo(comment);
+    this.attachTo(comment, 'edit');
 };
 
 //a single instance to reuse
@@ -1139,6 +1146,10 @@ Comment.prototype.isBlank = function(){
     return this._blank;
 };
 
+Comment.prototype.getId = function(){
+    return this._data['id'];
+};
+
 Comment.prototype.hasContent = function(){
     return ('id' in this._data);
     //shortcut for 'user_url' 'html' 'user_display_name' 'comment_age'
@@ -1152,13 +1163,21 @@ Comment.prototype.getContainerWidget = function(){
     return this._container_widget;
 };
 
+Comment.prototype.getParentType = function(){
+    return this._container_widget.getPostType();
+};
+
+Comment.prototype.getParentId = function(){
+    return this._container_widget.getPostId();
+};
+
 Comment.prototype.setContent = function(data){
     this._data = data || this._data;
     this._element.html('');
     this._element.attr('class', 'comment');
     this._element.attr('id', 'comment-' + this._data['id']);
 
-    this._element.append(data['html']);
+    this._element.append(this._data['html']);
     this._element.append(' - ');
 
     this._user_link = $('<a></a>').attr('class', 'author');
@@ -1237,8 +1256,6 @@ Comment.prototype.getText = function(){
 }
 
 Comment.prototype.getEditHandler = function(){
-    var comment_id = this._data['id'];
-    var parent_post_id = this._data['post_id'];
     var comment = this;
     return function(){
         if (editCommentForm.canCancel()){
@@ -1264,7 +1281,7 @@ Comment.prototype.getDeleteHandler = function(){
             $.ajax({
                 type: 'POST',
                 url: askbot['urls']['deleteComment'], 
-                data: { comment_id: comment._data['id'] }, 
+                data: { comment_id: comment.getId() }, 
                 success: function(json, textStatus, xhr) {
                     comment.dispose();
                 }, 
@@ -1323,6 +1340,14 @@ PostCommentsWidget.prototype.decorate = function(element){
     this._comments = comments;
 };
 
+PostCommentsWidget.prototype.getPostType = function(){
+    return this._post_type;
+};
+
+PostCommentsWidget.prototype.getPostId = function(){
+    return this._post_id;
+};
+
 PostCommentsWidget.prototype.hideButton = function(){
     this._activate_button.hide();
 };
@@ -1334,7 +1359,7 @@ PostCommentsWidget.prototype.showButton = function(){
 PostCommentsWidget.prototype.startNewComment = function(){
     var comment = new Comment(this);
     this._cbox.append(comment.getElement());
-    editCommentForm.attachTo(comment);
+    editCommentForm.attachTo(comment, 'add');
 };
 
 PostCommentsWidget.prototype.needToReload = function(){

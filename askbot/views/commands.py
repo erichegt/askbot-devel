@@ -368,7 +368,7 @@ def ajax_command(request):
     """view processing ajax commands - note "vote" and view others do it too
     """
     if 'command' not in request.POST:
-        return HttpResponseForbidden(mimetype="application/json")
+        raise exceptions.PermissionDenied(_('Bad request'))
     if request.POST['command'] == 'toggle-ignored-questions':
         return ajax_toggle_ignored_questions(request)
 

@@ -24,9 +24,9 @@
         </div>
         {{macros.edit_post(form, settings.WIKI_ON, post_type='question', edit_title=False)}}
         {% if not request.user.is_authenticated() %}
-        <input type="submit" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
+        <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
         {% else %}
-        <input type="submit" value="{% trans %}Ask your question{% endtrans %}" class="submit" />
+        <input type="submit" name="post" value="{% trans %}Ask your question{% endtrans %}" class="submit" />
         {% endif %}
     </form>
 </div>

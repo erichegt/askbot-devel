@@ -102,9 +102,14 @@ urlpatterns = patterns('',
         name='question_revisions'
     ),
     url(
-        r'^post_comments/$', 
+        r'^post_comments/$',
         app.writers.post_comments, 
         name='post_comments'
+    ),
+    url(
+        r'^edit_comment/$',
+        app.writers.edit_comment,
+        name='edit_comment'
     ),
     url(
         r'^%s$' % _('command/'), 

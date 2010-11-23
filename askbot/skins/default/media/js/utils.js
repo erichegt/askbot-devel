@@ -7,7 +7,7 @@ var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
 
-var showMessage = function(object, msg) {
+var showMessage = function(element, msg, where) {
     var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
     $.i18n._('click to close') + ')</div>');
 
@@ -15,7 +15,15 @@ var showMessage = function(object, msg) {
         $(".vote-notification").fadeOut("fast", function() { $(this).remove(); });
     });
 
-    object.parent().append(div);
+    var where = where || 'parent';
+
+    if (where == 'parent'){
+        element.parent().append(div);
+    }
+    else {
+        element.after(div);
+    }
+
     div.fadeIn("fast");
 };
 

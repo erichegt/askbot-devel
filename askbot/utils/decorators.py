@@ -37,17 +37,24 @@ def ajax_login_required(view_func):
 
 def ajax_method(view_func):
     @functools.wraps(view_func)
-    def wrap(request,*args,**kwargs):
+    def wrapper(request,*args,**kwargs):
         if not request.is_ajax():
             raise Http404
-        retval = view_func(request,*args,**kwargs)
-        if isinstance(retval, HttpResponse):
-            retval.mimetype = 'application/json'
-            return retval
+        try:
+            data = view_func(request,*args,**kwargs)
+        except Exception, e:
+            message = unicode(e)
+            if message == '':
+                message = _('Oops, apologies - there was some error')
+            return HttpResponse(message, status = 404)
+
+        if isinstance(data, HttpResponse):#is this used?
+            data.mimetype = 'application/json'
+            return data
         else:
-            json = simplejson.dumps(retval)
+            json = simplejson.dumps(data)
             return HttpResponse(json,mimetype='application/json')
-    return wrap
+    return wrapper
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE

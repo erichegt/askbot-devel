@@ -278,6 +278,31 @@ def user_assert_can_post_answer(self):
     self.assert_can_post_question()
 
 
+def user_assert_can_edit_comment(self, comment = None):
+    """raises exceptions.PermissionDenied if user
+    cannot edit comment with the reason given as message
+
+    only owners, moderators or admins can edit comments
+    """
+    if self.is_administrator() or self.is_moderator():
+        return
+    else:
+        if comment.user == self:
+            now = datetime.datetime.now()
+            if now - comment.added_at > datetime.timedelta(0, 600):
+                error_message = _(
+                    'Sorry, but comments can be edited only within 10 minutes from posting'
+                )
+                raise django_exceptions.PermissionDenied(error_message)
+            return
+
+    error_message = _(
+        'Sorry, but only post owners or moderators can edit comments'
+    )
+    raise django_exceptions.PermissionDenied(error_message)
+
+
+
 def user_assert_can_post_comment(self, parent_post = None):
     """raises exceptions.PermissionDenied if
     user cannot post comment
@@ -883,6 +908,14 @@ def user_post_question(
                                 )
     return question
 
+def user_edit_comment(self, comment = None, body_text = None):
+    """apply edit to a comment, the method does not
+    change the comments timestamp and no signals are sent
+    """
+    self.assert_can_edit_comment(comment)
+    comment.comment = body_text
+    comment.parse_and_save(author = self)
+
 @auto_now_timestamp
 def user_edit_question(
                     self,
@@ -1427,6 +1460,7 @@ User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
 User.add_to_class('post_comment', user_post_comment)
+User.add_to_class('edit_comment', user_edit_comment)
 User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
@@ -1488,6 +1522,7 @@ User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
 User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
 User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)
 User.add_to_class('assert_can_delete_comment', user_assert_can_delete_comment)
+User.add_to_class('assert_can_edit_comment', user_assert_can_edit_comment)
 User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)
 User.add_to_class('assert_can_accept_best_answer', user_assert_can_accept_best_answer)
