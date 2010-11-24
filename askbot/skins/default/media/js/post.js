@@ -971,7 +971,7 @@ EditCommentForm.prototype.canCancel = function(){
         return true;
     }
     var ctext = $.trim(this._textarea.val());
-    if (ctext == this._text){
+    if ($.trim(ctext) == $.trim(this._text)){
         return true;
     }
     else if (this.confirmAbandon()){
