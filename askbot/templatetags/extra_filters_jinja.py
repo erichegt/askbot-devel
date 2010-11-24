@@ -136,6 +136,11 @@ can_post_comment = make_template_filter_from_permission_assertion(
                         filter_name = 'can_post_comment'
                     )
 
+can_edit_comment = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_edit_comment',
+                        filter_name = 'can_edit_comment'
+                    )
+
 can_close_question = make_template_filter_from_permission_assertion(
                         assertion_name = 'assert_can_close_question',
                         filter_name = 'can_close_question'

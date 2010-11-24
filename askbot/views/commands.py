@@ -21,7 +21,7 @@ from askbot.forms import CloseForm
 from askbot import auth
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from askbot.utils.decorators import ajax_method, ajax_login_required
+from askbot.utils.decorators import ajax_only, ajax_login_required
 from askbot.templatetags import extra_filters as template_filters
 from askbot.skins.loaders import ENV
 from askbot import const
@@ -363,7 +363,7 @@ def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering syste
     request.user.hide_ignored_questions = new_hide_setting
     request.user.save()
 
-@ajax_method
+@ajax_only
 def ajax_command(request):
     """view processing ajax commands - note "vote" and view others do it too
     """

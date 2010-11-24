@@ -27,15 +27,22 @@ var showMessage = function(element, msg, where) {
     div.fadeIn("fast");
 };
 
-var setupButtonEventHandlers = function(button, callback){
-    button.keydown(function(e){
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)){
+
+var makeKeyHandler = function(key, callback){
+    return function(e){
+        if ((e.which && e.which == key) || (e.keyCode && e.keyCode == key)){
             callback();
             return false;
         }
-    });
+    };
+};
+
+
+var setupButtonEventHandlers = function(button, callback){
+    button.keydown(makeKeyHandler(13, callback));
     button.click(callback);
 };
+
 
 var putCursorAtEnd = function(element){
     var el = element.get()[0];

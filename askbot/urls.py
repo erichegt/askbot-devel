@@ -123,8 +123,8 @@ urlpatterns = patterns('',
     ),
     url(
         r'^comment/get_text/$',
-        app.readers.get_comment_text, 
-        name='get_comment_text'
+        app.readers.get_comment, 
+        name='get_comment'
     ),
     #place general question item in the end of other operations
     url(

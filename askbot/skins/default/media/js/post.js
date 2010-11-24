@@ -842,26 +842,39 @@ WrappedElement.prototype.dispose = function(){
     this._element.remove();
 };
 
-var EditLink = function(edit_handler){
-    WrappedElement.call(this)
-    this._edit_handler = edit_handler;
+var SimpleControl = function(){
+    WrappedElement.call(this);
+    this._handler = null;
 };
-inherits(EditLink, WrappedElement);
+inherits(SimpleControl, WrappedElement);
+
+SimpleControl.prototype.setHandler = function(handler){
+    this._handler = handler;
+};
+
+var EditLink = function(){
+    SimpleControl.call(this)
+};
+inherits(EditLink, SimpleControl);
 
 EditLink.prototype.createDom = function(){
-    this._element = $('<a></a>');
-    this._element.attr('title', $.i18n._('click to edit this comment'));
-    this._element.css('display', 'none');
-    this._element.html($.i18n._('edit'));
-    setupButtonEventHandlers(this._element, this._edit_handler);
+    var element = $('<a></a>');
+    element.addClass('edit');
+    this.decorate(element);
 };
 
-var DeleteIcon = function(title, delete_handler){
-    WrappedElement.call(this);
-    this._title = title;
-    this._delete_handler = delete_handler;
+EditLink.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('title', $.i18n._('click to edit this comment'));
+    this._element.html($.i18n._('edit'));
+    setupButtonEventHandlers(this._element, this._handler);
 };
-inherits(DeleteIcon, WrappedElement);
+
+var DeleteIcon = function(title){
+    SimpleControl.call(this);
+    this._title = title;
+};
+inherits(DeleteIcon, SimpleControl);
 
 DeleteIcon.prototype.decorate = function(element){
     this._element = element;
@@ -870,7 +883,7 @@ DeleteIcon.prototype.decorate = function(element){
     this._element.attr('class', 'delete-icon');
     this._element.attr('src', img);
     this._element.attr('title', this._title);
-    setupButtonEventHandlers(this._element, this._delete_handler);
+    setupButtonEventHandlers(this._element, this._handler);
     this._element.mouseover(function(e){
         $(this).attr('src', imgHover);
     });
@@ -909,12 +922,18 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     comment.getElement().after(this.getElement());
     comment.getElement().hide();
     this._comment_widget.hideButton();
+    if (this._type == 'add'){
+        this._submit_btn.html($.i18n._('add comment'));
+    }
+    else {
+        this._submit_btn.html($.i18n._('save comment'));
+    }
     this.getElement().show();
     this.focus();
     putCursorAtEnd(this._textarea);
 };
 
-EditCommentForm.prototype.makeCounterUpdater = function(){
+EditCommentForm.prototype.getCounterUpdater = function(){
     //returns event handler
     var counter = this._text_counter;
     var handler = function(){
@@ -928,10 +947,21 @@ EditCommentForm.prototype.makeCounterUpdater = function(){
         if (length2 < 0){
             length2 = Math.round(0.9*maxCommentLength);
         }
-        var color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
-        counter.html($.i18n._('can write') + ' ' + 
+        
+        var color = 'maroon';
+        if (length === 0){
+            var feedback = $.i18n._('title minchars').replace('{0}', 10);
+        }
+        else if (length < 10){
+            var feedback = $.i18n._('enter more characters').replace('{0}', 10 - length);
+        }
+        else {
+            color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
+            var feedback = $.i18n._('can write') + ' ' + 
                     (maxCommentLength - length) + ' ' +
-                    $.i18n._('characters')).css("color", color);
+                    $.i18n._('characters');
+        }
+        counter.html(feedback).css('color', color);
     };
     return handler;
 };
@@ -949,17 +979,15 @@ EditCommentForm.prototype.canCancel = function(){
     }
     this.focus();
     return false;
-}
+};
 
-EditCommentForm.prototype.makeEscapeHandler = function(){
+EditCommentForm.prototype.getCancelHandler = function(){
     var form = this;
-    return function(e){
-        if ((e.which && e.which == 27) || (e.keyCode && e.keyCode == 27)){
-            if (form.canCancel()){
-                form.detach();
-            }
-            return false;
-        }
+    return function(){
+        if (form.canCancel()){
+            form.detach();
+        } 
+        return false;
     };
 };
 
@@ -989,18 +1017,20 @@ EditCommentForm.prototype.createDom = function(){
 
     this._element.append(div);
     div.append(this._textarea);
-    this._submit_btn = $('<input type="submit" />');
+    this._text_counter = $('<span></span>').attr('class', 'counter');
+    div.append(this._text_counter);
+    this._submit_btn = $('<button class="submit small"></button>');
     div.append(this._submit_btn);
-    this._cancel_btn = $('<button></button>');
+    this._cancel_btn = $('<button class="submit small"></button>');
     this._cancel_btn.html($.i18n._('cancel'));
     div.append(this._cancel_btn);
-    div.append('<br />');
-    this._text_counter = $('<span></span>').attr('class', 'text-counter');
-    div.append(this._text_counter);
-    div.append('<span class="form-error"></span>');
 
-    var update_counter = this.makeCounterUpdater();
-    var escape_handler = this.makeEscapeHandler();
+    setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
+    setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
+
+    var update_counter = this.getCounterUpdater();
+    var escape_handler = makeKeyHandler(27, this.getCancelHandler());
+    var save_handler = makeKeyHandler(13, this.getSaveHandler());
     this._textarea.attr('name', 'comment')
             .attr('cols', 60)
             .attr('rows', 5)
@@ -1008,15 +1038,9 @@ EditCommentForm.prototype.createDom = function(){
             .blur(update_counter)
             .focus(update_counter)
             .keyup(update_counter)
-            .keyup(escape_handler);
+            .keyup(escape_handler)
+            .keydown(save_handler);
     this._textarea.val(this._text);
-
-    setupFormValidation(
-        this._element,
-        { comment: { required: true, minlength: 10} },
-        '',
-        this.getSaveHandler()
-    );
 };
 
 EditCommentForm.prototype.enableButtons = function(){
@@ -1037,24 +1061,32 @@ EditCommentForm.prototype.reset = function(){
 };
 
 EditCommentForm.prototype.confirmAbandon = function(){
-    this.focus();
+    this.focus(true);
     this._textarea.addClass('highlight');
     var answer = confirm($.i18n._('confirm abandon comment'));
     this._textarea.removeClass('highlight');
     return answer;
 };
 
-EditCommentForm.prototype.focus = function(){
+EditCommentForm.prototype.focus = function(hard){
     this._textarea.focus();
-    window.location.hash = this._id;
+    if (hard === true){
+        $(this._textarea).scrollTop();
+    }
 };
 
 EditCommentForm.prototype.getSaveHandler = function(){
 
     var me = this;
     return function(){
+        var text = me._textarea.val();
+        if (text.length <= 10){
+            me.focus();
+            return;
+        }
+
         var post_data = {
-            comment: me._textarea.val(),
+            comment: text
         };
 
         if (me._type == 'edit'){
@@ -1095,11 +1127,6 @@ EditCommentForm.prototype.getSaveHandler = function(){
     };
 };
 
-EditCommentForm.prototype.editComment = function(comment){
-    this.detach();
-    this.attachTo(comment, 'edit');
-};
-
 //a single instance to reuse
 var editCommentForm = new EditCommentForm();
 
@@ -1112,10 +1139,14 @@ var Comment = function(widget, data){
     this._delete_prompt = $.i18n._('delete this comment');
     if (data && data['is_deletable']){
         this._deletable = data['is_deletable'];
-        this._editable = data['is_deletable'];
     }
     else {
         this._deletable = false;
+    }
+    if (data && data['is_editable']){
+        this._editable = data['is_deletable'];
+    }
+    else {
         this._editable = false;
     }
 };
@@ -1129,16 +1160,18 @@ Comment.prototype.decorate = function(element){
     var delete_img = this._element.find('img.delete-icon');
     if (delete_img.length > 0){
         this._deletable = true;
-        this._editable = true;
-
-        var del = new DeleteIcon(this.deletePrompt, this.getDeleteHandler());
-        del.decorate(delete_img);
-
-        var edit_link = new EditLink(this.getEditHandler());
-        this._element.append(edit_link.getElement());
-        this._element.mouseover(function(){edit_link.getElement().show()});
-        this._element.mouseout(function(){edit_link.getElement().hide()});
+        this._delete_icon = new DeleteIcon(this.deletePrompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._delete_icon.decorate(delete_img);
     }
+    var edit_link = this._element.find('a.edit');
+    if (edit_link.length > 0){
+        this._editable = true;
+        this._edit_link = new EditLink();
+        this._edit_link.setHandler(this.getEditHandler());
+        this._edit_link.decorate(edit_link);
+    }
+
     this._blank = false;
 };
 
@@ -1191,16 +1224,16 @@ Comment.prototype.setContent = function(data){
     this._element.append(this._comment_age);
     this._element.append(')');
 
-    if (this._deletable){
-        this._delete_icon = new DeleteIcon(this._delete_prompt, this.getDeleteHandler);
-        this._element.append(this._delete_icon.getElement());
-    }
     if (this._editable){
-        this._edit_link = new EditLink(this.getEditHandler());
+        this._edit_link = new EditLink();
+        this._edit_link.setHandler(this.getEditHandler())
         this._element.append(this._edit_link.getElement());
-        var edit_link = this._edit_link;
-        this._element.mouseover(function(){edit_link.getElement().show()});
-        this._element.mouseout(function(){edit_link.getElement().hide()});
+    }
+
+    if (this._deletable){
+        this._delete_icon = new DeleteIcon(this._delete_prompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._element.append(this._delete_icon.getElement());
     }
     this._blank = false;
 };
@@ -1237,12 +1270,15 @@ Comment.prototype.loadText = function(on_load_handler){
     var me = this;
     $.ajax({
         type: "GET",
-        url: askbot['urls']['getCommentText'],
+        url: askbot['urls']['getComment'],
         data: {id: this._data['id']},
         success: function(json){
             me._data['text'] = json['text'];
             on_load_handler()
-        }
+        },
+        error: function(xhr, textStatus, exception) {
+            showMessage(me.getElement(), xhr.responseText, 'after');
+        },
     });
 };
 
@@ -1259,13 +1295,14 @@ Comment.prototype.getEditHandler = function(){
     var comment = this;
     return function(){
         if (editCommentForm.canCancel()){
+            editCommentForm.detach();
             if (comment.hasText()){
-                editCommentForm.editComment(comment);
+                editCommentForm.attachTo(comment, 'edit');
             }
             else {
                 comment.loadText(
                     function(){
-                        editCommentForm.editComment(comment);
+                        editCommentForm.attachTo(comment, 'edit');
                     }
                 );
             }
@@ -1275,9 +1312,10 @@ Comment.prototype.getEditHandler = function(){
 
 Comment.prototype.getDeleteHandler = function(){
     var comment = this;
+    var del_icon = this._delete_icon;
     return function(){
         if (confirm($.i18n._('confirm delete comment'))){
-            $(this).hide();
+            comment.getElement().hide();
             $.ajax({
                 type: 'POST',
                 url: askbot['urls']['deleteComment'], 
@@ -1286,8 +1324,8 @@ Comment.prototype.getDeleteHandler = function(){
                     comment.dispose();
                 }, 
                 error: function(xhr, textStatus, exception) {
-                    $(this).show();
-                    showMessage(me._delete_icon, xhr.responseText);
+                    comment.getElement().show()
+                    showMessage(del_icon.getElement(), xhr.responseText);
                 },
                 dataType: "json"
             });
@@ -1353,6 +1391,9 @@ PostCommentsWidget.prototype.hideButton = function(){
 };
 
 PostCommentsWidget.prototype.showButton = function(){
+    if (this._is_truncated === false){
+        this._activate_button.html(askbot['messages']['addComment']);
+    }
     this._activate_button.show();
 }
 
@@ -1403,11 +1444,15 @@ PostCommentsWidget.prototype.getDenyHandler = function(){
 
 PostCommentsWidget.prototype.reloadAllComments = function(callback){
     var post_data = {post_id: this._post_id, post_type: this._post_type};
+    var me = this;
     $.ajax({
         type: "GET",
         url: askbot['urls']['postComments'],
         data: post_data,
-        success: callback,
+        success: function(json){
+            callback(json);
+            me._is_truncated = false;
+        },
         dataType: "json"
     });
 };

@@ -36,8 +36,7 @@ from askbot import auth
 from askbot.utils import markup
 from askbot.utils.forms import get_next_url
 from askbot.utils.functions import not_a_robot_request
-from askbot.utils.decorators import profile
-from askbot.utils.http import JsonResponse, JsonLoggingErrorResponse
+from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
@@ -557,20 +556,15 @@ def revisions(request, id, object_name=None):
     template = ENV.get_template('revisions.html')
     return HttpResponse(template.render(context))
 
-def get_comment_text(request):
+@ajax_only
+@anonymous_forbidden
+@get_only
+def get_comment(request):
     """returns text of a comment by id
     via ajax response requires request method get
     and request must be ajax
     """
-    if request.is_ajax():
-        if request.method == "GET":
-            try:
-                id = int(request.GET['id'])
-                comment = Comment.objects.get(id = id)
-                return JsonResponse(data={'text': comment.comment})
-            except Exception, e:
-                return JsonLoggingErrorResponse(e)
-        else:
-            return JsonResponse(status=400)
-    else:
-        raise Http404()
+    id = int(request.GET['id'])
+    comment = Comment.objects.get(id = id)
+    request.user.assert_can_edit_comment(comment)
+    return {'text': comment.comment}

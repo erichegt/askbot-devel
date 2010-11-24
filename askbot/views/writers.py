@@ -26,8 +26,9 @@ from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models
 from askbot.skins.loaders import ENV
-from askbot.utils.decorators import ajax_method
+from askbot.utils.decorators import ajax_only
 from askbot.templatetags.extra_tags import diff_date
+from askbot.templatetags import extra_filters_jinja as template_filters
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -408,8 +409,11 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
                 is_deletable = True
             except exceptions.PermissionDenied:
                 is_deletable = False
+            is_editable = template_filters.can_edit_comment(comment.user, comment)
         else:
             is_deletable = False
+            is_editable = False
+
 
         comment_owner = comment.get_owner()
         json_comments.append({'id' : comment.id,
@@ -420,6 +424,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'user_url': comment_owner.get_profile_url(),
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
+            'is_editable': is_editable,
         })
 
     data = simplejson.dumps(json_comments)
@@ -463,7 +468,7 @@ def post_comments(request):#non-view generic ajax handler to load comments to an
     else:
         raise Http404
 
-@ajax_method
+@ajax_only
 def edit_comment(request):
     if request.user.is_authenticated():
         comment_id = int(request.POST['comment_id'])
@@ -473,11 +478,9 @@ def edit_comment(request):
                         comment = comment,
                         body_text = request.POST['comment']
                     )
-        try:
-            request.user.assert_can_delete_comment(comment)
-            is_deletable = True
-        except exceptions.PermissionDenied:
-            is_deletable = False
+
+        is_deletable = template_filters.can_delete_comment(comment.user, comment)
+        is_editable = template_filters.can_edit_comment(comment.user, comment)
 
         return {'id' : comment.id,
             'object_id': comment.content_object.id,
@@ -487,13 +490,14 @@ def edit_comment(request):
             'user_url': comment.user.get_profile_url(),
             'user_id': comment.user.id,
             'is_deletable': is_deletable,
+            'is_editable': is_editable,
         }
     else:
         raise exceptions.PermissionDenied(
                 _('Sorry, anonymous users cannot edit comments')
             )
 
-def delete_comment(request, object_id='', comment_id=''):
+def delete_comment(request):
     """ajax handler to delete comment
     """
     try:
@@ -504,8 +508,9 @@ def delete_comment(request, object_id='', comment_id=''):
                     {'sign_in_url': reverse('user_signin')}
             raise exceptions.PermissionDenied(msg)
         if request.is_ajax():
-            comment = get_object_or_404(models.Comment, id=comment_id)
 
+            comment_id = request.POST['comment_id']
+            comment = get_object_or_404(models.Comment, id=comment_id)
             request.user.assert_can_delete_comment(comment)
 
             obj = comment.content_object

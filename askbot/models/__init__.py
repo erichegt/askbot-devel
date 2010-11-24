@@ -290,8 +290,10 @@ def user_assert_can_edit_comment(self, comment = None):
         if comment.user == self:
             now = datetime.datetime.now()
             if now - comment.added_at > datetime.timedelta(0, 600):
+                if comment.is_last():
+                    return
                 error_message = _(
-                    'Sorry, but comments can be edited only within 10 minutes from posting'
+                    'Sorry, comments (except the last one) are editable only within 10 minutes from posting'
                 )
                 raise django_exceptions.PermissionDenied(error_message)
             return

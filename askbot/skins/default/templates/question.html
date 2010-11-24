@@ -415,7 +415,9 @@
             var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
             askbot['urls']['postComments'] = '{% url post_comments %}';
             askbot['urls']['editComment'] = '{% url edit_comment %}';
-            askbot['urls']['getCommentText'] = '{% url get_comment_text %}';
+            askbot['urls']['deleteComment'] = '{% url delete_comment %}';
+            askbot['urls']['getComment'] = '{% url get_comment %}';
+            askbot['messages']['addComment'] = '{% trans %}add comment{% endtrans %}';
         </script>
         <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
         <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>

@@ -1,4 +1,13 @@
 from django.core import exceptions
+from django.utils.translation import ugettext as _
+
+class LoginRequired(exceptions.PermissionDenied):
+    """raised when an operation required a logged 
+    in user"""
+    def __init__(self, msg = None):
+        if msg is None:
+            msg = _('Sorry, but anonymous visitors cannot access this function')
+        super(LoginRequired, self).__init__(msg)
 
 class InsufficientReputation(exceptions.PermissionDenied):
     """exception class to indicate that permission

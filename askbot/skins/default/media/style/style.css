@@ -1304,6 +1304,12 @@ a:hover.medal {
     font-size: 90%;
 }
 
+.comments {
+    font-size: 11px;
+    line-height: 15px;
+    clear: both;
+}
+
 .comments div.controls {
     clear: both;
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
@@ -1313,8 +1319,13 @@ a:hover.medal {
 }
 
 .comments textarea {
-    height: 6em;
-    margin-bottom: 4px;
+    height: 48px;
+    width: 664px;
+    margin: 0 0 4px 0;
+    font-family: sans-serif;
+    font-size: 11px;
+    line-height: 15px;
+    padding: 2px 0 0 2px;
 }
 
 .comments input {
@@ -1322,6 +1333,12 @@ a:hover.medal {
     margin-top: 1px;
     vertical-align: top;
     width: 100px;
+}
+
+.comments .counter {
+    display: inline-block;
+    width: 245px;
+    vertical-align: top;
 }
 
 .comments .controls a {
@@ -1337,7 +1354,6 @@ a:hover.medal {
 
 span.text-counter {
     margin-right: 20px;
-    font-size: 11px;
 }
 
 span.form-error {
@@ -2176,7 +2192,7 @@ div.started .reputation-score {
 a.comment {
     background: #EEE;
     color: #993300;
-    padding: 4px;
+    padding: 5px;
 }
 
 a.permLink {
@@ -2256,6 +2272,17 @@ p.space-above {
 .submit:hover {
     text-decoration: underline;
 }
+
+.submit.small {
+    height:20px;
+    font-weight:normal;
+    font-size:12px;
+    padding:0 5px;
+}
+.submit.small:hover {
+    text-decoration:none;
+}
+
 
 .ask-body {
     padding-right: 10px;
@@ -2399,14 +2426,14 @@ p.space-above {
 .comment {
     border-top: 1px dotted #ccccce;
     margin: 0;
-    font-size: 11px;
-    color: #444444;
-    padding: 5px 0 5px 0;
+    color: #444;
+    padding: 2px 3px 5px 3px;
 }
 
 .delete-icon {
     vertical-align: middle;
-    padding-left: 3px;
+    padding-left: 1px;
+    margin-bottom:3px;
 }
 
 /* these need to go */
@@ -2565,9 +2592,6 @@ ul.form-horizontal-rows li input {
     margin: 4px 8px 0 0;
 }
 
-.comments {
-    clear: both;
-}
 
 .post-update-info p.tip {
     color: #444;
@@ -2772,6 +2796,11 @@ img.gravatar {
     background-position: 0px 0px;
 }
 /* Pretty printing styles. Used with prettify.js. */
+
+a.edit {
+    padding-left:3px;
+    color: #145bff;
+}
 
 .str { color: #080; }
 .kwd { color: #008; }

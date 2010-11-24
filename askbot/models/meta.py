@@ -246,5 +246,15 @@ class Comment(base.MetaContent, base.UserContent):
     def get_latest_revision_number(self):
         return 1
 
+    def is_last(self):
+        """True if there are no newer comments on 
+        the related parent object
+        """
+        return Comment.objects.filter(
+            added_at__gt = self.added_at,
+            object_id = self.object_id,
+            content_type = self.content_type
+        ).count() == 0
+
     def __unicode__(self):
         return self.comment

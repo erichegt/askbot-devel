@@ -268,6 +268,9 @@ poor design of the data or methods on data objects #}
                     href="{{comment.user.get_profile_url()}}"
                 >{{comment.user.username}}</a>
                 <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
+                {% if user|can_edit_comment(comment) %}
+                    <a class="edit">{% trans %}edit{% endtrans %}</a>
+                {% endif %}
                 {% if user|can_delete_comment(comment) %}
                     <img class="delete-icon" 
                         src="{{"/images/close-small.png"|media}}"
