@@ -281,14 +281,14 @@ $.fn.authenticator = function() {
     var start_facebook_login = function(){
         set_provider_name($(this));
         if (typeof FB != 'undefined'){
-            FB.login();
-            //FB.getLoginStatus(function(response){
-            //    if (response.session){
-            //        alert('you are logged in');
-            //    }
-            //    else {
-            //    }
-            //});
+            FB.getLoginStatus(function(response){
+                if (response.session){
+                    signin_form.submit();
+                }
+                else {
+                    FB.login();
+                }
+            });
         }
         return false;
     };

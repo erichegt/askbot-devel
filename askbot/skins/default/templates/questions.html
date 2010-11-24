@@ -103,9 +103,9 @@
         <p id="question-count" class="search-result-summary">
         {% if author_name or search_tags or query %}
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}
-                {{q_num}} question found
+                {{q_num}} question
             {% pluralize %}
-                {{q_num}} questions found
+                {{q_num}} questions
             {% endtrans %}
         {% else %}
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}{{q_num}} question{% pluralize %}{{q_num}} questions{% endtrans %}
@@ -212,7 +212,7 @@
     {% endif %}
 
     {% if tags %}
-        {% cache 600 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
+        {% cache 0 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
         <div class="boxC">
             <h3 class="subtitle">{% trans %}Related tags{% endtrans %}</h3>
             <div id="related-tags" class="tags">

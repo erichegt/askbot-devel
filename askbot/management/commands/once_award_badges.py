@@ -12,8 +12,9 @@
 # Licence:     GPL V2
 #-------------------------------------------------------------------------------
 
+import logging
 from datetime import datetime, date
-from django.db import connection
+from django.db import connection, transaction
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
@@ -92,20 +93,26 @@ BADGE_AWARD_TYPE_FIRST = {
 }
 
 class Command(BaseCommand):
+    @transaction.commit_manually
     def handle_noargs(self, **options):
+        badge_calls = (
+            self.alpha_user,
+            self.beta_user,
+            self.first_type_award,
+            self.first_ask_be_voted,
+            self.first_answer_be_voted,
+            self.first_answer_be_voted_10,
+            self.vote_count_300,
+            self.edit_count_100,
+            self.comment_count_10
+        )
         try:
-            try:
-                self.alpha_user()
-                self.beta_user()
-                self.first_type_award()
-                self.first_ask_be_voted()
-                self.first_answer_be_voted()
-                self.first_answer_be_voted_10()
-                self.vote_count_300()
-                self.edit_count_100()
-                self.comment_count_10()
-            except Exception, e:
-                print e
+            for badge_call in badge_calls:
+                try:
+                    badge_call()
+                    transaction.commit()
+                except Exception, e:
+                    logging.critical('badge award error ' + unicode(e) + 'in ' + badge_call.__name__)
         finally:
             connection.close()
 
@@ -147,7 +154,7 @@ class Command(BaseCommand):
 
         activity_types = ','.join('%s' % item for item in BADGE_AWARD_TYPE_FIRST.keys())
         # ORDER BY user_id, activity_type
-        query = "SELECT id, user_id, activity_type, content_type_id, object_id FROM activity WHERE is_auditted = 0 AND activity_type IN (%s) ORDER BY user_id, activity_type" % activity_types
+        query = "SELECT id, user_id, activity_type, content_type_id, object_id FROM activity WHERE is_auditted = False AND activity_type IN (%s) ORDER BY user_id, activity_type" % activity_types
         cursor = connection.cursor()
         try:
             cursor.execute(query)

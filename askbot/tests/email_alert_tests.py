@@ -9,6 +9,7 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
+from askbot.utils.mail import mail_moderators
 
 def email_alert_test(test_func):
     """decorator for test methods in EmailAlertTests
@@ -710,7 +711,6 @@ class FeedbackTests(utils.AskbotTestCase):
     def test_mail_moderators(self):
         """tests askbot.mail_moderators()
         """
-        import askbot
-        askbot.mail_moderators('subject', 'text')
+        mail_moderators('subject', 'text')
         self.assert_feedback_works()
 

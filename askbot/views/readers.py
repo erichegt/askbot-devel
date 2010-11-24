@@ -29,7 +29,7 @@ import askbot
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import *
+from askbot.forms import AdvancedSearchForm, AnswerForm
 from askbot.models import *
 from askbot import const
 from askbot import auth
@@ -40,6 +40,7 @@ from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
+import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import ENV #jinja2 template loading enviroment
 
@@ -301,10 +302,10 @@ def questions(request):
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
         'sort': search_state.sort,
-        'show_sort_by_relevance': askbot.should_show_sort_by_relevance(),
+        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
-        })
+    })
 
     assert(request.is_ajax() == False)
     #ajax request is handled in a separate branch above

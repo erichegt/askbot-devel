@@ -5,6 +5,7 @@ from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from coffin.common import CoffinEnvironment
 from jinja2 import loaders as jinja_loaders
+from askbot.skins import utils
 
 #module for skinning askbot
 #via ASKBOT_DEFAULT_SKIN configureation variable (not django setting)
@@ -42,13 +43,8 @@ class SkinEnvironment(CoffinEnvironment):
         """
         loaders = list()
         skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_dirs = django_settings.TEMPLATE_DIRS + (ASKBOT_SKIN_COLLECTION_DIR,)
-
-        template_dirs = list()
-        for dir in skin_dirs:
-            template_dirs.append(os.path.join(dir, skin_name, 'templates'))
-        for dir in skin_dirs:
-            template_dirs.append(os.path.join(dir, 'default', 'templates'))
+        skin_dirs = utils.get_available_skins(selected = skin_name).values()
+        template_dirs = [os.path.join(skin_dir, 'templates') for skin_dir in skin_dirs]
 
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders

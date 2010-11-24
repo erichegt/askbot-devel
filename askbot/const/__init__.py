@@ -80,7 +80,8 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #however it will be hard to expect that people will type
 #correct regexes - plus this must be an anchored regex
 #to do full string match
-TAG_REGEX = r'^[\w\+\.\-#]+$'
+TAG_CHARS = '\w\+\.\-#'
+TAG_REGEX = r'^[%s]+$' % TAG_CHARS
 TAG_SPLIT_REGEX = r'[ ,]+'
 
 TYPE_ACTIVITY_ASK_QUESTION=1

@@ -28,10 +28,11 @@
                 <td>
                 {% if settings.EDITABLE_SCREEN_NAME %}
                     {{ form.username }}
+                    <span class="form-error"></span> {{ form.username.errors }} </td>
                 {% else %}
                     {{ request.user.username }}
                 {% endif %}
-                <span class="form-error"></span> {{ form.username.errors }} </td>
+                </td>
                 </tr>
                 <tr style="height:35px">
                     <td>{{ form.email.label_tag() }}:</td>

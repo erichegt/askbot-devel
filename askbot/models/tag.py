@@ -6,39 +6,18 @@ from askbot.models.base import DeletableContent
 
 
 class TagManager(models.Manager):
-    UPDATE_USED_COUNTS_QUERY = (
-        'UPDATE tag '
-        'SET used_count = ('
-            'SELECT COUNT(*) FROM question_tags '
-            'INNER JOIN question ON question_id=question.id '
-            'WHERE tag_id = tag.id AND NOT question.deleted'
-        ') '
-        'WHERE id IN (%s)')
+    UPDATE_USED_COUNTS_QUERY ="""
+        UPDATE tag 
+        SET used_count = (
+            SELECT COUNT(*) FROM question_tags 
+            INNER JOIN question ON question_id=question.id
+            WHERE tag_id = tag.id AND NOT question.deleted
+        ) 
+        WHERE id IN (%s);
+    """
 
     def get_valid_tags(self, page_size):
         tags = self.all().filter(deleted=False).exclude(used_count=0).order_by("-id")[:page_size]
-        return tags
-
-    def get_or_create_multiple(self, names, user):
-        """
-        Fetches a list of Tags with the given names, creating any Tags
-        which don't exist when necesssary.
-        """
-        tags = list(self.filter(name__in=names))
-        #Set all these tag visible
-        for tag in tags:
-            if tag.deleted:
-                tag.deleted = False
-                tag.deleted_by = None
-                tag.deleted_at = None
-                tag.save()
-
-        if len(tags) < len(names):
-            existing_names = set(tag.name for tag in tags)
-            new_names = [name for name in names if name not in existing_names]
-            tags.extend([self.create(name=name, created_by=user)
-                         for name in new_names if self.filter(name=name).count() == 0 and len(name.strip()) > 0])
-
         return tags
 
     def update_use_counts(self, tags):
@@ -74,7 +53,7 @@ class TagManager(models.Manager):
             #the big questions query to hit only the page to be displayed
             q_id_list = questions.values_list('id', flat=True)
             tags = self.filter(
-                    questions__id__in = q_id_list
+                    questions__id__in = q_id_list,
                 ).annotate(
                     local_used_count=models.Count('id')
                 ).order_by(
@@ -83,6 +62,8 @@ class TagManager(models.Manager):
 
         if ignored_tag_names:
             tags = tags.exclude(name__in=ignored_tag_names)
+
+        tags = tags.exclude(deleted = True)
 
         tags = tags[:50]#magic number
         if cheating:

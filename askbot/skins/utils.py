@@ -1,33 +1,90 @@
+"""utilities dealing with resolution of skin components
+
+the lookup resolution process for templates and media works as follows:
+* look up item in selected skin
+* if not found look in 'default'
+* the look in 'common'
+* raise an exception 
+"""
 import os
 import logging
 from django.conf import settings as django_settings
+from django.utils.datastructures import SortedDict
 
-def get_skin_dirs():
-    #todo: handle case of multiple skin directories
-    d = os.path.dirname
-    n = os.path.normpath
-    j = os.path.join
-    f = os.path.isfile
-    skin_dirs = []
-    skin_dirs.append( n(j(d(d(__file__)), 'skins')) )
-    return skin_dirs
+class MediaNotFound(Exception):
+    """raised when media file is not found"""
+    pass
+
+def get_skins_from_dir(directory):
+    """returns sorted dict with skin data, like get_available_skins
+    but from a specific directory
+    """
+    skins = SortedDict()
+    for item in sorted(os.listdir(directory)):
+        item_dir = os.path.join(directory, item)
+        if os.path.isdir(item_dir):
+            skins[item] = item_dir
+    return skins
+
+def get_available_skins(selected=None):
+    """selected is a name of preferred skin
+    if it's None, then information about all skins will be returned
+    otherwise, only data about selected, default and common skins
+    will be returned
+
+    selected skin is guaranteed to be the first item in the dictionary
+
+    """
+    skins = SortedDict()
+    if hasattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR'):
+        skins.update(get_skins_from_dir(django_settings.ASKBOT_EXTRA_SKINS_DIR))
+
+    stock_dir = os.path.normpath(os.path.dirname(__file__))
+    stock_skins = get_skins_from_dir(stock_dir)
+    default_dir = stock_skins.pop('default')
+    common_dir = stock_skins.pop('common')
+
+    skins.update(stock_skins)
+
+    if selected:
+        if selected in skins:
+            selected_dir = skins[selected]
+            skins.clear()
+            skins[selected] = selected_dir
+        else:
+            assert(selected == 'default')
+            skins = SortedDict()
+
+    #re-insert default and common as last two items
+    skins['default'] = default_dir
+    skins['common'] = common_dir
+    return skins
+
+
+def get_path_to_skin(skin):
+    """returns path to directory in the list of
+    available skin directories that contains another
+    directory called skin
+
+    it is assumed that all skins are named uniquely
+    """
+    skin_dirs = get_available_skins()
+    return skin_dirs.get(skin, None)
 
 def get_skin_choices():
-    #todo: expand this to handle custom skin directories
-    dirs = get_skin_dirs()
-    default_dir = dirs[0]
-    items = os.listdir(default_dir)
-    skin_list = ['default']
-    for i in items:
-        item_path = os.path.join(default_dir,i)
-        if not os.path.isdir(item_path):
-            continue
-        if i == 'common':
-            continue
-        if i not in skin_list:
-            skin_list.append(i)
+    """returns a tuple for use as a set of 
+    choices in the form"""
+    skin_names = list(reversed(get_available_skins().keys()))
+    skin_names.remove('common')
+    return zip(skin_names, skin_names)
 
-    return [(i,i) for i in skin_list]
+def resolve_skin_for_media(media=None, preferred_skin = None):
+    #see if file exists, if not, try skins 'default', then 'common'
+    available_skins = get_available_skins(selected = preferred_skin).items()
+    for skin_name, skin_dir in available_skins:
+        if os.path.isfile(os.path.join(skin_dir, 'media', media)):
+            return skin_name
+    raise MediaNotFound(media)
 
 def get_media_url(url):
     """returns url prefixed with the skin name
@@ -37,6 +94,8 @@ def get_media_url(url):
     if file is not found - returns None
     and logs an error message
     """
+    #import datetime
+    #before = datetime.datetime.now()
     url = unicode(url)
     while url[0] == '/': url = url[1:]
     #todo: handles case of multiple skin directories
@@ -65,7 +124,7 @@ def get_media_url(url):
         else:
             logging.critical('missing media resource %s' % url)
 
-    #2) if it does not exist - look in skins
+    #2) if it does not exist in uploaded files directory - look in skins
 
     #purpose of this try statement is to determine
     #which skin is currently used
@@ -80,24 +139,14 @@ def get_media_url(url):
         use_skin = 'default'
         resource_revision = None
 
-    skins = get_skin_dirs()[0]
-
-    #see if file exists, if not, try skins 'default', then 'common'
-    file_path = os.path.join(skins, use_skin, 'media', url)
-    if not os.path.isfile(file_path):
-        file_path = os.path.join(skins, 'default', 'media', url)
-        if os.path.isfile(file_path):
-            use_skin = 'default'
-        else:
-            file_path = os.path.join(skins, 'common', 'media', url)
-            if os.path.isfile(file_path):
-                use_skin = 'common'
-            else:
-                log_message = 'missing media resource %s in skin %s' \
-                                % (url, use_skin)
-                logging.critical(log_message)
-                use_skin = ''
-                return None
+    #determine from which skin take the media file
+    try:
+        use_skin = resolve_skin_for_media(media=url, preferred_skin = use_skin)
+    except MediaNotFound, e:
+        log_message = 'missing media resource %s in skin %s' \
+                        % (url, use_skin)
+        logging.critical(log_message)
+        return None
 
     url = use_skin + '/media/' + url
     url = '///' + django_settings.ASKBOT_URL + 'm/' + url
@@ -110,4 +159,6 @@ def get_media_url(url):
     if resource_revision:
         url +=  '?v=%d' % resource_revision
 
+    #after = datetime.datetime.now()
+    #print after - before
     return url
