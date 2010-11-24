@@ -1319,6 +1319,7 @@ a:hover.medal {
 }
 
 .comments textarea {
+    display: block;
     height: 48px;
     width: 664px;
     margin: 0 0 4px 0;

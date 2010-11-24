@@ -1357,7 +1357,7 @@ PostCommentsWidget.prototype.decorate = function(element){
     if (this._user_can_post == false){
         setupButtonEventHandlers(
             this._activate_button,
-            this.getDenyHandler()
+            this.getReadOnlyLoadHandler()
         );
     }
     else {
@@ -1425,19 +1425,13 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
     };
 };
 
-PostCommentsWidget.prototype.getDenyHandler = function(){
+PostCommentsWidget.prototype.getReadOnlyLoadHandler = function(){
     var me = this;
     return function(){
-        if (me._denied == false){
-            var denial = $('<p id="denial" class="comment"></p>');
-            denial.html($.i18n._('to comment, need') + ' ' +
-                repNeededForComments + ' ' + $.i18n._('community karma points') + 
-                '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
-                $.i18n._('please see') + 'faq</a></span>'
-            );
-            me._controls.append(denial);
-        }
-        me._denied = true;
+        me.reloadAllComments(function(json){
+            me.reRenderComments(json);
+            me._activate_button.remove();
+        });
     };
 };
 

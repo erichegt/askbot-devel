@@ -288,22 +288,19 @@ poor design of the data or methods on data objects #}
                     truncated: {% if post.comment_count > max_comments %}true{% else %}false{% endif %}
                 };
             </script>
-            <input type="hidden" value="{{ can_post }}" />
-            {% if can_post or post.comment_count > max_comments %}
+            {% if post.comment_count > max_comments %}
+                {% set remaining_comments = post.comment_count - max_comments %}
                 <a class="button">
                 {% if can_post %}
-                    {% trans %}add comment{% endtrans %}
+                    {% trans %}add comment{% endtrans %} /
+                    {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
+                {% else %}
+                    {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
+                    {% endtrans %}
                 {% endif %}
-                {% if post.comment_count > max_comments %}
-                    {% set remaining_comments = post.comment_count - max_comments %}
-                    {% if can_post %}/
-                        {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
-                    {% else %}
-                        {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
-                        {% endtrans %}
-                    {% endif %}
-                {% endif %}
-            </a>
+                </a>
+            {% elif can_post %}
+                <a class="button">{% trans %}add comment{% endtrans %}</a>
             {% endif %}
         </div>
     </div>

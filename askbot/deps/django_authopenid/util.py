@@ -192,10 +192,12 @@ def get_major_login_providers():
     data = SortedDict()
 
     if use_password_login():
+        site_name = askbot_settings.APP_SHORT_NAME
+        prompt = _('%(site)s user name and password') % {'site': site_name}
         data['local'] = {
             'name': 'local',
-            'display_name': askbot_settings.APP_SHORT_NAME,
-            'extra_token_name': 'Askbot user name and password',
+            'display_name': site_name,
+            'extra_token_name': prompt,
             'type': 'password',
             'create_password_prompt': _('Create a password-protected account'),
             'change_password_prompt': _('Change your password'),
