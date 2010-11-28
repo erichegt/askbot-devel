@@ -19,6 +19,7 @@ from django.utils.html import *
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils import translation
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
