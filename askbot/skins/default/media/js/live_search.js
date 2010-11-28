@@ -68,7 +68,7 @@ $(document).ready(function(){
     }
 
     var render_counter = function(count, word, counter_class){
-        var output = '<div class="votes"' +
+        var output = '<div class="votes">' +
                     '<span class="item-count ' + counter_class + '">' +
                         count;
         if (counter_class == 'accepted'){
