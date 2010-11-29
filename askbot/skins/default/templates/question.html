@@ -304,12 +304,15 @@
             <p style="padding-left:3px">
             {{ answer.email_notify }} 
             <label for="question-subscribe-updates">
-            {% if request.user.get_q_sel_email_feed_frequency()=='n' %}
+            {% set email_feed_frequency = request.user.get_q_sel_email_feed_frequency() %}
+            {% if email_feed_frequency =='n' %}
                 {% trans %}Notify me once a day when there are any new answers{% endtrans %}
-            {% elif request.user.get_q_sel_email_feed_frequency()=='d' %}
+            {% elif email_feed_frequency =='d' %}
                 {% trans %}Notify me once a day when there are any new answers{% endtrans %}
-            {% elif request.user.get_q_sel_email_feed_frequency()=='w' %}
+            {% elif email_feed_frequency =='w' %}
                 {% trans %}Notify me weekly when there are any new answers{% endtrans %}
+            {% elif email_feed_frequency =='i' %}
+                {% trans %}Notify me immediately when there are any new answers{% endtrans %}
             {% endif %}
             </label>
             {% trans profile_url=request.user.get_profile_url() %}You can always adjust frequency of email updates from your {{profile_url}}{% endtrans %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-18 17:35-0600\n"
+"POT-Creation-Date: 2010-11-29 16:37-0600\n"
 "PO-Revision-Date: 2010-03-28 22:15-0600\n"
 "Last-Translator: Francisco Espinoza <pacoesni@gmail.com>\n"
 "Language-Team: Hasked Team <pacoesni@gmail.com>\n"
@@ -17,6 +17,11 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: NICARAGUA\n"
 "X-Poedit-SourceCharset: utf-8\n"
+
+#: exceptions.py:9
+#, fuzzy
+msgid "Sorry, but anonymous visitors cannot access this function"
+msgstr "usuarios anónimos no pueden votar"
 
 #: feed.py:22
 msgid " - "
@@ -112,24 +117,24 @@ msgstr ""
 msgid "Enter number of points to add or subtract"
 msgstr ""
 
-#: forms.py:175 const/__init__.py:218
+#: forms.py:175 const/__init__.py:219
 msgid "approved"
 msgstr ""
 
-#: forms.py:176 const/__init__.py:219
+#: forms.py:176 const/__init__.py:220
 msgid "watched"
 msgstr ""
 
-#: forms.py:177 const/__init__.py:220
+#: forms.py:177 const/__init__.py:221
 #, fuzzy
 msgid "suspended"
 msgstr "actualizado"
 
-#: forms.py:178 const/__init__.py:221
+#: forms.py:178 const/__init__.py:222
 msgid "blocked"
 msgstr ""
 
-#: forms.py:180 const/__init__.py:217
+#: forms.py:180 const/__init__.py:218
 #, fuzzy
 msgid "moderator"
 msgstr "moderar-usuario/"
@@ -271,49 +276,45 @@ msgstr "privacidad/"
 msgid "logout/"
 msgstr "salir/"
 
-#: urls.py:47 urls.py:52 urls.py:57 urls.py:127
+#: urls.py:47 urls.py:52
 msgid "answers/"
 msgstr "respuestas/"
 
-#: urls.py:47 urls.py:109 urls.py:120 urls.py:127
-msgid "comments/"
-msgstr "comentarios/"
-
-#: urls.py:52 urls.py:73 urls.py:168
+#: urls.py:47 urls.py:68 urls.py:164
 msgid "edit/"
 msgstr "editar/"
 
-#: urls.py:57 urls.py:103
+#: urls.py:52 urls.py:98
 msgid "revisions/"
 msgstr "revisiones/"
 
-#: urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83 urls.py:88
-#: urls.py:93 urls.py:98 urls.py:103 urls.py:109 urls.py:120
+#: urls.py:58 urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83
+#: urls.py:88 urls.py:93 urls.py:98
 msgid "questions/"
 msgstr "preguntas/"
 
-#: urls.py:68
+#: urls.py:63
 msgid "ask/"
 msgstr "preguntar/"
 
-#: urls.py:78
+#: urls.py:73
 #, fuzzy
 msgid "retag/"
 msgstr "etiquetas/"
 
-#: urls.py:83
+#: urls.py:78
 msgid "close/"
 msgstr "cerrar/"
 
-#: urls.py:88
+#: urls.py:83
 msgid "reopen/"
 msgstr "reabrir/"
 
-#: urls.py:93
+#: urls.py:88
 msgid "answer/"
 msgstr "responder/"
 
-#: urls.py:98
+#: urls.py:93
 msgid "vote/"
 msgstr "votar/"
 
@@ -321,64 +322,60 @@ msgstr "votar/"
 msgid "command/"
 msgstr "comando/"
 
-#: urls.py:120 urls.py:127
-msgid "delete/"
-msgstr "eliminar/"
-
-#: urls.py:134
+#: urls.py:130
 msgid "question/"
 msgstr "pregunta/"
 
-#: urls.py:139
+#: urls.py:135
 msgid "tags/"
 msgstr "etiquetas/"
 
-#: urls.py:144 urls.py:150
+#: urls.py:140 urls.py:146
 msgid "mark-tag/"
 msgstr "marcar-etiqueta/"
 
-#: urls.py:144
+#: urls.py:140
 msgid "interesting/"
 msgstr "interesante/"
 
-#: urls.py:150
+#: urls.py:146
 msgid "ignored/"
 msgstr "ignorada/"
 
-#: urls.py:156
+#: urls.py:152
 msgid "unmark-tag/"
 msgstr "desmarcar-etiqueta/"
 
-#: urls.py:162 urls.py:168 urls.py:173
+#: urls.py:158 urls.py:164 urls.py:169
 msgid "users/"
 msgstr "usuarios/"
 
-#: urls.py:178 urls.py:183
+#: urls.py:174 urls.py:179
 msgid "badges/"
 msgstr "trofeos/"
 
-#: urls.py:188
+#: urls.py:184
 msgid "messages/"
 msgstr "mensajes/"
 
-#: urls.py:188
+#: urls.py:184
 msgid "markread/"
 msgstr "marcar-como-leidos/"
 
-#: urls.py:203
+#: urls.py:199
 msgid "upload/"
 msgstr "subir/"
 
-#: urls.py:204
+#: urls.py:200
 msgid "search/"
 msgstr "buscar/"
 
-#: urls.py:205
+#: urls.py:201
 msgid "feedback/"
 msgstr "feedback/"
 
-#: urls.py:206 setup_templates/settings.py:182
-#: skins/default/templates/authopenid/signin.html:269
+#: urls.py:202 setup_templates/settings.py:182
+#: skins/default/templates/authopenid/signin.html:249
 msgid "account/"
 msgstr "cuenta/"
 
@@ -1143,137 +1140,137 @@ msgstr "Preguntas que he respondido"
 msgid "Question has no accepted answers"
 msgstr "Preguntas que he respondido"
 
-#: const/__init__.py:110
+#: const/__init__.py:111
 #, fuzzy
 msgid "asked a question"
 msgstr "preguntar"
 
-#: const/__init__.py:111
+#: const/__init__.py:112
 #, fuzzy
 msgid "answered a question"
 msgstr "preguntas sin contestar"
 
-#: const/__init__.py:112
+#: const/__init__.py:113
 msgid "commented question"
 msgstr "comentar pregunta"
 
-#: const/__init__.py:113
+#: const/__init__.py:114
 msgid "commented answer"
 msgstr "comentar respuesta"
 
-#: const/__init__.py:114
+#: const/__init__.py:115
 msgid "edited question"
 msgstr "editar pregunta"
 
-#: const/__init__.py:115
+#: const/__init__.py:116
 msgid "edited answer"
 msgstr "editar respuesta"
 
-#: const/__init__.py:116
+#: const/__init__.py:117
 msgid "received award"
 msgstr "recibió un trofeo"
 
-#: const/__init__.py:117
+#: const/__init__.py:118
 msgid "marked best answer"
 msgstr "la mejor respuesta fue marcada"
 
-#: const/__init__.py:118
+#: const/__init__.py:119
 msgid "upvoted"
 msgstr "voto positivo"
 
-#: const/__init__.py:119
+#: const/__init__.py:120
 msgid "downvoted"
 msgstr "voto negativo"
 
-#: const/__init__.py:120
+#: const/__init__.py:121
 msgid "canceled vote"
 msgstr "voto cancelado"
 
-#: const/__init__.py:121
+#: const/__init__.py:122
 msgid "deleted question"
 msgstr "eliminar pregunta"
 
-#: const/__init__.py:122
+#: const/__init__.py:123
 msgid "deleted answer"
 msgstr "eliminar respuesta"
 
-#: const/__init__.py:123
+#: const/__init__.py:124
 msgid "marked offensive"
 msgstr "marcar como ofensivo"
 
-#: const/__init__.py:124
+#: const/__init__.py:125
 msgid "updated tags"
 msgstr "actualizar etiquetas"
 
-#: const/__init__.py:125
+#: const/__init__.py:126
 msgid "selected favorite"
 msgstr "seleccionar favorito"
 
-#: const/__init__.py:126
+#: const/__init__.py:127
 msgid "completed user profile"
 msgstr "completar perfil de usuario"
 
-#: const/__init__.py:127
+#: const/__init__.py:128
 msgid "email update sent to user"
 msgstr "enviar actualizaciones al usuario"
 
-#: const/__init__.py:128
+#: const/__init__.py:129
 msgid "mentioned in the post"
 msgstr ""
 
-#: const/__init__.py:179
+#: const/__init__.py:180
 msgid "question_answered"
 msgstr "pregunta_respondida"
 
-#: const/__init__.py:180
+#: const/__init__.py:181
 msgid "question_commented"
 msgstr "pregunta_comentada"
 
-#: const/__init__.py:181
+#: const/__init__.py:182
 msgid "answer_commented"
 msgstr "respuesta_comentada"
 
-#: const/__init__.py:182
+#: const/__init__.py:183
 msgid "answer_accepted"
 msgstr "respuesta_aceptada"
 
-#: const/__init__.py:186
+#: const/__init__.py:187
 msgid "[closed]"
 msgstr "[cerrado]"
 
-#: const/__init__.py:187
+#: const/__init__.py:188
 msgid "[deleted]"
 msgstr "[eliminado]"
 
-#: const/__init__.py:188 views/readers.py:546
+#: const/__init__.py:189 views/readers.py:549
 msgid "initial version"
 msgstr "versión inicial"
 
-#: const/__init__.py:189
+#: const/__init__.py:190
 msgid "retagged"
 msgstr "re-etiquetado"
 
-#: const/__init__.py:194
+#: const/__init__.py:195
 msgid "exclude ignored tags"
 msgstr "excluir etiquetas ignoradas"
 
-#: const/__init__.py:195
+#: const/__init__.py:196
 msgid "allow only selected tags"
 msgstr "permitir unicamente etiquetas seleccionadas"
 
-#: const/__init__.py:199
+#: const/__init__.py:200
 msgid "instantly"
 msgstr ""
 
-#: const/__init__.py:200
+#: const/__init__.py:201
 msgid "daily"
 msgstr "diario"
 
-#: const/__init__.py:201
+#: const/__init__.py:202
 msgid "weekly"
 msgstr "semanal"
 
-#: const/__init__.py:202
+#: const/__init__.py:203
 msgid "no email"
 msgstr "no enviar emails"
 
@@ -1387,98 +1384,103 @@ msgstr "eliminar-cuenta/"
 msgid "recover/"
 msgstr "remover/"
 
-#: deps/django_authopenid/util.py:200
+#: deps/django_authopenid/util.py:196
+#, fuzzy, python-format
+msgid "%(site)s user name and password"
+msgstr "Ingrese su nombre de usuario y contraseña."
+
+#: deps/django_authopenid/util.py:202
 #: skins/default/templates/authopenid/signin.html:124
 msgid "Create a password-protected account"
 msgstr ""
 
-#: deps/django_authopenid/util.py:201
+#: deps/django_authopenid/util.py:203
 #, fuzzy
 msgid "Change your password"
 msgstr "Cambiar Contraseña"
 
-#: deps/django_authopenid/util.py:263
+#: deps/django_authopenid/util.py:265
 msgid "Sign in with Yahoo"
 msgstr ""
 
-#: deps/django_authopenid/util.py:270
+#: deps/django_authopenid/util.py:272
 #, fuzzy
 msgid "AOL screen name"
 msgstr "Nombre para mostrar"
 
-#: deps/django_authopenid/util.py:278
+#: deps/django_authopenid/util.py:280
 #, fuzzy
 msgid "OpenID url"
 msgstr "Obetener OpenID"
 
-#: deps/django_authopenid/util.py:295
+#: deps/django_authopenid/util.py:297
 #, fuzzy
 msgid "MyOpenid user name"
 msgstr "por nombre de usuario"
 
-#: deps/django_authopenid/util.py:303 deps/django_authopenid/util.py:311
+#: deps/django_authopenid/util.py:305 deps/django_authopenid/util.py:313
 #, fuzzy
 msgid "Flickr user name"
 msgstr "nombr de usuario"
 
-#: deps/django_authopenid/util.py:319
+#: deps/django_authopenid/util.py:321
 #, fuzzy
 msgid "Technorati user name"
 msgstr "seleccione un nombre de usuario"
 
-#: deps/django_authopenid/util.py:327
+#: deps/django_authopenid/util.py:329
 msgid "WordPress blog name"
 msgstr ""
 
-#: deps/django_authopenid/util.py:335
+#: deps/django_authopenid/util.py:337
 msgid "Blogger blog name"
 msgstr ""
 
-#: deps/django_authopenid/util.py:343
+#: deps/django_authopenid/util.py:345
 msgid "LiveJournal blog name"
 msgstr ""
 
-#: deps/django_authopenid/util.py:351
+#: deps/django_authopenid/util.py:353
 #, fuzzy
 msgid "ClaimID user name"
 msgstr "nombr de usuario"
 
-#: deps/django_authopenid/util.py:359
+#: deps/django_authopenid/util.py:361
 #, fuzzy
 msgid "Vidoop user name"
 msgstr "nombr de usuario"
 
-#: deps/django_authopenid/util.py:367
+#: deps/django_authopenid/util.py:369
 #, fuzzy
 msgid "Verisign user name"
 msgstr "nombr de usuario"
 
-#: deps/django_authopenid/util.py:391
+#: deps/django_authopenid/util.py:393
 #, fuzzy, python-format
 msgid "Change your %(provider)s password"
 msgstr "Cambiar Contraseña"
 
-#: deps/django_authopenid/util.py:395
+#: deps/django_authopenid/util.py:397
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr ""
 
-#: deps/django_authopenid/util.py:404
+#: deps/django_authopenid/util.py:406
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr ""
 
-#: deps/django_authopenid/util.py:408
+#: deps/django_authopenid/util.py:410
 #, fuzzy, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Conectar tu OpenID con tu cuenta en este sitio"
 
-#: deps/django_authopenid/util.py:417
+#: deps/django_authopenid/util.py:419
 #, fuzzy, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Ingrese su nombre de usuario y contraseña."
 
-#: deps/django_authopenid/util.py:424
+#: deps/django_authopenid/util.py:426
 #, python-format
 msgid "Sign in with your %(provider)s account"
 msgstr ""
@@ -1698,35 +1700,35 @@ msgstr "Validación incorrecta"
 msgid "Congratulations, you are now an Administrator"
 msgstr ""
 
-#: management/commands/send_email_alerts.py:104
+#: management/commands/send_email_alerts.py:105
 #, python-format
 msgid "\" and \"%s\""
 msgstr ""
 
-#: management/commands/send_email_alerts.py:107
+#: management/commands/send_email_alerts.py:108
 #, fuzzy
 msgid "\" and more"
 msgstr "Para saber más"
 
-#: management/commands/send_email_alerts.py:112
+#: management/commands/send_email_alerts.py:113
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: management/commands/send_email_alerts.py:466
+#: management/commands/send_email_alerts.py:467
 #, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: management/commands/send_email_alerts.py:483
+#: management/commands/send_email_alerts.py:484
 msgid "new question"
 msgstr "nueva pregunta"
 
-#: management/commands/send_email_alerts.py:500
+#: management/commands/send_email_alerts.py:501
 #, fuzzy
 msgid ""
 "Please visit the askbot and see what's new! Could you spread the word about "
@@ -1736,7 +1738,7 @@ msgstr ""
 "Por favor, visita el foro y mira lo que hay de nuevo. ¿Podría correr la voz "
 "sobre ello - conoce a alguien que sepa la respuesta a las preguntas?"
 
-#: management/commands/send_email_alerts.py:512
+#: management/commands/send_email_alerts.py:513
 #, fuzzy
 msgid ""
 "Your most frequent subscription setting is 'daily' on selected questions. If "
@@ -1748,7 +1750,7 @@ msgstr ""
 "por favor no dude en reportar acerca de este problema al administrador del "
 "foro."
 
-#: management/commands/send_email_alerts.py:518
+#: management/commands/send_email_alerts.py:519
 #, fuzzy
 msgid ""
 "Your most frequent subscription setting is 'weekly' if you are receiving "
@@ -1760,7 +1762,7 @@ msgstr ""
 "semana, por favor no dude en reportar acerca de este problema al "
 "administrador del foro."
 
-#: management/commands/send_email_alerts.py:524
+#: management/commands/send_email_alerts.py:525
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
@@ -1768,7 +1770,7 @@ msgstr ""
 "Existe la posibilidad de que usted puede estar recibiendo enlaces visto "
 "antes - debido a un tecnicismo que a la larga va a desaparecer."
 
-#: management/commands/send_email_alerts.py:529
+#: management/commands/send_email_alerts.py:530
 #, fuzzy, python-format
 msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or %"
@@ -2265,54 +2267,54 @@ msgstr ""
 msgid "Created a tag used by 50 questions"
 msgstr "Creo una etiqueta usada por %s preguntas"
 
-#: models/__init__.py:168
+#: models/__init__.py:169
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr ""
 
-#: models/__init__.py:173
+#: models/__init__.py:174
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr ""
 
-#: models/__init__.py:179
+#: models/__init__.py:180
 #, fuzzy
 msgid ""
 "Sorry, you cannot accept or unaccept your own answer to your own question"
 msgstr "Primer respuesta aceptada a un pregunta tuya"
 
-#: models/__init__.py:186
+#: models/__init__.py:187
 #, python-format
 msgid ""
 "Sorry, only original author of the question  - %(username)s - can accept the "
 "best answer"
 msgstr ""
 
-#: models/__init__.py:209
+#: models/__init__.py:210
 msgid "cannot vote for own posts"
 msgstr "no se puede votar por sus propias publicaciones"
 
-#: models/__init__.py:212
+#: models/__init__.py:213
 msgid "Sorry your account appears to be blocked "
 msgstr ""
 
-#: models/__init__.py:217
+#: models/__init__.py:218
 msgid "Sorry your account appears to be suspended "
 msgstr ""
 
-#: models/__init__.py:227
+#: models/__init__.py:228
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ">%(points)s puntos requeridos para votar positivamente "
 
-#: models/__init__.py:233
+#: models/__init__.py:234
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr ">%(points)s puntos requeridos para votar negativamente"
 
-#: models/__init__.py:248
+#: models/__init__.py:249
 #, fuzzy
 msgid "Sorry, blocked users cannot upload files"
 msgstr ""
@@ -2320,7 +2322,7 @@ msgstr ""
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
 
-#: models/__init__.py:249
+#: models/__init__.py:250
 #, fuzzy
 msgid "Sorry, suspended users cannot upload files"
 msgstr ""
@@ -2328,13 +2330,13 @@ msgstr ""
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 
-#: models/__init__.py:251
+#: models/__init__.py:252
 #, python-format
 msgid ""
 "uploading images is limited to users with >%(min_rep)s reputation points"
 msgstr ""
 
-#: models/__init__.py:270 models/__init__.py:303 models/__init__.py:1910
+#: models/__init__.py:271 models/__init__.py:331 models/__init__.py:1950
 #, fuzzy
 msgid "blocked users cannot post"
 msgstr ""
@@ -2342,7 +2344,7 @@ msgstr ""
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
 
-#: models/__init__.py:271 models/__init__.py:1913
+#: models/__init__.py:272 models/__init__.py:1953
 #, fuzzy
 msgid "suspended users cannot post"
 msgstr ""
@@ -2350,52 +2352,62 @@ msgstr ""
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 
-#: models/__init__.py:289
+#: models/__init__.py:297
+msgid ""
+"Sorry, comments (except the last one) are editable only within 10 minutes "
+"from posting"
+msgstr ""
+
+#: models/__init__.py:303
+msgid "Sorry, but only post owners or moderators can edit comments"
+msgstr ""
+
+#: models/__init__.py:317
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
 
-#: models/__init__.py:293
+#: models/__init__.py:321
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr ""
 
-#: models/__init__.py:321
+#: models/__init__.py:349
 msgid ""
 "This post has been deleted and can be seen only by post ownwers, site "
 "administrators and moderators"
 msgstr ""
 
-#: models/__init__.py:338
+#: models/__init__.py:366
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
 msgstr ""
 
-#: models/__init__.py:353
+#: models/__init__.py:381
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr ""
 
-#: models/__init__.py:357
+#: models/__init__.py:385
 msgid "Sorry, since your account is suspended you can edit only your own posts"
 msgstr ""
 
-#: models/__init__.py:362
+#: models/__init__.py:390
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:369
+#: models/__init__.py:397
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:432
+#: models/__init__.py:460
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -2405,61 +2417,61 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:447
+#: models/__init__.py:475
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr ""
 
-#: models/__init__.py:451
+#: models/__init__.py:479
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr ""
 
-#: models/__init__.py:455
+#: models/__init__.py:483
 #, python-format
 msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:475
+#: models/__init__.py:503
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr ""
 
-#: models/__init__.py:479
+#: models/__init__.py:507
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr ""
 
-#: models/__init__.py:483
+#: models/__init__.py:511
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:492
+#: models/__init__.py:520
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:516
+#: models/__init__.py:544
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > %"
 "(min_rep)s can reopen questions."
 msgstr ""
 
-#: models/__init__.py:522
+#: models/__init__.py:550
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:542
+#: models/__init__.py:570
 msgid "cannot flag message as offensive twice"
 msgstr ""
 
-#: models/__init__.py:547
+#: models/__init__.py:575
 #, fuzzy
 msgid "blocked users cannot flag posts"
 msgstr ""
@@ -2467,7 +2479,7 @@ msgstr ""
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
 
-#: models/__init__.py:549
+#: models/__init__.py:577
 #, fuzzy
 msgid "suspended users cannot flag posts"
 msgstr ""
@@ -2475,164 +2487,164 @@ msgstr ""
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 
-#: models/__init__.py:551
+#: models/__init__.py:579
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
 msgstr ""
 
-#: models/__init__.py:570
+#: models/__init__.py:598
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
 msgstr ""
 
-#: models/__init__.py:585
+#: models/__init__.py:613
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
 
-#: models/__init__.py:592
+#: models/__init__.py:620
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr ""
 
-#: models/__init__.py:596
+#: models/__init__.py:624
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
 
-#: models/__init__.py:600
+#: models/__init__.py:628
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:619
+#: models/__init__.py:647
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr ""
 
-#: models/__init__.py:623
+#: models/__init__.py:651
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
 
-#: models/__init__.py:627
+#: models/__init__.py:655
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:650
+#: models/__init__.py:678
 msgid "cannot revoke old vote"
 msgstr "no puede revocar un voto viejo"
 
-#: models/__init__.py:1128 views/users.py:387
+#: models/__init__.py:1166 views/users.py:388
 #, fuzzy
 msgid "Site Adminstrator"
 msgstr ""
 "Sinceramente,<br />\n"
 "    Administrador del Foro"
 
-#: models/__init__.py:1130 views/users.py:389
+#: models/__init__.py:1168 views/users.py:390
 msgid "Forum Moderator"
 msgstr ""
 
-#: models/__init__.py:1132 views/users.py:391
+#: models/__init__.py:1170 views/users.py:392
 #, fuzzy
 msgid "Suspended User"
 msgstr "Enviar enlace"
 
-#: models/__init__.py:1134 views/users.py:393
+#: models/__init__.py:1172 views/users.py:394
 msgid "Blocked User"
 msgstr ""
 
-#: models/__init__.py:1136 views/users.py:395
+#: models/__init__.py:1174 views/users.py:396
 #, fuzzy
 msgid "Registered User"
 msgstr "Usuario registrado"
 
-#: models/__init__.py:1138
+#: models/__init__.py:1176
 msgid "Watched User"
 msgstr ""
 
-#: models/__init__.py:1140
+#: models/__init__.py:1178
 #, fuzzy
 msgid "Approved User"
 msgstr "proveedores/"
 
-#: models/__init__.py:1196
+#: models/__init__.py:1234
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr ""
 
-#: models/__init__.py:1206
+#: models/__init__.py:1244
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1213
+#: models/__init__.py:1251
 #, fuzzy, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "descripción de la medalla de plata"
 msgstr[1] "descripción de la medalla de plata"
 
-#: models/__init__.py:1220
+#: models/__init__.py:1258
 #, fuzzy, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "descripción de la medalla de bronce"
 msgstr[1] "descripción de la medalla de bronce"
 
-#: models/__init__.py:1231
+#: models/__init__.py:1269
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr ""
 
-#: models/__init__.py:1235
+#: models/__init__.py:1273
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr ""
 
-#: models/__init__.py:1526 models/__init__.py:1532 models/__init__.py:1537
-#: models/__init__.py:1542
+#: models/__init__.py:1566 models/__init__.py:1572 models/__init__.py:1577
+#: models/__init__.py:1582
 #, python-format
 msgid "Re: \"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:1547 models/__init__.py:1552
+#: models/__init__.py:1587 models/__init__.py:1592
 #, fuzzy, python-format
 msgid "Question: \"%(title)s\""
 msgstr "Etiquetas de la pregunta"
 
-#: models/__init__.py:1733
+#: models/__init__.py:1773
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
 
-#: models/question.py:667
+#: models/question.py:687
 #, fuzzy, python-format
 msgid "%(author)s modified the question"
 msgstr "%(author)s modificaron la pregunta"
 
-#: models/question.py:671
+#: models/question.py:691
 #, fuzzy, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr "%(people)s publicaron %(new_answer_count)s nuevas respuestas"
 
-#: models/question.py:676
+#: models/question.py:696
 #, fuzzy, python-format
 msgid "%(people)s commented the question"
 msgstr "%(people)s comentaron la pregunta"
 
-#: models/question.py:681
+#: models/question.py:701
 #, fuzzy, python-format
 msgid "%(people)s commented answers"
 msgstr "%(people)s comentaron respuestas"
 
-#: models/question.py:683
+#: models/question.py:703
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr "%(people)s comentaron una respuesta"
@@ -2668,11 +2680,11 @@ msgid ""
 "question %(question_title)s"
 msgstr ""
 
-#: models/tag.py:110
+#: models/tag.py:91
 msgid "interesting"
 msgstr "interesante"
 
-#: models/tag.py:110
+#: models/tag.py:91
 msgid "ignored"
 msgstr "ignorado"
 
@@ -2838,9 +2850,9 @@ msgstr "Cancelar"
 #: skins/default/templates/answer_edit.html:59
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:36 skins/default/templates/ask.html:39
-#: skins/default/templates/macros.html:387
-#: skins/default/templates/question.html:448
-#: skins/default/templates/question.html:451
+#: skins/default/templates/macros.html:398
+#: skins/default/templates/question.html:456
+#: skins/default/templates/question.html:459
 #: skins/default/templates/question_edit.html:63
 #: skins/default/templates/question_edit.html:66
 msgid "hide preview"
@@ -2848,7 +2860,7 @@ msgstr "ocultar vista previa"
 
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:39
-#: skins/default/templates/question.html:451
+#: skins/default/templates/question.html:459
 #: skins/default/templates/question_edit.html:66
 msgid "show preview"
 msgstr "mostrar vista previa"
@@ -3622,7 +3634,7 @@ msgid "updated"
 msgstr "actualizado"
 
 #: skins/default/templates/macros.html:210
-#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:235
+#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:237
 #, fuzzy
 msgid "vote"
 msgid_plural "votes"
@@ -3630,7 +3642,7 @@ msgstr[0] "votar/"
 msgstr[1] "votar/"
 
 #: skins/default/templates/macros.html:227
-#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:238
+#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:240
 #, fuzzy
 msgid "answer"
 msgid_plural "answers"
@@ -3638,7 +3650,7 @@ msgstr[0] "respuesta"
 msgstr[1] "respuesta"
 
 #: skins/default/templates/macros.html:239
-#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:241
+#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:243
 #, fuzzy
 msgid "view"
 msgid_plural "views"
@@ -3655,22 +3667,31 @@ msgstr[1] "vistas"
 msgid "see questions tagged '%(tag)s'"
 msgstr "ver preguntas etiquetadas con '%(tagname)s'"
 
-#: skins/default/templates/macros.html:269
+#: skins/default/templates/macros.html:272
+#: skins/default/templates/question.html:94
+#: skins/default/templates/question.html:247
+#: skins/default/templates/revisions.html:37
+msgid "edit"
+msgstr "editar"
+
+#: skins/default/templates/macros.html:277
 msgid "delete this comment"
 msgstr "eliminar este comentario"
 
-#: skins/default/templates/macros.html:284
+#: skins/default/templates/macros.html:295
+#: skins/default/templates/macros.html:303
+#: skins/default/templates/question.html:423
 msgid "add comment"
 msgstr "comentar"
 
-#: skins/default/templates/macros.html:289
+#: skins/default/templates/macros.html:296
 #, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:291
+#: skins/default/templates/macros.html:298
 #, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
@@ -3679,11 +3700,11 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:364
+#: skins/default/templates/macros.html:375
 msgid "(required)"
 msgstr "(requerido)"
 
-#: skins/default/templates/macros.html:385
+#: skins/default/templates/macros.html:396
 msgid "Toggle the real time Markdown editor preview"
 msgstr "Vista preliminar en tiempo real del editor Markdown"
 
@@ -3734,12 +3755,6 @@ msgstr "Reabrir esta pregunta"
 msgid "Share this question on facebook"
 msgstr "última información de la pregunta"
 
-#: skins/default/templates/question.html:94
-#: skins/default/templates/question.html:247
-#: skins/default/templates/revisions.html:37
-msgid "edit"
-msgstr "editar"
-
 #: skins/default/templates/question.html:97
 #, fuzzy
 msgid "retag"
@@ -3789,12 +3804,12 @@ msgstr "tiempo %(closed_at)s"
 #, python-format
 msgid ""
 "\n"
-"                    %(counter)s Answer:\n"
-"                    "
+"                %(counter)s Answer:\n"
+"                "
 msgid_plural ""
 "\n"
-"                    %(counter)s Answers:\n"
-"                    "
+"                %(counter)s Answers:\n"
+"                "
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3856,16 +3871,21 @@ msgstr "enlace permanente"
 msgid "undelete"
 msgstr "revivir"
 
-#: skins/default/templates/question.html:308
-#: skins/default/templates/question.html:310
+#: skins/default/templates/question.html:309
+#: skins/default/templates/question.html:311
 msgid "Notify me once a day when there are any new answers"
 msgstr "Notificarme una vez al día cuando tenga nuevas respuestas"
 
-#: skins/default/templates/question.html:312
+#: skins/default/templates/question.html:313
 msgid "Notify me weekly when there are any new answers"
 msgstr "Notificarme semanalmente cuando tenga alguna nueva respuesta"
 
 #: skins/default/templates/question.html:315
+#, fuzzy
+msgid "Notify me immediately when there are any new answers"
+msgstr "Notificarme semanalmente cuando tenga alguna nueva respuesta"
+
+#: skins/default/templates/question.html:318
 #, fuzzy, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
@@ -3875,49 +3895,49 @@ msgstr ""
 "(profile_url)s\n"
 "                "
 
-#: skins/default/templates/question.html:320
+#: skins/default/templates/question.html:323
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 "una vez que inicie sesión serás capaz de suscribirte para recibir "
 "actualizaciones"
 
-#: skins/default/templates/question.html:330
+#: skins/default/templates/question.html:333
 msgid "Your answer"
 msgstr "Tu respuesta"
 
-#: skins/default/templates/question.html:332
+#: skins/default/templates/question.html:335
 msgid "Be the first one to answer this question!"
 msgstr "Se el primero en contestar esta pregunta"
 
-#: skins/default/templates/question.html:338
+#: skins/default/templates/question.html:341
 msgid "you can answer anonymously and then login"
 msgstr "tu puedes contestar anonimamente y luego ingresar"
 
-#: skins/default/templates/question.html:342
+#: skins/default/templates/question.html:345
 msgid "answer your own question only to give an answer"
 msgstr "responder a tu pregunta sólo para dar una respuesta"
 
-#: skins/default/templates/question.html:344
+#: skins/default/templates/question.html:347
 msgid "please only give an answer, no discussions"
 msgstr "por favor intenta responder, no discutir"
 
-#: skins/default/templates/question.html:351
+#: skins/default/templates/question.html:354
 msgid "Login/Signup to Post Your Answer"
 msgstr "Ingresa/Registrate para publicar tu respuesta"
 
-#: skins/default/templates/question.html:354
+#: skins/default/templates/question.html:357
 msgid "Answer Your Own Question"
 msgstr "Responde tu pregunta"
 
-#: skins/default/templates/question.html:356
+#: skins/default/templates/question.html:359
 msgid "Answer the question"
 msgstr "Responde la pregunta"
 
-#: skins/default/templates/question.html:370
+#: skins/default/templates/question.html:373
 msgid "Question tags"
 msgstr "Etiquetas de la pregunta"
 
-#: skins/default/templates/question.html:375
+#: skins/default/templates/question.html:378
 #: skins/default/templates/questions.html:222
 #: skins/default/templates/tag_selector.html:9
 #: skins/default/templates/tag_selector.html:26
@@ -3925,23 +3945,23 @@ msgstr "Etiquetas de la pregunta"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr "ver etiquetas de la pregunta '%(tag_name)s'"
 
-#: skins/default/templates/question.html:381
+#: skins/default/templates/question.html:384
 msgid "question asked"
 msgstr "pregunta formulada"
 
-#: skins/default/templates/question.html:384
+#: skins/default/templates/question.html:387
 msgid "question was seen"
 msgstr "la pregunta ha sido vista"
 
-#: skins/default/templates/question.html:384
+#: skins/default/templates/question.html:387
 msgid "times"
 msgstr "veces"
 
-#: skins/default/templates/question.html:387
+#: skins/default/templates/question.html:390
 msgid "last updated"
 msgstr "última actualización"
 
-#: skins/default/templates/question.html:394
+#: skins/default/templates/question.html:397
 msgid "Related questions"
 msgstr "Preguntas relacionadas"
 
@@ -4032,7 +4052,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/questions.html:111 views/readers.py:155
+#: skins/default/templates/questions.html:111 views/readers.py:157
 #, fuzzy, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -4550,7 +4570,7 @@ msgstr "Pefil de usuario"
 msgid "overview"
 msgstr "descripción general"
 
-#: skins/default/templates/user_tabs.html:9 views/users.py:752
+#: skins/default/templates/user_tabs.html:9 views/users.py:753
 msgid "comments and answers to others questions"
 msgstr "comentar y responder otras preguntas"
 
@@ -4583,7 +4603,7 @@ msgstr "actividad reciente"
 msgid "activity"
 msgstr "activa"
 
-#: skins/default/templates/user_tabs.html:23 views/users.py:817
+#: skins/default/templates/user_tabs.html:23 views/users.py:818
 msgid "user vote record"
 msgstr "registro de votos de este usuario"
 
@@ -4591,7 +4611,7 @@ msgstr "registro de votos de este usuario"
 msgid "casted votes"
 msgstr "votos emitidos"
 
-#: skins/default/templates/user_tabs.html:28 views/users.py:927
+#: skins/default/templates/user_tabs.html:28 views/users.py:928
 msgid "email subscription settings"
 msgstr "configuraciones de suscripción por email"
 
@@ -4600,7 +4620,7 @@ msgstr "configuraciones de suscripción por email"
 msgid "subscriptions"
 msgstr "suscripción por email"
 
-#: skins/default/templates/user_tabs.html:33 views/users.py:215
+#: skins/default/templates/user_tabs.html:33 views/users.py:216
 #, fuzzy
 msgid "moderate this user"
 msgstr "Moderar este usuario"
@@ -5185,11 +5205,11 @@ msgstr "votos"
 msgid "views"
 msgstr "vistas"
 
-#: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:229
+#: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:234
 msgid "no items in counter"
 msgstr ""
 
-#: templatetags/extra_tags.py:155 views/readers.py:185
+#: templatetags/extra_tags.py:155 views/readers.py:187
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
 msgid_plural "%(badge_count)d %(badge_level)s badges"
@@ -5210,6 +5230,10 @@ msgstr ""
 #, fuzzy
 msgid "badges: "
 msgstr "medallas"
+
+#: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
+msgid "Oops, apologies - there was some error"
+msgstr ""
 
 #: utils/forms.py:32
 msgid "this field is required"
@@ -5325,10 +5349,6 @@ msgstr ""
 msgid "You have %(votes_left)s votes left for today"
 msgstr ""
 
-#: views/commands.py:132 views/commands.py:149
-msgid "Oops, apologies - there was some error"
-msgstr ""
-
 #: views/commands.py:139
 #, fuzzy
 msgid "Sorry, but anonymous users cannot access the inbox"
@@ -5354,119 +5374,135 @@ msgstr ""
 msgid "email update frequency has been set to daily"
 msgstr "la frecuencia de notificaciones por email ha sido cambiada a diario"
 
-#: views/meta.py:57
+#: views/commands.py:371
+#, fuzzy
+msgid "Bad request"
+msgstr "Validación incorrecta"
+
+#: views/meta.py:58
 msgid "Q&A forum feedback"
 msgstr "Foro de sugerencias"
 
-#: views/meta.py:58
+#: views/meta.py:59
 msgid "Thanks for the feedback!"
 msgstr "Gracias por tus sugerencias"
 
-#: views/meta.py:68
+#: views/meta.py:69
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr "Esperamos con interés escuchar sus comentarios! :)"
 
-#: views/readers.py:429
+#: views/readers.py:432
 #, fuzzy
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "esta pregunta ha sido seleccionada como la favorita"
 
-#: views/users.py:216
+#: views/users.py:217
 #, fuzzy
 msgid "moderate user"
 msgstr "moderar-usuario/"
 
-#: views/users.py:400
+#: views/users.py:401
 msgid "user profile"
 msgstr "perfil de usuario"
 
-#: views/users.py:401
+#: views/users.py:402
 msgid "user profile overview"
 msgstr "vista del perfil de usuario"
 
-#: views/users.py:684
+#: views/users.py:685
 msgid "recent user activity"
 msgstr "actividad reciente del usuario"
 
-#: views/users.py:685
+#: views/users.py:686
 msgid "profile - recent activity"
 msgstr "perfil - actividad reciente"
 
-#: views/users.py:753
+#: views/users.py:754
 msgid "profile - responses"
 msgstr "perfil - respuestas"
 
-#: views/users.py:818
+#: views/users.py:819
 msgid "profile - votes"
 msgstr "pefil - votos"
 
-#: views/users.py:856
+#: views/users.py:857
 msgid "user reputation in the community"
 msgstr "reputación del usuario en la comunidad"
 
-#: views/users.py:857
+#: views/users.py:858
 msgid "profile - user reputation"
 msgstr "perfil - reputación del usuario"
 
-#: views/users.py:885
+#: views/users.py:886
 msgid "users favorite questions"
 msgstr "preguntas favoritas del usuario"
 
-#: views/users.py:886
+#: views/users.py:887
 msgid "profile - favorite questions"
 msgstr "pefil - preguntas favoritas"
 
-#: views/users.py:906 views/users.py:910
+#: views/users.py:907 views/users.py:911
 msgid "changes saved"
 msgstr "cambios guardados"
 
-#: views/users.py:916
+#: views/users.py:917
 msgid "email updates canceled"
 msgstr "notificaciones por email cancelada"
 
-#: views/users.py:928
+#: views/users.py:929
 msgid "profile - email subscriptions"
 msgstr "perfil - notificación por email"
 
-#: views/writers.py:53
+#: views/writers.py:56
 #, fuzzy
 msgid "Sorry, anonymous users cannot upload files"
 msgstr "usuarios anónimos no pueden votar"
 
-#: views/writers.py:62
+#: views/writers.py:65
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr ""
 
-#: views/writers.py:85
+#: views/writers.py:88
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr ""
 
-#: views/writers.py:93
+#: views/writers.py:96
 #, fuzzy
 msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 "Error al subir el archivo. Por favor contacte el administrador del sitio. "
 "Gracias. %s"
 
-#: views/writers.py:454
+#: views/writers.py:452
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:489
+#: views/writers.py:497
+#, fuzzy
+msgid "Sorry, anonymous users cannot edit comments"
+msgstr "usuarios anónimos no pueden votar"
+
+#: views/writers.py:505
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:509
+#: views/writers.py:526
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
+
+#~ msgid "comments/"
+#~ msgstr "comentarios/"
+
+#~ msgid "delete/"
+#~ msgstr "eliminar/"
 
 #~ msgid "Please enter valid username and password (both are case-sensitive)."
 #~ msgstr ""

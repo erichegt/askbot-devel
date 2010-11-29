@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-29 14:13-0600\n"
+"POT-Creation-Date: 2010-11-29 16:37-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2680,8 +2680,8 @@ msgstr ""
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:36 skins/default/templates/ask.html:39
 #: skins/default/templates/macros.html:398
-#: skins/default/templates/question.html:453
 #: skins/default/templates/question.html:456
+#: skins/default/templates/question.html:459
 #: skins/default/templates/question_edit.html:63
 #: skins/default/templates/question_edit.html:66
 msgid "hide preview"
@@ -2689,7 +2689,7 @@ msgstr ""
 
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:39
-#: skins/default/templates/question.html:456
+#: skins/default/templates/question.html:459
 #: skins/default/templates/question_edit.html:66
 msgid "show preview"
 msgstr ""
@@ -3505,7 +3505,7 @@ msgstr ""
 
 #: skins/default/templates/macros.html:295
 #: skins/default/templates/macros.html:303
-#: skins/default/templates/question.html:420
+#: skins/default/templates/question.html:423
 msgid "add comment"
 msgstr "post a comment"
 
@@ -3686,19 +3686,25 @@ msgstr "link"
 msgid "undelete"
 msgstr ""
 
-#: skins/default/templates/question.html:308
-#: skins/default/templates/question.html:310
+#: skins/default/templates/question.html:309
+#: skins/default/templates/question.html:311
 msgid "Notify me once a day when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> once a day by email when there are any new "
 "answers or updates"
 
-#: skins/default/templates/question.html:312
+#: skins/default/templates/question.html:313
 msgid "Notify me weekly when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> weekly when there are any new answers or updates"
 
 #: skins/default/templates/question.html:315
+#, fuzzy
+msgid "Notify me immediately when there are any new answers"
+msgstr ""
+"<strong>Notify me</strong> weekly when there are any new answers or updates"
+
+#: skins/default/templates/question.html:318
 #, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
@@ -3706,21 +3712,21 @@ msgstr ""
 "(note: you can always <strong><a href='%(profile_url)s?"
 "sort=email_subscriptions'>change</a></strong> how often you receive updates)"
 
-#: skins/default/templates/question.html:320
+#: skins/default/templates/question.html:323
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 "<span class='strong'>Here</span> (once you log in) you will be able to sign "
 "up for the periodic email updates about this question."
 
-#: skins/default/templates/question.html:330
+#: skins/default/templates/question.html:333
 msgid "Your answer"
 msgstr ""
 
-#: skins/default/templates/question.html:332
+#: skins/default/templates/question.html:335
 msgid "Be the first one to answer this question!"
 msgstr ""
 
-#: skins/default/templates/question.html:338
+#: skins/default/templates/question.html:341
 msgid "you can answer anonymously and then login"
 msgstr ""
 "<span class='strong big'>Please start posting your answer anonymously</span> "
@@ -3729,7 +3735,7 @@ msgstr ""
 "answer</strong>, for discussions, <strong>please use comments</strong> and "
 "<strong>please do remember to vote</strong> (after you log in)!"
 
-#: skins/default/templates/question.html:342
+#: skins/default/templates/question.html:345
 msgid "answer your own question only to give an answer"
 msgstr ""
 "<span class='big strong'>You are welcome to answer your own question</span>, "
@@ -3739,7 +3745,7 @@ msgstr ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)! "
 
-#: skins/default/templates/question.html:344
+#: skins/default/templates/question.html:347
 msgid "please only give an answer, no discussions"
 msgstr ""
 "<span class='big strong'>Please try to give a substantial answer</span>. If "
@@ -3749,23 +3755,23 @@ msgstr ""
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
 
-#: skins/default/templates/question.html:351
+#: skins/default/templates/question.html:354
 msgid "Login/Signup to Post Your Answer"
 msgstr "Login/Signup to Post"
 
-#: skins/default/templates/question.html:354
+#: skins/default/templates/question.html:357
 msgid "Answer Your Own Question"
 msgstr ""
 
-#: skins/default/templates/question.html:356
+#: skins/default/templates/question.html:359
 msgid "Answer the question"
 msgstr "Post Your Answer"
 
-#: skins/default/templates/question.html:370
+#: skins/default/templates/question.html:373
 msgid "Question tags"
 msgstr "Tags"
 
-#: skins/default/templates/question.html:375
+#: skins/default/templates/question.html:378
 #: skins/default/templates/questions.html:222
 #: skins/default/templates/tag_selector.html:9
 #: skins/default/templates/tag_selector.html:26
@@ -3773,23 +3779,23 @@ msgstr "Tags"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr ""
 
-#: skins/default/templates/question.html:381
+#: skins/default/templates/question.html:384
 msgid "question asked"
 msgstr "Asked"
 
-#: skins/default/templates/question.html:384
+#: skins/default/templates/question.html:387
 msgid "question was seen"
 msgstr "Seen"
 
-#: skins/default/templates/question.html:384
+#: skins/default/templates/question.html:387
 msgid "times"
 msgstr ""
 
-#: skins/default/templates/question.html:387
+#: skins/default/templates/question.html:390
 msgid "last updated"
 msgstr "Last updated"
 
-#: skins/default/templates/question.html:394
+#: skins/default/templates/question.html:397
 msgid "Related questions"
 msgstr ""
 
@@ -4127,15 +4133,15 @@ msgstr ""
 #: skins/default/templates/user_email_subscriptions.html:4
 msgid "Email subscription settings"
 msgstr ""
+
+#: skins/default/templates/user_email_subscriptions.html:5
+msgid "email subscription settings info"
+msgstr ""
 "<span class='big strong'>Adjust frequency of email updates.</span> Receive "
 "updates on interesting questions by email, <strong><br/>help the community</"
 "strong> by answering questions of your colleagues. If you do not wish to "
 "receive emails - select 'no email' on all items below.<br/>Updates are only "
 "sent when there is any new activity on selected items."
-
-#: skins/default/templates/user_email_subscriptions.html:5
-msgid "email subscription settings info"
-msgstr ""
 
 #: skins/default/templates/user_email_subscriptions.html:19
 msgid "Stop sending email"
