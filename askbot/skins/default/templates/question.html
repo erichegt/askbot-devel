@@ -170,11 +170,11 @@
                 {% endtrans %}
                 </div>
                 <div class="tabsA">
-                     <a id="oldest" href="{% url question question.id %}?sort=oldest#sort-top" 
+                     <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top" 
                         title="{% trans %}oldest answers will be shown first{% endtrans %}">{% trans %}oldest answers{% endtrans %}</a>
-                    <a id="latest" href="{% url question question.id %}?sort=latest#sort-top" 
+                    <a id="latest" href="{{ question.get_absolute_url() }}?sort=latest#sort-top" 
                         title="{% trans %}newest answers will be shown first{% endtrans %}">{% trans %}newest answers{% endtrans %}</a>
-                    <a id="votes" href="{% url question question.id %}?sort=votes#sort-top" 
+                    <a id="votes" href="{{ question.get_absolute_url() }}?sort=votes#sort-top" 
                         title="{% trans %}most voted answers will be shown first{% endtrans %}">{% trans %}popular answers{% endtrans %}</a>   
                 </div>
             </div>

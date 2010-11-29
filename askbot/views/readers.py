@@ -397,32 +397,33 @@ def question(request, id):#refactor - long subroutine. display question body, an
     except ValueError:
         page = 1
 
-    view_id = request.GET.get('sort', None)
+    answer_sort_method = request.GET.get('sort', None)
     view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
     try:
-        orderby = view_dic[view_id]
+        orderby = view_dic[answer_sort_method]
     except KeyError:
         qsm = request.session.get('questions_sort_method',None)
         if qsm in ('mostvoted','latest'):
             logging.debug('loaded from session ' + qsm)
             if qsm == 'mostvoted':
-                view_id = 'votes'
+                answer_sort_method = 'votes'
                 orderby = '-score'
             else:
-                view_id = 'latest'
+                answer_sort_method = 'latest'
                 orderby = '-added_at'
         else:
-            view_id = "votes"
+            answer_sort_method = "votes"
             orderby = "-score"
 
-    logging.debug('view_id=' + unicode(view_id))
+    logging.debug('answer_sort_method=' + unicode(answer_sort_method))
 
     question = get_object_or_404(Question, id=id)
     try:
         assert(request.path == question.get_absolute_url())
     except AssertionError:
         logging.debug('no slug match!')
-        return HttpResponseRedirect(question.get_absolute_url())
+        question_url = question.get_absolute_url() + '?sort=%s' % answer_sort_method
+        return HttpResponseRedirect(question_url)
 
     if question.deleted:
         try:
@@ -509,7 +510,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'has_next': page_objects.has_next(),
         'previous': page_objects.previous_page_number(),
         'next': page_objects.next_page_number(),
-        'base_url' : request.path + '?sort=%s&amp;' % view_id,
+        'base_url' : request.path + '?sort=%s&amp;' % answer_sort_method,
         'extend_url' : "#sort-top"
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
@@ -524,7 +525,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
         'tags' : question.tags.all(),
-        'tab_id' : view_id,
+        'tab_id' : answer_sort_method,
         'favorited' : favorited,
         'similar_questions' : question.get_similar_questions(),
         'language_code': translation.get_language(),
