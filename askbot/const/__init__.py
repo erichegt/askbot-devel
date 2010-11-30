@@ -233,5 +233,21 @@ DEPENDENCY_URLS = {
 
 PASSWORD_MIN_LENGTH = 8
 
+GOLD_BADGE = 1
+SILVER_BADGE = 2
+BRONZE_BADGE = 3
+BADGE_TYPE_CHOICES = (
+    (GOLD_BADGE,   _('gold')),
+    (SILVER_BADGE, _('silver')),
+    (BRONZE_BADGE, _('bronze')),
+)
+BADGE_CSS_CLASSES = {
+    GOLD_BADGE: 'badge1',
+    SILVER_BADGE: 'badge2',
+    BRONZE_BADGE: 'badge3',
+}
+BADGE_DISPLAY_SYMBOL = '&#9679;'
+
+
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

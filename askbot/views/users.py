@@ -445,7 +445,7 @@ def user_recent(request, user):
             self.time = time
             self.type = get_type_name(type)
             self.type_id = type
-            self.badge = get_object_or_404(models.Badge, id=id)
+            self.badge = get_object_or_404(models.BadgeData, id=id)
 
     activities = []
     # ask questions

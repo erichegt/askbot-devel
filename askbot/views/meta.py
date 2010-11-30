@@ -13,7 +13,7 @@ from django.views import static
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
-from askbot.models import Badge, Award
+from askbot.models import BadgeData, Award
 from askbot.skins.loaders import ENV
 from askbot import skins
 import askbot
@@ -90,7 +90,8 @@ def logout(request):#refactor/change behavior?
     return HttpResponse(template.render(context))
 
 def badges(request):#user status/reputation system
-    badges = Badge.objects.all().order_by('name')
+    #todo: supplement database data with the stuff from badges.py
+    badges = BadgeData.objects.all().order_by('name')
     my_badges = []
     if request.user.is_authenticated():
         my_badges = Award.objects.filter(user=request.user).values('badge_id')
@@ -108,7 +109,8 @@ def badges(request):#user status/reputation system
     return HttpResponse(template.render(context))
 
 def badge(request, id):
-    badge = get_object_or_404(Badge, id=id)
+    #todo: supplement database data with the stuff from badges.py
+    badge = get_object_or_404(BadgeData, id=id)
     awards = Award.objects.extra(
         select={'id': 'auth_user.id', 
                 'name': 'auth_user.username', 

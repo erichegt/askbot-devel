@@ -31,12 +31,13 @@ from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm
-from askbot.models import *
+from askbot import models
+from askbot.models import badges
 from askbot import const
 from askbot import auth
 from askbot.utils import markup
 from askbot.utils.forms import get_next_url
-from askbot.utils.functions import not_a_robot_request
+from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
@@ -61,7 +62,7 @@ def _get_tags_cache_json():#service routine used by views requiring tag list in 
     """returns list of all tags in json format
     no caching yet, actually
     """
-    tags = Tag.objects.filter(deleted=False).all()
+    tags = models.Tag.objects.filter(deleted=False).all()
     tags_list = []
     for tag in tags:
         dic = {'n': tag.name, 'c': tag.used_count}
@@ -124,7 +125,7 @@ def questions(request):
     #request.session.modified = True
 
     #todo: have this call implemented for sphinx, mysql and pgsql
-    (qs, meta_data, related_tags) = Question.objects.run_advanced_search(
+    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
                                             request_user = request.user,
                                             search_state = search_state,
                                         )
@@ -136,7 +137,7 @@ def questions(request):
 
     page = paginator.page(search_state.page)
 
-    contributors = Question.objects.get_question_and_answer_contributors(page.object_list)
+    contributors = models.Question.objects.get_question_and_answer_contributors(page.object_list)
 
     paginator_context = {
         'is_paginated' : (paginator.count > search_state.page_size),
@@ -181,7 +182,7 @@ def questions(request):
             'faces': list()
         }
 
-        badge_levels = dict(Badge.TYPE_CHOICES)
+        badge_levels = dict(badges.TYPE_CHOICES)
         def pluralize_badge_count(count, level):
             return ungettext(
                 '%(badge_count)d %(badge_level)s badge',
@@ -192,9 +193,9 @@ def questions(request):
                 'badge_level': badge_levels[level]
             }
 
-        gold_badge_css_class = Badge.CSS_CLASSES[Badge.GOLD],
-        silver_badge_css_class = Badge.CSS_CLASSES[Badge.SILVER],
-        bronze_badge_css_class = Badge.CSS_CLASSES[Badge.BRONZE],
+        gold_badge_css_class = badges.CSS_CLASSES[badges.GOLD],
+        silver_badge_css_class = badges.CSS_CLASSES[badges.SILVER],
+        bronze_badge_css_class = badges.CSS_CLASSES[badges.BRONZE],
 
         for tag in related_tags:
             tag_data = {
@@ -242,30 +243,30 @@ def questions(request):
                 'views_class': views_class,
                 'views_word': ungettext('view', 'views', question.view_count),
                 'timestamp': unicode(timestamp),
-                'timesince': extra_tags.diff_date(timestamp),
+                'timesince': functions.diff_date(timestamp),
                 'u_id': author.id,
                 'u_name': author.username,
                 'u_rep': author.reputation,
                 'u_gold': author.gold,
                 'u_gold_title': pluralize_badge_count(
                                                 author.gold,
-                                                Badge.GOLD
+                                                badges.GOLD
                                             ),
-                'u_gold_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_gold_badge_symbol': badges.DISPLAY_SYMBOL,
                 'u_gold_css_class': gold_badge_css_class,
                 'u_silver': author.silver,
                 'u_silver_title': pluralize_badge_count(
                                             author.silver,
-                                            Badge.SILVER
+                                            badges.SILVER
                                         ),
-                'u_silver_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_silver_badge_symbol': badges.DISPLAY_SYMBOL,
                 'u_silver_css_class': silver_badge_css_class,
                 'u_bronze': author.bronze,
                 'u_bronze_title': pluralize_badge_count(
                                             author.bronze,
-                                            Badge.BRONZE
+                                            badges.BRONZE
                                         ),
-                'u_bronze_badge_symbol': Badge.DISPLAY_SYMBOL,
+                'u_bronze_badge_symbol': badges.DISPLAY_SYMBOL,
                 'u_bronze_css_class': bronze_badge_css_class,
             }
             ajax_data['questions'].append(question_data)
@@ -352,12 +353,12 @@ def tags(request):#view showing a listing of available tags - plain list
     if request.method == "GET":
         stag = request.GET.get("q", "").strip()
         if stag != '':
-            objects_list = Paginator(Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name like %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
+            objects_list = Paginator(models.Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name like %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
         else:
             if sortby == "name":
-                objects_list = Paginator(Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
+                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
             else:
-                objects_list = Paginator(Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
+                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
 
     try:
         tags = objects_list.page(page)
@@ -417,7 +418,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
 
-    question = get_object_or_404(Question, id=id)
+    question = get_object_or_404(models.Question, id=id)
     try:
         assert(request.path == question.get_absolute_url())
     except AssertionError:
@@ -473,7 +474,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     objects_list = Paginator(filtered_answers, ANSWERS_PAGE_SIZE)
     page_objects = objects_list.page(page)
 
-    if not_a_robot_request(request):
+    if functions.not_a_robot_request(request):
         #todo: split this out into a subroutine
         #todo: merge view counts per user and per session
         #1) view count per session
@@ -539,7 +540,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
 def revisions(request, id, object_name=None):
     assert(object_name in ('Question', 'Answer'))
-    post = get_object_or_404(get_model(object_name), id=id)
+    post = get_object_or_404(models.get_model(object_name), id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
     for i, revision in enumerate(revisions):
@@ -568,6 +569,6 @@ def get_comment(request):
     and request must be ajax
     """
     id = int(request.GET['id'])
-    comment = Comment.objects.get(id = id)
+    comment = models.Comment.objects.get(id = id)
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.comment}

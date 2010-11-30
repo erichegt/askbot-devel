@@ -1,37 +1,19 @@
+import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
-import datetime
-from askbot import const
 from django.core.urlresolvers import reverse
+from askbot import const
+from askbot models import badges
 
-class Badge(models.Model):
+class BadgeData(models.Model):
     """Awarded for notable actions performed on the site by Users."""
-    GOLD = 1
-    SILVER = 2
-    BRONZE = 3
-    TYPE_CHOICES = (
-        (GOLD,   _('gold')),
-        (SILVER, _('silver')),
-        (BRONZE, _('bronze')),
-    )
-    CSS_CLASSES = {
-        GOLD: 'badge1',
-        SILVER: 'badge2',
-        BRONZE: 'badge3',
-    }
-    DISPLAY_SYMBOL = '&#9679;'
 
-    name        = models.CharField(max_length=50)
-    type        = models.SmallIntegerField(choices=TYPE_CHOICES)
-    slug        = models.SlugField(max_length=50, blank=True)
-    description = models.CharField(max_length=300)
-    multiple    = models.BooleanField(default=False)
+    name        = models.CharField(max_length=50, unique=True)
     # Denormalised data
     awarded_count = models.PositiveIntegerField(default=0)
-
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
     class Meta:
@@ -46,7 +28,7 @@ class Badge(models.Model):
     def save(self, **kwargs):
         if not self.slug:
             self.slug = self.name#slugify(self.name)
-        super(Badge, self).save(**kwargs)
+        super(BadgeData, self).save(**kwargs)
 
     def get_absolute_url(self):
         return '%s%s/' % (reverse('badge', args=[self.id]), self.slug)
@@ -67,7 +49,7 @@ class AwardManager(models.Manager):
 class Award(models.Model):
     """The awarding of a Badge to a User."""
     user       = models.ForeignKey(User, related_name='award_user')
-    badge      = models.ForeignKey('Badge', related_name='award_badge')
+    badge      = models.ForeignKey(BadgeData, related_name='award_badge')
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')

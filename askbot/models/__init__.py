@@ -27,7 +27,8 @@ from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
-from askbot.models.repute import Badge, Award, Repute
+from askbot.models.repute import BadgeData, Award, Repute
+from askbot.models import badges
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
@@ -1755,11 +1756,11 @@ def record_award_event(instance, created, **kwargs):
         instance.badge.awarded_count += 1
         instance.badge.save()
 
-        if instance.badge.type == Badge.GOLD:
+        if instance.badge.type == badges.GOLD:
             instance.user.gold += 1
-        if instance.badge.type == Badge.SILVER:
+        if instance.badge.type == badges.SILVER:
             instance.user.silver += 1
-        if instance.badge.type == Badge.BRONZE:
+        if instance.badge.type == badges.BRONZE:
             instance.user.bronze += 1
         instance.user.save()
 
@@ -2011,7 +2012,7 @@ Comment = Comment
 Vote = Vote
 MarkedTag = MarkedTag
 
-Badge = Badge
+BadgeData = BadgeData
 Award = Award
 Repute = Repute
 
@@ -2038,7 +2039,7 @@ __all__ = [
         'Vote',
         'MarkedTag',
 
-        'Badge',
+        'BadgeData',
         'Award',
         'Repute',
 

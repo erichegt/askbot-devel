@@ -265,7 +265,7 @@ class X(object):#
         
     @classmethod
     def get_badge_name(cls, name):
-        return cls.badge_exceptions.get(name, name)
+        return slugify(cls.badge_exceptions.get(name, name).lower())
 
 class Command(BaseCommand):
     help = 'Loads StackExchange data from unzipped directory of XML files into the ASKBOT database'
@@ -618,23 +618,20 @@ class Command(BaseCommand):
                 user = USER[se_c.user.id]
             )
 
-    def _install_missing_badges(self):
+    def _collect_missing_badges(self):
         self._missing_badges = {}
         for se_b in se.Badge.objects.all():
             name = X.get_badge_name(se_b.name)
             try:
-                askbot.Badge.objects.get(name=name)
-            except:
+                #todo: query badge from askbot.models.badges
+                #using case-insensitive name matching
+                askbot.badges.get_badge(name=name)
+            except KeyError:
+                #todo: if absent - print error message
+                #and drop it
                 self._missing_badges[name] = 0
                 if len(se_b.description) > 300:
                     print 'Warning truncated description for badge %d' % se_b.id
-                askbot.Badge.objects.create(
-                    name = name,
-                    slug = slugify(name),
-                    description = se_b.description,
-                    multiple = (not se_b.single),
-                    type = se_b.class_type
-                )
 
     def _award_badges(self):
         #note: SE does not keep information on
@@ -644,7 +641,7 @@ class Command(BaseCommand):
                 continue #skip community user
             u = USER[se_a.user.id]
             badge_name = X.get_badge_name(se_a.badge.name)
-            b = askbot.Badge.objects.get(name=badge_name)
+            b = askbot.badges.get_badge(name=badge_name)
             if b.multiple == False:
                 if b.award_badge.count() > 0:
                     continue
@@ -652,29 +649,28 @@ class Command(BaseCommand):
             #todo: but askbot requires related content object
             askbot.Award.objects.create(
                 user=u,
-                badge=b,
+                badge=b.get_stored_data(),
                 awarded_at=se_a.date,
                 content_object=u,
             )
             if b.name in self._missing_badges:
                 self._missing_badges[b.name] += 1
 
-    def _cleanup_badges(self):
+    def _report_missing_badges(self):
         d = self._missing_badges
         unused = [name for name in d.keys() if d[name] == 0]
-        askbot.Badge.objects.filter(name__in=unused).delete()
-        installed = [name for name in d.keys() if d[name] > 0]
-        print 'Warning - following unsupported badges were installed:'
-        print ', '.join(installed)
+        dropped = [name for name in d.keys() if d[name] > 0]
+        print 'Warning - following unsupported badges were dropped:'
+        print ', '.join(dropped)
 
     def transfer_badges(self):
         #note: badge level is neglected
         #1) install missing badges
-        self._install_missing_badges()
+        self._collect_missing_badges()
         #2) award badges
         self._award_badges()
-        #3) delete unused newly installed badges
-        self._cleanup_badges()
+        #3) report missing badges 
+        self._report_missing_badges()
         pass
 
     def transfer_question_view_counts(self):
