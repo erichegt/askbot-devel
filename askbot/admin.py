@@ -40,23 +40,11 @@ class AnswerRevisionAdmin(admin.ModelAdmin):
 class AwardAdmin(admin.ModelAdmin):
     """  admin class"""
 
-class BadgeAdmin(admin.ModelAdmin):
-    """  admin class"""
-
 class ReputeAdmin(admin.ModelAdmin):
     """  admin class"""
 
 class ActivityAdmin(admin.ModelAdmin):
     """  admin class"""
-    
-#class BookAdmin(admin.ModelAdmin):
-#    """  admin class"""
-    
-#class BookAuthorInfoAdmin(admin.ModelAdmin):
-#    """  admin class"""
-    
-#class BookAuthorRssAdmin(admin.ModelAdmin):
-#    """  admin class"""
     
 admin.site.register(models.Question, QuestionAdmin)
 admin.site.register(models.Tag, TagAdmin)
@@ -66,7 +54,6 @@ admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
 admin.site.register(models.QuestionRevision, QuestionRevisionAdmin)
 admin.site.register(models.AnswerRevision, AnswerRevisionAdmin)
-admin.site.register(models.Badge, BadgeAdmin)
 admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)

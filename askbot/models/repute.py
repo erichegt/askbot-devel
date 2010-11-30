@@ -72,7 +72,7 @@ class Award(models.Model):
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     awarded_at = models.DateTimeField(default=datetime.datetime.now)
-    notified   = models.BooleanField(default=False)
+    notified   = models.BooleanField(default=False)#not used
 
     objects = AwardManager()
 

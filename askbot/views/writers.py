@@ -27,7 +27,7 @@ from askbot import forms
 from askbot import models
 from askbot.skins.loaders import ENV
 from askbot.utils.decorators import ajax_only
-from askbot.templatetags.extra_tags import diff_date
+from askbot.utils.functions import diff_date
 from askbot.templatetags import extra_filters_jinja as template_filters
 
 # used in index page
