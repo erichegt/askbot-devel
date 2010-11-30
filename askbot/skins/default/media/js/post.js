@@ -1082,7 +1082,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
         var text = me._textarea.val();
         if (text.length <= 10){
             me.focus();
-            return;
+            return false;
         }
 
         var post_data = {
