@@ -102,8 +102,7 @@ $.fn.authenticator = function() {
                                         );
                                         existing_login_methods = null;
                                     }
-                                },
-
+                                }
                             });
                         }
                     }

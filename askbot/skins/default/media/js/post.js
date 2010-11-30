@@ -64,7 +64,7 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
         errorPlacement: function(error, element) {
             var span = element.next().find("span.form-error");
             if (span.length === 0) {
-                var span = element.parent().find("span.form-error");
+                span = element.parent().find("span.form-error");
                 if (span.length === 0){
                     //for resizable textarea
                     var element_id = element.attr('id');
@@ -112,7 +112,7 @@ var CPValidator = function(){
                     required: true,
                     maxlength: 105,
                     limit_tag_count: true,
-                    limit_tag_length: true,
+                    limit_tag_length: true
                 },  
                 text: {
                     required: true,
@@ -736,7 +736,7 @@ var questionRetagger = function(){
                     required: true,
                     maxlength: askbot['settings']['maxTagsPerPost'] * askbot['settings']['maxTagLength'],
                     limit_tag_count: true,
-                    limit_tag_length: true,
+                    limit_tag_length: true
                 }
             },
             messages: {
@@ -748,7 +748,7 @@ var questionRetagger = function(){
                 }
             },
             submitHandler: doRetag,
-            errorClass: "retag-error",
+            errorClass: "retag-error"
         });
 
         return div;
@@ -1124,6 +1124,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
                 me.enableButtons();
             }
         });
+        return false;
     };
 };
 
@@ -1278,7 +1279,7 @@ Comment.prototype.loadText = function(on_load_handler){
         },
         error: function(xhr, textStatus, exception) {
             showMessage(me.getElement(), xhr.responseText, 'after');
-        },
+        }
     });
 };
 
@@ -1493,7 +1494,7 @@ var socialSharing = function(){
         }
     }
 
-    return{
+    return {
         init: function(page_url, text_to_share){
             URL = window.location.href;
             TEXT = escape($('div.headNormal > a').html());
@@ -1503,7 +1504,7 @@ var socialSharing = function(){
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
-        },
+        }
     }
 }(); 
 
