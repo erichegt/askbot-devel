@@ -28,7 +28,6 @@ from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import BadgeData, Award, Repute
-from askbot.models import badges
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
@@ -1756,11 +1755,11 @@ def record_award_event(instance, created, **kwargs):
         instance.badge.awarded_count += 1
         instance.badge.save()
 
-        if instance.badge.type == badges.GOLD:
+        if instance.badge.type == const.GOLD_BADGE:
             instance.user.gold += 1
-        if instance.badge.type == badges.SILVER:
+        if instance.badge.type == const.SILVER_BADGE:
             instance.user.silver += 1
-        if instance.badge.type == badges.BRONZE:
+        if instance.badge.type == const.BRONZE_BADGE:
             instance.user.bronze += 1
         instance.user.save()
 

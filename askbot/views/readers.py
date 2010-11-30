@@ -32,7 +32,6 @@ from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm
 from askbot import models
-from askbot.models import badges
 from askbot import const
 from askbot import auth
 from askbot.utils import markup
@@ -182,7 +181,7 @@ def questions(request):
             'faces': list()
         }
 
-        badge_levels = dict(badges.TYPE_CHOICES)
+        badge_levels = dict(const.BADGE_TYPE_CHOICES)
         def pluralize_badge_count(count, level):
             return ungettext(
                 '%(badge_count)d %(badge_level)s badge',
@@ -193,9 +192,9 @@ def questions(request):
                 'badge_level': badge_levels[level]
             }
 
-        gold_badge_css_class = badges.CSS_CLASSES[badges.GOLD],
-        silver_badge_css_class = badges.CSS_CLASSES[badges.SILVER],
-        bronze_badge_css_class = badges.CSS_CLASSES[badges.BRONZE],
+        gold_badge_css_class = const.BADGE_CSS_CLASSES[const.GOLD_BADGE],
+        silver_badge_css_class = const.BADGE_CSS_CLASSES[const.SILVER_BADGE],
+        bronze_badge_css_class = const.BADGE_CSS_CLASSES[const.BRONZE_BADGE],
 
         for tag in related_tags:
             tag_data = {
@@ -250,23 +249,23 @@ def questions(request):
                 'u_gold': author.gold,
                 'u_gold_title': pluralize_badge_count(
                                                 author.gold,
-                                                badges.GOLD
+                                                const.GOLD_BADGE
                                             ),
-                'u_gold_badge_symbol': badges.DISPLAY_SYMBOL,
+                'u_gold_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_gold_css_class': gold_badge_css_class,
                 'u_silver': author.silver,
                 'u_silver_title': pluralize_badge_count(
                                             author.silver,
-                                            badges.SILVER
+                                            const.SILVER_BADGE
                                         ),
-                'u_silver_badge_symbol': badges.DISPLAY_SYMBOL,
+                'u_silver_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_silver_css_class': silver_badge_css_class,
                 'u_bronze': author.bronze,
                 'u_bronze_title': pluralize_badge_count(
                                             author.bronze,
-                                            badges.BRONZE
+                                            const.BRONZE_BADGE
                                         ),
-                'u_bronze_badge_symbol': badges.DISPLAY_SYMBOL,
+                'u_bronze_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_bronze_css_class': bronze_badge_css_class,
             }
             ajax_data['questions'].append(question_data)
