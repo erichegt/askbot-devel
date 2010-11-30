@@ -46,14 +46,16 @@ $.fn.authenticator = function() {
         setup_enter_key_handler(elements);
     };
 
+    var get_provider_name = function(row_el){
+        var row = $(row_el);
+        var name_span = row.find('.ab-provider-name');
+        return provider_name = $.trim(name_span.html());
+    };
+
     var read_existing_login_methods = function(){
         $('.ab-provider-row').each(
             function(i, provider_row){
-                var provider_name = $(
-                                    provider_row
-                                ).find(
-                                    '.ab-provider-name'
-                                ).html().trim();
+                var provider_name = get_provider_name(provider_row);
                 existing_login_methods[provider_name] = true;
             }
         );
@@ -62,11 +64,7 @@ $.fn.authenticator = function() {
     var setup_login_method_deleters = function(){
         $('.ab-provider-row').each(
             function(i, provider_row){
-                var provider_name = $(
-                                    provider_row
-                                ).find(
-                                    '.ab-provider-name'
-                                ).html().trim();
+                var provider_name = get_provider_name(provider_row);
                 var remove_button = $(
                                     provider_row
                                 ).find('button');

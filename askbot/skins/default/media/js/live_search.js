@@ -339,7 +339,7 @@ $(document).ready(function(){
             data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
-            complete: try_again,
+            complete: try_again
         });
         prev_text = query_text;
     }
@@ -351,7 +351,7 @@ $(document).ready(function(){
             data: {reset_query: true, sort: sort_method},
             dataType: 'json',
             success: render_result,
-            complete: try_again,
+            complete: try_again
         });
         prev_text = '';
     }
