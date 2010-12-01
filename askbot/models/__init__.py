@@ -26,6 +26,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
+from askbot.models.badges import award_badges_signal, get_badge
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import BadgeData, Award, Repute
 from askbot import auth
@@ -782,6 +783,13 @@ def user_delete_answer(
         instance = answer,
         delete_by = self
     )
+    award_badges_signal.send(None,
+                event = 'delete_post',
+                actor = self,
+                context_object = answer,
+                timestamp = timestamp
+            )
+
 
 @auto_now_timestamp
 def user_delete_question(
@@ -810,6 +818,13 @@ def user_delete_question(
         instance = question,
         delete_by = self
     )
+    award_badges_signal.send(None,
+                event = 'delete_post',
+                actor = self,
+                context_object = question,
+                timestamp = timestamp
+            )
+
 
 @auto_now_timestamp
 def user_close_question(
@@ -1755,11 +1770,13 @@ def record_award_event(instance, created, **kwargs):
         instance.badge.awarded_count += 1
         instance.badge.save()
 
-        if instance.badge.type == const.GOLD_BADGE:
+        badge = get_badge(instance.badge.slug)
+
+        if badge.level == const.GOLD_BADGE:
             instance.user.gold += 1
-        if instance.badge.type == const.SILVER_BADGE:
+        if badge.level == const.SILVER_BADGE:
             instance.user.silver += 1
-        if instance.badge.type == const.BRONZE_BADGE:
+        if badge.level == const.BRONZE_BADGE:
             instance.user.bronze += 1
         instance.user.save()
 
@@ -1770,10 +1787,12 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
+        badge = get_badge(instance.badge.slug)
+
         msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
                 u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
                 % {
-                    'badge_name':instance.badge.name, 
+                    'badge_name':badge.name, 
                     'user_profile':user.get_profile_url()
                 } 
 

@@ -1,34 +1,24 @@
-import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
+import datetime
 from askbot import const
-from askbot models import badges
+from django.core.urlresolvers import reverse
 
 class BadgeData(models.Model):
     """Awarded for notable actions performed on the site by Users."""
-
-    name        = models.CharField(max_length=50, unique=True)
-    # Denormalised data
+    slug = models.SlugField(max_length=50, unique=True)
     awarded_count = models.PositiveIntegerField(default=0)
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
     class Meta:
         app_label = 'askbot'
-        db_table = u'badge'
-        ordering = ('name',)
-        unique_together = ('name', 'type')
+        ordering = ('slug',)
 
     def __unicode__(self):
-        return u'%s: %s' % (self.get_type_display(), self.name)
-
-    def save(self, **kwargs):
-        if not self.slug:
-            self.slug = self.name#slugify(self.name)
-        super(BadgeData, self).save(**kwargs)
+        return u'%s: %s' % (self.get_type_display(), self.slug)
 
     def get_absolute_url(self):
         return '%s%s/' % (reverse('badge', args=[self.id]), self.slug)
@@ -54,7 +44,7 @@ class Award(models.Model):
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     awarded_at = models.DateTimeField(default=datetime.datetime.now)
-    notified   = models.BooleanField(default=False)#not used
+    notified   = models.BooleanField(default=False)
 
     objects = AwardManager()
 
