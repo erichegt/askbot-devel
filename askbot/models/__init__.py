@@ -26,7 +26,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
-from askbot.models.badges import award_badges_signal, get_badge
+from askbot.models.badges import award_badges_signal, get_badge, init_badges
 #from user import AuthKeyUserAssociation
 from askbot.models.repute import BadgeData, Award, Repute
 from askbot import auth
@@ -34,9 +34,9 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.mail import send_mail
-from askbot.startup_tests import run_startup_tests
+from askbot import startup_procedures
 
-run_startup_tests()
+startup_procedures.run()
 
 def get_model(model_name):
     return models.get_model('askbot', model_name)
@@ -1320,6 +1320,12 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
     Question.objects.update_favorite_count(question)
     return result
 
+VOTES_TO_EVENTS = {
+    (Vote.VOTE_UP, 'answer'): 'upvote_answer',
+#    (Vote.VOTE_UP, 'question'): 'upvote_question',
+#    (Vote.VOTE_DOWN, 'answer'): 'downvote_answer',
+#    (Vote.VOTE_DOWN, 'question'): 'downvote_question'
+}
 @auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     """"private" wrapper function that applies post upvotes/downvotes
@@ -1367,14 +1373,22 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
             return None
         else:
             auth.onUpVoted(vote, post, user, timestamp)
-            return vote
     elif vote_type == Vote.VOTE_DOWN:
         if cancel:
             auth.onDownVotedCanceled(vote, post, user, timestamp)
             return None
         else:
             auth.onDownVoted(vote, post, user, timestamp)
-            return vote
+
+    event = VOTES_TO_EVENTS.get((vote_type, post.post_type), None)
+    if event:
+        award_badges_signal.send(None,
+                    event = event,
+                    actor = user,
+                    context_object = post,
+                    timestamp = timestamp
+                )
+    return vote
 
 def user_unfollow_question(self, question = None):
     if self in question.followed_by.all():

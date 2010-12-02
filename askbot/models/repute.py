@@ -13,6 +13,26 @@ class BadgeData(models.Model):
     awarded_count = models.PositiveIntegerField(default=0)
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
+    @property
+    def name(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).name
+
+    @property
+    def description(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).description
+
+    @property
+    def css_class(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).css_class
+
+    def get_type_display(self):
+        from askbot.models import badges
+        #todo - rename "type" -> "level" in this model
+        return badges.get_badge(self.slug).get_level_display()
+
     class Meta:
         app_label = 'askbot'
         ordering = ('slug',)

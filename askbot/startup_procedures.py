@@ -7,14 +7,15 @@ the main function is run_startup_tests
 """
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from askbot.models import badges
 
 #todo:
 #
 # *validate emails in settings.py
 
 def run_startup_tests():
-    """main function that runs
-    all startup tests
+    """function that runs
+    all startup tests, mainly checking settings config so far
     """
 
     #todo: refactor this when another test arrives
@@ -45,3 +46,8 @@ def run_startup_tests():
             except AssertionError:
                 msg = 'if ASKBOT_URL setting is not empty, ' + \
                         'it must not start with /'
+
+def run():
+    """runs all the startup procedures"""
+    run_startup_tests()
+    badges.init_badges()

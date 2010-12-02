@@ -25,7 +25,7 @@
             <div style="float:left;width:230px;">
                 <a href="{{badge.get_absolute_url()}}" 
                     title="{% trans type=badge.get_type_display() %}{{type}}{% endtrans %} : {% trans description=badge.description %}{{description}}{% endtrans %}" 
-                    class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><strong> 
+                    class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><strong> 
                     &#215; {{ badge.awarded_count|intcomma }}</strong>
             </div>
             <p style="float:left;margin-top:8px;">{% trans description=badge.description %}{{description}}{% endtrans %}</p>

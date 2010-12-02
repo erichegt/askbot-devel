@@ -14,6 +14,7 @@ from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award
+from askbot.models import badges as badge_data
 from askbot.skins.loaders import ENV
 from askbot import skins
 import askbot
@@ -91,7 +92,8 @@ def logout(request):#refactor/change behavior?
 
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py
-    badges = BadgeData.objects.all().order_by('name')
+    known_badges = badge_data.BADGES.keys() 
+    badges = BadgeData.objects.filter(slug__in = known_badges).order_by('slug')
     my_badges = []
     if request.user.is_authenticated():
         my_badges = Award.objects.filter(user=request.user).values('badge_id')

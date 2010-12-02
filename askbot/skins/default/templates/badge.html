@@ -8,7 +8,7 @@
 </div>
 <div id="main-body" style="width:100%;margin-bottom:20px">
     <p>
-        <a href="{{badge.get_absolute_url()}}" title="{{ badge.get_type_display() }} : {% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="badge{{ badge.type }}">&#9679;</span>&nbsp;{% trans name=badge.name%}{{name}}{% endtrans %}</a> {% trans description=badge.description %}{{description}}{% endtrans %}
+        <a href="{{badge.get_absolute_url()}}" title="{{ badge.get_type_display() }} : {% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name%}{{name}}{% endtrans %}</a> {% trans description=badge.description %}{{description}}{% endtrans %}
     </p>
     <div>
         {% if badge.awarded_count %}

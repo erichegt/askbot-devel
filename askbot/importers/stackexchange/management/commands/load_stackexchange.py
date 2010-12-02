@@ -14,6 +14,7 @@ from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
 from askbot.utils.slug import slugify
+from askbot.models.badges import award_badges_signal, award_badges
 #from markdown2 import Markdown
 #markdowner = Markdown(html4tags=True)
 
@@ -273,6 +274,9 @@ class Command(BaseCommand):
 
     @transaction.commit_manually
     def handle(self, *arg, **kwarg):
+
+        award_badges_signal.disconnect(award_badges)
+
         if len(arg) < 1 or not os.path.isdir(arg[0]):
             print 'Error: first argument must be a directory with all the SE *.xml files'
             sys.exit(1)
@@ -641,9 +645,16 @@ class Command(BaseCommand):
                 continue #skip community user
             u = USER[se_a.user.id]
             badge_name = X.get_badge_name(se_a.badge.name)
-            b = askbot.badges.get_badge(name=badge_name)
+            try:
+                b = askbot.badges.get_badge(name=badge_name)
+            except KeyError:
+                #do not transfer badges that Askbot does not have
+                self._missing_badges[badge_name] += 1
+                continue
+
             if b.multiple == False:
-                if b.award_badge.count() > 0:
+                if b.award_badge.filter(user = u).count() > 0:
+                    #do not allow transfer of "multi" in SE -> single badge in AB
                     continue
             #todo: fake content object here b/c SE does not support this
             #todo: but askbot requires related content object
