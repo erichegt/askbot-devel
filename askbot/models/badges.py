@@ -208,12 +208,36 @@ class QualityPost(Badge):
 
 class NiceAnswer(QualityPost):
     def __new__(cls):
-        self = super(QualityPost, cls).__new__(cls)
+        self = super(NiceAnswer, cls).__new__(cls)
         self.name = _('Nice Answer')
         self.key = 'nice-answer'
         self.level = const.BRONZE_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.NICE_ANSWER_BADGE_MIN_UPVOTES
+        self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
+        self.post_type = 'answer'
+        return self
+
+class GoodAnswer(QualityPost):
+    def __new__(cls):
+        self = super(GoodAnswer, cls).__new__(cls)
+        self.name = _('Good Answer')
+        self.key = 'good-answer'
+        self.level = const.SILVER_BADGE
+        self.multiple = True
+        self.min_votes = askbot_settings.GOOD_ANSWER_BADGE_MIN_UPVOTES
+        self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
+        self.post_type = 'answer'
+        return self
+
+class GreatAnswer(QualityPost):
+    def __new__(cls):
+        self = super(GreatAnswer, cls).__new__(cls)
+        self.name = _('Great Answer')
+        self.key = 'great-answer'
+        self.level = const.GOLD_BADGE
+        self.multiple = True
+        self.min_votes = askbot_settings.GREAT_ANSWER_BADGE_MIN_UPVOTES
         self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
         self.post_type = 'answer'
         return self
@@ -233,12 +257,10 @@ ORIGINAL_DATA = """
     (_('Supporter'), 3, _('supporter'), _('First up vote'), False, 0),
     (_('Autobiographer'), 3, _('autobiographer'), _('Completed all user profile fields'), False, 0),
     (_('Self-Learner'), 3, _('self-learner'), _('Answered your own question with at least 3 up votes'), True, 0),
-    (_('Great Answer'), 1, _('great-answer'), _('Answer voted up 100 times'), True, 0),
     (_('Great Question'), 1, _('great-question'), _('Question voted up 100 times'), True, 0),
     (_('Stellar Question'), 1, _('stellar-question'), _('Question favorited by 100 users'), True, 0),
     (_('Famous question'), 1, _('famous-question'), _('Asked a question with 10,000 views'), True, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
-    (_('Good Answer'), 2, _('good-answer'), _('Answer voted up 25 times'), True, 0),
     (_('Good Question'), 2, _('good-question'), _('Question voted up 25 times'), True, 0),
     (_('Favorite Question'), 2, _('favorite-question'), _('Question favorited by 25 users'), True, 0),
     (_('Civic duty'), 2, _('civic-duty'), _('Voted 300 times'), False, 0),
@@ -259,10 +281,12 @@ BADGES = {
     'peer-pressure': PeerPressure,
     'teacher': Teacher,
     'nice-answer': NiceAnswer,
+    'good-answer': GoodAnswer,
+    'great-answer': GreatAnswer,
 }
 
 EVENTS_TO_BADGES = {
-    'upvote_answer': (Teacher, NiceAnswer,),
+    'upvote_answer': (Teacher, NiceAnswer, GoodAnswer, GreatAnswer),
     'delete_post': (Disciplined, PeerPressure,),
 }
 

@@ -48,3 +48,21 @@ settings.register(
         description=_('Nice Answer: minimum upvotes for the answer')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'GOOD_ANSWER_BADGE_MIN_UPVOTES',
+        default=3,
+        description=_('Good answer: minimum upvotes for the answer')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'GREAT_ANSWER_BADGE_MIN_UPVOTES',
+        default=3,
+        description=_('Great answer: minimum upvotes for the answer')
+    )
+)
