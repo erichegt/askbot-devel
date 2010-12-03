@@ -32,6 +32,7 @@ from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm
 from askbot import models
+from askbot.models.badges import award_badges_signal
 from askbot import const
 from askbot import auth
 from askbot.utils import markup
@@ -481,7 +482,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if 'question_view_times' not in request.session:
             request.session['question_view_times'] = {}
 
-        last_seen = request.session['question_view_times'].get(question.id,None)
+        last_seen = request.session['question_view_times'].get(question.id, None)
         updated_when, updated_who = question.get_last_update_info()
 
         if updated_who != request.user:
@@ -493,6 +494,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         request.session['question_view_times'][question.id] = \
                                                     datetime.datetime.now()
+
         if update_view_count:
             question.view_count += 1
             question.save()
@@ -501,6 +503,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if request.user.is_authenticated():
             #get response notifications
             request.user.visit_question(question)
+
+        #3) send award badges signal for any badges
+        #that are awarded for question views 
+        award_badges_signal.send(None,
+                        event = 'view_question',
+                        actor = request.user,
+                        context_object = question,
+                    )
 
     paginator_data = {
         'is_paginated' : (objects_list.count > ANSWERS_PAGE_SIZE),

@@ -1322,9 +1322,9 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
 
 VOTES_TO_EVENTS = {
     (Vote.VOTE_UP, 'answer'): 'upvote_answer',
-#    (Vote.VOTE_UP, 'question'): 'upvote_question',
-#    (Vote.VOTE_DOWN, 'answer'): 'downvote_answer',
-#    (Vote.VOTE_DOWN, 'question'): 'downvote_question'
+    (Vote.VOTE_UP, 'question'): 'upvote_question',
+    (Vote.VOTE_DOWN, 'question'): 'downvote',
+    (Vote.VOTE_DOWN, 'answer'): 'downvote'
 }
 @auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):

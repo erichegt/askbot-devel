@@ -54,7 +54,7 @@ settings.register(
         BADGES,
         'GOOD_ANSWER_BADGE_MIN_UPVOTES',
         default=3,
-        description=_('Good answer: minimum upvotes for the answer')
+        description=_('Good Answer: minimum upvotes for the answer')
     )
 )
 
@@ -62,7 +62,70 @@ settings.register(
     IntegerValue(
         BADGES,
         'GREAT_ANSWER_BADGE_MIN_UPVOTES',
+        default=5,
+        description=_('Great Answer: minimum upvotes for the answer')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'NICE_QUESTION_BADGE_MIN_UPVOTES',
+        default=2,
+        description=_('Nice Question: minimum upvotes for the question')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'GOOD_QUESTION_BADGE_MIN_UPVOTES',
         default=3,
-        description=_('Great answer: minimum upvotes for the answer')
+        description=_('Good Question: minimum upvotes for the question')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'GREAT_QUESTION_BADGE_MIN_UPVOTES',
+        default=5,
+        description=_('Great Question: minimum upvotes for the question')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'POPULAR_QUESTION_BADGE_MIN_VIEWS',
+        default=5,
+        description=_('Popular Question: minimum views')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'NOTABLE_QUESTION_BADGE_MIN_VIEWS',
+        default=150,
+        description=_('Notable Question: minimum views')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'FAMOUS_QUESTION_BADGE_MIN_VIEWS',
+        default=500,
+        description=_('Famous Question: minimum views')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'SELF_LEARNER_BADGE_MIN_UPVOTES',
+        default=500,
+        description=_('Self-Learner: minimum answer upvotes')
     )
 )
