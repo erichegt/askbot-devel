@@ -28,6 +28,14 @@ from askbot.utils.decorators import auto_now_timestamp
 
 class Badge(object):
     """base class for the badges
+
+    badges must implement method consider_award
+    which returns a boolean True if award succeds
+    and False otherwise
+
+    consider_award assumes that the function is called
+    upon correct event, i.e. it is the responsibility of
+    the caller to try awarding badges at appropriate times
     """
     def __init__(self,
                 key = '',
@@ -216,6 +224,25 @@ class Critic(FirstVote):
         self.name = _('Critic')
         self.description = _('First downvote')
         return self
+
+class CivicDuty(Badge):
+    """awarded once after a certain number of votes"""
+    def __init__(self):
+        min_votes = askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES
+        super(CivicDuty, self).__init__(
+            key = 'civic-duty',
+            name = _('Civic Duty'),
+            description = _('Voted %(num)s times') % {'num': min_votes},
+            level = const.SILVER_BADGE,
+            multiple = False
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        if context_object.post_type not in ('question', 'answer'):
+            return False
+        if actor.votes.count() == askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES:
+            return self.award(actor, context_object, timestamp)
 
 class SelfLearner(Badge):
     def __init__(self):
@@ -412,15 +439,79 @@ class FamousQuestion(FrequentedQuestion):
                             % {'views' : self.min_views}
         return self
 
+class Scholar(Badge):
+    """scholar badge is awarded to the asker when
+    he/she accepts an answer for the first time
+    """
+    def __init__(self):
+        description = _('Asked a question and accepted an answer')
+        super(Scholar, self).__init__(
+            key = 'scholar',
+            name = _('Scholar'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = description
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        if context_object.post_type != 'answer':
+            return False
+        answer = context_object
+        if answer.question.author != actor:
+            return False
+        return self.award(actor, context_object, timestamp)
+
+class VotedAcceptedAnswer(Badge):
+    """superclass for Enlightened and Guru badges
+    not awarded directly
+
+    Subclasses must define __new__ function
+    """
+    def __init__(self):
+        super(VotedAcceptedAnswer, self).__init__(
+            key = self.key,
+            name = self.name,
+            level = self.level,
+            multiple = self.multiple,
+            description = self.description
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        if context_object.post_type != 'answer':
+            return None
+        answer = context_object
+        if answer.score >= self.min_votes and answer.accepted:
+            return self.award(answer.author, answer, timestamp)
+
+class Enlightened(VotedAcceptedAnswer):
+    def __new__(cls):
+        self = super(Enlightened, cls).__new__(cls)
+        self.key = 'enlightened'
+        self.name = _('Enlightened')
+        self.level = const.SILVER_BADGE
+        self.multiple = False
+        self.min_votes = askbot_settings.ENLIGHTENED_BADGE_MIN_UPVOTES
+        descr = _('First answer was accepted with %(num)s or more votes')
+        self.description = descr % {'num': self.min_votes}
+        return self
+
+class Guru(VotedAcceptedAnswer):
+    def __new__(cls):
+        self = super(Guru, cls).__new__(cls)
+        self.key = 'guru'
+        self.name = _('Guru')
+        self.level = const.GOLD_BADGE
+        self.multiple = True
+        descr = _('Answer accepted with %(num)s or more votes')
+        self.min_votes = askbot_settings.GURU_BADGE_MIN_UPVOTES
+        self.description = descr % {'num': self.min_votes}
+        return self
+
 ORIGINAL_DATA = """
-    (_('Civic duty'), 2, _('civic-duty'), _('Voted 300 times'), False, 0),
-
-    (_('Enlightened'), 2, _('enlightened'), _('First answer was accepted with at least 10 up votes'), False, 0),
-    (_('Guru'), 2, _('guru'), _('Accepted answer and voted up 40 times'), True, 0),
-
     (_('Necromancer'), 2, _('necromancer'), _('Answered a question more than 60 days later with at least 5 votes'), True, 0),
 
-    (_('Scholar'), 3, _('scholar'), _('First accepted answer on your own question'), False, 0),
     (_('Pundit'), 3, _('pundit'), _('Left 10 comments with score of 10 or more'), False, 0),
     (_('Citizen patrol'), 3, _('citizen-patrol'), _('First flagged post'), False, 0),
 
@@ -435,7 +526,6 @@ ORIGINAL_DATA = """
     (_('Stellar Question'), 1, _('stellar-question'), _('Question favorited by 100 users'), True, 0),
     (_('Favorite Question'), 2, _('favorite-question'), _('Question favorited by 25 users'), True, 0),
 
-    (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
     (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
@@ -443,40 +533,47 @@ ORIGINAL_DATA = """
 
     (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
+    (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
 
 BADGES = {
+    'critic': Critic,
+    'civic-duty': CivicDuty,
     'disciplined': Disciplined,
+    'enlightened': Enlightened,
+    'famous-question': FamousQuestion,
+    'good-answer': GoodAnswer,
+    'good-question': GoodQuestion,
+    'great-answer': GreatAnswer,
+    'great-question': GreatQuestion,
+    'guru': Guru,
+    'nice-answer': NiceAnswer,
+    'nice-question': NiceQuestion,
+    'notable-question': NotableQuestion,
     'peer-pressure': PeerPressure,
-    'teacher': Teacher,
+    'popular-question': PopularQuestion,
+    'scholar': Scholar,
     'student': Student,
     'supporter': Supporter,
     'self-learner': SelfLearner,
-    'nice-answer': NiceAnswer,
-    'good-answer': GoodAnswer,
-    'great-answer': GreatAnswer,
-    'nice-question': NiceQuestion,
-    'good-question': GoodQuestion,
-    'great-question': GreatQuestion,
-    'popular-question': PopularQuestion,
-    'notable-question': NotableQuestion,
-    'famous-question': FamousQuestion,
-    'critic': Critic,
+    'teacher': Teacher,
 }
 
 #events are sent as a parameter via signal award_badges_signal
 #from appropriate locations in the code of askbot application
 #most likely - from manipulator functions that are added to the User objects
 EVENTS_TO_BADGES = {
+    'accept_best_answer': (Scholar, Guru, Enlightened),
     'upvote_answer': (
                     Teacher, NiceAnswer, GoodAnswer,
-                    GreatAnswer, Supporter, SelfLearner
+                    GreatAnswer, Supporter, SelfLearner, CivicDuty,
+                    Guru, Enlightened
                 ),
     'upvote_question': (
                     NiceQuestion, GoodQuestion,
-                    GreatQuestion, Student, Supporter
+                    GreatQuestion, Student, Supporter, CivicDuty
                 ),
-    'downvote': (Critic,),#no regard for question or answer for now
+    'downvote': (Critic, CivicDuty),#no regard for question or answer for now
     'delete_post': (Disciplined, PeerPressure,),
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
 }

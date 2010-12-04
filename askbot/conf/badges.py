@@ -125,7 +125,34 @@ settings.register(
     IntegerValue(
         BADGES,
         'SELF_LEARNER_BADGE_MIN_UPVOTES',
-        default=500,
+        default=1,
         description=_('Self-Learner: minimum answer upvotes')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'CIVIC_DUTY_BADGE_MIN_VOTES',
+        default=100,
+        description=_('Civic Duty: minimum votes')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'ENLIGHTENED_BADGE_MIN_UPVOTES',
+        default=3,
+        description=_('Enlightened Duty: minimum upvotes')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'GURU_BADGE_MIN_UPVOTES',
+        default=5,
+        description=_('Guru: minimum upvotes')
     )
 )

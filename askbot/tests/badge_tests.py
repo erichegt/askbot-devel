@@ -16,6 +16,31 @@ class BadgeTests(AskbotTestCase):
         count = models.Award.objects.filter(**filters).count()
         self.assertEquals(count, expected_count)
 
+    def assert_accepted_answer_badge_works(self,
+                                    badge_key = None,
+                                    min_score = None,
+                                    expected_count = 1,
+                                    previous_count = 0,
+                                    trigger = None
+                                ):
+        assert(trigger in ('accept_best_answer', 'upvote_answer'))
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u2, question = question)
+        answer.score = min_score - 1
+        answer.save()
+
+        recipient = answer.author
+
+        if trigger == 'accept_best_answer':
+            self.u1.upvote(answer)
+            self.assert_have_badge(badge_key, recipient, previous_count)
+            self.u1.accept_best_answer(answer)
+        else:
+            self.u1.accept_best_answer(answer)
+            self.assert_have_badge(badge_key, recipient, previous_count)
+            self.u1.upvote(answer)
+        self.assert_have_badge(badge_key, recipient, expected_count)
+
     def assert_upvoted_answer_badge_works(self, 
                                     badge_key = None,
                                     min_score = None,
@@ -207,3 +232,83 @@ class BadgeTests(AskbotTestCase):
         answer.save()
         self.u2.upvote(answer)
         self.assert_have_badge('self-learner', recipient = self.u1, expected_count = 2)
+
+        question = self.post_question(user = self.u2)
+        answer = self.post_answer(user = self.u1, question = question)
+        answer.score = min_votes - 1
+        answer.save()
+        self.u2.upvote(answer)
+        #no badge when asker != answerer
+        self.assert_have_badge(
+            'self-learner',
+            recipient = self.u1,
+            expected_count = 2
+        )
+
+    def test_civic_duty_badge(self):
+        settings.update('CIVIC_DUTY_BADGE_MIN_VOTES', 2)
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u2, question = question)
+        answer2 = self.post_answer(user = self.u1, question = question)
+        self.u3.upvote(question)
+        self.u3.downvote(answer)
+        self.assert_have_badge('civic-duty', recipient = self.u3)
+        self.u3.upvote(answer2)
+        self.assert_have_badge('civic-duty', recipient = self.u3, expected_count = 1)
+        self.u3.downvote(answer)
+        self.assert_have_badge('civic-duty', recipient = self.u3, expected_count = 1)
+
+    def test_scholar_badge(self):
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u2, question = question)
+        self.u1.accept_best_answer(answer)
+        self.assert_have_badge('scholar', recipient = self.u1)
+        answer2 = self.post_answer(user = self.u2, question = question)
+        self.u1.accept_best_answer(answer2)
+        self.assert_have_badge(
+            'scholar',
+            recipient = self.u1,
+            expected_count=1
+        )
+
+    def assert_enlightened_badge_works(self, trigger):
+        self.assert_accepted_answer_badge_works(
+            'enlightened',
+            min_score = settings.ENLIGHTENED_BADGE_MIN_UPVOTES,
+            expected_count = 1,
+            trigger = trigger
+        )
+        self.assert_accepted_answer_badge_works(
+            'enlightened',
+            min_score = settings.ENLIGHTENED_BADGE_MIN_UPVOTES,
+            expected_count = 1,
+            previous_count = 1,
+            trigger = trigger
+        )
+
+    def assert_guru_badge_works(self, trigger):
+        self.assert_accepted_answer_badge_works(
+            'guru',
+            min_score = settings.GURU_BADGE_MIN_UPVOTES,
+            expected_count = 1,
+            trigger = trigger
+        )
+        self.assert_accepted_answer_badge_works(
+            'guru',
+            min_score = settings.GURU_BADGE_MIN_UPVOTES,
+            previous_count = 1,
+            expected_count = 2,
+            trigger = trigger
+        )
+
+    def test_enlightened_badge1(self):
+        self.assert_enlightened_badge_works('upvote_answer')
+
+    def test_enlightened_badge2(self):
+        self.assert_enlightened_badge_works('accept_best_answer')
+
+    def test_guru_badge1(self):
+        self.assert_guru_badge_works('upvote_answer')
+
+    def test_guru_badge1(self):
+        self.assert_guru_badge_works('accept_best_answer')

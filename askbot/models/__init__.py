@@ -745,7 +745,13 @@ def user_accept_best_answer(self, answer = None, timestamp = None):
     for prev_answer in prev_accepted_answers:
         auth.onAnswerAcceptCanceled(prev_answer, self)
 
-    auth.onAnswerAccept(answer, self)
+    auth.onAnswerAccept(answer, self, timestamp = timestamp)
+    award_badges_signal.send(None,
+        event = 'accept_best_answer',
+        actor = self,
+        context_object = answer,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
 def user_unaccept_best_answer(self, answer = None, timestamp = None):
@@ -1414,12 +1420,6 @@ def downvote(self, post, timestamp=None, cancel=False):
         vote_type=Vote.VOTE_DOWN
     )
 
-def accept_answer(self, answer, timestamp=None, cancel=False):
-    if cancel:
-        auth.onAnswerAcceptCanceled(answer, self, timestamp=timestamp)
-    else:
-        auth.onAnswerAccept(answer, self, timestamp=timestamp)
-
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False):
     if cancel:#todo: can't unflag?
@@ -1499,7 +1499,6 @@ User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
-User.add_to_class('accept_answer', accept_answer)
 User.add_to_class('flag_post', flag_post)
 User.add_to_class('get_flags', user_get_flags)
 User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)

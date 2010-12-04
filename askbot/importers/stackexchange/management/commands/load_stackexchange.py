@@ -59,7 +59,7 @@ class X(object):#
     vote_actions = {
         'UpMod':'upvote',
         'DownMod':'downvote',
-        'AcceptedByOriginator':'accept_answer',
+        'AcceptedByOriginator':'accept_best_answer',
         'Offensive':'flag_post',
         'Favorite':'toggle_favorite_question',
     }

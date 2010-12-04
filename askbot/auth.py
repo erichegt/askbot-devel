@@ -121,9 +121,6 @@ def onFlaggedItem(post, user, timestamp=None):
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):
-    if timestamp is None:
-        timestamp = datetime.datetime.now()
-
     answer.accepted = True
     answer.accepted_at = timestamp
     answer.question.answer_accepted = True
