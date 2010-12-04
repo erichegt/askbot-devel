@@ -156,3 +156,30 @@ settings.register(
         description=_('Guru: minimum upvotes')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'NECROMANCER_BADGE_MIN_UPVOTES',
+        default=1,
+        description=_('Necromancer: minimum upvotes')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'NECROMANCER_BADGE_MIN_DELAY',
+        default=30,
+        description=_('Necromancer: minimum delay in days')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'ASSOCIATE_EDITOR_BADGE_MIN_EDITS',
+        default=20,
+        description=_('Associate Editor: minimum number of edits')
+    )
+)

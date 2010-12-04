@@ -964,6 +964,12 @@ def user_edit_question(
         tags = tags,
         wiki = wiki,
     )
+    award_badges_signal.send(None,
+        event = 'edit_question',
+        actor = self,
+        context_object = question,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
 def user_edit_answer(
@@ -981,6 +987,12 @@ def user_edit_answer(
         text = body_text,
         comment = revision_comment,
         wiki = wiki,
+    )
+    award_badges_signal.send(None,
+        event = 'edit_answer',
+        actor = self,
+        context_object = answer,
+        timestamp = timestamp
     )
 
 def user_is_following(self, followed_item):
@@ -1021,6 +1033,11 @@ def user_post_answer(
                                     email_notify = follow,
                                     wiki = wiki
                                 )
+    award_badges_signal.send(None,
+        event = 'post_answer',
+        actor = self,
+        context_object = answer
+    )
     return answer
 
 def user_visit_question(self, question = None, timestamp = None):
@@ -1427,6 +1444,12 @@ def flag_post(user, post, timestamp=None, cancel=False):
 
     user.assert_can_flag_offensive(post = post)
     auth.onFlaggedItem(post, user, timestamp=timestamp)
+    award_badges_signal.send(None,
+        event = 'flag_post',
+        actor = user,
+        context_object = post,
+        timestamp = timestamp
+    )
 
 def user_get_flags(self):
     """return flag Activity query set

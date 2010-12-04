@@ -1,3 +1,4 @@
+import datetime
 from django.test.client import Client
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings
@@ -312,3 +313,97 @@ class BadgeTests(AskbotTestCase):
 
     def test_guru_badge1(self):
         self.assert_guru_badge_works('accept_best_answer')
+
+    def test_necromancer_badge(self):
+        question = self.post_question(user = self.u1)
+        now = datetime.datetime.now()
+        delta = datetime.timedelta(settings.NECROMANCER_BADGE_MIN_DELAY + 1)
+        future = now + delta
+        answer = self.post_answer(
+                        user = self.u2,
+                        question = question,
+                        timestamp = future
+                    ) 
+        answer.score = settings.NECROMANCER_BADGE_MIN_UPVOTES - 1
+        answer.save()
+        self.assert_have_badge('necromancer', self.u2, expected_count = 0)
+        self.u1.upvote(answer)
+        self.assert_have_badge('necromancer', self.u2, expected_count = 1)
+
+    def test_citizen_patrol_question(self):
+        self.u2.set_status('m')
+        question = self.post_question(user = self.u1)
+        self.u2.flag_post(question)
+        self.assert_have_badge('citizen-patrol', self.u2)
+        question = self.post_question(user = self.u1)
+        self.u2.flag_post(question)
+        self.assert_have_badge('citizen-patrol', self.u2, 1)
+
+    def test_citizen_patrol_answer(self):
+        self.u2.set_status('m')
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u1, question = question)
+        self.u2.flag_post(answer)
+        self.assert_have_badge('citizen-patrol', self.u2)
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u1, question = question)
+        self.u2.flag_post(answer)
+        self.assert_have_badge('citizen-patrol', self.u2, 1)
+
+    def test_editor_badge_question(self):
+        self.u2.set_status('m')
+        question = self.post_question(user = self.u1)
+        self.u2.edit_question(
+            question = question,
+            title = 'hahaha',
+            body_text = 'heheeh',
+            revision_comment = 'ihihih'
+        )
+        self.assert_have_badge('editor', self.u2, 1)
+        #double check that its not multiple
+        question = self.post_question(user = self.u1)
+        self.u2.edit_question(
+            question = question,
+            title = 'hahaha',
+            body_text = 'heheeh',
+            revision_comment = 'ihihih'
+        )
+        self.assert_have_badge('editor', self.u2, 1)
+
+    def test_editor_badge_answer(self):
+        self.u2.set_status('m')
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u1, question = question)
+        self.u2.edit_answer(answer = answer, body_text = 'hahaha')
+        self.assert_have_badge('editor', self.u2, 1)
+        #double check that its not multiple
+        question = self.post_question(user = self.u1)
+        answer = self.post_answer(user = self.u1, question = question)
+        self.u2.edit_answer(answer = answer, body_text = 'hahaha')
+        self.assert_have_badge('editor', self.u2, 1)
+
+    def test_associate_editor_badge(self):
+        self.u2.set_status('m')
+        question = self.post_question(user = self.u1)
+        settings.update('ASSOCIATE_EDITOR_BADGE_MIN_EDITS', 2)
+        self.u2.edit_question(
+            question = question,
+            title = 'hahaha',
+            body_text = 'sdgsdjghsldkfshd',
+            revision_comment = 'sdgdfgsgfs'
+        )
+        self.assert_have_badge('strunk-and-white', self.u2, 0)
+        self.u2.edit_question(
+            question = question,
+            title = 'hahaha',
+            body_text = 'sdgsdjghsldkfshd',
+            revision_comment = 'sdgdfgsgfs'
+        )
+        self.assert_have_badge('strunk-and-white', self.u2, 1)
+        self.u2.edit_question(
+            question = question,
+            title = 'hahaha',
+            body_text = 'sdgsdjghsldkfshd',
+            revision_comment = 'sdgdfgsgfs'
+        )
+        self.assert_have_badge('strunk-and-white', self.u2, 1)

@@ -17,11 +17,13 @@ and make sure that a signal `award_badges_signal` is sent with the
 corresponding event name, actor (user object), context_object and optionally
 - timestamp
 """
+import datetime
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
+from askbot.models.user import Activity
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
@@ -108,17 +110,16 @@ class Badge(object):
         award.save()#note: there are signals that listen to saving the Award
         return True
 
-    def consider_award(self, actor = None, 
-                context_object = None, timestamp = None):
-        """This method should be implemented in subclasses
-        actor - user who committed some action, context_object - 
-        the object related to the award situation, e.g. an
-        answer that is being upvoted
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        """Normally this method should be reimplemented 
+        in subclass, but some badges are awarded without
+        checks. Those do no need to override this method
 
-        the method should internally check who might be awarded and
-        whether the situation is appropriate
+        actor - user who committed some action, context_object - 
+        the object related to the award situation, e.g. answer
         """
-        raise NotImplementedError()
+        return self.award(actor, context_object, timestamp)
 
 class Disciplined(Badge):
     def __init__(self):
@@ -509,16 +510,123 @@ class Guru(VotedAcceptedAnswer):
         self.description = descr % {'num': self.min_votes}
         return self
 
+class Necromancer(Badge):
+    def __init__(self):
+        description = _(
+            'Answered a question more than %(days)s days '
+            'later with at least %(votes)s votes'
+        )
+        days = askbot_settings.NECROMANCER_BADGE_MIN_DELAY
+        votes = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
+        super(Necromancer, self).__init__(
+            key = 'necromancer',
+            name = _('Necromancer'),
+            level = const.SILVER_BADGE,
+            description = description % {'days':days, 'votes':votes},
+            multiple = True
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        if context_object.post_type != 'answer':
+            return False
+        answer = context_object
+        question = answer.question
+        delta = datetime.timedelta(askbot_settings.NECROMANCER_BADGE_MIN_DELAY)
+        min_score = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
+        if answer.added_at - question.added_at >= delta \
+            and answer.score >= min_score:
+            return self.award(answer.author, answer, timestamp)
+        return False
+
+class CitizenPatrol(Badge):
+    def __init__(self):
+        super(CitizenPatrol, self).__init__(
+            key = 'citizen-patrol',
+            name = _('Citizen Patrol'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = _('First flagged post')
+        )
+
+class Cleanup(Badge):
+    """This badge is inactive right now.
+    to make it live we need to be able to either
+    detect "undo" actions or rewrite the view
+    correspondingly
+    """
+    def __init__(self):
+        super(Cleanup, self).__init__(
+            key = 'cleanup',
+            name = _('Cleanup'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = _('First rollback')
+        )
+
+class Pundit(Badge):
+    """Inactive until it is possible to vote
+    for comments.
+    Pundit is someone who makes good comments.
+    """
+    def __init__(self):
+        super(Pundit, self).__init__(
+            key = 'pundit',
+            name = _('Pundit'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _('Left 10 comments with score of 10 or more')
+        )
+
+class EditorTypeBadge(Badge):
+    """subclassing badges are types of editors
+    must provide usual parameters + min_edits
+    via __new__ function
+    """
+    def __init__(self):
+        super(EditorTypeBadge, self).__init__(
+            key = self.key,
+            name = self.name,
+            level = self.level,
+            multiple = False,
+            description = self.description
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+
+        atypes = (
+            const.TYPE_ACTIVITY_UPDATE_QUESTION,
+            const.TYPE_ACTIVITY_UPDATE_ANSWER
+        )
+        filters = {'user': actor, 'activity_type__in': atypes}
+        if Activity.objects.filter(**filters).count() == self.min_edits:
+            return self.award(actor, context_object, timestamp)
+
+class Editor(EditorTypeBadge):
+    def __new__(cls):
+        self = super(Editor, cls).__new__(cls)
+        self.key = 'editor'
+        self.name = _('Editor')
+        self.level = const.BRONZE_BADGE
+        self.multiple = False
+        self.description = _('First edit')
+        self.min_edits = 1
+        return self
+
+class AssociateEditor(EditorTypeBadge):
+    def __new__(cls):
+        self = super(AssociateEditor, cls).__new__(cls)
+        self.key = 'strunk-and-white'#legacy copycat name from stackoverflow
+        self.name = _('Associate Editor')
+        self.level = const.SILVER_BADGE
+        self.multiple = False
+        self.min_edits = askbot_settings.ASSOCIATE_EDITOR_BADGE_MIN_EDITS
+        self.description = _('Edited %(num)s entries') % {'num': self.min_edits}
+        return self
+
+
 ORIGINAL_DATA = """
-    (_('Necromancer'), 2, _('necromancer'), _('Answered a question more than 60 days later with at least 5 votes'), True, 0),
-
-    (_('Pundit'), 3, _('pundit'), _('Left 10 comments with score of 10 or more'), False, 0),
-    (_('Citizen patrol'), 3, _('citizen-patrol'), _('First flagged post'), False, 0),
-
-    (_('Cleanup'), 3, _('cleanup'), _('First rollback'), False, 0),
-
-    (_('Editor'), 3, _('editor'), _('First edit'), False, 0),
-    (_('Strunk & White'), 2, _('strunk-and-white'), _('Edited 100 entries'), False, 0),
     (_('Organizer'), 3, _('organizer'), _('First retag'), False, 0),
 
     (_('Autobiographer'), 3, _('autobiographer'), _('Completed all user profile fields'), False, 0),
@@ -537,9 +645,13 @@ ORIGINAL_DATA = """
 """
 
 BADGES = {
+    'strunk-and-white': AssociateEditor,#legacy slug name
     'critic': Critic,
+    'citizen-patrol': CitizenPatrol,
     'civic-duty': CivicDuty,
+    'cleanup': Cleanup,
     'disciplined': Disciplined,
+    'editor': Editor,
     'enlightened': Enlightened,
     'famous-question': FamousQuestion,
     'good-answer': GoodAnswer,
@@ -547,11 +659,13 @@ BADGES = {
     'great-answer': GreatAnswer,
     'great-question': GreatQuestion,
     'guru': Guru,
+    'necromancer': Necromancer,
     'nice-answer': NiceAnswer,
     'nice-question': NiceQuestion,
     'notable-question': NotableQuestion,
     'peer-pressure': PeerPressure,
     'popular-question': PopularQuestion,
+    'pundit': Pundit,
     'scholar': Scholar,
     'student': Student,
     'supporter': Supporter,
@@ -564,10 +678,13 @@ BADGES = {
 #most likely - from manipulator functions that are added to the User objects
 EVENTS_TO_BADGES = {
     'accept_best_answer': (Scholar, Guru, Enlightened),
+    'edit_answer': (Editor, AssociateEditor),
+    'edit_question': (Editor, AssociateEditor),
+    'flag_post': (CitizenPatrol,),
     'upvote_answer': (
                     Teacher, NiceAnswer, GoodAnswer,
                     GreatAnswer, Supporter, SelfLearner, CivicDuty,
-                    Guru, Enlightened
+                    Guru, Enlightened, Necromancer
                 ),
     'upvote_question': (
                     NiceQuestion, GoodQuestion,
@@ -575,6 +692,7 @@ EVENTS_TO_BADGES = {
                 ),
     'downvote': (Critic, CivicDuty),#no regard for question or answer for now
     'delete_post': (Disciplined, PeerPressure,),
+    'post_answer': (Necromancer,),
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
 }
 
