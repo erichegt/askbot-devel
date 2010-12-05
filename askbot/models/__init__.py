@@ -734,6 +734,12 @@ def user_retag_question(
         tagnames = tags,
         silent = silent
     )
+    award_badges_signal.send(None,
+        event = 'retag_question',
+        actor = self,
+        context_object = question,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
 def user_accept_best_answer(self, answer = None, timestamp = None):
@@ -1330,6 +1336,7 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
         fave = FavoriteQuestion.objects.get(question=question, user=self)
         fave.delete()
         result = False
+        question.update_favorite_count()
     except FavoriteQuestion.DoesNotExist:
         if timestamp is None:
             timestamp = datetime.datetime.now()
@@ -1340,7 +1347,13 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
         )
         fave.save()
         result = True
-    Question.objects.update_favorite_count(question)
+        question.update_favorite_count()
+        award_badges_signal.send(None,
+            event = 'select_favorite_question',
+            actor = self,
+            context_object = question,
+            timestamp = timestamp
+        )
     return result
 
 VOTES_TO_EVENTS = {

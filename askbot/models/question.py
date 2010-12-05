@@ -281,11 +281,6 @@ class QuestionManager(models.Manager):
         """
         self.filter(id=question.id).update(view_count = question.view_count + 1)
 
-    def update_favorite_count(self, question):
-        """
-        update favourite_count for given question
-        """
-        self.filter(id=question.id).update(favourite_count = FavoriteQuestion.objects.filter(question=question).count())
 
 class Question(content.Content, DeletableContent):
     post_type = 'question'
@@ -328,6 +323,15 @@ class Question(content.Content, DeletableContent):
         self.answer_count = self.get_answers().count()
         if save: 
             self.save()
+   
+    def update_favorite_count(self):
+        """
+        update favourite_count for given question
+        """
+        self.favourite_count = FavoriteQuestion.objects.filter(
+                                                            question=self
+                                                        ).count()
+        self.save()
 
 
     def get_similar_questions(self):

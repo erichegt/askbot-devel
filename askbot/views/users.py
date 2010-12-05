@@ -32,7 +32,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
-from askbot.models import signals
+from askbot.models.badges import award_badges_signal
 from askbot.skins.loaders import ENV
 from askbot.templatetags import extra_tags
 
@@ -262,14 +262,12 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
 
             user.save()
-            # send user updated singal if full fields have been updated
-            if user.email and user.real_name and user.website \
-                and user.location and  user.date_of_birth and user.about:
-                signals.user_updated.send(
-                                sender=user.__class__, 
-                                instance=user, 
-                                updated_by=user
-                            )
+            # send user updated signal if full fields have been updated
+            award_badges_signal.send(None,
+                            event = 'update_user_profile',
+                            actor = user,
+                            context_object = user
+                        )
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)

@@ -3,6 +3,7 @@ from django.test.client import Client
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings
 from askbot import models
+from askbot.models.badges import award_badges_signal
 
 class BadgeTests(AskbotTestCase):
 
@@ -13,6 +14,9 @@ class BadgeTests(AskbotTestCase):
         self.client = Client()
 
     def assert_have_badge(self, badge_key, recipient = None, expected_count = 1):
+        """note - expected_count matches total number of
+        badges within test, not the one that was awarded between the calls
+        to this assertion"""
         filters = {'badge__slug': badge_key, 'user': recipient}
         count = models.Award.objects.filter(**filters).count()
         self.assertEquals(count, expected_count)
@@ -407,3 +411,61 @@ class BadgeTests(AskbotTestCase):
             revision_comment = 'sdgdfgsgfs'
         )
         self.assert_have_badge('strunk-and-white', self.u2, 1)
+
+    def test_organizer_badge(self):
+        question = self.post_question(user = self.u1)
+        self.u1.retag_question(question = question, tags = 'blah boom')
+        self.assert_have_badge('organizer', self.u1, 1)
+        self.u1.retag_question(question = question, tags = 'blah pooh')
+        self.assert_have_badge('organizer', self.u1, 1)
+
+    def test_autobiographer_badge(self):
+        self.u1.real_name = 'blah'
+        self.u1.website = 'cnn.com'
+        self.u1.location = 'irvine'
+        self.u1.about = 'blah'
+        self.u1.save()
+        award_badges_signal.send(None,
+            event = 'update_user_profile',
+            actor = self.u1,
+            context_object = self.u1
+        )
+        self.assert_have_badge('autobiographer', self.u1, 1)
+        award_badges_signal.send(None,
+            event = 'update_user_profile',
+            actor = self.u1,
+            context_object = self.u1
+        )
+        self.assert_have_badge('autobiographer', self.u1, 1)
+
+    def test_stellar_badge1(self):
+        question = self.post_question(user = self.u1)
+        settings.update('STELLAR_QUESTION_BADGE_MIN_STARS', 2)
+        self.u2.toggle_favorite_question(question)
+        self.assert_have_badge('stellar-question', self.u1, 0)
+        self.u3.toggle_favorite_question(question)
+        self.assert_have_badge('stellar-question', self.u1, 1)
+
+    def test_stellar_badge2(self):
+        question = self.post_question(user = self.u1)
+        settings.update('STELLAR_QUESTION_BADGE_MIN_STARS', 2)
+        self.u2.toggle_favorite_question(question)
+        self.assert_have_badge('stellar-question', self.u1, 0)
+        self.u1.toggle_favorite_question(question)
+        """no gaming"""
+        self.assert_have_badge('stellar-question', self.u1, 0)
+    
+    def test_stellar_badge3(self):
+        question = self.post_question(user = self.u1)
+        settings.update('STELLAR_QUESTION_BADGE_MIN_STARS', 2)
+        self.u2.toggle_favorite_question(question)
+        self.assert_have_badge('stellar-question', self.u1, 0)
+        self.u3.toggle_favorite_question(question)
+        #award now
+        self.assert_have_badge('stellar-question', self.u1, 1)
+        self.u3.toggle_favorite_question(question)
+        #dont take back
+        self.assert_have_badge('stellar-question', self.u1, 1)
+        self.u3.toggle_favorite_question(question)
+        #dont reaward
+        self.assert_have_badge('stellar-question', self.u1, 1)

@@ -24,6 +24,7 @@ from django.utils.translation import gettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
+from askbot.models.question import FavoriteQuestion as Fave#name collision
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
@@ -625,16 +626,80 @@ class AssociateEditor(EditorTypeBadge):
         self.description = _('Edited %(num)s entries') % {'num': self.min_edits}
         return self
 
+class Organizer(Badge):
+    def __init__(self):
+        super(Organizer, self).__init__(
+            key = 'organizer',
+            name = _('Organizer'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = _('First retag')
+        )
+
+class Autobiographer(Badge):
+    def __init__(self):
+        super(Autobiographer, self).__init__(
+            key = 'autobiographer',
+            name = _('Autobiographer'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = _('Completed all user profile fields')
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        user = context_object
+        if user.email and user.real_name and user.website \
+            and user.location and user.about:
+            return self.award(user, user, timestamp)
+        return False
+
+class FavoriteTypeBadge(Badge):
+    """subclass must use __new__ and in addition
+    must provide min_stars property for the badge
+    """
+    def __init__(self):
+        descr = _('Question favorited by %(num)s users')
+        super(FavoriteTypeBadge, self).__init__(
+            key = self.key,
+            name = self.name,
+            level = self.level,
+            multiple = True,
+            description = descr % {'num': self.min_stars}
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        question = context_object
+        #model FavoriteQuestion imported under alias of Fave
+        count = Fave.objects.filter(
+                                        question = question
+                                    ).exclude(
+                                        user = question.author
+                                    ).count()
+        if count == self.min_stars:
+            return self.award(question.author, question, timestamp)
+        return False
+
+class StellarQuestion(FavoriteTypeBadge):
+    def __new__(cls):
+        self = super(StellarQuestion, cls).__new__(cls)
+        self.key = 'stellar-question'
+        self.name = _('Stellar Question')
+        self.level = const.GOLD_BADGE
+        self.min_stars = askbot_settings.STELLAR_QUESTION_BADGE_MIN_STARS
+        return self
+
+class FavoriteQuestion(FavoriteTypeBadge):
+    def __new__(cls):
+        self = super(FavoriteQuestion, cls).__new__(cls)
+        self.key = 'favorite-question'
+        self.name = _('Favorite Question')
+        self.level = const.SILVER_BADGE
+        self.min_stars = askbot_settings.FAVORITE_QUESTION_BADGE_MIN_STARS
+        return self
 
 ORIGINAL_DATA = """
-    (_('Organizer'), 3, _('organizer'), _('First retag'), False, 0),
-
-    (_('Autobiographer'), 3, _('autobiographer'), _('Completed all user profile fields'), False, 0),
-
-    (_('Stellar Question'), 1, _('stellar-question'), _('Question favorited by 100 users'), True, 0),
-    (_('Favorite Question'), 2, _('favorite-question'), _('Question favorited by 25 users'), True, 0),
-
-
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
     (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
     (_('Taxonomist'), 2, _('taxonomist'), _('Created a tag used by 50 questions'), True, 0)
@@ -646,6 +711,7 @@ ORIGINAL_DATA = """
 
 BADGES = {
     'strunk-and-white': AssociateEditor,#legacy slug name
+    'autobiographer': Autobiographer,
     'critic': Critic,
     'citizen-patrol': CitizenPatrol,
     'civic-duty': CivicDuty,
@@ -654,6 +720,7 @@ BADGES = {
     'editor': Editor,
     'enlightened': Enlightened,
     'famous-question': FamousQuestion,
+    'favorite-question': FavoriteQuestion,
     'good-answer': GoodAnswer,
     'good-question': GoodQuestion,
     'great-answer': GreatAnswer,
@@ -663,6 +730,7 @@ BADGES = {
     'nice-answer': NiceAnswer,
     'nice-question': NiceQuestion,
     'notable-question': NotableQuestion,
+    'organizer': Organizer,
     'peer-pressure': PeerPressure,
     'popular-question': PopularQuestion,
     'pundit': Pundit,
@@ -670,6 +738,7 @@ BADGES = {
     'student': Student,
     'supporter': Supporter,
     'self-learner': SelfLearner,
+    'stellar-question': StellarQuestion,
     'teacher': Teacher,
 }
 
@@ -678,9 +747,15 @@ BADGES = {
 #most likely - from manipulator functions that are added to the User objects
 EVENTS_TO_BADGES = {
     'accept_best_answer': (Scholar, Guru, Enlightened),
+    'delete_post': (Disciplined, PeerPressure,),
+    'downvote': (Critic, CivicDuty),#no regard for question or answer for now
     'edit_answer': (Editor, AssociateEditor),
     'edit_question': (Editor, AssociateEditor),
     'flag_post': (CitizenPatrol,),
+    'post_answer': (Necromancer,),
+    'retag_question': (Organizer,),
+    'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
+    'update_user_profile': (Autobiographer,),
     'upvote_answer': (
                     Teacher, NiceAnswer, GoodAnswer,
                     GreatAnswer, Supporter, SelfLearner, CivicDuty,
@@ -690,9 +765,6 @@ EVENTS_TO_BADGES = {
                     NiceQuestion, GoodQuestion,
                     GreatQuestion, Student, Supporter, CivicDuty
                 ),
-    'downvote': (Critic, CivicDuty),#no regard for question or answer for now
-    'delete_post': (Disciplined, PeerPressure,),
-    'post_answer': (Necromancer,),
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
 }
 

@@ -183,3 +183,21 @@ settings.register(
         description=_('Associate Editor: minimum number of edits')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'FAVORITE_QUESTION_BADGE_MIN_STARS',
+        default=3,
+        description=_('Favorite Question: minimum stars')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'STELLAR_QUESTION_BADGE_MIN_STARS',
+        default=5,
+        description=_('Stellar Question: minimum stars')
+    )
+)
