@@ -742,7 +742,10 @@ def user_retag_question(
     )
 
 @auto_now_timestamp
-def user_accept_best_answer(self, answer = None, timestamp = None):
+def user_accept_best_answer(self, answer = None,
+                            timestamp = None, cancel = False):
+    if cancel:
+        return self.unaccept_best_answer(answer = answer, timestamp = timestamp)
     self.assert_can_accept_best_answer(answer)
     if answer.accepted == True:
         return

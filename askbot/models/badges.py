@@ -700,11 +700,20 @@ class FavoriteQuestion(FavoriteTypeBadge):
         return self
 
 ORIGINAL_DATA = """
+ 
+extra badges from stackexchange
+* commentator - left n comments (single)
+* enthusiast, fanatic - visited site n days in a row (s)
+* epic, legendary - hit daily reputation cap on n days (s)
+* mortarboard - hit the daily reputation cap for the first time (s)
+* populist - provided an answer that outscored an accepted answer two-fold or by n points, whichever is higher (m)
+* reversal - provided an answer with +n points to a question of -m points
+    (_('Taxonomist'), 2, _('taxonomist'), _('Created a tag used by 50 questions'), True, 0)
+    (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
+
+
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
     (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
-    (_('Taxonomist'), 2, _('taxonomist'), _('Created a tag used by 50 questions'), True, 0)
-
-    (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
@@ -712,10 +721,10 @@ ORIGINAL_DATA = """
 BADGES = {
     'strunk-and-white': AssociateEditor,#legacy slug name
     'autobiographer': Autobiographer,
-    'critic': Critic,
+    'cleanup': Cleanup,
     'citizen-patrol': CitizenPatrol,
     'civic-duty': CivicDuty,
-    'cleanup': Cleanup,
+    'critic': Critic,
     'disciplined': Disciplined,
     'editor': Editor,
     'enlightened': Enlightened,
@@ -735,10 +744,10 @@ BADGES = {
     'popular-question': PopularQuestion,
     'pundit': Pundit,
     'scholar': Scholar,
-    'student': Student,
-    'supporter': Supporter,
     'self-learner': SelfLearner,
     'stellar-question': StellarQuestion,
+    'student': Student,
+    'supporter': Supporter,
     'teacher': Teacher,
 }
 

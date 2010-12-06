@@ -20,7 +20,6 @@ from askbot import skins
 import askbot
 
 def generic_view(request, template = None):
-    print 'in generic view'
     template = ENV.get_template(template)
     context = RequestContext(request)
     return HttpResponse(template.render(context))

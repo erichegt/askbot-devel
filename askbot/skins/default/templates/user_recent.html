@@ -10,7 +10,7 @@
                 </div>
                 <div style="float:left;overflow:hidden;">
                     {% if act.type_id==7 %}
-                    <a href="{{act.badge.get_absolute_url()}}" title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.description %}{{description}}{% endtrans %}" class="medal"><span class="badge{{ act.badge.type }}">&#9679;</span>&nbsp;{% trans name=act.badge.name %}{{name}}{% endtrans %}</a>
+                    <a href="{{act.badge.get_absolute_url()}}" title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ act.badge.css_class }}">&#9679;</span>&nbsp;{% trans name=act.badge.name %}{{name}}{% endtrans %}</a>
                     {% else %}
                     <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title|escape }}</a></span>
                     {% if act.summary %}<span class="revision-summary">{{ act.summary|escape }}</span>{% endif %}

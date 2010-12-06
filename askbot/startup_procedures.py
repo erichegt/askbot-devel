@@ -5,6 +5,7 @@ the purpose of this module is to validate deployment of askbot
 
 the main function is run_startup_tests
 """
+from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
@@ -47,7 +48,12 @@ def run_startup_tests():
                 msg = 'if ASKBOT_URL setting is not empty, ' + \
                         'it must not start with /'
 
+@transaction.commit_manually
 def run():
     """runs all the startup procedures"""
     run_startup_tests()
-    badges.init_badges()
+    try:
+        badges.init_badges()
+        transaction.commit()
+    except:
+        transaction.rollback()

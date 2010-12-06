@@ -49,7 +49,7 @@ class PageLoadTestCase(TestCase):
                 self.assertEqual(r.template[0].name, template)
 
 class PageLoadTests(PageLoadTestCase):
-    fixtures = ['tmp/fixture1.json', ]
+    fixtures = ['tmp/fixture2.json', ]
 
     def test_index(self):
         #todo: merge this with all reader url tests

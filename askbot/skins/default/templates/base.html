@@ -100,11 +100,11 @@
                 {% else %}
                     $('#id_title').focus();
                 {% endif %}
-                {% if user_messages %}
-                    $('#validate_email_alert').click(function(){notify.close(true)})
-                    notify.show();
-                {% endif %}
             });
+        {% endif %}
+        {% if user_messages %}
+            $('#validate_email_alert').click(function(){notify.close(true)})
+            notify.show();
         {% endif %}
         </script>
         {% if settings.GOOGLE_ANALYTICS_KEY %}
