@@ -2260,6 +2260,10 @@ p.space-above {
     color: darkred;
 }
 
+button::-moz-focus-inner {
+    padding:0;
+    border:none;
+}
 .submit {
     cursor: pointer; /*letter-spacing:1px;*/
     background-color: #D4D0C8;
@@ -2275,15 +2279,15 @@ p.space-above {
 }
 
 .submit.small {
+    margin-right:5px;
     height:20px;
     font-weight:normal;
     font-size:12px;
-    padding:0 5px;
+    padding:1px 5px;
 }
 .submit.small:hover {
     text-decoration:none;
 }
-
 
 .ask-body {
     padding-right: 10px;
