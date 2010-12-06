@@ -336,9 +336,19 @@ def user_stats(request, user):
     question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
-    awards = models.Award.objects.filter(user=user).order_by('-awarded_at')
-    total_awards = awards.count()
-    awards = awards.annotate(count = Count('badge__id'))
+    badges = models.BadgeData.objects.filter(
+                            award_badge__user=user
+                        )
+    total_awards = badges.count()
+    badges = badges.order_by(
+        '-slug'
+    ).distinct()
+    awarded_badge_counts = models.Award.objects.filter(
+                                user = user
+                            ).annotate(
+                                count = Count('badge__id')
+                            ).values_list('badge', 'count')
+
     user_tags = user_tags.annotate(
                             user_tag_usage_count=Count('name')
                         ).order_by(
@@ -372,7 +382,8 @@ def user_stats(request, user):
         'votes_today_left': votes_total-votes_today,
         'votes_total_per_day': votes_total,
         'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
-        'awards': awards,
+        'badges': badges,
+        'awarded_badge_counts': dict(awarded_badge_counts),
         'total_awards' : total_awards,
     }
     context = RequestContext(request, data)

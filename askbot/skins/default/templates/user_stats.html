@@ -84,8 +84,8 @@
             <table>
                 <tr>
                     <td width="180" style="line-height:35px">
-                        {% for award in awards %}{# todo: translate badge name properly #}
-                            <a href="{{award.badge.get_absolute_url()}}" title="{% trans description=award.badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ award.badge.css_class }}">&#9679;</span>&nbsp;{% trans name=award.badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ award.count|intcomma }}</span><br/>
+                        {% for badge in badges %}{# todo: translate badge name properly #}
+                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span><br/>
                             {% if loop.index is divisibleby 3 %}
                                 </td>
                                 <td width="180" style="line-height:35px">

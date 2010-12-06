@@ -95,7 +95,11 @@ def badges(request):#user status/reputation system
     badges = BadgeData.objects.filter(slug__in = known_badges).order_by('slug')
     my_badges = []
     if request.user.is_authenticated():
-        my_badges = Award.objects.filter(user=request.user).values('badge_id')
+        my_badges = Award.objects.filter(
+                                user=request.user
+                            ).values(
+                                'badge_id'
+                            ).distinct()
         #my_badges.query.group_by = ['badge_id']
 
     template = ENV.get_template('badges.html')

@@ -34,7 +34,7 @@
     <ul class="tagsList tags">
     {% for tag in tags.object_list %}
        <li>
-        <a href="{% url questions %}?tags={{tag|urlencode}}" 
+        <a href="{% url questions %}?tags={{tag|urlencode}}&start_over=true" 
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">
             {{ tag }}
         </a>&nbsp;
