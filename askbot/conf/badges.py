@@ -98,7 +98,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'POPULAR_QUESTION_BADGE_MIN_VIEWS',
-        default=5,
+        default=150,
         description=_('Popular Question: minimum views')
     )
 )
@@ -107,7 +107,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'NOTABLE_QUESTION_BADGE_MIN_VIEWS',
-        default=150,
+        default=250,
         description=_('Notable Question: minimum views')
     )
 )
