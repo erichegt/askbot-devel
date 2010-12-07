@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.views import static
+from django.db.models import Max, Count
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
@@ -118,9 +119,12 @@ def badge(request, id):
     badge = get_object_or_404(BadgeData, id=id)
     badge_recipients = User.objects.filter(
                             award_user__badge = badge
+                        ).annotate(
+                            last_awarded_at = Max('award_user__awarded_at'),
+                            award_count = Count('award_user')
                         ).order_by(
-                            '-award_user__awarded_at'
-                        ).distinct()
+                            '-last_awarded_at'
+                        )
 
     template = ENV.get_template('badge.html')
     data = {
