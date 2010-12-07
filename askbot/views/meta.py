@@ -116,17 +116,16 @@ def badges(request):#user status/reputation system
 def badge(request, id):
     #todo: supplement database data with the stuff from badges.py
     badge = get_object_or_404(BadgeData, id=id)
-    awards = Award.objects.extra(
-        select={'id': 'auth_user.id', 
-                'name': 'auth_user.username', 
-                'rep':'auth_user.reputation', 
-                'gold': 'auth_user.gold', 
-                'silver': 'auth_user.silver', 
-                'bronze': 'auth_user.bronze'},
-        tables=['award', 'auth_user'],
-        where=['badge_id=%s AND user_id=auth_user.id'],
-        params=[id]
-    ).distinct('id')
+    awards = Award.objects.filter(
+                            badge = badge,
+                        ).select_related(
+                            'user__id',
+                            'user__username',
+                            'user__reputation',
+                            'user__gold',
+                            'user__silver',
+                            'user__bronze'
+                        ).distinct('user')
 
     template = ENV.get_template('badge.html')
     data = {

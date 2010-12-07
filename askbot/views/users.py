@@ -345,9 +345,13 @@ def user_stats(request, user):
     ).distinct()
     awarded_badge_counts = models.Award.objects.filter(
                                 user = user
+                            ).values(
+                                'badge'
                             ).annotate(
                                 count = Count('badge__id')
-                            ).values_list('badge', 'count')
+                            ).values_list(
+                                'badge', 'count'
+                            )
 
     user_tags = user_tags.annotate(
                             user_tag_usage_count=Count('name')
