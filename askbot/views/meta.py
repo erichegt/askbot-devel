@@ -13,7 +13,7 @@ from django.views import static
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
-from askbot.models import BadgeData, Award
+from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import ENV
 from askbot import skins
@@ -116,22 +116,17 @@ def badges(request):#user status/reputation system
 def badge(request, id):
     #todo: supplement database data with the stuff from badges.py
     badge = get_object_or_404(BadgeData, id=id)
-    awards = Award.objects.filter(
-                            badge = badge,
-                        ).select_related(
-                            'user__id',
-                            'user__username',
-                            'user__reputation',
-                            'user__gold',
-                            'user__silver',
-                            'user__bronze'
-                        ).distinct('user')
+    badge_recipients = User.objects.filter(
+                            award_user__badge = badge
+                        ).order_by(
+                            '-award_user__awarded_at'
+                        ).distinct()
 
     template = ENV.get_template('badge.html')
     data = {
         'view_name': badge,
         'active_tab': 'badges',
-        'awards' : awards,
+        'badge_recipients' : badge_recipients,
         'badge' : badge,
     }
     context = RequestContext(request, data)

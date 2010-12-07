@@ -12,14 +12,14 @@
     </p>
     <div>
         {% if badge.awarded_count %}
-        <p style="float:left"><span class="count">{{ awards|length|intcomma }}</span>
-        <strong>{% trans num_awardees=awards|length %}user received this badge:{% pluralize %}users received this badge:{% endtrans %}</strong></p>
+        <p style="float:left"><span class="count">{{ badge_recipients|length|intcomma }}</span>
+        <strong>{% trans num_awardees=badge_recipients|length %}user received this badge:{% pluralize %}users received this badge:{% endtrans %}</strong></p>
         {% endif %}
     </div>
     <div id="award-list" style="clear:both;margin-left:20px;line-height:25px;">
-        {% for award in awards %}
-        <p style="width:180px;float:left"><a href="{{ award.user.get_absolute_url() }}">{{ award.user.username }}</a> 
-        {{ macros.user_score_and_badge_summary(award.user) }}
+        {% for recipient in badge_recipients %}
+        <p style="width:180px;float:left"><a href="{{ recipient.get_absolute_url() }}">{{ recipient.username }}</a> 
+        {{ macros.user_score_and_badge_summary(recipient) }}
         </p>
         {% endfor %}
     </div>
