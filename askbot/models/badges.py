@@ -699,6 +699,28 @@ class FavoriteQuestion(FavoriteTypeBadge):
         self.min_stars = askbot_settings.FAVORITE_QUESTION_BADGE_MIN_STARS
         return self
 
+class Enthusiast(Badge):
+    """Unimplemented stub badge"""
+    def __init__(self):
+        super(Enthusiast, self).__init__(
+            key = 'enthusiast',
+            name = _('Enthusiast'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _('Visited site every day for 30 days in a row')
+        )
+
+class Commentator(Badge):
+    """Unimplemented stub badge"""
+    def __init__(self):
+        super(Commentator, self).__init__(
+            key = 'commentator',
+            name = _('Commentator'),
+            level = const.BRONZE_BADGE,
+            multiple = False,
+            description = _('Posted 10 comments')
+        )
+
 ORIGINAL_DATA = """
  
 extra badges from stackexchange
@@ -724,10 +746,12 @@ BADGES = {
     'cleanup': Cleanup,
     'citizen-patrol': CitizenPatrol,
     'civic-duty': CivicDuty,
+    'commentator': Commentator,
     'critic': Critic,
     'disciplined': Disciplined,
     'editor': Editor,
     'enlightened': Enlightened,
+    'enthusiast': Enthusiast,
     'famous-question': FamousQuestion,
     'favorite-question': FavoriteQuestion,
     'good-answer': GoodAnswer,

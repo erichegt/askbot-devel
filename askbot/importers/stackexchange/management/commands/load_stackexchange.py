@@ -647,25 +647,22 @@ class Command(BaseCommand):
             badge_name = X.get_badge_name(se_a.badge.name)
             try:
                 b = askbot.badges.get_badge(name=badge_name)
+                if b.multiple == False:
+                    if b.award_badge.filter(user = u).count() > 0:
+                        #do not allow transfer of "multi" in SE -> single badge in AB
+                        continue
+                #todo: fake content object here b/c SE does not support this
+                #todo: but askbot requires related content object
+                askbot.Award.objects.create(
+                    user=u,
+                    badge=b.get_stored_data(),
+                    awarded_at=se_a.date,
+                    content_object=u,
+                )
             except KeyError:
                 #do not transfer badges that Askbot does not have
                 self._missing_badges[badge_name] += 1
                 continue
-
-            if b.multiple == False:
-                if b.award_badge.filter(user = u).count() > 0:
-                    #do not allow transfer of "multi" in SE -> single badge in AB
-                    continue
-            #todo: fake content object here b/c SE does not support this
-            #todo: but askbot requires related content object
-            askbot.Award.objects.create(
-                user=u,
-                badge=b.get_stored_data(),
-                awarded_at=se_a.date,
-                content_object=u,
-            )
-            if b.name in self._missing_badges:
-                self._missing_badges[b.name] += 1
 
     def _report_missing_badges(self):
         d = self._missing_badges
