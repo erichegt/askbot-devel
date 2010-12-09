@@ -102,6 +102,19 @@ class Comment(base.MetaContent, base.UserContent):
     def get_origin_post(self):
         return self.content_object.get_origin_post()
 
+    def get_page_number(self, answers = None):
+        """return page number whithin the page
+        where the comment is going to appear
+        answers parameter will not be used if the comment belongs
+        to a question, otherwise answers list or queryset
+        will be used to determine the page number"""
+        return self.content_object.get_page_number(answers = answers)
+
+    def get_order_number(self):
+        return self.content_object.comments.filter(
+                                        added_at__lt = self.added_at
+                                     ).count() + 1
+
     #todo: maybe remove this wnen post models are unified
     def get_text(self):
         return self.comment
@@ -241,7 +254,8 @@ class Comment(base.MetaContent, base.UserContent):
 
     def get_absolute_url(self):
         origin_post = self.get_origin_post()
-        return '%s#comment-%d' % (origin_post.get_absolute_url(), self.id)
+        return '%(url)s?comment=%(id)d#comment-%(id)d' % \
+            {'url': origin_post.get_absolute_url(), 'id':self.id}
 
     def get_latest_revision_number(self):
         return 1

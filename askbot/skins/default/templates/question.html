@@ -143,6 +143,9 @@
                         {{
                             macros.post_comments_widget(
                                     post = question,
+                                    show_post = show_post,
+                                    show_comment = show_comment,
+                                    comment_order_number = comment_order_number,
                                     user = request.user,
                                     max_comments = settings.MAX_COMMENTS_TO_SHOW
                                 )
@@ -285,6 +288,9 @@
                                     {{
                                         macros.post_comments_widget(
                                                 post = answer,
+                                                show_post = show_post,
+                                                show_comment = show_comment,
+                                                comment_order_number = comment_order_number,
                                                 user = request.user,
                                                 max_comments = settings.MAX_COMMENTS_TO_SHOW
                                             )

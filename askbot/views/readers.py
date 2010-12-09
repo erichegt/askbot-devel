@@ -8,7 +8,7 @@ allow adding new comments via Ajax form post.
 """
 import datetime
 import logging
-from urllib import unquote
+import urllib
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -30,7 +30,7 @@ import askbot
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AdvancedSearchForm, AnswerForm
+from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot.models.badges import award_badges_signal
 from askbot import const
@@ -55,7 +55,6 @@ INDEX_TAGS_SIZE = 25
 DEFAULT_PAGE_SIZE = 60
 # used in questions
 # used in answers
-ANSWERS_PAGE_SIZE = 10
 
 #system to display main content
 def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space
@@ -393,39 +392,30 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """view that displays body of the question and 
     all answers to it
     """
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    answer_sort_method = request.GET.get('sort', None)
-    view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
-    try:
-        orderby = view_dic[answer_sort_method]
-    except KeyError:
-        qsm = request.session.get('questions_sort_method',None)
-        if qsm in ('mostvoted','latest'):
-            logging.debug('loaded from session ' + qsm)
-            if qsm == 'mostvoted':
-                answer_sort_method = 'votes'
-                orderby = '-score'
-            else:
-                answer_sort_method = 'latest'
-                orderby = '-added_at'
-        else:
-            answer_sort_method = "votes"
-            orderby = "-score"
-
-    logging.debug('answer_sort_method=' + unicode(answer_sort_method))
-
     question = get_object_or_404(models.Question, id=id)
+
+    #todo: fix inheritance of sort method from questions
+    default_sort_method = request.session.get('questions_sort_method', 'votes')
+    form = ShowQuestionForm(request.GET, default_sort_method)
+    form.full_clean()#always valid
+    show_answer = form.cleaned_data['show_answer']
+    show_comment = form.cleaned_data['show_comment']
+    show_page = form.cleaned_data['show_page']
+    is_permalink = form.cleaned_data['is_permalink']
+    answer_sort_method = form.cleaned_data['answer_sort_method']
+
+    #redirect if slug in the url is wrong
     try:
         assert(request.path == question.get_absolute_url())
     except AssertionError:
         logging.debug('no slug match!')
-        question_url = question.get_absolute_url() + '?sort=%s' % answer_sort_method
+        question_url = '?'.join((
+                            question.get_absolute_url(),
+                            urllib.urlencode(request.GET)
+                        ))
         return HttpResponseRedirect(question_url)
 
+    #maybe refuse showing deleted question
     if question.deleted:
         try:
             if request.user.is_anonymous():
@@ -439,17 +429,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.user.message_set.create(message = unicode(e))
             return HttpResponseRedirect(reverse('index'))
 
-    answer_form = AnswerForm(question,request.user)
+    logging.debug('answer_sort_method=' + unicode(answer_sort_method))
+    #load answers
     answers = question.get_answers(user = request.user)
     answers = answers.select_related(depth=1)
-
-    favorited = question.has_favorite_by_user(request.user)
-    if request.user.is_authenticated():
-        question_vote = question.votes.select_related().filter(user=request.user)
-    else:
-        question_vote = None #is this correct?
-    if question_vote is not None and question_vote.count() > 0:
-        question_vote = question_vote[0]
 
     user_answer_votes = {}
     for answer in answers:
@@ -460,6 +443,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
                 vote_value = 1
             user_answer_votes[answer.id] = vote_value
 
+    view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
+    orderby = view_dic[answer_sort_method]
     if answers is not None:
         answers = answers.order_by("-accepted", orderby)
 
@@ -471,9 +456,55 @@ def question(request, id):#refactor - long subroutine. display question body, an
         else:
             filtered_answers.append(answer)
 
-    objects_list = Paginator(filtered_answers, ANSWERS_PAGE_SIZE)
-    page_objects = objects_list.page(page)
+    #modify variables to handle permalinks to comments and answers
+    linked_post_deleted = False
+    missing_answer_message = _(
+        'Sorry, this answer has been '
+        'deleted and is no longer accessible'
+    )
+    show_post = None
+    comment_order_number = None
+    if show_comment is not None:
+        #comments
+        try:
+            show_comment = models.Comment.objects.get(id = show_comment)
+            if show_comment.get_origin_post() != question:
+                return HttpResponseRedirect(show_comment.get_absolute_url())
+            show_page = show_comment.get_page_number(answers = filtered_answers)
+            comment_order_number = show_comment.get_order_number()
+            show_post = show_comment.content_object
+        except models.Comment.DoesNotExist:
+            missing_comment_message = _(
+                'Sorry, the comment has been '
+                'deleted and is no longer accessible'
+            )
+            request.user.message_set.create(message = missing_comment_message)
+            return HttpResponseRedirect(question.get_absolute_url())
+    elif show_answer is not None:
+        #answers
+        try:
+            show_post = models.Answer.objects.get(id = show_answer)
+            if show_post.question != question:
+                return HttpResponseRedirect(show_post.get_absolute_url())
+            if show_post.deleted:
+                if request.user.is_anonymous():
+                    linked_post_deleted = True
+                    missing_post_message = missing_answer_message
+                else:
+                    try:
+                        request.user.assert_can_see_deleted_post(show_post)
+                    except django_exceptions.PermissionDenied, e:
+                        missing_post_message = unicode(e)
+                        linked_post_deleted = True
+            show_page = show_post.get_page_number(answers = filtered_answers)
+        except models.Answer.DoesNotExist:
+            request.user.message_set.create(message = missing_answer_message)
+            return HttpResponseRedirect(question.get_absolute_url())
 
+    objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
+    page_objects = objects_list.page(show_page)
+
+    #count visits
     if functions.not_a_robot_request(request):
         #todo: split this out into a subroutine
         #todo: merge view counts per user and per session
@@ -513,9 +544,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     )
 
     paginator_data = {
-        'is_paginated' : (objects_list.count > ANSWERS_PAGE_SIZE),
+        'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),
         'pages': objects_list.num_pages,
-        'page': page,
+        'page': show_page,
         'has_previous': page_objects.has_previous(),
         'has_next': page_objects.has_next(),
         'previous': page_objects.previous_page_number(),
@@ -525,13 +556,22 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
 
+    favorited = question.has_favorite_by_user(request.user)
+    if request.user.is_authenticated():
+        question_vote = question.votes.select_related().filter(user=request.user)
+    else:
+        question_vote = None #is this correct?
+    if question_vote is not None and question_vote.count() > 0:
+        question_vote = question_vote[0]
+
+
     data = {
         'view_name': 'question',
         'active_tab': 'questions',
         'question' : question,
         'question_vote' : question_vote,
         'question_comment_count':question.comments.count(),
-        'answer' : answer_form,
+        'answer' : AnswerForm(question,request.user),
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
         'tags' : question.tags.all(),
@@ -539,7 +579,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'favorited' : favorited,
         'similar_questions' : question.get_similar_questions(),
         'language_code': translation.get_language(),
-        'paginator_context' : paginator_context
+        'paginator_context' : paginator_context,
+        'show_post': show_post,
+        'show_comment': show_comment,
+        'comment_order_number': comment_order_number
     }
     if request.user.is_authenticated():
         data['tags_autocomplete'] = _get_tags_cache_json()

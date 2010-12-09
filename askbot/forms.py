@@ -148,6 +148,49 @@ class SummaryField(forms.CharField):
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
 
+class ShowQuestionForm(forms.Form):
+    answer = forms.IntegerField(required = False)
+    comment = forms.IntegerField(required = False)
+    page = forms.IntegerField(required = False)
+    sort = forms.CharField(required = False)
+
+    def __init__(self, data, default_sort_method):
+        super(ShowQuestionForm, self).__init__(data)
+        self.default_sort_method = default_sort_method
+
+    def get_pruned_data(self):
+        nones = ('answer', 'comment', 'page')
+        for key in nones:
+            if self.cleaned_data[key] is None:
+                del self.cleaned_data[key]
+        if self.cleaned_data['sort'] == '':
+            del self.cleaned_data['sort']
+        return self.cleaned_data
+
+    def clean(self):
+        """this form must always be valid
+        should use defaults if the data is incomplete
+        or invalid"""
+        in_data = self.get_pruned_data()
+        out_data = dict()
+        if ('answer' in in_data) ^ ('comment' in in_data):
+            out_data['is_permalink'] = True
+            out_data['show_page'] = None
+            out_data['answer_sort_method'] = 'votes'
+            out_data['show_comment'] = in_data.get('comment', None)
+            out_data['show_answer'] = in_data.get('answer', None)
+        else:
+            out_data['is_permalink'] = False
+            out_data['show_page'] = in_data.get('page', 1)
+            out_data['answer_sort_method'] = in_data.get(
+                                                    'sort',
+                                                    self.default_sort_method
+                                                )
+            out_data['show_comment'] = None
+            out_data['show_answer'] = None
+        self.cleaned_data = out_data
+        return out_data
+
 class ChangeUserReputationForm(forms.Form):
     """Form that allows moderators and site administrators
     to adjust reputation of users.

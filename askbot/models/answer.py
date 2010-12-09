@@ -159,6 +159,18 @@ class Answer(content.Content, DeletableContent):
     def get_origin_post(self):
         return self.question
 
+    def get_page_number(self, answers = None):
+        """When question has many answers, answers are
+        paginated. This function returns number of the page
+        on which the answer will be shown, using the default
+        sort order. The result may depend on the visitor."""
+        order_number = 1
+        for answer in answers:
+            if self == answer:
+                break
+            order_number += 1
+        return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
+
     def get_response_receivers(self, exclude_list = None):
         """get list of users interested in this response
         update based on their participation in the question
@@ -201,7 +213,12 @@ class Answer(content.Content, DeletableContent):
         return self.question.title
 
     def get_absolute_url(self):
-        return '%s%s#%s' % (reverse('question', args=[self.question.id]), django_urlquote(slugify(self.question.title)), self.id)
+        return '%(base)s%(slug)s?answer=%(id)d#%(id)d' % \
+                {
+                    'base': reverse('question', args=[self.question.id]),
+                    'slug': django_urlquote(slugify(self.question.title)),
+                    'id': self.id
+                }
 
     def __unicode__(self):
         return self.html

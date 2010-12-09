@@ -372,6 +372,13 @@ class Question(content.Content, DeletableContent):
 
         return LazyList(get_data)
 
+    def get_page_number(self, answers = None):
+        """question always appears on its own
+        first page by definition. The answers 
+        parameter is not used here. The extra parameter is necessary
+        to maintain generality of the function call signature"""
+        return 1
+
     def get_similarity(self, other_question = None):
         """return number of tags in the other question
         that overlap with the current question (self)
