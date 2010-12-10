@@ -348,7 +348,7 @@ def user_assert_can_see_deleted_post(self, post = None):
 
     error_message = _(
                         'This post has been deleted and can be seen only '
-                        'by post ownwers, site administrators and moderators'
+                        'by post owners, site administrators and moderators'
                     )
     _assert_user_can(
         user = self,

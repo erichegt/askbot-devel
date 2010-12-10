@@ -27,6 +27,7 @@ from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
 import askbot
+from askbot import exceptions
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
@@ -392,8 +393,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """view that displays body of the question and 
     all answers to it
     """
-    question = get_object_or_404(models.Question, id=id)
-
     #todo: fix inheritance of sort method from questions
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
@@ -404,10 +403,59 @@ def question(request, id):#refactor - long subroutine. display question body, an
     is_permalink = form.cleaned_data['is_permalink']
     answer_sort_method = form.cleaned_data['answer_sort_method']
 
-    #redirect if slug in the url is wrong
+    #resolve comment and answer permalinks
+    #they go first because in theory both can be moved to another question
+    #this block "returns" show_post and assigns actual comment and answer
+    #to show_comment and show_answer variables
+    #in the case if the permalinked items or their parents are gone - redirect
+    #redirect also happens if id of the object's origin post != requested id
+    show_post = None #used for permalinks
+    #import pdb
+    #pdb.set_trace()
+    if show_comment is not None:
+        #comments
+        try:
+            show_comment = models.Comment.objects.get(id = show_comment)
+            if str(show_comment.get_origin_post().id) != id:
+                return HttpResponseRedirect(show_comment.get_absolute_url())
+            show_post = show_comment.content_object
+            show_comment.assert_is_visible_to(request.user)
+        except models.Comment.DoesNotExist:
+            error_message = _(
+                'Sorry, the comment you are looking for has been '
+                'deleted and is no longer accessible'
+            )
+            request.user.message_set.create(message = error_message)
+            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+        except exceptions.AnswerHidden, error:
+            request.user.message_set.create(message = unicode(error))
+            #use reverse function here because question is not yet loaded
+            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+        except exceptions.QuestionHidden, error:
+            request.user.message_set.create(message = unicode(error))
+            return HttpResponseRedirect(reverse('index'))
+
+    elif show_answer is not None:
+        #answers
+        try:
+            show_post = get_object_or_404(models.Answer, id = show_answer)
+            if str(show_post.question.id) != id:
+                return HttpResponseRedirect(show_post.get_absolute_url())
+            show_post.assert_is_visible_to(request.user)
+        except django_exceptions.PermissionDenied, error:
+            request.user.message_set.create(message = unicode(error))
+            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+
+    #load question and maybe refuse showing deleted question
     try:
-        assert(request.path == question.get_absolute_url())
-    except AssertionError:
+        question = get_object_or_404(models.Question, id=id)
+        question.assert_is_visible_to(request.user)
+    except exceptions.QuestionHidden, error:
+        request.user.message_set.create(message = unicode(error))
+        return HttpResponseRedirect(reverse('index'))
+
+    #redirect if slug in the url is wrong
+    if request.path != question.get_absolute_url():
         logging.debug('no slug match!')
         question_url = '?'.join((
                             question.get_absolute_url(),
@@ -415,19 +463,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
                         ))
         return HttpResponseRedirect(question_url)
 
-    #maybe refuse showing deleted question
-    if question.deleted:
-        try:
-            if request.user.is_anonymous():
-                msg = _(
-                        'Sorry, this question has been '
-                        'deleted and is no longer accessible'
-                    )
-                raise django_exceptions.PermissionDenied(msg)
-            request.user.assert_can_see_deleted_post(question)
-        except django_exceptions.PermissionDenied, e:
-            request.user.message_set.create(message = unicode(e))
-            return HttpResponseRedirect(reverse('index'))
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
     #load answers
@@ -456,52 +491,17 @@ def question(request, id):#refactor - long subroutine. display question body, an
         else:
             filtered_answers.append(answer)
 
-    #modify variables to handle permalinks to comments and answers
-    linked_post_deleted = False
-    missing_answer_message = _(
-        'Sorry, this answer has been '
-        'deleted and is no longer accessible'
-    )
-    show_post = None
+    #resolve page number and comment number for permalinks
     comment_order_number = None
-    if show_comment is not None:
-        #comments
-        try:
-            show_comment = models.Comment.objects.get(id = show_comment)
-            if show_comment.get_origin_post() != question:
-                return HttpResponseRedirect(show_comment.get_absolute_url())
-            show_page = show_comment.get_page_number(answers = filtered_answers)
-            comment_order_number = show_comment.get_order_number()
-            show_post = show_comment.content_object
-        except models.Comment.DoesNotExist:
-            missing_comment_message = _(
-                'Sorry, the comment has been '
-                'deleted and is no longer accessible'
-            )
-            request.user.message_set.create(message = missing_comment_message)
-            return HttpResponseRedirect(question.get_absolute_url())
-    elif show_answer is not None:
-        #answers
-        try:
-            show_post = models.Answer.objects.get(id = show_answer)
-            if show_post.question != question:
-                return HttpResponseRedirect(show_post.get_absolute_url())
-            if show_post.deleted:
-                if request.user.is_anonymous():
-                    linked_post_deleted = True
-                    missing_post_message = missing_answer_message
-                else:
-                    try:
-                        request.user.assert_can_see_deleted_post(show_post)
-                    except django_exceptions.PermissionDenied, e:
-                        missing_post_message = unicode(e)
-                        linked_post_deleted = True
-            show_page = show_post.get_page_number(answers = filtered_answers)
-        except models.Answer.DoesNotExist:
-            request.user.message_set.create(message = missing_answer_message)
-            return HttpResponseRedirect(question.get_absolute_url())
+    if show_comment:
+        show_page = show_comment.get_page_number(answers = filtered_answers)
+        comment_order_number = show_comment.get_order_number()
+    elif show_answer:
+        show_page = show_post.get_page_number(answers = filtered_answers)
 
     objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
+    if show_page > objects_list.num_pages:
+        return HttpResponseRediect(question.get_absolute_url())
     page_objects = objects_list.page(show_page)
 
     #count visits

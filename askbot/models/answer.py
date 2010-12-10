@@ -1,8 +1,11 @@
 import datetime
 from django.db import models
 from django.utils.http import urlquote  as django_urlquote
+from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core import exceptions as django_exceptions
 from django.conf import settings
+from askbot import exceptions
 from askbot.models.base import AnonymousContent, DeletableContent
 from askbot.models.base import ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
@@ -93,6 +96,29 @@ class Answer(content.Content, DeletableContent):
     parse = parse_post_text
     parse_and_save = parse_and_save_post
 
+    def assert_is_visible_to(self, user):
+        """raises QuestionHidden or AnswerHidden"""
+        try:
+            self.question.assert_is_visible_to(user)
+        except exceptions.QuestionHidden:
+            message = _(
+                        'Sorry, the answer you are looking for is '
+                        'no longer available, because the parent '
+                        'question has been removed'
+                       )
+            raise exceptions.QuestionHidden(message)
+        if self.deleted:
+            message = _(
+                    'Sorry, this answer has been '
+                    'removed and is no longer accessible'
+                )
+            if user.is_anonymous():
+                raise exceptions.AnswerHidden(message)
+            try:
+                user.assert_can_see_deleted_post(self)
+            except django_exceptions.PermissionDenied:
+                raise exceptions.AnswerHidden(message)
+
     def get_updated_activity_data(self, created = False):
         #todo: simplify this to always return latest revision for the second
         #part
@@ -164,7 +190,7 @@ class Answer(content.Content, DeletableContent):
         paginated. This function returns number of the page
         on which the answer will be shown, using the default
         sort order. The result may depend on the visitor."""
-        order_number = 1
+        order_number = 0
         for answer in answers:
             if self == answer:
                 break

@@ -2,7 +2,9 @@ import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import html as html_utils
+from django.utils.translation import ugettext as _
 from askbot import const
+from askbot import exceptions
 from askbot.models import base
 from askbot.models.user import EmailFeedSetting
 
@@ -98,6 +100,25 @@ class Comment(base.MetaContent, base.UserContent):
     #these two are methods
     parse = base.parse_post_text
     parse_and_save = base.parse_and_save_post
+
+    def assert_is_visible_to(self, user):
+        """raises QuestionHidden or AnswerHidden"""
+        try:
+            self.content_object.assert_is_visible_to(user)
+        except exceptions.QuestionHidden:
+            message = _(
+                        'Sorry, the comment you are looking for is no '
+                        'longer accessible, because the parent question '
+                        'has been removed'
+                       )
+            raise exceptions.QuestionHidden(message)
+        except exceptions.AnswerHidden:
+            message = _(
+                        'Sorry, the comment you are looking for is no '
+                        'longer accessible, because the parent answer '
+                        'has been removed'
+                       )
+            raise exceptions.AnswerHidden(message)
 
     def get_origin_post(self):
         return self.content_object.get_origin_post()

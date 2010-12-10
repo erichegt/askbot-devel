@@ -27,3 +27,12 @@ class EmailNotSent(exceptions.ImproperlyConfigured):
     """
     pass
 
+class QuestionHidden(exceptions.PermissionDenied):
+    """raised when user cannot see deleted question
+    """
+    pass
+
+class AnswerHidden(exceptions.PermissionDenied):
+    """raised when user cannot see deleted answer
+    """
+    pass

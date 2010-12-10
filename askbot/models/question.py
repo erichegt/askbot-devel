@@ -7,10 +7,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.http import urlquote as django_urlquote
 from django.core.urlresolvers import reverse
+from django.core import exceptions as django_exceptions
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
 import askbot
 import askbot.conf
+from askbot import exceptions
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
@@ -315,6 +317,20 @@ class Question(content.Content, DeletableContent):
 
     parse = parse_post_text
     parse_and_save = parse_and_save_post
+
+    def assert_is_visible_to(self, user):
+        """raises QuestionHidden"""
+        if self.deleted:
+            message = _(
+                    'Sorry, this question has been '
+                    'deleted and is no longer accessible'
+                )
+            if user.is_anonymous():
+                raise exceptions.QuestionHidden(message)
+            try:
+                user.assert_can_see_deleted_post(self)
+            except django_exceptions.PermissionDenied:
+                raise exceptions.QuestionHidden(message)
 
     def update_answer_count(self, save = True):
         """updates the denormalized field 'answer_count'
