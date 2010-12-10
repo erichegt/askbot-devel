@@ -204,6 +204,37 @@ class Activity(models.Model):
 
     def get_absolute_url(self):
         return self.content_object.get_absolute_url()
+        
+
+class EmailFeedSettingManager(models.Manager):
+    def filter_subscribers(
+                        self,
+                        potential_subscribers = None,
+                        feed_type = None,
+                        frequency = None
+                    ):
+        """returns set of users who have matching subscriptions
+        and if potential_subscribers is not none, search will
+        be limited to only potential subscribers,
+
+        otherwise search is unrestricted
+
+        todo: when EmailFeedSetting is merged into user table
+        this method may become unnecessary
+        """
+        matching_feeds = self.filter(
+                                        feed_type = feed_type,
+                                        frequency = frequency
+                                    )
+        if potential_subscribers is not None:
+            matching_feeds.filter(
+                            subscriber__in = potential_subscribers
+                        )
+        subscriber_set = set()
+        for feed in matching_feeds:
+            subscriber_set.add(feed.subscriber)
+
+        return subscriber_set
 
 class EmailFeedSetting(models.Model):
     #definitions of delays before notification for each type of notification frequency
@@ -253,6 +284,7 @@ class EmailFeedSetting(models.Model):
                                 )
     added_at = models.DateTimeField(auto_now_add=True)
     reported_at = models.DateTimeField(null=True)
+    objects = EmailFeedSettingManager()
 
     def __str__(self):
         if self.reported_at is None:
@@ -276,37 +308,6 @@ class EmailFeedSetting(models.Model):
         if len(similar) > 0:
             raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
-
-    @classmethod
-    def filter_subscribers(
-                        cls,
-                        potential_subscribers = None,
-                        feed_type = None,
-                        frequency = None
-                    ):
-        """returns set of users who have matching subscriptions
-        and if potential_subscribers is not none, search will
-        be limited to only potential subscribers,
-
-        otherwise search is unrestricted
-
-        todo: when EmailFeedSetting is merged into user table
-        this method may become unnecessary
-        """
-        matching_feeds = cls.objects.filter(
-                                        feed_type = feed_type,
-                                        frequency = frequency
-                                    )
-        if potential_subscribers is not None:
-            matching_feeds.filter(
-                            subscriber__in = potential_subscribers
-                        )
-        subscriber_set = set()
-        for feed in matching_feeds:
-            subscriber_set.add(feed.subscriber)
-
-        return subscriber_set
-
 
     def get_previous_report_cutoff_time(self):
         now = datetime.datetime.now()

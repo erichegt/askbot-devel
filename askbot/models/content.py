@@ -116,7 +116,7 @@ class Content(models.Model):
 
         #1) mention subscribers - common to questions and answers
         if mentioned_users:
-            mention_subscribers = EmailFeedSetting.filter_subscribers(
+            mention_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                             potential_subscribers = mentioned_users,
                                             feed_type = 'm_and_c',
                                             frequency = 'i'
@@ -132,7 +132,7 @@ class Content(models.Model):
         selective_subscribers = origin_post.followed_by.all()
         #print 'question followers are ', [s for s in selective_subscribers]
         if selective_subscribers:
-            selective_subscribers = EmailFeedSetting.filter_subscribers(
+            selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                 potential_subscribers = selective_subscribers,
                                 feed_type = 'q_sel',
                                 frequency = 'i'
@@ -142,7 +142,7 @@ class Content(models.Model):
 
 
         #3) whole forum subscibers
-        global_subscribers = EmailFeedSetting.filter_subscribers(
+        global_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
                                         )
@@ -172,7 +172,7 @@ class Content(models.Model):
             answer_authors.update(authors)
 
         if answer_authors:
-            answer_subscribers = EmailFeedSetting.filter_subscribers(
+            answer_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                     potential_subscribers = answer_authors,
                                     frequency = 'i',
                                     feed_type = 'q_ans',

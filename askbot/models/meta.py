@@ -198,7 +198,7 @@ class Comment(base.MetaContent, base.UserContent):
             potential_subscribers.update(mentioned_users)
 
         if potential_subscribers:
-            comment_subscribers = EmailFeedSetting.filter_subscribers(
+            comment_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                         potential_subscribers = potential_subscribers,
                                         feed_type = 'm_and_c',
                                         frequency = 'i'
@@ -209,7 +209,7 @@ class Comment(base.MetaContent, base.UserContent):
         origin_post = self.get_origin_post()
         selective_subscribers = origin_post.followed_by.all()
         if selective_subscribers:
-            selective_subscribers = EmailFeedSetting.filter_subscribers(
+            selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                     potential_subscribers = selective_subscribers,
                                     feed_type = 'q_sel',
                                     frequency = 'i'
@@ -221,7 +221,7 @@ class Comment(base.MetaContent, base.UserContent):
             subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
 
-        global_subscribers = EmailFeedSetting.filter_subscribers(
+        global_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
                                         )
