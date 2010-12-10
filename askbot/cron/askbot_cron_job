@@ -14,5 +14,3 @@ PROJECT_ROOT=$PYTHONPATH/$PROJECT_NAME
 
 #these are actual commands that are to be run
 python $PROJECT_ROOT/manage.py send_email_alerts
-python $PROJECT_ROOT/manage.py once_award_badges 
-python $PROJECT_ROOT/manage.py multi_award_badges
