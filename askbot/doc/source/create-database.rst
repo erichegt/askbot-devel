@@ -1,19 +1,13 @@
-.. _pre-requisites:
+.. _create-database:
 
-=========================
-Prerequisites for Askbot
-=========================
-Askbot installation currently requires:
+==========================
+Create database for Askbot
+==========================
 
-* Python_ version 2.4 - 2.6 (Version 3 is not yet supported)
-* MySQL_ version 5
-* access to an instance of MySQL database with full privileges
+Askbot has been successfully tested with `MySQL` and `PostgresQL` databases.
 
-For the production :ref:`deployment` you will also need a webserver capable to run
-python web applications.
-
-Creating a database instance
------------------------------
+MySQL
+-----
 This section assumes that MySQL is installed and is up and running.
 
 Database can be prepared via your hosting control panel, if available, or
