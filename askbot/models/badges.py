@@ -20,7 +20,7 @@ corresponding event name, actor (user object), context_object and optionally
 import datetime
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
@@ -147,7 +147,7 @@ class Disciplined(Badge):
 class PeerPressure(Badge):
     def __init__(self):
         description = _(
-            'Deleted own post with %(votes)s or more downvotes'
+            u'Deleted own post with %(votes)s or more downvotes'
         ) % {'votes': askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES}
         super(PeerPressure, self).__init__(
             key = 'peer-pressure',
