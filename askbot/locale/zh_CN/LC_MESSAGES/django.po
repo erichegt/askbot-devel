@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-11 23:41-0600\n"
-"PO-Revision-Date: 2010-12-13 03:38\n"
+"PO-Revision-Date: 2010-12-14 08:56\n"
 "Last-Translator: <suyu8776@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr "标题"
 
 #: forms.py:55
 msgid "please enter a descriptive title for your question"
-msgstr "请输入对问题具有描述性质的标题 - “帮忙！紧急求助！”不是建议的提问方式。"
+msgstr "请输入对问题具有描述性质的标题 - “帮忙！紧急求助！”是不建议的标题。"
 
 #: forms.py:60
 msgid "title must be > 10 characters"
@@ -67,14 +67,14 @@ msgstr " 标签不能为空。"
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "最多只能有%(tag_count)d个标签"
-msgstr[1] "最多只能有%(tag_count)d个标签"
+msgstr[1] ""
 
 #: forms.py:111
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "标签最多只能有%(max_chars)d个字符"
-msgstr[1] "标签最多只能有%(max_chars)d个字符"
+msgstr[1] ""
 
 #: forms.py:119
 msgid "use-these-chars-in-tags"
@@ -105,7 +105,7 @@ msgstr "输入要添加或减去的分数"
 
 #: forms.py:218 const/__init__.py:220
 msgid "approved"
-msgstr "认证"
+msgstr "已认证"
 
 #: forms.py:219 const/__init__.py:221
 msgid "watched"
@@ -129,7 +129,7 @@ msgstr "修改状态为"
 
 #: forms.py:270
 msgid "which one?"
-msgstr "哪个？"
+msgstr "哪个?"
 
 #: forms.py:291
 msgid "Cannot change own status"
@@ -1097,7 +1097,7 @@ msgstr "最新问题"
 #: const/__init__.py:41 skins/default/templates/users.html:25
 #: skins/default/templates/users.html:26
 msgid "oldest"
-msgstr "最早问题"
+msgstr "最早加入排在前面"
 
 #: const/__init__.py:42
 msgid "active"
@@ -1575,7 +1575,6 @@ msgstr "默认值: %s"
 
 # todo take these out of settings
 #: deps/livesettings/values.py:589
-#fuzzy, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "只允许上传'%(file_types)s'类型的文件！"
 
@@ -2600,7 +2599,6 @@ msgstr "评论员"
 
 # todo - check if it's indeed plural
 #: models/badges.py:721
-#, fuzzy
 msgid "Posted 10 comments"
 msgstr "已发布10条评论"
 
@@ -3062,7 +3060,7 @@ msgstr "最多%(tag_count)s个标签，每个标签长度小于%(max_chars)s个�
 
 #: skins/default/templates/faq.html:3 skins/default/templates/faq.html.py:6
 msgid "FAQ"
-msgstr ""
+msgstr "问答"
 
 #: skins/default/templates/faq.html:6
 msgid "Frequently Asked Questions "
@@ -3219,7 +3217,7 @@ msgstr "还有其他问题？"
 #: skins/default/templates/faq.html:110
 #, python-format
 msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "请在这里%(ask_question_url)s提交你的疑问，请一起来完善我们的"
+msgstr "请提交你的疑问%(ask_question_url)s,帮助我们一起完善网站"
 
 #: skins/default/templates/faq.html:112
 #: skins/default/templates/header.html:100
@@ -3494,7 +3492,7 @@ msgstr "点击退出登录"
 
 #: skins/default/templates/macros.html:26
 msgid "karma:"
-msgstr "积分"
+msgstr "按积分排序"
 
 #: skins/default/templates/macros.html:30
 msgid "badges:"
@@ -3756,7 +3754,7 @@ msgstr "投票次数最多的显示在最前面"
 
 #: skins/default/templates/question.html:181
 msgid "popular answers"
-msgstr "投票最多"
+msgstr "受欢迎的答案"
 
 #: skins/default/templates/question.html:199
 #: skins/default/templates/question.html:200
@@ -3924,7 +3922,7 @@ msgstr "问题列表"
 
 #: skins/default/templates/questions.html:9
 msgid "In:"
-msgstr ""
+msgstr "选择:"
 
 #: skins/default/templates/questions.html:18
 msgid "see unanswered questions"
@@ -4057,12 +4055,12 @@ msgstr "重新开始"
 #: skins/default/templates/questions.html:180
 #: skins/default/templates/unused/questions_ajax.html:109
 msgid "Please always feel free to ask your question!"
-msgstr "请随便提问"
+msgstr "发布你自己的问题"
 
 #: skins/default/templates/questions.html:184
 #: skins/default/templates/unused/questions_ajax.html:113
 msgid "Did not find what you were looking for?"
-msgstr "不知道你在找什么?"
+msgstr "你找的问题没有?"
 
 #: skins/default/templates/questions.html:185
 #: skins/default/templates/unused/questions_ajax.html:114
@@ -4392,7 +4390,6 @@ msgstr[0] "<span class=\"count\">%(counter)s</span>个答案"
 msgstr[1] "<span class=\"count\">%(counter)s</span>个答案"
 
 #: skins/default/templates/user_stats.html:20
-#fuzzy, python-format
 msgid "the answer has been voted for %(answer_score)s times"
 msgstr "该回答总共有%d个投票"
 
@@ -4483,7 +4480,7 @@ msgstr "收藏"
 
 #: skins/default/templates/user_tabs.html:19
 msgid "recent activity"
-msgstr "最近活动"
+msgstr "最近活跃"
 
 #: skins/default/templates/user_tabs.html:20
 msgid "activity"
@@ -4520,11 +4517,11 @@ msgstr "用户列表"
 
 #: skins/default/templates/users.html:19 skins/default/templates/users.html:20
 msgid "recent"
-msgstr "最新加入"
+msgstr "最新注册排在前面"
 
 #: skins/default/templates/users.html:31 skins/default/templates/users.html:32
 msgid "by username"
-msgstr "用户名"
+msgstr "按用户名排序"
 
 #: skins/default/templates/users.html:38
 #, python-format
