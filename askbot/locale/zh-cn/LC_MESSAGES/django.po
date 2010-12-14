@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-11 23:41-0600\n"
-"PO-Revision-Date: 2010-12-12 08:06\n"
+"PO-Revision-Date: 2010-12-13 03:38\n"
 "Last-Translator: <suyu8776@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,8 @@ msgstr ""
 "X-Translated-Using: django-rosetta 0.5.6\n"
 
 #: exceptions.py:9
-#, fuzzy
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "匿名用户不能投票"
+msgstr "对不起,匿名用户不能使用此功能"
 
 #: feed.py:22
 msgid " - "
@@ -64,18 +63,18 @@ msgid "tags are required"
 msgstr " 标签不能为空。"
 
 #: forms.py:102
-#, fuzzy, python-format
+#, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] "最多只能有5个标签"
-msgstr[1] "最多只能有5个标签"
+msgstr[0] "最多只能有%(tag_count)d个标签"
+msgstr[1] "最多只能有%(tag_count)d个标签"
 
 #: forms.py:111
-#, fuzzy, python-format
+#, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] "每个标签的长度不超过20"
-msgstr[1] "每个标签的长度不超过20"
+msgstr[0] "标签最多只能有%(max_chars)d个字符"
+msgstr[1] "标签最多只能有%(max_chars)d个字符"
 
 #: forms.py:119
 msgid "use-these-chars-in-tags"
@@ -113,7 +112,6 @@ msgid "watched"
 msgstr "查看"
 
 #: forms.py:220 const/__init__.py:222
-#, fuzzy
 msgid "suspended"
 msgstr "暂停使用"
 
@@ -126,18 +124,16 @@ msgid "moderator"
 msgstr "版主"
 
 #: forms.py:243
-#, fuzzy
 msgid "Change status to"
-msgstr "修改问题标签"
+msgstr "修改状态为"
 
 #: forms.py:270
 msgid "which one?"
 msgstr "哪个？"
 
 #: forms.py:291
-#, fuzzy
 msgid "Cannot change own status"
-msgstr "不能给自己的帖子投票"
+msgstr "不能修改自己的状态"
 
 #: forms.py:297
 msgid "Cannot turn other user to moderator"
@@ -161,17 +157,14 @@ msgid "Message text"
 msgstr "信息文本"
 
 #: forms.py:403
-#, fuzzy
 msgid "Your name:"
 msgstr "用户名"
 
 #: forms.py:404
-#, fuzzy
 msgid "Email (not shared with anyone):"
-msgstr "电子邮件（<i>用于头像显示服务</i>）"
+msgstr "电子邮件"
 
 #: forms.py:405
-#, fuzzy
 msgid "Your message:"
 msgstr "你的信息:"
 
@@ -204,9 +197,8 @@ msgid "Profile"
 msgstr "个人简介"
 
 #: forms.py:536
-#, fuzzy
 msgid "Screen name"
-msgstr "姓名"
+msgstr "昵称"
 
 #: forms.py:561 forms.py:562
 msgid "this email has already been registered, please use another one"
@@ -250,88 +242,71 @@ msgstr "请从以上选项中选择一项"
 
 # footer.html
 #: urls.py:45
-#, fuzzy
 msgid "about/"
 msgstr "关于本站"
 
 #: urls.py:46 conf/site_settings.py:79
-#, fuzzy
 msgid "faq/"
 msgstr "常见问题"
 
 #: urls.py:47
-#, fuzzy
 msgid "privacy/"
 msgstr "隐私政策"
 
 #: urls.py:48
-#, fuzzy
 msgid "logout/"
 msgstr "退出登录"
 
 #: urls.py:50 urls.py:55
-#, fuzzy
 msgid "answers/"
 msgstr "回答"
 
 #: urls.py:50 urls.py:71 urls.py:167
-#, fuzzy
 msgid "edit/"
 msgstr "编辑"
 
 #: urls.py:55 urls.py:101
-#, fuzzy
 msgid "revisions/"
-msgstr "修正"
+msgstr "版本"
 
 #: urls.py:61 urls.py:66 urls.py:71 urls.py:76 urls.py:81 urls.py:86
 #: urls.py:91 urls.py:96 urls.py:101
-#, fuzzy
 msgid "questions/"
 msgstr "问题"
 
 #: urls.py:66
-#, fuzzy
 msgid "ask/"
 msgstr "提问"
 
 #: urls.py:76
-#, fuzzy
 msgid "retag/"
 msgstr "修改标签"
 
 #: urls.py:81
-#, fuzzy
 msgid "close/"
 msgstr "关闭"
 
 #: urls.py:86
-#, fuzzy
 msgid "reopen/"
 msgstr "打开"
 
 #: urls.py:91
-#, fuzzy
 msgid "answer/"
 msgstr "回答"
 
 #: urls.py:96
-#, fuzzy
 msgid "vote/"
 msgstr "票"
 
 #: urls.py:117
-#, fuzzy
 msgid "command/"
 msgstr "命令"
 
 #: urls.py:133
-#, fuzzy
 msgid "question/"
 msgstr "提问"
 
 #: urls.py:138
-#, fuzzy
 msgid "tags/"
 msgstr "标签"
 
@@ -352,12 +327,10 @@ msgid "unmark-tag/"
 msgstr "未标记标签"
 
 #: urls.py:161 urls.py:167 urls.py:172
-#, fuzzy
 msgid "users/"
 msgstr "用户"
 
 #: urls.py:177 urls.py:182
-#, fuzzy
 msgid "badges/"
 msgstr "奖牌榜"
 
@@ -374,23 +347,19 @@ msgid "upload/"
 msgstr "上传"
 
 #: urls.py:203
-#, fuzzy
 msgid "search/"
 msgstr "搜索"
 
 #: urls.py:204
-#, fuzzy
 msgid "feedback/"
 msgstr "问题反馈"
 
 #: urls.py:205 setup_templates/settings.py:182
 #: skins/default/templates/authopenid/signin.html:249
-#, fuzzy
 msgid "account/"
-msgstr "新帐号"
+msgstr "账户"
 
 #: conf/badges.py:12
-#, fuzzy
 msgid "Badge settings"
 msgstr "设置"
 
@@ -431,18 +400,15 @@ msgid "Great Question: minimum upvotes for the question"
 msgstr "优秀的问题:问题的最小推荐票数"
 
 #: conf/badges.py:102
-#, fuzzy
 msgid "Popular Question: minimum views"
 msgstr "受欢迎问题:最小浏览次数"
 
 #: conf/badges.py:111
-#, fuzzy
 msgid "Notable Question: minimum views"
 msgstr "著名的问题:最小浏览次数"
 
 # close.html
 #: conf/badges.py:120
-#, fuzzy
 msgid "Famous Question: minimum views"
 msgstr "极好的问题:最小浏览次数"
 
@@ -475,12 +441,10 @@ msgid "Associate Editor: minimum number of edits"
 msgstr "联合编辑:最小编辑数"
 
 #: conf/badges.py:192
-#, fuzzy
 msgid "Favorite Question: minimum stars"
 msgstr "收藏问题:最少星数"
 
 #: conf/badges.py:201
-#, fuzzy
 msgid "Stellar Question: minimum stars"
 msgstr "星号问题:最少星数"
 
@@ -509,9 +473,8 @@ msgid "Active email verification is done by sending a verification key in email"
 msgstr "通过发送确认邮件完成邮件激活确认"
 
 #: conf/email.py:57
-#, fuzzy
 msgid "Allow only one account per email address"
-msgstr "每个邮件地址只允许一个账户"
+msgstr "每个邮件地址只允许关联一个账户"
 
 #: conf/email.py:66
 msgid "Fake email for anonymous user"
@@ -542,7 +505,7 @@ msgstr ""
 
 #: conf/external_keys.py:34
 msgid "Google Analytics key"
-msgstr ""
+msgstr "Google Analytics key"
 
 #: conf/external_keys.py:36
 #, python-format
@@ -583,7 +546,6 @@ msgid "Facebook secret key"
 msgstr "Facebook secret key"
 
 #: conf/external_keys.py:103
-#, fuzzy
 msgid "Twitter consumer key"
 msgstr "Twitter consumer key"
 
@@ -616,9 +578,8 @@ msgid "URL for the LDAP service"
 msgstr "LDAP服务URL"
 
 #: conf/external_keys.py:170
-#, fuzzy
 msgid "Explain how to change LDAP password"
-msgstr "解释如何修改LDAP密码"
+msgstr "如何修改LDAP密码"
 
 #: conf/flatpages.py:10
 msgid "Flatpages - about, privacy policy, etc."
@@ -674,14 +635,12 @@ msgid "Maximum number of tags per question"
 msgstr "每个问题的最多标签数"
 
 #: conf/forum_data_rules.py:82
-#, fuzzy
 msgid "Number of questions to list by default"
 msgstr "默认显示的问题数"
 
 #: conf/forum_data_rules.py:92
-#, fuzzy
 msgid "What should \"unanswered question\" mean?"
-msgstr "\"未回答\"问题意味着什么?"
+msgstr "\"未回答\"问题是什么?"
 
 #: conf/markup.py:15
 msgid "Markup formatting"
@@ -717,23 +676,19 @@ msgid "Minimum reputation required to perform actions"
 msgstr "完成这个动作需要最小积分"
 
 #: conf/minimum_reputation.py:20
-#, fuzzy
 msgid "Upvote"
 msgstr "投赞成票"
 
 #: conf/minimum_reputation.py:29
-#, fuzzy
 msgid "Downvote"
 msgstr "投反对票"
 
 #: conf/minimum_reputation.py:38
-#, fuzzy
 msgid "Flag offensive"
-msgstr "垃圾帖？"
+msgstr "垃圾帖"
 
 # todo - check if it's indeed plural
 #: conf/minimum_reputation.py:47
-#, fuzzy
 msgid "Leave comments"
 msgstr "添加留言"
 
@@ -742,18 +697,15 @@ msgid "Delete comments posted by others"
 msgstr "删除其他人的留言"
 
 #: conf/minimum_reputation.py:65
-#, fuzzy
 msgid "Delete questions and answers posted by others"
 msgstr "删除任何一个问题或答案，及其他管理功能"
 
 #: conf/minimum_reputation.py:74
-#, fuzzy
 msgid "Upload files"
 msgstr "上传文件"
 
 # close.html
 #: conf/minimum_reputation.py:83
-#, fuzzy
 msgid "Close own questions"
 msgstr "关闭自己的问题"
 
@@ -762,12 +714,10 @@ msgid "Retag questions posted by other people"
 msgstr "为其他人发布的问题重新设置标签"
 
 #: conf/minimum_reputation.py:101
-#, fuzzy
 msgid "Reopen own questions"
 msgstr "重设问题"
 
 #: conf/minimum_reputation.py:110
-#, fuzzy
 msgid "Edit community wiki posts"
 msgstr "编辑wiki类问题"
 
@@ -776,13 +726,11 @@ msgid "Edit posts authored by other people"
 msgstr "编辑其他人的发布权限"
 
 #: conf/minimum_reputation.py:128
-#, fuzzy
 msgid "View offensive flags"
 msgstr "查看标记垃圾帖"
 
 # must have extra space after in english
 #: conf/minimum_reputation.py:137
-#, fuzzy
 msgid "Close questions asked by others"
 msgstr "关闭其他人的问题"
 
@@ -807,7 +755,6 @@ msgid "Gain for the author of accepted answer"
 msgstr "标记接受回答的作者"
 
 #: conf/reputation_changes.py:48
-#, fuzzy
 msgid "Gain for accepting best answer"
 msgstr "标记最佳答案"
 
@@ -873,7 +820,6 @@ msgstr "为搜索引擎添加的网站描述"
 
 # footer.html
 #: conf/site_settings.py:58
-#, fuzzy
 msgid "Askbot"
 msgstr "关于本站"
 
@@ -894,7 +840,6 @@ msgid "If you change this url from the default - then you will also probably wan
 msgstr "如果你想改变默认url，你可能想挑战下面内容的翻译："
 
 #: conf/site_settings.py:98
-#, fuzzy
 msgid "Feedback site URL"
 msgstr "问题反馈URL"
 
@@ -1012,12 +957,10 @@ msgid "Foreground color for accepted answer"
 msgstr "接受回答前景色"
 
 #: conf/skin_general_settings.py:15
-#, fuzzy
 msgid "Skin and User Interface settings"
-msgstr "用户参数的设置"
+msgstr "主题设置"
 
 #: conf/skin_general_settings.py:22
-#, fuzzy
 msgid "Q&A site logo"
 msgstr "网站logo"
 
@@ -1051,7 +994,6 @@ msgid "If checked, all forum functions will be shown to users, regardless of the
 msgstr "如果选择了,所有的网站功能将被展示给用户,不管他们的积分是多少.尽管使用了这些功能,适度规则,积分和其他限制仍然有作用."
 
 #: conf/skin_general_settings.py:90
-#, fuzzy
 msgid "Select skin"
 msgstr "选择主题"
 
@@ -1072,9 +1014,8 @@ msgid "Check to enable sharing of questions on Twitter and Facebook"
 msgstr "激活在Twitter和Facebook上共享问答"
 
 #: conf/user_settings.py:10
-#, fuzzy
 msgid "User policy settings"
-msgstr "用户参数的设置"
+msgstr "用户隐私设置"
 
 #: conf/user_settings.py:18
 msgid "Allow editing user screen name"
@@ -1118,7 +1059,6 @@ msgstr "完全重复的问题"
 
 # chinese translation is domain specific
 #: const/__init__.py:10
-#, fuzzy
 msgid "question is off-topic or not relevant"
 msgstr "偏离主题的问题"
 
@@ -1127,7 +1067,6 @@ msgid "too subjective and argumentative"
 msgstr "太主观性、引起争吵的问题"
 
 #: const/__init__.py:12
-#, fuzzy
 msgid "not a real question"
 msgstr "不是一个真正的问题"
 
@@ -1136,12 +1075,10 @@ msgid "the question is answered, right answer was accepted"
 msgstr "问题已经解决，已得到正确答案"
 
 #: const/__init__.py:14
-#, fuzzy
 msgid "question is not relevant or outdated"
 msgstr "已经过时、不可重现的问题"
 
 #: const/__init__.py:15
-#, fuzzy
 msgid "question contains offensive or malicious remarks"
 msgstr "恶意言论"
 
@@ -1163,23 +1100,20 @@ msgid "oldest"
 msgstr "最早问题"
 
 #: const/__init__.py:42
-#, fuzzy
 msgid "active"
-msgstr "活跃问题"
+msgstr "活跃"
 
 #: const/__init__.py:43
-#, fuzzy
 msgid "inactive"
-msgstr "不活跃问题"
+msgstr "不活跃"
 
 #: const/__init__.py:44
 msgid "hottest"
 msgstr "热门问题"
 
 #: const/__init__.py:45
-#, fuzzy
 msgid "coldest"
-msgstr "最酷问题"
+msgstr "最酷"
 
 # "最有价值问题"
 # "最新问题"
@@ -1190,12 +1124,10 @@ msgstr "最有价值的问题"
 # "最有价值问题"
 # "最新问题"
 #: const/__init__.py:47
-#, fuzzy
 msgid "least voted"
-msgstr "最有知识的问题"
+msgstr "投票最少"
 
 #: const/__init__.py:48
-#, fuzzy
 msgid "relevance"
 msgstr "相关"
 
@@ -1205,32 +1137,26 @@ msgid "all"
 msgstr "所有"
 
 #: const/__init__.py:56 skins/default/templates/questions.html:19
-#, fuzzy
 msgid "unanswered"
 msgstr "未回答"
 
 #: const/__init__.py:57 skins/default/templates/questions.html:25
-#, fuzzy
 msgid "favorite"
 msgstr "收藏"
 
 #: const/__init__.py:71
-#, fuzzy
 msgid "Question has no answers"
-msgstr "没有答案的问题"
+msgstr "未回答的问题"
 
 #: const/__init__.py:72
-#, fuzzy
 msgid "Question has no accepted answers"
-msgstr "没有可接受答案的问题"
+msgstr "仍没有正确答案的问题"
 
 #: const/__init__.py:112
-#, fuzzy
 msgid "asked a question"
 msgstr "我要提问"
 
 #: const/__init__.py:113
-#, fuzzy
 msgid "answered a question"
 msgstr "回答问题"
 
@@ -1239,7 +1165,6 @@ msgid "commented question"
 msgstr "评论问题"
 
 #: const/__init__.py:115
-#, fuzzy
 msgid "commented answer"
 msgstr "评论回答"
 
@@ -1304,12 +1229,10 @@ msgid "mentioned in the post"
 msgstr "发布提醒"
 
 #: const/__init__.py:181
-#, fuzzy
 msgid "question_answered"
 msgstr "回答的问题"
 
 #: const/__init__.py:182
-#, fuzzy
 msgid "question_commented"
 msgstr "留言的问题"
 
@@ -1358,7 +1281,6 @@ msgid "weekly"
 msgstr "每周"
 
 #: const/__init__.py:204
-#, fuzzy
 msgid "no email"
 msgstr "没有邮件"
 
@@ -1380,27 +1302,23 @@ msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr "第一次来？查看<a href=\"%s\">FAQ</a>!"
 
 #: deps/django_authopenid/forms.py:116 deps/django_authopenid/views.py:137
-#, fuzzy
 msgid "i-names are not supported"
 msgstr "基本的HTML标签也是支持的"
 
 #: deps/django_authopenid/forms.py:237
-#, fuzzy, python-format
+#, python-format
 msgid "Please enter your %(username_token)s"
 msgstr "请输入%(username_token)s"
 
 #: deps/django_authopenid/forms.py:263
-#, fuzzy
 msgid "Please, enter your user name"
 msgstr "请输入用户名"
 
 #: deps/django_authopenid/forms.py:267
-#, fuzzy
 msgid "Please, enter your password"
 msgstr "请输入密码"
 
 #: deps/django_authopenid/forms.py:274 deps/django_authopenid/forms.py:278
-#, fuzzy
 msgid "Please, enter your new password"
 msgstr "请输入新密码"
 
@@ -1414,7 +1332,6 @@ msgid "Please choose password > %(len)s characters"
 msgstr "密码长度必须大于%(len)s"
 
 #: deps/django_authopenid/forms.py:336
-#, fuzzy
 msgid "Current password"
 msgstr "当前密码"
 
@@ -1441,12 +1358,10 @@ msgid "signin/"
 msgstr "登录"
 
 #: deps/django_authopenid/urls.py:13
-#, fuzzy
 msgid "newquestion/"
 msgstr "提问"
 
 #: deps/django_authopenid/urls.py:14
-#, fuzzy
 msgid "newanswer/"
 msgstr "回答"
 
@@ -1463,22 +1378,19 @@ msgid "complete-oauth/"
 msgstr "完成验证"
 
 #: deps/django_authopenid/urls.py:24
-#, fuzzy
 msgid "register/"
 msgstr "注册"
 
 #: deps/django_authopenid/urls.py:26
-#, fuzzy
 msgid "signup/"
 msgstr "登录"
 
 #: deps/django_authopenid/urls.py:34
-#, fuzzy
 msgid "recover/"
 msgstr "恢复"
 
 #: deps/django_authopenid/util.py:196
-#, fuzzy, python-format
+#, python-format
 msgid "%(site)s user name and password"
 msgstr "使用%(site)s 帐号密码登录"
 
@@ -1488,7 +1400,6 @@ msgid "Create a password-protected account"
 msgstr "创建一个密码保护账户"
 
 #: deps/django_authopenid/util.py:203
-#, fuzzy
 msgid "Change your password"
 msgstr "修改密码"
 
@@ -1497,29 +1408,24 @@ msgid "Sign in with Yahoo"
 msgstr "使用Yahoo用户登录"
 
 #: deps/django_authopenid/util.py:272
-#, fuzzy
 msgid "AOL screen name"
 msgstr "AOL用户名"
 
 #: deps/django_authopenid/util.py:280
-#, fuzzy
 msgid "OpenID url"
 msgstr "OpenID url"
 
 # translation and user name validation are language-specific
 #: deps/django_authopenid/util.py:297
-#, fuzzy
 msgid "MyOpenid user name"
 msgstr "MyOpenid用户名"
 
 # translation and user name validation are language-specific
 #: deps/django_authopenid/util.py:305 deps/django_authopenid/util.py:313
-#, fuzzy
 msgid "Flickr user name"
 msgstr "Flickr 用户名"
 
 #: deps/django_authopenid/util.py:321
-#, fuzzy
 msgid "Technorati user name"
 msgstr "Technorati 用户名"
 
@@ -1537,24 +1443,21 @@ msgstr "LiveJournal 博客名称"
 
 # translation and user name validation are language-specific
 #: deps/django_authopenid/util.py:353
-#, fuzzy
 msgid "ClaimID user name"
 msgstr "ClaimID 用户名"
 
 # translation and user name validation are language-specific
 #: deps/django_authopenid/util.py:361
-#, fuzzy
 msgid "Vidoop user name"
 msgstr "Vidoop 用户名"
 
 # translation and user name validation are language-specific
 #: deps/django_authopenid/util.py:369
-#, fuzzy
 msgid "Verisign user name"
-msgstr "Verisign用户名只能"
+msgstr "Verisign用户名"
 
 #: deps/django_authopenid/util.py:393
-#, fuzzy, python-format
+#, python-format
 msgid "Change your %(provider)s password"
 msgstr "修改%(provider)s密码"
 
@@ -1569,12 +1472,12 @@ msgid "Create password for %(provider)s"
 msgstr "为%(provider)s创建密码"
 
 #: deps/django_authopenid/util.py:410
-#, fuzzy, python-format
+#, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "链接你的%(provider)s账户到%(site_name)s"
 
 #: deps/django_authopenid/util.py:419
-#, fuzzy, python-format
+#, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "使用%(provider)s帐号密码登录"
 
@@ -1595,7 +1498,6 @@ msgid "Unfortunately, there was some problem when connecting to %(provider)s, pl
 msgstr "很不幸,当链接%(provider)s时出现一些问题,请重试或使用其他的服务"
 
 #: deps/django_authopenid/views.py:349
-#, fuzzy
 msgid "Your new password saved"
 msgstr "你的新密码已保存"
 
@@ -1604,7 +1506,6 @@ msgid "Please click any of the icons below to sign in"
 msgstr "请点击下面任何一个图标登录"
 
 #: deps/django_authopenid/views.py:513
-#, fuzzy
 msgid "Account recovery email sent"
 msgstr "发送账户恢复邮件"
 
@@ -1652,12 +1553,10 @@ msgid "Please check your email and visit the enclosed link."
 msgstr "请检查你的邮件并访问其内部链接"
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
-#, fuzzy
 msgid "Site"
 msgstr "网站"
 
 #: deps/livesettings/values.py:107
-#, fuzzy
 msgid "Base Settings"
 msgstr "基本设置"
 
@@ -1676,13 +1575,12 @@ msgstr "默认值: %s"
 
 # todo take these out of settings
 #: deps/livesettings/values.py:589
-#, fuzzy, python-format
+#fuzzy, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "只允许上传'%(file_types)s'类型的文件！"
 
 #: deps/livesettings/templates/livesettings/_admin_site_views.html:4
 #: skins/default/templates/askbot.deps.livesettings/_admin_site_views.html:4
-#, fuzzy
 msgid "Sites"
 msgstr "网站"
 
@@ -1690,7 +1588,6 @@ msgstr "网站"
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/default/templates/askbot.deps.livesettings/group_settings.html:11
 #: skins/default/templates/askbot.deps.livesettings/site_settings.html:23
-#, fuzzy
 msgid "Documentation"
 msgstr "文档"
 
@@ -1706,7 +1603,6 @@ msgstr "修改密码"
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/default/templates/askbot.deps.livesettings/group_settings.html:11
 #: skins/default/templates/askbot.deps.livesettings/site_settings.html:23
-#, fuzzy
 msgid "Log out"
 msgstr "退出登录"
 
@@ -1714,14 +1610,12 @@ msgstr "退出登录"
 #: deps/livesettings/templates/livesettings/site_settings.html:26
 #: skins/default/templates/askbot.deps.livesettings/group_settings.html:14
 #: skins/default/templates/askbot.deps.livesettings/site_settings.html:26
-#, fuzzy
 msgid "Home"
 msgstr "首页"
 
 # page title
 #: deps/livesettings/templates/livesettings/group_settings.html:15
 #: skins/default/templates/askbot.deps.livesettings/group_settings.html:15
-#, fuzzy
 msgid "Edit Group Settings"
 msgstr "修改组设置"
 
@@ -1750,7 +1644,6 @@ msgstr "你没有权限修改这些值"
 # book.html line 123 must be empty in english
 #: deps/livesettings/templates/livesettings/group_settings.html:68
 #: skins/default/templates/askbot.deps.livesettings/group_settings.html:68
-#, fuzzy
 msgid "Setting groups"
 msgstr "设置组"
 
@@ -1814,7 +1707,6 @@ msgstr "不正确的请求"
 
 # base_content.html
 #: importers/stackexchange/management/commands/load_stackexchange.py:126
-#, fuzzy
 msgid "Congratulations, you are now an Administrator"
 msgstr "恭喜您，社区给您颁发了奖牌"
 
@@ -1824,7 +1716,6 @@ msgid "\" and \"%s\""
 msgstr "\" 和 \"%s\""
 
 #: management/commands/send_email_alerts.py:108
-#, fuzzy
 msgid "\" and more"
 msgstr "查看更多"
 
@@ -1843,7 +1734,6 @@ msgstr[0] "%(name)s, %(num)d 个问题的更新标题"
 msgstr[1] "%(name)s, %(num)d 个问题的更新标题"
 
 #: management/commands/send_email_alerts.py:489
-#, fuzzy
 msgid "new question"
 msgstr "提问"
 
@@ -1893,56 +1783,46 @@ msgid "Deleted own post with score of -3 or lower"
 msgstr "删除自己-3分或更低的问题"
 
 #: migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Nice answer"
 msgstr "好回答"
 
 #: migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "nice-answer"
 msgstr "好回答"
 
 #: migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Answer voted up 10 times"
 msgstr "投票10次以上的回答"
 
 #: migrations/0005_install_badges.py:14 models/badges.py:339
-#, fuzzy
 msgid "Nice Question"
 msgstr "好问题"
 
 #: migrations/0005_install_badges.py:14
-#, fuzzy
 msgid "nice-question"
 msgstr "好提问"
 
 #: migrations/0005_install_badges.py:14
-#, fuzzy
 msgid "Question voted up 10 times"
 msgstr "投票10次以上的问题"
 
 #: migrations/0005_install_badges.py:15 models/badges.py:576
-#, fuzzy
 msgid "Pundit"
-msgstr "编辑"
+msgstr "学者"
 
 #: migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "pundit"
-msgstr "编辑"
+msgstr "学者"
 
 #: migrations/0005_install_badges.py:15 models/badges.py:579
 msgid "Left 10 comments with score of 10 or more"
 msgstr "留言超过10且得分上10的问题"
 
 #: migrations/0005_install_badges.py:16 models/badges.py:413
-#, fuzzy
 msgid "Popular Question"
 msgstr "受欢迎的问题"
 
 #: migrations/0005_install_badges.py:16
-#, fuzzy
 msgid "popular-question"
 msgstr "受欢迎的问题"
 
@@ -1983,17 +1863,14 @@ msgid "critic"
 msgstr ""
 
 #: migrations/0005_install_badges.py:19
-#, fuzzy
 msgid "First down vote"
-msgstr "投反对票"
+msgstr "第一个反对票"
 
 #: migrations/0005_install_badges.py:20 models/badges.py:611
-#, fuzzy
 msgid "Editor"
 msgstr "编辑"
 
 #: migrations/0005_install_badges.py:20
-#, fuzzy
 msgid "editor"
 msgstr "编辑"
 
@@ -2006,7 +1883,6 @@ msgid "Organizer"
 msgstr "组织者"
 
 #: migrations/0005_install_badges.py:21
-#, fuzzy
 msgid "organizer"
 msgstr "组织者"
 
@@ -2023,9 +1899,8 @@ msgid "scholar"
 msgstr "学者"
 
 #: migrations/0005_install_badges.py:22
-#, fuzzy
 msgid "First accepted answer on your own question"
-msgstr "第一个可接受的回答的问题"
+msgstr "自己接受的第一个回答"
 
 #: migrations/0005_install_badges.py:23 models/badges.py:375
 msgid "Student"
@@ -2040,27 +1915,22 @@ msgid "Asked first question with at least one up vote"
 msgstr "得到至少一个赞成票的问题"
 
 #: migrations/0005_install_badges.py:24 models/badges.py:217
-#, fuzzy
 msgid "Supporter"
 msgstr "拥护者"
 
 #: migrations/0005_install_badges.py:24
-#, fuzzy
 msgid "supporter"
 msgstr "拥护者"
 
 #: migrations/0005_install_badges.py:24
-#, fuzzy
 msgid "First up vote"
-msgstr "第一次投赞成票"
+msgstr "第一个赞成票"
 
 #: migrations/0005_install_badges.py:25 models/badges.py:177
-#, fuzzy
 msgid "Teacher"
 msgstr "老师"
 
 #: migrations/0005_install_badges.py:25
-#, fuzzy
 msgid "teacher"
 msgstr "老师"
 
@@ -2077,9 +1947,8 @@ msgid "autobiographer"
 msgstr "自传作者"
 
 #: migrations/0005_install_badges.py:26 models/badges.py:646
-#, fuzzy
 msgid "Completed all user profile fields"
-msgstr "完成个人所有资料"
+msgstr "完善个人所有资料"
 
 #: migrations/0005_install_badges.py:27 models/badges.py:255
 msgid "Self-Learner"
@@ -2094,42 +1963,34 @@ msgid "Answered your own question with at least 3 up votes"
 msgstr "回答的至少有三个赞成票的问题"
 
 #: migrations/0005_install_badges.py:28 models/badges.py:327
-#, fuzzy
 msgid "Great Answer"
-msgstr "绝妙的回答"
+msgstr "完美答案"
 
 #: migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "great-answer"
-msgstr "绝妙的回答"
+msgstr "完美-答案"
 
 #: migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "Answer voted up 100 times"
 msgstr "赞成票达到100的答案"
 
 #: migrations/0005_install_badges.py:29 models/badges.py:363
-#, fuzzy
 msgid "Great Question"
-msgstr "绝妙的问题"
+msgstr "完美的问题"
 
 #: migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "great-question"
-msgstr "绝妙的问题"
+msgstr "完美-问题"
 
 #: migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "Question voted up 100 times"
 msgstr "有100赞成票的问题"
 
 #: migrations/0005_install_badges.py:30 models/badges.py:688
-#, fuzzy
 msgid "Stellar Question"
 msgstr "星号问题"
 
 #: migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "stellar-question"
 msgstr "星号问题"
 
@@ -2139,14 +2000,12 @@ msgstr "被100个用户收藏的问题"
 
 # close.html
 #: migrations/0005_install_badges.py:31
-#, fuzzy
 msgid "Famous question"
-msgstr "著名的问题"
+msgstr "极好的问题"
 
 #: migrations/0005_install_badges.py:31
-#, fuzzy
 msgid "famous-question"
-msgstr "著名的问题"
+msgstr "极好的问题"
 
 #: migrations/0005_install_badges.py:31
 msgid "Asked a question with 10,000 views"
@@ -2165,44 +2024,36 @@ msgid "Actively participated in the private alpha"
 msgstr "在alpha阶段积极贡献"
 
 #: migrations/0005_install_badges.py:33 models/badges.py:315
-#, fuzzy
 msgid "Good Answer"
 msgstr "好回答"
 
 #: migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "good-answer"
 msgstr "好回答"
 
 #: migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "Answer voted up 25 times"
 msgstr "有25次投票的回答"
 
 #: migrations/0005_install_badges.py:34 models/badges.py:351
-#, fuzzy
 msgid "Good Question"
 msgstr "好问题"
 
 #: migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "good-question"
 msgstr "好问题"
 
 #: migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "Question voted up 25 times"
 msgstr "有25次投票的问题"
 
 #: migrations/0005_install_badges.py:35 models/badges.py:697
-#, fuzzy
 msgid "Favorite Question"
-msgstr "收藏"
+msgstr "收藏问题"
 
 #: migrations/0005_install_badges.py:35
-#, fuzzy
 msgid "favorite-question"
-msgstr "收藏"
+msgstr "收藏问题"
 
 #: migrations/0005_install_badges.py:35
 msgid "Question favorited by 25 users"
@@ -2249,7 +2100,6 @@ msgid "Expert"
 msgstr "专家"
 
 #: migrations/0005_install_badges.py:39
-#, fuzzy
 msgid "expert"
 msgstr "专家"
 
@@ -2275,9 +2125,8 @@ msgid "Notable Question"
 msgstr "有名的问题"
 
 #: migrations/0005_install_badges.py:41
-#, fuzzy
 msgid "notable-question"
-msgstr "有名的问题"
+msgstr "值得注意的问题"
 
 #: migrations/0005_install_badges.py:41
 msgid "Asked a question with 2,500 views"
@@ -2316,9 +2165,8 @@ msgid "guru"
 msgstr "专家"
 
 #: migrations/0005_install_badges.py:44
-#, fuzzy
 msgid "Accepted answer and voted up 40 times"
-msgstr "投票超过40次的被接受的问题"
+msgstr "投票超过40次的回答"
 
 #: migrations/0005_install_badges.py:45 models/badges.py:524
 msgid "Necromancer"
@@ -2341,7 +2189,6 @@ msgid "taxonomist"
 msgstr "分类学者"
 
 #: migrations/0005_install_badges.py:46
-#, fuzzy
 msgid "Created a tag used by 50 questions"
 msgstr "创建一个50个问题都用到的标签"
 
@@ -2354,7 +2201,6 @@ msgid "Sorry, you cannot accept or unaccept best answers because your account is
 msgstr "对不起,你不能认定或否决最佳答案因为你的账户已暂停使用"
 
 #: models/__init__.py:181
-#, fuzzy
 msgid "Sorry, you cannot accept or unaccept your own answer to your own question"
 msgstr "对不起,你不能认定或否决你自己的回答的自己的问题"
 
@@ -2376,7 +2222,7 @@ msgid "Sorry your account appears to be suspended "
 msgstr "对不起你的账户已暂停使用"
 
 #: models/__init__.py:229
-#, fuzzy, python-format
+#, python-format
 msgid ">%(points)s points required to upvote"
 msgstr "需要+%(points)s积分才能投支持票。"
 
@@ -2386,12 +2232,10 @@ msgid ">%(points)s points required to downvote"
 msgstr "需要+%(points)s积分才能投反对票。"
 
 #: models/__init__.py:250
-#, fuzzy
 msgid "Sorry, blocked users cannot upload files"
 msgstr "对不起,冻结用户不能上传文件"
 
 #: models/__init__.py:251
-#, fuzzy
 msgid "Sorry, suspended users cannot upload files"
 msgstr "对不起,暂停使用用户不能上传文件"
 
@@ -2401,12 +2245,10 @@ msgid "uploading images is limited to users with >%(min_rep)s reputation points"
 msgstr "上传图片只限于积分+%(min_rep)s以上注册用户!"
 
 #: models/__init__.py:272 models/__init__.py:332 models/__init__.py:2021
-#, fuzzy
 msgid "blocked users cannot post"
 msgstr "冻结用户不能发布信息"
 
 #: models/__init__.py:273 models/__init__.py:2024
-#, fuzzy
 msgid "suspended users cannot post"
 msgstr "暂停使用用户不能发布信息"
 
@@ -2505,12 +2347,10 @@ msgid "cannot flag message as offensive twice"
 msgstr "不能两次标记同一信息为垃圾信息"
 
 #: models/__init__.py:576
-#, fuzzy
 msgid "blocked users cannot flag posts"
 msgstr "冻结用户不能标记信息"
 
 #: models/__init__.py:578
-#, fuzzy
 msgid "suspended users cannot flag posts"
 msgstr "暂停使用的用户不能标记信息"
 
@@ -2559,7 +2399,6 @@ msgid "cannot revoke old vote"
 msgstr "这个投票已经过时，不能撤销。"
 
 #: models/__init__.py:1213 views/users.py:363
-#, fuzzy
 msgid "Site Adminstrator"
 msgstr "网站管理员"
 
@@ -2568,7 +2407,6 @@ msgid "Forum Moderator"
 msgstr "论坛版主"
 
 #: models/__init__.py:1217 views/users.py:367
-#, fuzzy
 msgid "Suspended User"
 msgstr "暂停账户"
 
@@ -2577,7 +2415,6 @@ msgid "Blocked User"
 msgstr "冻结账户"
 
 #: models/__init__.py:1221 views/users.py:371
-#, fuzzy
 msgid "Registered User"
 msgstr "注册用户"
 
@@ -2609,7 +2446,7 @@ msgstr[0] "一块银牌"
 msgstr[1] "%(count)d 银牌"
 
 #: models/__init__.py:1305
-#, fuzzy, python-format
+#, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "一块铜牌"
@@ -2632,7 +2469,7 @@ msgid "Re: \"%(title)s\""
 msgstr "Re: \"%(title)s\""
 
 #: models/__init__.py:1654 models/__init__.py:1659
-#, fuzzy, python-format
+#, python-format
 msgid "Question: \"%(title)s\""
 msgstr "问题:\"%(title)s\""
 
@@ -2648,7 +2485,6 @@ msgid "Sorry, the answer you are looking for is no longer available, because the
 msgstr "对不起,你查找的问题已失效,因为问题已删除"
 
 #: models/answer.py:112
-#, fuzzy
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "对不起,这个问题已删除"
 
@@ -2668,14 +2504,12 @@ msgid "Received at least %(votes)s upvote for an answer for the first time"
 msgstr "获取至少有%(votes)s推荐票的问题"
 
 #: models/badges.py:218
-#, fuzzy
 msgid "First upvote"
-msgstr "第一次赞成票"
+msgstr "第一个赞成票"
 
 #: models/badges.py:227
-#, fuzzy
 msgid "First downvote"
-msgstr "第一次反对票"
+msgstr "第一个反对票"
 
 #: models/badges.py:236
 msgid "Civic Duty"
@@ -2692,17 +2526,16 @@ msgid "Answered own question with at least %(num)s up votes"
 msgstr "自己回答的至少有%(num)s次推荐票的问题"
 
 #: models/badges.py:303
-#, fuzzy
 msgid "Nice Answer"
 msgstr "好回答"
 
 #: models/badges.py:308 models/badges.py:320 models/badges.py:332
-#, fuzzy, python-format
+#, python-format
 msgid "Answer voted up %(num)s times"
 msgstr "该用户投的赞成票回答总数%(num)s"
 
 #: models/badges.py:344 models/badges.py:356 models/badges.py:368
-#, fuzzy, python-format
+#, python-format
 msgid "Question voted up %(num)s times"
 msgstr "该用户投的赞成票问题总数%(num)s"
 
@@ -2713,19 +2546,17 @@ msgstr "被查看 %(views)s次的问题"
 
 # close.html
 #: models/badges.py:435
-#, fuzzy
 msgid "Famous Question"
 msgstr "著名问题"
 
 #: models/badges.py:449
-#, fuzzy
 msgid "Asked a question and accepted an answer"
-msgstr "问了接受问题的答案"
+msgstr "提问的有正确答案的问题"
 
 #: models/badges.py:498
-#, fuzzy, python-format
+#, python-format
 msgid "First answer was accepted with %(num)s or more votes"
-msgstr "第一个被接受的且被投了%(num)s或更多此的回答"
+msgstr "第一个正确且被投了%(num)s或更多票的答案"
 
 #: models/badges.py:509
 #, python-format
@@ -2751,7 +2582,7 @@ msgid "Edited %(num)s entries"
 msgstr "编辑了%(num)s条目"
 
 #: models/badges.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Question favorited by %(num)s users"
 msgstr "被%(num)s用户收藏的问题"
 
@@ -2764,7 +2595,6 @@ msgid "Visited site every day for 30 days in a row"
 msgstr "过去30天每天都来访问网站的用户"
 
 #: models/badges.py:718
-#, fuzzy
 msgid "Commentator"
 msgstr "评论员"
 
@@ -2772,7 +2602,7 @@ msgstr "评论员"
 #: models/badges.py:721
 #, fuzzy
 msgid "Posted 10 comments"
-msgstr "发布10条评论"
+msgstr "已发布10条评论"
 
 #: models/meta.py:110
 msgid "Sorry, the comment you are looking for is no longer accessible, because the parent question has been removed"
@@ -2783,12 +2613,11 @@ msgid "Sorry, the comment you are looking for is no longer accessible, because t
 msgstr "对不起,你查找的评论不能访问,因为回答已删除"
 
 #: models/question.py:326
-#, fuzzy
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "对不起,此问题已删除"
 
 #: models/question.py:715
-#, fuzzy, python-format
+#, python-format
 msgid "%(author)s modified the question"
 msgstr "%(author)s修改了问题"
 
@@ -2798,17 +2627,17 @@ msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr "%(people)s 发布了 %(new_answer_count)s 新答案"
 
 #: models/question.py:724
-#, fuzzy, python-format
+#, python-format
 msgid "%(people)s commented the question"
-msgstr "%(people)s评论问题"
+msgstr "%(people)s评论了问题"
 
 #: models/question.py:729
-#, fuzzy, python-format
+#, python-format
 msgid "%(people)s commented answers"
 msgstr "%(people)s 评论了答案"
 
 #: models/question.py:731
-#, fuzzy, python-format
+#, python-format
 msgid "%(people)s commented an answer"
 msgstr "%(people)s 评论了答案"
 
@@ -2828,9 +2657,8 @@ msgid "%(points)s points were subtracted for %(username)s's contribution to ques
 msgstr "%(username)s被减去%(points)s分，因为他贡献了 %(question_title)s问题"
 
 #: models/tag.py:91
-#, fuzzy
 msgid "interesting"
-msgstr "修改问题"
+msgstr "感兴趣"
 
 #: models/tag.py:91
 msgid "ignored"
@@ -2841,17 +2669,14 @@ msgid "Entire forum"
 msgstr "忽略的"
 
 #: models/user.py:266
-#, fuzzy
 msgid "Questions that I asked"
 msgstr "我问的问题"
 
 #: models/user.py:267
-#, fuzzy
 msgid "Questions that I answered"
 msgstr "我答的问题"
 
 #: models/user.py:268
-#, fuzzy
 msgid "Individually selected questions"
 msgstr "我选择的问题"
 
@@ -2872,7 +2697,6 @@ msgid "Weekly"
 msgstr "每周"
 
 #: models/user.py:275
-#, fuzzy
 msgid "No email"
 msgstr "没有邮件"
 
@@ -2943,18 +2767,15 @@ msgid "please report the error to the site administrators if you wish"
 msgstr "请报告这些错误给网站管理员"
 
 #: skins/default/templates/500.jinja.html:14
-#, fuzzy
 msgid "see latest questions"
 msgstr "最新问题"
 
 #: skins/default/templates/500.jinja.html:15
-#, fuzzy
 msgid "see tags"
-msgstr "标记垃圾帖"
+msgstr "查看标签"
 
 # footer.html
 #: skins/default/templates/about.html:3 skins/default/templates/about.html:6
-#, fuzzy
 msgid "About"
 msgstr "关于本站"
 
@@ -3028,9 +2849,8 @@ msgid "try to give an answer, rather than engage into a discussion"
 msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
 #: skins/default/templates/answer_edit_tips.html:12
-#, fuzzy
 msgid "please try to provide details"
-msgstr "请详细描述您的问题。"
+msgstr "请详细描述您的问题"
 
 #: skins/default/templates/answer_edit_tips.html:15
 #: skins/default/templates/question_edit_tips.html:12
@@ -3059,7 +2879,6 @@ msgstr "**粗体**"
 
 #: skins/default/templates/answer_edit_tips.html:36
 #: skins/default/templates/question_edit_tips.html:33
-#, fuzzy
 msgid "*italic* or _italic_"
 msgstr "*斜体* 或者 _斜体_"
 
@@ -3105,7 +2924,6 @@ msgid "Ask a question"
 msgstr "我要提问"
 
 #: skins/default/templates/ask_form.html:7
-#, fuzzy
 msgid "login to post question info"
 msgstr "登录并提交问题"
 
@@ -3142,7 +2960,7 @@ msgstr "奖牌"
 #: skins/default/templates/badges.html:31
 #: skins/default/templates/user_recent.html:13
 #: skins/default/templates/user_stats.html:88
-#, fuzzy, python-format
+#, python-format
 msgid "%(description)s"
 msgstr "%(description)s"
 
@@ -3153,7 +2971,6 @@ msgstr[0] "用户获得奖牌"
 msgstr[1] "用户获得奖牌"
 
 #: skins/default/templates/badges.html:3
-#, fuzzy
 msgid "Badges summary"
 msgstr "奖牌列表"
 
@@ -3166,7 +2983,7 @@ msgid "Community gives you awards for your questions, answers and votes."
 msgstr "提出问题，给予回答，投出你的票 - 社区会对你的表现，授予你各类奖牌。"
 
 #: skins/default/templates/badges.html:11
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
@@ -3203,7 +3020,6 @@ msgid "bronze badge: often given as a special honor"
 msgstr "铜牌:时常授予之特殊荣誉"
 
 #: skins/default/templates/badges.html:62
-#, fuzzy
 msgid "bronze badge description"
 msgstr "铜牌描述"
 
@@ -3225,24 +3041,24 @@ msgid "OK to close"
 msgstr "确定关闭"
 
 #: skins/default/templates/editor_data.html:8
-#, fuzzy, python-format
+#, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] "每个标签的长度不超过20"
-msgstr[1] "每个标签的长度不超过20"
+msgstr[0] "每个标签的长度不超过%(max_chars)s"
+msgstr[1] "每个标签的长度不超过%(max_chars)s"
 
 #: skins/default/templates/editor_data.html:10
-#, fuzzy, python-format
+#, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
-msgstr[0] "最多只能有5个标签"
-msgstr[1] "最多只能有5个标签"
+msgstr[0] "最多只能有%(tag_count)s个标签"
+msgstr[1] "最多只能有%(tag_count)s个标签"
 
 # todo: remove magic numbers from this file
 #: skins/default/templates/editor_data.html:11
-#, fuzzy, python-format
+#, python-format
 msgid "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
-msgstr "最多5个标签，每个标签长度小于20个字符。"
+msgstr "最多%(tag_count)s个标签，每个标签长度小于%(max_chars)s个字符。"
 
 #: skins/default/templates/faq.html:3 skins/default/templates/faq.html.py:6
 msgid "FAQ"
@@ -3301,7 +3117,6 @@ msgid "How does reputation system work?"
 msgstr "什么是社区积分？"
 
 #: skins/default/templates/faq.html:33
-#, fuzzy
 msgid "Rep system summary"
 msgstr "更新概要："
 
@@ -3319,7 +3134,6 @@ msgid "upvote"
 msgstr "投赞成票"
 
 #: skins/default/templates/faq.html:49
-#, fuzzy
 msgid "use tags"
 msgstr "标记垃圾帖"
 
@@ -3334,28 +3148,24 @@ msgid "downvote"
 msgstr "投反对票"
 
 #: skins/default/templates/faq.html:61
-#, fuzzy
 msgid "open and close own questions"
 msgstr "打开关闭任何人的问题"
 
 #: skins/default/templates/faq.html:65
-#, fuzzy
 msgid "retag other's questions"
-msgstr "给任何问题整理标签"
+msgstr "整理标签"
 
 #: skins/default/templates/faq.html:70
 msgid "edit community wiki questions"
 msgstr "编辑wiki类问题"
 
 #: skins/default/templates/faq.html:75
-#, fuzzy
 msgid "edit any answer"
-msgstr "编辑任何问题或答案"
+msgstr "编辑问题"
 
 #: skins/default/templates/faq.html:79
-#, fuzzy
 msgid "delete any comment"
-msgstr "删除任何一个评论"
+msgstr "删除评论"
 
 #: skins/default/templates/faq.html:86
 msgid "how to validate email title"
@@ -3379,12 +3189,10 @@ msgid "To register, do I need to create new password?"
 msgstr "我需要注册一个新用户吗？"
 
 #: skins/default/templates/faq.html:98
-#, fuzzy
 msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc.\""
 msgstr "不需要。社区提供了OpenID的登录支持，你要用Google、Yahoo等任何支持OpenID登录的帐号就可以使用系统。"
 
 #: skins/default/templates/faq.html:99
-#, fuzzy
 msgid "\"Login now!\""
 msgstr "马上登录"
 
@@ -3409,9 +3217,9 @@ msgid "Still have questions?"
 msgstr "还有其他问题？"
 
 #: skins/default/templates/faq.html:110
-#, fuzzy, python-format
+#, python-format
 msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "如果您对社区还有其他疑问，请一起来完善我们的"
+msgstr "请在这里%(ask_question_url)s提交你的疑问，请一起来完善我们的"
 
 #: skins/default/templates/faq.html:112
 #: skins/default/templates/header.html:100
@@ -3423,7 +3231,6 @@ msgid "."
 msgstr "。"
 
 #: skins/default/templates/feedback.html:3
-#, fuzzy
 msgid "Feedback"
 msgstr "问题反馈"
 
@@ -3440,7 +3247,8 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"<span class='big strong'>亲爱的 %(user_name)s</span>,  我们盼望收到你的反馈. \n请发送你的反馈信息给我们，以帮助我们更好的改进."
+"<span class='big strong'>亲爱的 %(user_name)s</span>,  我们盼望收到你的反馈. \n"
+"请发送你的反馈信息给我们，以帮助我们更好的改进."
 
 #: skins/default/templates/feedback.html:19
 msgid ""
@@ -3450,20 +3258,18 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-" <span class='big strong'>亲爱的访客</span>,  我们盼望收到你的反馈. \n请发送你的反馈信息给我们，以帮助我们更好的改进 ."
+" <span class='big strong'>亲爱的访客</span>,  我们盼望收到你的反馈. \n"
+"请发送你的反馈信息给我们，以帮助我们更好的改进 ."
 
 #: skins/default/templates/feedback.html:28
-#, fuzzy
 msgid "(please enter a valid email)"
 msgstr "请输入正确的email地址"
 
 #: skins/default/templates/feedback.html:36
-#, fuzzy
 msgid "(this field is required)"
 msgstr "必填项"
 
 #: skins/default/templates/feedback.html:44
-#, fuzzy
 msgid "Send Feedback"
 msgstr "问题反馈"
 
@@ -3477,7 +3283,6 @@ msgstr ""
 "你好, 这是从 %(site_title)s 网站发出的反馈信息。\n"
 
 #: skins/default/templates/feedback_email.txt:9
-#, fuzzy
 msgid "Sender is"
 msgstr "发件人"
 
@@ -3504,14 +3309,13 @@ msgid "privacy policy"
 msgstr "隐私政策"
 
 #: skins/default/templates/footer.html:16
-#, fuzzy
 msgid "give feedback"
 msgstr "问题反馈"
 
 #: skins/default/templates/header.html:13
-#, fuzzy, python-format
+#, python-format
 msgid "responses for %(username)s"
-msgstr "选择一个用户名"
+msgstr "回应%(username)s"
 
 #: skins/default/templates/header.html:16
 #, python-format
@@ -3521,7 +3325,6 @@ msgstr[0] "你有一个新回应"
 msgstr[1] "你有 %(response_count)s 个新回应"
 
 #: skins/default/templates/header.html:19
-#, fuzzy
 msgid "no new responses yet"
 msgstr "仍没有回应"
 
@@ -3565,7 +3368,6 @@ msgstr "请帮忙翻译"
 
 # book.html line 123 must be empty in english
 #: skins/default/templates/header.html:81
-#, fuzzy
 msgid "settings"
 msgstr "设置"
 
@@ -3574,7 +3376,7 @@ msgid "back to home page"
 msgstr "回到首页"
 
 #: skins/default/templates/header.html:91
-#, fuzzy, python-format
+#, python-format
 msgid "%(site)s logo"
 msgstr "%(site)s logo"
 
@@ -3625,7 +3427,8 @@ msgid ""
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
 "\n"
-"<p>%(update_author_name)s 回答了一个问题 \n<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+"<p>%(update_author_name)s 回答了一个问题 \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:19
 #, python-format
@@ -3635,7 +3438,8 @@ msgid ""
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
 "\n"
-"<p>%(update_author_name)s 提交了一个新问题 \n<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+"<p>%(update_author_name)s 提交了一个新问题 \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:25
 #, python-format
@@ -3645,7 +3449,8 @@ msgid ""
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
 "\n"
-"<p>%(update_author_name)s 更新了问题的回答\n<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+"<p>%(update_author_name)s 更新了问题的回答\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:31
 #, python-format
@@ -3655,7 +3460,8 @@ msgid ""
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
 "\n"
-"<p>%(update_author_name)s 更新了问题 \n<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+"<p>%(update_author_name)s 更新了问题 \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:37
 #, python-format
@@ -3667,7 +3473,8 @@ msgid ""
 msgstr ""
 "\n"
 "<div>%(content_preview)s</div>\n"
-"<p>注意 - 你可以通过 <a href=\"%(user_subscriptions_url)s\">这里</a>\n修改你接收这些通知的频率或取消订阅. 谢谢你对我们网站的关注 </p>\n"
+"<p>注意 - 你可以通过 <a href=\"%(user_subscriptions_url)s\">这里</a>\n"
+"修改你接收这些通知的频率或取消订阅. 谢谢你对我们网站的关注 </p>\n"
 
 #: skins/default/templates/instant_notification.html:42
 msgid "<p>Sincerely,<br/>Forum Administrator</p>"
@@ -3690,7 +3497,6 @@ msgid "karma:"
 msgstr "积分"
 
 #: skins/default/templates/macros.html:30
-#, fuzzy
 msgid "badges:"
 msgstr "奖牌榜"
 
@@ -3705,9 +3511,9 @@ msgstr "当前页"
 
 #: skins/default/templates/macros.html:66
 #: skins/default/templates/macros.html:73
-#, fuzzy, python-format
+#, python-format
 msgid "page number %(num)s"
-msgstr "第"
+msgstr "第%(num)s页"
 
 #: skins/default/templates/macros.html:77
 msgid "next page"
@@ -3731,21 +3537,21 @@ msgstr "这个发布像社区wiki被标记"
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
-msgstr "这个发布是wiki.\n任何积分为 &gt;%(wiki_min_rep)s 都可以改进它."
+msgstr ""
+"这个发布是wiki.\n"
+"任何积分为 &gt;%(wiki_min_rep)s 都可以改进它."
 
 #: skins/default/templates/macros.html:151
 msgid "asked"
 msgstr "提问于"
 
 #: skins/default/templates/macros.html:153
-#, fuzzy
 msgid "answered"
 msgstr "回答"
 
 #: skins/default/templates/macros.html:155
-#, fuzzy
 msgid "posted"
-msgstr "投赞成票"
+msgstr "发布"
 
 #: skins/default/templates/macros.html:185
 msgid "updated"
@@ -3753,7 +3559,6 @@ msgstr "更新于"
 
 #: skins/default/templates/macros.html:210
 #: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:250
-#, fuzzy
 msgid "vote"
 msgid_plural "votes"
 msgstr[0] "票"
@@ -3761,7 +3566,6 @@ msgstr[1] "票"
 
 #: skins/default/templates/macros.html:227
 #: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:253
-#, fuzzy
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] "回答"
@@ -3769,7 +3573,6 @@ msgstr[1] "回答"
 
 #: skins/default/templates/macros.html:239
 #: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:256
-#, fuzzy
 msgid "view"
 msgid_plural "views"
 msgstr[0] "浏览"
@@ -3782,9 +3585,9 @@ msgstr[1] "浏览"
 #: skins/default/templates/unused/question_list.html:64
 #: skins/default/templates/unused/question_summary_list_roll.html:52
 #: skins/default/templates/unused/questions_ajax.html:68
-#, fuzzy, python-format
+#, python-format
 msgid "see questions tagged '%(tag)s'"
-msgstr "查看有关'%(tag)s'的问题"
+msgstr "查看有关%(tag)s的问题"
 
 #: skins/default/templates/macros.html:267
 #: skins/default/templates/question.html:94
@@ -3794,9 +3597,8 @@ msgid "edit"
 msgstr "编辑"
 
 #: skins/default/templates/macros.html:272
-#, fuzzy
 msgid "delete this comment"
-msgstr "删除任何一个评论"
+msgstr "删除这个留言"
 
 #: skins/default/templates/macros.html:290
 #: skins/default/templates/macros.html:298
@@ -3805,14 +3607,14 @@ msgid "add comment"
 msgstr "添加评论"
 
 #: skins/default/templates/macros.html:291
-#, fuzzy, python-format
+#, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] "查看<strong>%(counter)s</strong>更多"
 msgstr[1] "查看<strong>%(counter)s</strong>更多"
 
 #: skins/default/templates/macros.html:293
-#, fuzzy, python-format
+#, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
@@ -3864,18 +3666,16 @@ msgid "remove favorite mark from this question (click again to restore mark)"
 msgstr "我要收藏这个问题（再次点击取消操作）"
 
 #: skins/default/templates/question.html:74
-#, fuzzy
 msgid "Share this question on twitter"
-msgstr "发布我的提问到我的Twitter"
+msgstr "发布我的提问到Twitter"
 
 #: skins/default/templates/question.html:75
 msgid "Share this question on facebook"
 msgstr "分享提问到我的facebook"
 
 #: skins/default/templates/question.html:97
-#, fuzzy
 msgid "retag"
-msgstr "更新了标签"
+msgstr "更新标签"
 
 #: skins/default/templates/question.html:104
 msgid "reopen"
@@ -3908,14 +3708,14 @@ msgid "delete"
 msgstr "删除"
 
 #: skins/default/templates/question.html:159
-#, fuzzy, python-format
+#, python-format
 msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
-msgstr "问题以\"%(close_reason)s\"的原因已被关闭"
+msgstr "问题因\"%(close_reason)s\"原因已被关闭"
 
 #: skins/default/templates/question.html:161
-#, fuzzy, python-format
+#, python-format
 msgid "close date %(closed_at)s"
-msgstr "由于以下原因，你要关闭这个问题"
+msgstr "%(closed_at)s日关闭"
 
 #: skins/default/templates/question.html:169
 #, python-format
@@ -3927,8 +3727,12 @@ msgid_plural ""
 "\n"
 "                %(counter)s Answers:\n"
 "                "
-msgstr[0] "\n%(counter)s个回答:"
-msgstr[1] "\n%(counter)s个回答:"
+msgstr[0] ""
+"\n"
+"%(counter)s个回答:"
+msgstr[1] ""
+"\n"
+"%(counter)s个回答:"
 
 #: skins/default/templates/question.html:177
 msgid "oldest answers will be shown first"
@@ -3971,9 +3775,9 @@ msgstr "最佳答案（再次点击取消操作）"
 
 #: skins/default/templates/question.html:229
 #: skins/default/templates/question.html:230
-#, fuzzy, python-format
+#, python-format
 msgid "%(question_author)s has selected this answer as correct"
-msgstr "这个答案已经被%(question_author)s标记为最佳答案"
+msgstr "这个答案已经被%(question_author)s标记为正确答案"
 
 #: skins/default/templates/question.html:245
 msgid "answer permanent link"
@@ -4010,7 +3814,6 @@ msgid "Your answer"
 msgstr "您的回答"
 
 #: skins/default/templates/question.html:341
-#, fuzzy
 msgid "Be the first one to answer this question!"
 msgstr "成为第一个回答此问题的人!"
 
@@ -4023,7 +3826,6 @@ msgid "answer your own question only to give an answer"
 msgstr "仅仅为了回答你自己的问题而给一个答案"
 
 #: skins/default/templates/question.html:353
-#, fuzzy
 msgid "please only give an answer, no discussions"
 msgstr "建议您提的问题是可以被答复的，而不仅仅是可以讨论。"
 
@@ -4032,7 +3834,6 @@ msgid "Login/Signup to Post Your Answer"
 msgstr "登录发布你的答案"
 
 #: skins/default/templates/question.html:363
-#, fuzzy
 msgid "Answer Your Own Question"
 msgstr "回答你自己的问题"
 
@@ -4049,14 +3850,13 @@ msgstr "您正在浏览的问题含有以下标签"
 #: skins/default/templates/questions.html:222
 #: skins/default/templates/tag_selector.html:9
 #: skins/default/templates/tag_selector.html:26
-#, fuzzy, python-format
+#, python-format
 msgid "see questions tagged '%(tag_name)s'"
-msgstr "查看有关'%(tagname)s'的问题"
+msgstr "查看有关%(tag_name)s的问题"
 
 #: skins/default/templates/question.html:390
-#, fuzzy
 msgid "question asked"
-msgstr "提问时间"
+msgstr "已问问题"
 
 #: skins/default/templates/question.html:393
 msgid "question was seen"
@@ -4071,7 +3871,6 @@ msgid "last updated"
 msgstr "最后更新时间"
 
 #: skins/default/templates/question.html:403
-#, fuzzy
 msgid "Related questions"
 msgstr "相似的问题"
 
@@ -4086,14 +3885,12 @@ msgid "question tips"
 msgstr "受欢迎的提问"
 
 #: skins/default/templates/question_edit_tips.html:6
-#, fuzzy
 msgid "please ask a relevant question"
-msgstr "我要提问"
+msgstr "请问与此相关的问题"
 
 #: skins/default/templates/question_edit_tips.html:9
-#, fuzzy
 msgid "please try provide enough details"
-msgstr "请详细描述您的问题。"
+msgstr "请详细描述您的问题"
 
 #: skins/default/templates/question_retag.html:3
 #: skins/default/templates/question_retag.html:6
@@ -4101,7 +3898,6 @@ msgid "Change tags"
 msgstr "修改标签"
 
 #: skins/default/templates/question_retag.html:25
-#, fuzzy
 msgid "Retag"
 msgstr "修改标签"
 
@@ -4131,14 +3927,12 @@ msgid "In:"
 msgstr ""
 
 #: skins/default/templates/questions.html:18
-#, fuzzy
 msgid "see unanswered questions"
-msgstr "没有回答的问题"
+msgstr "查看没有回答的问题"
 
 #: skins/default/templates/questions.html:24
-#, fuzzy
 msgid "see your favorite questions"
-msgstr "查看收藏问题"
+msgstr "查看我收藏问题"
 
 #: skins/default/templates/questions.html:29
 msgid "Sort by:"
@@ -4163,11 +3957,15 @@ msgid_plural ""
 "\n"
 "                %(q_num)s questions\n"
 "            "
-msgstr[0] "\n%(q_num)s个问题"
-msgstr[1] "\n%(q_num)s个问题"
+msgstr[0] ""
+"\n"
+"%(q_num)s个问题"
+msgstr[1] ""
+"\n"
+"%(q_num)s个问题"
 
 #: skins/default/templates/questions.html:111 views/readers.py:170
-#, fuzzy, python-format
+#, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] "%(q_num)s个问题"
@@ -4179,37 +3977,32 @@ msgid "with %(author_name)s's contributions"
 msgstr "%(author_name)s的贡献"
 
 #: skins/default/templates/questions.html:117
-#, fuzzy
 msgid "tagged"
-msgstr "更新了标签"
+msgstr "已加标签"
 
 #: skins/default/templates/questions.html:122
-#, fuzzy
 msgid "Search tips:"
-msgstr "受欢迎的提问"
+msgstr "搜索主题"
 
 #: skins/default/templates/questions.html:125
-#, fuzzy
 msgid "reset author"
-msgstr "向作者提问"
+msgstr "重置作者"
 
 #: skins/default/templates/questions.html:127
 #: skins/default/templates/questions.html:130
 #: skins/default/templates/questions.html:168
 #: skins/default/templates/questions.html:171
-#, fuzzy
 msgid " or "
 msgstr "或者"
 
 #: skins/default/templates/questions.html:128
-#, fuzzy
 msgid "reset tags"
-msgstr "标记垃圾帖"
+msgstr "重置标签"
 
 #: skins/default/templates/questions.html:131
 #: skins/default/templates/questions.html:134
 msgid "start over"
-msgstr ""
+msgstr "重新开始"
 
 #: skins/default/templates/questions.html:136
 msgid " - to expand, or dig in by adding more tags and revising the query."
@@ -4225,15 +4018,13 @@ msgstr "添加标签和查询条件进行更精确查询"
 
 #: skins/default/templates/questions.html:154
 #: skins/default/templates/unused/questions_ajax.html:79
-#, fuzzy
 msgid "There are no unanswered questions here"
 msgstr "没有未回答的问题"
 
 #: skins/default/templates/questions.html:157
 #: skins/default/templates/unused/questions_ajax.html:82
-#, fuzzy
 msgid "No favorite questions here. "
-msgstr "收藏"
+msgstr "还没有收藏"
 
 #: skins/default/templates/questions.html:158
 #: skins/default/templates/unused/questions_ajax.html:83
@@ -4247,14 +4038,12 @@ msgstr "扩展你的查询"
 
 #: skins/default/templates/questions.html:166
 #: skins/default/templates/unused/questions_ajax.html:92
-#, fuzzy
 msgid "resetting author"
 msgstr "重置作者"
 
 # book.html line 123 must be empty in english
 #: skins/default/templates/questions.html:169
 #: skins/default/templates/unused/questions_ajax.html:96
-#, fuzzy
 msgid "resetting tags"
 msgstr "重置标签"
 
@@ -4263,11 +4052,10 @@ msgstr "重置标签"
 #: skins/default/templates/unused/questions_ajax.html:100
 #: skins/default/templates/unused/questions_ajax.html:104
 msgid "starting over"
-msgstr ""
+msgstr "重新开始"
 
 #: skins/default/templates/questions.html:180
 #: skins/default/templates/unused/questions_ajax.html:109
-#, fuzzy
 msgid "Please always feel free to ask your question!"
 msgstr "请随便提问"
 
@@ -4278,7 +4066,6 @@ msgstr "不知道你在找什么?"
 
 #: skins/default/templates/questions.html:185
 #: skins/default/templates/unused/questions_ajax.html:114
-#, fuzzy
 msgid "Please, post your question!"
 msgstr "现在提问"
 
@@ -4295,7 +4082,6 @@ msgid "Reopen question"
 msgstr "重设问题"
 
 #: skins/default/templates/reopen.html:9
-#, fuzzy
 msgid "Title"
 msgstr "标题"
 
@@ -4311,21 +4097,18 @@ msgstr ""
 
 # close.html
 #: skins/default/templates/reopen.html:19
-#, fuzzy
 msgid "Close reason:"
-msgstr "关闭问题"
+msgstr "关闭原因"
 
 #: skins/default/templates/reopen.html:22
 msgid "When:"
 msgstr "当:"
 
 #: skins/default/templates/reopen.html:25
-#, fuzzy
 msgid "Reopen this question?"
 msgstr "确定打开这个问题"
 
 #: skins/default/templates/reopen.html:29
-#, fuzzy
 msgid "Reopen this question"
 msgstr "确定打开这个问题"
 
@@ -4340,13 +4123,12 @@ msgid "click to hide/show revision"
 msgstr "点击隐藏或显示版本"
 
 #: skins/default/templates/revisions.html:29
-#, fuzzy, python-format
+#, python-format
 msgid "revision %(number)s"
 msgstr "版本%(number)s"
 
 # book.html line 123 must be empty in english
 #: skins/default/templates/tag_selector.html:3
-#, fuzzy
 msgid "Interesting tags"
 msgstr "感兴趣的标签"
 
@@ -4362,7 +4144,6 @@ msgid "Add"
 msgstr "添加"
 
 #: skins/default/templates/tag_selector.html:20
-#, fuzzy
 msgid "Ignored tags"
 msgstr "忽略标签"
 
@@ -4372,7 +4153,6 @@ msgid "remove '%(tag_name)s' from the list of ignored tags"
 msgstr "从忽略标签列表中删除'%(tag_name)s'标签"
 
 #: skins/default/templates/tag_selector.html:39
-#, fuzzy
 msgid "keep ignored questions hidden"
 msgstr "忽略问题保持隐藏"
 
@@ -4393,7 +4173,6 @@ msgid "sorted by frequency of tag use"
 msgstr "按标签被使用的次数排序"
 
 #: skins/default/templates/tags.html:21
-#, fuzzy
 msgid "by popularity"
 msgstr "按流行程度排序"
 
@@ -4403,14 +4182,13 @@ msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></spa
 msgstr "匹配 '<span class=\"darkred\"><strong>%(stag)s</strong></span>的标签"
 
 #: skins/default/templates/tags.html:30
-#, fuzzy
 msgid "Nothing found"
 msgstr "没有找到相关数据。"
 
 #: skins/default/templates/user.html:14
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s's profile"
-msgstr "用户概览"
+msgstr "%(username)s用户概览"
 
 #: skins/default/templates/user_edit.html:4
 msgid "Edit user profile"
@@ -4423,16 +4201,15 @@ msgstr "修改资料"
 #: skins/default/templates/user_edit.html:17
 #: skins/default/templates/user_info.html:11
 msgid "change picture"
-msgstr ""
+msgstr "修改图片"
 
 #: skins/default/templates/user_edit.html:20
 msgid "Registered user"
 msgstr "注册用户"
 
 #: skins/default/templates/user_edit.html:27
-#, fuzzy
 msgid "Screen Name"
-msgstr "当前页"
+msgstr "用户名"
 
 #: skins/default/templates/user_edit.html:75
 #: skins/default/templates/user_email_subscriptions.html:18
@@ -4452,7 +4229,6 @@ msgid "Stop sending email"
 msgstr "停止发送邮件"
 
 #: skins/default/templates/user_inbox.html:31
-#, fuzzy
 msgid "Sections:"
 msgstr "段"
 
@@ -4467,31 +4243,26 @@ msgid "flagged items (%(flag_count)s)"
 msgstr "已标记项目 (%(flag_count)s)"
 
 #: skins/default/templates/user_inbox.html:46
-#, fuzzy
 msgid "select:"
-msgstr "删除"
+msgstr "选择:"
 
 #: skins/default/templates/user_inbox.html:48
-#, fuzzy
 msgid "seen"
 msgstr "查看"
 
 #: skins/default/templates/user_inbox.html:49
-#, fuzzy
 msgid "new"
-msgstr "最新问题"
+msgstr "新"
 
 #: skins/default/templates/user_inbox.html:50
 msgid "none"
 msgstr "无"
 
 #: skins/default/templates/user_inbox.html:51
-#, fuzzy
 msgid "mark as seen"
 msgstr "已看标记"
 
 #: skins/default/templates/user_inbox.html:52
-#, fuzzy
 msgid "mark as new"
 msgstr "新标记"
 
@@ -4573,7 +4344,6 @@ msgid "User's current reputation is %(reputation)s points"
 msgstr "用户当前的积分是 %(reputation)s"
 
 #: skins/default/templates/user_moderate.html:27
-#, fuzzy
 msgid "User reputation changed"
 msgstr "用户积分已修改"
 
@@ -4591,12 +4361,10 @@ msgid "An email will be sent to the user with 'reply-to' field set to your email
 msgstr "邮件将被发送给接受回复的用户地址，请确保你输入的邮件地址是正确的"
 
 #: skins/default/templates/user_moderate.html:42
-#, fuzzy
 msgid "Message sent"
 msgstr "发送消息"
 
 #: skins/default/templates/user_moderate.html:60
-#, fuzzy
 msgid "Send message"
 msgstr "发送消息"
 
@@ -4624,7 +4392,7 @@ msgstr[0] "<span class=\"count\">%(counter)s</span>个答案"
 msgstr[1] "<span class=\"count\">%(counter)s</span>个答案"
 
 #: skins/default/templates/user_stats.html:20
-#, fuzzy, python-format
+#fuzzy, python-format
 msgid "the answer has been voted for %(answer_score)s times"
 msgstr "该回答总共有%d个投票"
 
@@ -4633,7 +4401,7 @@ msgid "this answer has been selected as correct"
 msgstr "该回答已被设为最佳答案"
 
 #: skins/default/templates/user_stats.html:30
-#, fuzzy, python-format
+#, python-format
 msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] "%(comment_count)s次评论"
@@ -4659,7 +4427,6 @@ msgid "thumb down"
 msgstr "差"
 
 #: skins/default/templates/user_stats.html:51
-#, fuzzy
 msgid "user voted down this many times"
 msgstr "用户投的反对票总数"
 
@@ -4671,7 +4438,7 @@ msgstr[0] "<span class=\"count\">%(counter)s</span>标签"
 msgstr[1] "<span class=\"count\">%(counter)s</span>标签"
 
 #: skins/default/templates/user_stats.html:67
-#, fuzzy, python-format
+#, python-format
 msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "查看有关%(view_user)s的%(tag_name)s标签的分享"
 
@@ -4719,7 +4486,6 @@ msgid "recent activity"
 msgstr "最近活动"
 
 #: skins/default/templates/user_tabs.html:20
-#, fuzzy
 msgid "activity"
 msgstr "活跃问题"
 
@@ -4736,19 +4502,17 @@ msgid "email subscription settings"
 msgstr "邮件订阅设置"
 
 #: skins/default/templates/user_tabs.html:29
-#, fuzzy
 msgid "subscriptions"
 msgstr "订阅"
 
 #: skins/default/templates/user_tabs.html:33 views/users.py:216
-#, fuzzy
 msgid "moderate this user"
-msgstr "谁是社区的管理员？"
+msgstr "设为版主"
 
 #: skins/default/templates/user_tabs.html:34
 #, fuzzy
 msgid "moderation"
-msgstr "城市"
+msgstr ""
 
 #: skins/default/templates/users.html:4 skins/default/templates/users.html:7
 msgid "Users"
@@ -4763,7 +4527,7 @@ msgid "by username"
 msgstr "用户名"
 
 #: skins/default/templates/users.html:38
-#, fuzzy, python-format
+#, python-format
 msgid "users matching query %(suser)s:"
 msgstr "匹配查询%(suser)s用户："
 
@@ -4773,7 +4537,7 @@ msgstr "没有找到相关数据。"
 
 #: skins/default/templates/users_questions.html:9
 #: skins/default/templates/users_questions.html:17
-#, fuzzy, python-format
+#, python-format
 msgid "this questions was selected as favorite %(cnt)s time"
 msgid_plural "this questions was selected as favorite %(cnt)s times"
 msgstr[0] "这个问题被收藏%(cnt)s次"
@@ -4794,12 +4558,11 @@ msgid "Change email"
 msgstr "更换电子邮件"
 
 #: skins/default/templates/authopenid/changeemail.html:10
-#, fuzzy
 msgid "Save your email address"
 msgstr "保存您的电子邮件地址"
 
 #: skins/default/templates/authopenid/changeemail.html:15
-#, fuzzy, python-format
+#, python-format
 msgid "change %(email)s info"
 msgstr "更换%(email)s电子邮件"
 
@@ -4817,12 +4580,10 @@ msgid "Your Email"
 msgstr "你的邮件"
 
 #: skins/default/templates/authopenid/changeemail.html:36
-#, fuzzy
 msgid "Save Email"
 msgstr "保存邮件地址"
 
 #: skins/default/templates/authopenid/changeemail.html:45
-#, fuzzy
 msgid "Validate email"
 msgstr "更换电子邮件"
 
@@ -4841,7 +4602,6 @@ msgid "old %(email)s kept, if you like go to %(change_email_url)s"
 msgstr "旧邮件%(email)s被保存,你可以去%(change_email_url)s修改"
 
 #: skins/default/templates/authopenid/changeemail.html:59
-#, fuzzy
 msgid "Email changed"
 msgstr "邮件地址已改"
 
@@ -4869,7 +4629,6 @@ msgstr "邮件地址未发送%(email)s,点这里修改%(change_link)s"
 
 #: skins/default/templates/authopenid/complete.html:21
 #: skins/default/templates/authopenid/complete.html:24
-#, fuzzy
 msgid "Registration"
 msgstr "注册"
 
@@ -4906,7 +4665,6 @@ msgid "Screen name label"
 msgstr "昵称"
 
 #: skins/default/templates/authopenid/complete.html:68
-#, fuzzy
 msgid "Email address label"
 msgstr "您的电子邮件地址"
 
@@ -4937,12 +4695,10 @@ msgid "Your account details are:"
 msgstr "你的详细账户信息为:"
 
 #: skins/default/templates/authopenid/confirm_email.txt:5
-#, fuzzy
 msgid "Username:"
 msgstr "用户名"
 
 #: skins/default/templates/authopenid/confirm_email.txt:6
-#, fuzzy
 msgid "Password:"
 msgstr "密码"
 
@@ -5032,12 +4788,10 @@ msgid "(or select another login method above)"
 msgstr "(或从上面选择一个登录方式)"
 
 #: skins/default/templates/authopenid/signin.html:89
-#, fuzzy
 msgid "Sign in"
 msgstr "注册帐号"
 
 #: skins/default/templates/authopenid/signin.html:107
-#, fuzzy
 msgid "Please enter your <span>user name and password</span>, then sign in"
 msgstr "使用帐号密码登录"
 
@@ -5062,12 +4816,10 @@ msgid "To change your password - please enter the new one twice, then submit"
 msgstr "修改密码-请输入新密码两次并提交"
 
 #: skins/default/templates/authopenid/signin.html:132
-#, fuzzy
 msgid "New password"
 msgstr "新密码"
 
 #: skins/default/templates/authopenid/signin.html:137
-#, fuzzy
 msgid "Please, retype"
 msgstr "确认密码"
 
@@ -5080,7 +4832,6 @@ msgid "provider"
 msgstr "提供者"
 
 #: skins/default/templates/authopenid/signin.html:161
-#, fuzzy
 msgid "last used"
 msgstr "上次活动时间"
 
@@ -5089,7 +4840,6 @@ msgid "delete, if you like"
 msgstr "可以删除"
 
 #: skins/default/templates/authopenid/signin.html:187
-#, fuzzy
 msgid "Still have trouble signing in?"
 msgstr "还有其他问题？"
 
@@ -5146,7 +4896,6 @@ msgid "Signup"
 msgstr "注册帐号"
 
 #: skins/default/templates/authopenid/signup_with_password.html:6
-#, fuzzy
 msgid "Create login name and password"
 msgstr "使用帐号密码登录"
 
@@ -5159,7 +4908,6 @@ msgid "Please read and type in the two words below to help us prevent automated 
 msgstr "请输入验证信息"
 
 #: skins/default/templates/authopenid/signup_with_password.html:26
-#, fuzzy
 msgid "Create Account"
 msgstr "创建帐号"
 
@@ -5168,12 +4916,10 @@ msgid "or"
 msgstr "或者"
 
 #: skins/default/templates/authopenid/signup_with_password.html:28
-#, fuzzy
 msgid "return to OpenID login"
 msgstr "返回登录"
 
 #: skins/default/templates/unused/email_base.html:8
-#, fuzzy
 msgid "home"
 msgstr "首页"
 
@@ -5198,15 +4944,18 @@ msgid_plural ""
 "\n"
 "        votes\n"
 "        "
-msgstr[0] "\n投票"
-msgstr[1] "\n投票"
+msgstr[0] ""
+"\n"
+"投票"
+msgstr[1] ""
+"\n"
+"投票"
 
 #: skins/default/templates/unused/question_counter_widget.html:93
 #: skins/default/templates/unused/question_list.html:23
 #: skins/default/templates/unused/questions_ajax.html:27
-#, fuzzy
 msgid "this answer has been accepted to be correct"
-msgstr "有答案已被接受为正确答案"
+msgstr "答案已被接受为正确答案"
 
 #: skins/default/templates/unused/question_counter_widget.html:99
 msgid ""
@@ -5217,8 +4966,12 @@ msgid_plural ""
 "\n"
 "        answers \n"
 "        "
-msgstr[0] "\n回答"
-msgstr[1] "\n回答"
+msgstr[0] ""
+"\n"
+"回答"
+msgstr[1] ""
+"\n"
+"回答"
 
 #: skins/default/templates/unused/question_counter_widget.html:111
 msgid ""
@@ -5229,8 +4982,12 @@ msgid_plural ""
 "\n"
 "        views\n"
 "        "
-msgstr[0] "\n浏览"
-msgstr[1] "\n浏览"
+msgstr[0] ""
+"\n"
+"浏览"
+msgstr[1] ""
+"\n"
+"浏览"
 
 #: skins/default/templates/unused/question_list.html:15
 msgid ""
@@ -5241,8 +4998,12 @@ msgid_plural ""
 "\n"
 "            votes\n"
 "            "
-msgstr[0] "\n投票"
-msgstr[1] "\n投票"
+msgstr[0] ""
+"\n"
+"投票"
+msgstr[1] ""
+"\n"
+"投票"
 
 #: skins/default/templates/unused/question_list.html:35
 msgid ""
@@ -5253,8 +5014,12 @@ msgid_plural ""
 "\n"
 "            answers \n"
 "            "
-msgstr[0] "\n回答"
-msgstr[1] "\n回答"
+msgstr[0] ""
+"\n"
+"回答"
+msgstr[1] ""
+"\n"
+"回答"
 
 #: skins/default/templates/unused/question_list.html:47
 msgid ""
@@ -5265,8 +5030,12 @@ msgid_plural ""
 "\n"
 "            views\n"
 "            "
-msgstr[0] "\n浏览"
-msgstr[1] "\n浏览"
+msgstr[0] ""
+"\n"
+"浏览"
+msgstr[1] ""
+"\n"
+"浏览"
 
 #: skins/default/templates/unused/question_summary_list_roll.html:13
 msgid "answers"
@@ -5281,35 +5050,30 @@ msgid "views"
 msgstr "浏览"
 
 #: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:234
-#, fuzzy
 msgid "no items in counter"
-msgstr "no"
+msgstr "没有其他项目"
 
 #: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
 msgid "Oops, apologies - there was some error"
 msgstr "对不起，系统错误"
 
 #: utils/forms.py:32
-#, fuzzy
 msgid "this field is required"
-msgstr " 标签不能为空。"
+msgstr "必填项"
 
 #: utils/forms.py:46
 msgid "choose a username"
 msgstr "选择一个用户名"
 
 #: utils/forms.py:52
-#, fuzzy
 msgid "user name is required"
-msgstr " 标签不能为空。"
+msgstr "必填项"
 
 #: utils/forms.py:53
-#, fuzzy
 msgid "sorry, this name is taken, please choose another"
-msgstr "对不起，您不能注册该用户名，请换一个试试"
+msgstr "对不起，用户名已存在，请换一个试试"
 
 #: utils/forms.py:54
-#, fuzzy
 msgid "sorry, this name is not allowed, please choose another"
 msgstr "对不起，您不能注册该用户名，请换一个试试"
 
@@ -5330,7 +5094,6 @@ msgid "your email address"
 msgstr "您的电子邮件地址"
 
 #: utils/forms.py:119
-#, fuzzy
 msgid "email address is required"
 msgstr "必填项"
 
@@ -5339,7 +5102,6 @@ msgid "please enter a valid email address"
 msgstr "请输入正确的邮件地址"
 
 #: utils/forms.py:121
-#, fuzzy
 msgid "this email is already used by someone else, please choose another"
 msgstr "该电子邮件已被注册，请选择另一个再试。"
 
@@ -5348,7 +5110,6 @@ msgid "choose password"
 msgstr "密码"
 
 #: utils/forms.py:150
-#, fuzzy
 msgid "password is required"
 msgstr "必填项"
 
@@ -5357,7 +5118,6 @@ msgid "retype password"
 msgstr "确认密码"
 
 #: utils/forms.py:154
-#, fuzzy
 msgid "please, retype your password"
 msgstr "确认密码"
 
@@ -5371,7 +5131,6 @@ msgid "on %(date)s"
 msgstr "在%(date)s"
 
 #: utils/functions.py:67
-#, fuzzy
 msgid "2 days ago"
 msgstr "2天前"
 
@@ -5407,7 +5166,6 @@ msgid "You have %(votes_left)s votes left for today"
 msgstr "你今天还可以投%(votes_left)s次票"
 
 #: views/commands.py:139
-#, fuzzy
 msgid "Sorry, but anonymous users cannot access the inbox"
 msgstr "对不起，匿名用户没有收件箱"
 
@@ -5416,7 +5174,6 @@ msgid "Sorry, something is not right here..."
 msgstr "对不起，这里出了些问题"
 
 #: views/commands.py:226
-#, fuzzy
 msgid "Sorry, but anonymous users cannot accept answers"
 msgstr "匿名用户不能接受回答"
 
@@ -5430,7 +5187,6 @@ msgid "email update frequency has been set to daily"
 msgstr "邮件更新频率已设置成每日更新"
 
 #: views/commands.py:373
-#, fuzzy
 msgid "Bad request"
 msgstr "错误请求"
 
@@ -5454,32 +5210,27 @@ msgstr[0] "%(badge_count)d %(badge_level)s奖章"
 msgstr[1] "%(badge_count)d %(badge_level)s奖章"
 
 #: views/readers.py:446
-#, fuzzy
 msgid "Sorry, the comment you are looking for has been deleted and is no longer accessible"
 msgstr "对不起，你找的这个评论已经被删除"
 
 #: views/users.py:217
 #, fuzzy
 msgid "moderate user"
-msgstr "用户"
+msgstr "中等用户"
 
 #: views/users.py:376
-#, fuzzy
 msgid "user profile"
 msgstr "用户概览"
 
 #: views/users.py:377
-#, fuzzy
 msgid "user profile overview"
 msgstr "用户概览"
 
 #: views/users.py:661
-#, fuzzy
 msgid "recent user activity"
 msgstr "最近活动"
 
 #: views/users.py:662
-#, fuzzy
 msgid "profile - recent activity"
 msgstr "最近活动"
 
@@ -5516,14 +5267,12 @@ msgid "email updates canceled"
 msgstr "邮件更新取消"
 
 #: views/users.py:905
-#, fuzzy
 msgid "profile - email subscriptions"
-msgstr "收藏 - 用户资料"
+msgstr "邮件订阅"
 
 #: views/writers.py:56
-#, fuzzy
 msgid "Sorry, anonymous users cannot upload files"
-msgstr "匿名用户不能投票"
+msgstr "匿名用户不能上传文件"
 
 # todo take these out of settings
 #: views/writers.py:65
@@ -5532,12 +5281,11 @@ msgid "allowed file types are '%(file_types)s'"
 msgstr "只允许上传'%(file_types)s'类型的文件！"
 
 #: views/writers.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "maximum upload file size is %(file_size)sK"
-msgstr "只允许上传%sK大小的文件！"
+msgstr "只允许上传不超过%(file_size)sK大小的文件！"
 
 #: views/writers.py:96
-#, fuzzy
 msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "在文件上传过程中产生了错误，请联系管理员，谢谢^_^"
 
@@ -5547,7 +5295,6 @@ msgid "Sorry, you appear to be logged out and cannot post comments. Please <a hr
 msgstr "对不起，你已经退出，不恩那个在发表评论，请<a href=\"%(sign_in_url)s\">登录</a>."
 
 #: views/writers.py:497
-#, fuzzy
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "匿名用户不能编辑评论"
 
