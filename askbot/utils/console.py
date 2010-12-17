@@ -1,6 +1,8 @@
 """functions that directly handle user input
 """
 import time
+import os
+from askbot.utils import path
 
 def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
     """prints a prompt, accepts keyboard input
@@ -21,3 +23,28 @@ def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
             opt_string = ','.join(choices)
             print invalid_phrase % {'opt_string': opt_string}
         time.sleep(1)
+
+def open_new_file(prompt_phrase, extension = '', hint = None):
+    """will ask for a file name to be typed
+    by user into the console path to the file can be
+    either relative or absolute. Extension will be appended
+    to the given file name.
+    Return value is the file object.
+    """
+    if extension != '':
+        if extension[0] != '.':
+            extension = '.' + extension
+    else:
+        extension = ''
+
+    if hint:
+        file_path = path.extend_file_name(hint, extension)
+        if not os.path.exists(file_path):
+            return open(file_path, 'w+')
+        
+    while 1:
+        file_path = raw_input(prompt_phrase)
+        file_path = path.extend_file_name(file_path, extension)
+
+        if not os.path.exists(file_path):
+            return open(file_path, 'w+')
