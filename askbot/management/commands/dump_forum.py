@@ -22,11 +22,15 @@ The extension ".json" will be added automatically."""
                     )
         print "Saving file %s ..." % dump_file.name
         stdout_orig = sys.stdout
-        sys.stdout = dump_file
-        management.call_command(
-                            'dumpdata',
-                            exclude = ('contenttypes',),
-                            indent = 4
-                        )
-        sys.stdout = stdout_orig
-        print "Done."
+        try:
+            sys.stdout = dump_file
+            management.call_command(
+                                'dumpdata',
+                                exclude = ('contenttypes',),
+                                indent = 4
+                            )
+            sys.stdout = stdout_orig
+            print "Done."
+        except KeyboardInterrupt:
+            sys.stdout = stdout_orig
+            print "\nCanceled."

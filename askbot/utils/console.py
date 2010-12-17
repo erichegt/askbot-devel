@@ -37,14 +37,14 @@ def open_new_file(prompt_phrase, extension = '', hint = None):
     else:
         extension = ''
 
+    file_object = None
     if hint:
         file_path = path.extend_file_name(hint, extension)
-        if not os.path.exists(file_path):
-            return open(file_path, 'w+')
+        file_object = path.create_file_if_does_not_exist(file_path, print_warning = True)
         
-    while 1:
+    while file_object == None:
         file_path = raw_input(prompt_phrase)
         file_path = path.extend_file_name(file_path, extension)
+        file_object = path.create_file_if_does_not_exist(file_path, print_warning = True)
 
-        if not os.path.exists(file_path):
-            return open(file_path, 'w+')
+    return file_object
