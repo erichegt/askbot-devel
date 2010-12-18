@@ -38,6 +38,17 @@ The bulk of the management commands fall into this group and will probably be th
 | --to <to_tags> --user-id        | who will be assigned as the performer of the retag action.  |
 | <user_id>`                      | If more than is in the `--from` or the `--to` parameters    |
 |                                 | then that parameter quoted, e.g. `--to "tag1 tag2".         |
+|                                 | If user id is not given, the administrator with the smallest|
+|                                 | id number will be automatically assigned.                   |
++---------------------------------+-------------------------------------------------------------+
+| `rename_tags_id --from          | This command is the same as `rename_tags`, but takes the tag|
+| <from_tag_ids> --to             | id's as arguments.                                          |
+| <to_tag_ids> --user_id          |                                                             |
+| <user_id>`                      |                                                             |
++---------------------------------+-------------------------------------------------------------+
+| `delete_unused_tags`            | Permanently deletes tags that do not appear in any questions|
+|                                 | , including the questions that are themselves               |
+|                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
 
 Batch jobs
@@ -60,10 +71,47 @@ Batch jobs are those that should be run periodically. A program called `cron` ca
 Data repair commands
 ====================
 
-Under certain circumstances (especially when using MySQL database with MyISAM storage engine or when venturing to adapt the software to your needs) some records in the database tables may become internally inconsistent. The commands from this section will help fix those issues:
+Under certain circumstances (especially when using MySQL database with MyISAM 
+storage engine or when venturing to adapt the software to your needs) some 
+records in the database tables may become internally inconsistent. 
+The commands from this section will help fix those issues.
 
-* `add_missing_subscriptions` - adds default values of email subscription settings to users that lack them
-* `fix_answer_counts` - recalculates answer counts for all questions
-* `fix_revisionless_posts` - adds a revision record to posts that lack them
+.. note::
 
-The commands are safe to run at any time, also they do not require additional parameters. In the future all these will be replaced with just one simple command.
+ Data inconsistency in the Askbot project is considered as a critical error and as a matter of 
+ the project policy is addressed on the day of reporting. If you discover such issue - please
+ report it at the forum or by email at `admin@askbot.org`
+
++--------------------------------+-------------------------------------------------------------+
+| command                        | purpose                                                     |
++================================+=============================================================+
+| `add_missing_subscriptions`    | adds default values of email subscription settings to users |
+|                                | that lack them                                              |
++--------------------------------+-------------------------------------------------------------+
+| `fix_answer_counts`            | recalculates answer counts for all questions                |
++--------------------------------+-------------------------------------------------------------+
+| `fix_revisionless_posts`       | adds a revision record to posts that lack them              |
++--------------------------------+-------------------------------------------------------------+
+
+The above commands are safe to run at any time, also they do not require 
+additional parameters. In the future all these will be replaced with just one simple command.
+
+Developer commands
+==================
+
+Besides the commands designed to help run the forum, there are several aiming to help
+the developers of the Askbot project:
+
++--------------------------------+-------------------------------------------------------------+
+| command                        | purpose                                                     |
++================================+=============================================================+
+| `make_docs`                    | Rebuild HTML documentation for the project                  |
++--------------------------------+-------------------------------------------------------------+
+| `jinja2_makemessages`          | Extract translatable strings into the `.po` files. Works    |
+|                                | exactly the same way as the django `makemessages` command   |
+|                                | but extracts strings from Jinja2 templates that are used    |
+|                                | by the Askbot project. **Note:** the `jinja2_makemessages`  |
+|                                | must be run from the `askbot` app directory, unlike all the |
+|                                | remaining commands that are expected to be run from the     |
+|                                | site root directory.                                        |
++--------------------------------+-------------------------------------------------------------+
