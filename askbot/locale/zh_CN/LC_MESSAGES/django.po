@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-11 23:41-0600\n"
-"PO-Revision-Date: 2010-12-14 08:56\n"
+"PO-Revision-Date: 2010-12-15 00:54\n"
 "Last-Translator: <suyu8776@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -67,18 +67,18 @@ msgstr " 标签不能为空。"
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "最多只能有%(tag_count)d个标签"
-msgstr[1] ""
+msgstr[1] "最多只能有%(tag_count)d个标签"
 
 #: forms.py:111
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "标签最多只能有%(max_chars)d个字符"
-msgstr[1] ""
+msgstr[1] "标签最多只能有%(max_chars)d个字符"
 
 #: forms.py:119
 msgid "use-these-chars-in-tags"
-msgstr ""
+msgstr "在标签中使用这些字符"
 
 # index.html
 #: forms.py:130
@@ -405,7 +405,7 @@ msgstr "受欢迎问题:最小浏览次数"
 
 #: conf/badges.py:111
 msgid "Notable Question: minimum views"
-msgstr "著名的问题:最小浏览次数"
+msgstr "关注的问题:最小浏览次数"
 
 # close.html
 #: conf/badges.py:120
@@ -418,7 +418,7 @@ msgstr "自学者：答案最少推荐票数"
 
 #: conf/badges.py:138
 msgid "Civic Duty: minimum votes"
-msgstr "一般义务:最少投票数"
+msgstr "居民义务:最少投票数"
 
 #: conf/badges.py:147
 msgid "Enlightened Duty: minimum upvotes"
@@ -446,7 +446,7 @@ msgstr "收藏问题:最少星数"
 
 #: conf/badges.py:201
 msgid "Stellar Question: minimum stars"
-msgstr "星号问题:最少星数"
+msgstr "重要问题:最少星数"
 
 #: conf/email.py:12
 msgid "Email and email alert settings"
@@ -1097,7 +1097,7 @@ msgstr "最新问题"
 #: const/__init__.py:41 skins/default/templates/users.html:25
 #: skins/default/templates/users.html:26
 msgid "oldest"
-msgstr "最早加入排在前面"
+msgstr "按最早加入"
 
 #: const/__init__.py:42
 msgid "active"
@@ -1303,7 +1303,7 @@ msgstr "第一次来？查看<a href=\"%s\">FAQ</a>!"
 
 #: deps/django_authopenid/forms.py:116 deps/django_authopenid/views.py:137
 msgid "i-names are not supported"
-msgstr "基本的HTML标签也是支持的"
+msgstr "支持基本的HTML标签"
 
 #: deps/django_authopenid/forms.py:237
 #, python-format
@@ -1831,15 +1831,15 @@ msgstr "1000次查看的问题"
 
 #: migrations/0005_install_badges.py:17
 msgid "Citizen patrol"
-msgstr ""
+msgstr "社区居民"
 
 #: migrations/0005_install_badges.py:17
 msgid "citizen-patrol"
-msgstr ""
+msgstr "社区居民"
 
 #: migrations/0005_install_badges.py:17 models/badges.py:550
 msgid "First flagged post"
-msgstr "第一个标记的发布"
+msgstr "第一次标记"
 
 #: migrations/0005_install_badges.py:18 models/badges.py:562
 msgid "Cleanup"
@@ -1855,11 +1855,11 @@ msgstr "第一次回滚"
 
 #: migrations/0005_install_badges.py:19 models/badges.py:226
 msgid "Critic"
-msgstr ""
+msgstr "评论家"
 
 #: migrations/0005_install_badges.py:19
 msgid "critic"
-msgstr ""
+msgstr "评论家"
 
 #: migrations/0005_install_badges.py:19
 msgid "First down vote"
@@ -1939,11 +1939,11 @@ msgstr "回答的至少有一个赞成票的问题"
 
 #: migrations/0005_install_badges.py:26 models/badges.py:643
 msgid "Autobiographer"
-msgstr "自传作者"
+msgstr "完善个人资料者"
 
 #: migrations/0005_install_badges.py:26
 msgid "autobiographer"
-msgstr "自传作者"
+msgstr "完善个人资料者"
 
 #: migrations/0005_install_badges.py:26 models/badges.py:646
 msgid "Completed all user profile fields"
@@ -1987,11 +1987,11 @@ msgstr "有100赞成票的问题"
 
 #: migrations/0005_install_badges.py:30 models/badges.py:688
 msgid "Stellar Question"
-msgstr "星号问题"
+msgstr "重要问题"
 
 #: migrations/0005_install_badges.py:30
 msgid "stellar-question"
-msgstr "星号问题"
+msgstr "重要问题"
 
 #: migrations/0005_install_badges.py:30
 msgid "Question favorited by 100 users"
@@ -2060,15 +2060,15 @@ msgstr "被25人收藏的问题"
 
 #: migrations/0005_install_badges.py:36
 msgid "Civic duty"
-msgstr ""
+msgstr "居民义务"
 
 #: migrations/0005_install_badges.py:36
 msgid "civic-duty"
-msgstr ""
+msgstr "居民义务"
 
 #: migrations/0005_install_badges.py:36
 msgid "Voted 300 times"
-msgstr "投票300次的问题"
+msgstr "已投票300次"
 
 #: migrations/0005_install_badges.py:37
 msgid "Strunk & White"
@@ -2119,13 +2119,12 @@ msgid "Active member for a year"
 msgstr "一年中活跃用户"
 
 #: migrations/0005_install_badges.py:41 models/badges.py:424
-#, fuzzy
 msgid "Notable Question"
-msgstr "有名的问题"
+msgstr "关注的问题"
 
 #: migrations/0005_install_badges.py:41
 msgid "notable-question"
-msgstr "值得注意的问题"
+msgstr "关注的问题"
 
 #: migrations/0005_install_badges.py:41
 msgid "Asked a question with 2,500 views"
@@ -2512,12 +2511,12 @@ msgstr "第一个反对票"
 
 #: models/badges.py:236
 msgid "Civic Duty"
-msgstr ""
+msgstr "居民义务"
 
 #: models/badges.py:237
 #, python-format
 msgid "Voted %(num)s times"
-msgstr "投票%(num)s次"
+msgstr "已投票%(num)s次"
 
 #: models/badges.py:251
 #, python-format
@@ -2569,7 +2568,7 @@ msgstr "问了一个超过%(days)s天且至少有%(votes)s投票的问题"
 
 #: models/badges.py:547
 msgid "Citizen Patrol"
-msgstr ""
+msgstr "社区居民"
 
 #: models/badges.py:622
 msgid "Associate Editor"
@@ -2863,22 +2862,22 @@ msgstr "查看常见问题"
 #: skins/default/templates/answer_edit_tips.html:25
 #: skins/default/templates/question_edit_tips.html:22
 msgid "Markdown tips"
-msgstr "Markdown快速参考"
+msgstr "标记栏参考"
 
 #: skins/default/templates/answer_edit_tips.html:29
 #: skins/default/templates/question_edit_tips.html:26
 msgid "*italic*"
-msgstr "斜体"
+msgstr "*斜体*表示*号内字体为斜体"
 
 #: skins/default/templates/answer_edit_tips.html:32
 #: skins/default/templates/question_edit_tips.html:29
 msgid "**bold**"
-msgstr "**粗体**"
+msgstr "**粗体**表示2个*号内字体为粗体"
 
 #: skins/default/templates/answer_edit_tips.html:36
 #: skins/default/templates/question_edit_tips.html:33
 msgid "*italic* or _italic_"
-msgstr "*斜体* 或者 _斜体_"
+msgstr "*斜体* , _斜体_表示*号或_号内字体为斜体"
 
 #: skins/default/templates/answer_edit_tips.html:39
 #: skins/default/templates/question_edit_tips.html:36
@@ -2910,7 +2909,7 @@ msgstr "列表："
 #: skins/default/templates/answer_edit_tips.html:56
 #: skins/default/templates/question_edit_tips.html:54
 msgid "basic HTML tags are also supported"
-msgstr "基本的HTML标签也是支持的"
+msgstr "支持基本的HTML标签"
 
 #: skins/default/templates/answer_edit_tips.html:60
 #: skins/default/templates/question_edit_tips.html:58
@@ -2974,7 +2973,7 @@ msgstr "奖牌列表"
 
 #: skins/default/templates/badges.html:6
 msgid "Badges"
-msgstr "枚奖牌"
+msgstr "奖牌"
 
 #: skins/default/templates/badges.html:10
 msgid "Community gives you awards for your questions, answers and votes."
@@ -2986,7 +2985,7 @@ msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
 "    "
-msgstr "这里列出社区所有的奖牌，以及到目前为此，每个奖牌被授予的用户人数。在这里%(feedback_faq_url)s给我们反馈。"
+msgstr "这里列出社区所有的奖牌，以及每类奖牌获取的所需条件。点击<a href=\\\"%(feedback_faq_url)s\\\">这里<\\a>给我们反馈。"
 
 #: skins/default/templates/badges.html:27
 #, python-format
@@ -2995,15 +2994,15 @@ msgstr "%(type)s"
 
 #: skins/default/templates/badges.html:40
 msgid "Community badges"
-msgstr "社区奖牌"
+msgstr "奖牌等级"
 
 #: skins/default/templates/badges.html:43
 msgid "gold badge: the highest honor and is very rare"
-msgstr "金牌:十分罕见之最高荣耀"
+msgstr "金牌:十分罕见之最高奖励"
 
 #: skins/default/templates/badges.html:46
 msgid "gold badge description"
-msgstr "金牌描述"
+msgstr "金牌:十分罕见之最高奖励"
 
 #: skins/default/templates/badges.html:51
 msgid "silver badge: occasionally awarded for the very high quality contributions"
@@ -3011,7 +3010,7 @@ msgstr "银牌:偶尔颁发之优质奖章"
 
 #: skins/default/templates/badges.html:55
 msgid "silver badge description"
-msgstr "银牌描述"
+msgstr "银牌:偶尔颁发之优质奖章"
 
 #: skins/default/templates/badges.html:58
 msgid "bronze badge: often given as a special honor"
@@ -3019,7 +3018,7 @@ msgstr "铜牌:时常授予之特殊荣誉"
 
 #: skins/default/templates/badges.html:62
 msgid "bronze badge description"
-msgstr "铜牌描述"
+msgstr "铜牌:时常授予之特殊荣誉"
 
 # close.html
 #: skins/default/templates/close.html:3 skins/default/templates/close.html:6
@@ -3092,7 +3091,7 @@ msgstr "什么样的回答是不受欢迎的？"
 
 #: skins/default/templates/faq.html:21
 msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
-msgstr "希望用户提供针对提问的技术回答，可以是进一步了解问题实质，给予参考方案，或完全解决问题的回答。我们希望通过问答的形式解决用户的实际问题。因此，<span class=\"yellowbg\">我们不>欢迎在回答中出现不是回答问题的内容，包括针对他人回答的讨论，和其他无意义的浪费网络资源行为</span>。CNProg建议您使用<span class=\"yellowbg\">评论</span>功能来讨论你的意见和想法。"
+msgstr "希望用户针对提问的问题回答，可以是进一步了解问题实质，给予参考方案，或完全解决问题的回答。我们希望通过问答的形式解决用户的实际问题。因此，我们不欢迎在回答中出现不是回答问题的内容，包括针对他人回答的讨论，和其他无意义的浪费网络资源行为。"
 
 #: skins/default/templates/faq.html:24
 msgid "Who moderates this community?"
@@ -3104,11 +3103,11 @@ msgstr "答案是：<span class=\"yellowbg\">每个用户。</span>"
 
 #: skins/default/templates/faq.html:26
 msgid "This website is moderated by the users."
-msgstr "社区没有严格意义上的管理员身份"
+msgstr "社区没有严格意义上的管理员身份。"
 
 #: skins/default/templates/faq.html:27
 msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
-msgstr "通过积分运作，<span class=\"yellowbg\">每个用户都有权限创建标签，进行对所有问题、回答的投票、编辑、关闭等操作。</span>"
+msgstr "通过积分运作，每个用户都有权限创建标签，对所有问题、回答投票、编辑、关闭等操作。"
 
 #: skins/default/templates/faq.html:32
 msgid "How does reputation system work?"
@@ -3123,8 +3122,8 @@ msgstr "更新概要："
 msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against will subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. There is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> points that can be accumulated for a question or answer per day. The table below explains reputation point requirements for each type of moderation task."
 msgstr ""
 "例如，如果你问一个有趣的问题或给别人一个有帮助的答案，你的输入将被投赞成票。否则你的答案是误导的，你将被投反对票。\n"
-"每个赞成票将增加<strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong>分，每个反对票将减去<strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong>分\n"
-"每个问题或答案都将有一个<strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong>分限制。下面的表格解释了每个合适任务的积分分要求"
+"每个赞成票将增加<strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong>分，每个反对票将减去<strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong>分，\n"
+"每个问题或答案都将有一个<strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong>分限制。下表解释了每个相应动作的积分要求："
 
 #: skins/default/templates/faq.html:44
 #: skins/default/templates/user_votes.html:10
@@ -3176,11 +3175,11 @@ msgstr "如何使用%(send_email_key_url)s %(gravatar_faq_url)s验证邮件信�
 
 #: skins/default/templates/faq.html:93
 msgid "what is gravatar"
-msgstr "什么是图像"
+msgstr "什么是图像及如何修改？"
 
 #: skins/default/templates/faq.html:94
 msgid "gravatar faq info"
-msgstr "图像faq"
+msgstr "图像常见问题"
 
 #: skins/default/templates/faq.html:97
 msgid "To register, do I need to create new password?"
@@ -3200,7 +3199,7 @@ msgstr "为什么其他人可以修改我的问题/回答？"
 
 #: skins/default/templates/faq.html:104
 msgid "Goal of this site is..."
-msgstr "CNProg 是为了帮助程序员解决更多问题，更加方便的解决问题。"
+msgstr "此网站的木的是帮助大家更好更全面的解决自己的问题。"
 
 #: skins/default/templates/faq.html:104
 msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
@@ -3217,7 +3216,7 @@ msgstr "还有其他问题？"
 #: skins/default/templates/faq.html:110
 #, python-format
 msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
-msgstr "请提交你的疑问%(ask_question_url)s,帮助我们一起完善网站"
+msgstr "请提交你的<a href=\\\"%(ask_question_url)s\\\">疑问<\\a>,帮助我们一起完善网站"
 
 #: skins/default/templates/faq.html:112
 #: skins/default/templates/header.html:100
@@ -3884,7 +3883,7 @@ msgstr "受欢迎的提问"
 
 #: skins/default/templates/question_edit_tips.html:6
 msgid "please ask a relevant question"
-msgstr "请问与此相关的问题"
+msgstr "请问与此社区相关的问题"
 
 #: skins/default/templates/question_edit_tips.html:9
 msgid "please try provide enough details"
@@ -4168,11 +4167,11 @@ msgstr "按名称排序"
 
 #: skins/default/templates/tags.html:20
 msgid "sorted by frequency of tag use"
-msgstr "按标签被使用的次数排序"
+msgstr "按标签流行度排序"
 
 #: skins/default/templates/tags.html:21
 msgid "by popularity"
-msgstr "按流行程度排序"
+msgstr "按流行度排序"
 
 #: skins/default/templates/tags.html:27
 #, python-format
@@ -4517,11 +4516,11 @@ msgstr "用户列表"
 
 #: skins/default/templates/users.html:19 skins/default/templates/users.html:20
 msgid "recent"
-msgstr "最新注册排在前面"
+msgstr "按最新注册"
 
 #: skins/default/templates/users.html:31 skins/default/templates/users.html:32
 msgid "by username"
-msgstr "按用户名排序"
+msgstr "按用户名"
 
 #: skins/default/templates/users.html:38
 #, python-format
@@ -5048,7 +5047,7 @@ msgstr "浏览"
 
 #: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:234
 msgid "no items in counter"
-msgstr "没有其他项目"
+msgstr "无"
 
 #: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
 msgid "Oops, apologies - there was some error"
@@ -5237,7 +5236,7 @@ msgstr "回应 - 用户资料"
 
 #: views/users.py:795
 msgid "profile - votes"
-msgstr "投票 - 用户资料"
+msgstr "用户资料 - 投票"
 
 #: views/users.py:833
 msgid "user reputation in the community"
