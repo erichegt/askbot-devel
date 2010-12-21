@@ -1,0 +1,55 @@
+{% if request.user.is_authenticated() %}
+    <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username }}</a> 
+    {% spaceless %}
+    {% if request.user.new_response_count > 0 or request.user.seen_response_count > 0 %}
+    <a class='ab-responses-envelope' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
+        <img 
+            alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
+            {% if request.user.new_response_count > 0 %}
+                src="{{ "/images/mail-envelope-full.png"|media }}"
+                title="{% trans response_count=request.user.new_response_count %}you have a new response{% pluralize %}you nave {{response_count}} new responses{% endtrans %}"
+            {% elif request.user.seen_response_count > 0 %}
+                src="{{ "/images/mail-envelope-empty.png"|media }}"
+                title="{% trans %}no new responses yet{% endtrans %}"
+            {% endif %}
+        />
+    </a>
+    {% endif %}
+    {% if moderation_items %}
+        <a class="ab-responses-envelope"
+            href="{{request.user.get_absolute_url()}}?sort=inbox&section=flags"
+        >
+        {% if moderation_items['new_count'] > 0 %}
+            <img src="{{'/images/dialog-warning.png'|media}}"
+            {% if moderation_items['seen_count'] > 0 %}
+                alt="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+            {% else %}
+                alt="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+            {% endif %}
+            />
+        {% elif moderation_items['seen_count'] > 0 %}
+            <img src={{'/images/dialog-warning-off.png'|media}} 
+                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+            />
+        {% endif %}
+        </a>
+    {% endif %}
+    {#
+                {% endif %}
+        {% else if moderation_items['seen_count'] > 0 %}
+        {% endif %}
+    {% endif %#}
+    {% endspaceless %}
+    ({{ macros.user_long_score_and_badge_summary(user) }})
+    <a href="{% url logout %}">{% trans %}logout{% endtrans %}</a>
+{% else %}
+    <a href="{% url user_signin %}">{% trans %}login{% endtrans %}</a>
+{% endif %}
+<a href="{% url about %}">{% trans %}about{% endtrans %}</a>
+<a href="{% url faq %}">{% trans %}faq{% endtrans %}</a>
+{% if request.user.is_administrator %}
+<a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
+{% endif %}

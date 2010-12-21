@@ -4,121 +4,13 @@
     {% spaceless %}
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        {% block meta_description %}
-        <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
-        {% endblock %}
-        <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
-        {% if settings.GOOGLE_SITEMAP_CODE %}
-        <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
-        {% endif %}
-        <link rel="shortcut icon" href="{{ "/images/favicon.gif"|media }}" />
-        <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
-        {% block forestyle %}{% endblock %}
-        {% if user_messages %}
-        <style type="text/css">
-            body { margin-top:2.4em; }
-        </style>
-        {% endif %}
-        <script type="text/javascript">
-            var askbot = {};
-            askbot['data'] = {};
-            askbot['urls'] = {};
-            askbot['settings'] = {};
-            askbot['messages'] = {};
-        </script>
-        {% block forejs %}
-        {% endblock %}
+        {% include "blocks/head.html" %}
+        {# avoid adding javascript here so that pages load faster #}
     </head>
     {% endspaceless %}
     <body{% if page_class %} class="{{page_class}}"{% endif %}>
-        <div class="notify" style="display:none">
-            {% if user_messages %}
-                {% for message in user_messages %}
-                      <p class="darkred">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-            <a id="close-notify" onclick="notify.close(true)">&times;</a>
-        </div>
-        {% include "header.html" %}
-        {% block body %}
-        {% endblock %}
-        {% include "footer.html" %}
-        <script type="text/javascript">
-            var i18nLang = '{{settings.LANGUAGE_CODE}}';
-            var scriptUrl = '/{{settings.ASKBOT_URL}}'
-            var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
-            var enableMathJax = {% if settings.ENABLE_MATHJAX %}true{% else %}false{% endif %};
-            {% if request.user.is_authenticated() %}
-                askbot['data']['userIsAuthenticated'] = true;
-                askbot['data']['userId'] = {{request.user.id}};
-                askbot['data']['userIsAdminOrMod'] = {% if 
-                                                        request.user.is_administrator()
-                                                        or request.user.is_moderator()
-                                                    %}true{% else %}false{% endif %};
-            {% else %}
-                askbot['data']['userIsAuthenticated'] = false;
-            {% endif %}
-        </script>
-        <script 
-            type="text/javascript"
-            {% if settings.DEBUG %}
-                src="{{"/js/jquery-1.4.3.js"|media}}"
-            {% else %}
-                src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"
-            {% endif %}
-        ></script>
-        <script type='text/javascript' src="{{"/js/i18n.js"|media }}"></script>
-        <script type='text/javascript' src="{{"/js/jquery.i18n.js"|media }}"></script>
-        <script type='text/javascript' src="{{"/js/utils.js"|media }}"></script>
-        {% if settings.ENABLE_MATHJAX %}
-            <script type='text/javascript' src="{{settings.MATHJAX_BASE_URL}}/MathJax.js">
-                MathJax.Hub.Config({
-                    extensions: ["tex2jax.js"],
-                    jax: ["input/TeX","output/HTML-CSS"],
-                    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-                });
-            </script>
-        {% endif %}
-        {% block endjs %}
-        {% endblock %}
-        <script type="text/javascript">
-        {% if active_tab != "tags" and active_tab != "users" %}
-        {# start asking question with title from search query #}
-            $(document).ready(function(){
-                $('#nav_ask').click(
-                    function(){
-                        var starting_title = $('#keywords').attr('value');
-                        var new_url = $(this).attr('href') + '?title=' + encodeURIComponent(starting_title);
-                        window.location.href = new_url;
-                        return false;
-                    }
-                );
-                //{# focus input on the search bar endcomment #}
-                {% if active_tab != "ask" %}
-                    $('#keywords').focus();
-                {% else %}
-                    $('#id_title').focus();
-                {% endif %}
-            });
-        {% endif %}
-        {% if user_messages %}
-            $('#validate_email_alert').click(function(){notify.close(true)})
-            notify.show();
-        {% endif %}
-        </script>
-        {% if settings.GOOGLE_ANALYTICS_KEY %}
-        <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-            </script>
-            <script type="text/javascript">
-            try {
-            var pageTracker = _gat._getTracker('{{ settings.GOOGLE_ANALYTICS_KEY }}');
-            pageTracker._trackPageview();
-            } catch(err) {}
-        </script>
-        {% endif %}
+        {% include "blocks/forum_body.html" %}
+        {% include "blocks/bottom_scripts.html" %}
     </body>
 </html>
 <!-- end template base.html -->

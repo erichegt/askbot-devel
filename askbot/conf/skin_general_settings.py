@@ -32,6 +32,20 @@ settings.register(
 )
 
 settings.register(
+    BooleanValue(
+        GENERAL_SKIN_SETTINGS,
+        'SHOW_LOGO',
+        description = _('Show logo'),
+        help_text = _(
+                        'Check if you want to show logo in the forum header '
+                        'or uncheck in the case you do not want the logo to '
+                        'appear in the default location'
+                    ),
+        default = True
+    )
+)
+
+settings.register(
     ImageValue(
         GENERAL_SKIN_SETTINGS,
         'SITE_FAVICON',
@@ -62,6 +76,18 @@ settings.register(
         upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/pw-login.gif',
         url_resolver = skin_utils.get_media_url
+    )
+)
+
+settings.register(
+    BooleanValue(
+        GENERAL_SKIN_SETTINGS,
+        'SHOW_FOOTER',
+        description = _('Show footer'),
+        help_text = _(
+                    'Check if you want to show the footer on each forum page'
+                ),
+        default = True
     )
 )
 

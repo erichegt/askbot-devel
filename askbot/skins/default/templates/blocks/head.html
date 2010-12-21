@@ -1,0 +1,25 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% block meta_description %}
+<meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
+{% endblock %}
+<meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
+{% if settings.GOOGLE_SITEMAP_CODE %}
+<meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
+{% endif %}
+<link rel="shortcut icon" href="{{ "/images/favicon.gif"|media }}" />
+<link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
+{% block forestyle %}{% endblock %}
+{% if user_messages %}
+<style type="text/css">
+    body { margin-top:2.4em; }
+</style>
+{% endif %}
+<script type="text/javascript">
+    var askbot = {};
+    askbot['data'] = {};
+    askbot['urls'] = {};
+    askbot['settings'] = {};
+    askbot['messages'] = {};
+</script>
+{% block forejs %}
+{% endblock %}
