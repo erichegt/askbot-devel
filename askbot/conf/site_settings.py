@@ -55,7 +55,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_SHORT_NAME',
-        default=_('Askbot'),
+        default='Askbot',
         description=_('Short name for your Q&A forum')
     )
 )

@@ -307,8 +307,8 @@ class ChangeUserStatusForm(forms.Form):
             if user_status == 'select':
                 del self.cleaned_data['user_status']
                 msg = _(
-                        'If you wish to change %(username)s\'s status, ' \
-                        + 'please make a meaningful selection.'
+                        'If you wish to change %(username)s\'s status, '
+                        'please make a meaningful selection.'
                     ) % {'username': self.subject.username }
                 raise forms.ValidationError(msg)
 

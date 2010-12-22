@@ -142,7 +142,7 @@ settings.register(
     livesettings.BooleanValue(
         EXTERNAL_KEYS,
         'USE_LDAP_FOR_PASSWORD_LOGIN',
-        description=_('User LDAP authentication for the password login'),
+        description=_('Use LDAP authentication for the password login'),
         defaut=False
     )
 )
