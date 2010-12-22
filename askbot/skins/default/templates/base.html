@@ -9,7 +9,21 @@
     </head>
     {% endspaceless %}
     <body{% if page_class %} class="{{page_class}}"{% endif %}>
-        {% include "blocks/forum_body.html" %}
+        {#% include "blocks/forum_body.html" %#}
+        <div class="notify" style="display:none">
+            {% if user_messages %}
+                {% for message in user_messages %}
+                      <p class="darkred">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+            <a id="close-notify" onclick="notify.close(true)">&times;</a>
+        </div>
+        {% include "header.html" %}
+        {% block body %}
+        {% endblock %}
+        {% if settings.SHOW_FOOTER %}
+            {% include "footer.html" %}
+        {% endif %}
         {% include "blocks/bottom_scripts.html" %}
     </body>
 </html>
