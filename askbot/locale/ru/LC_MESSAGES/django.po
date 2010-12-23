@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-21 21:42-0600\n"
+"POT-Creation-Date: 2010-12-22 21:07-0600\n"
 "PO-Revision-Date: 2010-12-21 21:37\n"
 "Last-Translator: <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,7 +293,7 @@ msgid "revisions/"
 msgstr "pravki/"
 
 #: urls.py:58 urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83
-#: urls.py:88 urls.py:93 urls.py:98
+#: urls.py:88 urls.py:93 urls.py:98 skins/default/templates/question.html:431
 msgid "questions/"
 msgstr "voprosy/"
 
@@ -317,7 +317,7 @@ msgstr "otkryvaem-zanovo/"
 msgid "answer/"
 msgstr "otvet/"
 
-#: urls.py:93
+#: urls.py:93 skins/default/templates/question.html:431
 msgid "vote/"
 msgstr "golosuem/"
 
@@ -325,7 +325,8 @@ msgstr "golosuem/"
 msgid "command/"
 msgstr "komanda/"
 
-#: urls.py:130
+#: urls.py:130 skins/default/templates/question.html:429
+#: skins/default/templates/questions.html:252
 msgid "question/"
 msgstr "vopros/"
 
@@ -333,23 +334,25 @@ msgstr "vopros/"
 msgid "tags/"
 msgstr "temy/"
 
-#: urls.py:140 urls.py:146
+#: urls.py:140 urls.py:146 skins/default/templates/questions.html:247
+#: skins/default/templates/questions.html:248
 msgid "mark-tag/"
 msgstr "pomechayem-temy/"
 
-#: urls.py:140
+#: urls.py:140 skins/default/templates/questions.html:247
 msgid "interesting/"
 msgstr "interesnaya/"
 
-#: urls.py:146
+#: urls.py:146 skins/default/templates/questions.html:248
 msgid "ignored/"
 msgstr "neinteresnaya/"
 
-#: urls.py:152
+#: urls.py:152 skins/default/templates/questions.html:249
 msgid "unmark-tag/"
 msgstr "otmenyaem-pometku-temy/"
 
 #: urls.py:158 urls.py:164 urls.py:169
+#: skins/default/templates/questions.html:253
 msgid "users/"
 msgstr "lyudi/"
 
@@ -365,19 +368,19 @@ msgstr "soobsheniya/"
 msgid "markread/"
 msgstr "otmechaem-prochitannoye/"
 
-#: urls.py:199
+#: urls.py:200
 msgid "upload/"
 msgstr "zagruzhaem-file/"
 
-#: urls.py:200
+#: urls.py:201
 msgid "search/"
 msgstr "poisk/"
 
-#: urls.py:201
+#: urls.py:202
 msgid "feedback/"
 msgstr "obratnaya-svyaz/"
 
-#: urls.py:202 setup_templates/settings.py:182
+#: urls.py:203 setup_templates/settings.py:182
 #: skins/default/templates/authopenid/signin.html:249
 msgid "account/"
 msgstr "account/"
@@ -1214,20 +1217,20 @@ msgstr "спам или реклама"
 msgid "too localized"
 msgstr "слишком специализированный"
 
-#: const/__init__.py:40
+#: const/__init__.py:40 const/message_keys.py:28
 msgid "newest"
 msgstr "новые"
 
-#: const/__init__.py:41 skins/default/templates/users.html:25
-#: skins/default/templates/users.html:26
+#: const/__init__.py:41 const/message_keys.py:26
+#: skins/default/templates/users.html:25 skins/default/templates/users.html:26
 msgid "oldest"
 msgstr "старожилы"
 
-#: const/__init__.py:42
+#: const/__init__.py:42 const/message_keys.py:32
 msgid "active"
 msgstr "активные"
 
-#: const/__init__.py:43
+#: const/__init__.py:43 const/message_keys.py:30
 msgid "inactive"
 msgstr "неактивные"
 
@@ -1247,7 +1250,7 @@ msgstr "больше голосов"
 msgid "least voted"
 msgstr "меньше голосов"
 
-#: const/__init__.py:48
+#: const/__init__.py:48 const/message_keys.py:24
 msgid "relevance"
 msgstr "уместность"
 
@@ -1422,6 +1425,66 @@ msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr ""
 "Здравствуйте, Вы здесь впервые? Посмотрите наши <a href=\"%s\">часто "
 "задаваемые вопросы</a>!"
+
+#: const/message_keys.py:22
+#, fuzzy
+msgid "most relevant questions"
+msgstr "ваш вопрос должен соответствовать тематике сообщества"
+
+#: const/message_keys.py:23
+#, fuzzy
+msgid "click to see most relevant questions"
+msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
+
+#: const/message_keys.py:25
+msgid "click to see the oldest questions"
+msgstr "нажмите, чтобы увидеть старые вопросы"
+
+#: const/message_keys.py:27
+msgid "click to see the newest questions"
+msgstr "нажмите, чтобы увидеть последние вопросы"
+
+#: const/message_keys.py:29
+msgid "click to see the least recently updated questions"
+msgstr "нажмите, чтобы посмотреть последние обновленные вопросы"
+
+#: const/message_keys.py:31
+msgid "click to see the most recently updated questions"
+msgstr "нажмите, чтобы посмотреть недавно обновленные вопросы"
+
+#: const/message_keys.py:33
+#, fuzzy
+msgid "click to see the least answered questions"
+msgstr "нажмите, чтобы увидеть старые вопросы"
+
+#: const/message_keys.py:34
+msgid "less answers"
+msgstr "меньше ответов"
+
+#: const/message_keys.py:35
+#, fuzzy
+msgid "click to see the most answered questions"
+msgstr "нажмите, чтобы увидеть последние вопросы"
+
+#: const/message_keys.py:36
+msgid "more answers"
+msgstr "кол-ву ответов"
+
+#: const/message_keys.py:37
+msgid "click to see least voted questions"
+msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
+
+#: const/message_keys.py:38
+msgid "unpopular"
+msgstr "непопулярный"
+
+#: const/message_keys.py:39
+msgid "click to see most voted questions"
+msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
+
+#: const/message_keys.py:40
+msgid "popular"
+msgstr "популярные"
 
 #: deps/django_authopenid/forms.py:116 deps/django_authopenid/views.py:137
 msgid "i-names are not supported"
@@ -1907,440 +1970,6 @@ msgstr ""
 "возникнет необходимость - пожалуйста свяжитесь с администратором форума по %"
 "(email)s."
 
-#: migrations/0005_install_badges.py:11 models/badges.py:132
-msgid "Disciplined"
-msgstr "Дисциплина"
-
-#: migrations/0005_install_badges.py:11
-msgid "disciplined"
-msgstr "дисциплина"
-
-#: migrations/0005_install_badges.py:11
-msgid "Deleted own post with score of 3 or higher"
-msgstr "Удалили своё сообщение с 3-мя или более положительными откликами"
-
-#: migrations/0005_install_badges.py:12 models/badges.py:154
-msgid "Peer Pressure"
-msgstr "Коллегиальное давление"
-
-#: migrations/0005_install_badges.py:12
-msgid "peer-pressure"
-msgstr "коллегиальное-давление"
-
-#: migrations/0005_install_badges.py:12
-msgid "Deleted own post with score of -3 or lower"
-msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
-
-#: migrations/0005_install_badges.py:13
-msgid "Nice answer"
-msgstr "Хороший ответ"
-
-#: migrations/0005_install_badges.py:13
-msgid "nice-answer"
-msgstr "хороший-ответ"
-
-#: migrations/0005_install_badges.py:13
-msgid "Answer voted up 10 times"
-msgstr "Ответ получил 10 положительных откликов"
-
-#: migrations/0005_install_badges.py:14 models/badges.py:339
-msgid "Nice Question"
-msgstr "Хороший Вопрос"
-
-#: migrations/0005_install_badges.py:14
-msgid "nice-question"
-msgstr "хороший-вопос"
-
-#: migrations/0005_install_badges.py:14
-msgid "Question voted up 10 times"
-msgstr "Вопрос с 10-ю или более положительными откликами"
-
-#: migrations/0005_install_badges.py:15 models/badges.py:576
-msgid "Pundit"
-msgstr "Знаток"
-
-#: migrations/0005_install_badges.py:15
-msgid "pundit"
-msgstr "знаток"
-
-#: migrations/0005_install_badges.py:15 models/badges.py:579
-msgid "Left 10 comments with score of 10 or more"
-msgstr "Поместили 10 ответов с 10-ю или более положительными откликами"
-
-#: migrations/0005_install_badges.py:16 models/badges.py:413
-msgid "Popular Question"
-msgstr "Популярный Вопрос"
-
-#: migrations/0005_install_badges.py:16
-msgid "popular-question"
-msgstr "популярный-вопрос"
-
-#: migrations/0005_install_badges.py:16
-msgid "Asked a question with 1,000 views"
-msgstr "Задали вопрос с более 1,000 просмотров"
-
-#: migrations/0005_install_badges.py:17
-msgid "Citizen patrol"
-msgstr "Гражданский Дозор"
-
-#: migrations/0005_install_badges.py:17
-msgid "citizen-patrol"
-msgstr "гражданский-дозор"
-
-#: migrations/0005_install_badges.py:17 models/badges.py:550
-msgid "First flagged post"
-msgstr "Впервые отметили флажком неуместное сообщение"
-
-#: migrations/0005_install_badges.py:18 models/badges.py:562
-msgid "Cleanup"
-msgstr "Уборщик"
-
-#: migrations/0005_install_badges.py:18
-msgid "cleanup"
-msgstr "уборщик"
-
-#: migrations/0005_install_badges.py:18 models/badges.py:565
-msgid "First rollback"
-msgstr "В первый раз вернули сообщение к предыдущей версии"
-
-#: migrations/0005_install_badges.py:19 models/badges.py:226
-msgid "Critic"
-msgstr "Критик"
-
-#: migrations/0005_install_badges.py:19
-msgid "critic"
-msgstr "критик"
-
-#: migrations/0005_install_badges.py:19
-msgid "First down vote"
-msgstr "Впервые дали негативный отклик"
-
-#: migrations/0005_install_badges.py:20 models/badges.py:611
-msgid "Editor"
-msgstr "Редактор"
-
-#: migrations/0005_install_badges.py:20
-msgid "editor"
-msgstr "редактор"
-
-#: migrations/0005_install_badges.py:20 models/badges.py:614
-msgid "First edit"
-msgstr "Впервые исправили сообщение"
-
-#: migrations/0005_install_badges.py:21 models/badges.py:633
-msgid "Organizer"
-msgstr "Организатор"
-
-#: migrations/0005_install_badges.py:21
-msgid "organizer"
-msgstr "организатор"
-
-#: migrations/0005_install_badges.py:21 models/badges.py:636
-msgid "First retag"
-msgstr "Впервые изменили тематические отметки"
-
-#: migrations/0005_install_badges.py:22 models/badges.py:452
-msgid "Scholar"
-msgstr "Ученый"
-
-#: migrations/0005_install_badges.py:22
-msgid "scholar"
-msgstr "ученый"
-
-#: migrations/0005_install_badges.py:22
-msgid "First accepted answer on your own question"
-msgstr "Впервые приняли лучший ответ на собственный вопрос"
-
-#: migrations/0005_install_badges.py:23 models/badges.py:375
-msgid "Student"
-msgstr "Ученик"
-
-#: migrations/0005_install_badges.py:23
-msgid "student"
-msgstr "ученик"
-
-#: migrations/0005_install_badges.py:23 models/badges.py:380
-msgid "Asked first question with at least one up vote"
-msgstr "Спросили вопос получивший хотя бы один положительный отклик"
-
-#: migrations/0005_install_badges.py:24 models/badges.py:217
-msgid "Supporter"
-msgstr "Фанат"
-
-#: migrations/0005_install_badges.py:24
-msgid "supporter"
-msgstr "фанат"
-
-#: migrations/0005_install_badges.py:24
-msgid "First up vote"
-msgstr "В первый раз дали положительный отклик другому поьзователю"
-
-#: migrations/0005_install_badges.py:25 models/badges.py:177
-msgid "Teacher"
-msgstr "Учитель"
-
-#: migrations/0005_install_badges.py:25
-msgid "teacher"
-msgstr "учитель"
-
-#: migrations/0005_install_badges.py:25
-msgid "Answered first question with at least one up vote"
-msgstr "Дали ответ получивший один или более положительных отликов"
-
-#: migrations/0005_install_badges.py:26 models/badges.py:643
-msgid "Autobiographer"
-msgstr "Автобиограф"
-
-#: migrations/0005_install_badges.py:26
-msgid "autobiographer"
-msgstr "автобиограф"
-
-#: migrations/0005_install_badges.py:26 models/badges.py:646
-msgid "Completed all user profile fields"
-msgstr "Заполнены все пункты в профиле"
-
-#: migrations/0005_install_badges.py:27 models/badges.py:255
-msgid "Self-Learner"
-msgstr "Самоучка"
-
-#: migrations/0005_install_badges.py:27
-msgid "self-learner"
-msgstr "самоучка"
-
-#: migrations/0005_install_badges.py:27
-msgid "Answered your own question with at least 3 up votes"
-msgstr ""
-"Поместили ответ на собственный вопрос и получили 3 или более положительных "
-"откликов"
-
-#: migrations/0005_install_badges.py:28 models/badges.py:327
-msgid "Great Answer"
-msgstr "Замечательный Ответ"
-
-#: migrations/0005_install_badges.py:28
-msgid "great-answer"
-msgstr "замечательный-ответ"
-
-#: migrations/0005_install_badges.py:28
-msgid "Answer voted up 100 times"
-msgstr "Дали ответ получивший 100 положительных откликов"
-
-#: migrations/0005_install_badges.py:29 models/badges.py:363
-msgid "Great Question"
-msgstr "Замечательный Вопрос"
-
-#: migrations/0005_install_badges.py:29
-msgid "great-question"
-msgstr "замечательный-вопрос"
-
-#: migrations/0005_install_badges.py:29
-msgid "Question voted up 100 times"
-msgstr "Задали вопрос 100 положительных откликов"
-
-#: migrations/0005_install_badges.py:30 models/badges.py:688
-msgid "Stellar Question"
-msgstr "Гениальный Вопрос"
-
-#: migrations/0005_install_badges.py:30
-msgid "stellar-question"
-msgstr "гениальный-вопрос"
-
-#: migrations/0005_install_badges.py:30
-msgid "Question favorited by 100 users"
-msgstr "Задали ворпос отмеченный закладкой более чем 100 пользователями"
-
-#: migrations/0005_install_badges.py:31
-msgid "Famous question"
-msgstr "Знаменитый Вопрос"
-
-#: migrations/0005_install_badges.py:31
-msgid "famous-question"
-msgstr "знаменитый-вопрос"
-
-#: migrations/0005_install_badges.py:31
-msgid "Asked a question with 10,000 views"
-msgstr "Задали вопрос просомотренный более чем 10,000 раз"
-
-#: migrations/0005_install_badges.py:32
-msgid "Alpha"
-msgstr "Альфа Тестер"
-
-#: migrations/0005_install_badges.py:32
-msgid "alpha"
-msgstr "альфа-тестер"
-
-#: migrations/0005_install_badges.py:32
-msgid "Actively participated in the private alpha"
-msgstr "За участие в альфа тестировании"
-
-#: migrations/0005_install_badges.py:33 models/badges.py:315
-msgid "Good Answer"
-msgstr "Очень Хороший Ответ"
-
-#: migrations/0005_install_badges.py:33
-msgid "good-answer"
-msgstr "очень-хороший-ответ"
-
-#: migrations/0005_install_badges.py:33
-msgid "Answer voted up 25 times"
-msgstr "Дали ответ получивший 25 положительных откликов"
-
-#: migrations/0005_install_badges.py:34 models/badges.py:351
-msgid "Good Question"
-msgstr "Очень Хороший Вопрос"
-
-#: migrations/0005_install_badges.py:34
-msgid "good-question"
-msgstr "очень-хороший-вопрос"
-
-#: migrations/0005_install_badges.py:34
-msgid "Question voted up 25 times"
-msgstr "Задали вопрос получивший 25 положительных откликов"
-
-#: migrations/0005_install_badges.py:35 models/badges.py:697
-msgid "Favorite Question"
-msgstr "Интересный Вопрос"
-
-#: migrations/0005_install_badges.py:35
-msgid "favorite-question"
-msgstr "интересный-вопрос"
-
-#: migrations/0005_install_badges.py:35
-msgid "Question favorited by 25 users"
-msgstr "Задали ворпос получивший 25 закладок"
-
-#: migrations/0005_install_badges.py:36
-msgid "Civic duty"
-msgstr "Общественный Долг"
-
-#: migrations/0005_install_badges.py:36
-msgid "civic-duty"
-msgstr "общественный долг"
-
-#: migrations/0005_install_badges.py:36
-msgid "Voted 300 times"
-msgstr "Набрано 300 голосов"
-
-#: migrations/0005_install_badges.py:37
-msgid "Strunk & White"
-msgstr "Главный Редактор"
-
-#: migrations/0005_install_badges.py:37
-msgid "strunk-and-white"
-msgstr "мастер-старания"
-
-#: migrations/0005_install_badges.py:37
-msgid "Edited 100 entries"
-msgstr "главный-редактор"
-
-#: migrations/0005_install_badges.py:38
-msgid "Generalist"
-msgstr "Полиглот"
-
-#: migrations/0005_install_badges.py:38
-msgid "generalist"
-msgstr "полиглот"
-
-#: migrations/0005_install_badges.py:38
-msgid "Active in many different tags"
-msgstr "Активность в разнообразных темах"
-
-#: migrations/0005_install_badges.py:39
-msgid "Expert"
-msgstr "Эксперт"
-
-#: migrations/0005_install_badges.py:39
-msgid "expert"
-msgstr "эксперт"
-
-#: migrations/0005_install_badges.py:39
-msgid "Very active in one tag"
-msgstr "Очень активны в одной теме"
-
-#: migrations/0005_install_badges.py:40
-msgid "Yearling"
-msgstr "Годовщина"
-
-#: migrations/0005_install_badges.py:40
-msgid "yearling"
-msgstr "годовщина"
-
-#: migrations/0005_install_badges.py:40
-msgid "Active member for a year"
-msgstr "Активный пользователь в течение года"
-
-#: migrations/0005_install_badges.py:41 models/badges.py:424
-msgid "Notable Question"
-msgstr "Известные Вопрос"
-
-#: migrations/0005_install_badges.py:41
-msgid "notable-question"
-msgstr "заметные-вопрос"
-
-#: migrations/0005_install_badges.py:41
-msgid "Asked a question with 2,500 views"
-msgstr "Вопрос задан с 2500 просмотров"
-
-#: migrations/0005_install_badges.py:42 models/badges.py:494
-msgid "Enlightened"
-msgstr "Просвещенный"
-
-#: migrations/0005_install_badges.py:42
-msgid "enlightened"
-msgstr "просвещенный"
-
-#: migrations/0005_install_badges.py:42
-msgid "First answer was accepted with at least 10 up votes"
-msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
-
-#: migrations/0005_install_badges.py:43
-msgid "Beta"
-msgstr "Бета"
-
-#: migrations/0005_install_badges.py:43
-msgid "beta"
-msgstr "бета"
-
-#: migrations/0005_install_badges.py:43
-msgid "Actively participated in the private beta"
-msgstr "За активное участие в закрытой бета-версии"
-
-#: migrations/0005_install_badges.py:44 models/badges.py:506
-msgid "Guru"
-msgstr "Гуру"
-
-#: migrations/0005_install_badges.py:44
-msgid "guru"
-msgstr "гуру"
-
-#: migrations/0005_install_badges.py:44
-msgid "Accepted answer and voted up 40 times"
-msgstr "Принят ответ и проголосовали 40 раз"
-
-#: migrations/0005_install_badges.py:45 models/badges.py:524
-msgid "Necromancer"
-msgstr "Некромант"
-
-#: migrations/0005_install_badges.py:45
-msgid "necromancer"
-msgstr "некромант"
-
-#: migrations/0005_install_badges.py:45
-msgid "Answered a question more than 60 days later with at least 5 votes"
-msgstr "Ответ на вопрос более чем 60 дней спустя с минимум 5 голосами"
-
-#: migrations/0005_install_badges.py:46
-msgid "Taxonomist"
-msgstr "Таксономист"
-
-#: migrations/0005_install_badges.py:46
-msgid "taxonomist"
-msgstr "таксономист"
-
-#: migrations/0005_install_badges.py:46
-msgid "Created a tag used by 50 questions"
-msgstr "Создал тег, использованный в 50 вопросах"
-
 #: models/__init__.py:170
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
@@ -2716,20 +2345,40 @@ msgstr "к этому вопросу был отмечен как интерес
 msgid "Deleted own post with %(votes)s or more upvotes"
 msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
 
+#: models/badges.py:132
+msgid "Disciplined"
+msgstr "Дисциплина"
+
 #: models/badges.py:150
 #, fuzzy, python-format
 msgid "Deleted own post with %(votes)s or more downvotes"
 msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+
+#: models/badges.py:154
+msgid "Peer Pressure"
+msgstr "Коллегиальное давление"
 
 #: models/badges.py:173
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
 msgstr ""
 
+#: models/badges.py:177
+msgid "Teacher"
+msgstr "Учитель"
+
+#: models/badges.py:217
+msgid "Supporter"
+msgstr "Фанат"
+
 #: models/badges.py:218
 #, fuzzy
 msgid "First upvote"
 msgstr "В первый раз дали положительный отклик другому поьзователю"
+
+#: models/badges.py:226
+msgid "Critic"
+msgstr "Критик"
 
 #: models/badges.py:227
 #, fuzzy
@@ -2753,6 +2402,10 @@ msgstr ""
 "Поместили ответ на собственный вопрос и получили 3 или более положительных "
 "откликов"
 
+#: models/badges.py:255
+msgid "Self-Learner"
+msgstr "Самоучка"
+
 #: models/badges.py:303
 #, fuzzy
 msgid "Nice Answer"
@@ -2763,15 +2416,51 @@ msgstr "Хороший ответ"
 msgid "Answer voted up %(num)s times"
 msgstr "Ответ получил 10 положительных откликов"
 
+#: models/badges.py:315
+msgid "Good Answer"
+msgstr "Очень Хороший Ответ"
+
+#: models/badges.py:327
+msgid "Great Answer"
+msgstr "Замечательный Ответ"
+
+#: models/badges.py:339
+msgid "Nice Question"
+msgstr "Хороший Вопрос"
+
 #: models/badges.py:344 models/badges.py:356 models/badges.py:368
 #, fuzzy, python-format
 msgid "Question voted up %(num)s times"
 msgstr "Вопрос с 10-ю или более положительными откликами"
 
+#: models/badges.py:351
+msgid "Good Question"
+msgstr "Очень Хороший Вопрос"
+
+#: models/badges.py:363
+msgid "Great Question"
+msgstr "Замечательный Вопрос"
+
+#: models/badges.py:375
+msgid "Student"
+msgstr "Ученик"
+
+#: models/badges.py:380
+msgid "Asked first question with at least one up vote"
+msgstr "Спросили вопос получивший хотя бы один положительный отклик"
+
+#: models/badges.py:413
+msgid "Popular Question"
+msgstr "Популярный Вопрос"
+
 #: models/badges.py:417 models/badges.py:428 models/badges.py:440
 #, fuzzy, python-format
 msgid "Asked a question with %(views)s views"
 msgstr "Задали вопрос с более 1,000 просмотров"
+
+#: models/badges.py:424
+msgid "Notable Question"
+msgstr "Известные Вопрос"
 
 #: models/badges.py:435
 #, fuzzy
@@ -2783,10 +2472,22 @@ msgstr "Знаменитый Вопрос"
 msgid "Asked a question and accepted an answer"
 msgstr "Вопросы отвеченные мной"
 
+#: models/badges.py:452
+msgid "Scholar"
+msgstr "Ученый"
+
+#: models/badges.py:494
+msgid "Enlightened"
+msgstr "Просвещенный"
+
 #: models/badges.py:498
 #, fuzzy, python-format
 msgid "First answer was accepted with %(num)s or more votes"
 msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+
+#: models/badges.py:506
+msgid "Guru"
+msgstr "Гуру"
 
 #: models/badges.py:509
 #, fuzzy, python-format
@@ -2800,10 +2501,42 @@ msgid ""
 "votes"
 msgstr "Ответ на вопрос более чем 60 дней спустя с минимум 5 голосами"
 
+#: models/badges.py:524
+msgid "Necromancer"
+msgstr "Некромант"
+
 #: models/badges.py:547
 #, fuzzy
 msgid "Citizen Patrol"
 msgstr "Гражданский Дозор"
+
+#: models/badges.py:550
+msgid "First flagged post"
+msgstr "Впервые отметили флажком неуместное сообщение"
+
+#: models/badges.py:562
+msgid "Cleanup"
+msgstr "Уборщик"
+
+#: models/badges.py:565
+msgid "First rollback"
+msgstr "В первый раз вернули сообщение к предыдущей версии"
+
+#: models/badges.py:576
+msgid "Pundit"
+msgstr "Знаток"
+
+#: models/badges.py:579
+msgid "Left 10 comments with score of 10 or more"
+msgstr "Поместили 10 ответов с 10-ю или более положительными откликами"
+
+#: models/badges.py:611
+msgid "Editor"
+msgstr "Редактор"
+
+#: models/badges.py:614
+msgid "First edit"
+msgstr "Впервые исправили сообщение"
 
 #: models/badges.py:622
 msgid "Associate Editor"
@@ -2814,10 +2547,34 @@ msgstr ""
 msgid "Edited %(num)s entries"
 msgstr "главный-редактор"
 
+#: models/badges.py:633
+msgid "Organizer"
+msgstr "Организатор"
+
+#: models/badges.py:636
+msgid "First retag"
+msgstr "Впервые изменили тематические отметки"
+
+#: models/badges.py:643
+msgid "Autobiographer"
+msgstr "Автобиограф"
+
+#: models/badges.py:646
+msgid "Completed all user profile fields"
+msgstr "Заполнены все пункты в профиле"
+
 #: models/badges.py:662
 #, fuzzy, python-format
 msgid "Question favorited by %(num)s users"
 msgstr "Задали ворпос получивший 25 закладок"
+
+#: models/badges.py:688
+msgid "Stellar Question"
+msgstr "Гениальный Вопрос"
+
+#: models/badges.py:697
+msgid "Favorite Question"
+msgstr "Интересный Вопрос"
 
 #: models/badges.py:707
 msgid "Enthusiast"
@@ -3070,8 +2827,8 @@ msgstr "Отменить"
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:36 skins/default/templates/ask.html:39
 #: skins/default/templates/macros.html:445
-#: skins/default/templates/question.html:462
 #: skins/default/templates/question.html:465
+#: skins/default/templates/question.html:468
 #: skins/default/templates/question_edit.html:63
 #: skins/default/templates/question_edit.html:66
 msgid "hide preview"
@@ -3079,7 +2836,7 @@ msgstr "скрыть предварительный просмотр"
 
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:39
-#: skins/default/templates/question.html:465
+#: skins/default/templates/question.html:468
 #: skins/default/templates/question_edit.html:66
 msgid "show preview"
 msgstr "показать предварительный просмотр"
@@ -3295,7 +3052,7 @@ msgstr "Причины"
 msgid "OK to close"
 msgstr "OK, чтобы закрыть"
 
-#: skins/default/templates/editor_data.html:8
+#: skins/default/templates/editor_data.html:5
 #, fuzzy, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
@@ -3303,7 +3060,7 @@ msgstr[0] "каждое слово должно быть не более %(max_c
 msgstr[1] "каждое слово должно быть не более %(max_chars)d буквы"
 msgstr[2] "каждое слово должно быть не более %(max_chars)d букв"
 
-#: skins/default/templates/editor_data.html:10
+#: skins/default/templates/editor_data.html:7
 #, fuzzy, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
@@ -3311,7 +3068,7 @@ msgstr[0] "пожалуйста введите не более %(tag_count)d с�
 msgstr[1] "пожалуйста введите не более %(tag_count)d слова"
 msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
 
-#: skins/default/templates/editor_data.html:11
+#: skins/default/templates/editor_data.html:8
 #, fuzzy, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
@@ -3851,7 +3608,7 @@ msgstr "удалить этот комментарий"
 
 #: skins/default/templates/macros.html:290
 #: skins/default/templates/macros.html:298
-#: skins/default/templates/question.html:429
+#: skins/default/templates/question.html:432
 msgid "add comment"
 msgstr "добавить комментарий"
 
@@ -5744,6 +5501,236 @@ msgstr ""
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
+#~ msgid "disciplined"
+#~ msgstr "дисциплина"
+
+#~ msgid "Deleted own post with score of 3 or higher"
+#~ msgstr "Удалили своё сообщение с 3-мя или более положительными откликами"
+
+#~ msgid "peer-pressure"
+#~ msgstr "коллегиальное-давление"
+
+#~ msgid "Deleted own post with score of -3 or lower"
+#~ msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+
+#~ msgid "Nice answer"
+#~ msgstr "Хороший ответ"
+
+#~ msgid "nice-answer"
+#~ msgstr "хороший-ответ"
+
+#~ msgid "Answer voted up 10 times"
+#~ msgstr "Ответ получил 10 положительных откликов"
+
+#~ msgid "nice-question"
+#~ msgstr "хороший-вопос"
+
+#~ msgid "Question voted up 10 times"
+#~ msgstr "Вопрос с 10-ю или более положительными откликами"
+
+#~ msgid "pundit"
+#~ msgstr "знаток"
+
+#~ msgid "popular-question"
+#~ msgstr "популярный-вопрос"
+
+#~ msgid "Asked a question with 1,000 views"
+#~ msgstr "Задали вопрос с более 1,000 просмотров"
+
+#~ msgid "Citizen patrol"
+#~ msgstr "Гражданский Дозор"
+
+#~ msgid "citizen-patrol"
+#~ msgstr "гражданский-дозор"
+
+#~ msgid "cleanup"
+#~ msgstr "уборщик"
+
+#~ msgid "critic"
+#~ msgstr "критик"
+
+#~ msgid "First down vote"
+#~ msgstr "Впервые дали негативный отклик"
+
+#~ msgid "editor"
+#~ msgstr "редактор"
+
+#~ msgid "organizer"
+#~ msgstr "организатор"
+
+#~ msgid "scholar"
+#~ msgstr "ученый"
+
+#~ msgid "First accepted answer on your own question"
+#~ msgstr "Впервые приняли лучший ответ на собственный вопрос"
+
+#~ msgid "student"
+#~ msgstr "ученик"
+
+#~ msgid "supporter"
+#~ msgstr "фанат"
+
+#~ msgid "First up vote"
+#~ msgstr "В первый раз дали положительный отклик другому поьзователю"
+
+#~ msgid "teacher"
+#~ msgstr "учитель"
+
+#~ msgid "Answered first question with at least one up vote"
+#~ msgstr "Дали ответ получивший один или более положительных отликов"
+
+#~ msgid "autobiographer"
+#~ msgstr "автобиограф"
+
+#~ msgid "self-learner"
+#~ msgstr "самоучка"
+
+#~ msgid "Answered your own question with at least 3 up votes"
+#~ msgstr ""
+#~ "Поместили ответ на собственный вопрос и получили 3 или более "
+#~ "положительных откликов"
+
+#~ msgid "great-answer"
+#~ msgstr "замечательный-ответ"
+
+#~ msgid "Answer voted up 100 times"
+#~ msgstr "Дали ответ получивший 100 положительных откликов"
+
+#~ msgid "great-question"
+#~ msgstr "замечательный-вопрос"
+
+#~ msgid "Question voted up 100 times"
+#~ msgstr "Задали вопрос 100 положительных откликов"
+
+#~ msgid "stellar-question"
+#~ msgstr "гениальный-вопрос"
+
+#~ msgid "Question favorited by 100 users"
+#~ msgstr "Задали ворпос отмеченный закладкой более чем 100 пользователями"
+
+#~ msgid "Famous question"
+#~ msgstr "Знаменитый Вопрос"
+
+#~ msgid "famous-question"
+#~ msgstr "знаменитый-вопрос"
+
+#~ msgid "Asked a question with 10,000 views"
+#~ msgstr "Задали вопрос просомотренный более чем 10,000 раз"
+
+#~ msgid "Alpha"
+#~ msgstr "Альфа Тестер"
+
+#~ msgid "alpha"
+#~ msgstr "альфа-тестер"
+
+#~ msgid "Actively participated in the private alpha"
+#~ msgstr "За участие в альфа тестировании"
+
+#~ msgid "good-answer"
+#~ msgstr "очень-хороший-ответ"
+
+#~ msgid "Answer voted up 25 times"
+#~ msgstr "Дали ответ получивший 25 положительных откликов"
+
+#~ msgid "good-question"
+#~ msgstr "очень-хороший-вопрос"
+
+#~ msgid "Question voted up 25 times"
+#~ msgstr "Задали вопрос получивший 25 положительных откликов"
+
+#~ msgid "favorite-question"
+#~ msgstr "интересный-вопрос"
+
+#~ msgid "Question favorited by 25 users"
+#~ msgstr "Задали ворпос получивший 25 закладок"
+
+#~ msgid "Civic duty"
+#~ msgstr "Общественный Долг"
+
+#~ msgid "civic-duty"
+#~ msgstr "общественный долг"
+
+#~ msgid "Voted 300 times"
+#~ msgstr "Набрано 300 голосов"
+
+#~ msgid "Strunk & White"
+#~ msgstr "Главный Редактор"
+
+#~ msgid "strunk-and-white"
+#~ msgstr "мастер-старания"
+
+#~ msgid "Edited 100 entries"
+#~ msgstr "главный-редактор"
+
+#~ msgid "Generalist"
+#~ msgstr "Полиглот"
+
+#~ msgid "generalist"
+#~ msgstr "полиглот"
+
+#~ msgid "Active in many different tags"
+#~ msgstr "Активность в разнообразных темах"
+
+#~ msgid "Expert"
+#~ msgstr "Эксперт"
+
+#~ msgid "expert"
+#~ msgstr "эксперт"
+
+#~ msgid "Very active in one tag"
+#~ msgstr "Очень активны в одной теме"
+
+#~ msgid "Yearling"
+#~ msgstr "Годовщина"
+
+#~ msgid "yearling"
+#~ msgstr "годовщина"
+
+#~ msgid "Active member for a year"
+#~ msgstr "Активный пользователь в течение года"
+
+#~ msgid "notable-question"
+#~ msgstr "заметные-вопрос"
+
+#~ msgid "Asked a question with 2,500 views"
+#~ msgstr "Вопрос задан с 2500 просмотров"
+
+#~ msgid "enlightened"
+#~ msgstr "просвещенный"
+
+#~ msgid "First answer was accepted with at least 10 up votes"
+#~ msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+
+#~ msgid "Beta"
+#~ msgstr "Бета"
+
+#~ msgid "beta"
+#~ msgstr "бета"
+
+#~ msgid "Actively participated in the private beta"
+#~ msgstr "За активное участие в закрытой бета-версии"
+
+#~ msgid "guru"
+#~ msgstr "гуру"
+
+#~ msgid "Accepted answer and voted up 40 times"
+#~ msgstr "Принят ответ и проголосовали 40 раз"
+
+#~ msgid "necromancer"
+#~ msgstr "некромант"
+
+#~ msgid "Answered a question more than 60 days later with at least 5 votes"
+#~ msgstr "Ответ на вопрос более чем 60 дней спустя с минимум 5 голосами"
+
+#~ msgid "Taxonomist"
+#~ msgstr "Таксономист"
+
+#~ msgid "taxonomist"
+#~ msgstr "таксономист"
+
+#~ msgid "Created a tag used by 50 questions"
+#~ msgstr "Создал тег, использованный в 50 вопросах"
+
 #, fuzzy
 #~ msgid "Askbot"
 #~ msgstr "Askbot"
@@ -6040,41 +6027,11 @@ msgstr ""
 #~ msgid "All questions"
 #~ msgstr "Все вопросы"
 
-#~ msgid "click to see the newest questions"
-#~ msgstr "нажмите, чтобы увидеть последние вопросы"
-
-#~ msgid "click to see the oldest questions"
-#~ msgstr "нажмите, чтобы увидеть старые вопросы"
-
-#~ msgid "click to see the most recently updated questions"
-#~ msgstr "нажмите, чтобы посмотреть недавно обновленные вопросы"
-
-#~ msgid "click to see the least recently updated questions"
-#~ msgstr "нажмите, чтобы посмотреть последние обновленные вопросы"
-
 #~ msgid "click to see hottest questions"
 #~ msgstr "нажмите, чтобы посмотреть популярные вопросы"
 
-#~ msgid "less answers"
-#~ msgstr "меньше ответов"
-
 #~ msgid "click to see coldest questions"
 #~ msgstr "нажмите, чтобы посмотреть непопулярные вопросы"
-
-#~ msgid "more answers"
-#~ msgstr "кол-ву ответов"
-
-#~ msgid "click to see most voted questions"
-#~ msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
-
-#~ msgid "unpopular"
-#~ msgstr "непопулярный"
-
-#~ msgid "click to see least voted questions"
-#~ msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
-
-#~ msgid "popular"
-#~ msgstr "популярные"
 
 #~ msgid " One question found"
 #~ msgid_plural "%(q_num)s questions found"
