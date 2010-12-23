@@ -54,7 +54,7 @@ urlpatterns = patterns('',
         kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
-    url(
+    url(#this url works both normally and through ajax
         r'^%s$' % _('questions/'), 
         views.readers.questions, 
         name='questions'
@@ -69,7 +69,7 @@ urlpatterns = patterns('',
         views.writers.edit_question, 
         name='edit_question'
     ),
-    url(
+    url(#this url is both regular and ajax
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
         views.writers.retag_question, 
         name='retag_question'
@@ -89,7 +89,7 @@ urlpatterns = patterns('',
         views.writers.answer, 
         name='answer'
     ),
-    url(
+    url(#ajax only
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), 
         views.commands.vote, 
         name='vote'
@@ -100,27 +100,27 @@ urlpatterns = patterns('',
         kwargs = {'object_name': 'Question'},
         name='question_revisions'
     ),
-    url(
+    url(#ajax only
         r'^post_comments/$',
         views.writers.post_comments, 
         name='post_comments'
     ),
-    url(
+    url(#ajax only
         r'^edit_comment/$',
         views.writers.edit_comment,
         name='edit_comment'
     ),
-    url(
+    url(#ajax only
         r'^%s$' % _('command/'), 
         views.commands.ajax_command, 
         name='call_ajax'
     ),
-    url(
+    url(#ajax only
         r'^comment/delete/$',
         views.writers.delete_comment, 
         name='delete_comment'
     ),
-    url(
+    url(#ajax only
         r'^comment/get_text/$',
         views.readers.get_comment, 
         name='get_comment'
@@ -136,23 +136,23 @@ urlpatterns = patterns('',
         views.readers.tags, 
         name='tags'
     ),
-    url(
+    url(#ajax only
         r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')),
         views.commands.mark_tag,
         kwargs={'reason':'good','action':'add'},
         name='mark_interesting_tag'
     ),
-    url(
+    url(#ajax only
         r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')),
         views.commands.mark_tag,
         kwargs={'reason':'bad','action':'add'},
         name='mark_ignored_tag'
     ),
-    url(
+    url(#ajax only
         r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'),
         views.commands.mark_tag,
         kwargs={'action':'remove'},
-        name='mark_ignored_tag'
+        name='unmark_tag'
     ),
     url(
         r'^%s$' % _('users/'),
@@ -180,12 +180,12 @@ urlpatterns = patterns('',
         views.meta.badge,
         name='badge'
     ),
-    url(
+    url(#ajax only
         r'^%s%s$' % (_('messages/'), _('markread/')),
         views.commands.read_message,
         name='read_message'
     ),
-    url(
+    url(#ajax only
         r'^manage_inbox/$',
         views.commands.manage_inbox,
         name='manage_inbox'
@@ -196,6 +196,7 @@ urlpatterns = patterns('',
         {'feed_dict': feeds},
         name='feeds'
     ),
+    #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('search/'), views.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),

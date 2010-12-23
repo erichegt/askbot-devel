@@ -177,16 +177,14 @@ var Vote = function(){
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
-    var pleaseLogin = " <a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
-                    + "?next=" + scriptUrl + $.i18n._("question/") + "{{QuestionID}}/{{questionSlug}}'>"
+    var pleaseLogin = " <a href='" + askbot['urls']['user_signin']
+                    + "?next=" + askbot['urls']['question_url_template']
+                    + "'>"
                     + $.i18n._('please login') + "</a>";
-
-    var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
 
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') + pleaseLogin;
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
-    var voteDenyCancelMessage = $.i18n._('cannot revoke old vote') + pleaseSeeFAQ;
     var offensiveConfirmation = $.i18n._('please confirm offensive');
     var offensiveAnonymousMessage = $.i18n._('anonymous users cannot flag offensive posts') + pleaseLogin;
     var removeConfirmation = $.i18n._('confirm delete');
@@ -356,7 +354,7 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
-            url: scriptUrl + $.i18n._("questions/") + questionId + "/" + $.i18n._("vote/"),
+            url: askbot['urls']['vote_url_template'].replace('{{QuestionID}}', questionId),
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data){callback(object, voteType, data);}
@@ -465,9 +463,6 @@ var Vote = function(){
         //todo: transfer proper translations of these from i18n.js
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
-        //_('flag offensive cap exhausted') + pleaseSeeFAQ;
-        //_('need >15 points to report spam') + pleaseSeeFAQ;
-        //_('cannot flag message as offensive twice') + pleaseSeeFAQ;
         if (data.success == "1"){
             $(object).children('span[class=darkred]').text("("+ data.count +")");
         }
@@ -635,8 +630,7 @@ var questionRetagger = function(){
 
     var render_tag = function(tag_name){
         //copy-paste from live search!!!
-        var url = scriptUrl + 
-                    $.i18n._('questions/') + 
+        var url = askbot['urls']['questions'] + 
                     '?tags=' + encodeURI(tag_name);
         var tag_title = $.i18n._(
                             "see questions tagged '{tag}'"

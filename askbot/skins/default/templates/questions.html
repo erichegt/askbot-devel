@@ -244,6 +244,13 @@
             Hilite.elementid = "listA";
             Hilite.debug_referrer = location.href;
         });
+        askbot['urls']['mark_interesting_tag'] = '{{settings.ASKBOT_URL}}/{% trans %}mark-tag/{% endtrans %}{% trans %}interesting/{% endtrans %}';
+        askbot['urls']['mark_ignored_tag'] = '{{settings.ASKBOT_URL}}/{% trans %}mark-tag/{% endtrans %}{% trans %}ignored/{% endtrans %}';
+        askbot['urls']['unmark_tag'] = '{{settings.ASKBOT_URL}}/{% trans %}unmark-tag/{% endtrans %}';
+        askbot['urls']['command'] = '{% url "call_ajax" %}';
+        askbot['urls']['questions'] = '{% url "questions" %}';
+        askbot['urls']['question_url_template'] = '{{settings.ASKBOT_URL}}/{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';
+        askbot['urls']['user_url_template'] = '{{settings.ASKBOT_URL}}/{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
     </script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     {% if request.user.is_authenticated() %}

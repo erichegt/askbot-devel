@@ -1,19 +1,18 @@
-//var scriptUrl, interestingTags, ignoredTags, tags, $;
+//var interestingTags, ignoredTags, tags, $;
 function pickedTags(){
 
     var sendAjax = function(tagname, reason, action, callback){
-        var url = scriptUrl;
+        var url = '';
         if (action == 'add'){
-            url += $.i18n._('mark-tag/');
             if (reason == 'good'){
-                url += $.i18n._('interesting/');
+                url = askbot['urls']['mark_interesting_tag'];
             }
             else {
-                url += $.i18n._('ignored/');
+                url = askbot['urls']['mark_ignored_tag'];
             }
         }
         else {
-            url += $.i18n._('unmark-tag/');
+            url = askbot['urls']['unmark_tag'];
         }
         url = url + tagname + '/';
 
@@ -82,8 +81,7 @@ function pickedTags(){
                 new_tag.addClass('deletable-tag');
                 var tag_link = $('<a></a>');
                 tag_link.attr('rel','tag');
-                var tag_url = scriptUrl + $.i18n._('questions/') +
-                              '?tags=' + tagname;
+                var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
                 tag_link.attr('href', tag_url);
                 tag_link.html(tagname);
                 var del_link = $('<img></img>');
@@ -137,7 +135,7 @@ function pickedTags(){
                         type: 'POST',
                         dataType: 'json',
                         cache: false,
-                        url: scriptUrl + $.i18n._('command/'),
+                        url: askbot['urls']['command'],
                         data: {command:'toggle-ignored-questions'}
                     });
         });

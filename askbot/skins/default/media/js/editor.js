@@ -42,7 +42,7 @@ function ajaxFileUpload(imageUrl)
       $.ajaxFileUpload
       (
         {
-            url:'/upload/',
+            url: askbot['urls']['upload'],
               secureuri:false,
               fileElementId:'file-upload',
               dataType: 'xml',

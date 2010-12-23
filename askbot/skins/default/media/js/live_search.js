@@ -83,10 +83,10 @@ $(document).ready(function(){
     var render_title = function(result){
         return '<h2>' +
                     '<a title="' + result['summary'] + '" ' +
-                        'href="' + scriptUrl + 
-                                $.i18n._('question/') + result['id'] + 
-                            '/"' +
-                    '>' +
+                        'href="' + 
+                            askbot['urls']['question_url_template']
+                            .replace('{{QuestionID}}', result['id']) +
+                    '">' +
                         result['title'] +
                     '</a>' +
                 '</h2>';
@@ -96,9 +96,11 @@ $(document).ready(function(){
         if (result['u_id'] !== false){
             var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
             return '<a ' +
-                        'href="' + scriptUrl + $.i18n._('users/') + result['u_id'] + 
-                            '/' + u_slug + '/"' +
-                    '>' +
+                        'href="' + 
+                            askbot['urls']['user_url_template']
+                            .replace('{{user_id}}', result['u_id'])
+                            .replace('{{slug}}', u_slug) +
+                    '">' +
                         result['u_name'] +
                     '</a> ';
         }
@@ -150,8 +152,7 @@ $(document).ready(function(){
     };
 
     var render_tag = function(tag_name){
-        var url = scriptUrl + 
-                    $.i18n._('questions/') + 
+        var url = askbot['urls']['questions'] +
                     '?tags=' + encodeURI(tag_name);
         var tag_title = $.i18n._(
                             "see questions tagged '{tag}'"
@@ -335,7 +336,7 @@ $(document).ready(function(){
     var send_query = function(query_text, sort_method){
         var post_data = {query: query_text};
         $.ajax({
-            url: scriptUrl + $.i18n._('questions/'), 
+            url: askbot['urls']['questions'],
             data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
@@ -347,7 +348,7 @@ $(document).ready(function(){
     var reset_query = function(sort_method){
         refresh_x_button();
         $.ajax({
-            url: scriptUrl + $.i18n._('questions/'), 
+            url: askbot['urls']['questions'],
             data: {reset_query: true, sort: sort_method},
             dataType: 'json',
             success: render_result,
