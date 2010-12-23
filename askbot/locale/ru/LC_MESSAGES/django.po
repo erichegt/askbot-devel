@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 21:07-0600\n"
-"PO-Revision-Date: 2010-12-21 21:37\n"
-"Last-Translator: <evgeny.fadeev@gmail.com>\n"
+"POT-Creation-Date: 2010-12-22 20:54-0600\n"
+"PO-Revision-Date: 2010-12-22 20:39\n"
+"Last-Translator: <litnimaxster@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr "заголовок"
 
 #: forms.py:55
 msgid "please enter a descriptive title for your question"
-msgstr "пожалуйста, введите заголовок содержащий суть вашего вопроса"
+msgstr "пожалуйста, введите заголовок, содержащий суть вашего вопроса"
 
 #: forms.py:60
 msgid "title must be > 10 characters"
@@ -57,15 +57,14 @@ msgstr "содержание вопроса должно быть более 10-
 
 #: forms.py:84 skins/default/templates/header.html:31
 msgid "tags"
-msgstr "темы"
+msgstr "тэги"
 
 #: forms.py:86
 msgid ""
 "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
-"Темы (теги) - это ключевые слова характеризующие вопрос, для разделения "
-"тегов используйте пробел, для объединения слов в теге используйте дефис. "
-"Допускается добавление не более пяти тегов."
+"Теги - ключевые слова, характеризующие вопрос. Теги отделяются пробелом, "
+"может быть использовано до 5 тегов."
 
 #: forms.py:93 skins/default/templates/question_retag.html:78
 msgid "tags are required"
@@ -95,15 +94,15 @@ msgstr "допускается использование только симв�
 #: skins/default/templates/unused/question_summary_list_roll.html:26
 #: skins/default/templates/unused/question_summary_list_roll.html:38
 msgid "community wiki"
-msgstr "общее вики"
+msgstr "вики сообщества"
 
 #: forms.py:131
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
-"если вы отметите \"общее вики\", то голоса на ответ и вопрос не принесут "
-"изменения в репутации"
+"если вы отметите \"вики сообщества\", то вопрос и ответ не дадут вам кармы и "
+"имя автора не будет отображаться"
 
 #: forms.py:147
 msgid "update summary:"
@@ -147,7 +146,7 @@ msgstr "Измененить статус на"
 
 #: forms.py:270
 msgid "which one?"
-msgstr "какой?"
+msgstr "который?"
 
 #: forms.py:291
 msgid "Cannot change own status"
@@ -169,8 +168,8 @@ msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
-"Если Вы хотите изменить статус пользователя %(username)s\n"
-", это можно сделать сдесь"
+"Если Вы хотите изменить статус пользователя %(username)s, это можно сделать "
+"сдесь"
 
 #: forms.py:319
 msgid "Subject line"
@@ -222,7 +221,7 @@ msgstr "Профиль"
 
 #: forms.py:536
 msgid "Screen name"
-msgstr "Имя для публики"
+msgstr "Название экрана"
 
 #: forms.py:561 forms.py:562
 msgid "this email has already been registered, please use another one"
@@ -266,19 +265,19 @@ msgstr "пожалуйста сделайте Ваш выбор (см. выше)
 
 #: urls.py:42
 msgid "about/"
-msgstr "o-nas/"
+msgstr ""
 
 #: urls.py:43 conf/site_settings.py:79
 msgid "faq/"
-msgstr "chasto-zadavayamye-voprosy/"
+msgstr ""
 
 #: urls.py:44
 msgid "privacy/"
-msgstr "pravila-o-lichnoi-informacii/"
+msgstr ""
 
 #: urls.py:45
 msgid "logout/"
-msgstr "vyhod/"
+msgstr ""
 
 #: urls.py:47 urls.py:52
 msgid "answers/"
@@ -286,11 +285,11 @@ msgstr "otvety/"
 
 #: urls.py:47 urls.py:68 urls.py:164
 msgid "edit/"
-msgstr "novaya-pravka/"
+msgstr ""
 
 #: urls.py:52 urls.py:98
 msgid "revisions/"
-msgstr "pravki/"
+msgstr ""
 
 #: urls.py:58 urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83
 #: urls.py:88 urls.py:93 urls.py:98 skins/default/templates/question.html:431
@@ -423,7 +422,7 @@ msgstr "Замечательный вопрос: минимум голосов �
 
 #: conf/badges.py:93
 msgid "Great Question: minimum upvotes for the question"
-msgstr "Выдающийся вопрос: минимум голосов за вопрос"
+msgstr "Великолепный вопрос: минимум голосов за вопрос"
 
 #: conf/badges.py:102
 msgid "Popular Question: minimum views"
@@ -431,7 +430,7 @@ msgstr "Популярный вопрос:  минимум просмотров"
 
 #: conf/badges.py:111
 msgid "Notable Question: minimum views"
-msgstr "Известные вопрос: минимум просмотров"
+msgstr "Выдающийся вопрос: минимум просмотров"
 
 #: conf/badges.py:120
 msgid "Famous Question: minimum views"
@@ -446,7 +445,6 @@ msgid "Civic Duty: minimum votes"
 msgstr "Активист: минимум голосов"
 
 #: conf/badges.py:147
-#, fuzzy
 msgid "Enlightened Duty: minimum upvotes"
 msgstr "Просветитель: минимум голосов за принятый ответ"
 
@@ -456,11 +454,11 @@ msgstr "Гуру: минимум голосов за принятый ответ
 
 #: conf/badges.py:165
 msgid "Necromancer: minimum upvotes"
-msgstr "Некроман: минимум голосов за ответ"
+msgstr "Некромант: минимум голосов за ответ"
 
 #: conf/badges.py:174
 msgid "Necromancer: minimum delay in days"
-msgstr "Некроман: минимальная задержка (дней) перед ответом"
+msgstr "Некромант: минимальная задержка (дней) перед ответом"
 
 #: conf/badges.py:183
 msgid "Associate Editor: minimum number of edits"
@@ -468,7 +466,7 @@ msgstr "Штатный редактор: минимум правок"
 
 #: conf/badges.py:192
 msgid "Favorite Question: minimum stars"
-msgstr "Интересный вопрос: минимальное количество закладок"
+msgstr "Популярный вопрос: минимальное количество звезд"
 
 #: conf/badges.py:201
 msgid "Stellar Question: minimum stars"
@@ -496,7 +494,7 @@ msgstr ""
 "Эта опция определяет частоту рассылки сообщений по умолчанию в категориях: "
 "вопросы заданные пользователем, отвеченные пользователем, выбранные "
 "отдельно, все вопросы (отфильтрованные по темам) и сообщения которые "
-"упоминают имя пользователя а также комментарии."
+"упоминают имя пользователя, а также комментарии."
 
 #: conf/email.py:47
 msgid "Require email verification before allowing to post"
@@ -507,8 +505,8 @@ msgstr ""
 msgid ""
 "Active email verification is done by sending a verification key in email"
 msgstr ""
-"Подтверждение адреса электронной почты осуществляется посылкой специальной "
-"ссылки которую пользователь должен будет использовать по получению"
+"Подтверждение адреса электронной почты осуществляется отправкой ключа "
+"проверки на email"
 
 #: conf/email.py:57
 msgid "Allow only one account per email address"
@@ -516,7 +514,7 @@ msgstr "Позволить только один аккаунт на кажды�
 
 #: conf/email.py:66
 msgid "Fake email for anonymous user"
-msgstr "Адрес электронной почты для анонимного пользователя"
+msgstr "Поддельный адрес электронной почты для анонимного пользователя"
 
 #: conf/email.py:67
 msgid "Use this setting to control gravatar for email-less user"
@@ -526,15 +524,15 @@ msgstr ""
 
 #: conf/email.py:76
 msgid "Prefix for the email subject line"
-msgstr "добро пожаловать на форум!"
+msgstr "Префикс для электронной почты в строке темы"
 
 #: conf/external_keys.py:11
 msgid "Keys to connect the site with external services like Facebook, etc."
-msgstr "Префикс в теме электронных сообщений"
+msgstr "Ключи для связи с внешними сервисами, такими как Facebook, и т.д."
 
 #: conf/external_keys.py:18
 msgid "Google site verification key"
-msgstr "Идентификационный ключ Вашего сайта для поисковика Google"
+msgstr "Идентификационный ключ Google"
 
 #: conf/external_keys.py:20
 #, python-format
@@ -548,7 +546,7 @@ msgstr ""
 
 #: conf/external_keys.py:34
 msgid "Google Analytics key"
-msgstr "Ключ для активизации сервиса \"Google-Аналитика\""
+msgstr "Ключ для активации сервиса \"Google-Analytics\""
 
 #: conf/external_keys.py:36
 #, python-format
@@ -557,11 +555,11 @@ msgid ""
 "to use Google Analytics to monitor your site"
 msgstr ""
 "Получите ключ <a href=\"%(ga_site)s\">по этой ссылке</a>, если Вы "
-"собираетесь пользоваться инструментом Google-Аналитика"
+"собираетесь пользоваться инструментом Google-Analytics"
 
 #: conf/external_keys.py:49
 msgid "Enable recaptcha (keys below are required)"
-msgstr "Активизировать recaptcha (требуется регистрация на recaptcha.net)"
+msgstr "Активировать recaptcha (требуется регистрация на recaptcha.net)"
 
 #: conf/external_keys.py:58
 msgid "Recaptcha public key"
@@ -577,7 +575,7 @@ msgid ""
 "robots. Please get this and a public key at the <a href=\"http://recaptcha."
 "net\">recaptcha.net</a>"
 msgstr ""
-"Recaptcha это средство которое помогает отличить живых людей от надоедливых "
+"Recaptcha это средство, которое помогает отличить живых людей от надоедливых "
 "спам-роботов. Пожалуйста получите необходимые ключи на сайте <a href="
 "\"http://recaptcha.net\">recaptcha.net</a>"
 
@@ -626,7 +624,6 @@ msgid "LinkedIn consumer secret"
 msgstr "Секретный ключ для LinkedIn (consumer secret)"
 
 #: conf/external_keys.py:145
-#, fuzzy
 msgid "Use LDAP authentication for the password login"
 msgstr ""
 "Использовать протокол LDAP для авторизации через пароль и имя пользователя"
@@ -637,13 +634,11 @@ msgstr "Имя провайдера сервиса авторизации LDAP"
 
 #: conf/external_keys.py:162
 msgid "URL for the LDAP service"
-msgstr "URL по которому доступен сервис LDAP"
+msgstr "URL, по которому доступен сервис LDAP"
 
 #: conf/external_keys.py:170
 msgid "Explain how to change LDAP password"
-msgstr ""
-"Об‎‎\"ясните что делать пользователям которые изменить пароль, "
-"зарегистрированный через сервер LDAP"
+msgstr "Об‎‎ъясните, как изменить LDAP пароль"
 
 #: conf/flatpages.py:10
 msgid "Flatpages - about, privacy policy, etc."
@@ -659,11 +654,11 @@ msgid ""
 "the \"about\" page to check your input."
 msgstr ""
 "Сохраните, затем <a href=\"http://validator.w3.org/\">используйте HTML "
-"валидатор</a> на странице \"о нас\" Вашего foruma."
+"валидатор</a> на странице \"о нас\" для проверки правильности."
 
 #: conf/flatpages.py:30
 msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr "политика о личных данных (в формате html)"
+msgstr "Политика о личных данных (в формате html)"
 
 #: conf/flatpages.py:33
 msgid ""
@@ -671,7 +666,7 @@ msgid ""
 "the \"privacy\" page to check your input."
 msgstr ""
 "Сохраните, затем <a href=\"http://validator.w3.org/\">используйте HTML "
-"валидатор</a> на странице \"политика о личных данных\" Вашего foruma."
+"валидатор</a> на странице \"о нас\" для проверки правильности."
 
 #: conf/forum_data_rules.py:12
 msgid "Settings for askbot data entry and display"
@@ -689,19 +684,17 @@ msgstr "Максимальное количество букв в теге (кл
 
 #: conf/forum_data_rules.py:39
 msgid "Default max number of comments to display under posts"
-msgstr ""
-"Наибольшее количество комментариев, которое показывается под сообщениями в "
-"развернутом виде"
+msgstr "Число комментариев по-умолчанию, которое показывается под сообщениями"
 
 #: conf/forum_data_rules.py:50
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
 msgstr ""
-"Максимальная длина kommentariyev, должна быть menee <%(max_len)s символов"
+"Максимальная длина комментария не должна превышать %(max_len)s символов"
 
 #: conf/forum_data_rules.py:60
 msgid "Minimum length of search term for Ajax search"
-msgstr "Минимальная длина запроса при которой посылается автоматический запрос"
+msgstr "Минимальная длина поискового запроса в AJAX поиске"
 
 #: conf/forum_data_rules.py:61
 msgid "Must match the corresponding database backend setting"
@@ -718,15 +711,15 @@ msgstr "Количество вопросов отображаемых на гл
 
 #: conf/forum_data_rules.py:92
 msgid "What should \"unanswered question\" mean?"
-msgstr "Каково должно быть значение термина \"неотвеченный вопрос\"?"
+msgstr "Что должен означать \"неотвеченный вопрос\"?"
 
 #: conf/markup.py:15
 msgid "Markup formatting"
-msgstr "Формат ввода для текста"
+msgstr "Разметка текста"
 
 #: conf/markup.py:29
 msgid "Enable code-friendly Markdown"
-msgstr "Markdown оптимизированный для программистов"
+msgstr "Активировать Markdown, оптимизированный для программистов"
 
 #: conf/markup.py:31
 msgid ""
@@ -751,10 +744,12 @@ msgid ""
 "If you enable this feature, <a href=\"%(url)s\">mathjax</a> must be "
 "installed in directory %(dir)s"
 msgstr ""
+"Если вы включите эту функцию, <a href=\"%(url)s\">mathjax</a> должен быть "
+"установлен в каталоге %(dir)s"
 
 #: conf/markup.py:63
 msgid "Base url of MathJax deployment"
-msgstr ""
+msgstr "База URL-ов для размещения MathJax"
 
 #: conf/markup.py:65
 msgid ""
@@ -762,70 +757,73 @@ msgid ""
 "deploy it yourself, preferably at a separate domain and enter url pointing "
 "to the \"mathjax\" directory (for example: http://mysite.com/mathjax)"
 msgstr ""
+"Примечание - <strong>MathJax не входит в askbot</strong> - вы должны "
+"разместить его лично, желательно на отдельном домене и ввести URL, "
+"указывающий на \"mathjax\" каталог (например: http://mysite.com/mathjax)"
 
 #: conf/minimum_reputation.py:11
 msgid "Minimum reputation required to perform actions"
-msgstr "Пороги для уровней репутации"
+msgstr "Требования минимального уровня кармы для выполнения действий"
 
 #: conf/minimum_reputation.py:20
 msgid "Upvote"
-msgstr "голосовать \"за\""
+msgstr "Голосовать \"за\""
 
 #: conf/minimum_reputation.py:29
 msgid "Downvote"
-msgstr "голосовать \"против\""
+msgstr "Голосовать \"против\""
 
 #: conf/minimum_reputation.py:38
 msgid "Flag offensive"
-msgstr "пометить спам"
+msgstr "Пометить как спам"
 
 #: conf/minimum_reputation.py:47
 msgid "Leave comments"
-msgstr "добавить комментарии"
+msgstr "Добавить комментарии"
 
 #: conf/minimum_reputation.py:56
 msgid "Delete comments posted by others"
-msgstr "удалить чужие комментарии"
+msgstr "Удалить чужие комментарии"
 
 #: conf/minimum_reputation.py:65
 msgid "Delete questions and answers posted by others"
-msgstr "удалить любые вопросы или ответы"
+msgstr "Удалить любые вопросы или ответы"
 
 #: conf/minimum_reputation.py:74
 msgid "Upload files"
-msgstr "загружать файлы"
+msgstr "Загрузить файлы"
 
 #: conf/minimum_reputation.py:83
 msgid "Close own questions"
-msgstr "собственные вопросы"
+msgstr "Закрыть собственные вопросы"
 
 #: conf/minimum_reputation.py:92
 msgid "Retag questions posted by other people"
-msgstr "изменить теги на любых вопросах"
+msgstr "Изменить теги вопросов, заданных другими"
 
 #: conf/minimum_reputation.py:101
 msgid "Reopen own questions"
-msgstr "заново открыть свои вопросы"
+msgstr "Заново открыть свои вопросы"
 
 #: conf/minimum_reputation.py:110
 msgid "Edit community wiki posts"
-msgstr "редактировать сообщения помеченные как  вики"
+msgstr "Редактировать сообщения, помеченные как вики"
 
 #: conf/minimum_reputation.py:119
 msgid "Edit posts authored by other people"
-msgstr "править чужие сообщения"
+msgstr "Править чужие сообщения"
 
 #: conf/minimum_reputation.py:128
 msgid "View offensive flags"
-msgstr "видеть отметки неуместного контента"
+msgstr "Просмотреть отметки неуместного контента"
 
 #: conf/minimum_reputation.py:137
 msgid "Close questions asked by others"
-msgstr "закрывать чужие вопросы"
+msgstr "Закрыть чужие вопросы"
 
 #: conf/minimum_reputation.py:146
 msgid "Lock posts"
-msgstr ""
+msgstr "Заблокировать посты"
 
 #: conf/reputation_changes.py:12
 msgid "Reputation loss and gain rules"
@@ -869,31 +867,31 @@ msgstr "Потеря для голосующего \"против\""
 
 #: conf/reputation_changes.py:106
 msgid "Loss for owner of post that was flagged offensive"
-msgstr "Потеря для автора чъе сообщение было помечено как неприемлемое"
+msgstr "Потеря для автора, чье сообщение было помечено как неприемлемое"
 
 #: conf/reputation_changes.py:116
 msgid "Loss for owner of post that was downvoted"
-msgstr "Потеря для автора чъе сообщение получило голос \"против\""
+msgstr "Потеря для автора, чье сообщение получило голос \"против\""
 
 #: conf/reputation_changes.py:126
 msgid "Loss for owner of post that was flagged 3 times per same revision"
 msgstr ""
-"Потеря для автора чъе сообщение было помечено как неприемлемое трижды на "
+"Потеря для автора, чье сообщение было помечено как неприемлемое трижды на "
 "одну и ту же правку"
 
 #: conf/reputation_changes.py:136
 msgid "Loss for owner of post that was flagged 5 times per same revision"
 msgstr ""
-"Потеря для автора чъе сообщение было помечено как неприемлемое пять раз на "
+"Потеря для автора, чье сообщение было помечено как неприемлемое пять раз на "
 "одну и ту же правку"
 
 #: conf/reputation_changes.py:146
 msgid "Loss for post owner when upvote is canceled"
-msgstr "Потеря для автора чъе сообщение потеряло голос \"за\""
+msgstr "Потеря для автора, чье сообщение потеряло голос \"за\""
 
 #: conf/site_settings.py:13
 msgid "Q&A forum website parameters and urls"
-msgstr "Основные параметры форума"
+msgstr "Основные параметры и ссылки форума"
 
 #: conf/site_settings.py:21
 msgid "Site title for the Q&A forum"
@@ -905,8 +903,7 @@ msgstr "Ключевые слова для сайта, через запятую
 
 #: conf/site_settings.py:40
 msgid "Copyright message to show in the footer"
-msgstr ""
-"Сообщение о копирайте правообладателя (показывается в нижней части страницы)"
+msgstr "Сообщение о праве собственности (показывается в нижней части страницы)"
 
 #: conf/site_settings.py:50
 msgid "Site description for the search engines"
@@ -914,17 +911,16 @@ msgstr "Описание сайта для поисковиков"
 
 #: conf/site_settings.py:59
 msgid "Short name for your Q&A forum"
-msgstr "Короткое название форума"
+msgstr "Краткое название форума"
 
 #: conf/site_settings.py:69
 msgid "Base URL for your Q&A forum, must start with http or https"
-msgstr ""
-"Базовая часть интернет адреса этого форума (должна начинаться с http или "
-"https)"
+msgstr "Базовая часть URL форума (должна начинаться с http или https)"
 
 #: conf/site_settings.py:82
 msgid "Link shown in the greeting message shown to the anonymous user"
-msgstr "Ссылка которая показывается приветствии неавторизованному посетителю"
+msgstr ""
+"Ссылка, которая показывается в приветствии неавторизованному посетителю"
 
 #: conf/site_settings.py:85
 msgid ""
@@ -946,15 +942,15 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:11
 msgid "Skin: view, vote and answer counters"
-msgstr ""
+msgstr "Скин: счетчики просмотров, голосования и ответов"
 
 #: conf/skin_counter_settings.py:19
 msgid "Vote counter value to give \"full color\""
-msgstr ""
+msgstr "Значение счетчика голосования для присвоения \"full color\""
 
 #: conf/skin_counter_settings.py:29
 msgid "Background color for votes = 0"
-msgstr ""
+msgstr "Цвет фона для голоса = 0"
 
 #: conf/skin_counter_settings.py:30 conf/skin_counter_settings.py:41
 #: conf/skin_counter_settings.py:52 conf/skin_counter_settings.py:62
@@ -967,95 +963,95 @@ msgstr ""
 #: conf/skin_counter_settings.py:228 conf/skin_counter_settings.py:239
 #: conf/skin_counter_settings.py:252 conf/skin_counter_settings.py:262
 msgid "HTML color name or hex value"
-msgstr ""
+msgstr "Имя цвета HTML  или шестнадцатиричное значение"
 
 #: conf/skin_counter_settings.py:40
 msgid "Foreground color for votes = 0"
-msgstr ""
+msgstr "Цвет шрифта для голоса = 0"
 
 #: conf/skin_counter_settings.py:51
 msgid "Background color for votes"
-msgstr ""
+msgstr "Цвет фона для голоса"
 
 #: conf/skin_counter_settings.py:61
 msgid "Foreground color for votes"
-msgstr ""
+msgstr "Цвет шрифта для голоса"
 
 #: conf/skin_counter_settings.py:71
 msgid "Background color for votes = MAX"
-msgstr ""
+msgstr "Цвет фона для голоса = MAX"
 
 #: conf/skin_counter_settings.py:84
 msgid "Foreground color for votes = MAX"
-msgstr ""
+msgstr "Цвет шрифта для голоса = MAX"
 
 #: conf/skin_counter_settings.py:95
 msgid "View counter value to give \"full color\""
-msgstr ""
+msgstr "Посмотреть значение счетчика для присвоения \"full color\""
 
 #: conf/skin_counter_settings.py:105
 msgid "Background color for views = 0"
-msgstr ""
+msgstr "Цвет фона для просмотра = 0"
 
 #: conf/skin_counter_settings.py:116
 msgid "Foreground color for views = 0"
-msgstr ""
+msgstr "Цвет шрифта для просмотра = 0"
 
 #: conf/skin_counter_settings.py:127
 msgid "Background color for views"
-msgstr ""
+msgstr "Цвет фона для просмотра"
 
 #: conf/skin_counter_settings.py:137
 msgid "Foreground color for views"
-msgstr ""
+msgstr "Цвет шрифта для просмотра"
 
 #: conf/skin_counter_settings.py:147
 msgid "Background color for views = MAX"
-msgstr ""
+msgstr "Цвет фона для просмотра = MAX"
 
 #: conf/skin_counter_settings.py:162
 msgid "Foreground color for views = MAX"
-msgstr ""
+msgstr "Цвет шрифта для просмотра = MAX"
 
 #: conf/skin_counter_settings.py:173
 msgid "Answer counter value to give \"full color\""
-msgstr ""
+msgstr "Значение счетчика ответов для присвоения \"full color\""
 
 #: conf/skin_counter_settings.py:185
 msgid "Background color for answers = 0"
-msgstr ""
+msgstr "Цвет фона для ответов = 0"
 
 #: conf/skin_counter_settings.py:195
 msgid "Foreground color for answers = 0"
-msgstr ""
+msgstr "Цвет шрифта для ответов = 0"
 
 #: conf/skin_counter_settings.py:205
 msgid "Background color for answers"
-msgstr ""
+msgstr "Цвет фона для ответов"
 
 #: conf/skin_counter_settings.py:215
 msgid "Foreground color for answers"
-msgstr ""
+msgstr "Цвет шрифта для ответов"
 
 #: conf/skin_counter_settings.py:227
 msgid "Background color for answers = MAX"
-msgstr ""
+msgstr "Цвет фона для ответов = MAX"
 
 #: conf/skin_counter_settings.py:238
 msgid "Foreground color for answers = MAX"
-msgstr ""
+msgstr "Цвет шрифта для ответов = MAX"
 
 #: conf/skin_counter_settings.py:251
 msgid "Background color for accepted"
-msgstr ""
+msgstr "Цвет фона для принятых"
 
 #: conf/skin_counter_settings.py:261
 msgid "Foreground color for accepted answer"
-msgstr ""
+msgstr "Цвет шрифта для принятых ответов"
 
 #: conf/skin_general_settings.py:15
 msgid "Skin and User Interface settings"
-msgstr "Интерфейс и внешний вид"
+msgstr "Настройки интерфейса и отображения"
 
 #: conf/skin_general_settings.py:22
 msgid "Q&A site logo"
@@ -1064,21 +1060,22 @@ msgstr "Главный логотип"
 #: conf/skin_general_settings.py:24
 msgid "To change the logo, select new file, then submit this whole form."
 msgstr ""
+"Чтобы заменить логотип, выберите новый файл затем нажмите кнопку \"сохранить"
+"\""
 
 #: conf/skin_general_settings.py:38
-#, fuzzy
 msgid "Show logo"
-msgstr "блога автора"
+msgstr "Показывать логотип"
 
 #: conf/skin_general_settings.py:40
 msgid ""
 "Check if you want to show logo in the forum header or uncheck in the case "
 "you do not want the logo to appear in the default location"
-msgstr ""
+msgstr "Отметьте если Вы хотите использовать логотип в головной части форум"
 
 #: conf/skin_general_settings.py:52
 msgid "Site favicon"
-msgstr ""
+msgstr "Фавикон для Вашего сайта"
 
 #: conf/skin_general_settings.py:54
 #, python-format
@@ -1087,28 +1084,34 @@ msgid ""
 "browser user interface. Please find more information about favicon at <a "
 "href=\"%(favicon_info_url)s\">this page</a>."
 msgstr ""
+"favicon это маленькая квадратная картинка 16х16 либо 32х32, которая "
+"используется в интерфейсе браузеров. На <a href=\"%(favicon_info_url)s"
+"\">Здесь</a> есть дополнительная информация о favicon."
 
 #: conf/skin_general_settings.py:70
 msgid "Password login button"
-msgstr ""
+msgstr "Кнопка для входа с паролем"
 
 #: conf/skin_general_settings.py:72
 msgid ""
 "An 88x38 pixel image that is used on the login screen for the password login "
 "button."
 msgstr ""
+"Картинка размером 88x38, которая используется в качестве кнопки для "
+"авторизации с именем и паролем."
 
 #: conf/skin_general_settings.py:86
 msgid "Show footer"
-msgstr ""
+msgstr "Показывать подвал страницы."
 
 #: conf/skin_general_settings.py:88
 msgid "Check if you want to show the footer on each forum page"
 msgstr ""
+"Отметьте, если вы хотите, чтобы подвал отображался на каждой странице форума"
 
 #: conf/skin_general_settings.py:99
 msgid "Show all UI functions to all users"
-msgstr ""
+msgstr "Отображать все функции пользовательского интерфейса всем пользователям"
 
 #: conf/skin_general_settings.py:101
 msgid ""
@@ -1116,70 +1119,75 @@ msgid ""
 "reputation. However to use those functions, moderation rules, reputation and "
 "other limits will still apply."
 msgstr ""
+"Если эта опция помечена, то все пользователи форума будут иметь визуальный "
+"доступ ко всем его функциям, вне зависимости от репутации. Однако "
+"фактический доступ всё равно будет зависить от репутации, правил "
+"модерирования и т.п."
 
 #: conf/skin_general_settings.py:116
-#, fuzzy
 msgid "Select skin"
-msgstr "выбрать версию"
+msgstr "Выберите тему пользовательского интерфейса"
 
 #: conf/skin_general_settings.py:125
 msgid "Skin media revision number"
-msgstr ""
+msgstr "Ревизия медиа-файлов скина"
 
 #: conf/skin_general_settings.py:127
 msgid ""
 "Increment this number when you change image in skin media or stylesheet. "
 "This helps avoid showing your users outdated images from their browser cache."
 msgstr ""
+"Увеличьте это число когда изменяете медиа-файлы или css. Это позволяет "
+"избежать ошибки отображения кешированных старых данных у пользователей."
 
 #: conf/social_sharing.py:10
 msgid "Sharing content on social networks"
-msgstr ""
+msgstr "Распространение информации по социальным сетям"
 
 #: conf/social_sharing.py:18
 msgid "Check to enable sharing of questions on Twitter and Facebook"
-msgstr ""
+msgstr "Добавить кнопки для сетей Twitter и Facebook в каждый вопрос"
 
 #: conf/user_settings.py:10
-#, fuzzy
 msgid "User policy settings"
-msgstr "политика в отношении cookie"
+msgstr "Настройка политики пользователей"
 
 #: conf/user_settings.py:18
 msgid "Allow editing user screen name"
-msgstr ""
+msgstr "Позволить пользователям изменять имена"
 
 #: conf/user_settings.py:28
 msgid "Minimum allowed length for screen name"
-msgstr ""
+msgstr "Минимальное количество букв в именах пользователей"
 
 #: conf/vote_rules.py:13
 msgid "Limits applicable to votes and moderation flags"
-msgstr ""
+msgstr "Настройки, применяемые для голосования и отметок модерации"
 
 #: conf/vote_rules.py:22
 msgid "Number of votes a user can cast per day"
-msgstr ""
+msgstr "Количество голосов на одного пользователя в день  "
 
 #: conf/vote_rules.py:31
 msgid "Maximum number of flags per user per day"
-msgstr ""
+msgstr "Максимальное количество меток на одного пользователя в день"
 
 #: conf/vote_rules.py:40
 msgid "Threshold for warning about remaining daily votes"
-msgstr ""
+msgstr "Порог предупреждения об оставшихся ежедневных голосах "
 
 #: conf/vote_rules.py:49
 msgid "Number of days to allow canceling votes"
-msgstr ""
+msgstr "Количество дней, в течение которых можно отменить голос"
 
 #: conf/vote_rules.py:58
 msgid "Number of flags required to automatically hide posts"
-msgstr ""
+msgstr "Число сигналов, требуемое для автоматического скрытия сообщений"
 
 #: conf/vote_rules.py:67
+#, fuzzy
 msgid "Number of flags required to automatically delete posts"
-msgstr ""
+msgstr "Количество меток требуемое для автоматического удаления сообщений"
 
 #: const/__init__.py:9
 msgid "duplicate question"
@@ -1217,28 +1225,31 @@ msgstr "спам или реклама"
 msgid "too localized"
 msgstr "слишком специализированный"
 
-#: const/__init__.py:40 const/message_keys.py:28
+#: const/__init__.py:40
 msgid "newest"
 msgstr "новые"
 
-#: const/__init__.py:41 const/message_keys.py:26
-#: skins/default/templates/users.html:25 skins/default/templates/users.html:26
+#: const/__init__.py:41 skins/default/templates/users.html:25
+#: skins/default/templates/users.html:26
+#, fuzzy
 msgid "oldest"
-msgstr "старожилы"
+msgstr "старые"
 
-#: const/__init__.py:42 const/message_keys.py:32
+#: const/__init__.py:42
 msgid "active"
 msgstr "активные"
 
-#: const/__init__.py:43 const/message_keys.py:30
+#: const/__init__.py:43
 msgid "inactive"
 msgstr "неактивные"
 
 #: const/__init__.py:44
+#, fuzzy
 msgid "hottest"
 msgstr "больше ответов"
 
 #: const/__init__.py:45
+#, fuzzy
 msgid "coldest"
 msgstr "меньше ответов"
 
@@ -1250,7 +1261,7 @@ msgstr "больше голосов"
 msgid "least voted"
 msgstr "меньше голосов"
 
-#: const/__init__.py:48 const/message_keys.py:24
+#: const/__init__.py:48
 msgid "relevance"
 msgstr "уместность"
 
@@ -1277,35 +1288,35 @@ msgstr "Нет принятого ответа"
 
 #: const/__init__.py:112
 msgid "asked a question"
-msgstr "задали вопрос"
+msgstr "задан вопрос"
 
 #: const/__init__.py:113
 msgid "answered a question"
-msgstr "дали ответ"
+msgstr "дан ответ"
 
 #: const/__init__.py:114
 msgid "commented question"
-msgstr "комментарий на вопрос"
+msgstr "прокомментированный вопрос"
 
 #: const/__init__.py:115
 msgid "commented answer"
-msgstr "комментарий на ответ"
+msgstr "прокомментированный ответ"
 
 #: const/__init__.py:116
 msgid "edited question"
-msgstr "отредактировали вопрос"
+msgstr "отредактированный вопрос"
 
 #: const/__init__.py:117
 msgid "edited answer"
-msgstr "отредактировали ответ"
+msgstr "отредактированный ответ"
 
 #: const/__init__.py:118
 msgid "received award"
-msgstr "получили награду"
+msgstr "получена награда"
 
 #: const/__init__.py:119
 msgid "marked best answer"
-msgstr "отметили лучший ответ"
+msgstr "отмечен как лучший ответ"
 
 #: const/__init__.py:120
 msgid "upvoted"
@@ -1317,15 +1328,15 @@ msgstr "проголосовали \"против\""
 
 #: const/__init__.py:122
 msgid "canceled vote"
-msgstr "отмена голоса"
+msgstr "отмененный голос"
 
 #: const/__init__.py:123
 msgid "deleted question"
-msgstr "удаление вопроса"
+msgstr "удаленный вопрос"
 
 #: const/__init__.py:124
 msgid "deleted answer"
-msgstr "удаление ответа"
+msgstr "удаленный ответ"
 
 #: const/__init__.py:125
 msgid "marked offensive"
@@ -1333,15 +1344,17 @@ msgstr "отметка неуместного содержания"
 
 #: const/__init__.py:126
 msgid "updated tags"
-msgstr "обновление тем"
+msgstr "обновленные тэги "
 
 #: const/__init__.py:127
+#, fuzzy
 msgid "selected favorite"
-msgstr "отметка интересного вопроса"
+msgstr "занесено в избранное "
 
 #: const/__init__.py:128
+#, fuzzy
 msgid "completed user profile"
-msgstr "полное завершение учётной записи"
+msgstr "завершенный профиль пользователя"
 
 #: const/__init__.py:129
 msgid "email update sent to user"
@@ -1349,7 +1362,7 @@ msgstr "сообщение выслано по электронной почте
 
 #: const/__init__.py:130
 msgid "mentioned in the post"
-msgstr "упомянули в тексте сообщения"
+msgstr "упомянуто в тексте сообщения"
 
 #: const/__init__.py:181
 msgid "question_answered"
@@ -1381,19 +1394,19 @@ msgstr "изначальная версия"
 
 #: const/__init__.py:191
 msgid "retagged"
-msgstr "редакция тематических отметок"
+msgstr "теги изменены"
 
 #: const/__init__.py:196
 msgid "exclude ignored tags"
-msgstr "исключить игнорируемые темы"
+msgstr "исключить игнорируемые тэги"
 
 #: const/__init__.py:197
 msgid "allow only selected tags"
-msgstr "влючить только выбранные темы"
+msgstr "включить только выбранные тэги"
 
 #: const/__init__.py:201
 msgid "instantly"
-msgstr "немедленно"
+msgstr "немедленно "
 
 #: const/__init__.py:202
 msgid "daily"
@@ -1405,7 +1418,7 @@ msgstr "еженедельно"
 
 #: const/__init__.py:204
 msgid "no email"
-msgstr "не посылать электронную почту"
+msgstr "не посылать email"
 
 #: const/__init__.py:241 skins/default/templates/badges.html:43
 msgid "gold"
@@ -1423,72 +1436,12 @@ msgstr "бронзовая "
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr ""
-"Здравствуйте, Вы здесь впервые? Посмотрите наши <a href=\"%s\">часто "
-"задаваемые вопросы</a>!"
-
-#: const/message_keys.py:22
-#, fuzzy
-msgid "most relevant questions"
-msgstr "ваш вопрос должен соответствовать тематике сообщества"
-
-#: const/message_keys.py:23
-#, fuzzy
-msgid "click to see most relevant questions"
-msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
-
-#: const/message_keys.py:25
-msgid "click to see the oldest questions"
-msgstr "нажмите, чтобы увидеть старые вопросы"
-
-#: const/message_keys.py:27
-msgid "click to see the newest questions"
-msgstr "нажмите, чтобы увидеть последние вопросы"
-
-#: const/message_keys.py:29
-msgid "click to see the least recently updated questions"
-msgstr "нажмите, чтобы посмотреть последние обновленные вопросы"
-
-#: const/message_keys.py:31
-msgid "click to see the most recently updated questions"
-msgstr "нажмите, чтобы посмотреть недавно обновленные вопросы"
-
-#: const/message_keys.py:33
-#, fuzzy
-msgid "click to see the least answered questions"
-msgstr "нажмите, чтобы увидеть старые вопросы"
-
-#: const/message_keys.py:34
-msgid "less answers"
-msgstr "меньше ответов"
-
-#: const/message_keys.py:35
-#, fuzzy
-msgid "click to see the most answered questions"
-msgstr "нажмите, чтобы увидеть последние вопросы"
-
-#: const/message_keys.py:36
-msgid "more answers"
-msgstr "кол-ву ответов"
-
-#: const/message_keys.py:37
-msgid "click to see least voted questions"
-msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
-
-#: const/message_keys.py:38
-msgid "unpopular"
-msgstr "непопулярный"
-
-#: const/message_keys.py:39
-msgid "click to see most voted questions"
-msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
-
-#: const/message_keys.py:40
-msgid "popular"
-msgstr "популярные"
+"Впервые здесь? Посмотрите наши <a href=\"%s\">часто задаваемые вопросы(FAQ)</"
+"a>!"
 
 #: deps/django_authopenid/forms.py:116 deps/django_authopenid/views.py:137
 msgid "i-names are not supported"
-msgstr "извините, но i-names не поддерживаются"
+msgstr "i-names не поддерживаются"
 
 #: deps/django_authopenid/forms.py:237
 #, python-format
@@ -1518,7 +1471,7 @@ msgstr "Пожалуйста, выберите пароль > %(len)s симво
 
 #: deps/django_authopenid/forms.py:336
 msgid "Current password"
-msgstr "Настоящий пароль"
+msgstr "Текущий пароль"
 
 #: deps/django_authopenid/forms.py:347
 msgid ""
@@ -1584,7 +1537,7 @@ msgstr "имя пользователя и пароль на %(site)s"
 #: deps/django_authopenid/util.py:202
 #: skins/default/templates/authopenid/signin.html:124
 msgid "Create a password-protected account"
-msgstr "Откройте новый аккаунт с именем и паролем"
+msgstr "Создайте новый аккаунт с именем и паролем"
 
 #: deps/django_authopenid/util.py:203
 msgid "Change your password"
@@ -1592,7 +1545,7 @@ msgstr "Сменить пароль"
 
 #: deps/django_authopenid/util.py:265
 msgid "Sign in with Yahoo"
-msgstr "Заходите через Yahoo"
+msgstr "Вход через Yahoo"
 
 #: deps/django_authopenid/util.py:272
 msgid "AOL screen name"
@@ -1608,7 +1561,7 @@ msgstr "Имя пользователя в MyOpenid"
 
 #: deps/django_authopenid/util.py:305 deps/django_authopenid/util.py:313
 msgid "Flickr user name"
-msgstr "Имя пользователя в Flickr"
+msgstr "Имя пользователя на Flickr"
 
 #: deps/django_authopenid/util.py:321
 msgid "Technorati user name"
@@ -1664,7 +1617,7 @@ msgstr ""
 #: deps/django_authopenid/util.py:419
 #, python-format
 msgid "Signin with %(provider)s user name and password"
-msgstr "Заходите на %(provider)s"
+msgstr "Заходите с именем пользователя и паролем %(provider)s "
 
 #: deps/django_authopenid/util.py:426
 #, python-format
@@ -1683,8 +1636,8 @@ msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr ""
-"К сожалению, не получается соединиться с %(provider)s, пожалуйста попробуйте "
-"ещё раз или зайдите через другого провайдера"
+"К сожалению, возникла проблема при соединении с %(provider)s, пожалуйста "
+"попробуйте ещё раз или зайдите через другого провайдера"
 
 #: deps/django_authopenid/views.py:349
 msgid "Your new password saved"
@@ -1692,11 +1645,11 @@ msgstr "Ваш новый пароль сохранен"
 
 #: deps/django_authopenid/views.py:511
 msgid "Please click any of the icons below to sign in"
-msgstr "Жмите на любую из кнопок ниже и заходите на форум"
+msgstr "Чтобы войти на форум, нажмите на любую из кнопок ниже "
 
 #: deps/django_authopenid/views.py:513
 msgid "Account recovery email sent"
-msgstr "Сообщение с ключом для восстановления аккаунта выслано"
+msgstr "Email для восстановления аккаунта выслан"
 
 #: deps/django_authopenid/views.py:516
 msgid "Please add one or more login methods."
@@ -1713,78 +1666,75 @@ msgstr ""
 #: deps/django_authopenid/views.py:520
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr ""
+"Пожалуйста, подождите секунду! Ваша учетная запись восстанавлена, но ..."
 
 #: deps/django_authopenid/views.py:522
 msgid "Sorry, this account recovery key has expired or is invalid"
-msgstr ""
+msgstr "К сожалению, этот ключ восстановления истек или не является верным"
 
 #: deps/django_authopenid/views.py:578
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
-msgstr ""
+msgstr "Метод входа %(provider_name) s не существует"
 
 #: deps/django_authopenid/views.py:584
-#, fuzzy
 msgid "Oops, sorry - there was some error - please try again"
-msgstr "к сожалению, пароли не совпадают, попробуйте еще раз"
+msgstr "Упс, извините, произошла ошибка - пожалуйста, попробуйте ещё раз"
 
 #: deps/django_authopenid/views.py:675
 #, python-format
 msgid "Your %(provider)s login works fine"
-msgstr ""
+msgstr "Вход при помощи %(provider)s работает отлично"
 
 #: deps/django_authopenid/views.py:973 deps/django_authopenid/views.py:979
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
-"пожалуйста подтвердите адрес Вашей электронной почты (<a href=\"%"
-"(details_url)s\">дополнительная информация здесь</a>)"
+"пожалуйста подтвердите ваш email, дополнительная информация (<a href=\"%"
+"(details_url)s\">здесь</a>)"
 
 #: deps/django_authopenid/views.py:1000
 msgid "Email verification subject line"
-msgstr "[форум]: подтвердите адрес Вашей электронной почты"
+msgstr "Тема сообщения для верификации email"
 
 #: deps/django_authopenid/views.py:1065
 msgid "Please check your email and visit the enclosed link."
-msgstr ""
+msgstr "Пожалуйста, проверьте свой email и пройдите по вложенной ссылке."
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
-#, fuzzy
 msgid "Site"
-msgstr "заголовок"
+msgstr "Сайт"
 
 #: deps/livesettings/values.py:107
 msgid "Base Settings"
-msgstr ""
+msgstr "Базовые настройки"
 
 #: deps/livesettings/values.py:214
 msgid "Default value: \"\""
-msgstr ""
+msgstr "Значение по умолчанию:\"\""
 
 #: deps/livesettings/values.py:221
 msgid "Default value: "
-msgstr ""
+msgstr "Значение по умолчанию:"
 
 #: deps/livesettings/values.py:224
 #, python-format
 msgid "Default value: %s"
-msgstr ""
+msgstr "Значение по умолчанию: %s"
 
 #: deps/livesettings/values.py:589
-#, fuzzy, python-format
+#, python-format
 msgid "Allowed image file types are %(types)s"
-msgstr "допустимые типы файлов: '%(file_types)s'"
+msgstr "Допустимые типы файлов изображений: %(types)s"
 
 #: deps/livesettings/templates/livesettings/_admin_site_views.html:4
-#, fuzzy
 msgid "Sites"
-msgstr "заголовок"
+msgstr "Сайт"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
-#, fuzzy
 msgid "Documentation"
-msgstr "Местоположение"
+msgstr "Документация"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
@@ -1794,97 +1744,92 @@ msgstr "Сменить пароль"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
-#, fuzzy
 msgid "Log out"
 msgstr "Выйти"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:14
 #: deps/livesettings/templates/livesettings/site_settings.html:26
-#, fuzzy
 msgid "Home"
-msgstr "главная"
+msgstr "Главная"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:15
-#, fuzzy
 msgid "Edit Group Settings"
-msgstr "Изменить вопрос"
+msgstr "Изменить настройки групп"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:22
 #: deps/livesettings/templates/livesettings/site_settings.html:50
-#, fuzzy
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] "Пожалуйста, исправьте ошибки, указанные ниже:"
+msgstr[0] "Пожалуйста, исправьте ошибку, указанную ниже:"
 msgstr[1] "Пожалуйста, исправьте ошибки, указанные ниже:"
 msgstr[2] "Пожалуйста, исправьте ошибки, указанные ниже:"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:28
 #, python-format
 msgid "Settings included in %(name)s."
-msgstr ""
+msgstr "Настройки включены в %(name)s ."
 
 #: deps/livesettings/templates/livesettings/group_settings.html:62
 #: deps/livesettings/templates/livesettings/site_settings.html:97
 msgid "You don't have permission to edit values."
-msgstr ""
+msgstr "У вас нет разрешения на изменение значений."
 
 #: deps/livesettings/templates/livesettings/group_settings.html:68
-#, fuzzy
 msgid "Setting groups"
-msgstr "сброс тэгов"
+msgstr "Настройки групп"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
 msgid "Edit Site Settings"
-msgstr ""
+msgstr "Изменить настройки сайта"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
-msgstr ""
+msgstr "Livesettings отключены для этого сайта."
 
 #: deps/livesettings/templates/livesettings/site_settings.html:44
 msgid "All configuration options must be edited in the site settings.py file"
-msgstr ""
+msgstr "Все параметры конфигурации должны быть изменены в файле settings.py "
 
 #: deps/livesettings/templates/livesettings/site_settings.html:66
 #, python-format
 msgid "Group settings: %(name)s"
-msgstr ""
+msgstr "Настройки групп: %(name)s"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
 msgid "Uncollapse all"
-msgstr ""
+msgstr "Развернуть все"
 
 #: deps/recaptcha_django/__init__.py:19 deps/recaptcha_django/__init__.py:80
 msgid "Unknown error."
-msgstr ""
+msgstr "Неизвестная ошибка."
 
 #: deps/recaptcha_django/__init__.py:20 deps/recaptcha_django/__init__.py:21
 msgid "ReCAPTCHA is wrongly configured."
-msgstr ""
+msgstr "Recaptcha неправильно настроен."
 
 #: deps/recaptcha_django/__init__.py:22
 msgid "Bad reCAPTCHA challenge parameter."
-msgstr ""
+msgstr "Неправильный ввод параметра reCAPTCHA. "
 
 #: deps/recaptcha_django/__init__.py:23
 msgid "The CAPTCHA solution was incorrect."
-msgstr ""
+msgstr "Решение CAPTCHA было неправильным."
 
 #: deps/recaptcha_django/__init__.py:24
 msgid "Bad reCAPTCHA verification parameters."
-msgstr ""
+msgstr "Неверные параметры верификации reCAPTCHA. "
 
 #: deps/recaptcha_django/__init__.py:25
 msgid "Provided reCAPTCHA API keys are not valid for this domain."
-msgstr ""
+msgstr "Предоставленные Recaptcha API ключи не подходят для этого домена."
 
 #: deps/recaptcha_django/__init__.py:26
 msgid "ReCAPTCHA could not be reached."
-msgstr ""
+msgstr "ReCAPTCHA недоступен. "
 
 #: deps/recaptcha_django/__init__.py:73
 msgid "Invalid request"
-msgstr ""
+msgstr "Неправильный запрос"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:126
 msgid "Congratulations, you are now an Administrator"
@@ -1893,7 +1838,7 @@ msgstr "Поздравляем, теперь Вы администратор н�
 #: management/commands/send_email_alerts.py:105
 #, python-format
 msgid "\" and \"%s\""
-msgstr ""
+msgstr "\" и \"%s\""
 
 #: management/commands/send_email_alerts.py:108
 #, fuzzy
@@ -1904,15 +1849,15 @@ msgstr "Узнать больше"
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(question_count)d вопрос обновлен в %(topics)s"
+msgstr[1] "%(question_count)d вопросы обновлены в %(topics)s"
+msgstr[2] "%(question_count)d вопросы обновлены в %(topics)s"
 
 #: management/commands/send_email_alerts.py:467
-#, fuzzy, python-format
+#, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] "%(name)s, в этом вопросе есть новости"
+msgstr[0] "%(name)s, в этом %(num)d вопросе есть новости"
 msgstr[1] "%(name)s, в этих %(num)d вопросах есть новости"
 msgstr[2] "%(name)s, в этих %(num)d вопросах есть новости"
 
@@ -1927,66 +1872,67 @@ msgid ""
 "posting one?"
 msgstr ""
 "Пожалуйста, зайдите на наш форум и посмотрите что есть нового. Может быть Вы "
-"поможете нам рассказать другим о нашем сайте или кто-нибудь из Ваших "
-"знакомых может ответить на эти вопросы или извлечь пользу из ответов?"
+"расскажете другим о нашем сайте или кто-нибудь из Ваших знакомых может "
+"ответить на эти вопросы или извлечь пользу из ответов?"
 
 #: management/commands/send_email_alerts.py:513
-#, fuzzy
 msgid ""
 "Your most frequent subscription setting is 'daily' on selected questions. If "
 "you are receiving more than one email per dayplease tell about this issue to "
 "the askbot administrator."
 msgstr ""
-"Вы выбрали получать ежедневные сообщения о новостях в избранных вопросах. "
-"Если Вы получаете от нас более чем одно сообщение в день, пожалуйста дайте "
-"об этом знать администратору форума."
+"Ваша наиболее частая настройка оповещения по email - ежедневная. Если вы "
+"получаете email чаще, пожалуйста, известите администратора форума."
 
 #: management/commands/send_email_alerts.py:519
-#, fuzzy
 msgid ""
 "Your most frequent subscription setting is 'weekly' if you are receiving "
 "this email more than once a week please report this issue to the askbot "
 "administrator."
 msgstr ""
-"Вы выбрали получать сообщения о новостях в избранных вопросах один раз в "
-"неделю. Если Вы получаете от нас более одного сообщения в неделю то "
-"пожалуйста дайте об этом знать администратору форума."
+"Ваша наиболее частая настройка оповещения по email - еженедельная. Если вы "
+"получаете email чаще, пожалуйста, известите администратора форума."
 
 #: management/commands/send_email_alerts.py:525
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
 msgstr ""
-"Не исключено что здесь есть ссылки которые Вы раньше видели. Это результат "
-"технической детали, которая со временем перестанет себя проявлять."
+"Не исключено что Вы можете получить ссылки, которые видели раньше. Это "
+"исчезнет спустя некоторое время."
 
 #: management/commands/send_email_alerts.py:530
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or %"
 "(admin_email)s administrator"
 msgstr ""
-"<a href=\"%(link)s\">Здесь</a> Вы можете изменить частоту рассылки. Если "
-"возникнет необходимость - пожалуйста свяжитесь с администратором форума по %"
-"(email)s."
+"<a href=\"%(email_settings_link)s\">Здесь</a> Вы можете изменить частоту "
+"рассылки. Если возникнет необходимость - пожалуйста свяжитесь с "
+"администратором форума по %(admin_email)s."
 
 #: models/__init__.py:170
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr ""
+"К сожалению, вы не можете принять или не принять   лучший ответ, потому что "
+"ваша учетная запись заблокирована"
 
 #: models/__init__.py:175
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr ""
+"К сожалению, вы не можете принять или не принять   лучший ответ, потому что "
+"ваша учетная запись приостановлена"
 
 #: models/__init__.py:181
-#, fuzzy
 msgid ""
 "Sorry, you cannot accept or unaccept your own answer to your own question"
-msgstr "Впервые приняли лучший ответ на собственный вопрос"
+msgstr ""
+"К сожалению, вы не можете принять или не принять ваш собственный ответ на "
+"ваш вопрос"
 
 #: models/__init__.py:188
 #, python-format
@@ -1994,6 +1940,8 @@ msgid ""
 "Sorry, only original author of the question  - %(username)s - can accept the "
 "best answer"
 msgstr ""
+"К сожалению, только первый автор вопроса - %(username)s - может принять "
+"лучший ответ"
 
 #: models/__init__.py:211
 msgid "cannot vote for own posts"
@@ -2001,11 +1949,11 @@ msgstr "нельзя голосовать за собственные сообщ
 
 #: models/__init__.py:214
 msgid "Sorry your account appears to be blocked "
-msgstr ""
+msgstr "К сожалению, ваша  учетная запись заблокирована"
 
 #: models/__init__.py:219
 msgid "Sorry your account appears to be suspended "
-msgstr ""
+msgstr "К сожалению, ваша  учетная запись приостановлена"
 
 #: models/__init__.py:229
 #, python-format
@@ -2018,20 +1966,13 @@ msgid ">%(points)s points required to downvote"
 msgstr "для понижения рейтинга требуется минимум %(points)s баллов"
 
 #: models/__init__.py:250
-#, fuzzy
 msgid "Sorry, blocked users cannot upload files"
-msgstr ""
-"Sorry, your account appears to be blocked and you cannot make new posts "
-"until this issue is resolved. Please contact the forum administrator to "
-"reach a resolution."
+msgstr "К сожалению, заблокированные пользователи не могут загружать файлы"
 
 #: models/__init__.py:251
-#, fuzzy
 msgid "Sorry, suspended users cannot upload files"
 msgstr ""
-"Sorry, your account appears to be suspended and you cannot make new posts "
-"until this issue is resolved. You can, however edit your existing posts. "
-"Please contact the forum administrator to reach a resolution."
+"К сожалению, временно блокированные пользователи не могут загружать файлы"
 
 #: models/__init__.py:253
 #, python-format
@@ -2041,35 +1982,32 @@ msgstr ""
 "загрузка изображений доступна только пользователям с репутацией > %(min_rep)s"
 
 #: models/__init__.py:272 models/__init__.py:332 models/__init__.py:2021
-#, fuzzy
 msgid "blocked users cannot post"
-msgstr ""
-"Sorry, your account appears to be blocked and you cannot make new posts "
-"until this issue is resolved. Please contact the forum administrator to "
-"reach a resolution."
+msgstr "заблокированные пользователи не могут размещать сообщения"
 
 #: models/__init__.py:273 models/__init__.py:2024
-#, fuzzy
 msgid "suspended users cannot post"
-msgstr ""
-"Sorry, your account appears to be suspended and you cannot make new posts "
-"until this issue is resolved. You can, however edit your existing posts. "
-"Please contact the forum administrator to reach a resolution."
+msgstr "временно заблокированные пользователи не могут размещать сообщения"
 
 #: models/__init__.py:298
 msgid ""
 "Sorry, comments (except the last one) are editable only within 10 minutes "
 "from posting"
 msgstr ""
+"К сожалению, комментарии (за исключением последнего) можно редактировать "
+"только в течение 10 минут"
 
 #: models/__init__.py:304
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
+"К сожалению, только владелец или модератор может редактировать комментарий"
 
 #: models/__init__.py:318
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
+"К сожалению, так как ваш аккаунт приостановлен вы можете комментировать "
+"только свои собственные сообщения"
 
 #: models/__init__.py:322
 #, python-format
@@ -2077,32 +2015,45 @@ msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr ""
+"К сожалению, для комментирования любого сообщения требуется  %(min_rep)s "
+"балов кармы. Вы можете комментировать только свои собственные сообщения и "
+"ответы на ваши вопросы"
 
 #: models/__init__.py:350
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
+"Этот пост был удален, его может увидеть только владелец, администраторы "
+"сайта и модераторы"
 
 #: models/__init__.py:367
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
 msgstr ""
+"Извините, только модераторы, администраторы сайта и владельцы сообщения "
+"могут редактировать удаленные сообщения"
 
 #: models/__init__.py:382
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr ""
+"К сожалению, так как Ваш учетная запись заблокирована Вы не можете "
+"редактировать сообщения"
 
 #: models/__init__.py:386
 msgid "Sorry, since your account is suspended you can edit only your own posts"
 msgstr ""
+"К сожалению, так как ваша учетная запись приостановлена вы можете "
+"редактировать только ваши собственные сообщения"
 
 #: models/__init__.py:391
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"К сожалению, для редактирования вики сообщений, требуется %(min_rep)s баллов "
+"кармы"
 
 #: models/__init__.py:398
 #, python-format
@@ -2110,6 +2061,8 @@ msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
+"К сожалению, для редактировать сообщения других пользователей, требуется %"
+"(min_rep)s балов кармы"
 
 #: models/__init__.py:461
 msgid ""
@@ -2119,17 +2072,27 @@ msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
 msgstr[0] ""
+"К сожалению, Вы не может удалить ваш вопрос, поскольку на него ответил "
+"другой пользователь и его ответ получил положительный голос"
 msgstr[1] ""
+"К сожалению, Вы не может удалить ваш вопрос, поскольку на него ответили "
+"другие пользователи и их ответы получили положительные голоса"
 msgstr[2] ""
+"К сожалению, Вы не может удалить ваш вопрос, поскольку на него ответили "
+"другие пользователи и их ответы получили положительные голоса"
 
 #: models/__init__.py:476
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr ""
+"К сожалению, так как Ваша учетная запись заблокирована Вы не можете удалять "
+"сообщения"
 
 #: models/__init__.py:480
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr ""
+"К сожалению, так как Ваша учетная запись приостановлена Вы не можете удалять "
+"сообщения"
 
 #: models/__init__.py:484
 #, python-format
@@ -2137,14 +2100,20 @@ msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
+"К сожалению, для удаления сообщений других пользователей, требуется  %"
+"(min_rep)s балов кармы"
 
 #: models/__init__.py:504
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr ""
+"К сожалению, так как Ваша учетная запись заблокирована вы не можете закрыть "
+"вопросы"
 
 #: models/__init__.py:508
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr ""
+"К сожалению, так как Ваша учетная запись приостановлена вы не можете закрыть "
+"вопросы"
 
 #: models/__init__.py:512
 #, python-format
@@ -2152,12 +2121,15 @@ msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
+"К сожалению, для закрытия сообщения других пользователей, требуется %"
+"(min_rep)s балов кармы"
 
 #: models/__init__.py:521
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"К сожалению, для закрытия своего вопроса, требуется %(min_rep)s балов кармы"
 
 #: models/__init__.py:545
 #, python-format
@@ -2165,162 +2137,166 @@ msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > %"
 "(min_rep)s can reopen questions."
 msgstr ""
+"К сожалению, только администраторы, модераторы или владельцы с кармой >%"
+"(min_rep)s может открыть вопрос"
 
 #: models/__init__.py:551
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"К сожалению, чтобы вновь открыть собственный вопрос требуется %(min_rep)s "
+"баллов кармы"
 
 #: models/__init__.py:571
 msgid "cannot flag message as offensive twice"
-msgstr ""
+msgstr "нельзя пометить сообщение как оскорбительное дважды"
 
 #: models/__init__.py:576
-#, fuzzy
 msgid "blocked users cannot flag posts"
-msgstr ""
-"Sorry, your account appears to be blocked and you cannot make new posts "
-"until this issue is resolved. Please contact the forum administrator to "
-"reach a resolution."
+msgstr "заблокированные пользователи не могут помечать сообщения"
 
 #: models/__init__.py:578
-#, fuzzy
 msgid "suspended users cannot flag posts"
-msgstr ""
-"Sorry, your account appears to be suspended and you cannot make new posts "
-"until this issue is resolved. You can, however edit your existing posts. "
-"Please contact the forum administrator to reach a resolution."
+msgstr "приостановленные пользователи не могут помечать сообщения"
 
 #: models/__init__.py:580
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
-msgstr ""
+msgstr "необходимо > %(min_rep)s баллов чтобы отметить как спам"
 
 #: models/__init__.py:599
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
-msgstr ""
+msgstr "%(max_flags_per_day)s превышен"
 
 #: models/__init__.py:614
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
+"К сожалению, только владельцы, администраторы сайта и модераторы могут "
+"менять теги к удаленным вопросам"
 
 #: models/__init__.py:621
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr ""
+"К сожалению, так как Ваша учетная запись заблокирована вы не можете поменять "
+"теги вопроса "
 
 #: models/__init__.py:625
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
+"К сожалению, так как Ваша учетная запись приостановлена вы можете менять "
+"теги только на свои вопросы"
 
 #: models/__init__.py:629
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
-msgstr ""
+msgstr "К сожалению, для изменения тегов требуется %(min_rep)s баллов кармы"
 
 #: models/__init__.py:648
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr ""
+"К сожалению, так как Ваша учетная запись заблокирована Вы не можете удалять "
+"комментарий"
 
 #: models/__init__.py:652
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
+"К сожалению, так как Ваша учетная запись приостановлена вы можете удалять "
+"только ваши собственные комментарии"
 
 #: models/__init__.py:656
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
+"К сожалению, для удаления комментариев требуется %(min_rep)s баллов кармы"
 
 #: models/__init__.py:679
 msgid "cannot revoke old vote"
 msgstr "голос не может быть отозван"
 
 #: models/__init__.py:1213 views/users.py:363
-#, fuzzy
 msgid "Site Adminstrator"
-msgstr "С уважением, администратор форума"
+msgstr "Администратор сайта"
 
 #: models/__init__.py:1215 views/users.py:365
 msgid "Forum Moderator"
-msgstr ""
+msgstr "С уважением, Модератор форума"
 
 #: models/__init__.py:1217 views/users.py:367
-#, fuzzy
 msgid "Suspended User"
-msgstr "Отправитель"
+msgstr "Приостановленный пользователь "
 
 #: models/__init__.py:1219 views/users.py:369
 msgid "Blocked User"
-msgstr ""
+msgstr "Заблокированный пользователь"
 
 #: models/__init__.py:1221 views/users.py:371
-#, fuzzy
 msgid "Registered User"
 msgstr "Зарегистрированный пользователь"
 
 #: models/__init__.py:1223
 msgid "Watched User"
-msgstr ""
+msgstr "Видный пользователь"
 
 #: models/__init__.py:1225
 msgid "Approved User"
-msgstr ""
+msgstr "Утвержденный Пользователь"
 
 #: models/__init__.py:1281
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s karma is %(reputation)s"
-msgstr "История зменений кармы для %(user_name)s "
+msgstr "%(reputation)s кармы %(username)s "
 
 #: models/__init__.py:1291
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "золотая медаль"
+msgstr[1] "%(count)d золотых медалей"
+msgstr[2] "%(count)d золотых медалей"
 
 #: models/__init__.py:1298
-#, fuzzy, python-format
+#, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] "серебряный значок"
-msgstr[1] "серебряный значок"
-msgstr[2] "серебряный значок"
+msgstr[0] "серебряная медаль"
+msgstr[1] "%(count)d серебряных медалей"
+msgstr[2] "%(count)d серебряных медалей"
 
 #: models/__init__.py:1305
-#, fuzzy, python-format
+#, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
-msgstr[0] "бронзовый значок"
-msgstr[1] "бронзовый значок"
-msgstr[2] "бронзовый значок"
+msgstr[0] "бронзовая медаль"
+msgstr[1] "%(count)d бронзовых медалей"
+msgstr[2] "%(count)d бронзовых медалей"
 
 #: models/__init__.py:1316
 #, python-format
 msgid "%(item1)s and %(item2)s"
-msgstr ""
+msgstr "%(item1)s и %(item2)s"
 
 #: models/__init__.py:1320
 #, python-format
 msgid "%(user)s has %(badges)s"
-msgstr ""
+msgstr "%(user)s имеет %(badges)s"
 
 #: models/__init__.py:1633 models/__init__.py:1639 models/__init__.py:1644
 #: models/__init__.py:1649
 #, python-format
 msgid "Re: \"%(title)s\""
-msgstr ""
+msgstr "Re: \"%(title)s\""
 
 #: models/__init__.py:1654 models/__init__.py:1659
-#, fuzzy, python-format
+#, python-format
 msgid "Question: \"%(title)s\""
-msgstr "подсказки к вопросам"
+msgstr "Вопрос: \"%(title)s\""
 
 #: models/__init__.py:1844
 #, python-format
@@ -2328,93 +2304,91 @@ msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
+"Поздравляем, вы получили '%(badge_name)s'. Проверьте свой <a href=\"%"
+"(user_profile)s\">профиль</a>."
 
 #: models/answer.py:105
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr ""
+"К сожалению, ответ который вы ищете больше не доступен, потому что вопрос "
+"был удален"
 
 #: models/answer.py:112
-#, fuzzy
 msgid "Sorry, this answer has been removed and is no longer accessible"
-msgstr "к этому вопросу был отмечен как интересный"
+msgstr "К сожалению, этот ответ был удален и больше не доступен"
 
 #: models/badges.py:128
-#, fuzzy, python-format
+#, python-format
 msgid "Deleted own post with %(votes)s or more upvotes"
-msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+msgstr "Удалили своё сообщение с %(votes)s или более позитивными откликами"
 
 #: models/badges.py:132
 msgid "Disciplined"
-msgstr "Дисциплина"
+msgstr "Дисциплинированный"
 
 #: models/badges.py:150
-#, fuzzy, python-format
+#, python-format
 msgid "Deleted own post with %(votes)s or more downvotes"
-msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+msgstr "Удалили своё сообщение с %(votes)s или более негативными откликами"
 
 #: models/badges.py:154
 msgid "Peer Pressure"
-msgstr "Коллегиальное давление"
+msgstr "Давление сообщества"
 
 #: models/badges.py:173
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
-msgstr ""
+msgstr "Получил по меньшей мере %(votes)s позитивных голосов за первый ответ"
 
 #: models/badges.py:177
 msgid "Teacher"
 msgstr "Учитель"
 
 #: models/badges.py:217
+#, fuzzy
 msgid "Supporter"
 msgstr "Фанат"
 
 #: models/badges.py:218
-#, fuzzy
 msgid "First upvote"
-msgstr "В первый раз дали положительный отклик другому поьзователю"
+msgstr "Впервые дали положительный отклик"
 
 #: models/badges.py:226
 msgid "Critic"
 msgstr "Критик"
 
 #: models/badges.py:227
-#, fuzzy
 msgid "First downvote"
 msgstr "Впервые дали негативный отклик"
 
 #: models/badges.py:236
-#, fuzzy
 msgid "Civic Duty"
 msgstr "Общественный Долг"
 
 #: models/badges.py:237
-#, fuzzy, python-format
+#, python-format
 msgid "Voted %(num)s times"
-msgstr "Набрано 300 голосов"
+msgstr "Голосовал %(num)s раз"
 
 #: models/badges.py:251
-#, fuzzy, python-format
+#, python-format
 msgid "Answered own question with at least %(num)s up votes"
-msgstr ""
-"Поместили ответ на собственный вопрос и получили 3 или более положительных "
-"откликов"
+msgstr "Ответил на вопрос и получил более %(num)s позитивных откликов"
 
 #: models/badges.py:255
 msgid "Self-Learner"
 msgstr "Самоучка"
 
 #: models/badges.py:303
-#, fuzzy
 msgid "Nice Answer"
 msgstr "Хороший ответ"
 
 #: models/badges.py:308 models/badges.py:320 models/badges.py:332
-#, fuzzy, python-format
+#, python-format
 msgid "Answer voted up %(num)s times"
-msgstr "Ответ получил 10 положительных откликов"
+msgstr "Ответ получил %(num)s положительных голосов"
 
 #: models/badges.py:315
 msgid "Good Answer"
@@ -2429,9 +2403,9 @@ msgid "Nice Question"
 msgstr "Хороший Вопрос"
 
 #: models/badges.py:344 models/badges.py:356 models/badges.py:368
-#, fuzzy, python-format
+#, python-format
 msgid "Question voted up %(num)s times"
-msgstr "Вопрос с 10-ю или более положительными откликами"
+msgstr "Вопрос с %(num)s или более положительными откликами"
 
 #: models/badges.py:351
 msgid "Good Question"
@@ -2443,84 +2417,84 @@ msgstr "Замечательный Вопрос"
 
 #: models/badges.py:375
 msgid "Student"
-msgstr "Ученик"
+msgstr "Студент"
 
 #: models/badges.py:380
 msgid "Asked first question with at least one up vote"
-msgstr "Спросили вопос получивший хотя бы один положительный отклик"
+msgstr "Задан первый вопрос, получивший хотя бы один положительный отклик"
 
 #: models/badges.py:413
 msgid "Popular Question"
 msgstr "Популярный Вопрос"
 
 #: models/badges.py:417 models/badges.py:428 models/badges.py:440
-#, fuzzy, python-format
+#, python-format
 msgid "Asked a question with %(views)s views"
-msgstr "Задали вопрос с более 1,000 просмотров"
+msgstr "Задал вопрос с %(views)s просмотрами"
 
 #: models/badges.py:424
 msgid "Notable Question"
-msgstr "Известные Вопрос"
+msgstr "Выдающийся Вопрос"
 
 #: models/badges.py:435
-#, fuzzy
 msgid "Famous Question"
 msgstr "Знаменитый Вопрос"
 
 #: models/badges.py:449
-#, fuzzy
 msgid "Asked a question and accepted an answer"
-msgstr "Вопросы отвеченные мной"
+msgstr "Задал вопрос и принял ответ"
 
 #: models/badges.py:452
 msgid "Scholar"
-msgstr "Ученый"
+msgstr "Ученик"
 
 #: models/badges.py:494
 msgid "Enlightened"
 msgstr "Просвещенный"
 
 #: models/badges.py:498
-#, fuzzy, python-format
+#, python-format
 msgid "First answer was accepted with %(num)s or more votes"
-msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+msgstr "Первый ответ был отмечен, по крайней мере %(num)s голосами"
 
 #: models/badges.py:506
 msgid "Guru"
 msgstr "Гуру"
 
 #: models/badges.py:509
-#, fuzzy, python-format
+#, python-format
 msgid "Answer accepted with %(num)s or more votes"
-msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+msgstr "Ответ отмечен, по меньшей мере %(num)s голосами"
 
 #: models/badges.py:517
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Answered a question more than %(days)s days later with at least %(votes)s "
 "votes"
-msgstr "Ответ на вопрос более чем 60 дней спустя с минимум 5 голосами"
+msgstr ""
+"Ответил на вопрос более чем %(days)s дней спустя с минимум %(votes)s голосами"
 
 #: models/badges.py:524
 msgid "Necromancer"
 msgstr "Некромант"
 
 #: models/badges.py:547
-#, fuzzy
 msgid "Citizen Patrol"
 msgstr "Гражданский Дозор"
 
 #: models/badges.py:550
 msgid "First flagged post"
-msgstr "Впервые отметили флажком неуместное сообщение"
+msgstr "Первое отмеченное сообщение"
 
 #: models/badges.py:562
+#, fuzzy
 msgid "Cleanup"
 msgstr "Уборщик"
 
 #: models/badges.py:565
+#, fuzzy
 msgid "First rollback"
-msgstr "В первый раз вернули сообщение к предыдущей версии"
+msgstr "Первый откат "
 
 #: models/badges.py:576
 msgid "Pundit"
@@ -2528,32 +2502,34 @@ msgstr "Знаток"
 
 #: models/badges.py:579
 msgid "Left 10 comments with score of 10 or more"
-msgstr "Поместили 10 ответов с 10-ю или более положительными откликами"
+msgstr "Оставил 10 комментариев с 10-ю или более положительными откликами"
 
 #: models/badges.py:611
 msgid "Editor"
 msgstr "Редактор"
 
 #: models/badges.py:614
+#, fuzzy
 msgid "First edit"
-msgstr "Впервые исправили сообщение"
+msgstr "Первое исправление "
 
 #: models/badges.py:622
 msgid "Associate Editor"
-msgstr ""
+msgstr "Помощник редактора"
 
 #: models/badges.py:626
-#, fuzzy, python-format
+#, python-format
 msgid "Edited %(num)s entries"
-msgstr "главный-редактор"
+msgstr "Исправил %(num)s записей"
 
 #: models/badges.py:633
 msgid "Organizer"
 msgstr "Организатор"
 
 #: models/badges.py:636
+#, fuzzy
 msgid "First retag"
-msgstr "Впервые изменили тематические отметки"
+msgstr "Первое изменение тэгов "
 
 #: models/badges.py:643
 msgid "Autobiographer"
@@ -2564,9 +2540,9 @@ msgid "Completed all user profile fields"
 msgstr "Заполнены все пункты в профиле"
 
 #: models/badges.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Question favorited by %(num)s users"
-msgstr "Задали ворпос получивший 25 закладок"
+msgstr "Вопрос добавили в закладки %(num)s пользователей"
 
 #: models/badges.py:688
 msgid "Stellar Question"
@@ -2578,38 +2554,39 @@ msgstr "Интересный Вопрос"
 
 #: models/badges.py:707
 msgid "Enthusiast"
-msgstr ""
+msgstr "Энтузиаст"
 
 #: models/badges.py:710
 msgid "Visited site every day for 30 days in a row"
-msgstr ""
+msgstr "Посещал сайт каждый день в течение 30 дней подряд"
 
 #: models/badges.py:718
-#, fuzzy
 msgid "Commentator"
-msgstr "Местоположение"
+msgstr "Комментатор"
 
 #: models/badges.py:721
-#, fuzzy
 msgid "Posted 10 comments"
-msgstr "добавить комментарии"
+msgstr "Разместил 10 комментариев"
 
 #: models/meta.py:110
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr ""
+"К сожалению, комментарии который вы ищете больше не доступны, потому что "
+"вопрос был удален"
 
 #: models/meta.py:117
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr ""
+"К сожалению, комментарий который Вы ищете больше не доступен, потому что "
+"ответ был удален"
 
 #: models/question.py:325
-#, fuzzy
 msgid "Sorry, this question has been deleted and is no longer accessible"
-msgstr "к этому вопросу был отмечен как интересный"
+msgstr "Извините, вопрос удалён и более не доступен"
 
 #: models/question.py:714
 #, python-format
@@ -2639,7 +2616,7 @@ msgstr "%(people)s комментировали ответы"
 #: models/repute.py:142
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
-msgstr ""
+msgstr "<em>Изменено модератором. Причина:</em> %(reason)s"
 
 #: models/repute.py:153
 #, python-format
@@ -2647,6 +2624,7 @@ msgid ""
 "%(points)s points were added for %(username)s's contribution to question %"
 "(question_title)s"
 msgstr ""
+"%(points)s было добавлено за вклад %(username)s к вопросу %(question_title)s"
 
 #: models/repute.py:158
 #, python-format
@@ -2654,6 +2632,8 @@ msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
 "question %(question_title)s"
 msgstr ""
+"%(points)s было отобрано у %(username)s's за участие в вопросе %"
+"(question_title)s"
 
 #: models/tag.py:91
 msgid "interesting"
@@ -2681,11 +2661,11 @@ msgstr "Индивидуально избранные вопросы"
 
 #: models/user.py:268
 msgid "Mentions and comment responses"
-msgstr ""
+msgstr "Упоминания и комментарии ответов"
 
 #: models/user.py:271
 msgid "Instantly"
-msgstr ""
+msgstr "Мгновенно"
 
 #: models/user.py:272
 msgid "Daily"
@@ -2702,7 +2682,7 @@ msgstr "Отменить"
 #: skins/default/templates/404.jinja.html:3
 #: skins/default/templates/404.jinja.html:11
 msgid "Page not found"
-msgstr ""
+msgstr "Страница не найдена"
 
 #: skins/default/templates/404.jinja.html:15
 msgid "Sorry, could not find the page you requested."
@@ -2760,7 +2740,7 @@ msgstr "смотреть все темы"
 #: skins/default/templates/500.jinja.html:3
 #: skins/default/templates/500.jinja.html:6
 msgid "Internal server error"
-msgstr ""
+msgstr "Внутренняя ошибка сервера"
 
 #: skins/default/templates/500.jinja.html:10
 msgid "system error log is recorded, error will be fixed as soon as possible"
@@ -2876,16 +2856,15 @@ msgstr "Поддерживается язык разметки - Markdown"
 #: skins/default/templates/answer_edit_tips.html:29
 #: skins/default/templates/question_edit_tips.html:26
 msgid "*italic*"
-msgstr ""
+msgstr "*курсив*"
 
 #: skins/default/templates/answer_edit_tips.html:32
 #: skins/default/templates/question_edit_tips.html:29
 msgid "**bold**"
-msgstr ""
+msgstr "**жирный**"
 
 #: skins/default/templates/answer_edit_tips.html:36
 #: skins/default/templates/question_edit_tips.html:33
-#, fuzzy
 msgid "*italic* or _italic_"
 msgstr "*курсив* или _курсив_"
 
@@ -2963,7 +2942,7 @@ msgstr "Задайте Ваш вопрос"
 #: skins/default/templates/user_stats.html:88
 #, python-format
 msgid "%(name)s"
-msgstr ""
+msgstr "%(name)s"
 
 #: skins/default/templates/badge.html:4 skins/default/templates/badge.html:7
 msgid "Badge"
@@ -2972,9 +2951,9 @@ msgstr "Награда"
 #: skins/default/templates/badge.html:11
 #: skins/default/templates/user_recent.html:13
 #: skins/default/templates/user_stats.html:88
-#, fuzzy, python-format
+#, python-format
 msgid "%(description)s"
-msgstr "подписки по email"
+msgstr "%(description)s"
 
 #: skins/default/templates/badge.html:16
 msgid "user received this badge:"
@@ -3013,7 +2992,7 @@ msgstr "Значки отличия сообщества"
 
 #: skins/default/templates/badges.html:43
 msgid "gold badge: the highest honor and is very rare"
-msgstr ""
+msgstr "золотая медаль: высокая честь и очень редкая награда"
 
 #: skins/default/templates/badges.html:46
 msgid "gold badge description"
@@ -3022,7 +3001,7 @@ msgstr "золотой значок"
 #: skins/default/templates/badges.html:51
 msgid ""
 "silver badge: occasionally awarded for the very high quality contributions"
-msgstr ""
+msgstr "серебряная медаль: иногда присуждается за большой вклад"
 
 #: skins/default/templates/badges.html:55
 msgid "silver badge description"
@@ -3030,11 +3009,11 @@ msgstr "серебряный значок"
 
 #: skins/default/templates/badges.html:58
 msgid "bronze badge: often given as a special honor"
-msgstr "бронзовый значок: часто делаются с особым почетом"
+msgstr "бронзовый значок: часто даётся как особая заслуга"
 
 #: skins/default/templates/badges.html:62
 msgid "bronze badge description"
-msgstr "бронзовый значок"
+msgstr "бронзовый значок - описание"
 
 #: skins/default/templates/close.html:3 skins/default/templates/close.html:6
 msgid "Close question"
@@ -3053,30 +3032,32 @@ msgid "OK to close"
 msgstr "OK, чтобы закрыть"
 
 #: skins/default/templates/editor_data.html:5
-#, fuzzy, python-format
+#, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] "каждое слово должно быть не более %(max_chars)d букв"
-msgstr[1] "каждое слово должно быть не более %(max_chars)d буквы"
-msgstr[2] "каждое слово должно быть не более %(max_chars)d букв"
+msgstr[0] "каждый тег должен быть короче %(max_chars)s символа"
+msgstr[1] "каждый тег должно быть короче чем %(max_chars)s символа"
+msgstr[2] "каждый тег должно быть короче чем %(max_chars)s символов"
 
 #: skins/default/templates/editor_data.html:7
-#, fuzzy, python-format
+#, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
-msgstr[0] "пожалуйста введите не более %(tag_count)d слов"
-msgstr[1] "пожалуйста введите не более %(tag_count)d слова"
-msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
+msgstr[0] "пожалуйста, используйте %(tag_count)s тег"
+msgstr[1] "пожалуйста введите не более %(tag_count)s тегов"
+msgstr[2] "пожалуйста введите не более %(tag_count)s тегов"
 
 #: skins/default/templates/editor_data.html:8
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
-msgstr "до 5 тегов, менее 20 символов каждый"
+msgstr ""
+"пожалуйста, используйте до %(tag_count)s тегов, количество символов в каждом "
+"менее %(max_chars)s"
 
 #: skins/default/templates/faq.html:3 skins/default/templates/faq.html.py:6
 msgid "FAQ"
-msgstr ""
+msgstr "FAQ"
 
 #: skins/default/templates/faq.html:6
 msgid "Frequently Asked Questions "
@@ -3091,7 +3072,8 @@ msgid ""
 "Most importanly - questions should be <strong>relevant</strong> to this "
 "community."
 msgstr ""
-"Самое главное - вопросы должны <strong>соответствовать теме</strong> сайта."
+"Самое главное - вопросы должны <strong>соответствовать теме</strong> "
+"сообщества."
 
 #: skins/default/templates/faq.html:13
 msgid ""
@@ -3111,7 +3093,7 @@ msgid ""
 "subjective and argumentative."
 msgstr ""
 "Просьба не задавать вопросы, которые не соответствуют теме этого сайта, "
-"слишком субъективные и очевидные."
+"слишком субъективны или очевидны."
 
 #: skins/default/templates/faq.html:20
 msgid "What should I avoid in my answers?"
@@ -3129,11 +3111,11 @@ msgstr ""
 
 #: skins/default/templates/faq.html:24
 msgid "Who moderates this community?"
-msgstr "Кто модерирует этим сообществом?"
+msgstr "Кто модерирует это сообщество?"
 
 #: skins/default/templates/faq.html:25
 msgid "The short answer is: <strong>you</strong>."
-msgstr "Короткий ответ: <strong>вы.</strong>"
+msgstr "Ответ краток: <strong>вы.</strong>"
 
 #: skins/default/templates/faq.html:26
 msgid "This website is moderated by the users."
@@ -3144,7 +3126,7 @@ msgid ""
 "The reputation system allows users earn the authorization to perform a "
 "variety of moderation tasks."
 msgstr ""
-"Система репутации позволяет пользователям приобретать различные "
+"Система репутации (кармы) позволяет пользователям приобретать различные "
 "управленческие права."
 
 #: skins/default/templates/faq.html:32
@@ -3156,7 +3138,7 @@ msgid "Rep system summary"
 msgstr "Суть кармы"
 
 #: skins/default/templates/faq.html:34
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "For example, if you ask an interesting question or give a helpful answer, "
 "your input will be upvoted. On the other hand if the answer is misleading - "
@@ -3170,11 +3152,12 @@ msgstr ""
 "Например, если задать интересующий вопрос или дать полный ответ, ваш вклад "
 "будет оценен положительно. С другой стороны, если ответ будет вводить в "
 "заблуждение - это будет оценено отрицательно. Каждый голос в пользу будет "
-"генерировать <strong>10 пунктов</strong> кармы, каждый голос против - будет "
-"отнимать <strong>2 балла</strong> кармы. Существует лимит <strong>на 200 "
-"пунктов</strong> кармы, которые могут быть накоплены на каждый вопрос или "
-"ответ. В таблице ниже представлены все требования к карме для каждого типа "
-"задачи модерации."
+"генерировать <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> кармы, "
+"каждый голос против - будет отнимать <strong>%"
+"(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> кармы. Существует лимит <strong>%"
+"(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> кармы, который может быть набран "
+"за вопрос или ответ за день. В таблице ниже представлены все требования к "
+"карме для каждого типа модерирования."
 
 #: skins/default/templates/faq.html:44
 #: skins/default/templates/user_votes.html:10
@@ -3199,21 +3182,18 @@ msgid "open and close own questions"
 msgstr "открывать и закрывать свои вопросы"
 
 #: skins/default/templates/faq.html:65
-#, fuzzy
 msgid "retag other's questions"
-msgstr "изменять состав тэгов в вопросах"
+msgstr "изменять теги других вопросов"
 
 #: skins/default/templates/faq.html:70
 msgid "edit community wiki questions"
 msgstr "редактировать вопросы в вики сообщества "
 
 #: skins/default/templates/faq.html:75
-#, fuzzy
 msgid "\"edit any answer"
 msgstr "редактировать любой ответ"
 
 #: skins/default/templates/faq.html:79
-#, fuzzy
 msgid "\"delete any comment"
 msgstr "удалять любые комментарии"
 
@@ -3235,14 +3215,13 @@ msgstr "что такое Gravatar"
 
 #: skins/default/templates/faq.html:94
 msgid "gravatar faq info"
-msgstr "gravatar фак"
+msgstr "gravatar FAQ"
 
 #: skins/default/templates/faq.html:97
 msgid "To register, do I need to create new password?"
 msgstr "Необходимо ли создавать новый пароль, чтобы зарегистрироваться?"
 
 #: skins/default/templates/faq.html:98
-#, fuzzy
 msgid ""
 "No, you don't have to. You can login through any service that supports "
 "OpenID, e.g. Google, Yahoo, AOL, etc.\""
@@ -3251,13 +3230,12 @@ msgstr ""
 "который поддерживает OpenID, например, Google, Yahoo, AOL и т.д."
 
 #: skins/default/templates/faq.html:99
-#, fuzzy
 msgid "\"Login now!\""
 msgstr "Войти сейчас!"
 
 #: skins/default/templates/faq.html:103
 msgid "Why other people can edit my questions/answers?"
-msgstr "Почему другие люди могут изменить вопросы / ответы?"
+msgstr "Почему другие люди могут изменять мои вопросы / ответы?"
 
 #: skins/default/templates/faq.html:104
 msgid "Goal of this site is..."
@@ -3270,8 +3248,8 @@ msgid ""
 "content."
 msgstr ""
 "Таким образом, более опытные пользователи могут редактировать вопросы и "
-"отвеы как странички на вики, что в свою очередь улучшает качество содержания "
-"базы данных."
+"ответы как страницы вики, что в свою очередь улучшает качество содержания "
+"базы данных вопросов/ответов."
 
 #: skins/default/templates/faq.html:105
 msgid "If this approach is not for you, we respect your choice."
@@ -3287,8 +3265,8 @@ msgid ""
 "Please ask your question at %(ask_question_url)s, help make our community "
 "better!"
 msgstr ""
-"Задайте свой вопрос в %(ask_question_url)s, помогайте сделать наше "
-"сообщество лучше!"
+"Задайте свой вопрос в %(ask_question_url)s, помогите сделать наше сообщество "
+"лучше!"
 
 #: skins/default/templates/faq.html:112 skins/default/templates/header.html:26
 msgid "questions"
@@ -3333,9 +3311,8 @@ msgstr ""
 "ваших отзывов. Пожалуйста, введите и отправить нам свое сообщение ниже."
 
 #: skins/default/templates/feedback.html:28
-#, fuzzy
 msgid "(please enter a valid email)"
-msgstr "пожалуйста, введите работающий адрес электронной почты"
+msgstr "(пожалуйста, введите правильный адрес электронной почты)"
 
 #: skins/default/templates/feedback.html:36
 msgid "(this field is required)"
@@ -3386,20 +3363,20 @@ msgstr "оставить отзыв"
 
 #: skins/default/templates/header.html:15
 msgid "back to home page"
-msgstr "вернуться на главную страницу"
+msgstr "вернуться на главную"
 
 #: skins/default/templates/header.html:16
 #, python-format
 msgid "%(site)s logo"
-msgstr ""
+msgstr "логотип %(site)s"
 
 #: skins/default/templates/header.html:36
 msgid "users"
-msgstr "люди"
+msgstr "пользователи"
 
 #: skins/default/templates/header.html:41
 msgid "badges"
-msgstr "значки"
+msgstr "награды"
 
 #: skins/default/templates/header.html:46
 msgid "ask a question"
@@ -3412,7 +3389,7 @@ msgstr "поиск"
 #: skins/default/templates/instant_notification.html:1
 #, python-format
 msgid "<p>Dear %(receiving_user_name)s,</p>"
-msgstr ""
+msgstr "<p>Уважаемый %(receiving_user_name)s,</p>"
 
 #: skins/default/templates/instant_notification.html:3
 #, python-format
@@ -3421,6 +3398,9 @@ msgid ""
 "<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a>:</"
 "p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s оставил <a href=\"%(post_url)s\">новый "
+"комментарий</a>:</p>\n"
 
 #: skins/default/templates/instant_notification.html:8
 #, python-format
@@ -3429,6 +3409,9 @@ msgid ""
 "<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a></"
 "p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s оставил <a href=\"%(post_url)s\">новый "
+"комментарий</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:13
 #, python-format
@@ -3437,6 +3420,9 @@ msgid ""
 "<p>%(update_author_name)s answered a question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ответил на вопрос\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:19
 #, python-format
@@ -3445,6 +3431,9 @@ msgid ""
 "<p>%(update_author_name)s posted a new question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s задал новый вопрос\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:25
 #, python-format
@@ -3453,6 +3442,9 @@ msgid ""
 "<p>%(update_author_name)s updated an answer to the question\n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s обновил ответ на вопрос\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:31
 #, python-format
@@ -3461,6 +3453,9 @@ msgid ""
 "<p>%(update_author_name)s updated a question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s обновил вопрос\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:37
 #, python-format
@@ -3472,11 +3467,16 @@ msgid ""
 "how often you receive these notifications or unsubscribe. Thank you for your "
 "interest in our forum!</p>\n"
 msgstr ""
+"\n"
+"<div>%(content_preview)s</div>\n"
+"<p>Обратите внимание - вы можете с лёгкостью <a href=\"%"
+"(user_subscriptions_url)s\">изменить</a>\n"
+"условия рассылки или отписаться вовсе. Спасибо за ваш интерес к нашему "
+"форуму!</p>\n"
 
 #: skins/default/templates/instant_notification.html:42
-#, fuzzy
 msgid "<p>Sincerely,<br/>Forum Administrator</p>"
-msgstr "С уважением, администратор форума"
+msgstr "<p>С уважением,<br/>Администрация Форума</p>"
 
 #: skins/default/templates/logout.html:3 skins/default/templates/logout.html:6
 msgid "Logout"
@@ -3487,8 +3487,8 @@ msgid ""
 "As a registered user you can login with your OpenID, log out of the site or "
 "permanently remove your account."
 msgstr ""
-"Как зарегистрированный пользователь Вы можете Войти с OpenID, выйдите из "
-"сайта или удалить свой аккаунт."
+"Как зарегистрированный пользователь Вы можете Войти с OpenID, выйти из сайта "
+"или удалить свой аккаунт."
 
 #: skins/default/templates/logout.html:10
 msgid "Logout now"
@@ -3496,12 +3496,11 @@ msgstr "Выйти сейчас"
 
 #: skins/default/templates/macros.html:26
 msgid "karma:"
-msgstr ""
+msgstr "карма:"
 
 #: skins/default/templates/macros.html:30
-#, fuzzy
 msgid "badges:"
-msgstr "значки"
+msgstr "награды"
 
 #: skins/default/templates/macros.html:52
 #: skins/default/templates/macros.html:53
@@ -3516,7 +3515,7 @@ msgstr "текущая страница"
 #: skins/default/templates/macros.html:73
 #, python-format
 msgid "page number %(num)s"
-msgstr "номер страницы %(num)s"
+msgstr "страница номер %(num)s"
 
 #: skins/default/templates/macros.html:77
 msgid "next page"
@@ -3533,7 +3532,7 @@ msgstr "%(username)s Gravatar"
 
 #: skins/default/templates/macros.html:142
 msgid "this post is marked as community wiki"
-msgstr ""
+msgstr "пост отмечен как вики сообщества"
 
 #: skins/default/templates/macros.html:145
 #, python-format
@@ -3541,6 +3540,7 @@ msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr ""
+"Этот пост - вики. Любой с кармой &gt;%(wiki_min_rep)s может улучшить его."
 
 #: skins/default/templates/macros.html:151
 msgid "asked"
@@ -3560,29 +3560,26 @@ msgstr "обновил"
 
 #: skins/default/templates/macros.html:210
 #: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:238
-#, fuzzy
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] "голосовать/"
-msgstr[1] "голосовать/"
-msgstr[2] "голосовать/"
+msgstr[0] "голос"
+msgstr[1] "голоса"
+msgstr[2] "голосов"
 
 #: skins/default/templates/macros.html:227
 #: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:241
-#, fuzzy
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] "ответ"
-msgstr[1] "ответ"
-msgstr[2] "ответ"
+msgstr[1] "ответа"
+msgstr[2] "ответов"
 
 #: skins/default/templates/macros.html:239
 #: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:244
-#, fuzzy
 msgid "view"
 msgid_plural "views"
-msgstr[0] "просмотров"
-msgstr[1] "просмотров"
+msgstr[0] "просмотр"
+msgstr[1] "просмотра"
 msgstr[2] "просмотров"
 
 #: skins/default/templates/macros.html:251
@@ -3593,7 +3590,7 @@ msgstr[2] "просмотров"
 #: skins/default/templates/unused/questions_ajax.html:68
 #, python-format
 msgid "see questions tagged '%(tag)s'"
-msgstr "вопросы по теме '%(tag)s'"
+msgstr "смотри вопросы с тегами '%(tag)s'"
 
 #: skins/default/templates/macros.html:267
 #: skins/default/templates/question.html:94
@@ -3613,7 +3610,7 @@ msgid "add comment"
 msgstr "добавить комментарий"
 
 #: skins/default/templates/macros.html:291
-#, fuzzy, python-format
+#, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] "смотреть еще <strong>один</strong>"
@@ -3621,7 +3618,7 @@ msgstr[1] "смотреть еще <strong>%(counter)s</strong>"
 msgstr[2] "смотреть еще <strong>%(counter)s</strong>"
 
 #: skins/default/templates/macros.html:293
-#, fuzzy, python-format
+#, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
@@ -3661,31 +3658,29 @@ msgstr "текущее число голосов"
 #: skins/default/templates/question.html:55
 #: skins/default/templates/question.html:56
 msgid "i dont like this post (click again to cancel)"
-msgstr "я не понравился этот пост (нажмите еще раз для отмены)"
+msgstr "мне не понравился этот пост (нажмите еще раз для отмены)"
 
 #: skins/default/templates/question.html:60
 #: skins/default/templates/question.html:61
 msgid "mark this question as favorite (click again to cancel)"
-msgstr "отметьте закладкой (чтобы отменить - отметьте еще раз)"
+msgstr "добавить в закладки (чтобы отменить - отметьте еще раз)"
 
 #: skins/default/templates/question.html:67
 #: skins/default/templates/question.html:68
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr "удалить закладку (еще раз - чтобы восстановить)"
+msgstr "удалить из закладок (еще раз - чтобы восстановить)"
 
 #: skins/default/templates/question.html:74
-#, fuzzy
 msgid "Share this question on twitter"
-msgstr "Переоткрыть этот вопрос"
+msgstr "Поделиться вопросом на Twitter"
 
 #: skins/default/templates/question.html:75
 msgid "Share this question on facebook"
-msgstr ""
+msgstr "Поделиться вопросом на Facebook"
 
 #: skins/default/templates/question.html:97
-#, fuzzy
 msgid "retag"
-msgstr "редакция тематических отметок"
+msgstr "изменить тег"
 
 #: skins/default/templates/question.html:104
 msgid "reopen"
@@ -3731,7 +3726,7 @@ msgid "close date %(closed_at)s"
 msgstr "дата закрытия: %(closed_at)s"
 
 #: skins/default/templates/question.html:169
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                %(counter)s Answer:\n"
@@ -3792,9 +3787,9 @@ msgstr "отметить этот вопрос как интересный (ещ
 
 #: skins/default/templates/question.html:229
 #: skins/default/templates/question.html:230
-#, fuzzy, python-format
+#, python-format
 msgid "%(question_author)s has selected this answer as correct"
-msgstr "автор вопроса выбрал этот ответ правильным"
+msgstr "автор вопроса %(question_author)s выбрал этот ответ правильным"
 
 #: skins/default/templates/question.html:245
 msgid "answer permanent link"
@@ -3814,9 +3809,8 @@ msgid "Notify me weekly when there are any new answers"
 msgstr "Еженедельно информировать о новых ответах"
 
 #: skins/default/templates/question.html:321
-#, fuzzy
 msgid "Notify me immediately when there are any new answers"
-msgstr "Еженедельно информировать о новых ответах"
+msgstr "Информировать о новых ответах сразу"
 
 #: skins/default/templates/question.html:324
 #, python-format
@@ -3856,11 +3850,11 @@ msgstr "Войти / Зарегистрироваться чтобы ответ�
 
 #: skins/default/templates/question.html:363
 msgid "Answer Your Own Question"
-msgstr "Ответ на собственный вопрос"
+msgstr "Ответьте на собственный вопрос"
 
 #: skins/default/templates/question.html:365
 msgid "Answer the question"
-msgstr "Ответ на вопрос"
+msgstr "Ответить на вопрос"
 
 #: skins/default/templates/question.html:379
 msgid "Question tags"
@@ -3917,9 +3911,8 @@ msgid "Change tags"
 msgstr "Измененить тэги"
 
 #: skins/default/templates/question_retag.html:25
-#, fuzzy
 msgid "Retag"
-msgstr "темы"
+msgstr "изменить теги"
 
 #: skins/default/templates/question_retag.html:34
 msgid "Why use and modify tags?"
@@ -3927,11 +3920,11 @@ msgstr "Зачем использовать и изменять теги?"
 
 #: skins/default/templates/question_retag.html:36
 msgid "Tags help to keep the content better organized and searchable"
-msgstr ""
+msgstr "Теги помогают лучше организовать поиск"
 
 #: skins/default/templates/question_retag.html:38
 msgid "tag editors receive special awards from the community"
-msgstr "теги редакторы получают специальные призы от сообщества"
+msgstr "редакторы тегов получают специальные призы от сообщества"
 
 #: skins/default/templates/question_retag.html:79
 msgid "up to 5 tags, less than 20 characters each"
@@ -3947,15 +3940,15 @@ msgstr "В:"
 
 #: skins/default/templates/questions.html:18
 msgid "see unanswered questions"
-msgstr "просмотрите неотвеченные ворпосы"
+msgstr "просмотреть неотвеченные ворпосы"
 
 #: skins/default/templates/questions.html:24
 msgid "see your favorite questions"
-msgstr "просмотр отмеченных вопросов"
+msgstr "просмотр отмеченные вопросы"
 
 #: skins/default/templates/questions.html:29
 msgid "Sort by:"
-msgstr "По:"
+msgstr "Упорядочить по:"
 
 #: skins/default/templates/questions.html:97
 #: skins/default/templates/questions.html:100
@@ -3964,10 +3957,10 @@ msgstr "подписаться на RSS-канал для вопросов"
 
 #: skins/default/templates/questions.html:101
 msgid "rss feed"
-msgstr ""
+msgstr "RSS-канал"
 
 #: skins/default/templates/questions.html:105
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                %(q_num)s question\n"
@@ -3978,17 +3971,16 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"Один ответ:\n"
-" "
+"%(q_num)s ответ:"
 msgstr[1] ""
 "\n"
-"%(counter)s Ответа:"
+"%(q_num)s ответа:"
 msgstr[2] ""
 "\n"
-"%(counter)s Ответов:"
+"%(q_num)s ответов:"
 
 #: skins/default/templates/questions.html:111 views/readers.py:158
-#, fuzzy, python-format
+#, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] "%(q_num)s вопрос"
@@ -3998,7 +3990,7 @@ msgstr[2] "%(q_num)s вопросов"
 #: skins/default/templates/questions.html:114
 #, python-format
 msgid "with %(author_name)s's contributions"
-msgstr "с помошью от %(author_name)s"
+msgstr "при помощи %(author_name)s"
 
 #: skins/default/templates/questions.html:117
 msgid "tagged"
@@ -4016,7 +4008,6 @@ msgstr "сброс автора"
 #: skins/default/templates/questions.html:130
 #: skins/default/templates/questions.html:168
 #: skins/default/templates/questions.html:171
-#, fuzzy
 msgid " or "
 msgstr "или"
 
@@ -4044,7 +4035,7 @@ msgstr "добавить теги и выполнить поиск"
 #: skins/default/templates/questions.html:154
 #: skins/default/templates/unused/questions_ajax.html:79
 msgid "There are no unanswered questions here"
-msgstr "Неотвеченных вопросов здесь нет"
+msgstr "Неотвеченных вопросов нет"
 
 #: skins/default/templates/questions.html:157
 #: skins/default/templates/unused/questions_ajax.html:82
@@ -4054,7 +4045,8 @@ msgstr "Отмеченных вопросов нет."
 #: skins/default/templates/questions.html:158
 #: skins/default/templates/unused/questions_ajax.html:83
 msgid "Please start (bookmark) some questions when you visit them"
-msgstr "Начните (закладки) некоторые вопросы, когда вы посещаете их"
+msgstr ""
+"Начните добавлять в (закладки) некоторые вопросы, когда вы посещаете их"
 
 #: skins/default/templates/questions.html:163
 #: skins/default/templates/unused/questions_ajax.html:88
@@ -4081,7 +4073,7 @@ msgstr "начать сначала"
 #: skins/default/templates/questions.html:180
 #: skins/default/templates/unused/questions_ajax.html:109
 msgid "Please always feel free to ask your question!"
-msgstr "Пожалуйста, всегда можете задать свой вопрос!"
+msgstr "Вы всегда можете задать свой вопрос!"
 
 #: skins/default/templates/questions.html:184
 #: skins/default/templates/unused/questions_ajax.html:113
@@ -4106,9 +4098,8 @@ msgid "Reopen question"
 msgstr "Переоткрыть вопрос"
 
 #: skins/default/templates/reopen.html:9
-#, fuzzy
 msgid "Title"
-msgstr "заголовок"
+msgstr "Заголовок"
 
 #: skins/default/templates/reopen.html:14
 #, python-format
@@ -4117,24 +4108,24 @@ msgid ""
 "        <a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>\n"
 "    "
 msgstr ""
+"Этот вопрос был закрыт\n"
+"<a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>"
 
 #: skins/default/templates/reopen.html:19
-#, fuzzy
 msgid "Close reason:"
-msgstr "Закрыть вопрос"
+msgstr "Закрыт по причине:"
 
 #: skins/default/templates/reopen.html:22
 msgid "When:"
-msgstr ""
+msgstr "Когда:"
 
 #: skins/default/templates/reopen.html:25
-#, fuzzy
 msgid "Reopen this question?"
-msgstr "Переоткрыть этот вопрос"
+msgstr "Открыть повторно этот вопрос?"
 
 #: skins/default/templates/reopen.html:29
 msgid "Reopen this question"
-msgstr "Переоткрыть этот вопрос"
+msgstr "Открыть повторно этот вопрос"
 
 #: skins/default/templates/revisions.html:4
 #: skins/default/templates/revisions.html:7
@@ -4143,12 +4134,12 @@ msgstr "История изменений"
 
 #: skins/default/templates/revisions.html:23
 msgid "click to hide/show revision"
-msgstr "нажмите, чтобы скрыть / показать ревизию"
+msgstr "нажмите, чтобы скрыть/показать версии"
 
 #: skins/default/templates/revisions.html:29
-#, fuzzy, python-format
+#, python-format
 msgid "revision %(number)s"
-msgstr "правки/"
+msgstr "версия %(number)s"
 
 #: skins/default/templates/tag_selector.html:3
 msgid "Interesting tags"
@@ -4157,7 +4148,7 @@ msgstr "Избранные теги"
 #: skins/default/templates/tag_selector.html:13
 #, python-format
 msgid "remove '%(tag_name)s' from the list of interesting tags"
-msgstr "удалить '%(tag_name)s' из списка интересных теги"
+msgstr "удалить '%(tag_name)s' из списка интересных тегов"
 
 #: skins/default/templates/tag_selector.html:19
 #: skins/default/templates/tag_selector.html:36
@@ -4184,7 +4175,7 @@ msgstr "Список тегов"
 
 #: skins/default/templates/tags.html:14
 msgid "sorted alphabetically"
-msgstr "сортируются в алфавитном порядке"
+msgstr "сортировать в алфавитном порядке"
 
 #: skins/default/templates/tags.html:15
 msgid "by name"
@@ -4192,7 +4183,7 @@ msgstr "по имени"
 
 #: skins/default/templates/tags.html:20
 msgid "sorted by frequency of tag use"
-msgstr "отсортировано по частоте использования тега"
+msgstr "сортировать по частоте использования тега"
 
 #: skins/default/templates/tags.html:21
 msgid "by popularity"
@@ -4203,7 +4194,7 @@ msgstr "по популярности"
 msgid ""
 "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
 msgstr ""
-"Все тэга, соответствующие <strong><span class=\"darkred\"> '%(stag)s'</"
+"Все теги, соответствующие <strong><span class=\"darkred\"> '%(stag)s'</"
 "span></strong> "
 
 #: skins/default/templates/tags.html:30
@@ -4211,9 +4202,9 @@ msgid "Nothing found"
 msgstr "Ничего не найдено"
 
 #: skins/default/templates/user.html:14
-#, fuzzy, python-format
+#, python-format
 msgid "%(username)s's profile"
-msgstr "профиль пользователя"
+msgstr "профиль пользователя %(username)s"
 
 #: skins/default/templates/user_edit.html:4
 msgid "Edit user profile"
@@ -4254,53 +4245,46 @@ msgid "Stop sending email"
 msgstr "Остановить отправку электронной почты"
 
 #: skins/default/templates/user_inbox.html:31
-#, fuzzy
 msgid "Sections:"
-msgstr "вопросы"
+msgstr "Разделы:"
 
 #: skins/default/templates/user_inbox.html:35
 #, python-format
 msgid "forum responses (%(re_count)s)"
-msgstr ""
+msgstr "ответы в форуме (%(re_count)s)"
 
 #: skins/default/templates/user_inbox.html:40
 #, python-format
 msgid "flagged items (%(flag_count)s)"
-msgstr ""
+msgstr "помеченные пункты (%(flag_count)s)"
 
 #: skins/default/templates/user_inbox.html:46
-#, fuzzy
 msgid "select:"
-msgstr "удалить"
+msgstr "выберите:"
 
 #: skins/default/templates/user_inbox.html:48
-#, fuzzy
 msgid "seen"
-msgstr "последнее посещение"
+msgstr "прочитанные"
 
 #: skins/default/templates/user_inbox.html:49
-#, fuzzy
 msgid "new"
 msgstr "новые"
 
 #: skins/default/templates/user_inbox.html:50
-#, fuzzy
 msgid "none"
-msgstr "бронзовый"
+msgstr "нет"
 
 #: skins/default/templates/user_inbox.html:51
-#, fuzzy
 msgid "mark as seen"
-msgstr "последнее посещение"
+msgstr "отметить как прочитано "
 
 #: skins/default/templates/user_inbox.html:52
-#, fuzzy
 msgid "mark as new"
-msgstr "отметка лучшего ответа"
+msgstr "отметить как новое"
 
 #: skins/default/templates/user_inbox.html:53
 msgid "dismiss"
-msgstr ""
+msgstr "удалить"
 
 #: skins/default/templates/user_info.html:18
 #: skins/default/templates/users.html:13 skins/default/templates/users.html:14
@@ -4309,7 +4293,7 @@ msgstr "карма"
 
 #: skins/default/templates/user_info.html:30
 msgid "manage login methods"
-msgstr ""
+msgstr "управление методами входа"
 
 #: skins/default/templates/user_info.html:34
 msgid "update profile"
@@ -4321,7 +4305,7 @@ msgstr "настоящее имя"
 
 #: skins/default/templates/user_info.html:51
 msgid "member for"
-msgstr "состоит в "
+msgstr "состоит пользователем"
 
 #: skins/default/templates/user_info.html:56
 msgid "last seen"
@@ -4341,7 +4325,7 @@ msgstr "возраст"
 
 #: skins/default/templates/user_info.html:76
 msgid "age unit"
-msgstr "блок возраста"
+msgstr "возраст"
 
 #: skins/default/templates/user_info.html:83
 msgid "todays unused votes"
@@ -4354,68 +4338,66 @@ msgstr "осталось голосов"
 #: skins/default/templates/user_moderate.html:5
 #, python-format
 msgid "%(username)s's current status is \"%(status)s\""
-msgstr ""
+msgstr "пользователь %(username)s имеет статус \"%(status)s\""
 
 #: skins/default/templates/user_moderate.html:8
 msgid "User status changed"
-msgstr ""
+msgstr "Статус пользователя изменился"
 
 #: skins/default/templates/user_moderate.html:15
-#, fuzzy
 msgid "Save"
 msgstr "Сохранить"
 
 #: skins/default/templates/user_moderate.html:21
 #, python-format
 msgid "Your current reputation is %(reputation)s points"
-msgstr ""
+msgstr "Ваша текущая карма %(reputation)s балов"
 
 #: skins/default/templates/user_moderate.html:23
 #, python-format
 msgid "User's current reputation is %(reputation)s points"
-msgstr ""
+msgstr "Карма пользователя %(reputation)s балов "
 
 #: skins/default/templates/user_moderate.html:27
-#, fuzzy
 msgid "User reputation changed"
-msgstr "карма пользователя в сообществе"
+msgstr "Карма пользователя изменена"
 
 #: skins/default/templates/user_moderate.html:34
 msgid "Subtract"
-msgstr ""
+msgstr "Отнять"
 
 #: skins/default/templates/user_moderate.html:39
 #, python-format
 msgid "Send message to %(username)s"
-msgstr ""
+msgstr "Отправить сообщение для %(username)s"
 
 #: skins/default/templates/user_moderate.html:40
 msgid ""
 "An email will be sent to the user with 'reply-to' field set to your email "
 "address. Please make sure that your address is entered correctly."
 msgstr ""
+"Письмо будет отправлено пользователю со ссылкой \"Ответить\" на ваш адрес "
+"электронной почты. Пожалуйста, убедитесь, что ваш адрес введен правильно."
 
 #: skins/default/templates/user_moderate.html:42
-#, fuzzy
 msgid "Message sent"
-msgstr "сообщения/"
+msgstr "Сообщение отправлено"
 
 #: skins/default/templates/user_moderate.html:60
-#, fuzzy
 msgid "Send message"
-msgstr "сообщения/"
+msgstr "Отправить сообщение"
 
 #: skins/default/templates/user_reputation.html:7
 msgid "Your karma change log."
-msgstr "История зменений кармы"
+msgstr "История изменений кармы."
 
 #: skins/default/templates/user_reputation.html:9
 #, python-format
 msgid "%(user_name)s's karma change log"
-msgstr "История зменений кармы для %(user_name)s "
+msgstr "История изменений кармы для %(user_name)s "
 
 #: skins/default/templates/user_stats.html:7
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">%(counter)s</span> Question"
 msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
 msgstr[0] "<span class=\"count\">1</span> Вопрос"
@@ -4423,7 +4405,7 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Вопросов"
 msgstr[2] "<span class=\"count\">%(counter)s</span> Вопроса"
 
 #: skins/default/templates/user_stats.html:12
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">%(counter)s</span> Answer"
 msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
 msgstr[0] "<span class=\"count\">1</span> Ответ"
@@ -4440,7 +4422,7 @@ msgid "this answer has been selected as correct"
 msgstr "этот ответ был выбран в качестве правильного"
 
 #: skins/default/templates/user_stats.html:30
-#, fuzzy, python-format
+#, python-format
 msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] "(один комментарий)"
@@ -4448,7 +4430,7 @@ msgstr[1] "ответ был прокомментирован %(comment_count)s 
 msgstr[2] "ответ был прокомментирован %(comment_count)s  раза"
 
 #: skins/default/templates/user_stats.html:40
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] "<span class=\"count\">1</span> Голос"
@@ -4472,28 +4454,28 @@ msgid "user voted down this many times"
 msgstr "пользователь проголосовал \"против\" много раз"
 
 #: skins/default/templates/user_stats.html:59
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
-msgstr[0] "<span class=\"count\">1</span> Тэг"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Тэгов"
-msgstr[2] "<span class=\"count\">%(counter)s</span> Тэга"
+msgstr[0] "<span class=\"count\">1</span> Тег"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Тегов"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Тега"
 
 #: skins/default/templates/user_stats.html:67
 #, python-format
 msgid ""
 "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr ""
-"см. другие вопросы, в которых есть вклад от %(view_user)s, отмеченные тэгом "
+"см. другие вопросы, в которых есть вклад от %(view_user)s, отмеченные тегом "
 "'%(tag_name)s'"
 
 #: skins/default/templates/user_stats.html:81
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
-msgstr[0] "<span class=\"count\">1</span> Значок"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Значка"
-msgstr[2] "<span class=\"count\">%(counter)s</span> Значков"
+msgstr[0] "<span class=\"count\">%(counter)s</span> Медаль"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Медали"
+msgstr[2] "<span class=\"count\">%(counter)s</span> Медалей"
 
 #: skins/default/templates/user_tabs.html:5
 msgid "User profile"
@@ -4509,7 +4491,7 @@ msgstr "комментарии и ответы на другие вопросы"
 
 #: skins/default/templates/user_tabs.html:10
 msgid "inbox"
-msgstr ""
+msgstr "входящие"
 
 #: skins/default/templates/user_tabs.html:13
 msgid "graph of user reputation"
@@ -4517,13 +4499,11 @@ msgstr "график кармы"
 
 #: skins/default/templates/user_tabs.html:14
 msgid "reputation history"
-msgstr "карма"
+msgstr "история кармы"
 
 #: skins/default/templates/user_tabs.html:16
 msgid "questions that user selected as his/her favorite"
-msgstr ""
-"Вопросов отмеченных закладками (интересные вопросы можно отмечать нажав на "
-"звездочку)."
+msgstr "Вопросы, выбранные пользователем в закладки"
 
 #: skins/default/templates/user_tabs.html:17
 msgid "favorites"
@@ -4531,39 +4511,35 @@ msgstr "закладки"
 
 #: skins/default/templates/user_tabs.html:19
 msgid "recent activity"
-msgstr "активность"
+msgstr "последняя активность"
 
 #: skins/default/templates/user_tabs.html:20
-#, fuzzy
 msgid "activity"
-msgstr "активные"
+msgstr "активность"
 
 #: skins/default/templates/user_tabs.html:23 views/users.py:794
 msgid "user vote record"
-msgstr "голос пользователя записан"
+msgstr "голос пользователя"
 
 #: skins/default/templates/user_tabs.html:24
 msgid "casted votes"
-msgstr "голоса"
+msgstr "поданные голоса"
 
 #: skins/default/templates/user_tabs.html:28 views/users.py:904
 msgid "email subscription settings"
 msgstr "настройки подписки по электронной почте"
 
 #: skins/default/templates/user_tabs.html:29
-#, fuzzy
 msgid "subscriptions"
 msgstr "подписки по email"
 
 #: skins/default/templates/user_tabs.html:33 views/users.py:216
-#, fuzzy
 msgid "moderate this user"
 msgstr "Модерировать этого пользователя"
 
 #: skins/default/templates/user_tabs.html:34
-#, fuzzy
 msgid "moderation"
-msgstr "Местоположение"
+msgstr "модерация"
 
 #: skins/default/templates/users.html:4 skins/default/templates/users.html:7
 msgid "Users"
@@ -4588,12 +4564,12 @@ msgstr "Ничего не найдено."
 
 #: skins/default/templates/users_questions.html:9
 #: skins/default/templates/users_questions.html:17
-#, fuzzy, python-format
+#, python-format
 msgid "this questions was selected as favorite %(cnt)s time"
 msgid_plural "this questions was selected as favorite %(cnt)s times"
-msgstr[0] "эти вопросы были выбраны в качестве любимых"
-msgstr[1] "эти вопросы были выбраны в качестве любимых"
-msgstr[2] "эти вопросы были выбраны в качестве любимых"
+msgstr[0] "этот вопрос был добавлен в закладки %(cnt)s раз"
+msgstr[1] "эти вопросы были добавлены в закладки %(cnt)s раз"
+msgstr[2] "эти вопросы были добавлены в закладки %(cnt)s раз"
 
 #: skins/default/templates/users_questions.html:10
 msgid "thumb-up on"
@@ -4674,19 +4650,18 @@ msgstr "спасибо за проверку email"
 
 #: skins/default/templates/authopenid/changeemail.html:73
 msgid "email key not sent"
-msgstr "email ключ не передается"
+msgstr "email ключ не отослан"
 
 #: skins/default/templates/authopenid/changeemail.html:76
 #, python-format
 msgid "email key not sent %(email)s change email here %(change_link)s"
 msgstr ""
-"email ключ не послан на %(email)s, изменить email здесь %(change_link)s"
+"email ключ не отослан на %(email)s, изменить email здесь %(change_link)s"
 
 #: skins/default/templates/authopenid/complete.html:21
 #: skins/default/templates/authopenid/complete.html:24
-#, fuzzy
 msgid "Registration"
-msgstr "Зарегистрироваться"
+msgstr "Регистрация"
 
 #: skins/default/templates/authopenid/complete.html:29
 #, python-format
@@ -4779,7 +4754,7 @@ msgstr "С уважением, администратор форума"
 
 #: skins/default/templates/authopenid/email_validation.txt:1
 msgid "Greetings from the Q&A forum"
-msgstr "С Уважением, Q/A форум"
+msgstr "Вас приветствует Q/A форум"
 
 #: skins/default/templates/authopenid/email_validation.txt:3
 msgid "To make use of the Forum, please follow the link below:"
@@ -4805,7 +4780,7 @@ msgid "User login"
 msgstr "Вход выполнен"
 
 #: skins/default/templates/authopenid/signin.html:11
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "        Your answer to %(title)s %(summary)s will be posted once you log in\n"
@@ -4815,7 +4790,7 @@ msgstr ""
 "Ваш ответ на %(title)s / %(summary)s будет опубликован, как только вы войдете"
 
 #: skins/default/templates/authopenid/signin.html:18
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Your question \n"
 "        %(title)s %(summary)s will be posted once you log in\n"
@@ -4830,6 +4805,9 @@ msgid ""
 "similar technology. Your external service password always stays confidential "
 "and you don't have to rememeber or create another one."
 msgstr ""
+"Выберите ваш сервис чтобы войти используя безопасную OpenID (или похожую) "
+"технологию. Пароль к вашей внешней службе всегда конфиденциален и нет "
+"необходимости создавать пароль при регистрации."
 
 #: skins/default/templates/authopenid/signin.html:28
 msgid ""
@@ -4837,54 +4815,64 @@ msgid ""
 "or add a new one. Please click any of the icons below to check/change or add "
 "new login methods."
 msgstr ""
+"Всегда хорошая идея проверить работает ли ваш текущий метод входа, а также "
+"добавить и другие методы. Пожалуйста, выберите любую иконку ниже для "
+"проверки/изменения/добавления методов входа."
 
 #: skins/default/templates/authopenid/signin.html:30
 msgid ""
 "Please add a more permanent login method by clicking one of the icons below, "
 "to avoid logging in via email each time."
 msgstr ""
+"Пожалуйста, добавьте постоянный метод входа кликнув по одной из иконок ниже, "
+"чтобы не входить каждый раз через e-mail."
 
 #: skins/default/templates/authopenid/signin.html:34
 msgid ""
 "Click on one of the icons below to add a new login method or re-validate an "
 "existing one."
 msgstr ""
+"Кликние на одной из иконок ниже чтобы добавить метод входа или проверить уже "
+"существующий."
 
 #: skins/default/templates/authopenid/signin.html:36
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
+"На данный момент вами не выбран ни один из методов входа, добавьте хотя бы "
+"один кликнув по иконке ниже."
 
 #: skins/default/templates/authopenid/signin.html:39
 msgid ""
 "Please check your email and visit the enclosed link to re-connect to your "
 "account"
 msgstr ""
+"Пожалуйста, проверьте ваш email и пройдите по ссылке чтобы вновь войти в ваш "
+"аккаунт"
 
 #: skins/default/templates/authopenid/signin.html:86
 msgid "Please enter your <span>user name</span>, then sign in"
-msgstr ""
+msgstr "Пожалуйста, введите ваше <span>имя пользователя</span>, затем войдите"
 
 #: skins/default/templates/authopenid/signin.html:87
 #: skins/default/templates/authopenid/signin.html:109
-#, fuzzy
 msgid "(or select another login method above)"
-msgstr "Пожалуйста, выберите один из вариантов"
+msgstr "(или выберите один из методов входа выше)"
 
 #: skins/default/templates/authopenid/signin.html:89
-#, fuzzy
 msgid "Sign in"
-msgstr "войти/"
+msgstr "Войти"
 
 #: skins/default/templates/authopenid/signin.html:107
-#, fuzzy
 msgid "Please enter your <span>user name and password</span>, then sign in"
-msgstr "Пожалуйста, введите имя пользователя и пароль"
+msgstr ""
+"Пожалуйста, введите ваши <span>имя пользователя и пароль</span>, затем "
+"войдите"
 
 #: skins/default/templates/authopenid/signin.html:111
 msgid "Login failed, please try again"
-msgstr ""
+msgstr "Вход завершился неудачей, попробуйте ещё раз"
 
 #: skins/default/templates/authopenid/signin.html:114
 msgid "Login name"
@@ -4901,60 +4889,57 @@ msgstr "Войти"
 #: skins/default/templates/authopenid/signin.html:129
 msgid "To change your password - please enter the new one twice, then submit"
 msgstr ""
+"Чтобы изменить ваш пароль - пожалуйста, введите новый дважды и подтвердите "
+"ввод"
 
 #: skins/default/templates/authopenid/signin.html:132
-#, fuzzy
 msgid "New password"
-msgstr "Установлен новый пароль"
+msgstr "Новый пароль"
 
 #: skins/default/templates/authopenid/signin.html:137
-#, fuzzy
 msgid "Please, retype"
-msgstr "пожалуйста, повторите свой пароль"
+msgstr "пожалуйста, повторите пароль"
 
 #: skins/default/templates/authopenid/signin.html:156
 msgid "Here are your current login methods"
-msgstr ""
+msgstr "Ваши текущие методы входа"
 
 #: skins/default/templates/authopenid/signin.html:160
 msgid "provider"
-msgstr ""
+msgstr "провайдер"
 
 #: skins/default/templates/authopenid/signin.html:161
-#, fuzzy
 msgid "last used"
-msgstr "последнее посещение"
+msgstr "последний использованный"
 
 #: skins/default/templates/authopenid/signin.html:162
 msgid "delete, if you like"
-msgstr ""
+msgstr "удалите, если хотите"
 
 #: skins/default/templates/authopenid/signin.html:187
-#, fuzzy
 msgid "Still have trouble signing in?"
-msgstr "Остались вопросы?"
+msgstr "По-прежнему проблемы со входом ?"
 
 #: skins/default/templates/authopenid/signin.html:192
 msgid "Please, enter your email address below and obtain a new key"
-msgstr ""
+msgstr "Пожалуйста, введите ваш email-адрес ниже и получите новый ключ"
 
 #: skins/default/templates/authopenid/signin.html:194
 msgid "Please, enter your email address below to recover your account"
 msgstr ""
+"Пожалуйста, введите ваш email-адрес ниже чтобы восстановить ваш аккаунт"
 
 #: skins/default/templates/authopenid/signin.html:197
-#, fuzzy
 msgid "recover your account via email"
-msgstr "Адрес электронной почты связанный с аккаунтом"
+msgstr "Восстановить ваш аккаунт по email"
 
 #: skins/default/templates/authopenid/signin.html:208
 msgid "Send a new recovery key"
-msgstr ""
+msgstr "Послать новый ключ восстановления"
 
 #: skins/default/templates/authopenid/signin.html:210
-#, fuzzy
 msgid "Recover your account via email"
-msgstr "Адрес электронной почты связанный с аккаунтом"
+msgstr "Восстановить ваш аккаунт используя email"
 
 #: skins/default/templates/authopenid/signin.html:221
 msgid "Why use OpenID?"
@@ -4962,15 +4947,15 @@ msgstr "Плюсы использования OpenID"
 
 #: skins/default/templates/authopenid/signin.html:224
 msgid "with openid it is easier"
-msgstr "Легкая и быстрая регистрация"
+msgstr "С OpenID проще"
 
 #: skins/default/templates/authopenid/signin.html:227
 msgid "reuse openid"
-msgstr "Простая аутентификация"
+msgstr "Используйте везде повторно"
 
 #: skins/default/templates/authopenid/signin.html:230
 msgid "openid is widely adopted"
-msgstr "Имеет широкое распространение"
+msgstr "OpenID широко распространён"
 
 #: skins/default/templates/authopenid/signin.html:233
 msgid "openid is supported open standard"
@@ -5017,70 +5002,68 @@ msgid "return to OpenID login"
 msgstr "вернуться к старнице OpenID входа"
 
 #: skins/default/templates/blocks/header_meta_links.html:7
-#, fuzzy, python-format
+#, python-format
 msgid "responses for %(username)s"
-msgstr "выбрать имя пользователя"
+msgstr "ответы пользователю %(username)s"
 
 #: skins/default/templates/blocks/header_meta_links.html:10
 #, python-format
 msgid "you have a new response"
 msgid_plural "you nave %(response_count)s new responses"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "У вас новый ответ"
+msgstr[1] "У вас %(response_count)s новых ответов"
+msgstr[2] "У вас %(response_count)s новых ответов"
 
 #: skins/default/templates/blocks/header_meta_links.html:13
-#, fuzzy
 msgid "no new responses yet"
-msgstr "ответы"
+msgstr "новых ответов нет"
 
 #: skins/default/templates/blocks/header_meta_links.html:25
 #: skins/default/templates/blocks/header_meta_links.html:26
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
-msgstr ""
+msgstr "%(new)s новых постов со спамом и %(seen)s предыдущих"
 
 #: skins/default/templates/blocks/header_meta_links.html:28
 #: skins/default/templates/blocks/header_meta_links.html:29
-#, fuzzy, python-format
+#, python-format
 msgid "%(new)s new flagged posts"
-msgstr "Впервые отметили флажком неуместное сообщение"
+msgstr "%(new)s новых неуместных сообщений"
 
 #: skins/default/templates/blocks/header_meta_links.html:34
 #: skins/default/templates/blocks/header_meta_links.html:35
-#, fuzzy, python-format
+#, python-format
 msgid "%(seen)s flagged posts"
-msgstr "Впервые отметили флажком неуместное сообщение"
+msgstr "%(seen)s неуместных сообщений"
 
 #: skins/default/templates/blocks/header_meta_links.html:47
 msgid "logout"
-msgstr "выход"
+msgstr "Выход"
 
 #: skins/default/templates/blocks/header_meta_links.html:49
 msgid "login"
-msgstr "Войти"
+msgstr "Вход"
 
 #: skins/default/templates/blocks/header_meta_links.html:54
-#, fuzzy
 msgid "settings"
-msgstr "сброс тэгов"
+msgstr "Настройки"
 
 #: skins/default/templates/unused/email_base.html:8
 msgid "home"
-msgstr "главная"
+msgstr "Главная"
 
 #: skins/default/templates/unused/notarobot.html:3
 msgid "Please prove that you are a Human Being"
-msgstr "Вы Человек?"
+msgstr "Подтвердите что вы человек"
 
 #: skins/default/templates/unused/notarobot.html:10
 msgid "I am a Human Being"
-msgstr "Я Человек"
+msgstr "Я - Человек!"
 
 #: skins/default/templates/unused/question_counter_widget.html:78
 msgid "Please decide if you like this question or not by voting"
 msgstr ""
-"Пожалуйста, решите, если вам нравится этот вопрос или не путем голосования"
+"Пожалуйста, решите, если вам нравится этот вопрос или нет путем голосования"
 
 #: skins/default/templates/unused/question_counter_widget.html:84
 msgid ""
@@ -5149,7 +5132,6 @@ msgstr[2] ""
 "просмотров"
 
 #: skins/default/templates/unused/question_list.html:15
-#, fuzzy
 msgid ""
 "\n"
 "            vote\n"
@@ -5170,7 +5152,6 @@ msgstr[2] ""
 "голосов"
 
 #: skins/default/templates/unused/question_list.html:35
-#, fuzzy
 msgid ""
 "\n"
 "            answer \n"
@@ -5191,7 +5172,6 @@ msgstr[2] ""
 "ответов"
 
 #: skins/default/templates/unused/question_list.html:47
-#, fuzzy
 msgid ""
 "\n"
 "            view\n"
@@ -5229,7 +5209,7 @@ msgstr "нет"
 
 #: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
 msgid "Oops, apologies - there was some error"
-msgstr ""
+msgstr "Извините, произошла ошибка!"
 
 #: utils/forms.py:32
 msgid "this field is required"
@@ -5253,12 +5233,12 @@ msgstr "к сожалению, это имя не разрешено, выбер
 
 #: utils/forms.py:55
 msgid "sorry, there is no user with this name"
-msgstr "е сожалению, пользователя с таким именем не существует"
+msgstr "к сожалению, пользователя с таким именем не существует"
 
 #: utils/forms.py:56
 msgid "sorry, we have a serious error - user name is taken by several users"
 msgstr ""
-"е сожалению, у нас есть серьезная ошибка - имя пользователя используется "
+"к сожалению, у нас есть серьезная ошибка - имя пользователя используется "
 "несколькими пользователями"
 
 #: utils/forms.py:57
@@ -5276,11 +5256,11 @@ msgstr "email обязательное"
 
 #: utils/forms.py:120
 msgid "please enter a valid email address"
-msgstr "пожалуйста, введите работающий адрес электронной почты"
+msgstr "пожалуйста, введите правильный адрес электронной почты"
 
 #: utils/forms.py:121
 msgid "this email is already used by someone else, please choose another"
-msgstr "этот email уже используется кем-то еще, пожалуйста, выберите другое"
+msgstr "этот email уже используется кем-то еще, пожалуйста, выберите другой"
 
 #: utils/forms.py:149
 msgid "choose password"
@@ -5305,7 +5285,7 @@ msgstr "к сожалению, пароли не совпадают, попро�
 #: utils/functions.py:63
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #: utils/functions.py:67
 msgid "2 days ago"
@@ -5337,26 +5317,25 @@ msgstr "неавторизированные пользователи не мо�
 
 #: views/commands.py:62
 msgid "Sorry you ran out of votes for today"
-msgstr ""
+msgstr "Извините, вы исчерпали лимит голосования за сегодня"
 
 #: views/commands.py:68
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
-msgstr ""
+msgstr "Вы можете голосовать сегодня ещё %(votes_left)s раз"
 
 #: views/commands.py:139
-#, fuzzy
 msgid "Sorry, but anonymous users cannot access the inbox"
-msgstr "неавторизированные пользователи не могут голосовать "
+msgstr "неавторизированные пользователи не имеют доступа к папке \"входящие\""
 
 #: views/commands.py:209
 msgid "Sorry, something is not right here..."
-msgstr ""
+msgstr "Извините, что-то не здесь..."
 
 #: views/commands.py:224
-#, fuzzy
 msgid "Sorry, but anonymous users cannot accept answers"
-msgstr "неавторизированные пользователи не могут голосовать "
+msgstr ""
+"неавторизированные пользователи не могут отмечать ответы как правильные"
 
 #: views/commands.py:305
 #, python-format
@@ -5368,9 +5347,8 @@ msgid "email update frequency has been set to daily"
 msgstr "частота обновлений по email была установлена в ежедневную"
 
 #: views/commands.py:371
-#, fuzzy
 msgid "Bad request"
-msgstr "на вопрос не похоже"
+msgstr "неверный запрос"
 
 #: views/meta.py:59
 msgid "Q&A forum feedback"
@@ -5388,21 +5366,19 @@ msgstr "Мы с нетерпением ждем ваших отзывов!"
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
 msgid_plural "%(badge_count)d %(badge_level)s badges"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%(badge_count)d %(badge_level)s медаль"
+msgstr[1] "%(badge_count)d %(badge_level)s медали"
+msgstr[2] "%(badge_count)d %(badge_level)s медалей"
 
 #: views/readers.py:425
-#, fuzzy
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr "к этому вопросу был отмечен как интересный"
+msgstr "Извините, но запрашиваемый комментарий был удалён"
 
 #: views/users.py:217
-#, fuzzy
 msgid "moderate user"
-msgstr "модерировать-пользователя/"
+msgstr "модерировать пользователя"
 
 #: views/users.py:376
 msgid "user profile"
@@ -5457,9 +5433,8 @@ msgid "profile - email subscriptions"
 msgstr "профиль - email подписки"
 
 #: views/writers.py:56
-#, fuzzy
 msgid "Sorry, anonymous users cannot upload files"
-msgstr "неавторизированные пользователи не могут голосовать "
+msgstr "неавторизированные пользователи не могут загружать файлы"
 
 #: views/writers.py:65
 #, python-format
@@ -5467,16 +5442,14 @@ msgid "allowed file types are '%(file_types)s'"
 msgstr "допустимые типы файлов: '%(file_types)s'"
 
 #: views/writers.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "maximum upload file size is %(file_size)sK"
-msgstr "максимальный размер загружаемого файла - %s K"
+msgstr "максимальный размер загружаемого файла - %(file_size)s K"
 
 #: views/writers.py:96
-#, fuzzy
 msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
-"Ошибка при загрузке файла. Пожалуйста, свяжитесь с администрацией сайта. "
-"Спасибо. %s"
+"Ошибка при загрузке файла. Пожалуйста, свяжитесь с администрацией сайта."
 
 #: views/writers.py:452
 #, python-format
@@ -5484,11 +5457,12 @@ msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
+"Извините, вы не вошли, поэтому не можете оставлять комментарии. <a href=\"%"
+"(sign_in_url)s\">Войдите</a>."
 
 #: views/writers.py:497
-#, fuzzy
 msgid "Sorry, anonymous users cannot edit comments"
-msgstr "неавторизированные пользователи не могут голосовать "
+msgstr "неавторизированные пользователи не могут исправлять комментарии"
 
 #: views/writers.py:505
 #, python-format
@@ -5496,22 +5470,24 @@ msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
+"Извините, вы не вошли, поэтому не можете удалять комментарии. <a href=\"%"
+"(sign_in_url)s\">Войдите</a>."
 
 #: views/writers.py:526
 msgid "sorry, we seem to have some technical difficulties"
-msgstr ""
+msgstr "Извините, у нас определённые технические проблемы."
 
 #~ msgid "disciplined"
 #~ msgstr "дисциплина"
 
 #~ msgid "Deleted own post with score of 3 or higher"
-#~ msgstr "Удалили своё сообщение с 3-мя или более положительными откликами"
+#~ msgstr "Удалилено своё сообщение с 3-мя или более положительными откликами"
 
 #~ msgid "peer-pressure"
-#~ msgstr "коллегиальное-давление"
+#~ msgstr "давление-сообщества"
 
 #~ msgid "Deleted own post with score of -3 or lower"
-#~ msgstr "Удалили своё сообщение с 3-мя или более негативными откликами"
+#~ msgstr "Удалилено своё сообщение с 3-мя или более негативными откликами"
 
 #~ msgid "Nice answer"
 #~ msgstr "Хороший ответ"
@@ -5535,7 +5511,7 @@ msgstr ""
 #~ msgstr "популярный-вопрос"
 
 #~ msgid "Asked a question with 1,000 views"
-#~ msgstr "Задали вопрос с более 1,000 просмотров"
+#~ msgstr "Задан вопрос с более 1,000 просмотров"
 
 #~ msgid "Citizen patrol"
 #~ msgstr "Гражданский Дозор"
@@ -5550,7 +5526,7 @@ msgstr ""
 #~ msgstr "критик"
 
 #~ msgid "First down vote"
-#~ msgstr "Впервые дали негативный отклик"
+#~ msgstr "Первый негативный отклик"
 
 #~ msgid "editor"
 #~ msgstr "редактор"
@@ -5559,25 +5535,25 @@ msgstr ""
 #~ msgstr "организатор"
 
 #~ msgid "scholar"
-#~ msgstr "ученый"
+#~ msgstr "ученик"
 
 #~ msgid "First accepted answer on your own question"
-#~ msgstr "Впервые приняли лучший ответ на собственный вопрос"
+#~ msgstr "Первый принятый ответ на собственный вопрос"
 
 #~ msgid "student"
-#~ msgstr "ученик"
+#~ msgstr "студент"
 
 #~ msgid "supporter"
 #~ msgstr "фанат"
 
 #~ msgid "First up vote"
-#~ msgstr "В первый раз дали положительный отклик другому поьзователю"
+#~ msgstr "Первый положительный голос "
 
 #~ msgid "teacher"
 #~ msgstr "учитель"
 
 #~ msgid "Answered first question with at least one up vote"
-#~ msgstr "Дали ответ получивший один или более положительных отликов"
+#~ msgstr "Дал первый ответ и получил один или более положительный голос"
 
 #~ msgid "autobiographer"
 #~ msgstr "автобиограф"
@@ -5587,26 +5563,26 @@ msgstr ""
 
 #~ msgid "Answered your own question with at least 3 up votes"
 #~ msgstr ""
-#~ "Поместили ответ на собственный вопрос и получили 3 или более "
-#~ "положительных откликов"
+#~ "Дал ответ на собственный вопрос и получил 3 или более положительных "
+#~ "голосов"
 
 #~ msgid "great-answer"
 #~ msgstr "замечательный-ответ"
 
 #~ msgid "Answer voted up 100 times"
-#~ msgstr "Дали ответ получивший 100 положительных откликов"
+#~ msgstr "Дан ответ, получивший 100 положительных откликов"
 
 #~ msgid "great-question"
 #~ msgstr "замечательный-вопрос"
 
 #~ msgid "Question voted up 100 times"
-#~ msgstr "Задали вопрос 100 положительных откликов"
+#~ msgstr "Задан вопрос, получивший 100 положительных откликов"
 
 #~ msgid "stellar-question"
 #~ msgstr "гениальный-вопрос"
 
 #~ msgid "Question favorited by 100 users"
-#~ msgstr "Задали ворпос отмеченный закладкой более чем 100 пользователями"
+#~ msgstr "Задан вопрос, отмеченный закладкой более чем 100 пользователями"
 
 #~ msgid "Famous question"
 #~ msgstr "Знаменитый Вопрос"
@@ -5615,7 +5591,7 @@ msgstr ""
 #~ msgstr "знаменитый-вопрос"
 
 #~ msgid "Asked a question with 10,000 views"
-#~ msgstr "Задали вопрос просомотренный более чем 10,000 раз"
+#~ msgstr "Задан вопрос набравший более 10 000 просмотров"
 
 #~ msgid "Alpha"
 #~ msgstr "Альфа Тестер"
@@ -5630,19 +5606,19 @@ msgstr ""
 #~ msgstr "очень-хороший-ответ"
 
 #~ msgid "Answer voted up 25 times"
-#~ msgstr "Дали ответ получивший 25 положительных откликов"
+#~ msgstr "Дан ответ, получивший 25 положительных откликов"
 
 #~ msgid "good-question"
 #~ msgstr "очень-хороший-вопрос"
 
 #~ msgid "Question voted up 25 times"
-#~ msgstr "Задали вопрос получивший 25 положительных откликов"
+#~ msgstr "Вопрос, получивший 25 положительных откликов"
 
 #~ msgid "favorite-question"
 #~ msgstr "интересный-вопрос"
 
 #~ msgid "Question favorited by 25 users"
-#~ msgstr "Задали ворпос получивший 25 закладок"
+#~ msgstr "Вопрос, 25 раз добавленный в закладки"
 
 #~ msgid "Civic duty"
 #~ msgstr "Общественный Долг"
@@ -5660,16 +5636,16 @@ msgstr ""
 #~ msgstr "мастер-старания"
 
 #~ msgid "Edited 100 entries"
-#~ msgstr "главный-редактор"
+#~ msgstr "Отредактировано 100 записей"
 
 #~ msgid "Generalist"
-#~ msgstr "Полиглот"
+#~ msgstr "Эрудит"
 
 #~ msgid "generalist"
-#~ msgstr "полиглот"
+#~ msgstr "эрудит"
 
 #~ msgid "Active in many different tags"
-#~ msgstr "Активность в разнообразных темах"
+#~ msgstr "Активность в различных тегах"
 
 #~ msgid "Expert"
 #~ msgstr "Эксперт"
@@ -5678,7 +5654,7 @@ msgstr ""
 #~ msgstr "эксперт"
 
 #~ msgid "Very active in one tag"
-#~ msgstr "Очень активны в одной теме"
+#~ msgstr "Очень активны в одном теге"
 
 #~ msgid "Yearling"
 #~ msgstr "Годовщина"
@@ -5690,16 +5666,17 @@ msgstr ""
 #~ msgstr "Активный пользователь в течение года"
 
 #~ msgid "notable-question"
-#~ msgstr "заметные-вопрос"
+#~ msgstr "выдающийся-вопрос"
 
 #~ msgid "Asked a question with 2,500 views"
-#~ msgstr "Вопрос задан с 2500 просмотров"
+#~ msgstr "Задаваемые вопросы с 2500 просмотров"
 
 #~ msgid "enlightened"
 #~ msgstr "просвещенный"
 
 #~ msgid "First answer was accepted with at least 10 up votes"
-#~ msgstr "Первый ответ был принят, по крайней мере до 10 голосов"
+#~ msgstr ""
+#~ "Первый ответ был отмечен, по крайней мере 10-ю положительными голосами"
 
 #~ msgid "Beta"
 #~ msgstr "Бета"
@@ -5714,7 +5691,7 @@ msgstr ""
 #~ msgstr "гуру"
 
 #~ msgid "Accepted answer and voted up 40 times"
-#~ msgstr "Принят ответ и проголосовали 40 раз"
+#~ msgstr "Принял ответ и проголосовал 40 раз"
 
 #~ msgid "necromancer"
 #~ msgstr "некромант"
@@ -5731,11 +5708,9 @@ msgstr ""
 #~ msgid "Created a tag used by 50 questions"
 #~ msgstr "Создал тег, использованный в 50 вопросах"
 
-#, fuzzy
 #~ msgid "Askbot"
 #~ msgstr "Askbot"
 
-#, fuzzy
 #~ msgid "Please, sign in or Join askbot!"
 #~ msgstr "Пожалуйста, войдите здесь:"
 
@@ -6027,11 +6002,41 @@ msgstr ""
 #~ msgid "All questions"
 #~ msgstr "Все вопросы"
 
+#~ msgid "click to see the newest questions"
+#~ msgstr "нажмите, чтобы увидеть последние вопросы"
+
+#~ msgid "click to see the oldest questions"
+#~ msgstr "нажмите, чтобы увидеть старые вопросы"
+
+#~ msgid "click to see the most recently updated questions"
+#~ msgstr "нажмите, чтобы посмотреть недавно обновленные вопросы"
+
+#~ msgid "click to see the least recently updated questions"
+#~ msgstr "нажмите, чтобы посмотреть последние обновленные вопросы"
+
 #~ msgid "click to see hottest questions"
 #~ msgstr "нажмите, чтобы посмотреть популярные вопросы"
 
+#~ msgid "less answers"
+#~ msgstr "меньше ответов"
+
 #~ msgid "click to see coldest questions"
 #~ msgstr "нажмите, чтобы посмотреть непопулярные вопросы"
+
+#~ msgid "more answers"
+#~ msgstr "кол-ву ответов"
+
+#~ msgid "click to see most voted questions"
+#~ msgstr "нажмите, чтобы просмотреть вопросы с большим числом голосов"
+
+#~ msgid "unpopular"
+#~ msgstr "непопулярный"
+
+#~ msgid "click to see least voted questions"
+#~ msgstr "нажмите, чтобы просмотреть последние отмеченные голосами вопросы"
+
+#~ msgid "popular"
+#~ msgstr "популярные"
 
 #~ msgid " One question found"
 #~ msgid_plural "%(q_num)s questions found"
