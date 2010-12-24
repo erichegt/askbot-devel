@@ -30,7 +30,7 @@ class API(BaseAPI):
             return self.orm.QuestionRevision.objects.get(id=id).question
         elif model == 'comment':
             comment = self.orm.Comment.objects.get(id=id)
-            return self.get_question_from_generic_relation(comment)
+            return self.get_origin_post_from_content_object(comment)
         else:
             #print 'dropped migration of activity in %s' % model
             return None

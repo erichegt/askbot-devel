@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 21:25-0600\n"
+"POT-Creation-Date: 2010-12-23 16:49-0600\n"
 "PO-Revision-Date: 2010-12-22 20:39\n"
 "Last-Translator: <litnimaxster@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -325,7 +325,7 @@ msgid "command/"
 msgstr "komanda/"
 
 #: urls.py:130 skins/default/templates/question.html:429
-#: skins/default/templates/questions.html:252
+#: skins/default/templates/questions.html:254
 msgid "question/"
 msgstr "vopros/"
 
@@ -333,25 +333,25 @@ msgstr "vopros/"
 msgid "tags/"
 msgstr "temy/"
 
-#: urls.py:140 urls.py:146 skins/default/templates/questions.html:247
-#: skins/default/templates/questions.html:248
+#: urls.py:140 urls.py:146 skins/default/templates/questions.html:249
+#: skins/default/templates/questions.html:250
 msgid "mark-tag/"
 msgstr "pomechayem-temy/"
 
-#: urls.py:140 skins/default/templates/questions.html:247
+#: urls.py:140 skins/default/templates/questions.html:249
 msgid "interesting/"
 msgstr "interesnaya/"
 
-#: urls.py:146 skins/default/templates/questions.html:248
+#: urls.py:146 skins/default/templates/questions.html:250
 msgid "ignored/"
 msgstr "neinteresnaya/"
 
-#: urls.py:152 skins/default/templates/questions.html:249
+#: urls.py:152 skins/default/templates/questions.html:251
 msgid "unmark-tag/"
 msgstr "otmenyaem-pometku-temy/"
 
 #: urls.py:158 urls.py:164 urls.py:169
-#: skins/default/templates/questions.html:253
+#: skins/default/templates/questions.html:255
 msgid "users/"
 msgstr "lyudi/"
 
@@ -3921,7 +3921,7 @@ msgid "Question tags"
 msgstr "Теги вопроса"
 
 #: skins/default/templates/question.html:384
-#: skins/default/templates/questions.html:222
+#: skins/default/templates/questions.html:224
 #: skins/default/templates/tag_selector.html:9
 #: skins/default/templates/tag_selector.html:26
 #, python-format
@@ -4010,16 +4010,16 @@ msgstr "просмотр отмеченные вопросы"
 msgid "Sort by:"
 msgstr "Упорядочить по:"
 
-#: skins/default/templates/questions.html:97
-#: skins/default/templates/questions.html:100
+#: skins/default/templates/questions.html:99
+#: skins/default/templates/questions.html:102
 msgid "subscribe to the questions feed"
 msgstr "подписаться на RSS-канал для вопросов"
 
-#: skins/default/templates/questions.html:101
+#: skins/default/templates/questions.html:103
 msgid "rss feed"
 msgstr "RSS-канал"
 
-#: skins/default/templates/questions.html:105
+#: skins/default/templates/questions.html:107
 #, python-format
 msgid ""
 "\n"
@@ -4039,7 +4039,7 @@ msgstr[2] ""
 "\n"
 "%(q_num)s ответов:"
 
-#: skins/default/templates/questions.html:111 views/readers.py:158
+#: skins/default/templates/questions.html:113 views/readers.py:158
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -4047,109 +4047,109 @@ msgstr[0] "%(q_num)s вопрос"
 msgstr[1] "%(q_num)s вопроса"
 msgstr[2] "%(q_num)s вопросов"
 
-#: skins/default/templates/questions.html:114
+#: skins/default/templates/questions.html:116
 #, python-format
 msgid "with %(author_name)s's contributions"
 msgstr "при помощи %(author_name)s"
 
-#: skins/default/templates/questions.html:117
+#: skins/default/templates/questions.html:119
 msgid "tagged"
 msgstr "помеченный"
 
-#: skins/default/templates/questions.html:122
+#: skins/default/templates/questions.html:124
 msgid "Search tips:"
 msgstr "Советы по поиску:"
 
-#: skins/default/templates/questions.html:125
+#: skins/default/templates/questions.html:127
 msgid "reset author"
 msgstr "сброс автора"
 
-#: skins/default/templates/questions.html:127
-#: skins/default/templates/questions.html:130
-#: skins/default/templates/questions.html:168
-#: skins/default/templates/questions.html:171
+#: skins/default/templates/questions.html:129
+#: skins/default/templates/questions.html:132
+#: skins/default/templates/questions.html:170
+#: skins/default/templates/questions.html:173
 msgid " or "
 msgstr "или"
 
-#: skins/default/templates/questions.html:128
+#: skins/default/templates/questions.html:130
 msgid "reset tags"
 msgstr "сбросить тэги"
 
-#: skins/default/templates/questions.html:131
-#: skins/default/templates/questions.html:134
+#: skins/default/templates/questions.html:133
+#: skins/default/templates/questions.html:136
 msgid "start over"
 msgstr "начать все сначала"
 
-#: skins/default/templates/questions.html:136
+#: skins/default/templates/questions.html:138
 msgid " - to expand, or dig in by adding more tags and revising the query."
 msgstr "- расширить или сузить, добавляя свои метки и получая запрос."
 
-#: skins/default/templates/questions.html:139
+#: skins/default/templates/questions.html:141
 msgid "Search tip:"
 msgstr "Подсказки для поиска:"
 
-#: skins/default/templates/questions.html:139
+#: skins/default/templates/questions.html:141
 msgid "add tags and a query to focus your search"
 msgstr "добавить теги и выполнить поиск"
 
-#: skins/default/templates/questions.html:154
+#: skins/default/templates/questions.html:156
 #: skins/default/templates/unused/questions_ajax.html:79
 msgid "There are no unanswered questions here"
 msgstr "Неотвеченных вопросов нет"
 
-#: skins/default/templates/questions.html:157
+#: skins/default/templates/questions.html:159
 #: skins/default/templates/unused/questions_ajax.html:82
 msgid "No favorite questions here. "
 msgstr "Отмеченных вопросов нет."
 
-#: skins/default/templates/questions.html:158
+#: skins/default/templates/questions.html:160
 #: skins/default/templates/unused/questions_ajax.html:83
 msgid "Please start (bookmark) some questions when you visit them"
 msgstr ""
 "Начните добавлять в (закладки) некоторые вопросы, когда вы посещаете их"
 
-#: skins/default/templates/questions.html:163
+#: skins/default/templates/questions.html:165
 #: skins/default/templates/unused/questions_ajax.html:88
 msgid "You can expand your search by "
 msgstr "Вы можете расширить поиск"
 
-#: skins/default/templates/questions.html:166
+#: skins/default/templates/questions.html:168
 #: skins/default/templates/unused/questions_ajax.html:92
 msgid "resetting author"
 msgstr "сброс автора"
 
-#: skins/default/templates/questions.html:169
+#: skins/default/templates/questions.html:171
 #: skins/default/templates/unused/questions_ajax.html:96
 msgid "resetting tags"
 msgstr "сброс тэгов"
 
-#: skins/default/templates/questions.html:172
-#: skins/default/templates/questions.html:175
+#: skins/default/templates/questions.html:174
+#: skins/default/templates/questions.html:177
 #: skins/default/templates/unused/questions_ajax.html:100
 #: skins/default/templates/unused/questions_ajax.html:104
 msgid "starting over"
 msgstr "начать сначала"
 
-#: skins/default/templates/questions.html:180
+#: skins/default/templates/questions.html:182
 #: skins/default/templates/unused/questions_ajax.html:109
 msgid "Please always feel free to ask your question!"
 msgstr "Вы всегда можете задать свой вопрос!"
 
-#: skins/default/templates/questions.html:184
+#: skins/default/templates/questions.html:186
 #: skins/default/templates/unused/questions_ajax.html:113
 msgid "Did not find what you were looking for?"
 msgstr "Не нашли то, что искали?"
 
-#: skins/default/templates/questions.html:185
+#: skins/default/templates/questions.html:187
 #: skins/default/templates/unused/questions_ajax.html:114
 msgid "Please, post your question!"
 msgstr "Пожалуйста, опубликуйте свой вопрос!"
 
-#: skins/default/templates/questions.html:200
+#: skins/default/templates/questions.html:202
 msgid "Contributors"
 msgstr "Авторы"
 
-#: skins/default/templates/questions.html:217
+#: skins/default/templates/questions.html:219
 msgid "Related tags"
 msgstr "Связанные теги"
 

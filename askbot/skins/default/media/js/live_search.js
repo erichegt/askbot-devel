@@ -146,7 +146,7 @@ $(document).ready(function(){
             result['timesince'] +
             '</span> ' +
             render_user_link(result) +
-            render_user_badge_and_karma(result) +
+            //render_user_badge_and_karma(result) +
         '</div>';
         return user_html;
     };
@@ -257,7 +257,7 @@ $(document).ready(function(){
         relevance_tab = $('<a></a>');
         relevance_tab.attr('href', '?sort=relevance-desc');
         relevance_tab.attr('id', 'by_relevance');
-        relevance_tab.html(sortButtonData['relevance']['desc_label']);
+        relevance_tab.html(sortButtonData['relevance']['label']);
         return relevance_tab;
     }
 
@@ -276,17 +276,18 @@ $(document).ready(function(){
                     'title',
                     sortButtonData[tab_name]['desc_tooltip']
                 );
-                tab.html(sortButtonData[tab_name]['desc_label']);
+                tab.html(sortButtonData[tab_name]['label']);
             }
         });
         var bits = sort_method.split('-', 2);
         var name = bits[0];
         var sense = bits[1];//sense of sort
         var antisense = (sense == 'asc' ? 'desc':'asc');
+        var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
         var active_tab = $('#by_' + name);
         active_tab.attr('class', 'on');
         active_tab.attr('title', sortButtonData[name][antisense + '_tooltip']);
-        active_tab.html(sortButtonData[name][sense + '_label']);
+        active_tab.html(sortButtonData[name]['label'] + arrow);
     };
 
     var render_relevance_sort_tab = function(){

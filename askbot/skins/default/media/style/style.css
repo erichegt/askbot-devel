@@ -959,7 +959,7 @@ a:hover.medal {
     margin-top: 3px;
 }
 
-.tabsA {
+.tabsA, .tabsC {
     background-color: #FFF;
     float: right;
     position: relative;
@@ -968,25 +968,11 @@ a:hover.medal {
     height: 20px;
 }
 
-.tabsB {
-    background-color: #FFF;
-    float: left;
-    position: relative;
-    display: block;
-    font-weight: bold;
-    height: 20px;
-}
+/* tabsA - used for sorting */
+.tabsA { float: right; }
+.tabsC { float: left; }
 
-.tabsC {
-    background-color: #FFF;
-    float: left;
-    position: relative;
-    display: block;
-    font-weight: bold;
-    height: 20px;
-}
-
-.tabsA a.on, .tabsA a:hover, .tabsB a.on, .tabsB a:hover , .tabsC a.on, tabsC a:hover {
+.tabsA a.on, .tabsC a.on, .tabsA a:hover, .tabsC a:hover {
     background: #fff;
     color: #a40000;
     border-top: 1px solid #babdb6;
@@ -997,6 +983,10 @@ a:hover.medal {
     line-height: 26px;
     margin-top: 3px;
     padding: 0px 11px 0px 11px;
+}
+
+.tabsA a.on, tabsA a.on:hover {
+   padding: 0px 6px 0px 11px;
 }
 
 .tabsA a, .tabsC a{
@@ -1034,7 +1024,6 @@ a:hover.medal {
     text-decoration: none;
 }
 
-/*.tabsA a:hover, .tabsB a:hover {background: #fff;border: 1px solid #777;border-bottom:3px solid #FFF;}*/
 .headlineA {
     font-size: 13px;
     border-bottom: 1px solid #777;

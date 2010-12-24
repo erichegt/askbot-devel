@@ -28,15 +28,15 @@
     <div id="sort_tabs" class="tabsA">
         <span class="label">{% trans %}Sort by:{% endtrans %}</span>
         {% if show_sort_by_relevance %}
-            {% set asc_relevance_tooltip = gettext('most relevant questions') %}
-            {% set desc_relevance_tooltip = gettext('click to see most relevant questions') %}
-            {% set relevance_label = gettext('relevance') %}
+            {% set asc_relevance_tooltip = _('most relevant questions') %}
+            {% set desc_relevance_tooltip = _('click to see most relevant questions') %}
+            {% set relevance_label = _('relevance') %}
             {% if query %}
             <a id="by_relevance"
                 {% if sort == "relevance-desc" %}
                     href="?sort=relevance-desc"
                     class="on"
-                    title="{{asc_relevance_tooltip}}">{{relevance_label}}
+                    title="{{asc_relevance_tooltip}}">{{relevance_label}} &#9660;
                 {% else %}
                     href="?sort=relevance-desc"
                     class="off"
@@ -49,42 +49,41 @@
                 sortButtonData['relevance'] = {
                     asc_tooltip: "{{asc_relevance_tooltip}}",
                     desc_tooltip: "{{desc_relevance_tooltip}}",
-                    asc_label: "{{relevance_label}}",
-                    desc_label: "{{relevance_label}}"
+                    label: "{{relevance_label}}",
                 };
             </script>
         {% endif %}
         {{macros.reversible_sort_button(
-            button_sort_criterium = 'age',
-            asc_tooltip = gettext('click to see the oldest questions'),
-            asc_label = gettext('oldest'),
-            desc_tooltip = gettext('click to see the newest questions'),
-            desc_label = gettext('newest'),
-            current_sort_method = sort)
+                button_sort_criterium = 'age',
+                label = _('by date'),
+                asc_tooltip = _('click to see the oldest questions'),
+                desc_tooltip = _('click to see the newest questions'),
+                current_sort_method = sort
+            )
         }}
         {{macros.reversible_sort_button(
-            button_sort_criterium = 'activity',
-            asc_tooltip = gettext('click to see the least recently updated questions'),
-            asc_label = gettext('inactive'),
-            desc_tooltip = gettext('click to see the most recently updated questions'),
-            desc_label = gettext('active'),
-            current_sort_method = sort)
+                button_sort_criterium = 'activity',
+                label = _('by activity'),
+                asc_tooltip = _('click to see the least recently updated questions'),
+                desc_tooltip = _('click to see the most recently updated questions'),
+                current_sort_method = sort
+            )
         }}
         {{macros.reversible_sort_button(
-            button_sort_criterium = 'answers',
-            asc_tooltip = gettext('click to see the least answered questions'),
-            asc_label = gettext('less answers'),
-            desc_tooltip = gettext('click to see the most answered questions'),
-            desc_label = gettext('more answers'),
-            current_sort_method = sort)
+                button_sort_criterium = 'answers',
+                label = _('by answers'),
+                asc_tooltip = _('click to see the least answered questions'),
+                desc_tooltip = _('click to see the most answered questions'),
+                current_sort_method = sort
+            )
         }}
         {{macros.reversible_sort_button(
-            button_sort_criterium = 'votes',
-            asc_tooltip = gettext('click to see least voted questions'),
-            asc_label = gettext('unpopular'),
-            desc_tooltip = gettext('click to see most voted questions'),
-            desc_label = gettext('popular'),
-            current_sort_method = sort)
+                button_sort_criterium = 'votes',
+                label = _('by votes'),
+                asc_tooltip = _('click to see least voted questions'),
+                desc_tooltip = _('click to see most voted questions'),
+                current_sort_method = sort
+            )
         }}
     </div>
 </div>

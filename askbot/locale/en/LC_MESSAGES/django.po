@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-29 16:37-0600\n"
+"POT-Creation-Date: 2010-12-23 17:20-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "question content must be > 10 characters"
 msgstr ""
 
-#: forms.py:84 skins/default/templates/header.html:83
+#: forms.py:84 skins/default/templates/header.html:31
 msgid "tags"
 msgstr ""
 
@@ -104,144 +104,146 @@ msgid ""
 "improved style, this field is optional)"
 msgstr ""
 
-#: forms.py:161
+#: forms.py:204
 msgid "Enter number of points to add or subtract"
 msgstr ""
 
-#: forms.py:175 const/__init__.py:219
+#: forms.py:218 const/__init__.py:220
 msgid "approved"
 msgstr ""
 
-#: forms.py:176 const/__init__.py:220
+#: forms.py:219 const/__init__.py:221
 msgid "watched"
 msgstr ""
 
-#: forms.py:177 const/__init__.py:221
+#: forms.py:220 const/__init__.py:222
 msgid "suspended"
 msgstr ""
 
-#: forms.py:178 const/__init__.py:222
+#: forms.py:221 const/__init__.py:223
 msgid "blocked"
 msgstr ""
 
-#: forms.py:180 const/__init__.py:218
+#: forms.py:223 const/__init__.py:219
 msgid "moderator"
 msgstr ""
 
-#: forms.py:200
+#: forms.py:243
 msgid "Change status to"
 msgstr ""
 
-#: forms.py:227
+#: forms.py:270
 msgid "which one?"
 msgstr ""
 
-#: forms.py:248
+#: forms.py:291
 msgid "Cannot change own status"
 msgstr ""
 
-#: forms.py:254
+#: forms.py:297
 msgid "Cannot turn other user to moderator"
 msgstr ""
 
-#: forms.py:261
+#: forms.py:304
 msgid "Cannot change status of another moderator"
 msgstr ""
 
-#: forms.py:267
+#: forms.py:310
 #, python-format
-msgid "If you wish to change %(username)s's status, "
+msgid ""
+"If you wish to change %(username)s's status, please make a meaningful "
+"selection."
 msgstr ""
 
-#: forms.py:276
+#: forms.py:319
 msgid "Subject line"
 msgstr ""
 
-#: forms.py:283
+#: forms.py:326
 msgid "Message text"
 msgstr ""
 
-#: forms.py:360
+#: forms.py:403
 msgid "Your name:"
 msgstr ""
 
-#: forms.py:361
+#: forms.py:404
 msgid "Email (not shared with anyone):"
 msgstr ""
 
-#: forms.py:362
+#: forms.py:405
 msgid "Your message:"
 msgstr ""
 
-#: forms.py:449
+#: forms.py:492
 msgid "this email does not have to be linked to gravatar"
 msgstr ""
 
-#: forms.py:456
+#: forms.py:499
 msgid "Real name"
 msgstr ""
 
-#: forms.py:463
+#: forms.py:506
 msgid "Website"
 msgstr ""
 
-#: forms.py:470
+#: forms.py:513
 msgid "Location"
 msgstr ""
 
-#: forms.py:477
+#: forms.py:520
 msgid "Date of birth"
 msgstr ""
 
-#: forms.py:478
+#: forms.py:521
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr ""
 
-#: forms.py:484
+#: forms.py:527
 msgid "Profile"
 msgstr ""
 
-#: forms.py:493
+#: forms.py:536
 msgid "Screen name"
 msgstr ""
 
-#: forms.py:518 forms.py:519
+#: forms.py:561 forms.py:562
 msgid "this email has already been registered, please use another one"
 msgstr ""
 
-#: forms.py:525
+#: forms.py:568
 msgid "Choose email tag filter"
 msgstr ""
 
-#: forms.py:564
+#: forms.py:607
 msgid "Asked by me"
 msgstr ""
 
-#: forms.py:567
+#: forms.py:610
 msgid "Answered by me"
 msgstr ""
 
-#: forms.py:570
+#: forms.py:613
 msgid "Individually selected"
 msgstr ""
 
-#: forms.py:573
+#: forms.py:616
 msgid "Entire forum (tag filtered)"
 msgstr ""
 
-#: forms.py:577
+#: forms.py:620
 msgid "Comments and posts mentioning me"
 msgstr ""
 
-#: forms.py:635
+#: forms.py:678
 msgid "okay, let's try!"
 msgstr ""
 
-#: forms.py:636
+#: forms.py:679
 msgid "no community email please, thanks"
 msgstr "no askbot email please, thanks"
 
-#: forms.py:640
+#: forms.py:683
 msgid "please choose one of the options above"
 msgstr ""
 
@@ -274,7 +276,7 @@ msgid "revisions/"
 msgstr ""
 
 #: urls.py:58 urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83
-#: urls.py:88 urls.py:93 urls.py:98
+#: urls.py:88 urls.py:93 urls.py:98 skins/default/templates/question.html:431
 msgid "questions/"
 msgstr ""
 
@@ -298,7 +300,7 @@ msgstr ""
 msgid "answer/"
 msgstr ""
 
-#: urls.py:93
+#: urls.py:93 skins/default/templates/question.html:431
 msgid "vote/"
 msgstr ""
 
@@ -306,7 +308,8 @@ msgstr ""
 msgid "command/"
 msgstr ""
 
-#: urls.py:130
+#: urls.py:130 skins/default/templates/question.html:429
+#: skins/default/templates/questions.html:252
 msgid "question/"
 msgstr ""
 
@@ -314,23 +317,25 @@ msgstr ""
 msgid "tags/"
 msgstr ""
 
-#: urls.py:140 urls.py:146
+#: urls.py:140 urls.py:146 skins/default/templates/questions.html:247
+#: skins/default/templates/questions.html:248
 msgid "mark-tag/"
 msgstr ""
 
-#: urls.py:140
+#: urls.py:140 skins/default/templates/questions.html:247
 msgid "interesting/"
 msgstr ""
 
-#: urls.py:146
+#: urls.py:146 skins/default/templates/questions.html:248
 msgid "ignored/"
 msgstr ""
 
-#: urls.py:152
+#: urls.py:152 skins/default/templates/questions.html:249
 msgid "unmark-tag/"
 msgstr ""
 
 #: urls.py:158 urls.py:164 urls.py:169
+#: skins/default/templates/questions.html:253
 msgid "users/"
 msgstr ""
 
@@ -346,21 +351,109 @@ msgstr ""
 msgid "markread/"
 msgstr ""
 
-#: urls.py:199
+#: urls.py:200
 msgid "upload/"
 msgstr ""
 
-#: urls.py:200
+#: urls.py:201
 msgid "search/"
 msgstr ""
 
-#: urls.py:201
+#: urls.py:202
 msgid "feedback/"
 msgstr ""
 
-#: urls.py:202 setup_templates/settings.py:182
+#: urls.py:203 setup_templates/settings.py:182
 #: skins/default/templates/authopenid/signin.html:249
 msgid "account/"
+msgstr ""
+
+#: conf/badges.py:12
+msgid "Badge settings"
+msgstr ""
+
+#: conf/badges.py:21
+msgid "Disciplined: minimum upvotes for deleted post"
+msgstr ""
+
+#: conf/badges.py:30
+msgid "Peer Pressure: minimum downvotes for deleted post"
+msgstr ""
+
+#: conf/badges.py:39
+msgid "Teacher: minimum upvotes for the answer"
+msgstr ""
+
+#: conf/badges.py:48
+msgid "Nice Answer: minimum upvotes for the answer"
+msgstr ""
+
+#: conf/badges.py:57
+msgid "Good Answer: minimum upvotes for the answer"
+msgstr ""
+
+#: conf/badges.py:66
+msgid "Great Answer: minimum upvotes for the answer"
+msgstr ""
+
+#: conf/badges.py:75
+msgid "Nice Question: minimum upvotes for the question"
+msgstr ""
+
+#: conf/badges.py:84
+msgid "Good Question: minimum upvotes for the question"
+msgstr ""
+
+#: conf/badges.py:93
+msgid "Great Question: minimum upvotes for the question"
+msgstr ""
+
+#: conf/badges.py:102
+msgid "Popular Question: minimum views"
+msgstr ""
+
+#: conf/badges.py:111
+msgid "Notable Question: minimum views"
+msgstr ""
+
+#: conf/badges.py:120
+msgid "Famous Question: minimum views"
+msgstr ""
+
+#: conf/badges.py:129
+msgid "Self-Learner: minimum answer upvotes"
+msgstr ""
+
+#: conf/badges.py:138
+msgid "Civic Duty: minimum votes"
+msgstr ""
+
+#: conf/badges.py:147
+msgid "Enlightened Duty: minimum upvotes"
+msgstr ""
+
+#: conf/badges.py:156
+msgid "Guru: minimum upvotes"
+msgstr ""
+
+#: conf/badges.py:165
+msgid "Necromancer: minimum upvotes"
+msgstr ""
+
+#: conf/badges.py:174
+msgid "Necromancer: minimum delay in days"
+msgstr ""
+
+#: conf/badges.py:183
+msgid "Associate Editor: minimum number of edits"
+msgstr ""
+
+#: conf/badges.py:192
+msgid "Favorite Question: minimum stars"
+msgstr ""
+
+#: conf/badges.py:201
+msgid "Stellar Question: minimum stars"
 msgstr ""
 
 #: conf/email.py:12
@@ -491,7 +584,7 @@ msgid "LinkedIn consumer secret"
 msgstr ""
 
 #: conf/external_keys.py:145
-msgid "User LDAP authentication for the password login"
+msgid "Use LDAP authentication for the password login"
 msgstr ""
 
 #: conf/external_keys.py:154
@@ -753,10 +846,6 @@ msgstr ""
 msgid "Site description for the search engines"
 msgstr ""
 
-#: conf/site_settings.py:58
-msgid "Askbot"
-msgstr ""
-
 #: conf/site_settings.py:59
 msgid "Short name for your Q&A forum"
 msgstr ""
@@ -905,10 +994,20 @@ msgid "To change the logo, select new file, then submit this whole form."
 msgstr ""
 
 #: conf/skin_general_settings.py:38
-msgid "Site favicon"
+msgid "Show logo"
 msgstr ""
 
 #: conf/skin_general_settings.py:40
+msgid ""
+"Check if you want to show logo in the forum header or uncheck in the case "
+"you do not want the logo to appear in the default location"
+msgstr ""
+
+#: conf/skin_general_settings.py:52
+msgid "Site favicon"
+msgstr ""
+
+#: conf/skin_general_settings.py:54
 #, python-format
 msgid ""
 "A small 16x16 or 32x32 pixel icon image used to distinguish your site in the "
@@ -916,36 +1015,44 @@ msgid ""
 "href=\"%(favicon_info_url)s\">this page</a>."
 msgstr ""
 
-#: conf/skin_general_settings.py:56
+#: conf/skin_general_settings.py:70
 msgid "Password login button"
 msgstr ""
 
-#: conf/skin_general_settings.py:58
+#: conf/skin_general_settings.py:72
 msgid ""
 "An 88x38 pixel image that is used on the login screen for the password login "
 "button."
 msgstr ""
 
-#: conf/skin_general_settings.py:73
+#: conf/skin_general_settings.py:86
+msgid "Show footer"
+msgstr ""
+
+#: conf/skin_general_settings.py:88
+msgid "Check if you want to show the footer on each forum page"
+msgstr ""
+
+#: conf/skin_general_settings.py:99
 msgid "Show all UI functions to all users"
 msgstr ""
 
-#: conf/skin_general_settings.py:75
+#: conf/skin_general_settings.py:101
 msgid ""
 "If checked, all forum functions will be shown to users, regardless of their "
 "reputation. However to use those functions, moderation rules, reputation and "
 "other limits will still apply."
 msgstr ""
 
-#: conf/skin_general_settings.py:90
+#: conf/skin_general_settings.py:116
 msgid "Select skin"
 msgstr ""
 
-#: conf/skin_general_settings.py:99
+#: conf/skin_general_settings.py:125
 msgid "Skin media revision number"
 msgstr ""
 
-#: conf/skin_general_settings.py:101
+#: conf/skin_general_settings.py:127
 msgid ""
 "Increment this number when you change image in skin media or stylesheet. "
 "This helps avoid showing your users outdated images from their browser cache."
@@ -1068,7 +1175,7 @@ msgstr ""
 msgid "least voted"
 msgstr ""
 
-#: const/__init__.py:48
+#: const/__init__.py:48 skins/default/templates/questions.html:33
 msgid "relevance"
 msgstr ""
 
@@ -1085,149 +1192,221 @@ msgstr ""
 msgid "favorite"
 msgstr ""
 
-#: const/__init__.py:70
+#: const/__init__.py:71
 msgid "Question has no answers"
 msgstr ""
 
-#: const/__init__.py:71
+#: const/__init__.py:72
 msgid "Question has no accepted answers"
 msgstr ""
 
-#: const/__init__.py:111
+#: const/__init__.py:112
 msgid "asked a question"
 msgstr ""
 
-#: const/__init__.py:112
+#: const/__init__.py:113
 msgid "answered a question"
 msgstr ""
 
-#: const/__init__.py:113
+#: const/__init__.py:114
 msgid "commented question"
 msgstr ""
 
-#: const/__init__.py:114
+#: const/__init__.py:115
 msgid "commented answer"
 msgstr ""
 
-#: const/__init__.py:115
+#: const/__init__.py:116
 msgid "edited question"
 msgstr ""
 
-#: const/__init__.py:116
+#: const/__init__.py:117
 msgid "edited answer"
 msgstr ""
 
-#: const/__init__.py:117
+#: const/__init__.py:118
 msgid "received award"
 msgstr "received badge"
 
-#: const/__init__.py:118
+#: const/__init__.py:119
 msgid "marked best answer"
 msgstr ""
 
-#: const/__init__.py:119
+#: const/__init__.py:120
 msgid "upvoted"
 msgstr ""
 
-#: const/__init__.py:120
+#: const/__init__.py:121
 msgid "downvoted"
 msgstr ""
 
-#: const/__init__.py:121
+#: const/__init__.py:122
 msgid "canceled vote"
 msgstr ""
 
-#: const/__init__.py:122
+#: const/__init__.py:123
 msgid "deleted question"
 msgstr ""
 
-#: const/__init__.py:123
+#: const/__init__.py:124
 msgid "deleted answer"
 msgstr ""
 
-#: const/__init__.py:124
+#: const/__init__.py:125
 msgid "marked offensive"
 msgstr ""
 
-#: const/__init__.py:125
+#: const/__init__.py:126
 msgid "updated tags"
 msgstr ""
 
-#: const/__init__.py:126
+#: const/__init__.py:127
 msgid "selected favorite"
 msgstr ""
 
-#: const/__init__.py:127
+#: const/__init__.py:128
 msgid "completed user profile"
 msgstr ""
 
-#: const/__init__.py:128
+#: const/__init__.py:129
 msgid "email update sent to user"
 msgstr ""
 
-#: const/__init__.py:129
+#: const/__init__.py:130
 msgid "mentioned in the post"
 msgstr ""
 
-#: const/__init__.py:180
+#: const/__init__.py:181
 msgid "question_answered"
 msgstr "answered question"
 
-#: const/__init__.py:181
+#: const/__init__.py:182
 msgid "question_commented"
 msgstr "commented question"
 
-#: const/__init__.py:182
+#: const/__init__.py:183
 msgid "answer_commented"
 msgstr ""
 
-#: const/__init__.py:183
+#: const/__init__.py:184
 msgid "answer_accepted"
 msgstr ""
 
-#: const/__init__.py:187
+#: const/__init__.py:188
 msgid "[closed]"
 msgstr ""
 
-#: const/__init__.py:188
+#: const/__init__.py:189
 msgid "[deleted]"
 msgstr ""
 
-#: const/__init__.py:189 views/readers.py:549
+#: const/__init__.py:190 views/readers.py:602
 msgid "initial version"
 msgstr ""
 
-#: const/__init__.py:190
+#: const/__init__.py:191
 msgid "retagged"
 msgstr ""
 
-#: const/__init__.py:195
+#: const/__init__.py:196
 msgid "exclude ignored tags"
 msgstr ""
 
-#: const/__init__.py:196
+#: const/__init__.py:197
 msgid "allow only selected tags"
 msgstr ""
 
-#: const/__init__.py:200
+#: const/__init__.py:201
 msgid "instantly"
 msgstr ""
 
-#: const/__init__.py:201
+#: const/__init__.py:202
 msgid "daily"
 msgstr ""
 
-#: const/__init__.py:202
+#: const/__init__.py:203
 msgid "weekly"
 msgstr ""
 
-#: const/__init__.py:203
+#: const/__init__.py:204
 msgid "no email"
+msgstr ""
+
+#: const/__init__.py:241 skins/default/templates/badges.html:43
+msgid "gold"
+msgstr ""
+
+#: const/__init__.py:242 skins/default/templates/badges.html:52
+msgid "silver"
+msgstr ""
+
+#: const/__init__.py:243 skins/default/templates/badges.html:59
+msgid "bronze"
 msgstr ""
 
 #: const/message_keys.py:19
 #, python-format
 msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
+msgstr ""
+
+#: const/message_keys.py:22 skins/default/templates/questions.html:31
+msgid "most relevant questions"
+msgstr ""
+
+#: const/message_keys.py:23 skins/default/templates/questions.html:32
+msgid "click to see most relevant questions"
+msgstr ""
+
+#: const/message_keys.py:24
+msgid "by relevance"
+msgstr "relevance"
+
+#: const/message_keys.py:25
+msgid "click to see the oldest questions"
+msgstr ""
+
+#: const/message_keys.py:26
+msgid "by date"
+msgstr "date"
+
+#: const/message_keys.py:27
+msgid "click to see the newest questions"
+msgstr ""
+
+#: const/message_keys.py:28
+msgid "click to see the least recently updated questions"
+msgstr ""
+
+#: const/message_keys.py:29
+msgid "by activity"
+msgstr "activity"
+
+#: const/message_keys.py:30
+msgid "click to see the most recently updated questions"
+msgstr ""
+
+#: const/message_keys.py:31
+msgid "click to see the least answered questions"
+msgstr ""
+
+#: const/message_keys.py:32
+msgid "by answers"
+msgstr "answers"
+
+#: const/message_keys.py:33
+msgid "click to see the most answered questions"
+msgstr ""
+
+#: const/message_keys.py:34
+msgid "click to see least voted questions"
+msgstr ""
+
+#: const/message_keys.py:35
+msgid "by votes"
+msgstr "votes"
+
+#: const/message_keys.py:36
+msgid "click to see most voted questions"
 msgstr ""
 
 #: deps/django_authopenid/forms.py:116 deps/django_authopenid/views.py:137
@@ -1611,7 +1790,7 @@ msgstr ""
 msgid "Invalid request"
 msgstr ""
 
-#: importers/stackexchange/management/commands/load_stackexchange.py:125
+#: importers/stackexchange/management/commands/load_stackexchange.py:126
 msgid "Congratulations, you are now an Administrator"
 msgstr ""
 
@@ -1685,568 +1864,136 @@ msgstr ""
 "it the forum administrator at %(admin_email)s.</p><p>Sincerely,</p><p>Your "
 "friendly Q&A forum server.</p>"
 
-#: migrations/0005_install_badges.py:11
-msgid "Disciplined"
-msgstr ""
-
-#: migrations/0005_install_badges.py:11
-msgid "disciplined"
-msgstr ""
-
-#: migrations/0005_install_badges.py:11
-msgid "Deleted own post with score of 3 or higher"
-msgstr ""
-
-#: migrations/0005_install_badges.py:12
-msgid "Peer Pressure"
-msgstr ""
-
-#: migrations/0005_install_badges.py:12
-msgid "peer-pressure"
-msgstr ""
-
-#: migrations/0005_install_badges.py:12
-msgid "Deleted own post with score of -3 or lower"
-msgstr ""
-
-#: migrations/0005_install_badges.py:13
-msgid "Nice answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:13
-msgid "nice-answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:13
-msgid "Answer voted up 10 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:14
-msgid "Nice Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:14
-msgid "nice-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:14
-msgid "Question voted up 10 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:15
-msgid "Pundit"
-msgstr ""
-
-#: migrations/0005_install_badges.py:15
-msgid "pundit"
-msgstr ""
-
-#: migrations/0005_install_badges.py:15
-msgid "Left 10 comments with score of 10 or more"
-msgstr ""
-
-#: migrations/0005_install_badges.py:16
-msgid "Popular Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:16
-msgid "popular-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:16
-msgid "Asked a question with 1,000 views"
-msgstr ""
-
-#: migrations/0005_install_badges.py:17
-msgid "Citizen patrol"
-msgstr ""
-
-#: migrations/0005_install_badges.py:17
-msgid "citizen-patrol"
-msgstr ""
-
-#: migrations/0005_install_badges.py:17
-msgid "First flagged post"
-msgstr ""
-
-#: migrations/0005_install_badges.py:18
-msgid "Cleanup"
-msgstr ""
-
-#: migrations/0005_install_badges.py:18
-msgid "cleanup"
-msgstr ""
-
-#: migrations/0005_install_badges.py:18
-msgid "First rollback"
-msgstr ""
-
-#: migrations/0005_install_badges.py:19
-msgid "Critic"
-msgstr ""
-
-#: migrations/0005_install_badges.py:19
-msgid "critic"
-msgstr ""
-
-#: migrations/0005_install_badges.py:19
-msgid "First down vote"
-msgstr ""
-
-#: migrations/0005_install_badges.py:20
-msgid "Editor"
-msgstr ""
-
-#: migrations/0005_install_badges.py:20
-msgid "editor"
-msgstr ""
-
-#: migrations/0005_install_badges.py:20
-msgid "First edit"
-msgstr ""
-
-#: migrations/0005_install_badges.py:21
-msgid "Organizer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:21
-msgid "organizer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:21
-msgid "First retag"
-msgstr ""
-
-#: migrations/0005_install_badges.py:22
-msgid "Scholar"
-msgstr ""
-
-#: migrations/0005_install_badges.py:22
-msgid "scholar"
-msgstr ""
-
-#: migrations/0005_install_badges.py:22
-msgid "First accepted answer on your own question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:23
-msgid "Student"
-msgstr ""
-
-#: migrations/0005_install_badges.py:23
-msgid "student"
-msgstr ""
-
-#: migrations/0005_install_badges.py:23
-msgid "Asked first question with at least one up vote"
-msgstr ""
-
-#: migrations/0005_install_badges.py:24
-msgid "Supporter"
-msgstr ""
-
-#: migrations/0005_install_badges.py:24
-msgid "supporter"
-msgstr ""
-
-#: migrations/0005_install_badges.py:24
-msgid "First up vote"
-msgstr ""
-
-#: migrations/0005_install_badges.py:25
-msgid "Teacher"
-msgstr ""
-
-#: migrations/0005_install_badges.py:25
-msgid "teacher"
-msgstr ""
-
-#: migrations/0005_install_badges.py:25
-msgid "Answered first question with at least one up vote"
-msgstr ""
-
-#: migrations/0005_install_badges.py:26
-msgid "Autobiographer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:26
-msgid "autobiographer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:26
-msgid "Completed all user profile fields"
-msgstr ""
-
-#: migrations/0005_install_badges.py:27
-msgid "Self-Learner"
-msgstr ""
-
-#: migrations/0005_install_badges.py:27
-msgid "self-learner"
-msgstr ""
-
-#: migrations/0005_install_badges.py:27
-msgid "Answered your own question with at least 3 up votes"
-msgstr ""
-
-#: migrations/0005_install_badges.py:28
-msgid "Great Answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:28
-msgid "great-answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:28
-msgid "Answer voted up 100 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:29
-msgid "Great Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:29
-msgid "great-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:29
-msgid "Question voted up 100 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:30
-msgid "Stellar Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:30
-msgid "stellar-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:30
-msgid "Question favorited by 100 users"
-msgstr ""
-
-#: migrations/0005_install_badges.py:31
-msgid "Famous question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:31
-msgid "famous-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:31
-msgid "Asked a question with 10,000 views"
-msgstr ""
-
-#: migrations/0005_install_badges.py:32
-msgid "Alpha"
-msgstr ""
-
-#: migrations/0005_install_badges.py:32
-msgid "alpha"
-msgstr ""
-
-#: migrations/0005_install_badges.py:32
-msgid "Actively participated in the private alpha"
-msgstr ""
-
-#: migrations/0005_install_badges.py:33
-msgid "Good Answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:33
-msgid "good-answer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:33
-msgid "Answer voted up 25 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:34
-msgid "Good Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:34
-msgid "good-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:34
-msgid "Question voted up 25 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:35
-msgid "Favorite Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:35
-msgid "favorite-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:35
-msgid "Question favorited by 25 users"
-msgstr ""
-
-#: migrations/0005_install_badges.py:36
-msgid "Civic duty"
-msgstr ""
-
-#: migrations/0005_install_badges.py:36
-msgid "civic-duty"
-msgstr ""
-
-#: migrations/0005_install_badges.py:36
-msgid "Voted 300 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:37
-msgid "Strunk & White"
-msgstr ""
-
-#: migrations/0005_install_badges.py:37
-msgid "strunk-and-white"
-msgstr ""
-
-#: migrations/0005_install_badges.py:37
-msgid "Edited 100 entries"
-msgstr ""
-
-#: migrations/0005_install_badges.py:38
-msgid "Generalist"
-msgstr ""
-
-#: migrations/0005_install_badges.py:38
-msgid "generalist"
-msgstr ""
-
-#: migrations/0005_install_badges.py:38
-msgid "Active in many different tags"
-msgstr ""
-
-#: migrations/0005_install_badges.py:39
-msgid "Expert"
-msgstr ""
-
-#: migrations/0005_install_badges.py:39
-msgid "expert"
-msgstr ""
-
-#: migrations/0005_install_badges.py:39
-msgid "Very active in one tag"
-msgstr ""
-
-#: migrations/0005_install_badges.py:40
-msgid "Yearling"
-msgstr ""
-
-#: migrations/0005_install_badges.py:40
-msgid "yearling"
-msgstr ""
-
-#: migrations/0005_install_badges.py:40
-msgid "Active member for a year"
-msgstr ""
-
-#: migrations/0005_install_badges.py:41
-msgid "Notable Question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:41
-msgid "notable-question"
-msgstr ""
-
-#: migrations/0005_install_badges.py:41
-msgid "Asked a question with 2,500 views"
-msgstr ""
-
-#: migrations/0005_install_badges.py:42
-msgid "Enlightened"
-msgstr ""
-
-#: migrations/0005_install_badges.py:42
-msgid "enlightened"
-msgstr ""
-
-#: migrations/0005_install_badges.py:42
-msgid "First answer was accepted with at least 10 up votes"
-msgstr ""
-
-#: migrations/0005_install_badges.py:43
-msgid "Beta"
-msgstr ""
-
-#: migrations/0005_install_badges.py:43
-msgid "beta"
-msgstr ""
-
-#: migrations/0005_install_badges.py:43
-msgid "Actively participated in the private beta"
-msgstr ""
-
-#: migrations/0005_install_badges.py:44
-msgid "Guru"
-msgstr ""
-
-#: migrations/0005_install_badges.py:44
-msgid "guru"
-msgstr ""
-
-#: migrations/0005_install_badges.py:44
-msgid "Accepted answer and voted up 40 times"
-msgstr ""
-
-#: migrations/0005_install_badges.py:45
-msgid "Necromancer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:45
-msgid "necromancer"
-msgstr ""
-
-#: migrations/0005_install_badges.py:45
-msgid "Answered a question more than 60 days later with at least 5 votes"
-msgstr ""
-
-#: migrations/0005_install_badges.py:46
-msgid "Taxonomist"
-msgstr ""
-
-#: migrations/0005_install_badges.py:46
-msgid "taxonomist"
-msgstr ""
-
-#: migrations/0005_install_badges.py:46
-msgid "Created a tag used by 50 questions"
-msgstr ""
-
-#: models/__init__.py:169
+#: models/__init__.py:170
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr ""
 
-#: models/__init__.py:174
+#: models/__init__.py:175
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr ""
 
-#: models/__init__.py:180
+#: models/__init__.py:181
 msgid ""
 "Sorry, you cannot accept or unaccept your own answer to your own question"
 msgstr ""
 
-#: models/__init__.py:187
+#: models/__init__.py:188
 #, python-format
 msgid ""
 "Sorry, only original author of the question  - %(username)s - can accept the "
 "best answer"
 msgstr ""
 
-#: models/__init__.py:210
+#: models/__init__.py:211
 msgid "cannot vote for own posts"
 msgstr "Sorry, you cannot vote for your own posts"
 
-#: models/__init__.py:213
+#: models/__init__.py:214
 msgid "Sorry your account appears to be blocked "
 msgstr ""
 
-#: models/__init__.py:218
+#: models/__init__.py:219
 msgid "Sorry your account appears to be suspended "
 msgstr ""
 
-#: models/__init__.py:228
+#: models/__init__.py:229
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ">%(points)s points required to upvote "
 
-#: models/__init__.py:234
+#: models/__init__.py:235
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr ">%(points)s points required to downvote "
 
-#: models/__init__.py:249
+#: models/__init__.py:250
 msgid "Sorry, blocked users cannot upload files"
 msgstr ""
 
-#: models/__init__.py:250
+#: models/__init__.py:251
 msgid "Sorry, suspended users cannot upload files"
 msgstr ""
 
-#: models/__init__.py:252
+#: models/__init__.py:253
 #, python-format
 msgid ""
 "uploading images is limited to users with >%(min_rep)s reputation points"
 msgstr "sorry, file uploading requires karma >%(min_rep)s"
 
-#: models/__init__.py:271 models/__init__.py:331 models/__init__.py:1950
+#: models/__init__.py:272 models/__init__.py:332 models/__init__.py:2021
 msgid "blocked users cannot post"
 msgstr ""
 "Sorry, your account appears to be blocked and you cannot make new posts "
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
 
-#: models/__init__.py:272 models/__init__.py:1953
+#: models/__init__.py:273 models/__init__.py:2024
 msgid "suspended users cannot post"
 msgstr ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 
-#: models/__init__.py:297
+#: models/__init__.py:298
 msgid ""
 "Sorry, comments (except the last one) are editable only within 10 minutes "
 "from posting"
 msgstr ""
 
-#: models/__init__.py:303
+#: models/__init__.py:304
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 
-#: models/__init__.py:317
+#: models/__init__.py:318
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
 
-#: models/__init__.py:321
+#: models/__init__.py:322
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr ""
 
-#: models/__init__.py:349
+#: models/__init__.py:350
 msgid ""
-"This post has been deleted and can be seen only by post ownwers, site "
+"This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
 
-#: models/__init__.py:366
+#: models/__init__.py:367
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
 msgstr ""
 
-#: models/__init__.py:381
+#: models/__init__.py:382
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr ""
 
-#: models/__init__.py:385
+#: models/__init__.py:386
 msgid "Sorry, since your account is suspended you can edit only your own posts"
 msgstr ""
 
-#: models/__init__.py:390
+#: models/__init__.py:391
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:397
+#: models/__init__.py:398
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:460
+#: models/__init__.py:461
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -2256,257 +2003,514 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:475
+#: models/__init__.py:476
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr ""
 
-#: models/__init__.py:479
+#: models/__init__.py:480
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr ""
 
-#: models/__init__.py:483
+#: models/__init__.py:484
 #, python-format
 msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:503
+#: models/__init__.py:504
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr ""
 
-#: models/__init__.py:507
+#: models/__init__.py:508
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr ""
 
-#: models/__init__.py:511
+#: models/__init__.py:512
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:520
+#: models/__init__.py:521
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:544
+#: models/__init__.py:545
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > %"
 "(min_rep)s can reopen questions."
 msgstr ""
 
-#: models/__init__.py:550
+#: models/__init__.py:551
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:570
+#: models/__init__.py:571
 msgid "cannot flag message as offensive twice"
 msgstr "You have flagged this question before and cannot do it more than once"
 
-#: models/__init__.py:575
+#: models/__init__.py:576
 msgid "blocked users cannot flag posts"
 msgstr ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 
-#: models/__init__.py:577
+#: models/__init__.py:578
 msgid "suspended users cannot flag posts"
 msgstr ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 
-#: models/__init__.py:579
+#: models/__init__.py:580
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
 msgstr ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
 "required"
 
-#: models/__init__.py:598
+#: models/__init__.py:599
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
 msgstr ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 
-#: models/__init__.py:613
+#: models/__init__.py:614
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
 
-#: models/__init__.py:620
+#: models/__init__.py:621
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr ""
 
-#: models/__init__.py:624
+#: models/__init__.py:625
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
 
-#: models/__init__.py:628
+#: models/__init__.py:629
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:647
+#: models/__init__.py:648
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr ""
 
-#: models/__init__.py:651
+#: models/__init__.py:652
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
 
-#: models/__init__.py:655
+#: models/__init__.py:656
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:678
+#: models/__init__.py:679
 msgid "cannot revoke old vote"
 msgstr "sorry, but older votes cannot be revoked"
 
-#: models/__init__.py:1166 views/users.py:388
+#: models/__init__.py:1213 views/users.py:363
 msgid "Site Adminstrator"
 msgstr ""
 
-#: models/__init__.py:1168 views/users.py:390
+#: models/__init__.py:1215 views/users.py:365
 msgid "Forum Moderator"
 msgstr ""
 
-#: models/__init__.py:1170 views/users.py:392
+#: models/__init__.py:1217 views/users.py:367
 msgid "Suspended User"
 msgstr ""
 
-#: models/__init__.py:1172 views/users.py:394
+#: models/__init__.py:1219 views/users.py:369
 msgid "Blocked User"
 msgstr ""
 
-#: models/__init__.py:1174 views/users.py:396
+#: models/__init__.py:1221 views/users.py:371
 msgid "Registered User"
 msgstr ""
 
-#: models/__init__.py:1176
+#: models/__init__.py:1223
 msgid "Watched User"
 msgstr ""
 
-#: models/__init__.py:1178
+#: models/__init__.py:1225
 msgid "Approved User"
 msgstr ""
 
-#: models/__init__.py:1234
+#: models/__init__.py:1281
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr ""
 
-#: models/__init__.py:1244
+#: models/__init__.py:1291
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1251
+#: models/__init__.py:1298
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1258
+#: models/__init__.py:1305
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1269
+#: models/__init__.py:1316
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr ""
 
-#: models/__init__.py:1273
+#: models/__init__.py:1320
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr ""
 
-#: models/__init__.py:1566 models/__init__.py:1572 models/__init__.py:1577
-#: models/__init__.py:1582
+#: models/__init__.py:1633 models/__init__.py:1639 models/__init__.py:1644
+#: models/__init__.py:1649
 #, python-format
 msgid "Re: \"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:1587 models/__init__.py:1592
+#: models/__init__.py:1654 models/__init__.py:1659
 #, python-format
 msgid "Question: \"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:1773
+#: models/__init__.py:1844
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
 
-#: models/question.py:687
+#: models/answer.py:105
+msgid ""
+"Sorry, the answer you are looking for is no longer available, because the "
+"parent question has been removed"
+msgstr ""
+
+#: models/answer.py:112
+msgid "Sorry, this answer has been removed and is no longer accessible"
+msgstr ""
+
+#: models/badges.py:128
+#, python-format
+msgid "Deleted own post with %(votes)s or more upvotes"
+msgstr ""
+
+#: models/badges.py:132
+msgid "Disciplined"
+msgstr ""
+
+#: models/badges.py:150
+#, python-format
+msgid "Deleted own post with %(votes)s or more downvotes"
+msgstr ""
+
+#: models/badges.py:154
+msgid "Peer Pressure"
+msgstr ""
+
+#: models/badges.py:173
+#, python-format
+msgid "Received at least %(votes)s upvote for an answer for the first time"
+msgstr ""
+
+#: models/badges.py:177
+msgid "Teacher"
+msgstr ""
+
+#: models/badges.py:217
+msgid "Supporter"
+msgstr ""
+
+#: models/badges.py:218
+msgid "First upvote"
+msgstr ""
+
+#: models/badges.py:226
+msgid "Critic"
+msgstr ""
+
+#: models/badges.py:227
+msgid "First downvote"
+msgstr ""
+
+#: models/badges.py:236
+msgid "Civic Duty"
+msgstr ""
+
+#: models/badges.py:237
+#, python-format
+msgid "Voted %(num)s times"
+msgstr ""
+
+#: models/badges.py:251
+#, python-format
+msgid "Answered own question with at least %(num)s up votes"
+msgstr ""
+
+#: models/badges.py:255
+msgid "Self-Learner"
+msgstr ""
+
+#: models/badges.py:303
+msgid "Nice Answer"
+msgstr ""
+
+#: models/badges.py:308 models/badges.py:320 models/badges.py:332
+#, python-format
+msgid "Answer voted up %(num)s times"
+msgstr ""
+
+#: models/badges.py:315
+msgid "Good Answer"
+msgstr ""
+
+#: models/badges.py:327
+msgid "Great Answer"
+msgstr ""
+
+#: models/badges.py:339
+msgid "Nice Question"
+msgstr ""
+
+#: models/badges.py:344 models/badges.py:356 models/badges.py:368
+#, python-format
+msgid "Question voted up %(num)s times"
+msgstr ""
+
+#: models/badges.py:351
+msgid "Good Question"
+msgstr ""
+
+#: models/badges.py:363
+msgid "Great Question"
+msgstr ""
+
+#: models/badges.py:375
+msgid "Student"
+msgstr ""
+
+#: models/badges.py:380
+msgid "Asked first question with at least one up vote"
+msgstr ""
+
+#: models/badges.py:413
+msgid "Popular Question"
+msgstr ""
+
+#: models/badges.py:417 models/badges.py:428 models/badges.py:440
+#, python-format
+msgid "Asked a question with %(views)s views"
+msgstr ""
+
+#: models/badges.py:424
+msgid "Notable Question"
+msgstr ""
+
+#: models/badges.py:435
+msgid "Famous Question"
+msgstr ""
+
+#: models/badges.py:449
+msgid "Asked a question and accepted an answer"
+msgstr ""
+
+#: models/badges.py:452
+msgid "Scholar"
+msgstr ""
+
+#: models/badges.py:494
+msgid "Enlightened"
+msgstr ""
+
+#: models/badges.py:498
+#, python-format
+msgid "First answer was accepted with %(num)s or more votes"
+msgstr ""
+
+#: models/badges.py:506
+msgid "Guru"
+msgstr ""
+
+#: models/badges.py:509
+#, python-format
+msgid "Answer accepted with %(num)s or more votes"
+msgstr ""
+
+#: models/badges.py:517
+#, python-format
+msgid ""
+"Answered a question more than %(days)s days later with at least %(votes)s "
+"votes"
+msgstr ""
+
+#: models/badges.py:524
+msgid "Necromancer"
+msgstr ""
+
+#: models/badges.py:547
+msgid "Citizen Patrol"
+msgstr ""
+
+#: models/badges.py:550
+msgid "First flagged post"
+msgstr ""
+
+#: models/badges.py:562
+msgid "Cleanup"
+msgstr ""
+
+#: models/badges.py:565
+msgid "First rollback"
+msgstr ""
+
+#: models/badges.py:576
+msgid "Pundit"
+msgstr ""
+
+#: models/badges.py:579
+msgid "Left 10 comments with score of 10 or more"
+msgstr ""
+
+#: models/badges.py:611
+msgid "Editor"
+msgstr ""
+
+#: models/badges.py:614
+msgid "First edit"
+msgstr ""
+
+#: models/badges.py:622
+msgid "Associate Editor"
+msgstr ""
+
+#: models/badges.py:626
+#, python-format
+msgid "Edited %(num)s entries"
+msgstr ""
+
+#: models/badges.py:633
+msgid "Organizer"
+msgstr ""
+
+#: models/badges.py:636
+msgid "First retag"
+msgstr ""
+
+#: models/badges.py:643
+msgid "Autobiographer"
+msgstr ""
+
+#: models/badges.py:646
+msgid "Completed all user profile fields"
+msgstr ""
+
+#: models/badges.py:662
+#, python-format
+msgid "Question favorited by %(num)s users"
+msgstr ""
+
+#: models/badges.py:688
+msgid "Stellar Question"
+msgstr ""
+
+#: models/badges.py:697
+msgid "Favorite Question"
+msgstr ""
+
+#: models/badges.py:707
+msgid "Enthusiast"
+msgstr ""
+
+#: models/badges.py:710
+msgid "Visited site every day for 30 days in a row"
+msgstr ""
+
+#: models/badges.py:718
+msgid "Commentator"
+msgstr ""
+
+#: models/badges.py:721
+msgid "Posted 10 comments"
+msgstr ""
+
+#: models/meta.py:110
+msgid ""
+"Sorry, the comment you are looking for is no longer accessible, because the "
+"parent question has been removed"
+msgstr ""
+
+#: models/meta.py:117
+msgid ""
+"Sorry, the comment you are looking for is no longer accessible, because the "
+"parent answer has been removed"
+msgstr ""
+
+#: models/question.py:325
+msgid "Sorry, this question has been deleted and is no longer accessible"
+msgstr ""
+
+#: models/question.py:714
 #, python-format
 msgid "%(author)s modified the question"
 msgstr ""
 
-#: models/question.py:691
+#: models/question.py:718
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: models/question.py:696
+#: models/question.py:723
 #, python-format
 msgid "%(people)s commented the question"
 msgstr ""
 
-#: models/question.py:701
+#: models/question.py:728
 #, python-format
 msgid "%(people)s commented answers"
 msgstr ""
 
-#: models/question.py:703
+#: models/question.py:730
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr ""
 
-#: models/repute.py:16 skins/default/templates/badges.html:43
-msgid "gold"
-msgstr ""
-
-#: models/repute.py:17 skins/default/templates/badges.html:52
-msgid "silver"
-msgstr ""
-
-#: models/repute.py:18 skins/default/templates/badges.html:59
-msgid "bronze"
-msgstr ""
-
-#: models/repute.py:150
+#: models/repute.py:142
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr ""
 
-#: models/repute.py:161
+#: models/repute.py:153
 #, python-format
 msgid ""
 "%(points)s points were added for %(username)s's contribution to question %"
 "(question_title)s"
 msgstr ""
 
-#: models/repute.py:166
+#: models/repute.py:158
 #, python-format
 msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
@@ -2521,39 +2525,39 @@ msgstr ""
 msgid "ignored"
 msgstr ""
 
-#: models/user.py:233
+#: models/user.py:264
 msgid "Entire forum"
 msgstr ""
 
-#: models/user.py:234
+#: models/user.py:265
 msgid "Questions that I asked"
 msgstr ""
 
-#: models/user.py:235
+#: models/user.py:266
 msgid "Questions that I answered"
 msgstr ""
 
-#: models/user.py:236
+#: models/user.py:267
 msgid "Individually selected questions"
 msgstr ""
 
-#: models/user.py:237
+#: models/user.py:268
 msgid "Mentions and comment responses"
 msgstr ""
 
-#: models/user.py:240
+#: models/user.py:271
 msgid "Instantly"
 msgstr ""
 
-#: models/user.py:241
+#: models/user.py:272
 msgid "Daily"
 msgstr ""
 
-#: models/user.py:242
+#: models/user.py:273
 msgid "Weekly"
 msgstr ""
 
-#: models/user.py:243
+#: models/user.py:274
 msgid "No email"
 msgstr ""
 
@@ -2586,8 +2590,8 @@ msgstr ""
 
 #: skins/default/templates/404.jinja.html:21
 #: skins/default/templates/footer.html:6
-#: skins/default/templates/header.html:57
 #: skins/default/templates/question_edit_tips.html:16
+#: skins/default/templates/blocks/header_meta_links.html:52
 msgid "faq"
 msgstr ""
 
@@ -2679,9 +2683,9 @@ msgstr ""
 #: skins/default/templates/answer_edit.html:59
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:36 skins/default/templates/ask.html:39
-#: skins/default/templates/macros.html:398
-#: skins/default/templates/question.html:456
-#: skins/default/templates/question.html:459
+#: skins/default/templates/macros.html:444
+#: skins/default/templates/question.html:465
+#: skins/default/templates/question.html:468
 #: skins/default/templates/question_edit.html:63
 #: skins/default/templates/question_edit.html:66
 msgid "hide preview"
@@ -2689,7 +2693,7 @@ msgstr ""
 
 #: skins/default/templates/answer_edit.html:62
 #: skins/default/templates/ask.html:39
-#: skins/default/templates/question.html:459
+#: skins/default/templates/question.html:468
 #: skins/default/templates/question_edit.html:66
 msgid "show preview"
 msgstr ""
@@ -2812,7 +2816,6 @@ msgid "Ask your question"
 msgstr "Ask Your Question"
 
 #: skins/default/templates/badge.html:4 skins/default/templates/badge.html:11
-#: skins/default/templates/badges.html:28
 #: skins/default/templates/user_recent.html:13
 #: skins/default/templates/user_stats.html:88
 #, python-format
@@ -2824,8 +2827,6 @@ msgid "Badge"
 msgstr ""
 
 #: skins/default/templates/badge.html:11
-#: skins/default/templates/badges.html:27
-#: skins/default/templates/badges.html:31
 #: skins/default/templates/user_recent.html:13
 #: skins/default/templates/user_stats.html:88
 #, python-format
@@ -2861,11 +2862,6 @@ msgstr ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Have ideas about fun "
 "badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>"
-
-#: skins/default/templates/badges.html:27
-#, python-format
-msgid "%(type)s"
-msgstr ""
 
 #: skins/default/templates/badges.html:40
 msgid "Community badges"
@@ -2915,21 +2911,21 @@ msgstr ""
 msgid "OK to close"
 msgstr ""
 
-#: skins/default/templates/editor_data.html:8
+#: skins/default/templates/editor_data.html:5
 #, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/editor_data.html:10
+#: skins/default/templates/editor_data.html:7
 #, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/editor_data.html:11
+#: skins/default/templates/editor_data.html:8
 #, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
@@ -3158,7 +3154,7 @@ msgstr ""
 "Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
 
-#: skins/default/templates/faq.html:112 skins/default/templates/header.html:78
+#: skins/default/templates/faq.html:112 skins/default/templates/header.html:26
 msgid "questions"
 msgstr ""
 
@@ -3230,7 +3226,7 @@ msgid "Message body:"
 msgstr ""
 
 #: skins/default/templates/footer.html:5
-#: skins/default/templates/header.html:56
+#: skins/default/templates/blocks/header_meta_links.html:51
 msgid "about"
 msgstr ""
 
@@ -3242,70 +3238,24 @@ msgstr ""
 msgid "give feedback"
 msgstr ""
 
-#: skins/default/templates/header.html:12
-#, python-format
-msgid "responses for %(username)s"
-msgstr ""
-
 #: skins/default/templates/header.html:15
-#, python-format
-msgid "you have a new response"
-msgid_plural "you nave %(response_count)s new responses"
-msgstr[0] ""
-msgstr[1] ""
-
-#: skins/default/templates/header.html:18
-msgid "no new responses yet"
-msgstr ""
-
-#: skins/default/templates/header.html:30
-#: skins/default/templates/header.html:31
-#, python-format
-msgid "%(new)s new flagged posts and %(seen)s previous"
-msgstr ""
-
-#: skins/default/templates/header.html:33
-#: skins/default/templates/header.html:34
-#, python-format
-msgid "%(new)s new flagged posts"
-msgstr ""
-
-#: skins/default/templates/header.html:39
-#: skins/default/templates/header.html:40
-#, python-format
-msgid "%(seen)s flagged posts"
-msgstr ""
-
-#: skins/default/templates/header.html:52
-msgid "logout"
-msgstr "sign out"
-
-#: skins/default/templates/header.html:54
-msgid "login"
-msgstr "Hi, there! Please sign in"
-
-#: skins/default/templates/header.html:59
-msgid "settings"
-msgstr ""
-
-#: skins/default/templates/header.html:68
 msgid "back to home page"
 msgstr ""
 
-#: skins/default/templates/header.html:69
+#: skins/default/templates/header.html:16
 #, python-format
 msgid "%(site)s logo"
 msgstr ""
 
-#: skins/default/templates/header.html:88
+#: skins/default/templates/header.html:36
 msgid "users"
 msgstr "people"
 
-#: skins/default/templates/header.html:93
+#: skins/default/templates/header.html:41
 msgid "badges"
 msgstr ""
 
-#: skins/default/templates/header.html:98
+#: skins/default/templates/header.html:46
 msgid "ask a question"
 msgstr ""
 
@@ -3429,7 +3379,7 @@ msgstr ""
 msgid "posts per page"
 msgstr ""
 
-#: skins/default/templates/macros.html:119 templatetags/extra_tags.py:56
+#: skins/default/templates/macros.html:119 templatetags/extra_tags.py:44
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr ""
@@ -3462,21 +3412,21 @@ msgid "updated"
 msgstr ""
 
 #: skins/default/templates/macros.html:210
-#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:237
+#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:238
 msgid "vote"
 msgid_plural "votes"
 msgstr[0] ""
 msgstr[1] ""
 
 #: skins/default/templates/macros.html:227
-#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:240
+#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:241
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] ""
 msgstr[1] ""
 
 #: skins/default/templates/macros.html:239
-#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:243
+#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:244
 msgid "view"
 msgid_plural "views"
 msgstr[0] ""
@@ -3492,44 +3442,44 @@ msgstr[1] ""
 msgid "see questions tagged '%(tag)s'"
 msgstr ""
 
-#: skins/default/templates/macros.html:272
+#: skins/default/templates/macros.html:267
 #: skins/default/templates/question.html:94
-#: skins/default/templates/question.html:247
+#: skins/default/templates/question.html:250
 #: skins/default/templates/revisions.html:37
 msgid "edit"
 msgstr ""
 
-#: skins/default/templates/macros.html:277
+#: skins/default/templates/macros.html:272
 msgid "delete this comment"
 msgstr ""
 
-#: skins/default/templates/macros.html:295
-#: skins/default/templates/macros.html:303
-#: skins/default/templates/question.html:423
+#: skins/default/templates/macros.html:290
+#: skins/default/templates/macros.html:298
+#: skins/default/templates/question.html:432
 msgid "add comment"
 msgstr "post a comment"
 
-#: skins/default/templates/macros.html:296
+#: skins/default/templates/macros.html:291
 #, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:298
+#: skins/default/templates/macros.html:293
 #, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
-"                    "
+"            "
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:375
+#: skins/default/templates/macros.html:421
 msgid "(required)"
 msgstr ""
 
-#: skins/default/templates/macros.html:396
+#: skins/default/templates/macros.html:442
 msgid "Toggle the real time Markdown editor preview"
 msgstr ""
 
@@ -3547,7 +3497,7 @@ msgstr ""
 
 #: skins/default/templates/question.html:33
 #: skins/default/templates/question.html:50
-#: skins/default/templates/question.html:198
+#: skins/default/templates/question.html:201
 msgid "current number of votes"
 msgstr ""
 
@@ -3589,34 +3539,39 @@ msgid "close"
 msgstr ""
 
 #: skins/default/templates/question.html:113
-#: skins/default/templates/question.html:251
+#: skins/default/templates/question.html:254
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
 #: skins/default/templates/question.html:114
-#: skins/default/templates/question.html:252
+#: skins/default/templates/question.html:255
 msgid "flag offensive"
 msgstr ""
 
 #: skins/default/templates/question.html:121
-#: skins/default/templates/question.html:262
+#: skins/default/templates/question.html:265
+msgid "undelete"
+msgstr ""
+
+#: skins/default/templates/question.html:121
+#: skins/default/templates/question.html:265
 #: skins/default/templates/authopenid/signin.html:175
 msgid "delete"
 msgstr ""
 
-#: skins/default/templates/question.html:156
+#: skins/default/templates/question.html:159
 #, python-format
 msgid ""
 "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr ""
 
-#: skins/default/templates/question.html:158
+#: skins/default/templates/question.html:161
 #, python-format
 msgid "close date %(closed_at)s"
 msgstr ""
 
-#: skins/default/templates/question.html:166
+#: skins/default/templates/question.html:169
 #, python-format
 msgid ""
 "\n"
@@ -3629,82 +3584,77 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/question.html:174
+#: skins/default/templates/question.html:177
 msgid "oldest answers will be shown first"
 msgstr ""
 
-#: skins/default/templates/question.html:174
+#: skins/default/templates/question.html:177
 msgid "oldest answers"
 msgstr "oldest"
 
-#: skins/default/templates/question.html:176
+#: skins/default/templates/question.html:179
 msgid "newest answers will be shown first"
 msgstr ""
 
-#: skins/default/templates/question.html:176
+#: skins/default/templates/question.html:179
 msgid "newest answers"
 msgstr "newest"
 
-#: skins/default/templates/question.html:178
+#: skins/default/templates/question.html:181
 msgid "most voted answers will be shown first"
 msgstr ""
 
-#: skins/default/templates/question.html:178
+#: skins/default/templates/question.html:181
 msgid "popular answers"
 msgstr "most voted"
 
-#: skins/default/templates/question.html:196
-#: skins/default/templates/question.html:197
+#: skins/default/templates/question.html:199
+#: skins/default/templates/question.html:200
 msgid "i like this answer (click again to cancel)"
 msgstr ""
 
-#: skins/default/templates/question.html:207
-#: skins/default/templates/question.html:208
+#: skins/default/templates/question.html:210
+#: skins/default/templates/question.html:211
 msgid "i dont like this answer (click again to cancel)"
 msgstr ""
 
-#: skins/default/templates/question.html:216
-#: skins/default/templates/question.html:217
+#: skins/default/templates/question.html:219
+#: skins/default/templates/question.html:220
 msgid "mark this answer as favorite (click again to undo)"
 msgstr ""
 
-#: skins/default/templates/question.html:226
-#: skins/default/templates/question.html:227
+#: skins/default/templates/question.html:229
+#: skins/default/templates/question.html:230
 #, python-format
 msgid "%(question_author)s has selected this answer as correct"
 msgstr ""
 
-#: skins/default/templates/question.html:242
+#: skins/default/templates/question.html:245
 msgid "answer permanent link"
 msgstr "permanent link"
 
-#: skins/default/templates/question.html:243
+#: skins/default/templates/question.html:246
 msgid "permanent link"
 msgstr "link"
 
-#: skins/default/templates/question.html:262
-msgid "undelete"
-msgstr ""
-
-#: skins/default/templates/question.html:309
-#: skins/default/templates/question.html:311
+#: skins/default/templates/question.html:315
+#: skins/default/templates/question.html:317
 msgid "Notify me once a day when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> once a day by email when there are any new "
 "answers or updates"
 
-#: skins/default/templates/question.html:313
+#: skins/default/templates/question.html:319
 msgid "Notify me weekly when there are any new answers"
 msgstr ""
 "<strong>Notify me</strong> weekly when there are any new answers or updates"
 
-#: skins/default/templates/question.html:315
-#, fuzzy
+#: skins/default/templates/question.html:321
 msgid "Notify me immediately when there are any new answers"
 msgstr ""
-"<strong>Notify me</strong> weekly when there are any new answers or updates"
+"<strong>Notify me</strong> immediately when there are any new answers or updates"
 
-#: skins/default/templates/question.html:318
+#: skins/default/templates/question.html:324
 #, python-format
 msgid ""
 "You can always adjust frequency of email updates from your %(profile_url)s"
@@ -3712,21 +3662,21 @@ msgstr ""
 "(note: you can always <strong><a href='%(profile_url)s?"
 "sort=email_subscriptions'>change</a></strong> how often you receive updates)"
 
-#: skins/default/templates/question.html:323
+#: skins/default/templates/question.html:329
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
 "<span class='strong'>Here</span> (once you log in) you will be able to sign "
 "up for the periodic email updates about this question."
 
-#: skins/default/templates/question.html:333
+#: skins/default/templates/question.html:339
 msgid "Your answer"
 msgstr ""
 
-#: skins/default/templates/question.html:335
+#: skins/default/templates/question.html:341
 msgid "Be the first one to answer this question!"
 msgstr ""
 
-#: skins/default/templates/question.html:341
+#: skins/default/templates/question.html:347
 msgid "you can answer anonymously and then login"
 msgstr ""
 "<span class='strong big'>Please start posting your answer anonymously</span> "
@@ -3735,7 +3685,7 @@ msgstr ""
 "answer</strong>, for discussions, <strong>please use comments</strong> and "
 "<strong>please do remember to vote</strong> (after you log in)!"
 
-#: skins/default/templates/question.html:345
+#: skins/default/templates/question.html:351
 msgid "answer your own question only to give an answer"
 msgstr ""
 "<span class='big strong'>You are welcome to answer your own question</span>, "
@@ -3745,7 +3695,7 @@ msgstr ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)! "
 
-#: skins/default/templates/question.html:347
+#: skins/default/templates/question.html:353
 msgid "please only give an answer, no discussions"
 msgstr ""
 "<span class='big strong'>Please try to give a substantial answer</span>. If "
@@ -3755,23 +3705,23 @@ msgstr ""
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
 
-#: skins/default/templates/question.html:354
+#: skins/default/templates/question.html:360
 msgid "Login/Signup to Post Your Answer"
 msgstr "Login/Signup to Post"
 
-#: skins/default/templates/question.html:357
+#: skins/default/templates/question.html:363
 msgid "Answer Your Own Question"
 msgstr ""
 
-#: skins/default/templates/question.html:359
+#: skins/default/templates/question.html:365
 msgid "Answer the question"
 msgstr "Post Your Answer"
 
-#: skins/default/templates/question.html:373
+#: skins/default/templates/question.html:379
 msgid "Question tags"
 msgstr "Tags"
 
-#: skins/default/templates/question.html:378
+#: skins/default/templates/question.html:384
 #: skins/default/templates/questions.html:222
 #: skins/default/templates/tag_selector.html:9
 #: skins/default/templates/tag_selector.html:26
@@ -3779,23 +3729,23 @@ msgstr "Tags"
 msgid "see questions tagged '%(tag_name)s'"
 msgstr ""
 
-#: skins/default/templates/question.html:384
+#: skins/default/templates/question.html:390
 msgid "question asked"
 msgstr "Asked"
 
-#: skins/default/templates/question.html:387
+#: skins/default/templates/question.html:393
 msgid "question was seen"
 msgstr "Seen"
 
-#: skins/default/templates/question.html:387
+#: skins/default/templates/question.html:393
 msgid "times"
 msgstr ""
 
-#: skins/default/templates/question.html:390
+#: skins/default/templates/question.html:396
 msgid "last updated"
 msgstr "Last updated"
 
-#: skins/default/templates/question.html:397
+#: skins/default/templates/question.html:403
 msgid "Related questions"
 msgstr ""
 
@@ -3883,7 +3833,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/questions.html:111 views/readers.py:157
+#: skins/default/templates/questions.html:111 views/readers.py:158
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -4378,7 +4328,7 @@ msgstr ""
 msgid "overview"
 msgstr ""
 
-#: skins/default/templates/user_tabs.html:9 views/users.py:753
+#: skins/default/templates/user_tabs.html:9 views/users.py:729
 msgid "comments and answers to others questions"
 msgstr ""
 
@@ -4410,7 +4360,7 @@ msgstr ""
 msgid "activity"
 msgstr ""
 
-#: skins/default/templates/user_tabs.html:23 views/users.py:818
+#: skins/default/templates/user_tabs.html:23 views/users.py:794
 msgid "user vote record"
 msgstr ""
 
@@ -4418,7 +4368,7 @@ msgstr ""
 msgid "casted votes"
 msgstr "votes"
 
-#: skins/default/templates/user_tabs.html:28 views/users.py:928
+#: skins/default/templates/user_tabs.html:28 views/users.py:904
 msgid "email subscription settings"
 msgstr ""
 
@@ -4939,6 +4889,52 @@ msgstr ""
 msgid "return to OpenID login"
 msgstr ""
 
+#: skins/default/templates/blocks/header_meta_links.html:7
+#, python-format
+msgid "responses for %(username)s"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:10
+#, python-format
+msgid "you have a new response"
+msgid_plural "you nave %(response_count)s new responses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/blocks/header_meta_links.html:13
+msgid "no new responses yet"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:25
+#: skins/default/templates/blocks/header_meta_links.html:26
+#, python-format
+msgid "%(new)s new flagged posts and %(seen)s previous"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:28
+#: skins/default/templates/blocks/header_meta_links.html:29
+#, python-format
+msgid "%(new)s new flagged posts"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:34
+#: skins/default/templates/blocks/header_meta_links.html:35
+#, python-format
+msgid "%(seen)s flagged posts"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:47
+msgid "logout"
+msgstr "sign out"
+
+#: skins/default/templates/blocks/header_meta_links.html:49
+msgid "login"
+msgstr "Hi, there! Please sign in"
+
+#: skins/default/templates/blocks/header_meta_links.html:54
+msgid "settings"
+msgstr ""
+
 #: skins/default/templates/unused/email_base.html:8
 msgid "home"
 msgstr ""
@@ -5048,27 +5044,6 @@ msgstr ""
 #: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:234
 msgid "no items in counter"
 msgstr "no"
-
-#: templatetags/extra_tags.py:155 views/readers.py:187
-#, python-format
-msgid "%(badge_count)d %(badge_level)s badge"
-msgid_plural "%(badge_count)d %(badge_level)s badges"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templatetags/extra_tags.py:178 templatetags/extra_tags.py:225
-#: templatetags/extra_tags.py:229
-msgid "reputation points"
-msgstr "karma"
-
-#: templatetags/extra_tags.py:221
-#, python-format
-msgid "your karma is %(reputation)s"
-msgstr ""
-
-#: templatetags/extra_tags.py:237
-msgid "badges: "
-msgstr ""
 
 #: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
 msgid "Oops, apologies - there was some error"
@@ -5209,75 +5184,84 @@ msgstr ""
 msgid "Bad request"
 msgstr ""
 
-#: views/meta.py:58
+#: views/meta.py:59
 msgid "Q&A forum feedback"
 msgstr ""
 
-#: views/meta.py:59
+#: views/meta.py:60
 msgid "Thanks for the feedback!"
 msgstr ""
 
-#: views/meta.py:69
+#: views/meta.py:70
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: views/readers.py:432
-msgid "Sorry, this question has been deleted and is no longer accessible"
+#: views/readers.py:188
+#, python-format
+msgid "%(badge_count)d %(badge_level)s badge"
+msgid_plural "%(badge_count)d %(badge_level)s badges"
+msgstr[0] ""
+msgstr[1] ""
+
+#: views/readers.py:425
+msgid ""
+"Sorry, the comment you are looking for has been deleted and is no longer "
+"accessible"
 msgstr ""
 
 #: views/users.py:217
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:401
+#: views/users.py:376
 msgid "user profile"
 msgstr ""
 
-#: views/users.py:402
+#: views/users.py:377
 msgid "user profile overview"
 msgstr ""
 
-#: views/users.py:685
+#: views/users.py:661
 msgid "recent user activity"
 msgstr ""
 
-#: views/users.py:686
+#: views/users.py:662
 msgid "profile - recent activity"
 msgstr ""
 
-#: views/users.py:754
+#: views/users.py:730
 msgid "profile - responses"
 msgstr ""
 
-#: views/users.py:819
+#: views/users.py:795
 msgid "profile - votes"
 msgstr ""
 
-#: views/users.py:857
+#: views/users.py:833
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: views/users.py:858
+#: views/users.py:834
 msgid "profile - user reputation"
 msgstr "Profile - User's Karma"
 
-#: views/users.py:886
+#: views/users.py:862
 msgid "users favorite questions"
 msgstr ""
 
-#: views/users.py:887
+#: views/users.py:863
 msgid "profile - favorite questions"
 msgstr ""
 
-#: views/users.py:907 views/users.py:911
+#: views/users.py:883 views/users.py:887
 msgid "changes saved"
 msgstr ""
 
-#: views/users.py:917
+#: views/users.py:893
 msgid "email updates canceled"
 msgstr ""
 
-#: views/users.py:929
+#: views/users.py:905
 msgid "profile - email subscriptions"
 msgstr ""
 
@@ -5320,3 +5304,14 @@ msgstr ""
 #: views/writers.py:526
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
+
+#, fuzzy
+#~ msgid "more answers"
+#~ msgstr "oldest"
+
+#, fuzzy
+#~ msgid "popular"
+#~ msgstr "most voted"
+
+#~ msgid "reputation points"
+#~ msgstr "karma"
