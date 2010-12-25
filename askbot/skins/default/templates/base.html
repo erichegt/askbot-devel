@@ -21,6 +21,9 @@
             body { margin-top:2.4em; }
         </style>
         {% endif %}
+        {% if settings.USE_CUSTOM_HTML_HEAD %}
+            {{ settings.CUSTOM_HTML_HEAD }}
+        {% endif %}
         <script type="text/javascript">
             var askbot = {};
             askbot['data'] = {};
@@ -46,8 +49,10 @@
         {% include "header.html" %}
         {% block body %}
         {% endblock %}
-        {% if settings.SHOW_FOOTER %}
+        {% if settings.FOOTER_MODE == 'default' %}
             {% include "footer.html" %}
+        {% elif settings.FOOTER_MODE == 'customize' %}
+            {{ settings.CUSTOM_FOOTER }}
         {% endif %}
         {% include "blocks/bottom_scripts.html" %}
         {% block endjs %}

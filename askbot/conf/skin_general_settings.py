@@ -3,8 +3,7 @@ General skin settings
 """
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
-from askbot.deps.livesettings import StringValue, IntegerValue, BooleanValue
-from askbot.deps.livesettings import ImageValue
+from askbot.deps.livesettings import values
 from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
@@ -16,7 +15,7 @@ GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                 )
 
 settings.register(
-    ImageValue(
+    values.ImageValue(
         GENERAL_SKIN_SETTINGS,
         'SITE_LOGO_URL',
         description = _('Q&A site logo'),
@@ -32,7 +31,7 @@ settings.register(
 )
 
 settings.register(
-    BooleanValue(
+    values.BooleanValue(
         GENERAL_SKIN_SETTINGS,
         'SHOW_LOGO',
         description = _('Show logo'),
@@ -46,14 +45,15 @@ settings.register(
 )
 
 settings.register(
-    ImageValue(
+    values.ImageValue(
         GENERAL_SKIN_SETTINGS,
         'SITE_FAVICON',
         description = _('Site favicon'),
         help_text = _(
                         'A small 16x16 or 32x32 pixel icon image '
                         'used to distinguish your site in the browser '
-                        'user interface. Please find more information about favicon '
+                        'user interface. Please find more information '
+                        'about favicon '
                         'at <a href="%(favicon_info_url)s">this page</a>.'
                     ) % {'favicon_info_url': const.DEPENDENCY_URLS['favicon']},
         upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
@@ -64,7 +64,7 @@ settings.register(
 )
 
 settings.register(
-    ImageValue(
+    values.ImageValue(
         GENERAL_SKIN_SETTINGS,
         'LOCAL_LOGIN_ICON',
         description = _('Password login button'),
@@ -80,19 +80,7 @@ settings.register(
 )
 
 settings.register(
-    BooleanValue(
-        GENERAL_SKIN_SETTINGS,
-        'SHOW_FOOTER',
-        description = _('Show footer'),
-        help_text = _(
-                    'Check if you want to show the footer on each forum page'
-                ),
-        default = True
-    )
-)
-
-settings.register(
-    BooleanValue(
+    values.BooleanValue(
         GENERAL_SKIN_SETTINGS,
         'ALWAYS_SHOW_ALL_UI_FUNCTIONS',
         default = False,
@@ -108,7 +96,7 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    values.StringValue(
         GENERAL_SKIN_SETTINGS,
         'ASKBOT_DEFAULT_SKIN',
         default = 'default',
@@ -118,7 +106,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    values.IntegerValue(
         GENERAL_SKIN_SETTINGS,
         'MEDIA_RESOURCE_REVISION',
         default = 1,
@@ -128,6 +116,74 @@ settings.register(
                     'image in skin media or stylesheet. '
                     'This helps avoid showing your users '
                     'outdated images from their browser cache.'
+                    )
+    )
+)
+
+settings.register(
+    values.BooleanValue(
+        GENERAL_SKIN_SETTINGS,
+        'USE_CUSTOM_HTML_HEAD',
+        default = False,
+        description = _('Customize HTML <HEAD>')
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_HTML_HEAD',
+        default = '',
+        description = _('Custom portion of the HTML <HEAD>'),
+        help_text = _(
+                    '<strong>To use this option</strong>, '
+                    'check "Customize HTML &lt;HEAD&gt;" '
+                    'above. Contents of this box will be inserted '
+                    'into the &lt;HEAD&gt; portion of the HTML '
+                    'output, where elements such as &lt;script&gt;, '
+                    '&lt;link&gt;, &lt;meta&gt; may be added. '
+                    'Please, keep in mind that adding external '
+                    'javascript to the &lt;HEAD&gt; is not recommended '
+                    'because it slows loading of the pages. '
+                    'Instead, it will be more efficient to place '
+                    'links to the javascript files into the footer. '
+                    '<strong>Note:</strong> if you do use this setting, '
+                    'please test the site with the W3C HTML validator service.'
+                    )
+    )
+)
+
+settings.register(
+    values.StringValue( GENERAL_SKIN_SETTINGS,
+        'FOOTER_MODE',
+        description = _('Site footer mode'),
+        help_text = _(
+                    'Footer is the bottom portion of the content, '
+                    'which is common to all pages. '
+                    'You can disable, customize, or use the default footer.'
+                ),
+        choices = (
+                    ('default', 'default'),
+                    ('customize', 'customize'),
+                    ('disable', 'disable')
+                ),
+        default = 'default',
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_FOOTER',
+        description = _('Custom footer (HTML format)'),
+        help_text = _(
+                    '<strong>To enable this function</strong>, please select '
+                    'option \'customize\' in the "Site footer mode" above. '
+                    'Use this area to enter contents of the footer '
+                    'in the HTML format. When customizing the site footer '
+                    '(as well as the HTML &lt;HEAD&gt;), '
+                    'use the HTML validation service to make sure that '
+                    'your input is valid and works well in all browsers.'
                     )
     )
 )
