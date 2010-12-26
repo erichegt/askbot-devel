@@ -226,16 +226,19 @@ blockquote {
     width: 710px;
     float: left;
     position: relative;
+    padding-left: 0 5px;
+
 }
 
 #CARight {
     width: 235px;
     float: right;
+    padding-right: 5px;
 }
 
 #CAFull {
     float: left;
-    padding: 0 5px 0 5px;
+    padding: 0 5px;
     width: 950px;
 }
 
