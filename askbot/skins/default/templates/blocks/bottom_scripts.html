@@ -64,6 +64,12 @@
     notify.show();
 {% endif %}
 </script>
+{% if settings.USE_CUSTOM_JS %}
+<script 
+    src="{% url "custom_js"%}?{{ settings.MEDIA_RESOURCE_REVISION }}"
+    type="text/javascript"
+></script>
+{% endif %}
 {% if settings.GOOGLE_ANALYTICS_KEY %}
 <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

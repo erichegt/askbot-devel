@@ -15,6 +15,13 @@
         {% endif %}
         <link rel="shortcut icon" href="{{ "/images/favicon.gif"|media }}" />
         <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
+        {% if settings.USE_CUSTOM_CSS %}
+            <link 
+                href="{% url "custom_css" %}?v={{settings.MEDIA_RESOURCE_REVISION}}"
+                rel="stylesheet"
+                type="text/css"
+            />
+        {% endif %}
         {% block forestyle %}{% endblock %}
         {% if user_messages %}
         <style type="text/css">

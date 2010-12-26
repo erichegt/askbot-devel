@@ -17,6 +17,7 @@ from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import ENV
+from askbot.conf import settings as askbot_settings
 from askbot import skins
 import askbot
 
@@ -24,6 +25,13 @@ def generic_view(request, template = None):
     template = ENV.get_template(template)
     context = RequestContext(request)
     return HttpResponse(template.render(context))
+
+def config_variable(request, variable_name = None, mimetype = None):
+    """Print value from the configuration settings
+    as response content. All parameters are required.
+    """
+    output = getattr(askbot_settings, variable_name, '')
+    return HttpResponse(output, mimetype = mimetype)
 
 def about(request, template='about.html'):
     return generic_view(request, template) 

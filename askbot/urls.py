@@ -10,6 +10,7 @@ from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from askbot.conf import settings as askbot_settings
 
 admin.autodiscover()
 feeds = {
@@ -208,5 +209,23 @@ urlpatterns = patterns('',
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
         name='askbot_docs',
+    ),
+    url(
+        '^custom\.css$',
+        views.meta.config_variable,
+        kwargs = {
+            'variable_name': 'CUSTOM_CSS',
+            'mimetype': 'text/css'
+        },
+        name = 'custom_css'
+    ),
+    url(
+        '^custom\.js$',
+        views.meta.config_variable,
+        kwargs = {
+            'variable_name': 'CUSTOM_JS',
+            'mimetype': 'text/javascript'
+        },
+        name = 'custom_js'
     ),
 )

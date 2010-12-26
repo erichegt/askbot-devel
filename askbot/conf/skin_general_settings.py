@@ -187,3 +187,67 @@ settings.register(
                     )
     )
 )
+
+settings.register(
+    values.BooleanValue(
+        GENERAL_SKIN_SETTINGS,
+        'USE_CUSTOM_CSS',
+        description = _('Apply custom style sheet (CSS)'),
+        help_text = _(
+                    'Check if you want to change appearance '
+                    'of your form by adding custom style sheet rules ' 
+                    '(please see the next item)'
+                    ),
+        default = False
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_CSS',
+        description = _('Custom style sheet (CSS)'),
+        help_text = _(
+                    '<strong>To use this function</strong>, check '
+                    '"Apply custom style sheet" option above. '
+                    'The CSS rules added in this window will be applied '
+                    'after the default style sheet rules. ' 
+                    'The custom style sheet will be served dynamically at '
+                    'url "&lt;forum url&gt;/custom.css", where '
+                    'the "&lt;forum url&gt; part depends (default is '
+                    'empty string) on the url configuration in your urls.py.'
+                    )
+    )
+)
+
+settings.register(
+    values.BooleanValue(
+        GENERAL_SKIN_SETTINGS,
+        'USE_CUSTOM_JS',
+        description = _('Add custom javascript'),
+        default = False,
+        help_text = _(
+            'Check to enable javascript that you can enter '
+            'in the next field'
+        )
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_JS',
+        description = _('Custom javascript'),
+        help_text = _(
+            'Type or paste plain javascript that you would like '
+            'to run on your site. Link to the script will be inserted '
+            'at the bottom of the HTML output and will be served '
+            'at the url "&lt;forum url&gt;/custom.js". Please, '
+            'bear in mind that your javascript code may break other '
+            'functionalities of the site and that the behavior may '
+            'not be consistent across different browsers '
+            '(<strong>to enable your custom code</strong>, check '
+            '"Add custom javascript" option above).'
+        )
+    )
+)
