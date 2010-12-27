@@ -1,3 +1,8 @@
+"""functions that send email in askbot
+these automatically catch email-related exceptions
+"""
+import smtplib
+import logging
 from django.core import mail
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
@@ -39,12 +44,15 @@ def send_mail(
         msg.send()
         if related_object is not None:
             assert(activity_type is not None)
-    except Exception, e:
-        logging.critical(unicode(e))
+    except Exception, error:
+        logging.critical(unicode(error))
         if raise_on_failure == True:
-            raise exceptions.EmailNotSent(unicode(e))
+            raise exceptions.EmailNotSent(unicode(error))
 
-def mail_moderators(subject_line, body_text):
+def mail_moderators(
+            subject_line = '',
+            body_text = '',
+            raise_on_failure = False):
     """sends email to forum moderators and admins
     """
     from django.db.models import Q
@@ -60,7 +68,7 @@ def mail_moderators(subject_line, body_text):
 
     try:
         mail.send_mail(subject_line, body_text, from_email, recipient_list)
-    except smtplib.SMPTException, e:
-        logging.critical(unicode(e))
+    except smtplib.SMTPException, error:
+        logging.critical(unicode(error))
         if raise_on_failure == True:
-            raise exceptions.EmailNotSent(unicode(e))
+            raise exceptions.EmailNotSent(unicode(error))
