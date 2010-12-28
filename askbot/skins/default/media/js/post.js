@@ -951,9 +951,8 @@ EditCommentForm.prototype.getCounterUpdater = function(){
         }
         else {
             color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
-            var feedback = $.i18n._('can write') + ' ' + 
-                    (maxCommentLength - length) + ' ' +
-                    $.i18n._('characters');
+            var feedback = $.i18n._('{0} characters left')
+                            .replace('{0}', maxCommentLength - length);
         }
         counter.html(feedback).css('color', color);
     };
