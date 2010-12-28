@@ -161,7 +161,7 @@ var i18nFi = {
     'content minchars': 'syötä vähintään {0} merkkiä',
     'title minchars':"syötä vähintään {0} merkkiä",
     '{0} characters left': '{0} merkkiä jäljellä',
-    'cannot flag message as offensive twice':'ei voi merkata kahta kertaa ',
+    'cannot flag message as offensive twice':'ei voi merkata kahta kertaa '
 };
 
 var i18nTr = {
@@ -214,7 +214,7 @@ var i18nTr = {
     'redo':'yeniden',
     'enter image url':'örnek resmin URLsini girin： <br />http://www.example.com/image.jpg   \"resim başlığı\"',
     'enter url':'web adresini girin： <br />http://www.cnprog.com/   \"başlık bağlantısı\"</p>"',
-    'upload image':'resim yükle：',
+    'upload image':'resim yükle：'
 };
 
 var i18nEs = {
@@ -267,7 +267,7 @@ var i18nEs = {
     'redo':'rehacer',
     'enter image url':'introduzca la URL de la imagen, por ejemplo：<br />http://www.example.com/image.jpg   \"titulo de imagen\"',
     'enter url':'introduzca direcciones web, ejemplo：<br />http://www.cnprog.com/   \"titulo del enlace\"</p>"',
-    'upload image':'cargar imagen：',
+    'upload image':'cargar imagen：'
 };
 
 var i18nDe = {
@@ -320,7 +320,7 @@ var i18nDe = {
     'to comment, need': '(Um Beiträge anderer benutzer zu kommentieren, sind mindestens ', 
     'undelete': 'wiederherstellen', 
     'undo': 'Rückgängig', 
-    'upload image': 'Bild hochladen', 
+    'upload image': 'Bild hochladen'
 };
 
 
@@ -400,7 +400,7 @@ var i18nRu = {
     'undo': 'отменить', 
     'upload image': 'загрузить изображение', 
     'upload file attachment': 'upload file attachment',
-    'You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.': 'You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.',
+    'You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.': 'You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.'
 };
 
 var i18nFr = {
@@ -453,7 +453,7 @@ var i18nFr = {
     "to comment, need": "Pour faire des commentaires sur les commentaires d'autres utilisateurs, vous devez avoir au moins ", 
     'undelete': 'Restaurer', 
     'undo': 'Annuler', 
-    'upload image': 'Charger une image', 
+    'upload image': 'Charger une image'
 };
 
 var i18nIt = {
@@ -506,7 +506,7 @@ var i18nIt = {
     'to comment, need': '(per commentare post di altre persone, la reputazione ',
     'undelete': 'elimina', 
     'undo': 'annulla', 
-    'upload image': 'carica immagine', 
+    'upload image': 'carica immagine'
 };
 
 var i18n = {
