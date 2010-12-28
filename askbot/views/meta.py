@@ -21,9 +21,9 @@ from askbot.conf import settings as askbot_settings
 from askbot import skins
 import askbot
 
-def generic_view(request, template = None):
+def generic_view(request, template = None, page_class = None):
     template = ENV.get_template(template)
-    context = RequestContext(request)
+    context = RequestContext(request, {'page_class': page_class})
     return HttpResponse(template.render(context))
 
 def config_variable(request, variable_name = None, mimetype = None):
@@ -34,7 +34,7 @@ def config_variable(request, variable_name = None, mimetype = None):
     return HttpResponse(output, mimetype = mimetype)
 
 def about(request, template='about.html'):
-    return generic_view(request, template) 
+    return generic_view(request, template = template, page_class = 'meta') 
 
 def page_not_found(request, template='404.html'):
     return generic_view(request, template) 
@@ -49,12 +49,13 @@ def faq(request):
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
+        'page_class': 'meta',
     }
     context = RequestContext(request, data)
     return HttpResponse(template.render(context))
 
 def feedback(request):
-    data = {'view_name':'feedback'}
+    data = {'view_name':'feedback', 'page_class': 'meta'}
     form = None
     if request.method == "POST":
         form = FeedbackForm(request.POST)
@@ -78,7 +79,7 @@ def feedback(request):
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    context = RequestContext(request, {'view_name':'privacy'})
+    context = RequestContext(request, {'view_name':'privacy', 'page_class': 'meta'})
     template = ENV.get_template('privacy.html')
     return HttpResponse(template.render(context)) 
 
@@ -93,6 +94,7 @@ def logout(request):#refactor/change behavior?
     data = {
         'view_name':'logout',
         'next' : get_next_url(request),
+        'page_class': 'meta',
     }
     context = RequestContext(request, data)
     template = ENV.get_template('logout.html')
@@ -140,6 +142,7 @@ def badge(request, id):
         'active_tab': 'badges',
         'badge_recipients' : badge_recipients,
         'badge' : badge,
+        'page_class': 'meta',
     }
     context = RequestContext(request, data)
     return HttpResponse(template.render(context))
