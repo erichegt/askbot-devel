@@ -311,7 +311,7 @@ var i18nRu = {
     'confirm delete': 'Удалить?', 
     'confirm delete comment': 'Удалить комментарий?', 
     'content cannot be empty': 'пожалуйста, добавьте содержание', 
-    'content minchars': 'содержание > {0} символов', 
+    'content minchars': 'содержание должно быть более {0} символов', 
     'daily vote cap exhausted': 'исчерпан доступный на сегодня лимит голосований', 
     'delete': 'удалить', 
     'save tags': 'запомнить теги',
