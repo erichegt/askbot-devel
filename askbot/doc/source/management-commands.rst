@@ -28,7 +28,7 @@ The bulk of the management commands fall into this group and will probably be th
 | `remove_admin <user_id>`        | Remove admin status from a user account - the opposite of   |
 |                                 | the `add_admin` command                                     |
 +---------------------------------+-------------------------------------------------------------+
-| `askbot_add_user --user-name    | Create a user account. If password is not given, an         |
+| `add_askbot_user --user-name    | Create a user account. If password is not given, an         |
 | --email [--password]            | unusable password will be set. Possible values for the      |
 | [--email-frequency]`            | --email-frequency are: **i**, **d**, **w**, **n**           |
 |                                 | that stand for                                              |
