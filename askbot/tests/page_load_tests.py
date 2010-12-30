@@ -1,7 +1,6 @@
 from django.test import TestCase, signals
 from jinja2.environment import Template as Jinja2Template
 from django.template import defaultfilters
-from django.core.management import call_command
 from django.core.urlresolvers import reverse
 import coffin.template
 from askbot import models

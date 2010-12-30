@@ -28,6 +28,14 @@ The bulk of the management commands fall into this group and will probably be th
 | `remove_admin <user_id>`        | Remove admin status from a user account - the opposite of   |
 |                                 | the `add_admin` command                                     |
 +---------------------------------+-------------------------------------------------------------+
+| `askbot_add_user --user-name    | Create a user account. If password is not given, an         |
+| --email [--password]            | unusable password will be set. Possible values for the      |
+| [--email-frequency]`            | --email-frequency are: **i**, **d**, **w**, **n**           |
+|                                 | that stand for                                              |
+|                                 | instant, daily, weekly and never - respectively. The default|
+|                                 | value is w. The command does not create associations with   |
+|                                 | any of the external login providers.                        |
++---------------------------------+-------------------------------------------------------------+
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |
 | some_name`]                     | optional                                                    |
 +---------------------------------+-------------------------------------------------------------+

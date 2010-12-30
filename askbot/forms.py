@@ -634,14 +634,26 @@ class EditUserEmailFeedsForm(forms.Form):
         return self
 
     def reset(self):
+        """equivalent to set_frequency('n')
+        but also returns self due to some legacy requirement
+        todo: clean up use of this function
+        """
         if self.is_bound:
-            self.cleaned_data['all_questions'] = 'n'
-            self.cleaned_data['asked_by_me'] = 'n'
-            self.cleaned_data['answered_by_me'] = 'n'
-            self.cleaned_data['individually_selected'] = 'n'
-            self.cleaned_data['mentions_and_comments'] = 'n'
+            self.cleaned_data = self.NO_EMAIL_INITIAL
         self.initial = self.NO_EMAIL_INITIAL
         return self
+
+    def set_frequency(self, frequency = 'n'):
+        data = {
+            'all_questions': frequency,
+            'asked_by_me': frequency,
+            'answered_by_me': frequency,
+            'individually_selected': frequency,
+            'mentions_and_comments': frequency
+        }
+        if self.is_bound:
+            self.cleaned_data = data
+        self.initial = data
 
     def save(self,user,save_unbound=False):
         """
@@ -684,10 +696,17 @@ class SimpleEmailSubscribeForm(forms.Form):
             choices=SIMPLE_SUBSCRIBE_CHOICES
         )
 
+    def __init__(self, *args, **kwargs):
+        self.frequency = kwargs.pop('frequency', 'w') 
+        super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
+
     def save(self, user=None):
         EFF = EditUserEmailFeedsForm
-        if self.cleaned_data['subscribe'] == 'y':
+        #here we have kind of an anomaly - the value 'y' is redundant
+        #with the frequency variable - needs to be fixed
+        if self.is_bound and self.cleaned_data['subscribe'] == 'y':
             email_settings_form = EFF()
+            email_settings_form.set_frequency(self.frequency)
             logging.debug('%s wants to subscribe' % user.username)
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
