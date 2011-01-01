@@ -225,7 +225,7 @@ def user_moderate(request, subject):
         'user_status_changed': user_status_changed
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_moderate.html')
+    template = ENV.get_template('user_profile/user_moderate.html')
     return HttpResponse(template.render(context))
 
 #non-view function
@@ -277,7 +277,7 @@ def edit_user(request, id):
         'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_edit.html')
+    template = ENV.get_template('user_profile/user_edit.html')
     return HttpResponse(template.render(context))
 
 def user_stats(request, user):
@@ -391,7 +391,7 @@ def user_stats(request, user):
         'total_awards' : total_awards,
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_stats.html')
+    template = ENV.get_template('user_profile/user_stats.html')
     return HttpResponse(template.render(context))
 
 def user_recent(request, user):
@@ -664,7 +664,7 @@ def user_recent(request, user):
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_recent.html')
+    template = ENV.get_template('user_profile/user_recent.html')
     return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
@@ -732,7 +732,7 @@ def user_responses(request, user):
         'responses' : response_list,
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_inbox.html')
+    template = ENV.get_template('user_profile/user_inbox.html')
     return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
@@ -797,7 +797,7 @@ def user_votes(request, user):
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_votes.html')
+    template = ENV.get_template('user_profile/user_votes.html')
     return HttpResponse(template.render(context))
 
 def user_reputation(request, user):
@@ -837,7 +837,7 @@ def user_reputation(request, user):
         'reps': reps
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_reputation.html')
+    template = ENV.get_template('user_profile/user_reputation.html')
     return HttpResponse(template.render(context))
 
 def user_favorites(request, user):
@@ -866,7 +866,7 @@ def user_favorites(request, user):
         'view_user' : user
     }
     context = RequestContext(request, data)
-    template = ENV.get_template('user_favorites.html')
+    template = ENV.get_template('user_profile/user_favorites.html')
     return HttpResponse(template.render(context))
 
 @owner_or_moderator_required
@@ -897,7 +897,7 @@ def user_email_subscriptions(request, user):
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
         action_status = None
 
-    template = ENV.get_template('user_email_subscriptions.html')
+    template = ENV.get_template('user_profile/user_email_subscriptions.html')
     data = {
         'active_tab': 'users',
         'tab_name': 'email_subscriptions',

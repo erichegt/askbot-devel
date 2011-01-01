@@ -1,12 +1,12 @@
-{% extends "user.html" %}
+{% extends "user_profile/user.html" %}
 <!-- user_stats.html -->
     {% block usercontent %}
-        {% include "user_info.html" %}
+        {% include "user_profile/user_info.html" %}
         <a name="questions"></a>
         {% spaceless %}
             <h2>{% trans counter=questions|length %}<span class="count">{{counter}}</span> Question{% pluralize %}<span class="count">{{counter}}</span> Questions{% endtrans %}</h2>
         {% endspaceless %}
-    {% include "users_questions.html" %}
+    {% include "user_profile/users_questions.html" %}
         <a name="answers"></a>
         {% spaceless %}
             <h2 style="clear:both;">{% trans counter=answered_questions|length %}<span class="count">{{counter}}</span> Answer{% pluralize %}<span class="count">{{counter}}</span> Answers{% endtrans %}</h2>

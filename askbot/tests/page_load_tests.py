@@ -252,13 +252,13 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'stats'}, 
-            template='user_stats.html'
+            template='user_profile/user_stats.html'
         )
         self.try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'recent'}, 
-            template='user_recent.html'
+            template='user_profile/user_recent.html'
         )
         self.try_url(
             'user_profile', 
@@ -271,7 +271,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'reputation'}, 
-            template='user_reputation.html'
+            template='user_profile/user_reputation.html'
         )
         self.try_url(
             'user_profile', 
@@ -284,7 +284,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'favorites'}, 
-            template='user_favorites.html'
+            template='user_profile/user_favorites.html'
         )
         self.try_url(
             'user_profile', 

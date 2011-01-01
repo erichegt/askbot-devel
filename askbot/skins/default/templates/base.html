@@ -4,7 +4,6 @@
     {% spaceless %}
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
-        {#% include "blocks/head.html" %#}
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         {% block meta_description %}
         <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
@@ -44,23 +43,17 @@
     </head>
     {% endspaceless %}
     <body{% if page_class %} class="{{page_class}}"{% endif %}>
-        {#% include "blocks/forum_body.html" %#}
-        <div class="notify" style="display:none">
-            {% if user_messages %}
-                {% for message in user_messages %}
-                      <p class="darkred">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-            <a id="close-notify" onclick="notify.close(true)">&times;</a>
-        </div>
-        {% include "header.html" %}
+        {% include "blocks/system_messages.html" %}
+        {% include "custom_header.html" ignore missing %}
+        {% include "blocks/header.html" %}
         {% block body %}
         {% endblock %}
         {% if settings.FOOTER_MODE == 'default' %}
-            {% include "footer.html" %}
+            {% include "blocks/footer.html" %}
         {% elif settings.FOOTER_MODE == 'customize' %}
             {{ settings.CUSTOM_FOOTER }}
         {% endif %}
+        {% include "custom_footer.html" ignore missing %}
         {% include "blocks/bottom_scripts.html" %}
         {% block endjs %}
         {% endblock %}

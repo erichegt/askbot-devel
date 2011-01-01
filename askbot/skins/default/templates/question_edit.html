@@ -33,11 +33,11 @@
 {% endblock %}
 
 {% block sidebar %}
-{% include "question_edit_tips.html" %}
+{% include "blocks/question_edit_tips.html" %}
 {% endblock %}
 
 {% block endjs %}
-    {% include "editor_data.html" %}
+    {% include "blocks/editor_data.html" %}
     <script type='text/javascript' src='{{"/js/editor.js"|media }}'></script>
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
