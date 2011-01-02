@@ -227,7 +227,7 @@ class EmailFeedSettingManager(models.Manager):
                                         frequency = frequency
                                     )
         if potential_subscribers is not None:
-            matching_feeds.filter(
+            matching_feeds = matching_feeds.filter(
                             subscriber__in = potential_subscribers
                         )
         subscriber_set = set()
