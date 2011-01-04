@@ -772,6 +772,7 @@ BADGES = {
     'editor': Editor,
     'enlightened': Enlightened,
     'enthusiast': Enthusiast,
+    'expert': Expert,
     'famous-question': FamousQuestion,
     'favorite-question': FavoriteQuestion,
     'good-answer': GoodAnswer,
@@ -793,6 +794,7 @@ BADGES = {
     'student': Student,
     'supporter': Supporter,
     'teacher': Teacher,
+    'taxonomist': Taxonomist,
 }
 
 #events are sent as a parameter via signal award_badges_signal
