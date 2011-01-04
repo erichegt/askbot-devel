@@ -721,6 +721,28 @@ class Commentator(Badge):
             description = _('Posted 10 comments')
         )
 
+class Taxonomist(Badge):
+    """Stub badge"""
+    def __init__(self):
+        super(Taxonomist, self).__init__(
+            key = 'taxonomist',
+            name = _('Taxonomist'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _('Created a tag used by 50 questions')
+        )
+
+class Expert(Badge):
+    """Stub badge"""
+    def __init__(self):
+        super(Expert, self).__init__(
+            key = 'expert',
+            name = _('Expert'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _('Very active in one tag')
+        )
+
 ORIGINAL_DATA = """
  
 extra badges from stackexchange
@@ -730,12 +752,10 @@ extra badges from stackexchange
 * mortarboard - hit the daily reputation cap for the first time (s)
 * populist - provided an answer that outscored an accepted answer two-fold or by n points, whichever is higher (m)
 * reversal - provided an answer with +n points to a question of -m points
-    (_('Taxonomist'), 2, _('taxonomist'), _('Created a tag used by 50 questions'), True, 0)
     (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
 
 
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
-    (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
@@ -802,7 +822,7 @@ EVENTS_TO_BADGES = {
 }
 
 def get_badge(name = None):
-    """Get badge object by name, if none mathes the name
+    """Get badge object by name, if none matches the name
     raise KeyError
     """
     key = slugify(name)

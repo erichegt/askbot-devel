@@ -1,8 +1,6 @@
 # encoding: utf-8
-import datetime
-from south.db import db
+#from south.db import db
 from south.v2 import DataMigration
-from django.db import models
 from askbot.migrations_api.version1 import API
 from askbot import const
 
@@ -22,19 +20,19 @@ class Migration(DataMigration):
         for flag in orm.FlaggedItem.objects.all():
             activity_items = api.get_activity_items_for_object(flag)
             if len(activity_items) == 0:#fix a glitch
-                activity = orm.Activity(
-                    user = flag.user,
-                    active_at = flag.flagged_at,
-                    activity_type = OFFENSIVE
-                )
+                activity = orm.Activity()
             elif len(activity_items) == 1:
                 activity = activity_items[0]
             else:
                 raise ValueError('cannot have >1 flagged items per activity')
-            assert(activity.user==flag.user)
-            assert(activity.content_type==flag.content_type)
-            assert(activity.object_id==flag.object_id)
+
+            activity.user = flag.user
+            activity.active_at = flag.flagged_at
+            activity.activity_type = OFFENSIVE
+            activity.content_type = flag.content_type
+            activity.object_id = flag.object_id
             activity.question = api.get_origin_post_from_content_object(flag)
+
             activity.save()
             api.add_recipients_to_activity(moderators, activity)
             flag.delete()
@@ -44,7 +42,6 @@ class Migration(DataMigration):
         question reference is not deleted either
         """
         activity_items = orm.Activity.objects.filter(activity_type=OFFENSIVE)
-        api = API(orm)
         for activity in activity_items:
             flag = orm.FlaggedItem(
                 user = activity.user,
