@@ -45,8 +45,6 @@ def parse_post_text(post):
     mentioned_authors = list()
     removed_mentions = list()
     if '@' in text:
-        from askbot.models.user import Activity
-
         op = post.get_origin_post()
         anticipated_authors = op.get_author_list(
                                     include_comments = True,
@@ -73,6 +71,7 @@ def parse_post_text(post):
 
         #find mentions that were removed and identify any previously
         #entered mentions so that we can send alerts on only new ones
+        from askbot.models.user import Activity
         if post.pk is not None:
             #only look for previous mentions if post was already saved before
             prev_mention_qs = Activity.objects.get_mentions(

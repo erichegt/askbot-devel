@@ -9,3 +9,4 @@ exclude settings.py
 exclude manage.py
 exclude __init__.py
 exclude urls.py
+exclude askbot/upfiles/*.*

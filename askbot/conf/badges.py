@@ -201,3 +201,12 @@ settings.register(
         description=_('Stellar Question: minimum stars')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'COMMENTATOR_BADGE_MIN_COMMENTS',
+        default=10,
+        description=_('Commentator: minimum comments')
+    )
+)

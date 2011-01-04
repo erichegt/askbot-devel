@@ -24,6 +24,7 @@ from django.utils.translation import ugettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
+from askbot.models.meta import Comment
 from askbot.models.question import FavoriteQuestion as Fave#name collision
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -711,15 +712,25 @@ class Enthusiast(Badge):
         )
 
 class Commentator(Badge):
-    """Unimplemented stub badge"""
+    """Commentator is a bronze badge that is 
+    awarded once when user posts a certain number of
+    comments"""
     def __init__(self):
         super(Commentator, self).__init__(
             key = 'commentator',
             name = _('Commentator'),
             level = const.BRONZE_BADGE,
             multiple = False,
-            description = _('Posted 10 comments')
+            description = _(
+                'Posted %(num_comments)s comments'
+            ) % {'num_comments': askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS}
         )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        num_comments = Comment.objects.filter(user = actor).count()
+        if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
+            self.award(actor, context_object, timestamp)
 
 class Taxonomist(Badge):
     """Stub badge"""
@@ -808,6 +819,7 @@ EVENTS_TO_BADGES = {
     'edit_question': (Editor, AssociateEditor),
     'flag_post': (CitizenPatrol,),
     'post_answer': (Necromancer,),
+    'post_comment': (Commentator,),
     'retag_question': (Organizer,),
     'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
     'update_user_profile': (Autobiographer,),

@@ -469,3 +469,15 @@ class BadgeTests(AskbotTestCase):
         self.u3.toggle_favorite_question(question)
         #dont reaward
         self.assert_have_badge('stellar-question', self.u1, 1)
+
+    def test_commentator_badge(self):
+        question = self.post_question(user = self.u1)
+        min_comments = settings.COMMENTATOR_BADGE_MIN_COMMENTS
+        for i in xrange(min_comments - 1):
+            self.post_comment(user = self.u1, parent_post = question)
+
+        self.assert_have_badge('commentator', self.u1, 0)
+        self.post_comment(user = self.u1, parent_post = question) 
+        self.assert_have_badge('commentator', self.u1, 1)
+        self.post_comment(user = self.u1, parent_post = question) 
+        self.assert_have_badge('commentator', self.u1, 1)

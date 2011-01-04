@@ -717,6 +717,12 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
+    award_badges_signal.send(None,
+        event = 'post_comment',
+        actor = self,
+        context_object = comment,
+        timestamp = timestamp
+    )
     return comment
 
 @auto_now_timestamp
