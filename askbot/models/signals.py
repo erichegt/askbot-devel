@@ -1,6 +1,8 @@
 import django.dispatch
 
-tags_updated = django.dispatch.Signal(providing_args=['question'])
+tags_updated = django.dispatch.Signal(
+                        providing_args=['tags', 'user', 'timestamp']
+                    )
 
 #todo: this one seems to be unused
 edit_question_or_answer = django.dispatch.Signal(

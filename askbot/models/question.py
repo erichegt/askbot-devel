@@ -17,6 +17,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
+from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
@@ -428,6 +429,7 @@ class Question(content.Content, DeletableContent):
                 if tag.used_count == 1:
                     #we won't modify used count b/c it's done below anyway
                     removed_tags.remove(tag)
+                    #todo - do we need to use fields deleted_by and deleted_at?
                     tag.delete()#auto-delete tags whose use count dwindled
 
             #remember modified tags, we'll need to update use counts on them
@@ -466,6 +468,12 @@ class Question(content.Content, DeletableContent):
         #if there are any modified tags, update their use counts
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
+            signals.tags_updated.send(None,
+                                question = self,
+                                tags = modified_tags,
+                                user = user,
+                                timestamp = timestamp
+                            )
             return True
 
         return False

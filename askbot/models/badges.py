@@ -743,6 +743,16 @@ class Taxonomist(Badge):
             description = _('Created a tag used by 50 questions')
         )
 
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+
+        tag = context_object
+        taxonomist_threshold = askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
+        #the "-1" is used because tag counts are updated in a bulk query
+        #that does not update the value in the python object
+        if tag.used_count == taxonomist_threshold - 1:
+            self.award(tag.created_by, tag, timestamp)
+
 class Expert(Badge):
     """Stub badge"""
     def __init__(self):
@@ -821,6 +831,7 @@ EVENTS_TO_BADGES = {
     'post_answer': (Necromancer,),
     'post_comment': (Commentator,),
     'retag_question': (Organizer,),
+    'update_tag': (Taxonomist,),
     'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
     'update_user_profile': (Autobiographer,),
     'upvote_answer': (

@@ -210,3 +210,12 @@ settings.register(
         description=_('Commentator: minimum comments')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'TAXONOMIST_BADGE_MIN_USE_COUNT',
+        default = 10,
+        description = _('Taxonomist: minimum tag use count')
+    )
+)

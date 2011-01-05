@@ -1963,12 +1963,21 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                 )
     activity.add_recipients(recipients)
 
-def record_update_tags(question, **kwargs):
+def record_update_tags(question, tags, user, timestamp, **kwargs):
     """
-    when user updated tags of the question
+    This function sends award badges signal on each updated tag
+    the badges that respond to the 'ta
     """
+    for tag in tags:
+        award_badges_signal.send(None,
+            event = 'update_tag',
+            actor = user,
+            context_object = tag,
+            timestamp = timestamp
+        )
+
     activity = Activity(
-                    user=question.author,
+                    user=user,
                     active_at=datetime.datetime.now(),
                     content_object=question,
                     activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS,
@@ -2053,7 +2062,7 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Questio
 signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
 signals.flag_offensive.connect(record_flag_offensive, sender=Question)
 signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
-signals.tags_updated.connect(record_update_tags, sender=Question)
+signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)
 signals.post_updated.connect(

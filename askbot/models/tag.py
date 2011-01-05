@@ -3,6 +3,7 @@ from django.db import connection, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.base import DeletableContent
+from askbot.conf import settings as askbot_settings
 
 
 class TagManager(models.Manager):
@@ -27,8 +28,8 @@ class TagManager(models.Manager):
         cursor = connection.cursor()
         query = self.UPDATE_USED_COUNTS_QUERY % ','.join(['%s'] * len(tags))
         cursor.execute(query, [tag.id for tag in tags])
-        transaction.commit_unless_managed()
 
+        transaction.commit_unless_managed() 
     def get_related_to_search(
                             self,
                             questions=None,

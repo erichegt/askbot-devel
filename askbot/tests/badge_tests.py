@@ -481,3 +481,12 @@ class BadgeTests(AskbotTestCase):
         self.assert_have_badge('commentator', self.u1, 1)
         self.post_comment(user = self.u1, parent_post = question) 
         self.assert_have_badge('commentator', self.u1, 1)
+
+    def test_taxonomist_badge(self):
+        self.post_question(user = self.u1, tags = 'test')
+        min_use = settings.TAXONOMIST_BADGE_MIN_USE_COUNT
+        for i in xrange(min_use - 2):
+            self.post_question(user = self.u2, tags = 'test')
+        self.assert_have_badge('taxonomist', self.u1, 0)
+        self.post_question(user = self.u2, tags = 'test')
+        self.assert_have_badge('taxonomist', self.u1, 1)
