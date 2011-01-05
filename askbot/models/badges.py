@@ -701,15 +701,26 @@ class FavoriteQuestion(FavoriteTypeBadge):
         return self
 
 class Enthusiast(Badge):
-    """Unimplemented stub badge"""
+    """Awarded to a user who visits the site
+    for a certain number of days in a row
+    """
     def __init__(self):
         super(Enthusiast, self).__init__(
             key = 'enthusiast',
             name = _('Enthusiast'),
             level = const.SILVER_BADGE,
             multiple = False,
-            description = _('Visited site every day for 30 days in a row')
+            description = _(
+                'Visited site every day for %(num)s days in a row'
+            ) % {'num': askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS}
         )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        min_days = askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS
+        if actor.consecutive_days_visit_count == min_days:
+            return self.award(actor, context_object, timestamp)
+        return False
 
 class Commentator(Badge):
     """Commentator is a bronze badge that is 
@@ -730,7 +741,8 @@ class Commentator(Badge):
             context_object = None, timestamp = None):
         num_comments = Comment.objects.filter(user = actor).count()
         if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
-            self.award(actor, context_object, timestamp)
+            return self.award(actor, context_object, timestamp)
+        return False
 
 class Taxonomist(Badge):
     """Stub badge"""
@@ -753,7 +765,8 @@ class Taxonomist(Badge):
         #the "-1" is used because tag counts are updated in a bulk query
         #that does not update the value in the python object
         if tag.used_count == taxonomist_threshold - 1:
-            self.award(tag.created_by, tag, timestamp)
+            return self.award(tag.created_by, tag, timestamp)
+        return False
 
 class Expert(Badge):
     """Stub badge"""
@@ -833,8 +846,9 @@ EVENTS_TO_BADGES = {
     'post_answer': (Necromancer,),
     'post_comment': (Commentator,),
     'retag_question': (Organizer,),
-    'update_tag': (Taxonomist,),
     'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
+    'site_visit': (Enthusiast,),
+    'update_tag': (Taxonomist,),
     'update_user_profile': (Autobiographer,),
     'upvote_answer': (
                     Teacher, NiceAnswer, GoodAnswer,

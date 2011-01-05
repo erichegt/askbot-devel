@@ -219,3 +219,12 @@ settings.register(
         description = _('Taxonomist: minimum tag use count')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'ENTHUSIAST_BADGE_MIN_DAYS',
+        default = 30,
+        description = _('Enthusiast: minimum days')
+    )
+)

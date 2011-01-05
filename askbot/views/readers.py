@@ -410,8 +410,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #in the case if the permalinked items or their parents are gone - redirect
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
-    #import pdb
-    #pdb.set_trace()
     if show_comment is not None:
         #comments
         try:

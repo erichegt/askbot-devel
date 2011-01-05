@@ -1,3 +1,5 @@
+"""Custom django signals defined for the askbot forum application.
+"""
 import django.dispatch
 
 tags_updated = django.dispatch.Signal(
@@ -23,3 +25,4 @@ post_updated = django.dispatch.Signal(
                                             'newly_mentioned_users'
                                         ]
                             )
+site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])

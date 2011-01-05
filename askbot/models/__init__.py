@@ -80,6 +80,7 @@ User.add_to_class('tag_filter_setting',
                  )
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
+User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
 
 
 def user_get_old_vote_for_post(self, post):
@@ -1875,18 +1876,21 @@ def record_answer_accepted(instance, created, **kwargs):
                                 )
         activity.add_recipients(recipients)
 
-
-def update_last_seen(instance, created, **kwargs):
+def record_user_visit(user, timestamp, **kwargs):
     """
-    when user has activities, we update 'last_seen' time stamp for him
+    when user visits any pages, we update the last_seen and
+    consecutive_days_visit_count
     """
-    #todo: in reality author of this activity must not be the receiving user
-    #but for now just have this plug, so that last seen timestamp is not 
-    #perturbed by the email update sender
-    if instance.activity_type == const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT:
-        return
-    user = instance.user
-    user.last_seen = instance.active_at
+    prev_last_seen = user.last_seen
+    user.last_seen = timestamp
+    if (user.last_seen - prev_last_seen).days == 1:
+        user.consecutive_days_visit_count += 1
+        award_badges_signal.send(None,
+            event = 'site_visit',
+            actor = user,
+            context_object = user,
+            timestamp = timestamp
+        )
     user.save()
 
 
@@ -2049,7 +2053,6 @@ django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
-django_signals.post_save.connect(update_last_seen, sender=Activity)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(
                             record_favorite_question,
@@ -2077,6 +2080,7 @@ signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Question
                        )
+signals.site_visited.connect(record_user_visit)
 #post_syncdb.connect(create_fulltext_indexes)
 
 #todo: wtf??? what is x=x about?
