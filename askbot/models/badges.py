@@ -740,7 +740,9 @@ class Taxonomist(Badge):
             name = _('Taxonomist'),
             level = const.SILVER_BADGE,
             multiple = False,
-            description = _('Created a tag used by 50 questions')
+            description = _(
+                'Created a tag used by %(num)s questions'
+            ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT}
         )
 
     def consider_award(self, actor = None,
