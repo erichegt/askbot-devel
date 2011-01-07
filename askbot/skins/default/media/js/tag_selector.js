@@ -1,7 +1,7 @@
 //var interestingTags, ignoredTags, tags, $;
 function pickedTags(){
 
-    var sendAjax = function(tagname, reason, action, callback){
+    var sendAjax = function(tagnames, reason, action, callback){
         var url = '';
         if (action == 'add'){
             if (reason == 'good'){
@@ -14,11 +14,12 @@ function pickedTags(){
         else {
             url = askbot['urls']['unmark_tag'];
         }
-        url = url + tagname + '/';
 
         var call_settings = {
             type:'POST',
-            url:url
+            url:url,
+            data: JSON.stringify({tagnames: tagnames}),
+            dataType: 'json'
         };
         if (callback !== false){
             call_settings.success = callback;
@@ -26,14 +27,14 @@ function pickedTags(){
         $.ajax(call_settings);
     };
 
-    var unpickTag = function(from_target ,tagname, reason, send_ajax){
+    var unpickTag = function(from_target, tagname, reason, send_ajax){
         //send ajax request to delete tag
         var deleteTagLocally = function(){
             from_target[tagname].remove();
             delete from_target[tagname];
         };
         if (send_ajax){
-            sendAjax(tagname,reason,'remove',deleteTagLocally);
+            sendAjax([tagname], reason, 'remove', deleteTagLocally);
         }
         else {
             deleteTagLocally();
@@ -52,8 +53,36 @@ function pickedTags(){
         });
     };
 
+    var renderNewTags = function(
+                                    clean_tagnames,
+                                    reason,
+                                    to_target,
+                                    to_tag_container
+                                ){
+        $.each(clean_tagnames, function(idx, tagname){
+            var new_tag = $('<span></span>');
+            new_tag.addClass('deletable-tag');
+            var tag_link = $('<a></a>');
+            tag_link.attr('rel','tag');
+            var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
+            tag_link.attr('href', tag_url);
+            tag_link.html(tagname);
+            var del_link = $('<img></img>');
+            del_link.addClass('delete-icon');
+            del_link.attr('src', mediaUrl('media/images/close-small-dark.png'));
+
+            setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
+
+            new_tag.append(tag_link);
+            new_tag.append(del_link);
+            to_tag_container.append(new_tag);
+
+            to_target[tagname] = new_tag;
+        });
+    };
+
     var handlePickedTag = function(obj,reason){
-        var tagname = $.trim($(obj).prev().attr('value'));
+        var tagnames = getUniqueWords($(obj).prev().attr('value'));
         var to_target = interestingTags;
         var from_target = ignoredTags;
         var to_tag_container;
@@ -62,40 +91,42 @@ function pickedTags(){
             from_target = interestingTags;
             to_tag_container = $('div .tags.ignored');
         }
-        else if (reason != 'good'){
-            return;
-        }
-        else {
+        else if (reason == 'good'){
             to_tag_container = $('div .tags.interesting');
         }
-
-        if (tagname in from_target){
-            unpickTag(from_target,tagname,reason,false);
+        else {
+            return;
         }
 
-        if (!(tagname in to_target)){
+        $.each(tagnames, function(idx, tagname){
+            if (tagname in from_target){
+                unpickTag(from_target,tagname,reason,false);
+            }
+        });
+
+        var clean_tagnames = [];
+        $.each(tagnames, function(idx, tagname){
+            if (!(tagname in to_target)){
+                clean_tagnames.push(tagname);
+            }
+        });
+
+        if (clean_tagnames.length > 0){
             //send ajax request to pick this tag
 
-            sendAjax(tagname,reason,'add',function(){
-                var new_tag = $('<span></span>');
-                new_tag.addClass('deletable-tag');
-                var tag_link = $('<a></a>');
-                tag_link.attr('rel','tag');
-                var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
-                tag_link.attr('href', tag_url);
-                tag_link.html(tagname);
-                var del_link = $('<img></img>');
-                del_link.addClass('delete-icon');
-                del_link.attr('src', mediaUrl('/media/images/close-small-dark.png'));
-
-                setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
-
-                new_tag.append(tag_link);
-                new_tag.append(del_link);
-                to_tag_container.append(new_tag);
-
-                to_target[tagname] = new_tag;
-            });
+            sendAjax(
+                clean_tagnames,
+                reason,
+                'add',
+                function(){ 
+                    renderNewTags(
+                        clean_tagnames,
+                        reason,
+                        to_target,
+                        to_tag_container
+                    );
+                }
+            );
         }
     };
 

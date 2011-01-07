@@ -24,10 +24,6 @@ var lanai =
     }
 };
 
-var getUniqueWords = function(value){
-    return $.unique($.trim(value).split(/\s+/));
-};
-
 function appendLoader(element) {
     element.append('<img class="ajax-loader" ' +
         'src="' + mediaUrl("media/images/indicator.gif") + '" title="' +

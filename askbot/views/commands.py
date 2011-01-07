@@ -335,23 +335,34 @@ def vote(request, id):
 
 #internally grouped views - used by the tagging system
 @ajax_login_required
-def mark_tag(request, tag=None, **kwargs):#tagging system
+def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
-    ts = models.MarkedTag.objects.filter(user=request.user, tag__name=tag)
+    post_data = simplejson.loads(request.raw_post_data)
+    tagnames = post_data['tagnames']
+    marked_ts = models.MarkedTag.objects.filter(
+                                    user=request.user,
+                                    tag__name__in=tagnames
+                                )
+    #todo: use the user api methods here instead of the straight ORM
     if action == 'remove':
-        logging.debug('deleting tag %s' % tag)
-        ts.delete()
+        logging.debug('deleting tag marks: %s' % ','.join(tagnames))
+        marked_ts.delete()
     else:
         reason = kwargs['reason']
-        if len(ts) == 0:
+        if len(marked_ts) == 0:
             try:
-                t = models.Tag.objects.get(name=tag)
-                mt = models.MarkedTag(user=request.user, reason=reason, tag=t)
-                mt.save()
+                ts = models.Tag.objects.filter(name__in=tagnames)
+                for tag in ts:
+                    mt = models.MarkedTag(
+                                user=request.user,
+                                reason=reason,
+                                tag=tag
+                            )
+                    mt.save()
             except:
                 pass
         else:
-            ts.update(reason=reason)
+            marked_ts.update(reason=reason)
     return HttpResponse(simplejson.dumps(''), mimetype="application/json")
 
 @ajax_login_required

@@ -138,19 +138,19 @@ urlpatterns = patterns('',
         name='tags'
     ),
     url(#ajax only
-        r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')),
+        r'^%s%s$' % (_('mark-tag/'),_('interesting/')),
         views.commands.mark_tag,
         kwargs={'reason':'good','action':'add'},
         name='mark_interesting_tag'
     ),
     url(#ajax only
-        r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')),
+        r'^%s%s$' % (_('mark-tag/'),_('ignored/')),
         views.commands.mark_tag,
         kwargs={'reason':'bad','action':'add'},
         name='mark_ignored_tag'
     ),
     url(#ajax only
-        r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'),
+        _('unmark-tag/'),
         views.commands.mark_tag,
         kwargs={'action':'remove'},
         name='unmark_tag'
