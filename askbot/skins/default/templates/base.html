@@ -46,8 +46,10 @@
         {% include "blocks/system_messages.html" %}
         {% include "custom_header.html" ignore missing %}
         {% include "blocks/header.html" %}
-        {% block body %}
-        {% endblock %}
+        <div id="askbot">
+            {% block body %}
+            {% endblock %}
+        </div>
         {% if settings.FOOTER_MODE == 'default' %}
             {% include "blocks/footer.html" %}
         {% elif settings.FOOTER_MODE == 'customize' %}

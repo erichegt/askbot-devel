@@ -7,14 +7,14 @@
 </style>
 {% endblock %}
 {% block content %}
-    <div id="mainbar-full">
-        <div id="subheader" class="headUser">
-            {% spaceless %}
-            <a href="{% url user_profile view_user.id, view_user.username|slugify %}">
-            {% trans username=view_user.username %}{{username}}'s profile{% endtrans %}
-            </a>
-            {% endspaceless %}
-        </div>
+    <h1>
+        {% spaceless %}
+        <a href="{% url user_profile view_user.id, view_user.username|slugify %}">
+        {% trans username=view_user.username %}{{username}}'s profile{% endtrans %}
+        </a>
+        {% endspaceless %}
+    </h1>
+    <div style="margin-left: 5px;">
         {% include "user_profile/user_tabs.html" %}
         {% block usercontent %}
         {% endblock %}

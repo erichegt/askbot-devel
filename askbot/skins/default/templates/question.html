@@ -11,364 +11,360 @@
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
-<div class="headNormal">
-    <a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a>
-</div>
-<div id="main-body" class="">
-    <div id="askform">
-        <table style="width:100%;" id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
-            <tr>
-                <td style="width:30px;vertical-align:top">
-                    <div class="vote-buttons">
-                        {% if question_vote %}
-                        <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
-                            {% if question_vote.is_upvote() %}
-                                src="{{"/images/vote-arrow-up-on.png"|media}}" 
-                            {% else %}
-                                src="{{"/images/vote-arrow-up.png"|media}}" 
-                            {% endif %}
-                            alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
-                            title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
-                        <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-                            title="{% trans %}current number of votes{% endtrans %}">
-                            {{ question.score }}
-                        </div>
-                        <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-                            {% if question_vote.is_downvote() %}
-                                src="{{"/images/vote-arrow-down-on.png"|media}}" 
-                            {% else %}
-                                src="{{"/images/vote-arrow-down.png"|media}}" 
-                            {% endif %}
-                            alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
-                            title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
+<h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
+<div id="askform">
+    <table style="width:100%;" id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
+        <tr>
+            <td style="width:30px;vertical-align:top">
+                <div class="vote-buttons">
+                    {% if question_vote %}
+                    <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
+                        {% if question_vote.is_upvote() %}
+                            src="{{"/images/vote-arrow-up-on.png"|media}}" 
                         {% else %}
-                        <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
-                            alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
                             src="{{"/images/vote-arrow-up.png"|media}}" 
-                            title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
-                        <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-                            title="{% trans %}current number of votes{% endtrans %}">
-                            {{ question.score }}
-                        </div>
-                        <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-                            src="{{"/images/vote-arrow-down.png"|media}}"
-                            alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
-                            title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
                         {% endif %}
-                        {% if favorited %}
-                        <img class="question-img-favorite" src="{{"/images/vote-favorite-on.png"|media}}"
-                            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}"
-                            title="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}" />
-                        <div id="favorite-number" class="favorite-number my-favorite-number">
-                            {{ question.favourite_count }}
-                        </div>
+                        alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
+                        title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
+                    <div id="question-vote-number-{{ question.id }}" class="vote-number" 
+                        title="{% trans %}current number of votes{% endtrans %}">
+                        {{ question.score }}
+                    </div>
+                    <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
+                        {% if question_vote.is_downvote() %}
+                            src="{{"/images/vote-arrow-down-on.png"|media}}" 
                         {% else %}
-                        <img class="question-img-favorite" src="{{"/images/vote-favorite-off.png"|media}}"
-                            alt="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}"
-                            title="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}" />
-                        <div id="favorite-number" class="favorite-number">
-                           {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
-                        </div>
+                            src="{{"/images/vote-arrow-down.png"|media}}" 
                         {% endif %}
-                        {% if settings.ENABLE_SOCIAL_SHARING %}
-                        <a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>
-                        <a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>
+                        alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
+                        title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
+                    {% else %}
+                    <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
+                        alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
+                        src="{{"/images/vote-arrow-up.png"|media}}" 
+                        title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
+                    <div id="question-vote-number-{{ question.id }}" class="vote-number" 
+                        title="{% trans %}current number of votes{% endtrans %}">
+                        {{ question.score }}
+                    </div>
+                    <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
+                        src="{{"/images/vote-arrow-down.png"|media}}"
+                        alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
+                        title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
+                    {% endif %}
+                    {% if favorited %}
+                    <img class="question-img-favorite" src="{{"/images/vote-favorite-on.png"|media}}"
+                        alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}"
+                        title="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}" />
+                    <div id="favorite-number" class="favorite-number my-favorite-number">
+                        {{ question.favourite_count }}
+                    </div>
+                    {% else %}
+                    <img class="question-img-favorite" src="{{"/images/vote-favorite-off.png"|media}}"
+                        alt="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}"
+                        title="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}" />
+                    <div id="favorite-number" class="favorite-number">
+                       {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
+                    </div>
+                    {% endif %}
+                    {% if settings.ENABLE_SOCIAL_SHARING %}
+                    <a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>
+                    <a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <div id="item-right">
+                    <div class="question-body">
+                        {{question.html}}
+                    </div>
+                    <div id="question-tags" class="post-tags tags">
+                        {% for tag in question.get_tag_names() %}
+                            <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
+                                class="post-tag"
+                                title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                    <div id="question-controls" class="post-controls">
+                        {% set pipe=joiner('<span class="sep">|</span>') %}
+                        {% if request.user|can_edit_post(question) %}{{ pipe() }}
+                            <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
                         {% endif %}
+                        {% if request.user|can_retag_question(question) %}{{ pipe() }}
+                            <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
+                            <script type="text/javascript">
+                                var retagUrl = "{% url retag_question question.id %}";
+                            </script>
+                        {% endif %}
+                        {% if question.closed %}
+                            {% if request.user|can_reopen_question(question) %}{{ pipe() }}
+                            <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
+                            {% endif %}
+                        {% else %}
+                            {% if request.user|can_close_question(question) %}{{ pipe() }}
+                            <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
+                            {% endif %}
+                        {% endif %}
+                        {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
+                        <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
+                            title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                            <a>{% trans %}flag offensive{% endtrans %}</a>
+                            {% if request.user|can_see_offensive_flags(question) %}
+                                <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                        {% if request.user|can_delete_post(question) %}{{ pipe() }}
+                            <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                        {% endif %}
+                        </div>
                     </div>
-                </td>
-                <td>
-                    <div id="item-right">
-                        <div class="question-body">
-                            {{question.html}}
-                        </div>
-                        <div id="question-tags" class="post-tags tags">
-                            {% for tag in question.get_tag_names() %}
-                                <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
-                                    class="post-tag"
-                                    title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
-                            {% endfor %}
-                        </div>
-                        <div id="question-controls" class="post-controls">
-                            {% set pipe=joiner('<span class="sep">|</span>') %}
-                            {% if request.user|can_edit_post(question) %}{{ pipe() }}
-                                <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
-                            {% endif %}
-                            {% if request.user|can_retag_question(question) %}{{ pipe() }}
-                                <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
-                                <script type="text/javascript">
-                                    var retagUrl = "{% url retag_question question.id %}";
-                                </script>
-                            {% endif %}
-                            {% if question.closed %}
-                                {% if request.user|can_reopen_question(question) %}{{ pipe() }}
-                                <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
-                                {% endif %}
-                            {% else %}
-                                {% if request.user|can_close_question(question) %}{{ pipe() }}
-                                <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
-                                {% endif %}
-                            {% endif %}
-                            {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
-                            <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
-                                title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                                <a>{% trans %}flag offensive{% endtrans %}</a>
-                                {% if request.user|can_see_offensive_flags(question) %}
-                                    <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
-                                {% endif %}
-                            </span>
-                            {% endif %}
-                            {% if request.user|can_delete_post(question) %}{{ pipe() }}
-                                <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                            {% endif %}
-                            </div>
-                        </div>
-                        <div class="post-update-info-container">
-                                {{ 
-                                    macros.post_contributor_info(
-                                                    question,
-                                                    "original_author",
-                                                    question.wiki,
-                                                    settings.MIN_REP_TO_EDIT_WIKI
-                                                )
-                                }}
-                                {{ 
-                                    macros.post_contributor_info(
-                                                    question,
-                                                    "last_updater",
-                                                    question.wiki,
-                                                    settings.MIN_REP_TO_EDIT_WIKI,
-                                                )
-                                }}
-                        </div>
-                        {{
-                            macros.post_comments_widget(
-                                    post = question,
-                                    show_post = show_post,
-                                    show_comment = show_comment,
-                                    comment_order_number = comment_order_number,
-                                    user = request.user,
-                                    max_comments = settings.MAX_COMMENTS_TO_SHOW
-                                )
-                        }}
+                    <div class="post-update-info-container">
+                            {{ 
+                                macros.post_contributor_info(
+                                                question,
+                                                "original_author",
+                                                question.wiki,
+                                                settings.MIN_REP_TO_EDIT_WIKI
+                                            )
+                            }}
+                            {{ 
+                                macros.post_contributor_info(
+                                                question,
+                                                "last_updater",
+                                                question.wiki,
+                                                settings.MIN_REP_TO_EDIT_WIKI,
+                                            )
+                            }}
                     </div>
-                </td>
-            </tr>
-        </table>
-        {% if question.closed %}
-        <div class="question-status" style="margin-bottom:15px">
-        <h3>{% trans close_reason=question.get_close_reason_display() %}The question has been closed for the following reason "{{ close_reason }}" by{% endtrans %} 
-        <a href="{{ question.closed_by.get_profile_url() }}">{{ question.closed_by.username }}</a> 
-        {% trans closed_at=question.closed_at %}close date {{closed_at}}{% endtrans %}</h3>
-        </div>
-        {% endif %}
-        {% if answers %}
-            <hr/>
-            <div class="tabBar">
-                <a name="sort-top"></a>
-                <div class="headUsers">
-                {% trans counter=answers|length %}
-                {{counter}} Answer:
-                {% pluralize %}
-                {{counter}} Answers:
-                {% endtrans %}
+                    {{
+                        macros.post_comments_widget(
+                                post = question,
+                                show_post = show_post,
+                                show_comment = show_comment,
+                                comment_order_number = comment_order_number,
+                                user = request.user,
+                                max_comments = settings.MAX_COMMENTS_TO_SHOW
+                            )
+                    }}
                 </div>
-                <div class="tabsA">
-                     <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top" 
-                        title="{% trans %}oldest answers will be shown first{% endtrans %}">{% trans %}oldest answers{% endtrans %}</a>
-                    <a id="latest" href="{{ question.get_absolute_url() }}?sort=latest#sort-top" 
-                        title="{% trans %}newest answers will be shown first{% endtrans %}">{% trans %}newest answers{% endtrans %}</a>
-                    <a id="votes" href="{{ question.get_absolute_url() }}?sort=votes#sort-top" 
-                        title="{% trans %}most voted answers will be shown first{% endtrans %}">{% trans %}popular answers{% endtrans %}</a>   
-                </div>
+            </td>
+        </tr>
+    </table>
+    {% if question.closed %}
+    <div class="question-status" style="margin-bottom:15px">
+    <h3>{% trans close_reason=question.get_close_reason_display() %}The question has been closed for the following reason "{{ close_reason }}" by{% endtrans %} 
+    <a href="{{ question.closed_by.get_profile_url() }}">{{ question.closed_by.username }}</a> 
+    {% trans closed_at=question.closed_at %}close date {{closed_at}}{% endtrans %}</h3>
+    </div>
+    {% endif %}
+    {% if answers %}
+        <hr/>
+        <div class="tabBar">
+            <a name="sort-top"></a>
+            <div class="headUsers">
+            {% trans counter=answers|length %}
+            {{counter}} Answer:
+            {% pluralize %}
+            {{counter}} Answers:
+            {% endtrans %}
             </div>
-            {{ macros.paginator(paginator_context) }}
+            <div class="tabsA">
+                 <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top" 
+                    title="{% trans %}oldest answers will be shown first{% endtrans %}">{% trans %}oldest answers{% endtrans %}</a>
+                <a id="latest" href="{{ question.get_absolute_url() }}?sort=latest#sort-top" 
+                    title="{% trans %}newest answers will be shown first{% endtrans %}">{% trans %}newest answers{% endtrans %}</a>
+                <a id="votes" href="{{ question.get_absolute_url() }}?sort=votes#sort-top" 
+                    title="{% trans %}most voted answers will be shown first{% endtrans %}">{% trans %}popular answers{% endtrans %}</a>   
+            </div>
+        </div>
+        {{ macros.paginator(paginator_context) }}
 
-            {% for answer in answers %}
-                <a name="{{ answer.id }}"></a>
-                <div id="answer-container-{{ answer.id }}" class="answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif %}">
-                    <table style="width:100%;">
-                        <tr>
-                            <td style="width:30px;vertical-align:top">
-                                <div class="vote-buttons">
-                                    <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
-                                        {% if user_answer_votes[answer.id] == 1 %}
-                                            src="{{"/images/vote-arrow-up-on.png"|media}}" 
-                                        {% else %}
-                                            src="{{"/images/vote-arrow-up.png"|media}}" 
-                                        {% endif %}
-                                        alt="{% trans %}i like this answer (click again to cancel){% endtrans %}"
-                                        title="{% trans %}i like this answer (click again to cancel){% endtrans %}"/>
-                                    <div id="answer-vote-number-{{ answer.id }}" class="vote-number" title="{% trans %}current number of votes{% endtrans %}">
-                                        {{ answer.score }}
-                                    </div>
-                                    <img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
-                                        {% if user_answer_votes[answer.id] == -1 %}
-                                            src="{{"/images/vote-arrow-down-on.png"|media}}" 
-                                        {% else %}
-                                            src="{{"/images/vote-arrow-down.png"|media}}" 
-                                        {% endif %}
-                                        alt="{% trans %}i dont like this answer (click again to cancel){% endtrans %}"
-                                        title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" />
-                                    {% if request.user == question.author %}
+        {% for answer in answers %}
+            <a name="{{ answer.id }}"></a>
+            <div id="answer-container-{{ answer.id }}" class="answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif %}">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:30px;vertical-align:top">
+                            <div class="vote-buttons">
+                                <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
+                                    {% if user_answer_votes[answer.id] == 1 %}
+                                        src="{{"/images/vote-arrow-up-on.png"|media}}" 
+                                    {% else %}
+                                        src="{{"/images/vote-arrow-up.png"|media}}" 
+                                    {% endif %}
+                                    alt="{% trans %}i like this answer (click again to cancel){% endtrans %}"
+                                    title="{% trans %}i like this answer (click again to cancel){% endtrans %}"/>
+                                <div id="answer-vote-number-{{ answer.id }}" class="vote-number" title="{% trans %}current number of votes{% endtrans %}">
+                                    {{ answer.score }}
+                                </div>
+                                <img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
+                                    {% if user_answer_votes[answer.id] == -1 %}
+                                        src="{{"/images/vote-arrow-down-on.png"|media}}" 
+                                    {% else %}
+                                        src="{{"/images/vote-arrow-down.png"|media}}" 
+                                    {% endif %}
+                                    alt="{% trans %}i dont like this answer (click again to cancel){% endtrans %}"
+                                    title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" />
+                                {% if request.user == question.author %}
+                                <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
+                                    {% if answer.accepted %}
+                                        src="{{"/images/vote-accepted-on.png"|media}}"
+                                    {% else %}
+                                        src="{{"/images/vote-accepted.png"|media}}" 
+                                    {% endif %}
+                                    alt="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}"
+                                    title="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}" />
+                                {% else %}
+                                    {% if answer.accepted %}
                                     <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
                                         {% if answer.accepted %}
                                             src="{{"/images/vote-accepted-on.png"|media}}"
                                         {% else %}
-                                            src="{{"/images/vote-accepted.png"|media}}" 
+                                            src="{{"/images/vote-accepted.png"|media}}"
                                         {% endif %}
-                                        alt="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}"
-                                        title="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}" />
-                                    {% else %}
-                                        {% if answer.accepted %}
-                                        <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
-                                            {% if answer.accepted %}
-                                                src="{{"/images/vote-accepted-on.png"|media}}"
-                                            {% else %}
-                                                src="{{"/images/vote-accepted.png"|media}}"
-                                            {% endif %}
-                                            alt="{% trans question_author=question.author.username %}{{question_author}} has selected this answer as correct{% endtrans %}"
-                                            title="{% trans questsion_author=question.author.username%}{{question_author}} has selected this answer as correct{% endtrans %}"
+                                        alt="{% trans question_author=question.author.username %}{{question_author}} has selected this answer as correct{% endtrans %}"
+                                        title="{% trans questsion_author=question.author.username%}{{question_author}} has selected this answer as correct{% endtrans %}"
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="item-right">
+                                <div class="answer-body">
+                                    {{ answer.html }}
+                                </div>
+                                <div class="answer-controls post-controls">
+                                    {% set pipe=joiner('<span class="sep">|</span>') %}
+                                    <span class="linksopt">{{ pipe() }}
+                                        <a 
+                                            href="{{ answer.get_absolute_url() }}" 
+                                            title="{% trans %}answer permanent link{% endtrans %}">
+                                            {% trans %}permanent link{% endtrans %}
+                                        </a>
+                                    </span>
+                                    {% if request.user|can_edit_post(answer) %}{{ pipe() }}
+                                    <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
+                                    {% endif %}
+                                    {% if request.user|can_flag_offensive(answer) %}{{ pipe() }}
+                                    <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
+                                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                                        <a>{% trans %}flag offensive{% endtrans %}</a>
+                                        {% if request.user|can_see_offensive_flags(answer) %}
+                                            <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
                                         {% endif %}
+                                    </span>
+                                    {% endif %}
+                                    {% if request.user|can_delete_post(answer) %}{{ pipe() }}
+                                        {% spaceless %}
+                                        <span class="action-link">
+                                            <a id="answer-delete-link-{{answer.id}}">
+                                            {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                                        </span>
+                                        {% endspaceless %}
                                     {% endif %}
                                 </div>
-                            </td>
-                            <td>
-                                <div class="item-right">
-                                    <div class="answer-body">
-                                        {{ answer.html }}
-                                    </div>
-                                    <div class="answer-controls post-controls">
-                                        {% set pipe=joiner('<span class="sep">|</span>') %}
-                                        <span class="linksopt">{{ pipe() }}
-                                            <a 
-                                                href="{{ answer.get_absolute_url() }}" 
-                                                title="{% trans %}answer permanent link{% endtrans %}">
-                                                {% trans %}permanent link{% endtrans %}
-                                            </a>
-                                        </span>
-                                        {% if request.user|can_edit_post(answer) %}{{ pipe() }}
-                                        <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
-                                        {% endif %}
-                                        {% if request.user|can_flag_offensive(answer) %}{{ pipe() }}
-                                        <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
-                                            title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                                            <a>{% trans %}flag offensive{% endtrans %}</a>
-                                            {% if request.user|can_see_offensive_flags(answer) %}
-                                                <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
-                                            {% endif %}
-                                        </span>
-                                        {% endif %}
-                                        {% if request.user|can_delete_post(answer) %}{{ pipe() }}
-                                            {% spaceless %}
-                                            <span class="action-link">
-                                                <a id="answer-delete-link-{{answer.id}}">
-                                                {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                                            </span>
-                                            {% endspaceless %}
-                                        {% endif %}
-                                    </div>
-                                    <div class="post-update-info-container">
-                                            {{
-                                                macros.post_contributor_info(
-                                                    answer,
-                                                    "original_author",
-                                                    answer.wiki,
-                                                    settings.MIN_REP_TO_EDIT_WIKI
-                                                )
-                                            }}
-                                            {{ 
-                                                macros.post_contributor_info(
-                                                    answer,
-                                                    "last_updater",
-                                                    answer.wiki,
-                                                    settings.MIN_REP_TO_EDIT_WIKI
-                                                )
-                                            }}
-                                    </div>
-                                    {{
-                                        macros.post_comments_widget(
-                                                post = answer,
-                                                show_post = show_post,
-                                                show_comment = show_comment,
-                                                comment_order_number = comment_order_number,
-                                                user = request.user,
-                                                max_comments = settings.MAX_COMMENTS_TO_SHOW
+                                <div class="post-update-info-container">
+                                        {{
+                                            macros.post_contributor_info(
+                                                answer,
+                                                "original_author",
+                                                answer.wiki,
+                                                settings.MIN_REP_TO_EDIT_WIKI
                                             )
-                                    }}
+                                        }}
+                                        {{ 
+                                            macros.post_contributor_info(
+                                                answer,
+                                                "last_updater",
+                                                answer.wiki,
+                                                settings.MIN_REP_TO_EDIT_WIKI
+                                            )
+                                        }}
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            {% endfor %}
-            <div class="paginator-container-left">
-                {{ macros.paginator(paginator_context) }}
+                                {{
+                                    macros.post_comments_widget(
+                                            post = answer,
+                                            show_post = show_post,
+                                            show_comment = show_comment,
+                                            comment_order_number = comment_order_number,
+                                            user = request.user,
+                                            max_comments = settings.MAX_COMMENTS_TO_SHOW
+                                        )
+                                }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
-        {% endif %}
-    <form id="fmanswer" action="{% url answer question.id %}" method="post">
-        {% if request.user.is_authenticated() %}
-            <p style="padding-left:3px">
-            {{ answer.email_notify }} 
-            <label for="question-subscribe-updates">
-            {% set email_feed_frequency = request.user.get_q_sel_email_feed_frequency() %}
-            {% if email_feed_frequency =='n' %}
-                {% trans %}Notify me once a day when there are any new answers{% endtrans %}
-            {% elif email_feed_frequency =='d' %}
-                {% trans %}Notify me once a day when there are any new answers{% endtrans %}
-            {% elif email_feed_frequency =='w' %}
-                {% trans %}Notify me weekly when there are any new answers{% endtrans %}
-            {% elif email_feed_frequency =='i' %}
-                {% trans %}Notify me immediately when there are any new answers{% endtrans %}
-            {% endif %}
-            </label>
-            {% trans profile_url=request.user.get_profile_url() %}You can always adjust frequency of email updates from your {{profile_url}}{% endtrans %}
-            </p>
-        {% else %}
-            <p style="padding-left:3px">
-                <input class="nomargin" type="checkbox" disabled="disabled" />
-                <label>{% trans %}once you sign in you will be able to subscribe for any updates here{% endtrans %}</label>
-            </p>
-        {% endif %}
-        <div style="clear:both">
+        {% endfor %}
+        <div class="paginator-container-left">
+            {{ macros.paginator(paginator_context) }}
         </div>
-        {% if not question.closed %}
-            <div style="padding:10px 0 0 0;">
-                {% spaceless %}
-                <div class="headNormal">
-                    {% if answers %}
-                        {% trans %}Your answer{% endtrans %}
-                    {% else %}
-                        {% trans %}Be the first one to answer this question!{% endtrans %}
-                    {% endif %}
-                </div>
-                {% endspaceless %}
-            </div>
-            {% if not request.user.is_authenticated() %}
-                <div class="message">{% trans %}you can answer anonymously and then login{% endtrans %}</div>
-            {% else %}
-                <p class="message">
-                    {% if request.user==question.author  %}
-                        {% trans %}answer your own question only to give an answer{% endtrans %}
-                    {% else %}
-                        {% trans %}please only give an answer, no discussions{% endtrans %}
-                    {% endif %}
-                </p>
-            {% endif %}
-            {{macros.edit_post(answer, settings.WIKI_ON)}}
-            <input type="submit" 
-                {% if user.is_anonymous() %}
-                    value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
-                {% else %}
-                    {% if user == question.author %}
-                        value="{% trans %}Answer Your Own Question{% endtrans %}" 
-                    {% else %}
-                        value="{% trans %}Answer the question{% endtrans %}" 
-                    {% endif %}
-                {% endif %}
-                class="submit after-editor" style="float:left"/>
-            {% endif %}
-        </form>
+    {% endif %}
+<form id="fmanswer" action="{% url answer question.id %}" method="post">
+    {% if request.user.is_authenticated() %}
+        <p style="padding-left:3px">
+        {{ answer.email_notify }} 
+        <label for="question-subscribe-updates">
+        {% set email_feed_frequency = request.user.get_q_sel_email_feed_frequency() %}
+        {% if email_feed_frequency =='n' %}
+            {% trans %}Notify me once a day when there are any new answers{% endtrans %}
+        {% elif email_feed_frequency =='d' %}
+            {% trans %}Notify me once a day when there are any new answers{% endtrans %}
+        {% elif email_feed_frequency =='w' %}
+            {% trans %}Notify me weekly when there are any new answers{% endtrans %}
+        {% elif email_feed_frequency =='i' %}
+            {% trans %}Notify me immediately when there are any new answers{% endtrans %}
+        {% endif %}
+        </label>
+        {% trans profile_url=request.user.get_profile_url() %}You can always adjust frequency of email updates from your {{profile_url}}{% endtrans %}
+        </p>
+    {% else %}
+        <p style="padding-left:3px">
+            <input class="nomargin" type="checkbox" disabled="disabled" />
+            <label>{% trans %}once you sign in you will be able to subscribe for any updates here{% endtrans %}</label>
+        </p>
+    {% endif %}
+    <div style="clear:both">
     </div>
+    {% if not question.closed %}
+        <div style="padding:10px 0 0 0;">
+            {% spaceless %}
+            <div class="headNormal">
+                {% if answers %}
+                    {% trans %}Your answer{% endtrans %}
+                {% else %}
+                    {% trans %}Be the first one to answer this question!{% endtrans %}
+                {% endif %}
+            </div>
+            {% endspaceless %}
+        </div>
+        {% if not request.user.is_authenticated() %}
+            <div class="message">{% trans %}you can answer anonymously and then login{% endtrans %}</div>
+        {% else %}
+            <p class="message">
+                {% if request.user==question.author  %}
+                    {% trans %}answer your own question only to give an answer{% endtrans %}
+                {% else %}
+                    {% trans %}please only give an answer, no discussions{% endtrans %}
+                {% endif %}
+            </p>
+        {% endif %}
+        {{macros.edit_post(answer, settings.WIKI_ON)}}
+        <input type="submit" 
+            {% if user.is_anonymous() %}
+                value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
+            {% else %}
+                {% if user == question.author %}
+                    value="{% trans %}Answer Your Own Question{% endtrans %}" 
+                {% else %}
+                    value="{% trans %}Answer the question{% endtrans %}" 
+                {% endif %}
+            {% endif %}
+            class="submit after-editor" style="float:left"/>
+        {% endif %}
+    </form>
 </div>
 {% endblock %}
 

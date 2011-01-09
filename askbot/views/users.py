@@ -124,6 +124,7 @@ def users(request):
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
         'active_tab': 'users',
+        'page_class': 'users',
         'users' : users_page,
         'suser' : suser,
         'keywords' : suser,

@@ -2,30 +2,26 @@
 <!-- question_retag.html -->
 {% block title %}{% spaceless %}{% trans %}Change tags{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<div id="main-bar" class="headNormal">
-    {% trans %}Change tags{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
-</div>
-<div id="main-body" class="ask-body">
-    <div id="askform">
-        <form id="fmretag" action="{% url retag_question question.id %}" method="post" >
-            <h3>
-                {{ question.get_question_title() }}
-            </h3>
-            <div id="description" class="edit-content-html">
-                {{ question.html }}
+<h1>{% trans %}Change tags{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
+<div id="askform">
+    <form id="fmretag" action="{% url retag_question question.id %}" method="post" >
+        <h2>
+            {{ question.get_question_title() }}
+        </h2>
+        <div id="description" class="edit-content-html">
+            {{ question.html }}
+        </div>
+        <div class="form-item">
+            <strong>{{ form.tags.label_tag() }}:</strong> <span class="form-error"></span><br/>
+            {{ form.tags }}  {{ form.tags.errors }}
+            <div class="title-desc">
+                {{ form.tags.help_text }}
             </div>
-            <div class="form-item">
-                <strong>{{ form.tags.label_tag() }}:</strong> <span class="form-error"></span><br/>
-                {{ form.tags }}  {{ form.tags.errors }}
-                <div class="title-desc">
-                    {{ form.tags.help_text }}
-                </div>
-            </div>
-            <div class="error" ></div>
-            <input type="submit" value="{% trans %}Retag{% endtrans %}" class="submit" />&nbsp;
-            <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
-        </form>
-    </div>
+        </div>
+        <div class="error" ></div>
+        <input type="submit" value="{% trans %}Retag{% endtrans %}" class="submit" />&nbsp;
+        <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
+    </form>
 </div>
 {% endblock %}
 

@@ -39,6 +39,7 @@ p {
     margin-bottom: 13px;
     font-size: 13px;
     line-height: 140%;
+    padding-left: 5px;
 }
 
 a {
@@ -129,33 +130,23 @@ a:hover {
     text-decoration: underline;
 }
 
-.spacer1 {
-    height: 6px;
-    line-height: 6px;
-    clear: both;
-    visibility: hidden;
-}
-
-.spacer3 {
-    height: 30px;
-    line-height: 30px;
-    clear: both;
-    visibility: hidden;
-}
-
 h1 {
     font-size: 160%;
-    padding: 5px 0 5px 0;
+    padding: 10px 0 5px 5px;
+}
+
+.users h1, .tags-page h1 {
+    float: left;
 }
 
 h2 {
     font-size: 140%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 h3 {
     font-size: 120%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 ul {
@@ -205,9 +196,10 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-#wrapper {
+#askbot {
     width: 960px;
     margin: auto;
+    margin-bottom: 40px;
     padding: 0;
 }
 
@@ -217,16 +209,11 @@ blockquote {
     background: #FFF;
 }
 
-#room {
-    padding: 0 0 10px 0;
-    background-color: #FFF;
-}
-
 #CALeft {
     width: 710px;
     float: left;
     position: relative;
-    padding-left: 0 5px;
+    padding: 0 5px;
 
 }
 
@@ -244,6 +231,7 @@ blockquote {
 
 #ground {
     width: 100%;
+    clear: both;
     border-top: 1px solid #000;
     padding-top: 6px;
     padding-bottom: 0px;
@@ -732,7 +720,7 @@ blockquote {
 .boxC {
     background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px 10px 10px 15px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     /*
     border-top: 1px solid #eeeeec;
     border-left: 1px solid #eeeeec;
@@ -917,8 +905,7 @@ conflicts with WMD!
 }
 
 .marked-tags {
-    margin-top: 0px;
-    margin-bottom: 5px;
+    margin: 5px 0;
 }
 
 .deletable-tag {
@@ -1469,6 +1456,7 @@ div.comments {
     margin: 0;
     list-style-type: none;
     padding: 0px;
+    padding-left: 5px;
 }
 
 .tagsList li {
@@ -1811,8 +1799,8 @@ ins .post-tag {
 }
 
 .user-info-table {
-    width: 950;
     margin-bottom: 10px;
+    border-spacing: 0;
 }
 
 .user-stats-table .question-summary {
@@ -2612,6 +2600,19 @@ ul.form-horizontal-rows li input {
 
 #tagSelector {
     padding-bottom: 2px;
+    margin-bottom: 0;
+}
+
+#contrib-users, #related-tags, #tagSelector {
+    padding-left: 7px;
+}
+
+#contrib-users h2 {
+    padding: 0 0 5px 0;
+}
+
+#tagSelector h2{
+    padding: 0px;
 }
 
 #hideIgnoredTagsControl {
@@ -2729,6 +2730,9 @@ p.signup_p {
 
 img.gravatar {
     margin:2px;
+}
+.user-info-table .gravatar {
+    margin:0;
 }
 
 .vote-notification {

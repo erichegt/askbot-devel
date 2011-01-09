@@ -1,6 +1,6 @@
 {# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
 <div id="tagSelector" class="boxC">
-    <h3 class="subtitle">{% trans %}Interesting tags{% endtrans %}</h3>
+    <h2>{% trans %}Interesting tags{% endtrans %}</h2>
     <div class="tags interesting marked-tags">
     {% for tag_name in interesting_tag_names %}
         {% spaceless %}
@@ -17,7 +17,7 @@
     </div>
     <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
     <input id="interestingTagAdd" type="submit" value="{% trans %}Add{% endtrans %}"/>
-    <h3 class="subtitle">{% trans %}Ignored tags{% endtrans %}</h3>
+    <h2>{% trans %}Ignored tags{% endtrans %}</h2>
     <div class="tags ignored marked-tags">
     {% for tag_name in ignored_tag_names %}
         {% spaceless %}

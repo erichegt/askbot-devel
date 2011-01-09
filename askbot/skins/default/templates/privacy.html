@@ -2,11 +2,7 @@
 <!-- privacy.html -->
 {% block title %}{% spaceless %}{% trans %}Privacy policy{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<div class="headNormal">
-    {% trans %}Privacy policy{% endtrans %}
-</div>
-<div id="main-body" style="width:100%">
-    {{settings.FORUM_PRIVACY}}
-</div>
+<h1>{% trans %}Privacy policy{% endtrans %}</h1>
+{{settings.FORUM_PRIVACY}}
 {% endblock %}
 <!-- end privacy.html -->

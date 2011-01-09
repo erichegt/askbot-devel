@@ -379,6 +379,7 @@ def tags(request):#view showing a listing of available tags - plain list
     data = {
         'view_name':'tags',
         'active_tab': 'tags',
+        'page_class': 'tags-page',
         'tags' : tags,
         'stag' : stag,
         'tab_id' : sortby,

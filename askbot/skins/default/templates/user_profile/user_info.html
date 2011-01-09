@@ -2,23 +2,15 @@
 {% import "macros.html" as macros %}
 <table class="user-info-table">
     <tr>
-        <td width="180" style="vertical-align:middle;text-align:center;">
-            <table width="100%">
-                <tr>
-                    <td>
-                        {{ macros.gravatar(view_user, 128) }}
-                        {% if request.user == view_user %}
-                        <h1><a href="{% url faq %}#gravatar">{% trans %}change picture{% endtrans %}</a></h1>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center">
-                        <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
-                        <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
-                    </td>
-                </tr>
-            </table>
+        <td style="vertical-align:middle;text-align:center;">
+            <div>
+                {{ macros.gravatar(view_user, 128) }}
+                {% if request.user == view_user %}
+                <h1><a href="{% url faq %}#gravatar">{% trans %}change picture{% endtrans %}</a></h1>
+                {% endif %}
+            </div>
+            <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
+            <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
         </td>
         <td width="360" style="vertical-align: top;">
             <table class="user-details">

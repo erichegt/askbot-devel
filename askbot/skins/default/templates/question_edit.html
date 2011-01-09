@@ -6,30 +6,26 @@
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
-<div id="main-bar" class="headNormal">
-    {% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
-</div>
-<div id="main-body" class="ask-body">
-    <form id="fmedit" action="{% url edit_question question.id %}" method="post" >
-        <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/>
-        {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
-        <div style="vertical-align:middle">
-        {{ revision_form.revision }} <input type="submit" style="display:none"
-                                            id="select_revision" name="select_revision" 
-                                            value="{% trans %}select revision{% endtrans %}">
-        </div> 
-        {{macros.edit_post(
-                        form,
-                        settings.WIKI_ON and question.wiki == False,
-                        post_type='question',
-                        edit_title=True,
-        )}}
-        <div class="after-editor">
-            <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
-            <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
-        </div>
-    </form>
-</div>
+<h1>{% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
+<form id="fmedit" action="{% url edit_question question.id %}" method="post" >
+    <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/>
+    {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
+    <div style="vertical-align:middle">
+    {{ revision_form.revision }} <input type="submit" style="display:none"
+                                        id="select_revision" name="select_revision" 
+                                        value="{% trans %}select revision{% endtrans %}">
+    </div> 
+    {{macros.edit_post(
+                    form,
+                    settings.WIKI_ON and question.wiki == False,
+                    post_type='question',
+                    edit_title=True,
+    )}}
+    <div class="after-editor">
+        <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
+        <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
+    </div>
+</form>
 {% endblock %}
 
 {% block sidebar %}

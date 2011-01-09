@@ -3,10 +3,7 @@
 <!-- template badge.html -->
 {% block title %}{% spaceless %}{% trans name=badge.name %}{{name}}{% endtrans %} - {% trans %}Badge{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<div id="main-bar" class="headNormal">
-{% trans %}Badge{% endtrans %}
-</div>
-<div id="main-body" style="width:100%;margin-bottom:20px">
+<h1>{% trans name=badge.name %}Badge "{{name}}"{% endtrans %}</h1>
     <p>
         <a href="{{badge.get_absolute_url()}}" title="{{ badge.get_type_display() }} : {% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name%}{{name}}{% endtrans %}</a> {% trans description=badge.description %}{{description}}{% endtrans %}
     </p>
@@ -23,7 +20,5 @@
         </p>
         {% endfor %}
     </div>
-
-</div>
 {% endblock %}
 <!-- end template badge.html -->
