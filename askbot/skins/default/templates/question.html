@@ -395,7 +395,7 @@
 {% if similar_questions.data %}
     {% cache 1800 "related_questions" related_questions question.id language_code %}
     <div class="boxC">
-        <h3 class="subtitle">{% trans %}Related questions{% endtrans %}</h3>
+        <h2>{% trans %}Related questions{% endtrans %}</h2>
         <div class="questions-related">
             {% for question in similar_questions.data() %}
             <p>

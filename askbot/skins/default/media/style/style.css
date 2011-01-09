@@ -1239,32 +1239,9 @@ ins .post-tag {
     float: left;
 }
 
-/* paused cleaning here */
-
-.question-summary {
-    border-bottom: 1px dotted #999999;
-    float: left;
-    overflow: hidden;
-    padding: 11px 0;
-    width: 670px;
-}
-
 .user-info-table {
     margin-bottom: 10px;
     border-spacing: 0;
-}
-
-.user-stats-table .question-summary {
-    width: 800px;
-}
-
-.narrow .stats {
-    float: left;
-    height: 48px;
-    margin: 0 0 0 7px;
-    padding: 0;
-    width: auto;
-    font-family: Arial;
 }
 
 /* todo: remove this hack? */
@@ -1272,114 +1249,14 @@ ins .post-tag {
     width: 660px;
 }
 
-.stats div {
-    font-size: 11px;
-    text-align: center;
-}
-
-/*
-.narrow .votes {
-    background: #EEEEEE none repeat scroll 0 0;
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-*/
-
-/*
-.narrow .summary {
-    width: 600px;
-    display: inline-block;
-}
-*/
-
 .narrow .summary h3 {
     padding: 0px;
     margin: 0px;
 }
 
-/* todo: delete commented out stuff */
-/*
-.narrow .views {
-    height: 42px;
-    float: left;
-    margin: 0 7px 0 0; *//*padding:5px 0 5px 4px;*//*
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    color: #777;
-}
-*/
-
-.narrow .status {
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-
-.narrow .vote-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-    color: #555;
-    line-height: 20px;
-}
-
-.narrow .answer-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-.narrow .views-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-div.started {
-    color: #999999;
-    float: right;
-    line-height: 18px;
-
-}
-
-.narrow div.started {
-    line-height: inherit;
-    padding-top: 4px;
-    white-space: nowrap;
-    width: auto;
-}
-
 .relativetime {
     font-weight: bold;
     text-decoration: none;
-}
-
-div.started a {
-    font-weight: bold;
-}
-
-div.started .reputation-score {
-    margin-left: 1px;
 }
 
 #top a.user-micro-info {
@@ -1419,10 +1296,7 @@ div.started .reputation-score {
     color: #777;
 }
 
-.user-action {
-
-}
-
+/* todo: make these more semantic */
 .user-action-1 {
     font-weight: bold;
     color: #333;
@@ -1474,6 +1348,7 @@ div.started .reputation-score {
     color: #333;
 }
 
+/* todo: make these more semantic */
 .post-type-1 a {
     font-weight: bold;
 
@@ -1504,66 +1379,6 @@ div.started .reputation-score {
     color: #333;
 }
 
-/*读书频道*/
-.bookInfo {
-    float: left;
-    width: 940px;
-    padding: 5px;
-}
-
-.bookCover {
-    float: left;
-    width: 200px;
-}
-
-.bookCover img {
-    border: 1px solid #ccc;
-    max-width: 200px;
-}
-
-.bookSummary {
-    float: left;
-    font-size: 13px;
-}
-
-.blogRss {
-    float: right;
-    margin: 0 10px 0 0;
-    width: 460px;
-    height: 240px;
-    background-color: #EEE;
-    padding: 5px;
-}
-
-.bookQuestions {
-    margin-bottom: 10px;
-}
-
-.bookFeed {
-    float: right;
-}
-
-.bookAsk {
-/*letter-spacing:1px; */
-    float: right;
-    margin: -30px 10px 0 0;
-    padding: 3px 5px 3px 5px;
-}
-
-.bookAsk a {
-    font-size: 15px;
-    color: #FFF;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #EC7000;
-    padding: 3px 6px 3px 6px;
-}
-
-.bookAsk a:hover {
-    text-decoration: underline;
-}
-
-/*其他全局样式*/
 .hilite {
     background-color: #ff0;
 }
@@ -1578,16 +1393,6 @@ div.started .reputation-score {
 
 .hilite3 {
     background-color: #0ff;
-}
-
-.userStatus {
-    margin-left: 12px;
-    color: #FFF;
-    float: right;
-}
-
-.userStatus a {
-    color: #FFF;
 }
 
 .gold, .badge1 {
@@ -1617,29 +1422,14 @@ div.started .reputation-score {
     font-size: 13px;
 }
 
-.subSearch {
-    margin-bottom: 12px;
-    padding: 4px;
-}
-
 a.comment {
     background: #EEE;
     color: #993300;
     padding: 5px;
 }
 
-a.permLink {
-    padding: 2px;
-}
-
 a.offensive {
     color: #999;
-}
-
-ul.bulleta li {
-    background: url(../images/bullet_green.gif) no-repeat 0px 2px;
-    padding-left: 16px;
-    margin-bottom: 4px;
 }
 
 .user {
@@ -1658,10 +1448,6 @@ ul.bulleta li {
     float: left;
     margin-right: 4px;
     display: inline;
-}
-
-.yellowbg {
-    background: yellow;
 }
 
 .message {
@@ -1725,10 +1511,6 @@ button::-moz-focus-inner {
     padding-right: 10px;
 }
 
-.thousand {
-    color: orange;
-}
-
 .notify {
     position: fixed;
     top: 0px;
@@ -1770,15 +1552,11 @@ button::-moz-focus-inner {
     font-size: 15px;
 }
 
-.bigger {
-    font-size: 14px;
-}
-
 .strong {
     font-weight: bold;
 }
 
-.orange {
+.orange {/* used in django.po */
     color: #d64000;
     font-weight: bold;
 }
@@ -1790,27 +1568,6 @@ button::-moz-focus-inner {
 .about div {
     padding: 10px 5px 10px 5px;
     border-top: 1px dashed #aaaaaa;
-}
-
-.about div.first {
-    padding-top: 0;
-    border-top: none;
-}
-
-.about p {
-    margin-bottom: 10px;
-}
-
-.about a {
-    color: #d64000;
-    text-decoration: underline;
-}
-
-.about h3 {
-    line-height: 30px;
-    font-size: 15px;
-    font-weight: 700;
-    padding-top: 0px;
 }
 
 .highlight {
@@ -1849,11 +1606,6 @@ button::-moz-focus-inner {
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
-}
-
-.tight {
-    margin: 0;
-    padding: 0;
 }
 
 .list-table td {
@@ -1954,29 +1706,8 @@ ul.form-horizontal-rows li input {
     margin: 0px;
 }
 
-#emailpw-form li input {
-    left: 170px;
-}
-
-#emailpw-form ul.errorlist {
-    left: 170px;
-}
-
-#changepw-form li input {
-    left: 150px;
-}
-
-#changepw-form ul.errorlist {
-    left: 150px;
-}
-
 .narrow .summary {
     float: left;
-}
-
-.narrow .summary .question-title {
-    font-weight: bold;
-    font-size: 120%;
 }
 
 .user-profile-tool-links {
@@ -2032,21 +1763,6 @@ ul.form-horizontal-rows li input {
 
 .post-update-info p.tip {
     color: #444;
-}
-
-.admin {
-    background-color: #fff380; /* nice yellow */
-    border: 1px solid darkred;
-    padding: 0 5px 0 5px;
-}
-
-.admin p {
-    margin-bottom: 3px;
-}
-
-.admin #action_status {
-    text-align: center;
-    font-weight: bold;
 }
 
 #tagSelector {
