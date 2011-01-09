@@ -477,20 +477,6 @@ blockquote {
     font: normal 12px sans-serif;
 }
 
-.paginator .prev-na,
-.paginator .next-na {
-    padding: .3em;
-    font: bold .875em sans-serif;
-}
-
-.paginator .prev-na,
-.paginator .next-na {
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    color: #aaa;
-    font-weight: normal;
-}
-
 .paginator .prev a, .paginator .prev a:visited,
 .paginator .next a, .paginator .next a:visited {
     border: 1px solid #fff;
@@ -500,11 +486,11 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator .prev, .paginator .prev-na {
+.paginator .prev {
     margin-right: .5em;
 }
 
-.paginator .next, .paginator .next-na {
+.paginator .next {
     margin-left: .5em;
 }
 
@@ -540,31 +526,9 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator-container {
-    float: right;
-    padding: 10px 0 10px 0;
-}
-
 .paginator-container-left {
     padding: 5px 0 10px 0;
 }
-
-/*标签*/
-/* todo: probably needs to be removed
-conflicts with WMD!
-.tag {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}
-*/
 
 .tags {
     font-family: sans-serif;
@@ -593,28 +557,6 @@ conflicts with WMD!
     color: #333;
 }
 
-.tagsbox {
-    line-height: 200%;
-}
-
-.tagsbox a {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}
-
-.tagsbox a:hover {
-    background-color: #fFF;
-    color: #333;
-}
-
 .tag-number {
     font-weight: 700;
     font-family: sans-serif;
@@ -629,7 +571,7 @@ conflicts with WMD!
     white-space: nowrap;
 }
 
-/*奖牌*/
+/* badges */
 a.medal {
     font-size: 14px;
     line-height: 250%;
@@ -663,6 +605,10 @@ a:hover.medal {
     clear: both;
     margin-bottom: 3px;
     margin-top: 3px;
+}
+
+.tabBar h2 {
+    float: left;
 }
 
 .tabsA, .tabsC {
@@ -731,142 +677,6 @@ a:hover.medal {
     text-decoration: none;
 }
 
-.headlineA {
-    font-size: 13px;
-    border-bottom: 1px solid #777;
-    padding-bottom: 2px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    text-align: right;
-    height: 30px;
-}
-
-.headQuestions {
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headAnswers {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_answers.gif) left 2px no-repeat;
-    padding-left: 24px;
-}
-
-.headTags {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_tags.gif) no-repeat;
-    padding-left: 24px;
-}
-
-/* todo: make this class applicable to all headers it is actually uses in tags.html too */
-.headUsers {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headMedals {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headLogin {
-    float: left;
-    padding: 3px;
-    font-size: 15px;
-    font-weight: 800;
-    background: url(../images/ico_login.gif) no-repeat;
-    padding-left: 24px;
-}
-
-.headNormal {
-    text-align: left;
-    padding: 3px;
-    font-size: 15px;
-    margin-bottom: 12px;
-    font-weight: bold;
-    border-bottom: 1px solid #777;
-}
-
-.headUser {
-    text-align: left;
-    padding: 5px;
-    font-size: 20px; /*letter-spacing:1px;*/
-    margin-bottom: 12px;
-    font-weight: 800;
-    border-bottom: 1px solid #777;
-}
-
-/*RSS订阅*/
-#feeds {
-    margin: 10px 0;
-}
-
-#feeds a {
-    background: url(../images/feed-icon-small.png) no-repeat 0;
-    padding-left: 18px;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-/*问题*/
-#question {
-    margin-bottom: 30px;
-}
-
-#question h1 {
-    font-size: 15px;
-    background: #CCC;
-    padding: 6px 8px;;
-}
-
-#question .body {
-    background: #F7F7F7;
-    padding: 20px 10px;
-}
-
-.starter {
-    padding: 10px;
-    background: #E0EAF1;
-}
-
-.vote {
-    font-size: 20px;
-    color: #666;
-    font-weight: 800;
-}
-
 .questions-related {
     font-weight: 700;
     word-wrap: break-word;
@@ -897,22 +707,6 @@ a:hover.medal {
 
 .question-body IMG {
     max-width: 600px;
-}
-
-.question-mark {
-    /*background-color:#fff5e0;
-    border-top: 1px solid #eeeeec;
-    border-right: 1px solid #babdb6;
-    border-bottom: 1px solid #babdb6;
-    border-left: 1px solid #eeeeec;*/
-    text-align: left;
-    padding: 5px;
-    overflow: hidden;
-}
-
-.question-edit {
-    text-align: left;
-    overflow: hidden;
 }
 
 .vote-buttons {
@@ -992,12 +786,6 @@ a:hover.medal {
 
 .post-controls .sep {
     color: #ccc;
-}
-
-.wiki-category {
-    margin-left: 5px;
-    color: #999;
-    font-size: 90%;
 }
 
 .comments {
@@ -1092,15 +880,6 @@ div.comments {
 }
 
 /*回答*/
-#answers {
-}
-
-.answer {
-    padding-top: 10px;
-    width: 100%;
-    border-bottom: 1px solid #ccccce;
-}
-
 .answer-body {
     min-height: 80px;
     font-size: 13px;
@@ -1134,11 +913,6 @@ div.comments {
     color: #763333;
 }
 
-.unanswered {
-    background: #777;
-    color: white;
-}
-
 .answered-by-owner {
     background: #E9E9FF;
 }
@@ -1163,11 +937,7 @@ div.comments {
     background: #F4E7E7 none repeat scroll 0 0;
 }
 
-/*标签列表*/
-/*
-.tagsbox {}
-.tagsbox a {color:#000;line-height:30px;margin-right:10px;font-size:100%;background-color:#F9F7ED;padding:3px;border:1px solid #aaaaaa;}
-.tagsbox a:hover {text-decoration:none;background-color:#F9F7ED;color:#B02B2C;} */
+/* tags */
 .tagsList {
     margin: 0;
     list-style-type: none;
@@ -1180,17 +950,11 @@ div.comments {
     float: left;
 }
 
-.badge-list {
-    margin: 0;
-    list-style-type: none;
-}
-
-/*登录*/
-.list-item {
+.boxC ul {
     margin-left: 15px;
 }
 
-.list-item LI {
+.boxC li {
     list-style-type: disc;
     font-size: 13px;
     line-height: 20px;
@@ -1232,9 +996,6 @@ table.ab-tag-filter-form {
     width: 45em;
 }
 
-/*.form-row li label {
-    display: inline
-}*/
 .submit-row {
     line-height: 30px;
     padding-top: 10px;
@@ -1259,12 +1020,7 @@ label.retag-error {
     font-size: 10px;
 }
 
-.error-list li {
-    padding: 5px;
-}
-
 .fieldset {
-/*	border:solid 1px #777;*/
     border: none;
     margin-top: 10px;
     padding: 10px;
@@ -1297,18 +1053,6 @@ label.retag-error {
     font-size: 120%;
 }
 
-.openid-samples {
-
-}
-
-.openid-samples .list, .list li {
-    font-family: Trebuchet MS, "segoe ui", Helvetica, "Microsoft YaHei", 宋 体, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
-    list-style: none !important;
-    margin-left: -30px !important;
-    line-height: 20px !important;
-}
-
-/*表单相关*/
 span.form-error {
     color: #990000;
     font-size: 90%;
@@ -1375,8 +1119,6 @@ span.form-error {
     margin: 5px 0 5px 0;
 }
 
-/*修订记录*/
-
 .revision {
     margin: 10px 0 10px 0;
     width: 100%;
@@ -1422,11 +1164,6 @@ span.form-error {
     font-size: 300%;
     font-weight: bold;
     font-family: sans-serif;
-}
-
-.revision .body {
-    padding-left: 10px;
-    margin-bottom: 50px;
 }
 
 .revision .answerbody {
@@ -1479,11 +1216,6 @@ ins .post-tag {
     width: 90%;
 }
 
-.user-edit-link {
-    background: url(../images/edit.png) no-repeat;
-    padding-left: 20px;
-}
-
 .favorites-count-off {
     color: #919191;
     float: left;
@@ -1500,11 +1232,14 @@ ins .post-tag {
     text-align: center;
 }
 
+/* todo: get rid of this in html */
 .favorites-empty {
     width: 32px;
     height: 45px;
     float: left;
 }
+
+/* paused cleaning here */
 
 .question-summary {
     border-bottom: 1px dotted #999999;

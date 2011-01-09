@@ -20,9 +20,7 @@ parameters:
 {% block head %}{% endblock %}
 {% block title %}{% spaceless %}{% trans %}Registration{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-    <div id="main-bar" class="headNormal">
-        {% trans %}Registration{% endtrans %}
-    </div>      
+    <h1>{% trans %}Registration{% endtrans %}</h1>
     <div id="completetxt" >
         <div class="message">
             {% if login_type=='openid' %}

@@ -161,14 +161,13 @@
     {% if answers %}
         <hr/>
         <div class="tabBar">
-            <a name="sort-top"></a>
-            <div class="headUsers">
+            <h2 id="sort-top">
             {% trans counter=answers|length %}
             {{counter}} Answer:
             {% pluralize %}
             {{counter}} Answers:
             {% endtrans %}
-            </div>
+            </h2>
             <div class="tabsA">
                  <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top" 
                     title="{% trans %}oldest answers will be shown first{% endtrans %}">{% trans %}oldest answers{% endtrans %}</a>
@@ -331,13 +330,13 @@
     {% if not question.closed %}
         <div style="padding:10px 0 0 0;">
             {% spaceless %}
-            <div class="headNormal">
+            <h2>
                 {% if answers %}
                     {% trans %}Your answer{% endtrans %}
                 {% else %}
                     {% trans %}Be the first one to answer this question!{% endtrans %}
                 {% endif %}
-            </div>
+            </h2>
             {% endspaceless %}
         </div>
         {% if not request.user.is_authenticated() %}

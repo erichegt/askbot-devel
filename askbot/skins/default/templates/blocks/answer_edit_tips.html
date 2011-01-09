@@ -1,8 +1,8 @@
 <!-- template answer_edit_tips.html -->
 <div class="boxC">
-    <h3>{% trans %}answer tips{% endtrans %}</h3>
+    <h2>{% trans %}answer tips{% endtrans %}</h2>
     <div>
-        <ul class="list-item">
+        <ul>
             <li> <b>{% trans %}please make your answer relevant to this community{% endtrans %}</b>
             </li>
             <li>
@@ -22,8 +22,8 @@
 </div>
 
 <div class="boxC">
-    <h3>{% trans %}Markdown tips{% endtrans %}</h3>
-    <ul class="list-item">
+    <h2>{% trans %}Markdown tips{% endtrans %}</h2>
+    <ul>
         {% if settings.MARKUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
         <li>
             {% trans %}*italic*{% endtrans %}

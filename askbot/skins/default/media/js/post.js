@@ -1486,7 +1486,7 @@ var socialSharing = function(){
     return {
         init: function(page_url, text_to_share){
             URL = window.location.href;
-            TEXT = escape($('div.headNormal > a').html());
+            TEXT = escape($('h1 > a').html());
             var fb = $('a.fb-share')
             var tw = $('a.twitter-share');
             copyAltToTitle(fb);

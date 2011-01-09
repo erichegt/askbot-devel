@@ -3,13 +3,13 @@
 {% block content %}
 <!-- changeemail.html action_type={{action_type}}-->
 {% if action_type=="change" %}
-    <div id="main-bar" class="headNormal">
+    <h1>
         {% if user.email %}
             {% trans %}Change email{% endtrans %}
         {% else %}
             {% trans %}Save your email address{% endtrans %}
         {% endif %}
-    </div>
+    </h1>
     <p class="message">
         {% if user.email %}
             {% trans %}change {{email}} info{% endtrans %}

@@ -1,26 +1,24 @@
 <!-- question_edit_tips.html -->
 <div class="boxC">
-    <h3>{% trans %}question tips{% endtrans %}</h3>
-    <div>
-        <ul class="list-item">
-            <li> <b>{% trans %}please ask a relevant question{% endtrans %}</b>
-            </li>
-            <li>
-                {% trans %}please try provide enough details{% endtrans %}
-            </li>
-            <li>
-                {% trans %}be clear and concise{% endtrans %}
-            </li>
-        </ul>
-        <p class='info-box-follow-up-links'>
-            <a href="{% url faq %}" target="_blank" title="{% trans %}see frequently asked questions{% endtrans %}">{% trans %}faq{% endtrans %} »</a>
-        </p>
-    </div>
+    <h2>{% trans %}question tips{% endtrans %}</h2>
+    <ul>
+        <li> <b>{% trans %}please ask a relevant question{% endtrans %}</b>
+        </li>
+        <li>
+            {% trans %}please try provide enough details{% endtrans %}
+        </li>
+        <li>
+            {% trans %}be clear and concise{% endtrans %}
+        </li>
+    </ul>
+    <p class='info-box-follow-up-links'>
+        <a href="{% url faq %}" target="_blank" title="{% trans %}see frequently asked questions{% endtrans %}">{% trans %}faq{% endtrans %} »</a>
+    </p>
 </div>
 
 <div class="boxC">
-    <h3>{% trans %}Markdown tips{% endtrans %}</h3>
-    <ul class="list-item">
+    <h2>{% trans %}Markdown tips{% endtrans %}</h2>
+    <ul>
         {% if settings.MARKDUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
         <li>
             {% trans %}*italic*{% endtrans %}
