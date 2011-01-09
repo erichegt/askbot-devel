@@ -57,79 +57,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.block {
-    width: 960px;
-    height: auto;
-}
-
-.fleft {
-    float: left;
-}
-
-.fright {
-    float: right;
-}
-
-.tleft {
-    text-align: left;
-}
-
-.tcenter {
-    text-align: center;
-}
-
-.tright {
-    text-align: right;
-}
-
-.dis {
-    display: block;
-}
-
-.inline {
-    display: inline;
-}
-
-.none {
-    display: none;
-}
-
-.red {
-    color: #CC0000;
-}
-
-.b {
-    font-weight: bold;
-}
-
-.f10 {
-    font-size: 10px;
-}
-
-.f11 {
-    font-size: 11px;
-}
-
-.f12 {
-    font-size: 12px;
-}
-
-.f13 {
-    font-size: 13px;
-}
-
-.f14 {
-    font-size: 14px;
-}
-
-.white {
-    color: #FFFFFF;
-}
-
-.u {
-    text-decoration: underline;
-}
-
 h1 {
     font-size: 160%;
     padding: 10px 0 5px 5px;
@@ -239,8 +166,6 @@ blockquote {
     background: #777;
 }
 
-/*#licenseLogo {position:absolute;top:10px;right:10px;}*/
-
 /* why is this called top? - this contains links like login, faq, etc */
 #top {
     position: absolute;
@@ -299,9 +224,6 @@ blockquote {
 #navBar .nav a {
     color: #333333;
     background-color: #fff0e0;
-    /*border-left: 1px solid #eeeeec;
-                 border-right: 1px solid #babdb6;
-                 border-top: 1px solid #eeeeec;*/
     border: 1px solid #888888;
     border-bottom: none;
     padding: 0px 12px 3px 12px;
@@ -418,137 +340,11 @@ blockquote {
     padding: 5px 0 0 5px;
 }
 
-
-#searchBar .options {
-    padding: 3px 0 3px 0;
-    font-size: 100%;
-    color: #EEE; /*letter-spacing:1px;*/
-}
-
-#searchBar .options INPUT {
-    margin: 0 3px 0 15px;
-}
-
-#searchBar .options INPUT:hover {
-    cursor: pointer
-}
-
-/*问题列表*/
 #listA {
     float: left;
     background-color: #FFF;
     padding: 0;
     width: 100%;
-}
-
-#listA .qstA {
-    position: relative;
-    padding: 3px 5px 5px 10px;
-    border-top: 1px dashed #ccccce;
-    /*border-left:1px solid #ebebbe;
-    border-right:1px solid #b4b48e;
-    border-bottom:1px solid #b4b48e;*/
-    background: white; /* #f9f7ed;*/
-/*margin:10px 0 10px 0;*/
-/*background:url(../images/quest-bg.gif) repeat-x top;*/
-}
-
-#listA .qstA thumb {
-    float: left;
-}
-
-#listA .qstA H2 {
-    font-size: 14px;
-    font-weight: 800;
-    margin: 8px auto;
-    padding: 0px;
-}
-
-#listA .qstA H2 a {
-    color: 333333 /*#2e3436*/;
-    font-size: 15px;
-}
-
-#listA .qstA .stat {
-    position: absolute;
-    right: 0px;
-    bottom: 5px;
-    font-size: 12px; /*letter-spacing:1px;*/
-    float: right;
-}
-
-#listA .qstA .stat span {
-    margin-right: 5px;
-}
-
-#listA .qstA .stat td {
-    min-width: 40px;
-    text-align: center;
-}
-
-#listA .qstA .stat .num {
-    font-family: sans-serif;
-    color: #a40000;
-    /*background:#eeeeec;
- border: 1px solid #babdb6;*/
-    margin: 0px;
-    font-size: 17px;
-    font-weight: 800;
-}
-
-#listA .qstA table {
-    border-spacing: 0px;
-}
-
-#listA .qstA table td {
-    padding: 0px;
-    width: 60px;
-    text-align: center;
-}
-
-#listA .qstA .stat .unit {
-    color: #777777;
-    margin: 0px
-}
-
-#listA .qstA .from {
-    margin-top: 5px;
-    font-size: 13px;
-    color: #777777;
-}
-
-#listA .qstA .from .score {
-    font-family: sans-serif;
-    color: #555555;
-}
-
-#listA .qstA .date {
-    margin-left: 10px;
-    color: #777777;
-}
-
-#listA .qstA .wiki {
-    color: #763333;
-    font-size: 12px;
-}
-
-#listA .qstA .from a {
-}
-
-#listA .qstA .from IMG {
-    vertical-align: middle;
-}
-
-#listA .qstA .author {
-    font-weight: 400;
-}
-
-#listA .qstA .author a {
-    color: #444444;
-}
-
-#listA .qstA .summary {
-    margin-right: 5px;
 }
 
 .short-summary {
@@ -647,94 +443,14 @@ blockquote {
     text-decoration: underline;
 }
 
-.questions-count {
-    font-size: 32px;
-    font-family: sans-serif;
-    font-weight: 600;
-    padding: 0 0 5px 0px;
-    color: #a40000;
-    margin-top: 3px;
-}
-
-/*内容块*/
-.boxA {
-    background: #888a85;
-    padding: 6px;
-    margin-bottom: 8px;
-    border 1px solid #babdb6;
-}
-
-.boxA H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #FFF;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 4px;
-}
-
-.boxA .body {
-    border: 1px solid #999;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-}
-
-.boxA .more {
-    padding: 2px;
-    text-align: right;
-    font-weight: 800;
-}
-
-.boxB {
-    background: #F9F7ED;
-    padding: 6px;
-    margin-bottom: 8px;
-    border: solid 1px #aaaaaa;
-}
-
-.boxB H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #000;
-    margin: 0;
-    padding: 0 0 0 15px;
-    margin-bottom: 4px;
-    background: url(../images/dot-g.gif) no-repeat left center;
-}
-
-.boxB .body {
-    border: 1px solid #aaaaaa;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-    line-height: 160%;
-}
-
-.boxB .more {
-    padding: 1px;
-    text-align: right;
-    font-weight: 800;
-}
-
 .boxC {
     background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px 10px 10px 15px;
     margin-bottom: 12px;
-    /*
-    border-top: 1px solid #eeeeec;
-    border-left: 1px solid #eeeeec;
-    border-right: 1px solid #a9aca5;
-    border-bottom: 1px solid #babdb6;
-    */
 }
 
 .boxC p {
     margin-bottom: 8px;
-}
-
-.boxC p.nomargin {
-    margin: 0px;
 }
 
 .boxC p.info-box-follow-up-links {
