@@ -14,29 +14,9 @@ from askbot.models import Answer
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 
-# user preferences view permissions
-def is_user_self(request_user, target_user):
-    return (request_user.is_authenticated() and request_user == target_user)
-    
-def can_view_user_votes(request_user, target_user):
-    return (request_user.is_authenticated() and request_user == target_user)
-
-def can_view_user_preferences(request_user, target_user):
-    return (request_user.is_authenticated() and request_user == target_user)
-
-def can_view_user_edit(request_user, target_user):
-    return (request_user.is_authenticated() and request_user == target_user)
-
 ###########################################
 ## actions and reputation changes event
 ###########################################
-def calculate_reputation(origin, offset):
-    result = int(origin) + int(offset)
-    if (result > 0):
-        return result
-    else:
-        return 1
-
 @transaction.commit_on_success
 def onFlaggedItem(post, user, timestamp=None):
     if timestamp is None:
@@ -45,10 +25,9 @@ def onFlaggedItem(post, user, timestamp=None):
     post.offensive_flag_count = post.offensive_flag_count + 1
     post.save()
 
-    post.author.reputation = calculate_reputation(
-                                post.author.reputation,
-                                askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
-                            )
+    post.author.receive_reputation(
+        askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
+    )
     post.author.save()
 
     question = post.get_origin_post()
@@ -71,11 +50,9 @@ def onFlaggedItem(post, user, timestamp=None):
 
     #todo: These should be updated to work on same revisions.
     if post.offensive_flag_count ==  askbot_settings.MIN_FLAGS_TO_HIDE_POST:
-        post.author.reputation = \
-            calculate_reputation(
-                post.author.reputation,
-                askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
-            )
+        post.author.receive_reputation(
+            askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
+        )
 
         post.author.save()
 
@@ -91,11 +68,9 @@ def onFlaggedItem(post, user, timestamp=None):
         reputation.save()
 
     elif post.offensive_flag_count == askbot_settings.MIN_FLAGS_TO_DELETE_POST:
-        post.author.reputation = \
-            calculate_reputation(
-                post.author.reputation,
-                askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
-            )
+        post.author.receive_reputation(
+            askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
+        )
 
         post.author.save()
 
@@ -123,10 +98,9 @@ def onAnswerAccept(answer, user, timestamp=None):
     answer.save()
     answer.question.save()
 
-    answer.author.reputation = calculate_reputation(
-                        answer.author.reputation,
-                        askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
-                    )
+    answer.author.receive_reputation(
+        askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+    )
     answer.author.save()
     reputation = Repute(user=answer.author,
                positive=askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
@@ -136,8 +110,7 @@ def onAnswerAccept(answer, user, timestamp=None):
                reputation=answer.author.reputation)
     reputation.save()
 
-    user.reputation = calculate_reputation(user.reputation,
-                            askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER)
+    user.receive_reputation(askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER)
     user.save()
     reputation = Repute(user=user,
                positive=askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
@@ -157,8 +130,7 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     answer.save()
     answer.question.save()
 
-    answer.author.reputation = calculate_reputation(
-        answer.author.reputation,
+    answer.author.receive_reputation(
         askbot_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE
     )
     answer.author.save()
@@ -173,8 +145,9 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     )
     reputation.save()
 
-    user.reputation = calculate_reputation(user.reputation,
-                    askbot_settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE)
+    user.receive_reputation(
+        askbot_settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE
+    )
     user.save()
     reputation = Repute(user=user,
                negative=askbot_settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE,
@@ -198,8 +171,9 @@ def onUpVoted(vote, post, user, timestamp=None):
         author = post.author
         todays_rep_gain = Repute.objects.get_reputation_by_upvoted_today(author)
         if todays_rep_gain <  askbot_settings.MAX_REP_GAIN_PER_USER_PER_DAY:
-            author.reputation = calculate_reputation(author.reputation,
-                              askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
+            author.receive_reputation(
+                askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE
+            )
             author.save()
 
             question = post
@@ -228,11 +202,9 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = \
-                calculate_reputation(
-                    author.reputation,
-                    askbot_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION
-                )
+        author.receive_reputation(
+            askbot_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION
+        )
         author.save()
 
         question = post
@@ -261,10 +233,7 @@ def onDownVoted(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = calculate_reputation(
-                                        author.reputation,
-                                        askbot_settings.REP_LOSS_FOR_DOWNVOTING
-                                    )
+        author.receive_reputation(askbot_settings.REP_LOSS_FOR_DOWNVOTING)
         author.save()
 
         question = post
@@ -279,10 +248,9 @@ def onDownVoted(vote, post, user, timestamp=None):
                    reputation=author.reputation)
         reputation.save()
 
-        user.reputation = calculate_reputation(
-                                user.reputation,
-                                askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
-                            )
+        user.receive_reputation(
+            askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+        )
         user.save()
 
         reputation = Repute(user=user,
@@ -307,10 +275,9 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
 
     if not post.wiki:
         author = post.author
-        author.reputation = calculate_reputation(
-                author.reputation,
-                askbot_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION
-            )
+        author.receive_reputation(
+            askbot_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION
+        )
         author.save()
 
         question = post
@@ -327,8 +294,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
             )
         reputation.save()
 
-        user.reputation = calculate_reputation(user.reputation,
-                        askbot_settings.REP_GAIN_FOR_CANCELING_DOWNVOTE)
+        user.receive_reputation(askbot_settings.REP_GAIN_FOR_CANCELING_DOWNVOTE)
         user.save()
 
         reputation = Repute(user=user,

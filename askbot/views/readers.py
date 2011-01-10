@@ -309,28 +309,6 @@ def questions(request):
     #print after - before
     return response
 
-def search(request): #generates listing of questions matching a search query - including tags and just words
-    """redirects to people and tag search pages
-    todo: eliminate this altogether and instead make
-    search "tab" sensitive automatically - the radio-buttons
-    are useless under the search bar
-    """
-    if request.method == "GET":
-        search_type = request.GET.get('t')
-        query = request.GET.get('query')
-        try:
-            page = int(request.GET.get('page', '1'))
-        except ValueError:
-            page = 1
-        if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?' + urlencode({'q':query.strip(),'page': page}))
-        elif search_type == 'user':
-            return HttpResponseRedirect(reverse('users') + '?' + urlencode({'q':query.strip(),'page': page}))
-        else:
-            raise Http404
-    else:
-        raise Http404
-
 def tags(request):#view showing a listing of available tags - plain list
     stag = ""
     is_paginated = True
@@ -341,9 +319,9 @@ def tags(request):#view showing a listing of available tags - plain list
         page = 1
 
     if request.method == "GET":
-        stag = request.GET.get("q", "").strip()
+        stag = request.GET.get("query", "").strip()
         if stag != '':
-            objects_list = Paginator(models.Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name like %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
+            objects_list = Paginator(models.Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name ilike %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
         else:
             if sortby == "name":
                 objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)

@@ -199,22 +199,6 @@ def can_see_offensive_flags(user, post):
         return False
 
 @register.filter
-def can_view_user_edit(request_user, target_user):
-    return auth.can_view_user_edit(request_user, target_user)
-    
-@register.filter
-def can_view_user_votes(request_user, target_user):
-    return auth.can_view_user_votes(request_user, target_user)
-    
-@register.filter
-def can_view_user_preferences(request_user, target_user):
-    return auth.can_view_user_preferences(request_user, target_user)
-    
-@register.filter
-def is_user_self(request_user, target_user):
-    return auth.is_user_self(request_user, target_user)
-    
-@register.filter
 def cnprog_intword(number):
     try:
         if 1000 <= number < 10000:

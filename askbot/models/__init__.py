@@ -53,16 +53,20 @@ User.add_to_class(
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation', models.PositiveIntegerField(default=1))
+User.add_to_class('reputation', 
+    models.PositiveIntegerField(default=const.MIN_REPUTATION)
+)
 User.add_to_class('gravatar', models.CharField(max_length=32))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
-User.add_to_class('questions_per_page',
-              models.SmallIntegerField(
-                            choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
-                            default=10)
-            )
+User.add_to_class(
+    'questions_per_page',
+    models.SmallIntegerField(
+        choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
+        default=10
+    )
+)
 User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
@@ -1528,6 +1532,13 @@ def user_clean_response_counts(user):
                 'seen response count wanted to go below zero form %s' % user.username
             )
 
+def user_receive_reputation(self, num_points):
+    new_points = self.reputation + num_points
+    if new_points > 0:
+        self.reputation = new_points
+    else:
+        self.reputation = const.MIN_REPUTATION
+
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
             'get_q_sel_email_feed_frequency',
@@ -1546,6 +1557,7 @@ User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('flag_post', flag_post)
+User.add_to_class('receive_reputation', user_receive_reputation)
 User.add_to_class('get_flags', user_get_flags)
 User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)

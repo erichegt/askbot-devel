@@ -3,8 +3,10 @@
 <div id="searchBar">
     {# url action depends on which tab is active #}
     <form 
-        {% if active_tab == "tags" or active_tab == "users" %}
-            action="{% url search %}" 
+        {% if active_tab == "tags" %}
+            action="{% url tags %}" 
+        {% elif active_tab == "users" %}
+            action="{% url users %}" 
         {% else %}
             action="{% url questions %}" 
         {% endif %}

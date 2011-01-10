@@ -64,7 +64,7 @@ def owner_or_moderator_required(f):
 def users(request):
     is_paginated = True
     sortby = request.GET.get('sort', 'reputation')
-    suser = request.REQUEST.get('q',  "")
+    suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -92,7 +92,7 @@ def users(request):
         sortby = "reputation"
         objects_list = Paginator(
                             models.User.objects.extra(
-                                                where=['username like %s'],
+                                                where=['username ilike %s'],
                                                 params=['%' + suser + '%']
                                             ).order_by(
                                                 '-reputation'

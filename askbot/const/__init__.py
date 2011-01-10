@@ -249,6 +249,8 @@ BADGE_CSS_CLASSES = {
 }
 BADGE_DISPLAY_SYMBOL = '&#9679;'
 
+MIN_REPUTATION = 1
+
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *
