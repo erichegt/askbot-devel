@@ -272,49 +272,44 @@ blockquote {
     background-color: #cccccc;/*888a85; /*#e9b96e;*/
     width:700px;
     border: 1px solid #aaaaaa;
-    padding: 4px 7px 5px 5px;
+    padding: 4px 5px 4px 5px;
 }
 
-#searchBar .searchInput {
+#searchBar .searchInput, #searchBar .searchInputCancelable {
     font-size: 24px;
     line-height: 24px;
-    height: 36px;
-    width: 605px;
-    margin: 0px 3px 0px 0px;
+    height: 31px;
+    margin: 0px 4px 0px 0px;
     padding: 5px 0 0 5px;
+}
+
+#searchBar .searchInput, #searchBar .searchInputCancelable {
+    width: 607px;
 }
 
 #searchBar .searchInputCancelable {
-    font-size: 24px;
-    line-height: 24px;
-    height: 36px;
-    width: 561px;
-    padding: 5px 0 0 5px;
-    margin: 0px 3px 0px 0px;
+    width: 564px;
+}
+
+#searchBar .searchBtn, #searchBar .cancelSearchBtn {
+    font-size: 20px;
+    color: #666;
+    background-color: #eee;
+    height: 40px;
+    border: 1px solid #aaa;
+    line-height: 22px;
+    text-align: center;
+    padding-bottom: 4px;
 }
 
 #searchBar .searchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
-    width: 80px;
-    width: 80px;
-    width: 80px;
-    line-height: 22px;
     margin: 0px;
-    text-align: center;
-    padding-bottom: 4px;
+    width: 80px;
 }
 
 #searchBar .cancelSearchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
     width: 40px;
-    line-height: 22px;
     margin: 0px 3px 0px 0px;
-    padding-bottom: 4px;
-    text-align: center;
 }
 
 #askFormBar {
