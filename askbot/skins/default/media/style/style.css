@@ -272,7 +272,7 @@ blockquote {
     background-color: #cccccc;/*888a85; /*#e9b96e;*/
     width:700px;
     border: 1px solid #aaaaaa;
-    padding: 4px 5px 4px 5px;
+    padding: 4px 5px 4px 4px;
 }
 
 #searchBar .searchInput, #searchBar .searchInputCancelable {
@@ -643,7 +643,7 @@ a:hover.medal {
     float: left;
     height: 20px;
     line-height: 22px;
-    margin: 5px 4px 0 0;
+    margin: 5px 0 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
 }
@@ -652,7 +652,7 @@ a:hover.medal {
     float: left;
     font-weight: bold; 
     color: #777;
-    margin: 8px 4px 0 4px;
+    margin: 8px 0 0 4px;
 }
 
 .tabsB a {

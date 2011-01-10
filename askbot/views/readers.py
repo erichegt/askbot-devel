@@ -153,7 +153,7 @@ def questions(request):
                             }
 
         if q_count > search_state.page_size:
-            paginator_tpl = ENV.get_template('paginator.html')
+            paginator_tpl = ENV.get_template('blocks/paginator.html')
             #todo: remove this patch on context after all templates are moved to jinja
             paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {

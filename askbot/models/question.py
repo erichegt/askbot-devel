@@ -55,7 +55,6 @@ class QuestionManager(models.Manager):
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field
             #is used as an indicator whether question has been edited
-            #in template askbot/skins/default/templates/post_contributor_info.html
             #but in principle, post creation should count as edit as well
             question.last_edited_by = question.author
             question.last_edited_at = added_at
