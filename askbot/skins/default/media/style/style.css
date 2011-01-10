@@ -340,10 +340,10 @@ blockquote {
 
 .short-summary {
     position: relative;
-    padding: 3px 5px 5px 10px;
+    padding: 3px 2px 5px 2px;
     border-top: 1px dashed #ccccce;
     overflow: hidden;
-    width: 700px;
+    width: 702px;
     float: left;
 }
 
@@ -359,9 +359,7 @@ blockquote {
 
 .short-summary .counts {
     float: right;
-    margin-top: 4px;
-    margin-right: 10px;
-    margin-left: 5px;
+    margin: 4px 0 0 5px;
 }
 
 .short-summary .counts .item-count {
@@ -407,7 +405,6 @@ blockquote {
 }
 
 .short-summary .votes,
-.short-summary .status,
 .short-summary .views {
     font-size: 12px;
     text-align: center;
@@ -419,6 +416,15 @@ blockquote {
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
+}
+
+.short-summary .views {
+    width: 36px;
+    padding-right: 0;
+}
+
+.short-summary h2 {
+    padding-left: 0;
 }
 
 #question-table {
@@ -652,7 +658,7 @@ a:hover.medal {
     float: left;
     font-weight: bold; 
     color: #777;
-    margin: 8px 0 0 4px;
+    margin: 8px 0 0 0px;
 }
 
 .tabsB a {
@@ -1854,14 +1860,14 @@ p.signup_p {
 .search-result-summary {
     font-weight: bold;
     font-size:18px;
-    line-height:30px;
-    margin:0px 0px 0px 5px;
+    line-height:22px;
+    margin:0px 0px 0px 0px;
     padding:0px;
 }
 .search-tips {
     font-size:12px;
     line-height:12px;
-    margin:0 0 5px 5px;
+    margin:0 0 5px 0;
     padding:0px;
 }
 .search-tips a {
