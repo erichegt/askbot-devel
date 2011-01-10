@@ -1,4 +1,3 @@
-import logging
 import datetime
 import time
 from coffin import template as coffin_template
@@ -8,8 +7,6 @@ from django.contrib.humanize.templatetags import humanize
 from django.template import defaultfilters
 from askbot import exceptions as askbot_exceptions
 from askbot import auth
-from askbot import models
-from askbot.deps.grapefruit import Color
 from askbot.conf import settings as askbot_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils import functions

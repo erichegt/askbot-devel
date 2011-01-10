@@ -10,7 +10,6 @@ from askbot.models.base import AnonymousContent, DeletableContent
 from askbot.models.base import ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
-from askbot.models.question import Question
 from askbot import const
 from askbot.utils.slug import slugify
 from askbot.utils import markup

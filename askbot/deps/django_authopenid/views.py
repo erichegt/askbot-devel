@@ -31,9 +31,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import datetime
-from django.utils import simplejson
-from django.http import HttpResponseRedirect, get_host, Http404, \
-                         HttpResponseServerError
+from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext, Context
 from django.conf import settings
@@ -45,11 +43,8 @@ from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.utils.http import urlquote_plus
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from django.views.defaults import server_error
-
 from askbot.skins.loaders import ENV
 
 from askbot.deps.openid.consumer.consumer import Consumer, \
@@ -62,16 +57,13 @@ try:
 except ImportError:
     from yadis import xri
 
-import re
 import urllib
-
 from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid import decorators
-from askbot.deps.django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
+from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
-from django import forms as django_forms
 import logging
 from askbot.utils.forms import get_next_url
 

@@ -9,42 +9,32 @@ allow adding new comments via Ajax form post.
 import datetime
 import logging
 import urllib
-from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext, Context
-from django.template import defaultfilters
-from django.utils.html import *
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
 from django.core.urlresolvers import reverse
-from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
 import askbot
 from askbot import exceptions
-from askbot.utils.html import sanitize_html
-#from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot.models.badges import award_badges_signal
 from askbot import const
-from askbot import auth
-from askbot.utils import markup
-from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 import askbot.conf
-from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import ENV #jinja2 template loading enviroment
 
 # used in index page
@@ -500,7 +490,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
-        return HttpResponseRediect(question.get_absolute_url())
+        return HttpResponseRedirect(question.get_absolute_url())
     page_objects = objects_list.page(show_page)
 
     #count visits

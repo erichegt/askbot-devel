@@ -1,8 +1,6 @@
 import datetime
-import logging
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.contrib.sitemaps import ping_google
 from django.db import models
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting

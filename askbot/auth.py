@@ -8,14 +8,10 @@ Many of these functions are being replaced with assertions:
 User.assert_can...
 """
 import datetime
-from django.utils.translation import ugettext as _
 from django.db import transaction
 from askbot.models import Repute
-from askbot.models import Question
 from askbot.models import Answer
 from askbot.models import signals
-import logging
-
 from askbot.conf import settings as askbot_settings
 
 # user preferences view permissions

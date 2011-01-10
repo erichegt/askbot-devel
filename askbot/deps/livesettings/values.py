@@ -17,7 +17,6 @@ from askbot.deps.livesettings.widgets import ImageInput
 import datetime
 import logging
 import signals
-import tempfile
 import os
 
 __all__ = ['BASE_GROUP', 'ConfigurationGroup', 'Value', 'BooleanValue', 'DecimalValue', 'DurationValue',

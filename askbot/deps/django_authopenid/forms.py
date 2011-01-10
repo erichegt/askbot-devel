@@ -29,13 +29,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-import types
-import re
 import logging
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
@@ -50,9 +46,7 @@ try:
 except ImportError:
     from yadis import xri
     
-from askbot.utils.forms import clean_next
 from askbot.deps.django_authopenid import util
-from askbot.deps.django_authopenid.models import ExternalLoginData
 
 __all__ = [
     'OpenidSigninForm','OpenidRegisterForm',

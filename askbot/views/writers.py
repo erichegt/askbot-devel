@@ -10,7 +10,7 @@ import datetime
 import random
 import logging
 from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.template import RequestContext
@@ -21,7 +21,6 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 
-from askbot import auth
 from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models

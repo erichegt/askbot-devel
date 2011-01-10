@@ -1,7 +1,6 @@
 """functions that directly handle user input
 """
 import time
-import os
 from askbot.utils import path
 
 def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):

@@ -4,7 +4,6 @@ retagged
 """
 import sys
 from optparse import make_option
-from django.db import transaction
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
 from askbot import api, models
@@ -142,8 +141,6 @@ Also, you can try command "rename_tag_id"
                 )
             except models.Tag.MultipleObjectsReturned:
                 raise CommandError(u'found more than one tag named %s' % tag_name)
-        #transaction.commit()
-
         options['user_id'] = admin.id
         options['from'] = format_tag_ids(from_tags)
         options['to'] = format_tag_ids(to_tags)

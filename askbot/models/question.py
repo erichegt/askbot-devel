@@ -1,4 +1,3 @@
-import random
 import logging
 import datetime
 from django.conf import settings
@@ -13,7 +12,7 @@ from django.utils.translation import ugettext as _
 import askbot
 import askbot.conf
 from askbot import exceptions
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content

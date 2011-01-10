@@ -3,11 +3,10 @@ from django.db import connection, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.base import DeletableContent
-from askbot.conf import settings as askbot_settings
 
 
 class TagManager(models.Manager):
-    UPDATE_USED_COUNTS_QUERY ="""
+    UPDATE_USED_COUNTS_QUERY = """
         UPDATE tag 
         SET used_count = (
             SELECT COUNT(*) FROM question_tags 
@@ -89,7 +88,7 @@ class Tag(DeletableContent):
         return self.name
 
 class MarkedTag(models.Model):
-    TAG_MARK_REASONS = (('good',_('interesting')),('bad',_('ignored')))
+    TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')
     reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)

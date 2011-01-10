@@ -5,24 +5,18 @@ This module contains most (but not all) processors for Ajax requests.
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
 is not always very clean.
 """
-import datetime
-#todo: maybe eliminate usage of django.settings
-from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
 from django.core import exceptions
 from django.http import HttpResponse, HttpResponseRedirect
-from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from django.template import RequestContext
 from askbot import models
 from askbot.forms import CloseForm
-from askbot import auth
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_only, ajax_login_required
-from askbot.templatetags import extra_filters as template_filters
 from askbot.skins.loaders import ENV
 from askbot import const
 import logging

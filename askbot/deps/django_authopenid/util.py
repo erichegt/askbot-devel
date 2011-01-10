@@ -9,7 +9,6 @@ import oauth2 as oauth
 
 from django.db.models.query import Q
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
@@ -28,8 +27,6 @@ except:
     from yadis import xri
 
 import time, base64, hashlib, operator, logging
-from askbot.utils.forms import clean_next, get_next_url
-
 from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']

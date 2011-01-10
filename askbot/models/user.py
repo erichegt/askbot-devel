@@ -1,6 +1,3 @@
-from hashlib import md5
-import string
-from random import Random
 import datetime
 import logging
 from django.db import models
@@ -327,12 +324,3 @@ class EmailFeedSetting(models.Model):
 
     class Meta:
         app_label = 'askbot'
-
-#class AuthKeyUserAssociation(models.Model):
-#    key = models.CharField(max_length=255,null=False,unique=True)
-#    provider = models.CharField(max_length=64)#string 'yahoo', 'google', etc.
-#    user = models.ForeignKey(User, related_name="auth_keys")
-#    added_at = models.DateTimeField(default=datetime.datetime.now)
-#
-#    class Meta:
-#        app_label = 'askbot'

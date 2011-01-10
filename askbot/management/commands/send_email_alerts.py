@@ -1,9 +1,7 @@
-import logging
 import datetime
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
-import askbot
 from askbot.models import User, Question, Answer, Tag, QuestionRevision
 from askbot.models import AnswerRevision, Activity, EmailFeedSetting
 from askbot.models import Comment

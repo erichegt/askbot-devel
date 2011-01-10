@@ -2,7 +2,6 @@
 from askbot.deps.django_authopenid import mimeparse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.conf import settings
 import logging
 
 __all__ = ["OpenIDMiddleware"]

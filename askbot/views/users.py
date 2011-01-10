@@ -9,24 +9,19 @@ Also this module includes the view listing all forum users.
 import calendar
 import functools
 import datetime
-import logging
-from django.db.models import Sum, Count
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
-from django.utils import simplejson
-from django.conf import settings as django_settings
-import askbot
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
-from askbot import auth
 from askbot import forms
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -809,8 +804,6 @@ def user_reputation(request, user):
                             'question__id', 
                             'user__username'
                         )
-    #reputes = reputates.annotate(positive=Sum("positive"), negative=Sum("negative"))
-
     #prepare data for the graph
     rep_list = []
     #last values go in first

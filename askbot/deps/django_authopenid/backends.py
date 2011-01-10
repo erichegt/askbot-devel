@@ -2,7 +2,6 @@
 multiple login methods supported by the authenticator
 application
 """
-import logging
 import datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured

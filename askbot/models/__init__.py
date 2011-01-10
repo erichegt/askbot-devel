@@ -1724,22 +1724,22 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
 
-            subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            update_type = update_type,
-                            template = template,
-                        )
-            #todo: this could be packaged as an "action" - a bundle
-            #of executive function with the activity log recording
-            send_mail(
-                subject_line = subject_line,
-                body_text = body_text,
-                recipient_list = [user.email],
-                related_object = origin_post,
-                activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-            )
+        subject_line, body_text = format_instant_notification_email(
+                        to_user = user,
+                        from_user = update_activity.user,
+                        post = post,
+                        update_type = update_type,
+                        template = template,
+                    )
+        #todo: this could be packaged as an "action" - a bundle
+        #of executive function with the activity log recording
+        send_mail(
+            subject_line = subject_line,
+            body_text = body_text,
+            recipient_list = [user.email],
+            related_object = origin_post,
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+        )
 
 
 #todo: move to utils

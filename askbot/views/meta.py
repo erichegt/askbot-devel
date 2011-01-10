@@ -19,7 +19,6 @@ from askbot.models import badges as badge_data
 from askbot.skins.loaders import ENV
 from askbot.conf import settings as askbot_settings
 from askbot import skins
-import askbot
 
 def generic_view(request, template = None, page_class = None):
     template = ENV.get_template(template)

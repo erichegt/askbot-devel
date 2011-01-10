@@ -1,16 +1,9 @@
-import logging
 from django import template
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
-from django.contrib.humanize.templatetags import humanize
-from django.template import defaultfilters
 from askbot import exceptions as askbot_exceptions
 from askbot import auth
-from askbot import models
-from askbot.deps.grapefruit import Color
 from askbot.conf import settings as askbot_settings
-from askbot.skins import utils as skin_utils
-from askbot.utils import functions
 from askbot.utils.slug import slugify
 
 register = template.Library()

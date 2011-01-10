@@ -12,7 +12,7 @@
 """
 #!/usr/bin/env python
 #encoding:utf-8
-from django.contrib.syndication.feeds import Feed, FeedDoesNotExist
+from django.contrib.syndication.feeds import Feed
 from django.utils.translation import ugettext as _
 from askbot.models import Question
 from askbot.conf import settings as askbot_settings

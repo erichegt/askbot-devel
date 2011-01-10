@@ -1,7 +1,6 @@
 from django.core.management.base import NoArgsCommand
 from django.db import connection
 from askbot.models import EmailFeedSetting, User
-from django.core.mail import EmailMessage
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
