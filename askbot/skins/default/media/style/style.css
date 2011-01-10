@@ -123,11 +123,9 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-#askbot {
+#askbot-content {
     width: 960px;
     margin: auto;
-    margin-bottom: 40px;
-    padding: 0;
 }
 
 #roof {
@@ -140,14 +138,13 @@ blockquote {
     width: 710px;
     float: left;
     position: relative;
-    padding: 0 5px;
-
+    padding: 0 5px 10px 5px;
 }
 
 #CARight {
-    width: 235px;
+    width: 230px;
     float: right;
-    padding-right: 5px;
+    padding: 0 5px 10px 5px;
 }
 
 #CAFull {
@@ -160,8 +157,7 @@ blockquote {
     width: 100%;
     clear: both;
     border-top: 1px solid #000;
-    padding-top: 6px;
-    padding-bottom: 0px;
+    padding: 6px 0 0 0;
     text-align: center;
     background: #777;
 }
@@ -1770,16 +1766,8 @@ ul.form-horizontal-rows li input {
     margin-bottom: 0;
 }
 
-#contrib-users, #related-tags, #tagSelector {
-    padding-left: 7px;
-}
-
-#contrib-users h2 {
-    padding: 0 0 5px 0;
-}
-
-#tagSelector h2{
-    padding: 0px;
+#related-tags {
+    padding-left: 3px;
 }
 
 #hideIgnoredTagsControl {
