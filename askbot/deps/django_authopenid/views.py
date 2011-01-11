@@ -989,7 +989,7 @@ def _send_email_key(user):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Email verification subject line")
+    subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
     message_template = ENV.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
