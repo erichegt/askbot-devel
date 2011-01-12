@@ -4,6 +4,7 @@ import sys
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.conf import settings
+from askbot import utils
 
 # used in questions
 QUESTIONS_PAGE_SIZE = 10
@@ -49,6 +50,8 @@ class QuestionsPageSizeMiddleware(object):
         else:
             #todo - we have a strange requirement - maybe remove 
             #500.html needs RequestContext, while handler500 only receives Context
+            #need to log some more details about the request
+            logging.critical(utils.http.get_request_info(request))
             from askbot.skins.loaders import ENV
             template = ENV.get_template('500.jinja.html')
             return HttpResponse(template.render(RequestContext(request)))

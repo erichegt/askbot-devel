@@ -9,6 +9,7 @@ Also this module includes the view listing all forum users.
 import calendar
 import functools
 import datetime
+import logging
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -22,6 +23,7 @@ from django.utils.translation import ugettext as _
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
+from askbot.utils.http import get_request_info
 from askbot import forms
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -866,6 +868,7 @@ def user_favorites(request, user):
 @owner_or_moderator_required
 def user_email_subscriptions(request, user):
 
+    logging.debug(get_request_info(request))
     if request.method == 'POST':
         email_feeds_form = forms.EditUserEmailFeedsForm(request.POST)
         tag_filter_form = forms.TagFilterSelectionForm(request.POST, instance=user)

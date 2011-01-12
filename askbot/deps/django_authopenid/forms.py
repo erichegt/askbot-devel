@@ -407,6 +407,7 @@ class ChangeopenidForm(forms.Form):
 
 class DeleteForm(forms.Form):
     """ confirm form to delete an account """
+    #todo: i think this form is not used
     confirm = forms.CharField(widget=forms.CheckboxInput(attrs={'class':'required'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}))
 

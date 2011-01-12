@@ -66,6 +66,7 @@ from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
+from askbot.utils.http import get_request_info
 
 #todo: decouple from askbot
 def login(request,user):
@@ -835,7 +836,7 @@ def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
-
+    logging.debug(get_request_info(request))
     next = get_next_url(request)
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
