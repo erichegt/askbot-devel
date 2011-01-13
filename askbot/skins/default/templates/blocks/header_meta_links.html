@@ -50,6 +50,6 @@
 {% endif %}
 <a href="{% url about %}">{% trans %}about{% endtrans %}</a>
 <a href="{% url faq %}">{% trans %}faq{% endtrans %}</a>
-{% if request.user.is_administrator %}
+{% if request.user.is_authenticated() and request.user.is_administrator() %}
 <a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
 {% endif %}
