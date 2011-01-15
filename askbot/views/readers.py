@@ -86,10 +86,8 @@ def questions(request):
 
     view_log = request.session['view_log']
 
-    if view_log.get_previous(1) != 'questions':
-        if view_log.get_previous(2) != 'questions':
-            #print 'user stepped too far, resetting search state'
-            search_state.reset()
+    if view_log.should_reset_search_state():
+        search_state.reset()
 
     if request.user.is_authenticated():
         search_state.set_logged_in()

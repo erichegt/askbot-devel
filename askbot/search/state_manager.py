@@ -172,3 +172,44 @@ class SearchState(object):
 
     def reset_scope(self):
         self.scope = const.DEFAULT_POST_SCOPE
+
+class ViewLog(object):
+    """The ViewLog helper obejcts store the trail of the page visits for a
+    given user. The trail is recorded only up to a certain depth.
+
+    The purpose to record this info is to reset the search state
+    when the user walks "too far away" from the search page.
+    
+    These objects must be modified only in this middlware.
+    """
+    def __init__(self):
+        self.views = []
+        self.depth = 3 #todo maybe move this to const.py
+
+    def get_previous(self, num):
+        """get a previous record from a certain depth"""
+        if num > self.depth - 1:
+            raise Exception("view log depth exceeded")
+        elif num < 0:
+            raise Exception("num must be positive")
+        elif num <= len(self.views) - 1:
+            return self.views[num]
+        else:
+            return None
+
+    def should_reset_search_state(self):
+        """return True if user stepped too far from the home page
+        and False otherwise"""
+        if self.get_previous(1) != 'questions':
+            if self.get_previous(2) != 'questions':
+                return True
+        return False
+
+    def set_current(self, view_name):
+        """insert a new record"""
+        self.views.insert(0, view_name)
+        if len(self.views) > self.depth:
+            self.views.pop()
+
+    def __str__(self):
+        return str(self.views) + ' depth=%d' % self.depth

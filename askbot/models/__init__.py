@@ -3,7 +3,6 @@ import re
 import hashlib
 import datetime
 from django.core.urlresolvers import reverse
-from askbot.search.indexer import create_fulltext_indexes
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.utils.translation import ugettext as _
@@ -2093,7 +2092,6 @@ signals.post_updated.connect(
                            sender=Question
                        )
 signals.site_visited.connect(record_user_visit)
-#post_syncdb.connect(create_fulltext_indexes)
 
 #todo: wtf??? what is x=x about?
 signals = signals
