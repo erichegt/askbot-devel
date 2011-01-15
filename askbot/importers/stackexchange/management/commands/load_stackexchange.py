@@ -747,7 +747,7 @@ class Command(BaseCommand):
             if u_type == 'Administrator':
                 u.is_superuser = True
             elif u_type == 'Moderator':
-                u.is_staff = True
+                u.set_status('m')
             elif u_type not in ('Unregistered', 'Registered'):
                 raise Exception('unknown user type %s' % u_type)
 

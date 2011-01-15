@@ -42,5 +42,4 @@ class Command(NoArgsCommand):
         self.remove_signals()
 
         self.user.is_superuser = True
-        self.user.is_staff = True
         self.user.save()

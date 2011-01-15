@@ -1127,7 +1127,7 @@ def user_is_username_taken(cls,username):
         return False
 
 def user_is_administrator(self):
-    return (self.is_superuser or self.is_staff)
+    return self.is_superuser
 
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
@@ -1167,9 +1167,9 @@ def user_set_status(self, new_status):
         return
 
     #clear admin status if user was an administrator
-    if self.is_administrator:
+    #because this function is not dealing with the site admins
+    if self.is_administrator():
         self.is_superuser = False
-        self.is_staff = False
 
     self.status = new_status
     self.save()
