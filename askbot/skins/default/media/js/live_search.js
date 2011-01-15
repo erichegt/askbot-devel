@@ -30,6 +30,19 @@ $(document).ready(function(){
         }
     };
 
+    var reset_sort_method = function(){
+        if (sortMethod == 'relevance-desc'){
+            sortMethod = prevSortMethod;
+            if (sortMethod == 'relevance-desc'){
+                sortMethod = 'activity-desc';
+            }
+        }
+        else {
+            sortMethod = 'activity-desc';
+            prevSortMethod = 'activity-desc';
+        }
+    };
+
     var eval_query = function(){
         cur_text = $.trim(query.val());
         if (cur_text != prev_text && running === false){
@@ -44,14 +57,12 @@ $(document).ready(function(){
                 running = true;
             }
             else if (cur_text.length === 0){
-                if (sortMethod == 'relevance-desc'){
-                    sortMethod = prevSortMethod;
-                }
+                reset_sort_method();
                 reset_query(sortMethod);
                 running = true;
             }
         }
-    }
+    };
 
     var listen = function(){
         running = false;
@@ -65,7 +76,7 @@ $(document).ready(function(){
         query.keyup(function(){
             refresh_x_button();
         });
-    }
+    };
 
     var render_counter = function(count, word, counter_class){
         var output = '<div class="votes">' +
@@ -78,7 +89,7 @@ $(document).ready(function(){
                     '<div>' + word + '</div>' +
                 '</div>';
         return output;
-    }
+    };
 
     var render_title = function(result){
         return '<h2>' +

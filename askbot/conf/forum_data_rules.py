@@ -2,18 +2,17 @@
 Settings for askbot data display and entry
 """
 from askbot.conf.settings_wrapper import settings
-from askbot.deps.livesettings import ConfigurationGroup, BooleanValue, IntegerValue
-from askbot.deps.livesettings import StringValue
+from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 from askbot import const
 
-FORUM_DATA_RULES = ConfigurationGroup(
+FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         'FORUM_DATA_RULES',
                         _('Settings for askbot data entry and display')
                     )
 
 settings.register(
-    BooleanValue(
+    livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'WIKI_ON',
         default=True,
@@ -22,7 +21,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAG_LENGTH',
         default=20,
@@ -31,7 +30,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENTS_TO_SHOW',
         default=5,
@@ -42,7 +41,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENT_LENGTH',
         default=300,
@@ -53,7 +52,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
         default=4,
@@ -63,7 +62,22 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'DECOUPLE_TEXT_QUERY_FROM_SEARCH_STATE',
+        default=False,
+        description=_('Do not make text query sticky in search'),
+        help_text=_(
+            'Check to disable the "sticky" behavior of the search query. '
+            'This may be useful if you want to move the search bar away '
+            'from the default position or do not like the default '
+            'sticky behavior of the text search query.'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAGS_PER_POST',
         default=5,
@@ -74,7 +88,7 @@ settings.register(
 #todo: looks like there is a bug in askbot.deps.livesettings 
 #that does not allow Integer values with defaults and choices
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
         'DEFAULT_QUESTIONS_PAGE_SIZE',
         choices=const.PAGE_SIZE_CHOICES,
@@ -84,7 +98,7 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
         'UNANSWERED_QUESTION_MEANING',
         choices=const.UNANSWERED_QUESTION_MEANING_CHOICES,

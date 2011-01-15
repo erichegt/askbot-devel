@@ -83,7 +83,6 @@ def questions(request):
     #todo: redo SearchState to accept input from
     #view_log, session and request parameters
     search_state = request.session.get('search_state', SearchState())
-
     view_log = request.session['view_log']
 
     if view_log.should_reset_search_state():
@@ -95,16 +94,7 @@ def questions(request):
     form = AdvancedSearchForm(request.GET)
     #todo: form is used only for validation...
     if form.is_valid():
-        search_state.update_from_user_input(
-                                    form.cleaned_data,
-                                    request.GET,
-                                )
-        #todo: better put these in separately then analyze
-        #what neesd to be done, otherwise there are two routines
-        #that take request.GET I don't like this use of parameters
-        #another weakness is that order of routine calls matters here
-        search_state.relax_stickiness( request.GET, view_log )
-
+        search_state.update(form.cleaned_data, view_log)
         request.session['search_state'] = search_state
         request.session.modified = True
 

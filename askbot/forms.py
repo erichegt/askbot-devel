@@ -332,11 +332,14 @@ class SendMessageForm(forms.Form):
 
 
 class AdvancedSearchForm(forms.Form):
-    #nothing must be required in this form
-    #it is used by the main questions view
+    """nothing must be required in this form
+    it is used by the main questions view for input validation only
+    """
     scope = forms.ChoiceField(choices=const.POST_SCOPE_LIST, required=False)
     sort = forms.ChoiceField(choices=const.POST_SORT_METHODS, required=False)
     query = forms.CharField(max_length=256, required=False)
+    #search field is actually a button, used to detect manual button click
+    search = forms.CharField(max_length=16, required=False)
     reset_tags = forms.BooleanField(required=False)
     reset_author = forms.BooleanField(required=False)
     reset_query = forms.BooleanField(required=False)
@@ -387,6 +390,7 @@ class AdvancedSearchForm(forms.Form):
         cleanup_dict(data, 'tags', None)
         cleanup_dict(data, 'sort', '')
         cleanup_dict(data, 'query', None)
+        cleanup_dict(data, 'search', '')
         cleanup_dict(data, 'reset_tags', False)
         cleanup_dict(data, 'reset_author', False)
         cleanup_dict(data, 'reset_query', False)

@@ -24,6 +24,7 @@ class SearchState(object):
     def __init__(self):
         self.scope = const.DEFAULT_POST_SCOPE
         self.query = None
+        self.search = None
         self.tags = None
         self.author = None
         self.sort = const.DEFAULT_POST_SORT_METHOD
@@ -35,6 +36,9 @@ class SearchState(object):
     def __str__(self):
         out = 'scope=%s\n' % self.scope
         out += 'query=%s\n' % self.query
+        if hasattr(self, 'search'):
+            manual_search = (self.search == 'search')
+            out += 'manual_search = %s' % str(manual_search)
         if self.tags:
             out += 'tags=%s\n' % ','.join(self.tags)
         out += 'author=%s\n' % self.author
@@ -87,7 +91,7 @@ class SearchState(object):
                 self.reset()
         #todo also relax if 'all' scope was clicked twice
 
-    def update_from_user_input(self, input_dict, unprocessed_input = {}):
+    def update_from_user_input(self, input_dict):
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
         if 'start_over' in input_dict:
@@ -135,6 +139,8 @@ class SearchState(object):
 
         if 'reset_query' in input_dict:
             self.reset_query()
+            if input_dict.get('sort', None) == 'relevance-desc':
+                self.reset_sort()
             return
 
         self.update_value('author', input_dict)
@@ -142,9 +148,16 @@ class SearchState(object):
         if 'query' in input_dict:
             self.update_value('query', input_dict)
             self.sort = 'relevance-desc'
-        elif 'search' in unprocessed_input:#a case of use nulling search query by hand
+        elif 'search' in input_dict:
+            #a case of use nulling search query by hand
+            #this branch corresponds to hitting search button manually
+            #when the search query is empty
             self.reset_query()
             return
+        elif askbot_settings.DECOUPLE_TEXT_QUERY_FROM_SEARCH_STATE:
+            #no query in the request and the setting instructs to
+            #not have the text search query sticky
+            self.reset_query()
 
         if 'sort' in input_dict:
             if input_dict['sort'] == 'relevance-desc' and self.query is None:
@@ -157,10 +170,20 @@ class SearchState(object):
             if self.sort == 'relevance-desc':
                 self.reset_sort()
 
+    def update(self, input_dict, view_log):
+        """update the search state according to the
+        user input and the queue of the page hits that
+        user made"""
+        self.update_from_user_input(input_dict)
+        self.relax_stickiness(input_dict, view_log)
+
     def reset_page(self):
         self.page = 1
 
     def reset_query(self):
+        """reset the search query string and 
+        the associated "sort by relevance command"
+        """
         if self.query:
             self.query = None
             self.reset_page()
