@@ -150,9 +150,17 @@ def questions(request):
             paginator_html = paginator_tpl.render(Context(data))
         else:
             paginator_html = ''
+        search_tags = list()
+        if search_state.tags:
+            search_tags = list(search_state.tags)
+        query_data = {
+            'tags': search_tags,
+            'sort_order': search_state.sort
+        }
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button
+            'query_data': query_data,
             'paginator': paginator_html,
             'question_counter': question_counter,
             'questions': list(),

@@ -179,9 +179,9 @@ $(document).ready(function(){
 
     var render_tags = function(tags){
         var tags_html = '<div class="tags">';
-        for (var i=0; i<tags.length; i++){
-            tags_html += render_tag(tags[i]);
-        }
+        $.each(tags, function(idx, item){
+            tags_html += render_tag(item);
+        });
         tags_html += '</div>';
         return tags_html;
     };
@@ -264,6 +264,12 @@ $(document).ready(function(){
         $('#question-count').html(count_html);
     };
 
+    var render_search_tags = function(tags){
+        var html = $('#question-count').html();
+        var tags_html = render_tags(tags);
+        $('#question-count').html(html + tags_html);
+    };
+
     var create_relevance_tab = function(){
         relevance_tab = $('<a></a>');
         relevance_tab.attr('href', '?sort=relevance-desc');
@@ -331,6 +337,7 @@ $(document).ready(function(){
             new_list.attr('id', q_list_sel);
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
+            render_search_tags(data['query_data']['tags']);
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
             render_relevance_sort_tab();
