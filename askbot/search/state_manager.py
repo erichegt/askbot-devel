@@ -183,7 +183,7 @@ class SearchState(object):
             self.reset()
 
         if user.is_authenticated():
-            search_state.set_logged_in()
+            self.set_logged_in()
 
         self.update_from_user_input(input_dict)
         self.relax_stickiness(input_dict, view_log)
