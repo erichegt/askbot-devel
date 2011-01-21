@@ -225,4 +225,10 @@ urlpatterns = patterns('',
         },
         name = 'custom_js'
     ),
+    url(
+        r'^jsi18n/$',
+        'django.views.i18n.javascript_catalog',
+        {'packages': ('askbot',)},
+        name = 'askbot_jsi18n'
+    ),
 )

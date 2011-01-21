@@ -44,7 +44,6 @@ def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
 
-    f = request.FILES['file-upload']
     # check upload permission
     result = ''
     error = ''
@@ -58,6 +57,7 @@ def upload(request):#ajax upload file to a question or answer
         request.user.assert_can_upload_file()
 
         # check file type
+        f = request.FILES['file-upload']
         file_extension = os.path.splitext(f.name)[1].lower()
         if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
             file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)

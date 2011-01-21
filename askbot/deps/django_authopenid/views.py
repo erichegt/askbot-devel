@@ -118,7 +118,6 @@ def ask_openid(
             sreg_request=None
         ):
     """ basic function to ask openid and return response """
-    request.encoding = 'UTF-8'
     on_failure = on_failure or signin_failure
     
     trust_root = getattr(
@@ -268,7 +267,6 @@ def signin(
     template : authopenid/signin.htm
     """
     logging.debug('in signin view')
-    request.encoding = 'UTF-8'
     on_failure = signin_failure
     email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 

@@ -162,7 +162,7 @@ $(document).ready(function(){
         return user_html;
     };
 
-    var render_tag = function(tag_name){
+    var render_tag = function(tag_name, linkable, deletable){
         var url = askbot['urls']['questions'] +
                     '?tags=' + encodeURI(tag_name);
         var tag_title = $.i18n._(
@@ -171,16 +171,27 @@ $(document).ready(function(){
                             '{tag}',
                             tag_name
                         );
-        return '<a ' +
-                    'href="' + url + '" ' + 
-                    'title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</a>';
+        var tag_element = 'span';
+        var tag_url = '';
+        if (linkable){
+            tag_element = 'a';
+            tag_url = ' href="' + url + '" ';
+        }
+        html = '<' + tag_element +
+                    ' class="tag" ' +
+                    tag_url +
+                    ' title="' + tag_title + '" rel="tag"' +
+                '>' + tag_name + '</' + tag_element + '>';
+        if (deletable){
+            html += '<span class="delete-icon"></span>';
+        }
+        return html;
     };
 
-    var render_tags = function(tags){
+    var render_tags = function(tags, linkable, deletable){
         var tags_html = '<div class="tags">';
         $.each(tags, function(idx, item){
-            tags_html += render_tag(item);
+            tags_html += render_tag(item, linkable, deletable);
         });
         tags_html += '</div>';
         return tags_html;
@@ -208,7 +219,7 @@ $(document).ready(function(){
             '</div>' + 
             render_title(question) +
             render_user_info(question) +
-            render_tags(question['tags']) +
+            render_tags(question['tags'], true, false) +
         '</div>';
         return entry_html;
     };
@@ -239,7 +250,7 @@ $(document).ready(function(){
         }
         var html = '';
         for (var i=0; i<tags.length; i++){
-            html += render_tag(tags[i]['name']);
+            html += render_tag(tags[i]['name'], true, false);
             html += '<span class="tag-number">&#215; ' +
                         tags[i]['used_count'] +
                     '</span>' +
@@ -264,10 +275,23 @@ $(document).ready(function(){
         $('#question-count').html(count_html);
     };
 
+    var get_old_tags = function(container){
+        var tag_elements = container.find('.tag');
+        var old_tags = [];
+        tag_elements.each(function(idx, element){
+            old_tags.push($(element).html());
+        });
+        return old_tags;
+    };
+
     var render_search_tags = function(tags){
-        var html = $('#question-count').html();
-        var tags_html = render_tags(tags);
-        $('#question-count').html(html + tags_html);
+        var search_tags = $('#search-tags');
+        search_tags.children().remove();
+        var tags_html = '';
+        $.each(tags, function(idx, tag){
+            tags_html += render_tag(tag, false, true);
+        });
+        search_tags.html(tags_html);
     };
 
     var create_relevance_tab = function(){
@@ -325,6 +349,27 @@ $(document).ready(function(){
         }
     };
 
+    var remove_search_tag = function(tag_name){
+        $.ajax({
+            url: askbot['urls']['questions'],
+            data: {remove_tag: tag_name},
+            dataType: 'json',
+            success: render_result,
+            complete: try_again
+        });
+    };
+
+    var activate_search_tag_deleters = function(){
+        var deleters = $('#search-tags .delete-icon');
+        $.each(deleters, function(idx, deleter){
+            var search_tag = $(deleter).prev().html();
+            setupButtonEventHandlers(
+                $(deleter), 
+                function(){remove_search_tag(search_tag)}
+            );
+        });
+    };
+
     var render_result = function(data, text_status, xhr){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>');
@@ -338,6 +383,7 @@ $(document).ready(function(){
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
             render_search_tags(data['query_data']['tags']);
+            activate_search_tag_deleters();
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
             render_relevance_sort_tab();
@@ -376,5 +422,6 @@ $(document).ready(function(){
         prev_text = '';
     }
 
+    activate_search_tag_deleters();
     listen();
 });

@@ -9,7 +9,7 @@ import logging
 
 ACTIVE_COMMANDS = (
     'sort', 'search', 'query',
-    'reset_query', 'reset_author', 'reset_tags',
+    'reset_query', 'reset_author', 'reset_tags', 'remove_tag',
     'tags', 'scope', 'page_size', 'start_over',
     'page'
 )
@@ -38,7 +38,7 @@ class SearchState(object):
         out += 'query=%s\n' % self.query
         if hasattr(self, 'search'):
             manual_search = (self.search == 'search')
-            out += 'manual_search = %s' % str(manual_search)
+            out += 'manual_search = %s\n' % str(manual_search)
         if self.tags:
             out += 'tags=%s\n' % ','.join(self.tags)
         out += 'author=%s\n' % self.author
@@ -123,6 +123,11 @@ class SearchState(object):
             else:
                 self.tags = input_dict['tags']
 
+        if 'remove_tag' in input_dict and self.tags:
+            rm_set = set([input_dict['remove_tag']])
+            self.tags -= rm_set
+            return
+
         #all resets just return
         if 'reset_tags' in input_dict:
             if self.tags:
@@ -174,6 +179,8 @@ class SearchState(object):
         """update the search state according to the
         user input and the queue of the page hits that
         user made"""
+        if view_log.should_reset_search_state():
+            self.reset()
         self.update_from_user_input(input_dict)
         self.relax_stickiness(input_dict, view_log)
 

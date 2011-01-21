@@ -93,9 +93,8 @@ def users(request):
     else:
         sortby = "reputation"
         objects_list = Paginator(
-                            models.User.objects.extra(
-                                                where=['username ilike %s'],
-                                                params=['%' + suser + '%']
+                            models.User.objects.filter(
+                                                username__icontains = suser
                                             ).order_by(
                                                 '-reputation'
                                             ), 

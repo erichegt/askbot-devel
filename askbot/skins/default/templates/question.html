@@ -78,6 +78,7 @@
                     <div class="question-body">
                         {{question.html}}
                     </div>
+                    {% spaceless %}
                     <div id="question-tags" class="post-tags tags">
                         {% for tag in question.get_tag_names() %}
                             <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
@@ -85,6 +86,7 @@
                                 title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
                         {% endfor %}
                     </div>
+                    {% endspaceless %}
                     <div id="question-controls" class="post-controls">
                         {% set pipe=joiner('<span class="sep">|</span>') %}
                         {% if request.user|can_edit_post(question) %}{{ pipe() }}
@@ -182,7 +184,7 @@
         {% for answer in answers %}
             <a name="{{ answer.id }}"></a>
             <div id="answer-container-{{ answer.id }}" class="answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif %}">
-                <table style="width:100%;">
+                <table style="width:100%;" class="answer-table">
                     <tr>
                         <td style="width:30px;vertical-align:top">
                             <div class="vote-buttons">

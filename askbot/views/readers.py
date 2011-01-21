@@ -85,14 +85,13 @@ def questions(request):
     search_state = request.session.get('search_state', SearchState())
     view_log = request.session['view_log']
 
-    if view_log.should_reset_search_state():
-        search_state.reset()
-
+    #todo: move this call inside SearchState.update()
     if request.user.is_authenticated():
         search_state.set_logged_in()
 
     form = AdvancedSearchForm(request.GET)
     #todo: form is used only for validation...
+
     if form.is_valid():
         search_state.update(form.cleaned_data, view_log)
         request.session['search_state'] = search_state
@@ -132,13 +131,22 @@ def questions(request):
     if request.is_ajax():
 
         q_count = paginator.count
-        question_counter = ungettext(
-                                '%(q_num)s question',
-                                '%(q_num)s questions',
-                                q_count
-                            ) % {
-                                'q_num': humanize.intcomma(q_count),
-                            }
+        if search_state.tags:
+            question_counter = ungettext(
+                                    '%(q_num)s question, tagged',
+                                    '%(q_num)s questions, tagged',
+                                    q_count
+                                ) % {
+                                    'q_num': humanize.intcomma(q_count),
+                                }
+        else:
+            question_counter = ungettext(
+                                    '%(q_num)s question',
+                                    '%(q_num)s questions',
+                                    q_count
+                                ) % {
+                                    'q_num': humanize.intcomma(q_count),
+                                }
 
         if q_count > search_state.page_size:
             paginator_tpl = ENV.get_template('blocks/paginator.html')
@@ -317,7 +325,15 @@ def tags(request):#view showing a listing of available tags - plain list
     if request.method == "GET":
         stag = request.GET.get("query", "").strip()
         if stag != '':
-            objects_list = Paginator(models.Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name ilike %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
+            objects_list = Paginator(
+                            models.Tag.objects.filter(
+                                                deleted=False,
+                                                name__icontains=stag
+                                            ).exclude(
+                                                used_count=0
+                                            ),
+                            DEFAULT_PAGE_SIZE
+                        )
         else:
             if sortby == "name":
                 objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
