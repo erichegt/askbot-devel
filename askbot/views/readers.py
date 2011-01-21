@@ -80,22 +80,17 @@ def questions(request):
     if request.method == 'POST':
         raise Http404
 
-    #todo: redo SearchState to accept input from
-    #view_log, session and request parameters
+    #update search state
+    form = AdvancedSearchForm(request.GET)
+    if form.is_valid():
+        user_input = form.cleaned_data
+    else:
+        user_input = None
     search_state = request.session.get('search_state', SearchState())
     view_log = request.session['view_log']
-
-    #todo: move this call inside SearchState.update()
-    if request.user.is_authenticated():
-        search_state.set_logged_in()
-
-    form = AdvancedSearchForm(request.GET)
-    #todo: form is used only for validation...
-
-    if form.is_valid():
-        search_state.update(form.cleaned_data, view_log)
-        request.session['search_state'] = search_state
-        request.session.modified = True
+    search_state.update(user_input, view_log, request.user)
+    request.session['search_state'] = search_state
+    request.session.modified = True
 
     #force reset for debugging
     #search_state.reset()

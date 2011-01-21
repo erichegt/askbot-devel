@@ -1,6 +1,9 @@
 from django.test import TestCase
+from django.contrib.auth.models import AnonymousUser
 from askbot.search.state_manager import SearchState, ViewLog
+from askbot import const
 
+DEFAULT_SORT = const.DEFAULT_POST_SORT_METHOD
 class SearchStateTests(TestCase):
     def setUp(self):
         self.state = SearchState()
@@ -12,9 +15,11 @@ class SearchStateTests(TestCase):
         """
         self.log.set_current(page_name)
 
-    def update(self, data):
+    def update(self, data, user = None):
         self.visit_page('questions')
-        self.state.update(data, self.log)
+        if user is None:
+            user = AnonymousUser()
+        self.state.update(data, self.log, user)
 
     def add_tag(self, tag):
         self.update({'tags': set([tag])})
@@ -47,3 +52,9 @@ class SearchStateTests(TestCase):
         self.update({'reset_query':True})
         self.assertEquals(self.state.query, None)
         self.assert_tags_are('tag1')
+
+    def test_auto_reset_sort(self):
+        self.update({'sort': 'age-asc'})
+        self.assertEquals(self.state.sort, 'age-asc')
+        self.update({})
+        self.assertEquals(self.state.sort, DEFAULT_SORT)

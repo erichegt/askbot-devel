@@ -7,7 +7,7 @@ $(document).ready(function(){
 
     var refresh_x_button = function(){
         if ($.trim(query.val()).length > 0){
-            if (query.attr('class') == 'searchInput'){
+            if (query.attr('class') === 'searchInput'){
                 query.attr('class', 'searchInputCancelable');
                 x_button = $('<input class="cancelSearchBtn" type="button" name="reset_query"/>');
                 //x_button.click(reset_query);
@@ -15,7 +15,7 @@ $(document).ready(function(){
                 x_button.click(
                     function(){
                         query.val('');
-                        if (sortMethod == 'relevance-desc'){
+                        if (sortMethod === 'relevance-desc'){
                             sortMethod = prevSortMethod;
                         }
                         reset_query(sortMethod);
@@ -23,21 +23,19 @@ $(document).ready(function(){
                 );
                 query.after(x_button);
             }
-        }
-        else {
+        } else {
             $('input[name=reset_query]').remove();
             query.attr('class', 'searchInput');
         }
     };
 
     var reset_sort_method = function(){
-        if (sortMethod == 'relevance-desc'){
+        if (sortMethod === 'relevance-desc'){
             sortMethod = prevSortMethod;
-            if (sortMethod == 'relevance-desc'){
+            if (sortMethod === 'relevance-desc'){
                 sortMethod = 'activity-desc';
             }
-        }
-        else {
+        } else {
             sortMethod = 'activity-desc';
             prevSortMethod = 'activity-desc';
         }
@@ -45,18 +43,17 @@ $(document).ready(function(){
 
     var eval_query = function(){
         cur_text = $.trim(query.val());
-        if (cur_text != prev_text && running === false){
+        if (cur_text !== prev_text && running === false){
             if (cur_text.length >= minSearchWordLength){
                 if (prev_text.length === 0 && showSortByRelevance){
-                    if (sortMethod == 'activity-desc'){
+                    if (sortMethod === 'activity-desc'){
                         prevSortMethod = sortMethod;
                         sortMethod = 'relevance-desc';
                     }
                 }
                 send_query(cur_text, sortMethod);
                 running = true;
-            }
-            else if (cur_text.length === 0){
+            } else if (cur_text.length === 0){
                 reset_sort_method();
                 reset_query(sortMethod);
                 running = true;
@@ -82,8 +79,8 @@ $(document).ready(function(){
         var output = '<div class="votes">' +
                     '<span class="item-count ' + counter_class + '">' +
                         count;
-        if (counter_class == 'accepted'){
-            output += '&#10003;'
+        if (counter_class === 'accepted'){
+            output += '&#10003;';
         }
         output +=   '</span>' +
                     '<div>' + word + '</div>' +

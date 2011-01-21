@@ -106,42 +106,42 @@ class PageLoadTests(PageLoadTestCase):
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'latest'},
+                data={'scope':'unanswered', 'sort':'age-desc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'oldest'},
+                data={'scope':'unanswered', 'sort':'age-asc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'active'},
+                data={'scope':'unanswered', 'sort':'activity-desc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'inactive'},
+                data={'scope':'unanswered', 'sort':'activity-asc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'hottest'},
+                data={'sort':'answers-desc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'coldest'},
+                data={'sort':'answers-asc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'mostvoted'},
+                data={'sort':'votes-desc'},
                 template='questions.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'leastvoted'},
+                data={'sort':'votes-asc'},
                 template='questions.html'
             )
         self.try_url(
