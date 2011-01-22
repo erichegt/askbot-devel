@@ -149,7 +149,7 @@ blockquote {
 
 #CAFull {
     float: left;
-    padding: 0 5px;
+    padding: 0 5px 10px 5px;
     width: 950px;
 }
 

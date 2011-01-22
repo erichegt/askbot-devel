@@ -45,6 +45,12 @@ class RssLastestQuestionsFeed(Feed):
         """
         return item.added_at
 
+    def item_guid(self, item):
+        """returns url without the slug
+        because the slug can change
+        """
+        return self.link + item.get_absolute_url(no_slug = True)
+
     def items(self, item):
         """get questions for the feed
         """

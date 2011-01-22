@@ -537,9 +537,9 @@ class Question(content.Content, DeletableContent):
         self.tagnames = tagnames
         if silent == False:
             self.last_edited_at = retagged_at
-            self.last_activity_at = retagged_at
+            #self.last_activity_at = retagged_at
             self.last_edited_by = retagged_by
-            self.last_activity_by = retagged_by
+            #self.last_activity_by = retagged_by
         self.save()
 
         # Update the Question's tag associations
@@ -640,11 +640,12 @@ class Question(content.Content, DeletableContent):
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
-    def get_absolute_url(self):
-        return '%s%s' % (
-                    reverse('question', args=[self.id]), 
-                    django_urlquote(slugify(self.title))
-                )
+    def get_absolute_url(self, no_slug = False):
+        url = reverse('question', args=[self.id])
+        if no_slug == True:
+            return url
+        else:
+            return url + django_urlquote(slugify(self.title))
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():

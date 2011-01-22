@@ -39,6 +39,13 @@ The bulk of the management commands fall into this group and will probably be th
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |
 | some_name`]                     | optional                                                    |
 +---------------------------------+-------------------------------------------------------------+
+| `get_tag_stats [-u|-t] [-e]`    | Print tag subscription statistics, per tag (option -t)      |
+|                                 | or per user (option -u), if option -e is given, empty       |
+|                                 | records will be shown too (longer versions of the options   |
+|                                 | are: --per-tag-subscription-counts for -t,                  |
+|                                 | --per-user-tag-subscription-counts for -u, and --print-empty|
+|                                 | for -e).                                                    |
++---------------------------------+-------------------------------------------------------------+
 | `load_forum <file_name>`        | Load forum data from a file saved by the `dump_forum`       |
 |                                 | command                                                     |
 +---------------------------------+-------------------------------------------------------------+
