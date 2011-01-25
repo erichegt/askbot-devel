@@ -279,12 +279,6 @@ class Command(BaseCommand):
 
         award_badges_signal.disconnect(award_badges)
 
-        import logging
-        logging.critical(str(arg))
-
-        logging.critical(os.path.isfile(arg[0]))
-        logging.critical(os.path.exists(arg[0]))
-
         if len(arg) < 1 or not os.path.isfile(arg[0]):
             raise CommandError('Error: first argument must be a zip file with the SE forum data')
 

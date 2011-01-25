@@ -171,9 +171,6 @@ def import_data(request):
                 dump_storage.write(chunk)
             dump_storage.flush()
 
-            import shutil
-            shutil.copyfile(dump_storage.name, '/home/fadeev/askbot-devel/junk-zip.zip')
-
             return HttpResponse(__import_se_data(dump_storage), mimetype = 'text/plain')
             #yield HttpResponse(_('StackExchange import complete.'), mimetype='text/plain')
             #dump_storage.close()
