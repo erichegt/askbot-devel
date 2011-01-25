@@ -2,7 +2,7 @@
 
 body {
     background: #FFF;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 150%;
     margin: 0;
     padding: 0;
@@ -37,7 +37,7 @@ input, select {
 
 p {
     margin-bottom: 13px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 140%;
     padding-left: 5px;
 }
@@ -179,7 +179,6 @@ blockquote {
     text-align: right; /*letter-spacing:1px; */
     margin-left: 20px;
     text-decoration: underline;
-    font-size: 12px;
     color: #555555;
 }
 
@@ -340,7 +339,7 @@ blockquote {
 
 .short-summary {
     position: relative;
-    padding: 3px 2px 5px 2px;
+    padding: 5px 2px 5px 2px;
     border-top: 1px dashed #ccccce;
     overflow: hidden;
     width: 702px;
@@ -352,14 +351,22 @@ blockquote {
     font-family: "Trebuchet MS", "segoe ui", arial, sans-serif;
 }
 
+.short-summary .userinfo .relativetime,
+.short-summary .userinfo a {
+    font-size: 11px;
+    font-weight: normal;
+    color: #777;
+}
+
+
 .short-summary .userinfo {
-    float: right;
-    margin-top: 8px;
+    text-align:center;
+    line-height:16px;
 }
 
 .short-summary .counts {
     float: right;
-    margin: 4px 0 0 5px;
+    margin: 2px 0 0 5px;
 }
 
 .short-summary .counts .item-count {
@@ -371,8 +378,16 @@ blockquote {
     font-weight: 800;
 }
 
-.short-summary .counts .votes div {
-    padding-top:1px;
+.short-summary .counts .votes div,
+.short-summary .counts .views div
+{
+    font-size: 12px;
+    line-height:14px;
+    color: #666;
+}
+
+.short-summary .tags {
+    margin-top: 0;
 }
 
 .no-votes {
@@ -406,12 +421,10 @@ blockquote {
 
 .short-summary .votes,
 .short-summary .views {
-    font-size: 12px;
     text-align: center;
-    margin: 0 0 0 7px;
+    margin: 0 3px;
     padding: 4px 2px 0px 2px;
     width: 46px;
-    height: 48px;
     float: left;
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
@@ -455,6 +468,10 @@ blockquote {
 .boxC p.info-box-follow-up-links {
     text-align: right;
     margin: 0;
+}
+
+.boxC h2 {
+    padding-left: 0;
 }
 
 .pager {
@@ -531,7 +548,7 @@ blockquote {
 
 .tags {
     font-family: sans-serif;
-    line-height: 200%;
+    line-height: 170%;
     display: block;
     margin-top: 5px;
 }
@@ -542,7 +559,9 @@ blockquote {
 
 p.rss {
     float: right;
-    margin-right: 2px;
+    font-size: 12px;
+    color: #666;
+    margin: 0 2px 0 0;
 }
 
 p.rss a {
@@ -726,13 +745,12 @@ a:hover.medal {
     font-size: 125%;
 }
 
-.question-body {
+.question-body, .answer-body {
     min-height: 39px;
-    font-size: 13px;
     line-height: 20px;
 }
 
-.question-body IMG {
+.question-body IMG, .answer-body IMG {
     max-width: 600px;
 }
 
@@ -817,7 +835,7 @@ a:hover.medal {
 }
 
 .comments {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     clear: both;
 }
@@ -836,7 +854,7 @@ a:hover.medal {
     width: 664px;
     margin: 0 0 4px 0;
     font-family: sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     padding: 2px 0 0 2px;
 }
@@ -905,17 +923,6 @@ div.comments {
 
 .comment a.author:hover {
     text-decoration: underline;
-}
-
-/*回答*/
-.answer-body {
-    min-height: 39px;
-    font-size: 13px;
-    line-height: 20px;
-}
-
-.answer-body IMG {
-    max-width: 600px;
 }
 
 .accepted-answer {
@@ -1807,6 +1814,11 @@ ul.form-horizontal-rows li input {
     margin: 5px 0 0 0;
 }
 
+#hideIgnoredTagsControl label {
+    font-size: 12px;
+    color: #666;
+}
+
 #hideIgnoredTagsCb {
     margin: 0 2px 0 1px;
 }
@@ -1900,12 +1912,14 @@ p.signup_p {
 .search-tips {
     font-size:12px;
     line-height:12px;
+    color: #666;
     margin:0 0 5px 0;
     padding:0px;
     clear:both;
 }
 .search-tips a {
     text-decoration: underline;
+    color: #666;
 }
 
 .faq-rep-item { 

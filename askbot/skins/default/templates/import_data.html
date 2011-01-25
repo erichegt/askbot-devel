@@ -11,6 +11,31 @@
     $('#load-dump-form input[type=submit]').click(function(){
         return;
     });
+    $("#upload").ajaxStart(function(){
+          $(this).hide();
+      }).ajaxComplete(function(){
+          $(this).show();
+      });
+
+    $.ajaxFileUpload({
+        url: "{% url import_data %}",
+        secureuri:false,
+        fileElementId:'id_dump_file',
+        dataType: 'xml',
+        success: function (data, status){
+            var fileURL = $(data).find('file_url').text(); 
+            var error = $(data).find('error').text();
+            if(error != ''){
+                alert(error);
+            } else {
+                imageUrl.attr('value', fileURL);
+            }
+        },
+        error: function (data, status, e){
+            alert(e);
+        }
+    });
+}
     
 </script>
 {% endblock %}

@@ -1126,8 +1126,20 @@ def user_is_username_taken(cls,username):
         return False
 
 def user_is_administrator(self):
-    return self.is_superuser
+    """checks whether user in the forum site administrator
+    the admin must be both superuser and staff member
+    the latter is because staff membership is required
+    to access the live settings"""
+    return (self.is_superuser and self.is_staff)
 
+def user_remove_admin_status(self):
+    self.is_staff = False
+    self.is_superuser = False
+
+def user_set_admin_status(self):
+    self.is_staff = True
+    self.is_superuser = True
+    
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
@@ -1168,7 +1180,7 @@ def user_set_status(self, new_status):
     #clear admin status if user was an administrator
     #because this function is not dealing with the site admins
     if self.is_administrator():
-        self.is_superuser = False
+        self.remove_admin_status()
 
     self.status = new_status
     self.save()
@@ -1572,6 +1584,8 @@ User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)
 User.add_to_class('is_administrator', user_is_administrator)
+User.add_to_class('set_admin_status', user_set_admin_status)
+User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)

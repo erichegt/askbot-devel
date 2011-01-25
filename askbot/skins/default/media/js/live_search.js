@@ -213,9 +213,9 @@ $(document).ready(function(){
                     question['views_word'],
                     question['views_class']
                 ) +
+                render_user_info(question) +
             '</div>' + 
             render_title(question) +
-            render_user_info(question) +
             render_tags(question['tags'], true, false) +
         '</div>';
         return entry_html;

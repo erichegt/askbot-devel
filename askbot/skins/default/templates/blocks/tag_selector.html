@@ -35,7 +35,7 @@
     <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
     <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     <p id="hideIgnoredTagsControl">
-    <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />&nbsp;
+    <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />
     <label id="hideIgnoredTagsLabel" for="hideIgnoredTagsCb">{% trans %}keep ignored questions hidden{% endtrans %}</label>
     <p>
 </div>

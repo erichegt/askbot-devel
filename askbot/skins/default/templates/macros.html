@@ -239,13 +239,13 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
                 </div>
             </div>
+            <div class="userinfo">
+                <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
+                <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
+                {#{user_score_and_badge_summary(question.last_activity_by)}#}
+            </div>
         </div>
         <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-        <div class="userinfo">
-            <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-            <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
-            {#{user_score_and_badge_summary(question.last_activity_by)}#}
-        </div>
         {% spaceless %}
         <div class="tags">
             {% for tag in question.get_tag_names() %}

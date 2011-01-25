@@ -765,7 +765,7 @@ class Command(BaseCommand):
             u = askbot.User()
             u_type = se_u.user_type.name
             if u_type == 'Administrator':
-                u.is_superuser = True
+                u.set_admin_status()
             elif u_type == 'Moderator':
                 u.set_status('m')
             elif u_type not in ('Unregistered', 'Registered'):

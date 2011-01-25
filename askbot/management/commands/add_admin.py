@@ -41,5 +41,5 @@ class Command(NoArgsCommand):
         self.confirm_action()
         self.remove_signals()
 
-        self.user.is_superuser = True
+        self.user.set_admin_status()
         self.user.save()
