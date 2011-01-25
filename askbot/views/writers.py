@@ -4,11 +4,14 @@
 
 This module contains views that allow adding, editing, and deleting main textual content.
 """
-import os.path
-import time
 import datetime
-import random
 import logging
+import os
+import os.path
+import random
+import sys
+import tempfile
+import time
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -28,6 +31,7 @@ from askbot.skins.loaders import ENV
 from askbot.utils.decorators import ajax_only
 from askbot.utils.functions import diff_date
 from askbot.templatetags import extra_filters_jinja as template_filters
+from askbot.importers.stackexchange.management import ImporterThread#todo: may change
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -106,6 +110,80 @@ def upload(request):#ajax upload file to a question or answer
     xml = xml_template % (result, error, file_url)
 
     return HttpResponse(xml, mimetype="application/xml")
+
+def __import_se_data(dump_file):
+    """non-view function that imports the SE data
+    in the future may import other formats as well
+
+    In this function stdout is temporarily 
+    redirected, so that the underlying importer management
+    command could stream the output to the browser
+
+    todo: maybe need to add try/except clauses to restore
+    the redirects in the exceptional situations
+    """
+    
+    fake_stdout = tempfile.NamedTemporaryFile()
+    real_stdout = sys.stdout
+    sys.stdout = fake_stdout
+
+    importer = ImporterThread(dump_file = dump_file.name)
+    importer.start()
+
+    #run a loop where we'll be reading output of the
+    #importer tread and yielding it to the caller
+    read_stdout = open(fake_stdout.name, 'r')
+    file_pos = 0
+    fd = read_stdout.fileno()
+    while importer.isAlive():
+        c_size = os.fstat(fd).st_size
+        if c_size > file_pos:
+            line = read_stdout.readline()
+            yield line
+            file_pos = read_stdout.tell()
+
+    fake_stdout.close()
+    read_stdout.close()
+    dump_file.close()
+    sys.stdout = real_stdout
+    yield 'done.'
+
+
+@login_required
+def import_data(request):
+    """a view allowing the site administrator
+    upload stackexchange data
+    """
+    if not request.user.is_administrator():
+        raise Http404
+
+    if request.method == 'POST':
+        #if not request.is_ajax():
+        #    raise Http404
+
+        form = forms.DumpUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dump_file = form.cleaned_data['dump_file']
+            dump_storage = tempfile.NamedTemporaryFile()
+
+            #save the temp file
+            for chunk in dump_file.chunks():
+                dump_storage.write(chunk)
+            dump_storage.flush()
+
+            import shutil
+            shutil.copyfile(dump_storage.name, '/home/fadeev/askbot-devel/junk-zip.zip')
+
+            return HttpResponse(__import_se_data(dump_storage), mimetype = 'text/plain')
+            #yield HttpResponse(_('StackExchange import complete.'), mimetype='text/plain')
+            #dump_storage.close()
+    else:
+        form = forms.DumpUploadForm()
+
+    template = ENV.get_template('import_data.html')
+    data = {'dump_upload_form': form}
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 #@login_required #actually you can post anonymously, but then must register
 def ask(request):#view used to ask a new question

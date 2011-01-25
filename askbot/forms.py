@@ -148,6 +148,13 @@ class SummaryField(forms.CharField):
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
 
+class DumpUploadForm(forms.Form):
+    """This form handles importing
+    data into the forum. At the moment it only 
+    supports stackexchange import.
+    """
+    dump_file = forms.FileField()
+
 class ShowQuestionForm(forms.Form):
     answer = forms.IntegerField(required = False)
     comment = forms.IntegerField(required = False)

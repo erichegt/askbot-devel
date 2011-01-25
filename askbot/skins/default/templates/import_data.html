@@ -1,0 +1,16 @@
+{% extends "two_column_body.html" %}
+{% block content %}
+    <form id="load-dump-form" method="post" enctype="multipart/form-data">
+        {{dump_upload_form.as_table()}}
+        <input type="submit" value="{% trans %}Import data{% endtrans %}" />
+    </form>
+    <div id="results"></div>
+{% endblock %}
+{% block endjs %}
+<script type="text/javascript">
+    $('#load-dump-form input[type=submit]').click(function(){
+        return;
+    });
+    
+</script>
+{% endblock %}
