@@ -278,7 +278,7 @@ def questions(request):
     template_context = RequestContext(request, {
         'language_code': translation.get_language(),
         'reset_method_count': reset_method_count,
-        'view_name': 'questions',
+        'page_class': 'main-page',
         'active_tab': 'questions',
         'questions' : page,
         'contributors' : contributors,
@@ -352,7 +352,6 @@ def tags(request):#view showing a listing of available tags - plain list
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
-        'view_name':'tags',
         'active_tab': 'tags',
         'page_class': 'tags-page',
         'tags' : tags,
@@ -540,7 +539,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
 
     data = {
-        'view_name': 'question',
+        'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question,
         'question_vote' : question_vote,
@@ -577,7 +576,7 @@ def revisions(request, id, object_name=None):
         else:
             revision.diff = htmldiff(revisions[i-1].html, revision.html)
     data = {
-        'view_name':'answer_revisions',
+        'page_class':'revisions-page',
         'active_tab':'questions',
         'post': post,
         'revisions': revisions,

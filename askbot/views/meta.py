@@ -44,7 +44,6 @@ def server_error(request, template='500.html'):
 def faq(request):
     template = ENV.get_template('faq.html')
     data = {
-        'view_name':'faq',
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
@@ -54,7 +53,7 @@ def faq(request):
     return HttpResponse(template.render(context))
 
 def feedback(request):
-    data = {'view_name':'feedback', 'page_class': 'meta'}
+    data = {'page_class': 'meta'}
     form = None
     if request.method == "POST":
         form = FeedbackForm(request.POST)
@@ -78,7 +77,7 @@ def feedback(request):
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    context = RequestContext(request, {'view_name':'privacy', 'page_class': 'meta'})
+    context = RequestContext(request, {'page_class': 'meta'})
     template = ENV.get_template('privacy.html')
     return HttpResponse(template.render(context)) 
 
@@ -91,7 +90,6 @@ def logout(request):#refactor/change behavior?
 #why not just show a message: you are logged out of forum, but
 #if you really want to log out -> go to your openid provider
     data = {
-        'view_name':'logout',
         'next' : get_next_url(request),
         'page_class': 'meta',
     }
@@ -116,7 +114,7 @@ def badges(request):#user status/reputation system
     data = {
         'active_tab': 'badges',
         'badges' : badges,
-        'view_name': 'badges',
+        'page_class': 'meta',
         'mybadges' : my_badges,
         'feedback_faq_url' : reverse('feedback'),
     }
@@ -137,7 +135,6 @@ def badge(request, id):
 
     template = ENV.get_template('badge.html')
     data = {
-        'view_name': badge,
         'active_tab': 'badges',
         'badge_recipients' : badge_recipients,
         'badge' : badge,
