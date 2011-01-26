@@ -239,6 +239,7 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
                 </div>
             </div>
+            <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
                 <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>

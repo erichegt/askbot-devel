@@ -354,8 +354,9 @@ blockquote {
 .short-summary .userinfo .relativetime,
 .short-summary .userinfo a {
     font-size: 11px;
+    clear:both;
     font-weight: normal;
-    color: #777;
+    color: #555;
 }
 
 
@@ -383,7 +384,7 @@ blockquote {
 {
     font-size: 12px;
     line-height:14px;
-    color: #666;
+    color: #555;
 }
 
 .short-summary .tags {
@@ -1912,14 +1913,14 @@ p.signup_p {
 .search-tips {
     font-size:12px;
     line-height:12px;
-    color: #666;
+    color: #555;
     margin:0 0 5px 0;
     padding:0px;
     clear:both;
 }
 .search-tips a {
     text-decoration: underline;
-    color: #666;
+    color: #555;
 }
 
 .faq-rep-item { 
