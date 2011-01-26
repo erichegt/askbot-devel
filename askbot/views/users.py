@@ -120,7 +120,7 @@ def users(request):
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
         'active_tab': 'users',
-        'page_class': 'users',
+        'page_class': 'users-page',
         'users' : users_page,
         'suser' : suser,
         'keywords' : suser,
@@ -209,6 +209,7 @@ def user_moderate(request, subject):
                                     )
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'moderation',
         'tab_description': _('moderate this user'),
         'page_title': _('moderate user'),
@@ -270,6 +271,7 @@ def edit_user(request, id):
         form = forms.EditUserForm(user)
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'form' : form,
         'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }
@@ -369,6 +371,7 @@ def user_stats(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'stats',
         'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),
@@ -654,6 +657,7 @@ def user_recent(request, user):
 
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'recent',
         'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
@@ -721,6 +725,7 @@ def user_responses(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
@@ -787,6 +792,7 @@ def user_votes(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'votes',
         'tab_description' : _('user vote record'),
         'page_title' : _('profile - votes'),
@@ -824,6 +830,7 @@ def user_reputation(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'reputation',
         'tab_description': _('user reputation in the community'),
         'page_title': _('profile - user reputation'),
@@ -853,6 +860,7 @@ def user_favorites(request, user):
                                 )[:const.USER_VIEW_DATA_SIZE]
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'favorites',
         'tab_description' : _('users favorite questions'),
         'page_title' : _('profile - favorite questions'),
@@ -896,6 +904,7 @@ def user_email_subscriptions(request, user):
     template = ENV.get_template('user_profile/user_email_subscriptions.html')
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'email_subscriptions',
         'tab_description': _('email subscription settings'),
         'page_title': _('profile - email subscriptions'),
