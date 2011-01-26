@@ -31,7 +31,7 @@ from askbot.skins.loaders import ENV
 from askbot.utils.decorators import ajax_only
 from askbot.utils.functions import diff_date
 from askbot.templatetags import extra_filters_jinja as template_filters
-from askbot.importers.stackexchange.management import ImporterThread#todo: may change
+from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -127,7 +127,7 @@ def __import_se_data(dump_file):
     real_stdout = sys.stdout
     sys.stdout = fake_stdout
 
-    importer = ImporterThread(dump_file = dump_file.name)
+    importer = stackexchange.ImporterThread(dump_file = dump_file.name)
     importer.start()
 
     #run a loop where we'll be reading output of the
@@ -135,27 +135,30 @@ def __import_se_data(dump_file):
     read_stdout = open(fake_stdout.name, 'r')
     file_pos = 0
     fd = read_stdout.fileno()
+    yield '<html><body><style>* {font-family: sans;} p {font-size: 12px; line-height: 16px; margin: 0; padding: 0;}</style><h1>Importing your data. This may take a few minutes...</h1>'
     while importer.isAlive():
         c_size = os.fstat(fd).st_size
         if c_size > file_pos:
             line = read_stdout.readline()
-            yield line
+            yield '<p>' + line + '</p>'
             file_pos = read_stdout.tell()
 
     fake_stdout.close()
     read_stdout.close()
     dump_file.close()
     sys.stdout = real_stdout
-    yield 'done.'
+    yield '<p>Done. Please, <a href="%s">Visit Your Forum</a></p></body></html>' % reverse('index')
 
 
-@login_required
 def import_data(request):
     """a view allowing the site administrator
     upload stackexchange data
     """
-    if not request.user.is_administrator():
-        raise Http404
+    #allow to use this view to site admins
+    #or when the forum in completely empty
+    if request.user.is_anonymous() or (not request.user.is_administrator()):
+        if models.Question.objects.count() > 0:
+            raise Http404
 
     if request.method == 'POST':
         #if not request.is_ajax():
@@ -171,14 +174,17 @@ def import_data(request):
                 dump_storage.write(chunk)
             dump_storage.flush()
 
-            return HttpResponse(__import_se_data(dump_storage), mimetype = 'text/plain')
+            return HttpResponse(__import_se_data(dump_storage))
             #yield HttpResponse(_('StackExchange import complete.'), mimetype='text/plain')
             #dump_storage.close()
     else:
         form = forms.DumpUploadForm()
 
     template = ENV.get_template('import_data.html')
-    data = {'dump_upload_form': form}
+    data = {
+        'dump_upload_form': form,
+        'need_configuration': (not stackexchange.is_ready())
+    }
     context = RequestContext(request, data)
     return HttpResponse(template.render(context))
 

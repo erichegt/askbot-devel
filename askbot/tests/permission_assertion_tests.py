@@ -90,7 +90,8 @@ class SeeOffensiveFlagsPermissionAssertionTests(utils.AskbotTestCase):
 
     def test_admin_can_see_flags(self):
         question = self.post_question()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.reputation < self.min_rep)
         self.assertTrue(
             template_filters.can_see_offensive_flags(
@@ -222,7 +223,8 @@ class DeleteAnswerPermissionAssertionTests(utils.AskbotTestCase):
 
     def test_low_rep_admin_can_delete(self):
         self.post_answer(user = self.other_user)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         assert(self.user.reputation < self.min_rep)
         self.assert_can_delete()
 
@@ -337,7 +339,8 @@ class CloseQuestionPermissionAssertionTests(utils.AskbotTestCase):
         )
 
     def test_low_rep_admin_can_close(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.reputation < self.min_rep)
         self.assert_can_close(user = self.other_user)
 
@@ -442,7 +445,7 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_cannot_reopen(user = self.other_user)
 
     def test_low_rep_admin_can_reopen(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
         self.assert_can_reopen(user = self.other_user)
 
     def test_low_rep_moderator_can_reopen(self):
@@ -515,12 +518,14 @@ class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_user_cannot(user = self.other_user)
 
     def test_admin_can_edit(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_other_can()
 
     def test_admin_can_edit_deleted(self):
         self.post.deleted = True
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_other_can()
 
     def test_mod_can_edit(self):
@@ -773,7 +778,8 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
     def test_admin_has_no_limit_for_flags_per_day(self):
         max_flags = askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
         other_user = self.create_other_user()
-        other_user.is_superuser = True
+        other_user.set_admin_status()
+        other_user.save()
         for i in range(max_flags + 1):
             question = self.post_question()
             other_user.flag_post(question)
@@ -808,11 +814,12 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
 
     def low_rep_administrator_can_flag(self):
         assert(self.user.reputation < self.min_rep)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
         self.assert_user_can_flag()
 
     def test_superuser_cannot_flag_question_twice(self):
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         self.user.flag_post(post = self.question)
         self.assertRaises(
             exceptions.PermissionDenied,
@@ -829,7 +836,8 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
         )
 
     def test_superuser_cannot_flag_answer_twice(self):
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         self.user.flag_post(post = self.answer)
         self.assertRaises(
             exceptions.PermissionDenied,
@@ -1017,7 +1025,8 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                         parent_post = question,
                         body_text = 'test comment'
                     )
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.other_user.delete_comment(comment)
         self.assertTrue(
             template_filters.can_delete_comment(
@@ -1149,7 +1158,8 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
 
     def test_low_rep_admin_can_comment_others_question(self):
         question = self.post_question()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.is_administrator())
         assert(self.other_user.reputation < self.min_rep)
         comment = self.other_user.post_comment(
@@ -1272,12 +1282,14 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
     def test_admin_cannot_accept_others_answer(self):
         self.other_post_answer()
         self.create_user(username = 'third_user')
-        self.third_user.is_superuser = True
+        self.third_user.set_admin_status()
+        self.third_user.save()
         self.assert_user_cannot(user = self.third_user)
 
     def test_admin_cannot_accept_own_answer(self):
         self.other_post_answer()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_user_cannot(user = self.other_user)
 
 class VotePermissionAssertionTests(PermissionAssertionTestCase):
@@ -1433,7 +1445,8 @@ class UploadPermissionAssertionTests(PermissionAssertionTestCase):
 
     def test_low_rep_administrator_can_upload(self):
         assert(self.user.reputation < self.min_rep)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         try:
             self.user.assert_can_upload_file()
         except exceptions.PermissionDenied:

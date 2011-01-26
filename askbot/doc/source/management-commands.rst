@@ -37,7 +37,7 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | any of the external login providers.                        |
 +---------------------------------+-------------------------------------------------------------+
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |
-| some_name`]                     | optional                                                    |
+| some_name]`                     | optional                                                    |
 +---------------------------------+-------------------------------------------------------------+
 | `get_tag_stats [-u|-t] [-e]`    | Print tag subscription statistics, per tag (option -t)      |
 |                                 | or per user (option -u), if option -e is given, empty       |
@@ -48,6 +48,13 @@ The bulk of the management commands fall into this group and will probably be th
 +---------------------------------+-------------------------------------------------------------+
 | `load_forum <file_name>`        | Load forum data from a file saved by the `dump_forum`       |
 |                                 | command                                                     |
++---------------------------------+-------------------------------------------------------------+
+| `load_stackexchange <file.zip>` | Load SackExchange dump into Askbot. It is best to run this  |
+|                                 | command on empty database. Also - before running, make sure |
+|                                 | that `askbot.importers.stackexchange` is in the list of     |
+|                                 | installed apps within your settings.py file (it might also  |
+|                                 | be necessary to run `syncdb` command to initiate the        |
+|                                 | SE importer tables).                                        |
 +---------------------------------+-------------------------------------------------------------+
 | `rename_tags --from <from_tags> | Rename, merge or split tags. User ID is the id of the user  |
 | --to <to_tags> --user-id        | who will be assigned as the performer of the retag action.  |

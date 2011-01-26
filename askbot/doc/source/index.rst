@@ -19,6 +19,7 @@ at the forum_ or by email at admin@askbot.org
    Create and configure the site files<initial-configuration>
    Initialize the database tables <initialize-database-tables>
    Deploy on a webserver <deployment>
+   Import data (StackExchange) <import-data>
    Appendix A: Maintenance procedures <management-commands>
 
 Some background information: Askbot is written in Python on top of the Django platform.

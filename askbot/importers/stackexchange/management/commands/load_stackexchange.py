@@ -16,6 +16,7 @@ from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
 from askbot.utils.slug import slugify
 from askbot.models.badges import award_badges_signal, award_badges
+from askbot.importers.stackexchange.management import is_ready as importer_is_ready
 #from markdown2 import Markdown
 #markdowner = Markdown(html4tags=True)
 
@@ -276,6 +277,14 @@ class Command(BaseCommand):
 
     @transaction.commit_manually
     def handle(self, *arg, **kwarg):
+
+        if not importer_is_ready():
+            raise CommandError(
+                "Looks like stackexchange tables are not yet initialized in the database.\n"
+                "Please, run command: \npython manage.py syncdb\n"
+                "then import the data."
+            )
+
 
         award_badges_signal.disconnect(award_badges)
 
