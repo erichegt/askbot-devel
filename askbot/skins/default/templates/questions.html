@@ -138,7 +138,7 @@
         {% endif %}
     </div>
 {% endif %}
-<div id="listA">
+<div id="question-list">
 {% cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
     {% for question in questions.object_list %}
         {{macros.question_summary(question)}}
@@ -239,7 +239,7 @@
             /*var on_tab = '#nav_questions';
             $(on_tab).attr('className','on');*/
             Hilite.exact = false;
-            Hilite.elementid = "listA";
+            Hilite.elementid = "question-list";
             Hilite.debug_referrer = location.href;
         });
         askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% trans %}mark-tag/{% endtrans %}{% trans %}interesting/{% endtrans %}';

@@ -330,7 +330,7 @@ blockquote {
     padding: 5px 0 0 5px;
 }
 
-#listA {
+#question-list {
     float: left;
     background-color: #FFF;
     padding: 0;
@@ -593,7 +593,7 @@ p.rss a {
     color: #333;
 }
 
-#listA .tag {
+#question-list .tag {
     margin-right: 6px;
 }
 
