@@ -380,7 +380,8 @@ blockquote {
 }
 
 .short-summary .counts .votes div,
-.short-summary .counts .views div
+.short-summary .counts .views div,
+.short-summary .counts .answers div
 {
     font-size: 12px;
     line-height:14px;
@@ -391,36 +392,37 @@ blockquote {
     margin-top: 0;
 }
 
-.no-votes {
+.no-votes .item-count {
     background: white;
     color: gray;
 }
-.some-votes {
+.some-votes .item-count {
     background: #a3d0ff;
     color: #4a4a4a;
 }
-.no-answers {
+.no-answers .item-count {
     background: #b63333;
     color: yellow;
 }
-.some-answers {
+.some-answers .item-count {
     background: #ffed9c;
     color: #a4a4a4;
 }
-.accepted {
+.accepted .item-count {
     background:#338333;
     color:#d0f5a9;
 }
-.no-views {
+.no-views .item-count {
     background: gray;
     color: white;
 }
-.some-views {
+.some-views .item-count {
     background: #ff8c8c;
     color: #4a4a4a;
 }
 
 .short-summary .votes,
+.short-summary .answers,
 .short-summary .views {
     text-align: center;
     margin: 0 3px;

@@ -271,7 +271,7 @@ def edit_user(request, id):
         form = forms.EditUserForm(user)
     data = {
         'active_tab': 'users',
-        'page_class': 'user-profile-page',
+        'page_class': 'user-profile-edit-page',
         'form' : form,
         'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }

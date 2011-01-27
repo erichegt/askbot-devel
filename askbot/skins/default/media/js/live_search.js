@@ -75,9 +75,9 @@ $(document).ready(function(){
         });
     };
 
-    var render_counter = function(count, word, counter_class){
-        var output = '<div class="votes">' +
-                    '<span class="item-count ' + counter_class + '">' +
+    var render_counter = function(count, word, counter_class, counter_subclass){
+        var output = '<div class="' + counter_class + ' ' + counter_subclass + '">' +
+                    '<span class="item-count">' +
                         count;
         if (counter_class === 'accepted'){
             output += '&#10003;';
@@ -201,16 +201,19 @@ $(document).ready(function(){
                 render_counter(
                     question['votes'],
                     question['votes_word'],
+                    'votes',
                     question['votes_class']
                 ) +
                 render_counter(
                     question['answers'],
                     question['answers_word'],
+                    'answers',
                     question['answers_class']
                 ) +
                 render_counter(
                     question['views'],
                     question['views_word'],
+                    'views',
                     question['views_class']
                 ) +
                 render_user_info(question) +
