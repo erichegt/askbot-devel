@@ -1,8 +1,9 @@
+<span class="user-info">
 {% if request.user.is_authenticated() %}
     <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username }}</a> 
     {% spaceless %}
     {% if request.user.new_response_count > 0 or request.user.seen_response_count > 0 %}
-    <a class='ab-responses-envelope' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
+    <a id='ab-responses' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
         <img 
             alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
             {% if request.user.new_response_count > 0 %}
@@ -16,7 +17,7 @@
     </a>
     {% endif %}
     {% if moderation_items %}
-        <a class="ab-responses-envelope"
+        <a id="ab-responses"
             href="{{request.user.get_absolute_url()}}?sort=inbox&section=flags"
         >
         {% if moderation_items['new_count'] > 0 %}
@@ -48,6 +49,7 @@
 {% else %}
     <a href="{% url user_signin %}">{% trans %}login{% endtrans %}</a>
 {% endif %}
+</span>
 <a href="{% url about %}">{% trans %}about{% endtrans %}</a>
 <a href="{% url faq %}">{% trans %}faq{% endtrans %}</a>
 {% if request.user.is_authenticated() and request.user.is_administrator() %}
