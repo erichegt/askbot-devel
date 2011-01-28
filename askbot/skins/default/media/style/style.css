@@ -185,6 +185,7 @@ blockquote {
     top: 0px;
     height: 20px;
     padding: 3px;
+    margin: 0;
 }
 
 #ab-meta-nav a {
@@ -193,6 +194,10 @@ blockquote {
     margin-left: 20px;
     text-decoration: underline;
     color: #555555;
+}
+
+#ab-meta-nav a:first-child {
+    margin-left: 0;
 }
 
 #ab-meta-nav a#ab-responses {
@@ -220,7 +225,7 @@ blockquote {
     padding: 0px 12px 3px 12px;
     height: 25px;
     line-height: 30px;
-    margin-left: 10px;
+    margin-right: 10px;
     font-size: 18px;
     font-weight: 100;
     text-decoration: none;
