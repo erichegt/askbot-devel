@@ -1,0 +1,35 @@
+{% import "macros.html" as macros %}
+{% if contributors %}
+    {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
+    <div id="contrib-users" class="boxC">
+    <h2>{% trans %}Contributors{% endtrans %}</h2>
+    {% spaceless %}
+        {% for person in contributors %}
+            {{ macros.gravatar(person,48) }}
+        {% endfor %}
+    {% endspaceless %}
+    </div>
+    {% endcache %}
+{% endif %}
+
+{% if request.user.is_authenticated() %} 
+   {% include "blocks/tag_selector.html" %}
+{% endif %}
+
+{% if tags %}
+    {% cache 0 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
+    <div class="boxC">
+        <h2>{% trans %}Related tags{% endtrans %}</h2>
+        <div id="related-tags" class="tags">
+            {% for tag in tags %}
+                <a 
+                    rel="tag" 
+                    title="{% trans tag_name=tag.name %}see questions tagged '{{ tag_name }}'{% endtrans %}"  
+                    href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
+                <span class="tag-number">&#215; {{ tag.local_used_count|intcomma }}</span>
+                <br />
+            {% endfor %}
+        </div>
+    </div>
+    {% endcache %}
+{% endif %}

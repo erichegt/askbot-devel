@@ -56,7 +56,7 @@ class PageLoadTests(PageLoadTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        self.assertEquals(response.template.name, 'questions.html')
+        self.assertEquals(response.template.name, 'main_page.html')
 
     def proto_test_non_user_urls(self):
         """test all reader views thoroughly
@@ -82,67 +82,62 @@ class PageLoadTests(PageLoadTestCase):
         #todo: test different sort methods and scopes
         self.try_url(
                 'questions',
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'start_over':'true'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered'},
-                template='questions.html'
-            )
-        self.try_url(
-                'questions',
-                data={'scope':'all'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'favorite'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'age-desc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'age-asc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'activity-desc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered', 'sort':'activity-asc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'answers-desc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'answers-asc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'votes-desc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'sort':'votes-asc'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'question',

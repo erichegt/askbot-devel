@@ -302,7 +302,7 @@ def questions(request):
     #ajax request is handled in a separate branch above
 
     #before = datetime.datetime.now()
-    template = ENV.get_template('questions.html')
+    template = ENV.get_template('main_page.html')
     response = HttpResponse(template.render(template_context))
     #after = datetime.datetime.now()
     #print after - before
