@@ -3,7 +3,7 @@ $(document).ready(function(){
     var query = $('input#keywords');
     var prev_text = $.trim(query.val());
     var running = false;
-    var q_list_sel = 'listA';//id of question listing div
+    var q_list_sel = 'question-list';//id of question listing div
 
     var refresh_x_button = function(){
         if ($.trim(query.val()).length > 0){
