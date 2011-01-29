@@ -114,6 +114,12 @@ The commands from this section will help fix those issues.
 +--------------------------------+-------------------------------------------------------------+
 | `fix_revisionless_posts`       | adds a revision record to posts that lack them              |
 +--------------------------------+-------------------------------------------------------------+
+| `fix_question_tags`            | takes tag names from the record on the question table       |
+|                                | and stores them in the tag table. This defect may show when |
+|                                | the server process is interrupted after the question was    |
+|                                | saved, but tags were not updated, and the symptom is that   |
+|                                | the question cannot be found via the tag search.            |
++--------------------------------+-------------------------------------------------------------+
 
 The above commands are safe to run at any time, also they do not require 
 additional parameters. In the future all these will be replaced with just one simple command.
