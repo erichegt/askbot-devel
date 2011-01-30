@@ -2,8 +2,10 @@ import sys
 from django.core.management.base import NoArgsCommand
 from django.db import transaction
 from askbot import models
+from askbot import forms
 from askbot.utils import console
 from askbot.models import signals
+from askbot.conf import settings as askbot_settings
 
 FORMAT_STRING = '%6.2f%%'
 
@@ -16,14 +18,32 @@ class Command(NoArgsCommand):
     @transaction.commit_manually
     def run_command(self):
         """method that runs the actual command"""
+        #go through tags and find character case duplicates and eliminate them
+        tagnames = models.Tag.objects.values_list('name', flat = True)
+        for name in tagnames:
+            dupes = models.Tag.objects.filter(name__iexact = name)
+            first_tag = dupes[0]
+            if dupes.count() > 1:
+                line = 'Found duplicate tags for %s:' % first_tag.name
+                for idx in xrange(1, dupes.count()):
+                    print dupes[idx].name + ' ',
+                    dupes[idx].delete()
+                print ''
+            if askbot_settings.FORCE_LOWERCASE_TAGS:
+                lowercased_name = first_tag.name.lower()
+                if first_tag.name != lowercased_name:
+                    print 'Converting tag %s to lower case' % first_tag.name
+                    first_tag.name = lowercased_name
+                    first_tag.save()
+        transaction.commit()
 
+        #go through questions and fix tag records on each
         questions = models.Question.objects.all()
         checked_count = 0
         found_count = 0
         total_count = questions.count()
-        print "Searching for questions with incomplete tag records:",
+        print "Searching for questions with inconsistent tag records:",
         for question in questions:
-
             tags = question.tags.all()
             denorm_tag_set = set(question.get_tag_names())
             norm_tag_set = set(question.tags.values_list('name', flat=True))
@@ -36,12 +56,17 @@ class Command(NoArgsCommand):
                     user = question.author
                     timestamp = question.added_at
 
+                tagnames = forms.TagNamesField().clean(question.tagnames)
+
                 question.update_tags(
-                    tagnames = question.tagnames,
+                    tagnames = tagnames,
                     user = user,
                     timestamp = timestamp
                 )
+                question.tagnames = tagnames
+                question.save()
                 found_count += 1
+
             transaction.commit()
             checked_count += 1
             progress = 100*float(checked_count)/float(total_count)
@@ -50,4 +75,4 @@ class Command(NoArgsCommand):
         if found_count:
             print '%d problem questions found, tag records restored' % found_count
         else:
-            print 'Nothing found'
+            print 'Did not find any problems'

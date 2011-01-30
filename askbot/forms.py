@@ -94,7 +94,7 @@ class TagNamesField(forms.CharField):
 
         split_re = re.compile(const.TAG_SPLIT_REGEX)
         tag_strings = split_re.split(data)
-        out_tag_list = []
+        entered_tags = []
         tag_count = len(tag_strings)
         if tag_count > askbot_settings.MAX_TAGS_PER_POST:
             max_tags = askbot_settings.MAX_TAGS_PER_POST
@@ -118,9 +118,28 @@ class TagNamesField(forms.CharField):
             if not tagname_re.search(tag):
                 raise forms.ValidationError(_('use-these-chars-in-tags'))
             #only keep unique tags
-            if tag not in out_tag_list:
-                out_tag_list.append(tag)
-        return u' '.join(out_tag_list)
+            if tag not in entered_tags:
+                entered_tags.append(tag)
+
+        #normalize character case of tags
+        if askbot_settings.FORCE_LOWERCASE_TAGS:
+            entered_tags = set([name.lower() for name in entered_tags])
+        else:
+            #make names of tags in the input to agree with the database
+
+            cleaned_entered_tags = set()
+            for entered_tag in entered_tags:
+                try:
+                    #looks like we have to load tags one-by one
+                    stored_tag = models.Tag.objects.get(
+                                            name__iexact = entered_tag
+                                        )
+                    cleaned_entered_tags.add(stored_tag.name)
+                except models.Tag.DoesNotExist:
+                    cleaned_entered_tags.add(entered_tag)
+            entered_tags = list(cleaned_entered_tags)
+
+        return u' '.join(entered_tags)
 
 class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
