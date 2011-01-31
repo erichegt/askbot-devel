@@ -112,6 +112,8 @@ The commands from this section will help fix those issues.
 +--------------------------------+-------------------------------------------------------------+
 | `fix_answer_counts`            | recalculates answer counts for all questions                |
 +--------------------------------+-------------------------------------------------------------+
+| `fix_inbox_counts`             | recalculates response counts in the user inboxes            |
++--------------------------------+-------------------------------------------------------------+
 | `fix_revisionless_posts`       | adds a revision record to posts that lack them              |
 +--------------------------------+-------------------------------------------------------------+
 | `fix_question_tags`            | takes tag names from the record on the question table       |
