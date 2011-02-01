@@ -16,14 +16,13 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
 def generic_view(request, template = None, page_class = None):
-    template = ENV.get_template(template)
-    context = RequestContext(request, {'page_class': page_class})
-    return HttpResponse(template.render(context))
+    """this may be not necessary, since it is just a rewrite of render_into_skin"""
+    return render_into_skin(template, {'page_class': page_class}, request)
 
 def config_variable(request, variable_name = None, mimetype = None):
     """Print value from the configuration settings
@@ -42,15 +41,13 @@ def server_error(request, template='500.html'):
     return generic_view(request, template) 
 
 def faq(request):
-    template = ENV.get_template('faq.html')
     data = {
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
         'page_class': 'meta',
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('faq.html', data, request)
 
 def feedback(request):
     data = {'page_class': 'meta'}
@@ -71,15 +68,11 @@ def feedback(request):
         form = FeedbackForm(initial={'next':get_next_url(request)})
 
     data['form'] = form
-    context = RequestContext(request, data)
-    template = ENV.get_template('feedback.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('feedback.html', data, request)
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    context = RequestContext(request, {'page_class': 'meta'})
-    template = ENV.get_template('privacy.html')
-    return HttpResponse(template.render(context)) 
+    return render_into_skin('privacy.html', {'page_class': 'meta'}, request)
 
 def logout(request):#refactor/change behavior?
 #currently you click logout and you get
@@ -93,9 +86,7 @@ def logout(request):#refactor/change behavior?
         'next' : get_next_url(request),
         'page_class': 'meta',
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('logout.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('logout.html', data, request)
 
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py
@@ -110,7 +101,6 @@ def badges(request):#user status/reputation system
                             ).distinct()
         #my_badges.query.group_by = ['badge_id']
 
-    template = ENV.get_template('badges.html')
     data = {
         'active_tab': 'badges',
         'badges' : badges,
@@ -118,8 +108,7 @@ def badges(request):#user status/reputation system
         'mybadges' : my_badges,
         'feedback_faq_url' : reverse('feedback'),
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('badges.html', data, request)
 
 def badge(request, id):
     #todo: supplement database data with the stuff from badges.py
@@ -133,15 +122,13 @@ def badge(request, id):
                             '-last_awarded_at'
                         )
 
-    template = ENV.get_template('badge.html')
     data = {
         'active_tab': 'badges',
         'badge_recipients' : badge_recipients,
         'badge' : badge,
         'page_class': 'meta',
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('badge.html', data, request)
 
 def media(request, skin, resource):
     """view that serves static media from any skin

@@ -16,7 +16,6 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
-from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
@@ -27,7 +26,7 @@ from django.conf import settings
 from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot.utils.decorators import ajax_only
 from askbot.utils.functions import diff_date
 from askbot.templatetags import extra_filters_jinja as template_filters
@@ -180,13 +179,11 @@ def import_data(request):
     else:
         form = forms.DumpUploadForm()
 
-    template = ENV.get_template('import_data.html')
     data = {
         'dump_upload_form': form,
         'need_configuration': (not stackexchange.is_ready())
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('import_data.html', data, request)
 
 #@login_required #actually you can post anonymously, but then must register
 def ask(request):#view used to ask a new question
@@ -255,15 +252,13 @@ def ask(request):#view used to ask a new question
                 form.initial['title'] = query
 
     tags = _get_tags_cache_json()
-    template = ENV.get_template('ask.html')
     data = {
         'active_tab': 'ask',
         'form' : form,
         'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('ask.html', data, request)
 
 @login_required
 def retag_question(request, id):
@@ -306,9 +301,7 @@ def retag_question(request, id):
             'form' : form,
             'tags' : _get_tags_cache_json(),
         }
-        context = RequestContext(request, data)
-        template = ENV.get_template('question_retag.html')
-        return HttpResponse(template.render(context))
+        return render_into_skin('question_retag.html', data, request)
     except exceptions.PermissionDenied, e:
         if request.is_ajax():
             response_data = {
@@ -366,9 +359,7 @@ def edit_question(request, id):
             'form' : form,
             'tags' : _get_tags_cache_json()
         }
-        context = RequestContext(request, data)
-        template = ENV.get_template('question_edit.html')
-        return HttpResponse(template.render(context))
+        return render_into_skin('question_edit.html', data, request)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
@@ -417,15 +408,13 @@ def edit_answer(request, id):
         else:
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
-        template = ENV.get_template('answer_edit.html')
         data = {
             'active_tab': 'questions',
             'answer': answer,
             'revision_form': revision_form,
             'form': form,
         }
-        context = RequestContext(request, data)
-        return HttpResponse(template.render(context))
+        return render_into_skin('answer_edit.html', data, request)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

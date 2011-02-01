@@ -11,13 +11,12 @@ from django.core import exceptions
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
-from django.template import RequestContext
 from askbot import models
 from askbot.forms import CloseForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_only, ajax_login_required
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
 
@@ -397,10 +396,7 @@ def close(request, id):#close question
         else:
             request.user.assert_can_close_question(question)
             form = CloseForm()
-            template = ENV.get_template('close.html')
-            data = {'form': form, 'question': question}
-            context = RequestContext(request, data)
-            return HttpResponse(template.render(context))
+            return render_into_skin('close.html', data, request)
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -428,9 +424,7 @@ def reopen(request, id):#re-open question
                 'closed_by_profile_url': closed_by_profile_url,
                 'closed_by_username': closed_by_username,
             }
-            context = RequestContext(request, data)
-            template = ENV.get_template('reopen.html')
-            return HttpResponse(template.render(context))
+            return render_into_skin('reopen.html', data, request)
             
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

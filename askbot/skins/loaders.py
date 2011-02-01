@@ -1,5 +1,7 @@
 import os.path
 from django.template.loaders import filesystem
+from django.template import RequestContext
+from django.http import HttpResponse
 from django.utils import translation
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
@@ -65,14 +67,20 @@ class SkinEnvironment(CoffinEnvironment):
     that loads templates from askbot skins
     """
 
+    def __init__(self, *args, **kwargs):
+        """save the skin path and initialize the
+        Coffin Environment
+        """
+        self.skin = kwargs.pop('skin')
+        super(SkinEnvironment, self).__init__(*args, **kwargs)
+
     def _get_loaders(self):
         """this method is not used
         over-ridden function _get_loaders that creates
         the loader for the skin templates
         """
         loaders = list()
-        skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_dirs = utils.get_available_skins(selected = skin_name).values()
+        skin_dirs = utils.get_available_skins(selected = self.skin).values()
         template_dirs = [os.path.join(skin_dir, 'templates') for skin_dir in skin_dirs]
 
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
@@ -86,10 +94,38 @@ class SkinEnvironment(CoffinEnvironment):
         trans = translation.trans_real.translation(language_code)
         self.install_gettext_translations(trans)
 
-
 ENV = SkinEnvironment(
             autoescape=False,
             extensions=['jinja2.ext.i18n'],
+            skin = 'default'
             #loader = SkinLoader()
          )
 ENV.set_language(django_settings.LANGUAGE_CODE)
+
+def load_skins():
+    skins = dict()
+    for skin_name in utils.get_available_skins():
+        skins[skin_name] = SkinEnvironment(skin = skin_name)
+        skins[skin_name].set_language(django_settings.LANGUAGE_CODE)
+    return skins
+
+SKINS = load_skins()
+
+def get_template(template, request):
+    """retreives template for the skin
+    request variable will be used in the future to set
+    template according to the user preference or admins preference
+
+    at this point request variable is not used though
+    """
+    skin = SKINS[askbot_settings.ASKBOT_DEFAULT_SKIN]
+    return skin.get_template(template)
+
+def render_into_skin(template, data, request, mimetype = 'text/html'):
+    """in the future this function will be able to
+    switch skin depending on the site administrator/user selection
+    right now only admins can switch
+    """
+    context = RequestContext(request, data)
+    template = get_template(template, request)
+    return HttpResponse(template.render(context), mimetype = mimetype)
