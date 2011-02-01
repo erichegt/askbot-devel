@@ -7,3 +7,4 @@ from askbot.tests.skin_tests import *
 from askbot.tests.badge_tests import *
 from askbot.tests.management_command_tests import *
 from askbot.tests.search_state_tests import *
+from askbot.tests.form_tests import *

@@ -662,7 +662,7 @@ var questionRetagger = function(){
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function(json) {
                 if (json['success'] === true){
-                    new_tags = getUniqueWords(tagInput.val());
+                    new_tags = getUniqueWords(json['new_tags']);
                     oldTagsHtml = '';
                     cancelRetag();
                     drawNewTags(new_tags.join(' '));

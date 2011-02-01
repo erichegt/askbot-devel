@@ -114,12 +114,14 @@ class QuestionManager(models.Manager):
                            | models.Q(answers__text__search = search_query)
                         )
             elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
-                rank_clause = "ts_rank(question.text_search_vector, to_tsquery('%s'))";
+                rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
                 search_query = '&'.join(search_query.split())
+                extra_params = ("'" + search_query + "'",)
                 extra_kwargs = {
-                    'select': {'relevance': rank_clause % search_query},
+                    'select': {'relevance': rank_clause},
                     'where': ['text_search_vector @@ to_tsquery(%s)'],
-                    'params': ["'" + search_query + "'"]
+                    'params': extra_params,
+                    'select_params': extra_params,
                 }
                 if askbot.conf.should_show_sort_by_relevance():
                     if sort_method == 'relevance-desc':

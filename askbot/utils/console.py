@@ -1,5 +1,6 @@
 """functions that directly handle user input
 """
+import sys
 import time
 from askbot.utils import path
 
@@ -47,3 +48,14 @@ def open_new_file(prompt_phrase, extension = '', hint = None):
         file_object = path.create_file_if_does_not_exist(file_path, print_warning = True)
 
     return file_object
+
+def print_progress(format_string, progress):
+    """print dynamic output of progress of some
+    operation to the console and clear the output with
+    a backspace character to have the number increment
+    in-place"""
+    output = format_string % progress
+    sys.stdout.write(output)
+    sys.stdout.flush()
+    sys.stdout.write('\b' * len(output))
+    

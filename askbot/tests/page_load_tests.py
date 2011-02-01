@@ -231,6 +231,11 @@ class PageLoadTests(PageLoadTestCase):
                 status_code=200,
                 follow=True,
             )
+        self.try_url(
+                'faq',
+                template='faq.html',
+                status_code=200,
+            )
 
     def test_non_user_urls(self):
         self.proto_test_non_user_urls()

@@ -30,6 +30,21 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'FORCE_LOWERCASE_TAGS',
+        default = False,
+        description = _('Force lowercase the tags'),
+        help_text = _(
+                        'Attention: after checking this, please back up the database, '
+                        'and run a management command: '
+                        '<code>python manage.py fix_question_tags</code> to globally '
+                        'rename the tags'
+                     )
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENTS_TO_SHOW',

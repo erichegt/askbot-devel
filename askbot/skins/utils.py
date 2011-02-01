@@ -3,7 +3,6 @@
 the lookup resolution process for templates and media works as follows:
 * look up item in selected skin
 * if not found look in 'default'
-* the look in 'common'
 * raise an exception 
 """
 import os
@@ -29,11 +28,10 @@ def get_skins_from_dir(directory):
 def get_available_skins(selected=None):
     """selected is a name of preferred skin
     if it's None, then information about all skins will be returned
-    otherwise, only data about selected, default and common skins
+    otherwise, only data about selected and default skins
     will be returned
 
     selected skin is guaranteed to be the first item in the dictionary
-
     """
     skins = SortedDict()
     if hasattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR'):
@@ -42,7 +40,6 @@ def get_available_skins(selected=None):
     stock_dir = os.path.normpath(os.path.dirname(__file__))
     stock_skins = get_skins_from_dir(stock_dir)
     default_dir = stock_skins.pop('default')
-    common_dir = stock_skins.pop('common')
 
     skins.update(stock_skins)
 
@@ -55,9 +52,8 @@ def get_available_skins(selected=None):
             assert(selected == 'default')
             skins = SortedDict()
 
-    #re-insert default and common as last two items
+    #re-insert default as a last item
     skins['default'] = default_dir
-    skins['common'] = common_dir
     return skins
 
 
@@ -75,11 +71,10 @@ def get_skin_choices():
     """returns a tuple for use as a set of 
     choices in the form"""
     skin_names = list(reversed(get_available_skins().keys()))
-    skin_names.remove('common')
     return zip(skin_names, skin_names)
 
 def resolve_skin_for_media(media=None, preferred_skin = None):
-    #see if file exists, if not, try skins 'default', then 'common'
+    #see if file exists, if not, try skin 'default'
     available_skins = get_available_skins(selected = preferred_skin).items()
     for skin_name, skin_dir in available_skins:
         if os.path.isfile(os.path.join(skin_dir, 'media', media)):

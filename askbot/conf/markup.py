@@ -15,13 +15,6 @@ MARKUP = ConfigurationGroup(
                     _('Markup formatting')
                 )
 
-mathjax_dir = os.path.join(
-                        askbot.get_install_directory(),
-                        'skins',
-                        'common',
-                        'media'
-                    )
-
 settings.register(
     BooleanValue(
         MARKUP,
@@ -47,10 +40,9 @@ settings.register(
         help_text=_(
                     'If you enable this feature, '
                     '<a href="%(url)s">mathjax</a> must be '
-                    'installed in directory %(dir)s'
+                    'installed on your server in its own directory.'
                     ) % {
                             'url': const.DEPENDENCY_URLS['mathjax'],
-                            'dir': mathjax_dir,
                         },
         default = False
     )
