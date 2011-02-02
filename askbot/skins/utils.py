@@ -88,6 +88,8 @@ def get_media_url(url):
     askbot_settings.ASKBOT_DEFAULT_SKIN, then 'default', then 'commmon'
     if file is not found - returns None
     and logs an error message
+
+    todo: move this to the skin environment class
     """
     #import datetime
     #before = datetime.datetime.now()

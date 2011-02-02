@@ -82,7 +82,6 @@ class SkinEnvironment(CoffinEnvironment):
         loaders = list()
         skin_dirs = utils.get_available_skins(selected = self.skin).values()
         template_dirs = [os.path.join(skin_dir, 'templates') for skin_dir in skin_dirs]
-
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
 
@@ -93,6 +92,16 @@ class SkinEnvironment(CoffinEnvironment):
         """
         trans = translation.trans_real.translation(language_code)
         self.install_gettext_translations(trans)
+
+    def get_extra_css_link(self):
+        """returns either the link tag (to be inserted in the html head element)
+        or empty string - depending on the existence of file
+        SKIN_PATH/media/style/extra.css
+        """
+        url = utils.get_media_url('style/extra.css')
+        if url is not None:
+            return '<link href="%s" rel="stylesheet" type="text/css" />' % url
+        return ''
 
 ENV = SkinEnvironment(
             autoescape=False,
@@ -111,6 +120,11 @@ def load_skins():
 
 SKINS = load_skins()
 
+def get_skin(request):
+    """retreives the skin environment
+    for a given request (request var is not used at this time)"""
+    return SKINS[askbot_settings.ASKBOT_DEFAULT_SKIN]
+
 def get_template(template, request):
     """retreives template for the skin
     request variable will be used in the future to set
@@ -118,7 +132,7 @@ def get_template(template, request):
 
     at this point request variable is not used though
     """
-    skin = SKINS[askbot_settings.ASKBOT_DEFAULT_SKIN]
+    skin = get_skin(request)
     return skin.get_template(template)
 
 def render_into_skin(template, data, request, mimetype = 'text/html'):

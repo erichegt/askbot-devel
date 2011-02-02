@@ -6,6 +6,7 @@ from django.conf import settings
 import askbot
 from askbot import api
 from askbot.conf import settings as askbot_settings
+from askbot.skins.loaders import get_skin
 
 def application_settings(request):
     """The context processor function"""
@@ -16,5 +17,6 @@ def application_settings(request):
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
     return {
         'settings': my_settings,
+        'skin': get_skin(request),
         'moderation_items': api.get_info_on_moderation_items(request.user)
     }
