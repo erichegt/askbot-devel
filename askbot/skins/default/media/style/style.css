@@ -106,6 +106,7 @@ pre {
     background-color: #F5F5F5;
     padding-left: 5px;
     padding-top: 5px;
+    width: 671px;
     padding-bottom: 20px ! ie7;
 }
 
@@ -543,6 +544,9 @@ blockquote {
     padding: 5px 0 10px 0;
 }
 
+/* tag formatting is also copy-pasted in template
+   askbot/models/__init__.py:format_instant_notification_email()
+*/
 .tags {
     font-family: sans-serif;
     line-height: 170%;

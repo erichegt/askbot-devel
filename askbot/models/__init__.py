@@ -1708,6 +1708,20 @@ def format_instant_notification_email(
         #todo: remove hardcoded style
     else:
         content_preview = post.html
+        tag_style = "white-space: nowrap; " \
+                    + "font-size: 11px; color: #333;" \
+                    + "background-color: #EEE;" \
+                    + "border-left: 3px solid #777;" \
+                    + "border-top: 1px solid #EEE;" \
+                    + "border-bottom: 1px solid #CCC;" \
+                    + "border-right: 1px solid #CCC;" \
+                    + "padding: 1px 8px 1px 8px;" \
+                    + "margin-right:3px;"
+        if post.post_type == 'question':#add tags to the question
+            content_preview += '<div>'
+            for tag_name in post.get_tag_names():
+                content_preview += '<span style="%s">%s</span>' % (tag_style, tag_name)
+            content_preview += '</div>'
 
     update_data = {
         'update_author_name': from_user.username,
