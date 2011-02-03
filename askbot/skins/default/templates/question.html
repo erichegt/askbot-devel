@@ -427,6 +427,11 @@
             askbot['urls']['user_signin'] = '{% url user_signin %}';
             askbot['urls']['vote_url_template'] = scriptUrl + '{% trans %}questions/{% endtrans %}{{ "{{QuestionID}}/" }}{% trans %}vote/{% endtrans %}';
             askbot['messages']['addComment'] = '{% trans %}add comment{% endtrans %}';
+            {% if settings.SAVE_COMMENT_ON_ENTER %}
+                askbot['settings']['saveCommentOnEnter'] = true;
+            {% else %}
+                askbot['settings']['saveCommentOnEnter'] = false;
+            {% endif %}
         </script>
         <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
         <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>

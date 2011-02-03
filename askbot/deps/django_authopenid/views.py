@@ -1073,7 +1073,7 @@ def account_recover(request, key = None):
         if user:
             if request.user.is_authenticated():
                 if user != request.user:
-                    logout(request.user)
+                    logout(request)
                     login(request, user)
             else:
                 login(request, user)

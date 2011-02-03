@@ -1019,7 +1019,6 @@ EditCommentForm.prototype.createDom = function(){
 
     var update_counter = this.getCounterUpdater();
     var escape_handler = makeKeyHandler(27, this.getCancelHandler());
-    var save_handler = makeKeyHandler(13, this.getSaveHandler());
     this._textarea.attr('name', 'comment')
             .attr('cols', 60)
             .attr('rows', 5)
@@ -1027,8 +1026,11 @@ EditCommentForm.prototype.createDom = function(){
             .blur(update_counter)
             .focus(update_counter)
             .keyup(update_counter)
-            .keyup(escape_handler)
-            .keydown(save_handler);
+            .keyup(escape_handler);
+    if (askbot['settings']['saveCommentOnEnter']){
+        var save_handler = makeKeyHandler(13, this.getSaveHandler());
+        this._textarea.keydown(save_handler);
+    }
     this._textarea.val(this._text);
 };
 

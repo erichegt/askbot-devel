@@ -67,6 +67,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SAVE_COMMENT_ON_ENTER',
+        default = True,
+        description = _('Save comment by pressing <Enter> key')
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
