@@ -24,7 +24,8 @@ class Command(NoArgsCommand):
             dupes = models.Tag.objects.filter(name__iexact = name)
             first_tag = dupes[0]
             if dupes.count() > 1:
-                line = 'Found duplicate tags for %s:' % first_tag.name
+                line 'Found duplicate tags for %s: ' % first_tag.name
+                print line,
                 for idx in xrange(1, dupes.count()):
                     print dupes[idx].name + ' ',
                     dupes[idx].delete()

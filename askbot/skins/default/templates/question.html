@@ -74,10 +74,9 @@
                 </div>
             </td>
             <td>
-                <div id="item-right">
-                    <div class="question-body">
-                        {{question.html}}
-                    </div>
+                <div class="question-body">
+                    {{question.html}}
+                </div>
                     {% spaceless %}
                     <div id="question-tags" class="post-tags tags">
                         {% for tag in question.get_tag_names() %}
@@ -119,7 +118,6 @@
                         {% if request.user|can_delete_post(question) %}{{ pipe() }}
                             <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
                         {% endif %}
-                        </div>
                     </div>
                     <div class="post-update-info-container">
                             {{ 
@@ -161,7 +159,6 @@
     </div>
     {% endif %}
     {% if answers %}
-        <hr/>
         <div class="tabBar">
             <h2 id="sort-top">
             {% trans counter=answers|length %}

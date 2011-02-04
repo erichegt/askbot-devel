@@ -444,6 +444,10 @@ blockquote {
     border-spacing: 0px;
 }
 
+.answer-table {
+    border-bottom: 1px solid #bbb;
+}
+
 .evenMore {
     font-size: 14px;
     font-weight: 800;
@@ -1747,13 +1751,15 @@ ul.form-horizontal-rows li input {
 }
 
 .post-controls, .post-tags {
-    clear: left;
-    float: left;
     font-size: 11px;
     line-height: 12px;
     min-width: 200px;
     padding-left: 5px;
     margin-bottom: 5px;
+}
+
+.post-controls {
+    float: left;
 }
 
 .post-tags {
@@ -1770,7 +1776,7 @@ ul.form-horizontal-rows li input {
 
 .post-update-info-container {
     float: right;
-    min-width: 190px;
+    min-width: 85px;
 }
 
 .post-update-info {
