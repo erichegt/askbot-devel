@@ -294,15 +294,23 @@ def user_assert_can_edit_comment(self, comment = None):
         return
     else:
         if comment.user == self:
-            now = datetime.datetime.now()
-            if now - comment.added_at > datetime.timedelta(0, 600):
-                if comment.is_last():
-                    return
-                error_message = _(
-                    'Sorry, comments (except the last one) are editable only within 10 minutes from posting'
-                )
-                raise django_exceptions.PermissionDenied(error_message)
-            return
+            if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+                now = datetime.datetime.now()
+                delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+                if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                    if comment.is_last():
+                        return
+                    error_message = ungettext(
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minute from posting',
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minutes from posting',
+                        askbot_settings.MINUTES_TO_EDIT_COMMENT
+                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                    raise django_exceptions.PermissionDenied(error_message)
+                return
+            else:
+                return
 
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'

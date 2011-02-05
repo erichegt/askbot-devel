@@ -69,6 +69,29 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'USE_TIME_LIMIT_TO_EDIT_COMMENT',
+        default = True,
+        description = _('Limit time to edit comments'),
+        help_text = _(
+                        'If unchecked, there will be no time '
+                        'limit to edit the comments'
+                    )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MINUTES_TO_EDIT_COMMENT',
+        default = 10,
+        description = _('Minutes allowed to edit a comment'),
+        help_text = _('To enable this setting, check the previous one')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'SAVE_COMMENT_ON_ENTER',
         default = True,
         description = _('Save comment by pressing <Enter> key')
