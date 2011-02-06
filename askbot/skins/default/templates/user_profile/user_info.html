@@ -52,7 +52,7 @@
                 {% if view_user.website %}
                 <tr>
                     <td>{% trans %}user website{% endtrans %}</td>
-                    <td><a rel="nofollow" target="_blank" href="{{view_user.website}}">{{view_user.website}}</a></td>
+                    <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
                 </tr>
                 {% endif  %}
                 {% if view_user.location %}

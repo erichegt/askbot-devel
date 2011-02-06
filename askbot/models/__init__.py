@@ -106,6 +106,10 @@ def user_get_old_vote_for_post(self, post):
 
     return old_votes[0]
 
+def user_can_have_strong_url(self):
+    """True if user's homepage url can be 
+    followed by the search engine crawlers"""
+    return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
 def _assert_user_can(
                         user = None,
@@ -316,7 +320,6 @@ def user_assert_can_edit_comment(self, comment = None):
         'Sorry, but only post owners or moderators can edit comments'
     )
     raise django_exceptions.PermissionDenied(error_message)
-
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -1591,6 +1594,7 @@ User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)
+User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('remove_admin_status', user_remove_admin_status)

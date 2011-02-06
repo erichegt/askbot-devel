@@ -5074,7 +5074,7 @@ msgstr "Graph of user karma"
 
 #: skins/default/templates/user_profile/user_tabs.html:14
 msgid "reputation history"
-msgstr "karma history"
+msgstr "karma"
 
 #: skins/default/templates/user_profile/user_tabs.html:16
 msgid "questions that user selected as his/her favorite"

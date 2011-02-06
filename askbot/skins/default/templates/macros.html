@@ -121,13 +121,27 @@
 {% endspaceless %}
 {%- endmacro -%}
 
+{%- macro user_website_link(user, max_display_length=25) -%}
+    {% if user.website %}
+        <a 
+            href="{{user.website}}"
+            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
+            {% if user.can_have_strong_url() == False %}
+            rel="nofollow"
+            {% endif %}
+        >
+        {{user.website|truncate(length=max_display_length, killwords=True, end='...')}}
+        </a>
+    {% endif %}
+{%- endmacro -%}
+
 {%- macro post_contributor_info(post, contributor_type, is_wiki, wiki_min_rep) -%}
 <div class='post-update-info'>
 {# there is a whole bunch of trickery here, probably indicative of 
 poor design of the data or methods on data objects #}
 {% if contributor_type=="original_author" %}
     {% if is_wiki %}
-        <p style="line-height:12px">
+        <p>
            {%- if post.__class__.__name__ == 'Question' -%}
                 {%- trans %}asked{% endtrans %}
            {% elif post.__class__.__name__ == 'Answer' %}
@@ -161,10 +175,11 @@ poor design of the data or methods on data objects #}
             {% endif %}
         </p>
         {{ gravatar(post.author, 32) }}
-        <p>{{post.author.get_profile_link()}}<br/>
-        {{ user_score_and_badge_summary(post.author) }}</p>
+            {{post.author.get_profile_link()}}{% if not post.author.website %}<br/>{% endif %}
+            {{ user_score_and_badge_summary(post.author) }}<br/>
+            {{ user_website_link(post.author) }}
     {% endif %}
-{% else %}
+{% elif contributor_type=="last_updater" %}
     {% if post.__class__.__name__ in ('Question', 'Answer') %}
         {% set last_edited_at = post.last_edited_at %}
         {% set original_author = post.author %}
@@ -186,8 +201,9 @@ poor design of the data or methods on data objects #}
         </p>
         {% if original_author != update_author or is_wiki %}
             {{ gravatar(update_author, 32) }}
-            <p style="float:left">{{update_author.get_profile_link()}}<br/>
-            {{ user_score_and_badge_summary(update_author) }}</p>
+            {{update_author.get_profile_link()}}{% if not update_author.website %}<br/>{% endif %}
+            {{ user_score_and_badge_summary(update_author) }}<br/>
+            {{ user_website_link(update_author) }}
         {% endif %}
     {% endif %}
 {% endif %}

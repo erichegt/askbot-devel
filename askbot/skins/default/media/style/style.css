@@ -1782,20 +1782,22 @@ ul.form-horizontal-rows li input {
 .post-update-info {
     display: inline-block;
     float: right;
+    font-size: 11px;
     width: 190px;
     margin-bottom: 5px;
+    line-height: 14px
 }
 
 .post-update-info p {
+    line-height: 13px;
     font-size: 11px;
-    line-height: 15px;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 1px;
     padding: 0;
 }
 
-.post-update-info img {
+.post-update-info .gravatar {
     float: left;
-    margin: 4px 8px 0 0;
+    margin-right: 4px;
 }
 
 
