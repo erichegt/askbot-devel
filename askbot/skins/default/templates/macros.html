@@ -136,10 +136,10 @@
 {%- endmacro -%}
 
 {%- macro post_contributor_info(post, contributor_type, is_wiki, wiki_min_rep) -%}
-<div class='post-update-info'>
 {# there is a whole bunch of trickery here, probably indicative of 
 poor design of the data or methods on data objects #}
 {% if contributor_type=="original_author" %}
+    <div class='post-update-info'>
     {% if is_wiki %}
         <p>
            {%- if post.__class__.__name__ == 'Question' -%}
@@ -179,6 +179,7 @@ poor design of the data or methods on data objects #}
             {{ user_score_and_badge_summary(post.author) }}<br/>
             {{ user_website_link(post.author) }}
     {% endif %}
+    </div>
 {% elif contributor_type=="last_updater" %}
     {% if post.__class__.__name__ in ('Question', 'Answer') %}
         {% set last_edited_at = post.last_edited_at %}
@@ -190,6 +191,7 @@ poor design of the data or methods on data objects #}
         {% set update_author = post.author %}
     {% endif %}
     {% if last_edited_at %}
+    <div class='post-update-info'>
         <p style="line-height:12px;">
             <a 
         {% if post.__class__.__name__ == 'Question' %}
@@ -205,9 +207,9 @@ poor design of the data or methods on data objects #}
             {{ user_score_and_badge_summary(update_author) }}<br/>
             {{ user_website_link(update_author) }}
         {% endif %}
+    </div>
     {% endif %}
 {% endif %}
-</div>
 {%- endmacro -%}
 
 {%- macro question_summary(question, extra_class=None) -%}
