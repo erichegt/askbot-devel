@@ -2,7 +2,8 @@ import logging
 import re
 import hashlib
 import datetime
-from django.core.urlresolvers import reverse
+import urllib
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.utils.translation import ugettext as _
@@ -56,6 +57,7 @@ User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
+User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -70,6 +72,7 @@ User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
+#denormed user avatar url
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
@@ -84,6 +87,43 @@ User.add_to_class('tag_filter_setting',
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
+
+GRAVATAR_TEMPLATE = "http://www.gravatar.com/avatar/%(gravatar)s?" + \
+    "s=%(size)d&amp;d=%(type)s&amp;r=PG"
+
+def user_get_gravatar_url(self, size):
+    """returns gravatar url
+    currently identicon is the only supported type
+    """
+    return GRAVATAR_TEMPLATE % {
+                'gravatar': self.gravatar,
+                'size': size,
+                'type': 'identicon'
+            }
+
+def user_get_avatar_url(self, size):
+    """returns avatar url - by default - gravatar,
+    but if application django-avatar is installed
+    it will use avatar provided through that app
+    """
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        if self.has_custom_avatar == False:
+            import avatar
+            if avatar.settings.AVATAR_GRAVATAR_BACKUP:
+                return self.get_gravatar_url(size)
+            else:
+                return avatar.utils.get_default_avatar_url()
+        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        try:
+            return reverse('avatar_render_primary', kwargs = kwargs)
+        except NoReverseMatch:
+            message = 'Please, make sure that avatar urls are in the urls.py '\
+                      'or update your django-avatar app, '\
+                      'currently it is impossible to serve avatars.'
+            logging.critical(message)
+            raise django_exceptions.ImproperlyConfigured(message)
+    else:
+        return user.get_gravatar_url(size)
 
 
 def user_get_old_vote_for_post(self, post):
@@ -1567,6 +1607,8 @@ User.add_to_class(
             user_get_q_sel_email_feed_frequency
         )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
+User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)

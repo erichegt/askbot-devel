@@ -108,13 +108,14 @@
 {% endspaceless %}
 {%- endmacro -%}
 
+{#todo: rename this to avatar #}
 {%- macro gravatar(user, size) -%}
 {% spaceless %}
 <a style="text-decoration:none"
-    href="{{user.get_absolute_url()}}"
+    href="{{ user.get_absolute_url() }}"
 ><img class="gravatar" 
     width="{{size}}" height="{{size}}"
-    src="http://www.gravatar.com/avatar/{{user.gravatar}}?s={{size}}&amp;d=identicon&amp;r=PG"
+    src="{{ user.get_avatar_url(size) }}"
     title="{{user.username}}" 
     alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
 /></a>
