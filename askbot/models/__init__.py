@@ -123,7 +123,21 @@ def user_get_avatar_url(self, size):
             logging.critical(message)
             raise django_exceptions.ImproperlyConfigured(message)
     else:
-        return user.get_gravatar_url(size)
+        return self.get_gravatar_url(size)
+
+
+def user_update_has_custom_avatar(self):
+    """counts number of custom avatars
+    and if zero, sets has_custom_avatar to False,
+    True otherwise. The method is called only if
+    avatar application is installed.
+    Saves the object.
+    """
+    if self.avatar_set.count() > 0:
+        self.has_custom_avatar = True
+    else:
+        self.has_custom_avatar = False
+    self.save()
 
 
 def user_get_old_vote_for_post(self, post):
@@ -1609,6 +1623,7 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -2141,6 +2156,12 @@ def post_stored_anonymous_content(
             for aa in aa_list:
                 aa.publish(user)
 
+def set_user_has_custom_avatar_flag(instance, created, **kwargs):
+    instance.user.update_has_custom_avatar()
+
+def update_user_has_custom_avatar_flag(instance, **kwargs):
+    instance.user.update_has_custom_avatar()
+
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
@@ -2151,6 +2172,17 @@ django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
+if 'avatar' in django_settings.INSTALLED_APPS:
+    from avatar.models import Avatar
+    django_signals.post_save.connect(
+                        set_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+    django_signals.post_delete.connect(
+                        update_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2

@@ -19,6 +19,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
+from django.conf import settings as django_settings
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
@@ -365,6 +366,7 @@ def user_stats(request, user):
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
+        'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
         'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),

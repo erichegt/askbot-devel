@@ -234,3 +234,18 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if 'avatar' in settings.INSTALLED_APPS:
+    #unforturately we have to wire avatar urls here,
+    #because views add and change are adapted to
+    #use jinja2 templates
+    urlpatterns += (
+        url('^avatar/add/$', views.avatar_views.add, name='avatar_add'),
+        url('^avatar/change/$', views.avatar_views.change, name='avatar_change'),
+        url('^avatar/delete/$', views.avatar_views.delete, name='avatar_delete'),
+        url(#this urs we inherit from the original avatar app
+            '^avatar/render_primary/(?P<user>[\+\w]+)/(?P<size>[\d]+)/$',
+            'avatar.views.render_primary',
+            name='avatar_render_primary'
+        ),    
+    )

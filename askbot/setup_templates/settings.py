@@ -1,4 +1,4 @@
-# Django settings for ASKBOT enabled project.
+## Django settings for ASKBOT enabled project.
 import os.path
 import logging
 import sys
@@ -145,6 +145,8 @@ INSTALLED_APPS = (
     'askbot.deps.livesettings',
     'keyedcache',
     'robots',
+    #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
+    #requires setting of MEDIA_ROOT and MEDIA_URL
 )
 
 
