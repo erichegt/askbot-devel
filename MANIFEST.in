@@ -10,3 +10,5 @@ exclude manage.py
 exclude __init__.py
 exclude urls.py
 exclude askbot/upfiles/*.*
+recursive-exclude avatar *
+recursive-exclude adzone *
