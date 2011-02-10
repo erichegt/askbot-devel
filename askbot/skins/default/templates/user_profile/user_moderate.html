@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 <!-- user_moderate.html -->
+{% block profilesection %}
+    {% trans %}moderation{% endtrans %}
+{% endblock %}
 {% block usercontent %}
 {% if request.user != view_user %}
     <h3>{% trans username=view_user.username, status=view_user.get_status_display() %}{{username}}'s current status is "{{status}}"{% endtrans %}

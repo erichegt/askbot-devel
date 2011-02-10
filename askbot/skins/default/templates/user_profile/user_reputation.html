@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 <!-- user_reputation.html -->
+{% block profilesection %}
+    {% trans %}karma{% endtrans %}
+{% endblock %}
 {% block usercontent %}
         <div class="karma-summary">
             <div id="diagram" class="karma-diagram"></div>

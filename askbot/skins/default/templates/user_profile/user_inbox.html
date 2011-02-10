@@ -14,6 +14,9 @@ response_title - title of the question
 response_snippet - abbreviated content of the response
 inbox_section - forum|flags
 #}
+{% block profilesection %}
+    {% trans %}inbox{% endtrans %}
+{% endblock %}
 {% block usercontent %}
     <div style="padding-top:5px;font-size:13px;">
     {% set re_count = request.user.new_response_count +

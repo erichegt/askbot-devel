@@ -101,6 +101,7 @@ def add(request, extra_context=None, next_override=None,
         'upload_avatar_form': upload_avatar_form,
         'next': next_override or _get_next(request),
         'view_user': request.user,
+        'page_class': 'avatar-page',
     }
     if extra_context:
         data.update(extra_context)
@@ -141,6 +142,7 @@ def change(request, extra_context=None, next_override=None,
         'primary_avatar_form': primary_avatar_form,
         'next': next_override or _get_next(request), 
         'view_user': request.user,
+        'page_class': 'avatar-page',
     }
     if extra_context:
         data.update(extra_context)
@@ -176,6 +178,7 @@ def delete(request, extra_context=None, next_override=None, *args, **kwargs):
         'delete_avatar_form': delete_avatar_form,
         'next': next_override or _get_next(request),
         'view_user': request.user,
+        'page_class': 'avatar-page',
     }
     if extra_context:
         data.update(extra_context)

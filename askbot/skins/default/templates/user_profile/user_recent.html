@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 <!-- user_recent.html -->
+{% block profilesection %}
+    {% trans %}activity{% endtrans %}
+{% endblock %}
 {% block usercontent %}
         <div style="padding-top:5px;font-size:13px;">
         {% for act in activities %}

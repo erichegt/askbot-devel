@@ -1986,6 +1986,13 @@ img.gravatar {
     font-weight:bold;
 }
 
+.avatar-page ul {
+    list-style: none;
+}
+.avatar-page li {
+    display: inline;
+}
+
 .fb-share, .twitter-share {
     background: url(../images/sprite.png) no-repeat;
     text-indent:-100em;

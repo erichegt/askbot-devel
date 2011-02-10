@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 <!-- user_favorites.html -->
+{% block profilesection %}
+    {% trans %}favorites{% endtrans %}
+{% endblock %}
 {% block usercontent %}
 {% include "user_profile/users_questions.html" %}
 {% endblock %}

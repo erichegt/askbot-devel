@@ -10,7 +10,7 @@
     <h1>
         {% spaceless %}
         <a href="{% url user_profile view_user.id, view_user.username|slugify %}">
-        {% trans username=view_user.username %}{{username}}'s profile{% endtrans %}
+        {% trans username=view_user.username %}{{username}}'s profile{% endtrans %} - {% block profilesection %}{% endblock %}
         </a>
         {% endspaceless %}
     </h1>

@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 <!-- user_votes.html -->
+{% block profilesection %}
+    {% trans %}votes{% endtrans %}
+{% endblock %}
 {% block usercontent %}
         <div style="padding-top:5px;font-size:13px;">
         {% for vote in votes %}
