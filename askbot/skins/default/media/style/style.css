@@ -1992,6 +1992,9 @@ img.gravatar {
 .avatar-page li {
     display: inline;
 }
+.user-profile-page .avatar p {
+    margin-bottom: 0px;
+}
 
 .fb-share, .twitter-share {
     background: url(../images/sprite.png) no-repeat;

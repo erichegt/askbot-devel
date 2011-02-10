@@ -3,16 +3,22 @@
 <table class="user-info-table">
     <tr>
         <td style="vertical-align:middle;text-align:center;">
-            <div>
+            <div class='avatar'>
                 {{ macros.gravatar(view_user, 128) }}
                 {% if request.user == view_user %}
-                <p><a 
+                    <p><a 
+                        {% if support_custom_avatars %}
+                            href="{% url avatar_change %}"
+                        {% else %}
+                            href="{% url faq %}#gravatar"
+                        {% endif %}
+                    >{% trans %}change picture{% endtrans %}</a></p>
                     {% if support_custom_avatars %}
-                        href="{% url avatar_change %}"
-                    {% else %}
-                        href="{% url faq %}#gravatar"
+                    <p><a 
+                        href="{% url avatar_delete %}"
+                        >{% trans %}remove{% endtrans %}</a>
+                    </p>
                     {% endif %}
-                >{% trans %}change picture{% endtrans %}</a></p>
                 {% endif %}
             </div>
             <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
