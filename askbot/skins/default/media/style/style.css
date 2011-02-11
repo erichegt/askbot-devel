@@ -2006,6 +2006,9 @@ img.gravatar {
     padding: 0;
     margin-top: -3px;
 }
+.userList {
+    font-size: 13px;
+}
 
 img.flag {
     border: 1px solid #eee;
