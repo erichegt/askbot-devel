@@ -145,6 +145,21 @@ $(document).ready(function(){
         return html;
     };
 
+    var render_user_flag = function(result){
+        var country_code = result['u_country_code'];
+        if (country_code) {
+            return '<img class="flag" src="'+ 
+                   mediaUrl(
+                        'media/images/flags/' + 
+                        country_code.toLowerCase() +
+                        '.gif'
+                   ) +
+                   '"/>';
+        } else {
+            return '';
+        }
+    };
+
     var render_user_info = function(result){
         var user_html = 
         '<div class="userinfo">' +
@@ -154,6 +169,7 @@ $(document).ready(function(){
             result['timesince'] +
             '</span> ' +
             render_user_link(result) +
+            render_user_flag(result) +
             //render_user_badge_and_karma(result) +
         '</div>';
         return user_html;

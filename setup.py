@@ -19,6 +19,7 @@ install_requires = [
     'django-threaded-multihost',
     'django-robots',
     'unidecode',
+    'django-countries==1.0.5',
 ]
 
 import askbot

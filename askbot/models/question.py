@@ -236,7 +236,9 @@ class QuestionManager(models.Manager):
                         'last_activity_by__reputation',
                         'last_activity_by__gold',
                         'last_activity_by__silver',
-                        'last_activity_by__bronze'
+                        'last_activity_by__bronze',
+                        'last_activity_by__country',
+                        'last_activity_by__show_country',
                     )
 
         related_tags = Tag.objects.get_related_to_search(

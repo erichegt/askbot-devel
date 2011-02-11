@@ -14,6 +14,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
+from django_countries.fields import CountryField
 import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
@@ -72,8 +73,11 @@ User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
-#denormed user avatar url
+#location field is actually city
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
+User.add_to_class('country', CountryField(blank = True))
+User.add_to_class('show_country', models.BooleanField(default = False))
+
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))

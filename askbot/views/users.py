@@ -254,6 +254,8 @@ def edit_user(request, id):
             user.location = sanitize_html(form.cleaned_data['city'])
             user.date_of_birth = form.cleaned_data.get('birthday', None)
             user.about = sanitize_html(form.cleaned_data['about'])
+            user.country = form.cleaned_data['country']
+            user.show_country = form.cleaned_data['show_country']
 
             user.save()
             # send user updated signal if full fields have been updated

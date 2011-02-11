@@ -1241,6 +1241,7 @@ ins .post-tag {
     font-weight: 800;
     color: #777;
     line-height: 40px; /*letter-spacing:0px*/
+    margin-top: 3px;
 }
 
 .user-details {
@@ -1746,8 +1747,8 @@ ul.form-horizontal-rows li input {
 }
 
 .user-profile-tool-links {
-    padding-bottom: 10px;
     font-weight: bold;
+    vertical-align: top;
 }
 
 .post-controls, .post-tags {
@@ -1994,6 +1995,25 @@ img.gravatar {
 }
 .user-profile-page .avatar p {
     margin-bottom: 0px;
+}
+.user-profile-page .tabBar a#stats {
+    margin-left: 0;
+}
+.user-profile-page img.gravatar {
+    margin: 2px 0 3px 0;
+}
+.user-profile-page h3 {
+    padding: 0;
+    margin-top: -3px;
+}
+
+img.flag {
+    border: 1px solid #eee;
+    vertical-align: text-top;
+}
+
+.main-page img.flag {
+    vertical-align: text-bottom;
 }
 
 .fb-share, .twitter-share {

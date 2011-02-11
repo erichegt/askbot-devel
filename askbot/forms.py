@@ -2,10 +2,11 @@ import re
 from django import forms
 from askbot import models
 from askbot import const
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
@@ -42,6 +43,29 @@ def filter_choices(remove_choices = None, from_choices = None):
             filtered_choices += ( choice_to_test, )
 
     return filtered_choices
+
+
+COUNTRY_CHOICES = (('unknown',_('select country')),) + countries.COUNTRIES
+
+class CountryField(forms.ChoiceField):
+    """this is better placed into the django_coutries app"""
+    
+    def __init__(self, *args, **kwargs):
+        """sets label and the country choices
+        """
+        kwargs['choices'] = kwargs.pop('choices', COUNTRY_CHOICES)
+        kwargs['label'] = kwargs.pop('label', _('Country'))
+        super(CountryField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        """Handles case of 'unknown' country selection
+        """
+        if self.required:
+            if value == 'unknown':
+                raise forms.ValidationError(_('Country field is required'))
+        if value == 'unknown':
+            return None
+        return value
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -98,7 +122,7 @@ class TagNamesField(forms.CharField):
         tag_count = len(tag_strings)
         if tag_count > askbot_settings.MAX_TAGS_PER_POST:
             max_tags = askbot_settings.MAX_TAGS_PER_POST
-            msg = ungettext(
+            msg = ungettext_lazy(
                         'please use %(tag_count)d tag or less',
                         'please use %(tag_count)d tags or less',
                         tag_count) % {'tag_count':max_tags}
@@ -108,7 +132,7 @@ class TagNamesField(forms.CharField):
             if tag_length > askbot_settings.MAX_TAG_LENGTH:
                 #singular form is odd in english, but required for pluralization
                 #in other languages
-                msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
+                msg = ungettext_lazy('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
                                 'each tag must be shorter than %(max_chars)d characters',
                                 tag_length) % {'max_chars':tag_length}
                 raise forms.ValidationError(msg)
@@ -521,7 +545,7 @@ class EditAnswerForm(forms.Form):
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',
-                    help_text=_('this email does not have to be linked to gravatar'),
+                    help_text=_('this email will be linked to gravatar'),
                     required=True,
                     max_length=255,
                     widget=forms.TextInput(attrs={'size' : 35})
@@ -542,10 +566,17 @@ class EditUserForm(forms.Form):
                     )
 
     city = forms.CharField(
-                        label=_('Location'),
+                        label=_('City'),
                         required=False,
                         max_length=255,
                         widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    country = CountryField(required = False)
+
+    show_country = forms.BooleanField(
+                        label=_('Show country'),
+                        required=False
                     )
 
     birthday = forms.DateField(
@@ -572,6 +603,12 @@ class EditUserForm(forms.Form):
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website
         self.fields['city'].initial = user.location
+        if user.country == None:
+            country = 'unknown'
+        else:
+            country = user.country
+        self.fields['country'].initial = country
+        self.fields['show_country'].initial = user.show_country
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth

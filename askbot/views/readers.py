@@ -217,6 +217,10 @@ def questions(request):
             else:
                 views_class = 'some-views'
 
+            country_code = None
+            if author.country and author.show_country:
+                country_code = author.country.code
+
             question_data = {
                 'title': question.title,
                 'summary': question.summary,
@@ -257,6 +261,7 @@ def questions(request):
                                         ),
                 'u_bronze_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_bronze_css_class': bronze_badge_css_class,
+                'u_country_code': country_code,
             }
             ajax_data['questions'].append(question_data)
 

@@ -12,7 +12,21 @@ from askbot.skins import utils as skin_utils
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 
+from django_countries import countries
+from django_countries import settings as countries_settings
+
 register = coffin_template.Library()
+
+@register.filter
+def country_display_name(country_code):
+    country_dict = dict(countries.COUNTRIES)
+    return country_dict[country_code]
+
+@register.filter
+def country_flag_url(country_code):
+    import pdb
+    pdb.set_trace()
+    return countries_settings.FLAG_URL % country_code
 
 @register.filter
 def collapse(input):

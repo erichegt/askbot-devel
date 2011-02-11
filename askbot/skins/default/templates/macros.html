@@ -44,6 +44,26 @@
     {%- endif -%}
 {%- endmacro -%}
 
+{%- macro user_country_flag(user) -%}
+    {% if user.country and user.show_country %}
+        <img class="flag" src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"/>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro user_country_name_and_flag(user) -%}
+    {% if user.country and user.show_country %}
+        {{ user.country.name }}
+        {{ user_country_flag(user) }}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro user_full_location(user) -%}
+    {% if user.location %}
+        {{ user.location }},
+    {% endif %}
+    {{ user_country_name_and_flag(user) }}
+{%- endmacro -%}
+
 {%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
@@ -176,7 +196,7 @@ poor design of the data or methods on data objects #}
             {% endif %}
         </p>
         {{ gravatar(post.author, 32) }}
-            {{post.author.get_profile_link()}}{% if not post.author.website %}<br/>{% endif %}
+            {{post.author.get_profile_link()}}{{ user_country_flag(post.author)}}{% if not post.author.website %}<br/>{% endif %}
             {{ user_score_and_badge_summary(post.author) }}<br/>
             {{ user_website_link(post.author) }}
     {% endif %}
@@ -204,7 +224,7 @@ poor design of the data or methods on data objects #}
         </p>
         {% if original_author != update_author or is_wiki %}
             {{ gravatar(update_author, 32) }}
-            {{update_author.get_profile_link()}}{% if not update_author.website %}<br/>{% endif %}
+            {{update_author.get_profile_link()}}{{ user_country_flag(update_author) }}{% if not update_author.website %}<br/>{% endif %}
             {{ user_score_and_badge_summary(update_author) }}<br/>
             {{ user_website_link(update_author) }}
         {% endif %}
@@ -258,7 +278,7 @@ poor design of the data or methods on data objects #}
             <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-                <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>
+                <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>{{ user_country_flag(question.last_activity_by) }}
                 {#{user_score_and_badge_summary(question.last_activity_by)}#}
             </div>
         </div>

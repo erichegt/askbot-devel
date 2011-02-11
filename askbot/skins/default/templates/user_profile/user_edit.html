@@ -23,7 +23,7 @@
                     <th width="100px"></th>
                     <th></th>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                 <td>{% trans %}Screen Name{% endtrans %}:</td>
                 <td>
                 {% if settings.EDITABLE_SCREEN_NAME %}
@@ -34,31 +34,39 @@
                 {% endif %}
                 </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td>{{ form.email.label_tag() }}:</td>
                     <td>{{ form.email }} <span class="form-error"></span> {{ form.email.errors }} </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td></td>
                     <td class="title-desc">{{ form.email.help_text }}</td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td>{{ form.realname.label_tag() }}:</td>
                     <td>{{ form.realname }} <span class="form-error"></span> {{ form.realname.errors }} </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td>{{ form.website.label_tag() }}:</td>
                     <td>{{ form.website }} <span class="form-error"></span> {{ form.website.errors }} </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td>{{ form.city.label_tag() }}:</td>
                     <td>{{ form.city }} <span class="form-error"></span> {{ form.city.errors }} </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
+                    <td>{{ form.country.label_tag() }}:</td>
+                    <td>{{ form.country }} <span class="form-error"></span> {{ form.country.errors }} </td>
+                </tr>
+                <tr>
+                    <td>{{ form.show_country.label_tag() }}:</td>
+                    <td>{{ form.show_country }} <span class="form-error"></span> {{ form.show_country.errors }} </td>
+                </tr>
+                <tr>
                     <td>{{ form.birthday.label_tag() }}:</td>
                     <td>{{ form.birthday }} <span class="form-error"></span> {{ form.birthday.errors }} </td>
                 </tr>
-                <tr style="height:35px">
+                <tr>
                     <td></td>
                     <td class="title-desc">{{ form.birthday.help_text }}</td>
                 </tr>
