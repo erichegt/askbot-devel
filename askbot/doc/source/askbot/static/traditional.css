@@ -659,10 +659,7 @@ div.ab-proj-header {
 }
 div.ab-proj-header li {
     display: inline;
-    padding: 0 10px 0 10px;
-}
-div.ab-proj-header li.first {
-    padding-left: 0;
+    padding: 0;
 }
 div.ab-proj-header a,
 div.ab-proj-header a:visited,
@@ -676,4 +673,5 @@ div.ab-proj-header ul {
 }
 div.ab-proj-header .sep {
     color: #aaa;
+    padding: 0 10px;
 }
