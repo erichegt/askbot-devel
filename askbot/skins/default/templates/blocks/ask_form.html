@@ -22,11 +22,19 @@
                 {{ form.title.help_text }}
             </div>
         </div>
-        {{macros.edit_post(form, settings.WIKI_ON, post_type='question', edit_title=False)}}
+        {{macros.edit_post(form, post_type='question', edit_title=False)}}
         {% if not request.user.is_authenticated() %}
         <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
         {% else %}
         <input type="submit" name="post" value="{% trans %}Ask your question{% endtrans %}" class="submit" />
         {% endif %}
+        <div class="question-options">
+            {% if settings.WIKI_ON %}
+                {{ macros.checkbox_in_div(form.wiki) }}
+            {% endif %}
+            {% if settings.ALLOW_ASK_ANONYMOUSLY %}
+                {{ macros.checkbox_in_div(form.ask_anonymously) }}
+            {% endif %}
+        </div>
     </form>
 </div>

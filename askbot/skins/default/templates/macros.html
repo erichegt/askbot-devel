@@ -431,7 +431,20 @@ poor design of the data or methods on data objects #}
     </script>
 {%- endmacro %}
 
-{%- macro edit_post(post_form, wiki_on, post_type=None, edit_title=False) -%}
+{%- macro checkbox_in_div(checkbox_field, class = 'checkbox') -%}
+    <div{% if class %} class="{{class}}"{% endif %}
+        title="{{checkbox_field.help_text}}">
+        {{ checkbox_field }} 
+        {{ checkbox_field.label_tag() }} 
+        {{ checkbox_field.errors }}
+    </div>
+{%- endmacro -%}
+
+{%- macro edit_post(
+                post_form,
+                post_type=None,
+                edit_title=False) 
+-%}
     {% if edit_title %}
         <div class="form-item">
             <label for="id_title" ><strong>{{ post_form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
@@ -444,13 +457,6 @@ poor design of the data or methods on data objects #}
     <div id="wmd-button-bar" class="wmd-panel"></div>
     <div class="form-item">
         {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
-        {% if wiki_on %}
-            <div style="margin-right:5px;float:right;font-weight:normal;cursor:help" 
-                title="{{post_form.wiki.help_text}}">
-                {{ post_form.wiki }} 
-                {{ post_form.wiki.label_tag() }} 
-            </div>
-        {% endif %}
         <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
     </div>
     {# need label element for resizable input, b/c form validation won't find span #}

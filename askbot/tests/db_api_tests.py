@@ -53,6 +53,38 @@ class DBApiTests(AskbotTestCase):
             1
         )
 
+    def ask_anonymous_question(self):
+        q = self.user.post_question(
+                        is_anonymous = True,
+                        body_text = 'hahahah',
+                        title = 'aouaouaosuoa',
+                        tags = 'test'
+                    )
+        return self.reload_object(q)
+
+    def test_post_anonymous_question(self):
+        q = self.ask_anonymous_question()
+        self.assertTrue(q.is_anonymous)
+        rev = q.revisions.all()[0]
+        self.assertTrue(rev.is_anonymous)
+
+    def test_reveal_asker_identity(self):
+        q = self.ask_anonymous_question()
+        self.other_user.set_status('m')
+        self.other_user.save()
+        self.other_user.edit_question(
+                            question = q,
+                            title = 'hahah',
+                            body_text = 'hoeuaoea',
+                            tags = 'aoeuaoeu',
+                            revision_comment = 'hahahah'
+                        )
+        q.remove_author_anonymity()
+        q = self.reload_object(q)
+        self.assertFalse(q.is_anonymous)
+        for rev in q.revisions.all():
+            self.assertFalse(rev.is_anonymous)
+
     def test_accept_best_answer(self):
         self.post_answer(user = self.other_user)
         self.user.accept_best_answer(self.answer)

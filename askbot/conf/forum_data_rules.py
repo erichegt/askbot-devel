@@ -21,6 +21,20 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_ASK_ANONYMOUSLY',
+        default=True,
+        description=_('Allow asking questions anonymously'),
+        help_text=_(
+            'Users do not accrue reputation for anonymous questions '
+            'and their identity is not revealed until they change their '
+            'mind'
+        )
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAG_LENGTH',

@@ -998,6 +998,7 @@ def user_post_question(
                     body_text = None,
                     tags = None,
                     wiki = False,
+                    is_anonymous = False,
                     timestamp = None
                 ):
 
@@ -1018,7 +1019,8 @@ def user_post_question(
                                     text = body_text,
                                     tagnames = tags,
                                     added_at = timestamp,
-                                    wiki = wiki
+                                    wiki = wiki,
+                                    is_anonymous = is_anonymous,
                                 )
     return question
 
@@ -1039,7 +1041,8 @@ def user_edit_question(
                     revision_comment = None,
                     tags = None,
                     wiki = False,
-                    timestamp = None
+                    edit_anonymously = False,
+                    timestamp = None,
                 ):
     self.assert_can_edit_question(question)
     question.apply_edit(
@@ -1051,6 +1054,7 @@ def user_edit_question(
         comment = revision_comment,
         tags = tags,
         wiki = wiki,
+        edit_anonymously = edit_anonymously,
     )
     award_badges_signal.send(None,
         event = 'edit_question',
@@ -1223,6 +1227,15 @@ def user_is_watched(self):
 
 def user_is_approved(self):
     return (self.status == 'a')
+
+def user_is_owner_of(self, obj):
+    """True if user owns object
+    False otherwise
+    """
+    if isinstance(obj, Question):
+        return self == obj.author
+    else:
+        raise NotImplementedError()
 
 def user_set_status(self, new_status):
     """sets new status to user
@@ -1664,6 +1677,7 @@ User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
+User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)

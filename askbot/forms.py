@@ -44,7 +44,6 @@ def filter_choices(remove_choices = None, from_choices = None):
 
     return filtered_choices
 
-
 COUNTRY_CHOICES = (('unknown',_('select country')),) + countries.COUNTRIES
 
 class CountryField(forms.ChoiceField):
@@ -461,15 +460,63 @@ class FeedbackForm(forms.Form):
     message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
     next = NextUrlField()
 
-class AskForm(forms.Form):
+class FormWithHideableFields(object):
+    """allows to swap a field widget to HiddenInput() and back"""
+
+    def hide_field(self, name):
+        """replace widget with HiddenInput()
+        and save the original in the __hidden_fields dictionary
+        """
+        if not hasattr(self, '__hidden_fields'):
+            self.__hidden_fields = dict()
+        if name in self.__hidden_fields:
+            return
+        self.__hidden_fields[name] = self.fields[name].widget
+        self.fields[name].widget = forms.HiddenInput()
+
+    def show_field(self, name):
+        """restore the original widget on the field
+        if it was previously hidden
+        """
+        if name in self.__hidden_fields:
+            self.fields[name] = self.__hidden_fields.pop(name)
+
+class AskForm(forms.Form, FormWithHideableFields):
+    """the form used to askbot questions
+    field ask_anonymously is shown to the user if the 
+    if ALLOW_ASK_ANONYMOUSLY live setting is True
+    however, for simplicity, the value will always be present
+    in the cleaned data, and will evaluate to False if the
+    settings forbids anonymous asking
+    """
     title  = TitleField()
     text   = EditorField()
     tags   = TagNamesField()
     wiki = WikiField()
-
+    ask_anonymously = forms.BooleanField(
+        label = _('Ask anonymously'),
+        help_text = _(
+            'Check if you do not want to reveal your name '
+            'when asking this question'
+        ),
+        required = False,
+    )
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     email  = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+
+    def __init__(self, *args, **kwargs):
+        super(AskForm, self).__init__(*args, **kwargs)
+        #hide ask_anonymously field
+        if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
+            self.hide_field('ask_anonymously')
+
+    def clean_ask_anonymously(self):
+        """returns false if anonymous asking is not allowed
+        """
+        if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
+            self.cleaned_data['ask_anonymously'] = False
+        return self.cleaned_data['ask_anonymously'] 
 
 class AnswerForm(forms.Form):
     text   = EditorField()
@@ -516,21 +563,113 @@ class RevisionForm(forms.Form):
             for r in revisions]
         self.fields['revision'].initial = latest_revision.revision
 
-class EditQuestionForm(forms.Form):
+class EditQuestionForm(forms.Form, FormWithHideableFields):
     title  = TitleField()
     text   = EditorField()
     tags   = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
+    reveal_identity = forms.BooleanField(
+        help_text = _(
+            'You have asked this question anonymously, '
+            'if you decide to reveal your identity, please check '
+            'this box.'
+        ),
+        label = _('Reveal identity'),
+        required = False,
+    )
 
     #todo: this is odd that this form takes question as an argument
-    def __init__(self, question, revision, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """populate EditQuestionForm with initial data"""
+        self.question = kwargs.pop('question')
+        self.user = kwargs.pop('user')
+        revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
-        self.fields['wiki'].initial = question.wiki
+        self.fields['wiki'].initial = self.question.wiki
+        #hide the reveal identity field
+        if not self.can_stay_anonymous():
+            self.hide_field('reveal_identity')
+
+    def can_stay_anonymous(self):
+        """determines if the user cat keep editing the question
+        anonymously"""
+        return (askbot_settings.ALLOW_ASK_ANONYMOUSLY \
+            and self.question.is_anonymous \
+            and self.user.is_owner_of(self.question)
+        )
+
+    def clean_reveal_identity(self):
+        """cleans the reveal_identity field
+        which determines whether previous anonymous
+        edits must be rewritten as not anonymous
+        this does not necessarily mean that the edit will be anonymous
+
+        only does real work when question is anonymous
+        based on the following truth table:
+
+        is_anon  can  owner  checked  cleaned data
+        -        *     *        *        False (ignore choice in checkbox)
+        +        +     +        +        True
+        +        +     +        -        False
+        +        +     -        +        Raise(Not owner)
+        +        +     -        -        False
+        +        -     +        +        True (setting "can" changed, say yes)
+        +        -     +        -        False, warn (but prev edits stay anon)
+        +        -     -        +        Raise(Not owner)
+        +        -     -        -        False
+        """
+        value = self.cleaned_data['reveal_identity']
+        if self.question.is_anonymous:
+            if value == True:
+                if self.user.is_owner_of(self.question):
+                    #regardless of the ALLOW_ASK_ANONYMOUSLY
+                    return True
+                else:
+                    self.show_field('reveal_identity')
+                    del self.cleaned_data['reveal_identity']
+                    raise forms.ValidationError(
+                                _(
+                                    'Sorry, only owner of the anonymous '
+                                    'question can reveal his or her '
+                                    'identity, please uncheck the '
+                                    'box'
+                                 )
+                             )
+            else:
+                can_ask_anon = askbot_settings.ALLOW_ASK_ANONYMOUSLY
+                is_owner = self.user.is_owner_of(self.question)
+                if can_ask_anon == False and is_owner:
+                    self.show_field('reveal_identity')
+                    raise forms.ValidationError(
+                        _(
+                            'Sorry, apparently rules have just changed - '
+                            'it is no longer possible to ask anonymously. '
+                            'Please either check the "reveal identity" box '
+                            'or reload this page and try editing the question '
+                            'again.'
+                        )
+                    )
+                return False
+        else:
+            #takes care of 8 possibilities - first row of the table
+            return False
+
+    def clean(self):
+        """Purpose of this function is to determine whether
+        it is ok to apply edit anonymously in the synthetic
+        field edit_anonymously. It relies on correct cleaning
+        if the "reveal_identity" field
+        """
+        reveal_identity = self.cleaned_data.get('reveal_identity', False)
+        stay_anonymous = False
+        if reveal_identity == False and self.can_stay_anonymous():
+            stay_anonymous = True
+        self.cleaned_data['stay_anonymous'] = stay_anonymous
+        return self.cleaned_data
 
 class EditAnswerForm(forms.Form):
     text = EditorField()

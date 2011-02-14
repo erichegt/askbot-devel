@@ -1153,6 +1153,12 @@ span.form-error {
     margin-top: 10px;
 }
 
+.checkbox {
+    margin-left:5px;
+    font-weight:normal;
+    cursor:help
+}
+
 .edit-content-html {
     border-top: 1px dotted #D8D2A9;
     border-bottom: 1px dotted #D8D2A9;

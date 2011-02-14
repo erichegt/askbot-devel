@@ -77,6 +77,7 @@ class AskbotTestCase(TestCase):
                     body_text = 'test question body text',
                     tags = 'test',
                     wiki = False,
+                    is_anonymous = False,
                     follow = False,
                     timestamp = None
                 ):
@@ -94,6 +95,7 @@ class AskbotTestCase(TestCase):
                             body_text = body_text,
                             tags = tags,
                             wiki = wiki,
+                            is_anonymous = is_anonymous,
                             timestamp = timestamp
                         )
 
@@ -102,6 +104,11 @@ class AskbotTestCase(TestCase):
 
         return question
 
+    def reload_object(self, obj):
+        """reloads model object from the database
+        """
+        return obj.__class__.objects.get(id = obj.id)
+        
     def post_answer(
                     self,
                     user = None,

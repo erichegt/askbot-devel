@@ -197,7 +197,6 @@ def ask(request):#view used to ask a new question
     if request.method == "POST":
         form = forms.AskForm(request.POST)
         if form.is_valid():
-
             timestamp = datetime.datetime.now()
             #todo: move this to clean_title
             title = form.cleaned_data['title'].strip()
@@ -205,17 +204,18 @@ def ask(request):#view used to ask a new question
             #todo: move this to clean_tagnames
             tagnames = form.cleaned_data['tags'].strip()
             text = form.cleaned_data['text']
+            ask_anonymously = form.cleaned_data['ask_anonymously']
 
             if request.user.is_authenticated():
-
                 try:
                     question = request.user.post_question(
-                                                    title = title,
-                                                    body_text = text,
-                                                    tags = tagnames,
-                                                    wiki = wiki,
-                                                    timestamp = timestamp
-                                                )
+                                                title = title,
+                                                body_text = text,
+                                                tags = tagnames,
+                                                wiki = wiki,
+                                                is_anonymous = ask_anonymously,
+                                                timestamp = timestamp
+                                            )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
@@ -230,6 +230,7 @@ def ask(request):#view used to ask a new question
                     title       = title,
                     tagnames = tagnames,
                     wiki = wiki,
+                    is_anonymous = ask_anonymously,
                     text = text,
                     summary = summary,
                     added_at = timestamp,
@@ -324,33 +325,66 @@ def edit_question(request, id):
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
-            if 'select_revision' in request.POST:#revert-type edit
-                # user has changed revistion number
-                revision_form = forms.RevisionForm(question, latest_revision, request.POST)
+            if 'select_revision' in request.POST:
+                #revert-type edit - user selected previous revision
+                revision_form = forms.RevisionForm(
+                                                question,
+                                                latest_revision,
+                                                request.POST
+                                            )
                 if revision_form.is_valid():
                     # Replace with those from the selected revision
-                    form = forms.EditQuestionForm(question,
-                        models.QuestionRevision.objects.get(question=question,
-                            revision=revision_form.cleaned_data['revision']))
+                    rev_id = revision_form.cleaned_data['revision']
+                    selected_revision = models.QuestionRevision.objects.get(
+                                                        question = question,
+                                                        revision = rev_id
+                                                    )
+                    form = forms.EditQuestionForm(
+                                            question = question,
+                                            user = request.user,
+                                            revision = selected_revision
+                                        )
                 else:
-                    form = forms.EditQuestionForm(question, latest_revision, request.POST)
+                    form = forms.EditQuestionForm(
+                                            request.POST,
+                                            question = question,
+                                            user = request.user,
+                                            revision = latest_revision
+                                        )
             else:#new content edit
                 # Always check modifications against the latest revision
-                form = forms.EditQuestionForm(question, latest_revision, request.POST)
+                form = forms.EditQuestionForm(
+                                        request.POST,
+                                        question = question,
+                                        revision = latest_revision,
+                                        user = request.user,
+                                    )
                 if form.is_valid():
                     if form.has_changed():
+
+                        if form.cleaned_data['reveal_identity']:
+                            question.remove_author_anonymity()
+
+                        is_anon_edit = form.cleaned_data['edit_anonymously']
+                        is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         request.user.edit_question(
-                                            question = question,
-                                            title = form.cleaned_data['title'],
-                                            body_text = form.cleaned_data['text'],
-                                            revision_comment = form.cleaned_data['summary'],
-                                            tags = form.cleaned_data['tags'],
-                                            wiki = form.cleaned_data.get('wiki', question.wiki)
-                                        )
+                            question = question,
+                            title = form.cleaned_data['title'],
+                            body_text = form.cleaned_data['text'],
+                            revision_comment = form.cleaned_data['summary'],
+                            tags = form.cleaned_data['tags'],
+                            wiki = is_wiki, 
+                            edit_anonymously = is_anon_edit,
+                        )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
+            #request type was "GET"
             revision_form = forms.RevisionForm(question, latest_revision)
-            form = forms.EditQuestionForm(question, latest_revision)
+            form = forms.EditQuestionForm(
+                                    question = question,
+                                    revision = latest_revision,
+                                    user = request.user
+                                )
 
         data = {
             'active_tab': 'questions',

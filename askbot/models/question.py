@@ -37,7 +37,16 @@ QUESTION_ORDER_BY_MAP = {
 }
 
 class QuestionManager(models.Manager):
-    def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
+    def create_new(
+                self,
+                title = None,
+                author = None,
+                added_at = None,
+                wiki = False,
+                is_anonymous = False,
+                tagnames = None,
+                text = None
+            ):
 
         question = Question(
             title = title,
@@ -46,6 +55,7 @@ class QuestionManager(models.Manager):
             last_activity_at = added_at,
             last_activity_by = author,
             wiki = wiki,
+            is_anonymous = is_anonymous,
             tagnames = tagnames,
             #html field is denormalized in .save() call
             text = text,
@@ -64,10 +74,11 @@ class QuestionManager(models.Manager):
         question.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
 
         question.add_revision(
-            author=author,
-            text=text,
-            comment=const.POST_STATUS['default_version'],
-            revised_at=added_at,
+            author = author,
+            is_anonymous = is_anonymous,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
+            revised_at = added_at,
         )
         return question
 
@@ -312,6 +323,7 @@ class Question(content.Content, DeletableContent):
     summary              = models.CharField(max_length=180)
 
     favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
+    is_anonymous = models.BooleanField(default=False) 
 
     objects = QuestionManager()
 
@@ -334,6 +346,17 @@ class Question(content.Content, DeletableContent):
                 user.assert_can_see_deleted_post(self)
             except django_exceptions.PermissionDenied:
                 raise exceptions.QuestionHidden(message)
+
+    def remove_author_anonymity(self):
+        """removes anonymous flag from the question
+        and all its revisions
+        the function calls update method to make sure that
+        signals are not called
+        """
+        #it is important that update method is called - not save,
+        #because we do not want the signals to fire here
+        Question.objects.filter(id = self.id).update(is_anonymous = False)
+        self.revisions.all().update(is_anonymous = False)
 
     def update_answer_count(self, save = True):
         """updates the denormalized field 'answer_count'
@@ -565,7 +588,8 @@ class Question(content.Content, DeletableContent):
         return self
 
     def apply_edit(self, edited_at=None, edited_by=None, title=None,\
-                    text=None, comment=None, tags=None, wiki=False):
+                    text=None, comment=None, tags=None, wiki=False, \
+                    edit_anonymously = False):
 
         latest_revision = self.get_latest_revision()
         #a hack to allow partial edits - important for SE loader
@@ -590,6 +614,7 @@ class Question(content.Content, DeletableContent):
         self.last_activity_by = edited_by
         self.tagnames = tags
         self.text = text
+        self.is_anonymous = edit_anonymously
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -604,12 +629,20 @@ class Question(content.Content, DeletableContent):
             author = edited_by,
             text = text,
             revised_at = edited_at,
+            is_anonymous = edit_anonymously,
             comment = comment,
         )
 
         self.parse_and_save(author = edited_by)
 
-    def add_revision(self,author=None, text=None, comment=None, revised_at=None):
+    def add_revision(
+                self,
+                author = None,
+                is_anonymous = False,
+                text = None,
+                comment = None,
+                revised_at = None
+            ):
         if None in (author, text, comment):
             raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
@@ -624,6 +657,7 @@ class Question(content.Content, DeletableContent):
             revision   = rev_no,
             title      = self.title,
             author     = author,
+            is_anonymous = is_anonymous,
             revised_at = revised_at,
             tagnames   = self.tagnames,
             summary    = comment,
@@ -779,6 +813,7 @@ class QuestionRevision(ContentRevision):
     question   = models.ForeignKey(Question, related_name='revisions')
     title      = models.CharField(max_length=300)
     tagnames   = models.CharField(max_length=125)
+    is_anonymous = models.BooleanField(default=False)
 
     class Meta(ContentRevision.Meta):
         db_table = u'question_revision'
@@ -812,17 +847,24 @@ class QuestionRevision(ContentRevision):
         return u'revision %s of %s' % (self.revision, self.title)
 
 class AnonymousQuestion(AnonymousContent):
+    """question that was asked before logging in
+    maybe the name is a little misleading, the user still
+    may or may not want to stay anonymous after the question
+    is published
+    """
     title = models.CharField(max_length=300)
     tagnames = models.CharField(max_length=125)
+    is_anonymous = models.BooleanField(default=False)
 
     def publish(self,user):
         added_at = datetime.datetime.now()
         Question.objects.create_new(
-                                title=self.title,
-                                author=user,
-                                added_at=added_at,
-                                wiki=self.wiki,
-                                tagnames=self.tagnames,
-                                text=self.text,
+                                title = self.title,
+                                added_at = added_at,
+                                author = user,
+                                wiki = self.wiki,
+                                is_anonymous = self.is_anonymous,
+                                tagnames = self.tagnames,
+                                text = self.text,
                                 )
         self.delete()

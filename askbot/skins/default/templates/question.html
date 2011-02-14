@@ -349,7 +349,7 @@
                 {% endif %}
             </p>
         {% endif %}
-        {{macros.edit_post(answer, settings.WIKI_ON)}}
+        {{ macros.edit_post(answer) }}
         <input type="submit" 
             {% if user.is_anonymous() %}
                 value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
@@ -361,7 +361,10 @@
                 {% endif %}
             {% endif %}
             class="submit after-editor" style="float:left"/>
-        {% endif %}
+            {% if settings.WIKI_ON %}
+                {{ macros.checkbox_in_div(answer.wiki) }}
+            {% endif %}
+    {% endif %}
     </form>
 </div>
 {% endblock %}
