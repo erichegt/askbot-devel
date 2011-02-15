@@ -1,17 +1,21 @@
 {# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
+{% import "macros.html" as macros %}
 <div id="tagSelector" class="boxC">
     <h2>{% trans %}Interesting tags{% endtrans %}</h2>
     <div class="tags interesting marked-tags">
     {% for tag_name in interesting_tag_names %}
         {% spaceless %}
-        <span class="deletable-tag" id="interesting-tag-{{tag_name}}">
-            <a rel="tag" 
-                title="{% trans %}see questions tagged '{{ tag_name }}'{% endtrans %}"
-                href="{% url questions %}?tags={{tag_name|urlencode}}">{{tag_name}}</a>
-            <img class="delete-icon" 
-                src="{{'/images/close-small-dark.png'|media}}"
-                title="{% trans %}remove '{{tag_name}}' from the list of interesting tags{% endtrans %}"/>
-        </span>
+        {{
+            macros.tag_widget(
+                tag_name,
+                id = "interesting-tag-" ~ tag_name,
+                deletable = True,
+                delete_link_title = _(
+                    "remove '%(tag_name)s' from the list of interesting tags"|
+                    format(tag_name = tag_name)
+                )
+            )
+        }}
         {% endspaceless %}
     {% endfor %}
     </div>
@@ -21,14 +25,17 @@
     <div class="tags ignored marked-tags">
     {% for tag_name in ignored_tag_names %}
         {% spaceless %}
-        <span class="deletable-tag" id="ignored-tag-{{tag_name}}">
-            <a rel="tag" 
-                title="{% trans %}see questions tagged '{{ tag_name }}'{% endtrans %}"
-                href="{% url questions %}?tags={{tag_name|urlencode}}">{{tag_name}}</a>
-            <img class="delete-icon" 
-                src="{{'/images/close-small-dark.png'|media}}"
-                title="{% trans %}remove '{{tag_name}}' from the list of ignored tags{% endtrans %}"/>
-        </span>
+        {{
+            macros.tag_widget(
+                tag_name,
+                id = "interesting-tag-" ~ tag_name,
+                deletable = True,
+                delete_link_title = gettext(
+                    "remove '%(tag_name)s' from the list of ignored tags"|
+                    format(tag_name = tag_name)
+                )
+            )
+        }}
         {% endspaceless %}
     {% endfor %}
     </div>

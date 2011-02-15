@@ -199,14 +199,14 @@ $(document).ready(function(){
             tag_url = ' href="' + url + '" ';
         }
         html = '<' + tag_element +
-                    ' class="tag" ' +
+                    ' class="tag tag-right" ' +
                     tag_url +
                     ' title="' + tag_title + '" rel="tag"' +
                 '>' + tag_name + '</' + tag_element + '>';
         if (deletable){
             html += '<span class="delete-icon"></span>';
         }
-        return html;
+        return '<span class="tag-left">' + html + '</span>';
     };
 
     var render_tags = function(tags, linkable, deletable){

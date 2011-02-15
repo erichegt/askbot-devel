@@ -1,4 +1,5 @@
 {% extends "user_profile/user.html" %}
+{% import "macros.html" as macros %}
 <!-- user_stats.html -->
 {% block profilesection %}
     {% trans %}overview{% endtrans %}
@@ -66,10 +67,13 @@
                 <tr>
                     <td width="180" valign="top">
                         {% for tag in user_tags %}
-                        <a rel="tag" 
-                            title="{% trans tag_name=tag.name %}see other questions with {{view_user}}'s contributions tagged '{{ tag_name }}' {% endtrans %}" 
-                            href="{% url questions %}?tags={{tag|urlencode}}&amp;author={{view_user.id}}&amp;start_over=true">{{tag.name}}</a>
-                        <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
+                            {{ macros.tag_widget(
+                                tag.name,
+                                url_params = "author=" ~ view_user.id ~
+                                            "&start_over=true"
+                               )
+                            }}
+                            <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
                             {% if loop.index is divisibleby 10 %}
                                 </td>
                                 <td width="180"  valign="top">

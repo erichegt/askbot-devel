@@ -46,7 +46,17 @@
 
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.show_country %}
-        <img class="flag" src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"/>
+        <img class="flag" 
+            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
+            alt="{% trans 
+                    country=user.country.name 
+                    %}flag of {{country}}{% 
+                endtrans %}"
+            title="{% trans 
+                    country=user.country.name, 
+                    person=user.username %}{{person}} is from {{country}}{%
+                 endtrans %}"
+        />
     {% endif %}
 {%- endmacro -%}
 
@@ -239,6 +249,47 @@ poor design of the data or methods on data objects #}
 {% endif %}
 {%- endmacro -%}
 
+{%- macro if_else(condition, if_true, if_false) -%}
+    {%- if condition == True -%}
+        {{if_true}}
+    {%- else -%}
+        {{if_false}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro tag_widget(
+                tag,
+                id = None,
+                deletable = False,
+                is_link = True,
+                delete_link_title = None,
+                url_params = None
+            ) %}
+    <span 
+        {% if id %}id="{{ id }}"{% endif %}
+        class="tag-left{% if deletable %} deletable-tag{% endif %}"
+    >
+        <{{ if_else(is_link, 'a', 'span') }}
+            class="tag tag-right"
+            href="{% url questions %}?tags={{tag|urlencode}}{{ 
+                                                        if_else(
+                                                            url_params != None,
+                                                            '&' ~ url_params,
+                                                            ''
+                                                        )|escape
+                                                    }}"
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</{{ if_else(is_link, 'a', 'span') }}>
+        {% if deletable %}
+            <img class="delete-icon"
+                src="{{'/images/close-small-dark.png'|media}}"
+                {% if delete_link_title %}
+                    title="{{ delete_link_title }}"
+                {% endif %}
+            />
+        {% endif %}
+    </span>
+{%- endmacro -%}
+
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">
@@ -296,7 +347,7 @@ poor design of the data or methods on data objects #}
         {% spaceless %}
         <div class="tags">
             {% for tag in question.get_tag_names() %}
-            <a class="tag" href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
+                {{ tag_widget(tag) }}
             {% endfor %}
         </div>
         {% endspaceless %}

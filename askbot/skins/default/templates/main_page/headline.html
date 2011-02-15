@@ -1,3 +1,4 @@
+{% import "macros.html" as macros %}
 {% if questions_count > 0 %}
     <div style="clear:both">
         <p class="rss">
@@ -20,8 +21,10 @@
         <div id="search-tags" class="tags">
         {% if search_tags %}
             {% for tag in search_tags %}
-                <span class="tag">{{tag}}</span>
+            <span class="tag-left">
+                <span class="tag tag-right">{{tag}}</span>
                 <span class="delete-icon"></span>
+            </span>
             {% endfor %}
         {% endif %}
         </div>

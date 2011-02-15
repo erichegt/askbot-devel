@@ -62,7 +62,10 @@ function pickedTags(){
         $.each(clean_tagnames, function(idx, tagname){
             var new_tag = $('<span></span>');
             new_tag.addClass('deletable-tag');
+            new_tag.addClass('tag-left');
             var tag_link = $('<a></a>');
+            tag_link.addClass('tag-right');
+            tag_link.addClass('tag')
             tag_link.attr('rel','tag');
             var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
             tag_link.attr('href', tag_url);

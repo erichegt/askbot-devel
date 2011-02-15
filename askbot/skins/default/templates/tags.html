@@ -33,10 +33,7 @@
 <ul class="tagsList tags">
 {% for tag in tags.object_list %}
    <li>
-    <a href="{% url questions %}?tags={{tag|urlencode}}&start_over=true" 
-        title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">
-        {{ tag }}
-    </a>&nbsp;
+    {{ macros.tag_widget(tag.name, url_params = 'start_over=true') }}&nbsp;
     <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
     <br/>
     </li>
@@ -45,7 +42,7 @@
 {% endif %}
 <div class="pager">
     {{macros.paginator(paginator_context)}}
-</div>              
+</div>
 {% endblock %}
 {% block endjs %}
     <script type="text/javascript">

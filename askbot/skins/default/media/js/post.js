@@ -634,10 +634,13 @@ var questionRetagger = function(){
                             '{tag}',
                             tag_name
                         );
-        return '<a ' +
-                    'href="' + url + '" ' + 
-                    'title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</a>';
+        return '<span class="tag-left">' +
+                    '<a ' +
+                        'class="tag tag-right" ' +
+                        'href="' + url + '" ' + 
+                        'title="' + tag_title + '" rel="tag"' +
+                    '>' + tag_name + '</a>' +
+               '</span>';
     };
 
     var drawNewTags = function(new_tags){
