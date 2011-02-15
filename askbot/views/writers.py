@@ -255,6 +255,7 @@ def ask(request):#view used to ask a new question
     tags = _get_tags_cache_json()
     data = {
         'active_tab': 'ask',
+        'page_class': 'ask-page',
         'form' : form,
         'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
@@ -365,7 +366,7 @@ def edit_question(request, id):
                         if form.cleaned_data['reveal_identity']:
                             question.remove_author_anonymity()
 
-                        is_anon_edit = form.cleaned_data['edit_anonymously']
+                        is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         request.user.edit_question(
                             question = question,
@@ -387,6 +388,7 @@ def edit_question(request, id):
                                 )
 
         data = {
+            'page_class': 'edit-question-page',
             'active_tab': 'questions',
             'question': question,
             'revision_form': revision_form,

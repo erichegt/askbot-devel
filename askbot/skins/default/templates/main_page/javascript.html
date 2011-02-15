@@ -19,6 +19,7 @@
     askbot['urls']['questions'] = '{% url "questions" %}';
     askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';
     askbot['urls']['user_url_template'] = scriptUrl + '{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
+    askbot['messages']['name_of_anonymous_user'] = '{{ name_of_anonymous_user }}';
 </script>
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
 {% if request.user.is_authenticated() %}

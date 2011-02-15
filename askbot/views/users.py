@@ -277,8 +277,12 @@ def edit_user(request, id):
 
 def user_stats(request, user):
 
+    question_filter = {'author': user}
+    if request.user != user:
+        question_filter['is_anonymous'] = False
+
     questions = models.Question.objects.filter(
-                                    author = user
+                                    **question_filter
                                 ).order_by(
                                     '-score', '-last_activity_at'
                                 ).select_related(

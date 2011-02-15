@@ -94,6 +94,7 @@ class Answer(content.Content, DeletableContent):
 
     parse = parse_post_text
     parse_and_save = parse_and_save_post
+    is_anonymous = False #answers are never anonymous - may change
 
     def assert_is_visible_to(self, user):
         """raises QuestionHidden or AnswerHidden"""

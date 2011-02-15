@@ -167,7 +167,7 @@ def onUpVoted(vote, post, user, timestamp=None):
     post.score = int(post.score) + 1
     post.save()
 
-    if not post.wiki:
+    if not (post.wiki or post.is_anonymous):
         author = post.author
         todays_rep_gain = Repute.objects.get_reputation_by_upvoted_today(author)
         if todays_rep_gain <  askbot_settings.MAX_REP_GAIN_PER_USER_PER_DAY:
@@ -200,7 +200,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
     post.score = int(post.score) - 1
     post.save()
 
-    if not post.wiki:
+    if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(
             askbot_settings.REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION
@@ -231,7 +231,7 @@ def onDownVoted(vote, post, user, timestamp=None):
     post.score = int(post.score) - 1
     post.save()
 
-    if not post.wiki:
+    if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(askbot_settings.REP_LOSS_FOR_DOWNVOTING)
         author.save()
@@ -273,7 +273,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
     post.score = post.score + 1
     post.save()
 
-    if not post.wiki:
+    if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(
             askbot_settings.REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION

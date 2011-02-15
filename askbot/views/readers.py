@@ -262,6 +262,7 @@ def questions(request):
                 'u_bronze_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_bronze_css_class': bronze_badge_css_class,
                 'u_country_code': country_code,
+                'u_is_anonymous': question.is_anonymous,
             }
             ajax_data['questions'].append(question_data)
 
@@ -301,6 +302,7 @@ def questions(request):
         'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
+        'name_of_anonymous_user' : models.get_name_of_anonymous_user()
     }
 
     assert(request.is_ajax() == False)

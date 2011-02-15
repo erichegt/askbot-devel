@@ -347,7 +347,8 @@ blockquote {
 }
 
 .short-summary .userinfo .relativetime,
-.short-summary .userinfo a {
+.short-summary .userinfo a,
+.short-summary span.anonymous {
     font-size: 11px;
     clear:both;
     font-weight: normal;
@@ -1119,7 +1120,7 @@ span.form-error {
 }
 
 .wmd-preview {
-    margin: 0;
+    margin: 3px 0 5px 0;
     padding: 6px;
     width: 691px;
     background-color: #F5F5F5;
@@ -1157,6 +1158,21 @@ span.form-error {
     margin-left:5px;
     font-weight:normal;
     cursor:help
+}
+
+.question-options {
+    margin-top: 1px;
+    float: left;
+    color: #666;
+    line-height: 13px;
+}
+.question-options label {
+    vertical-align: text-bottom;
+}
+
+.ask-page input.submit,
+.edit-question-page input.submit {
+    float: left;
 }
 
 .edit-content-html {

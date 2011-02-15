@@ -2,16 +2,16 @@
 User policy settings
 """
 from askbot.conf.settings_wrapper import settings
-from askbot.deps.livesettings import ConfigurationGroup, BooleanValue, IntegerValue
+from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 
-USER_SETTINGS = ConfigurationGroup(
+USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
                     _('User policy settings')
                 )
 
 settings.register(
-    BooleanValue(
+    livesettings.BooleanValue(
         USER_SETTINGS,
         'EDITABLE_SCREEN_NAME',
         default=True,
@@ -20,11 +20,20 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         USER_SETTINGS,
         'MIN_USERNAME_LENGTH',
         hidden=True,
         default=1,
         description=_('Minimum allowed length for screen name')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'NAME_OF_ANONYMOUS_USER',
+        default = '',
+        description = _('Name for the Anonymous user')
     )
 )

@@ -1237,6 +1237,25 @@ def user_is_owner_of(self, obj):
     else:
         raise NotImplementedError()
 
+def get_name_of_anonymous_user():
+    """Returns name of the anonymous user
+    either comes from the live settyngs or the language
+    translation
+
+    very possible that this function does not belong here
+    """
+    if askbot_settings.NAME_OF_ANONYMOUS_USER:
+        return askbot_settings.NAME_OF_ANONYMOUS_USER
+    else:
+        return _('Anonymous')
+
+def user_get_anonymous_name(self):
+    """Returns name of anonymous user
+    - convinience method for use in the template 
+    macros that accept user as parameter
+    """
+    return get_name_of_anonymous_user()
+
 def user_set_status(self, new_status):
     """sets new status to user
 
@@ -1640,6 +1659,7 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)

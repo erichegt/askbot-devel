@@ -102,15 +102,21 @@ $(document).ready(function(){
 
     var render_user_link = function(result){
         if (result['u_id'] !== false){
-            var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
-            return '<a ' +
-                        'href="' + 
-                            askbot['urls']['user_url_template']
-                            .replace('{{user_id}}', result['u_id'])
-                            .replace('{{slug}}', u_slug) +
-                    '">' +
-                        result['u_name'] +
-                    '</a> ';
+            if (result['u_is_anonymous'] === true){
+                return '<span class="anonymous">' + 
+                            askbot['messages']['name_of_anonymous_user'] +
+                       '</span>';
+            } else {
+                var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
+                return '<a ' +
+                            'href="' + 
+                                askbot['urls']['user_url_template']
+                                .replace('{{user_id}}', result['u_id'])
+                                .replace('{{slug}}', u_slug) +
+                        '">' +
+                            result['u_name'] +
+                        '</a> ';
+            }
         }
         else {
             return '';
@@ -168,10 +174,12 @@ $(document).ready(function(){
             '>' +
             result['timesince'] +
             '</span> ' +
-            render_user_link(result) +
-            render_user_flag(result) +
+            render_user_link(result);
+        if (result['u_is_anonymous'] === false){
+            user_html += render_user_flag(result);
             //render_user_badge_and_karma(result) +
-        '</div>';
+        }
+        user_html += '</div>';
         return user_html;
     };
 

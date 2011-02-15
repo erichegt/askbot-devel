@@ -169,7 +169,7 @@ class WikiField(forms.BooleanField):
         super(WikiField, self).__init__(*args, **kwargs)
         self.required = False
         self.initial = False
-        self.label  = _('community wiki')
+        self.label  = _('community wiki (karma is not awarded & many others can edit wiki post)')
         self.help_text = _('if you choose community wiki option, the question and answer do not generate points and name of author will not be shown')
     def clean(self, value):
         return value and askbot_settings.WIKI_ON
@@ -494,7 +494,7 @@ class AskForm(forms.Form, FormWithHideableFields):
     tags   = TagNamesField()
     wiki = WikiField()
     ask_anonymously = forms.BooleanField(
-        label = _('Ask anonymously'),
+        label = _('ask anonymously'),
         help_text = _(
             'Check if you do not want to reveal your name '
             'when asking this question'
@@ -575,7 +575,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
             'if you decide to reveal your identity, please check '
             'this box.'
         ),
-        label = _('Reveal identity'),
+        label = _('reveal identity'),
         required = False,
     )
 
