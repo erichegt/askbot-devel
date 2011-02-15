@@ -396,6 +396,10 @@ def close(request, id):#close question
         else:
             request.user.assert_can_close_question(question)
             form = CloseForm()
+            data = {
+                'question': question,
+                'form': form,
+            }
             return render_into_skin('close.html', data, request)
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
