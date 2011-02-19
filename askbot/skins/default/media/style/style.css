@@ -66,6 +66,10 @@ h1 {
     float: left;
 }
 
+.main-page h1 {
+    margin-right: 5px;
+}
+
 h2 {
     font-size: 140%;
     padding: 3px 0 3px 5px;
@@ -559,9 +563,9 @@ blockquote {
     margin-top: 5px;
 }
 
-#search-tags .tag {
+/*#search-tags .tag {
     margin-left: 7px;
-}
+}*/
 
 p.rss {
     float: right;
@@ -575,7 +579,41 @@ p.rss a {
     background: url(../images/feed-icon-small.png) no-repeat;
 }
 
+.tag-left {
+    background: url(../images/tag-right.png) no-repeat right center;
+    overflow-x: hidden;
+    padding: 2px 0;
+    margin: 0 5px 0 0;
+    border: none;
+}
+.tag-right {
+    background: url(../images/tag-left.png) no-repeat left center;
+    padding: 2px 7px 2px 15px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: normal;
+    color: #333;
+    text-decoration: none;
+    vertical-align: middle;
+    line-height: 16px;
+    border: none;
+}
+
+.deletable-tag .tag-right {
+    padding-right: 0px;
+}
+.deletable-tag.tag-left {
+    padding-right: 3px;
+}
+
 .tags a,
+.tags span.tag-right {
+    color: #333;
+    text-decoration: none;
+    vertical-align: middle;
+    border: none;
+}
+/*.tags a,
 .tags span.tag {
     white-space: nowrap;
     font-size: 11px;
@@ -594,15 +632,16 @@ p.rss a {
 .tags a:hover {
     background-color: #fFF;
     color: #333;
-}
+}*/
 
-#question-list .tag {
+/*#question-list .tag {
     margin-right: 6px;
-}
+}*/
 
 span.delete-icon {
     padding-left: 13px;
     margin-left: -2px;
+    margin-right: 3px;
     background: url(../images/close-small-dark.png) no-repeat;
 }
 span.delete-icon:hover {
