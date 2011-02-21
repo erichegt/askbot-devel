@@ -7,12 +7,12 @@ from askbot.models import AnswerRevision, Activity, EmailFeedSetting
 from askbot.models import Comment
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
-from django.conf import settings
+from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
-from askbot.utils.mail import send_mail 
+from askbot.utils import mail
 
 DEBUG_THIS_COMMAND = False
 
@@ -98,7 +98,7 @@ def get_update_subject_line(question_dict):
     question_count = len(updated_questions)
     #note that double quote placement is important here
     if len(tag_list) == 1:
-        last_topic = ''
+        last_topic = '"'
     elif len(tag_list) <= 5:
         last_topic = _('" and "%s"') % tag_list.pop()
     else:
@@ -115,7 +115,8 @@ def get_update_subject_line(question_dict):
                         'question_count': question_count,
                         'topics': topics
                     }
-    return subject_line
+
+    return mail.prefix_the_subject_line(subject_line)
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -525,14 +526,20 @@ class Command(NoArgsCommand):
                         )
 
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
-                text += _('go to %(email_settings_link)s to change frequency of email updates or %(admin_email)s administrator') \
-                                % {'email_settings_link':link, 'admin_email':settings.ADMINS[0][1]}
+                text += _(
+                    'go to %(email_settings_link)s to change '
+                    'frequency of email updates or '
+                    '%(admin_email)s administrator'
+                ) % {
+                    'email_settings_link': link,
+                    'admin_email': django_settings.ADMINS[0][1]
+                }
                 if DEBUG_THIS_COMMAND == True:
-                    recipient_email = settings.ADMINS[0][1]
+                    recipient_email = django_settings.ADMINS[0][1]
                 else:
                     recipient_email = user.email
 
-                send_mail(
+                mail.send_mail(
                     subject_line = subject_line,
                     body_text = text,
                     recipient_list = [recipient_email]

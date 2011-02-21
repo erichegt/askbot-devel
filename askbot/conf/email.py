@@ -2,18 +2,34 @@
 Email related settings
 """
 from askbot.conf.settings_wrapper import settings
-from askbot.deps.livesettings import ConfigurationGroup, IntegerValue, BooleanValue
-from askbot.deps.livesettings import StringValue
-from django.utils.translation import ugettext as _
+from askbot.deps import livesettings
 from askbot import const
+from django.utils.translation import ugettext as _
+from django.conf import settings as django_settings
 
-EMAIL = ConfigurationGroup(
+EMAIL_SUBJECT_PREFIX = getattr(django_settings, 'EMAIL_SUBJECT_PREFIX', '')
+
+EMAIL = livesettings.ConfigurationGroup(
             'EMAIL',
             _('Email and email alert settings'), 
         )
 
 settings.register(
-    IntegerValue(
+    livesettings.StringValue(
+        EMAIL,
+        'EMAIL_SUBJECT_PREFIX',
+        default = EMAIL_SUBJECT_PREFIX,
+        description = _('Prefix for the email subject line'),
+        help_text = _(
+                'This setting takes default from the django setting'
+                'EMAIL_SUBJECT_PREFIX. A value entered here will override'
+                'the default.'
+            )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         EMAIL,
         'MAX_ALERTS_PER_EMAIL',
         default=7,
@@ -22,7 +38,7 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         EMAIL,
         'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE',
         default='w',
@@ -39,7 +55,7 @@ settings.register(
 )
 
 settings.register(
-    BooleanValue(
+    livesettings.BooleanValue(
         EMAIL,
         'EMAIL_VALIDATION',
         default=False,
@@ -50,7 +66,7 @@ settings.register(
 )
 
 settings.register(
-    BooleanValue(
+    livesettings.BooleanValue(
         EMAIL,
         'EMAIL_UNIQUE',
         default=True,
@@ -59,20 +75,11 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         EMAIL,
         'ANONYMOUS_USER_EMAIL',
         default='anonymous@askbot.org',
         description=_('Fake email for anonymous user'),
         help_text=_('Use this setting to control gravatar for email-less user')
-    )
-)
-
-settings.register(
-    StringValue(
-        EMAIL,
-        'EMAIL_SUBJECT_PREFIX',
-        default='',
-        description=_('Prefix for the email subject line'),
     )
 )

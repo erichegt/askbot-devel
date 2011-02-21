@@ -9,6 +9,16 @@ from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 #todo: maybe send_mail functions belong to models
 #or the future API
+def prefix_the_subject_line(subject):
+    """prefixes the subject line with the
+    EMAIL_SUBJECT_LINE_PREFIX either from
+    from live settings, which take default from django
+    """
+    prefix = askbot_settings.EMAIL_SUBJECT_PREFIX.strip()
+    if prefix != '':
+        subject = prefix + ' ' + subject
+    return subject
+
 def send_mail(
             subject_line = None,
             body_text = None,

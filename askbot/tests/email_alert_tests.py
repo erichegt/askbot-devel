@@ -9,7 +9,8 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
-from askbot.utils.mail import mail_moderators
+from askbot.utils import mail
+from askbot.conf import settings as askbot_settings
 
 def email_alert_test(test_func):
     """decorator for test methods in EmailAlertTests
@@ -78,6 +79,22 @@ def setup_email_alert_tests(setup_func):
         #because it is needed in setUpUsers() function
         test_object.setUpUsers()
     return wrapped_setup
+
+class SubjectLineTests(TestCase):
+    """Tests for the email subject line"""
+    def test_set_prefix(self):
+        """set prefix and see if it is there
+        """
+        askbot_settings.update('EMAIL_SUBJECT_PREFIX', 'test prefix')
+        subj = mail.prefix_the_subject_line('hahah')
+        self.assertEquals(subj, 'test prefix hahah')
+
+    def test_can_disable_prefix(self):
+        """set prefix to empty string and make sure
+        that the subject line is not altered"""
+        askbot_settings.update('EMAIL_SUBJECT_PREFIX', '')
+        subj = mail.prefix_the_subject_line('hahah')
+        self.assertEquals(subj, 'hahah')
 
 class EmailAlertTests(TestCase):
     """Base class for testing delayed Email notifications 
@@ -711,6 +728,6 @@ class FeedbackTests(utils.AskbotTestCase):
     def test_mail_moderators(self):
         """tests askbot.mail_moderators()
         """
-        mail_moderators('subject', 'text')
+        mail.mail_moderators('subject', 'text')
         self.assert_feedback_works()
 

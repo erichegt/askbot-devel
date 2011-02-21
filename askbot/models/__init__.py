@@ -34,7 +34,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils.mail import send_mail
+from askbot.utils import mail
 from askbot import startup_procedures
 
 startup_procedures.run()
@@ -1839,6 +1839,7 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
+    subject_line = mail.prefix_the_subject_line(subject_line)
     return subject_line, template.render(Context(update_data))
 
 #todo: action
@@ -1879,7 +1880,7 @@ def send_instant_notifications_about_activity_in_post(
                     )
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
-        send_mail(
+        mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],
