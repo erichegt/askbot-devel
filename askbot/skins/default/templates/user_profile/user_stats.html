@@ -65,20 +65,31 @@
         <div class="user-stats-table">
             <table class="tags">
                 <tr>
-                    <td width="180" valign="top">
+                    <td valign="top">
+                        <ul id="ab-user-tags" class="tags">
                         {% for tag in user_tags %}
+                            <li>
                             {{ macros.tag_widget(
                                 tag.name,
-                                url_params = "author=" ~ view_user.id ~
-                                            "&start_over=true"
+                                html_tag = 'div',
+                                url_params = 
+                                    "author=" ~ view_user.id ~
+                                    "&start_over=true",
+                                extra_content = 
+                                    '<span class="tag-number">&#215; ' ~
+                                    tag.user_tag_usage_count|intcomma ~
+                                    '</span>'
                                )
                             }}
-                            <span class="tag-number">&#215; {{ tag.user_tag_usage_count|intcomma }}</span><br/>
+                            </li>
+                            {#
                             {% if loop.index is divisibleby 10 %}
                                 </td>
                                 <td width="180"  valign="top">
                             {% endif %}
+                            #}
                         {% endfor %}
+                        </ul>
                     </td>
                 </tr>
             </table>

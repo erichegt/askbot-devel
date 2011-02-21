@@ -634,25 +634,20 @@ var questionRetagger = function(){
                             '{tag}',
                             tag_name
                         );
-        return '<span class="tag-left">' +
+        return '<li class="tag-left">' +
                     '<a ' +
                         'class="tag tag-right" ' +
                         'href="' + url + '" ' + 
                         'title="' + tag_title + '" rel="tag"' +
                     '>' + tag_name + '</a>' +
-               '</span>';
+               '</li>';
     };
 
     var drawNewTags = function(new_tags){
         new_tags = new_tags.split(/\s+/);
         var tags_html = ''
         $.each(new_tags, function(index, name){
-            if (index === 0){
-                tags_html = render_tag(name);
-            }
-            else {
-                tags_html += ' ' + render_tag(name);
-            }
+            tags_html += render_tag(name);
         });
         tagsDiv.html(tags_html);
     };
@@ -871,22 +866,13 @@ inherits(DeleteIcon, SimpleControl);
 
 DeleteIcon.prototype.decorate = function(element){
     this._element = element;
-    var img = mediaUrl("media/images/close-small.png");
-    var imgHover = mediaUrl("media/images/close-small-hover.png");
     this._element.attr('class', 'delete-icon');
-    this._element.attr('src', img);
     this._element.attr('title', this._title);
     setupButtonEventHandlers(this._element, this._handler);
-    this._element.mouseover(function(e){
-        $(this).attr('src', imgHover);
-    });
-    this._element.mouseout(function(e){
-        $(this).attr('src', img);
-    });
 };
 
 DeleteIcon.prototype.createDom = function(){
-    this.decorate($('<img />'));
+    this.decorate($('<span />'));
 };
 
 
@@ -1152,7 +1138,7 @@ Comment.prototype.decorate = function(element){
     var parent_type = this._element.parent().parent().attr('id').split('-')[2];
     var comment_id = this._element.attr('id').replace('comment-','');
     this._data = {id: comment_id};
-    var delete_img = this._element.find('img.delete-icon');
+    var delete_img = this._element.find('span.delete-icon');
     if (delete_img.length > 0){
         this._deletable = true;
         this._delete_icon = new DeleteIcon(this.deletePrompt);

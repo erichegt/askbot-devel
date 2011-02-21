@@ -20,13 +20,18 @@
     {% cache 0 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
     <div class="boxC">
         <h2>{% trans %}Related tags{% endtrans %}</h2>
-        <div id="related-tags" class="tags">
+        <ul id="related-tags" class="tags">
             {% for tag in tags %}
-                {{ macros.tag_widget(tag.name) }}
-                <span class="tag-number">&#215; {{ tag.local_used_count|intcomma }}</span>
-                <br />
+                <li>
+                    {{ macros.tag_widget(
+                        tag.name,
+                        html_tag = 'div',
+                        extra_content = '<span class="tag-number">&#215; ' ~
+                            tag.local_used_count|intcomma ~ '</span>'
+                    )}}
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     </div>
     {% endcache %}
 {% endif %}

@@ -77,77 +77,78 @@
                 <div class="question-body">
                     {{question.html}}
                 </div>
-                    {% spaceless %}
-                    <div id="question-tags" class="post-tags tags">
-                        {% for tag in question.get_tag_names() %}
-                            <a href="{% url questions %}?tags={{tag|urlencode}}&amp;start_over=true" 
-                                class="post-tag"
-                                title="{% trans %}see questions tagged '{{tag}}'{% endtrans %}" rel="tag">{{ tag }}</a>
-                        {% endfor %}
-                    </div>
-                    {% endspaceless %}
-                    <div id="question-controls" class="post-controls">
-                        {% set pipe=joiner('<span class="sep">|</span>') %}
-                        {% if request.user|can_edit_post(question) %}{{ pipe() }}
-                            <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
-                        {% endif %}
-                        {% if request.user|can_retag_question(question) %}{{ pipe() }}
-                            <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
-                            <script type="text/javascript">
-                                var retagUrl = "{% url retag_question question.id %}";
-                            </script>
-                        {% endif %}
-                        {% if question.closed %}
-                            {% if request.user|can_reopen_question(question) %}{{ pipe() }}
-                            <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
-                            {% endif %}
-                        {% else %}
-                            {% if request.user|can_close_question(question) %}{{ pipe() }}
-                            <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
-                            {% endif %}
-                        {% endif %}
-                        {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
-                        <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
-                            title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                            <a>{% trans %}flag offensive{% endtrans %}</a>
-                            {% if request.user|can_see_offensive_flags(question) %}
-                                <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
-                            {% endif %}
-                        </span>
-                        {% endif %}
-                        {% if request.user|can_delete_post(question) %}{{ pipe() }}
-                            <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                        {% endif %}
-                    </div>
-                    <div class="post-update-info-container">
-                            {{ 
-                                macros.post_contributor_info(
-                                                question,
-                                                "original_author",
-                                                question.wiki,
-                                                settings.MIN_REP_TO_EDIT_WIKI
-                                            )
-                            }}
-                            {{ 
-                                macros.post_contributor_info(
-                                                question,
-                                                "last_updater",
-                                                question.wiki,
-                                                settings.MIN_REP_TO_EDIT_WIKI,
-                                            )
-                            }}
-                    </div>
-                    {{
-                        macros.post_comments_widget(
-                                post = question,
-                                show_post = show_post,
-                                show_comment = show_comment,
-                                comment_order_number = comment_order_number,
-                                user = request.user,
-                                max_comments = settings.MAX_COMMENTS_TO_SHOW
+                <ul id="question-tags" class="post-tags tags">
+                    {% for tag in question.get_tag_names() %}
+                        {{ macros.tag_widget(
+                                tag,
+                                css_class = 'post-tag',
+                                html_tag = 'li'
                             )
-                    }}
+                        }}
+                    {% endfor %}
+                </ul>
+                <div id="question-controls" class="post-controls">
+                    {% set pipe=joiner('<span class="sep">|</span>') %}
+                    {% if request.user|can_edit_post(question) %}{{ pipe() }}
+                        <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
+                    {% endif %}
+                    {% if request.user|can_retag_question(question) %}{{ pipe() }}
+                        <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
+                        <script type="text/javascript">
+                            var retagUrl = "{% url retag_question question.id %}";
+                        </script>
+                    {% endif %}
+                    {% if question.closed %}
+                        {% if request.user|can_reopen_question(question) %}{{ pipe() }}
+                        <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
+                        {% endif %}
+                    {% else %}
+                        {% if request.user|can_close_question(question) %}{{ pipe() }}
+                        <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
+                    <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
+                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                        <a>{% trans %}flag offensive{% endtrans %}</a>
+                        {% if request.user|can_see_offensive_flags(question) %}
+                            <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
+                        {% endif %}
+                    </span>
+                    {% endif %}
+                    {% if request.user|can_delete_post(question) %}{{ pipe() }}
+                        <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                    {% endif %}
                 </div>
+                <div class="post-update-info-container">
+                        {{ 
+                            macros.post_contributor_info(
+                                            question,
+                                            "original_author",
+                                            question.wiki,
+                                            settings.MIN_REP_TO_EDIT_WIKI
+                                        )
+                        }}
+                        {{ 
+                            macros.post_contributor_info(
+                                            question,
+                                            "last_updater",
+                                            question.wiki,
+                                            settings.MIN_REP_TO_EDIT_WIKI,
+                                        )
+                        }}
+                </div>
+                {{
+                    macros.post_comments_widget(
+                            post = question,
+                            show_post = show_post,
+                            show_comment = show_comment,
+                            comment_order_number = comment_order_number,
+                            user = request.user,
+                            max_comments = settings.MAX_COMMENTS_TO_SHOW
+                        )
+                }}
+                <!--/div-->
             </td>
         </tr>
     </table>
@@ -375,15 +376,21 @@
     <p>
         {% trans %}Question tags{% endtrans %}:
     </p>
-    <p class="tags" >
+    <ul id="related-tags" class="tags">
         {% for tag in tags %}
-        <a href="{% url questions %}?tags={{tag.name|urlencode}}&amp;start_over=true" 
-            title="{% trans tag_name=tag.name %}see questions tagged '{{tag_name}}'{% endtrans %}" 
-            rel="tag">{{ tag.name }}</a> 
-            <span class="tag-number">&#215;{{ tag.used_count|intcomma }}</span><br/>
+        <li>
+            {{ macros.tag_widget(
+                    tag,
+                    html_tag = 'div',
+                    url_params = 'start_over=true',
+                    extra_content = '<span class="tag-number">&#215; ' ~
+                        tag.used_count|intcomma ~ '</span>'
+                )
+            }}
+        </li>
         {% endfor %}
-    </p>
-    <p>
+    </ul>
+    <p style="clear:left">
         {% trans %}question asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
     </p>
     <p> 

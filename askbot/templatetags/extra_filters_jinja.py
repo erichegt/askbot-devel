@@ -24,8 +24,6 @@ def country_display_name(country_code):
 
 @register.filter
 def country_flag_url(country_code):
-    import pdb
-    pdb.set_trace()
     return countries_settings.FLAG_URL % country_code
 
 @register.filter

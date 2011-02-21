@@ -2,45 +2,37 @@
 {% import "macros.html" as macros %}
 <div id="tagSelector" class="boxC">
     <h2>{% trans %}Interesting tags{% endtrans %}</h2>
-    <div class="tags interesting marked-tags">
-    {% for tag_name in interesting_tag_names %}
-        {% spaceless %}
-        {{
-            macros.tag_widget(
-                tag_name,
-                id = "interesting-tag-" ~ tag_name,
-                deletable = True,
-                delete_link_title = _(
-                    "remove '%(tag_name)s' from the list of interesting tags"|
-                    format(tag_name = tag_name)
-                )
-            )
-        }}
-        {% endspaceless %}
-    {% endfor %}
+    {{ 
+        macros.tag_list_widget(
+            interesting_tag_names,
+            deletable = True,
+            css_class = 'interesting marked-tags'
+        )
+    }}
+    {# todo - add this via js
+        "remove '%(tag_name)s' from the list of interesting tags"|
+        format(tag_name = tag_name)
+    #}
+    <div class="inputs">
+        <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
+        <input id="interestingTagAdd" type="submit" value="{% trans %}Add{% endtrans %}"/>
     </div>
-    <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
-    <input id="interestingTagAdd" type="submit" value="{% trans %}Add{% endtrans %}"/>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
-    <div class="tags ignored marked-tags">
-    {% for tag_name in ignored_tag_names %}
-        {% spaceless %}
-        {{
-            macros.tag_widget(
-                tag_name,
-                id = "interesting-tag-" ~ tag_name,
-                deletable = True,
-                delete_link_title = gettext(
-                    "remove '%(tag_name)s' from the list of ignored tags"|
-                    format(tag_name = tag_name)
-                )
-            )
-        }}
-        {% endspaceless %}
-    {% endfor %}
+    {{
+        macros.tag_list_widget(
+            ignored_tag_names,
+            deletable = True,
+            css_class = 'ignored marked-tags'
+        )
+    }}
+    {# todo: add this via javascript 
+        "remove '%(tag_name)s' from the list of ignored tags"|
+        format(tag_name = tag_name)
+    #}
+    <div class="inputs">
+        <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
+        <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     </div>
-    <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
-    <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     <p id="hideIgnoredTagsControl">
     <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />
     <label id="hideIgnoredTagsLabel" for="hideIgnoredTagsCb">{% trans %}keep ignored questions hidden{% endtrans %}</label>

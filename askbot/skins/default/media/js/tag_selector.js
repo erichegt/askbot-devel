@@ -42,12 +42,6 @@ function pickedTags(){
     };
 
     var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){
-        obj.unbind('mouseover').bind('mouseover', function(){
-            $(this).attr('src', mediaUrl('media/images/close-small-hover.png'));
-        });
-        obj.unbind('mouseout').bind('mouseout', function(){
-            $(this).attr('src', mediaUrl('media/images/close-small-dark.png'));
-        });
         obj.click( function(){
             unpickTag(tag_store,tagname,reason,send_ajax);
         });
@@ -60,7 +54,7 @@ function pickedTags(){
                                     to_tag_container
                                 ){
         $.each(clean_tagnames, function(idx, tagname){
-            var new_tag = $('<span></span>');
+            var new_tag = $('<li></li>');
             new_tag.addClass('deletable-tag');
             new_tag.addClass('tag-left');
             var tag_link = $('<a></a>');
@@ -70,9 +64,8 @@ function pickedTags(){
             var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
             tag_link.attr('href', tag_url);
             tag_link.html(tagname);
-            var del_link = $('<img></img>');
+            var del_link = $('<span></span>');
             del_link.addClass('delete-icon');
-            del_link.attr('src', mediaUrl('media/images/close-small-dark.png'));
 
             setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
 
@@ -133,32 +126,31 @@ function pickedTags(){
         }
     };
 
-    var collectPickedTags = function(){
-        var good_prefix = 'interesting-tag-';
-        var bad_prefix = 'ignored-tag-';
-        var good_re = RegExp('^' + good_prefix);
-        var bad_re = RegExp('^' + bad_prefix);
+    var collectPickedTags = function(section){
         interestingTags = {};
         ignoredTags = {};
-        $('.deletable-tag').each(
+        if (section === 'interesting'){
+            var reason = 'good';
+            var tag_store = interestingTags;
+        }
+        else if (section === 'ignored'){
+            var reason = 'bad';
+            var tag_store = ignoredTags;
+        }
+        else {
+            return;
+        }
+        $('.' + section + '.tags.marked-tags a.tag').each(
             function(i,item){
-                var item_id = $(item).attr('id');
-                var tag_name, tag_store;
-                if (good_re.test(item_id)){
-                    tag_name = item_id.replace(good_prefix,'');
-                    tag_store = interestingTags;
-                    reason = 'good';
-                }
-                else if (bad_re.test(item_id)){
-                    tag_name = item_id.replace(bad_prefix,'');
-                    tag_store = ignoredTags;
-                    reason = 'bad';
-                } 
-                else {
-                    return;
-                }
-                tag_store[tag_name] = $(item);
-                setupTagDeleteEvents($(item).find('img'),tag_store,tag_name,reason,true);
+                var tag_name = $(item).html();
+                tag_store[tag_name] = $(item).parent();
+                setupTagDeleteEvents(
+                    $(item).parent().find('.delete-icon'),
+                    tag_store,
+                    tag_name,
+                    reason,
+                    true
+                );
             }
         );
     };
@@ -176,7 +168,8 @@ function pickedTags(){
     };
     return {
         init: function(){
-            collectPickedTags();
+            collectPickedTags('interesting');
+            collectPickedTags('ignored');
             setupHideIgnoredQuestionsControl();
             $("#interestingTagInput, #ignoredTagInput").autocomplete(tags, {
                 minChars: 1,

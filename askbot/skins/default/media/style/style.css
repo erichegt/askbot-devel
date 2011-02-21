@@ -336,6 +336,121 @@ blockquote {
     width: 100%;
 }
 
+/* tag formatting is also copy-pasted in template
+   because it must be the same in the emails
+   askbot/models/__init__.py:format_instant_notification_email()
+*/
+ul.tags,
+ul.tags.marked-tags,
+ul#related-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 170%;
+    display: block;
+}
+
+ul.tags li {
+    float:left;
+    display: block;
+    margin: 0 5px 0 0;
+    padding: 0;
+}
+
+ul.tags.marked-tags li {
+    margin-bottom: 5px;
+}
+
+#tagSelector div.inputs {
+    clear: both;
+    float: none;
+}
+
+.tags-page ul.tags li,
+ul#ab-user-tags li {
+    width: 160px;
+}
+
+ul#related-tags li {
+    margin: 0 5px 3px 0;
+    float: left;
+    clear: left;
+}
+
+/* .tag-left and .tag-right are for the sliding doors decoration of tags */
+.tag-left {
+    background: url(../images/tag-right.png) no-repeat right center;
+    border: none;
+    display: block;
+    float: left;
+    height: 18px;
+    margin: 0 5px 0 0;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+.tag-right {
+    background: url(../images/tag-left.png) no-repeat left center;
+    border: none;
+    display: block;
+    float: left;
+    height: 18px;
+    line-height: 20px;
+    font-weight: normal;
+    font-size: 11px;
+    padding: 0px 7px 0px 15px;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.deletable-tag {
+    margin-right: 3px;
+    white-space: nowrap;
+}
+
+.deletable-tag .tag-right {
+    padding-right: 0px;
+    float: left;
+}
+.deletable-tag.tag-left {
+    padding-right: 3px;
+}
+
+.tags a.tag-right,
+.tags span.tag-right {
+    color: #333;
+    text-decoration: none;
+}
+
+span.delete-icon {
+    padding-left: 13px;
+    vertical-align: bottom;
+    background: url(../images/close-small-dark.png) no-repeat;
+}
+span.delete-icon:hover {
+    background: url(../images/close-small-hover.png) no-repeat;
+}
+
+.tags span.delete-icon {
+    float: left;
+    height: 15px;
+    margin: 2px 0 0 1px;
+    display: block;
+}
+
+.tag-number {
+    font-weight: 700;
+    display: block;
+    float: left;
+    font-family: sans-serif;
+}
+
+ul#search-tags {
+    padding-top: 3px;
+}
+
 .short-summary {
     position: relative;
     padding: 5px 2px 5px 2px;
@@ -469,7 +584,7 @@ blockquote {
 }
 
 .boxC p {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .boxC p.info-box-follow-up-links {
@@ -553,20 +668,6 @@ blockquote {
     padding: 5px 0 10px 0;
 }
 
-/* tag formatting is also copy-pasted in template
-   askbot/models/__init__.py:format_instant_notification_email()
-*/
-.tags {
-    font-family: sans-serif;
-    line-height: 170%;
-    display: block;
-    margin-top: 5px;
-}
-
-/*#search-tags .tag {
-    margin-left: 7px;
-}*/
-
 p.rss {
     float: right;
     font-size: 12px;
@@ -577,89 +678,6 @@ p.rss {
 p.rss a {
     padding-left: 16px;
     background: url(../images/feed-icon-small.png) no-repeat;
-}
-
-.tag-left {
-    background: url(../images/tag-right.png) no-repeat right center;
-    overflow-x: hidden;
-    padding: 2px 0;
-    margin: 0 5px 0 0;
-    border: none;
-}
-.tag-right {
-    background: url(../images/tag-left.png) no-repeat left center;
-    padding: 2px 7px 2px 15px;
-    white-space: nowrap;
-    font-size: 11px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    vertical-align: middle;
-    line-height: 16px;
-    border: none;
-}
-
-.deletable-tag .tag-right {
-    padding-right: 0px;
-}
-.deletable-tag.tag-left {
-    padding-right: 3px;
-}
-
-.tags a,
-.tags span.tag-right {
-    color: #333;
-    text-decoration: none;
-    vertical-align: middle;
-    border: none;
-}
-/*.tags a,
-.tags span.tag {
-    white-space: nowrap;
-    font-size: 11px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-    margin-right:3px;
-}
-
-.tags a:hover {
-    background-color: #fFF;
-    color: #333;
-}*/
-
-/*#question-list .tag {
-    margin-right: 6px;
-}*/
-
-span.delete-icon {
-    padding-left: 13px;
-    margin-left: -2px;
-    margin-right: 3px;
-    background: url(../images/close-small-dark.png) no-repeat;
-}
-span.delete-icon:hover {
-    background: url(../images/close-small-hover.png) no-repeat;
-}
-
-.tag-number {
-    font-weight: 700;
-    font-family: sans-serif;
-}
-
-.marked-tags {
-    margin: 5px 0;
-}
-
-.deletable-tag {
-    margin-right: 3px;
-    white-space: nowrap;
 }
 
 /* badges */
@@ -1017,18 +1035,6 @@ div.comments {
     background: #F4E7E7 none repeat scroll 0 0;
 }
 
-/* tags */
-.tagsList {
-    margin: 0;
-    list-style-type: none;
-    padding: 0px;
-    padding-left: 5px;
-}
-
-.tagsList li {
-    width: 235px;
-    float: left;
-}
 
 .boxC ul {
     margin-left: 15px;
@@ -1361,7 +1367,7 @@ ins .post-tag {
     text-decoration: none;
 }
 
-.narrow  .tags {
+.narrow .tags {
     float: left;
 }
 
@@ -1716,12 +1722,6 @@ button::-moz-focus-inner {
     padding: 2px 3px 5px 3px;
 }
 
-.delete-icon {
-    vertical-align: middle;
-    padding-left: 1px;
-    margin-bottom:3px;
-}
-
 /* these need to go */
 table.form-as-table .errorlist {
     display: block;
@@ -1821,15 +1821,21 @@ ul.form-horizontal-rows li input {
 }
 
 .post-controls {
+    clear: left;
     float: left;
 }
 
-.post-tags {
-    margin-bottom:8px;
+ul.post-tags {
+    margin-left: 7px;
+}
+ul.post-tags li {
+    margin-top: 4px;
+    margin-bottom: 3px;
 }
 
-.post-retag {
+ul.post-retag {
     margin-bottom:0px;
+    margin-left:5px;
 }
 
 #question-controls .tags {
@@ -2108,7 +2114,7 @@ a.edit {
 .lit { color: #066; }
 .pun { color: #660; }
 .pln { color: #000; }
-.tag { color: #008; }
+.tag { color: #008; }/* name conflict here */
 .atn { color: #606; }
 .atv { color: #080; }
 .dec { color: #606; }

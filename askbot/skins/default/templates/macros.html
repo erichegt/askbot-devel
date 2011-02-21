@@ -257,20 +257,48 @@ poor design of the data or methods on data objects #}
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro tag_widget(
+{%- macro tag_list_widget(
+            tags,
+            id = None,
+            deletable = False,
+            make_links = True,
+            url_params = None,
+            css_class = None
+        )
+-%}
+<ul {% if id %}id={{ id }}{% endif %}
+    class="tags{% if css_class %} {{css_class}}{% endif %}"
+>
+    {% if tags %}
+        {% for tag in tags %}
+            {{ tag_widget(
                 tag,
-                id = None,
-                deletable = False,
-                is_link = True,
-                delete_link_title = None,
-                url_params = None
-            ) %}
-    <span 
-        {% if id %}id="{{ id }}"{% endif %}
-        class="tag-left{% if deletable %} deletable-tag{% endif %}"
-    >
+                deletable = deletable,
+                is_link = make_links,
+                url_params = url_params,
+                html_tag = 'li'
+            )}}
+        {% endfor %}
+    {% endif %}
+</ul>
+{%- endmacro -%}
+
+{# todo: remove css_class argument because it is redundant #}
+{%- macro tag_widget(
+            tag,
+            deletable = False,
+            is_link = True,
+            delete_link_title = None,
+            url_params = None,
+            html_tag = 'div',
+            css_class = None,
+            extra_content = ''
+        )
+-%}
+    {% spaceless %}
+    <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
         <{{ if_else(is_link, 'a', 'span') }}
-            class="tag tag-right"
+            class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             href="{% url questions %}?tags={{tag|urlencode}}{{ 
                                                         if_else(
                                                             url_params != None,
@@ -280,14 +308,15 @@ poor design of the data or methods on data objects #}
                                                     }}"
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</{{ if_else(is_link, 'a', 'span') }}>
         {% if deletable %}
-            <img class="delete-icon"
-                src="{{'/images/close-small-dark.png'|media}}"
+            <span class="delete-icon"
                 {% if delete_link_title %}
                     title="{{ delete_link_title }}"
                 {% endif %}
-            />
+            ></span>
         {% endif %}
-    </span>
+    </{{ html_tag }}>
+    {{ extra_content }}
+    {% endspaceless %}
 {%- endmacro -%}
 
 {%- macro question_summary(question, extra_class=None) -%}
@@ -344,13 +373,7 @@ poor design of the data or methods on data objects #}
             </div>
         </div>
         <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-        {% spaceless %}
-        <div class="tags">
-            {% for tag in question.get_tag_names() %}
-                {{ tag_widget(tag) }}
-            {% endfor %}
-        </div>
-        {% endspaceless %}
+        {{ tag_list_widget(question.get_tag_names()) }}
     </div>
 {%- endmacro -%}
 
@@ -367,10 +390,9 @@ poor design of the data or methods on data objects #}
             <a class="edit">{% trans %}edit{% endtrans %}</a>
         {% endif %}
         {% if user|can_delete_comment(comment) %}
-            <img class="delete-icon" 
-                src="{{"/images/close-small.png"|media}}"
+            <span class="delete-icon" 
                 title="{% trans %}delete this comment{% endtrans %}"
-            />
+            ></span>
         {% endif %}
     </div>
     {% endfor %}

@@ -206,15 +206,19 @@ $(document).ready(function(){
         if (deletable){
             html += '<span class="delete-icon"></span>';
         }
-        return '<span class="tag-left">' + html + '</span>';
+        var tag_class = 'tag-left';
+        if (deletable){
+            tag_class += ' deletable-tag';
+        }
+        return '<li class="' + tag_class + '">' + html + '</li>';
     };
 
     var render_tags = function(tags, linkable, deletable){
-        var tags_html = '<div class="tags">';
+        var tags_html = '<ul class="tags">';
         $.each(tags, function(idx, item){
             tags_html += render_tag(item, linkable, deletable);
         });
-        tags_html += '</div>';
+        tags_html += '</ul>';
         return tags_html;
     };
 
