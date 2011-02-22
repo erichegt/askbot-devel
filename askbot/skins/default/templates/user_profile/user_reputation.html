@@ -6,12 +6,12 @@
 {% block usercontent %}
         <div class="karma-summary">
             <div id="diagram" class="karma-diagram"></div>
-            {% if view_user.id == user.id %}
-            <h3>{% trans %}Your karma change log.{% endtrans %}</h3>
-            {% else %}
-            <h3>{% trans user_name=view_user.username %}{{user_name}}'s karma change log{% endtrans %}</h3>
-            {% endif %}
             <div class="karma-details">
+                {% if view_user.id == user.id %}
+                <h3>{% trans %}Your karma change log.{% endtrans %}</h3>
+                {% else %}
+                <h3>{% trans user_name=view_user.username %}{{user_name}}'s karma change log{% endtrans %}</h3>
+                {% endif %}
                 {% for rep in reputation %}
                 <p>
                     <span class="karma-gained">{{ rep.positive }}</span>

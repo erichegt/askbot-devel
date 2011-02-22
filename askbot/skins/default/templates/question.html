@@ -299,7 +299,7 @@
         {% endfor %}
         <div class="paginator-container-left">
             {{ macros.paginator(paginator_context) }}
-        </div>
+        </div><br/>
     {% endif %}
 <form id="fmanswer" action="{% url answer question.id %}" method="post">
     {% if request.user.is_authenticated() %}

@@ -3256,7 +3256,7 @@ msgid ""
 "As a registered user you can login with your OpenID, log out of the site or "
 "permanently remove your account."
 msgstr ""
-"Clicking <strong>Logout</strong> will log you out from the forumbut will not "
+"Clicking <strong>Logout</strong> will log you out from the forum but will not "
 "sign you off from your OpenID provider.</p><p>If you wish to sign off "
 "completely - please make sure to log out from your OpenID provider as well."
 
