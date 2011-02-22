@@ -13,6 +13,7 @@ import askbot.conf.user_settings
 import askbot.conf.markup
 import askbot.conf.social_sharing
 import askbot.conf.badges
+import askbot.conf.login_providers
 
 #import main settings object
 from askbot.conf.settings_wrapper import settings

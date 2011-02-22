@@ -49,20 +49,24 @@
         <div id="login-icons">
             <ul class="login-icons large">
                 {% for login_provider in major_login_providers %}
-                <li>
-                    <input
-                        name="{{login_provider.name}}"
-                        type="image"
-                        class="{{login_provider.type}}"
-                        src="{{login_provider.icon_media_path|media}}"
-                        alt="{{login_provider.tooltip_text}}"
-                        title="{{login_provider.tooltip_text}}"
-                    />
-                </li>
+                
+                {%if settings[login_provider.name] == True%}
+                  <li>
+                      <input
+                          name="{{login_provider.name}}"
+                          type="image"
+                          class="{{login_provider.type}}"
+                          src="{{login_provider.icon_media_path|media}}"
+                          alt="{{login_provider.tooltip_text}}"
+                          title="{{login_provider.tooltip_text}}"
+                      />
+                  </li>
+                {%endif%}
                 {% endfor %}
             </ul>
             <ul class="login-icons small">
                 {% for login_provider in minor_login_providers %}
+                {%if settings[login_provider.name] == True%}
                 <li>
                     <input
                         name="{{login_provider.name}}"
@@ -73,6 +77,7 @@
                         title="{{login_provider.tooltip_text}}"
                     />
                 </li>
+                {%endif%}
                 {% endfor %}
             </ul>
         </div>
@@ -250,21 +255,25 @@
         var siteName = '{{settings.APP_SHORT_NAME}}';
         var provider_count = {{existing_login_methods|length}};
         {% for login_provider in major_login_providers %}
-            {% if login_provider.extra_token_name %}
-                extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
-            {% endif %}
-            {% if login_provider.type == 'password' %}
-                create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
-                change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+            {%if settings[login_provider.name] == True%}
+              {% if login_provider.extra_token_name %}
+                  extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+              {% endif %}
+              {% if login_provider.type == 'password' %}
+                  create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                  change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+              {% endif %}
             {% endif %}
         {% endfor %}
         {% for login_provider in minor_login_providers %}
-            {% if login_provider.extra_token_name %}
-                extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
-            {% endif %}
-            {% if login_provider.type == 'password' %}
-                create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
-                change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+            {%if settings[login_provider.name] == True%}
+              {% if login_provider.extra_token_name %}
+                  extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
+              {% endif %}
+              {% if login_provider.type == 'password' %}
+                  create_pw_text['{{login_provider.name}}'] = '{{login_provider.create_password_prompt}}';
+                  change_pw_text['{{login_provider.name}}'] = '{{login_provider.change_password_prompt}}';
+              {% endif %}
             {% endif %}
         {% endfor %}
         {% if user.is_authenticated() %}
