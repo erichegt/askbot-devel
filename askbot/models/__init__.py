@@ -80,6 +80,9 @@ User.add_to_class('show_country', models.BooleanField(default = False))
 
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
+#interesting tags and ignored tags are to store wildcard tag selections only
+User.add_to_class('interesting_tags', models.TextField(blank = True))
+User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
 User.add_to_class('tag_filter_setting',
                     models.CharField(
@@ -1651,6 +1654,42 @@ def user_receive_reputation(self, num_points):
     else:
         self.reputation = const.MIN_REPUTATION
 
+def user_update_wildcard_tag_selections(
+                                    self,
+                                    action = None,
+                                    reason = None,
+                                    wildcards = None,
+                                ):
+    """updates the user selection of wildcard tags
+    and saves the user object to the database
+    """
+    new_tags = set(wildcards)
+    interesting = set(self.interesting_tags.split())
+    ignored = set(self.ignored_tags.split())
+
+    target_set = interesting
+    other_set = ignored
+    if reason == 'good':
+        pass
+    elif reason == 'bad':
+        target_set = ignored
+        other_set = interesting
+    else:
+        assert(action == 'remove')
+
+    if action == 'add':
+        target_set.update(new_tags)
+        other_set.difference_update(new_tags)
+    else:
+        target_set.difference_update(new_tags)
+        other_set.difference_update(new_tags)
+
+    self.interesting_tags = ' '.join(interesting)
+    self.ignored_tags = ' '.join(ignored)
+    self.save()
+    return new_tags
+
+
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
             'get_q_sel_email_feed_frequency',
@@ -1712,6 +1751,10 @@ User.add_to_class('close_question', user_close_question)
 User.add_to_class('reopen_question', user_reopen_question)
 User.add_to_class('accept_best_answer', user_accept_best_answer)
 User.add_to_class('unaccept_best_answer', user_unaccept_best_answer)
+User.add_to_class(
+    'update_wildcard_tag_selections',
+    user_update_wildcard_tag_selections
+)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)

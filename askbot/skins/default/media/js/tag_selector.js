@@ -63,7 +63,7 @@ function pickedTags(){
             tag_link.attr('rel','tag');
             var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
             tag_link.attr('href', tag_url);
-            tag_link.html(tagname);
+            tag_link.html(tagname.replace('*','&#10045;'));
             var del_link = $('<span></span>');
             del_link.addClass('delete-icon');
 
@@ -142,7 +142,7 @@ function pickedTags(){
         }
         $('.' + section + '.tags.marked-tags a.tag').each(
             function(i,item){
-                var tag_name = $(item).html();
+                var tag_name = $(item).html().replace('\u273d','*');
                 tag_store[tag_name] = $(item).parent();
                 setupTagDeleteEvents(
                     $(item).parent().find('.delete-icon'),
