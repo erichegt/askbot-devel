@@ -11,131 +11,37 @@ LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     _('External login providers configuration.')
                 )
 
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'twitter',
-        description=_('Activate Twitter')
+providers = (('TWITTER', 'Activate Twitter'),
+              ('GOOGLE', 'Activate Google'),
+              ('LINKEDIN', 'Activate LinkedIn'),
+              ('YAHOO', 'Activate Yahoo!'),
+              ('AOL', 'Activate AOL'),
+              ('OPENID', 'Activate OpenID'),
+              ('FACEBOOK', 'Activate Facebook'),
+              ('LOCAL', 'Activate Local login'),
+              ('FLICKR', 'Activate Flickr'),
+              ('TECHNORATI', 'Activate Technorati'),
+              ('WORDPRESS', 'Activate Wordpress'),
+              ('BLOGGER', 'Activate Blogger'),
+              ('LIVEJOURNAL', 'Activate LiveJournal'),
+              ('CLAIMID', 'Activate ClaimID'),
+              ('VIDOOP', 'Activate Vidoop'),
+              ('VERISIGN', 'Activate Verisign')
+            )
+                  
+for key, value in providers:
+    settings.register(
+        livesettings.BooleanValue(
+            LOGIN_PROVIDERS,
+            key,
+            description=_(value),
+        )
     )
-)
 
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
-        'google',
-        description=_('Activate Google'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'linkedin',
-        description=_('Activate LinkedIn'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'yahoo',
-        description=_('Activate Yahoo'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'aol',
-        description=_('Activate AOL'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'openid',
-        description=_('Activate OpenID'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'facebook',
-        description=_('Activate Facebook'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'local',
-        description=_('Activate Local Login'),
-    )
-)
-#Minor providers
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'flickr',
-        description=_('Activate Flickr'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'technorati',
-        description=_('Activate Technorati'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'wordpress',
-        description=_('Activate Wordpress'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'blogger',
-        description=_('Activate Blogger'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'livejournal',
-        description=_('Activate LiveJournal'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'claimid',
-        description=_('Activate Claimid'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'vidoop',
-        description=_('Activate Vidoop'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'verisign',
-        description=_('Activate Verisign'),
+        'DISPLAYLOCAL',
+        description=_('Always display local login and hide Askbot button.'),
     )
 )

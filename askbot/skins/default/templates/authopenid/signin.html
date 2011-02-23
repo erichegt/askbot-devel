@@ -50,7 +50,7 @@
             <ul class="login-icons large">
                 {% for login_provider in major_login_providers %}
                 
-                {%if settings[login_provider.name] == True%}
+                {%if settings[login_provider.name.upper()] == True%}
                   <li>
                       <input
                           name="{{login_provider.name}}"
@@ -66,7 +66,7 @@
             </ul>
             <ul class="login-icons small">
                 {% for login_provider in minor_login_providers %}
-                {%if settings[login_provider.name] == True%}
+                {%if settings[login_provider.name.upper()] == True%}
                 <li>
                     <input
                         name="{{login_provider.name}}"
@@ -98,11 +98,15 @@
             id="password-fs"
             {% if user.is_anonymous() %}
                 {% if not login_form.username.errors and not login_form.password_login_failed %}
+                  {%if not settings.DISPLAYLOCAL%}
                     style="display:none;"
-                {% endif %}
+                    {%endif%}
+              {% endif %}
             {% else %}
                 {% if not login_form.new_password.errors and not login_form.new_password_retyped.errors %}
+                  {%if not settings.DISPLAYLOCAL%}
                     style="display:none;"
+                  {%endif%}
                 {% endif %}
             {% endif %}
         >
@@ -282,6 +286,9 @@
             var userIsAuthenticated = false;
         {% endif %}
         $("body").authenticator();
+        {% if settings.DISPLAYLOCAL %}
+        $('input.password').attr({'style': 'display:none'});
+        {%endif%}
     </script>
     {% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
     <div id="fb-root"></div>
