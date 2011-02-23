@@ -4,6 +4,7 @@ from django.contrib.contenttypes import generic
 from django.db import models
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
+from askbot.models.tag import Tag
 from django.utils import html as html_utils
 
 class Content(models.Model):
@@ -184,23 +185,6 @@ class Content(models.Model):
         #print 'final subscriber set is ', subscriber_set
         return list(subscriber_set)
 
-    def passes_tag_filter_for_user(user):
-
-        post_tags = self.get_origin_post().tags.all()
-
-        if user.tag_filter_setting == 'ignored':
-            ignored_tags = user.tag_selections.filter(reason = 'bad')
-            if set(post_tags) & set(ignored_tags):
-                return False
-            else:
-                return True
-        else:
-            interesting_tags = user.tag_selections.filter(reason = 'good')
-            if set(post_tags) & set(interesting_tags):
-                return True
-            else:
-                return False
-
     def get_latest_revision(self):
         return self.revisions.all().order_by('-revised_at')[0]
 
@@ -236,30 +220,19 @@ class Content(models.Model):
         return list(authors)
 
     def passes_tag_filter_for_user(self, user):
-        tags = self.get_origin_post().tags.all()
 
+        question = self.get_origin_post()
         if user.tag_filter_setting == 'interesting':
             #at least some of the tags must be marked interesting
-            interesting_selections = user.tag_selections.filter(
-                                        tag__in = tags, 
-                                        reason = 'good'
-                                    )
-            if interesting_selections.count() > 0:
-                return True
-            else:
-                return False
-
+            return user.has_affinity_to_question(
+                                            question,
+                                            affinity_type = 'like'
+                                        )
         elif user.tag_filter_setting == 'ignored':
-            #at least one tag must be ignored
-            ignored_selections = user.tag_selections.filter(
-                                                tag__in = tags, 
-                                                reason = 'bad'
-                                            )
-            if ignored_selections.count() > 0:
-                return False
-            else:
-                return True
-
+            return not user.has_affinity_to_question(
+                                            question,
+                                            affinity_type = 'dislike'
+                                        )
         else:
             raise ValueError(
                         'unexpected User.tag_filter_setting %s' \

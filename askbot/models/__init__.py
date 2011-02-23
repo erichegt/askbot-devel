@@ -167,6 +167,40 @@ def user_get_old_vote_for_post(self, post):
 
     return old_votes[0]
 
+
+def user_has_affinity_to_question(self, question = None, affinity_type = None):
+    """returns True if number of tag overlap of the user tag 
+    selection with the question is 0 and False otherwise
+    affinity_type can be either "like" or "dislike"
+    """
+    if affinity_type == 'like':
+        tag_selection_type = 'good'
+        wildcards = self.interesting_tags.split()
+    elif affinity_type == 'dislike':
+        tag_selection_type = 'bad'
+        wildcards = self.ignored_tags.split()
+    else:
+        raise ValueError('unexpected affinity type %s' % str(affinity_type))
+
+    question_tags = question.tags.all()
+    intersecting_tag_selections = self.tag_selections.filter(
+                                                tag__in = question_tags,
+                                                reason = tag_selection_type
+                                            )
+    #count number of overlapping tags
+    if intersecting_tag_selections.count() > 0:
+        return True
+    elif askbot_settings.USE_WILDCARD_TAGS == False:
+        return False
+
+    #match question tags against wildcards
+    for tag in question_tags:
+        for wildcard in wildcards:
+            if tag.name.startswith(wildcard[:-1]):
+                return True
+    return False
+
+
 def user_can_have_strong_url(self):
     """True if user's homepage url can be 
     followed by the search engine crawlers"""
@@ -800,6 +834,18 @@ def user_post_comment(
         timestamp = timestamp
     )
     return comment
+
+
+def user_mark_tag(self, tag_name = None, reason = None):
+    """reason is either "bad" or "good"
+    marks the tag
+    """
+    tag = models.Tag.objects.get(name = tag_name)
+    models.MarkedTag(
+        tag = tag,
+        user = self,
+        reason = reason
+    ).save()
 
 @auto_now_timestamp
 def user_retag_question(
@@ -1738,6 +1784,7 @@ User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
 User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
+User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_status_display', user_get_status_display)

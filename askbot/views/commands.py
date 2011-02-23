@@ -361,13 +361,12 @@ def mark_tag(request, **kwargs):#tagging system
             ts = models.Tag.objects.filter(name__in = unmarked_names)
             new_marks = list()
             for tag in ts:
-                mt = models.MarkedTag(
-                            user=request.user,
-                            reason=reason,
-                            tag=tag
-                        )
+                models.MarkedTag(
+                    user=request.user,
+                    reason=reason,
+                    tag=tag
+                ).save()
                 new_marks.append(tag.name)
-                mt.save()
             cleaned_tagnames.extend(marked_names)
             cleaned_tagnames.extend(new_marks)
         else:
