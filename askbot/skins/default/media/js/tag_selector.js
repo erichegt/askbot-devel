@@ -1,5 +1,8 @@
 //var interestingTags, ignoredTags, tags, $;
 function pickedTags(){
+    
+    var interestingTags = {};
+    var ignoredTags = {};
 
     var sendAjax = function(tagnames, reason, action, callback){
         var url = '';
@@ -127,8 +130,6 @@ function pickedTags(){
     };
 
     var collectPickedTags = function(section){
-        interestingTags = {};
-        ignoredTags = {};
         if (section === 'interesting'){
             var reason = 'good';
             var tag_store = interestingTags;
