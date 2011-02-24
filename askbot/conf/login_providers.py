@@ -11,22 +11,22 @@ LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     _('External login providers configuration.')
                 )
 
-providers = (('TWITTER', 'Activate Twitter'),
-              ('GOOGLE', 'Activate Google'),
-              ('LINKEDIN', 'Activate LinkedIn'),
-              ('YAHOO', 'Activate Yahoo!'),
-              ('AOL', 'Activate AOL'),
-              ('OPENID', 'Activate OpenID'),
-              ('FACEBOOK', 'Activate Facebook'),
-              ('LOCAL', 'Activate Local login'),
-              ('FLICKR', 'Activate Flickr'),
-              ('TECHNORATI', 'Activate Technorati'),
-              ('WORDPRESS', 'Activate Wordpress'),
-              ('BLOGGER', 'Activate Blogger'),
-              ('LIVEJOURNAL', 'Activate LiveJournal'),
-              ('CLAIMID', 'Activate ClaimID'),
-              ('VIDOOP', 'Activate Vidoop'),
-              ('VERISIGN', 'Activate Verisign')
+providers = (('SIGNIN_TWITTER_ENABLED', 'Activate Twitter'),
+              ('SIGNIN_GOOGLE_ENABLED', 'Activate Google'),
+              ('SIGNIN_LINKEDIN_ENABLED', 'Activate LinkedIn'),
+              ('SIGNIN_YAHOO_ENABLED', 'Activate Yahoo!'),
+              ('SIGNIN_AOL_ENABLED', 'Activate AOL'),
+              ('SIGNIN_OPENID_ENABLED', 'Activate OpenID'),
+              ('SIGNIN_FACEBOOK_ENABLED', 'Activate Facebook'),
+              ('SIGNIN_LOCAL_ENABLED', 'Activate Local login'),
+              ('SIGNIN_FLICKR_ENABLED', 'Activate Flickr'),
+              ('SIGNIN_TECHNORATI_ENABLED', 'Activate Technorati'),
+              ('SIGNIN_WORDPRESS_ENABLED', 'Activate Wordpress'),
+              ('SIGNIN_BLOGGER_ENABLED', 'Activate Blogger'),
+              ('SIGNIN_LIVEJOURNAL_ENABLED', 'Activate LiveJournal'),
+              ('SIGNIN_CLAIMID_ENABLED', 'Activate ClaimID'),
+              ('SIGNIN_VIDOOP_ENABLED', 'Activate Vidoop'),
+              ('SIGNIN_VERISIGN_ENABLED', 'Activate Verisign')
             )
                   
 for key, value in providers:

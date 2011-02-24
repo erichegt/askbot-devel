@@ -50,7 +50,7 @@
             <ul class="login-icons large">
                 {% for login_provider in major_login_providers %}
                 
-                {%if settings[login_provider.name.upper()] == True%}
+                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
                   <li>
                       <input
                           name="{{login_provider.name}}"
@@ -66,7 +66,7 @@
             </ul>
             <ul class="login-icons small">
                 {% for login_provider in minor_login_providers %}
-                {%if settings[login_provider.name.upper()] == True%}
+                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
                 <li>
                     <input
                         name="{{login_provider.name}}"
@@ -286,7 +286,7 @@
             var userIsAuthenticated = false;
         {% endif %}
         $("body").authenticator();
-        {% if settings.DISPLAYLOCAL %}
+        {% if settings.DISPLAYLOCAL and settings.SIGNIN_LOCAL_ENABLED %}
         $('input.password').attr({'style': 'display:none'});
         {%endif%}
     </script>
