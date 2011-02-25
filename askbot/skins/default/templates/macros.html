@@ -306,7 +306,7 @@ poor design of the data or methods on data objects #}
                                                             ''
                                                         )|escape
                                                     }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</{{ if_else(is_link, 'a', 'span') }}>
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag|replace('*', '&#10045;') }}</{{ if_else(is_link, 'a', 'span') }}>
         {% if deletable %}
             <span class="delete-icon"
                 {% if delete_link_title %}

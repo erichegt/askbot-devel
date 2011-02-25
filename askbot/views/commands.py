@@ -12,7 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from askbot import models
-from askbot.forms import CloseForm
+from askbot import forms
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_only, ajax_login_required
@@ -331,32 +331,65 @@ def vote(request, id):
 def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
-    tagnames = post_data['tagnames']
+    raw_tagnames = post_data['tagnames']
+    reason = kwargs.get('reason', None)
+    #separate plain tag names and wildcard tags
+    tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
+
+    cleaned_wildcards = list()
+    if wildcards:
+        cleaned_wildcards = request.user.update_wildcard_tag_selections(
+            action = action,
+            reason = reason,
+            wildcards = wildcards
+        )
+
+    #below we update normal tag selections
     marked_ts = models.MarkedTag.objects.filter(
                                     user=request.user,
                                     tag__name__in=tagnames
                                 )
     #todo: use the user api methods here instead of the straight ORM
+    cleaned_tagnames = list() #those that were actually updated
     if action == 'remove':
         logging.debug('deleting tag marks: %s' % ','.join(tagnames))
         marked_ts.delete()
     else:
-        reason = kwargs['reason']
-        if len(marked_ts) == 0:
-            try:
-                ts = models.Tag.objects.filter(name__in=tagnames)
-                for tag in ts:
-                    mt = models.MarkedTag(
-                                user=request.user,
-                                reason=reason,
-                                tag=tag
-                            )
-                    mt.save()
-            except:
-                pass
+        marked_names = marked_ts.values_list('tag__name', flat = True)
+        if len(marked_names) < len(tagnames):
+            unmarked_names = set(tagnames).difference(set(marked_names))
+            ts = models.Tag.objects.filter(name__in = unmarked_names)
+            new_marks = list()
+            for tag in ts:
+                models.MarkedTag(
+                    user=request.user,
+                    reason=reason,
+                    tag=tag
+                ).save()
+                new_marks.append(tag.name)
+            cleaned_tagnames.extend(marked_names)
+            cleaned_tagnames.extend(new_marks)
         else:
             marked_ts.update(reason=reason)
-    return HttpResponse(simplejson.dumps(''), mimetype="application/json")
+            cleaned_tagnames = tagnames
+
+    #lastly - calculate tag usage counts
+    tag_usage_counts = dict()
+    for name in tagnames:
+        if name in cleaned_tagnames:
+            tag_usage_counts[name] = 1
+        else:
+            tag_usage_counts[name] = 0
+
+    for name in wildcards:
+        if name in cleaned_wildcards:
+            tag_usage_counts[name] = models.Tag.objects.filter(
+                                        name__startswith = name[:-1]
+                                    ).count()
+        else:
+            tag_usage_counts[name] = 0
+
+    return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
 
 @ajax_login_required
 def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering system
@@ -384,7 +417,7 @@ def close(request, id):#close question
     question = get_object_or_404(models.Question, id=id)
     try:
         if request.method == 'POST':
-            form = CloseForm(request.POST)
+            form = forms.CloseForm(request.POST)
             if form.is_valid():
                 reason = form.cleaned_data['reason']
 
@@ -395,7 +428,7 @@ def close(request, id):#close question
             return HttpResponseRedirect(question.get_absolute_url())
         else:
             request.user.assert_can_close_question(question)
-            form = CloseForm()
+            form = forms.CloseForm()
             data = {
                 'question': question,
                 'form': form,

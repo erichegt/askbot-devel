@@ -59,6 +59,20 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'USE_WILDCARD_TAGS',
+        default = False,
+        description = _('Use wildcard tags'),
+        help_text = _(
+                        'Wildcard tags can be used to follow or ignore '
+                        'many tags at once, a valid wildcard tag has a single '
+                        'wildcard at the very end'
+                    )
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENTS_TO_SHOW',

@@ -1,5 +1,53 @@
 //var interestingTags, ignoredTags, tags, $;
+var TagDetailBox = function(box_type){
+    this.box_type = box_type;
+    this.__is_blank = true;
+    this.wildcard = undefined;
+};
+
+TagDetailBox.prototype.belongs_to = function(wildcard){
+    return (this.wildcard === wildcard);
+};
+
+TagDetailBox.prototype.is_blank = function(){
+    return (this.__is_blank);
+};
+
+TagDetailBox.prototype.clear = function(){
+    if (this.is_blank()){
+        return;
+    }
+    this.__is_blank = true;
+    this.__tags.remove();
+};
+
+TagDetailBox.prototype.load_tags = function(wildcard, callback){
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        url: askbot['urls']['load_wildcard_tags'],
+        data: { wildcard: wildcard },
+        success: callback
+    });
+};
+
+TagDetailBox.prototype.render = function(){
+};
+
+TagDetailBox.prototype.render_for = function(wildcard){
+    this.load_tags(
+        wildcard,
+        this.render
+    );
+}
+
 function pickedTags(){
+    
+    var interestingTags = {};
+    var ignoredTags = {};
+    var interestingTagDetailBox = new TagDetailBox('interesting');
+    var ignoredTagDetailBox = new TagDetailBox('ignored');
 
     var sendAjax = function(tagnames, reason, action, callback){
         var url = '';
@@ -47,13 +95,33 @@ function pickedTags(){
         });
     };
 
+    var getWildcardTagDetailBox = function(reason){
+        if (reason === 'good'){
+            return interestingTagDetailBox;
+        } else {
+            return ignoredTagDetailBox;
+        }
+    };
+
+    var handleWildcardTagClick = function(tag_name, reason){
+        var detail_box = getWildcardTagDetailBox(reason);
+        if (detail_box.is_blank()){
+            detail_box.render_for(tag_name);
+        } else if (detail_box.belongs_to(tag_name)){
+            detail_box.clear();
+        } else {
+            detail_box.clear();
+            detail_box.render_for(tag_name);
+        }
+    };
+
     var renderNewTags = function(
-                                    clean_tagnames,
+                                    clean_tag_names,
                                     reason,
                                     to_target,
                                     to_tag_container
                                 ){
-        $.each(clean_tagnames, function(idx, tagname){
+        $.each(clean_tag_names, function(idx, tag_name){
             var new_tag = $('<li></li>');
             new_tag.addClass('deletable-tag');
             new_tag.addClass('tag-left');
@@ -61,13 +129,17 @@ function pickedTags(){
             tag_link.addClass('tag-right');
             tag_link.addClass('tag')
             tag_link.attr('rel','tag');
-            var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
+            var tag_url = askbot['urls']['questions'] + '?tags=' + tag_name;
             tag_link.attr('href', tag_url);
-            tag_link.html(tagname);
+            tag_link.html(tagname.replace('*','&#10045;'));
             var del_link = $('<span></span>');
             del_link.addClass('delete-icon');
 
-            setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
+            if (/\*$/.test(tag_name)){
+                tag_link.click(handleWildCardTagClick(tag_name, reason))
+            }
+
+            setupTagDeleteEvents(del_link, to_target, tag_name, reason, true);
 
             new_tag.append(tag_link);
             new_tag.append(del_link);
@@ -127,8 +199,6 @@ function pickedTags(){
     };
 
     var collectPickedTags = function(section){
-        interestingTags = {};
-        ignoredTags = {};
         if (section === 'interesting'){
             var reason = 'good';
             var tag_store = interestingTags;
@@ -142,7 +212,7 @@ function pickedTags(){
         }
         $('.' + section + '.tags.marked-tags a.tag').each(
             function(i,item){
-                var tag_name = $(item).html();
+                var tag_name = $(item).html().replace('\u273d','*');
                 tag_store[tag_name] = $(item).parent();
                 setupTagDeleteEvents(
                     $(item).parent().find('.delete-icon'),
