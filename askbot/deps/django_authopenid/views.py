@@ -834,8 +834,10 @@ def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
+    
     logging.debug(get_request_info(request))
     next = get_next_url(request)
+    login_form = forms.LoginForm(initial = {'next': next})
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
@@ -915,9 +917,15 @@ def signup_with_password(request):
                     )
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
+
+    major_login_providers = util.get_major_login_providers()
+    minor_login_providers = util.get_minor_login_providers()
     context_data = {
                 'form': form, 
-                'email_feeds_form': email_feeds_form 
+                'email_feeds_form': email_feeds_form,
+                'major_login_providers': major_login_providers.values(),
+                'minor_login_providers': minor_login_providers.values(),
+                'login_form': login_form
             }
     template = ENV.get_template('authopenid/signup_with_password.html')
     context = RequestContext(request, context_data)

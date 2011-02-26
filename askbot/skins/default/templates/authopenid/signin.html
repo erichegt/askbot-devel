@@ -66,7 +66,7 @@
             </ul>
             <ul class="login-icons small">
                 {% for login_provider in minor_login_providers %}
-                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
+                {%if settings['SIGN_IN' + login_provider.name.upper() + '_ENABLED'] == True%}
                 <li>
                     <input
                         name="{{login_provider.name}}"
@@ -130,7 +130,7 @@
                 <p id="local_login_buttons">
                     <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Login{% endtrans %}" />
                     {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
-                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans %}Create a password-protected account{% endtrans %}</a>
+                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
                 </p>
             {% elif settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
@@ -259,7 +259,7 @@
         var siteName = '{{settings.APP_SHORT_NAME}}';
         var provider_count = {{existing_login_methods|length}};
         {% for login_provider in major_login_providers %}
-            {%if settings[login_provider.name] == True%}
+            {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
               {% if login_provider.extra_token_name %}
                   extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
               {% endif %}
@@ -270,7 +270,7 @@
             {% endif %}
         {% endfor %}
         {% for login_provider in minor_login_providers %}
-            {%if settings[login_provider.name] == True%}
+            {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
               {% if login_provider.extra_token_name %}
                   extra_token_name['{{login_provider.name}}'] = '{{login_provider.extra_token_name}}';
               {% endif %}

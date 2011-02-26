@@ -11,6 +11,22 @@ LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     _('External login providers configuration.')
                 )
 
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
+        'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
+        description=_('Show login proviers on Sign Up'),
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
+        'DISPLAYLOCAL',
+        description=_('Always display local login and hide Askbot button.'),
+    )
+)
+
 providers = (('SIGNIN_TWITTER_ENABLED', 'Activate Twitter'),
               ('SIGNIN_GOOGLE_ENABLED', 'Activate Google'),
               ('SIGNIN_LINKEDIN_ENABLED', 'Activate LinkedIn'),
@@ -37,11 +53,3 @@ for key, value in providers:
             description=_(value),
         )
     )
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'DISPLAYLOCAL',
-        description=_('Always display local login and hide Askbot button.'),
-    )
-)
