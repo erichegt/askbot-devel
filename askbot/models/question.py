@@ -439,6 +439,15 @@ class Question(content.Content, DeletableContent):
         """
         Updates Tag associations for a question to match the given
         tagname string.
+
+        When tags are removed and their use count hits 0 - the tag is 
+        automatically deleted.
+
+        When an added tag does not exist - it is created
+
+        Tag use counts are recalculated
+
+        A signal tags updated is sent
         """
 
         previous_tags = list(self.tags.all())
