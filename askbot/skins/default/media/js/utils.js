@@ -90,6 +90,269 @@ var notify = function() {
     };
 } ();
 
+/* some google closure-like code for the ui elements */
+var inherits = function(childCtor, parentCtor) {
+  /** @constructor taken from google closure */
+    function tempCtor() {};
+    tempCtor.prototype = parentCtor.prototype;
+    childCtor.superClass_ = parentCtor.prototype;
+    childCtor.prototype = new tempCtor();
+    childCtor.prototype.constructor = childCtor;
+};
+
+/* wrapper around jQuery object */
+var WrappedElement = function(){
+    this._element = null;
+};
+WrappedElement.prototype.setElement = function(element){
+    this._element = element;
+};
+WrappedElement.prototype.createDom = function(){
+    this._element = $('<div></div>');
+};
+WrappedElement.prototype.getElement = function(){
+    if (this._element === null){
+        this.createDom();
+    }
+    return this._element;
+};
+WrappedElement.prototype.makeElement = function(html_tag){
+    //makes jQuery element with tags
+    return $('<' + html_tag + '></' + html_tag + '>');
+};
+WrappedElement.prototype.dispose = function(){
+    this._element.remove();
+};
+
+var SimpleControl = function(){
+    WrappedElement.call(this);
+    this._handler = null;
+    this._title = null;
+};
+inherits(SimpleControl, WrappedElement);
+
+SimpleControl.prototype.setHandler = function(handler){
+    this._handler = handler;
+};
+SimpleControl.prototype.setTitle = function(title){
+    this._title = title;
+};
+
+var EditLink = function(){
+    SimpleControl.call(this)
+};
+inherits(EditLink, SimpleControl);
+
+EditLink.prototype.createDom = function(){
+    var element = $('<a></a>');
+    element.addClass('edit');
+    this.decorate(element);
+};
+
+EditLink.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('title', $.i18n._('click to edit this comment'));
+    this._element.html($.i18n._('edit'));
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
+var DeleteIcon = function(title){
+    SimpleControl.call(this);
+    this._title = title;
+};
+inherits(DeleteIcon, SimpleControl);
+
+DeleteIcon.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('class', 'delete-icon');
+    this._element.attr('title', this._title);
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
+DeleteIcon.prototype.createDom = function(){
+    this.decorate($('<span />'));
+};
+
+var Tag = function(deletable){
+    WrappedElement.call(this);
+    this._deletable = deletable;
+    this._delete_handler = null;
+    this._delete_icon_title = null;
+    this._tag_title = null;
+    this._name = null;
+    this._inner_html_tag = 'a';
+    this._html_tag = 'li';
+}
+inherits(Tag, SimpleControl);
+
+Tag.prototype.setName = function(name){
+    this._name = name;
+};
+
+Tag.prototype.setHtmlTag = function(html_tag){
+    this._html_tag = html_tag;
+};
+
+Tag.prototype.disableLink = function(){
+    this._inner_html_tag = 'span';
+};
+
+Tag.prototype.setUrlParams = function(url_params){
+    this._url_params = url_params;
+};
+
+/* delete handler will be specific to the task */
+Tag.prototype.setDeleteHandler = function(delete_handler){
+    this._delete_handler = delete_handler;
+};
+
+Tag.prototype.getDeleteHandler = function(){
+    return this._delete_handler;
+};
+
+Tag.prototype.setDeleteIconTitle = function(title){
+    this._delete_icon_title = title;
+};
+
+Tag.prototype.decorate = function(element){
+    this._element = element;
+    if (this._deletable === true){
+        this._delete_icon = new DeleteIcon();
+        if (this._delete_icon_title != null){
+            this._delete_icon.setTitle(this._delete_icon_title);
+        }
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        DeleteIcon.decorate(this._element.find('delete-icon'));
+    }
+    var tag_element = this._element.find('.tag');
+    if (this._title !== null){
+        tag_element.attr('title', this._title);
+    }
+    if (this._handler !== null){
+        setupButtonEventHandlers(this._element.find('.tag'), this._handler);
+    }
+};
+
+Tag.prototype.createDom = function(){
+    this._element = this.makeElement(this._html_tag);
+    //render the outer element
+    if (this._deletable){
+        this._element.addClass('deletable-tag');
+    }
+    this._element.addClass('tag-left');
+
+    //render the inner element
+    var in_tag = this._inner_html_tag;
+    this._inner_element = this.makeElement(this._inner_html_tag);
+    if (in_tag === 'a'){
+        var url = askbot['urls']['questions'];
+        url += '?tag=' + escape(this._name);
+        if (this._url_params !== null){
+            url += escape('&' + this._url_params);
+        }
+        this._inner_element.attr('href', url);
+    }
+    this._inner_element.addClass('tag tag-right');
+    this._inner_element.attr('rel', 'tag');
+    if (this._title !== null){
+        this._inner_element.attr('title', this._title);
+    }
+    this._inner_element.html(/\*$/.replace(this._name, '&#10045;'));
+
+    this._element.append(this._inner_element);
+
+    if (this._deletable){
+        this._delete_icon = DeleteIcon();
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        if (this._delete_icon_title !== null){
+            this._delete_icon.setTitle(this._delete_icon_title);
+        }
+        this._element.append(this._delete_icon.getElement());
+    }
+};
+
+from tag selector
+        $.each(clean_tag_names, function(idx, tag_name){
+            var new_tag = $('<li></li>');
+            new_tag.addClass('deletable-tag');
+            new_tag.addClass('tag-left');
+            var tag_link = $('<a></a>');
+            tag_link.addClass('tag-right');
+            tag_link.addClass('tag')
+            tag_link.attr('rel','tag');
+            var tag_url = askbot['urls']['questions'] + '?tags=' + tag_name;
+            tag_link.attr('href', tag_url);
+            var del_link = $('<span></span>');
+            del_link.addClass('delete-icon');
+
+            if (/\*$/.test(tag_name)){
+                tag_html = tagname.replace(/\*$/,'&#10045;');
+                tag_link.click(handleWildCardTagClick(tag_name, reason));
+            } else {
+                var tag_html = tagname;
+            }
+            tag_link.html(tag_html);
+
+            setupTagDeleteEvents(del_link, to_target, tag_name, reason, true);
+
+            new_tag.append(tag_link);
+            new_tag.append(del_link);
+            to_tag_container.append(new_tag);
+
+            to_target[tagname] = new_tag;
+        });
+
+/* from poost.js */
+    var render_tag = function(tag_name){
+        //copy-paste from live search!!!
+        var url = askbot['urls']['questions'] + 
+                    '?tags=' + encodeURI(tag_name);
+        var tag_title = $.i18n._(
+                            "see questions tagged '{tag}'"
+                        ).replace(
+                            '{tag}',
+                            tag_name
+                        );
+        return '<li class="tag-left">' +
+                    '<a ' +
+                        'class="tag tag-right" ' +
+                        'href="' + url + '" ' + 
+                        'title="' + tag_title + '" rel="tag"' +
+                    '>' + tag_name + '</a>' +
+               '</li>';
+    };
+
+/* from live search */
+    var render_tag = function(tag_name, linkable, deletable){
+        var url = askbot['urls']['questions'] +
+                    '?tags=' + encodeURI(tag_name);
+        var tag_title = $.i18n._(
+                            "see questions tagged '{tag}'"
+                        ).replace(
+                            '{tag}',
+                            tag_name
+                        );
+        var tag_element = 'span';
+        var tag_url = '';
+        if (linkable){
+            tag_element = 'a';
+            tag_url = ' href="' + url + '" ';
+        }
+        html = '<' + tag_element +
+                    ' class="tag tag-right" ' +
+                    tag_url +
+                    ' title="' + tag_title + '" rel="tag"' +
+                '>' + tag_name + '</' + tag_element + '>';
+        if (deletable){
+            html += '<span class="delete-icon"></span>';
+        }
+        var tag_class = 'tag-left';
+        if (deletable){
+            tag_class += ' deletable-tag';
+        }
+        return '<li class="' + tag_class + '">' + html + '</li>';
+    };
+
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/
 Hilite={elementid:"content",exact:true,max_nodes:1000,onload:true,style_name:"hilite",style_name_suffix:true,debug_referrer:""};Hilite.search_engines=[["local","q"],["cnprog\\.","q"],["google\\.","q"],["search\\.yahoo\\.","p"],["search\\.msn\\.","q"],["search\\.live\\.","query"],["search\\.aol\\.","userQuery"],["ask\\.com","q"],["altavista\\.","q"],["feedster\\.","q"],["search\\.lycos\\.","q"],["alltheweb\\.","q"],["technorati\\.com/search/([^\\?/]+)",1],["dogpile\\.com/info\\.dogpl/search/web/([^\\?/]+)",1,true]];Hilite.decodeReferrer=function(d){var g=null;var e=new RegExp("");for(var c=0;c<Hilite.search_engines.length;c++){var f=Hilite.search_engines[c];e.compile("^http://(www\\.)?"+f[0],"i");var b=d.match(e);if(b){var a;if(isNaN(f[1])){a=Hilite.decodeReferrerQS(d,f[1])}else{a=b[f[1]+1]}if(a){a=decodeURIComponent(a);if(f.length>2&&f[2]){a=decodeURIComponent(a)}a=a.replace(/\'|"/g,"");a=a.split(/[\s,\+\.]+/);return a}break}}return null};Hilite.decodeReferrerQS=function(f,d){var b=f.indexOf("?");var c;if(b>=0){var a=new String(f.substring(b+1));b=0;c=0;while((b>=0)&&((c=a.indexOf("=",b))>=0)){var e,g;e=a.substring(b,c);b=a.indexOf("&",c)+1;if(e==d){if(b<=0){return a.substring(c+1)}else{return a.substring(c+1,b-1)}}else{if(b<=0){return null}}}}return null};Hilite.hiliteElement=function(f,e){if(!e||f.childNodes.length==0){return}var c=new Array();for(var b=0;b<e.length;b++){e[b]=e[b].toLowerCase();if(Hilite.exact){c.push("\\b"+e[b]+"\\b")}else{c.push(e[b])}}c=new RegExp(c.join("|"),"i");var a={};for(var b=0;b<e.length;b++){if(Hilite.style_name_suffix){a[e[b]]=Hilite.style_name+(b+1)}else{a[e[b]]=Hilite.style_name}}var d=function(m){var j=c.exec(m.data);if(j){var n=j[0];var i="";var h=m.splitText(j.index);var g=h.splitText(n.length);var l=m.ownerDocument.createElement("SPAN");m.parentNode.replaceChild(l,h);l.className=a[n.toLowerCase()];l.appendChild(h);return l}else{return m}};Hilite.walkElements(f.childNodes[0],1,d)};Hilite.hilite=function(){var a=Hilite.debug_referrer?Hilite.debug_referrer:document.referrer;var b=null;a=Hilite.decodeReferrer(a);if(a&&((Hilite.elementid&&(b=document.getElementById(Hilite.elementid)))||(b=document.body))){Hilite.hiliteElement(b,a)}};Hilite.walkElements=function(d,f,e){var a=/^(script|style|textarea)/i;var c=0;while(d&&f>0){c++;if(c>=Hilite.max_nodes){var b=function(){Hilite.walkElements(d,f,e)};setTimeout(b,50);return}if(d.nodeType==1){if(!a.test(d.tagName)&&d.childNodes.length>0){d=d.childNodes[0];f++;continue}}else{if(d.nodeType==3){d=e(d)}}if(d.nextSibling){d=d.nextSibling}else{while(f>0){d=d.parentNode;f--;if(d.nextSibling){d=d.nextSibling;break}}}}};if(Hilite.onload){if(window.attachEvent){window.attachEvent("onload",Hilite.hilite)}else{if(window.addEventListener){window.addEventListener("load",Hilite.hilite,false)}else{var __onload=window.onload;window.onload=function(){Hilite.hilite();__onload()}}}};

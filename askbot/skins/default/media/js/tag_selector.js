@@ -131,13 +131,16 @@ function pickedTags(){
             tag_link.attr('rel','tag');
             var tag_url = askbot['urls']['questions'] + '?tags=' + tag_name;
             tag_link.attr('href', tag_url);
-            tag_link.html(tagname.replace('*','&#10045;'));
             var del_link = $('<span></span>');
             del_link.addClass('delete-icon');
 
             if (/\*$/.test(tag_name)){
-                tag_link.click(handleWildCardTagClick(tag_name, reason))
+                tag_html = tagname.replace(/\*$/,'&#10045;');
+                tag_link.click(handleWildCardTagClick(tag_name, reason));
+            } else {
+                var tag_html = tagname;
             }
+            tag_link.html(tag_html);
 
             setupTagDeleteEvents(del_link, to_target, tag_name, reason, true);
 

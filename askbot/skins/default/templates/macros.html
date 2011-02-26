@@ -283,7 +283,7 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
-{# todo: remove css_class argument because it is redundant #}
+{# todo: remove the extra content argument to make its usage more explicit #}
 {%- macro tag_widget(
             tag,
             deletable = False,
@@ -291,14 +291,13 @@ poor design of the data or methods on data objects #}
             delete_link_title = None,
             url_params = None,
             html_tag = 'div',
-            css_class = None,
             extra_content = ''
         )
 -%}
     {% spaceless %}
     <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
         <{{ if_else(is_link, 'a', 'span') }}
-            class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
+            class="tag tag-right"
             href="{% url questions %}?tags={{tag|urlencode}}{{ 
                                                         if_else(
                                                             url_params != None,
