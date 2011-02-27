@@ -626,21 +626,9 @@ var questionRetagger = function(){
 
     var render_tag = function(tag_name){
         //copy-paste from live search!!!
-        var url = askbot['urls']['questions'] + 
-                    '?tags=' + encodeURI(tag_name);
-        var tag_title = $.i18n._(
-                            "see questions tagged '{tag}'"
-                        ).replace(
-                            '{tag}',
-                            tag_name
-                        );
-        return '<li class="tag-left">' +
-                    '<a ' +
-                        'class="tag tag-right" ' +
-                        'href="' + url + '" ' + 
-                        'title="' + tag_title + '" rel="tag"' +
-                    '>' + tag_name + '</a>' +
-               '</li>';
+        var tag = new Tag();
+        tag.setName(tag_name);
+        return tag.getElement().outerHTML();
     };
 
     var drawNewTags = function(new_tags){

@@ -122,33 +122,24 @@ function pickedTags(){
                                     to_tag_container
                                 ){
         $.each(clean_tag_names, function(idx, tag_name){
-            var new_tag = $('<li></li>');
-            new_tag.addClass('deletable-tag');
-            new_tag.addClass('tag-left');
-            var tag_link = $('<a></a>');
-            tag_link.addClass('tag-right');
-            tag_link.addClass('tag')
-            tag_link.attr('rel','tag');
-            var tag_url = askbot['urls']['questions'] + '?tags=' + tag_name;
-            tag_link.attr('href', tag_url);
-            var del_link = $('<span></span>');
-            del_link.addClass('delete-icon');
+            var tag = new Tag();
+            tag.setDeletable(true);
+            tag.setHandler
 
             if (/\*$/.test(tag_name)){
-                tag_html = tagname.replace(/\*$/,'&#10045;');
-                tag_link.click(handleWildCardTagClick(tag_name, reason));
-            } else {
-                var tag_html = tagname;
+                tag.setLinkable(false);
+                tag.setHandler(function(){
+                    handleWildcardClick(tag_name, reason);
+                });
             }
             tag_link.html(tag_html);
+            tag.setDeleteHandler(function(){
+                unpickTag(to_target, tag_name, reason, true);
+            });
 
-            setupTagDeleteEvents(del_link, to_target, tag_name, reason, true);
-
-            new_tag.append(tag_link);
-            new_tag.append(del_link);
-            to_tag_container.append(new_tag);
-
-            to_target[tagname] = new_tag;
+            var tag_element = tag.getElement().outerHTML();
+            to_tag_container.append(tag_element);
+            to_target[tag_name] = tag_element;
         });
     };
 

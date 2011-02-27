@@ -184,33 +184,9 @@ $(document).ready(function(){
     };
 
     var render_tag = function(tag_name, linkable, deletable){
-        var url = askbot['urls']['questions'] +
-                    '?tags=' + encodeURI(tag_name);
-        var tag_title = $.i18n._(
-                            "see questions tagged '{tag}'"
-                        ).replace(
-                            '{tag}',
-                            tag_name
-                        );
-        var tag_element = 'span';
-        var tag_url = '';
-        if (linkable){
-            tag_element = 'a';
-            tag_url = ' href="' + url + '" ';
-        }
-        html = '<' + tag_element +
-                    ' class="tag tag-right" ' +
-                    tag_url +
-                    ' title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</' + tag_element + '>';
-        if (deletable){
-            html += '<span class="delete-icon"></span>';
-        }
-        var tag_class = 'tag-left';
-        if (deletable){
-            tag_class += ' deletable-tag';
-        }
-        return '<li class="' + tag_class + '">' + html + '</li>';
+        var tag = Tag(deletable);
+        tag.setLinkable(linkable);
+        return tag.getElement().outerHTML();
     };
 
     var render_tags = function(tags, linkable, deletable){
@@ -317,7 +293,13 @@ $(document).ready(function(){
         search_tags.children().remove();
         var tags_html = '';
         $.each(tags, function(idx, tag){
-            tags_html += render_tag(tag, false, true);
+            var tag = new Tag();
+            tag.setName(tag);
+            tag.setDeletable(true);
+            tag.setLinkable(false);
+            tag.setDeleteHandler(
+            );
+            tags_html += tag.getElement().outerHTML();
         });
         search_tags.html(tags_html);
     };
@@ -411,7 +393,6 @@ $(document).ready(function(){
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
             render_search_tags(data['query_data']['tags']);
-            activate_search_tag_deleters();
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
             render_relevance_sort_tab();

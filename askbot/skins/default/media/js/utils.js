@@ -31,6 +31,17 @@ var showMessage = function(element, msg, where) {
     div.fadeIn("fast");
 };
 
+//outer html hack - https://github.com/brandonaaron/jquery-outerhtml/
+(function($){
+    var div;
+    $.fn.outerHTML = function() {
+        var elem = this[0],
+        tmp;
+        return !elem ? null
+        : typeof ( tmp = elem.outerHTML ) === 'string' ? tmp
+        : ( div = div || $('<div/>') ).html( this.eq(0).clone() ).html();
+    };
+})(jQuery);
 
 var makeKeyHandler = function(key, callback){
     return function(e){
@@ -173,9 +184,9 @@ DeleteIcon.prototype.createDom = function(){
     this.decorate($('<span />'));
 };
 
-var Tag = function(deletable){
+var Tag = function(){
     WrappedElement.call(this);
-    this._deletable = deletable;
+    this._deletable = false;
     this._delete_handler = null;
     this._delete_icon_title = null;
     this._tag_title = null;
@@ -193,8 +204,20 @@ Tag.prototype.setHtmlTag = function(html_tag){
     this._html_tag = html_tag;
 };
 
-Tag.prototype.disableLink = function(){
-    this._inner_html_tag = 'span';
+Tag.prototype.setDeletable = function(is_deletable){
+    this._deletable = is_deletable;
+};
+
+Tag.prototype.setLinkable = function(yes_no){
+    if (yes_no === true){
+        this._inner_html_tag = 'a';
+    } else {
+        this._inner_html_tag = 'span';
+    }
+};
+
+Tag.prototype.isLinkable = function(){
+    return (this._inner_html_tag === 'a');
 };
 
 Tag.prototype.setUrlParams = function(url_params){
@@ -222,15 +245,20 @@ Tag.prototype.decorate = function(element){
             this._delete_icon.setTitle(this._delete_icon_title);
         }
         this._delete_icon.setHandler(this.getDeleteHandler());
-        DeleteIcon.decorate(this._element.find('delete-icon'));
+        DeleteIcon.decorate(this._element.find('.delete-icon'));
     }
-    var tag_element = this._element.find('.tag');
+    this._inner_element = this._element.find('.tag');
     if (this._title !== null){
-        tag_element.attr('title', this._title);
+        this._inner_element.attr('title', this._title);
     }
     if (this._handler !== null){
         setupButtonEventHandlers(this._element.find('.tag'), this._handler);
     }
+};
+
+Tag.prototype.getDisplayTagName = function(){
+    //replaces the trailing * symbol with the unicode asterisk
+    return /\*$/.replace(this._name, '&#10045;');
 };
 
 Tag.prototype.createDom = function(){
@@ -242,9 +270,8 @@ Tag.prototype.createDom = function(){
     this._element.addClass('tag-left');
 
     //render the inner element
-    var in_tag = this._inner_html_tag;
     this._inner_element = this.makeElement(this._inner_html_tag);
-    if (in_tag === 'a'){
+    if (this.isLinkable()){
         var url = askbot['urls']['questions'];
         url += '?tag=' + escape(this._name);
         if (this._url_params !== null){
@@ -254,10 +281,18 @@ Tag.prototype.createDom = function(){
     }
     this._inner_element.addClass('tag tag-right');
     this._inner_element.attr('rel', 'tag');
-    if (this._title !== null){
-        this._inner_element.attr('title', this._title);
+    if (this._title === null){
+        this.setTitle(
+            $.i18n._(
+                "see questions tagged '{tag}'"
+            ).replace(
+                '{tag}',
+                tag_name
+            )
+        );
     }
-    this._inner_element.html(/\*$/.replace(this._name, '&#10045;'));
+    this._inner_element.attr('title', this._title);
+    this._inner_element.html(this.getDisplayTagName());
 
     this._element.append(this._inner_element);
 
@@ -270,57 +305,6 @@ Tag.prototype.createDom = function(){
         this._element.append(this._delete_icon.getElement());
     }
 };
-
-from tag selector
-        $.each(clean_tag_names, function(idx, tag_name){
-            var new_tag = $('<li></li>');
-            new_tag.addClass('deletable-tag');
-            new_tag.addClass('tag-left');
-            var tag_link = $('<a></a>');
-            tag_link.addClass('tag-right');
-            tag_link.addClass('tag')
-            tag_link.attr('rel','tag');
-            var tag_url = askbot['urls']['questions'] + '?tags=' + tag_name;
-            tag_link.attr('href', tag_url);
-            var del_link = $('<span></span>');
-            del_link.addClass('delete-icon');
-
-            if (/\*$/.test(tag_name)){
-                tag_html = tagname.replace(/\*$/,'&#10045;');
-                tag_link.click(handleWildCardTagClick(tag_name, reason));
-            } else {
-                var tag_html = tagname;
-            }
-            tag_link.html(tag_html);
-
-            setupTagDeleteEvents(del_link, to_target, tag_name, reason, true);
-
-            new_tag.append(tag_link);
-            new_tag.append(del_link);
-            to_tag_container.append(new_tag);
-
-            to_target[tagname] = new_tag;
-        });
-
-/* from poost.js */
-    var render_tag = function(tag_name){
-        //copy-paste from live search!!!
-        var url = askbot['urls']['questions'] + 
-                    '?tags=' + encodeURI(tag_name);
-        var tag_title = $.i18n._(
-                            "see questions tagged '{tag}'"
-                        ).replace(
-                            '{tag}',
-                            tag_name
-                        );
-        return '<li class="tag-left">' +
-                    '<a ' +
-                        'class="tag tag-right" ' +
-                        'href="' + url + '" ' + 
-                        'title="' + tag_title + '" rel="tag"' +
-                    '>' + tag_name + '</a>' +
-               '</li>';
-    };
 
 /* from live search */
     var render_tag = function(tag_name, linkable, deletable){
