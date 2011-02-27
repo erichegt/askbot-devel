@@ -123,8 +123,8 @@ function pickedTags(){
                                 ){
         $.each(clean_tag_names, function(idx, tag_name){
             var tag = new Tag();
+            tag.setName(tag_name);
             tag.setDeletable(true);
-            tag.setHandler
 
             if (/\*$/.test(tag_name)){
                 tag.setLinkable(false);
@@ -132,12 +132,11 @@ function pickedTags(){
                     handleWildcardClick(tag_name, reason);
                 });
             }
-            tag_link.html(tag_html);
             tag.setDeleteHandler(function(){
                 unpickTag(to_target, tag_name, reason, true);
             });
 
-            var tag_element = tag.getElement().outerHTML();
+            var tag_element = tag.getElement();
             to_tag_container.append(tag_element);
             to_target[tag_name] = tag_element;
         });

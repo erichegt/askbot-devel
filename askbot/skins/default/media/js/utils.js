@@ -208,8 +208,8 @@ Tag.prototype.setDeletable = function(is_deletable){
     this._deletable = is_deletable;
 };
 
-Tag.prototype.setLinkable = function(yes_no){
-    if (yes_no === true){
+Tag.prototype.setLinkable = function(is_linkable){
+    if (is_linkable === true){
         this._inner_html_tag = 'a';
     } else {
         this._inner_html_tag = 'span';
@@ -305,37 +305,6 @@ Tag.prototype.createDom = function(){
         this._element.append(this._delete_icon.getElement());
     }
 };
-
-/* from live search */
-    var render_tag = function(tag_name, linkable, deletable){
-        var url = askbot['urls']['questions'] +
-                    '?tags=' + encodeURI(tag_name);
-        var tag_title = $.i18n._(
-                            "see questions tagged '{tag}'"
-                        ).replace(
-                            '{tag}',
-                            tag_name
-                        );
-        var tag_element = 'span';
-        var tag_url = '';
-        if (linkable){
-            tag_element = 'a';
-            tag_url = ' href="' + url + '" ';
-        }
-        html = '<' + tag_element +
-                    ' class="tag tag-right" ' +
-                    tag_url +
-                    ' title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</' + tag_element + '>';
-        if (deletable){
-            html += '<span class="delete-icon"></span>';
-        }
-        var tag_class = 'tag-left';
-        if (deletable){
-            tag_class += ' deletable-tag';
-        }
-        return '<li class="' + tag_class + '">' + html + '</li>';
-    };
 
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/

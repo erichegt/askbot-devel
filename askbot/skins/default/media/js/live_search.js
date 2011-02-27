@@ -184,7 +184,8 @@ $(document).ready(function(){
     };
 
     var render_tag = function(tag_name, linkable, deletable){
-        var tag = Tag(deletable);
+        var tag = new Tag();
+        tag.setDeletable(deletable);
         tag.setLinkable(linkable);
         return tag.getElement().outerHTML();
     };
@@ -298,6 +299,9 @@ $(document).ready(function(){
             tag.setDeletable(true);
             tag.setLinkable(false);
             tag.setDeleteHandler(
+                function(){
+                    remove_search_tag(search_tag);
+                }
             );
             tags_html += tag.getElement().outerHTML();
         });
@@ -369,13 +373,15 @@ $(document).ready(function(){
         });
     };
 
-    var activate_search_tag_deleters = function(){
-        var deleters = $('#search-tags .delete-icon');
-        $.each(deleters, function(idx, deleter){
-            var search_tag = $(deleter).prev().html();
-            setupButtonEventHandlers(
-                $(deleter), 
-                function(){remove_search_tag(search_tag)}
+    var activate_search_tags = function(){
+        var search_tags = $('#search-tags .tag-left');
+        $.each(search_tags, function(idx, element){
+            var tag = new Tag();
+            tag.decorate(element);
+            tag.setDeleteHandler(
+                function(){
+                    remove_search_tag(search_tag);
+                }
             );
         });
     };
@@ -431,6 +437,6 @@ $(document).ready(function(){
         prev_text = '';
     }
 
-    activate_search_tag_deleters();
+    activate_search_tags();
     listen();
 });
