@@ -1,24 +1,30 @@
 //var interestingTags, ignoredTags, tags, $;
 var TagDetailBox = function(box_type){
+    WrappedElement.call(this);
     this.box_type = box_type;
-    this.__is_blank = true;
+    this._is_blank = true;
+    this._tags = new Array();
     this.wildcard = undefined;
 };
+inherits(TagDetailBox, WrappedElement);
 
 TagDetailBox.prototype.belongs_to = function(wildcard){
     return (this.wildcard === wildcard);
 };
 
 TagDetailBox.prototype.is_blank = function(){
-    return (this.__is_blank);
+    return this._is_blank;
 };
 
 TagDetailBox.prototype.clear = function(){
     if (this.is_blank()){
         return;
     }
-    this.__is_blank = true;
-    this.__tags.remove();
+    this._is_blank = true;
+    $.each(this._tags, function(idx, item){
+        item.dispose();
+    });
+    this._tags = new Array();
 };
 
 TagDetailBox.prototype.load_tags = function(wildcard, callback){
@@ -26,19 +32,25 @@ TagDetailBox.prototype.load_tags = function(wildcard, callback){
         type: 'POST',
         dataType: 'json',
         cache: false,
-        url: askbot['urls']['load_wildcard_tags'],
+        url: askbot['urls']['get_tags_by_wildcard'],
         data: { wildcard: wildcard },
         success: callback
     });
 };
 
-TagDetailBox.prototype.render = function(){
-};
-
 TagDetailBox.prototype.render_for = function(wildcard){
+    var me = this;
     this.load_tags(
         wildcard,
-        this.render
+        function(data, text_status, xhr){
+            me._tag_names = data['tag_names'];
+            $.each(me._tag_names, function(idx, name){
+                var tag = new Tag();
+                tag.setName(name);
+                me._tags.push(tag);
+                me._element.append(tag.getElement());
+            });
+        }
     );
 }
 
@@ -95,32 +107,47 @@ function pickedTags(){
         });
     };
 
+    var getTagList = function(reason){
+        var base_selector = '.marked-tags';
+        if (reason === 'good'){
+            var extra_selector = '.interesting';
+        } else {
+            var extra_selector = '.ignored';
+        }
+        return $(base_selector + extra_selector);
+    };
+
     var getWildcardTagDetailBox = function(reason){
         if (reason === 'good'){
-            return interestingTagDetailBox;
+            var tag_box = interestingTagDetailBox;
         } else {
-            return ignoredTagDetailBox;
+            var tag_box = ignoredTagDetailBox;
         }
     };
 
     var handleWildcardTagClick = function(tag_name, reason){
         var detail_box = getWildcardTagDetailBox(reason);
+        var tag_box = getTagList(reason);
         if (detail_box.is_blank()){
             detail_box.render_for(tag_name);
         } else if (detail_box.belongs_to(tag_name)){
-            detail_box.clear();
+            detail_box.clear();//toggle off
         } else {
-            detail_box.clear();
+            detail_box.clear();//redraw with new data
             detail_box.render_for(tag_name);
+        }
+        if (!detail_box.inDocument()){
+            tag_box.after(detail_box.getElement());
+            detail_box.enterDocument();
         }
     };
 
     var renderNewTags = function(
-                                    clean_tag_names,
-                                    reason,
-                                    to_target,
-                                    to_tag_container
-                                ){
+                        clean_tag_names,
+                        reason,
+                        to_target,
+                        to_tag_container
+                    ){
         $.each(clean_tag_names, function(idx, tag_name){
             var tag = new Tag();
             tag.setName(tag_name);
@@ -129,7 +156,7 @@ function pickedTags(){
             if (/\*$/.test(tag_name)){
                 tag.setLinkable(false);
                 tag.setHandler(function(){
-                    handleWildcardClick(tag_name, reason);
+                    handleWildcardTagClick(tag_name, reason);
                 });
             }
             tag.setDeleteHandler(function(){

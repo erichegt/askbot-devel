@@ -185,6 +185,7 @@ $(document).ready(function(){
 
     var render_tag = function(tag_name, linkable, deletable){
         var tag = new Tag();
+        tag.setName(tag_name);
         tag.setDeletable(deletable);
         tag.setLinkable(linkable);
         return tag.getElement().outerHTML();
@@ -378,9 +379,11 @@ $(document).ready(function(){
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
             tag.decorate(element);
+            //todo: setDeleteHandler and setHandler
+            //must work after decorate & must have getName
             tag.setDeleteHandler(
                 function(){
-                    remove_search_tag(search_tag);
+                    remove_search_tag(tag.getName());
                 }
             );
         });

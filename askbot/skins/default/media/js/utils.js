@@ -114,6 +114,7 @@ var inherits = function(childCtor, parentCtor) {
 /* wrapper around jQuery object */
 var WrappedElement = function(){
     this._element = null;
+    this._in_document = false;
 };
 WrappedElement.prototype.setElement = function(element){
     this._element = element;
@@ -127,12 +128,22 @@ WrappedElement.prototype.getElement = function(){
     }
     return this._element;
 };
+WrappedElement.prototype.inDocument = function(){
+    return this._in_document;
+};
+WrappedElement.prototype.enterDocument = function(){
+    return this._in_document = true;
+};
+WrappedElement.prototype.hasElement = function(){
+    return (this._element !== null);
+};
 WrappedElement.prototype.makeElement = function(html_tag){
     //makes jQuery element with tags
     return $('<' + html_tag + '></' + html_tag + '>');
 };
 WrappedElement.prototype.dispose = function(){
     this._element.remove();
+    this._in_document = false;
 };
 
 var SimpleControl = function(){
@@ -144,7 +155,16 @@ inherits(SimpleControl, WrappedElement);
 
 SimpleControl.prototype.setHandler = function(handler){
     this._handler = handler;
+    if (this.hasElement()){
+        this.setHandlerInternal();
+    }
 };
+
+SimpleCortrol.prototype.setHandlerInternal = function(){
+    //default internal setHandler behavior
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
 SimpleControl.prototype.setTitle = function(title){
     this._title = title;
 };
@@ -164,7 +184,7 @@ EditLink.prototype.decorate = function(element){
     this._element = element;
     this._element.attr('title', $.i18n._('click to edit this comment'));
     this._element.html($.i18n._('edit'));
-    setupButtonEventHandlers(this._element, this._handler);
+    this.setHandlerInternal();
 };
 
 var DeleteIcon = function(title){
@@ -177,11 +197,16 @@ DeleteIcon.prototype.decorate = function(element){
     this._element = element;
     this._element.attr('class', 'delete-icon');
     this._element.attr('title', this._title);
+    this.setHandlerInternal();
+};
+
+DeleteIcon.prototype.setHandlerInternal = function(){
     setupButtonEventHandlers(this._element, this._handler);
 };
 
 DeleteIcon.prototype.createDom = function(){
-    this.decorate($('<span />'));
+    this._element = this.makeElement('span');
+    this.decorate(this._element);
 };
 
 var Tag = function(){
@@ -224,9 +249,16 @@ Tag.prototype.setUrlParams = function(url_params){
     this._url_params = url_params;
 };
 
+Tag.prototype.setHandlerInternal = function(){
+    setupButtonEventHandlers(this._element.find('.tag'), this._handler);
+};
+
 /* delete handler will be specific to the task */
 Tag.prototype.setDeleteHandler = function(delete_handler){
     this._delete_handler = delete_handler;
+    if (this.hasElement() && this.isDeletable()){
+        this._delete_icon.setHandler(delete_handler);
+    }
 };
 
 Tag.prototype.getDeleteHandler = function(){
@@ -244,7 +276,7 @@ Tag.prototype.decorate = function(element){
         if (this._delete_icon_title != null){
             this._delete_icon.setTitle(this._delete_icon_title);
         }
-        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._delete_icon.setDeleteHandler(this.getDeleteHandler());
         DeleteIcon.decorate(this._element.find('.delete-icon'));
     }
     this._inner_element = this._element.find('.tag');
@@ -252,7 +284,7 @@ Tag.prototype.decorate = function(element){
         this._inner_element.attr('title', this._title);
     }
     if (this._handler !== null){
-        setupButtonEventHandlers(this._element.find('.tag'), this._handler);
+        this.setHandlerInternal();
     }
 };
 
