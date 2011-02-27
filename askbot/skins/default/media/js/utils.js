@@ -160,7 +160,7 @@ SimpleControl.prototype.setHandler = function(handler){
     }
 };
 
-SimpleCortrol.prototype.setHandlerInternal = function(){
+SimpleControl.prototype.setHandlerInternal = function(){
     //default internal setHandler behavior
     setupButtonEventHandlers(this._element, this._handler);
 };
