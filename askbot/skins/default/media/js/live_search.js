@@ -326,7 +326,7 @@ $(document).ready(function(){
         relevance_tab = $('<a></a>');
         relevance_tab.attr('href', '?sort=relevance-desc');
         relevance_tab.attr('id', 'by_relevance');
-        relevance_tab.html(sortButtonData['relevance']['label']);
+        relevance_tab.html('<span>' + sortButtonData['relevance']['label'] + '</span>');
         return relevance_tab;
     }
 
