@@ -251,16 +251,34 @@ class Command(NoArgsCommand):
                                                 user_selections__user=user
                                             )
 
-                        q_all_A = Q_set_A.exclude( tags__in=ignored_tags )
+                        wk = user.ignored_tags.strip().split()
+                        ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
-                        q_all_B = Q_set_B.exclude( tags__in=ignored_tags )
+                        q_all_A = Q_set_A.exclude(
+                                        tags__in = ignored_tags
+                                    ).exclude(
+                                        tags__in = ignored_by_wildcards
+                                    )
+
+                        q_all_B = Q_set_B.exclude(
+                                        tags__in = ignored_tags
+                                    ).exclude(
+                                        tags__in = ignored_by_wildcards
+                                    )
                     else:
                         selected_tags = Tag.objects.filter(
                                                 user_selections__reason='good',
                                                 user_selections__user=user
                                             )
-                        q_all_A = Q_set_A.filter( tags__in=selected_tags )
-                        q_all_B = Q_set_B.filter( tags__in=selected_tags )
+
+                        wk = user.interesting_tags.strip().split()
+                        selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
+
+                        tag_filter = Q(tags__in = list(selected_tags)) \
+                                    | Q(tags__in = list(selected_by_wildcards))
+
+                        q_all_A = Q_set_A.filter( tag_filter )
+                        q_all_B = Q_set_B.filter( tag_filter )
 
                     q_all_A = q_all_A[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_B = q_all_B[:askbot_settings.MAX_ALERTS_PER_EMAIL]

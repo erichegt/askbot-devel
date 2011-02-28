@@ -257,6 +257,12 @@ class QuestionManager(models.Manager):
                                         search_state = search_state,
                                         ignored_tag_names = ignored_tag_names
                                     )
+        if askbot_settings.USE_WILDCARD_TAGS == True \
+            and request_user.is_authenticated() == True:
+            tagnames = request_user.interesting_tags
+            meta_data['interesting_tag_names'].extend(tagnames.split())
+            tagnames = request_user.ignored_tags
+            meta_data['ignored_tag_names'].extend(tagnames.split())
         return qs, meta_data, related_tags
 
     #todo: this function is similar to get_response_receivers
@@ -433,6 +439,15 @@ class Question(content.Content, DeletableContent):
         """
         Updates Tag associations for a question to match the given
         tagname string.
+
+        When tags are removed and their use count hits 0 - the tag is 
+        automatically deleted.
+
+        When an added tag does not exist - it is created
+
+        Tag use counts are recalculated
+
+        A signal tags updated is sent
         """
 
         previous_tags = list(self.tags.all())

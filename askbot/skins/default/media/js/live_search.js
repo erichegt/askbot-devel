@@ -184,33 +184,11 @@ $(document).ready(function(){
     };
 
     var render_tag = function(tag_name, linkable, deletable){
-        var url = askbot['urls']['questions'] +
-                    '?tags=' + encodeURI(tag_name);
-        var tag_title = $.i18n._(
-                            "see questions tagged '{tag}'"
-                        ).replace(
-                            '{tag}',
-                            tag_name
-                        );
-        var tag_element = 'span';
-        var tag_url = '';
-        if (linkable){
-            tag_element = 'a';
-            tag_url = ' href="' + url + '" ';
-        }
-        html = '<' + tag_element +
-                    ' class="tag tag-right" ' +
-                    tag_url +
-                    ' title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</' + tag_element + '>';
-        if (deletable){
-            html += '<span class="delete-icon"></span>';
-        }
-        var tag_class = 'tag-left';
-        if (deletable){
-            tag_class += ' deletable-tag';
-        }
-        return '<li class="' + tag_class + '">' + html + '</li>';
+        var tag = new Tag();
+        tag.setName(tag_name);
+        tag.setDeletable(deletable);
+        tag.setLinkable(linkable);
+        return tag.getElement().outerHTML();
     };
 
     var render_tags = function(tags, linkable, deletable){
@@ -316,10 +294,18 @@ $(document).ready(function(){
         var search_tags = $('#search-tags');
         search_tags.children().remove();
         var tags_html = '';
-        $.each(tags, function(idx, tag){
-            tags_html += render_tag(tag, false, true);
+        $.each(tags, function(idx, tag_name){
+            var tag = new Tag();
+            tag.setName(tag_name);
+            tag.setDeletable(true);
+            tag.setLinkable(false);
+            tag.setDeleteHandler(
+                function(){
+                    remove_search_tag(tag_name);
+                }
+            );
+            search_tags.append(tag.getElement());
         });
-        search_tags.html(tags_html);
     };
 
     var create_relevance_tab = function(){
@@ -387,13 +373,17 @@ $(document).ready(function(){
         });
     };
 
-    var activate_search_tag_deleters = function(){
-        var deleters = $('#search-tags .delete-icon');
-        $.each(deleters, function(idx, deleter){
-            var search_tag = $(deleter).prev().html();
-            setupButtonEventHandlers(
-                $(deleter), 
-                function(){remove_search_tag(search_tag)}
+    var activate_search_tags = function(){
+        var search_tags = $('#search-tags .tag-left');
+        $.each(search_tags, function(idx, element){
+            var tag = new Tag();
+            tag.decorate($(element));
+            //todo: setDeleteHandler and setHandler
+            //must work after decorate & must have getName
+            tag.setDeleteHandler(
+                function(){
+                    remove_search_tag(tag.getName());
+                }
             );
         });
     };
@@ -411,7 +401,6 @@ $(document).ready(function(){
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
             render_search_tags(data['query_data']['tags']);
-            activate_search_tag_deleters();
             render_faces(data['faces']);
             render_related_tags(data['related_tags']);
             render_relevance_sort_tab();
@@ -450,6 +439,6 @@ $(document).ready(function(){
         prev_text = '';
     }
 
-    activate_search_tag_deleters();
+    activate_search_tags();
     listen();
 });

@@ -1,5 +1,87 @@
 //var interestingTags, ignoredTags, tags, $;
+var TagDetailBox = function(box_type){
+    WrappedElement.call(this);
+    this.box_type = box_type;
+    this._is_blank = true;
+    this._tags = new Array();
+    this.wildcard = undefined;
+};
+inherits(TagDetailBox, WrappedElement);
+
+TagDetailBox.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    this._element.addClass('wildcard-tags');
+    this._headline = this.makeElement('p');
+    this._element.append(this._headline);
+    this._headline.html($.i18n._('Tag "<span></span>" matches:'));
+    this._tag_list_element = this.makeElement('ul');
+    this._tag_list_element.addClass('tags');
+    this._element.append(this._tag_list_element);
+}
+
+TagDetailBox.prototype.belongsTo = function(wildcard){
+    return (this.wildcard === wildcard);
+};
+
+TagDetailBox.prototype.isBlank = function(){
+    return this._is_blank;
+};
+
+TagDetailBox.prototype.clear = function(){
+    if (this.isBlank()){
+        return;
+    }
+    this._is_blank = true;
+    this.getElement().hide();
+    this.wildcard = null;
+    $.each(this._tags, function(idx, item){
+        item.dispose();
+    });
+    this._tags = new Array();
+};
+
+TagDetailBox.prototype.loadTags = function(wildcard, callback){
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        url: askbot['urls']['get_tags_by_wildcard'],
+        data: { wildcard: wildcard },
+        success: callback
+    });
+};
+
+TagDetailBox.prototype.renderFor = function(wildcard){
+    var me = this;
+    this.loadTags(
+        wildcard,
+        function(data, text_status, xhr){
+            me._tag_names = data['tag_names'];
+            if (data['tag_count'] > 0){
+                me._element.show();
+                me._headline.find('span').html(wildcard.replace(/\*$/, '&#10045;'));
+                $.each(me._tag_names, function(idx, name){
+                    var tag = new Tag();
+                    tag.setName(name);
+                    tag.setLinkable(false);
+                    me._tags.push(tag);
+                    me._tag_list_element.append(tag.getElement());
+                });
+                me._is_blank = false;
+                me.wildcard = wildcard;
+            } else {
+                me.clear();
+            }
+        }
+    );
+}
+
 function pickedTags(){
+    
+    var interestingTags = {};
+    var ignoredTags = {};
+    var interestingTagDetailBox = new TagDetailBox('interesting');
+    var ignoredTagDetailBox = new TagDetailBox('ignored');
 
     var sendAjax = function(tagnames, reason, action, callback){
         var url = '';
@@ -41,39 +123,77 @@ function pickedTags(){
         }
     };
 
-    var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){
-        obj.click( function(){
-            unpickTag(tag_store,tagname,reason,send_ajax);
-        });
+    var getTagList = function(reason){
+        var base_selector = '.marked-tags';
+        if (reason === 'good'){
+            var extra_selector = '.interesting';
+        } else {
+            var extra_selector = '.ignored';
+        }
+        return $(base_selector + extra_selector);
+    };
+
+    var getWildcardTagDetailBox = function(reason){
+        if (reason === 'good'){
+            return interestingTagDetailBox;
+        } else {
+            return ignoredTagDetailBox;
+        }
+    };
+
+    var handleWildcardTagClick = function(tag_name, reason){
+        var detail_box = getWildcardTagDetailBox(reason);
+        var tag_box = getTagList(reason);
+        if (detail_box.isBlank()){
+            detail_box.renderFor(tag_name);
+        } else if (detail_box.belongsTo(tag_name)){
+            detail_box.clear();//toggle off
+        } else {
+            detail_box.clear();//redraw with new data
+            detail_box.renderFor(tag_name);
+        }
+        if (!detail_box.inDocument()){
+            tag_box.after(detail_box.getElement());
+            detail_box.enterDocument();
+        }
     };
 
     var renderNewTags = function(
-                                    clean_tagnames,
-                                    reason,
-                                    to_target,
-                                    to_tag_container
-                                ){
-        $.each(clean_tagnames, function(idx, tagname){
-            var new_tag = $('<li></li>');
-            new_tag.addClass('deletable-tag');
-            new_tag.addClass('tag-left');
-            var tag_link = $('<a></a>');
-            tag_link.addClass('tag-right');
-            tag_link.addClass('tag')
-            tag_link.attr('rel','tag');
-            var tag_url = askbot['urls']['questions'] + '?tags=' + tagname;
-            tag_link.attr('href', tag_url);
-            tag_link.html(tagname);
-            var del_link = $('<span></span>');
-            del_link.addClass('delete-icon');
+                        clean_tag_names,
+                        reason,
+                        to_target,
+                        to_tag_container
+                    ){
+        $.each(clean_tag_names, function(idx, tag_name){
+            var tag = new Tag();
+            tag.setName(tag_name);
+            tag.setDeletable(true);
 
-            setupTagDeleteEvents(del_link, to_target, tagname, reason, true);
-
-            new_tag.append(tag_link);
-            new_tag.append(del_link);
-            to_tag_container.append(new_tag);
-
-            to_target[tagname] = new_tag;
+            if (/\*$/.test(tag_name)){
+                tag.setLinkable(false);
+                var detail_box = getWildcardTagDetailBox(reason);
+                tag.setHandler(function(){
+                    handleWildcardTagClick(tag_name, reason);
+                    if (detail_box.belongsTo(tag_name)){
+                        detail_box.clear();
+                    }
+                });
+                var delete_handler = function(){
+                    unpickTag(to_target, tag_name, reason, true);
+                    if (detail_box.belongsTo(tag_name)){
+                        detail_box.clear();
+                    }
+                }
+            } else {
+                var delete_handler = function(){
+                    unpickTag(to_target, tag_name, reason, true);
+                }
+            }
+            
+            tag.setDeleteHandler(delete_handler);
+            var tag_element = tag.getElement();
+            to_tag_container.append(tag_element);
+            to_target[tag_name] = tag_element;
         });
     };
 
@@ -127,8 +247,6 @@ function pickedTags(){
     };
 
     var collectPickedTags = function(section){
-        interestingTags = {};
-        ignoredTags = {};
         if (section === 'interesting'){
             var reason = 'good';
             var tag_store = interestingTags;
@@ -140,17 +258,24 @@ function pickedTags(){
         else {
             return;
         }
-        $('.' + section + '.tags.marked-tags a.tag').each(
+        $('.' + section + '.tags.marked-tags .tag-left').each(
             function(i,item){
-                var tag_name = $(item).html();
-                tag_store[tag_name] = $(item).parent();
-                setupTagDeleteEvents(
-                    $(item).parent().find('.delete-icon'),
-                    tag_store,
-                    tag_name,
-                    reason,
-                    true
-                );
+                var tag = new Tag();
+                tag.decorate($(item));
+                tag.setDeleteHandler(function(){
+                    unpickTag(
+                        tag_store,
+                        tag.getName(),
+                        reason,
+                        true
+                    )
+                });
+                if (tag.isWildcard()){
+                    tag.setHandler(function(){
+                        handleWildcardTagClick(tag.getName(), reason)
+                    });
+                }
+                tag_store[tag.getName()] = $(item);
             }
         );
     };
