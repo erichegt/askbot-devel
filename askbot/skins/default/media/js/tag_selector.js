@@ -8,28 +8,41 @@ var TagDetailBox = function(box_type){
 };
 inherits(TagDetailBox, WrappedElement);
 
-TagDetailBox.prototype.belongs_to = function(wildcard){
+TagDetailBox.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    this._element.addClass('wildcard-tags');
+    this._headline = this.makeElement('p');
+    this._element.append(this._headline);
+    this._headline.html($.i18n._('Tag "<span></span>" matches:'));
+    this._tag_list_element = this.makeElement('ul');
+    this._tag_list_element.addClass('tags');
+    this._element.append(this._tag_list_element);
+}
+
+TagDetailBox.prototype.belongsTo = function(wildcard){
     return (this.wildcard === wildcard);
 };
 
-TagDetailBox.prototype.is_blank = function(){
+TagDetailBox.prototype.isBlank = function(){
     return this._is_blank;
 };
 
 TagDetailBox.prototype.clear = function(){
-    if (this.is_blank()){
+    if (this.isBlank()){
         return;
     }
     this._is_blank = true;
+    this.getElement().hide();
+    this.wildcard = null;
     $.each(this._tags, function(idx, item){
         item.dispose();
     });
     this._tags = new Array();
 };
 
-TagDetailBox.prototype.load_tags = function(wildcard, callback){
+TagDetailBox.prototype.loadTags = function(wildcard, callback){
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         dataType: 'json',
         cache: false,
         url: askbot['urls']['get_tags_by_wildcard'],
@@ -38,18 +51,27 @@ TagDetailBox.prototype.load_tags = function(wildcard, callback){
     });
 };
 
-TagDetailBox.prototype.render_for = function(wildcard){
+TagDetailBox.prototype.renderFor = function(wildcard){
     var me = this;
-    this.load_tags(
+    this.loadTags(
         wildcard,
         function(data, text_status, xhr){
             me._tag_names = data['tag_names'];
-            $.each(me._tag_names, function(idx, name){
-                var tag = new Tag();
-                tag.setName(name);
-                me._tags.push(tag);
-                me._element.append(tag.getElement());
-            });
+            if (data['tag_count'] > 0){
+                me._element.show();
+                me._headline.find('span').html(wildcard.replace(/\*$/, '&#10045;'));
+                $.each(me._tag_names, function(idx, name){
+                    var tag = new Tag();
+                    tag.setName(name);
+                    tag.setLinkable(false);
+                    me._tags.push(tag);
+                    me._tag_list_element.append(tag.getElement());
+                });
+                me._is_blank = false;
+                me.wildcard = wildcard;
+            } else {
+                me.clear();
+            }
         }
     );
 }
@@ -101,12 +123,6 @@ function pickedTags(){
         }
     };
 
-    var setupTagDeleteEvents = function(obj,tag_store,tagname,reason,send_ajax){
-        obj.click( function(){
-            unpickTag(tag_store,tagname,reason,send_ajax);
-        });
-    };
-
     var getTagList = function(reason){
         var base_selector = '.marked-tags';
         if (reason === 'good'){
@@ -119,22 +135,22 @@ function pickedTags(){
 
     var getWildcardTagDetailBox = function(reason){
         if (reason === 'good'){
-            var tag_box = interestingTagDetailBox;
+            return interestingTagDetailBox;
         } else {
-            var tag_box = ignoredTagDetailBox;
+            return ignoredTagDetailBox;
         }
     };
 
     var handleWildcardTagClick = function(tag_name, reason){
         var detail_box = getWildcardTagDetailBox(reason);
         var tag_box = getTagList(reason);
-        if (detail_box.is_blank()){
-            detail_box.render_for(tag_name);
-        } else if (detail_box.belongs_to(tag_name)){
+        if (detail_box.isBlank()){
+            detail_box.renderFor(tag_name);
+        } else if (detail_box.belongsTo(tag_name)){
             detail_box.clear();//toggle off
         } else {
             detail_box.clear();//redraw with new data
-            detail_box.render_for(tag_name);
+            detail_box.renderFor(tag_name);
         }
         if (!detail_box.inDocument()){
             tag_box.after(detail_box.getElement());
@@ -155,14 +171,26 @@ function pickedTags(){
 
             if (/\*$/.test(tag_name)){
                 tag.setLinkable(false);
+                var detail_box = getWildcardTagDetailBox(reason);
                 tag.setHandler(function(){
                     handleWildcardTagClick(tag_name, reason);
+                    if (detail_box.belongsTo(tag_name)){
+                        detail_box.clear();
+                    }
                 });
+                var delete_handler = function(){
+                    unpickTag(to_target, tag_name, reason, true);
+                    if (detail_box.belongsTo(tag_name)){
+                        detail_box.clear();
+                    }
+                }
+            } else {
+                var delete_handler = function(){
+                    unpickTag(to_target, tag_name, reason, true);
+                }
             }
-            tag.setDeleteHandler(function(){
-                unpickTag(to_target, tag_name, reason, true);
-            });
-
+            
+            tag.setDeleteHandler(delete_handler);
             var tag_element = tag.getElement();
             to_tag_container.append(tag_element);
             to_target[tag_name] = tag_element;
@@ -230,17 +258,24 @@ function pickedTags(){
         else {
             return;
         }
-        $('.' + section + '.tags.marked-tags a.tag').each(
+        $('.' + section + '.tags.marked-tags .tag-left').each(
             function(i,item){
-                var tag_name = $(item).html().replace('\u273d','*');
-                tag_store[tag_name] = $(item).parent();
-                setupTagDeleteEvents(
-                    $(item).parent().find('.delete-icon'),
-                    tag_store,
-                    tag_name,
-                    reason,
-                    true
-                );
+                var tag = new Tag();
+                tag.decorate($(item));
+                tag.setDeleteHandler(function(){
+                    unpickTag(
+                        tag_store,
+                        tag.getName(),
+                        reason,
+                        true
+                    )
+                });
+                if (tag.isWildcard()){
+                    tag.setHandler(function(){
+                        handleWildcardTagClick(tag.getName(), reason)
+                    });
+                }
+                tag_store[tag.getName()] = $(item);
             }
         );
     };

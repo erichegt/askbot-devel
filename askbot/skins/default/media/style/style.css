@@ -341,6 +341,7 @@ blockquote {
    askbot/models/__init__.py:format_instant_notification_email()
 */
 ul.tags,
+.boxC ul.tags,
 ul.tags.marked-tags,
 ul#related-tags {
     list-style: none;
@@ -357,7 +358,12 @@ ul.tags li {
     padding: 0;
 }
 
-ul.tags.marked-tags li {
+.wildcard-tags {
+    clear: both;
+}
+
+ul.tags.marked-tags li,
+.wildcard-tags ul.tags li {
     margin-bottom: 5px;
 }
 
@@ -381,6 +387,7 @@ ul#related-tags li {
 .tag-left {
     background: url(../images/tag-right.png) no-repeat right center;
     border: none;
+    cursor: pointer;
     display: block;
     float: left;
     height: 18px;

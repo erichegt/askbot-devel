@@ -197,7 +197,9 @@ DeleteIcon.prototype.decorate = function(element){
     this._element = element;
     this._element.attr('class', 'delete-icon');
     this._element.attr('title', this._title);
-    this.setHandlerInternal();
+    if (this._handler !== null){
+        this.setHandlerInternal();
+    }
 };
 
 DeleteIcon.prototype.setHandlerInternal = function(){
@@ -210,12 +212,13 @@ DeleteIcon.prototype.createDom = function(){
 };
 
 var Tag = function(){
-    WrappedElement.call(this);
+    SimpleControl.call(this);
     this._deletable = false;
     this._delete_handler = null;
     this._delete_icon_title = null;
     this._tag_title = null;
     this._name = null;
+    this._url_params = null;
     this._inner_html_tag = 'a';
     this._html_tag = 'li';
 }
@@ -223,6 +226,10 @@ inherits(Tag, SimpleControl);
 
 Tag.prototype.setName = function(name){
     this._name = name;
+};
+
+Tag.prototype.getName = function(){
+    return this._name;
 };
 
 Tag.prototype.setHtmlTag = function(html_tag){
@@ -243,6 +250,14 @@ Tag.prototype.setLinkable = function(is_linkable){
 
 Tag.prototype.isLinkable = function(){
     return (this._inner_html_tag === 'a');
+};
+
+Tag.prototype.isDeletable = function(){
+    return this._deletable;
+};
+
+Tag.prototype.isWildcard = function(){
+    return (this.getName().substr(-1) === '*');
 };
 
 Tag.prototype.setUrlParams = function(url_params){
@@ -271,15 +286,18 @@ Tag.prototype.setDeleteIconTitle = function(title){
 
 Tag.prototype.decorate = function(element){
     this._element = element;
-    if (this._deletable === true){
+    var del = element.find('.delete-icon');
+    if (del.length === 1){
+        this.setDeletable(true);
         this._delete_icon = new DeleteIcon();
         if (this._delete_icon_title != null){
             this._delete_icon.setTitle(this._delete_icon_title);
         }
-        this._delete_icon.setDeleteHandler(this.getDeleteHandler());
-        DeleteIcon.decorate(this._element.find('.delete-icon'));
+        //do not set the delete handler here
+        this._delete_icon.decorate(del);
     }
     this._inner_element = this._element.find('.tag');
+    this._name = this.decodeTagName($.trim(this._inner_element.html()));
     if (this._title !== null){
         this._inner_element.attr('title', this._title);
     }
@@ -290,7 +308,11 @@ Tag.prototype.decorate = function(element){
 
 Tag.prototype.getDisplayTagName = function(){
     //replaces the trailing * symbol with the unicode asterisk
-    return /\*$/.replace(this._name, '&#10045;');
+    return this._name.replace(/\*$/, '&#10045;');
+};
+
+Tag.prototype.decodeTagName = function(encoded_name){
+    return encoded_name.replace('\u273d', '*');
 };
 
 Tag.prototype.createDom = function(){
@@ -305,7 +327,7 @@ Tag.prototype.createDom = function(){
     this._inner_element = this.makeElement(this._inner_html_tag);
     if (this.isLinkable()){
         var url = askbot['urls']['questions'];
-        url += '?tag=' + escape(this._name);
+        url += '?tags=' + escape(this.getName());
         if (this._url_params !== null){
             url += escape('&' + this._url_params);
         }
@@ -319,7 +341,7 @@ Tag.prototype.createDom = function(){
                 "see questions tagged '{tag}'"
             ).replace(
                 '{tag}',
-                tag_name
+                this.getName()
             )
         );
     }
@@ -328,8 +350,12 @@ Tag.prototype.createDom = function(){
 
     this._element.append(this._inner_element);
 
+    if (!this.isLinkable() && this._handler !== null){
+        this.setHandlerInternal();
+    }
+
     if (this._deletable){
-        this._delete_icon = DeleteIcon();
+        this._delete_icon = new DeleteIcon();
         this._delete_icon.setHandler(this.getDeleteHandler());
         if (this._delete_icon_title !== null){
             this._delete_icon.setTitle(this._delete_icon_title);

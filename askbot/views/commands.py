@@ -15,7 +15,7 @@ from askbot import models
 from askbot import forms
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from askbot.utils.decorators import ajax_only, ajax_login_required
+from askbot.utils import decorators
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -327,7 +327,7 @@ def vote(request, id):
     return HttpResponse(data, mimetype="application/json")
 
 #internally grouped views - used by the tagging system
-@ajax_login_required
+@decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
@@ -391,7 +391,22 @@ def mark_tag(request, **kwargs):#tagging system
 
     return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
 
-@ajax_login_required
+#@decorators.ajax_only
+@decorators.get_only
+def get_tags_by_wildcard(request):
+    """returns an json encoded array of tag names
+    in the response to a wildcard tag name
+    """
+    matching_tags = models.Tag.objects.get_by_wildcards(
+                        [request.GET['wildcard'],]
+                    )
+    count = matching_tags.count()
+    names = matching_tags.values_list('name', flat = True)[:10]
+    re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
+    return HttpResponse(re_data, mimetype = 'application/json')
+
+
+@decorators.ajax_login_required
 def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering system
     if request.user.hide_ignored_questions:
         new_hide_setting = False
@@ -400,7 +415,7 @@ def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering syste
     request.user.hide_ignored_questions = new_hide_setting
     request.user.save()
 
-@ajax_only
+@decorators.ajax_only
 def ajax_command(request):
     """view processing ajax commands - note "vote" and view others do it too
     """

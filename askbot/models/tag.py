@@ -30,27 +30,19 @@ class TagManager(models.Manager):
 
         transaction.commit_unless_managed() 
 
-    def get_matching_wildcards(
-                            self,
-                            wildcards = None
-                        ):
-        """returns query set of tags that match the list of the
-        wildcard tag names, wildcards is the list of wildcard tag
-        names - each is guaranteed to end with an asterisk and has
+    def get_by_wildcards(self, wildcards = None):
+        """returns query set of tags that match the wildcard tags
+        wildcard tag is guaranteed to end with an asterisk and has
         at least one character preceding the the asterisk. and there
         is only one asterisk in the entire name
         """
-        if len(wildcards) == 0:
+        if wildcards is None:
             return self.none()
-            
-        #initiate the Q object with name__startswith filter
-        #on the wildcard need to remove the trailing *
-        the_filter = models.Q(name__startswith = wildcards.pop()[:-1])
-        #in the loop build the Q object
-        for wildcard in wildcards:
-            the_filter = the_filter | models.Q(name__startswith = wildcard[:-1])
-        #execute the query and return
-        return self.filter(the_filter)
+        first_tag = wildcards.pop()
+        tag_filter = models.Q(name__startswith = first_tag[:-1])
+        for next_tag in wildcards:
+            tag_filter |= models.Q(name__startswith = next_tag[:-1])
+        return self.filter(tag_filter)
 
     def get_related_to_search(
                             self,

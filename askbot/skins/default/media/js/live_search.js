@@ -294,19 +294,18 @@ $(document).ready(function(){
         var search_tags = $('#search-tags');
         search_tags.children().remove();
         var tags_html = '';
-        $.each(tags, function(idx, tag){
+        $.each(tags, function(idx, tag_name){
             var tag = new Tag();
-            tag.setName(tag);
+            tag.setName(tag_name);
             tag.setDeletable(true);
             tag.setLinkable(false);
             tag.setDeleteHandler(
                 function(){
-                    remove_search_tag(search_tag);
+                    remove_search_tag(tag_name);
                 }
             );
-            tags_html += tag.getElement().outerHTML();
+            search_tags.append(tag.getElement());
         });
-        search_tags.html(tags_html);
     };
 
     var create_relevance_tab = function(){
@@ -378,7 +377,7 @@ $(document).ready(function(){
         var search_tags = $('#search-tags .tag-left');
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
-            tag.decorate(element);
+            tag.decorate($(element));
             //todo: setDeleteHandler and setHandler
             //must work after decorate & must have getName
             tag.setDeleteHandler(
