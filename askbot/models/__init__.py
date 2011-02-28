@@ -835,17 +835,46 @@ def user_post_comment(
     )
     return comment
 
+def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
+    """subscribe for or ignore a list of tags"""
+    cleaned_wildcards = list()
+    if wildcards:
+        cleaned_wildcards = self.update_wildcard_tag_selections(
+            action = action,
+            reason = reason,
+            wildcards = wildcards
+        )
 
-def user_mark_tag(self, tag_name = None, reason = None):
-    """reason is either "bad" or "good"
-    marks the tag
-    """
-    tag = models.Tag.objects.get(name = tag_name)
-    models.MarkedTag(
-        tag = tag,
-        user = self,
-        reason = reason
-    ).save()
+    #below we update normal tag selections
+    marked_ts = MarkedTag.objects.filter(
+                                    user = self,
+                                    tag__name__in = tagnames
+                                )
+    #todo: use the user api methods here instead of the straight ORM
+    cleaned_tagnames = list() #those that were actually updated
+    if action == 'remove':
+        logging.debug('deleting tag marks: %s' % ','.join(tagnames))
+        marked_ts.delete()
+    else:
+        marked_names = marked_ts.values_list('tag__name', flat = True)
+        if len(marked_names) < len(tagnames):
+            unmarked_names = set(tagnames).difference(set(marked_names))
+            ts = Tag.objects.filter(name__in = unmarked_names)
+            new_marks = list()
+            for tag in ts:
+                MarkedTag(
+                    user = self,
+                    reason = reason,
+                    tag = tag
+                ).save()
+                new_marks.append(tag.name)
+            cleaned_tagnames.extend(marked_names)
+            cleaned_tagnames.extend(new_marks)
+        else:
+            marked_ts.update(reason=reason)
+            cleaned_tagnames = tagnames
+
+    return cleaned_tagnames, cleaned_wildcards
 
 @auto_now_timestamp
 def user_retag_question(
@@ -1769,6 +1798,7 @@ User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
+User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
@@ -2258,8 +2288,23 @@ def record_user_full_updated(instance, **kwargs):
                 )
     activity.save()
 
+def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
+    """save pending tag subscriptions saved in the session"""
+    if 'subscribe_for_tags' in request.session:
+        (pure_tag_names, wildcards) = request.session.pop('subscribe_for_tags')
+        request.user.mark_tags(
+                    pure_tag_names,
+                    wildcards,
+                    reason = 'good',
+                    action = 'add'
+                )
+        request.user.message_set.create(
+            message = _('Your tag subscription was saved, thanks!')
+        )
+
 def post_stored_anonymous_content(
                                 sender,
+                                request,
                                 user,
                                 session_key,
                                 signal,
@@ -2327,6 +2372,7 @@ signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)
+signals.user_logged_in.connect(complete_pending_tag_subscriptions)
 signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Comment

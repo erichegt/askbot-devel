@@ -334,44 +334,14 @@ def mark_tag(request, **kwargs):#tagging system
     raw_tagnames = post_data['tagnames']
     reason = kwargs.get('reason', None)
     #separate plain tag names and wildcard tags
+
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
-
-    cleaned_wildcards = list()
-    if wildcards:
-        cleaned_wildcards = request.user.update_wildcard_tag_selections(
-            action = action,
-            reason = reason,
-            wildcards = wildcards
-        )
-
-    #below we update normal tag selections
-    marked_ts = models.MarkedTag.objects.filter(
-                                    user=request.user,
-                                    tag__name__in=tagnames
-                                )
-    #todo: use the user api methods here instead of the straight ORM
-    cleaned_tagnames = list() #those that were actually updated
-    if action == 'remove':
-        logging.debug('deleting tag marks: %s' % ','.join(tagnames))
-        marked_ts.delete()
-    else:
-        marked_names = marked_ts.values_list('tag__name', flat = True)
-        if len(marked_names) < len(tagnames):
-            unmarked_names = set(tagnames).difference(set(marked_names))
-            ts = models.Tag.objects.filter(name__in = unmarked_names)
-            new_marks = list()
-            for tag in ts:
-                models.MarkedTag(
-                    user=request.user,
-                    reason=reason,
-                    tag=tag
-                ).save()
-                new_marks.append(tag.name)
-            cleaned_tagnames.extend(marked_names)
-            cleaned_tagnames.extend(new_marks)
-        else:
-            marked_ts.update(reason=reason)
-            cleaned_tagnames = tagnames
+    cleaned_tagnames, cleaned_wildcards = request.user.mark_tags(
+                                                            tagnames,
+                                                            wildcards,
+                                                            reason = reason,
+                                                            action = action
+                                                        )
 
     #lastly - calculate tag usage counts
     tag_usage_counts = dict()
@@ -404,6 +374,40 @@ def get_tags_by_wildcard(request):
     names = matching_tags.values_list('name', flat = True)[:10]
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
+
+
+def subscribe_for_tags(request):
+    """process subscription of users by tags"""
+    tag_names = request.REQUEST['tags'].strip().split()
+    pure_tag_names, wildcards = forms.clean_marked_tagnames(tag_names)
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            if 'ok' in request.POST:
+                request.user.mark_tags(
+                            pure_tag_names,
+                            wildcards,
+                            reason = 'good',
+                            action = 'add'
+                        )
+                request.user.message_set.create(
+                    message = _('Your tag subscription was saved, thanks!')
+                )
+            else:
+                message = _(
+                    'Tag subscription was canceled (<a href="%(url)s">undo</a>).'
+                ) % {'url': request.path + '?tags=' + request.REQUEST['tags']}
+                request.user.message_set.create(message = message)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            data = {'tags': tag_names}
+            return render_into_skin('subscribe_for_tags.html', data, request)
+    else:
+        all_tag_names = pure_tag_names + wildcards
+        message = _('Please sign in to subscribe for: %(tags)s') \
+                    % {'tags': ', '.join(all_tag_names)}
+        request.user.message_set.create(message = message)
+        request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
+        return HttpResponseRedirect(reverse('user_signin'))
 
 
 @decorators.ajax_login_required

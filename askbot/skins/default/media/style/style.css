@@ -36,9 +36,9 @@ input, select {
 }
 
 p {
-    margin-bottom: 13px;
     font-size: 14px;
     line-height: 140%;
+    margin-bottom: 6px;
     padding-left: 5px;
 }
 
