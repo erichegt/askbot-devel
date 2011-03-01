@@ -1,0 +1,37 @@
+<form id="signin-form" method="post" action="{% url user_signin %}">
+  {{login_form.login_provider_name}}
+  <div id="login-icons">
+      <ul class="login-icons large">
+          {% for login_provider in major_login_providers %}
+          {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
+            <li>
+                <input
+                    name="{{login_provider.name}}"
+                    type="image"
+                    class="{{login_provider.type}}"
+                    src="{{login_provider.icon_media_path|media}}"
+                    alt="{{login_provider.tooltip_text}}"
+                    title="{{login_provider.tooltip_text}}"
+                />
+            </li>
+          {%endif%}
+          {% endfor %}
+      </ul>
+      <ul class="login-icons small">
+          {% for login_provider in minor_login_providers %}
+          {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
+          <li>
+              <input
+                  name="{{login_provider.name}}"
+                  type="image"
+                  class="{{login_provider.type}}"
+                  src="{{login_provider.icon_media_path|media}}"
+                  alt="{{login_provider.tooltip_text}}"
+                  title="{{login_provider.tooltip_text}}"
+              />
+          </li>
+          {%endif%}
+          {% endfor %}
+      </ul>
+  </div>
+</form>
