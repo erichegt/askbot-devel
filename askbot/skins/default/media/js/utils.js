@@ -31,6 +31,17 @@ var showMessage = function(element, msg, where) {
     div.fadeIn("fast");
 };
 
+//outer html hack - https://github.com/brandonaaron/jquery-outerhtml/
+(function($){
+    var div;
+    $.fn.outerHTML = function() {
+        var elem = this[0],
+        tmp;
+        return !elem ? null
+        : typeof ( tmp = elem.outerHTML ) === 'string' ? tmp
+        : ( div = div || $('<div/>') ).html( this.eq(0).clone() ).html();
+    };
+})(jQuery);
 
 var makeKeyHandler = function(key, callback){
     return function(e){
@@ -89,6 +100,269 @@ var notify = function() {
         isVisible: function() { return visible; }     
     };
 } ();
+
+/* some google closure-like code for the ui elements */
+var inherits = function(childCtor, parentCtor) {
+  /** @constructor taken from google closure */
+    function tempCtor() {};
+    tempCtor.prototype = parentCtor.prototype;
+    childCtor.superClass_ = parentCtor.prototype;
+    childCtor.prototype = new tempCtor();
+    childCtor.prototype.constructor = childCtor;
+};
+
+/* wrapper around jQuery object */
+var WrappedElement = function(){
+    this._element = null;
+    this._in_document = false;
+};
+WrappedElement.prototype.setElement = function(element){
+    this._element = element;
+};
+WrappedElement.prototype.createDom = function(){
+    this._element = $('<div></div>');
+};
+WrappedElement.prototype.getElement = function(){
+    if (this._element === null){
+        this.createDom();
+    }
+    return this._element;
+};
+WrappedElement.prototype.inDocument = function(){
+    return this._in_document;
+};
+WrappedElement.prototype.enterDocument = function(){
+    return this._in_document = true;
+};
+WrappedElement.prototype.hasElement = function(){
+    return (this._element !== null);
+};
+WrappedElement.prototype.makeElement = function(html_tag){
+    //makes jQuery element with tags
+    return $('<' + html_tag + '></' + html_tag + '>');
+};
+WrappedElement.prototype.dispose = function(){
+    this._element.remove();
+    this._in_document = false;
+};
+
+var SimpleControl = function(){
+    WrappedElement.call(this);
+    this._handler = null;
+    this._title = null;
+};
+inherits(SimpleControl, WrappedElement);
+
+SimpleControl.prototype.setHandler = function(handler){
+    this._handler = handler;
+    if (this.hasElement()){
+        this.setHandlerInternal();
+    }
+};
+
+SimpleControl.prototype.setHandlerInternal = function(){
+    //default internal setHandler behavior
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
+SimpleControl.prototype.setTitle = function(title){
+    this._title = title;
+};
+
+var EditLink = function(){
+    SimpleControl.call(this)
+};
+inherits(EditLink, SimpleControl);
+
+EditLink.prototype.createDom = function(){
+    var element = $('<a></a>');
+    element.addClass('edit');
+    this.decorate(element);
+};
+
+EditLink.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('title', $.i18n._('click to edit this comment'));
+    this._element.html($.i18n._('edit'));
+    this.setHandlerInternal();
+};
+
+var DeleteIcon = function(title){
+    SimpleControl.call(this);
+    this._title = title;
+};
+inherits(DeleteIcon, SimpleControl);
+
+DeleteIcon.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('class', 'delete-icon');
+    this._element.attr('title', this._title);
+    if (this._handler !== null){
+        this.setHandlerInternal();
+    }
+};
+
+DeleteIcon.prototype.setHandlerInternal = function(){
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
+DeleteIcon.prototype.createDom = function(){
+    this._element = this.makeElement('span');
+    this.decorate(this._element);
+};
+
+var Tag = function(){
+    SimpleControl.call(this);
+    this._deletable = false;
+    this._delete_handler = null;
+    this._delete_icon_title = null;
+    this._tag_title = null;
+    this._name = null;
+    this._url_params = null;
+    this._inner_html_tag = 'a';
+    this._html_tag = 'li';
+}
+inherits(Tag, SimpleControl);
+
+Tag.prototype.setName = function(name){
+    this._name = name;
+};
+
+Tag.prototype.getName = function(){
+    return this._name;
+};
+
+Tag.prototype.setHtmlTag = function(html_tag){
+    this._html_tag = html_tag;
+};
+
+Tag.prototype.setDeletable = function(is_deletable){
+    this._deletable = is_deletable;
+};
+
+Tag.prototype.setLinkable = function(is_linkable){
+    if (is_linkable === true){
+        this._inner_html_tag = 'a';
+    } else {
+        this._inner_html_tag = 'span';
+    }
+};
+
+Tag.prototype.isLinkable = function(){
+    return (this._inner_html_tag === 'a');
+};
+
+Tag.prototype.isDeletable = function(){
+    return this._deletable;
+};
+
+Tag.prototype.isWildcard = function(){
+    return (this.getName().substr(-1) === '*');
+};
+
+Tag.prototype.setUrlParams = function(url_params){
+    this._url_params = url_params;
+};
+
+Tag.prototype.setHandlerInternal = function(){
+    setupButtonEventHandlers(this._element.find('.tag'), this._handler);
+};
+
+/* delete handler will be specific to the task */
+Tag.prototype.setDeleteHandler = function(delete_handler){
+    this._delete_handler = delete_handler;
+    if (this.hasElement() && this.isDeletable()){
+        this._delete_icon.setHandler(delete_handler);
+    }
+};
+
+Tag.prototype.getDeleteHandler = function(){
+    return this._delete_handler;
+};
+
+Tag.prototype.setDeleteIconTitle = function(title){
+    this._delete_icon_title = title;
+};
+
+Tag.prototype.decorate = function(element){
+    this._element = element;
+    var del = element.find('.delete-icon');
+    if (del.length === 1){
+        this.setDeletable(true);
+        this._delete_icon = new DeleteIcon();
+        if (this._delete_icon_title != null){
+            this._delete_icon.setTitle(this._delete_icon_title);
+        }
+        //do not set the delete handler here
+        this._delete_icon.decorate(del);
+    }
+    this._inner_element = this._element.find('.tag');
+    this._name = this.decodeTagName($.trim(this._inner_element.html()));
+    if (this._title !== null){
+        this._inner_element.attr('title', this._title);
+    }
+    if (this._handler !== null){
+        this.setHandlerInternal();
+    }
+};
+
+Tag.prototype.getDisplayTagName = function(){
+    //replaces the trailing * symbol with the unicode asterisk
+    return this._name.replace(/\*$/, '&#10045;');
+};
+
+Tag.prototype.decodeTagName = function(encoded_name){
+    return encoded_name.replace('\u273d', '*');
+};
+
+Tag.prototype.createDom = function(){
+    this._element = this.makeElement(this._html_tag);
+    //render the outer element
+    if (this._deletable){
+        this._element.addClass('deletable-tag');
+    }
+    this._element.addClass('tag-left');
+
+    //render the inner element
+    this._inner_element = this.makeElement(this._inner_html_tag);
+    if (this.isLinkable()){
+        var url = askbot['urls']['questions'];
+        url += '?tags=' + escape(this.getName());
+        if (this._url_params !== null){
+            url += escape('&' + this._url_params);
+        }
+        this._inner_element.attr('href', url);
+    }
+    this._inner_element.addClass('tag tag-right');
+    this._inner_element.attr('rel', 'tag');
+    if (this._title === null){
+        this.setTitle(
+            $.i18n._(
+                "see questions tagged '{tag}'"
+            ).replace(
+                '{tag}',
+                this.getName()
+            )
+        );
+    }
+    this._inner_element.attr('title', this._title);
+    this._inner_element.html(this.getDisplayTagName());
+
+    this._element.append(this._inner_element);
+
+    if (!this.isLinkable() && this._handler !== null){
+        this.setHandlerInternal();
+    }
+
+    if (this._deletable){
+        this._delete_icon = new DeleteIcon();
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        if (this._delete_icon_title !== null){
+            this._delete_icon.setTitle(this._delete_icon_title);
+        }
+        this._element.append(this._delete_icon.getElement());
+    }
+};
 
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/

@@ -11,25 +11,25 @@
             href="{% url users %}?sort=reputation"
             {% if tab_id == 'reputation' %}class="on"{% endif %}
             title="{% trans %}reputation{% endtrans %}"
-        >{% trans %}reputation{% endtrans %}</a>
+        ><span>{% trans %}reputation{% endtrans %}</span></a>
         <a 
             id="sort_newest"
             href="{% url users %}?sort=newest"
             {% if tab_id == 'newest' %}class="on"{% endif %}
             class="off" title="{% trans %}recent{% endtrans %}"
-        >{% trans %}recent{% endtrans %}</a>
+        ><span>{% trans %}recent{% endtrans %}</span></a>
         <a 
             id="sort_last"
             href="{% url users %}?sort=last"
             {% if tab_id == 'last' %}class="on"{% endif %}
             class="off" title="{% trans %}oldest{% endtrans %}"
-        >{% trans %}oldest{% endtrans %}</a>
+        ><span>{% trans %}oldest{% endtrans %}<span></a>
         <a 
             id="sort_user"
             href="{% url users %}?sort=user"
             {% if tab_id == 'user' %}class="on"{% endif %}
             title="{% trans %}by username{% endtrans %}"
-        >{% trans %}by username{% endtrans %}</a>
+        ><span>{% trans %}by username{% endtrans %}</span></a>
     </div>
 </div>
 <p>

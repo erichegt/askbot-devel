@@ -5,6 +5,7 @@ e.g. ``some_user.do_something(...)``
 """
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
+from askbot.conf import settings as askbot_settings
 import datetime
 
 class DBApiTests(AskbotTestCase):
@@ -140,3 +141,74 @@ class DBApiTests(AskbotTestCase):
 
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
+
+class UserLikeTests(AskbotTestCase):
+    def setUp(self):
+        self.create_user()
+        self.question = self.post_question(tags = 'one two three')
+
+    def test_user_likes_question_via_tags(self):
+        truth_table = (
+            ('good', 'like', True),
+            ('good', 'dislike', False),
+            ('bad', 'like', False),
+            ('bad', 'dislike', True),
+        )
+        tag = models.Tag.objects.get(name = 'one')
+        for item in truth_table:
+            reason = item[0]
+            mt = models.MarkedTag(user = self.user, tag = tag, reason = reason)
+            mt.save()
+            self.assertEquals(
+                self.user.has_affinity_to_question(
+                    question = self.question,
+                    affinity_type = item[1]
+                ),
+                item[2]
+            )
+            mt.delete()
+
+    def setup_wildcard(self, wildcard = None, reason = None):
+        if reason == 'good':
+            self.user.interesting_tags = wildcard
+            self.user.ignored_tags = ''
+        else:
+            self.user.ignored_tags = wildcard
+            self.user.interesting_tags = ''
+        self.user.save()
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+
+    def assert_affinity_is(self, affinity_type, expectation):
+        self.assertEquals(
+            self.user.has_affinity_to_question(
+                question = self.question,
+                affinity_type = affinity_type
+            ),
+            expectation
+        )
+
+    def test_user_likes_question_via_wildcards(self):
+        self.setup_wildcard('on*', 'good')
+        self.assert_affinity_is('like', True)
+        self.assert_affinity_is('dislike', False)
+
+        self.setup_wildcard('aouaou* o* on* oeu*', 'good')
+        self.assert_affinity_is('like', True)
+        self.assert_affinity_is('dislike', False)
+
+        self.setup_wildcard('on*', 'bad')
+        self.assert_affinity_is('like', False)
+        self.assert_affinity_is('dislike', True)
+
+        self.setup_wildcard('aouaou* o* on* oeu*', 'bad')
+        self.assert_affinity_is('like', False)
+        self.assert_affinity_is('dislike', True)
+        
+        self.setup_wildcard('one*', 'good')
+        self.assert_affinity_is('like', True)
+        self.assert_affinity_is('dislike', False)
+
+        self.setup_wildcard('oneone*', 'good')
+        self.assert_affinity_is('like', False)
+        self.assert_affinity_is('dislike', False)
+

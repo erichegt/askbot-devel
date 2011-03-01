@@ -43,7 +43,7 @@
         {# avoid adding javascript here so that pages load faster #}
     </head>
     {% endspaceless %}
-    <body{% if page_class %} class="{{page_class}}"{% endif %}>
+    <body class="{% block body_class %}{% endblock %}{% if page_class %} {{page_class}}{% endif %}">
         {% include "blocks/system_messages.html" %}
         {% include "custom_header.html" ignore missing %}
         {% include "blocks/header.html" %}

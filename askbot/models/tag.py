@@ -29,11 +29,26 @@ class TagManager(models.Manager):
         cursor.execute(query, [tag.id for tag in tags])
 
         transaction.commit_unless_managed() 
+
+    def get_by_wildcards(self, wildcards = None):
+        """returns query set of tags that match the wildcard tags
+        wildcard tag is guaranteed to end with an asterisk and has
+        at least one character preceding the the asterisk. and there
+        is only one asterisk in the entire name
+        """
+        if wildcards is None:
+            return self.none()
+        first_tag = wildcards.pop()
+        tag_filter = models.Q(name__startswith = first_tag[:-1])
+        for next_tag in wildcards:
+            tag_filter |= models.Q(name__startswith = next_tag[:-1])
+        return self.filter(tag_filter)
+
     def get_related_to_search(
                             self,
-                            questions=None,
-                            search_state=None,
-                            ignored_tag_names=None
+                            questions = None,
+                            search_state = None,
+                            ignored_tag_names = None
                         ):
         """must return at least tag names, along with use counts
         handle several cases to optimize the query performance

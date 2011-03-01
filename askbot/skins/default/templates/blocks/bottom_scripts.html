@@ -18,6 +18,7 @@
         askbot['data']['userIsAuthenticated'] = false;
     {% endif %}
     askbot['urls']['mark_read_message'] = '{% url "read_message" %}';
+    askbot['urls']['get_tags_by_wildcard'] = '{% url "get_tags_by_wildcard" %}';
 </script>
 <script 
     type="text/javascript"

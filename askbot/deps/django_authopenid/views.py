@@ -89,7 +89,12 @@ def login(request,user):
     #5) send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
-    signals.user_logged_in.send(user=user,session_key=session_key,sender=None)
+    signals.user_logged_in.send(
+                        request = request,
+                        user = user,
+                        session_key=session_key,
+                        sender=None
+                    )
 
 #todo: uncouple this from askbot
 def logout(request):

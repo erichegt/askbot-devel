@@ -12,13 +12,13 @@
             href="{% url tags %}?sort=name"
             {% if tab_id == 'name' %}class="on"{% endif %}
             title="{% trans %}sorted alphabetically{% endtrans %}"
-        >{% trans %}by name{% endtrans %}</a>
+        ><span>{% trans %}by name{% endtrans %}</span></a>
         <a
             id="sort_used"
             href="{% url tags %}?sort=used"
             {% if tab_id == 'used' %}class="on"{% endif %}
             title="{% trans %}sorted by frequency of tag use{% endtrans %}"
-        >{% trans %}by popularity{% endtrans %}</a>
+        ><span>{% trans %}by popularity{% endtrans %}</span></a>
     </div>
 </div>
 <p>
