@@ -212,10 +212,21 @@ class QuestionManager(models.Manager):
                  )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
-            if ignored_tags:
+            have_ignored_wildcards = (
+                askbot_settings.USE_WILDCARD_TAGS \
+                and request_user.ignored_tags != ''
+            )
+
+            if ignored_tags or have_ignored_wildcards:
                 if request_user.hide_ignored_questions:
                     #exclude ignored tags if the user wants to
                     qs = qs.exclude(tags__in=ignored_tags)
+                    if have_ignored_wildcards:
+                        ignored_wildcards = request_user.ignored_tags.split() 
+                        extra_ignored_tags = Tag.objects.get_by_wildcards(
+                                                            ignored_wildcards
+                                                        )
+                        qs = qs.exclude(tags__in = extra_ignored_tags)
                 else:
                     #annotate questions tagged with ignored tags
                     #expensive query
