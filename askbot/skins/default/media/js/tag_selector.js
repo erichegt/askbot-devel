@@ -80,9 +80,9 @@ TagDetailBox.prototype.renderFor = function(wildcard){
                 me._is_blank = false;
                 me.wildcard = wildcard;
                 var tag_count = data['tag_count'];
-                if (tag_count > 10){
+                if (tag_count > 20){
                     var fmts = gettext('and %s more, not shown...');
-                    var footer_text = interpolate(fmts, [tag_count - 10]);
+                    var footer_text = interpolate(fmts, [tag_count - 20]);
                     me._footer.html(footer_text);
                     me._footer.show();
                 } else {

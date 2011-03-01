@@ -371,7 +371,7 @@ def get_tags_by_wildcard(request):
                         [request.GET['wildcard'],]
                     )
     count = matching_tags.count()
-    names = matching_tags.values_list('name', flat = True)[:10]
+    names = matching_tags.values_list('name', flat = True)[:20]
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
 
