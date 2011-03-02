@@ -124,6 +124,10 @@ class Comment(base.MetaContent, base.UserContent):
     def get_origin_post(self):
         return self.content_object.get_origin_post()
 
+    def get_tag_names(self):
+        """return tag names of the origin question"""
+        return self.get_origin_post().get_tag_names()
+
     def get_page_number(self, answers = None):
         """return page number whithin the page
         where the comment is going to appear
