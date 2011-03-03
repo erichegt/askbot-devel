@@ -1,9 +1,14 @@
 var prevSortMethod = sortMethod;
-$(document).ready(function(){
-    var query = $('input#keywords');
-    var prev_text = $.trim(query.val());
+var liveSearch = function(){
+    var query = undefined;
+    var prev_text = undefined;
     var running = false;
     var q_list_sel = 'question-list';//id of question listing div
+    var search_url = undefined;
+    var restart_query = function(){};
+    var process_query = function(){};
+    var render_result = function(){};
+
 
     var refresh_x_button = function(){
         if ($.trim(query.val()).length > 0){
@@ -18,6 +23,7 @@ $(document).ready(function(){
                         if (sortMethod === 'relevance-desc'){
                             sortMethod = prevSortMethod;
                         }
+                        refresh_x_button();
                         reset_query(sortMethod);
                     }
                 );
@@ -45,23 +51,24 @@ $(document).ready(function(){
         cur_text = $.trim(query.val());
         if (cur_text !== prev_text && running === false){
             if (cur_text.length >= minSearchWordLength){
-                if (prev_text.length === 0 && showSortByRelevance){
-                    if (sortMethod === 'activity-desc'){
-                        prevSortMethod = sortMethod;
-                        sortMethod = 'relevance-desc';
-                    }
-                }
-                send_query(cur_text, sortMethod);
+                process_query();
                 running = true;
             } else if (cur_text.length === 0){
-                reset_sort_method();
-                reset_query(sortMethod);
-                running = true;
+                restart_query();
             }
         }
     };
 
-    var listen = function(){
+    var ask_page_search_listen = function(){
+        running = false;
+        query.keydown(function(e){
+            if (running === false){
+                setTimeout(eval_query, 50);
+            }
+        });
+    };
+
+    var main_page_search_listen = function(){
         running = false;
         refresh_x_button();
         query.keydown(function(e){
@@ -388,7 +395,35 @@ $(document).ready(function(){
         });
     };
 
-    var render_result = function(data, text_status, xhr){
+    var render_ask_page_result = function(data, text_status, xhr){
+        var container = $('#' + q_list_sel);
+        container.children().remove();
+        if (data.length > 5){
+            container.css('overflow-y', 'scroll');
+            container.css('height', '120px');
+        } else {
+            container.css('height', data.length * 24 + 'px');
+            container.css('overflow-y', 'hidden');
+        }
+        $.each(data, function(idx, question){
+            var url = question['url'];
+            var title = question['title'];
+            var answer_count = question['answer_count'];
+            var list_item = $('<h2></h2>');
+            var count_element = $('<span class="item-count"></span>');
+            count_element.html(answer_count);
+            list_item.append(count_element);
+            var link = $('<a></a>');
+            link.attr('href', url);
+            list_item.append(link);
+            title_element = $('<span class="title"></span>');
+            title_element.html(title);
+            link.append(title)
+            container.append(list_item);
+        });
+    };
+
+    var render_main_page_result = function(data, text_status, xhr){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>');
         if (data['questions'].length > 0){
@@ -418,7 +453,7 @@ $(document).ready(function(){
     var send_query = function(query_text, sort_method){
         var post_data = {query: query_text};
         $.ajax({
-            url: askbot['urls']['questions'],
+            url: search_url,
             data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
@@ -428,9 +463,8 @@ $(document).ready(function(){
     }
 
     var reset_query = function(sort_method){
-        refresh_x_button();
         $.ajax({
-            url: askbot['urls']['questions'],
+            url: search_url,
             data: {reset_query: true, sort: sort_method},
             dataType: 'json',
             success: render_result,
@@ -439,6 +473,50 @@ $(document).ready(function(){
         prev_text = '';
     }
 
-    activate_search_tags();
-    listen();
-});
+    return {
+        init: function(mode){
+            if (mode === 'main_page'){
+                //live search for the main page
+                query = $('input#keywords');
+                search_url = askbot['urls']['questions'];
+                render_result = render_main_page_result;
+
+                process_query = function(){
+                    if (prev_text.length === 0 && showSortByRelevance){
+                        if (sortMethod === 'activity-desc'){
+                            prevSortMethod = sortMethod;
+                            sortMethod = 'relevance-desc';
+                        }
+                    }
+                    send_query(cur_text, sortMethod);
+                };
+                restart_query = function() {
+                    reset_sort_method();
+                    refresh_x_button();
+                    reset_query(sortMethod);
+                    running = true;
+                };
+
+                activate_search_tags();
+                main_page_search_listen();
+            } else {
+                query = $('input#id_title.questionTitleInput');
+                search_url = askbot['urls']['api_get_questions'];
+                render_result = render_ask_page_result;
+                process_query = function(){
+                    send_query(cur_text);
+                };
+                restart_query = function(){
+                    $('#' + q_list_sel).css('height',0).children().remove();
+                    running = false;
+                    prev_text = '';
+                    //ask_page_search_listen();
+                };
+                ask_page_search_listen();
+            }
+            prev_text = $.trim(query.val());
+            running = false;
+        }
+    };
+
+};

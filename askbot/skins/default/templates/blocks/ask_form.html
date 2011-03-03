@@ -22,6 +22,7 @@
                 {{ form.title.help_text }}
             </div>
         </div>
+        <div id='question-list'></div>
         {{macros.edit_post(form, post_type='question', edit_title=False)}}
         {% if not request.user.is_authenticated() %}
         <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />

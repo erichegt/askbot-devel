@@ -114,10 +114,10 @@ var CPValidator = function(){
                     required: true,
                     minlength: 10
                 },
-                title: {
+                /*title: {
                     required: true,
                     minlength: 10
-                }
+                }*/
             };
         },
         getQuestionFormMessages: function(){
