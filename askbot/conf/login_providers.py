@@ -15,6 +15,7 @@ settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
+        default = False,
         description=_('Show login proviers on Sign Up'),
     )
 )
@@ -23,6 +24,7 @@ settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'DISPLAYLOCAL',
+        default = True,
         description=_('Always display local login and hide Askbot button.'),
     )
 )
