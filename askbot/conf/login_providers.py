@@ -51,5 +51,6 @@ for key, value in providers:
             LOGIN_PROVIDERS,
             key,
             description=_(value),
+            default = True
         )
     )
