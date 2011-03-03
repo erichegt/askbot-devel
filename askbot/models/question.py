@@ -36,7 +36,7 @@ QUESTION_ORDER_BY_MAP = {
     'relevance-desc': None#this is a special case for postges only
 }
 
-class QuestionManager(models.Manager):
+class QuestionQuerySet(models.query.QuerySet):
     def create_new(
                 self,
                 title = None,
@@ -82,6 +82,35 @@ class QuestionManager(models.Manager):
         )
         return question
 
+    def get_by_text_query(self, search_query):
+        """returns a query set of questions, 
+        matching the full text query
+        """
+        if settings.DATABASE_ENGINE == 'mysql':
+            return self.filter( 
+                        models.Q(title__search = search_query) \
+                       | models.Q(text__search = search_query) \
+                       | models.Q(tagnames__search = search_query) \
+                       | models.Q(answers__text__search = search_query)
+                    )
+        elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+            rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
+            search_query = '&'.join(search_query.split())
+            extra_params = ("'" + search_query + "'",)
+            extra_kwargs = {
+                'select': {'relevance': rank_clause},
+                'where': ['text_search_vector @@ to_tsquery(%s)'],
+                'params': extra_params,
+                'select_params': extra_params,
+            }
+            return self.extra(**extra_kwargs)
+        else:
+            #fallback to dumb title match search
+            return extra(
+                        where=['title like %s'], 
+                        params=['%' + search_query + '%']
+                    )
+
     def run_advanced_search(
                         self,
                         request_user = None,
@@ -117,34 +146,12 @@ class QuestionManager(models.Manager):
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
-            if settings.DATABASE_ENGINE == 'mysql':
-                qs = qs.filter( 
-                            models.Q(title__search = search_query) \
-                           | models.Q(text__search = search_query) \
-                           | models.Q(tagnames__search = search_query) \
-                           | models.Q(answers__text__search = search_query)
-                        )
-            elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
-                rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
-                search_query = '&'.join(search_query.split())
-                extra_params = ("'" + search_query + "'",)
-                extra_kwargs = {
-                    'select': {'relevance': rank_clause},
-                    'where': ['text_search_vector @@ to_tsquery(%s)'],
-                    'params': extra_params,
-                    'select_params': extra_params,
-                }
-                if askbot.conf.should_show_sort_by_relevance():
-                    if sort_method == 'relevance-desc':
-                        extra_kwargs['order_by'] = ['-relevance',]
+            qs = qs.get_by_text_query(search_query)
+            #a patch for postgres search sort method
+            if askbot.conf.should_show_sort_by_relevance():
+                if sort_method == 'relevance-desc':
+                    qs= qs.extra(order_by = ['-relevance',])
 
-                qs = qs.extra(**extra_kwargs)
-            else:
-                #fallback to dumb title match search
-                qs = qs.extra(
-                                where=['title like %s'], 
-                                params=['%' + search_query + '%']
-                            )
 
         #have to import this at run time, otherwise there
         #a circular import dependency...
@@ -212,10 +219,21 @@ class QuestionManager(models.Manager):
                  )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
-            if ignored_tags:
+            have_ignored_wildcards = (
+                askbot_settings.USE_WILDCARD_TAGS \
+                and request_user.ignored_tags != ''
+            )
+
+            if ignored_tags or have_ignored_wildcards:
                 if request_user.hide_ignored_questions:
                     #exclude ignored tags if the user wants to
                     qs = qs.exclude(tags__in=ignored_tags)
+                    if have_ignored_wildcards:
+                        ignored_wildcards = request_user.ignored_tags.split() 
+                        extra_ignored_tags = Tag.objects.get_by_wildcards(
+                                                            ignored_wildcards
+                                                        )
+                        qs = qs.exclude(tags__in = extra_ignored_tags)
                 else:
                     #annotate questions tagged with ignored tags
                     #expensive query
@@ -302,6 +320,20 @@ class QuestionManager(models.Manager):
         update counter+1 when user browse question page
         """
         self.filter(id=question.id).update(view_count = question.view_count + 1)
+
+
+class QuestionManager(models.Manager):
+    """pattern from http://djangosnippets.org/snippets/562/
+    todo: turn this into a generic manager
+    """
+    def get_query_set(self):
+        return QuestionQuerySet(self.model)
+
+    def __getattr__(self, attr, *args):
+        try:
+            return getattr(self.__class__, attr, *args)
+        except AttributeError:
+            return getattr(self.get_query_set(), attr, *args)
 
 
 class Question(content.Content, DeletableContent):

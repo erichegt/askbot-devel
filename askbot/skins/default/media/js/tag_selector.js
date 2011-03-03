@@ -12,12 +12,16 @@ TagDetailBox.prototype.createDom = function(){
     this._element = this.makeElement('div');
     this._element.addClass('wildcard-tags');
     this._headline = this.makeElement('p');
+    this._headline.html(gettext('Tag "<span></span>" matches:'));
     this._element.append(this._headline);
-    this._headline.html($.i18n._('Tag "<span></span>" matches:'));
     this._tag_list_element = this.makeElement('ul');
     this._tag_list_element.addClass('tags');
     this._element.append(this._tag_list_element);
-}
+    this._footer = this.makeElement('p');
+    this._footer.css('clear', 'left');
+    this._element.append(this._footer);
+    this._element.hide();
+};
 
 TagDetailBox.prototype.belongsTo = function(wildcard){
     return (this.wildcard === wildcard);
@@ -41,37 +45,54 @@ TagDetailBox.prototype.clear = function(){
 };
 
 TagDetailBox.prototype.loadTags = function(wildcard, callback){
+    var me = this;
     $.ajax({
         type: 'GET',
         dataType: 'json',
         cache: false,
         url: askbot['urls']['get_tags_by_wildcard'],
         data: { wildcard: wildcard },
-        success: callback
+        success: callback,
+        failure: function(){ me._loading = false; }
     });
 };
 
 TagDetailBox.prototype.renderFor = function(wildcard){
     var me = this;
+    if (this._loading === true){
+        return;
+    }
+    this._loading = true;
     this.loadTags(
         wildcard,
         function(data, text_status, xhr){
             me._tag_names = data['tag_names'];
             if (data['tag_count'] > 0){
-                me._element.show();
-                me._headline.find('span').html(wildcard.replace(/\*$/, '&#10045;'));
+                var wildcard_display = wildcard.replace(/\*$/, '&#10045;');
+                me._headline.find('span').html(wildcard_display);
                 $.each(me._tag_names, function(idx, name){
                     var tag = new Tag();
                     tag.setName(name);
-                    tag.setLinkable(false);
+                    //tag.setLinkable(false);
                     me._tags.push(tag);
                     me._tag_list_element.append(tag.getElement());
                 });
                 me._is_blank = false;
                 me.wildcard = wildcard;
+                var tag_count = data['tag_count'];
+                if (tag_count > 20){
+                    var fmts = gettext('and %s more, not shown...');
+                    var footer_text = interpolate(fmts, [tag_count - 20]);
+                    me._footer.html(footer_text);
+                    me._footer.show();
+                } else {
+                    me._footer.hide();
+                }
+                me._element.show();
             } else {
                 me.clear();
             }
+            me._loading = false;
         }
     );
 }

@@ -174,7 +174,6 @@ class TagNamesField(forms.CharField):
             entered_tags = set([name.lower() for name in entered_tags])
         else:
             #make names of tags in the input to agree with the database
-
             cleaned_entered_tags = set()
             for entered_tag in entered_tags:
                 try:
