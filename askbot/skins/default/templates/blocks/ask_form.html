@@ -14,7 +14,7 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                <input id="id_title" class="questionTitleInput" name="title" 
+                <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
                     value="{% if form.initial.title %}{{form.initial.title}}{% endif %}"/>
                 <span class="form-error">{{ form.title.errors }}</span>
             </div>
