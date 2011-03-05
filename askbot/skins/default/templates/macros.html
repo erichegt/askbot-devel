@@ -493,17 +493,17 @@ poor design of the data or methods on data objects #}
     <a id="by_{{key_name}}" 
         href="?sort={{key_name}}-desc" 
         class="on" 
-        title="{{desc_tooltip}}">{{label}} &#9650;</a>
+        title="{{desc_tooltip}}"><span>{{label}} &#9650;</span></a>
     {% elif sort == key_name + "-desc" %}{# "best first" #}
     <a id="by_{{key_name}}"
         href="?sort={{key_name}}-asc" 
         class="on"
-        title="{{asc_tooltip}}">{{label}} &#9660;</a>
+        title="{{asc_tooltip}}"><span>{{label}} &#9660;</span></a>
     {% else %}{# default, when other button is active #}
     <a id="by_{{key_name}}"
         href="?sort={{key_name}}-desc" 
         class="off"
-        title="{{desc_tooltip}}">{{label}}</a>
+        title="{{desc_tooltip}}"><span>{{label}}</span></a>
     {% endif %}
     <script type="text/javascript">{# need to pass on text translations to js #}
         var sortButtonData = sortButtonData || {};

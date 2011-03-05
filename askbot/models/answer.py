@@ -128,6 +128,10 @@ class Answer(content.Content, DeletableContent):
             latest_revision = self.get_latest_revision()
             return const.TYPE_ACTIVITY_UPDATE_ANSWER, latest_revision
 
+    def get_tag_names(self):
+        """return tag names on the question"""
+        return self.question.get_tag_names()
+
     def apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
 
         if text is None:

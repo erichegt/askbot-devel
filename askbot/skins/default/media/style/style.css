@@ -336,6 +336,20 @@ blockquote {
     width: 100%;
 }
 
+.ask-page div#question-list {
+    float: none;
+    width: 706px;
+}
+.ask-page div#question-list h2 {
+    font-size: 14px;
+    padding-bottom: 0;
+}
+.ask-page div#question-list span {
+    padding: 3px 7px;
+    margin-right: 5px;
+    background: #ccc;
+}
+
 /* tag formatting is also copy-pasted in template
    because it must be the same in the emails
    askbot/models/__init__.py:format_instant_notification_email()
@@ -1163,7 +1177,7 @@ span.form-error {
     font-size: 100%;
     min-height: 200px;
     line-height: 18px;
-    width: 697px;
+    width: 702px;
     margin:0;
 }
 
