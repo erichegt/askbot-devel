@@ -66,7 +66,7 @@
             </ul>
             <ul class="login-icons small">
                 {% for login_provider in minor_login_providers %}
-                {%if settings['SIGN_IN' + login_provider.name.upper() + '_ENABLED'] == True%}
+                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
                 <li>
                     <input
                         name="{{login_provider.name}}"
