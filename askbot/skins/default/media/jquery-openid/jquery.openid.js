@@ -170,7 +170,9 @@ $.fn.authenticator = function() {
             setup_event_handlers(
                 enabler,
                 function(){
-                    password_input_fields.hide();
+                    if (askbot['settings']['signin_always_show_local_login'] === false){
+                        password_input_fields.hide();
+                    }
                     openid_login_token_input_fields.hide();
                     enabler.hide();
                     existing_login_methods_div.show();
@@ -193,7 +195,9 @@ $.fn.authenticator = function() {
 
     var reset_form = function(){
         openid_login_token_input_fields.hide();
-        password_input_fields.hide();
+        if (askbot['settings']['signin_always_show_local_login'] === false){
+            password_input_fields.hide();
+        }
         reset_password_input_fields();
         $('.error').remove();
         if (userIsAuthenticated === false){

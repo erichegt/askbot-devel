@@ -927,6 +927,7 @@ def signup_with_password(request):
     minor_login_providers = util.get_minor_login_providers()
     context_data = {
                 'form': form, 
+                'page_class': 'openid-signin',
                 'email_feeds_form': email_feeds_form,
                 'major_login_providers': major_login_providers.values(),
                 'minor_login_providers': minor_login_providers.values(),

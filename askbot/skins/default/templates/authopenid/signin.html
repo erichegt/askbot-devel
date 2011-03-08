@@ -1,4 +1,5 @@
 {% extends "two_column_body.html" %}
+{% import "authopenid/macros.html" as login_macros %}
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
@@ -44,69 +45,29 @@
     {% endif %}
     {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
         {# in this branch we display the login icons #}
-        <form id="signin-form" method="post" action="{% url user_signin %}">
-        {{login_form.login_provider_name}}
-        <div id="login-icons">
-            <ul class="login-icons large">
-                {% for login_provider in major_login_providers %}
-                
-                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
-                  <li>
-                      <input
-                          name="{{login_provider.name}}"
-                          type="image"
-                          class="{{login_provider.type}}"
-                          src="{{login_provider.icon_media_path|media}}"
-                          alt="{{login_provider.tooltip_text}}"
-                          title="{{login_provider.tooltip_text}}"
-                      />
-                  </li>
-                {%endif%}
-                {% endfor %}
-            </ul>
-            <ul class="login-icons small">
-                {% for login_provider in minor_login_providers %}
-                {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True%}
-                <li>
-                    <input
-                        name="{{login_provider.name}}"
-                        type="image"
-                        class="{{login_provider.type}}"
-                        src="{{login_provider.icon_media_path|media}}"
-                        alt="{{login_provider.tooltip_text}}"
-                        title="{{login_provider.tooltip_text}}"
-                    />
-                </li>
-                {%endif%}
-                {% endfor %}
-            </ul>
-        </div>
-        {{ login_form.next }}
-        <fieldset 
-            id="openid-fs" 
-            {% if not login_form.openid_login_token.errors %}
-                style="display:none;"
-            {% endif %}
-        >
-            <h2 id="openid-heading">{% trans %}Please enter your <span>user name</span>, then sign in{% endtrans %}</h2>
-            <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
-            <input type="text" name="openid_login_token" />
-            <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans %}Sign in{% endtrans %}"/>
-        </fieldset> 
+        {{ 
+            login_macros.provider_buttons(
+                login_form = login_form,
+                major_login_providers = major_login_providers,
+                minor_login_providers = minor_login_providers,
+                hide_local_login = True,
+                settings = settings
+            )
+        }}
         {% if use_password_login==True %}
         <fieldset 
             id="password-fs"
             {% if user.is_anonymous() %}
                 {% if not login_form.username.errors and not login_form.password_login_failed %}
-                  {%if not settings.DISPLAYLOCAL%}
-                    style="display:none;"
+                    {% if not settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}
+                        style="display:none;"
                     {%endif%}
               {% endif %}
             {% else %}
                 {% if not login_form.new_password.errors and not login_form.new_password_retyped.errors %}
-                  {%if not settings.DISPLAYLOCAL%}
-                    style="display:none;"
-                  {%endif%}
+                    {% if not settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}
+                        style="display:none;"
+                    {% endif%}
                 {% endif %}
             {% endif %}
         >
