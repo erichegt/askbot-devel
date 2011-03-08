@@ -106,7 +106,7 @@ class SkinEnvironment(CoffinEnvironment):
 ENV = SkinEnvironment(
             autoescape=False,
             extensions=['jinja2.ext.i18n'],
-            skin = 'default'
+            skin = askbot_settings.ASKBOT_DEFAULT_SKIN
             #loader = SkinLoader()
          )
 ENV.set_language(django_settings.LANGUAGE_CODE)
