@@ -8,15 +8,15 @@ from django.conf import settings as django_settings
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
-                    _('External login providers configuration.')
+                    _('Login provider setings')
                 )
 
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
-        default = False,
-        description=_('Show login proviers on Sign Up'),
+        default = True,
+        description=_('Show alternative logn provider buttons on the password Sign Up page'),
     )
 )
 
@@ -24,35 +24,49 @@ settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
-        default = True,
+        default = False,
         description=_('Always display local login and hide Askbot button.'),
     )
 )
 
-providers = (('SIGNIN_TWITTER_ENABLED', 'Activate Twitter login'),
-              ('SIGNIN_GOOGLE_ENABLED', 'Activate Google login'),
-              ('SIGNIN_LINKEDIN_ENABLED', 'Activate LinkedIn login'),
-              ('SIGNIN_YAHOO_ENABLED', 'Activate Yahoo! login'),
-              ('SIGNIN_AOL_ENABLED', 'Activate AOL login'),
-              ('SIGNIN_OPENID_ENABLED', 'Activate OpenID login'),
-              ('SIGNIN_FACEBOOK_ENABLED', 'Activate Facebook login'),
-              ('SIGNIN_LOCAL_ENABLED', 'Activate Local login'),
-              ('SIGNIN_FLICKR_ENABLED', 'Activate Flickr login'),
-              ('SIGNIN_TECHNORATI_ENABLED', 'Activate Technorati login'),
-              ('SIGNIN_WORDPRESS_ENABLED', 'Activate Wordpress login'),
-              ('SIGNIN_BLOGGER_ENABLED', 'Activate Blogger login'),
-              ('SIGNIN_LIVEJOURNAL_ENABLED', 'Activate LiveJournal login'),
-              ('SIGNIN_CLAIMID_ENABLED', 'Activate ClaimID login'),
-              ('SIGNIN_VIDOOP_ENABLED', 'Activate Vidoop login'),
-              ('SIGNIN_VERISIGN_ENABLED', 'Activate Verisign login')
-            )
-                  
-for key, value in providers:
+providers = (
+    'Twitter',
+    'Google',
+    'LinkedIn',
+    'Yahoo',
+    'AOL',
+    'OpenID',
+    'Facebook',
+    'Local',
+    'Flickr',
+    'Technorati',
+    'Wordpress',
+    'Blogger',
+    'LiveJournal',
+    'ClaimID',
+    'Vidoop',
+    'Verisign'
+)
+
+need_extra_setup = ('Twitter', 'Facebook', 'LinkedIn')
+
+for provider in providers:
+    kwargs = {
+        'description': _('Activate %(provider)s login') % {'provider': provider},
+        'default': True,
+    }
+    if provider in need_extra_setup:
+        kwargs['help_text'] = _(
+            'Note: to really enable %(provider)s login '
+            'some additional parameters will need to be set '
+            'in the "External keys" section'
+        ) % {'provider': provider}
+
+    setting_name = 'SIGNIN_%s_ENABLED' % provider.upper()
     settings.register(
         livesettings.BooleanValue(
             LOGIN_PROVIDERS,
-            key,
-            description=_(value),
-            default = True
+            setting_name,
+            **kwargs
         )
     )
