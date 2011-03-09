@@ -8,7 +8,16 @@ var copyAltToTitle = function(sel){
 };
 
 var getUniqueWords = function(value){
-    return $.unique($.trim(value).split(/\s+/));
+    var words = $.trim(value).split(/\s+/);
+    var uniques = new Object();
+    var out = new Array();
+    $.each(words, function(idx, item){
+        if (!(item in uniques)){
+            uniques[item] = 1;
+            out.push(item);
+        };
+    });
+    return out;
 };
 
 var showMessage = function(element, msg, where) {

@@ -170,23 +170,29 @@ class TagNamesField(forms.CharField):
                 entered_tags.append(tag)
 
         #normalize character case of tags
+        cleaned_entered_tags = list()
         if askbot_settings.FORCE_LOWERCASE_TAGS:
-            entered_tags = set([name.lower() for name in entered_tags])
+            #a simpler way to handle tags - just lowercase thew all
+            for name in entered_tags:
+                lowercased_name = name.lower()
+                if lowercased_name not in cleaned_entered_tags:
+                    cleaned_entered_tags.append(lowercased_name)
         else:
             #make names of tags in the input to agree with the database
-            cleaned_entered_tags = set()
             for entered_tag in entered_tags:
                 try:
                     #looks like we have to load tags one-by one
+                    #because we need tag name cases to be the same
+                    #as those stored in the database
                     stored_tag = models.Tag.objects.get(
                                             name__iexact = entered_tag
                                         )
-                    cleaned_entered_tags.add(stored_tag.name)
+                    if stored_tag.name not in cleaned_entered_tags:
+                        cleaned_entered_tags.append(stored_tag.name)
                 except models.Tag.DoesNotExist:
-                    cleaned_entered_tags.add(entered_tag)
-            entered_tags = list(cleaned_entered_tags)
+                    cleaned_entered_tags.append(entered_tag)
 
-        return u' '.join(entered_tags)
+        return u' '.join(cleaned_entered_tags)
 
 class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
