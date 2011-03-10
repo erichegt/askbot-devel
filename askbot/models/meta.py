@@ -226,10 +226,7 @@ class Comment(base.MetaContent, base.UserContent):
             subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
 
-        global_subscribers = EmailFeedSetting.objects.filter_subscribers(
-                                            feed_type = 'q_all',
-                                            frequency = 'i'
-                                        )
+        global_subscribers = origin_post.get_global_instant_notification_subscribers()
         #print 'global subscribers: ', global_subscribers
 
         subscriber_set.update(global_subscribers)

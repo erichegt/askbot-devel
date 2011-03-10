@@ -92,6 +92,48 @@ class Content(models.Model):
 
         return comment
 
+    def get_global_instant_notification_subscribers(self):
+        """returns a set of subscribers to post according to tag filters
+        both - subscribers who ignore tags or who follow only
+        specific tags
+        """
+        tags = self.tags.all()
+
+        subscriber_set = set()
+
+        global_subscriptions = EmailFeedSetting.objects.filter(
+                                                    feed_type = 'q_all',
+                                                    frequency = 'i'
+                                                )
+        interesting_tag_selections = MarkedTag.objects.filter(
+                                                    tag__in = tags,
+                                                    reason = 'good'
+                                                )
+        global_interested_subscribers = User.objects.filter(
+            tag_selections__in = interesting_tag_selections
+        ).filter(
+            notification_subscriptions__in = global_subscriptions
+        ).filter(
+            tag_filter_setting = 'interesting'
+        )
+        subscriber_set.update(global_interested_subscribers)
+
+        ignored_tag_selections = MarkedTag.objects.filter(
+                                                    tag__in = tags,
+                                                    reason = 'bad'
+                                                )
+
+        global_non_ignoring_subscribers = User.objects.exclude(
+            tag_selections__in = ignored_tag_selections
+        ).filter(
+            notification_subscriptions__in = global_subscriptions,
+        ).filter(
+            tag_filter_setting = 'ignored'
+        )
+        subscriber_set.update(global_non_ignoring_subscribers)
+        return subscriber_set
+
+
     def get_instant_notification_subscribers(
                                 self,
                                 potential_subscribers = None,
@@ -139,39 +181,9 @@ class Content(models.Model):
             subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
 
-        tags = origin_post.tags.all()
-
-        #3) whole forum subscibers on selected tags only
-        global_subscriptions = EmailFeedSetting.objects.filter(
-                                                    feed_type = 'q_all',
-                                                    frequency = 'i'
-                                                )
-        interesting_tag_selections = MarkedTag.objects.filter(
-                                                    tag__in = tags,
-                                                    reason = 'good'
-                                                )
-        global_interested_subscribers = User.objects.filter(
-            tag_selections__in = interesting_tag_selections
-        ).filter(
-            notification_subscriptions__in = global_subscriptions
-        ).filter(
-            tag_filter_setting = 'interesting'
-        )
-        subscriber_set.update(global_interested_subscribers)
-
-        ignored_tag_selections = MarkedTag.objects.filter(
-                                                    tag__in = tags,
-                                                    reason = 'bad'
-                                                )
-
-        global_non_ignoring_subscribers = User.objects.exclude(
-            tag_selections__in = ignored_tag_selections
-        ).filter(
-            notification_subscriptions__in = global_subscriptions,
-        ).filter(
-            tag_filter_setting = 'ignored'
-        )
-        subscriber_set.update(global_non_ignoring_subscribers)
+        #3) whole forum subscribers
+        global_subscribers = origin_post.get_global_instant_notification_subscribers()
+        subscriber_set.update(global_subscribers)
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
