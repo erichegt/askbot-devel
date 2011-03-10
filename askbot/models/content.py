@@ -4,7 +4,7 @@ from django.contrib.contenttypes import generic
 from django.db import models
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import Tag
+from askbot.models.tag import Tag, MarkedTag
 from django.utils import html as html_utils
 
 class Content(models.Model):
@@ -139,19 +139,39 @@ class Content(models.Model):
             subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
 
+        tags = origin_post.tags.all()
 
-        #3) whole forum subscibers
-        global_subscribers = EmailFeedSetting.objects.filter_subscribers(
-                                            feed_type = 'q_all',
-                                            frequency = 'i'
-                                        )
-        for subscriber in global_subscribers:
-            if origin_post.passes_tag_filter_for_user(subscriber):
-                #print subscriber, ' passes tag filter'
-                subscriber_set.add(subscriber)
-            else:
-                #print 'does not pass tag filter'
-                pass
+        #3) whole forum subscibers on selected tags only
+        global_subscriptions = EmailFeedSetting.objects.filter(
+                                                    feed_type = 'q_all',
+                                                    frequency = 'i'
+                                                )
+        interesting_tag_selections = MarkedTag.objects.filter(
+                                                    tag__in = tags,
+                                                    reason = 'good'
+                                                )
+        global_interested_subscribers = User.objects.filter(
+            tag_selections__in = interesting_tag_selections
+        ).filter(
+            notification_subscriptions__in = global_subscriptions
+        ).filter(
+            tag_filter_setting = 'interesting'
+        )
+        subscriber_set.update(global_interested_subscribers)
+
+        ignored_tag_selections = MarkedTag.objects.filter(
+                                                    tag__in = tags,
+                                                    reason = 'bad'
+                                                )
+
+        global_non_ignoring_subscribers = User.objects.exclude(
+            tag_selections__in = ignored_tag_selections
+        ).filter(
+            notification_subscriptions__in = global_subscriptions,
+        ).filter(
+            tag_filter_setting = 'ignored'
+        )
+        subscriber_set.update(global_non_ignoring_subscribers)
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author

@@ -168,6 +168,20 @@ class UserLikeTests(AskbotTestCase):
             )
             mt.delete()
 
+    def test_user_does_not_care_about_question_no_wildcards(self):
+        askbot_settings.update('USE_WILDCARD_TAGS', False)
+        tag = models.Tag(name = 'five', created_by = self.user)
+        tag.save()
+        mt = models.MarkedTag(user = self.user, tag = tag, reason = 'good')
+        mt.save()
+        self.assertFalse(
+            self.user.has_affinity_to_question(
+                question = self.question,
+                affinity_type = 'like'
+            )
+        )
+
+
     def setup_wildcard(self, wildcard = None, reason = None):
         if reason == 'good':
             self.user.interesting_tags = wildcard
