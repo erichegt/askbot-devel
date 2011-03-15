@@ -2020,7 +2020,7 @@ def calculate_gravatar_hash(instance, **kwargs):
 
 def record_post_update_activity(
         post,
-        newly_mentioned_users = list(), 
+        newly_mentioned_users = None, 
         updated_by = None,
         timestamp = None,
         created = False,
@@ -2031,54 +2031,19 @@ def record_post_update_activity(
     """
     assert(timestamp != None)
     assert(updated_by != None)
+    if newly_mentioned_users is None:
+        newly_mentioned_users = list()
 
-    #todo: take into account created == True case
-    (activity_type, update_object) = post.get_updated_activity_data(created)
+    from askbot.tasks import record_post_update_task
 
-    update_activity = Activity(
-                    user = updated_by,
-                    active_at = timestamp, 
-                    content_object = post, 
-                    activity_type = activity_type,
-                    question = post.get_origin_post()
-                )
-    update_activity.save()
-
-    #what users are included depends on the post type
-    #for example for question - all Q&A contributors
-    #are included, for comments only authors of comments and parent 
-    #post are included
-    recipients = post.get_response_receivers(
-                                exclude_list = [updated_by, ]
-                            )
-
-    update_activity.add_recipients(recipients)
-
-    assert(updated_by not in recipients)
-
-    for user in set(recipients) | set(newly_mentioned_users):
-        user.increment_response_count()
-        user.save()
-
-    #todo: weird thing is that only comments need the recipients
-    #todo: debug these calls and then uncomment in the repo
-    #argument to this call
-    notification_subscribers = post.get_instant_notification_subscribers(
-                                    potential_subscribers = recipients,
-                                    mentioned_users = newly_mentioned_users,
-                                    exclude_list = [updated_by, ]
-                                )
-    #todo: fix this temporary spam protection plug
-    if created:
-        if not (updated_by.is_administrator() or updated_by.is_moderator()):
-            if updated_by.reputation < 15:
-                notification_subscribers = \
-                    [u for u in notification_subscribers if u.is_administrator()]
-    send_instant_notifications_about_activity_in_post(
-                            update_activity = update_activity,
-                            post = post,
-                            recipients = notification_subscribers,
-                        )
+    record_post_update_task.delay(
+        post_id = post.id,
+        post_content_type_id = ContentType.objects.get_for_model(post).id,
+        newly_mentioned_user_id_list = [u.id for u in newly_mentioned_users],
+        updated_by_id = updated_by.id,
+        timestamp = timestamp,
+        created = created,
+    )
 
 
 def record_award_event(instance, created, **kwargs):
@@ -2388,7 +2353,6 @@ signals.post_updated.connect(
 signals.site_visited.connect(record_user_visit)
 
 #todo: wtf??? what is x=x about?
-signals = signals
 
 Question = Question
 QuestionRevision = QuestionRevision
@@ -2400,10 +2364,6 @@ Answer = Answer
 AnswerRevision = AnswerRevision
 AnonymousAnswer = AnonymousAnswer
 
-Tag = Tag
-Comment = Comment
-Vote = Vote
-MarkedTag = MarkedTag
 
 BadgeData = BadgeData
 Award = Award
