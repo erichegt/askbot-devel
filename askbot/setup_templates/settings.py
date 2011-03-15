@@ -148,6 +148,8 @@ INSTALLED_APPS = (
     'keyedcache',
     'robots',
     'django_countries',
+    'djcelery',
+    'djkombu',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
     #requires setting of MEDIA_ROOT and MEDIA_URL
 )
@@ -192,3 +194,6 @@ ALLOW_UNICODE_SLUGS = False
 #Celery Settings
 BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
 CELERY_ALWAYS_EAGER = True
+
+import djcelery
+djcelery.setup_loader()
