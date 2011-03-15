@@ -6,8 +6,7 @@ from askbot import models
 def get_tag_lines(tag_marks, width = 25):
     output = list()
     line = ''
-    for mark in tag_marks:
-        name = mark.tag.name
+    for name in tag_marks:
         if line == '':
             line = name
         elif len(line) + len(name) + 1 > width:
@@ -45,8 +44,7 @@ def format_table_row(*cols, **kwargs):
 
 
 class Command(BaseCommand):
-    help = """Dumps askbot forum data into the file for the later use with "load_forum".
-The extension ".json" will be added automatically."""
+    help = 'Prints statistics of tag usage'
 
     option_list = BaseCommand.option_list + (
             optparse.make_option(
@@ -93,10 +91,37 @@ The extension ".json" will be added automatically."""
         item_count = 0
         for user in users:
             tag_marks = user.tag_selections
-            followed_tags = tag_marks.filter(reason='good')
-            ignored_tags = tag_marks.filter(reason='bad')
-            followed_count = followed_tags.count()
-            ignored_count = ignored_tags.count()
+
+            #add names of explicitly followed tags
+            followed_tags = list()
+            followed_tags.extend(   
+                tag_marks.filter(
+                            reason='good'
+                        ).values_list(
+                            'tag__name', flat = True
+                        )
+            )
+
+            #add wildcards to the list of interesting tags
+            followed_tags.extend(user.interesting_tags.split())
+
+            for good_tag in user.interesting_tags.split():
+                followed_tags.append(good_tag)
+
+            ignored_tags = list()
+            ignored_tags.extend(
+                tag_marks.filter(
+                    reason='bad'
+                ).values_list(
+                    'tag__name', flat = True
+                )
+            )
+
+            for bad_tag in user.ignored_tags.split():
+                ignored_tags.append(bad_tag)
+
+            followed_count = len(followed_tags)
+            ignored_count = len(ignored_tags)
             if followed_count == 0 and ignored_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
@@ -104,9 +129,13 @@ The extension ".json" will be added automatically."""
                 print '%-28s %25s %25s' % ('=========', '================', '============')
             followed_lines = get_tag_lines(followed_tags, width = 25)
             ignored_lines = get_tag_lines(ignored_tags, width = 25)
-            user_string = '%s (%d)' % (user.username, user.id)
+
+            follow = '*'
+            if user.tag_filter_setting == "interesting":
+                follow = ''
+            user_string = '%s (%d)%s' % (user.username, user.id, follow)
             output_lines = format_table_row(
-                                [user.username,],
+                                [user_string,], 
                                 followed_lines,
                                 ignored_lines,
                                 format_string = '%-28s %25s %25s'
@@ -118,22 +147,64 @@ The extension ".json" will be added automatically."""
 
         self.print_postamble(item_count)
 
+    def get_wildcard_tag_stats(self):
+        """This method collects statistics on all tags
+        that are followed or ignored via a wildcard selection
+
+        The return value is a dictionary, where keys are tag names
+        and values are two element lists with whe first value - follow count
+        and the second value - ignore count
+        """
+        wild = dict()#the dict that is returned in the end
+
+        users = models.User.objects.all().order_by('username')
+        for user in users:
+            wk = user.interesting_tags.strip().split()
+            interesting_tags = models.Tag.objects.get_by_wildcards(wk)
+            for tag in interesting_tags:
+                if tag.name not in wild:
+                    wild[tag.name] = [0, 0]
+                wild[tag.name][0] += 1
+
+            wk = user.ignored_tags.strip().split()
+            ignored_tags = models.Tag.objects.get_by_wildcards(wk)
+            for tag in ignored_tags:
+                if tag.name not in wild:
+                    wild[tag.name] = [0, 0]
+                wild[tag.name][1] += 1
+
+        return wild
+
     def print_sub_counts(self, print_empty):
         """prints subscription counts for
         each tag (ignored and favorite counts)
         """
+        wild_tags = self.get_wildcard_tag_stats()
         tags = models.Tag.objects.all().order_by('name')
         item_count = 0
         for tag in tags:
+            wild_follow = 0
+            wild_ignore = 0
+            if tag.name in wild_tags:
+                (wild_follow, wild_ignore) = wild_tags[tag.name]
+
             tag_marks = tag.user_selections
-            follow_count = tag_marks.filter(reason='good').count()
-            ignore_count = tag_marks.filter(reason='bad').count()
+            follow_count = tag_marks.filter(reason='good').count() \
+                                                        + wild_follow
+            ignore_count = tag_marks.filter(reason='bad').count() \
+                                                        + wild_ignore
+            follow_str = '%d (%d)' % (follow_count, wild_follow)
+            ignore_str = '%d (%d)' % (ignore_count, wild_ignore)
+            counts = (11-len(follow_str)) * ' ' + follow_str + '  ' 
+            counts += (11-len(ignore_str)) * ' ' + ignore_str
+
             if follow_count + ignore_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                print '%-32s %12s %12s' % ('Tag name', 'Interesting', 'Ignored')
-                print '%-32s %12s %12s' % ('========', '===========', '=======')
-            print '%-32s %12d %12d' % (tag.name, follow_count, ignore_count)
+                print '%-32s %12s %12s' % ('', 'Interesting', 'Ignored  ')
+                print '%-32s %12s %12s' % ('Tag name', 'Total(wild)', 'Total(wild)')
+                print '%-32s %12s %12s' % ('========', '===========', '===========')
+            print '%-32s %s' % (tag.name, counts)
             item_count += 1
 
         self.print_postamble(item_count)

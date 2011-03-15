@@ -36,7 +36,7 @@ class TagManager(models.Manager):
         at least one character preceding the the asterisk. and there
         is only one asterisk in the entire name
         """
-        if wildcards is None:
+        if wildcards is None or len(wildcards) == 0:
             return self.none()
         first_tag = wildcards.pop()
         tag_filter = models.Q(name__startswith = first_tag[:-1])
