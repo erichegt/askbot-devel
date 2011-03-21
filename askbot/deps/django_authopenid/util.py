@@ -303,14 +303,6 @@ def get_minor_login_providers():
         'icon_media_path': '/jquery-openid/images/flickr.png',
         'openid_endpoint': 'http://flickr.com/%(username)s/'
     }
-    data['flickr'] = {
-        'name': 'flickr',
-        'display_name': 'Flickr',
-        'type': 'openid-username',
-        'extra_token_name': _('Flickr user name'),
-        'icon_media_path': '/jquery-openid/images/flickr.png',
-        'openid_endpoint': 'http://flickr.com/%(username)s/'
-    }
     data['technorati'] = {
         'name': 'technorati',
         'display_name': 'Technorati',

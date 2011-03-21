@@ -16,7 +16,7 @@ settings.register(
         LOGIN_PROVIDERS,
         'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
         default = True,
-        description=_('Show alternative logn provider buttons on the password Sign Up page'),
+        description=_('Show alternative login provider buttons on the password "Sign Up" page'),
     )
 )
 
@@ -25,27 +25,27 @@ settings.register(
         LOGIN_PROVIDERS,
         'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
         default = False,
-        description=_('Always display local login and hide Askbot button.'),
+        description=_('Always display local login form and hide "Askbot" button.'),
     )
 )
 
 providers = (
-    'Twitter',
-    'Google',
-    'LinkedIn',
-    'Yahoo',
-    'AOL',
-    'OpenID',
-    'Facebook',
     'Local',
+    'AOL',
+    'Blogger',
+    'ClaimID',
+    'Facebook',
     'Flickr',
+    'Google',
+    'Twitter',
+    'LinkedIn',
+    'LiveJournal',
+    'OpenID',
     'Technorati',
     'Wordpress',
-    'Blogger',
-    'LiveJournal',
-    'ClaimID',
     'Vidoop',
     'Verisign'
+    'Yahoo',
 )
 
 need_extra_setup = ('Twitter', 'Facebook', 'LinkedIn')
