@@ -17,7 +17,6 @@
                     settings = None
                 )
 %}
-<form id="signin-form" method="post" action="{% url user_signin %}">
     {{login_form.login_provider_name}}
     {{ login_form.next }}
     <div id="login-icons">
@@ -53,5 +52,4 @@
         <input type="text" name="openid_login_token" />
         <input class="submit-b" type="submit" name="openid_login_with_extra_token" value="{% trans %}Sign in{% endtrans %}"/>
     </fieldset> 
-</form>
 {% endmacro %}

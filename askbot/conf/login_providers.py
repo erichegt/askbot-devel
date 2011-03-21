@@ -30,7 +30,7 @@ settings.register(
 )
 
 providers = (
-    'Local',
+    'local',
     'AOL',
     'Blogger',
     'ClaimID',
@@ -44,7 +44,7 @@ providers = (
     'Technorati',
     'Wordpress',
     'Vidoop',
-    'Verisign'
+    'Verisign',
     'Yahoo',
 )
 

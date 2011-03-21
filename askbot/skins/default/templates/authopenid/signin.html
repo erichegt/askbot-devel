@@ -44,13 +44,18 @@
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
     {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
-        {# in this branch we display the login icons #}
+    <form id="signin-form" method="post" action="{% url user_signin %}">
+        {# in this branch - the real signin view we display the login icons
+            here we hide the local login button only if admin
+            wants to always show the password login form - then
+            the button is useless.
+        #}
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,
                 major_login_providers = major_login_providers,
                 minor_login_providers = minor_login_providers,
-                hide_local_login = True,
+                hide_local_login = settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN,
                 settings = settings
             )
         }}
@@ -114,7 +119,6 @@
             {% endif %}
         </fieldset>
         {% endif %}
-        </form>
         {% if user.is_authenticated() and existing_login_methods %}
         <div 
             id='existing-login-methods'
@@ -149,6 +153,7 @@
             </table>
         </div>
         {% endif %}
+    </form>
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
         {% if user.is_anonymous() %}
