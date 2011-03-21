@@ -244,7 +244,7 @@ class Command(NoArgsCommand):
                     q_ans_B.cutoff_time = cutoff_time
 
                 elif feed.feed_type == 'q_all':
-                    if user.tag_filter_setting == 'ignored':
+                    if user.email_tag_filter_strategy == 'ignored':
 
                         ignored_tags = Tag.objects.filter(
                                                 user_selections__reason='bad',
@@ -348,7 +348,7 @@ class Command(NoArgsCommand):
         except EmailFeedSetting.DoesNotExist:
             pass
 
-        if user.tag_filter_setting == 'interesting':
+        if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
             extend_question_list(q_all_A, q_list)
             extend_question_list(q_all_B, q_list)
 
@@ -358,7 +358,7 @@ class Command(NoArgsCommand):
         extend_question_list(q_ans_A, q_list, limit=True)
         extend_question_list(q_ans_B, q_list, limit=True)
 
-        if user.tag_filter_setting == 'ignored':
+        if user.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
             extend_question_list(q_all_A, q_list, limit=True)
             extend_question_list(q_all_B, q_list, limit=True)
 

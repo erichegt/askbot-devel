@@ -444,22 +444,18 @@ def api_get_questions(request):
 
 
 @decorators.ajax_login_required
-def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering system
-    if request.user.hide_ignored_questions:
-        new_hide_setting = False
-    else:
-        new_hide_setting = True
-    request.user.hide_ignored_questions = new_hide_setting
-    request.user.save()
-
-@decorators.ajax_only
-def ajax_command(request):
-    """view processing ajax commands - note "vote" and view others do it too
+def set_tag_filter_strategy(request):
+    """saves data in the ``User.display_tag_filter_strategy``
+    for the current user
     """
-    if 'command' not in request.POST:
-        raise exceptions.PermissionDenied(_('Bad request'))
-    if request.POST['command'] == 'toggle-ignored-questions':
-        return ajax_toggle_ignored_questions(request)
+    filter_type = request.POST['filter_type']
+    filter_value = int(request.POST['filter_value'])
+    assert(filter_type == 'display')
+    assert(filter_value in dict(const.TAG_FILTER_STRATEGY_CHOICES))
+    request.user.display_tag_filter_strategy = filter_value
+    request.user.save()
+    return HttpResponse('', mimetype = "application/json")
+
 
 @login_required
 def close(request, id):#close question

@@ -83,14 +83,21 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
-User.add_to_class('tag_filter_setting',
-                    models.CharField(
-                                        max_length=16,
-                                        choices=const.TAG_EMAIL_FILTER_CHOICES,
-                                        default='ignored'
-                                     )
-                 )
+User.add_to_class(
+    'email_tag_filter_strategy', 
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.EXCLUDE_IGNORED
+    )
+)
+User.add_to_class(
+    'display_tag_filter_strategy',
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.INCLUDE_ALL
+    )
+)
+
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
@@ -199,6 +206,25 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
             if tag.name.startswith(wildcard[:-1]):
                 return True
     return False
+
+
+def user_has_ignored_wildcard_tags(self):
+    """True if wildcard tags are on and 
+    user has some"""
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.ignored_tags != ''
+    )
+
+
+def user_has_interesting_wildcard_tags(self):
+    """True in wildcard tags aro on and
+    user has nome interesting wildcard tags selected
+    """
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.interesting_tags != ''
+    )
 
 
 def user_can_have_strong_url(self):
@@ -1813,6 +1839,8 @@ User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
 User.add_to_class('is_owner_of', user_is_owner_of)
+User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard_tags)
+User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)

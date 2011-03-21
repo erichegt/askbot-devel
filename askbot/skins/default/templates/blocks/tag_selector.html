@@ -33,8 +33,14 @@
         <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     </div>
-    <p id="hideIgnoredTagsControl">
-    <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />
-    <label id="hideIgnoredTagsLabel" for="hideIgnoredTagsCb">{% trans %}keep ignored questions hidden{% endtrans %}</label>
-    <p>
+    <h3>{% trans %}Display tag filter{% endtrans%}</h3>
+    <div id="displayTagFilterControl">
+        {{
+            macros.radio_select(
+                name = "display_tag_filter_strategy",
+                value = request.user.display_tag_filter_strategy,
+                choices = tag_filter_strategy_choices
+            )
+        }}
+    </div>
 </div>

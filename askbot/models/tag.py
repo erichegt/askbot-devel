@@ -54,8 +54,7 @@ class TagManager(models.Manager):
         handle several cases to optimize the query performance
         """
 
-        if search_state.is_default() or \
-                questions.count() > search_state.page_size * 3:
+        if questions.count() > search_state.page_size * 3:
             """if we have too many questions or 
             search query is the most common - just return a list
             of top tags"""

@@ -473,7 +473,19 @@ var liveSearch = function(){
         prev_text = '';
     }
 
+    var refresh_main_page = function(){
+        $.ajax({
+            url: askbot['urls']['questions'],
+            data: {preserve_state: true},
+            dataType: 'json',
+            success: render_main_page_result
+        });
+    };
+
     return {
+        refresh: function(){
+            refresh_main_page();
+        },
         init: function(mode){
             if (mode === 'main_page'){
                 //live search for the main page

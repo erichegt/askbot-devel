@@ -801,18 +801,20 @@ class EditUserForm(forms.Form):
         return self.cleaned_data['email']
 
 class TagFilterSelectionForm(forms.ModelForm):
-    tag_filter_setting = forms.ChoiceField(choices=const.TAG_EMAIL_FILTER_CHOICES,
-                                            initial='ignored',
-                                            label=_('Choose email tag filter'),
-                                            widget=forms.RadioSelect)
+    email_tag_filter_strategy = forms.ChoiceField(
+        choices = const.TAG_FILTER_STRATEGY_CHOICES,
+        initial = const.EXCLUDE_IGNORED,
+        label = _('Choose email tag filter'),
+        widget = forms.RadioSelect
+    )
     class Meta:
         model = User
-        fields = ('tag_filter_setting',)
+        fields = ('email_tag_filter_strategy',)
 
     def save(self):
-        before = self.instance.tag_filter_setting
+        before = self.instance.email_tag_filter_strategy
         super(TagFilterSelectionForm, self).save()
-        after = self.instance.tag_filter_setting #User.objects.get(pk=self.instance.id).tag_filter_setting
+        after = self.instance.email_tag_filter_strategy
         if before != after:
             return True
         return False

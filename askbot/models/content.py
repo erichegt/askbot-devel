@@ -2,10 +2,11 @@ import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db import models
+from django.utils import html as html_utils
+from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag
-from django.utils import html as html_utils
 
 class Content(models.Model):
     """
@@ -105,6 +106,14 @@ class Content(models.Model):
                                                     feed_type = 'q_all',
                                                     frequency = 'i'
                                                 )
+
+        #segment of users who have tag filter turned off
+        global_subscribers = User.objects.filter(
+            email_tag_filter_strategy = const.INCLUDE_ALL
+        )
+        subscriber_set.update(global_subscribers)
+
+        #segment of users who want emails on selected questions only
         interesting_tag_selections = MarkedTag.objects.filter(
                                                     tag__in = tags,
                                                     reason = 'good'
@@ -114,10 +123,11 @@ class Content(models.Model):
         ).filter(
             notification_subscriptions__in = global_subscriptions
         ).filter(
-            tag_filter_setting = 'interesting'
+            email_tag_filter_strategy = const.INCLUDE_INTERESTING 
         )
         subscriber_set.update(global_interested_subscribers)
 
+        #segment of users who want to exclude ignored tags
         ignored_tag_selections = MarkedTag.objects.filter(
                                                     tag__in = tags,
                                                     reason = 'bad'
@@ -128,7 +138,7 @@ class Content(models.Model):
         ).filter(
             notification_subscriptions__in = global_subscriptions,
         ).filter(
-            tag_filter_setting = 'ignored'
+            email_tag_filter_strategy = const.EXCLUDE_IGNORED
         )
         subscriber_set.update(global_non_ignoring_subscribers)
         return subscriber_set
@@ -254,21 +264,23 @@ class Content(models.Model):
     def passes_tag_filter_for_user(self, user):
 
         question = self.get_origin_post()
-        if user.tag_filter_setting == 'interesting':
+        if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
             #at least some of the tags must be marked interesting
             return user.has_affinity_to_question(
                                             question,
                                             affinity_type = 'like'
                                         )
-        elif user.tag_filter_setting == 'ignored':
+        elif user.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
             return not user.has_affinity_to_question(
                                             question,
                                             affinity_type = 'dislike'
                                         )
+        elif user.email_tag_filter_strategy == const.INCLUDE_ALL:
+            return True
         else:
             raise ValueError(
-                        'unexpected User.tag_filter_setting %s' \
-                        % user.tag_filter_setting
+                        'unexpected User.email_tag_filter_strategy %s' \
+                        % user.email_tag_filter_strategy
                     )
 
     def post_get_last_update_info(self):#todo: rename this subroutine

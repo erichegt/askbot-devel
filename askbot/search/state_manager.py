@@ -179,6 +179,9 @@ class SearchState(object):
         """update the search state according to the
         user input and the queue of the page hits that
         user made"""
+        if 'preserve_state' in input_dict:
+            return
+
         if view_log.should_reset_search_state():
             self.reset()
 

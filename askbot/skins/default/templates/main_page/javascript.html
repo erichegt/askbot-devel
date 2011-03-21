@@ -16,7 +16,7 @@
     askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% trans %}mark-tag/{% endtrans %}{% trans %}interesting/{% endtrans %}';
     askbot['urls']['mark_ignored_tag'] = scriptUrl + '{% trans %}mark-tag/{% endtrans %}{% trans %}ignored/{% endtrans %}';
     askbot['urls']['unmark_tag'] = scriptUrl + '{% trans %}unmark-tag/{% endtrans %}';
-    askbot['urls']['command'] = '{% url "call_ajax" %}';
+    askbot['urls']['set_tag_filter_strategy'] = '{% url "set_tag_filter_strategy" %}';
     askbot['urls']['questions'] = '{% url "questions" %}';
     askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';
     askbot['urls']['user_url_template'] = scriptUrl + '{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';

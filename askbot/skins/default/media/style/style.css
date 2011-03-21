@@ -613,8 +613,13 @@ ul#search-tags {
     margin: 0;
 }
 
-.boxC h2 {
+.boxC h2,
+.boxC h3 {
     padding-left: 0;
+}
+
+.boxC label {
+    color: #333;
 }
 
 .pager {

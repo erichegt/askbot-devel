@@ -320,6 +320,24 @@ poor design of the data or methods on data objects #}
     {% endspaceless %}
 {%- endmacro -%}
 
+{%- macro radio_select(name = None, value = None, choices = None) -%}
+    {% for choice in choices %}
+        <p class="choice">
+            {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
+            <label for="{{ id }}">{{ choice[1] }}</label>
+            <input 
+                id="{{ id }}"
+                name="{{ name }}"
+                value="{{ choice[0] }}"
+                type="radio"
+                {% if value == choice[0] %}
+                checked="checked"
+                {% endif %}
+            />
+        </p>
+    {% endfor %}
+{%- endmacro -%}
+
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">

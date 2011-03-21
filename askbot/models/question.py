@@ -202,33 +202,40 @@ class QuestionQuerySet(models.query.QuerySet):
             ignored_tag_names = [tag.name for tag in ignored_tags]
             meta_data['ignored_tag_names'] = ignored_tag_names
 
-            if interesting_tags:
+            if interesting_tags or request_user.has_interesting_wildcard_tags():
                 #expensive query
-                qs = qs.extra(
-                    select = SortedDict([
-                        (
-                            'interesting_score', 
-                            'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-                             + 'WHERE askbot_markedtag.user_id = %s '
-                             + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                             + 'AND askbot_markedtag.reason = \'good\' '
-                             + 'AND question_tags.question_id = question.id'
-                        ),
-                            ]),
-                    select_params = (uid_str,),
-                 )
+                if request_user.display_tag_filter_strategy == \
+                        const.INCLUDE_INTERESTING:
+                    #filter by interesting tags only
+                    qs = qs.filter(tags__in = interesting_tags)
+                    if request_user.has_ignored_wildcard_tags():
+                        interesting_wildcards = request_user.interesting_tags.split() 
+                        extra_interesting_tags = Tag.objects.get_by_wildcards(
+                                                            interesting_wildcards
+                                                        )
+                        qs = qs.filter(tags__in = extra_interesting_tags)
+                else:
+                    #simply annotate interesting questions
+                    qs = qs.extra(
+                        select = SortedDict([
+                            (
+                                'interesting_score', 
+                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
+                                 + 'WHERE askbot_markedtag.user_id = %s '
+                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+                                 + 'AND askbot_markedtag.reason = \'good\' '
+                                 + 'AND question_tags.question_id = question.id'
+                            ),
+                                ]),
+                        select_params = (uid_str,),
+                     )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
-            have_ignored_wildcards = (
-                askbot_settings.USE_WILDCARD_TAGS \
-                and request_user.ignored_tags != ''
-            )
-
-            if ignored_tags or have_ignored_wildcards:
-                if request_user.hide_ignored_questions:
+            if ignored_tags or request_user.has_ignored_wildcard_tags():
+                if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED:
                     #exclude ignored tags if the user wants to
                     qs = qs.exclude(tags__in=ignored_tags)
-                    if have_ignored_wildcards:
+                    if request_user.has_ignored_wildcard_tags():
                         ignored_wildcards = request_user.ignored_tags.split() 
                         extra_ignored_tags = Tag.objects.get_by_wildcards(
                                                             ignored_wildcards

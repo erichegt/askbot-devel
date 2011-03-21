@@ -282,27 +282,28 @@ def questions(request):
         reset_method_count += 1
 
     template_data = {
-        'language_code': translation.get_language(),
-        'reset_method_count': reset_method_count,
-        'page_class': 'main-page',
         'active_tab': 'questions',
-        'questions' : page,
-        'contributors' : contributors,
         'author_name' : meta_data.get('author_name',None),
-        'tab_id' : search_state.sort,
-        'questions_count' : paginator.count,
-        'tags' : related_tags,
-        'query': search_state.query,
-        'search_tags' : search_state.tags,
-        'tags_autocomplete' : tags_autocomplete,
+        'contributors' : contributors,
+        'context' : paginator_context,
         'is_unanswered' : False,#remove this from template
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
-        'sort': search_state.sort,
-        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+        'language_code': translation.get_language(),
+        'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
+        'page_class': 'main-page',
+        'query': search_state.query,
+        'questions' : page,
+        'questions_count' : paginator.count,
+        'reset_method_count': reset_method_count,
         'scope': search_state.scope,
-        'context' : paginator_context,
-        'name_of_anonymous_user' : models.get_name_of_anonymous_user()
+        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+        'search_tags' : search_state.tags,
+        'sort': search_state.sort,
+        'tab_id' : search_state.sort,
+        'tags' : related_tags,
+        'tags_autocomplete' : tags_autocomplete,
+        'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
     }
 
     assert(request.is_ajax() == False)

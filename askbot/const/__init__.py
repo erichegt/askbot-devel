@@ -191,10 +191,14 @@ POST_STATUS = {
     'retagged'          : _('retagged'),
 }
 
-#how to filter questions by tags in email digests?
-TAG_EMAIL_FILTER_CHOICES = (
-    ('ignored', _('exclude ignored tags')),
-    ('interesting',_('allow only selected tags'))
+#choices used in email and display filters
+INCLUDE_ALL = 0
+EXCLUDE_IGNORED = 1
+INCLUDE_INTERESTING = 2
+TAG_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('off')),
+    (EXCLUDE_IGNORED, _('exclude ignored')),
+    (INCLUDE_INTERESTING, _('only selected')),
 )
 
 NOTIFICATION_DELIVERY_SCHEDULE_CHOICES= (

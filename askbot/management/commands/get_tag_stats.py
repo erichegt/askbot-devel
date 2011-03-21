@@ -131,7 +131,7 @@ class Command(BaseCommand):
             ignored_lines = get_tag_lines(ignored_tags, width = 25)
 
             follow = '*'
-            if user.tag_filter_setting == "interesting":
+            if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
                 follow = ''
             user_string = '%s (%d)%s' % (user.username, user.id, follow)
             output_lines = format_table_row(
