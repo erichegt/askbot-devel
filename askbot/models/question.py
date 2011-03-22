@@ -207,13 +207,15 @@ class QuestionQuerySet(models.query.QuerySet):
                 if request_user.display_tag_filter_strategy == \
                         const.INCLUDE_INTERESTING:
                     #filter by interesting tags only
-                    qs = qs.filter(tags__in = interesting_tags)
-                    if request_user.has_ignored_wildcard_tags():
+                    interesting_tag_filter = models.Q(tags__in = interesting_tags)
+                    if request_user.has_interesting_wildcard_tags():
                         interesting_wildcards = request_user.interesting_tags.split() 
                         extra_interesting_tags = Tag.objects.get_by_wildcards(
                                                             interesting_wildcards
                                                         )
-                        qs = qs.filter(tags__in = extra_interesting_tags)
+                        interesting_tag_filter |= models.Q(tags__in = extra_interesting_tags)
+
+                    qs = qs.filter(interesting_tag_filter)
                 else:
                     #simply annotate interesting questions
                     qs = qs.extra(
