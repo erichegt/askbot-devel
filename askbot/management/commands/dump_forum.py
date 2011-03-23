@@ -26,7 +26,7 @@ The extension ".json" will be added automatically."""
             sys.stdout = dump_file
             management.call_command(
                                 'dumpdata',
-                                exclude = ('contenttypes',),
+                                #exclude = ('contenttypes',),
                                 indent = 4
                             )
             sys.stdout = stdout_orig
