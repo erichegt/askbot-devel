@@ -266,7 +266,7 @@ poor design of the data or methods on data objects #}
             css_class = None
         )
 -%}
-<ul {% if id %}id={{ id }}{% endif %}
+<ul {% if id %}id="{{ id }}"{% endif %}
     class="tags{% if css_class %} {{css_class}}{% endif %}"
 >
     {% if tags %}
