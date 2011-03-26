@@ -324,7 +324,6 @@ poor design of the data or methods on data objects #}
     {% for choice in choices %}
         <p class="choice">
             {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
-            <label for="{{ id }}">{{ choice[1] }}</label>
             <input 
                 id="{{ id }}"
                 name="{{ name }}"
@@ -334,6 +333,7 @@ poor design of the data or methods on data objects #}
                 checked="checked"
                 {% endif %}
             />
+            <label for="{{ id }}">{{ choice[1] }}</label>
         </p>
     {% endfor %}
 {%- endmacro -%}
@@ -635,4 +635,17 @@ poor design of the data or methods on data objects #}
         {% endif %}
         </a>
     {% endif %}
+{%- endmacro -%}
+
+{%- macro tag_autocomplete_js(id = '#id_tags') -%}
+    var tagAc = new AutoCompleter({
+            url: '{% url "get_tag_list" %}',
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10,
+    });
+    tagAc.decorate($("{{ id }}"));
 {%- endmacro -%}

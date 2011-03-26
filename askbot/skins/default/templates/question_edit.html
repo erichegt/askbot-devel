@@ -68,24 +68,7 @@
             $('#pre-collapse').text(txt);
         });
         
-        //Tags autocomplete action
-        var tags = {{ tags }};
-        $("#id_tags").autocomplete(tags, {
-            matchContains: true,
-            max: 20,
-            multiple: true,
-            multipleSeparator: " ",
-            highlightItem: true,
-            scroll: true,
-            scrollHeight: 300,
-            formatItem: function(row, i, max) {
-                return row.n + " ("+ row.c +")";
-            },
-            formatResult: function(row, i, max){
-                return row.n;
-            }
-            
-        });
+        {{ macros.tag_autocomplete_js(id = '#id_tags') }}
         
         setupFormValidation(
                     $("#fmedit"),

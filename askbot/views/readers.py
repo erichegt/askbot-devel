@@ -47,19 +47,6 @@ DEFAULT_PAGE_SIZE = 60
 # used in questions
 # used in answers
 
-#system to display main content
-def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space
-    """returns list of all tags in json format
-    no caching yet, actually
-    """
-    tags = models.Tag.objects.filter(deleted=False).all()
-    tags_list = []
-    for tag in tags:
-        dic = {'n': tag.name, 'c': tag.used_count}
-        tags_list.append(dic)
-    tags = simplejson.dumps(tags_list)
-    return tags
-
 #refactor? - we have these
 #views that generate a listing of questions in one way or another:
 #index, unanswered, questions, search, tag
@@ -271,8 +258,6 @@ def questions(request):
                     mimetype = 'application/json'
                 )
 
-    tags_autocomplete = _get_tags_cache_json()
-
     reset_method_count = 0
     if search_state.query:
         reset_method_count += 1
@@ -302,7 +287,6 @@ def questions(request):
         'sort': search_state.sort,
         'tab_id' : search_state.sort,
         'tags' : related_tags,
-        'tags_autocomplete' : tags_autocomplete,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
     }
 
@@ -562,8 +546,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'comment_order_number': comment_order_number
     }
-    if request.user.is_authenticated():
-        data['tags_autocomplete'] = _get_tags_cache_json()
     return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):

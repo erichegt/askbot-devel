@@ -46,39 +46,25 @@
     <script type="text/javascript">
         $().ready(function(){
             $("#nav_questions").attr('className',"on");
-            //Tags autocomplete action
-            var tags = {{ tags }};
-        $("#id_tags").autocomplete(tags, {
-            minChars: 1,
-            matchContains: true,
-            max: 20,
-            multiple: true,
-            multipleSeparator: " ",
-            formatItem: function(row, i, max) {
-                return row.n + " ("+ row.c +")";
-            },
-            formatResult: function(row, i, max){
-                return row.n;
-            }
-            
-        });
-         $("#fmretag").validate({
-            rules: {
-                tags: {
-                    required: true,
-                    maxength: 105
-                }
-            },
-            messages: {
-                tags: {
-                        required: "{% trans %}tags are required{% endtrans %}",
-                        maxlength: "{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}"
-                    }
-                }
-                
-            });
-            lanai.highlightSyntax();
-        });
+            {% import "macros.html" as macros %}
+            {{ macros.tag_autocomplete_js(id = '#id_tags') }}
+            $("#fmretag").validate({
+               rules: {
+                   tags: {
+                       required: true,
+                       maxength: 105
+                   }
+               },
+               messages: {
+                   tags: {
+                           required: "{% trans %}tags are required{% endtrans %}",
+                           maxlength: "{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}"
+                       }
+                   }
+                   
+               });
+               lanai.highlightSyntax();
+           });
     </script>
 {% endblock %}
 <!-- end question_retag.html -->

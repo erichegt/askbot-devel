@@ -1,4 +1,5 @@
 {% extends "two_column_body.html" %}
+{% import "macros.html" as macros %}
 <!-- template ask.html -->
 {% block title %}{% spaceless %}{% trans %}Ask a question{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
@@ -27,7 +28,6 @@
         {% else %}
             var codeFriendlyMarkdown = false;
         {% endif %}
-        var tags = {{ tags|safe }};
         $().ready(function(){
             liveSearch().init('ask_page');
             //set current module button style
@@ -48,21 +48,9 @@
                 $('#previewer').toggle();
                 $('#pre-collapse').text(txt);
             });
-            //Tags autocomplete action
-                $("#id_tags").autocomplete(tags, {
-                    minChars: 1,
-                    matchContains: true,
-                    max: 20,
-                    multiple: true,
-                    multipleSeparator: " ",
-                    formatItem: function(row, i, max) {
-                        return row.n + " ("+ row.c +")";
-                    },
-                    formatResult: function(row, i, max){
-                        return row.n;
-                    }
+            //Tags autocomplete
 
-            });
+            {{ macros.tag_autocomplete_js(id = '#id_tags') }}
 
             setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
             lanai.highlightSyntax();

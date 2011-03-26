@@ -23,7 +23,6 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 
-from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models
 from askbot.skins.loaders import render_into_skin
@@ -252,12 +251,10 @@ def ask(request):#view used to ask a new question
                 query = search_state.query
                 form.initial['title'] = query
 
-    tags = _get_tags_cache_json()
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
         'form' : form,
-        'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
     }
     return render_into_skin('ask.html', data, request)
@@ -301,7 +298,6 @@ def retag_question(request, id):
             'active_tab': 'questions',
             'question': question,
             'form' : form,
-            'tags' : _get_tags_cache_json(),
         }
         return render_into_skin('question_retag.html', data, request)
     except exceptions.PermissionDenied, e:
@@ -393,7 +389,6 @@ def edit_question(request, id):
             'question': question,
             'revision_form': revision_form,
             'form' : form,
-            'tags' : _get_tags_cache_json()
         }
         return render_into_skin('question_edit.html', data, request)
 

@@ -378,6 +378,18 @@ def get_tags_by_wildcard(request):
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
 
+@decorators.get_only
+def get_tag_list(request):
+    """returns tags to use in the autocomplete
+    function
+    """
+    tag_names = models.Tag.objects.filter(
+                        deleted = False
+                    ).values_list(
+                        'name', flat = True
+                    )
+    output = '\n'.join(tag_names)
+    return HttpResponse(output, mimetype = "text/plain")
 
 def subscribe_for_tags(request):
     """process subscription of users by tags"""

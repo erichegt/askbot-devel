@@ -449,9 +449,6 @@
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
     <script type="text/javascript">
-        {% if request.user.is_authenticated() %}
-        var tags_autocomplete = {{tags_autocomplete|safe}};
-        {% endif %}
         // define reputation needs for comments
         var repNeededForComments = 50;
         $().ready(function(){

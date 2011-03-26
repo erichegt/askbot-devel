@@ -1,4 +1,4 @@
-//var interestingTags, ignoredTags, tags, $;
+
 var TagDetailBox = function(box_type){
     WrappedElement.call(this);
     this.box_type = box_type;
@@ -226,22 +226,25 @@ function pickedTags(){
         });
     };
 
-    var handlePickedTag = function(obj,reason){
-        var tagnames = getUniqueWords($(obj).prev().attr('value'));
+    var handlePickedTag = function(reason){
         var to_target = interestingTags;
         var from_target = ignoredTags;
         var to_tag_container;
         if (reason == 'bad'){
+            var input_sel = '#ignoredTagInput';
             to_target = ignoredTags;
             from_target = interestingTags;
             to_tag_container = $('div .tags.ignored');
         }
         else if (reason == 'good'){
+            var input_sel = '#interestingTagInput';
             to_tag_container = $('div .tags.interesting');
         }
         else {
             return;
         }
+
+        var tagnames = getUniqueWords($(input_sel).attr('value'));
 
         $.each(tagnames, function(idx, tagname){
             if (tagname in from_target){
@@ -270,6 +273,7 @@ function pickedTags(){
                         to_target,
                         to_tag_container
                     );
+                    $(input_sel).val('');
                     liveSearch().refresh();
                 }
             );
@@ -329,27 +333,39 @@ function pickedTags(){
             });
         });
     };
+
+    var getResultCallback = function(reason){
+        return function(){ 
+            handlePickedTag(reason);
+        };
+    };
+
     return {
         init: function(){
             collectPickedTags('interesting');
             collectPickedTags('ignored');
             setupTagFilterControl('display');
-            $("#interestingTagInput, #ignoredTagInput").autocomplete(tags, {
+            var ac = new AutoCompleter({
+                url: askbot['urls']['get_tag_list'],
+                preloadData: true,
                 minChars: 1,
-                matchContains: true,
-                max: 20,
-                multiple: true,
-                multipleSeparator: " ",
-                formatItem: function(row, i, max) {
-                    return row.n + " ("+ row.c +")";
-                },
-                formatResult: function(row, i, max){
-                    return row.n;
-                }
-
+                useCache: true,
+                matchInside: true,
+                maxCacheLength: 100,
+                delay: 10,
             });
-            $("#interestingTagAdd").click(function(){handlePickedTag(this,'good');});
-            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'bad');});
+
+
+            var interestingTagAc = $.extend(true, {}, ac);
+            interestingTagAc.decorate($('#interestingTagInput'));
+            interestingTagAc.setOption('onItemSelect', getResultCallback('good'));
+
+            var ignoredTagAc = $.extend(true, {}, ac);
+            ignoredTagAc.decorate($('#ignoredTagInput'));
+            ignoredTagAc.setOption('onItemSelect', getResultCallback('bad'));
+
+            $("#interestingTagAdd").click(getResultCallback('good'));
+            $("#ignoredTagAdd").click(getResultCallback('bad'));
         }
     };
 }

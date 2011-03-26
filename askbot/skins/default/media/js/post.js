@@ -616,7 +616,6 @@ var questionRetagger = function(){
     };
 
     var cancelRetag = function(){
-        tagInput.unautocomplete();//removes dropdown if open
         tagsDiv.html(oldTagsHTML);
         tagsDiv.removeClass('post-retag');
         tagsDiv.addClass('post-tags');
@@ -682,22 +681,16 @@ var questionRetagger = function(){
         //var tagLabel = $('<label for="retag_tags" class="error"></label>');
         tagInput.val(old_tags_string);
         //populate input
-        //todo: make autocomplete work
-        tagInput.autocomplete(tags_autocomplete, {
-                minChars: 1,
-                matchContains: true,
-                selectFirst: false,
-                max: 20,
-                multiple: true,
-                multipleSeparator: " ",
-                formatItem: function(row, i, max) {
-                    return row.n + " ("+ row.c +")";
-                },
-                formatResult: function(row, i, max){
-                    return row.n;
-                }
+        var tagAc = new AutoCompleter({
+            url: askbot['urls']['get_tag_list'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10,
         });
-
+        tagAc.decorate(tagInput);
         div.append(tagInput);
         //div.append(tagLabel);
         setupInputEventHandlers(tagInput);
