@@ -2010,8 +2010,8 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
-    from askbot.skins.loaders import ENV
-    template = ENV.get_template('instant_notification.html')
+    from askbot.skins.loaders import get_template
+    template = get_template('instant_notification.html')
 
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]

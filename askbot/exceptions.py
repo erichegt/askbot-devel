@@ -1,6 +1,10 @@
 from django.core import exceptions
 from django.utils.translation import ugettext as _
 
+class DeploymentError(exceptions.ImproperlyConfigured):
+    """raised when there is some error with deployment"""
+    pass
+
 class LoginRequired(exceptions.PermissionDenied):
     """raised when an operation required a logged 
     in user"""

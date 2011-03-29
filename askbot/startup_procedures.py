@@ -3,6 +3,8 @@ in the beginning of models/__init__.py
 
 the purpose of this module is to validate deployment of askbot
 
+question: why not run these from askbot/__init__.py?
+
 the main function is run_startup_tests
 """
 from django.db import transaction

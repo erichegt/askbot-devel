@@ -1,23 +1,30 @@
-from django.test import TestCase, signals
-from jinja2.environment import Template as Jinja2Template
+from django.test import TestCase
+from django.test import signals
 from django.template import defaultfilters
 from django.core.urlresolvers import reverse
+import coffin
 import coffin.template
 from askbot import models
 from askbot.utils.slug import slugify
+from askbot.deployment import package_utils
 import sys
 
-#note - this code can be run only once
-ORIG_JINJA2_RENDERER = Jinja2Template.render
-def instrumented_render(template_object, *args, **kwargs):
-    context = dict(*args, **kwargs)
-    signals.template_rendered.send(
-                            sender=template_object,
-                            template=template_object,
-                            context=context
-                        )
-    return ORIG_JINJA2_RENDERER(template_object, *args, **kwargs)
-Jinja2Template.render = instrumented_render
+def patch_jinja2():
+    from jinja2 import Template
+    ORIG_JINJA2_RENDERER = Template.render
+    def instrumented_render(template_object, *args, **kwargs):
+        context = dict(*args, **kwargs)
+        signals.template_rendered.send(
+                                sender=template_object,
+                                template=template_object,
+                                context=context
+                            )
+        return ORIG_JINJA2_RENDERER(template_object, *args, **kwargs)
+    Template.render = instrumented_render
+
+(CMAJOR, CMINOR, CMICRO) = package_utils.get_coffin_version()
+if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
+    patch_jinja2()
 
 class PageLoadTestCase(TestCase):
     def try_url(

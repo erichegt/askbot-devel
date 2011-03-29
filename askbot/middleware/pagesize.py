@@ -52,6 +52,6 @@ class QuestionsPageSizeMiddleware(object):
             #500.html needs RequestContext, while handler500 only receives Context
             #need to log some more details about the request
             logging.critical(utils.http.get_request_info(request))
-            from askbot.skins.loaders import ENV
-            template = ENV.get_template('500.jinja.html')
+            from askbot.skins.loaders import get_template
+            template = get_template('500.jinja.html', request)
             return HttpResponse(template.render(RequestContext(request)))

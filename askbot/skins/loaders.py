@@ -3,13 +3,16 @@ from django.template.loaders import filesystem
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils import translation
-from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from coffin.common import CoffinEnvironment
 from jinja2 import loaders as jinja_loaders
 from jinja2.exceptions import TemplateNotFound
 from jinja2.utils import open_if_exists
+from askbot.conf import settings as askbot_settings
 from askbot.skins import utils
+
+from coffin import template
+template.add_to_builtins('askbot.templatetags.extra_filters_jinja')
 
 #module for skinning askbot
 #via ASKBOT_DEFAULT_SKIN configureation variable (not django setting)
@@ -103,29 +106,26 @@ class SkinEnvironment(CoffinEnvironment):
             return '<link href="%s" rel="stylesheet" type="text/css" />' % url
         return ''
 
-ENV = SkinEnvironment(
-            autoescape=False,
-            extensions=['jinja2.ext.i18n'],
-            skin = askbot_settings.ASKBOT_DEFAULT_SKIN
-            #loader = SkinLoader()
-         )
-ENV.set_language(django_settings.LANGUAGE_CODE)
-
 def load_skins():
     skins = dict()
     for skin_name in utils.get_available_skins():
-        skins[skin_name] = SkinEnvironment(skin = skin_name)
+        skins[skin_name] = SkinEnvironment(
+                                skin = skin_name,
+                                extensions=['jinja2.ext.i18n',]
+                            )
         skins[skin_name].set_language(django_settings.LANGUAGE_CODE)
+        #from askbot.templatetags import extra_filters_jinja as filters
+        #skins[skin_name].filters['media'] = filters.media
     return skins
 
 SKINS = load_skins()
 
-def get_skin(request):
+def get_skin(request = None):
     """retreives the skin environment
     for a given request (request var is not used at this time)"""
     return SKINS[askbot_settings.ASKBOT_DEFAULT_SKIN]
 
-def get_template(template, request):
+def get_template(template, request = None):
     """retreives template for the skin
     request variable will be used in the future to set
     template according to the user preference or admins preference

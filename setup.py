@@ -7,9 +7,9 @@ import sys
 #you might want to install django-debug-toolbar as well
 
 install_requires = [
-    'django==1.1.2',
+    'django>=1.1.2',
     'Jinja2',
-    'Coffin==0.3.0',
+    'Coffin>=0.3',
     'South>=0.7.1',
     'oauth2',
     'recaptcha-client',
@@ -24,7 +24,9 @@ install_requires = [
     'django-kombu==0.9.2',
 ]
 
-import askbot
+#todo: have a dirty version retriever that 
+#parses it out from askbot/__init__.py but does not
+#import it as there are issues
 
 WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
@@ -32,7 +34,7 @@ if sys.platform not in WIN_PLATFORMS:
 
 setup(
     name = "askbot",
-    version = askbot.get_version(),
+    version = '0.6.75',#remember to manually set this correctly
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
