@@ -10,6 +10,8 @@ var AutoCompleter = function(options) {
      * Default options for autocomplete plugin
      */
     var defaults = {
+        autocompleteMultiple: true,
+        multipleSeparator: ' ',//a single character
         inputClass: 'acInput',
         loadingClass: 'acLoading',
         resultsClass: 'acResults',
@@ -30,6 +32,7 @@ var AutoCompleter = function(options) {
         mustMatch: false,
         preloadData: false,
         selectFirst: false,
+        stopCharRegex: /\s+/,
         selectOnly: false,
         formatItem: null,           // TBD
         onItemSelect: false,
@@ -301,7 +304,7 @@ AutoCompleter.prototype.activate = function() {
 };
 
 AutoCompleter.prototype.activateNow = function() {
-    var value = this._element.val();
+    var value = this.getValue();
     if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
         if (value.length >= this.options.minChars) {
             this.active_ = true;
@@ -641,10 +644,79 @@ AutoCompleter.prototype.selectItem = function($li) {
     var displayValue = this.displayValue(value, data);
     this.lastProcessedValue_ = displayValue;
     this.lastSelectedValue_ = displayValue;
-    this._element.val(displayValue).focus();
+
+    this.setValue(displayValue);
+
     this.setCaret(displayValue.length);
     this.callHook('onItemSelect', { value: value, data: data });
     this.finish();
+};
+
+/**
+ * @return {boolean} true if the symbol matches something that is
+ *                   considered content and false otherwise
+ * @param {string} symbol - a single char string
+ */
+AutoCompleter.prototype.isContentChar = function(symbol){
+    if (symbol.match(this.options['stopCharRegex'])){
+        return false;
+    } else if (symbol === this.options['multipleSeparator']){
+        return false;
+    } else {
+        return true;
+    }
+};
+
+/**
+ * takes value from the input box
+ * and saves _selection_start and _selection_end coordinates
+ * respects settings autocompleteMultiple and
+ * multipleSeparator
+ * @return {string} the current word in the 
+ * autocompletable word
+ */
+AutoCompleter.prototype.getValue = function(){
+    var sel = this._element.getSelection();
+    var text = this._element.val();
+    var pos = sel.start;//estimated start
+    //find real start
+    var start = pos;
+    for (cpos = pos; cpos >= 0; cpos = cpos - 1){
+        if (cpos === text.length){
+            continue;
+        }
+        var symbol = text.charAt(cpos);
+        if (!this.isContentChar(symbol)){
+            break;
+        }
+        start = cpos;
+    }
+    //find real end
+    var end = pos;
+    for (cpos = pos; cpos < text.length; cpos = cpos + 1){
+        if (cpos === 0){
+            continue;
+        }
+        var symbol = text.charAt(cpos);
+        if (!this.isContentChar(symbol)){
+            break;
+        }
+        end = cpos;
+    }
+    this._selection_start = start;
+    this._selection_end = end;
+    return text.substring(start, end);
+}
+
+/** 
+ * sets value of the input box
+ * by replacing the previous selection
+ * with the value from the autocompleter
+ */
+AutoCompleter.prototype.setValue = function(val){
+    var prefix = this._element.val().substring(0, this._selection_start);
+    var postfix = this._element.val().substring(this._selection_end + 1);
+    this._element.val(prefix + val + postfix);
 };
 
 AutoCompleter.prototype.displayValue = function(value, data) {
