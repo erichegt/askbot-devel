@@ -393,6 +393,7 @@ def get_tag_list(request):
 
 def subscribe_for_tags(request):
     """process subscription of users by tags"""
+    #todo - use special separator to split tags
     tag_names = request.REQUEST.get('tags','').strip().split()
     pure_tag_names, wildcards = forms.clean_marked_tagnames(tag_names)
     if request.user.is_authenticated():

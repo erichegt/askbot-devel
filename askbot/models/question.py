@@ -13,8 +13,12 @@ import askbot
 import askbot.conf
 from askbot import exceptions
 from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
-from askbot.models.base import parse_post_text, parse_and_save_post
+from askbot.models.base import AnonymousContent
+from askbot.models.base import DeletableContent
+from askbot.models.base import ContentRevision
+from askbot.models.base import BaseQuerySetManager
+from askbot.models.base import parse_post_text
+from askbot.models.base import parse_and_save_post
 from askbot.models import content
 from askbot.models import signals
 from askbot import const
@@ -331,18 +335,12 @@ class QuestionQuerySet(models.query.QuerySet):
         self.filter(id=question.id).update(view_count = question.view_count + 1)
 
 
-class QuestionManager(models.Manager):
-    """pattern from http://djangosnippets.org/snippets/562/
-    todo: turn this into a generic manager
+class QuestionManager(BaseQuerySetManager):
+    """chainable custom query set manager for 
+    questions
     """
     def get_query_set(self):
         return QuestionQuerySet(self.model)
-
-    def __getattr__(self, attr, *args):
-        try:
-            return getattr(self.__class__, attr, *args)
-        except AttributeError:
-            return getattr(self.get_query_set(), attr, *args)
 
 
 class Question(content.Content, DeletableContent):

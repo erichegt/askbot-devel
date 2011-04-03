@@ -7,6 +7,7 @@ from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag
+from askbot.conf import settings as askbot_settings
 
 class Content(models.Model):
     """
@@ -93,10 +94,85 @@ class Content(models.Model):
 
         return comment
 
+    def get_global_tag_based_subscribers(
+                                    self,
+                                    tags = None,
+                                    tag_mark_reason = None,
+                                    subscription_records = None
+                                ):
+        """returns a list of users who either follow or "do not ignore"
+        the given set of tags, depending on the tag_mark_reason
+
+        ``subscription_records`` - query set of ``~askbot.models.EmailFeedSetting``
+        this argument is used to reduce number of database queries
+        """
+        if tag_mark_reason == 'good':
+            email_tag_filter_strategy = const.INCLUDE_INTERESTING
+            user_set_getter = User.objects.filter
+        elif tag_mark_reason == 'bad':
+            email_tag_filter_strategy = const.EXCLUDE_IGNORED
+            user_set_getter = User.objects.exclude
+        else:
+            raise ValueError('Uknown value of tag mark reason %s' % tag_mark_reason)
+
+        #part 1 - find users who follow or not ignore the set of tags
+        tag_selections = MarkedTag.objects.filter(
+                                            tag__in = tags,
+                                            reason = tag_mark_reason
+                                        )
+        subscribers = set(
+            user_set_getter(
+                tag_selections__in = tag_selections
+            ).filter(
+                notification_subscriptions__in = subscription_records
+            ).filter(
+                email_tag_filter_strategy = email_tag_filter_strategy
+            )
+        )
+
+        #part 2 - find users who follow or not ignore tags via wildcard selections
+        #inside there is a potentially time consuming loop
+        if askbot_settings.USE_WILDCARD_TAGS:
+            #todo: fix this 
+            #this branch will not scale well
+            #because we have to loop through the list of users
+            #in python
+            if tag_mark_reason == 'good':
+                empty_wildcard_filter = {'interesting_tags__exact': ''}
+                wildcard_tags_attribute = 'interesting_tags'
+                update_subscribers = lambda the_set, item: the_set.add(item)
+            elif tag_mark_reason == 'bad':
+                empty_wildcard_filter = {'ignored_tags__exact': ''}
+                wildcard_tags_attribute = 'ignored_tags'
+                update_subscribers = lambda the_set, item: the_set.remove(item)
+
+            potential_wildcard_subscribers = User.objects.filter(
+                notification_subscriptions__in = subscription_records
+            ).filter(
+                email_tag_filter_strategy = email_tag_filter_strategy
+            ).exclude(
+                **empty_wildcard_filter #need this to limit size of the loop
+            )
+            for potential_subscriber in potential_wildcard_subscribers:
+                wildcard_tags = getattr(
+                                    potential_subscriber,
+                                    wildcard_tags_attribute
+                                ).split(' ')
+
+                if tags.tags_match_some_wildcard(wildcard_tags):
+                    update_subscribers(subscribers, potential_subscriber)
+
+        return subscribers
+
     def get_global_instant_notification_subscribers(self):
         """returns a set of subscribers to post according to tag filters
         both - subscribers who ignore tags or who follow only
         specific tags
+
+        this method in turn calls several more specialized
+        subscriber retrieval functions
+        todo: retrieval of wildcard tag followers ignorers
+              won't scale at all
         """
         tags = self.tags.all()
 
@@ -114,33 +190,22 @@ class Content(models.Model):
         subscriber_set.update(global_subscribers)
 
         #segment of users who want emails on selected questions only
-        interesting_tag_selections = MarkedTag.objects.filter(
-                                                    tag__in = tags,
-                                                    reason = 'good'
-                                                )
-        global_interested_subscribers = User.objects.filter(
-            tag_selections__in = interesting_tag_selections
-        ).filter(
-            notification_subscriptions__in = global_subscriptions
-        ).filter(
-            email_tag_filter_strategy = const.INCLUDE_INTERESTING 
+        subscriber_set.update(
+            self.get_global_tag_based_subscribers(
+                                        tags = tags,
+                                        subscription_records = global_subscriptions,
+                                        tag_mark_reason = 'good'
+                                    )
         )
-        subscriber_set.update(global_interested_subscribers)
 
         #segment of users who want to exclude ignored tags
-        ignored_tag_selections = MarkedTag.objects.filter(
-                                                    tag__in = tags,
-                                                    reason = 'bad'
-                                                )
-
-        global_non_ignoring_subscribers = User.objects.exclude(
-            tag_selections__in = ignored_tag_selections
-        ).filter(
-            notification_subscriptions__in = global_subscriptions,
-        ).filter(
-            email_tag_filter_strategy = const.EXCLUDE_IGNORED
+        subscriber_set.update(
+            self.get_global_tag_based_subscribers(
+                                        tags = tags,
+                                        subscription_records = global_subscriptions,
+                                        tag_mark_reason = 'bad'
+                                    )
         )
-        subscriber_set.update(global_non_ignoring_subscribers)
         return subscriber_set
 
 

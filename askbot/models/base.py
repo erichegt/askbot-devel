@@ -5,6 +5,7 @@ from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sitemaps import ping_google
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
@@ -155,6 +156,37 @@ def parse_and_save_post(post, author = None, **kwargs):
             ping_google()
     except Exception:
         logging.debug('cannot ping google - did you register with them?')
+
+class BaseQuerySetManager(models.Manager):
+    """a base class that allows chainable qustom filters
+    on the query sets
+
+    pattern from http://djangosnippets.org/snippets/562/
+
+    Usage (the most basic example, all imports explicit for clarity):
+
+    >>>import django.db.models.QuerySet
+    >>>import django.db.models.Model
+    >>>import askbot.models.base.BaseQuerySetManager
+    >>>
+    >>>class SomeQuerySet(django.db.models.QuerySet):
+    >>>    def some_custom_filter(self, *args, **kwargs):
+    >>>        return self #or any custom code
+    >>>    #add more custom filters here
+    >>>
+    >>>class SomeManager(askbot.models.base.BaseQuerySetManager)
+    >>>    def get_query_set(self):
+    >>>        return SomeQuerySet(self.model)
+    >>>
+    >>>class SomeModel(django.db.models.Model)
+    >>>    #add fields here
+    >>>    objects = SomeManager()
+    """
+    def __getattr__(self, attr, *args):
+        try:
+            return getattr(self.__class__, attr, *args)
+        except AttributeError:
+            return getattr(self.get_query_set(), attr, *args)
 
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')

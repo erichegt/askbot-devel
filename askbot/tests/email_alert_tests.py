@@ -612,6 +612,7 @@ class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['q_sel'] = 'i'
+        #first posts yesterday
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.follow_question = True
 

@@ -5,6 +5,7 @@ e.g. ``some_user.do_something(...)``
 """
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
+from askbot import const
 from askbot.conf import settings as askbot_settings
 import datetime
 
@@ -226,3 +227,98 @@ class UserLikeTests(AskbotTestCase):
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', False)
 
+class GlobalTagSubscriberGetterTests(AskbotTestCase):
+    """tests for the :meth:`~askbot.models.Question.get_global_tag_based_subscribers`
+    """
+    def setUp(self):
+        """create two users"""
+        schedule = {'q_all': 'i'}
+        self.u1 = self.create_user(
+                        username = 'user1',
+                        notification_schedule = schedule
+                    )
+        self.u2 = self.create_user(
+                        username = 'user2',
+                        notification_schedule = schedule
+                    )
+        self.question = self.post_question(
+                                    user = self.u1,
+                                    tags = "good day"
+                                )
+
+    def set_email_tag_filter_strategy(self, strategy):
+        self.u1.email_tag_filter_strategy = strategy
+        self.u1.save()
+        self.u2.email_tag_filter_strategy = strategy
+        self.u2.save()
+
+    def assert_subscribers_are(self, expected_subscribers = None, reason = None):
+        """a special assertion that compares the subscribers
+        on the question with the given set"""
+        subscriptions = models.EmailFeedSetting.objects.filter(
+                                                    feed_type = 'q_all',
+                                                    frequency = 'i'
+                                                )
+        actual_subscribers = self.question.get_global_tag_based_subscribers(
+            tags = self.question.tags.all(),
+            tag_mark_reason = reason,
+            subscription_records = subscriptions
+        )
+        self.assertEquals(actual_subscribers, expected_subscribers)
+
+    def test_nobody_likes_any_tags(self):
+        """no-one had marked tags, so the set 
+        of subscribers must be empty
+        """
+        self.assert_subscribers_are(
+            expected_subscribers = set(),
+            reason = 'good'
+        )
+
+    def test_nobody_dislikes_any_tags(self):
+        """since nobody dislikes tags - therefore
+        the set must contain two users"""
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u1, self.u2]),
+            reason = 'bad'
+        )
+
+    def test_user_likes_tag(self):
+        """user set must contain one person who likes the tag"""
+        self.set_email_tag_filter_strategy(const.INCLUDE_INTERESTING)
+        self.u1.mark_tags(tagnames = ('day',), reason = 'good', action = 'add')
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u1,]),
+            reason = 'good'
+        )
+
+    def test_user_dislikes_tag(self):
+        """user set must have one user who does not dislike a tag"""
+        self.set_email_tag_filter_strategy(const.EXCLUDE_IGNORED)
+        self.u1.mark_tags(tagnames = ('day',), reason = 'bad', action = 'add')
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u2,]),
+            reason = 'bad'
+        )
+
+    def test_user_likes_wildcard(self):
+        """user set must contain one person who likes the tag via wildcard"""
+        self.set_email_tag_filter_strategy(const.INCLUDE_INTERESTING)
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        self.u1.mark_tags(wildcards = ('da*',), reason = 'good', action = 'add')
+        self.u1.save()
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u1,]),
+            reason = 'good'
+        )
+
+    def test_user_dislikes_wildcard(self):
+        """user set must have one user who does not dislike the tag via wildcard"""
+        self.set_email_tag_filter_strategy(const.EXCLUDE_IGNORED)
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        self.u1.mark_tags(wildcards = ('da*',), reason = 'bad', action = 'add')
+        self.u1.save()
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u2,]),
+            reason = 'bad'
+        )

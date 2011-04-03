@@ -84,6 +84,8 @@ class AskbotTestCase(TestCase):
         """posts and returns question on behalf
         of user. If user is not given, it will be self.user
 
+        ``tags`` is a string with tagnames
+
         if follow is True, question is followed by the poster
         """
 
