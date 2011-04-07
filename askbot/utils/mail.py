@@ -7,6 +7,7 @@ from django.core import mail
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
+from askbot import const
 #todo: maybe send_mail functions belong to models
 #or the future API
 def prefix_the_subject_line(subject):
@@ -19,6 +20,17 @@ def prefix_the_subject_line(subject):
         subject = prefix + ' ' + subject
     return subject
 
+def extract_first_email_address(text):
+    """extract first matching email address
+    from text string
+    returns ``None`` if there are no matches
+    """
+    match = const.EMAIL_REGEX.search(text)
+    if match:
+        return match.group(0)
+    else:
+        return None
+
 def send_mail(
             subject_line = None,
             body_text = None,
@@ -28,7 +40,9 @@ def send_mail(
             headers = None,
             raise_on_failure = False,
         ):
-    """sends email message
+    """
+    todo: remove parameters not relevant to the function
+    sends email message
     logs email sending activity
     and any errors are reported as critical
     in the main log file
@@ -78,6 +92,7 @@ def mail_moderators(
 
     try:
         mail.send_mail(subject_line, body_text, from_email, recipient_list)
+        pass
     except smtplib.SMTPException, error:
         logging.critical(unicode(error))
         if raise_on_failure == True:

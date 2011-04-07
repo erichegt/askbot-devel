@@ -83,3 +83,29 @@ settings.register(
         help_text=_('Use this setting to control gravatar for email-less user')
     )
 )
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'ALLOW_ASKING_BY_EMAIL',
+        default = False,
+        description=_('Allow posting questions by email'),
+        help_text=_(
+            'Before enabling this setting - please fill out IMAP settings '
+            'in the settings.py file'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS',
+        default = True,
+        description = _('Replace space in emailed tags with dash'),
+        help_text = _(
+            'This setting applies to tags written in the subject line '
+            'of questions asked by email'
+        )
+    )
+)

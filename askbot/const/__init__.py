@@ -84,6 +84,7 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 TAG_CHARS = '\w\+\.\-#'
 TAG_REGEX = r'^[%s]+$' % TAG_CHARS
 TAG_SPLIT_REGEX = r'[ ,]+'
+EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION=1
 TYPE_ACTIVITY_ANSWER=2

@@ -41,6 +41,8 @@ QUESTION_ORDER_BY_MAP = {
 }
 
 class QuestionQuerySet(models.query.QuerySet):
+    """Custom query set subclass for :class:`~askbot.models.Question`
+    """
     def create_new(
                 self,
                 title = None,

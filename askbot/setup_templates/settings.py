@@ -24,7 +24,7 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-#mail server settings
+#outgoing mail server settings
 SERVER_EMAIL = ''
 DEFAULT_FROM_EMAIL = ''
 EMAIL_HOST_USER = ''
@@ -34,6 +34,21 @@ EMAIL_HOST=''
 EMAIL_PORT=''
 EMAIL_USE_TLS=False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#incoming mail settings
+#after filling out these settings - please
+#go to the site's live settings and enable the feature
+#"Email settings" -> "allow asking by email"
+#
+#   WARNING: command post_emailed_questions DELETES all 
+#            emails from the mailbox each time
+#            do not use your personal mail box here!!!
+#
+IMAP_HOST = ''
+IMAP_HOST_USER = ''
+IMAP_HOST_PASSWORD = ''
+IMAP_PORT = ''
+IMAP_USE_TLS = False
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

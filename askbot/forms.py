@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.mail import extract_first_email_address
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
@@ -547,6 +548,73 @@ class AskForm(forms.Form, FormWithHideableFields):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously'] 
+
+
+class AskByEmailForm(forms.Form):
+    """:class:`~askbot.forms.AskByEmailForm`
+    validates question data, where question was posted
+    by email.
+
+    It is ivoked by the management command
+    :mod:`~askbot.management.commands.post_emailed_questions`
+
+    Input is text data with attributes:
+
+    * :attr:`~askbot.forms.AskByEmailForm.sender` - unparsed "from" data
+    * :attr:`~askbot.forms.AskByEmailForm.subject` - subject line
+    * :attr:`~askbot.forms.AskByEmailForm.body_text` - body text of the email
+
+    Cleaned values are:
+    * ``email`` - email address
+    * ``title`` - question title
+    * ``tagnames`` - tag names all in one string
+    * ``body_text`` - body of question text - a pass-through, no extra validation
+    """
+    sender = forms.CharField(max_length = 255)
+    subject = forms.CharField(max_length = 255)
+    body_text = EditorField()
+
+    def clean_sender(self):
+        """Cleans the :attr:`~askbot.forms.AskByEmail.sender` attribute
+
+        If the field is valid, cleaned data will receive value ``email``
+        """
+        raw_email = self.cleaned_data['sender']
+        email = extract_first_email_address(raw_email)
+        if email is None:
+            raise forms.ValidationError('Could not extract email address')
+        self.cleaned_data['email'] = email
+        return self.cleaned_data['sender']
+
+    def clean_subject(self):
+        """Cleans the :attr:`~askbot.forms.AskByEmail.subject` attribute
+
+        If the field is valid, cleaned data will receive values
+        ``tagnames`` and ``title``
+        """
+        raw_subject = self.cleaned_data['subject'].strip()
+        subject_re = re.compile(r'^\[([^]]+)\](.*)$')
+        match = subject_re.match(raw_subject)
+        if match:
+            #make raw tags comma-separated
+            tagnames = match.group(1).replace(';',',')
+
+            #pre-process tags
+            tag_list = [tag.strip() for tag in tagnames.split(',')]
+            tag_list = [re.sub(r'\s+', ' ', tag) for tag in tag_list]
+            if askbot_settings.REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS:
+                tag_list = [tag.replace(' ', '-') for tag in tag_list]
+            tagnames = ' '.join(tag_list)#todo: use tag separator char here
+
+            #clean tags - may raise ValidationError
+            self.cleaned_data['tagnames'] = TagNamesField().clean(tagnames)
+
+            #clean title - may raise ValidationError
+            title = match.group(2).strip()
+            self.cleaned_data['title'] = TitleField().clean(title)
+        else:
+            raise forms.ValidationError('could not parse subject line')
+        return self.cleaned_data['subject']
 
 class AnswerForm(forms.Form):
     text   = EditorField()

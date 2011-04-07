@@ -3,6 +3,85 @@ from askbot.conf import settings as askbot_settings
 from askbot import forms
 from askbot import models
 
+EMAIL_CASES = (#test should fail if the second item is None
+    ('user@example.com', 'user@example.com'),
+    ('Name Name <name@example.com>', 'name@example.com'),
+    ('"Name Name [example.com]" <name@example.com>', 'name@example.com'),
+    (
+        'someone <reply+m-4823355-3ae97f4698708d0be6bb087d6d4ce1e5e33ac131@reply.example.com>',
+        'reply+m-4823355-3ae97f4698708d0be6bb087d6d4ce1e5e33ac131@reply.example.com'
+    ),
+    (
+        'freddy krueger <someone@example.edu> (by way of somebody else)',
+        'someone@example.edu'
+    ),
+    (
+        'Google Anniversary Promotion =?iso-8859-1?Q?=A9_2011?= <someone@example.br>',
+        'someone@example.br'
+    ),
+    ('=?koi8-r?B?5sHExcXXwSDvzNjHwQ==?= <someone@example.ru>', 'someone@example.ru'),
+    ('root@example.org (Cron Daemon)', 'root@example.org'),
+    ('<summary@example.com>', 'summary@example.com'),
+    ('some text without an email adderess', None)
+)
+SUBJECT_LINE_CASES = (#test fails if second item is None
+    (
+        ' [ tag1;long  tag, another] question title',
+        ('tag1 long-tag another', 'question title')
+    ),
+    ('[] question title', None),
+    ('question title', None),
+    ('   [question title', None),
+    ('] question title', None),
+)
+
+class AskByEmailFormTests(AskbotTestCase):
+    """Tests :class:`~askbot.forms.AskByEmailForm`
+    form"""
+    def setUp(self):
+        #benign data set that must pass
+        self.data = {
+            'sender': 'someone@example.com',
+            'subject': '[tag-one] where is titanic?',
+            'body_text': 'where is titanic?'
+        }
+    def test_subject_line(self):
+        """loops through various forms of the subject line
+        and makes sure that tags and title are parsed out"""
+        for test_case in SUBJECT_LINE_CASES:
+            self.data['subject'] = test_case[0]
+            form = forms.AskByEmailForm(self.data)
+            output = test_case[1]
+            if output is None:
+                self.assertFalse(form.is_valid())
+            else:
+                self.assertTrue(form.is_valid())
+                self.assertEquals(
+                    form.cleaned_data['tagnames'],
+                    output[0]
+                )
+                self.assertEquals(
+                    form.cleaned_data['title'],
+                    output[1]
+                )
+
+    def test_email(self):
+        """loops through variants of the from field 
+        in the emails and tests the email address 
+        extractor"""
+        for test_case in EMAIL_CASES:
+            self.data['sender'] = test_case[0]
+            expected_result = test_case[1]
+            form = forms.AskByEmailForm(self.data)
+            if expected_result is None:
+                self.assertFalse(form.is_valid())
+            else:
+                self.assertTrue(form.is_valid())
+                self.assertEquals(
+                    form.cleaned_data['email'],
+                    expected_result
+                )
+
 class TagNamesFieldTests(AskbotTestCase):
 
     def setUp(self):
