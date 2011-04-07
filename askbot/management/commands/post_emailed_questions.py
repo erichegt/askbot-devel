@@ -12,6 +12,8 @@ also, to make use of this command, the feature must
 be enabled via ALLOW_ASKING_BY_EMAIL
 and IMAP settings in the settings.py must be configured
 correctly
+
+todo: use templates for the email formatting
 """
 import imaplib
 import email
@@ -20,20 +22,39 @@ import base64
 from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand, CommandError
 from django.core import exceptions
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 from django.core.urlresolvers import reverse
 from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
 from askbot import models
 from askbot.forms import AskByEmailForm
 
+USAGE = _(
+"""<p>To ask by email, please:</p>
+<ul>
+    <li>Format the subject line as: [Tag1; Tag2] Question title</li>
+    <li>Type details of your question into the email body</li>
+</ul>
+<p>Note that tags may consist of more than one word, and tags
+may be separated by a semicolon or a comma</p>
+"""
+)
+
 def bounce_email(email, subject, reason = None, body_text = None):
-    assert(reason in ('unknown_user', 'problem_posting', 'permission_denied'))
+    """sends a bounce email at address ``email``, with the subject
+    line ``subject``, accepts several reasons for the bounce:
+
+    * ``'problem_posting'``, ``unknown_user`` and ``permission_denied``
+    * ``body_text`` in an optional parameter that allows to append
+      extra text to the message
+    """
     if reason == 'problem_posting':
         error_message = _(
             '<p>Sorry, there was an error posting your question '
             'please contact the %(site)s administrator</p>'
         ) % {'site': askbot_settings.APP_SHORT_NAME}
+        error_message = string_concat(error_message, USAGE)
     elif reason == 'unknown_user':
         error_message = _(
             '<p>Sorry, in order to post questions on %(site)s '
@@ -47,9 +68,11 @@ def bounce_email(email, subject, reason = None, body_text = None):
             '<p>Sorry, your question could not be posted '
             'due to insufficient privileges of your user account</p>'
         )
+    else:
+        raise ValueError('unknown reason to bounce an email: "%s"' % reason)
 
     if body_text != None:
-        error_message += body_text
+        error_message = string_concat(error_message, body_text)
 
     #print 'sending email'
     #print email
