@@ -144,7 +144,7 @@ class Content(models.Model):
             elif tag_mark_reason == 'bad':
                 empty_wildcard_filter = {'ignored_tags__exact': ''}
                 wildcard_tags_attribute = 'ignored_tags'
-                update_subscribers = lambda the_set, item: the_set.remove(item)
+                update_subscribers = lambda the_set, item: the_set.discard(item)
 
             potential_wildcard_subscribers = User.objects.filter(
                 notification_subscriptions__in = subscription_records
