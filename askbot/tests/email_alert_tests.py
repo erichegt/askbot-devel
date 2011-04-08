@@ -1,6 +1,7 @@
 import datetime
 import functools
 import copy
+import time
 from django.conf import settings as django_settings
 from django.core import management
 import django.core.mail
@@ -11,9 +12,11 @@ from askbot.tests import utils
 from askbot import models
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
+from askbot import const
 
 def email_alert_test(test_func):
-    """decorator for test methods in EmailAlertTests
+    """decorator for test methods in
+    :class:`~askbot.tests.email_alert_tests.EmailAlertTests`
     wraps tests with a generic sequence of testing
     email alerts on updates to anything relating to
     given question
@@ -732,3 +735,68 @@ class FeedbackTests(utils.AskbotTestCase):
         mail.mail_moderators('subject', 'text')
         self.assert_feedback_works()
 
+
+class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.create_user(
+            username = 'user1',
+            notification_schedule = {'q_all': 'i'},
+            status = 'm'
+        )
+        self.create_user(
+            username = 'user2',
+            status = 'm'
+        )
+
+    def test_wildcard_catches_new_tag(self):
+        """users asks a question with a brand new tag
+        and other user subscribes to it by wildcard
+        """
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        self.user1.email_tag_filter_strategy = const.INCLUDE_INTERESTING
+        self.user1.save()
+        self.user1.mark_tags(
+            wildcards = ('some*',),
+            reason = 'good',
+            action = 'add'
+        )
+        self.user2.post_question(
+            title = 'some title',
+            body_text = 'some text for the question',
+            tags = 'something'
+        )
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
+
+    def test_tag_based_subscription_on_new_question_works(self):
+        """someone subscribes for an pre-existing tag
+        then another user asks a question with that tag
+        and the subcriber receives an alert
+        """
+        models.Tag(
+            name = 'something',
+            created_by = self.user1
+        ).save()
+
+        self.user1.email_tag_filter_strategy = const.INCLUDE_INTERESTING
+        self.user1.save()
+        self.user1.mark_tags(
+            tagnames = ('something',),
+            reason = 'good',
+            action = 'add'
+        )
+        self.user2.post_question(
+            title = 'some title',
+            body_text = 'some text for the question',
+            tags = 'something'
+        )
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )

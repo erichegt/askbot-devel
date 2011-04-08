@@ -260,7 +260,6 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
                                                     frequency = 'i'
                                                 )
         actual_subscribers = self.question.get_global_tag_based_subscribers(
-            tags = self.question.tags.all(),
             tag_mark_reason = reason,
             subscription_records = subscriptions
         )

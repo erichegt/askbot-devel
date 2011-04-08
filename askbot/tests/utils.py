@@ -12,7 +12,26 @@ def create_user(
             reputation = 1
         ):
     """Creates a user and sets default update subscription
-    settings"""
+    settings
+
+    ``notification_schedule`` is a dictionary with keys
+    the same as in keys in
+    :attr:`~askbot.models.EmailFeedSetting.FEED_TYPES`:
+
+    * 'q_ask' - questions that user asks
+    * 'q_all' - enture forum, tag filtered
+    * 'q_ans' - questions that user answers
+    * 'q_sel' - questions that user decides to follow
+    * 'm_and_c' - comments and mentions of user anywhere
+
+    and values as keys in 
+    :attr:`~askbot.models.EmailFeedSetting.FEED_TYPES`:
+
+    * 'i' - instantly
+    * 'd' - daily
+    * 'w' - weekly
+    * 'n' - never 
+    """
     user = models.User.objects.create_user(username, email)
     user.reputation = reputation
     if date_joined is not None:

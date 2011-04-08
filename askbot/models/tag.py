@@ -5,6 +5,17 @@ from django.utils.translation import ugettext as _
 from askbot.models.base import DeletableContent
 from askbot.models.base import BaseQuerySetManager
 
+def tags_match_some_wildcard(tag_names, wildcard_tags):
+    """Same as 
+    :meth:`~askbot.models.tag.TagQuerySet.tags_match_some_wildcard`
+    except it works on tag name strings
+    """
+    for tag_name in tag_names:
+        for wildcard_tag in sorted(wildcard_tags):
+            if tag_name.startswith(wildcard_tag[:-1]):
+                return True
+    return False
+
 class TagQuerySet(models.query.QuerySet):
     UPDATE_USED_COUNTS_QUERY = """
         UPDATE tag 
@@ -35,6 +46,8 @@ class TagQuerySet(models.query.QuerySet):
         matches a wildcard
 
         :arg:`wildcard_tags` is an iterable of wildcard tag strings
+
+        todo: refactor to use :func:`tags_match_some_wildcard`
         """
         for tag in self.all():
             for wildcard_tag in sorted(wildcard_tags):

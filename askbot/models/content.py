@@ -6,7 +6,7 @@ from django.utils import html as html_utils
 from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 
 class Content(models.Model):
@@ -96,7 +96,6 @@ class Content(models.Model):
 
     def get_global_tag_based_subscribers(
                                     self,
-                                    tags = None,
                                     tag_mark_reason = None,
                                     subscription_records = None
                                 ):
@@ -116,8 +115,9 @@ class Content(models.Model):
             raise ValueError('Uknown value of tag mark reason %s' % tag_mark_reason)
 
         #part 1 - find users who follow or not ignore the set of tags
+        tag_names = self.get_tag_names()
         tag_selections = MarkedTag.objects.filter(
-                                            tag__in = tags,
+                                            tag__name__in = tag_names,
                                             reason = tag_mark_reason
                                         )
         subscribers = set(
@@ -159,7 +159,7 @@ class Content(models.Model):
                                     wildcard_tags_attribute
                                 ).split(' ')
 
-                if tags.tags_match_some_wildcard(wildcard_tags):
+                if tags_match_some_wildcard(tag_names, wildcard_tags):
                     update_subscribers(subscribers, potential_subscriber)
 
         return subscribers
@@ -174,8 +174,6 @@ class Content(models.Model):
         todo: retrieval of wildcard tag followers ignorers
               won't scale at all
         """
-        tags = self.tags.all()
-
         subscriber_set = set()
 
         global_subscriptions = EmailFeedSetting.objects.filter(
@@ -192,7 +190,6 @@ class Content(models.Model):
         #segment of users who want emails on selected questions only
         subscriber_set.update(
             self.get_global_tag_based_subscribers(
-                                        tags = tags,
                                         subscription_records = global_subscriptions,
                                         tag_mark_reason = 'good'
                                     )
@@ -201,7 +198,6 @@ class Content(models.Model):
         #segment of users who want to exclude ignored tags
         subscriber_set.update(
             self.get_global_tag_based_subscribers(
-                                        tags = tags,
                                         subscription_records = global_subscriptions,
                                         tag_mark_reason = 'bad'
                                     )
