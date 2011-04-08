@@ -2078,9 +2078,9 @@ def record_post_update_activity(
     if newly_mentioned_users is None:
         newly_mentioned_users = list()
 
-    from askbot.tasks import record_post_update_task
+    from askbot import tasks
 
-    record_post_update_task.delay(
+    tasks.record_post_update_celery_task.delay(
         post_id = post.id,
         post_content_type_id = ContentType.objects.get_for_model(post).id,
         newly_mentioned_user_id_list = [u.id for u in newly_mentioned_users],
@@ -2088,6 +2088,14 @@ def record_post_update_activity(
         timestamp = timestamp,
         created = created,
     )
+    #non-celery version
+    #tasks.record_post_update(
+    #    post = post,
+    #    newly_mentioned_users = newly_mentioned_users,
+    #    updated_by = updated_by,
+    #    timestamp = timestamp,
+    #    created = created,
+    #)
 
 
 def record_award_event(instance, created, **kwargs):

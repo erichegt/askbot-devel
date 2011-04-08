@@ -36,6 +36,7 @@ class SkinTests(TestCase):
                             'test_skin'
                         )
         shutil.rmtree(test_skin_dir)
+        askbot_settings.update('ASKBOT_DEFAULT_SKIN', 'default')
 
     def assert_default_logo_in_skin(self, skin_name):
         url = skin_utils.get_media_url(askbot_settings.SITE_LOGO_URL)

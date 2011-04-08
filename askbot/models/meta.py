@@ -164,17 +164,17 @@ class Comment(base.MetaContent, base.UserContent):
             return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
 
     def get_response_receivers(self, exclude_list = None):
-        """get list of users who authored comments on a post
-        and the post itself
+        """Response receivers are commenters of the 
+        same post and the authors of the post itself.
         """
         assert(exclude_list is not None)
         users = set()
+        #get authors of parent object and all associated comments
         users.update(
-                    #get authors of parent object and all associated comments
-                    self.content_object.get_author_list(
-                            include_comments = True,
-                        )
+            self.content_object.get_author_list(
+                    include_comments = True,
                 )
+        )
         users -= set(exclude_list)
         return list(users)
 
@@ -184,10 +184,20 @@ class Comment(base.MetaContent, base.UserContent):
                                     mentioned_users = None,
                                     exclude_list = None
                                 ):
-        """get list of users who want instant notifications
-        about this comment
+        """get list of users who want instant notifications about comments
 
         argument potential_subscribers is required as it saves on db hits
+
+        Here is the list of people who will receive the notifications:
+
+        * mentioned users
+        * of response receivers
+          (see :meth:`~askbot.models.meta.Comment.get_response_receivers`) -
+          those who subscribe for the instant
+          updates on comments and @mentions
+        * all who follow the question explicitly
+        * all global subscribers
+          (tag filtered, and subject to personalized settings)
         """
         #print 'in meta function'
         #print 'potential subscribers: ', potential_subscribers

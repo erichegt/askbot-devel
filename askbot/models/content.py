@@ -215,11 +215,28 @@ class Content(models.Model):
         receive instant notifications for a given post
         this method works for questions and answers
 
-        parameter "potential_subscribers" is not used here,
-        but left for the uniformity of the interface (Comment method does use it)
+        Arguments:
 
-        comment class has it's own variant which does have quite a bit
-        of duplicated code at the moment
+        * ``potential_subscribers`` is not used here! todo: why? - clean this out
+          parameter is left for the uniformity of the interface
+          (Comment method does use it)
+          normally these methods would determine the list
+          :meth:`~askbot.models.question.Question.get_response_recipients`
+          :meth:`~askbot.models.question.Answer.get_response_recipients`
+          - depending on the type of the post
+        * ``mentioned_users`` - users, mentioned in the post for the first time
+        * ``exclude_list`` - users who must be excluded from the subscription
+
+        Users who receive notifications are:
+
+        * of ``mentioned_users`` - those who subscribe for the instant
+          updates on the @name mentions
+        * those who follow the parent question
+        * global subscribers (any personalized tag filters are applied)
+        * author of the question who subscribe to instant updates 
+          on questions that they asked
+        * authors or any answers who subsribe to instant updates
+          on the questions which they answered
         """
         #print '------------------'
         #print 'in content function'
