@@ -5,7 +5,7 @@
     {{ macros.moderation_items_link(request.user, moderation_items) }}
     ({{ macros.user_long_score_and_badge_summary(user) }})
     </span>
-    <a href="{% url logout %}">{% trans %}logout{% endtrans %}</a>
+    <a href="{% url user_signout %}?next={% url logout %}">{% trans %}logout{% endtrans %}</a>
 {% else %}
     <a href="{% url user_signin %}">{% trans %}login{% endtrans %}</a>
 {% endif %}
