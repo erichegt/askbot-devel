@@ -2,9 +2,8 @@
 <!-- template logout.html -->
 {% block title %}{% spaceless %}{% trans %}Logout{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Logout{% endtrans %}</h1>
-<p>{% trans %}As a registered user you can login with your OpenID, log out of the site or permanently remove your account.{% endtrans %}</p>
-<input id="btLogout" type="button" class="submit" value="{% trans %}Logout now{% endtrans %}"><!-- style="width:150px">-->
+<h1>{% trans %}You have successfully logged out{% endtrans %}</h1>
+<p>{% trans %}However, you still may be logged in to your OpenID provider. Please logout of your provider if you wish to do so.{% endtrans %}</p>
 {% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
     <div id="fb-root"></div>
     <script src="http://connect.facebook.net/en_US/all.js"></script>
@@ -15,27 +14,15 @@
 {% endblock %}
 {% block endjs %}
     <script type="text/javascript">
-    var sign_out = function(){
-        window.location.href='{% url user_signout %}?next={{ next }}';
-    }
     $(document).ready(function(){
-        $('#btLogout').bind('click', function(){
-            if (typeof FB != 'undefined'){
-                FB.getLoginStatus(function(response){
-                    if (response.session){
-                        FB.logout(function(response){
-                            sign_out();
-                        });
-                    }
-                    else {
-                        sign_out();
-                    }
-                });
-            }
-            else {
-                sign_out();
-            }
-        });
+        //logout user from facebook
+		if (typeof FB != 'undefined'){
+		    FB.getLoginStatus(function(response){
+		        if (response.session){
+		            FB.logout();
+		        }
+		    });
+		}
     });
     </script>
 {% endblock %}
