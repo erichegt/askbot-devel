@@ -21,6 +21,7 @@ at the forum_ or by email at admin@askbot.org
    Deploy on a webserver <deployment>
    Import data (StackExchange) <import-data>
    Appendix A: Maintenance procedures <management-commands>
+   Contributors <contributors>
 
 Some background information: Askbot is written in Python on top of the Django platform.
 Code of Askbot grew out of CNPROG project originally written by 
