@@ -61,9 +61,11 @@ var liveSearch = function(){
 
     var ask_page_search_listen = function(){
         running = false;
-        query.keydown(function(e){
+        var ask_page_eval_handle;
+        query.keyup(function(e){
             if (running === false){
-                setTimeout(eval_query, 50);
+                clearTimeout(ask_page_eval_handle);
+                ask_page_eval_handle = setTimeout(eval_query, 400);
             }
         });
     };
@@ -71,14 +73,13 @@ var liveSearch = function(){
     var main_page_search_listen = function(){
         running = false;
         refresh_x_button();
-        query.keydown(function(e){
+        var main_page_eval_handle;
+        query.keyup(function(e){
             refresh_x_button();
             if (running === false){
-                setTimeout(eval_query, 50);
+                clearTimeout(main_page_eval_handle);
+                main_page_eval_handle = setTimeout(eval_query, 400);
             }
-        });
-        query.keyup(function(){
-            refresh_x_button();
         });
     };
 
