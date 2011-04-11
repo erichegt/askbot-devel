@@ -23,12 +23,9 @@ Translations
 * Evgeny Kalinin - Russian
 * Evgeny Fadeev - English
 * Oktay Yildiz, Onur Mat, Cemre - Turkish
-* Anonymous contributor - French
+* Jérôme Blondon (bearstech) - French
 * Pekka Gaiser - German
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
 * Dario Ghilardi, Federico Poloni - Italian
-
-
-
 
