@@ -45,7 +45,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from askbot.skins.loaders import render_into_skin
+from askbot.skins.loaders import render_into_skin, get_template
 
 from askbot.deps.openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -1008,7 +1008,8 @@ def _send_email_key(user):
                                     kwargs={'key':user.email_key}
                             )
     }
-    message = render_into_skin('authopenid/email_validation.txt', data)
+    template = get_template('authopenid/email_validation.txt')
+    message = template.render(data)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 def send_new_email_key(user,nomessage=False):
