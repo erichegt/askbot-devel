@@ -317,6 +317,8 @@ def signin(
                                     login_provider_name = ldap_provider_name,
                                     redirect_url = next_url
                                 )
+                    else:
+                        login_form.set_password_login_error() 
                 else:
                     if password_action == 'login':
                         user = authenticate(
