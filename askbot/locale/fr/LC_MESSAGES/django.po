@@ -3534,9 +3534,8 @@ msgid "ask a question"
 msgstr "poser une question"
 
 #: skins/default/templates/input_bar.html:32
-#, fuzzy
 msgid "search"
-msgstr "chercher/"
+msgstr "chercher"
 
 #: skins/default/templates/instant_notification.html:1
 #, python-format
@@ -4078,7 +4077,7 @@ msgstr "questions/"
 
 #: skins/default/templates/questions.html:9
 msgid "In:"
-msgstr ""
+msgstr "Dans :"
 
 #: skins/default/templates/questions.html:18
 #, fuzzy
@@ -4216,13 +4215,12 @@ msgstr ""
 #: skins/default/templates/questions.html:183
 #: skins/default/templates/unused/questions_ajax.html:113
 msgid "Did not find what you were looking for?"
-msgstr ""
+msgstr "Vous n'avez pas trouvé ce que vous recherchiez ?"
 
 #: skins/default/templates/questions.html:184
 #: skins/default/templates/unused/questions_ajax.html:114
-#, fuzzy
 msgid "Please, post your question!"
-msgstr "Veuillez saisir votre identifiant"
+msgstr "Poster votre question !"
 
 #: skins/default/templates/questions.html:199
 msgid "Contributors"
@@ -4230,17 +4228,14 @@ msgstr ""
 
 # FXME ou "offensive" ?
 #: skins/default/templates/questions.html:216
-#, fuzzy
 msgid "Related tags"
-msgstr "Mots-clés"
+msgstr "Tags associés"
 
 #: skins/default/templates/reopen.html:3 skins/default/templates/reopen.html:6
-#, fuzzy
 msgid "Reopen question"
-msgstr "Réouvrir ses propres questions"
+msgstr "Réouvrir la question"
 
 #: skins/default/templates/reopen.html:9
-#, fuzzy
 msgid "Title"
 msgstr "Titre"
 
@@ -5345,41 +5340,39 @@ msgstr "Mot de passe actuel"
 
 # TODO "votre" ou "un" ?
 #: utils/forms.py:154
-#, fuzzy
 msgid "please, retype your password"
-msgstr "Veuillez saisir votre mot de passe"
+msgstr "veuillez saisir de nouveau votre mot de passe"
 
 #: utils/forms.py:155
-#, fuzzy
 msgid "sorry, entered passwords did not match, please try again"
-msgstr "Désolé, les 2 mots de passe sont différents, veuillez recommencer"
+msgstr "désolé, les 2 mots de passe sont différents, veuillez recommencer"
 
 #: utils/functions.py:63
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "le %(date)s"
 
 #: utils/functions.py:67
 msgid "2 days ago"
-msgstr ""
+msgstr "il y a 2 jours"
 
 #: utils/functions.py:69
 msgid "yesterday"
-msgstr ""
+msgstr "hier"
 
 #: utils/functions.py:71
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "il y a %(hr)d heure"
+msgstr[1] "il y a %(hr)d heures"
 
 #: utils/functions.py:73
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "il y a %(min)d minute"
+msgstr[1] "il y a %(min)d minutes"
 
 #: views/commands.py:42
 #, fuzzy
