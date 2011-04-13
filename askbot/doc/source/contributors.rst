@@ -15,6 +15,7 @@ Programming
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
 * Andy Knotts
+* Jeff Madynski
 
 Translations
 ------------
