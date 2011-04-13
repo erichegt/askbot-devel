@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-11 15:07+0200\n"
+"POT-Creation-Date: 2011-04-13 03:00-0500\n"
 "PO-Revision-Date: 2010-08-25 19:15+0100\n"
 "Last-Translator: - <->\n"
 "Language-Team: FrenchTranslationTeam <toto@toto.com>\n"
@@ -30,7 +30,10 @@ msgstr " - "
 msgid "latest questions"
 msgstr "dernières questions"
 
-#: forms.py:54
+#: forms.py:54 skins/default/templates/answer_edit_tips.html:43
+#: skins/default/templates/answer_edit_tips.html:47
+#: skins/default/templates/question_edit_tips.html:40
+#: skins/default/templates/question_edit_tips.html:45
 msgid "title"
 msgstr "Titre"
 
@@ -50,7 +53,7 @@ msgstr "contenu"
 msgid "question content must be > 10 characters"
 msgstr "La question doit comporter plus de 10 caractères."
 
-#: forms.py:84
+#: forms.py:84 skins/default/templates/header.html:31
 msgid "tags"
 msgstr "Mots-clés (tags)"
 
@@ -62,7 +65,7 @@ msgstr ""
 "doivent être courts, et ne pas comporter d'espaces. Vous pouvez utiliser "
 "jusqu'à 5 mots-clés."
 
-#: forms.py:93
+#: forms.py:93 skins/default/templates/question_retag.html:78
 msgid "tags are required"
 msgstr "Les mots-clés sont obligatoires."
 
@@ -287,7 +290,7 @@ msgid "revisions/"
 msgstr "revisions/"
 
 #: urls.py:59 urls.py:64 urls.py:69 urls.py:74 urls.py:79 urls.py:84
-#: urls.py:89 urls.py:94 urls.py:99
+#: urls.py:89 urls.py:94 urls.py:99 skins/default/templates/question.html:431
 msgid "questions/"
 msgstr "questions/"
 
@@ -311,7 +314,7 @@ msgstr "reouvrir/"
 msgid "answer/"
 msgstr "repondre/"
 
-#: urls.py:94
+#: urls.py:94 skins/default/templates/question.html:431
 msgid "vote/"
 msgstr "voter/"
 
@@ -319,7 +322,8 @@ msgstr "voter/"
 msgid "command/"
 msgstr "commande/"
 
-#: urls.py:131
+#: urls.py:131 skins/default/templates/question.html:429
+#: skins/default/templates/questions.html:251
 msgid "question/"
 msgstr "question/"
 
@@ -327,24 +331,26 @@ msgstr "question/"
 msgid "tags/"
 msgstr "mots-cles/"
 
-#: urls.py:141 urls.py:147
+#: urls.py:141 urls.py:147 skins/default/templates/questions.html:246
+#: skins/default/templates/questions.html:247
 msgid "mark-tag/"
 msgstr "marquer-avec-un-tag/"
 
-#: urls.py:141
+#: urls.py:141 skins/default/templates/questions.html:246
 msgid "interesting/"
 msgstr "interessant/"
 
-#: urls.py:147
+#: urls.py:147 skins/default/templates/questions.html:247
 msgid "ignored/"
 msgstr "ignoree/"
 
 # FIXME
-#: urls.py:153
+#: urls.py:153 skins/default/templates/questions.html:248
 msgid "unmark-tag/"
 msgstr "retirer-un-tag/"
 
 #: urls.py:159 urls.py:165 urls.py:170
+#: skins/default/templates/questions.html:252
 msgid "users/"
 msgstr "utilisateurs/"
 
@@ -374,6 +380,7 @@ msgid "feedback/"
 msgstr "retour/"
 
 #: urls.py:204 setup_templates/settings.py:181
+#: skins/default/templates/authopenid/signin.html:249
 msgid "account/"
 msgstr "compte/"
 
@@ -422,9 +429,8 @@ msgid "Popular Question: minimum views"
 msgstr "Question populaire : vues minimum"
 
 #: conf/badges.py:111
-#, fuzzy
 msgid "Notable Question: minimum views"
-msgstr "Question remarquable"
+msgstr "Question remarquable : nombre de vues minimum"
 
 #: conf/badges.py:120
 msgid "Famous Question: minimum views"
@@ -459,14 +465,12 @@ msgid "Associate Editor: minimum number of edits"
 msgstr ""
 
 #: conf/badges.py:192
-#, fuzzy
 msgid "Favorite Question: minimum stars"
-msgstr "Question favorite"
+msgstr "Question favorite : minimum d'étoiles"
 
 #: conf/badges.py:201
-#, fuzzy
 msgid "Stellar Question: minimum stars"
-msgstr "Excellente question"
+msgstr "Excellente question : minimum d'étoiles"
 
 #: conf/email.py:12
 msgid "Email and email alert settings"
@@ -637,9 +641,8 @@ msgid "URL for the LDAP service"
 msgstr ""
 
 #: conf/external_keys.py:170
-#, fuzzy
 msgid "Explain how to change LDAP password"
-msgstr "Compte : changer de mot de passe"
+msgstr "Explique comment changer le mot de passe LDAP"
 
 #: conf/flatpages.py:10
 msgid "Flatpages - about, privacy policy, etc."
@@ -821,7 +824,6 @@ msgid "Lock posts"
 msgstr "Verrouiller des messages"
 
 #: conf/reputation_changes.py:12
-#, fuzzy
 msgid "Reputation loss and gain rules"
 msgstr "Règles concernant le gain et la perte de points de réputation"
 
@@ -966,7 +968,6 @@ msgstr "Couleur d'arrière plan pour votes = 0"
 #: conf/skin_counter_settings.py:206 conf/skin_counter_settings.py:216
 #: conf/skin_counter_settings.py:228 conf/skin_counter_settings.py:239
 #: conf/skin_counter_settings.py:252 conf/skin_counter_settings.py:262
-#, fuzzy
 msgid "HTML color name or hex value"
 msgstr "Nom de couleur HTML ou valeur hexadécimale"
 
@@ -1010,9 +1011,6 @@ msgstr "Couleur d'arrière-plan pour consultations"
 msgid "Foreground color for views"
 msgstr "Couleur de premier plan pour consultations"
 
-#: skins/default/templates/questions.html:29
-msgid "Sort by:"
-msgstr "Trier par :"
 #: conf/skin_counter_settings.py:147
 msgid "Background color for views = MAX"
 msgstr "Couleur d'arrière-plan pour consultations = MAX"
@@ -1324,7 +1322,8 @@ msgstr "trop spécifique à un lieu"
 msgid "newest"
 msgstr "date (↓)"
 
-#: const/__init__.py:41
+#: const/__init__.py:41 skins/default/templates/users.html:25
+#: skins/default/templates/users.html:26
 msgid "oldest"
 msgstr "date (↑)"
 
@@ -1365,15 +1364,16 @@ msgid "relevance"
 msgstr "pertinence"
 
 # FIXME
-#: const/__init__.py:55
+#: const/__init__.py:55 skins/default/templates/questions.html:14
+#: skins/default/templates/user_inbox.html:47
 msgid "all"
 msgstr "toutes"
 
-#: const/__init__.py:56
+#: const/__init__.py:56 skins/default/templates/questions.html:19
 msgid "unanswered"
 msgstr "ouvertes"
 
-#: const/__init__.py:57
+#: const/__init__.py:57 skins/default/templates/questions.html:25
 msgid "favorite"
 msgstr "favorite"
 
@@ -1525,15 +1525,15 @@ msgstr "hebdomadaire"
 msgid "no email"
 msgstr "Aucun email"
 
-#: const/__init__.py:241
+#: const/__init__.py:241 skins/default/templates/badges.html:42
 msgid "gold"
 msgstr "or"
 
-#: const/__init__.py:242
+#: const/__init__.py:242 skins/default/templates/badges.html:51
 msgid "silver"
 msgstr "argent"
 
-#: const/__init__.py:243
+#: const/__init__.py:243 skins/default/templates/badges.html:58
 msgid "bronze"
 msgstr "bronze"
 
@@ -1543,14 +1543,12 @@ msgid "First time here? Check out the <a href=\"%s\">FAQ</a>!"
 msgstr "Vous êtes nouveau ? Commencez par lire notre <a href=\"%s\">FAQ</a> !"
 
 #: const/message_keys.py:22 skins/default/templates/questions.html:31
-#, fuzzy
 msgid "most relevant questions"
-msgstr "Merci de poser une question pertinente."
+msgstr "question les plus pertinentes"
 
 #: const/message_keys.py:23 skins/default/templates/questions.html:32
-#, fuzzy
 msgid "click to see most relevant questions"
-msgstr "Cliquez ici pour voir les questions ayant obtenu le plus de votes"
+msgstr "Cliquez ici pour voir les questions les plus appropriées"
 
 # FIXME ou "peu de votes"
 #: const/message_keys.py:24
@@ -1592,9 +1590,8 @@ msgid "by answers"
 msgstr "par réponses"
 
 #: const/message_keys.py:33
-#, fuzzy
 msgid "click to see the most answered questions"
-msgstr "Cliquez ici pour voir les questions ayant obtenu le plus de votes"
+msgstr "cliquez ici pour voir les questions ayant obtenu le plus de réponses"
 
 #: const/message_keys.py:34
 msgid "click to see least voted questions"
@@ -1613,26 +1610,23 @@ msgid "i-names are not supported"
 msgstr "Les i-names ne sont pas supportés."
 
 #: deps/django_authopenid/forms.py:237
-#, fuzzy, python-format
+#, python-format
 msgid "Please enter your %(username_token)s"
-msgstr "Veuillez saisir votre nom d'utilisateur"
+msgstr "Veuillez saisir votre %(username_token)s"
 
 #: deps/django_authopenid/forms.py:263
-#, fuzzy
 msgid "Please, enter your user name"
-msgstr "Veuillez saisir votre nom d'utilisateur"
+msgstr "Veuillez saisir votre identifiant"
 
 # TODO "votre" ou "un" ?
 #: deps/django_authopenid/forms.py:267
-#, fuzzy
 msgid "Please, enter your password"
 msgstr "Veuillez saisir votre mot de passe"
 
 # TODO "votre" ou "un" ?
 #: deps/django_authopenid/forms.py:274 deps/django_authopenid/forms.py:278
-#, fuzzy
 msgid "Please, enter your new password"
-msgstr "Veuillez saisir votre mot de passe"
+msgstr "Veuillez saisir votre nouveau mot de passe"
 
 #: deps/django_authopenid/forms.py:289
 msgid "Passwords did not match"
@@ -1689,9 +1683,8 @@ msgid "complete/"
 msgstr "termine/"
 
 #: deps/django_authopenid/urls.py:18
-#, fuzzy
 msgid "complete-oauth/"
-msgstr "termine/"
+msgstr "complete-oauth/"
 
 #: deps/django_authopenid/urls.py:22
 msgid "register/"
@@ -1702,52 +1695,46 @@ msgid "signup/"
 msgstr "inscription/"
 
 #: deps/django_authopenid/urls.py:32
-#, fuzzy
 msgid "recover/"
-msgstr "reouvrir/"
+msgstr "retablir/"
 
 #: deps/django_authopenid/util.py:196
-#, fuzzy, python-format
+#, python-format
 msgid "%(site)s user name and password"
-msgstr "Veuillez saisir votre nom d'utilisateur et un mot de passe"
+msgstr "%(site)s identifiant et mot de passe"
 
 #: deps/django_authopenid/util.py:202
+#: skins/default/templates/authopenid/signin.html:124
 msgid "Create a password-protected account"
 msgstr ""
 
 #: deps/django_authopenid/util.py:203
-#, fuzzy
 msgid "Change your password"
-msgstr "Changer de mot de passe"
+msgstr "Changer votre mot de passe"
 
 #: deps/django_authopenid/util.py:265
 msgid "Sign in with Yahoo"
 msgstr ""
 
 #: deps/django_authopenid/util.py:272
-#, fuzzy
 msgid "AOL screen name"
-msgstr "Pseudo"
+msgstr "AOL screen name"
 
 #: deps/django_authopenid/util.py:280
-#, fuzzy
 msgid "OpenID url"
-msgstr "URL OpenID:"
+msgstr "URL OpenID"
 
 #: deps/django_authopenid/util.py:297
-#, fuzzy
 msgid "MyOpenid user name"
-msgstr "par nom d'utilisateur"
+msgstr "Identifiant MyOpenId"
 
 #: deps/django_authopenid/util.py:305 deps/django_authopenid/util.py:313
-#, fuzzy
 msgid "Flickr user name"
-msgstr "Nom d'utilisateur"
+msgstr "Nom d'utilisateur Flicker"
 
 #: deps/django_authopenid/util.py:321
-#, fuzzy
 msgid "Technorati user name"
-msgstr "choisissez un nom d'utilisateur"
+msgstr "identifiant Technorati"
 
 #: deps/django_authopenid/util.py:329
 msgid "WordPress blog name"
@@ -1762,24 +1749,21 @@ msgid "LiveJournal blog name"
 msgstr ""
 
 #: deps/django_authopenid/util.py:353
-#, fuzzy
 msgid "ClaimID user name"
-msgstr "Nom d'utilisateur"
+msgstr "identifiant ClaimID"
 
 #: deps/django_authopenid/util.py:361
-#, fuzzy
 msgid "Vidoop user name"
-msgstr "Nom d'utilisateur"
+msgstr "identifiant Vidoop"
 
 #: deps/django_authopenid/util.py:369
-#, fuzzy
 msgid "Verisign user name"
-msgstr "Nom d'utilisateur"
+msgstr "identifiant Verisign"
 
 #: deps/django_authopenid/util.py:393
-#, fuzzy, python-format
+#, python-format
 msgid "Change your %(provider)s password"
-msgstr "Changer de mot de passe"
+msgstr "Changer votre mot de passe de %(provider)s"
 
 #: deps/django_authopenid/util.py:397
 #, python-format
@@ -1793,14 +1777,17 @@ msgstr ""
 
 # FIXME
 #: deps/django_authopenid/util.py:410
-#, fuzzy, python-format
+#, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
-msgstr "Associez votre OpenID avec votre compte sur ce site"
+msgstr ""
+"Associez votre %(provider)s avec votre compte sur ce site %(site_name)s"
 
 #: deps/django_authopenid/util.py:419
-#, fuzzy, python-format
+#, python-format
 msgid "Signin with %(provider)s user name and password"
-msgstr "Veuillez saisir votre nom d'utilisateur et un mot de passe"
+msgstr ""
+"Veuillez saisir votre nom d'utilisateur et un mot de passe pour vous "
+"connecter avec %(provider)s"
 
 #: deps/django_authopenid/util.py:426
 #, python-format
@@ -1821,9 +1808,8 @@ msgid ""
 msgstr ""
 
 #: deps/django_authopenid/views.py:347
-#, fuzzy
 msgid "Your new password saved"
-msgstr "Votre mot de passe a été mis à jour."
+msgstr "Votre nouveau mot de passe a été sauvé"
 
 #: deps/django_authopenid/views.py:509
 msgid "Please click any of the icons below to sign in"
@@ -1855,9 +1841,8 @@ msgid "Login method %(provider_name)s does not exist"
 msgstr ""
 
 #: deps/django_authopenid/views.py:582
-#, fuzzy
 msgid "Oops, sorry - there was some error - please try again"
-msgstr "désolé, les 2 mots de passe sont différents, veuillez recommencer"
+msgstr "Désolé, les 2 mots de passe sont différents, veuillez recommencer"
 
 #: deps/django_authopenid/views.py:673
 #, python-format
@@ -1917,6 +1902,7 @@ msgstr "Documentation"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
+#: skins/default/templates/authopenid/signin.html:142
 msgid "Change password"
 msgstr "Changer de mot de passe"
 
@@ -2021,9 +2007,8 @@ msgid "\" and \"%s\""
 msgstr ""
 
 #: management/commands/send_email_alerts.py:108
-#, fuzzy
 msgid "\" and more"
-msgstr "En savoir plus."
+msgstr "\" et plus"
 
 #: management/commands/send_email_alerts.py:113
 #, python-format
@@ -2038,12 +2023,14 @@ msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 "<p>Bonjour %(name)s,</p></p>Il y a du nouveau concernant %(num)d question:</"
-msgstr[2] "p>"
-msgstr[3] ""
+msgstr[3] "p>"
 msgstr[4] ""
+msgstr[5] ""
+msgstr[6] ""
 "<p>Bonjour %(name)s,</p><p>Il y a du nouveau concernant %(num)d questions:</"
-msgstr[5] "p>"
+msgstr[7] "p>"
 
 #: management/commands/send_email_alerts.py:484
 msgid "new question"
@@ -2184,12 +2171,10 @@ msgid ""
 msgstr ""
 
 #: models/__init__.py:304
-#, fuzzy
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
-"Désolé, seuls les propriétaires des questions, les administrateurs du site "
-"et les modérateurs peuvent requalifier des questions supprimées (c'est à "
-"dire modifier leurs mots-clés)"
+"Désolé, seuls les propriétaires des questions et les modérateurs peuvent "
+"éditer les commentaires"
 
 #: models/__init__.py:318
 msgid ""
@@ -2209,7 +2194,6 @@ msgstr ""
 "publications et répondre à vos questions"
 
 #: models/__init__.py:350
-#, fuzzy
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
@@ -2237,7 +2221,7 @@ msgstr ""
 "est suspendu"
 
 #: models/__init__.py:391
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
@@ -2245,7 +2229,7 @@ msgstr ""
 "de réputation est requis"
 
 #: models/__init__.py:398
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
@@ -2750,12 +2734,12 @@ msgstr ""
 #: models/badges.py:688
 #, fuzzy
 msgid "Stellar Question"
-msgstr "Excellente question"
+msgstr "Excellente question : minimum d'étoiles"
 
 #: models/badges.py:697
 #, fuzzy
 msgid "Favorite Question"
-msgstr "Question favorite"
+msgstr "Question favorite : minimum d'étoiles"
 
 #: models/badges.py:707
 msgid "Enthusiast"
@@ -2889,12 +2873,2287 @@ msgstr "hebdomadaire"
 msgid "No email"
 msgstr "Aucun email"
 
+#: skins/default/templates/404.jinja.html:3
+#: skins/default/templates/404.jinja.html:11
+msgid "Page not found"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:15
+msgid "Sorry, could not find the page you requested."
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:17
+msgid "This might have happened for the following reasons:"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:19
+#, fuzzy
+msgid "this question or answer has been deleted;"
+msgstr "la question est résolue, une bonne réponse a été acceptée"
+
+#: skins/default/templates/404.jinja.html:20
+msgid "url has error - please check it;"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:21
+msgid ""
+"the page you tried to visit is protected or you don't have sufficient "
+"points, see"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:21
+#: skins/default/templates/footer.html:6
+#: skins/default/templates/question_edit_tips.html:16
+#: skins/default/templates/blocks/header_meta_links.html:52
+#, fuzzy
+msgid "faq"
+msgstr "faq/"
+
+#: skins/default/templates/404.jinja.html:22
+msgid "if you believe this error 404 should not have occured, please"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:23
+msgid "report this problem"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:32
+#: skins/default/templates/500.jinja.html:13
+msgid "back to previous page"
+msgstr ""
+
+#: skins/default/templates/404.jinja.html:33
+#: skins/default/templates/questions.html:13
+#, fuzzy
+msgid "see all questions"
+msgstr "a posé une question"
+
+#: skins/default/templates/404.jinja.html:34
+msgid "see all tags"
+msgstr ""
+
+#: skins/default/templates/500.jinja.html:3
+#: skins/default/templates/500.jinja.html:6
+msgid "Internal server error"
+msgstr ""
+
+#: skins/default/templates/500.jinja.html:10
+msgid "system error log is recorded, error will be fixed as soon as possible"
+msgstr ""
+
+#: skins/default/templates/500.jinja.html:11
+msgid "please report the error to the site administrators if you wish"
+msgstr ""
+
+#: skins/default/templates/500.jinja.html:14
+#, fuzzy
+msgid "see latest questions"
+msgstr "dernières questions"
+
+#: skins/default/templates/500.jinja.html:15
+#, fuzzy
+msgid "see tags"
+msgstr "Mots-clés (tags)"
+
+#: skins/default/templates/about.html:3 skins/default/templates/about.html:6
+#, fuzzy
+msgid "About"
+msgstr "apropos/"
+
+#: skins/default/templates/answer_edit.html:4
+#: skins/default/templates/answer_edit.html:10
+#, fuzzy
+msgid "Edit answer"
+msgstr "réponse modifiée"
+
+#: skins/default/templates/answer_edit.html:10
+#: skins/default/templates/question_edit.html:10
+#: skins/default/templates/question_retag.html:6
+#: skins/default/templates/revisions.html:7
+#, fuzzy
+msgid "back"
+msgstr "retour/"
+
+#: skins/default/templates/answer_edit.html:15
+#: skins/default/templates/question_edit.html:14
+#, fuzzy
+msgid "revision"
+msgstr "revisions/"
+
+#: skins/default/templates/answer_edit.html:18
+#: skins/default/templates/question_edit.html:19
+#, fuzzy
+msgid "select revision"
+msgstr "Sélectionnez un thème (skin)"
+
+#: skins/default/templates/answer_edit.html:22
+#: skins/default/templates/question_edit.html:28
+msgid "Save edit"
+msgstr ""
+
+#: skins/default/templates/answer_edit.html:23
+#: skins/default/templates/close.html:19
+#: skins/default/templates/feedback.html:45
+#: skins/default/templates/question_edit.html:29
+#: skins/default/templates/question_retag.html:26
+#: skins/default/templates/reopen.html:30
+#: skins/default/templates/user_edit.html:76
+#: skins/default/templates/authopenid/changeemail.html:38
+msgid "Cancel"
+msgstr ""
+
+#: skins/default/templates/answer_edit.html:59
+#: skins/default/templates/answer_edit.html:62
+#: skins/default/templates/ask.html:36 skins/default/templates/ask.html:39
+#: skins/default/templates/macros.html:444
+#: skins/default/templates/question.html:465
+#: skins/default/templates/question.html:468
+#: skins/default/templates/question_edit.html:63
+#: skins/default/templates/question_edit.html:66
+msgid "hide preview"
+msgstr "masquer la prévisualisation"
+
+#: skins/default/templates/answer_edit.html:62
+#: skins/default/templates/ask.html:39
+#: skins/default/templates/question.html:468
+#: skins/default/templates/question_edit.html:66
+msgid "show preview"
+msgstr "afficher la previsualisation"
+
+#: skins/default/templates/answer_edit_tips.html:3
+msgid "answer tips"
+msgstr "astuces de reponse"
+
+#: skins/default/templates/answer_edit_tips.html:6
+msgid "please make your answer relevant to this community"
+msgstr "merci de poser une question pertinente pour cette communauté"
+
+#: skins/default/templates/answer_edit_tips.html:9
+msgid "try to give an answer, rather than engage into a discussion"
+msgstr "essayer de donner une réponse, plutôt que d'engager une discussion"
+
+#: skins/default/templates/answer_edit_tips.html:12
+msgid "please try to provide details"
+msgstr "essayer de fournir des détails"
+
+#: skins/default/templates/answer_edit_tips.html:15
+#: skins/default/templates/question_edit_tips.html:12
+msgid "be clear and concise"
+msgstr "soyez clair et concis"
+
+#: skins/default/templates/answer_edit_tips.html:19
+#: skins/default/templates/question_edit_tips.html:16
+msgid "see frequently asked questions"
+msgstr "voir les question les plus fréquemment posées"
+
+#: skins/default/templates/answer_edit_tips.html:25
+#: skins/default/templates/question_edit_tips.html:22
+msgid "Markdown tips"
+msgstr "Astuces sur Markdown"
+
+#: skins/default/templates/answer_edit_tips.html:29
+#: skins/default/templates/question_edit_tips.html:26
+msgid "*italic*"
+msgstr ""
+
+#: skins/default/templates/answer_edit_tips.html:32
+#: skins/default/templates/question_edit_tips.html:29
+msgid "**bold**"
+msgstr "**gras**"
+
+#: skins/default/templates/answer_edit_tips.html:36
+#: skins/default/templates/question_edit_tips.html:33
+msgid "*italic* or _italic_"
+msgstr "*italique* ou _italique_"
+
+#: skins/default/templates/answer_edit_tips.html:39
+#: skins/default/templates/question_edit_tips.html:36
+msgid "**bold** or __bold__"
+msgstr "**gras** or __gras__"
+
+#: skins/default/templates/answer_edit_tips.html:43
+#: skins/default/templates/question_edit_tips.html:40
+msgid "link"
+msgstr "lien"
+
+#: skins/default/templates/answer_edit_tips.html:43
+#: skins/default/templates/answer_edit_tips.html:47
+#: skins/default/templates/question_edit_tips.html:40
+#: skins/default/templates/question_edit_tips.html:45
+msgid "text"
+msgstr "texte"
+
+#: skins/default/templates/answer_edit_tips.html:47
+#: skins/default/templates/question_edit_tips.html:45
+msgid "image"
+msgstr "image"
+
+#: skins/default/templates/answer_edit_tips.html:51
+#: skins/default/templates/question_edit_tips.html:49
+msgid "numbered list:"
+msgstr "liste numérotée"
+
+#: skins/default/templates/answer_edit_tips.html:56
+#: skins/default/templates/question_edit_tips.html:54
+msgid "basic HTML tags are also supported"
+msgstr "Les balises HTML basiques sont aussi supportées"
+
+#: skins/default/templates/answer_edit_tips.html:60
+#: skins/default/templates/question_edit_tips.html:58
+msgid "learn more about Markdown"
+msgstr "en savoir plus sur Markdown"
+
+#: skins/default/templates/ask.html:3
+msgid "Ask a question"
+msgstr "Poser une question"
+
+#: skins/default/templates/ask_form.html:7
+msgid "login to post question info"
+msgstr "veuillez vous connecter pour poster une question"
+
+#: skins/default/templates/ask_form.html:11
+#, python-format
+msgid ""
+"must have valid %(email)s to post, \n"
+"                                see %(email_validation_faq_url)s\n"
+"                                "
+msgstr ""
+
+#: skins/default/templates/ask_form.html:27
+msgid "Login/signup to post your question"
+msgstr "Se connecter pour poster votre question"
+
+#: skins/default/templates/ask_form.html:29
+msgid "Ask your question"
+msgstr "Poser votre question"
+
+#: skins/default/templates/badge.html:4 skins/default/templates/badge.html:11
+#: skins/default/templates/user_recent.html:13
+#: skins/default/templates/user_stats.html:88
+#, python-format
+msgid "%(name)s"
+msgstr "%(name)s"
+
+#: skins/default/templates/badge.html:4 skins/default/templates/badge.html:7
+#, fuzzy
+msgid "Badge"
+msgstr "Badges/"
+
+#: skins/default/templates/badge.html:11
+#: skins/default/templates/user_recent.html:13
+#: skins/default/templates/user_stats.html:88
+#, python-format
+msgid "%(description)s"
+msgstr ""
+
+#: skins/default/templates/badge.html:16
+msgid "user received this badge:"
+msgid_plural "users received this badge:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/badges.html:3
+#, fuzzy
+msgid "Badges summary"
+msgstr "Résumé des modifications:"
+
+#: skins/default/templates/badges.html:6
+#, fuzzy
+msgid "Badges"
+msgstr "Badges/"
+
+#: skins/default/templates/badges.html:10
+msgid "Community gives you awards for your questions, answers and votes."
+msgstr "La communauté vous récompense pour vos questions, réponses et votes."
+
+#: skins/default/templates/badges.html:11
+#, python-format
+msgid ""
+"Below is the list of available badges and number \n"
+"    of times each type of badge has been awarded. Give us feedback at "
+"%(feedback_faq_url)s.\n"
+"    "
+msgstr ""
+
+#: skins/default/templates/badges.html:39
+msgid "Community badges"
+msgstr "Badges de la communauté"
+
+#: skins/default/templates/badges.html:42
+msgid "gold badge: the highest honor and is very rare"
+msgstr ""
+
+#: skins/default/templates/badges.html:45
+msgid "gold badge description"
+msgstr ""
+
+#: skins/default/templates/badges.html:50
+msgid ""
+"silver badge: occasionally awarded for the very high quality contributions"
+msgstr ""
+
+#: skins/default/templates/badges.html:54
+msgid "silver badge description"
+msgstr ""
+
+#: skins/default/templates/badges.html:57
+msgid "bronze badge: often given as a special honor"
+msgstr ""
+
+#: skins/default/templates/badges.html:61
+msgid "bronze badge description"
+msgstr ""
+
+#: skins/default/templates/close.html:3 skins/default/templates/close.html:6
+#, fuzzy
+msgid "Close question"
+msgstr "Cloturer ses propres questions"
+
+#: skins/default/templates/close.html:9
+#, fuzzy
+msgid "Close the question"
+msgstr "Cloturer ses propres questions"
+
+#: skins/default/templates/close.html:14
+msgid "Reasons"
+msgstr ""
+
+#: skins/default/templates/close.html:18
+msgid "OK to close"
+msgstr ""
+
+#: skins/default/templates/editor_data.html:5
+#, fuzzy, python-format
+msgid "each tag must be shorter that %(max_chars)s character"
+msgid_plural "each tag must be shorter than %(max_chars)s characters"
+msgstr[0] "Chaque mot-clé doit comporter moins de %(max_chars)d caractère"
+msgstr[1] "Chaque mot-clé doit comporter moins de %(max_chars)d caractères"
+
+#: skins/default/templates/editor_data.html:7
+#, fuzzy, python-format
+msgid "please use %(tag_count)s tag"
+msgid_plural "please use %(tag_count)s tags or less"
+msgstr[0] "Veuillez utiliser %(tag_count)d mot-clé, ou moins"
+msgstr[1] "Veuillez utiliser %(tag_count)d mots-clés, ou moins"
+
+#: skins/default/templates/editor_data.html:8
+#, fuzzy, python-format
+msgid ""
+"please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
+msgstr "Chaque mot-clé doit comporter moins de %(max_chars)d caractère"
+
+#: skins/default/templates/faq.html:3 skins/default/templates/faq.html.py:6
+msgid "FAQ"
+msgstr ""
+
+#: skins/default/templates/faq.html:6
+#, fuzzy
+msgid "Frequently Asked Questions "
+msgstr "question supprimée"
+
+#: skins/default/templates/faq.html:11
+msgid "What kinds of questions can I ask here?"
+msgstr ""
+
+#: skins/default/templates/faq.html:12
+msgid ""
+"Most importanly - questions should be <strong>relevant</strong> to this "
+"community."
+msgstr ""
+
+#: skins/default/templates/faq.html:13
+msgid ""
+"Before asking the question - please make sure to use search to see whether "
+"your question has alredy been answered."
+msgstr ""
+
+#: skins/default/templates/faq.html:15
+msgid "What questions should I avoid asking?"
+msgstr ""
+
+#: skins/default/templates/faq.html:16
+msgid ""
+"Please avoid asking questions that are not relevant to this community, too "
+"subjective and argumentative."
+msgstr ""
+
+#: skins/default/templates/faq.html:20
+#, fuzzy
+msgid "What should I avoid in my answers?"
+msgstr "Que signifie  \"questions sans réponses\" ?"
+
+#: skins/default/templates/faq.html:21
+msgid ""
+"is a Q&A site, not a discussion group. Therefore - please avoid having "
+"discussions in your answers, comment facility allows some space for brief "
+"discussions."
+msgstr ""
+
+#: skins/default/templates/faq.html:24
+msgid "Who moderates this community?"
+msgstr ""
+
+#: skins/default/templates/faq.html:25
+msgid "The short answer is: <strong>you</strong>."
+msgstr ""
+
+#: skins/default/templates/faq.html:26
+msgid "This website is moderated by the users."
+msgstr ""
+
+#: skins/default/templates/faq.html:27
+msgid ""
+"The reputation system allows users earn the authorization to perform a "
+"variety of moderation tasks."
+msgstr ""
+
+#: skins/default/templates/faq.html:32
+msgid "How does reputation system work?"
+msgstr ""
+
+#: skins/default/templates/faq.html:33
+#, fuzzy
+msgid "Rep system summary"
+msgstr "Résumé des modifications:"
+
+#: skins/default/templates/faq.html:34
+#, python-format
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your input will be upvoted. On the other hand if the answer is misleading - "
+"it will be downvoted. Each vote in favor will generate <strong>"
+"%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> points, each vote against will "
+"subtract <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> points. There "
+"is a limit of <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> points that "
+"can be accumulated for a question or answer per day. The table below "
+"explains reputation point requirements for each type of moderation task."
+msgstr ""
+
+# FIXME ou "élue meilleure réponse"
+#: skins/default/templates/faq.html:44
+#: skins/default/templates/user_votes.html:10
+#, fuzzy
+msgid "upvote"
+msgstr "notée positivement"
+
+# FXME ou "offensive" ?
+#: skins/default/templates/faq.html:49
+#, fuzzy
+msgid "use tags"
+msgstr "Mots-clés"
+
+#: skins/default/templates/faq.html:54
+#, fuzzy
+msgid "add comments"
+msgstr "Ajouter un commentaire"
+
+# FIXME ou "ayant reçu un vote positif"
+#: skins/default/templates/faq.html:58
+#: skins/default/templates/user_votes.html:12
+#, fuzzy
+msgid "downvote"
+msgstr "notée négativement"
+
+#: skins/default/templates/faq.html:61
+#, fuzzy
+msgid "open and close own questions"
+msgstr "Cloturer ses propres questions"
+
+#: skins/default/templates/faq.html:65
+#, fuzzy
+msgid "retag other's questions"
+msgstr "dernières questions"
+
+#: skins/default/templates/faq.html:70
+#, fuzzy
+msgid "edit community wiki questions"
+msgstr "Modifier les messages sur le  \"wiki communautaire\""
+
+#: skins/default/templates/faq.html:75
+#, fuzzy
+msgid "\"edit any answer"
+msgstr "réponse modifiée"
+
+#: skins/default/templates/faq.html:79
+#, fuzzy
+msgid "\"delete any comment"
+msgstr "Ajouter un commentaire"
+
+#: skins/default/templates/faq.html:86
+#, fuzzy
+msgid "how to validate email title"
+msgstr "Choisissez un tag pour filtrer les emails"
+
+#: skins/default/templates/faq.html:88
+#, python-format
+msgid ""
+"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr ""
+
+#: skins/default/templates/faq.html:93
+msgid "what is gravatar"
+msgstr ""
+
+#: skins/default/templates/faq.html:94
+msgid "gravatar faq info"
+msgstr ""
+
+#: skins/default/templates/faq.html:97
+msgid "To register, do I need to create new password?"
+msgstr ""
+
+#: skins/default/templates/faq.html:98
+msgid ""
+"No, you don't have to. You can login through any service that supports "
+"OpenID, e.g. Google, Yahoo, AOL, etc.\""
+msgstr ""
+
+#: skins/default/templates/faq.html:99
+msgid "\"Login now!\""
+msgstr ""
+
+#: skins/default/templates/faq.html:103
+msgid "Why other people can edit my questions/answers?"
+msgstr ""
+
+#: skins/default/templates/faq.html:104
+msgid "Goal of this site is..."
+msgstr ""
+
+#: skins/default/templates/faq.html:104
+msgid ""
+"So questions and answers can be edited like wiki pages by experienced users "
+"of this site and this improves the overall quality of the knowledge base "
+"content."
+msgstr ""
+
+#: skins/default/templates/faq.html:105
+msgid "If this approach is not for you, we respect your choice."
+msgstr ""
+
+#: skins/default/templates/faq.html:109
+#, fuzzy
+msgid "Still have questions?"
+msgstr "dernières questions"
+
+#: skins/default/templates/faq.html:110
+#, python-format
+msgid ""
+"Please ask your question at %(ask_question_url)s, help make our community "
+"better!"
+msgstr ""
+
+#: skins/default/templates/faq.html:112 skins/default/templates/header.html:26
+#, fuzzy
+msgid "questions"
+msgstr "questions/"
+
+#: skins/default/templates/faq.html:112
+msgid "."
+msgstr ""
+
+#: skins/default/templates/feedback.html:3
+#, fuzzy
+msgid "Feedback"
+msgstr "retour/"
+
+#: skins/default/templates/feedback.html:6
+msgid "Give us your feedback!"
+msgstr ""
+
+#: skins/default/templates/feedback.html:12
+#, python-format
+msgid ""
+"\n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look "
+"forward to hearing your feedback. \n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+
+#: skins/default/templates/feedback.html:19
+msgid ""
+"\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to "
+"hearing your feedback.\n"
+"            Please type and send us your message below.\n"
+"            "
+msgstr ""
+
+#: skins/default/templates/feedback.html:28
+msgid "(please enter a valid email)"
+msgstr ""
+
+#: skins/default/templates/feedback.html:36
+#, fuzzy
+msgid "(this field is required)"
+msgstr "Les mots-clés sont obligatoires."
+
+#: skins/default/templates/feedback.html:44
+#, fuzzy
+msgid "Send Feedback"
+msgstr "retour/"
+
+#: skins/default/templates/footer.html:5
+#: skins/default/templates/blocks/header_meta_links.html:51
+#, fuzzy
+msgid "about"
+msgstr "apropos/"
+
+#: skins/default/templates/footer.html:7
+#, fuzzy
+msgid "privacy policy"
+msgstr "vieprivee/"
+
+#: skins/default/templates/footer.html:16
+#, fuzzy
+msgid "give feedback"
+msgstr "retour/"
+
+#: skins/default/templates/header.html:15
+msgid "back to home page"
+msgstr ""
+
+#: skins/default/templates/header.html:16
+#, fuzzy, python-format
+msgid "%(site)s logo"
+msgstr "Logo du site de Questions/Réponses"
+
+#: skins/default/templates/header.html:36
+#, fuzzy
+msgid "users"
+msgstr "utilisateurs/"
+
+#: skins/default/templates/header.html:41
+#, fuzzy
+msgid "badges"
+msgstr "Badges/"
+
+#: skins/default/templates/header.html:46
+msgid "ask a question"
+msgstr "poser une question"
+
+#: skins/default/templates/input_bar.html:32
+msgid "search"
+msgstr "chercher"
+
+#: skins/default/templates/instant_notification.html:1
+#, python-format
+msgid "<p>Dear %(receiving_user_name)s,</p>"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:3
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a>:</"
+"p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:8
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a></"
+"p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:13
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s answered a question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:19
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s posted a new question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:25
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s updated an answer to the question\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:31
+#, python-format
+msgid ""
+"\n"
+"<p>%(update_author_name)s updated a question \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:37
+#, python-format
+msgid ""
+"\n"
+"<div>%(content_preview)s</div>\n"
+"<p>Please note - you can easily <a href=\"%(user_subscriptions_url)s"
+"\">change</a>\n"
+"how often you receive these notifications or unsubscribe. Thank you for your "
+"interest in our forum!</p>\n"
+msgstr ""
+
+#: skins/default/templates/instant_notification.html:42
+msgid "<p>Sincerely,<br/>Forum Administrator</p>"
+msgstr ""
+
+#: skins/default/templates/logout.html:3 skins/default/templates/logout.html:6
+#, fuzzy
+msgid "Logout"
+msgstr "deconnecter/"
+
+#: skins/default/templates/logout.html:9
+msgid ""
+"As a registered user you can login with your OpenID, log out of the site or "
+"permanently remove your account."
+msgstr ""
+
+#: skins/default/templates/logout.html:10
+msgid "Logout now"
+msgstr ""
+
+#: skins/default/templates/macros.html:26
+msgid "karma:"
+msgstr ""
+
+#: skins/default/templates/macros.html:30
+#, fuzzy
+msgid "badges:"
+msgstr "Badges/"
+
+#: skins/default/templates/macros.html:52
+#: skins/default/templates/macros.html:53
+#, fuzzy
+msgid "previous"
+msgstr "revisions/"
+
+#: skins/default/templates/macros.html:64
+#, fuzzy
+msgid "current page"
+msgstr "Mot de passe actuel"
+
+#: skins/default/templates/macros.html:66
+#: skins/default/templates/macros.html:73
+#, python-format
+msgid "page number %(num)s"
+msgstr ""
+
+#: skins/default/templates/macros.html:77
+msgid "next page"
+msgstr ""
+
+#: skins/default/templates/macros.html:88
+msgid "posts per page"
+msgstr ""
+
+#: skins/default/templates/macros.html:119 templatetags/extra_tags.py:44
+#, python-format
+msgid "%(username)s gravatar image"
+msgstr ""
+
+#: skins/default/templates/macros.html:142
+msgid "this post is marked as community wiki"
+msgstr ""
+
+#: skins/default/templates/macros.html:145
+#, python-format
+msgid ""
+"This post is a wiki.\n"
+"        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
+msgstr ""
+
+#: skins/default/templates/macros.html:151
+msgid "asked"
+msgstr ""
+
+#: skins/default/templates/macros.html:153
+#, fuzzy
+msgid "answered"
+msgstr "ouvertes"
+
+#: skins/default/templates/macros.html:155
+msgid "posted"
+msgstr ""
+
+# FXME ou "offensive" ?
+#: skins/default/templates/macros.html:185
+#, fuzzy
+msgid "updated"
+msgstr "Mots-clés"
+
+#: skins/default/templates/macros.html:210
+#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:238
+#, fuzzy
+msgid "vote"
+msgid_plural "votes"
+msgstr[0] "voter/"
+msgstr[1] "voter/"
+
+#: skins/default/templates/macros.html:227
+#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:241
+#, fuzzy
+msgid "answer"
+msgid_plural "answers"
+msgstr[0] "repondre/"
+msgstr[1] "repondre/"
+
+#: skins/default/templates/macros.html:239
+#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:244
+msgid "view"
+msgid_plural "views"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/macros.html:251
+#: skins/default/templates/question.html:88
+#: skins/default/templates/tags.html:38
+#: skins/default/templates/unused/question_list.html:64
+#: skins/default/templates/unused/question_summary_list_roll.html:52
+#: skins/default/templates/unused/questions_ajax.html:68
+#, fuzzy, python-format
+msgid "see questions tagged '%(tag)s'"
+msgstr "Cloturer les questions posées par d'autres"
+
+#: skins/default/templates/macros.html:267
+#: skins/default/templates/question.html:94
+#: skins/default/templates/question.html:250
+#: skins/default/templates/revisions.html:37
+#, fuzzy
+msgid "edit"
+msgstr "modifier/"
+
+#: skins/default/templates/macros.html:272
+#, fuzzy
+msgid "delete this comment"
+msgstr "question supprimée"
+
+#: skins/default/templates/macros.html:290
+#: skins/default/templates/macros.html:298
+#: skins/default/templates/question.html:432
+#, fuzzy
+msgid "add comment"
+msgstr "Ajouter un commentaire"
+
+#: skins/default/templates/macros.html:291
+#, python-format
+msgid "see <strong>%(counter)s</strong> more"
+msgid_plural "see <strong>%(counter)s</strong> more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/macros.html:293
+#, python-format
+msgid "see <strong>%(counter)s</strong> more comment"
+msgid_plural ""
+"see <strong>%(counter)s</strong> more comments\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/macros.html:421
+msgid "(required)"
+msgstr "(obligatoire)"
+
+#: skins/default/templates/macros.html:442
+msgid "Toggle the real time Markdown editor preview"
+msgstr ""
+
+#: skins/default/templates/privacy.html:3
+#: skins/default/templates/privacy.html:6
+msgid "Privacy policy"
+msgstr "Politique de vie privée"
+
+#: skins/default/templates/question.html:30
+#: skins/default/templates/question.html:31
+#: skins/default/templates/question.html:46
+#: skins/default/templates/question.html:48
+msgid "i like this post (click again to cancel)"
+msgstr ""
+
+#: skins/default/templates/question.html:33
+#: skins/default/templates/question.html:50
+#: skins/default/templates/question.html:201
+msgid "current number of votes"
+msgstr ""
+
+#: skins/default/templates/question.html:42
+#: skins/default/templates/question.html:43
+#: skins/default/templates/question.html:55
+#: skins/default/templates/question.html:56
+msgid "i dont like this post (click again to cancel)"
+msgstr ""
+
+#: skins/default/templates/question.html:60
+#: skins/default/templates/question.html:61
+msgid "mark this question as favorite (click again to cancel)"
+msgstr ""
+
+#: skins/default/templates/question.html:67
+#: skins/default/templates/question.html:68
+msgid "remove favorite mark from this question (click again to restore mark)"
+msgstr ""
+
+#: skins/default/templates/question.html:74
+msgid "Share this question on twitter"
+msgstr ""
+
+#: skins/default/templates/question.html:75
+msgid "Share this question on facebook"
+msgstr ""
+
+#: skins/default/templates/question.html:97
+#, fuzzy
+msgid "retag"
+msgstr "requalification/"
+
+#: skins/default/templates/question.html:104
+#, fuzzy
+msgid "reopen"
+msgstr "reouvrir/"
+
+#: skins/default/templates/question.html:108
+#, fuzzy
+msgid "close"
+msgstr "fermer/"
+
+#: skins/default/templates/question.html:113
+#: skins/default/templates/question.html:254
+msgid ""
+"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgstr ""
+
+#: skins/default/templates/question.html:114
+#: skins/default/templates/question.html:255
+#, fuzzy
+msgid "flag offensive"
+msgstr "Marquer comme 'contenu abusif'"
+
+#: skins/default/templates/question.html:121
+#: skins/default/templates/question.html:265
+#, fuzzy
+msgid "undelete"
+msgstr "[supprimée]"
+
+#: skins/default/templates/question.html:121
+#: skins/default/templates/question.html:265
+#: skins/default/templates/authopenid/signin.html:175
+#, fuzzy
+msgid "delete"
+msgstr "[supprimée]"
+
+#: skins/default/templates/question.html:159
+#, python-format
+msgid ""
+"The question has been closed for the following reason \"%(close_reason)s\" by"
+msgstr ""
+
+#: skins/default/templates/question.html:161
+#, python-format
+msgid "close date %(closed_at)s"
+msgstr ""
+
+#: skins/default/templates/question.html:169
+#, python-format
+msgid ""
+"\n"
+"                %(counter)s Answer:\n"
+"                "
+msgid_plural ""
+"\n"
+"                %(counter)s Answers:\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/question.html:177
+msgid "oldest answers will be shown first"
+msgstr ""
+
+#: skins/default/templates/question.html:177
+#, fuzzy
+msgid "oldest answers"
+msgstr "réponse supprimée"
+
+#: skins/default/templates/question.html:179
+msgid "newest answers will be shown first"
+msgstr ""
+
+#: skins/default/templates/question.html:179
+#, fuzzy
+msgid "newest answers"
+msgstr "nouvelle_reponse/"
+
+#: skins/default/templates/question.html:181
+msgid "most voted answers will be shown first"
+msgstr ""
+
+#: skins/default/templates/question.html:181
+#, fuzzy
+msgid "popular answers"
+msgstr "par réponses"
+
+#: skins/default/templates/question.html:199
+#: skins/default/templates/question.html:200
+msgid "i like this answer (click again to cancel)"
+msgstr ""
+
+#: skins/default/templates/question.html:210
+#: skins/default/templates/question.html:211
+msgid "i dont like this answer (click again to cancel)"
+msgstr ""
+
+#: skins/default/templates/question.html:219
+#: skins/default/templates/question.html:220
+msgid "mark this answer as favorite (click again to undo)"
+msgstr ""
+
+#: skins/default/templates/question.html:229
+#: skins/default/templates/question.html:230
+#, python-format
+msgid "%(question_author)s has selected this answer as correct"
+msgstr ""
+
+#: skins/default/templates/question.html:245
+#, fuzzy
+msgid "answer permanent link"
+msgstr "a répondu à une question"
+
+#: skins/default/templates/question.html:246
+msgid "permanent link"
+msgstr ""
+
+#: skins/default/templates/question.html:315
+#: skins/default/templates/question.html:317
+msgid "Notify me once a day when there are any new answers"
+msgstr ""
+
+#: skins/default/templates/question.html:319
+msgid "Notify me weekly when there are any new answers"
+msgstr ""
+
+#: skins/default/templates/question.html:321
+msgid "Notify me immediately when there are any new answers"
+msgstr ""
+
+#: skins/default/templates/question.html:324
+#, python-format
+msgid ""
+"You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr ""
+
+#: skins/default/templates/question.html:329
+msgid "once you sign in you will be able to subscribe for any updates here"
+msgstr ""
+
+#: skins/default/templates/question.html:339
+#, fuzzy
+msgid "Your answer"
+msgstr "par réponses"
+
+#: skins/default/templates/question.html:341
+msgid "Be the first one to answer this question!"
+msgstr ""
+
+#: skins/default/templates/question.html:347
+msgid "you can answer anonymously and then login"
+msgstr ""
+
+#: skins/default/templates/question.html:351
+msgid "answer your own question only to give an answer"
+msgstr ""
+
+#: skins/default/templates/question.html:353
+msgid "please only give an answer, no discussions"
+msgstr ""
+
+#: skins/default/templates/question.html:360
+msgid "Login/Signup to Post Your Answer"
+msgstr ""
+
+#: skins/default/templates/question.html:363
+#, fuzzy
+msgid "Answer Your Own Question"
+msgstr "a répondu à une question"
+
+#: skins/default/templates/question.html:365
+#, fuzzy
+msgid "Answer the question"
+msgstr "a répondu à une question"
+
+#: skins/default/templates/question.html:379
+#, fuzzy
+msgid "Question tags"
+msgstr "questions/"
+
+#: skins/default/templates/question.html:384
+#: skins/default/templates/questions.html:221
+#: skins/default/templates/tag_selector.html:9
+#: skins/default/templates/tag_selector.html:26
+#, fuzzy, python-format
+msgid "see questions tagged '%(tag_name)s'"
+msgstr "Cloturer les questions posées par d'autres"
+
+#: skins/default/templates/question.html:390
+#, fuzzy
+msgid "question asked"
+msgstr "question_repondue"
+
+#: skins/default/templates/question.html:393
+#, fuzzy
+msgid "question was seen"
+msgstr "question_repondue"
+
+#: skins/default/templates/question.html:393
+msgid "times"
+msgstr ""
+
+# FIXME ou "bcp de votes"
+#: skins/default/templates/question.html:396
+#, fuzzy
+msgid "last updated"
+msgstr "popularité (↑)"
+
+#: skins/default/templates/question.html:403
+msgid "Related questions"
+msgstr "Questions en rapport"
+
+#: skins/default/templates/question_edit.html:4
+#: skins/default/templates/question_edit.html:10
+#, fuzzy
+msgid "Edit question"
+msgstr "Editer la question"
+
+#: skins/default/templates/question_edit_tips.html:3
+msgid "question tips"
+msgstr "astuces pour la question"
+
+#: skins/default/templates/question_edit_tips.html:6
+msgid "please ask a relevant question"
+msgstr "posez une question pertinente"
+
+#: skins/default/templates/question_edit_tips.html:9
+msgid "please try provide enough details"
+msgstr "fournissez assez de détails"
+
+#: skins/default/templates/question_retag.html:3
+#: skins/default/templates/question_retag.html:6
+#, fuzzy
+msgid "Change tags"
+msgstr "Modifier le statut en "
+
+#: skins/default/templates/question_retag.html:25
+#, fuzzy
+msgid "Retag"
+msgstr "requalification/"
+
+#: skins/default/templates/question_retag.html:34
+msgid "Why use and modify tags?"
+msgstr ""
+
+#: skins/default/templates/question_retag.html:36
+msgid "Tags help to keep the content better organized and searchable"
+msgstr ""
+
+#: skins/default/templates/question_retag.html:38
+msgid "tag editors receive special awards from the community"
+msgstr ""
+
+#: skins/default/templates/question_retag.html:79
+msgid "up to 5 tags, less than 20 characters each"
+msgstr ""
+
+#: skins/default/templates/questions.html:4
+#, fuzzy
+msgid "Questions"
+msgstr "questions/"
+
+#: skins/default/templates/questions.html:9
+msgid "In:"
+msgstr "Dans :"
+
+#: skins/default/templates/questions.html:18
+#, fuzzy
+msgid "see unanswered questions"
+msgstr "a répondu à une question"
+
+#: skins/default/templates/questions.html:24
+#, fuzzy
+msgid "see your favorite questions"
+msgstr "Cliquez ici pour voir les questions ayant obtenu le plus de votes"
+
+#: skins/default/templates/questions.html:29
+msgid "Sort by:"
+msgstr "Trier par"
+
+#: skins/default/templates/questions.html:96
+#: skins/default/templates/questions.html:99
+msgid "subscribe to the questions feed"
+msgstr "s'inscrire au flux des questions"
+
+#: skins/default/templates/questions.html:100
+msgid "rss feed"
+msgstr "flux rss"
+
+#: skins/default/templates/questions.html:104
+#, python-format
+msgid ""
+"\n"
+"                %(q_num)s question\n"
+"            "
+msgid_plural ""
+"\n"
+"                %(q_num)s questions\n"
+"            "
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/questions.html:110 views/readers.py:158
+#, fuzzy, python-format
+msgid "%(q_num)s question"
+msgid_plural "%(q_num)s questions"
+msgstr[0] "nouvelle question"
+msgstr[1] "nouvelle question"
+
+#: skins/default/templates/questions.html:113
+#, python-format
+msgid "with %(author_name)s's contributions"
+msgstr ""
+
+# FIXME
+#: skins/default/templates/questions.html:116
+msgid "tagged"
+msgstr "taggé"
+
+#: skins/default/templates/questions.html:121
+msgid "Search tips:"
+msgstr "Astuces pour la recherche :"
+
+#: skins/default/templates/questions.html:124
+msgid "reset author"
+msgstr "effacer auteur"
+
+#: skins/default/templates/questions.html:126
+#: skins/default/templates/questions.html:129
+#: skins/default/templates/questions.html:167
+#: skins/default/templates/questions.html:170
+msgid " or "
+msgstr " ou"
+
+#: skins/default/templates/questions.html:127
+msgid "reset tags"
+msgstr "effacer tags"
+
+#: skins/default/templates/questions.html:130
+#: skins/default/templates/questions.html:133
+msgid "start over"
+msgstr ""
+
+#: skins/default/templates/questions.html:135
+msgid " - to expand, or dig in by adding more tags and revising the query."
+msgstr ""
+
+#: skins/default/templates/questions.html:138
+msgid "Search tip:"
+msgstr ""
+
+#: skins/default/templates/questions.html:138
+msgid "add tags and a query to focus your search"
+msgstr ""
+
+#: skins/default/templates/questions.html:153
+#: skins/default/templates/unused/questions_ajax.html:79
+#, fuzzy
+msgid "There are no unanswered questions here"
+msgstr "Que signifie  \"questions sans réponses\" ?"
+
+#: skins/default/templates/questions.html:156
+#: skins/default/templates/unused/questions_ajax.html:82
+msgid "No favorite questions here. "
+msgstr ""
+
+#: skins/default/templates/questions.html:157
+#: skins/default/templates/unused/questions_ajax.html:83
+msgid "Please start (bookmark) some questions when you visit them"
+msgstr ""
+
+#: skins/default/templates/questions.html:162
+#: skins/default/templates/unused/questions_ajax.html:88
+msgid "You can expand your search by "
+msgstr ""
+
+#: skins/default/templates/questions.html:165
+#: skins/default/templates/unused/questions_ajax.html:92
+msgid "resetting author"
+msgstr ""
+
+#: skins/default/templates/questions.html:168
+#: skins/default/templates/unused/questions_ajax.html:96
+#, fuzzy
+msgid "resetting tags"
+msgstr "Paramètres de badge"
+
+#: skins/default/templates/questions.html:171
+#: skins/default/templates/questions.html:174
+#: skins/default/templates/unused/questions_ajax.html:100
+#: skins/default/templates/unused/questions_ajax.html:104
+msgid "starting over"
+msgstr ""
+
+#: skins/default/templates/questions.html:179
+#: skins/default/templates/unused/questions_ajax.html:109
+msgid "Please always feel free to ask your question!"
+msgstr "N'hésitez pas à poser votre question !"
+
+#: skins/default/templates/questions.html:183
+#: skins/default/templates/unused/questions_ajax.html:113
+msgid "Did not find what you were looking for?"
+msgstr "Vous n'avez pas trouvé ce que vous recherchiez ?"
+
+#: skins/default/templates/questions.html:184
+#: skins/default/templates/unused/questions_ajax.html:114
+msgid "Please, post your question!"
+msgstr "Poster votre question !"
+
+#: skins/default/templates/questions.html:199
+msgid "Contributors"
+msgstr ""
+
+# FXME ou "offensive" ?
+#: skins/default/templates/questions.html:216
+msgid "Related tags"
+msgstr "Tags associés"
+
+#: skins/default/templates/reopen.html:3 skins/default/templates/reopen.html:6
+msgid "Reopen question"
+msgstr "Réouvrir la question"
+
+#: skins/default/templates/reopen.html:9
+msgid "Title"
+msgstr "Titre"
+
+#: skins/default/templates/reopen.html:14
+#, python-format
+msgid ""
+"This question has been closed by \n"
+"        <a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>\n"
+"    "
+msgstr ""
+
+#: skins/default/templates/reopen.html:19
+#, fuzzy
+msgid "Close reason:"
+msgstr "Cloturer ses propres questions"
+
+#: skins/default/templates/reopen.html:22
+msgid "When:"
+msgstr ""
+
+#: skins/default/templates/reopen.html:25
+#, fuzzy
+msgid "Reopen this question?"
+msgstr "Réouvrir ses propres questions"
+
+#: skins/default/templates/reopen.html:29
+#, fuzzy
+msgid "Reopen this question"
+msgstr "Réouvrir ses propres questions"
+
+#: skins/default/templates/revisions.html:4
+#: skins/default/templates/revisions.html:7
+#, fuzzy
+msgid "Revision history"
+msgstr "revisions/"
+
+#: skins/default/templates/revisions.html:23
+#, fuzzy
+msgid "click to hide/show revision"
+msgstr "Cliquez ici pour voir les questions les moins récentes"
+
+#: skins/default/templates/revisions.html:29
+#, fuzzy, python-format
+msgid "revision %(number)s"
+msgstr "Numéro de révision du thème"
+
+#: skins/default/templates/tag_selector.html:3
+#, fuzzy
+msgid "Interesting tags"
+msgstr "interessant/"
+
+#: skins/default/templates/tag_selector.html:13
+#, python-format
+msgid "remove '%(tag_name)s' from the list of interesting tags"
+msgstr ""
+
+#: skins/default/templates/tag_selector.html:19
+#: skins/default/templates/tag_selector.html:36
+#: skins/default/templates/user_moderate.html:35
+msgid "Add"
+msgstr ""
+
+#: skins/default/templates/tag_selector.html:20
+#, fuzzy
+msgid "Ignored tags"
+msgstr "exclure les mots-clés ignorés"
+
+#: skins/default/templates/tag_selector.html:30
+#, python-format
+msgid "remove '%(tag_name)s' from the list of ignored tags"
+msgstr ""
+
+#: skins/default/templates/tag_selector.html:39
+msgid "keep ignored questions hidden"
+msgstr ""
+
+#: skins/default/templates/tags.html:4 skins/default/templates/tags.html:8
+msgid "Tag list"
+msgstr ""
+
+#: skins/default/templates/tags.html:14
+msgid "sorted alphabetically"
+msgstr ""
+
+#: skins/default/templates/tags.html:15
+#, fuzzy
+msgid "by name"
+msgstr "Nom réel"
+
+#: skins/default/templates/tags.html:20
+msgid "sorted by frequency of tag use"
+msgstr ""
+
+#: skins/default/templates/tags.html:21
+msgid "by popularity"
+msgstr ""
+
+#: skins/default/templates/tags.html:27
+#, python-format
+msgid ""
+"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgstr ""
+
+#: skins/default/templates/tags.html:30
+msgid "Nothing found"
+msgstr ""
+
+#: skins/default/templates/user.html:14
+#, python-format
+msgid "%(username)s's profile"
+msgstr ""
+
+#: skins/default/templates/user_edit.html:4
+#, fuzzy
+msgid "Edit user profile"
+msgstr "profil utilisateur entièrement renseigné"
+
+#: skins/default/templates/user_edit.html:7
+#, fuzzy
+msgid "edit profile"
+msgstr "Profil"
+
+#: skins/default/templates/user_edit.html:17
+#: skins/default/templates/user_info.html:11
+msgid "change picture"
+msgstr ""
+
+#: skins/default/templates/user_edit.html:20
+msgid "Registered user"
+msgstr ""
+
+#: skins/default/templates/user_edit.html:27
+#, fuzzy
+msgid "Screen Name"
+msgstr "Pseudo"
+
+#: skins/default/templates/user_edit.html:75
+#: skins/default/templates/user_email_subscriptions.html:18
+#, fuzzy
+msgid "Update"
+msgstr "par date"
+
+#: skins/default/templates/user_email_subscriptions.html:4
+#, fuzzy
+msgid "Email subscription settings"
+msgstr "Vérification de votre adresse email"
+
+#: skins/default/templates/user_email_subscriptions.html:5
+msgid "email subscription settings info"
+msgstr ""
+
+#: skins/default/templates/user_email_subscriptions.html:19
+msgid "Stop sending email"
+msgstr ""
+
+#: skins/default/templates/user_inbox.html:31
+#, fuzzy
+msgid "Sections:"
+msgstr "questions/"
+
+#: skins/default/templates/user_inbox.html:35
+#, python-format
+msgid "forum responses (%(re_count)s)"
+msgstr ""
+
+#: skins/default/templates/user_inbox.html:40
+#, python-format
+msgid "flagged items (%(flag_count)s)"
+msgstr ""
+
+#: skins/default/templates/user_inbox.html:46
+msgid "select:"
+msgstr ""
+
+#: skins/default/templates/user_inbox.html:48
+msgid "seen"
+msgstr ""
+
+#: skins/default/templates/user_inbox.html:49
+#, fuzzy
+msgid "new"
+msgstr "date (↓)"
+
+#: skins/default/templates/user_inbox.html:50
+msgid "none"
+msgstr ""
+
+# FIXME ou "ayant reçu une récompense"
+#: skins/default/templates/user_inbox.html:51
+#, fuzzy
+msgid "mark as seen"
+msgstr "marquée comme meilleure réponse"
+
+# FIXME ou "ayant reçu une récompense"
+#: skins/default/templates/user_inbox.html:52
+#, fuzzy
+msgid "mark as new"
+msgstr "marquée comme meilleure réponse"
+
+#: skins/default/templates/user_inbox.html:53
+msgid "dismiss"
+msgstr ""
+
+#: skins/default/templates/user_info.html:18
+#: skins/default/templates/users.html:13 skins/default/templates/users.html:14
+#, fuzzy
+msgid "reputation"
+msgstr "Documentation"
+
+#: skins/default/templates/user_info.html:30
+msgid "manage login methods"
+msgstr ""
+
+#: skins/default/templates/user_info.html:34
+#, fuzzy
+msgid "update profile"
+msgstr "profil utilisateur entièrement renseigné"
+
+#: skins/default/templates/user_info.html:46
+#, fuzzy
+msgid "real name"
+msgstr "Nom réel"
+
+#: skins/default/templates/user_info.html:51
+msgid "member for"
+msgstr ""
+
+# FIXME ou "bcp de votes"
+#: skins/default/templates/user_info.html:56
+#, fuzzy
+msgid "last seen"
+msgstr "popularité (↑)"
+
+#: skins/default/templates/user_info.html:62
+#, fuzzy
+msgid "user website"
+msgstr "Site web"
+
+#: skins/default/templates/user_info.html:68
+#, fuzzy
+msgid "location"
+msgstr "Lieu"
+
+#: skins/default/templates/user_info.html:75
+#, fuzzy
+msgid "age"
+msgstr "Badges/"
+
+#: skins/default/templates/user_info.html:76
+msgid "age unit"
+msgstr ""
+
 #: skins/default/templates/user_info.html:83
 msgid "todays unused votes"
 msgstr ""
 
 #: skins/default/templates/user_info.html:84
 msgid "votes left"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:5
+#, python-format
+msgid "%(username)s's current status is \"%(status)s\""
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:8
+msgid "User status changed"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:15
+msgid "Save"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:21
+#, python-format
+msgid "Your current reputation is %(reputation)s points"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:23
+#, python-format
+msgid "User's current reputation is %(reputation)s points"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:27
+msgid "User reputation changed"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:34
+msgid "Subtract"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:39
+#, python-format
+msgid "Send message to %(username)s"
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:40
+msgid ""
+"An email will be sent to the user with 'reply-to' field set to your email "
+"address. Please make sure that your address is entered correctly."
+msgstr ""
+
+#: skins/default/templates/user_moderate.html:42
+#, fuzzy
+msgid "Message sent"
+msgstr "Corps du message"
+
+#: skins/default/templates/user_moderate.html:60
+#, fuzzy
+msgid "Send message"
+msgstr "messages/"
+
+#: skins/default/templates/user_reputation.html:7
+msgid "Your karma change log."
+msgstr ""
+
+#: skins/default/templates/user_reputation.html:9
+#, python-format
+msgid "%(user_name)s's karma change log"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:7
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> Question"
+msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_stats.html:12
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> Answer"
+msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_stats.html:20
+#, python-format
+msgid "the answer has been voted for %(answer_score)s times"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:20
+msgid "this answer has been selected as correct"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:30
+#, python-format
+msgid "(%(comment_count)s comment)"
+msgid_plural "the answer has been commented %(comment_count)s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_stats.html:40
+#, python-format
+msgid "<span class=\"count\">%(cnt)s</span> Vote"
+msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_stats.html:46
+msgid "thumb up"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:47
+msgid "user has voted up this many times"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:50
+msgid "thumb down"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:51
+msgid "user voted down this many times"
+msgstr ""
+
+#: skins/default/templates/user_stats.html:59
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> Tag"
+msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_stats.html:67
+#, python-format
+msgid ""
+"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgstr ""
+
+#: skins/default/templates/user_stats.html:81
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> Badge"
+msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/user_tabs.html:5
+#, fuzzy
+msgid "User profile"
+msgstr "profil utilisateur entièrement renseigné"
+
+#: skins/default/templates/user_tabs.html:6
+msgid "overview"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:9 views/users.py:729
+msgid "comments and answers to others questions"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:10
+msgid "inbox"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:13
+msgid "graph of user reputation"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:14
+msgid "reputation history"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:16
+msgid "questions that user selected as his/her favorite"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:17
+#, fuzzy
+msgid "favorites"
+msgstr "favorite"
+
+# TODO demander au développeur de faire 2 entrées distinctes. Une contiendra "date (↑)" et l'autre "date"
+#: skins/default/templates/user_tabs.html:19
+#, fuzzy
+msgid "recent activity"
+msgstr "par activité"
+
+# TODO demander au développeur de faire 2 entrées distinctes. Une contiendra "date (↑)" et l'autre "date"
+#: skins/default/templates/user_tabs.html:20
+#, fuzzy
+msgid "activity"
+msgstr "par activité"
+
+#: skins/default/templates/user_tabs.html:23 views/users.py:794
+msgid "user vote record"
+msgstr ""
+
+# FIXME ou "ayant reçu un vote négatif"
+#: skins/default/templates/user_tabs.html:24
+#, fuzzy
+msgid "casted votes"
+msgstr "vote annulé"
+
+#: skins/default/templates/user_tabs.html:28 views/users.py:904
+msgid "email subscription settings"
+msgstr ""
+
+#: skins/default/templates/user_tabs.html:29
+#, fuzzy
+msgid "subscriptions"
+msgstr "questions/"
+
+#: skins/default/templates/user_tabs.html:33 views/users.py:216
+msgid "moderate this user"
+msgstr ""
+
+# FIXME
+#: skins/default/templates/user_tabs.html:34
+#, fuzzy
+msgid "moderation"
+msgstr "moderateur"
+
+#: skins/default/templates/users.html:4 skins/default/templates/users.html:7
+#, fuzzy
+msgid "Users"
+msgstr "utilisateurs/"
+
+#: skins/default/templates/users.html:19 skins/default/templates/users.html:20
+msgid "recent"
+msgstr ""
+
+#: skins/default/templates/users.html:31 skins/default/templates/users.html:32
+#, fuzzy
+msgid "by username"
+msgstr "Identifiant MyOpenId"
+
+#: skins/default/templates/users.html:38
+#, python-format
+msgid "users matching query %(suser)s:"
+msgstr ""
+
+#: skins/default/templates/users.html:41
+msgid "Nothing found."
+msgstr ""
+
+#: skins/default/templates/users_questions.html:9
+#: skins/default/templates/users_questions.html:17
+#, python-format
+msgid "this questions was selected as favorite %(cnt)s time"
+msgid_plural "this questions was selected as favorite %(cnt)s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/users_questions.html:10
+msgid "thumb-up on"
+msgstr ""
+
+#: skins/default/templates/users_questions.html:18
+msgid "thumb-up off"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:2
+#: skins/default/templates/authopenid/changeemail.html:8
+#: skins/default/templates/authopenid/changeemail.html:36
+#, fuzzy
+msgid "Change email"
+msgstr "Aucun email"
+
+#: skins/default/templates/authopenid/changeemail.html:10
+#, fuzzy
+msgid "Save your email address"
+msgstr "N'autoriser qu'un compte par adresse email"
+
+#: skins/default/templates/authopenid/changeemail.html:15
+#, python-format
+msgid "change %(email)s info"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:17
+#, python-format
+msgid "here is why email is required, see %(gravatar_faq_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:29
+#, fuzzy
+msgid "Your new Email"
+msgstr "Aucun email"
+
+#: skins/default/templates/authopenid/changeemail.html:29
+#, fuzzy
+msgid "Your Email"
+msgstr "Aucun email"
+
+#: skins/default/templates/authopenid/changeemail.html:36
+msgid "Save Email"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:45
+msgid "Validate email"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:48
+#, python-format
+msgid "validate %(email)s info or go to %(change_email_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:52
+msgid "Email not changed"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:55
+#, python-format
+msgid "old %(email)s kept, if you like go to %(change_email_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:59
+msgid "Email changed"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:62
+#, python-format
+msgid "your current %(email)s can be used for this"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:66
+msgid "Email verified"
+msgstr ""
+
+#: skins/default/templates/authopenid/changeemail.html:69
+msgid "thanks for verifying email"
+msgstr ""
+
+# FIXME
+#: skins/default/templates/authopenid/changeemail.html:73
+#, fuzzy
+msgid "email key not sent"
+msgstr "Mise à jour d'email envoyée à l'utilisateur"
+
+#: skins/default/templates/authopenid/changeemail.html:76
+#, python-format
+msgid "email key not sent %(email)s change email here %(change_link)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:21
+#: skins/default/templates/authopenid/complete.html:24
+msgid "Registration"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:29
+#, python-format
+msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:32
+#, python-format
+msgid ""
+"%(username)s already exists, choose another name for \n"
+"                            %(provider)s. Email is required too, see "
+"%(gravatar_faq_url)s\n"
+"                        "
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:36
+#, python-format
+msgid ""
+"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:39
+#, python-format
+msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:42
+#, fuzzy
+msgid "This account already exists, please use another."
+msgstr "Cet email a déjà été enregistré; merci d'utiliser une autre adresse"
+
+#: skins/default/templates/authopenid/complete.html:61
+#, fuzzy
+msgid "Screen name label"
+msgstr "Pseudo"
+
+#: skins/default/templates/authopenid/complete.html:68
+msgid "Email address label"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:74
+#: skins/default/templates/authopenid/signup_with_password.html:17
+msgid "receive updates motivational blurb"
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:78
+#: skins/default/templates/authopenid/signup_with_password.html:21
+#, fuzzy
+msgid "please select one of the options above"
+msgstr "Veuillez choisir une des options ci-dessus"
+
+#: skins/default/templates/authopenid/complete.html:81
+msgid "Tag filter tool will be your right panel, once you log in."
+msgstr ""
+
+#: skins/default/templates/authopenid/complete.html:82
+#, fuzzy
+msgid "create account"
+msgstr "compte/"
+
+#: skins/default/templates/authopenid/signin.html:3
+msgid "User login"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:11
+#, python-format
+msgid ""
+"\n"
+"        Your answer to %(title)s %(summary)s will be posted once you log in\n"
+"        "
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:18
+#, python-format
+msgid ""
+"Your question \n"
+"        %(title)s %(summary)s will be posted once you log in\n"
+"        "
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:25
+msgid ""
+"Take a pick of your favorite service below to sign in using secure OpenID or "
+"similar technology. Your external service password always stays confidential "
+"and you don't have to rememeber or create another one."
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:28
+msgid ""
+"It's a good idea to make sure that your existing login methods still work, "
+"or add a new one. Please click any of the icons below to check/change or add "
+"new login methods."
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:30
+msgid ""
+"Please add a more permanent login method by clicking one of the icons below, "
+"to avoid logging in via email each time."
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:34
+msgid ""
+"Click on one of the icons below to add a new login method or re-validate an "
+"existing one."
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:36
+msgid ""
+"You don't have a method to log in right now, please add one or more by "
+"clicking any of the icons below."
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:39
+msgid ""
+"Please check your email and visit the enclosed link to re-connect to your "
+"account"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:86
+#, fuzzy
+msgid "Please enter your <span>user name</span>, then sign in"
+msgstr "Veuillez saisir votre %(username_token)s"
+
+#: skins/default/templates/authopenid/signin.html:87
+#: skins/default/templates/authopenid/signin.html:109
+msgid "(or select another login method above)"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:89
+msgid "Sign in"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:107
+msgid "Please enter your <span>user name and password</span>, then sign in"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:111
+msgid "Login failed, please try again"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:114
+#, fuzzy
+msgid "Login name"
+msgstr "Votre nom:"
+
+#: skins/default/templates/authopenid/signin.html:118
+#, fuzzy
+msgid "Password"
+msgstr "Changer de mot de passe"
+
+#: skins/default/templates/authopenid/signin.html:122
+msgid "Login"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:129
+msgid "To change your password - please enter the new one twice, then submit"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:132
+#, fuzzy
+msgid "New password"
+msgstr "Changer de mot de passe"
+
+#: skins/default/templates/authopenid/signin.html:137
+msgid "Please, retype"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:156
+msgid "Here are your current login methods"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:160
+#, fuzzy
+msgid "provider"
+msgstr "approuvée"
+
+# FIXME ou "bcp de votes"
+#: skins/default/templates/authopenid/signin.html:161
+#, fuzzy
+msgid "last used"
+msgstr "popularité (↑)"
+
+#: skins/default/templates/authopenid/signin.html:162
+msgid "delete, if you like"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:187
+msgid "Still have trouble signing in?"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:192
+msgid "Please, enter your email address below and obtain a new key"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:194
+msgid "Please, enter your email address below to recover your account"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:197
+msgid "recover your account via email"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:208
+msgid "Send a new recovery key"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:210
+msgid "Recover your account via email"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:221
+msgid "Why use OpenID?"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:224
+msgid "with openid it is easier"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:227
+#, fuzzy
+msgid "reuse openid"
+msgstr "reouvrir/"
+
+#: skins/default/templates/authopenid/signin.html:230
+msgid "openid is widely adopted"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:233
+msgid "openid is supported open standard"
+msgstr ""
+
+#: skins/default/templates/authopenid/signin.html:237
+#, fuzzy
+msgid "Find out more"
+msgstr "\" et plus"
+
+#: skins/default/templates/authopenid/signin.html:238
+#, fuzzy
+msgid "Get OpenID"
+msgstr "URL OpenID"
+
+#: skins/default/templates/authopenid/signup_with_password.html:3
+#, fuzzy
+msgid "Signup"
+msgstr "inscription/"
+
+#: skins/default/templates/authopenid/signup_with_password.html:6
+#, fuzzy
+msgid "Create login name and password"
+msgstr "%(site)s identifiant et mot de passe"
+
+#: skins/default/templates/authopenid/signup_with_password.html:8
+msgid "Traditional signup info"
+msgstr ""
+
+#: skins/default/templates/authopenid/signup_with_password.html:24
+msgid ""
+"Please read and type in the two words below to help us prevent automated "
+"account creation."
+msgstr ""
+
+#: skins/default/templates/authopenid/signup_with_password.html:26
+#, fuzzy
+msgid "Create Account"
+msgstr "compte/"
+
+#: skins/default/templates/authopenid/signup_with_password.html:27
+msgid "or"
+msgstr ""
+
+#: skins/default/templates/authopenid/signup_with_password.html:28
+msgid "return to OpenID login"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:7
+#, fuzzy, python-format
+msgid "responses for %(username)s"
+msgstr "Veuillez saisir votre %(username_token)s"
+
+#: skins/default/templates/blocks/header_meta_links.html:10
+#, python-format
+msgid "you have a new response"
+msgid_plural "you nave %(response_count)s new responses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/templates/blocks/header_meta_links.html:13
+msgid "no new responses yet"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:25
+#: skins/default/templates/blocks/header_meta_links.html:26
+#, python-format
+msgid "%(new)s new flagged posts and %(seen)s previous"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:28
+#: skins/default/templates/blocks/header_meta_links.html:29
+#, python-format
+msgid "%(new)s new flagged posts"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:34
+#: skins/default/templates/blocks/header_meta_links.html:35
+#, python-format
+msgid "%(seen)s flagged posts"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:47
+#, fuzzy
+msgid "logout"
+msgstr "deconnecter/"
+
+#: skins/default/templates/blocks/header_meta_links.html:49
+msgid "login"
+msgstr ""
+
+#: skins/default/templates/blocks/header_meta_links.html:54
+#, fuzzy
+msgid "settings"
+msgstr "Paramétrage de la base de données"
+
+#: skins/default/templates/unused/email_base.html:8
+msgid "home"
 msgstr ""
 
 #: skins/default/templates/unused/notarobot.html:3
@@ -2987,13 +5246,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/unused/question_list.html:64
-#: skins/default/templates/unused/question_summary_list_roll.html:52
-#: skins/default/templates/unused/questions_ajax.html:68
-#, fuzzy, python-format
-msgid "see questions tagged '%(tag)s'"
-msgstr "Cloturer les questions posées par d'autres"
-
 #: skins/default/templates/unused/question_summary_list_roll.html:13
 #, fuzzy
 msgid "answers"
@@ -3008,90 +5260,24 @@ msgstr "voter/"
 msgid "views"
 msgstr ""
 
-#: skins/default/templates/unused/questions_ajax.html:23 views/readers.py:238
-#, fuzzy
-msgid "vote"
-msgid_plural "votes"
-msgstr[0] "voter/"
-msgstr[1] "voter/"
-
-#: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:241
-#, fuzzy
-msgid "answer"
-msgid_plural "answers"
-msgstr[0] "repondre/"
-msgstr[1] "repondre/"
-
-#: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:244
-msgid "view"
-msgid_plural "views"
-msgstr[0] ""
-msgstr[1] ""
-
-#: skins/default/templates/unused/questions_ajax.html:79
-#, fuzzy
-msgid "There are no unanswered questions here"
-msgstr "Que signifie  \"questions sans réponses\" ?"
-
-#: skins/default/templates/unused/questions_ajax.html:82
-msgid "No favorite questions here. "
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:83
-msgid "Please start (bookmark) some questions when you visit them"
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:88
-msgid "You can expand your search by "
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:92
-msgid "resetting author"
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:96
-#, fuzzy
-msgid "resetting tags"
-msgstr "Paramètres de badge"
-
-#: skins/default/templates/unused/questions_ajax.html:100
-#: skins/default/templates/unused/questions_ajax.html:104
-msgid "starting over"
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:109
-msgid "Please always feel free to ask your question!"
-msgstr ""
-
-#: skins/default/templates/unused/questions_ajax.html:113
-msgid "Did not find what you were looking for?"
-msgstr "Vous n'avez pas trouvé ce que vous recherchiez ?"
-
-#: skins/default/templates/unused/questions_ajax.html:114
-msgid "Please, post your question!"
-msgstr "Posez votre question !"
-
 #: templatetags/extra_filters.py:168 templatetags/extra_filters_jinja.py:234
 msgid "no items in counter"
 msgstr ""
 
-#: templatetags/extra_tags.py:44
-#, python-format
-msgid "%(username)s gravatar image"
-msgstr ""
-
 #: utils/decorators.py:82 views/commands.py:132 views/commands.py:149
+#, fuzzy
 msgid "Oops, apologies - there was some error"
-msgstr "Oops, désolé - une erreur est apparue"
+msgstr "Désolé, les 2 mots de passe sont différents, veuillez recommencer"
 
 #: utils/forms.py:32
+#, fuzzy
 msgid "this field is required"
-msgstr "Ce champ est obligatoire"
+msgstr "Les mots-clés sont obligatoires."
 
 #: utils/forms.py:46
 #, fuzzy
 msgid "choose a username"
-msgstr "choisissez un nom d'utilisateur"
+msgstr "identifiant Technorati"
 
 #: utils/forms.py:52
 #, fuzzy
@@ -3154,41 +5340,39 @@ msgstr "Mot de passe actuel"
 
 # TODO "votre" ou "un" ?
 #: utils/forms.py:154
-#, fuzzy
 msgid "please, retype your password"
-msgstr "Veuillez saisir votre mot de passe"
+msgstr "veuillez saisir de nouveau votre mot de passe"
 
 #: utils/forms.py:155
-#, fuzzy
 msgid "sorry, entered passwords did not match, please try again"
 msgstr "désolé, les 2 mots de passe sont différents, veuillez recommencer"
 
 #: utils/functions.py:63
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "le %(date)s"
 
 #: utils/functions.py:67
 msgid "2 days ago"
-msgstr ""
+msgstr "il y a 2 jours"
 
 #: utils/functions.py:69
 msgid "yesterday"
-msgstr ""
+msgstr "hier"
 
 #: utils/functions.py:71
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "il y a %(hr)d heure"
+msgstr[1] "il y a %(hr)d heures"
 
 #: utils/functions.py:73
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "il y a %(min)d minute"
+msgstr[1] "il y a %(min)d minutes"
 
 #: views/commands.py:42
 #, fuzzy
@@ -3253,13 +5437,6 @@ msgstr ""
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: views/readers.py:158
-#, fuzzy, python-format
-msgid "%(q_num)s question"
-msgid_plural "%(q_num)s questions"
-msgstr[0] "nouvelle question"
-msgstr[1] "nouvelle question"
-
 #: views/readers.py:188
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
@@ -3271,10 +5448,6 @@ msgstr[1] ""
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr ""
-
-#: views/users.py:216
-msgid "moderate this user"
 msgstr ""
 
 # FIXME
@@ -3300,16 +5473,8 @@ msgstr ""
 msgid "profile - recent activity"
 msgstr ""
 
-#: views/users.py:729
-msgid "comments and answers to others questions"
-msgstr ""
-
 #: views/users.py:730
 msgid "profile - responses"
-msgstr ""
-
-#: views/users.py:794
-msgid "user vote record"
 msgstr ""
 
 #: views/users.py:795
@@ -3343,10 +5508,6 @@ msgstr ""
 #, fuzzy
 msgid "email updates canceled"
 msgstr "Mise à jour d'email envoyée à l'utilisateur"
-
-#: views/users.py:904
-msgid "email subscription settings"
-msgstr ""
 
 #: views/users.py:905
 msgid "profile - email subscriptions"
@@ -3383,9 +5544,8 @@ msgstr ""
 #, fuzzy
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr ""
-"Désolé, seuls les propriétaires des questions, les administrateurs du site "
-"et les modérateurs peuvent requalifier des questions supprimées (c'est à "
-"dire modifier leurs mots-clés)"
+"Désolé, seuls les propriétaires des questions et les modérateurs peuvent "
+"éditer les commentaires"
 
 #: views/writers.py:505
 #, python-format
