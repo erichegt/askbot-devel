@@ -4210,7 +4210,7 @@ msgstr ""
 #: skins/default/templates/questions.html:179
 #: skins/default/templates/unused/questions_ajax.html:109
 msgid "Please always feel free to ask your question!"
-msgstr ""
+msgstr "N'hésitez pas à poser votre question !"
 
 #: skins/default/templates/questions.html:183
 #: skins/default/templates/unused/questions_ajax.html:113
