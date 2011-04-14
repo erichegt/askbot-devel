@@ -125,7 +125,7 @@ class Command(NoArgsCommand):
 
         all messages are deleted thereafter
         """
-        if askbot_settings.ALLOW_ASKING_BY_EMAIL:
+        if not askbot_settings.ALLOW_ASKING_BY_EMAIL:
             raise CommandError('Asking by email is not enabled')
 
         #open imap server and select the inbox
@@ -145,6 +145,12 @@ class Command(NoArgsCommand):
 
         #get message ids
         status, ids = imap.search(None, 'ALL')
+
+        if len(ids[0].strip()) == 0:
+            #with empty inbox - close and exit
+            imap.close()
+            imap.logout()
+            return
 
         #for each id - read a message, parse it and post a question
         for id in ids[0].split(' '):
@@ -166,8 +172,9 @@ class Command(NoArgsCommand):
             if form.is_valid():
                 email_address = form.cleaned_data['email']
                 try:
-                    print 'looking for ' + email_address
-                    user = models.User.objects.get(email = email_address)
+                    user = models.User.objects.get(
+                                email__iexact = email_address
+                            )
                 except models.User.DoesNotExist:
                     bounce_email(email_address, subject, reason = 'unknown_user')
                 except models.User.MultipleObjectsReturned:
@@ -178,10 +185,6 @@ class Command(NoArgsCommand):
                 body_text = form.cleaned_data['body_text']
 
                 try:
-                    print 'posting question'
-                    print title
-                    print tagnames
-                    print body_text
                     user.post_question(
                         title = title,
                         tags = tagnames,
