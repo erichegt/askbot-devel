@@ -356,6 +356,7 @@ def edit_question(request, id):
                                         revision = latest_revision,
                                         user = request.user,
                                     )
+                revision_form = forms.RevisionForm(question, latest_revision)
                 if form.is_valid():
                     if form.has_changed():
 
