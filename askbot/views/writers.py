@@ -426,6 +426,8 @@ def edit_answer(request, id):
                                         )
             else:
                 form = forms.EditAnswerForm(answer, latest_revision, request.POST)
+                revision_form = forms.RevisionForm(answer, latest_revision)
+
                 if form.is_valid():
                     if form.has_changed():
                         request.user.edit_answer(
