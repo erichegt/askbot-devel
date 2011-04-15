@@ -11,6 +11,7 @@ Programming
 * Mike Chen & Sailing Cai - original authors of CNPROG forum
 * Evgeny Fadeev - founder of askbot
 * Benoit Lavine (with Windriver Software, Inc.)
+* Alex Robbins (celery support)
 * Adolfo Fitoria
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
