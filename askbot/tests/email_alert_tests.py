@@ -13,6 +13,7 @@ from askbot import models
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
+from askbot.models.question import get_tag_summary_from_questions
 
 def email_alert_test(test_func):
     """decorator for test methods in
@@ -686,7 +687,7 @@ class DelayedAlertSubjectLineTests(TestCase):
                     q8:'', q9:'', q10:'', q11:'',
                 }
         from askbot.management.commands import send_email_alerts as cmd
-        subject = cmd.get_update_subject_line(q_dict)
+        subject = get_tag_summary_from_questions(q_dict.keys())
 
         self.assertTrue('one' not in subject)
         self.assertTrue('two' in subject)

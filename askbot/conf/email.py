@@ -57,6 +57,43 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         EMAIL,
+        'ENABLE_UNANSWERED_REMINDERS',
+        default = False,
+        description = _('Send periodic reminders about unanswered questions'),
+        help_text = _(
+            'NOTE: in order to use this feature, it is necessary to '
+            'run the management command "send_unanswered_question_reminders" '
+            '(for example, via a cron job - with an appropriate frequency)'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        EMAIL,
+        'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER',
+        default = 1,
+        description = _(
+            'Days before starting to send reminders about unanswered questions'
+        ),
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        EMAIL,
+        'UNANSWERED_REMINDER_FREQUENCY',
+        default = 1,
+        description = _(
+            'How often to send unanswered question reminders '
+            '(in days between the reminders sent).'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
         'EMAIL_VALIDATION',
         default=False,
         hidden=True,

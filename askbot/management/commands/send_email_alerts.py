@@ -5,6 +5,7 @@ from django.db.models import Q, F
 from askbot.models import User, Question, Answer, Tag, QuestionRevision
 from askbot.models import AnswerRevision, Activity, EmailFeedSetting
 from askbot.models import Comment
+from askbot.models.question import get_tag_summary_from_questions
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings as django_settings
@@ -71,52 +72,6 @@ def extend_question_list(
 def format_action_count(string, number, output):
     if number > 0:
         output.append(_(string) % {'num':number})
-
-def get_update_subject_line(question_dict):
-    """forms a subject line based on up to five most
-    frequently used tags in the question_dict
-
-    question_dict is an instance of SortedDict,
-    where questions are keys and values are meta_data
-    accumulated during the question filtering
-    """
-    #todo: in python 2.6 there is collections.Counter() thing
-    #which would be very useful here
-    tag_counts = dict()
-    updated_questions = question_dict.keys()
-    for question in updated_questions:
-        tag_names = question.get_tag_names()
-        for tag_name in tag_names:
-            if tag_name in tag_counts:
-                tag_counts[tag_name] += 1
-            else:
-                tag_counts[tag_name] = 1
-    tag_list = tag_counts.keys()
-    #sort in descending order
-    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
-
-    question_count = len(updated_questions)
-    #note that double quote placement is important here
-    if len(tag_list) == 1:
-        last_topic = '"'
-    elif len(tag_list) <= 5:
-        last_topic = _('" and "%s"') % tag_list.pop()
-    else:
-        tag_list = tag_list[:5]
-        last_topic = _('" and more')
-
-    topics = '"' + '", "'.join(tag_list) + last_topic
-
-    subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
-                    question_count
-                ) % {
-                        'question_count': question_count,
-                        'topics': topics
-                    }
-
-    return mail.prefix_the_subject_line(subject_line)
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -244,41 +199,8 @@ class Command(NoArgsCommand):
                     q_ans_B.cutoff_time = cutoff_time
 
                 elif feed.feed_type == 'q_all':
-                    if user.email_tag_filter_strategy == 'ignored':
-
-                        ignored_tags = Tag.objects.filter(
-                                                user_selections__reason='bad',
-                                                user_selections__user=user
-                                            )
-
-                        wk = user.ignored_tags.strip().split()
-                        ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
-
-                        q_all_A = Q_set_A.exclude(
-                                        tags__in = ignored_tags
-                                    ).exclude(
-                                        tags__in = ignored_by_wildcards
-                                    )
-
-                        q_all_B = Q_set_B.exclude(
-                                        tags__in = ignored_tags
-                                    ).exclude(
-                                        tags__in = ignored_by_wildcards
-                                    )
-                    else:
-                        selected_tags = Tag.objects.filter(
-                                                user_selections__reason='good',
-                                                user_selections__user=user
-                                            )
-
-                        wk = user.interesting_tags.strip().split()
-                        selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
-
-                        tag_filter = Q(tags__in = list(selected_tags)) \
-                                    | Q(tags__in = list(selected_by_wildcards))
-
-                        q_all_A = Q_set_A.filter( tag_filter )
-                        q_all_B = Q_set_B.filter( tag_filter )
+                    q_all_A = user.get_tag_filtered_questions(Q_set_A)
+                    q_all_B = user.get_tag_filtered_questions(Q_set_B)
 
                     q_all_A = q_all_A[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_B = q_all_B[:askbot_settings.MAX_ALERTS_PER_EMAIL]
@@ -478,7 +400,19 @@ class Command(NoArgsCommand):
                     num_q += 1
             if num_q > 0:
                 url_prefix = askbot_settings.APP_URL
-                subject_line = get_update_subject_line(q_list)
+
+                tag_summary = get_tag_summary_from_questions(q_list.keys())
+                question_count = len(q_list.keys())
+
+                subject_line = ungettext(
+                    '%(question_count)d updated question about %(topics)s',
+                    '%(question_count)d updated questions about %(topics)s',
+                    question_count
+                ) % {
+                    'question_count': question_count,
+                    'topics': tag_summary
+                }
+
                 #todo: send this to special log
                 #print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for %(num)d question', 
