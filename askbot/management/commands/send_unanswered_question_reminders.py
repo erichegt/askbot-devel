@@ -25,40 +25,46 @@ class Command(NoArgsCommand):
         questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
-                                        deleted = False
-                                    ).exclude(
+                                        deleted = True
+                                    ).filter(
                                         added_at__lt = cutoff_date
                                     ).filter(
-                                        answer_count__gt = 0
+                                        answer_count = 0
                                     ).order_by('-added_at')
         #for all users, excluding blocked
         #for each user, select a tag filtered subset
         #format the email reminder and send it
         for user in models.User.objects.exclude(status = 'b'):
             user_questions = questions.exclude(author = user)
-            user_questions = user.get_tag_filtered_questions(questions)
+            user_questions = user.get_tag_filtered_questions(user_questions)
 
             final_question_list = list()
             #todo: rewrite using query set filter
             #may be a lot more efficient
             for question in user_questions:
                 activity_type = const.TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT
-                activity, created = models.Activity.objects.get_or_create(
-                    user = user,
-                    question = question,
-                    activity_type = activity_type
-                )
-
-                now = datetime.datetime.now()
-                recurrence_delay = datetime.timedelta(
-                    askbot_settings.UNANSWERED_REMINDER_FREQUENCY
-                )
-                if created == False:
-                    if activity.active_at >= now + recurrence_delay:
+                try:
+                    activity = models.Activity.objects.get(
+                        user = user,
+                        question = question,
+                        activity_type = activity_type
+                    )
+                    now = datetime.datetime.now()
+                    recurrence_delay = datetime.timedelta(
+                        askbot_settings.UNANSWERED_REMINDER_FREQUENCY
+                    )
+                    if now < activity.active_at + recurrence_delay:
                         continue
-
+                except models.Activity.DoesNotExist:
+                    activity = models.Activity(
+                        user = user,
+                        question = question,
+                        activity_type = activity_type,
+                        content_object = question,
+                    )
                 activity.active_at = datetime.datetime.now()
                 activity.save()
+                final_question_list.append(question)
 
             question_count = len(final_question_list)
             if question_count == 0:
