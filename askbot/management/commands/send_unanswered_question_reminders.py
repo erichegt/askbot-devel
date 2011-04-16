@@ -13,7 +13,7 @@ DEBUG_THIS_COMMAND = False
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        if askbot_settings.ENABLE_UANSWERED_REMINDERS == False:
+        if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
         #get questions without answers, excluding closed and deleted
         #order it by descending added_at date
