@@ -17,10 +17,8 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: exceptions.py:9
-#, fuzzy
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr ""
-"Désolé, mais les utilisateurs anonymes ne peuvent aps accepter les réponses"
+msgstr "Désolé, mais les utilisateurs anonymes ne peuvent pas accéder à cette fonction"
 
 #: feed.py:22
 msgid " - "
@@ -35,7 +33,7 @@ msgstr "dernières questions"
 #: skins/default/templates/question_edit_tips.html:40
 #: skins/default/templates/question_edit_tips.html:45
 msgid "title"
-msgstr "Titre"
+msgstr "titre"
 
 #: forms.py:55
 msgid "please enter a descriptive title for your question"
@@ -159,11 +157,11 @@ msgid "Cannot change status of another moderator"
 msgstr "Impossible de changer le statut d'un autre modérateur"
 
 #: forms.py:310
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr "Si vous souhaitez changer le statut de %(username)s,  "
+msgstr "Si vous souhaitez changer le statut de %(username)s,  effectuez une selection pertinente."
 
 #: forms.py:319
 msgid "Subject line"
@@ -383,9 +381,8 @@ msgid "account/"
 msgstr "compte/"
 
 #: conf/badges.py:12
-#, fuzzy
 msgid "Badge settings"
-msgstr "Paramétrage de la base de données"
+msgstr "Paramétrage du badge"
 
 #: conf/badges.py:21
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -424,9 +421,8 @@ msgid "Great Question: minimum upvotes for the question"
 msgstr ""
 
 #: conf/badges.py:102
-#, fuzzy
 msgid "Popular Question: minimum views"
-msgstr "Question populaire"
+msgstr "Question populaire : nombre minimum de consultations"
 
 #: conf/badges.py:111
 #, fuzzy
@@ -531,9 +527,8 @@ msgstr ""
 "adresse email)"
 
 #: conf/email.py:76
-#, fuzzy
 msgid "Prefix for the email subject line"
-msgstr "Bienvenue dans notre forum collaboratif de questions/réponses"
+msgstr "Préfixe pour la ligne de sujet de l'email"
 
 #: conf/external_keys.py:11
 msgid "Keys to connect the site with external services like Facebook, etc."
@@ -648,7 +643,7 @@ msgstr ""
 #: conf/external_keys.py:170
 #, fuzzy
 msgid "Explain how to change LDAP password"
-msgstr "Compte : changer de mot de passe"
+msgstr "Explique comment changer le mot de passe LDAP"
 
 #: conf/flatpages.py:10
 msgid "Flatpages - about, privacy policy, etc."
@@ -3066,16 +3061,15 @@ msgstr "Aide sur les balises \"Markdown\""
 #: skins/default/templates/answer_edit_tips.html:29
 #: skins/default/templates/question_edit_tips.html:26
 msgid "*italic*"
-msgstr ""
+msgstr "*italique*"
 
 #: skins/default/templates/answer_edit_tips.html:32
 #: skins/default/templates/question_edit_tips.html:29
 msgid "**bold**"
-msgstr ""
+msgstr "**gras**"
 
 #: skins/default/templates/answer_edit_tips.html:36
 #: skins/default/templates/question_edit_tips.html:33
-#, fuzzy
 msgid "*italic* or _italic_"
 msgstr "*italique* ou __italique__"
 
@@ -3794,11 +3788,10 @@ msgstr[1] "votes"
 
 #: skins/default/templates/macros.html:227
 #: skins/default/templates/unused/questions_ajax.html:43 views/readers.py:241
-#, fuzzy
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] "réponse"
-msgstr[1] "réponse"
+msgstr[1] "réponses"
 
 #: skins/default/templates/macros.html:239
 #: skins/default/templates/unused/questions_ajax.html:55 views/readers.py:244
