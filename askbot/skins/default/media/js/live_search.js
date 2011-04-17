@@ -398,40 +398,43 @@ var liveSearch = function(){
 
     var render_ask_page_result = function(data, text_status, xhr){
         var container = $('#' + q_list_sel);
-        container.children().remove();
-        if (data.length > 5){
-            container.css('overflow-y', 'scroll');
-            container.css('height', '120px');
-        } else {
-            container.css('height', data.length * 24 + 'px');
-            container.css('overflow-y', 'hidden');
-        }
-        $.each(data, function(idx, question){
-            var url = question['url'];
-            var title = question['title'];
-            var answer_count = question['answer_count'];
-            var list_item = $('<h2></h2>');
-            var count_element = $('<span class="item-count"></span>');
-            count_element.html(answer_count);
-            list_item.append(count_element);
-            var link = $('<a></a>');
-            link.attr('href', url);
-            list_item.append(link);
-            title_element = $('<span class="title"></span>');
-            title_element.html(title);
-            link.append(title)
-            container.append(list_item);
+        container.fadeOut(200, function() {
+            container.children().remove();
+            if (data.length > 5){
+                container.css('overflow-y', 'scroll');
+                container.css('height', '120px');
+            } else {
+                container.css('height', data.length * 24 + 'px');
+                container.css('overflow-y', 'hidden');
+            }
+            $.each(data, function(idx, question){
+                var url = question['url'];
+                var title = question['title'];
+                var answer_count = question['answer_count'];
+                var list_item = $('<h2></h2>');
+                var count_element = $('<span class="item-count"></span>');
+                count_element.html(answer_count);
+                list_item.append(count_element);
+                var link = $('<a></a>');
+                link.attr('href', url);
+                list_item.append(link);
+                title_element = $('<span class="title"></span>');
+                title_element.html(title);
+                link.append(title)
+                container.append(list_item);
+            });
+            container.fadeIn();
         });
     };
 
     var render_main_page_result = function(data, text_status, xhr){
         var old_list = $('#' + q_list_sel);
-        var new_list = $('<div></div>');
+        var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
             new_list.html(render_question_list(data['questions']));
-            old_list.hide();
+            //old_list.hide();
             old_list.after(new_list);
-            old_list.remove();
+            //old_list.remove();
             //rename new div to old
             new_list.attr('id', q_list_sel);
             render_paginator(data['paginator']);
@@ -442,8 +445,13 @@ var liveSearch = function(){
             render_relevance_sort_tab();
             set_active_sort_tab(sortMethod);
             query.focus();
+            
+            //show new div with a fadeIn effect
+            old_list.fadeOut(200, function() {
+                old_list.remove();
+			            new_list.fadeIn(400);            
+            });
         }
-        //show new div
     }
 
     var try_again = function(){
