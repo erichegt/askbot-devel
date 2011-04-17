@@ -63,7 +63,8 @@ settings.register(
         help_text = _(
             'NOTE: in order to use this feature, it is necessary to '
             'run the management command "send_unanswered_question_reminders" '
-            '(for example, via a cron job - with an appropriate frequency)'
+            '(for example, via a cron job - with an appropriate frequency) '
+            'and an IMAP server with a dedicated inbox must be configured '
         )
     )
 )

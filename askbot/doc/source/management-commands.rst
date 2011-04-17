@@ -73,22 +73,41 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
 
-Batch jobs
-==========
+.. _email-related-commands:
 
-Batch jobs are those that should be run periodically. A program called `cron` can run these commands at the specified times (please look up futher information about `cron` elsewhere).
+Email-related commands
+======================
 
-+----------------------+-------------------------------------------------------------+
-| command              | purpose                                                     |
-+======================+=============================================================+
-| `send_email_alerts`  | Dispatches email alerts to the users according to           |
-|                      | their subscription settings. This command does not          |
-|                      | send iinstant" alerts because those are sent automatically  |
-|                      | and do not require a separate command.                      |
-|                      | The most frequent alert setting that can be served by this  |
-|                      | command is "daily", therefore running `send_email_alerts`   |
-|                      | more than twice a day is not necessary.                     |
-+----------------------+-------------------------------------------------------------+
+These commands deal with the periodic tasks related to sending and receiving email by askbot.
+A UNIX program called `cron` can run these commands at the specified times
+(please look up futher information about `cron` elsewhere).
+
+Any configurable options, related to these commands are accessible via "Email" section of the
+:ref:`live settings <live-settings>`.
+
++-------------------------------------+-------------------------------------------------------------+
+| command                             | purpose                                                     |
++=====================================+=============================================================+
+| `send_email_alerts`                 | Dispatches email alerts to the users according to           |
+|                                     | their subscription settings. This command does not          |
+|                                     | send instant" alerts because those are sent automatically   |
+|                                     | and do not require a separate command.                      |
+|                                     | The most frequent alert setting that can be served by this  |
+|                                     | command is "daily", therefore running `send_email_alerts`   |
+|                                     | more than twice a day is not necessary.                     |
++-------------------------------------+-------------------------------------------------------------+
+| `post_emailed_questions`            | (experimental feature) posts questions sent by email        |
+|                                     | to enable this feature - please follow the instructions     |
+|                                     | on :doc:`sending email to askbot <sending-email-to-askbot>`.|
+|                                     | This command uses :ref:`live settings <live-settings>`      |
+|                                     | "allow posting by email" and "replace spaces in tags        |
+|                                     | with dash".                                                 |
++-------------------------------------+-------------------------------------------------------------+
+| `send_unanswered_question_reminders`| Sends periodic reminders about unanswered questions.        |
+|                                     | This command may be disabled from the "email" section       |
+|                                     | of :ref:`live settings <live-settings>`, as well as         |
+|                                     | an initial wait period and the recurrence delay may be set. |
++-------------------------------------+-------------------------------------------------------------+
 
 Data repair commands
 ====================
