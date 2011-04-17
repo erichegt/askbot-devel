@@ -1492,6 +1492,45 @@ def user_get_q_sel_email_feed_frequency(self):
         raise e
     return feed_setting.frequency
 
+def user_get_tag_filtered_questions(self, questions = None):
+    """Returns a query set of questions, tag filtered according
+    to the user choices. Parameter ``questions`` can be either ``None``
+    or a starting query set.
+    """
+    if questions == None:
+        questions = Question.objects.all()
+
+    if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
+
+        ignored_tags = Tag.objects.filter(
+                                user_selections__reason = 'bad',
+                                user_selections__user = self
+                            )
+
+        wk = self.ignored_tags.strip().split()
+        ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
+
+        return questions.exclude(
+                        tags__in = ignored_tags
+                    ).exclude(
+                        tags__in = ignored_by_wildcards
+                    )
+    elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
+        selected_tags = Tag.objects.filter(
+                                user_selections__reason = 'good',
+                                user_selections__user = self
+                            )
+
+        wk = self.interesting_tags.strip().split()
+        selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
+
+        tag_filter = models.Q(tags__in = list(selected_tags)) \
+                    | models.Q(tags__in = list(selected_by_wildcards))
+
+        return questions.filter( tag_filter )
+    else:
+        return questions
+
 def get_messages(self):
     messages = []
     for m in self.message_set.all():
@@ -1831,10 +1870,14 @@ User.add_to_class('downvote', downvote)
 User.add_to_class('flag_post', flag_post)
 User.add_to_class('receive_reputation', user_receive_reputation)
 User.add_to_class('get_flags', user_get_flags)
-User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
+User.add_to_class(
+    'get_flag_count_posted_today',
+    user_get_flag_count_posted_today
+)
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
+User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)

@@ -40,6 +40,42 @@ QUESTION_ORDER_BY_MAP = {
     'relevance-desc': None#this is a special case for postges only
 }
 
+def get_tag_summary_from_questions(questions):
+    """returns a humanized string containing up to 
+    five most frequently used
+    unique tags coming from the ``questions``.
+    Variable ``questions`` is an iterable of 
+    :class:`~askbot.models.Question` model objects.
+
+    This is not implemented yet as a query set method,
+    because it is used on a list.
+    """
+    #todo: in python 2.6 there is collections.Counter() thing
+    #which would be very useful here
+    tag_counts = dict()
+    for question in questions:
+        tag_names = question.get_tag_names()
+        for tag_name in tag_names:
+            if tag_name in tag_counts:
+                tag_counts[tag_name] += 1
+            else:
+                tag_counts[tag_name] = 1
+    tag_list = tag_counts.keys()
+    #sort in descending order
+    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
+
+    #note that double quote placement is important here
+    if len(tag_list) == 1:
+        last_topic = '"'
+    elif len(tag_list) <= 5:
+        last_topic = _('" and "%s"') % tag_list.pop()
+    else:
+        tag_list = tag_list[:5]
+        last_topic = _('" and more')
+
+    return '"' + '", "'.join(tag_list) + last_topic
+
+
 class QuestionQuerySet(models.query.QuerySet):
     """Custom query set subclass for :class:`~askbot.models.Question`
     """
@@ -112,7 +148,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.extra(**extra_kwargs)
         else:
             #fallback to dumb title match search
-            return extra(
+            return self.extra(
                         where=['title like %s'], 
                         params=['%' + search_query + '%']
                     )

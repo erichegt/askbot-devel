@@ -13,6 +13,7 @@ from askbot import models
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
+from askbot.models.question import get_tag_summary_from_questions
 
 def email_alert_test(test_func):
     """decorator for test methods in
@@ -685,8 +686,7 @@ class DelayedAlertSubjectLineTests(TestCase):
                     q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
                     q8:'', q9:'', q10:'', q11:'',
                 }
-        from askbot.management.commands import send_email_alerts as cmd
-        subject = cmd.get_update_subject_line(q_dict)
+        subject = get_tag_summary_from_questions(q_dict.keys())
 
         self.assertTrue('one' not in subject)
         self.assertTrue('two' in subject)
@@ -701,9 +701,9 @@ class DelayedAlertSubjectLineTests(TestCase):
         i6 = subject.index('six')
         order = [i6, i5, i4, i3, i2]
         self.assertEquals(
-                order,
-                sorted(order)
-            )
+            order,
+            sorted(order)
+        )
 
 class FeedbackTests(utils.AskbotTestCase):
     def setUp(self):
@@ -800,3 +800,22 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         self.assertTrue(
             self.user1.email in outbox[0].recipients()
         )
+
+class UnansweredReminderTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.u1 = self.create_user(username = 'user1')
+        self.u2 = self.create_user(username = 'user2')
+
+    def test_reminder_simple(self):
+        """a positive test - user must receive a reminder
+        """
+        askbot_settings.update('ENABLE_UNANSWERED_REMINDERS', True)
+        days_ago = 5*askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
+        long_ago = datetime.datetime.now() - datetime.timedelta(days_ago)
+        self.post_question(
+            user = self.u1,
+            timestamp = long_ago
+        )
+        management.call_command('send_unanswered_question_reminders')
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
