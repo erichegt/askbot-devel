@@ -13,5 +13,6 @@ exclude urls.py
 exclude askbot/upfiles/*.*
 recursive-exclude avatar *
 recursive-exclude adzone *
+recursive-exclude categories *
 recursive-exclude env
 recursive-exclude .tox
