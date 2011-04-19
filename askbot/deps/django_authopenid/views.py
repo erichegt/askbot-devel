@@ -621,7 +621,7 @@ def signin_success(request, identity_url, openid_response):
     provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
-    request.session['username'] = openid_data.sreg.get('username', '')
+    request.session['username'] = openid_data.sreg.get('nickname', '')
 
     return finalize_generic_signin(
                         request = request,
