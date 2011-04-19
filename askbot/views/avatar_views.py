@@ -5,6 +5,7 @@ does not support jinja templates
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from django.views.decorators import csrf
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
@@ -74,6 +75,7 @@ def _get_avatars(user):
     return (avatar, avatars)    
 
 @login_required
+@csrf.csrf_protect
 def add(request, extra_context=None, next_override=None,
         upload_form=UploadAvatarForm, *args, **kwargs):
     if extra_context is None:
@@ -109,6 +111,7 @@ def add(request, extra_context=None, next_override=None,
     return render_into_skin('avatar/add.html', data, request)
 
 @login_required
+@csrf.csrf_protect
 def change(request, extra_context=None, next_override=None,
         upload_form=UploadAvatarForm, primary_form=PrimaryAvatarForm,
         *args, **kwargs):
@@ -150,6 +153,7 @@ def change(request, extra_context=None, next_override=None,
     return render_into_skin('avatar/change.html', data, request)
 
 @login_required
+@csrf.csrf_protect
 def delete(request, extra_context=None, next_override=None, *args, **kwargs):
     if extra_context is None:
         extra_context = {}

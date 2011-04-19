@@ -44,7 +44,7 @@
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
     {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
-    <form id="signin-form" method="post" action="{% url user_signin %}">
+    <form id="signin-form" method="post" action="{% url user_signin %}">{% csrf_token %}
         {# in this branch - the real signin view we display the login icons
             here we hide the local login button only if admin
             wants to always show the password login form - then
@@ -157,7 +157,7 @@
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
         {% if user.is_anonymous() %}
-        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">
+        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">{% csrf_token %}
             {% if view_subtype != 'bad_key' %}
                 <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>
             {% endif %}

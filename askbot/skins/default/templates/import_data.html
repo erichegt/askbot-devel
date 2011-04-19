@@ -18,7 +18,7 @@
         Please note that feedback will be printed in plain text.
         {% endtrans %}
         </p>
-        <form id="load-dump-form" method="post" enctype="multipart/form-data">
+        <form id="load-dump-form" method="post" enctype="multipart/form-data">{% csrf_token %}
             <table>
             {{dump_upload_form.as_table()}}
             </table>

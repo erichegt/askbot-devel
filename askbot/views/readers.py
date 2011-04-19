@@ -18,6 +18,7 @@ from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
+from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
@@ -354,6 +355,7 @@ def tags(request):#view showing a listing of available tags - plain list
     }
     return render_into_skin('tags.html', data, request)
 
+@csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and 
     all answers to it

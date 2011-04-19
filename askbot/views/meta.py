@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.views import static
+from django.views.decorators import csrf
 from django.db.models import Max, Count
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
@@ -49,6 +50,7 @@ def faq(request):
     }
     return render_into_skin('faq.html', data, request)
 
+@csrf.csrf_protect
 def feedback(request):
     data = {'page_class': 'meta'}
     form = None

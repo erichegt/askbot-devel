@@ -22,6 +22,7 @@ at the forum_ or by email at admin@askbot.org
    Import data (StackExchange) <import-data>
    Appendix A: Maintenance procedures <management-commands>
    Appendix B: Sending email to askbot <sending-email-to-askbot>
+   Apperdix C: Optional modules <optional-modules>
    Contributors <contributors>
 
 Some background information: Askbot is written in Python on top of the Django platform.

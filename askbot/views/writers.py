@@ -22,6 +22,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
+from django.views.decorators import csrf
 
 from askbot import forms
 from askbot import models
@@ -147,7 +148,7 @@ def __import_se_data(dump_file):
     sys.stdout = real_stdout
     yield '<p>Done. Please, <a href="%s">Visit Your Forum</a></p></body></html>' % reverse('index')
 
-
+@csrf.csrf_protect
 def import_data(request):
     """a view allowing the site administrator
     upload stackexchange data
@@ -185,6 +186,7 @@ def import_data(request):
     return render_into_skin('import_data.html', data, request)
 
 #@login_required #actually you can post anonymously, but then must register
+@csrf.csrf_protect
 def ask(request):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
@@ -260,6 +262,7 @@ def ask(request):#view used to ask a new question
     return render_into_skin('ask.html', data, request)
 
 @login_required
+@csrf.csrf_protect
 def retag_question(request, id):
     """retag question view
     """
@@ -313,6 +316,7 @@ def retag_question(request, id):
             return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
+@csrf.csrf_protect
 def edit_question(request, id):
     """edit question view
     """
@@ -398,6 +402,7 @@ def edit_question(request, id):
         return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
+@csrf.csrf_protect
 def edit_answer(request, id):
     answer = get_object_or_404(models.Answer, id=id)
     try:

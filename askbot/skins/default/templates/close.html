@@ -6,7 +6,7 @@
     <p>{% trans %}Close the question{% endtrans %}: <a href="{{ question.get_absolute_url() }}">
     <strong>{{ question.get_question_title() }}</strong></a>
     </p>
-    <form id="fmclose" action="{% url close question.id %}" method="post" >
+    <form id="fmclose" action="{% url close question.id %}" method="post" >{% csrf_token %}
         <p>
             <strong>{% trans %}Reasons{% endtrans %}:</strong>
             {{ form.reason }}

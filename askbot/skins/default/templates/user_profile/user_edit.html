@@ -7,7 +7,7 @@
     {{ request.user.username }} - {% trans %}edit profile{% endtrans %}
 </h1>
 <div id="main-body" style="width:100%;padding-top:10px">
-    <form name="" action="{% url edit_user request.user.id %}" method="post">
+    <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
         <div id="left" style="float:left;width:180px">
             {% if request.user.email %}
                 {{ macros.gravatar(request.user, 128) }}

@@ -304,7 +304,7 @@
             {{ macros.paginator(paginator_context) }}
         </div><br/>
     {% endif %}
-<form id="fmanswer" action="{% url answer question.id %}" method="post">
+<form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
     {% if request.user.is_authenticated() %}
         <p style="padding-left:3px">
         {{ answer.email_notify }} 

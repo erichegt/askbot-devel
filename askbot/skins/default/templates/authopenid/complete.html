@@ -48,11 +48,11 @@ parameters:
     {% endif %}
     <div class="login">
         {% if login_type=='openid' %}
-        <form name="fregister" action="{% url user_register %}" method="POST">
+        <form name="fregister" action="{% url user_register %}" method="POST">{% csrf_token %}
         {% elif login_type=='facebook' %}
-        <form name="fregister" action="" method="POST">
+        <form name="fregister" action="" method="POST">{% csrf_token %}
         {% else %}
-        <form name="fregister" action="{% url user_signin %}" method="POST">
+        <form name="fregister" action="{% url user_signin %}" method="POST">{% csrf_token %}
         {% endif %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">

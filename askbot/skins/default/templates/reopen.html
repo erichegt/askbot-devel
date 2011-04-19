@@ -21,7 +21,7 @@
 <p>
     {% trans %}Reopen this question?{% endtrans %}
 </p>
-<form id="fmclose" action="{% url reopen question.id %}" method="post" >
+<form id="fmclose" action="{% url reopen question.id %}" method="post" >{% csrf_token %}
     <div id="" style="padding:20px 0 20px 0">
         <input type="submit" value="{% trans %}Reopen this question{% endtrans %}" class="submit" />&nbsp;
         <input id="btBack" type="button" value="{% trans %}Cancel{% endtrans %}"  class="submit"  />

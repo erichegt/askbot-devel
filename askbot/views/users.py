@@ -11,6 +11,7 @@ import functools
 import datetime
 import logging
 from django.db.models import Count
+from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
@@ -19,7 +20,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
-from django.conf import settings as django_settings
+from django.views.decorators import csrf
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
@@ -129,6 +130,7 @@ def users(request):
     }
     return render_into_skin('users.html', data, request)
 
+@csrf.csrf_protect
 def user_moderate(request, subject):
     """user subview for moderation 
     """
@@ -232,6 +234,7 @@ def set_new_email(user, new_email, nomessage=False):
         #    send_new_email_key(user,nomessage=nomessage)    
 
 @login_required
+@csrf.csrf_protect
 def edit_user(request, id):
     """View that allows to edit user profile.
     This view is accessible to profile owners or site administrators
@@ -862,6 +865,7 @@ def user_favorites(request, user):
     return render_into_skin('user_profile/user_favorites.html', data, request)
 
 @owner_or_moderator_required
+@csrf.csrf_protect
 def user_email_subscriptions(request, user):
 
     logging.debug(get_request_info(request))

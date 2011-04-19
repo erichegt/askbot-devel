@@ -40,6 +40,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.core.urlresolvers import reverse
+from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -258,6 +259,7 @@ def complete_oauth_signin(request):
         return HttpResponseRedirect(next_url)
 
 #@not_authenticated
+@csrf.csrf_protect
 def signin(
         request,
         newquestion = False,#todo: not needed
@@ -447,6 +449,7 @@ def signin(
                         view_subtype = view_subtype
                     )
 
+@csrf.csrf_protect
 def show_signin_view(
                 request,
                 login_form = None,
@@ -690,6 +693,7 @@ def finalize_generic_signin(
             return HttpResponseRedirect(redirect_url)
 
 @not_authenticated
+@csrf.csrf_protect
 def register(request, login_provider_name=None, user_identifier=None):
     """
     this function is used via it's own url with request.method=POST
@@ -833,6 +837,7 @@ def signin_failure(request, message):
 
 @not_authenticated
 @decorators.valid_password_login_provider_required
+@csrf.csrf_protect
 def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
@@ -1024,6 +1029,7 @@ def send_new_email_key(user,nomessage=False):
         set_email_validation_message(user)
 
 @login_required
+@csrf.csrf_protect
 def send_email_key(request):
     """
     url = /email/sendkey/

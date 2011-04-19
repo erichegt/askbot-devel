@@ -6,7 +6,7 @@
     {% if not avatars %}
         <p>{% trans avatar_change_url="avatar_change"|url %}You have no avatars to delete. Please <a href="{{ avatar_change_url }}">upload one</a> now.{% endtrans %}</p>
     {% else %}
-        <form method="POST" action="{% url avatar_delete %}">
+        <form method="POST" action="{% url avatar_delete %}">{% csrf_token %}
             <ul>
                 {{ delete_avatar_form.as_ul() }}
             </ul>

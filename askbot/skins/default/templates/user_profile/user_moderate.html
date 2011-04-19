@@ -10,7 +10,7 @@
     {% if user_status_changed %}
         <p class="action-status"><span>{% trans %}User status changed{% endtrans %}</span></p>
     {% endif %}
-    <form method="post">
+    <form method="post">{% csrf_token %}
         <input type="hidden" name="sort" value="moderate"/>
         <table class="form-as-table">
         {{ change_user_status_form.as_table() }}
@@ -29,7 +29,7 @@
 {% if user_rep_changed %}
     <p class="action-status"><span>{% trans %}User reputation changed{% endtrans %}</span></p>
 {% endif %}
-<form method="post">
+<form method="post">{% csrf_token %}
     <input type="hidden" name="sort" value="moderate"/>
     <table class="form-as-table">
     {{ change_user_reputation_form.as_table() }}
@@ -44,7 +44,7 @@
     {% if message_sent %}
         <p class="action-status"><span>{% trans %}Message sent{% endtrans %}</span></p>
     {% endif %}
-<form method="post">
+<form method="post">{% csrf_token %}
     <input type="hidden" name="sort" value="moderate"/>
     <div class="form-row-vertical">
     <label for="id_subject_line">{{ send_message_form.subject_line.label}}</label>

@@ -10,7 +10,7 @@
     {% if action_status %}
         <p class="action-status"><span>{{action_status}}</span></p>
     {% endif %}
-    <form method="post" action=""> 
+    <form method="post" action="">{% csrf_token %}
         <table class='form-as-table ab-subscr-form'>
         {{email_feeds_form.as_table()}}
         </table>

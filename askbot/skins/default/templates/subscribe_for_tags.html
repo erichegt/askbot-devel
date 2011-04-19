@@ -10,7 +10,7 @@
     {% endfor %}
 </ul>
 <div style="clear:both;padding-top: 5px">
-    <form method="post" action="{% url subscribe_for_tags %}">
+    <form method="post" action="{% url subscribe_for_tags %}">{% csrf_token %}
         <input type="hidden" name="tags" value="{{tags|join(' ')|escape}}" />
         <input type="submit" name="ok" value="{% trans %}Subscribe{% endtrans %}" />
         <input type="submit" name="nope" value="{% trans %}Cancel{% endtrans %}" />

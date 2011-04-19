@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 <h1>{% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
-<form id="fmedit" action="{% url edit_question question.id %}" method="post" >
+<form id="fmedit" action="{% url edit_question question.id %}" method="post" >{% csrf_token %}
     <label for="id_revision" ><strong>{% trans %}revision{% endtrans %}:</strong></label> <br/>
     {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
     <div style="vertical-align:middle">

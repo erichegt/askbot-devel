@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 <div id="askform">
-    <form id="fmask" action="" method="post" >
+    <form id="fmask" action="" method="post" >{% csrf_token %}
         <div class="form-item">
             <div id="askFormBar">
                 {% if not request.user.is_authenticated() %}
