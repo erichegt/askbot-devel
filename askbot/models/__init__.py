@@ -2447,6 +2447,9 @@ signals.post_updated.connect(
                        )
 signals.site_visited.connect(record_user_visit)
 
+from follow import util as follow_util
+follow_util.register(User, m2m = True)
+
 #todo: wtf??? what is x=x about?
 
 Question = Question
