@@ -31,8 +31,9 @@ Within settings.py, at the very minimum you will need to provide correct values 
     DATABASE_NAME = ''
     DATABASE_USER = ''
     DATABASE_PASSWORD = '' 
+    CSRF_COOKIE_DOMAIN = ''#e.g. example.com (localhost/IP address for tests)
 
-within single quotes - login credentials to your mysql database. 
+within single quotes - login credentials to your database. 
 
 .. _urls.py: http://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/urls.py
 .. _settings.py: http://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.py
