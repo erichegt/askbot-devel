@@ -210,3 +210,6 @@ CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
+
+CSRF_COOKIE_NAME = 'askbot_scrf'
+CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
