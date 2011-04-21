@@ -112,7 +112,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.extra(**extra_kwargs)
         else:
             #fallback to dumb title match search
-            return extra(
+            return self.extra(
                         where=['title like %s'], 
                         params=['%' + search_query + '%']
                     )
