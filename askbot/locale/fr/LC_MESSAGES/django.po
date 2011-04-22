@@ -4297,7 +4297,7 @@ msgstr "cliquez pour afficher/masquer la révision"
 #: skins/default/templates/revisions.html:29
 #, python-format
 msgid "revision %(number)s"
-msgstr "révision %(number)"
+msgstr "révision %(number)s"
 
 #: skins/default/templates/subscribe_for_tags.html:3
 #: skins/default/templates/subscribe_for_tags.html:5
