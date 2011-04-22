@@ -12,10 +12,11 @@ Programming
 * Evgeny Fadeev - founder of askbot
 * Benoit Lavine (with Windriver Software, Inc.)
 * Alex Robbins (celery support)
-* Adolfo Fitoria
+* `Adolfo Fitoria <http://fitoria.net>`_
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
 * Andy Knotts
+* `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
 * Jeff Madynski
 
 Translations
