@@ -11,7 +11,7 @@ import logging
 from askbot import patches
 from askbot.deployment.assertions import assert_package_compatibility
 
-VERSION = (0, 6, 77)
+VERSION = (0, 6, 78)
 
 #necessary for interoperability of django and coffin
 assert_package_compatibility()
