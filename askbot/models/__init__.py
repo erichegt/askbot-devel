@@ -876,8 +876,9 @@ def user_mark_tags(
     * ``action`` - eitrer "add" or "remove"
     """
     cleaned_wildcards = list()
-    assert(reason in ('good', 'bad'))
     assert(action in ('add', 'remove'))
+    if action == 'add':
+        assert(reason in ('good', 'bad'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,

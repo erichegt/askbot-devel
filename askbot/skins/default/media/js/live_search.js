@@ -493,6 +493,7 @@ var liveSearch = function(){
 
     return {
         refresh: function(){
+            query = $('input#keywords');
             refresh_main_page();
         },
         init: function(mode){
