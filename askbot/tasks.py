@@ -93,9 +93,8 @@ def record_post_update(
 
     assert(updated_by not in recipients)
 
-    for user in set(recipients) | set(newly_mentioned_users):
-        user.increment_response_count()
-        user.save()
+    for user in (set(recipients) | set(newly_mentioned_users)):
+        user.update_response_counts()
 
     #todo: weird thing is that only comments need the recipients
     #todo: debug these calls and then uncomment in the repo

@@ -73,7 +73,7 @@ def pop_all_db_signal_receivers():
         post_syncdb,
     )
     if 'm2m_changed' in globals():
-        signals += m2m_changed
+        signals += (m2m_changed, )
 
     receiver_data = dict()
     for signal in signals:

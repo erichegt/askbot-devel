@@ -1297,8 +1297,7 @@ def user_visit_question(self, question = None, timestamp = None):
                                 status=ActivityAuditStatus.STATUS_SEEN
                             )
     if cleared_record_count > 0:
-        self.decrement_response_count(cleared_record_count)
-        self.save()
+        self.update_response_counts()
 
     #finally, mark admin memo objects if applicable
     #the admin response counts are not denormalized b/c they are easy to obtain
@@ -1774,35 +1773,24 @@ def user_get_flags_for_post(self, post):
     flags = self.get_flags()
     return flags.filter(content_type = post_content_type, object_id=post.id)
 
-def user_increment_response_count(user):
-    """increment response counter for user
-    by one
+def user_update_response_counts(user):
+    """Recount number of responses to the user.
     """
-    user.new_response_count += 1
+    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
 
-def user_decrement_response_count(user, amount=1):
-    """decrement response count for the user 
-    by one, log critical error if count would go below zero
-    but limit decrementation at zero exactly
-    """
-    assert(amount > 0)
-    user.seen_response_count += amount
-    if user.new_response_count >= amount:
-        user.new_response_count -= amount
-    user.clean_response_counts()
+    user.new_response_count = ActivityAuditStatus.objects.filter(
+                                    user = user,
+                                    status = ActivityAuditStatus.STATUS_NEW,
+                                    activity__activity_type__in = ACTIVITY_TYPES
+                                ).count()
+    user.seen_response_count = ActivityAuditStatus.objects.filter(
+                                    user = user,
+                                    status = ActivityAuditStatus.STATUS_SEEN,
+                                    activity__activity_type__in = ACTIVITY_TYPES
+                                ).count()
+    user.save()
 
-def user_clean_response_counts(user):
-    ""
-    if user.new_response_count < 0:
-        user.new_response_count = 0
-        logging.critical(
-                'new response count wanted to go below zero for %s' % user.username
-            )
-    if user.seen_response_count < 0:
-        user.seen_response_count = 0
-        logging.critical(
-                'seen response count wanted to go below zero form %s' % user.username
-            )
 
 def user_receive_reputation(self, num_points):
     new_points = self.reputation + num_points
@@ -1886,9 +1874,7 @@ User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('is_following', user_is_following)
-User.add_to_class('decrement_response_count', user_decrement_response_count)
-User.add_to_class('increment_response_count', user_increment_response_count)
-User.add_to_class('clean_response_counts', user_clean_response_counts)
+User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('set_admin_status', user_set_admin_status)

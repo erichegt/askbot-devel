@@ -61,6 +61,7 @@ class NoArgsJob(NoArgsCommand):
         total_count = batch['query_set'].count()
 
         if total_count == 0:
+            transaction.commit()
             return
 
         for item in batch['query_set'].all():

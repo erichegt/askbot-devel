@@ -99,35 +99,21 @@ def manage_inbox(request):
                                     activity__activity_type__in = activity_types,
                                     user = user
                                 )
+
                     action_type = post_data['action_type']
-                    seen_memos = memo_set.filter(
-                                    status=models.ActivityAuditStatus.STATUS_SEEN
-                                )
-                    new_memos = memo_set.filter(
-                                    status=models.ActivityAuditStatus.STATUS_NEW
-                                )
                     if action_type == 'delete':
-                        user.new_response_count -= new_memos.count()
-                        user.seen_response_count -= seen_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.delete()
                     elif action_type == 'mark_new':
-                        user.new_response_count += seen_memos.count()
-                        user.seen_response_count -= seen_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
                     elif action_type == 'mark_seen':
-                        user.new_response_count -= new_memos.count()
-                        user.seen_response_count += new_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
                     else:
                         raise exceptions.PermissionDenied(
                                     _('Oops, apologies - there was some error')
                                 )
+
+                    user.update_response_counts()
+
                     response_data['success'] = True
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")
