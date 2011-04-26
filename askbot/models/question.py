@@ -200,6 +200,7 @@ class QuestionQuerySet(models.query.QuerySet):
         from askbot.conf import settings as askbot_settings
         if scope_selector:
             if scope_selector == 'unanswered':
+                qs = qs.filter(closed = False)#do not show closed questions in unanswered section
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
