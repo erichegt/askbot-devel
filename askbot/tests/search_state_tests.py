@@ -49,9 +49,16 @@ class SearchStateTests(TestCase):
         self.add_tag('tag1')
         self.assertEquals(self.state.query, 'hahaha')
         self.assert_tags_are('tag1')
-        self.update({'reset_query':True})
+        self.update({'reset_query': True})
         self.assertEquals(self.state.query, None)
         self.assert_tags_are('tag1')
+
+    def test_start_over(self):
+        self.update({'query': 'hahaha'})
+        self.add_tag('tag1')
+        self.update({'start_over': True})
+        self.assertEquals(self.state.query, None)
+        self.assertEquals(self.state.tags, None)
 
     def test_auto_reset_sort(self):
         self.update({'sort': 'age-asc'})

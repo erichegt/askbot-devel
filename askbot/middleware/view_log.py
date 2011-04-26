@@ -10,7 +10,7 @@ from django.views.static import serve
 from django.views.i18n import javascript_catalog
 from askbot.models import signals
 from askbot.views.readers import questions as questions_view
-from askbot.views.commands import vote
+from askbot.views.commands import vote, get_tag_list
 from askbot.views.writers import delete_comment, post_comments, retag_question
 from askbot.views.readers import revisions
 from askbot.views.meta import media
@@ -18,8 +18,11 @@ from askbot.search.state_manager import ViewLog
 
 #todo: the list is getting bigger and bigger - maybe there is a better way to
 #trigger reset of sarch state?
-IGNORED_VIEWS = (serve, vote, media, delete_comment, post_comments,
-                retag_question, revisions, javascript_catalog)
+IGNORED_VIEWS = (
+    serve, vote, media, delete_comment, post_comments,
+    retag_question, revisions, javascript_catalog,
+    get_tag_list
+)
 
 
 class ViewLogMiddleware(object):

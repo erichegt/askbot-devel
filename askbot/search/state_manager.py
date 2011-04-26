@@ -237,7 +237,6 @@ class ViewLog(object):
     def should_reset_search_state(self):
         """return True if user stepped too far from the home page
         and False otherwise"""
-        return False
         if self.get_previous(1) != 'questions':
             if self.get_previous(2) != 'questions':
                 return True
