@@ -27,7 +27,10 @@ def email_alert_test(test_func):
         func_name = test_func.__name__
         if func_name.startswith('test_'):
             test_name = func_name.replace('test_', '', 1)
+            #run the main codo of the test function
             test_func(test_object)
+            #if visit_timestamp is set,
+            #target user will visit the question at that time
             test_object.maybe_visit_question()
             test_object.send_alerts()
             test_object.check_results(test_name)
@@ -283,11 +286,14 @@ class EmailAlertTests(TestCase):
                                                     self.__class__.__name__,
                                                     test_key,
                                                 )
+        #compares number of emails in the outbox and
+        #the expected message count for the current test
         self.assertEqual(len(outbox), expected['message_count'], error_message)
         if expected['message_count'] > 0:
             if len(outbox) > 0:
                 error_message = 'expected recipient %s found %s' % \
                     (self.target_user.email, outbox[0].recipients()[0])
+                #verify that target user receives the email
                 self.assertEqual(
                             outbox[0].recipients()[0], 
                             self.target_user.email,
