@@ -103,7 +103,7 @@ msgstr "utiliser-ces-caracteres-dans-les-mots-cles"
 
 #: forms.py:203
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr ""
+msgstr "wiki communautaire (le karma n'est pas mis à jour & peu de personnes peuvent éditer la question"
 
 #: forms.py:204
 msgid ""
@@ -200,9 +200,8 @@ msgid "Your message:"
 msgstr "Votre message:"
 
 #: forms.py:528
-#, fuzzy
 msgid "ask anonymously"
-msgstr "anonyme"
+msgstr "être anonyme"
 
 #: forms.py:530
 msgid "Check if you do not want to reveal your name when asking this question"
@@ -3211,7 +3210,7 @@ msgstr "Voir les mots-clés (tags)"
 #: skins/default/templates/about.html:3 skins/default/templates/about.html:5
 #, python-format
 msgid "About %(site_name)s"
-msgstr ""
+msgstr "A propos de %(site_name)s"
 
 #: skins/default/templates/answer_edit.html:4
 #: skins/default/templates/answer_edit.html:10
