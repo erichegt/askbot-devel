@@ -469,6 +469,12 @@ span.delete-icon:hover {
     font-family: sans-serif;
 }
 
+.badges .tag-number {
+    float: none;
+    display: inline;
+    padding-right: 15px;
+}
+
 ul#search-tags {
     padding-top: 3px;
 }

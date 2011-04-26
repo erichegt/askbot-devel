@@ -98,15 +98,15 @@
         {% spaceless %}
         <h2>{% trans counter=total_awards %}<span class="count">{{counter}}</span> Badge{% pluralize %}<span class="count">{{counter}}</span> Badges{% endtrans %}</h2>
         {% endspaceless %}
-        <div class="user-stats-table">
+        <div class="user-stats-table badges">
             <table>
                 <tr>
-                    <td width="180" style="line-height:35px">
+                    <td style="line-height:35px">
                         {% for badge in badges %}{# todo: translate badge name properly #}
-                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span><br/>
+                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span>
                             {% if loop.index is divisibleby 3 %}
                                 </td></tr>
-                                <tr><td width="180" style="line-height:35px">
+                                <tr><td style="line-height:35px">
                             {% endif %}
                         {% endfor %}
                     </td>
