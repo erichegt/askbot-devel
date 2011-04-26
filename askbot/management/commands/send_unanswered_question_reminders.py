@@ -20,7 +20,7 @@ class Command(NoArgsCommand):
         wait_period = datetime.timedelta(
             askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
         )
-        cutoff_date = datetime.datetime.now() + wait_period
+        cutoff_date = datetime.datetime.now() - wait_period
 
         questions = models.Question.objects.exclude(
                                         closed = True
@@ -90,8 +90,12 @@ class Command(NoArgsCommand):
                             )
             body_text += '</ul>'
 
-            mail.send_mail(
-                subject_line = subject_line,
-                body_text = body_text,
-                recipient_list = (user.email,)
-            )
+            if DEBUG_THIS_COMMAND:
+                print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
+                    (user.email, subject_line, body_text)
+            else:
+                mail.send_mail(
+                    subject_line = subject_line,
+                    body_text = body_text,
+                    recipient_list = (user.email,)
+                )
