@@ -1,4 +1,5 @@
 #import these to compile code and install values
+import askbot
 import askbot.conf.minimum_reputation
 import askbot.conf.vote_rules
 import askbot.conf.reputation_changes
@@ -23,4 +24,4 @@ def should_show_sort_by_relevance():
     """True if configuration support sorting
     questions by search relevance
     """
-    return (django_settings.DATABASE_ENGINE == 'postgresql_psycopg2')
+    return (askbot.get_database_engine_name() == 'postgresql_psycopg2')

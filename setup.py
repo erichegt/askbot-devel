@@ -27,6 +27,7 @@ install_requires = [
 #todo: have a dirty version retriever that 
 #parses it out from askbot/__init__.py but does not
 #import it as there are issues
+import askbot
 
 WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
@@ -34,7 +35,7 @@ if sys.platform not in WIN_PLATFORMS:
 
 setup(
     name = "askbot",
-    version = '0.6.80',#remember to manually set this correctly
+    version = askbot.get_version(),#version comes from askbot/__init__.py
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
@@ -150,7 +151,7 @@ if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
 print '**************************************************************'
 print '*                                                            *'
 print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >python startforum               *'
+print '*  To start deploying type: > startforum                     *'
 print '*  Please take a look at the manual askbot/doc/INSTALL       *'
 print '*  And please do not hesitate to ask your questions at       *'
 print '*  at http://askbot.org                                      *'

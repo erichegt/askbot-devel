@@ -1,5 +1,6 @@
 # encoding: utf-8
 import datetime
+import askbot
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -10,7 +11,7 @@ class Migration(DataMigration):
     
     def forwards(self, orm):
         "Write your forwards methods here."
-        if settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+        if askbot.get_database_engine_name() == 'postgresql_psycopg2':
             management.call_command('init_postgresql_full_text_search')
     
     def backwards(self, orm):

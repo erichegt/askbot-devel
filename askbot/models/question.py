@@ -135,7 +135,7 @@ class QuestionQuerySet(models.query.QuerySet):
                        | models.Q(tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
                     )
-        elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+        elif askbot.get_database_engine_name() == 'postgresql_psycopg2':
             rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
             search_query = '&'.join(search_query.split())
             extra_params = ("'" + search_query + "'",)
