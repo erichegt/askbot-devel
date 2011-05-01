@@ -2447,30 +2447,10 @@ signals.post_updated.connect(
                        )
 signals.site_visited.connect(record_user_visit)
 
+#set up a possibility for the users to follow others
 from follow import util as follow_util
 follow_util.register(User, m2m = True)
-
-#todo: wtf??? what is x=x about?
-
-Question = Question
-QuestionRevision = QuestionRevision
-QuestionView = QuestionView
-FavoriteQuestion = FavoriteQuestion
-AnonymousQuestion = AnonymousQuestion
-
-Answer = Answer
-AnswerRevision = AnswerRevision
-AnonymousAnswer = AnonymousAnswer
-
-
-BadgeData = BadgeData
-Award = Award
-Repute = Repute
-
-Activity = Activity
-ActivityAuditStatus = ActivityAuditStatus
-EmailFeedSetting = EmailFeedSetting
-#AuthKeyUserAssociation = AuthKeyUserAssociation
+follow_util.register(Question, m2m = True)
 
 __all__ = [
         'signals',
@@ -2503,3 +2483,4 @@ __all__ = [
 
         'get_model'
 ]
+
