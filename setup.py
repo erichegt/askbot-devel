@@ -22,12 +22,12 @@ install_requires = [
     'django-countries==1.0.5',
     'django-celery==2.2.3',
     'django-kombu==0.9.2',
+    'django-follow==0.2',
 ]
 
 #todo: have a dirty version retriever that 
 #parses it out from askbot/__init__.py but does not
 #import it as there are issues
-import askbot
 
 WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
@@ -35,7 +35,7 @@ if sys.platform not in WIN_PLATFORMS:
 
 setup(
     name = "askbot",
-    version = askbot.get_version(),#version comes from askbot/__init__.py
+    version = '0.6.77',#remember to manually set this correctly
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
@@ -63,9 +63,9 @@ setup(
         'Natural Language :: Serbian',
         'Natural Language :: Turkish',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.4',
         'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: JavaScript',
         'Topic :: Communications :: Usenet News',
         'Topic :: Communications :: Email :: Mailing List Servers',
@@ -151,7 +151,7 @@ if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
 print '**************************************************************'
 print '*                                                            *'
 print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: > startforum                     *'
+print '*  To start deploying type: >python startforum               *'
 print '*  Please take a look at the manual askbot/doc/INSTALL       *'
 print '*  And please do not hesitate to ask your questions at       *'
 print '*  at http://askbot.org                                      *'
