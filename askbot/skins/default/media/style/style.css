@@ -1757,6 +1757,8 @@ button::-moz-focus-inner {
     margin: 0;
     color: #444;
     padding: 2px 3px 5px 3px;
+    width: 670px;
+    overflow: auto;
 }
 
 /* these need to go */
