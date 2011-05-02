@@ -15,6 +15,7 @@ from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
+import follow
 import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
@@ -1719,6 +1720,16 @@ def user_follow_question(self, question = None):
     if self not in question.followed_by.all():
         question.followed_by.add(self)
 
+def user_follow_user(self, other_user):
+    """call when ``self`` user wants to follow ``other_user``
+    """
+    follow.follow(self, other_user)
+
+def user_unfollow_user(self, other_user):
+    """call when ``self`` user wants to unfollow ``other_user``
+    """
+    follow.unfollow(self, other_user)
+
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
         self,post,
@@ -1885,6 +1896,8 @@ User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('is_following', user_is_following)
+User.add_to_class('follow_user', user_follow_user)
+User.add_to_class('unfollow_user', user_unfollow_user)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)
@@ -2448,9 +2461,9 @@ signals.post_updated.connect(
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others
-from follow import util as follow_util
-follow_util.register(User, m2m = True)
-follow_util.register(Question, m2m = True)
+import follower
+follower.register(User)
+follower.register(Question)
 
 __all__ = [
         'signals',
