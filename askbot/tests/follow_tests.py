@@ -1,6 +1,6 @@
 from askbot.tests.utils import AskbotTestCase
 
-class UserFollowTests(AskbotTestCase):
+class FollowUserTests(AskbotTestCase):
 
     def setUp(self):
         self.u1 = self.create_user('user1')

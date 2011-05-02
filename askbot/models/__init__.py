@@ -15,7 +15,6 @@ from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
-import follow
 import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
@@ -2461,9 +2460,8 @@ signals.post_updated.connect(
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others
-import follower
-follower.register(User)
-follower.register(Question)
+import followit
+followit.register(User)
 
 __all__ = [
         'signals',
