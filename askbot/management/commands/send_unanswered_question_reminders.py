@@ -75,7 +75,7 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            tag_summary = get_tag_summary_from_questions(user_questions)
+            tag_summary = get_tag_summary_from_questions(final_question_list)
             subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
