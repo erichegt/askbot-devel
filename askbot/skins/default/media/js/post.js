@@ -113,7 +113,7 @@ var CPValidator = function(){
                 text: {
                     required: true,
                     minlength: 10
-                },
+                }
                 /*title: {
                     required: true,
                     minlength: 10
@@ -688,7 +688,7 @@ var questionRetagger = function(){
             useCache: true,
             matchInside: true,
             maxCacheLength: 100,
-            delay: 10,
+            delay: 10
         });
         tagAc.decorate(tagInput);
         div.append(tagInput);

@@ -352,7 +352,7 @@ function pickedTags(){
                 useCache: true,
                 matchInside: true,
                 maxCacheLength: 100,
-                delay: 10,
+                delay: 10
             });
 
 
