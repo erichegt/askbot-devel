@@ -93,6 +93,18 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        EMAIL,
+        'MAX_UNANSWERED_REMINDERS',
+        default = 5,
+        description = _(
+            'Max. number of reminders to send '
+            'about unanswered questions'
+        )
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'EMAIL_VALIDATION',

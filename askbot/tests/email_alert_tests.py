@@ -811,17 +811,58 @@ class UnansweredReminderTests(utils.AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user(username = 'user1')
         self.u2 = self.create_user(username = 'user2')
-
-    def test_reminder_simple(self):
-        """a positive test - user must receive a reminder
-        """
         askbot_settings.update('ENABLE_UNANSWERED_REMINDERS', True)
-        days_ago = 5*askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
-        long_ago = datetime.datetime.now() - datetime.timedelta(days_ago)
-        self.post_question(
-            user = self.u1,
-            timestamp = long_ago
-        )
+        askbot_settings.update('MAX_UNANSWERED_REMINDERS', 5)
+        askbot_settings.update('UNANSWERED_REMINDER_FREQUENCY', 1)
+        askbot_settings.update('DAYS_BEFORE_SENDING_UNANSWERED_REMINDER', 2)
+
+        self.wait_days = askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
+        self.recurrence_days = askbot_settings.UNANSWERED_REMINDER_FREQUENCY
+        self.max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
+
+
+    def assert_have_emails(self, email_count = None):
         management.call_command('send_unanswered_question_reminders')
         outbox = django.core.mail.outbox
-        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox), email_count)
+
+    def do_post(self, timestamp):
+        self.post_question(
+            user = self.u1,
+            timestamp = timestamp
+        )
+
+    def test_reminder_positive_wait(self):
+        """a positive test - user must receive a reminder
+        """
+        days_ago = self.wait_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(1)
+
+    def test_reminder_negative_wait(self):
+        """a positive test - user must receive a reminder
+        """
+        days_ago = self.wait_days - 1
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(0)
+
+    def test_reminder_cutoff_positive(self):
+        """send a reminder a slightly before the last reminder
+        date passes"""
+        days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days - 1
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(1)
+
+
+    def test_reminder_cutoff_negative(self):
+        """no reminder after the time for the last reminder passes
+        """
+        days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(0)
+
+

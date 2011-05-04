@@ -20,14 +20,22 @@ class Command(NoArgsCommand):
         wait_period = datetime.timedelta(
             askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
         )
-        cutoff_date = datetime.datetime.now() - wait_period
+        start_cutoff_date = datetime.datetime.now() - wait_period
+
+        recurrence_delay = datetime.timedelta(
+            askbot_settings.UNANSWERED_REMINDER_FREQUENCY
+        )
+        max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
+        end_cutoff_date = start_cutoff_date - (max_emails - 1)*recurrence_delay
 
         questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
                                         deleted = True
                                     ).filter(
-                                        added_at__lt = cutoff_date
+                                        added_at__lt = start_cutoff_date
+                                    ).exclude(
+                                        added_at__lt = end_cutoff_date
                                     ).filter(
                                         answer_count = 0
                                     ).order_by('-added_at')
@@ -50,9 +58,6 @@ class Command(NoArgsCommand):
                         activity_type = activity_type
                     )
                     now = datetime.datetime.now()
-                    recurrence_delay = datetime.timedelta(
-                        askbot_settings.UNANSWERED_REMINDER_FREQUENCY
-                    )
                     if now < activity.active_at + recurrence_delay:
                         continue
                 except models.Activity.DoesNotExist:
@@ -70,7 +75,7 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            tag_summary = get_tag_summary_from_questions(user_questions)
+            tag_summary = get_tag_summary_from_questions(final_question_list)
             subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
