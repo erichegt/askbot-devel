@@ -11,7 +11,7 @@ Embedding video
 ===============
 
 Want to share videos in askbot posts? It is possible, but you will have to install a forked 
-version of ``markdown2`` module, here is how:
+version of ``markdown2`` module, here is how::
 
     pip uninstall markdown2
     pip install -U -e git+git://github.com/andryuha/python-markdown2.git#egg=markdown2
