@@ -14,7 +14,7 @@ Want to share videos in askbot posts? It is possible, but you will have to insta
 version of ``markdown2`` module, here is how::
 
     pip uninstall markdown2
-    pip install -U -e git+git://github.com/andryuha/python-markdown2.git#egg=markdown2
+    pip install -e git+git://github.com/andryuha/python-markdown2.git#egg=markdown2
 
 Also, for this to work you'll need to have :ref:`pip` and :ref:`git` installed on your system.
 
