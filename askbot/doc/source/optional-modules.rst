@@ -21,7 +21,7 @@ Also, for this to work you'll need to have :ref:`pip` and :ref:`git` installed o
 Finally, please go to your forum :ref:`live settings <live-settings>` --> 
 "Settings for askbot data entry and display" and check "Enable embedding video".
 
-Limitation: at the moment only YouTube is supported, but more will work soon.
+Limitation: at the moment only YouTube and Veoh are supported.
 
 .. _ldap:
 
