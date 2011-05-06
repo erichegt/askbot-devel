@@ -239,7 +239,8 @@ USER_VIEW_DATA_SIZE = 50
 
 DEPENDENCY_URLS = {
     'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
-    'favicon': 'http://en.wikipedia.org/wiki/Favicon'
+    'favicon': 'http://en.wikipedia.org/wiki/Favicon',
+    'embedding-video': 'http://askbot.org/doc/optional-modules.html#embedding-video'
 }
 
 PASSWORD_MIN_LENGTH = 8

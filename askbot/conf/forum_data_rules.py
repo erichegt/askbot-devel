@@ -14,9 +14,21 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'ENABLE_VIDEO_EMBEDDING',
+        default = False,
+        description = _(
+            'Enable embedding videos. '
+            '<em>Note: please read <a href="%(url)s>read this</a> first.</em>'
+        ) % {'url': const.DEPENDENCY_URLS['embedding-video']}
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'WIKI_ON',
-        default=True,
-        description=_('Check to enable community wiki feature')
+        default = True,
+        description = _('Check to enable community wiki feature')
     )
 )
 

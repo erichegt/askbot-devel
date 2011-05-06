@@ -9,11 +9,11 @@ class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd',
         'li', 'ol', 'p', 'pre', 'q', 's', 'samp', 'small', 'span', 'strike',
         'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead',
-        'tr', 'tt', 'u', 'ul', 'var')
+        'tr', 'tt', 'u', 'ul', 'var', 'object', 'param')
 
     acceptable_attributes = ('abbr', 'align', 'alt', 'axis', 'border',
         'cellpadding', 'cellspacing', 'char', 'charoff', 'charset', 'cite',
-        'cols', 'colspan', 'datetime', 'dir', 'frame', 'headers', 'height',
+        'cols', 'colspan', 'data', 'datetime', 'dir', 'frame', 'headers', 'height',
         'href', 'hreflang', 'hspace', 'lang', 'longdesc', 'name', 'nohref',
         'noshade', 'nowrap', 'rel', 'rev', 'rows', 'rowspan', 'rules', 'scope',
         'span', 'src', 'start', 'summary', 'title', 'type', 'valign', 'vspace',
