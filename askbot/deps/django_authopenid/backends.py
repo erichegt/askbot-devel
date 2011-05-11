@@ -35,7 +35,7 @@ class AuthBackend(object):
         just which method it is going to use it determined
         from the signature of the function call
         """
-        login_providers = util.get_login_providers()
+        login_providers = util.get_enabled_login_providers()
         if method == 'password':
             if login_providers[provider_name]['type'] != 'password':
                 raise ImproperlyConfigured('login provider must use password')
@@ -150,7 +150,7 @@ class AuthBackend(object):
         any for any login provider that uses password
         and allows the password change function
         """
-        login_providers = util.get_login_providers()
+        login_providers = util.get_enabled_login_providers()
         if login_providers[provider_name]['type'] != 'password':
             raise ImproperlyConfigured('login provider must use password')
 

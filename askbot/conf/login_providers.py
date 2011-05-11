@@ -40,6 +40,7 @@ providers = (
     'Twitter',
     'LinkedIn',
     'LiveJournal',
+    #'myOpenID',
     'OpenID',
     'Technorati',
     'Wordpress',

@@ -17,14 +17,12 @@
                     settings = None
                 )
 %}
-    {{login_form.login_provider_name}}
-    {{ login_form.next }}
     <div id="login-icons">
         <ul class="login-icons large">
             {% for login_provider in major_login_providers %}
                 {% if login_provider.name == 'local' and hide_local_login == True %}
                     {# do nothing here, left if statement this way for simplicity #}
-                {% elif settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True %}
+                {% else %}
                     <li>
                         {{ login_provider_input(login_provider) }}
                     </li>
@@ -33,11 +31,9 @@
         </ul>
         <ul class="login-icons small">
             {% for login_provider in minor_login_providers %}
-                {% if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True %}
                 <li>
                     {{ login_provider_input(login_provider) }}
                 </li>
-                {% endif %}
             {% endfor %}
         </ul>
     </div>

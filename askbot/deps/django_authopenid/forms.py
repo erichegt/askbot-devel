@@ -69,7 +69,7 @@ class LoginProviderField(forms.CharField):
         """makes sure that login provider name
         exists is in the list of accepted providers
         """
-        providers = util.get_login_providers()
+        providers = util.get_enabled_login_providers()
         if value in providers:
             return value
         else:
@@ -87,7 +87,7 @@ class PasswordLoginProviderField(LoginProviderField):
         one of the known password login providers
         """
         value = super(PasswordLoginProviderField, self).clean(value)
-        providers = util.get_login_providers()
+        providers = util.get_enabled_login_providers()
         if providers[value]['type'] != 'password':
             raise forms.ValidationError(
                     'provider %s must accept password' % value
@@ -192,7 +192,7 @@ class LoginForm(forms.Form):
         contents of cleaned_data depends on the type
         of login
         """
-        providers = util.get_login_providers()
+        providers = util.get_enabled_login_providers()
 
         if 'login_provider_name' in self.cleaned_data:
             provider_name = self.cleaned_data['login_provider_name']

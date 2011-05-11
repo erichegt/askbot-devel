@@ -537,10 +537,27 @@ def show_signin_view(
         'use_password_login': util.use_password_login(),
     }
 
-    major_login_providers = util.get_major_login_providers()
-    minor_login_providers = util.get_minor_login_providers()
+    major_login_providers = util.get_enabled_major_login_providers()
+    minor_login_providers = util.get_enabled_minor_login_providers()
 
-    active_provider_names = None
+    #determine if we are only using password login
+    active_provider_names = [p['name'] for p in major_login_providers.values()]
+    active_provider_names.extend([p['name'] for p in minor_login_providers.values()])
+
+    have_buttons = True
+    if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
+        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
+            #in this case the form is not using javascript, so set initial values
+            #here
+            have_buttons = False
+            login_form.initial['login_provider_name'] = 'local'
+            if request.user.is_authenticated():
+                login_form.initial['password_action'] = 'change_password'
+            else:
+                login_form.initial['password_action'] = 'login'
+
+    data['have_buttons'] = have_buttons
+
     if request.user.is_authenticated():
         data['existing_login_methods'] = existing_login_methods
         active_provider_names = [
@@ -926,8 +943,9 @@ def signup_with_password(request):
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
 
-    major_login_providers = util.get_major_login_providers()
-    minor_login_providers = util.get_minor_login_providers()
+    major_login_providers = util.get_enabled_major_login_providers()
+    minor_login_providers = util.get_enabled_minor_login_providers()
+
     context_data = {
                 'form': form, 
                 'page_class': 'openid-signin',

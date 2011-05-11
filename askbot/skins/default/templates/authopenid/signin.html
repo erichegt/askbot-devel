@@ -6,7 +6,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
 {% endblock %}
 {% block content %}
-<h1>{{page_title}}</h1>
+{% if have_buttons or view_subtype == 'email_sent' %}
+    <h1>{{page_title}}</h1>
+{% endif %}
     {% if answer %}
         <div class="message">
         {% trans title=answer.question.title, summary=answer.summary %}
@@ -22,15 +24,15 @@
         </div>
     {% endif %}
     <p id='login-intro'>
-    {% if view_subtype == 'default' %}
+    {% if view_subtype == 'default' and have_buttons %}
         {% trans %}Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
-    {% elif view_subtype == 'add_openid' %}
+    {% elif view_subtype == 'add_openid' and have_buttons %}
         {% if existing_login_methods %}
             {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
         {% else %}
             {% trans %}Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time.{% endtrans %}
         {% endif %}
-    {% elif view_subtype == 'change_openid' %}
+    {% elif view_subtype == 'change_openid' and have_buttons %}
         {% if existing_login_methods %}
             {% trans %}Click on one of the icons below to add a new login method or re-validate an existing one.{% endtrans %}
         {% else %}
@@ -50,6 +52,8 @@
             wants to always show the password login form - then
             the button is useless.
         #}
+        {{ login_form.login_provider_name }}
+        {{ login_form.next }}
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,
