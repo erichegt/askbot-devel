@@ -262,7 +262,7 @@ def ask(request):#view used to ask a new question
     return render_into_skin('ask.html', data, request)
 
 @login_required
-@csrf.csrf_protect
+#@csrf.csrf_protect remove for ajax
 def retag_question(request, id):
     """retag question view
     """
