@@ -97,3 +97,81 @@ $(document).ready(function(){
                     }
     );
 });
+
+/**
+ * @constructor
+ * allows to follow/unfollow users
+ */
+var FollowUser = function(){
+    WrappedElement.call(this);
+    this._user_id = null;
+    this._user_name = null;
+};
+inherits(FollowUser, WrappedElement);
+
+/**
+ * @param {string} user_name
+ */
+FollowUser.prototype.setUserName = function(user_name){
+    this._user_name = user_name;
+};
+
+FollowUser.prototype.decorate = function(element){
+    this._element = element;
+    this._user_id = parseInt(element.attr('id').split('-').pop());
+    this._available_action = element.hasClass('follow') ? 'follow':'unfollow';
+    var me = this;
+    setupButtonEventHandlers(this._element, function(){ me.go() });
+};
+
+FollowUser.prototype.go = function(){
+    if (askbot['data']['userIsAuthenticated'] === false){
+        var message = gettext('Please <a href="%(signin_url)s">signin</a> to follow %(username)s');
+        var message_data = {
+            signin_url: askbot['urls']['user_signin'] + '?next=' + window.location.href,
+            username: this._user_name
+        }
+        message = interpolate(message, message_data, true);
+        showMessage(this._element, message);
+        return;
+    }
+    var user_id = this._user_id;
+    if (this._available_action === 'follow'){
+        var url = askbot['urls']['follow_user'];
+    } else {
+        var url = askbot['urls']['unfollow_user'];
+    }
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: url.replace('{{userId}}', user_id),
+        success: function(){ me.toggleState() }
+    });
+};
+
+FollowUser.prototype.toggleState = function(){
+    if (this._available_action === 'follow'){
+        this._available_action = 'unfollow';
+        this._element.removeClass('follow');
+        this._element.addClass('unfollow');
+        var fmts = gettext('unfollow %s');
+    } else {
+        this._available_action = 'follow';
+        this._element.removeClass('unfollow');
+        this._element.addClass('follow');
+        var fmts = gettext('follow %s');
+    }
+    this._element.html(interpolate(fmts, [this._user_name]));
+};
+
+(function(){
+    var fbtn = $('.follow-user');
+    if (fbtn.length === 1){
+        var follow_user = new FollowUser();
+        follow_user.decorate(fbtn);
+        follow_user.setUserName(askbot['data']['viewUserName']);
+    }
+})();
+

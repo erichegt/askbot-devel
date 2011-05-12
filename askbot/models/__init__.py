@@ -1207,19 +1207,6 @@ def user_edit_answer(
         timestamp = timestamp
     )
 
-def user_is_following(self, followed_item):
-    if isinstance(followed_item, Question):
-        followers = User.objects.filter(
-                                id = self.id,
-                                followed_questions = followed_item,
-                            )
-        if self in followers:
-            return True
-        else:
-            return False
-    else:
-        raise NotImplementedError('function only works for questions so far')
-
 def user_post_answer(
                     self,
                     question = None,
@@ -1719,16 +1706,6 @@ def user_follow_question(self, question = None):
     if self not in question.followed_by.all():
         question.followed_by.add(self)
 
-def user_follow_user(self, other_user):
-    """call when ``self`` user wants to follow ``other_user``
-    """
-    follow.follow(self, other_user)
-
-def user_unfollow_user(self, other_user):
-    """call when ``self`` user wants to unfollow ``other_user``
-    """
-    follow.unfollow(self, other_user)
-
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
         self,post,
@@ -1894,9 +1871,6 @@ User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('mark_tags', user_mark_tags)
-User.add_to_class('is_following', user_is_following)
-User.add_to_class('follow_user', user_follow_user)
-User.add_to_class('unfollow_user', user_unfollow_user)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)

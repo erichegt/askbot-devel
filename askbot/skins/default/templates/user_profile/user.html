@@ -21,12 +21,14 @@
     </div>
 {% endblock %}<!-- end user.html -->
 {% block endjs %}
+    <script type="text/javascript">
+        var viewUserID = {{view_user.id}};
+        askbot['data']['viewUserName'] = '{{ view_user.username }}';
+    </script>
     {% if request.user|can_moderate_user(view_user) %}
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
     {% endif %}
-    <script type="text/javascript">
-        var viewUserID = {{view_user.id}};
-    </script>
+    <script type="text/javascript" src='{{"/js/user.js"|media}}'></script>
     {% block userjs %}
     {% endblock %}
 {% endblock %}
