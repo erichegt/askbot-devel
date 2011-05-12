@@ -26,6 +26,7 @@ from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
+from askbot.utils import mysql
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
@@ -128,14 +129,14 @@ class QuestionQuerySet(models.query.QuerySet):
         """returns a query set of questions, 
         matching the full text query
         """
-        if settings.DATABASE_ENGINE == 'mysql':
+        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
             return self.filter( 
                         models.Q(title__search = search_query) \
                        | models.Q(text__search = search_query) \
                        | models.Q(tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
                     )
-        elif askbot.get_database_engine_name() == 'postgresql_psycopg2':
+        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
             rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
             search_query = '&'.join(search_query.split())
             extra_params = ("'" + search_query + "'",)

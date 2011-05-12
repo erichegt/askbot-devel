@@ -4,9 +4,20 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils import mysql
 
 Q_INDEX_NAME = 'askbot_question_full_text_index'
 A_INDEX_NAME = 'askbot_answer_full_text_index'
+
+NO_FTS_WARNING = """
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!                                                  !!
+!!  WARNING: Your database engine does not support  !!
+!!  full text search. Please switch to PostgresQL   !!
+!!  or select MyISAM engine for MySQL               !!
+!!                                                  !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
 
 def get_create_full_text_index_sql(index_name, table_name, column_list):
     column_sql = '(%s)' % ','.join(column_list)
@@ -24,24 +35,27 @@ class Migration(DataMigration):
         and will probably fail otherwise
         """
         if db.backend_name == 'mysql':
-            #todo: extract column names by introspection
-            question_index_sql = get_create_full_text_index_sql(
-                                            Q_INDEX_NAME,
-                                            orm.Question._meta.db_table,
-                                            ('title','text','tagnames',)
-                                        )
-            db.execute(question_index_sql)
+            if mysql.supports_full_text_search():
+                #todo: extract column names by introspection
+                question_index_sql = get_create_full_text_index_sql(
+                                                Q_INDEX_NAME,
+                                                orm.Question._meta.db_table,
+                                                ('title','text','tagnames',)
+                                            )
+                db.execute(question_index_sql)
 
-            answer_index_sql = get_create_full_text_index_sql(
-                                            A_INDEX_NAME,
-                                            orm.Answer._meta.db_table,
-                                            ('text',)
-                                        )
-            db.execute(answer_index_sql)
+                answer_index_sql = get_create_full_text_index_sql(
+                                                A_INDEX_NAME,
+                                                orm.Answer._meta.db_table,
+                                                ('text',)
+                                            )
+                db.execute(answer_index_sql)
+            else:
+                print NO_FTS_WARNING
     
     def backwards(self, orm):
         "code for removal of full text indices in mysql"
-        if db.backend_name == 'mysql':
+        if db.backend_name == 'mysql' and mysql.supports_full_text_search():
             db.execute(
                     get_drop_index_sql(
                             Q_INDEX_NAME,
