@@ -85,7 +85,9 @@
                 <h2 id="password-heading">
                     {% trans %}Please enter your <span>user name and password</span>, then sign in{% endtrans %}
                 </h2>
-                <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
+                {% if have_buttons %}
+                    <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
+                {% endif %}
                 {% if login_form.password_login_failed %}
                     <p class="error">{% trans %}Login failed, please try again{% endtrans %}</p>
                 {% endif %}
@@ -196,27 +198,29 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="boxC">
-    <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
-    <ul>
-        <li>
-            {% trans %}with openid it is easier{% endtrans %}
-        </li>
-        <li>
-            {% trans %}reuse openid{% endtrans %}
-        </li>
-        <li>
-            {% trans %}openid is widely adopted{% endtrans %}
-        </li>
-        <li>
-            {% trans %}openid is supported open standard{% endtrans %}
-        </li>
-    </ul>
-    <p class="info-box-follow-up-links">
-        <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
-        <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
-    </p>
-</div>
+    {% if have_buttons %}
+        <div class="boxC">
+            <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
+            <ul>
+                <li>
+                    {% trans %}with openid it is easier{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}reuse openid{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}openid is widely adopted{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}openid is supported open standard{% endtrans %}
+                </li>
+            </ul>
+            <p class="info-box-follow-up-links">
+                <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
+                <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
+            </p>
+        </div>
+    {% endif %}
 {% endblock%}
 {%block endjs%}
 {%include "authopenid/providers_javascript.html" %}
