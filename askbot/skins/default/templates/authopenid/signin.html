@@ -162,7 +162,7 @@
     </form>
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
-        {% if user.is_anonymous() %}
+        {% if user.is_anonymous() and settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
         <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">{% csrf_token %}
             {% if view_subtype != 'bad_key' %}
                 <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>

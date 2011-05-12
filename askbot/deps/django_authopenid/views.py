@@ -1087,6 +1087,8 @@ def account_recover(request, key = None):
 
     url name 'user_account_recover'
     """
+    if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
+        raise Http404
     if request.method == 'POST':
         form = forms.AccountRecoveryForm(request.POST)
         if form.is_valid():
