@@ -595,6 +595,7 @@ ul#search-tags {
 
 .answer-table {
     border-bottom: 1px solid #bbb;
+    clear: both;
 }
 
 .evenMore {
