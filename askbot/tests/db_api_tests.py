@@ -143,6 +143,14 @@ class DBApiTests(AskbotTestCase):
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
 
+    def test_search_with_apostrophe_works(self):
+        self.post_question(
+            user = self.user,
+            body_text = "ahahahahahahah database'"
+        )
+        matches = models.Question.objects.get_by_text_query("database'")
+        self.assertTrue(len(matches) == 1)
+
 class UserLikeTests(AskbotTestCase):
     def setUp(self):
         self.create_user()
