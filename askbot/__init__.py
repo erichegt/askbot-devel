@@ -9,7 +9,7 @@ import smtplib
 import sys
 import logging
 
-VERSION = (0, 6, 86)
+VERSION = (0, 6, 87)
 
 #necessary for interoperability of django and coffin
 try:
