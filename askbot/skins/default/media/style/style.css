@@ -778,11 +778,10 @@ a:hover.medal {
     height: 24px;
     line-height: 26px;
     margin-top: 3px;
-    padding: 0px 11px 0px 11px;
 }
 
-.tabsA a.on, tabsA a.on:hover {
-   padding: 0px 6px 0px 11px;
+.tabsA a.rev.on, tabsA a.rev.on:hover {
+   padding: 0px 2px 0px 7px;
 }
 
 .tabsA a, .tabsC a{
@@ -797,7 +796,7 @@ a:hover.medal {
     height: 20px;
     line-height: 22px;
     margin: 5px 0 0 4px;
-    padding: 0 11px 0 11px;
+    padding: 0 7px;
     text-decoration: none;
 }
 
@@ -2171,4 +2170,20 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .tag { color: #006; font-weight: bold; }
   .atn { color: #404; }
   .atv { color: #060; }
+}
+
+.follow-toggle {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    background: #fff0e0;
+    color: #777;
+    font-weight: bolder;
+    border: 1px solid #aaa;
+    cursor: pointer;
+}
+
+.follow-toggle.unfollow:hover {
+    background: #a40000;
+    color: #fff;
+    border: 1px solid #d40000;
 }

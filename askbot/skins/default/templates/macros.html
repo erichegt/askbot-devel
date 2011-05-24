@@ -20,6 +20,34 @@
     {% endif %}
 {%- endmacro -%}
 
+{%- macro follow_toggle(follow, name, alias, id) -%}
+    {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
+    <div 
+        class="follow-toggle follow-{{name}} {% if follow %}follow{% else %}unfollow{% endif %}" 
+        id="follow-{{ name }}-{{ id }}"
+    >
+        {% if follow %}
+            {% trans %}follow {{alias}}{% endtrans %}
+        {% else %}
+            {% trans %}unfollow {{alias}}{% endtrans %}
+        {% endif %}
+    </div>
+{%- endmacro -%}
+
+{%- macro follow_user_toggle(visitor = None, subject = None) -%}
+    {% if visitor.is_anonymous() %}
+        {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+    {% else %}
+        {% if visitor != subject %}
+            {% if visitor.is_following(subject) %}
+                {{ follow_toggle(False, 'user', subject.username, subject.id) }}
+            {% else %}
+                {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{%- endmacro -%}
+
 {%- macro user_long_score_and_badge_summary(user) -%}
     <a class="user-micro-info" 
        href="{{user.get_absolute_url()}}?sort=reputation"
@@ -72,6 +100,30 @@
         {{ user.location }},
     {% endif %}
     {{ user_country_name_and_flag(user) }}
+{%- endmacro -%}
+
+{%- macro user_list(users, profile_section = None) -%}
+<div class="userList">
+    <table class="list-table">
+        <tr>
+            <td class="list-td">
+                {% for user in users %}
+                <div class="user">
+                    <ul>
+                            <li class="thumb">{{ gravatar(user, 32) }}</li>
+                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username}}</a>{{ user_country_flag(user) }}</li>
+                            <li>{{ user_score_and_badge_summary(user) }}</li>
+                        </ul>
+                </div>
+                    {% if loop.index is divisibleby 7 %}
+            </td>
+            <td>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>   
+    </table>
+</div>
 {%- endmacro -%}
 
 {%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
@@ -510,12 +562,12 @@ poor design of the data or methods on data objects #}
     {% if sort == key_name + "-asc" %}{# "worst" first #}
     <a id="by_{{key_name}}" 
         href="?sort={{key_name}}-desc" 
-        class="on" 
+        class="rev on" 
         title="{{desc_tooltip}}"><span>{{label}} &#9650;</span></a>
     {% elif sort == key_name + "-desc" %}{# "best first" #}
     <a id="by_{{key_name}}"
         href="?sort={{key_name}}-asc" 
-        class="on"
+        class="rev on"
         title="{{asc_tooltip}}"><span>{{label}} &#9660;</span></a>
     {% else %}{# default, when other button is active #}
     <a id="by_{{key_name}}"

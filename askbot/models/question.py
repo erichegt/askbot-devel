@@ -211,7 +211,12 @@ class QuestionQuerySet(models.query.QuerySet):
                 else:
                     raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
-                qs = qs.filter(favorited_by = request_user)
+                favorite_filter = models.Q(favorited_by = request_user)
+                if 'followit' in settings.INSTALLED_APPS:
+                    followed_users = request_user.get_followed_users()
+                    favorite_filter |= models.Q(author__in = followed_users)
+                    favorite_filter |= models.Q(answers__author__in = followed_users)
+                qs = qs.filter(favorite_filter)
             
         #user contributed questions & answers
         if author_selector:

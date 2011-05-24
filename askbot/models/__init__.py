@@ -1208,19 +1208,6 @@ def user_edit_answer(
         timestamp = timestamp
     )
 
-def user_is_following(self, followed_item):
-    if isinstance(followed_item, Question):
-        followers = User.objects.filter(
-                                id = self.id,
-                                followed_questions = followed_item,
-                            )
-        if self in followers:
-            return True
-        else:
-            return False
-    else:
-        raise NotImplementedError('function only works for questions so far')
-
 def user_post_answer(
                     self,
                     question = None,
@@ -1719,6 +1706,16 @@ def user_follow_question(self, question = None):
     if self not in question.followed_by.all():
         question.followed_by.add(self)
 
+def user_is_following_question(user, question):
+    """True if user is following a question"""
+    followers = question.followed_by.all()
+    try:
+        followers.get(id = user.id)
+        return True
+    except User.DoesNotExist:
+        return False
+
+
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
         self,post,
@@ -1872,8 +1869,8 @@ User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
+User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
-User.add_to_class('is_following', user_is_following)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
@@ -2434,27 +2431,12 @@ signals.post_updated.connect(
                        )
 signals.site_visited.connect(record_user_visit)
 
-#todo: wtf??? what is x=x about?
-
-Question = Question
-QuestionRevision = QuestionRevision
-QuestionView = QuestionView
-FavoriteQuestion = FavoriteQuestion
-AnonymousQuestion = AnonymousQuestion
-
-Answer = Answer
-AnswerRevision = AnswerRevision
-AnonymousAnswer = AnonymousAnswer
-
-
-BadgeData = BadgeData
-Award = Award
-Repute = Repute
-
-Activity = Activity
-ActivityAuditStatus = ActivityAuditStatus
-EmailFeedSetting = EmailFeedSetting
-#AuthKeyUserAssociation = AuthKeyUserAssociation
+#set up a possibility for the users to follow others
+try:
+    import followit
+    followit.register(User)
+except ImportError:
+    pass
 
 __all__ = [
         'signals',
@@ -2487,3 +2469,4 @@ __all__ = [
 
         'get_model'
 ]
+

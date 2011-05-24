@@ -13,6 +13,7 @@ exclude urls.py
 exclude askbot/upfiles/*.*
 recursive-exclude avatar *
 recursive-exclude adzone *
+recursive-exclude follow *
 recursive-exclude categories *
 recursive-exclude follow *
 recursive-exclude env

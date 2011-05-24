@@ -11,6 +11,12 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=inbox"
         ><span>{% trans %}inbox{% endtrans %}</span></a>
         {% endif %}
+        {% if user_follow_feature_on %}
+        <a id="network" {% if tab_name=="network" %}class="on"{% endif %} 
+            title="{% trans %}followers and followed users{% endtrans %}" 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=network"
+        ><span>{% trans %}network{% endtrans %}</span></a>
+        {% endif %}
         <a id="reputation" {% if tab_name=="reputation" %}class="on"{% endif %} 
             title="{% trans %}graph of user reputation{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=reputation"
