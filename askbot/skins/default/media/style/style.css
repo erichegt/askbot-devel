@@ -2160,3 +2160,7 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .atn { color: #404; }
   .atv { color: #060; }
 }
+
+.follow-toggle {
+    color: #406A24;
+}
