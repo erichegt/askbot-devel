@@ -54,14 +54,14 @@ repute_type_id = repute_type.id
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
-    def wrapped_func(request, profile_owner):
+    def wrapped_func(request, profile_owner, context):
         if profile_owner == request.user:
             pass
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
             raise Http404 #todo: change to access forbidden?
-        return f(request, profile_owner)
+        return f(request, profile_owner, context)
     return wrapped_func 
 
 def users(request):
@@ -131,7 +131,7 @@ def users(request):
     return render_into_skin('users.html', data, request)
 
 @csrf.csrf_protect
-def user_moderate(request, subject):
+def user_moderate(request, subject, context):
     """user subview for moderation 
     """
     moderator = request.user
@@ -213,7 +213,6 @@ def user_moderate(request, subject):
         'tab_name': 'moderation',
         'tab_description': _('moderate this user'),
         'page_title': _('moderate user'),
-        'view_user': subject,
         'change_user_status_form': user_status_form,
         'change_user_reputation_form': user_rep_form,
         'send_message_form': send_message_form,
@@ -222,7 +221,8 @@ def user_moderate(request, subject):
         'user_rep_changed': user_rep_changed,
         'user_status_changed': user_status_changed
     }
-    return render_into_skin('user_profile/user_moderate.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_moderate.html', context, request)
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -278,7 +278,7 @@ def edit_user(request, id):
     }
     return render_into_skin('user_profile/user_edit.html', data, request)
 
-def user_stats(request, user):
+def user_stats(request, user, context):
 
     question_filter = {'author': user}
     if request.user != user:
@@ -379,7 +379,6 @@ def user_stats(request, user):
         'tab_name' : 'stats',
         'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),
-        'view_user' : user,
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'favorited_myself': favorited_myself,
@@ -394,9 +393,10 @@ def user_stats(request, user):
         'awarded_badge_counts': dict(awarded_badge_counts),
         'total_awards' : total_awards,
     }
-    return render_into_skin('user_profile/user_stats.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_stats.html', context, request)
 
-def user_recent(request, user):
+def user_recent(request, user, context):
 
     def get_type_name(type_id):
         for item in const.TYPE_ACTIVITY:
@@ -663,13 +663,13 @@ def user_recent(request, user):
         'tab_name' : 'recent',
         'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
-        'view_user' : user,
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
-    return render_into_skin('user_profile/user_recent.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_recent.html', context, request)
 
 @owner_or_moderator_required
-def user_responses(request, user):
+def user_responses(request, user, context):
     """
     We list answers for question, comments, and 
     answer accepted by others for this user.
@@ -730,13 +730,24 @@ def user_responses(request, user):
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
-        'view_user' : user,
         'responses' : response_list,
     }
-    return render_into_skin('user_profile/user_inbox.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_inbox.html', context, request)
+
+def user_network(request, user, context):
+    if 'followit' not in django_settings.INSTALLED_APPS:
+        raise Http404
+    data = {
+        'tab_name': 'network',
+        'followed_users': user.get_followed_users(),
+        'followers': user.get_followers(),
+    }
+    context.update(data)
+    return render_into_skin('user_profile/user_network.html', context, request)
 
 @owner_or_moderator_required
-def user_votes(request, user):
+def user_votes(request, user, context):
 
     votes = []
     question_votes = models.Vote.objects.extra(
@@ -794,12 +805,12 @@ def user_votes(request, user):
         'tab_name' : 'votes',
         'tab_description' : _('user vote record'),
         'page_title' : _('profile - votes'),
-        'view_user' : user,
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
-    return render_into_skin('user_profile/user_votes.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_votes.html', context, request)
 
-def user_reputation(request, user):
+def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
     #select_related() adds stuff needed for the query
     reputes = reputes.select_related(
@@ -834,9 +845,10 @@ def user_reputation(request, user):
         'reputation': reputes,
         'reps': reps
     }
-    return render_into_skin('user_profile/user_reputation.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_reputation.html', context, request)
 
-def user_favorites(request, user):
+def user_favorites(request, user, context):
     favorited_q_id_list= models.FavoriteQuestion.objects.filter(
                                     user = user
                                 ).values_list('question__id', flat=True)
@@ -860,13 +872,13 @@ def user_favorites(request, user):
         'page_title' : _('profile - favorite questions'),
         'questions' : questions,
         'favorited_myself': favorited_q_id_list,
-        'view_user' : user
     }
-    return render_into_skin('user_profile/user_favorites.html', data, request)
+    context.update(data)
+    return render_into_skin('user_profile/user_favorites.html', context, request)
 
 @owner_or_moderator_required
 @csrf.csrf_protect
-def user_email_subscriptions(request, user):
+def user_email_subscriptions(request, user, context):
 
     logging.debug(get_request_info(request))
     if request.method == 'POST':
@@ -900,14 +912,14 @@ def user_email_subscriptions(request, user):
         'tab_name': 'email_subscriptions',
         'tab_description': _('email subscription settings'),
         'page_title': _('profile - email subscriptions'),
-        'view_user': user,
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
     }
+    context.update(data)
     return render_into_skin(
         'user_profile/user_email_subscriptions.html',
-        data,
+        context,
         request
     )
 
@@ -915,6 +927,7 @@ user_view_call_table = {
     'stats': user_stats,
     'recent': user_recent,
     'inbox': user_responses,
+    'network': user_network,
     'reputation': user_reputation,
     'favorites': user_favorites,
     'votes': user_votes,
@@ -943,4 +956,9 @@ def user(request, id, slug=None):
     else:
         user_view_func = user_stats
 
-    return user_view_func(request, profile_owner)
+    context = {
+        'view_user': profile_owner,
+        'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
+    }
+
+    return user_view_func(request, profile_owner, context)

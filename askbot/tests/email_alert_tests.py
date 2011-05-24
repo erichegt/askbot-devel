@@ -258,7 +258,7 @@ class EmailAlertTests(TestCase):
             timestamp = self.setup_timestamp
 
         if follow is None:
-            if author.is_following(question):
+            if author.is_following_question(question):
                 follow = True
             else:
                 follow = False

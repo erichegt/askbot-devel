@@ -1706,6 +1706,16 @@ def user_follow_question(self, question = None):
     if self not in question.followed_by.all():
         question.followed_by.add(self)
 
+def user_is_following_question(user, question):
+    """True if user is following a question"""
+    followers = question.followed_by.all()
+    try:
+        followers.get(id = user.id)
+        return True
+    except User.DoesNotExist:
+        return False
+
+
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
         self,post,
@@ -1870,6 +1880,7 @@ User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
+User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
@@ -2434,8 +2445,11 @@ signals.post_updated.connect(
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others
-import followit
-followit.register(User)
+try:
+    import followit
+    followit.register(User)
+except ImportError:
+    pass
 
 __all__ = [
         'signals',
