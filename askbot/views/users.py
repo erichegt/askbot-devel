@@ -841,7 +841,6 @@ def user_reputation(request, user, context):
         'tab_name': 'reputation',
         'tab_description': _('user reputation in the community'),
         'page_title': _('profile - user reputation'),
-        'view_user': user,
         'reputation': reputes,
         'reps': reps
     }
