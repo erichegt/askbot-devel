@@ -229,6 +229,12 @@ class DumpUploadForm(forms.Form):
     dump_file = forms.FileField()
 
 class ShowQuestionForm(forms.Form):
+    """Cleans data necessary to access answers and comments
+    by the respective comment or answer id - necessary
+    when comments would be normally wrapped and/or displayed
+    on the page other than the first page of answers to a question.
+    Same for the answers that are shown on the later pages.
+    """
     answer = forms.IntegerField(required = False)
     comment = forms.IntegerField(required = False)
     page = forms.IntegerField(required = False)
@@ -241,10 +247,12 @@ class ShowQuestionForm(forms.Form):
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
         for key in nones:
-            if self.cleaned_data[key] is None:
-                del self.cleaned_data[key]
-        if self.cleaned_data['sort'] == '':
-            del self.cleaned_data['sort']
+            if key in self.cleaned_data:
+                if self.cleaned_data[key] is None:
+                    del self.cleaned_data[key]
+        if 'sort' in self.cleaned_data:
+            if self.cleaned_data['sort'] == '':
+                del self.cleaned_data['sort']
         return self.cleaned_data
 
     def clean(self):
