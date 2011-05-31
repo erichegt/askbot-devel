@@ -101,7 +101,7 @@ class SkinEnvironment(CoffinEnvironment):
         or empty string - depending on the existence of file
         SKIN_PATH/media/style/extra.css
         """
-        url = utils.get_media_url('style/extra.css')
+        url = utils.get_media_url('style/extra.css', ignore_missing = True)
         if url is not None:
             return '<link href="%s" rel="stylesheet" type="text/css" />' % url
         return ''

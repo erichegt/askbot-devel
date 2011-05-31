@@ -81,7 +81,7 @@ def resolve_skin_for_media(media=None, preferred_skin = None):
             return skin_name
     raise MediaNotFound(media)
 
-def get_media_url(url):
+def get_media_url(url, ignore_missing = False):
     """returns url prefixed with the skin name
     of the first skin that contains the file 
     directories are searched in this order:
@@ -118,7 +118,7 @@ def get_media_url(url):
                                     '///', '/'
                                 )
             return url_copy
-        else:
+        elif ignore_missing == False:
             logging.critical('missing media resource %s' % url)
 
     #2) if it does not exist in uploaded files directory - look in skins
