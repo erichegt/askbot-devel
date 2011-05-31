@@ -259,6 +259,11 @@ class ShowQuestionForm(forms.Form):
         """this form must always be valid
         should use defaults if the data is incomplete
         or invalid"""
+        if self._errors:
+            #since the form is always valid, clear the errors
+            logging.error(str(self._errors))
+            self._errors = {}
+
         in_data = self.get_pruned_data()
         out_data = dict()
         if ('answer' in in_data) ^ ('comment' in in_data):
