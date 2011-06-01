@@ -16,5 +16,5 @@ recursive-exclude adzone *
 recursive-exclude follow *
 recursive-exclude categories *
 recursive-exclude follow *
-recursive-exclude env
+recursive-exclude env *
 recursive-exclude .tox
