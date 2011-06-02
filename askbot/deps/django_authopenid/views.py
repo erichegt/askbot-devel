@@ -105,6 +105,13 @@ def logout(request):
         request.session.modified = True
     _logout(request)
 
+def logout_page(request):
+    data = {
+        'page_class': 'meta',
+        'have_federated_login_methods': util.have_enabled_federated_login_methods()
+    }
+    return render_into_skin('authopenid/logout.html', data, request)
+
 def get_url_host(request):
     if request.is_secure():
         protocol = 'https'

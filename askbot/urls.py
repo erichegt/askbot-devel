@@ -44,7 +44,6 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
     url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
-    url(r'^%s$' % _('logout/'), views.meta.logout, name='logout'),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
         views.writers.edit_answer, 

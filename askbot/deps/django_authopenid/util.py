@@ -403,6 +403,15 @@ def get_enabled_minor_login_providers():
     }
     return filter_enabled_providers(data)
 
+def have_enabled_federated_login_methods():
+    providers = get_enabled_major_login_providers()
+    providers.update(get_enabled_minor_login_providers())
+    provider_types = [provider['type'] for provider in providers.values()]
+    for provider_type in provider_types:
+        if provider_type.startswith('openid') or provider_type == 'oauth':
+            return True
+    return False
+
 def get_enabled_login_providers():
     """return all login providers in one sorted dict
     """

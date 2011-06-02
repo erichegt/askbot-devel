@@ -76,12 +76,6 @@ feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, giv
 def privacy(request):
     return render_into_skin('privacy.html', {'page_class': 'meta'}, request)
 
-def logout(request):
-    data = {
-        'page_class': 'meta',
-    }
-    return render_into_skin('logout.html', data, request)
-
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py
     known_badges = badge_data.BADGES.keys() 
