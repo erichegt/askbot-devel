@@ -280,6 +280,10 @@ def signin(
     next_url = get_next_url(request)
     logging.debug('next url is %s' % next_url)
 
+    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
+        and request.user.is_authenticated():
+        return HttpResponseRedirect(next_url)
+
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
 
@@ -580,6 +584,8 @@ def show_signin_view(
 
 @login_required
 def delete_login_method(request):
+    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
+        raise Http404
     if request.is_ajax() and request.method == 'POST':
         provider_name = request.POST['provider_name']
         try:

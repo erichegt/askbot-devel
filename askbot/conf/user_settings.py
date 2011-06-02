@@ -29,6 +29,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ALLOW_ADD_REMOVE_LOGIN_METHODS',
+        default = True,
+        description = _('Allow adding and removing login methods')
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         USER_SETTINGS,
         'MIN_USERNAME_LENGTH',

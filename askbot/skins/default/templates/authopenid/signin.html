@@ -125,41 +125,41 @@
             {% endif %}
         </fieldset>
         {% endif %}
-        {% if user.is_authenticated() and existing_login_methods %}
-        <div 
-            id='existing-login-methods'
-            {% if login_form.password_change_failed %}
-                style="display:none";
-            {% endif %}
-        >
-            <h2 id='ab-show-login-methods'>
-                {% trans %}Here are your current login methods{% endtrans %}
-            </h2>
-            <table id='ab-existing-login-methods'>
-                <tr>
-                    <th>{% trans %}provider{% endtrans %}</th>
-                    <th>{% trans %}last used{% endtrans %}</th>
-                    <th>{% trans %}delete, if you like{% endtrans %}</th>
-                </tr>
-                {% for login_method in existing_login_methods %}
-                <tr class="ab-provider-row">
-                    <td class="ab-provider-name">
-                        {{login_method.provider_name}}
-                    </td>
-                    <td>
-                        {% if login_method.last_used_timestamp %}
-                            {{login_method.last_used_timestamp|diff_date}}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <button>{% trans %}delete{% endtrans %}</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        {% endif %}
     </form>
+    {% if user.is_authenticated() and existing_login_methods and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
+    <div 
+        id='existing-login-methods'
+        {% if login_form.password_change_failed %}
+            style="display:none";
+        {% endif %}
+    >
+        <h2 id='ab-show-login-methods'>
+            {% trans %}Here are your current login methods{% endtrans %}
+        </h2>
+        <table id='ab-existing-login-methods'>
+            <tr>
+                <th>{% trans %}provider{% endtrans %}</th>
+                <th>{% trans %}last used{% endtrans %}</th>
+                <th>{% trans %}delete, if you like{% endtrans %}</th>
+            </tr>
+            {% for login_method in existing_login_methods %}
+            <tr class="ab-provider-row">
+                <td class="ab-provider-name">
+                    {{login_method.provider_name}}
+                </td>
+                <td>
+                    {% if login_method.last_used_timestamp %}
+                        {{login_method.last_used_timestamp|diff_date}}
+                    {% endif %}
+                </td>
+                <td>
+                    <button>{% trans %}delete{% endtrans %}</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
         {% if user.is_anonymous() and settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
