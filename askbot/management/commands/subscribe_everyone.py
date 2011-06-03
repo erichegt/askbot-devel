@@ -16,16 +16,10 @@ class Command(NoArgsCommand):
 
         for user in User.objects.all():
             for feed_type in EmailFeedSetting.FEED_TYPES:
-                try:
-                    feed_setting = EmailFeedSetting.objects.get(
+                feed_setting, created = EmailFeedSetting.objects.get_or_create(
                                                 subscriber=user,
                                                 feed_type = feed_type[0]
                                             )
-                except EmailFeedSetting.DoesNotExist:
-                    feed_setting = EmailFeedSetting(
-                                        subscriber=user,
-                                        feed_type=feed_type[0]
-                                    )
                 feed_setting.frequency = 'w'
                 feed_setting.reported_at = None
                 feed_setting.save()

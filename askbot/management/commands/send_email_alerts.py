@@ -102,7 +102,7 @@ class Command(NoArgsCommand):
                 should_proceed = True
                 break
 
-        #shortcirquit - if there is no ripe feed to work on for this user
+        #shortcircuit - if there is no ripe feed to work on for this user
         if should_proceed == False:
             return {}
 
@@ -455,9 +455,7 @@ class Command(NoArgsCommand):
                             'benefit from posting one?'
                         )
 
-                feeds = EmailFeedSetting.objects.filter(
-                                                        subscriber=user,
-                                                    )
+                feeds = EmailFeedSetting.objects.filter(subscriber = user)
                 feed_freq = [feed.frequency for feed in feeds]
                 text += '<p></p>'
                 if 'd' in feed_freq:

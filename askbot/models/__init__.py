@@ -1469,15 +1469,29 @@ def user_can_moderate_user(self, other):
         return False
 
 
-def user_get_q_sel_email_feed_frequency(self):
-    try:
-        feed_setting = EmailFeedSetting.objects.get(
-                                        subscriber=self,
-                                        feed_type='q_sel'
-                                    )
-    except Exception, e:
-        raise e
+def user_get_followed_question_alert_frequency(self):
+    feed_setting, created = EmailFeedSetting.objects.get_or_create(
+                                    subscriber=self,
+                                    feed_type='q_sel'
+                                )
     return feed_setting.frequency
+
+def user_subscribe_for_followed_question_alerts(self):
+    """turns on daily subscription for selected questions
+    otherwise does nothing
+
+    Returns ``True`` if the subscription was turned on and
+    ``False`` otherwise
+    """
+    feed_setting, created = EmailFeedSetting.objects.get_or_create(
+                                                        subscriber = self,
+                                                        feed_type = 'q_sel'
+                                                    )
+    if feed_setting.frequency == 'n':
+        feed_setting.frequency = 'd'
+        feed_setting.save()
+        return True
+    return False
 
 def user_get_tag_filtered_questions(self, questions = None):
     """Returns a query set of questions, tag filtered according
@@ -1834,9 +1848,13 @@ def user_update_wildcard_tag_selections(
 
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
-            'get_q_sel_email_feed_frequency',
-            user_get_q_sel_email_feed_frequency
-        )
+    'get_followed_question_alert_frequency',
+    user_get_followed_question_alert_frequency
+)
+User.add_to_class(
+    'subscribe_for_followed_question_alerts', 
+    user_subscribe_for_followed_question_alerts
+)
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)

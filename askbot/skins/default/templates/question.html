@@ -308,7 +308,7 @@
         <p style="padding-left:3px">
         {{ answer.email_notify }} 
         <label for="question-subscribe-updates">
-        {% set email_feed_frequency = request.user.get_q_sel_email_feed_frequency() %}
+        {% set email_feed_frequency = request.user.get_followed_question_alert_frequency() %}
         {% if email_feed_frequency =='n' %}
             {% trans %}Notify me once a day when there are any new answers{% endtrans %}
         {% elif email_feed_frequency =='d' %}
