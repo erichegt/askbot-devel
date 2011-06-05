@@ -75,7 +75,6 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('about', template='about.html')
         self.try_url('privacy', template='privacy.html')
         self.try_url('logout', template='authopenid/logout.html')
-        self.try_url('user_signin', template='authopenid/signin.html')
         #todo: test different tabs
         self.try_url('tags', template='tags.html')
         self.try_url('tags', data={'sort':'name'}, template='tags.html')

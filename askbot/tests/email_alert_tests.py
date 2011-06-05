@@ -877,7 +877,7 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
 
     def test_add_missings_subscriptions_noop(self):
         data_before = TO_JSON(self.get_user_feeds())
-        self.user.add_missing_subscriptions()
+        self.user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
 
@@ -885,7 +885,7 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         feed = self.get_user_feeds().filter(feed_type = 'q_all')
         feed.delete()
         count_before = self.get_user_feeds().count()
-        self.user.add_missing_subscriptions()
+        self.user.add_missing_askbot_subscriptions()
         count_after = self.get_user_feeds().count()
         self.assertEquals(count_after - count_before, 1)
 

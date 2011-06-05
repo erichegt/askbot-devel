@@ -20,6 +20,7 @@ from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
+from askbot.utils import url_utils
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -410,7 +411,7 @@ def subscribe_for_tags(request):
                     % {'tags': ', '.join(all_tag_names)}
         request.user.message_set.create(message = message)
         request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
-        return HttpResponseRedirect(reverse('user_signin'))
+        return HttpResponseRedirect(url_utils.get_login_url())
 
 
 @decorators.get_only

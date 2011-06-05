@@ -861,6 +861,37 @@ def user_post_comment(
     )
     return comment
 
+def user_post_anonymous_askbot_content(user, session_key):
+    """posts any posts added just before logging in 
+    the posts are identified by the session key, thus the second argument
+
+    this function is used by the signal handler with a similar name
+    """
+    aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
+    aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
+    #from askbot.conf import settings as askbot_settings
+    if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
+        for aq in aq_list:
+            aq.author = user
+            aq.save()
+        for aa in aa_list:
+            aa.author = user
+            aa.save()
+        #maybe add pending posts message?
+    else:
+        if user.is_blocked():
+            msg = _('blocked users cannot post')
+            user.message_set.create(message = msg)
+        elif user.is_suspended():
+            msg = _('suspended users cannot post')
+            user.message_set.create(message = msg)
+        else:
+            for aq in aq_list:
+                aq.publish(user)
+            for aa in aa_list:
+                aa.publish(user)
+
+
 def user_mark_tags(
             self,
             tagnames = None,
@@ -1320,7 +1351,7 @@ def user_set_admin_status(self):
     self.is_staff = True
     self.is_superuser = True
 
-def user_add_missing_subscriptions(self):
+def user_add_missing_askbot_subscriptions(self):
     from askbot import forms#need to avoid circular dependency
     form = forms.EditUserEmailFeedsForm()
     need_feed_types = form.get_db_model_subscription_type_names()
@@ -1865,7 +1896,10 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
-User.add_to_class('add_missing_subscriptions', user_add_missing_subscriptions)
+User.add_to_class(
+    'add_missing_askbot_subscriptions',
+    user_add_missing_askbot_subscriptions
+)
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
     'get_followed_question_alert_frequency',
@@ -1885,6 +1919,10 @@ User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
+User.add_to_class(
+    'post_anonymous_askbot_content',
+    user_post_anonymous_askbot_content
+)
 User.add_to_class('post_comment', user_post_comment)
 User.add_to_class('edit_comment', user_edit_comment)
 User.add_to_class('delete_post', user_delete_post)
@@ -2384,7 +2422,7 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
             message = _('Your tag subscription was saved, thanks!')
         )
 
-def post_stored_anonymous_content(
+def post_anonymous_askbot_content(
                                 sender,
                                 request,
                                 user,
@@ -2392,30 +2430,10 @@ def post_stored_anonymous_content(
                                 signal,
                                 *args,
                                 **kwargs):
-
-    aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
-    aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-    #from askbot.conf import settings as askbot_settings
-    if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
-        for aq in aq_list:
-            aq.author = user
-            aq.save()
-        for aa in aa_list:
-            aa.author = user
-            aa.save()
-        #maybe add pending posts message?
-    else:
-        if user.is_blocked():
-            msg = _('blocked users cannot post')
-            user.message_set.create(message = msg)
-        elif user.is_suspended():
-            msg = _('suspended users cannot post')
-            user.message_set.create(message = msg)
-        else:
-            for aq in aq_list:
-                aq.publish(user)
-            for aa in aa_list:
-                aa.publish(user)
+    """signal handler, unfortunately extra parameters
+    are necessary for the signal machinery, even though
+    they are not used in this function"""
+    user.post_anonymous_askbot_content(session_key)
 
 def set_user_has_custom_avatar_flag(instance, created, **kwargs):
     instance.user.update_has_custom_avatar()
@@ -2453,8 +2471,8 @@ signals.flag_offensive.connect(record_flag_offensive, sender=Question)
 signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
-signals.user_logged_in.connect(post_stored_anonymous_content)
-signals.user_logged_in.connect(complete_pending_tag_subscriptions)
+signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
+signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Comment

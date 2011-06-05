@@ -22,7 +22,7 @@
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
     askbot['urls']['follow_user'] = scriptUrl + 'followit/follow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['unfollow_user'] = scriptUrl + 'followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
-    askbot['urls']['user_signin'] = '{% url "user_signin" %}';
+    askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
 </script>
 <script 
     type="text/javascript"

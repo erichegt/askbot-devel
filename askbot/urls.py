@@ -2,14 +2,14 @@
 askbot askbot url configuraion file
 """
 import os.path
+from django.conf import settings
 from django.conf.urls.defaults import url, patterns, include
 from django.conf.urls.defaults import handler500, handler404
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
-from django.utils.translation import ugettext as _
-from django.conf import settings
 
 admin.autodiscover()
 feeds = {

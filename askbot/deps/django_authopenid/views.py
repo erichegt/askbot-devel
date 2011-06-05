@@ -267,11 +267,7 @@ def complete_oauth_signin(request):
 
 #@not_authenticated
 @csrf.csrf_protect
-def signin(
-        request,
-        newquestion = False,#todo: not needed
-        newanswer = False,#todo: not needed
-    ):
+def signin(request):
     """
     signin page. It manages the legacy authentification (user/password) 
     and openid authentification

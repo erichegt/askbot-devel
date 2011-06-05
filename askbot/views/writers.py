@@ -29,6 +29,7 @@ from askbot import models
 from askbot.skins.loaders import render_into_skin
 from askbot.utils.decorators import ajax_only
 from askbot.utils.functions import diff_date
+from askbot.utils import url_utils
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
@@ -238,7 +239,7 @@ def ask(request):#view used to ask a new question
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
-                return HttpResponseRedirect(reverse('user_signin_new_question'))
+                return HttpResponseRedirect(url_utils.get_login_url())
     else:
         #this branch is for the initial load of ask form
         form = forms.AskForm()
@@ -500,7 +501,7 @@ def answer(request, id):#process a new answer
                                        ip_addr=request.META['REMOTE_ADDR'],
                                        )
                 anon.save()
-                return HttpResponseRedirect(reverse('user_signin_new_answer'))
+                return HttpResponseRedirect(url_utils.get_login_url())
 
     return HttpResponseRedirect(question.get_absolute_url())
 
@@ -563,7 +564,7 @@ def post_comments(request):#non-view generic ajax handler to load comments to an
                     msg = _('Sorry, you appear to be logged out and '
                             'cannot post comments. Please '
                             '<a href="%(sign_in_url)s">sign in</a>.') % \
-                            {'sign_in_url': reverse('user_signin')}
+                            {'sign_in_url': url_utils.get_login_url()}
                     raise exceptions.PermissionDenied(msg)
                 user.post_comment(
                             parent_post = obj,
@@ -616,7 +617,7 @@ def delete_comment(request):
             msg = _('Sorry, you appear to be logged out and '
                     'cannot delete comments. Please '
                     '<a href="%(sign_in_url)s">sign in</a>.') % \
-                    {'sign_in_url': reverse('user_signin')}
+                    {'sign_in_url': url_utils.get_login_url()}
             raise exceptions.PermissionDenied(msg)
         if request.is_ajax():
 

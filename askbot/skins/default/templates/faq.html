@@ -71,7 +71,7 @@
 {% trans %}gravatar faq info{% endtrans %}
 <h2>{% trans %}To register, do I need to create new password?{% endtrans %}</h2>
 <p>{% trans %}No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."{% endtrans %}
-<strong><a href="{% url user_signin %}">{% trans %}"Login now!"{% endtrans %}</a> »</strong> 
+<strong><a href="{{ settings.LOGIN_URL }}">{% trans %}"Login now!"{% endtrans %}</a> »</strong> 
 </p>
 <h2>{% trans %}Why other people can edit my questions/answers?{% endtrans %}</h2>
 <p> {% trans %}Goal of this site is...{% endtrans %} {% trans %}So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content.{% endtrans %}

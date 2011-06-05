@@ -8,7 +8,7 @@ from askbot import const
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         'FORUM_DATA_RULES',
-                        _('Settings for askbot data entry and display')
+                        _('Data entry and display')
                     )
 
 settings.register(
@@ -42,6 +42,23 @@ settings.register(
             'Users do not accrue reputation for anonymous questions '
             'and their identity is not revealed until they change their '
             'mind'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_POSTING_BEFORE_LOGGING_IN',
+        default = True,
+        description = _('Allow posting before logging in'),
+        help_text = _(
+            'Check if you want to allow users start posting questions '
+            'or answers before logging in. '
+            'Enabling this may require adjustments in the '
+            'user login system to check for pending posts '
+            'every time the user logs in. The builtin Askbot login system '
+            'supports this feature.'
         )
     )
 )

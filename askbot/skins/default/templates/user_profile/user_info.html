@@ -36,7 +36,7 @@
                             {% trans %}update profile{% endtrans %}
                         </a>
                         {% if request.user == view_user and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
-                            | <a href="{% url user_signin %}?next={% url user_signin %}">
+                            | <a href="{{ settings.LOGIN_URL }}?next={{ settings.LOGIN_URL }}">
                                 {% trans %}manage login methods{% endtrans %}
                             </a>
                         {% endif %}

@@ -7,6 +7,7 @@ import askbot
 from askbot import api
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_skin
+from askbot.utils import url_utils
 
 def application_settings(request):
     """The context processor function"""
@@ -15,6 +16,9 @@ def application_settings(request):
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     my_settings['DEBUG'] = settings.DEBUG
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
+    my_settings['LOGIN_URL'] = url_utils.get_login_url()
+    my_settings['LOGOUT_URL'] = url_utils.get_logout_url()
+    my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
     return {
         'settings': my_settings,
         'skin': get_skin(request),

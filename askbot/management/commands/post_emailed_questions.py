@@ -27,6 +27,7 @@ from django.utils.translation import string_concat
 from django.core.urlresolvers import reverse
 from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
+from askbot.utils import url_utils
 from askbot import models
 from askbot.forms import AskByEmailForm
 
@@ -61,7 +62,7 @@ def bounce_email(email, subject, reason = None, body_text = None):
             'by email, please <a href="%(url)s">register first</a></p>'
         ) % {
             'site': askbot_settings.APP_SHORT_NAME,
-            'url': askbot_settings.APP_URL + reverse('user_signin')
+            'url': url_utils.get_login_url()
         }
     elif reason == 'permission_denied':
         error_message = _(
