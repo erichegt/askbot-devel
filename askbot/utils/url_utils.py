@@ -26,7 +26,7 @@ def get_logout_redirect_url():
     or url to the main page"""
     if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
         return reverse('logout')
-    elif hasattr(settings, LOGOUT_REDIRECT_URL):
+    elif hasattr(settings, 'LOGOUT_REDIRECT_URL'):
         return settigs.LOGOUT_REDIRECT_URL
     else:
         return reverse('index')

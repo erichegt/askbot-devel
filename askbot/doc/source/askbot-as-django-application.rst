@@ -14,24 +14,34 @@ Using alternative login system
 
 Askbot has a bundled application for user login and registration,
 but it can be replaced with any other.
+Just remove ``'askbot.deps.django_authopenid'``
+from the ``INSTALLED_APPS``,
+remove ``'askbot.deps.django_authopenid.backends.AuthBackend'``
+from the ``AUTHENTICATION_BACKENDS``,
+install another registration app
+and modify ``LOGIN_URL`` accordingly.
 
-There are two caveats. If you want the "allow posting before logging in" feature
-(which can be enabled/disabled at 
-"settings"->"data entry and display"->"allow posting before logging in"),
-you must either insure that your app calls ``user.post_anonymous_askbot_content()``
-right after the user logs in, or activate middleware
-``askbot.middleware.anon_posts.PublishAnonPostsMiddleware``.
+There are three caveats.
 
-The middleware solution is not desirable, as it will cause additional 
-database queries each time a logged in user loads any page on the site.
+Firstly, if you are using some other login/registration app,
+please disable feature
+"settings"->"data entry and display"->"allow posting before logging in".
 
-Second thing to keep in mind is in askbot each user has records for 
-email subscription settings, and these will be missing when user
-registers via some alternative login application. This is not a big problem 
-and should not lead to errors, however some users may miss email notifications
+This may be fixed in the future by adding a snippet of code to run
+right after the user logs in - please ask at askbot forum if you are 
+interested.
+
+Secondly, disable setting "settings"->"user settings"->"allow add and remove login methods".
+This one is specific to the builtin login application.
+
+One more thing to keep in mind is in askbot each user has records for 
+email subscription settings, and these will be missing when he/she
+registers via some alternative login application.
+This is not a big problem and should not lead to errors,
+however some users may miss email notifications
 until their records complete.
 
-The email subscription settings complete automatically when certain pages 
+The email subscription settings are created automatically when certain pages 
 are visited, but there is a way to accelerate this process by calling
 management command::
 

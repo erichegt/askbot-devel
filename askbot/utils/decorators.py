@@ -3,12 +3,18 @@ import time
 import os
 import datetime
 import functools
+import inspect
 import logging
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseForbidden, Http404
-from django.utils import simplejson
-from askbot import exceptions as askbot_exceptions
 from django.core import exceptions as django_exceptions
+from django.core import urlresolvers
+from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.http import HttpResponseRedirect
+from django.utils import simplejson
+from django.utils.translation import ugettext as _
+from askbot import exceptions as askbot_exceptions
+from askbot.conf import settings as askbot_settings
+from askbot.utils import url_utils
 
 def auto_now_timestamp(func):
     """decorator that will automatically set
@@ -91,6 +97,28 @@ def ajax_only(view_func):
             return HttpResponse(json,mimetype='application/json')
     return wrapper
 
+def check_authorization_to_post(func_or_message):
+
+    message = _('Please login to post')
+    if not inspect.isfunction(func_or_message):
+        message = unicode(func_or_message)
+
+    def decorator(view_func):
+        @functools.wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            if request.user.is_anonymous():
+                #todo: expand for handling ajax responses
+                if askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False:
+                    request.user.message_set.create(message = message)
+                    params = 'next=%s' % request.path
+                    return HttpResponseRedirect(url_utils.get_login_url() + '?' + params)
+            return view_func(request, *args, **kwargs)
+        return wrapper
+
+    if inspect.isfunction(func_or_message):
+        return decorator(func_or_message)
+    else:
+        return decorator
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE

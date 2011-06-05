@@ -299,9 +299,7 @@
             </table>
         </div>
     {% endfor %}
-    <div class="paginator-container-left">
-        {{ macros.paginator(paginator_context) }}
-    </div><br/>
+    {{ macros.paginator(paginator_context) }}
 {% endif %}
 <form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
     {% if request.user.is_authenticated() %}
@@ -329,44 +327,53 @@
     {% endif %}
     <div style="clear:both">
     </div>
-    {% if not question.closed %}
-        <div style="padding:10px 0 0 0;">
-            {% spaceless %}
-            <h2>
-                {% if answers %}
-                    {% trans %}Your answer{% endtrans %}
-                {% else %}
-                    {% trans %}Be the first one to answer this question!{% endtrans %}
-                {% endif %}
-            </h2>
-            {% endspaceless %}
-        </div>
-        {% if not request.user.is_authenticated() %}
-            <div class="message">{% trans %}you can answer anonymously and then login{% endtrans %}</div>
-        {% else %}
-            <p class="message">
-                {% if request.user==question.author  %}
-                    {% trans %}answer your own question only to give an answer{% endtrans %}
-                {% else %}
-                    {% trans %}please only give an answer, no discussions{% endtrans %}
-                {% endif %}
-            </p>
+    {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
+        {% if not question.closed %}
+            <a 
+                class="submit"
+                href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
+            >{% trans %}Login/Signup to Answer{% endtrans %}</a>
         {% endif %}
-        {{ macros.edit_post(answer) }}
-        <input type="submit" 
-            {% if user.is_anonymous() %}
-                value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
+    {% else %}
+        {% if not question.closed %}
+            <div style="padding:10px 0 0 0;">
+                {% spaceless %}
+                <h2>
+                    {% if answers %}
+                        {% trans %}Your answer{% endtrans %}
+                    {% else %}
+                        {% trans %}Be the first one to answer this question!{% endtrans %}
+                    {% endif %}
+                </h2>
+                {% endspaceless %}
+            </div>
+            {% if request.user.is_anonymous() %}
+                <div class="message">{% trans %}you can answer anonymously and then login{% endtrans %}</div>
             {% else %}
-                {% if user == question.author %}
-                    value="{% trans %}Answer Your Own Question{% endtrans %}" 
+                <p class="message">
+                    {% if request.user==question.author  %}
+                        {% trans %}answer your own question only to give an answer{% endtrans %}
+                    {% else %}
+                        {% trans %}please only give an answer, no discussions{% endtrans %}
+                    {% endif %}
+                </p>
+            {% endif %}
+            {{ macros.edit_post(answer) }}
+            <input type="submit" 
+                {% if user.is_anonymous() %}
+                    value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}" 
                 {% else %}
-                    value="{% trans %}Answer the question{% endtrans %}" 
+                    {% if user == question.author %}
+                        value="{% trans %}Answer Your Own Question{% endtrans %}" 
+                    {% else %}
+                        value="{% trans %}Answer the question{% endtrans %}" 
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            class="submit after-editor" style="float:left"/>
-            {% if settings.WIKI_ON %}
-                {{ macros.checkbox_in_div(answer.wiki) }}
-            {% endif %}
+                class="submit after-editor" style="float:left"/>
+                {% if settings.WIKI_ON %}
+                    {{ macros.checkbox_in_div(answer.wiki) }}
+                {% endif %}
+        {% endif %}
     {% endif %}
     </form>
 {% endblock %}
@@ -460,6 +467,9 @@
             
             lanai.highlightSyntax();
             $('#btLogin').bind('click', function(){window.location.href='{{ settings.LOGIN_URL }}'; } )
+            if (window.location.hash === 'fmanswer'){
+                $('#fmanswer textarea').focus();
+            }
         });
         
         function initEditor(){

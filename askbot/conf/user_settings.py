@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
-                    _('User policy settings')
+                    _('User settings')
                 )
 
 settings.register(

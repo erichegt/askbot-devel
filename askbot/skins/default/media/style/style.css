@@ -48,6 +48,25 @@ a {
     cursor: pointer;
 }
 
+/* http://pathfindersoftware.com/2007/09/developers-note-2/ */
+* html .clearfix,
+* html .paginator {
+    height: 1;
+    overflow: visible;
+}
++ html .clearfix,
++ html .paginator {
+    min-height: 1%;
+}
+.clearfix:after,
+.paginator:after {
+    clear: both;
+    content:".";
+    display:block;
+    height: 0;
+    visibility: hidden;
+}
+
 .badges a {
     color: #763333;
     text-decoration: underline;
@@ -1625,10 +1644,9 @@ button::-moz-focus-inner {
 .submit {
     cursor: pointer; /*letter-spacing:1px;*/
     background-color: #D4D0C8;
-    height: 40px;
+    height: 30px;
     border: 1px solid #777777; /*	width:100px; */
     font-weight: bold;
-    padding-bottom: 4px;
     font-size: 120%;
 }
 
@@ -1645,6 +1663,13 @@ button::-moz-focus-inner {
 }
 .submit.small:hover {
     text-decoration:none;
+}
+.question-page a.submit {
+    display: -moz-inline-stack;
+    display: inline-block;
+    line-height: 30px;
+    padding: 0 5px;
+    *display: inline;
 }
 
 .ask-body {

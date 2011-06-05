@@ -220,7 +220,6 @@ urlpatterns = patterns('',
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
-    (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
@@ -253,6 +252,11 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+    urlpatterns += (
+        url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+    )
 
 if 'avatar' in settings.INSTALLED_APPS:
     #unforturately we have to wire avatar urls here,

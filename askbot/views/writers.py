@@ -27,7 +27,7 @@ from django.views.decorators import csrf
 from askbot import forms
 from askbot import models
 from askbot.skins.loaders import render_into_skin
-from askbot.utils.decorators import ajax_only
+from askbot.utils import decorators
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
 from askbot.templatetags import extra_filters_jinja as template_filters
@@ -188,6 +188,7 @@ def import_data(request):
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
+@decorators.check_authorization_to_post(_('Please log in to ask questions'))
 def ask(request):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
@@ -195,7 +196,6 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-
     if request.method == "POST":
         form = forms.AskForm(request.POST)
         if form.is_valid():
@@ -461,6 +461,7 @@ def edit_answer(request, id):
         return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
+@decorators.check_authorization_to_post(_('Please log in to answer questions'))
 def answer(request, id):#process a new answer
     """view that posts new answer
 
@@ -580,7 +581,7 @@ def post_comments(request):#non-view generic ajax handler to load comments to an
     else:
         raise Http404
 
-@ajax_only
+@decorators.ajax_only
 def edit_comment(request):
     if request.user.is_authenticated():
         comment_id = int(request.POST['comment_id'])
