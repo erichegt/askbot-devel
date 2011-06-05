@@ -964,6 +964,15 @@ class EditUserEmailFeedsForm(forms.Form):
         self.initial = self.NO_EMAIL_INITIAL
         return self
 
+    def get_db_model_subscription_type_names(self):
+        """todo: refactor this - too hacky
+        should probably use model form instead
+
+        returns list of values acceptable in
+        ``attr::models.user.EmailFeedSetting.feed_type``
+        """
+        return self.FORM_TO_MODEL_MAP.values()
+
     def set_frequency(self, frequency = 'n'):
         data = {
             'all_questions': frequency,

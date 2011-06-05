@@ -900,6 +900,13 @@ def user_email_subscriptions(request, user, context):
                 if email_stopped:
                     action_status = _('email updates canceled')
     else:
+        #user may have been created by some app that does not know
+        #about the email subscriptions, in that case the call below
+        #will add any subscription settings that are missing
+        #using the default frequencies
+        user.add_missing_subsciptions()
+
+        #initialize the form
         email_feeds_form = forms.EditUserEmailFeedsForm()
         email_feeds_form.set_initial_values(user)
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)

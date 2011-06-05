@@ -1319,7 +1319,26 @@ def user_remove_admin_status(self):
 def user_set_admin_status(self):
     self.is_staff = True
     self.is_superuser = True
-    
+
+def user_add_missing_subscriptions(self):
+    from askbot import forms#need to avoid circular dependency
+    form = forms.EditUserEmailFeedsForm()
+    need_feed_types = form.get_db_model_subscription_type_names()
+    have_feed_types = EmailFeedSetting.objects.filter(
+                                            subscriber = self
+                                        ).values_list(
+                                            'feed_type', flat = True
+                                        )
+    missing_feed_types = set(need_feed_types) - set(have_feed_types)
+    frequency = askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
+    for missing_feed_type in missing_feed_types:
+        feed_setting = EmailFeedSetting(
+                            subscriber = self,
+                            feed_type = missing_feed_type,
+                            frequency = frequency
+                        )
+        feed_setting.save()
+
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
@@ -1846,6 +1865,7 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
+User.add_to_class('add_missing_subscriptions', user_add_missing_subscriptions)
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
     'get_followed_question_alert_frequency',

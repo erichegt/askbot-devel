@@ -4,6 +4,7 @@ import copy
 import time
 from django.conf import settings as django_settings
 from django.core import management
+from django.core import serializers
 import django.core.mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -14,6 +15,8 @@ from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.models.question import get_tag_summary_from_questions
+
+TO_JSON = functools.partial(serializers.serialize, 'json')
 
 def email_alert_test(test_func):
     """decorator for test methods in
@@ -865,4 +868,30 @@ class UnansweredReminderTests(utils.AskbotTestCase):
         self.do_post(timestamp)
         self.assert_have_emails(0)
 
+class EmailFeedSettingTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.user = self.create_user('user')
 
+    def get_user_feeds(self):
+        return models.EmailFeedSetting.objects.filter(subscriber = self.user)
+
+    def test_add_missings_subscriptions_noop(self):
+        data_before = TO_JSON(self.get_user_feeds())
+        self.user.add_missing_subscriptions()
+        data_after = TO_JSON(self.get_user_feeds())
+        self.assertEquals(data_before, data_after)
+
+    def test_add_missing_q_all_subscription(self):
+        feed = self.get_user_feeds().filter(feed_type = 'q_all')
+        feed.delete()
+        count_before = self.get_user_feeds().count()
+        self.user.add_missing_subscriptions()
+        count_after = self.get_user_feeds().count()
+        self.assertEquals(count_after - count_before, 1)
+
+        feed = self.get_user_feeds().filter(feed_type = 'q_all')[0]
+
+        self.assertEquals(
+            feed.frequency,
+            askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
+        )
