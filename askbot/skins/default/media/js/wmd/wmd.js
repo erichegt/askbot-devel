@@ -354,11 +354,12 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_input.attr('id', 'file-upload');
             upload_input.attr('size', 26);
 
-            upload_input.change(function(){
+            var startUploadHandler = function(){
                 localUploadFileName = $(this).val();
-                return ajaxFileUpload($('#image-url'));
-            });
+                return ajaxFileUpload($('#image-url'), startUploadHandler);
+            };
 
+            upload_input.change(startUploadHandler);
 
             upload_container.append(upload_input);
             upload_container.append($('<br/>'));
@@ -376,7 +377,13 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         // The ok button
         var okButton = doc.createElement("input");
         okButton.type = "button";
-        okButton.onclick = function(){ return close(false); };
+        okButton.onclick = function(){
+            var isCancel = false;
+            if ($.trim($(input).val()) === ''){
+                isCancel = true;
+            }
+            return close(isCancel);
+        };
         okButton.value = "OK";
         style = okButton.style;
         style.margin = "10px";
