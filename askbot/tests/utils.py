@@ -33,6 +33,7 @@ def create_user(
     * 'n' - never 
     """
     user = models.User.objects.create_user(username, email)
+
     user.reputation = reputation
     if date_joined is not None:
         user.date_joined = date_joined
@@ -41,6 +42,10 @@ def create_user(
     if notification_schedule == None:
         notification_schedule = models.EmailFeedSetting.NO_EMAIL_SCHEDULE
         
+    #a hack, we need to delete these, that will be created automatically
+    #because just below we will be replacing them with the new values
+    user.notification_subscriptions.all().delete()
+
     for feed_type, frequency in notification_schedule.items():
         feed = models.EmailFeedSetting(
                         feed_type = feed_type,

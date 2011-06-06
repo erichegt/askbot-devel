@@ -2422,6 +2422,13 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
             message = _('Your tag subscription was saved, thanks!')
         )
 
+def add_missing_subscriptions(sender, instance, created, **kwargs):
+    """``sender`` is instance of ``User``. When the ``User``
+    is created, any required email subscription settings will be
+    added by this handler"""
+    if created:
+        instance.add_missing_askbot_subscriptions()
+
 def post_anonymous_askbot_content(
                                 sender,
                                 request,
@@ -2443,6 +2450,7 @@ def update_user_has_custom_avatar_flag(instance, **kwargs):
 
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)

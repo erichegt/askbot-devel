@@ -895,3 +895,16 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
             feed.frequency,
             askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
         )
+
+    def test_missing_subscriptions_added_automatically(self):
+        new_user = models.User.objects.create_user('new', 'new@example.com')
+        feeds_before = self.get_user_feeds()
+
+        #verify that feed settigs are created automatically
+        #when user is just created
+        self.assertTrue(feeds_before.count() != 0)
+
+        data_before = TO_JSON(feeds_before)
+        new_user.add_missing_askbot_subscriptions()
+        data_after = TO_JSON(self.get_user_feeds())
+        self.assertEquals(data_before, data_after)

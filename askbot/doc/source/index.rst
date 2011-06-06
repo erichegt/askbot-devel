@@ -23,7 +23,7 @@ at the forum_ or by email at admin@askbot.org
    Appendix A: Maintenance procedures <management-commands>
    Appendix B: Sending email to askbot <sending-email-to-askbot>
    Appendix C: Optional modules <optional-modules>
-   Appendix D: Askbot as Django application <askbot-as-django-application>
+   Appendix D: Askbot as reusable Django application <askbot-as-reusable-django-application>
    Footnotes <footnotes>
    Contributors <contributors>
 
