@@ -14,6 +14,8 @@ ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px
 /*#signin-form #account-recovery-form input {cursor:pointer;}
 #signin-form #account-recovery-form input.text {cursor:default;}*/
 
+table.login { text-align: right;}
+
 .openid-signin .submit-b {
     cursor: pointer; /*letter-spacing:1px;*/
     margin: 0 0 2px 0;
