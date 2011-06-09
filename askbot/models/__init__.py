@@ -2081,7 +2081,8 @@ def format_instant_notification_email(
                         )
         #todo: remove hardcoded style
     else:
-        content_preview = post.html
+        from askbot.templatetags.extra_filters_jinja import absolutize_image_urls_func
+        content_preview = absolutize_image_urls_func(post.html)
         tag_style = "white-space: nowrap; " \
                     + "font-size: 11px; color: #333;" \
                     + "background-color: #EEE;" \

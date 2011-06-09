@@ -1,4 +1,5 @@
 import datetime
+import re
 import time
 from coffin import template as coffin_template
 from django.core import exceptions as django_exceptions
@@ -16,6 +17,14 @@ from django_countries import countries
 from django_countries import settings as countries_settings
 
 register = coffin_template.Library()
+
+def absolutize_image_urls_func(text):
+    url_re1 = re.compile(r'(?P<prefix><img[^<]+src=)"(?P<url>/[^"]+)"', re.I)
+    url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
+    replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
+    text = url_re1.sub(replacement, text)
+    return url_re2.sub(replacement, text)
+absolutize_image_urls = register.filter(absolutize_image_urls_func)
 
 @register.filter
 def country_display_name(country_code):
