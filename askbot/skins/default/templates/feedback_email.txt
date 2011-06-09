@@ -1,19 +1,13 @@
-{% load i18n %}
 {% spaceless %}
-{% blocktrans with settings.APP_TITLE|safe as site_title %}
-Hello, this is a {{site_title}} forum feedback message
-{% endblocktrans %}
+{% trans site_title = settings.APP_SHORT_NAME|safe %}
+Hello, this is a {{site_title}} forum feedback message.
+{% endtrans %}
 {% endspaceless %}
+{% if user.is_authenticated() -%}
+    {{user.username|safe}} ({{user.email|safe}}, ip:{{request.META.REMOTE_ADDR}})
+{%- else %}
+    {%- if name %}{{name|safe}} {% else %}{% trans %}Anonymous{% endtrans %} {% endif -%}
+    ({%- if email %}, {% endif -%}ip:{{request.META.REMOTE_ADDR}})
+{%- endif %} wrote:
 
-{% spaceless %}
-{% trans "Sender is" %}
-{% if user.is_authenticated %}
-    {{user.username|safe}} {% trans "email" %}:{{user.email|safe}} 
-{% else %}
-    {% if name %}{{name|safe}}{% else %}{% trans "anonymous" %}{% endif %}
-    {% if email %}{% trans "email" %}:{{email|safe}}{% endif %}
-{% endif %}
-    ip:{{request.META.REMOTE_ADDR}}
-{% endspaceless %}
-
-{% trans "Message body:" %} {{message|safe}}
+{{message|safe}}

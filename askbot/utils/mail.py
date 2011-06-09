@@ -83,6 +83,8 @@ def mail_moderators(
     from askbot.models import User
     recipient_list = User.objects.filter(
                     Q(status='m') | Q(is_superuser=True)
+                ).filter(
+                    is_active = True
                 ).values_list('email', flat=True)
     recipient_list = set(recipient_list)
 
