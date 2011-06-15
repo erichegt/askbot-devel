@@ -205,6 +205,7 @@ LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 #also, this url must not have the leading slash
 ASKBOT_UPLOADED_FILES_URL = '%s%s' % (ASKBOT_URL, 'upfiles/')
 ALLOW_UNICODE_SLUGS = False
+ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
 BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
