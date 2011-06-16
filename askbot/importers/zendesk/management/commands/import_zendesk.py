@@ -1,6 +1,10 @@
-"""importer from cnprog, please note, that you need an exporter in the first place
-to use this command.
-If you are interested to use it - please ask Evgeny <evgeny.fadeev@gmail.com>
+"""importer from zendesk data dump
+the dump must be a tar/gzipped file, containing one directory
+with all the .xml files.
+
+Run this command as::
+
+    python manage.py import_zendesk path/to/dump.tgz
 """
 import os
 import re
@@ -9,6 +13,7 @@ import tarfile
 import tempfile
 from datetime import datetime, date
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 from django.db import transaction
 from lxml import etree
 from askbot import models as askbot_models
@@ -45,6 +50,57 @@ def clean_username(name_seed):
             #will allow about a million extra possible unique names
             username = get_unique_username(username[:24])
     return username
+
+def create_askbot_user(zd_user):
+    """create askbot user from zendesk user record
+    return askbot user or None, if there is error
+    """
+    #special treatment for the user name
+    raw_username = unescape(zd_user.name)
+    username = clean_username(raw_username)
+    if len(username) > 30:#nearly impossible skip such user
+        print "Warning: could not import user %s" % raw_username
+        return None
+
+    if zd_user.email is None:
+        email = ''
+    else:
+        email = zd_user.email
+
+    ab_user = askbot_models.User(
+        email = email,
+        email_isvalid = zd_user.is_verified,
+        date_joined = zd_user.created_at,
+        last_seen = zd_user.created_at,#add initial date for now
+        username = username,
+        is_active = zd_user.is_active
+    )
+    ab_user.save()
+    return ab_user
+
+def post_question(zendesk_post):
+    """posts question to askbot, using zendesk post item"""
+    try:
+        return zendesk_post.get_author().post_question(
+            title = zendesk_post.get_fake_title(),
+            body_text = zendesk_post.get_body_text(),
+            tags = zendesk_post.get_tag_name(),
+            timestamp = zendesk_post.created_at
+        )
+    except Exception, e:
+        msg = unicode(e)
+        print "Warning: post %d dropped: %s" % (zendesk_post.post_id, msg)
+
+def post_answer(zendesk_post, question = None):
+    try:
+        zendesk_post.get_author().post_answer(
+            question = question,
+            body_text = zendesk_post.get_body_text(),
+            timestamp = zendesk_post.created_at
+        )
+    except Exception, e:
+        msg = unicode(e)
+        print "Warning: post %d dropped: %s" % (zendesk_post.post_id, msg)
 
 def get_val(elem, field_name):
     field = elem.find(field_name)
@@ -93,17 +149,17 @@ class Command(BaseCommand):
 
         self.tar = tarfile.open(args[0], 'r:gz')
 
-        sys.stdout.write('Reading users.xml: ')
-        self.read_users()
-        sys.stdout.write('Reading posts.xml: ')
-        self.read_posts()
-        sys.stdout.write('Reading forums.xml: ')
-        self.read_forums()
-        
+        #sys.stdout.write('Reading users.xml: ')
+        #self.read_users()
+        #sys.stdout.write('Reading posts.xml: ')
+        #self.read_posts()
+        #sys.stdout.write('Reading forums.xml: ')
+        #self.read_forums()
+
         sys.stdout.write("Importing user accounts: ")
         self.import_users()
-        #self.import_openid_associations()
-        #self.import_content()
+        sys.stdout.write("Loading threads: ")
+        self.import_content()
 
     def get_file(self, file_name):
         first_item = self.tar.getnames()[0]
@@ -174,6 +230,9 @@ class Command(BaseCommand):
                 'body', 'created-at', 'updated-at', 'entry-id',
                 'forum-id', 'user-id', 'is-informative'
             ),
+            extra_field_mappings = (
+                ('id', 'post_id'),
+            )
         )
 
     def read_forums(self):
@@ -201,38 +260,70 @@ class Command(BaseCommand):
             #a whole bunch of fields are actually dropped now
             #see what's available in users.xml meanings of some
             #values there is not clear
-            try:
-                ab_user = askbot_models.User.objects.get(email = zd_user.email)
-            except askbot_models.User.DoesNotExist:
-                #special treatment for the user name
-                raw_username = unescape(zd_user.name)
-                username = clean_username(raw_username)
-                if len(username) > 30:#nearly impossible skip such user
-                    print "Warning: could not import user %s" % raw_username
+
+            #if email is blank, just create a new user
+            if zd_user.email == '':
+                ab_user = create_askbot_user(zd_user)
+                if ab_user in None:
+                    print 'Warning: could not create user %s ' % zd_user.name
                     continue
-
-                if zd_user.email is None:
-                    email = ''
-                else:
-                    email = zd_user.email
-
-                ab_user = askbot_models.User(
-                    email = email,
-                    email_isvalid = zd_user.is_verified,
-                    date_joined = zd_user.created_at,
-                    last_seen = zd_user.created_at,#add initial date for now
-                    username = username,
-                    is_active = zd_user.is_active
-                )
-                ab_user.save()
-                added_users += 1
                 console.print_action(ab_user.username)
+            else:
+            #else see if user with the same email already exists
+            #and only create new askbot user if email is not yet in the
+            #database
+                try:
+                    ab_user = askbot_models.User.objects.get(email = zd_user.email)
+                except askbot_models.User.DoesNotExist:
+                    ab_user = create_askbot_user(zd_user)
+                    if ab_user is None:
+                        continue
+                    console.print_action(ab_user.username, nowipe = True)
+                    added_users += 1
             zd_user.askbot_user_id = ab_user.id
             zd_user.save()
+
+            if zd_user.openid_url != None and \
+                'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+                from askbot.deps.django_authopenid.models import UserAssociation
+                from askbot.deps.django_authopenid.util import get_provider_name
+                try:
+                    assoc = UserAssociation(
+                        user = ab_user,
+                        openid_url = zd_user.openid_url,
+                        provider_name = get_provider_name(zd_user.openid_url)
+                    )
+                    assoc.save()
+                except:
+                    #drop user association
+                    pass
+
             transaction.commit()
         console.print_action('%d users added' % added_users, nowipe = True)
 
+    @transaction.commit_manually
     def import_content(self):
-        for zd_post in zendesk_models.Post.objects.all():
-            if zd_post.is_processed:
-                continue
+        thread_ids = zendesk_models.Post.objects.values_list(
+                                                        'entry_id',
+                                                        flat = True
+                                                    ).distinct()
+        threads_posted = 0
+        for thread_id in thread_ids:
+            thread_entries = zendesk_models.Post.objects.filter(
+                entry_id = thread_id
+            ).order_by('created_at')
+            question_post = thread_entries[0]
+            question = post_question(question_post)
+            question_post.is_processed = True
+            question_post.save()
+            transaction.commit()
+            entry_count = thread_entries.count()
+            threads_posted += 1
+            console.print_action(str(threads_posted))
+            if entry_count > 1:
+                for answer_post in thread_entries[1:]:
+                    post_answer(answer_post, question = question)
+                    answer_post.is_processed = True
+                    answer_post.save()
+                    transaction.commit()
+        console.print_action(str(threads_posted), nowipe = True)
