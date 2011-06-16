@@ -64,6 +64,20 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_SWAPPING_ANSWER_WITH_QUESTION',
+        default = False,
+        description = _('Allow swapping answer with question'),
+        help_text = _(
+            'This setting will help import data from other forums '
+            'such as zendesk, when automatic '
+            'data import fails to detect the original question correctly.'
+        )
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAG_LENGTH',
