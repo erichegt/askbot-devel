@@ -181,6 +181,15 @@ urlpatterns = patterns('',
         name='edit_user'
     ),
     url(
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
+            _('users/'),
+            _('subscriptions/'),
+        ),
+        views.users.user,
+        kwargs = {'tab_name': 'email_subscriptions'},
+        name = 'user_subscriptions'
+    ),
+    url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'

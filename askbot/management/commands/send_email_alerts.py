@@ -1,5 +1,6 @@
 import datetime
 from django.core.management.base import NoArgsCommand
+from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, F
 from askbot.models import User, Question, Answer, Tag, QuestionRevision
@@ -14,6 +15,7 @@ from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
 from askbot.utils import mail
+from askbot.utils.slug import slugify
 
 DEBUG_THIS_COMMAND = False
 
@@ -476,7 +478,14 @@ class Command(NoArgsCommand):
                             'before - due to a technicality that will eventually go away. '
                         )
 
-                link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
+                link = url_prefix + reverse(
+                                        'user_subscriptions', 
+                                        kwargs = {
+                                            'id': user.id,
+                                            'slug': slugify(user.username)
+                                        }
+                                    )
+
                 text += _(
                     'go to %(email_settings_link)s to change '
                     'frequency of email updates or '

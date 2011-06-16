@@ -2029,8 +2029,14 @@ def format_instant_notification_email(
     site_url = askbot_settings.APP_URL
     origin_post = post.get_origin_post()
     #todo: create a better method to access "sub-urls" in user views
-    user_subscriptions_url = site_url + to_user.get_absolute_url() + \
-                            '?sort=email_subscriptions'
+    user_subscriptions_url = site_url + \
+                                reverse(
+                                    'user_subscriptions',
+                                    kwargs = {
+                                        'id': to_user.id,
+                                        'slug': slugify(to_user.username)
+                                    }
+                                )
 
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
