@@ -270,8 +270,8 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'inbox'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow=True
         )
         self.try_url(
             'user_profile', 
@@ -283,8 +283,8 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'votes'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
         self.try_url(
             'user_profile', 
@@ -296,8 +296,8 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'email_subscriptions'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
 
     def test_user_urls_logged_in(self):

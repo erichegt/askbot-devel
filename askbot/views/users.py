@@ -60,7 +60,8 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            raise Http404 #todo: change to access forbidden?
+            params = '?next=%s' % request.path
+            return HttpResponseRedirect(reverse('user_signin') + params)
         return f(request, profile_owner, context)
     return wrapped_func 
 
