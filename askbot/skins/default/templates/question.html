@@ -3,7 +3,7 @@
 <!-- question.html -->
 {% block title %}{% spaceless %}{{ question.get_question_title() }}{% endspaceless %}{% endblock %}
 {% block meta_description %}
-        <meta name="description" content="{{question.summary}}" />
+        <meta name="description" content="{{question.summary|striptags|escape}}" />
 {% endblock %}
 {% block keywords %}{{question.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
