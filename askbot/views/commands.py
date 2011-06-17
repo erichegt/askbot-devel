@@ -9,7 +9,7 @@ from django.conf import settings as django_settings
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
@@ -517,6 +517,24 @@ def reopen(request, id):#re-open question
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
+
+
+@decorators.ajax_only
+def swap_question_with_answer(request):
+    """receives two json parameters - answer id
+    and new question title
+    the view is made to be used only by the site administrator
+    or moderators
+    """
+    if request.user.is_authenticated():
+        if request.user.is_administrator() or request.user.is_moderator():
+            answer = models.Answer.objects.get(id = request.POST['answer_id'])
+            new_question = answer.swap_with_question(new_title = request.POST['new_title'])
+            return {
+                'id': new_question.id,
+                'slug': new_question.slug
+            }
+    raise Http404
 
 #askbot-user communication system
 def read_message(request):#marks message a read

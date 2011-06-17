@@ -171,6 +171,11 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
+        r'^swap-question-with-answer/',
+        views.commands.swap_question_with_answer,
+        name = 'swap_question_with_answer'
+    ),
+    url(
         r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,
         name = 'subscribe_for_tags'

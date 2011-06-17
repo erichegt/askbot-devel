@@ -66,7 +66,7 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
-        'ALLOW_SWAPPING_ANSWER_WITH_QUESTION',
+        'ALLOW_SWAPPING_QUESTION_WITH_ANSWER',
         default = False,
         description = _('Allow swapping answer with question'),
         help_text = _(

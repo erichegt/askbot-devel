@@ -264,6 +264,11 @@
                                     </span>
                                     {% endspaceless %}
                                 {% endif %}
+                                {% if settings.ALLOW_SWAPPING_QUESTION_WITH_ANSWER %}{{ pipe() }}
+                                    <span class="action-link">
+                                        <a id="swap-question-with-answer-{{answer.id}}">{% trans %}swap with question{% endtrans %}</a>
+                                    </span>
+                                {% endif %}
                             </div>
                             <div class="post-update-info-container">
                                     {{
@@ -441,6 +446,7 @@
             askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/{{questionSlug}}" }}';{# yes it needs to be that whacky #}
             askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
             askbot['urls']['vote_url_template'] = scriptUrl + '{% trans %}questions/{% endtrans %}{{ "{{QuestionID}}/" }}{% trans %}vote/{% endtrans %}';
+            askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
             askbot['messages']['addComment'] = '{% trans %}add comment{% endtrans %}';
             {% if settings.SAVE_COMMENT_ON_ENTER %}
                 askbot['settings']['saveCommentOnEnter'] = true;
