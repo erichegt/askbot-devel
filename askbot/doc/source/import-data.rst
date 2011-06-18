@@ -13,6 +13,7 @@ StackExchange
 =============
 
 Add `askbot.importers.stackexchange` to the list of `INSTALLED_APPS` list in your `settings.py`, then run::
+
     python manage.py syncdb
 
 Then there will be two ways to import your StackExchange dump:
@@ -22,7 +23,6 @@ Then there will be two ways to import your StackExchange dump:
 
     python manage.py load_stackexchange /path/to/your-se-data.zip
 
-In the case your database is not empty at the beginning of the process - **please do back it up**.
 
 Zendesk
 =======
@@ -38,3 +38,11 @@ Prepare your zendesk files: put all your .xml files into one directory and tar-z
 Then run the import script::
 
     python manage.py import_zendesk zendesk.tgz #file name is the parameter
+
+.. note::
+    It is possible that import script will make some mistakes in determining
+    which post in the group is the question, due to some specifics of zendesk
+    data format. If so, please enable feature
+    "Forum data rules"->"allow switching question with answer"
+    in :ref:`live settings <live-settings>` and use it in an admin or a moderator
+    account.

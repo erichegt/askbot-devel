@@ -1373,6 +1373,9 @@ def user_add_missing_askbot_subscriptions(self):
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
+def user_is_administrator_or_moderator(self):
+    return (self.is_administrator() or self.is_moderator())
+
 def user_is_suspended(self):
     return (self.status == 's')
 
@@ -1950,6 +1953,7 @@ User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
+User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
