@@ -7,6 +7,6 @@ from askbot import forms
 class Command(NoArgsCommand):
     @transaction.commit_manually
     def handle_noargs(self, **options):
-        for user in User.object.all():
+        for user in User.objects.all():
             user.add_missing_askbot_subscriptions()
             transaction.commit()
