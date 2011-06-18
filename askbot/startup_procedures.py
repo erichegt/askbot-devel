@@ -8,7 +8,7 @@ question: why not run these from askbot/__init__.py?
 the main function is run_startup_tests
 """
 from django.db import transaction
-from django.conf import settings
+from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
 
@@ -20,7 +20,7 @@ def test_askbot_url():
     well-formedness and raises the ImproperlyConfigured
     exception, if the setting is not good.
     """
-    url = settings.ASKBOT_URL
+    url = django_settings.ASKBOT_URL
     if url != '':
 
         if isinstance(url, str) or isinstance(url, unicode):
@@ -64,22 +64,29 @@ def test_middleware():
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     missing_middleware = list()
     for middleware in required_middleware:
-        if middleware not in settings.MIDDLEWARE_CLASSES:
+        if middleware not in django_settings.MIDDLEWARE_CLASSES:
             missing_middleware.append(middleware)
 
     debug_toolbar_middleware = 'debug_toolbar.middleware.DebugToolbarMiddleware'
-    if 'debug_toolbar' in settings.INSTALLED_APPS:
-        if debug_toolbar_middleware not in settings.MIDDLEWARE_CLASSES:
+    if 'debug_toolbar' in django_settings.INSTALLED_APPS:
+        if debug_toolbar_middleware not in django_settings.MIDDLEWARE_CLASSES:
             missing_middleware.append(debug_toolbar_middleware)
 
     if missing_middleware:
         error_message = """Please add the following middleware (listed 
 after this message) to the MIDDLEWARE_CLASSES variable in your site settings.py file. 
 The order the middleware records may be important, please take a look at the example in 
-https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.py\n\n%s""" \
+https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.jy\n\n%s""" \
         % ', '.join(missing_middleware)
         raise ImproperlyConfigured(error_message)
 
+def test_i18n():
+    if getattr(django_settings, 'USE_I18N', False) == False:
+        raise ImproperlyConfigured(
+            'Please set USE_I18N = True in settings.py and '
+            'set the LANGUAGE_CODE parameter correctly '
+            'it is very important for askbot.'
+        )
 
 def run_startup_tests():
     """function that runs
@@ -88,6 +95,7 @@ def run_startup_tests():
 
     #todo: refactor this when another test arrives
     test_askbot_url()
+    test_i18n()
     test_middleware()
 
 @transaction.commit_manually
