@@ -71,7 +71,7 @@ Settings below are not perfect but may be a good starting point::
 
          #aliases to serve static media directly
          #will probably need adjustment
-         Alias /m/ /usr/local/lib/python2.6/site-packages/askbot/skins/default/media/
+         Alias /m/ /usr/local/lib/python2.6/site-packages/askbot/skins/
          Alias /upfiles/ /path/to/django-project/askbot/upfiles/
          Alias /admin/media/ /usr/local/lib/python2.6/site-packages/django/contrib/admin/media/
          <DirectoryMatch "/path/to/django-project/askbot/skins/([^/]+)/media">
