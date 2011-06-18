@@ -161,6 +161,52 @@ class Answer(content.Content, DeletableContent):
         self.question.last_activity_by = edited_by
         self.question.save()
 
+    def repost_as_question(self, new_title = None):
+        """posts answer as question, together with all the comments
+        while preserving time stamps and authors
+        does not delete the answer itself though
+        """
+        revisions = self.revisions.all().order_by('revised_at')
+        rev0 = revisions[0]
+        new_question = rev0.author.post_question(
+            title = new_title,
+            body_text = rev0.text,
+            tags = self.question.tagnames,
+            wiki = self.question.wiki,
+            is_anonymous = self.question.is_anonymous,
+            timestamp = rev0.revised_at
+        )
+        if len(revisions) > 1:
+            for rev in revisions[1:]:
+                rev.author.edit_question(
+                    question = new_question,
+                    body_text = rev.text,
+                    revision_comment = rev.summary,
+                    timestamp = rev.revised_at
+                )
+        for comment in self.comments.all():
+            comment.content_object = new_question
+            comment.save()
+        return new_question
+
+    def swap_with_question(self, new_title = None):
+        """swaps answer with the question it belongs to and
+        sets the title of question to ``new_title``
+        """
+        #1) make new question by using new title, tags of old question
+        #   and the answer body, as well as the authors of all revisions
+        #   and repost all the comments
+        new_question = self.repost_as_question(new_title = new_title)
+
+        #2) post question (all revisions and comments) as answer
+        new_answer = self.question.repost_as_answer(question = new_question)
+
+        #3) assign all remaining answers to the new question
+        self.question.answers.update(question = new_question)
+        self.question.delete()
+        self.delete()
+        return new_question
+
     def add_revision(self, author=None, revised_at=None, text=None, comment=None):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):

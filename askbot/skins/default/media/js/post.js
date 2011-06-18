@@ -1394,10 +1394,61 @@ var socialSharing = function(){
     }
 }(); 
 
+/**
+ * @constructor
+ * @extends {SimpleControl}
+ */
+var QASwapper = function(){
+    SimpleControl.call(this);
+    this._ans_id = null;
+};
+inherits(QASwapper, SimpleControl);
+
+QASwapper.prototype.decorate = function(element){
+    this._element = element;
+    this._ans_id = parseInt(element.attr('id').split('-').pop());
+    var me = this;
+    this.setHandler(function(){
+        me.startSwapping();
+    });
+};
+
+QASwapper.prototype.startSwapping = function(){
+    while (true){
+        var title = prompt(gettext('Please enter question title (>10 characters)'));
+        if (title.length >= 10){
+            var data = {new_title: title, answer_id: this._ans_id};
+            $.ajax({
+                type: "POST",
+                cache: false,
+                dataType: "json",
+                url: askbot['urls']['swap_question_with_answer'],
+                data: data,
+                success: function(data){
+                    var url_template = askbot['urls']['question_url_template'];
+                    new_question_url = url_template.replace(
+                        '{{QuestionID}}', 
+                        data['id']
+                    ).replace(
+                        '{{questionSlug}}',
+                        data['slug']
+                    );
+                    window.location.href = new_question_url;
+                }
+            });
+            break;
+        }
+    }
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();
         comments.decorate(element);
+    });
+    $('[id^="swap-question-with-answer-"]').each(function(idx, element){
+        var swapper = new QASwapper();
+        swapper.decorate($(element));
     });
     questionRetagger.init();
     socialSharing.init();

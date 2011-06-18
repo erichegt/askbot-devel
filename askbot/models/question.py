@@ -457,14 +457,12 @@ class Question(content.Content, DeletableContent):
             self.save()
    
     def update_favorite_count(self):
-        """
-        update favourite_count for given question
+        """update favourite_count for given question
         """
         self.favourite_count = FavoriteQuestion.objects.filter(
                                                             question=self
                                                         ).count()
         self.save()
-
 
     def get_similar_questions(self):
         """
@@ -601,6 +599,31 @@ class Question(content.Content, DeletableContent):
             return True
 
         return False
+
+    def repost_as_answer(self, question = None):
+        """posts question as answer to another question,
+        but does not delete the question,
+        but moves all the comments to the new answer"""
+        revisions = self.revisions.all().order_by('revised_at')
+        rev0 = revisions[0]
+        new_answer = rev0.author.post_answer(
+            question = question,
+            body_text = rev0.text,
+            wiki = self.wiki,
+            timestamp = rev0.revised_at
+        )
+        if len(revisions) > 1:
+            for rev in revisions:
+                rev.author.edit_answer(
+                    answer = new_answer,
+                    body_text = rev.text,
+                    revision_comment = rev.summary,
+                    timestamp = rev.revised_at
+                )
+        for comment in self.comments.all():
+            comment.content_object = new_answer
+            comment.save()
+        return new_answer
 
     def delete(self):
         super(Question, self).delete()
@@ -782,7 +805,12 @@ class Question(content.Content, DeletableContent):
         if no_slug == True:
             return url
         else:
-            return url + django_urlquote(slugify(self.title))
+            return url + django_urlquote(self.slug)
+
+    def _get_slug(self):
+        return slugify(self.title)
+
+    slug = property(_get_slug)
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
