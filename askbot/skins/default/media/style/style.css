@@ -591,7 +591,7 @@ ul#search-tags {
     margin: 0 3px;
     padding: 4px 2px 0px 2px;
     width: 46px;
-    float: left;
+    float: right;
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;

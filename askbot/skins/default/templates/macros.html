@@ -395,15 +395,15 @@ poor design of the data or methods on data objects #}
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">
-            <div class="votes 
-                        {% if question.score == 0 -%}
-                            no-votes
-                        {% else -%}
-                            some-votes
-                        {%- endif -%}">
-                <span class="item-count">{{question.score|humanize_counter}}</span>
+            <div class="views
+                 {% if question.view_count == 0 -%}
+                    no-views
+                 {% else -%}
+                    some-views
+                 {%- endif -%}">
+                 <span class="item-count">{{question.view_count|humanize_counter}}</span>
                 <div>
-                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
+                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
                 </div>
             </div>
             <div class="answers
@@ -423,15 +423,15 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
                 </div>
             </div>
-            <div class="views
-                 {% if question.view_count == 0 -%}
-                    no-views
-                 {% else -%}
-                    some-views
-                 {%- endif -%}">
-                 <span class="item-count">{{question.view_count|humanize_counter}}</span>
+            <div class="votes 
+                        {% if question.score == 0 -%}
+                            no-votes
+                        {% else -%}
+                            some-votes
+                        {%- endif -%}">
+                <span class="item-count">{{question.score|humanize_counter}}</span>
                 <div>
-                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
+                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div>
             <div style="clear:both"></div>
