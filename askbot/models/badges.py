@@ -859,6 +859,7 @@ EVENTS_TO_BADGES = {
                     NiceQuestion, GoodQuestion,
                     GreatQuestion, Student, Supporter, CivicDuty
                 ),
+    'upvote_comment':(),#todo - add some badges here
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
 }
 

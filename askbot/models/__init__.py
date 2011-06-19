@@ -1699,7 +1699,8 @@ VOTES_TO_EVENTS = {
     (Vote.VOTE_UP, 'answer'): 'upvote_answer',
     (Vote.VOTE_UP, 'question'): 'upvote_question',
     (Vote.VOTE_DOWN, 'question'): 'downvote',
-    (Vote.VOTE_DOWN, 'answer'): 'downvote'
+    (Vote.VOTE_DOWN, 'answer'): 'downvote',
+    (Vote.VOTE_UP, 'comment'): 'upvote_comment',
 }
 @auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
@@ -1735,7 +1736,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
                     content_object = post,
                     vote = vote_type,
                     voted_at = timestamp,
-                    )
+                )
         elif vote.is_opposite(vote_type):
             vote.vote = vote_type
         else:

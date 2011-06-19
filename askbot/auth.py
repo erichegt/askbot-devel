@@ -25,20 +25,25 @@ def onFlaggedItem(post, user, timestamp=None):
     post.offensive_flag_count = post.offensive_flag_count + 1
     post.save()
 
-    post.author.receive_reputation(
+    if post.post_type == 'comment':#todo: fix this
+        flagged_user = post.user
+    else:
+        flagged_user = post.author
+
+    flagged_user.receive_reputation(
         askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
     )
-    post.author.save()
+    flagged_user.save()
 
     question = post.get_origin_post()
 
     reputation = Repute(
-                    user=post.author,
+                    user=flagged_user,
                     negative=askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG,
                     question=question,
                     reputed_at=timestamp,
                     reputation_type=-4,#todo: clean up magic number
-                    reputation=post.author.reputation
+                    reputation=flagged_user.reputation
                 )
     reputation.save()
 
@@ -48,40 +53,47 @@ def onFlaggedItem(post, user, timestamp=None):
         mark_by=user
     )
 
+    if post.post_type == 'comment':
+        #do not hide or delete comments automatically yet,
+        #because there is no .deleted field in the comment model
+        return
+
     #todo: These should be updated to work on same revisions.
     if post.offensive_flag_count ==  askbot_settings.MIN_FLAGS_TO_HIDE_POST:
-        post.author.receive_reputation(
+        #todo: strange - are we supposed to hide the post here or the name of
+        #setting is incorrect?
+        flagged_user.receive_reputation(
             askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
         )
 
-        post.author.save()
+        flagged_user.save()
 
         reputation = Repute(
-            user=post.author,
+            user=flagged_user,
             negative=\
                 askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
             question=question,
             reputed_at=timestamp,
             reputation_type=-6,
-            reputation=post.author.reputation
+            reputation=flagged_user.reputation
         )
         reputation.save()
 
     elif post.offensive_flag_count == askbot_settings.MIN_FLAGS_TO_DELETE_POST:
-        post.author.receive_reputation(
+        flagged_user.receive_reputation(
             askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
         )
 
-        post.author.save()
+        flagged_user.save()
 
         reputation = Repute(
-            user=post.author,
+            user=flagged_user,
             negative=\
                 askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
             question=question,
             reputed_at=timestamp,
             reputation_type=-7,
-            reputation=post.author.reputation
+            reputation=flagged_user.reputation
         )
         reputation.save()
 
@@ -163,9 +175,14 @@ def onUpVoted(vote, post, user, timestamp=None):
         timestamp = datetime.datetime.now()
     vote.save()
 
-    post.vote_up_count = int(post.vote_up_count) + 1
+    if post.post_type != 'comment':
+        post.vote_up_count = int(post.vote_up_count) + 1
     post.score = int(post.score) + 1
     post.save()
+
+    if post.post_type == 'comment':
+        #reputation is not affected by the comment votes
+        return
 
     if not (post.wiki or post.is_anonymous):
         author = post.author
@@ -194,11 +211,17 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
         timestamp = datetime.datetime.now()
     vote.delete()
 
-    post.vote_up_count = int(post.vote_up_count) - 1
-    if post.vote_up_count < 0:
-        post.vote_up_count  = 0
+    if post.post_type != 'comment':
+        post.vote_up_count = int(post.vote_up_count) - 1
+        if post.vote_up_count < 0:
+            post.vote_up_count  = 0
+
     post.score = int(post.score) - 1
     post.save()
+
+    if post.post_type == 'comment':
+        #comment votes do not affect reputation
+        return
 
     if not (post.wiki or post.is_anonymous):
         author = post.author

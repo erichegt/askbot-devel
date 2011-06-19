@@ -88,6 +88,7 @@ class Comment(base.MetaContent, base.UserContent):
     added_at = models.DateTimeField(default = datetime.datetime.now)
     html = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH, default='')
     score = models.IntegerField(default = 0)
+    offensive_flag_count = models.IntegerField(default = 0)
 
     _urlize = True
     _use_markdown = False
