@@ -958,6 +958,32 @@ a:hover.medal {
     clear: both;
 }
 
+.comments .content {
+    width: 650px;
+    float: right;
+}
+
+.comments div.comment {
+    min-height: 25px;
+}
+
+div.comment .comment-votes {
+    position:absolute;
+    width: 20px;
+    height: 25px;
+    margin-left: -20px;
+}
+
+div.comment .comment-votes .upvote.hover {
+    background: url(../images/go-up-grey.png) no-repeat;
+    padding-left: 16px;
+}
+
+div.comment .comment-votes .upvote:hover {
+    background: url(../images/go-up-orange.png) no-repeat;
+    padding-left: 16px;
+}
+
 .comments div.controls {
     clear: both;
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
@@ -1782,7 +1808,6 @@ button::-moz-focus-inner {
     margin: 0;
     color: #444;
     padding: 2px 3px 5px 3px;
-    width: 670px;
     overflow: auto;
 }
 

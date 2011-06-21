@@ -1059,6 +1059,17 @@ Comment.prototype.decorate = function(element){
         this._edit_link.decorate(edit_link);
     }
 
+    var comment_vote = this._element.find('.upvote');
+    var height = this._element.height();
+    this._element.find('.comment-votes').height(height);
+    this._element.mouseenter(function(){
+        comment_vote.addClass('hover');
+        comment_vo
+    });
+    this._element.mouseleave(function(){
+        comment_vote.removeClass('hover');
+    });
+
     this._blank = false;
 };
 
