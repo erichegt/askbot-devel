@@ -35,8 +35,8 @@ Now run the Django development server and check that everything works::
 
 Connect to the Django development server with your Web browser. The address is the name
 (or IP address) of your site followed by ":8000" (or whatever port number you chose above).
-Once the fresh copy of Askbot appears in your browser, create the administrator account by
-registering at the site.
+Once the fresh copy of Askbot appears in your browser, create a new account at the site.
+This will be your administrator account.
 
 Finally, turn the newly added user into a superuser by running::
 
