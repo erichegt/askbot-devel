@@ -8,7 +8,7 @@ When you install Askbot the first time and any time you upgrade the software, ru
 
     python manage.py syncdb
 
-When you will be suggested to create a superuser, answer **no**.
+When the script asks you if you want to create a superuser, answer **no**.
 
 Then run::
 
