@@ -35,6 +35,11 @@ Then jump into the new directory and run::
 
  python setup.py develop #the develop option will not install askbot into the python site packages directory
 
+.. note::
+
+    `setup.py` installs the Python modules required by Askbot into the proper directory (e.g.
+    `/usr/bin/python2.6/site-packages`).
+
 How to install into custom directories
 ======================================
 
