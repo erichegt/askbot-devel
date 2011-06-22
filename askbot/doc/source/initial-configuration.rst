@@ -15,19 +15,20 @@ When installing Askbot for the first time, you will need to initialize the site 
     startforum
 
 and answering the questions. The `startforum` script will ask you where to deploy Askbot. If you are in
-the directory where the Askbot project resides, you can answer `.` (the `.` refers to the current directory).
+the directory where the Askbot project resides, you can answer `.` (`.` refers to the current directory).
 There may be an error message; ignore it.
 
 .. note::
 
-    All Django sites have four project-wide files:
+    All Django sites have four project-wide files::
 
         settings.py - the main settings configuration file
-        urls.py - main url configuration
+        urls.py     - main url configuration
         __init__.py - often empty but needed for Python
-        manage.py - the hook allowing to run management commands
+        manage.py   - the hook allowing to run management commands
 
     `startforum` adds those files to the directory you select (and some more things specific to Askbot).
+
 
 Note that if you already have a Django site you will not want to use `startforum`, because you don't want to just overwrite your existing settings.py. See below for instructions.
 
