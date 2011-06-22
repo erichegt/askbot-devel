@@ -107,6 +107,11 @@ urlpatterns = patterns('',
         name='question_revisions'
     ),
     url(#ajax only
+        r'^comment/upvote/$',
+        views.commands.upvote_comment,
+        name = 'upvote_comment'
+    ),
+    url(#ajax only
         r'^post_comments/$',
         views.writers.post_comments, 
         name='post_comments'

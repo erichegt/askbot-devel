@@ -38,6 +38,16 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(post.deleted_by == None)
         self.assertTrue(post.deleted_at == None)
 
+    def test_get_question_comments(self):
+        comment = self.user.post_comment(
+            parent_post = self.question,
+            body_text = 'lalalalalalalalal hahahah'
+        )
+        self.other_user.upvote(comment)
+        comments = self.question.get_comments(visitor = self.other_user)
+        self.assertEquals(len(comments), 1)
+        self.assertEquals(comments[0].upvoted_by_user, True)
+
     def test_flag_question(self):
         self.user.set_status('m')
         self.user.flag_post(self.question)

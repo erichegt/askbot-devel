@@ -536,6 +536,23 @@ def swap_question_with_answer(request):
             }
     raise Http404
 
+@decorators.ajax_only
+@decorators.post_only
+def upvote_comment(request):
+    import pdb
+    pdb.set_trace()
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied(_('Please sign in to vote'))
+    form = forms.VoteForm(request.POST)
+    if form.is_valid():
+        comment_id = form.cleaned_data['post_id']
+        cancel_vote = form.cleaned_data['cancel_vote']
+        comment = models.Comment.objects.get(id = comment_id)
+        request.user.upvote(comment, cancel = cancel_vote)
+    else:
+        raise ValueError
+    return {'score': comment.score}
+
 #askbot-user communication system
 def read_message(request):#marks message a read
     if request.method == "POST":

@@ -509,7 +509,7 @@ def answer(request, id):#process a new answer
 def __generate_comments_json(obj, user):#non-view generates json data for the post comments
     """non-view generates json data for the post comments
     """
-    comments = obj.comments.all().order_by('id')
+    comments = obj.get_comments(visitor = user)
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
     for comment in comments:
@@ -543,7 +543,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
-def post_comments(request):#non-view generic ajax handler to load comments to an object
+def post_comments(request):#generic ajax handler to load comments to an object
     # only support get post comments by ajax now
     user = request.user
     if request.is_ajax():
@@ -604,6 +604,7 @@ def edit_comment(request):
             'user_id': comment.user.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
+            'voted': comment.is_upvoted_by(request.user),
         }
     else:
         raise exceptions.PermissionDenied(

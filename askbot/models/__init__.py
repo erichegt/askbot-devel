@@ -1786,7 +1786,8 @@ def user_is_following_question(user, question):
 
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_UP
@@ -1794,7 +1795,8 @@ def upvote(self, post, timestamp=None, cancel=False):
 
 def downvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_DOWN

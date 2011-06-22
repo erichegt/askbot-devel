@@ -447,6 +447,7 @@
             askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
             askbot['urls']['vote_url_template'] = scriptUrl + '{% trans %}questions/{% endtrans %}{{ "{{QuestionID}}/" }}{% trans %}vote/{% endtrans %}';
             askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
+            askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
             askbot['messages']['addComment'] = '{% trans %}add comment{% endtrans %}';
             {% if settings.SAVE_COMMENT_ON_ENTER %}
                 askbot['settings']['saveCommentOnEnter'] = true;

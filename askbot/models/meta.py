@@ -296,6 +296,15 @@ class Comment(base.MetaContent, base.UserContent):
     def get_latest_revision_number(self):
         return 1
 
+    def is_upvoted_by(self, user):
+        content_type = ContentType.objects.get_for_model(self)
+        what_to_count = {
+            'user': user,
+            'object_id': self.id,
+            'content_type': self.content_type
+        }
+        return Vote.objects.count(**what_to_count) > 0
+
     def is_last(self):
         """True if there are no newer comments on 
         the related parent object
