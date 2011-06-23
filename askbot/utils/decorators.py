@@ -87,12 +87,17 @@ def ajax_only(view_func):
             if message == '':
                 message = _('Oops, apologies - there was some error')
             logging.debug(message)
-            return HttpResponse(message, status = 404, mimetype='application/json')
+            data = {
+                'message': message,
+                'success': 0
+            }
+            return HttpResponse(simplejson.dumps(data), mimetype='application/json')
 
         if isinstance(data, HttpResponse):#is this used?
             data.mimetype = 'application/json'
             return data
         else:
+            data['success'] = 1
             json = simplejson.dumps(data)
             return HttpResponse(json,mimetype='application/json')
     return wrapper

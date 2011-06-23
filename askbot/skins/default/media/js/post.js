@@ -198,11 +198,12 @@ CommentVoteButton.prototype.getVoteHandler = function(){
             url: askbot['urls']['upvote_comment'],
             cache: false,
             success: function(data){
-                me.setScore(data['score']);
-                me.setVoted(true);
-            },
-            error: function(xhr, textStatus, exception) {
-                showMessage(comment.getElement(), xhr.responseText, 'after');
+                if (data['success'] == true){
+                    me.setScore(data['score']);
+                    me.setVoted(true);
+                } else {
+                    showMessage(comment.getElement(), data['message'], 'after');
+                }
             }
         });
     };
