@@ -142,21 +142,16 @@ var CPValidator = function(){
 }();
 
 /**
- * @enum {number}
- */
-var VoteType = {
-    UP: 0,
-    DOWN: 1,
-};
-
-/**
  * @constructor
  * @extends {SimpleControl}
- * @param {VoteType} vote_type
- * @param {string} vote_url
+ * @param {Comment} comment to upvote 
  */
-var CommentVoteButton = function(vote_type, vote_url){
+var CommentVoteButton = function(comment){
     SimpleControl.call(this);
+    /**
+     * @param {Comment}
+     */
+    this._comment = comment;
     /**
      * @type {boolean}
      */
@@ -165,32 +160,8 @@ var CommentVoteButton = function(vote_type, vote_url){
      * @type {number}
      */
     this._score = 0;
-    /**
-     * @type {VoteType}
-     */
-    this._vote_type = vote_type;
-    /**
-     * @type {string}
-     */
-    this._vote_url = vote_url;
-    /**
-     * @type {?number}
-     */
-    this._post_id;
 };
 inherits(CommentVoteButton, SimpleControl);
-/**
- * @param {number}
- */
-CommentVoteButton.prototype.setCommentId = function(post_id){
-    this._post_id = post_id;
-};
-/**
- * a hack. this method is to be called before CommentVoteButton.getElement()
- */
-CommentVoteButton.prototype.setCommentElement = function(celem){
-    this._comment_element = celem;
-};
 /**
  * @param {number} score
  */
@@ -205,14 +176,17 @@ CommentVoteButton.prototype.setScore = function(score){
  */
 CommentVoteButton.prototype.setVoted = function(voted){
     this._voted = voted;
+    if (this._element){
+        this._element.addClass('upvoted');
+    }
 };
 
 CommentVoteButton.prototype.getVoteHandler = function(){
     var me = this;
+    var comment = this._comment;
     return function(){
         var voted = me._voted;
-        var post_id = me._post_id;
-        var url = me._vote_url;
+        var post_id = me._comment.getId();
         var data = {
             cancel_vote: voted ? true:false,
             post_id: post_id
@@ -221,14 +195,14 @@ CommentVoteButton.prototype.getVoteHandler = function(){
             type: 'POST',
             data: data,
             dataType: 'json',
-            url: url,
+            url: askbot['urls']['upvote_comment'],
             cache: false,
             success: function(data){
                 me.setScore(data['score']);
                 me.setVoted(true);
             },
             error: function(xhr, textStatus, exception) {
-                showMessage(me.getElement(), xhr.responseText, 'after');
+                showMessage(comment.getElement(), xhr.responseText, 'after');
             }
         });
     };
@@ -236,33 +210,34 @@ CommentVoteButton.prototype.getVoteHandler = function(){
 
 CommentVoteButton.prototype.decorate = function(element){
     this._element = element;
-
     this.setHandler(this.getVoteHandler());
 
-    var comment_vote = this._element.find('.upvote');
-    if (this._element.parent()){
-        var height = this._element.parent().height();
-        this._element.height(height);
-    }
     var element = this._element;
-    this._comment_element.mouseenter(function(){
-        elment.addClass('hover');
+    var comment = this._comment;
+    /* can't call comment.getElement() here due
+     * an issue in the getElement() of comment
+     * so use an "illegal" access to comment._element here
+     */
+    comment._element.mouseenter(function(){
+        //outside height may not be known
+        var height = comment.getElement().height();
+        element.height(height);
+        element.addClass('hover');
     });
-    this._comment_element.mouseleave(function(){
+    comment._element.mouseleave(function(){
         element.removeClass('hover');
     });
 
 };
 
 CommentVoteButton.prototype.createDom = function(){
-    this._element = this.makeElement('span');
-    if (this._vote_type === VoteType.UP){
-        this._element.addClass('upvote');
-    } else if (this._vote_type === VoteType.DOWN){
-        this._element.addClass('downvote');
+    this._element = this.makeElement('div');
+    if (this._score > 0){
+        this._element.html(this._score);
     }
+    this._element.addClass('upvote');
     if (this._voted){
-        this._element.addClass('voted');
+        this._element.addClass('upvoted');
     }
     this.decorate(this._element);
 };
@@ -1188,10 +1163,7 @@ Comment.prototype.decorate = function(element){
         this._edit_link.decorate(edit_link);
     }
 
-    var url = askbot['urls']['upvote_comment'];
-    var vote = new CommentVoteButton(VoteType.UP, url);
-    vote.setCommentId(comment_id);
-    vote.setCommentElement(this._element);
+    var vote = new CommentVoteButton(this);
     vote.decorate(this._element.find('.comment-votes .upvote'));
 
     this._blank = false;
@@ -1235,14 +1207,11 @@ Comment.prototype.setContent = function(data){
     var votes = this.makeElement('div');
     votes.addClass('comment-votes');
     
-    var vote_url = askbot['urls']['upvote_comment'];
-    var vote = new CommentVoteButton(VoteType.UP, vote_url);
+    var vote = new CommentVoteButton(this);
     if (this._data['upvoted_by_user']){
         vote.setVoted(true);
     }
     vote.setScore(this._data['score']);
-    vote.setCommentId(this._data['id']);
-    vote.setCommentElement(this._element);
     votes.append(vote.getElement());
 
     this._element.append(votes);

@@ -529,7 +529,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 
 
         comment_owner = comment.get_owner()
-        json_comments.append({'id' : comment.id,
+        comment_data = {'id' : comment.id,
             'object_id': obj.id,
             'comment_age': diff_date(comment.added_at),
             'html': comment.html,
@@ -538,7 +538,10 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
-        })
+            'score': comment.score,
+            'upvoted_by_user': getattr(comment, 'upvoted_by_user', False)
+        }
+        json_comments.append(comment_data)
 
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")

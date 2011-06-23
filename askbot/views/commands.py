@@ -35,7 +35,6 @@ def process_vote(user = None, vote_direction = None, post = None):
     also in the future make keys in response data be more meaningful
     right now they are kind of cryptic - "status", "count"
     """
-
     if user.is_anonymous():
         raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
 
@@ -539,8 +538,6 @@ def swap_question_with_answer(request):
 @decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
-    import pdb
-    pdb.set_trace()
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied(_('Please sign in to vote'))
     form = forms.VoteForm(request.POST)
@@ -548,7 +545,11 @@ def upvote_comment(request):
         comment_id = form.cleaned_data['post_id']
         cancel_vote = form.cleaned_data['cancel_vote']
         comment = models.Comment.objects.get(id = comment_id)
-        request.user.upvote(comment, cancel = cancel_vote)
+        process_vote(
+            post = comment,
+            vote_direction = 'up',
+            user = request.user
+        )
     else:
         raise ValueError
     return {'score': comment.score}

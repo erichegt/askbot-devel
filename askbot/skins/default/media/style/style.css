@@ -968,20 +968,29 @@ a:hover.medal {
 }
 
 div.comment .comment-votes {
-    position:absolute;
+    position: absolute;
     width: 20px;
-    height: 25px;
-    margin-left: -20px;
+    margin: -2px 0 0 -20px;
 }
 
-div.comment .comment-votes .upvote.hover {
+div.comment .upvote {
+    width: 20px;
+    height: 20px;
+    padding: 3px 0 0 3px;
+    font-weight: bold;
+    color: #777;
+}
+
+div.comment .upvote.upvoted {
+    color: #d64000;
+}
+
+div.comment .upvote.hover {
     background: url(../images/go-up-grey.png) no-repeat;
-    padding-left: 16px;
 }
 
-div.comment .comment-votes .upvote:hover {
+div.comment .upvote:hover {
     background: url(../images/go-up-orange.png) no-repeat;
-    padding-left: 16px;
 }
 
 .comments div.controls {
@@ -1807,7 +1816,7 @@ button::-moz-focus-inner {
     border-top: 1px dotted #ccccce;
     margin: 0;
     color: #444;
-    padding: 2px 3px 5px 3px;
+    padding: 5px 3px 5px 3px;
     overflow: auto;
 }
 
