@@ -647,6 +647,24 @@ class AnswerForm(forms.Form):
                 return
         self.fields['email_notify'].initial = False
 
+class VoteForm(forms.Form):
+    """form used in ajax vote view (only comment_upvote so far)
+    """
+    post_id = forms.IntegerField()
+    cancel_vote = forms.CharField()#char because it is 'true' or 'false' as string
+
+    def clean_cancel_vote(self):
+        val = self.cleaned_data['cancel_vote']
+        if val == 'true':
+            result = True
+        elif val == 'false':
+            result = False
+        else:
+            del self.cleaned_data['cancel_vote']
+            raise forms.ValidationError('either "true" or "false" strings expected')
+        self.cleaned_data['cancel_vote'] = result
+        return self.cleaned_data['cancel_vote']
+
 
 class CloseForm(forms.Form):
     reason = forms.ChoiceField(choices=const.CLOSE_REASONS)

@@ -450,9 +450,23 @@ poor design of the data or methods on data objects #}
     </div>
 {%- endmacro -%}
 
+{%- macro comment_votes(comment = None) -%}
+    <div class="comment-votes">
+        {% if comment.score > 0 %}
+        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">
+            {{comment.score}}
+        </div>
+        {% else %}
+        <div class="upvote">
+        </div>
+        {% endif %}
+    </div>
+{%- endmacro -%}
+
 {%- macro comment_list(comments = None, user = None) -%}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
+        {{ comment_votes(comment = comment) }}
         {{comment.html}} -
         <a 
             class="author" 
@@ -501,14 +515,14 @@ poor design of the data or methods on data objects #}
         <div class="content">
             {% if show_post == post and show_comment %}
                 {% if comment_order_number > max_comments %}
-                    {% set comments = post.get_comments()[:comment_order_number] %}
+                    {% set comments = post.get_comments(visitor = user)[:comment_order_number] %}
                     {{ comment_list(comments = comments, user = user) }}
                 {% else %}
-                    {% set comments = post.get_comments()[:max_comments] %}
+                    {% set comments = post.get_comments(visitor = user)[:max_comments] %}
                     {{ comment_list(comments = comments, user = user) }}
                 {% endif %}
             {% else %}
-                {% set comments = post.get_comments()[:max_comments] %}
+                {% set comments = post.get_comments(visitor = user)[:max_comments] %}
                 {{ comment_list(comments = comments, user = user) }}
             {% endif %}
         </div>

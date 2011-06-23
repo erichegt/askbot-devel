@@ -141,7 +141,111 @@ var CPValidator = function(){
     };
 }();
 
+/**
+ * @constructor
+ * @extends {SimpleControl}
+ * @param {Comment} comment to upvote 
+ */
+var CommentVoteButton = function(comment){
+    SimpleControl.call(this);
+    /**
+     * @param {Comment}
+     */
+    this._comment = comment;
+    /**
+     * @type {boolean}
+     */
+    this._voted = false;
+    /**
+     * @type {number}
+     */
+    this._score = 0;
+};
+inherits(CommentVoteButton, SimpleControl);
+/**
+ * @param {number} score
+ */
+CommentVoteButton.prototype.setScore = function(score){
+    this._score = score;
+    if (this._element){
+        this._element.html(score);
+    }
+};
+/**
+ * @param {boolean} voted
+ */
+CommentVoteButton.prototype.setVoted = function(voted){
+    this._voted = voted;
+    if (this._element){
+        this._element.addClass('upvoted');
+    }
+};
 
+CommentVoteButton.prototype.getVoteHandler = function(){
+    var me = this;
+    var comment = this._comment;
+    return function(){
+        var voted = me._voted;
+        var post_id = me._comment.getId();
+        var data = {
+            cancel_vote: voted ? true:false,
+            post_id: post_id
+        };
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            url: askbot['urls']['upvote_comment'],
+            cache: false,
+            success: function(data){
+                me.setScore(data['score']);
+                me.setVoted(true);
+            },
+            error: function(xhr, textStatus, exception) {
+                showMessage(comment.getElement(), xhr.responseText, 'after');
+            }
+        });
+    };
+};
+
+CommentVoteButton.prototype.decorate = function(element){
+    this._element = element;
+    this.setHandler(this.getVoteHandler());
+
+    var element = this._element;
+    var comment = this._comment;
+    /* can't call comment.getElement() here due
+     * an issue in the getElement() of comment
+     * so use an "illegal" access to comment._element here
+     */
+    comment._element.mouseenter(function(){
+        //outside height may not be known
+        var height = comment.getElement().height();
+        element.height(height);
+        element.addClass('hover');
+    });
+    comment._element.mouseleave(function(){
+        element.removeClass('hover');
+    });
+
+};
+
+CommentVoteButton.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    if (this._score > 0){
+        this._element.html(this._score);
+    }
+    this._element.addClass('upvote');
+    if (this._voted){
+        this._element.addClass('upvoted');
+    }
+    this.decorate(this._element);
+};
+
+/**
+ * legacy Vote class
+ * handles all sorts of vote-like operations
+ */
 var Vote = function(){
     // All actions are related to a question
     var questionId;
@@ -1059,6 +1163,9 @@ Comment.prototype.decorate = function(element){
         this._edit_link.decorate(edit_link);
     }
 
+    var vote = new CommentVoteButton(this);
+    vote.decorate(this._element.find('.comment-votes .upvote'));
+
     this._blank = false;
 };
 
@@ -1096,6 +1203,18 @@ Comment.prototype.setContent = function(data){
     this._element.html('');
     this._element.attr('class', 'comment');
     this._element.attr('id', 'comment-' + this._data['id']);
+
+    var votes = this.makeElement('div');
+    votes.addClass('comment-votes');
+    
+    var vote = new CommentVoteButton(this);
+    if (this._data['upvoted_by_user']){
+        vote.setVoted(true);
+    }
+    vote.setScore(this._data['score']);
+    votes.append(vote.getElement());
+
+    this._element.append(votes);
 
     this._element.append(this._data['html']);
     this._element.append(' - ');

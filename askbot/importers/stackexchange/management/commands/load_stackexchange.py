@@ -6,7 +6,7 @@ import zipfile
 from django.core.management.base import BaseCommand, CommandError
 import askbot.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
-from django.db import models, transaction
+from django.db import models#, transaction
 #from askbot.utils import dummy_transaction as transaction
 import askbot.models as askbot
 import askbot.deps.django_authopenid.models as askbot_openid

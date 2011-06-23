@@ -3,6 +3,7 @@ functions that happen on behalf of users
 
 e.g. ``some_user.do_something(...)``
 """
+from django.core import exceptions
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
@@ -345,3 +346,34 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
             expected_subscribers = set([self.u2,]),
             reason = 'bad'
         )
+
+class CommentTests(AskbotTestCase):
+    """unfortunately, not very useful tests,
+    as assertions of type "user can" are not inside
+    the User.upvote() function
+    todo: refactor vote processing code
+    """
+    def setUp(self):
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.question = self.post_question()
+        self.now = datetime.datetime.now()
+        self.comment = self.user.post_comment(
+            parent_post = self.question,
+            body_text = 'lalalalalalalalal hahahah'
+        )
+
+    def test_other_user_can_upvote_comment(self):
+        self.other_user.upvote(self.comment)
+        comments = self.question.get_comments(visitor = self.other_user)
+        self.assertEquals(len(comments), 1)
+        self.assertEquals(comments[0].upvoted_by_user, True)
+
+
+    def test_other_user_can_cancel_upvote(self):
+        self.test_other_user_can_upvote_comment()
+        comment = models.Comment.objects.get(id = self.comment.id)
+        self.assertEquals(comment.score, 1)
+        self.other_user.upvote(comment, cancel = True)
+        comment = models.Comment.objects.get(id = self.comment.id)
+        self.assertEquals(comment.score, 0)

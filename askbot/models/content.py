@@ -1,8 +1,10 @@
 import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import html as html_utils
+from django.utils.datastructures import SortedDict
 from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
@@ -46,9 +48,29 @@ class Content(models.Model):
         abstract = True
         app_label = 'askbot'
 
-    def get_comments(self):
-        comments = self.comments.all().order_by('id')
-        return comments
+    def get_comments(self, visitor = None):
+        """returns comments for a post, annotated with
+        ``upvoted_by_user`` parameter, if visitor is logged in
+        otherwise, returns query set for all comments to a given post
+        """
+        if visitor.is_anonymous():
+            return self.comments.all().order_by('id')
+        else:
+            comment_content_type = ContentType.objects.get_for_model(Comment)
+            #a fancy query to annotate comments with the visitor votes
+            comments = self.comments.extra(
+                select = SortedDict([
+                            (
+                                'upvoted_by_user',
+                                'SELECT COUNT(*) from vote, comment '
+                                'WHERE vote.user_id = %s AND '
+                                'vote.content_type_id = %s AND '
+                                'vote.object_id = comment.id',
+                            )
+                        ]),
+                select_params = (visitor.id, comment_content_type.id)
+            ).order_by('id')
+            return comments
 
     #todo: maybe remove this wnen post models are unified
     def get_text(self):

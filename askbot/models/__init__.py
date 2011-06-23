@@ -336,7 +336,12 @@ def user_assert_can_vote_for_post(
     :param:post can be instance of question or answer
     """
 
-    if self == post.author:
+    #todo: after unifying models this if else will go away
+    if isinstance(post, Comment):
+        post_author = post.user
+    else:
+        post_author = post.author
+    if self == post_author:
         raise django_exceptions.PermissionDenied(_('cannot vote for own posts'))
 
     blocked_error_message = _(
@@ -1786,7 +1791,8 @@ def user_is_following_question(user, question):
 
 def upvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_UP
@@ -1794,7 +1800,8 @@ def upvote(self, post, timestamp=None, cancel=False):
 
 def downvote(self, post, timestamp=None, cancel=False):
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_DOWN
