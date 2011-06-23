@@ -6,8 +6,8 @@ This is the list of contributors to the code of Askbot project.
 The list is probably incomplete, apologies for any omissions.
 Thanks for all your help
 
-Programming
------------
+Programming and documentation
+-----------------------------
 * Mike Chen & Sailing Cai - original authors of CNPROG forum
 * Evgeny Fadeev - founder of askbot
 * Benoit Lavine (with Windriver Software, Inc.)
@@ -15,6 +15,7 @@ Programming
 * `Adolfo Fitoria <http://fitoria.net>`_
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
+* `Tomasz Szynalski <http://antimoon.com>`_
 * Andy Knotts
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
 * Jeff Madynski
