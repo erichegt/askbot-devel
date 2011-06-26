@@ -301,9 +301,9 @@ class Comment(base.MetaContent, base.UserContent):
         what_to_count = {
             'user': user,
             'object_id': self.id,
-            'content_type': self.content_type
+            'content_type': content_type
         }
-        return Vote.objects.count(**what_to_count) > 0
+        return Vote.objects.filter(**what_to_count).count() > 0
 
     def is_last(self):
         """True if there are no newer comments on 
