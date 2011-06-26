@@ -978,11 +978,20 @@ def user_retag_question(
     )
 
 @auto_now_timestamp
-def user_accept_best_answer(self, answer = None,
-                            timestamp = None, cancel = False):
+def user_accept_best_answer(
+                self, answer = None,
+                timestamp = None,
+                cancel = False,
+                force = False
+            ):
     if cancel:
-        return self.unaccept_best_answer(answer = answer, timestamp = timestamp)
-    self.assert_can_accept_best_answer(answer)
+        return self.unaccept_best_answer(
+                                answer = answer,
+                                timestamp = timestamp,
+                                force = force
+                            )
+    if force == False:
+        self.assert_can_accept_best_answer(answer)
     if answer.accepted == True:
         return
 
@@ -999,8 +1008,13 @@ def user_accept_best_answer(self, answer = None,
     )
 
 @auto_now_timestamp
-def user_unaccept_best_answer(self, answer = None, timestamp = None):
-    self.assert_can_unaccept_best_answer(answer)
+def user_unaccept_best_answer(
+                self, answer = None,
+                timestamp = None,
+                force = False
+            ):
+    if force == False:
+        self.assert_can_unaccept_best_answer(answer)
     if answer.accepted == False:
         return
     auth.onAnswerAcceptCanceled(answer, self)
@@ -1200,8 +1214,10 @@ def user_edit_question(
                     wiki = False,
                     edit_anonymously = False,
                     timestamp = None,
+                    force = False,#if True - bypass the assert
                 ):
-    self.assert_can_edit_question(question)
+    if force == False:
+        self.assert_can_edit_question(question)
     question.apply_edit(
         edited_at = timestamp,
         edited_by = self,
@@ -1227,9 +1243,11 @@ def user_edit_answer(
                     body_text = None,
                     revision_comment = None,
                     wiki = False,
-                    timestamp = None
+                    timestamp = None,
+                    force = False#if True - bypass the assert
                 ):
-    self.assert_can_edit_answer(answer)
+    if force == False:
+        self.assert_can_edit_answer(answer)
     answer.apply_edit(
         edited_at = timestamp,
         edited_by = self,
@@ -1668,7 +1686,12 @@ def user_get_badge_summary(self):
 #may be different
 #maybe if we do use business rule checks here - we should add
 #some flag allowing to bypass them for things like the data importers
-def toggle_favorite_question(self, question, timestamp=None, cancel=False):
+def toggle_favorite_question(
+                        self, question,
+                        timestamp = None,
+                        cancel = False,
+                        force = False#this parameter is not used yet
+                    ):
     """cancel has no effect here, but is important for the SE loader
     it is hoped that toggle will work and data will be consistent
     but there is no guarantee, maybe it's better to be more strict 
@@ -1789,7 +1812,8 @@ def user_is_following_question(user, question):
         return False
 
 
-def upvote(self, post, timestamp=None, cancel=False):
+def upvote(self, post, timestamp=None, cancel=False, force = False):
+    #force parameter not used yet
     return _process_vote(
         self,
         post,
@@ -1798,7 +1822,8 @@ def upvote(self, post, timestamp=None, cancel=False):
         vote_type=Vote.VOTE_UP
     )
 
-def downvote(self, post, timestamp=None, cancel=False):
+def downvote(self, post, timestamp=None, cancel=False, force = False):
+    #force not used yet
     return _process_vote(
         self,
         post,
@@ -1808,11 +1833,12 @@ def downvote(self, post, timestamp=None, cancel=False):
     )
 
 @auto_now_timestamp
-def flag_post(user, post, timestamp=None, cancel=False):
+def flag_post(user, post, timestamp=None, cancel=False, force = False):
     if cancel:#todo: can't unflag?
         return
 
-    user.assert_can_flag_offensive(post = post)
+    if force == False:
+        user.assert_can_flag_offensive(post = post)
     auth.onFlaggedItem(post, user, timestamp=timestamp)
     award_badges_signal.send(None,
         event = 'flag_post',
