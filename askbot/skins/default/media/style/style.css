@@ -1004,8 +1004,8 @@ div.comment .upvote:hover {
 .comments textarea {
     display: block;
     height: 48px;
-    width: 664px;
-    margin: 0 0 4px 0;
+    width: 644px;
+    margin: 3px 0 4px 0;
     font-family: sans-serif;
     font-size: 12px;
     line-height: 15px;
