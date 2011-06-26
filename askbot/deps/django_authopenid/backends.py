@@ -5,6 +5,7 @@ application
 import datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 
@@ -47,9 +48,33 @@ class AuthBackend(object):
                 except User.DoesNotExist:
                     return None
             else:
-                #todo there must be a call to some sort of 
-                #an external "check_password" function
-                raise NotImplementedError('do not support external passwords')
+                if login_providers[provider_name]['check_password'](username, password):
+                    try:
+                        #if have user associated with this username and provider,
+                        #return the user
+                        assoc = UserAssociation.objects.get(
+                                        openid_url = username + '@' + provider_name,#a hack - par name is bad
+                                        provider_name = provider_name
+                                    )
+                        return assoc.user
+                    except UserAssociation.DoesNotExist:
+                        #race condition here a user with this name may exist
+                        user, created = User.objects.get_or_create(username = username)
+                        if created:
+                            user.set_password(password)
+                            user.save()
+                        else:
+                            #have username collision - so make up a more unique user name
+                            #bug: - if user already exists with the new username - we are in trouble
+                            new_username = '%s@%s' % (username, provider_name)
+                            user = User.objects.create_user(new_username, '', password)
+                            message = _(
+                                'Welcome! Please set email address (important!) in your '
+                                'profile and adjust screen name, if necessary.'
+                            )
+                            user.message_set.create(message = message)
+                else:
+                    return None
 
             #this is a catch - make login token a little more unique
             #for the cases when passwords are the same for two users
@@ -64,7 +89,7 @@ class AuthBackend(object):
                                     user = user,
                                     provider_name = provider_name
                                 )
-            assoc.openid_url = user.password + str(user.id)
+            assoc.openid_url = username + '@' + provider_name#has to be this way for external pw logins
 
         elif method == 'openid':
             provider_name = util.get_provider_name(openid_url)

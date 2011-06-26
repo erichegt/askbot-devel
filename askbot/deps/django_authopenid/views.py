@@ -514,6 +514,17 @@ def show_signin_view(
 
     if request.user.is_authenticated():
         existing_login_methods = UserAssociation.objects.filter(user = request.user)
+        #annotate objects with extra data
+        providers = util.get_enabled_login_providers()
+        for login_method in existing_login_methods:
+            provider_data = providers[login_method.provider_name]
+            if provider_data['type'] == 'password':
+                #only external password logins will not be deletable
+                #this is because users with those can lose access to their accounts permanently
+                login_method.is_deletable = provider_data.get('password_changeable', False)
+            else:
+                login_method.is_deletable = True
+
 
     if view_subtype == 'default':
         page_title = _('Please click any of the icons below to sign in')

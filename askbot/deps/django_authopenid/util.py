@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import cgi
 import urllib
+import functools
+import re
 from askbot.deps.openid.store.interface import OpenIDStore
 from askbot.deps.openid.association import Association as OIDAssociation
 from askbot.deps.openid.extensions import sreg
@@ -30,6 +32,8 @@ import time, base64, hashlib, operator, logging
 from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -183,6 +187,144 @@ def filter_enabled_providers(data):
 
     return data
 
+class LoginMethod(object):
+    """Helper class to add custom authentication modules
+    as plugins for the askbot's version of django_authopenid
+    """
+    def __init__(self, login_module_path):
+        from askbot.utils.loading import load_module
+        self.mod = load_module(login_module_path)
+        self.mod_path = login_module_path
+        self.read_params()
+
+    def get_required_attr(self, attr_name, required_for_what):
+        attr_value = getattr(self.mod, attr_name, None)
+        if attr_value is None:
+            raise ImproperlyConfigured(
+                '%s.%s is required for %s' % (
+                    self.mod_path,
+                    attr_name,
+                    required_for_what
+                )
+            )
+        return attr_value
+
+    def read_params(self):
+        self.is_major = getattr(self.mod, 'BIG_BUTTON', True)
+        if not isinstance(self.is_major, bool):
+            raise ImproperlyConfigured(
+                'Boolean value expected for %s.BIG_BUTTON' % self.mod_path
+            )
+
+        self.order_number = getattr(self.mod, 'ORDER_NUMBER', 1)
+        if not isinstance(self.order_number, int):
+            raise ImproperlyConfigured(
+                'Integer value expected for %s.ORDER_NUMBER' % self.mod_path
+            )
+            
+        self.name = getattr(self.mod, 'NAME', None)
+        if self.name is None or not isinstance(self.name, basestring):
+            raise ImproperlyConfigured(
+                '%s.NAME is required as a string parameter' % self.mod_path
+            )
+        if not re.search(r'^[a-zA-Z0-9]+$', self.name):
+            raise ImproperlyConfigured(
+                '%s.NAME must be a string of ASCII letters and digits only'
+            )
+
+        self.display_name = getattr(self.mod, 'DISPLAY_NAME', None)
+        if self.display_name is None or not isinstance(self.display_name, basestring):
+            raise ImproperlyConfigured(
+                '%s.DISPLAY_NAME is required as a string parameter' % self.mod_path
+            )
+        self.extra_token_name = getattr(self.mod, 'EXTRA_TOKEN_NAME', None)
+        self.login_type = getattr(self.mod, 'TYPE', None)
+        if self.login_type is None or self.login_type not in ALLOWED_LOGIN_TYPES:
+            raise ImproperlyConfigured(
+                "%s.TYPE must be a string "
+                "and the possible values are : 'password', 'oauth', "
+                "'openid-direct', 'openid-username'." % self.mod_path
+            )
+        self.icon_media_path = getattr(self.mod, 'ICON_MEDIA_PATH', None)
+        if self.icon_media_path is None:
+            raise ImproperlyConfigured(
+                '%s.ICON_MEDIA_PATH is required and must be a url '
+                'to the image used as login button' % self.mod_path
+            )
+
+        self.create_password_prompt = getattr(self.mod, 'CREATE_PASSWORD_PROMPT', None)
+        self.change_password_prompt = getattr(self.mod, 'CHANGE_PASSWORD_PROMPT', None)
+
+        if self.login_type == 'password':
+            self.check_password_function = self.get_required_attr(
+                                                        'check_password',
+                                                        'custom password login'
+                                                    )
+        if self.login_type == 'oauth':
+            for_what = 'custom OAuth login'
+            self.oauth_consumer_key = self.get_required_attr('OAUTH_CONSUMER_KEY', for_what)
+            self.oauth_consumer_secret = self.get_required_attr('OAUTH_CONSUMER_SECRET', for_what)
+            self.oauth_request_token_url = self.get_required_attr('OAUTH_REQUEST_TOKEN_URL', for_what)
+            self.oauth_access_token_url = self.get_required_attr('OAUTH_ACCESS_TOKEN_URL', for_what)
+            self.oauth_authorize_url = self.get_required_attr('OAUTH_AUTHORIZE_URL', for_what)
+            self.oauth_get_user_id_function = self.get_required_attr('oauth_get_user_id_function', for_what)
+
+        if self.login_type.startswith('openid'):
+            self.openid_endpoint = self.get_required_attr('OPENID_ENDPOINT', 'custom OpenID login')
+            if self.login_type == 'openid-username':
+                if '%(username)s' not in self.openid_endpoint:
+                    msg = 'If OpenID provider requires a username, ' + \
+                        'then value of %s.OPENID_ENDPOINT must contain ' + \
+                        '%(username)s so that the username can be transmitted to the provider'
+                    raise ImproperlyConfigured(msg % self.mod_path)
+
+        self.tooltip_text = getattr(self.mod, 'TOOLTIP_TEXT', None)
+
+    def as_dict(self):
+        """returns parameters as dictionary that
+        can be inserted into one of the provider data dictionaries
+        for the use in the UI"""
+        params = (
+            'name', 'display_name', 'type', 'icon_media_path',
+            'extra_token_name', 'create_password_prompt',
+            'change_password_prompt', 'consumer_key', 'consumer_secret',
+            'request_token_url', 'access_token_url', 'authorize_url',
+            'get_user_id_function', 'openid_endpoint', 'tooltip_text',
+            'check_password',
+        )
+        #some parameters in the class have different names from those
+        #in the dictionary
+        parameter_map = {
+            'type': 'login_type',
+            'consumer_key': 'oauth_consumer_key',
+            'consumer_secret': 'oauth_consumer_secret',
+            'request_token_url': 'oauth_request_token_url',
+            'access_token_url': 'oauth_access_token_url',
+            'authorize_url': 'oauth_authorize_url',
+            'get_user_id_function': 'oauth_get_user_id_function',
+            'check_password': 'check_password_function'
+        }
+        data = dict()
+        for param in params:
+            attr_name = parameter_map.get(param, param)
+            data[param] = getattr(self, attr_name, None)
+        if self.login_type == 'password':
+            #passwords in external login systems are not changeable
+            data['password_changeable'] = False
+        return data
+
+def add_custom_provider(func):
+    @functools.wraps(func)
+    def wrapper():
+        providers = func()
+        login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE', None)
+        if login_module_path:
+            mod = LoginMethod(login_module_path)
+            if mod.is_major != func.is_major:
+                return providers#only patch the matching provider set
+            providers.insert(mod.order_number - 1, mod.name, mod.as_dict())
+        return providers
+    return wrapper
 
 def get_enabled_major_login_providers():
     """returns a dictionary with data about login providers
@@ -239,6 +381,7 @@ def get_enabled_major_login_providers():
             'create_password_prompt': _('Create a password-protected account'),
             'change_password_prompt': _('Change your password'),
             'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
+            'password_changeable': True
         }
 
     #if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
@@ -268,7 +411,6 @@ def get_enabled_major_login_providers():
         url = 'https://api.linkedin.com/v1/people/~:(first-name,last-name,id)'
         response, content = client.request(url, 'GET')
         if response['status'] == '200':
-            import re
             id_re = re.compile(r'<id>([^<]+)</id>')
             matches = id_re.search(content)
             if matches:
@@ -319,6 +461,8 @@ def get_enabled_major_login_providers():
         'openid_endpoint': None,
     }
     return filter_enabled_providers(data)
+get_enabled_major_login_providers.is_major = True
+get_enabled_major_login_providers = add_custom_provider(get_enabled_major_login_providers)
 
 def get_enabled_minor_login_providers():
     """same as get_enabled_major_login_providers
@@ -402,6 +546,8 @@ def get_enabled_minor_login_providers():
         'openid_endpoint': 'http://%(username)s.pip.verisignlabs.com/'
     }
     return filter_enabled_providers(data)
+get_enabled_minor_login_providers.is_major = False
+get_enabled_minor_login_providers = add_custom_provider(get_enabled_minor_login_providers)
 
 def have_enabled_federated_login_methods():
     providers = get_enabled_major_login_providers()

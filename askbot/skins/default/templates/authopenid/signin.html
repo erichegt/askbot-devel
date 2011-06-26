@@ -60,7 +60,8 @@
                 major_login_providers = major_login_providers,
                 minor_login_providers = minor_login_providers,
                 hide_local_login = settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN,
-                settings = settings
+                settings = settings,
+                logged_in = user.is_authenticated()
             )
         }}
         {% if use_password_login==True %}
@@ -161,7 +162,11 @@
                     {% endif %}
                 </td>
                 <td>
-                    <button>{% trans %}delete{% endtrans %}</button>
+                    {% if login_method.is_deletable %}
+                        <button>{% trans %}delete{% endtrans %}</button>
+                    {% else %}
+                        {% trans %}cannot be deleted{% endtrans %}
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

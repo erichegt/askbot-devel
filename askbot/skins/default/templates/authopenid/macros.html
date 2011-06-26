@@ -14,7 +14,8 @@
                     major_login_providers = None,
                     minor_login_providers = None,
                     hide_local_login = False,
-                    settings = None
+                    settings = None,
+                    logged_in = False
                 )
 %}
     <div id="login-icons">
@@ -23,17 +24,23 @@
                 {% if login_provider.name == 'local' and hide_local_login == True %}
                     {# do nothing here, left if statement this way for simplicity #}
                 {% else %}
+                    {% if logged_in == True and login_provider.type == 'password' and login_provider.password_changeable == False %}
+                    {% else %}
                     <li>
                         {{ login_provider_input(login_provider) }}
                     </li>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </ul>
         <ul class="login-icons small">
             {% for login_provider in minor_login_providers %}
+                {% if logged_in == True and login_provider.type == 'password' and login_provider.password_changeable == False %}
+                {% else %}
                 <li>
                     {{ login_provider_input(login_provider) }}
                 </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>
