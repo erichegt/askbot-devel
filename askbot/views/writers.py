@@ -586,8 +586,6 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
 @decorators.ajax_only
 def edit_comment(request):
-    import pdb
-    pdb.set_trace()
     if request.user.is_authenticated():
         comment_id = int(request.POST['comment_id'])
         comment = models.Comment.objects.get(id = comment_id)
