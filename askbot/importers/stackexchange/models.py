@@ -264,3 +264,7 @@ class VoteType(models.Model):
     name = models.CharField(max_length=50, null=True)
     description = models.CharField(max_length=300, null=True)
 
+class Password(models.Model):
+    id = models.IntegerField(primary_key = True)
+    password = models.CharField(max_length = 128)
+    salt = models.CharField(max_length = 32)

@@ -39,7 +39,7 @@ xml_read_order = (
         'UserHistoryTypes','UserHistory',
         'Users2Badges','VoteTypes','Users2Votes','MessageTypes',
         'Posts','Posts2Votes','PostHistory','PostComments',
-        'ModeratorMessages','Messages','Comments2Votes',
+        'ModeratorMessages','Messages','Comments2Votes', 'Passwords',
 )
 
 HEAP = hpy()
@@ -366,6 +366,7 @@ class Command(BaseCommand):
         transaction.commit()
         self.transfer_meta_pages()
         transaction.commit()
+        print 'done.'
 
     def open_dump(self, path):
         """open the zipfile, raise error if it
@@ -868,6 +869,12 @@ class Command(BaseCommand):
                 u.set_status('m')
             elif u_type not in ('Unregistered', 'Registered'):
                 raise Exception('unknown user type %s' % u_type)
+
+            if se_u.password_id is not None:
+                pw = se.Password.objects.get(id = se_u.password_id)
+                u.password = 'sha1$%s$%s' % (pw.salt, pw.password)
+            else:
+                u.set_unusable_password()
 
             #if user is not registered, no association record created
             #we do not allow posting by users who are not authenticated
