@@ -189,12 +189,26 @@ class QuestionQuerySet(models.query.QuerySet):
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
-            qs = qs.get_by_text_query(search_query)
-            #a patch for postgres search sort method
-            if askbot.conf.should_show_sort_by_relevance():
-                if sort_method == 'relevance-desc':
-                    qs= qs.extra(order_by = ['-relevance',])
-
+            if search_state.stripped_query:
+                qs = qs.get_by_text_query(search_state.stripped_query)
+                #a patch for postgres search sort method
+                if askbot.conf.should_show_sort_by_relevance():
+                    if sort_method == 'relevance-desc':
+                        qs = qs.extra(order_by = ['-relevance',])
+            if search_state.query_title:
+                qs = qs.filter(title__icontains = search_state.query_title)
+            if len(search_state.query_tags) > 0:
+                qs = qs.filter(tags__name__in = search_state.query_tags)
+            if len(search_state.query_users) > 0:
+                query_users = list()
+                for username in search_state.query_users:
+                    try:
+                        user = User.objects.get(username__iexact = username)
+                        query_users.append(user)
+                    except User.DoesNotExist:
+                        pass
+                if len(query_users) > 0:
+                    qs = qs.filter(author__in = query_users)
 
         #have to import this at run time, otherwise there
         #a circular import dependency...

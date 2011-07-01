@@ -1,10 +1,13 @@
 #search state manager object
 #that lives in the session and takes care of the state
 #persistece during the search session
+import re
+import copy
 import askbot
 import askbot.conf
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.utils.functions import strip_plus
 import logging
 
 ACTIVE_COMMANDS = (
@@ -20,10 +23,82 @@ def some_in(what, where):
             return True
     return False
 
+def extract_matching_token(text, regexes):
+    """if text matches any of the regexes,
+    * the entire match is removed from text
+    * repeating spaces in the remaining string are replaced with one
+    * returned is a tuple of: first group from the regex, remaining text
+    """
+    for regex in regexes:
+        m = regex.search(text)
+        if m:
+            text = regex.sub('', text)
+            extracted_match = m.group(1)
+            return (strip_plus(extracted_match), strip_plus(text))
+    return ('', text.strip())
+
+def extract_all_matching_tokens(text, regexes):
+    """the same as the ``extract_matching_token``
+    but returns a tuple of: list of first group matches from the regexes
+    and the remains of the input text
+    """
+    matching_tokens = set()
+    for regex in regexes:
+        matches = regex.findall(text)
+        if len(matches) > 0:
+            text = regex.sub('', text)
+            matching_tokens.update([match.strip() for match in matches])
+    return ([strip_plus(token) for token in matching_tokens], strip_plus(text))
+
+
+def parse_query(query):
+    """takes hand-typed search query string as an argument
+    returns a dictionary with keys (and values in parens):
+    * stripped_query (query with the items below stripped)
+    * query_tags (list of tag names)
+    * query_users (list of user names, not validated)
+    * query_title (question title)
+    Note: the stripped_query is the actual string
+    against which global search will be performed
+    the original query will still all be shown in the search
+    query input box
+    """
+    title_re1 = re.compile(r'\[title:(.+?)\]')
+    title_re2 = re.compile(r'title:"([^"]+?)"')
+    title_re3 = re.compile(r"title:'([^']+?)'")
+    title_regexes = (title_re1, title_re2, title_re3)
+    (query_title, query) = extract_matching_token(query, title_regexes)
+
+    tag_re1 = re.compile(r'\[([^:]+?)\]')
+    tag_re2 = re.compile(r'\[tag:\s*([\S]+)\s*]')
+    tag_re3 = re.compile(r'#(\S+)')
+    tag_regexes = (tag_re1, tag_re2, tag_re3)
+    (query_tags, query) = extract_all_matching_tokens(query, tag_regexes)
+
+    user_re1 = re.compile(r'\[user:([^\]]+?)\]')
+    user_re2 = re.compile(r'user:"([^"]+?)"')
+    user_re3 = re.compile(r"user:'([^']+?)'")
+    user_re4 = re.compile(r"""@([^'"\s]+)""")
+    user_re5 = re.compile(r'@"([^"]+)"')
+    user_re6 = re.compile(r"@'([^']+)'")
+    user_regexes = (user_re1, user_re2, user_re3, user_re4, user_re5, user_re6)
+    (query_users, stripped_query) = extract_all_matching_tokens(query, user_regexes)
+
+    return {
+        'stripped_query': stripped_query,
+        'query_title': query_title,
+        'query_tags': query_tags,
+        'query_users': query_users
+    }
+
 class SearchState(object):
     def __init__(self):
         self.scope = const.DEFAULT_POST_SCOPE
         self.query = None
+        self.stripped_query = None
+        self.query_tags = []
+        self.query_users = []
+        self.query_title = None
         self.search = None
         self.tags = None
         self.author = None
@@ -151,7 +226,17 @@ class SearchState(object):
         self.update_value('author', input_dict)
 
         if 'query' in input_dict:
-            self.update_value('query', input_dict)
+            query_bits = parse_query(input_dict['query'])
+            tmp_input_dict = copy.deepcopy(input_dict)
+            tmp_input_dict.update(query_bits)
+            self.update_value('query', tmp_input_dict)#the original query
+            #pull out values of [title:xxx], [user:some one]
+            #[tag: sometag], title:'xxx', title:"xxx", @user, @'some user',
+            #and  #tag - (hash symbol to delineate the tag
+            self.update_value('stripped_query', tmp_input_dict)
+            self.update_value('query_tags', tmp_input_dict)
+            self.update_value('query_users', tmp_input_dict)
+            self.update_value('query_title', tmp_input_dict)
             self.sort = 'relevance-desc'
         elif 'search' in input_dict:
             #a case of use nulling search query by hand

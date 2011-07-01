@@ -1,6 +1,8 @@
+import re
+import unittest
 from django.test import TestCase
 from django.contrib.auth.models import AnonymousUser
-from askbot.search.state_manager import SearchState, ViewLog
+from askbot.search.state_manager import SearchState, ViewLog, parse_query
 from askbot import const
 
 DEFAULT_SORT = const.DEFAULT_POST_SORT_METHOD
@@ -65,3 +67,41 @@ class SearchStateTests(TestCase):
         self.assertEquals(self.state.sort, 'age-asc')
         self.update({})
         self.assertEquals(self.state.sort, DEFAULT_SORT)
+class ParseQueryTests(unittest.TestCase):
+    def test_extract_users(self):
+        text = '@anna haha @"maria fernanda" @\'diego maradona\' hehe [user:karl  marx] hoho  user:\' george bush  \''
+        parse_results = parse_query(text)
+        self.assertEquals(
+            sorted(parse_results['query_users']),
+            sorted(['anna', 'maria fernanda', 'diego maradona', 'karl marx', 'george bush'])
+        )
+        self.assertEquals(parse_results['stripped_query'], 'haha hehe hoho')
+
+    def test_extract_tags(self):
+        text = '#tag1 [tag: tag2] some text [tag3] query'
+        parse_results = parse_query(text)
+        self.assertEquals(set(parse_results['query_tags']), set(['tag1', 'tag2', 'tag3']))
+        self.assertEquals(parse_results['stripped_query'], 'some text query')
+
+    def test_extract_title1(self):
+        text = 'some text query [title: what is this?]'
+        parse_results = parse_query(text)
+        self.assertEquals(parse_results['query_title'], 'what is this?')
+        self.assertEquals(parse_results['stripped_query'], 'some text query')
+
+    def test_extract_title2(self):
+        text = 'some text query title:"what is this?"'
+        parse_results = parse_query(text)
+        self.assertEquals(parse_results['query_title'], 'what is this?')
+        self.assertEquals(parse_results['stripped_query'], 'some text query')
+
+    def test_extract_title3(self):
+        text = 'some text query title:\'what is this?\''
+        parse_results = parse_query(text)
+        self.assertEquals(parse_results['query_title'], 'what is this?')
+        self.assertEquals(parse_results['stripped_query'], 'some text query')
+
+    def test_negative_match(self):
+        text = 'some query text'
+        parse_results = parse_query(text)
+        self.assertEquals(parse_results['stripped_query'], 'some query text')
