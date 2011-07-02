@@ -9,7 +9,6 @@ var liveSearch = function(){
     var process_query = function(){};
     var render_result = function(){};
 
-
     var refresh_x_button = function(){
         if ($.trim(query.val()).length > 0){
             if (query.attr('class') === 'searchInput'){
@@ -432,12 +431,13 @@ var liveSearch = function(){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
+            old_list.stop(true);
+
             new_list.html(render_question_list(data['questions']));
             //old_list.hide();
             old_list.after(new_list);
             //old_list.remove();
             //rename new div to old
-            new_list.attr('id', q_list_sel);
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
             render_search_tags(data['query_data']['tags']);
@@ -446,11 +446,12 @@ var liveSearch = function(){
             render_relevance_sort_tab();
             set_active_sort_tab(sortMethod);
             query.focus();
-            
+
             //show new div with a fadeIn effect
             old_list.fadeOut(200, function() {
                 old_list.remove();
-			            new_list.fadeIn(400);            
+                new_list.attr('id', q_list_sel);
+                new_list.fadeIn(400);            
             });
         }
     }
