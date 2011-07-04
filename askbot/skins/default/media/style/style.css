@@ -1037,7 +1037,7 @@ div.comment .upvote:hover {
     margin: 3px 0 4px 0;
     font-family: sans-serif;
     font-size: 12px;
-    line-height: 15px;
+    line-height: 130%;
     padding: 2px 0 0 2px;
 }
 

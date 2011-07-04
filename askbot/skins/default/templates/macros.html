@@ -460,6 +460,9 @@ poor design of the data or methods on data objects #}
     </div>
 {%- endmacro -%}
 
+{# Warning! Any changes to the comment markup here must be duplicated in post.js
+for the purposes of the AJAX comment editor #}
+
 {%- macro comment_list(comments = None, user = None) -%}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
