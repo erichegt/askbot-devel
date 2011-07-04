@@ -958,25 +958,52 @@ a:hover.medal {
     clear: both;
 }
 
+.comments .comment {
+    border-top: 1px dotted #cccccc;
+    margin: 0;
+    overflow: auto;
+}
+
 .comments .content {
     width: 650px;
-    float: right;
+    margin-bottom: 7px;    
 }
 
 .comments div.comment {
     min-height: 25px;
 }
 
+.comments div.comment:hover {
+    background-color: #eee;
+}
+
 div.comment .comment-votes {
-    position: absolute;
-    width: 20px;
-    margin: -2px 0 0 -20px;
+    float: left;
+    width: 37px;
+    padding: 8px 3px 8px 3px;
+}
+
+div.comment .comment-body {
+    line-height: 140%;
+    margin-left: 46px;
+    margin-right: 26px;
+    padding: 5px 3px;
+    color: #666;
+}
+
+div.comment .comment-delete {
+    float: right;
+    width: 14px;
+    padding: 5px 6px;
 }
 
 div.comment .upvote {
-    width: 20px;
+    margin: 0px;
+    smargin-right: 0px;
+    padding-right: 15px;
+    text-align: right;
     height: 20px;
-    padding: 3px 0 0 3px;
+    font-size: 13px;
     font-weight: bold;
     color: #777;
 }
@@ -987,10 +1014,12 @@ div.comment .upvote.upvoted {
 
 div.comment .upvote.hover {
     background: url(../images/go-up-grey.png) no-repeat;
+    background-position: top right;
 }
 
 div.comment .upvote:hover {
     background: url(../images/go-up-orange.png) no-repeat;
+    background-position: top right;    
 }
 
 .comments div.controls {
@@ -1810,14 +1839,6 @@ button::-moz-focus-inner {
 
 .list-table td {
     vertical-align: top;
-}
-
-.comment {
-    border-top: 1px dotted #ccccce;
-    margin: 0;
-    color: #444;
-    padding: 5px 3px 5px 3px;
-    overflow: auto;
 }
 
 /* these need to go */
