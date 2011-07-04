@@ -221,8 +221,8 @@ CommentVoteButton.prototype.decorate = function(element){
      */
     comment._element.mouseenter(function(){
         //outside height may not be known
-        var height = comment.getElement().height();
-        element.height(height);
+        //var height = comment.getElement().height();
+        //element.height(height);
         element.addClass('hover');
     });
     comment._element.mouseleave(function(){
