@@ -1072,7 +1072,6 @@ EditCommentForm.prototype.getSaveHandler = function(){
     return function(){
         var text = me._textarea.val();
         if (text.length < 10){
-            alert(text.length);
             me.focus();
             return false;
         }
