@@ -24,9 +24,9 @@
     <div id="sort_tabs" class="tabsA">
         <span class="label">{% trans %}Sort by:{% endtrans %}</span>
         {% if show_sort_by_relevance %}
-            {% set asc_relevance_tooltip = _('most relevant questions') %}
-            {% set desc_relevance_tooltip = _('click to see most relevant questions') %}
-            {% set relevance_label = _('relevance') %}
+            {% set asc_relevance_tooltip = gettext('most relevant questions') %}
+            {% set desc_relevance_tooltip = gettext('click to see most relevant questions') %}
+            {% set relevance_label = gettext('relevance') %}
             {% if query %}
             <a id="by_relevance"
                 {% if sort == "relevance-desc" %}
@@ -51,33 +51,33 @@
         {% endif %}
         {{macros.reversible_sort_button(
                 button_sort_criterium = 'age',
-                label = _('by date'),
-                asc_tooltip = _('click to see the oldest questions'),
-                desc_tooltip = _('click to see the newest questions'),
+                label = gettext('by date'),
+                asc_tooltip = gettext('click to see the oldest questions'),
+                desc_tooltip = gettext('click to see the newest questions'),
                 current_sort_method = sort
             )
         }}
         {{macros.reversible_sort_button(
                 button_sort_criterium = 'activity',
-                label = _('by activity'),
-                asc_tooltip = _('click to see the least recently updated questions'),
-                desc_tooltip = _('click to see the most recently updated questions'),
+                label = gettext('by activity'),
+                asc_tooltip = gettext('click to see the least recently updated questions'),
+                desc_tooltip = gettext('click to see the most recently updated questions'),
                 current_sort_method = sort
             )
         }}
         {{macros.reversible_sort_button(
                 button_sort_criterium = 'answers',
-                label = _('by answers'),
-                asc_tooltip = _('click to see the least answered questions'),
-                desc_tooltip = _('click to see the most answered questions'),
+                label = gettext('by answers'),
+                asc_tooltip = gettext('click to see the least answered questions'),
+                desc_tooltip = gettext('click to see the most answered questions'),
                 current_sort_method = sort
             )
         }}
         {{macros.reversible_sort_button(
                 button_sort_criterium = 'votes',
-                label = _('by votes'),
-                asc_tooltip = _('click to see least voted questions'),
-                desc_tooltip = _('click to see most voted questions'),
+                label = gettext('by votes'),
+                asc_tooltip = gettext('click to see least voted questions'),
+                desc_tooltip = gettext('click to see most voted questions'),
                 current_sort_method = sort
             )
         }}
