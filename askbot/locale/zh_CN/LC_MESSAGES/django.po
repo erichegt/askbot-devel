@@ -4390,7 +4390,7 @@ msgstr[1] "<span class=\"count\">%(counter)s</span>个答案"
 
 #: skins/default/templates/user_stats.html:20
 msgid "the answer has been voted for %(answer_score)s times"
-msgstr "该回答总共有%d个投票"
+msgstr "该回答总共有%(answer_score)s个投票"
 
 #: skins/default/templates/user_stats.html:20
 msgid "this answer has been selected as correct"
