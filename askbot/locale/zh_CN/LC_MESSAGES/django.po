@@ -243,121 +243,121 @@ msgstr "请从以上选项中选择一项"
 # footer.html
 #: urls.py:45
 msgid "about/"
-msgstr "关于本站"
+msgstr "关于本站/"
 
 #: urls.py:46 conf/site_settings.py:79
 msgid "faq/"
-msgstr "常见问题"
+msgstr "常见问题/"
 
 #: urls.py:47
 msgid "privacy/"
-msgstr "隐私政策"
+msgstr "隐私政策/"
 
 #: urls.py:48
 msgid "logout/"
-msgstr "退出登录"
+msgstr "退出登录/"
 
 #: urls.py:50 urls.py:55
 msgid "answers/"
-msgstr "回答"
+msgstr "回答/"
 
 #: urls.py:50 urls.py:71 urls.py:167
 msgid "edit/"
-msgstr "编辑"
+msgstr "编辑/"
 
 #: urls.py:55 urls.py:101
 msgid "revisions/"
-msgstr "版本"
+msgstr "版本/"
 
 #: urls.py:61 urls.py:66 urls.py:71 urls.py:76 urls.py:81 urls.py:86
 #: urls.py:91 urls.py:96 urls.py:101
 msgid "questions/"
-msgstr "问题"
+msgstr "问题/"
 
 #: urls.py:66
 msgid "ask/"
-msgstr "提问"
+msgstr "提问/"
 
 #: urls.py:76
 msgid "retag/"
-msgstr "修改标签"
+msgstr "修改标签/"
 
 #: urls.py:81
 msgid "close/"
-msgstr "关闭"
+msgstr "关闭/"
 
 #: urls.py:86
 msgid "reopen/"
-msgstr "打开"
+msgstr "打开/"
 
 #: urls.py:91
 msgid "answer/"
-msgstr "回答"
+msgstr "回答/"
 
 #: urls.py:96
 msgid "vote/"
-msgstr "票"
+msgstr "票/"
 
 #: urls.py:117
 msgid "command/"
-msgstr "命令"
+msgstr "命令/"
 
 #: urls.py:133
 msgid "question/"
-msgstr "提问"
+msgstr "提问/"
 
 #: urls.py:138
 msgid "tags/"
-msgstr "标签"
+msgstr "标签/"
 
 #: urls.py:143 urls.py:149
 msgid "mark-tag/"
-msgstr "标记标签"
+msgstr "标记标签/"
 
 #: urls.py:143
 msgid "interesting/"
-msgstr "感兴趣"
+msgstr "感兴趣/"
 
 #: urls.py:149
 msgid "ignored/"
-msgstr "忽略"
+msgstr "忽略/"
 
 #: urls.py:155
 msgid "unmark-tag/"
-msgstr "未标记标签"
+msgstr "未标记标签/"
 
 #: urls.py:161 urls.py:167 urls.py:172
 msgid "users/"
-msgstr "用户"
+msgstr "用户/"
 
 #: urls.py:177 urls.py:182
 msgid "badges/"
-msgstr "奖牌榜"
+msgstr "奖牌榜/"
 
 #: urls.py:187
 msgid "messages/"
-msgstr "信息"
+msgstr "信息/"
 
 #: urls.py:187
 msgid "markread/"
-msgstr "标记已读"
+msgstr "标记已读/"
 
 #: urls.py:202
 msgid "upload/"
-msgstr "上传"
+msgstr "上传/"
 
 #: urls.py:203
 msgid "search/"
-msgstr "搜索"
+msgstr "搜索/"
 
 #: urls.py:204
 msgid "feedback/"
-msgstr "问题反馈"
+msgstr "问题反馈/"
 
 #: urls.py:205 setup_templates/settings.py:182
 #: skins/default/templates/authopenid/signin.html:249
 msgid "account/"
-msgstr "账户"
+msgstr "账户/"
 
 #: conf/badges.py:12
 msgid "Badge settings"
@@ -1355,39 +1355,39 @@ msgstr "选择一个用户名"
 #: deps/django_authopenid/urls.py:17 deps/django_authopenid/urls.py:20
 #: setup_templates/settings.py:182
 msgid "signin/"
-msgstr "登录"
+msgstr "登录/"
 
 #: deps/django_authopenid/urls.py:13
 msgid "newquestion/"
-msgstr "提问"
+msgstr "提问/"
 
 #: deps/django_authopenid/urls.py:14
 msgid "newanswer/"
-msgstr "回答"
+msgstr "回答/"
 
 #: deps/django_authopenid/urls.py:15
 msgid "signout/"
-msgstr "退出"
+msgstr "退出/"
 
 #: deps/django_authopenid/urls.py:17
 msgid "complete/"
-msgstr "完成"
+msgstr "完成/"
 
 #: deps/django_authopenid/urls.py:20
 msgid "complete-oauth/"
-msgstr "完成验证"
+msgstr "完成验证/"
 
 #: deps/django_authopenid/urls.py:24
 msgid "register/"
-msgstr "注册"
+msgstr "注册/"
 
 #: deps/django_authopenid/urls.py:26
 msgid "signup/"
-msgstr "登录"
+msgstr "登录/"
 
 #: deps/django_authopenid/urls.py:34
 msgid "recover/"
-msgstr "恢复"
+msgstr "恢复/"
 
 #: deps/django_authopenid/util.py:196
 #, python-format

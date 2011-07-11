@@ -420,7 +420,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         return HttpResponseRedirect(reverse('index'))
 
     #redirect if slug in the url is wrong
-    if request.path != question.get_absolute_url():
+    if request.path.split('/')[-1] != question.slug:
         logging.debug('no slug match!')
         question_url = '?'.join((
                             question.get_absolute_url(),
