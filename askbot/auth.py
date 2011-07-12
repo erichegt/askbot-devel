@@ -109,18 +109,18 @@ def onAnswerAccept(answer, user, timestamp=None):
     answer.question.answer_accepted = True
     answer.save()
     answer.question.save()
-
-    answer.author.receive_reputation(
-        askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
-    )
-    answer.author.save()
-    reputation = Repute(user=answer.author,
-               positive=askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
-               question=answer.question,
-               reputed_at=timestamp,
-               reputation_type=2,
-               reputation=answer.author.reputation)
-    reputation.save()
+    if answer.author != user:
+        answer.author.receive_reputation(
+            askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+        )
+        answer.author.save()
+        reputation = Repute(user=answer.author,
+                   positive=askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
+                   question=answer.question,
+                   reputed_at=timestamp,
+                   reputation_type=2,
+                   reputation=answer.author.reputation)
+        reputation.save()
 
     user.receive_reputation(askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER)
     user.save()

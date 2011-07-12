@@ -33,6 +33,24 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
+        'MIN_REP_TO_ANSWER_OWN_QUESTION',
+        default=25,
+        description=_('Answer own question immediately')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
+        'MIN_REP_TO_ACCEPT_OWN_ANSWER',
+        default=50,
+        description=_('Accept own answer')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
         'MIN_REP_TO_FLAG_OFFENSIVE',
         default=15,
         description=_('Flag offensive')
