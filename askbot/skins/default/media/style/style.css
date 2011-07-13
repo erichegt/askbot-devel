@@ -986,7 +986,7 @@ div.comment .upvote.upvoted {
 }
 
 div.comment .upvote.hover {
-    background: url(../images/go-up-grey.png) no-repeat;
+    background: url(../images/go-up-grey.png) center bottom no-repeat;
 }
 
 div.comment .upvote:hover {
