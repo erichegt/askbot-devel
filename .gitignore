@@ -9,6 +9,7 @@ settings_local.py
 settings.py
 .idea
 *.iml
+lint
 env
 django
 django/*

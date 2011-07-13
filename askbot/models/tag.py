@@ -1,9 +1,11 @@
+import re
 from django.db import models
 from django.db import connection, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.base import DeletableContent
 from askbot.models.base import BaseQuerySetManager
+from askbot import const
 
 def tags_match_some_wildcard(tag_names, wildcard_tags):
     """Same as 
@@ -15,6 +17,17 @@ def tags_match_some_wildcard(tag_names, wildcard_tags):
             if tag_name.startswith(wildcard_tag[:-1]):
                 return True
     return False
+
+def get_mandatory_tags():
+    """returns list of mandatory tags,
+    or an empty list, if there aren't any"""
+    from askbot.conf import settings as askbot_settings
+    raw_mandatory_tags = askbot_settings.MANDATORY_TAGS.strip()
+    if len(raw_mandatory_tags) == 0:
+        return []
+    else:
+        split_re = re.compile(const.TAG_SPLIT_REGEX)
+        return split_re.split(raw_mandatory_tags)
 
 class TagQuerySet(models.query.QuerySet):
     UPDATE_USED_COUNTS_QUERY = """
