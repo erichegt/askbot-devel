@@ -2,6 +2,7 @@
 from the avatar app - the reason is that django-avatar app
 does not support jinja templates
 """
+import urllib
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
@@ -14,8 +15,10 @@ from avatar.forms import PrimaryAvatarForm, DeleteAvatarForm, UploadAvatarForm
 from avatar.models import Avatar
 from avatar.settings import AVATAR_MAX_AVATARS_PER_USER, AVATAR_DEFAULT_SIZE
 from avatar.util import get_primary_avatar, get_default_avatar_url
+from avatar.views import render_primary as django_avatar_render_primary
 
 from askbot.skins.loaders import render_into_skin
+from askbot import models
 
 notification = False
 if 'notification' in settings.INSTALLED_APPS:
@@ -188,3 +191,8 @@ def delete(request, extra_context=None, next_override=None, *args, **kwargs):
         data.update(extra_context)
 
     return render_into_skin('avatar/confirm_delete.html', data, request)
+
+def render_primary(request, user_id = None, *args, **kwargs):
+    user = models.User.objects.get(id = user_id)
+    kwargs['user'] = user.username
+    return django_avatar_render_primary(request, *args, **kwargs)

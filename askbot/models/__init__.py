@@ -127,7 +127,7 @@ def user_get_avatar_url(self, size):
                 return self.get_gravatar_url(size)
             else:
                 return avatar.utils.get_default_avatar_url()
-        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        kwargs = {'user_id': self.id, 'size': size}
         try:
             return reverse('avatar_render_primary', kwargs = kwargs)
         except NoReverseMatch:
