@@ -22,6 +22,7 @@ install_requires = [
     'django-countries==1.0.5',
     'django-celery==2.2.3',
     'django-kombu==0.9.2',
+    'django-followit',
 ]
 
 #todo: have a dirty version retriever that 
