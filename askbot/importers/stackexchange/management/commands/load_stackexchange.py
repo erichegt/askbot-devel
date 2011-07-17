@@ -5,7 +5,6 @@ import re
 import sys
 import zipfile
 from datetime import datetime
-from guppy import hpy
 from django.core.management.base import BaseCommand, CommandError
 import askbot.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
@@ -26,7 +25,9 @@ from askbot.importers.stackexchange.management import is_ready as importer_is_re
 #markdowner = Markdown(html4tags=True)
 
 if DEBUGME == True:
+    from guppy import hpy
     from askbot.utils import dummy_transaction as transaction
+    HEAP = hpy()
 else:
     from django.db import transaction
 
@@ -41,8 +42,6 @@ xml_read_order = (
         'Posts','Posts2Votes','PostHistory','PostComments',
         'ModeratorMessages','Messages','Comments2Votes', 'Passwords',
 )
-
-HEAP = hpy()
 
 #association tables SE item id --> ASKBOT item id
 #table associations are implied
