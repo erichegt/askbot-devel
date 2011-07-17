@@ -129,6 +129,8 @@ class QuestionQuerySet(models.query.QuerySet):
         """returns a query set of questions, 
         matching the full text query
         """
+        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+            return Question.sphinx_search(search_query)
         if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
             return self.filter( 
                         models.Q(title__search = search_query) \
@@ -430,6 +432,10 @@ class Question(content.Content, DeletableContent):
     is_anonymous = models.BooleanField(default=False) 
 
     objects = QuestionManager()
+
+    if getattr(settings, 'USE_SPHINX_SEARCH', False):
+        from djangosphinx.models import SphinxSearch
+        sphinx_search = SphinxSearch(settings.ASKBOT_SPHINX_SEARCH_INDEX)
 
     class Meta(content.Content.Meta):
         db_table = u'question'
