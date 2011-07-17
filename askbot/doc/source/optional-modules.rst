@@ -5,17 +5,6 @@ Optional modules
 Askbot supports a number of optional modules, enabling certain features, not available 
 in askbot by default.
 
-.. _follow-users:
-
-Follow users
-============
-
-Install ``django-followit`` app::
-
-    pip install -e git+git://github.com/ASKBOT/django-followit.git#egg=followit
-
-Then add ``followit`` to the ``INSTALLED_APPS`` and run ``syncdb`` management command.
-
 .. _embedding-video:
 
 Embedding video
