@@ -609,6 +609,7 @@ def edit_comment(request):
             'user_id': comment.user.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
+            'score': comment.score,            
             'voted': comment.is_upvoted_by(request.user),
         }
     else:
