@@ -130,7 +130,9 @@ class QuestionQuerySet(models.query.QuerySet):
         matching the full text query
         """
         if getattr(settings, 'USE_SPHINX_SEARCH', False):
-            return Question.sphinx_search(search_query)
+            matching_questions = Question.sphinx_search.query(search_query)
+            question_ids = [q.id for q in matching_questions] 
+            return Question.objects.filter(deleted = False, id__in = question_ids)
         if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
             return self.filter( 
                         models.Q(title__search = search_query) \
@@ -186,10 +188,6 @@ class QuestionQuerySet(models.query.QuerySet):
 
         #return metadata
         meta_data = {}
-        if tag_selector: 
-            for tag in tag_selector:
-                qs = qs.filter(tags__name = tag)
-
         if search_query:
             if search_state.stripped_query:
                 qs = qs.get_by_text_query(search_state.stripped_query)
@@ -211,6 +209,11 @@ class QuestionQuerySet(models.query.QuerySet):
                         pass
                 if len(query_users) > 0:
                     qs = qs.filter(author__in = query_users)
+
+        if tag_selector: 
+            for tag in tag_selector:
+                qs = qs.filter(tags__name = tag)
+
 
         #have to import this at run time, otherwise there
         #a circular import dependency...
@@ -432,10 +435,6 @@ class Question(content.Content, DeletableContent):
     is_anonymous = models.BooleanField(default=False) 
 
     objects = QuestionManager()
-
-    if getattr(settings, 'USE_SPHINX_SEARCH', False):
-        from djangosphinx.models import SphinxSearch
-        sphinx_search = SphinxSearch(settings.ASKBOT_SPHINX_SEARCH_INDEX)
 
     class Meta(content.Content.Meta):
         db_table = u'question'
@@ -930,6 +929,17 @@ class Question(content.Content, DeletableContent):
 
     def __unicode__(self):
         return self.title
+
+if getattr(settings, 'USE_SPHINX_SEARCH', False):
+    from djangosphinx.models import SphinxSearch
+    Question.add_to_class(
+        'sphinx_search',
+        SphinxSearch(
+            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
+            mode = 'SPH_MATCH_ALL'
+        )
+    )
+
 
         
 class QuestionView(models.Model):

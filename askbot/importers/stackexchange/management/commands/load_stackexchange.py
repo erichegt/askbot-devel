@@ -889,7 +889,7 @@ class Command(BaseCommand):
                     u_openid.last_used_timestamp = se_u.last_login_date
                     u_openid.save()
                 except AssertionError:
-                    print 'User %s (id=%d) does not have openid' % \
+                    print u'User %s (id=%d) does not have openid' % \
                             (se_u.display_name, se_u.id)
                     sys.stdout.flush()
                 except IntegrityError:
