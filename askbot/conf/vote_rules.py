@@ -53,6 +53,15 @@ settings.register(
 settings.register(
     IntegerValue(
         VOTE_RULES,
+        'MIN_DAYS_TO_ANSWER_OWN_QUESTION',
+        default=0,
+        description=_('Number of days required before answering own question')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        VOTE_RULES,
         'MIN_FLAGS_TO_HIDE_POST',
         default=3,
         description=_('Number of flags required to automatically hide posts')

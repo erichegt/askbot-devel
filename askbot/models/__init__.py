@@ -294,29 +294,41 @@ def _assert_user_can(
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
     assert(isinstance(answer, Answer))
+    blocked_error_message = _(
+            'Sorry, you cannot accept or unaccept best answers '
+            'because your account is blocked'
+        )
+    suspended_error_message = _(
+            'Sorry, you cannot accept or unaccept best answers '
+            'because your account is suspended'
+        )
     if self.is_blocked():
-        error_message = _(
-                'Sorry, you cannot accept or unaccept best answers '
-                'because your account is blocked'
-            )
+        error_message = blocked_error_message
     elif self.is_suspended():
-        error_message = _(
-                'Sorry, you cannot accept or unaccept best answers '
-                'because your account is suspended'
-            )
+        error_message = suspended_error_message
     elif self == answer.question.get_owner():
         if self == answer.get_owner():
-            error_message = _(
-                'Sorry, you cannot accept or unaccept your own answer '
-                'to your own question'
+            if not self.is_administrator(): 
+                #check rep
+                min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
+                low_rep_error_message = _(
+                            ">%(points)s points required to accept or unaccept "
+                            " your own answer to your own question"
+                        ) % {'points': min_rep_setting}
+    
+                _assert_user_can(
+                    user = self,
+                    blocked_error_message = blocked_error_message,
+                    suspended_error_message = suspended_error_message,
+                    min_rep_setting = min_rep_setting,
+                    low_rep_error_message = low_rep_error_message
                 )
-        else:
-            return #assertion success
+        return # success
     else:
         error_message = _(
-                'Sorry, only original author of the question '
-                ' - %(username)s - can accept the best answer'
-                ) % {'username': answer.get_owner().username}
+            'Sorry, only original author of the question '
+            ' - %(username)s - can accept or unaccept the best answer'
+            ) % {'username': answer.get_owner().username}
 
     raise django_exceptions.PermissionDenied(error_message)
 
@@ -1270,6 +1282,45 @@ def user_post_answer(
                     wiki = False,
                     timestamp = None
                 ):
+
+    if self == question.author and not self.is_administrator():
+
+        # check date and rep required to post answer to own question
+        
+        delta = datetime.timedelta(askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION)
+        
+        now = datetime.datetime.now()
+        asked = question.added_at
+        if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
+            diff = asked + delta - now
+            days = diff.days
+            hours = int(diff.seconds/3600)
+            minutes = int(diff.seconds/60)
+
+            if days > 2:
+                if date.year == now.year:
+                    date_token = date.strftime("%b %d")
+                else:
+                    date_token = date.strftime("%b %d '%y")
+                if use_on_prefix:
+                    left = _('on %(date)s') % { 'date': date_token }
+                else:
+                    left = date_token
+            elif days == 2:
+                left = _('in two days')
+            elif days == 1:
+                left = _('tomorrow')
+            elif minutes >= 60:
+                left = ungettext('in %(hr)d hour','in %(hr)d hours',hours) % {'hr':hours}
+            else:
+                left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
+            day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}    
+            error_message = _(
+                'New users must wait %(days)s before answering their own question. '
+                ' You can post an answer %(left)s'
+                ) % {'days': day,'left': left}
+            assert(error_message is not None)
+            raise django_exceptions.PermissionDenied(error_message)
 
     self.assert_can_post_answer()
 
@@ -2578,4 +2629,5 @@ __all__ = [
 
         'get_model'
 ]
+
 
