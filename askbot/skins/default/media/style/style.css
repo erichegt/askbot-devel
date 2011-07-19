@@ -986,8 +986,7 @@ div.comment .comment-votes {
 
 div.comment .comment-body {
     line-height: 140%;
-    margin-left: 46px;
-    margin-right: 26px;
+    margin: 3px 26px 0 46px;
     padding: 5px 3px;
     color: #666;
 }
@@ -996,12 +995,13 @@ div.comment .comment-delete {
     float: right;
     width: 14px;
     line-height: 130%;
-    padding: 5px 6px;
+    padding: 8px 6px;
 }
 
 div.comment .upvote {
     margin: 0px;
     padding-right: 17px;
+    padding-top: 2px;
     text-align: right;
     height: 20px;
     font-size: 13px;
