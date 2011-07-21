@@ -1,3 +1,4 @@
+from django import forms as django_forms
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot import forms
@@ -88,6 +89,9 @@ class TagNamesFieldTests(AskbotTestCase):
         self.field = forms.TagNamesField()
         self.user = self.create_user('user1')
 
+    def tearDown(self):
+        askbot_settings.update('MANDATORY_TAGS', '')
+
     def clean(self, value):
         return self.field.clean(value).strip().split(' ')
 
@@ -109,6 +113,26 @@ class TagNamesFieldTests(AskbotTestCase):
         models.Tag(name = 'Tag2', created_by = self.user).save()
         cleaned_tags = self.clean('tag1 taG2 TAG1 tag3 tag3')
         self.assert_tags_equal(cleaned_tags, ['TAG1', 'Tag2', 'tag3'])
+
+    def test_catch_missing_mandatory_tag(self):
+        askbot_settings.update('MANDATORY_TAGS', 'one two')
+        self.assertRaises(
+            django_forms.ValidationError,
+            self.clean,
+            ('three',)
+        )
+
+    def test_pass_with_entered_mandatory_tag(self):
+        askbot_settings.update('MANDATORY_TAGS', 'one two')
+        cleaned_tags = self.clean('one')
+        self.assert_tags_equal(cleaned_tags, ['one',])
+
+    def test_pass_with_entered_wk_mandatory_tag(self):
+        askbot_settings.update('MANDATORY_TAGS', 'one* two')
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        cleaned_tags = self.clean('oneness')
+        self.assert_tags_equal(cleaned_tags, ['oneness',])
+
 
 class EditQuestionAnonymouslyFormTests(AskbotTestCase):
     """setup the following truth table

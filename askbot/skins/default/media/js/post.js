@@ -221,8 +221,8 @@ CommentVoteButton.prototype.decorate = function(element){
      */
     comment._element.mouseenter(function(){
         //outside height may not be known
-        var height = comment.getElement().height();
-        element.height(height);
+        //var height = comment.getElement().height();
+        //element.height(height);
         element.addClass('hover');
     });
     comment._element.mouseleave(function(){
@@ -1071,7 +1071,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
     var me = this;
     return function(){
         var text = me._textarea.val();
-        if (text.length <= 10){
+        if (text.length < 10){
             me.focus();
             return false;
         }
@@ -1217,35 +1217,46 @@ Comment.prototype.setContent = function(data){
 
     this._element.append(votes);
 
-    this._element.append(this._data['html']);
-    this._element.append(' - ');
+    this._comment_delete = $('<div class="comment-delete"></div>');
+    if (this._deletable){
+        this._delete_icon = new DeleteIcon(this._delete_prompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._comment_delete.append(this._delete_icon.getElement());
+    }
+    this._element.append(this._comment_delete);
+    
+    this._comment_body = $('<div class="comment-body"></div>');
+    this._comment_body.html(this._data['html']);
+    this._comment_body.append(' &ndash; ');
 
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
     this._user_link.html(this._data['user_display_name']);
-    this._element.append(this._user_link);
+    this._comment_body.append(this._user_link);
 
-    this._element.append(' (');
+    this._comment_body.append(' (');
     this._comment_age = $('<span class="age"></span>');
     this._comment_age.html(this._data['comment_age']);
-    this._element.append(this._comment_age);
-    this._element.append(')');
+    this._comment_body.append(this._comment_age);
+    this._comment_body.append(')');
 
     if (this._editable){
         this._edit_link = new EditLink();
         this._edit_link.setHandler(this.getEditHandler())
-        this._element.append(this._edit_link.getElement());
+        this._comment_body.append(this._edit_link.getElement());
     }
-
-    if (this._deletable){
-        this._delete_icon = new DeleteIcon(this._delete_prompt);
-        this._delete_icon.setHandler(this.getDeleteHandler());
-        this._element.append(this._delete_icon.getElement());
-    }
+    this._element.append(this._comment_body);
+    
     this._blank = false;
 };
 
 Comment.prototype.dispose = function(){
+    if (this._comment_body){
+        this._comment_body.remove();
+    }
+    if (this._comment_delete){
+        this._comment_delete.remove();
+    }    
     if (this._user_link){
         this._user_link.remove();
     }

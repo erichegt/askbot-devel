@@ -87,6 +87,20 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'MANDATORY_TAGS',
+        description = _('Mandatory tags'),
+        default = '',
+        help_text = _(
+            'At least one of these tags will be required for any new '
+            'or newly edited question. A mandatory tag may be wildcard, '
+            'if the wildcard tags are active.'
+        )
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'FORCE_LOWERCASE_TAGS',

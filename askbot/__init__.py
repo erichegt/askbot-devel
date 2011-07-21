@@ -9,7 +9,7 @@ import smtplib
 import sys
 import logging
 
-VERSION = (0, 7, 6)
+VERSION = (0, 7, 7)
 
 #necessary for interoperability of django and coffin
 try:
@@ -27,6 +27,17 @@ def get_install_directory():
     is installed
     """
     return os.path.dirname(__file__)
+
+def get_path_to(relative_path):
+    """returns absolute path to a file
+    relative to ``askbot`` directory
+    ``relative_path`` must use only forward slashes
+    and must not start with a slash
+    """
+    root_dir = get_install_directory()
+    assert(relative_path[0] != 0)
+    path_bits = relative_path.split('/')
+    return os.path.join(root_dir, *path_bits)
 
 
 def get_version():

@@ -293,8 +293,8 @@ if 'avatar' in settings.INSTALLED_APPS:
         url('^avatar/change/$', views.avatar_views.change, name='avatar_change'),
         url('^avatar/delete/$', views.avatar_views.delete, name='avatar_delete'),
         url(#this urs we inherit from the original avatar app
-            '^avatar/render_primary/(?P<user>[\+\w]+)/(?P<size>[\d]+)/$',
-            'avatar.views.render_primary',
+            '^avatar/render_primary/(?P<user_id>[\+\d]+)/(?P<size>[\d]+)/$',
+            views.avatar_views.render_primary,
             name='avatar_render_primary'
-        ),    
+        ),
     )

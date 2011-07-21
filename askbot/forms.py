@@ -4,6 +4,7 @@ from askbot import models
 from askbot import const
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
+from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
@@ -135,6 +136,27 @@ class TagNamesField(forms.CharField):
         self.help_text = _('Tags are short keywords, with no spaces within. Up to five tags can be used.')
         self.initial = ''
 
+    def need_mandatory_tags(self):
+        """true, if list of mandatory tags is not empty"""
+        return len(models.tag.get_mandatory_tags()) > 0
+
+    def tag_string_matches(self, tag_string, mandatory_tag):
+        """true if tag string matches the mandatory tag"""
+        if mandatory_tag.endswith('*'):
+            return tag_string.startswith(mandatory_tag[:-1])
+        else:
+            return tag_string == mandatory_tag
+
+    def mandatory_tag_missing(self, tag_strings):
+        """true, if mandatory tag is not present in the list
+        of ``tag_strings``"""
+        mandatory_tags = models.tag.get_mandatory_tags()
+        for mandatory_tag in mandatory_tags:
+            for tag_string in tag_strings:
+                if self.tag_string_matches(tag_string, mandatory_tag):
+                    return False
+        return True
+
     def clean(self, value):
         value = super(TagNamesField, self).clean(value)
         data = value.strip()
@@ -152,6 +174,14 @@ class TagNamesField(forms.CharField):
                         'please use %(tag_count)d tags or less',
                         tag_count) % {'tag_count':max_tags}
             raise forms.ValidationError(msg)
+
+        if self.need_mandatory_tags():
+            if self.mandatory_tag_missing(tag_strings):
+                msg = _(
+                    'At least one of the following tags is required : %(tags)s'
+                ) % {'tags': get_text_list(models.tag.get_mandatory_tags())}
+                raise forms.ValidationError(msg)
+
         for tag in tag_strings:
             tag_length = len(tag)
             if tag_length > askbot_settings.MAX_TAG_LENGTH:

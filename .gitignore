@@ -9,6 +9,7 @@ settings_local.py
 settings.py
 .idea
 *.iml
+lint
 env
 django
 django/*
@@ -32,6 +33,7 @@ askbot/upfiles/*.jpg
 askbot/upfiles/*.jpeg
 askbot/upfiles/*.gif
 askbot/upfiles/*.png
+askbot/upfiles/avatars/
 askbot/skins/common/media/mathjax/
 /jinja2
 *.tar.tz

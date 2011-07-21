@@ -164,7 +164,7 @@ INSTALLED_APPS = (
     'django_countries',
     'djcelery',
     'djkombu',
-    #'followit',#to enable user follow pls look here http://askbot.org/doc/optional-modules.html#follow-users
+    'followit',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
     #requires setting of MEDIA_ROOT and MEDIA_URL
 )

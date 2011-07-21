@@ -22,7 +22,14 @@
         </div>
     </div>
     <div id='question-list'></div>
-    {{macros.edit_post(form, post_type='question', edit_title=False)}}
+    {{
+        macros.edit_post(
+            form,
+            post_type = 'question',
+            edit_title = False,
+            mandatory_tags = mandatory_tags
+        )
+    }}
     {% if not request.user.is_authenticated() %}
     <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
     {% else %}

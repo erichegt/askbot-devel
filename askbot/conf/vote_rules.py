@@ -54,7 +54,7 @@ settings.register(
     IntegerValue(
         VOTE_RULES,
         'MIN_DAYS_TO_ANSWER_OWN_QUESTION',
-        default=1,
+        default=0,
         description=_('Number of days required before answering own question')
     )
 )

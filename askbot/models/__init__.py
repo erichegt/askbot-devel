@@ -127,7 +127,7 @@ def user_get_avatar_url(self, size):
                 return self.get_gravatar_url(size)
             else:
                 return avatar.utils.get_default_avatar_url()
-        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        kwargs = {'user_id': self.id, 'size': size}
         try:
             return reverse('avatar_render_primary', kwargs = kwargs)
         except NoReverseMatch:
@@ -310,13 +310,11 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         if self == answer.get_owner():
             if not self.is_administrator(): 
                 #check rep
-                
                 min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
                 low_rep_error_message = _(
                             ">%(points)s points required to accept or unaccept "
                             " your own answer to your own question"
-                        ) % \
-                        {'points': askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER}
+                        ) % {'points': min_rep_setting}
     
                 _assert_user_can(
                     user = self,
@@ -325,14 +323,12 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                     min_rep_setting = min_rep_setting,
                     low_rep_error_message = low_rep_error_message
                 )
-    
-            return # success
-
-        else:
-            error_message = _(
-                'Sorry, only original author of the question '
-                ' - %(username)s - can accept the best answer'
-                ) % {'username': answer.get_owner().username}
+        return # success
+    else:
+        error_message = _(
+            'Sorry, only original author of the question '
+            ' - %(username)s - can accept or unaccept the best answer'
+            ) % {'username': answer.get_owner().username}
 
     raise django_exceptions.PermissionDenied(error_message)
 

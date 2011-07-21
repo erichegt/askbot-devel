@@ -5,16 +5,53 @@ Optional modules
 Askbot supports a number of optional modules, enabling certain features, not available 
 in askbot by default.
 
-.. _follow-users:
+.. _sphinx-search:
 
-Follow users
-============
+Sphinx search
+=============
+Askbot supports Sphinx search - and at this point only for MySQL.
+Tested with sphinx 0.9.8.
+May be a little outdated, please give your feedback if that is the case.
 
-Install ``django-followit`` app::
+To enable:
 
-    pip install -e git+git://github.com/ASKBOT/django-followit.git#egg=followit
+* install `sphinx search package <http://sphinxsearch.com/>`_
+* if necessary to support Chinese language, instead take `sphinx for Chinese <http://code.google.com/p/sphinx-for-chinese/>`_
+* prepare configuration file by running command ``python manage.py get_askbot_sphinx_config > sphinx.conf``
+* if necessary, modify the ``.conf`` file (may be needed for language other than English
+* place the ``sphinx.conf`` file to an appropriate location, like /etc/sphinx/
 
-Then add ``followit`` to the ``INSTALLED_APPS`` and run ``syncdb`` management command.
+Install django-sphinx python module (and follow all instructions)
+
+    pip install django-sphinx
+
+In ``settings.py`` add::
+
+    SPHINX_API_VERSION = 0x113 #according to django sphinx doc
+    USE_SPHINX_SEARCH = True
+    ASKBOT_SPHINX_SEARCH_INDEX = 'askbot'
+
+.. note::
+    Value of SPHINX_API_VERSION may depend on the version of 
+    python sphinx api installed with the django-sphinx application,
+    please refer to the django-sphinx documentation.
+
+Initialize the sphinx index (may need to log in as root)::
+
+    indexer askbot --config /etc/sphinx/sphinx.conf
+
+Start the sphinx search daemon::
+
+    /usr/local/bin/searchd --config /etc/sphinx/sphinx.conf &
+
+Also, add the line above to the file /etc/rc.d/rc.local or equivalent to start the daemon
+when the server reboots.
+
+Set up a periodic re-indexing job (using cron)::
+
+    indexer askbot --rotate --config /etc/sphinx/sphinx.conf
+
+Finally, add lin
 
 .. _embedding-video:
 

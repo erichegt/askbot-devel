@@ -353,6 +353,7 @@ poor design of the data or methods on data objects #}
     <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
     <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
+            {% if is_link %}
             href="{% url questions %}?tags={{tag|urlencode}}{{ 
                                                         if_else(
                                                             url_params != None,
@@ -360,7 +361,9 @@ poor design of the data or methods on data objects #}
                                                             ''
                                                         )|escape
                                                     }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag"
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
+            {% endif %}
+            rel="tag"
         >{{ tag|replace('*', '&#10045;') }}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <span class="delete-icon"
@@ -453,34 +456,36 @@ poor design of the data or methods on data objects #}
 {%- macro comment_votes(comment = None) -%}
     <div class="comment-votes">
         {% if comment.score > 0 %}
-        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">
-            {{comment.score}}
-        </div>
+        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">{{comment.score}}</div>
         {% else %}
-        <div class="upvote">
-        </div>
+        <div class="upvote"></div>
         {% endif %}
     </div>
 {%- endmacro -%}
+
+{# Warning! Any changes to the comment markup here must be duplicated in post.js
+for the purposes of the AJAX comment editor #}
 
 {%- macro comment_list(comments = None, user = None) -%}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
         {{ comment_votes(comment = comment) }}
-        {{comment.html}} -
-        <a 
-            class="author" 
-            href="{{comment.user.get_profile_url()}}"
-        >{{comment.user.username}}</a>
-        <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
-        {% if user|can_edit_comment(comment) %}
-            <a class="edit">{% trans %}edit{% endtrans %}</a>
-        {% endif %}
-        {% if user|can_delete_comment(comment) %}
-            <span class="delete-icon" 
-                title="{% trans %}delete this comment{% endtrans %}"
-            ></span>
-        {% endif %}
+        <div class="comment-delete">
+            {% if user|can_delete_comment(comment) %}
+                <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
+            {% endif %}
+        </div>
+        <div class="comment-body">
+            {{comment.html}} &ndash;
+            <a 
+                class="author" 
+                href="{{comment.user.get_profile_url()}}"
+            >{{comment.user.username}}</a>
+            <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
+            {% if user|can_edit_comment(comment) %}
+                <a class="edit">{% trans %}edit{% endtrans %}</a>
+            {% endif %}
+        </div>
     </div>
     {% endfor %}
 {%- endmacro -%}
@@ -612,8 +617,9 @@ poor design of the data or methods on data objects #}
 
 {%- macro edit_post(
                 post_form,
-                post_type=None,
-                edit_title=False
+                post_type = None,
+                mandatory_tags = None,
+                edit_title = False
             )
 -%}
     {% if edit_title %}
@@ -633,8 +639,24 @@ poor design of the data or methods on data objects #}
     {# need label element for resizable input, b/c form validation won't find span #}
     {% if post_type == 'question' %}
         <div class="form-item">
-            <strong>{{ post_form.tags.label_tag() }}:</strong>
-            {% trans %}(required){% endtrans %}
+            {% if mandatory_tags  %}
+                <label for="id_tags">
+                    <strong>{% trans %}tags{% endtrans %},</strong>
+                    {% trans %}one of these is required{% endtrans %}
+                </label>
+                {{
+                    tag_list_widget(
+                        mandatory_tags,
+                        make_links = False,
+                        css_class = 'clearfix'
+                    )
+                }}
+            {% else %}
+                <label for="id_tags">
+                    <strong>{% trans %}tags{% endtrans %}:</strong>
+                    {% trans %}(required){% endtrans %}
+                </label>
+            {% endif %}
             <span class="form-error">{{ post_form.tags.errors }}</span><br/>
             {{ post_form.tags }}
             <div class="title-desc">

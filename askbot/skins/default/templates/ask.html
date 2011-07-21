@@ -21,6 +21,9 @@
     </script>
     <script type='text/javascript' src='{{"/js/live_search.js"|media}}'></script>
     {% include "blocks/editor_data.html" %}
+    {% if mandatory_tags %}
+        {% include "blocks/mandatory_tags_js.html" %}
+    {% endif %}
     <script type='text/javascript'>
         askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
