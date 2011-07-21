@@ -10,15 +10,16 @@ Programming and documentation
 -----------------------------
 * Mike Chen & Sailing Cai - original authors of CNPROG forum
 * Evgeny Fadeev - founder of askbot
-* Benoit Lavine (with Windriver Software, Inc.)
-* Alex Robbins (celery support)
 * `Adolfo Fitoria <http://fitoria.net>`_
+* Andy Knotts
+* Benoit Lavine (with Windriver Software, Inc.)
+* Jeff Madynski
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
-* `Tomasz Szynalski <http://antimoon.com>`_
-* Andy Knotts
+* `NoahY <https://github.com/NoahY>`_
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
-* Jeff Madynski
+* Alex Robbins (celery support)
+* `Tomasz Szynalski <http://antimoon.com>`_
 
 Translations
 ------------
