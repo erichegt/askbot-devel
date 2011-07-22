@@ -154,6 +154,25 @@ settings.register(
 )
 
 settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_HEADER',
+        default = '',
+        description = _('Custom header additions'),
+        help_text = _(
+                    'Header is the bar at the top of the content '
+                    'that contains user info and site links, '
+                    'and is common to all pages. '
+                    'Use this area to enter contents of the footer '
+                    'in the HTML format.   When customizing the site header '
+                    '(as well as footer and the HTML &lt;HEAD&gt;), '
+                    'use the HTML validation service to make sure that '
+                    'your input is valid and works well in all browsers.'
+                    )
+    )
+)
+
+settings.register(
     values.StringValue( GENERAL_SKIN_SETTINGS,
         'FOOTER_MODE',
         description = _('Site footer mode'),
@@ -181,7 +200,7 @@ settings.register(
                     'option \'customize\' in the "Site footer mode" above. '
                     'Use this area to enter contents of the footer '
                     'in the HTML format. When customizing the site footer '
-                    '(as well as the HTML &lt;HEAD&gt;), '
+                    '(as well as the header and HTML &lt;HEAD&gt;), '
                     'use the HTML validation service to make sure that '
                     'your input is valid and works well in all browsers.'
                     )

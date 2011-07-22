@@ -8,7 +8,10 @@
             title="{% trans %}back to home page{% endtrans %}"
             alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/></a>
         {% endif %}
-        <div id="ab-meta-nav">{% include "blocks/header_meta_links.html" %}</div>
+        <div id="ab-meta-nav">
+            {% include "blocks/header_meta_links.html" %}
+            {{settings.CUSTOM_HEADER}}
+        </div>
         <div id="ab-main-nav">
             <a 
                 id="nav_questions"
