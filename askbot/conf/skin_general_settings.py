@@ -163,7 +163,7 @@ settings.register(
                     'Header is the bar at the top of the content '
                     'that contains user info and site links, '
                     'and is common to all pages. '
-                    'Use this area to enter contents of the footer '
+                    'Use this area to enter contents of the header'
                     'in the HTML format.   When customizing the site header '
                     '(as well as footer and the HTML &lt;HEAD&gt;), '
                     'use the HTML validation service to make sure that '
