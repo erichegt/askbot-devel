@@ -26,6 +26,20 @@ settings.register(
 settings.register(
     LongStringValue(
         FLATPAGES,
+        'FORUM_FAQ',
+        description=_('Text of the Q&A forum FAQ page (html format)'),
+        help_text=\
+        _(
+            'Save, then <a href="http://validator.w3.org/">'
+            'use HTML validator</a> on the "about" page to check your input.'
+        )
+    )
+)
+
+
+settings.register(
+    LongStringValue(
+        FLATPAGES,
         'FORUM_PRIVACY',
         description=_('Text of the Q&A forum Privacy Policy (html format)'),
         help_text=\

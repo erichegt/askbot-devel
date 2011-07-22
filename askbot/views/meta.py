@@ -48,7 +48,9 @@ def faq(request):
         'ask_question_url': reverse('ask'),
         'page_class': 'meta',
     }
-    return render_into_skin('faq.html', data, request)
+    if getattr(askbot_settings, 'FORUM_FAQ',''):
+        return render_into_skin('faq.html', data, request)
+    return render_into_skin('faq_static.html', data, request)
 
 @csrf.csrf_protect
 def feedback(request):
