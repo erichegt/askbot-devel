@@ -17,7 +17,7 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import get_template, render_into_skin
+from askbot.skins.loaders import get_template, render_into_skin, render_text
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
@@ -43,16 +43,15 @@ def server_error(request, template='500.html'):
 
 def faq(request):
     if getattr(askbot_settings, 'FORUM_FAQ',''):
-        text = getattr(askbot_settings, 'FORUM_FAQ','')
+        text = _(getattr(askbot_settings, 'FORUM_FAQ',''))
+        forum_faq = text
         data = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
             #'send_email_key_url': reverse('send_email_key'),
             'ask_question_url': reverse('ask'),
             'page_class': 'meta',
         }
-        context = RequestContext(request, data)
-        template = Template(text)
-        forum_faq = template.render(context)
+        forum_faq = render_text(text, data, request)
         data_out = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
             #'send_email_key_url': reverse('send_email_key'),

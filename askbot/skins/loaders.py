@@ -1,6 +1,6 @@
 import os.path
 from django.template.loaders import filesystem
-from django.template import RequestContext
+from django.template import RequestContext, Template
 from django.http import HttpResponse
 from django.utils import translation
 from django.conf import settings as django_settings
@@ -143,3 +143,8 @@ def render_into_skin(template, data, request, mimetype = 'text/html'):
     context = RequestContext(request, data)
     template = get_template(template, request)
     return HttpResponse(template.render(context), mimetype = mimetype)
+
+def render_text(text, data, request):
+        context = RequestContext(request, data)
+        template = Template(text)
+        return template.render(context)
