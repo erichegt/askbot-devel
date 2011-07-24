@@ -427,8 +427,10 @@ def user_recent(request, user, context):
                 self.title_link += '#%s' % answer_id
 
     class AwardEvent:
-        def __init__(self, time, type, id):
+        def __init__(self, time, obj, cont, type, id):
             self.time = time
+            self.obj = obj
+            self.cont = cont
             self.type = get_type_name(type)
             self.type_id = type
             self.badge = get_object_or_404(models.BadgeData, id=id)
@@ -439,6 +441,7 @@ def user_recent(request, user, context):
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
+            'summary' : 'question.summary',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
             },
@@ -450,6 +453,7 @@ def user_recent(request, user, context):
     ).values(
             'title',
             'question_id',
+            'summary',
             'active_at',
             'activity_type'
             )
@@ -474,6 +478,7 @@ def user_recent(request, user, context):
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
+            'summary' : 'question.summary',
             'answer_id' : 'answer.id',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
@@ -487,14 +492,15 @@ def user_recent(request, user, context):
     ).values(
             'title',
             'question_id',
+            'summary',
             'answer_id',
             'active_at',
             'activity_type'
             )
     if len(answers) > 0:
-        answers = [(Event(q['active_at'], q['activity_type'], q['title'], '', q['answer_id'], \
+        answer_activities = [(Event(q['active_at'], q['activity_type'], q['title'], '', q['answer_id'], \
                     q['question_id'])) for q in answers]
-        activities.extend(answers)
+        activities.extend(answer_activities)
 
     # question comments
     comments = models.Activity.objects.extra(
@@ -647,6 +653,8 @@ def user_recent(request, user, context):
         select={
             'badge_id' : 'askbot_badgedata.id',
             'awarded_at': 'award.awarded_at',
+            'object_id': 'award.object_id',
+            'content_type_id': 'award.content_type_id',
             'activity_type' : 'activity.activity_type'
             },
         tables=['activity', 'award', 'askbot_badgedata'],
@@ -657,15 +665,19 @@ def user_recent(request, user, context):
     ).values(
             'badge_id',
             'awarded_at',
+            'object_id',
+            'content_type_id',
             'activity_type'
             )
     if len(awards) > 0:
-        awards = [(AwardEvent(q['awarded_at'], q['activity_type'], q['badge_id'])) for q in awards]
+        awards = [(AwardEvent(q['awarded_at'], q['object_id'], q['content_type_id'], q['activity_type'], q['badge_id'])) for q in awards]
         activities.extend(awards)
 
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
     data = {
+        'answers': answers,
+        'questions': questions,
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'recent',
