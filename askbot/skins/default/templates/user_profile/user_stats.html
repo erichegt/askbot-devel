@@ -104,6 +104,32 @@
                     <td style="line-height:35px">
                         {% for badge in badges %}{# todo: translate badge name properly #}
                             <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span>
+                            <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
+                            {% for abt in awarded_badge_context %}
+                                {% if abt.badge == badge.id %}
+                                    {% if abt.content_type == 31 %}{# question #}
+                                        {% for question in questions %}{# could also create a new dict #}
+                                            {% if question.id == abt.object_id %}
+                                                <li>
+                                                <a title="{{question.summary|collapse}}" 
+                                                    href="{% url question question.id %}{{question.title|slugify}}">{{question.title}}</a>
+                                                </li>
+                                            {% endif %}   
+                                        {% endfor %}   
+                                    {% endif %}
+                                    {% if abt.content_type == 36 %}{# answer #}
+                                        {% for answered_question in answered_questions %}{# could also create a new dict #}
+                                            {% if answered_question.answer_id == abt.object_id %}
+                                                <li>
+                                                <a title="{{answered_question.summary|collapse}}" 
+                                                    href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a>
+                                                </li>
+                                            {% endif %}   
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
                             {% if loop.index is divisibleby 3 %}
                                 </td></tr>
                                 <tr><td style="line-height:35px">

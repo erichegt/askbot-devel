@@ -356,6 +356,12 @@ def user_stats(request, user, context):
                                 'badge', 'count'
                             )
 
+    awarded_badge_context = models.Award.objects.filter(
+                                user = user
+                            ).values(
+                                'object_id', 'badge', 'content_type'
+                            )
+
     user_tags = user_tags.annotate(
                             user_tag_usage_count=Count('name')
                         ).order_by(
@@ -392,6 +398,7 @@ def user_stats(request, user, context):
         'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
         'badges': badges,
         'awarded_badge_counts': dict(awarded_badge_counts),
+        'awarded_badge_context': awarded_badge_context,
         'total_awards' : total_awards,
     }
     context.update(data)
