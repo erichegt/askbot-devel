@@ -37,3 +37,4 @@ askbot/upfiles/avatars/
 askbot/skins/common/media/mathjax/
 /jinja2
 *.tar.tz
+run
