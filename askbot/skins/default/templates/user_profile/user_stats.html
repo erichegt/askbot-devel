@@ -103,7 +103,7 @@
                 <tr>
                     <td style="line-height:35px">
                         {% for badge in badges %}{# todo: translate badge name properly #}
-                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span>
+                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; <a href="javascript:void(0)" onclick="var div = jQuery('#badge-context-{{badge.id}}'); if(div.css('display') == 'none') div.show(); else(div.hide());">{{ awarded_badge_counts[badge.id]|intcomma }}</a></span>
                             <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
                             {% for abt in awarded_badge_context %}
                                 {% if abt.badge == badge.id %}
