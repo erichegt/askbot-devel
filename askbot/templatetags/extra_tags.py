@@ -14,7 +14,7 @@ GRAVATAR_TEMPLATE = (
                      'href="%(user_profile_url)s"><img class="gravatar" '
                      'width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
-                     '?s=%(size)s&amp;d=identicon&amp;r=PG" '
+                     '?s=%(size)s&amp;d=%(default)s&amp;r=PG" '
                      'title="%(username)s" '
                      'alt="%(alt_text)s" /></a>')
 
@@ -28,6 +28,7 @@ def gravatar(user, size):
     """
     #todo: rewrite using get_from_dict_or_object
     gravatar_hash = functions.get_from_dict_or_object(user, 'gravatar')
+    default = askbot_settings.DEFAULT_GRAVATAR
     username = functions.get_from_dict_or_object(user, 'username')
     user_id = functions.get_from_dict_or_object(user, 'id')
     slug = slugify(username)
@@ -40,6 +41,7 @@ def gravatar(user, size):
         'user_profile_url': user_profile_url,
         'size': size,
         'gravatar_hash': gravatar_hash,
+        'default': default,
         'alt_text': _('%(username)s gravatar image') % {'username': username},
         'username': username,
     })
