@@ -42,7 +42,7 @@ from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetP
 
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except ImportError:
     from yadis import xri
     
@@ -322,7 +322,10 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    recaptcha = ReCaptchaField()
+    recaptcha = ReCaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class ChangePasswordForm(SetPasswordForm):
     """ change password form """

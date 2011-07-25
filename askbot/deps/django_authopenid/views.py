@@ -48,13 +48,13 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from askbot.skins.loaders import render_into_skin, get_template
 
-from askbot.deps.openid.consumer.consumer import Consumer, \
+from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
-from askbot.deps.openid.consumer.discover import DiscoveryFailure
-from askbot.deps.openid.extensions import sreg
+from openid.consumer.discover import DiscoveryFailure
+from openid.extensions import sreg
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except ImportError:
     from yadis import xri
 
@@ -517,6 +517,8 @@ def show_signin_view(
         #annotate objects with extra data
         providers = util.get_enabled_login_providers()
         for login_method in existing_login_methods:
+            if login_method.provider_name == 'facebook':
+                continue#it is disabled
             provider_data = providers[login_method.provider_name]
             if provider_data['type'] == 'password':
                 #only external password logins will not be deletable

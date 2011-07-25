@@ -3,10 +3,10 @@ import cgi
 import urllib
 import functools
 import re
-from askbot.deps.openid.store.interface import OpenIDStore
-from askbot.deps.openid.association import Association as OIDAssociation
-from askbot.deps.openid.extensions import sreg
-from askbot.deps.openid import store as openid_store
+from openid.store.interface import OpenIDStore
+from openid.association import Association as OIDAssociation
+from openid.extensions import sreg
+from openid import store as openid_store
 import oauth2 as oauth
 
 from django.db.models.query import Q
@@ -24,7 +24,7 @@ from askbot.conf import settings as askbot_settings
 
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except:
     from yadis import xri
 

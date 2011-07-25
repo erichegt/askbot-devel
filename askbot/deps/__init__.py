@@ -16,9 +16,4 @@ Some packages included here were modified with hardcoded imports like::
     from askbot.deps import somepackage
 
 So these cannot be moved around at all.
-
-There is one package - ``python.openid`` which has not been modified this way.
-In order for this one to import, PYTHONPATH variable was modified within `django.wsgi`_
-file - the connector script for Apache mod_wsgi.
-
 """

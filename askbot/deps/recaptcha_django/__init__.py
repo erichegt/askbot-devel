@@ -33,11 +33,15 @@ class ReCaptchaWidget(Widget):
     """
     options = ['theme', 'lang', 'custom_theme_widget', 'tabindex']
 
+    def __init__(self, public_key = None, *args, **kwargs):
+        self.public_key = public_key
+        super(ReCaptchaWidget, self).__init__(*args, **kwargs)
+
     def render(self, name, value, attrs=None):
         final_attrs = self.build_attrs(attrs)
         error = final_attrs.get('error', None)
         html = captcha.displayhtml(
-                            askbot_settings.RECAPTCHA_KEY, 
+                            self.public_key,
                             error=error
                         )
         options = u',\n'.join([u'%s: "%s"' % (k, conditional_escape(v)) \
@@ -66,7 +70,11 @@ class ReCaptchaField(Field):
     """
     Field definition for a ReCAPTCHA
     """
-    widget = ReCaptchaWidget
+
+    def __init__(self, private_key = None, public_key = None, *args, **kwargs):
+        self.widget = ReCaptchaWidget(public_key = public_key)
+        self.private_key = private_key
+        super(ReCaptchaField, self).__init__(*args, **kwargs)
 
     def clean(self, value):
         if value is None:

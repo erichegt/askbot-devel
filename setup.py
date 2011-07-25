@@ -23,6 +23,7 @@ install_requires = [
     'django-celery==2.2.3',
     'django-kombu==0.9.2',
     'django-followit',
+    'python-openid',
 ]
 
 #todo: have a dirty version retriever that 
