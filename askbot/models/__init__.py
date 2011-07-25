@@ -107,7 +107,6 @@ GRAVATAR_TEMPLATE = "http://www.gravatar.com/avatar/%(gravatar)s?" + \
 
 def user_get_gravatar_url(self, size):
     """returns gravatar url
-    currently identicon is the only supported type
     """
     return GRAVATAR_TEMPLATE % {
                 'gravatar': self.gravatar,
