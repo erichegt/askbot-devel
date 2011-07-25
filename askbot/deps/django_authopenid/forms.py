@@ -322,7 +322,10 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    recaptcha = ReCaptchaField()
+    recaptcha = ReCaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class ChangePasswordForm(SetPasswordForm):
     """ change password form """

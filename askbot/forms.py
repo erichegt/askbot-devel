@@ -526,7 +526,10 @@ class AdvancedSearchForm(forms.Form):
         return data
 
 class NotARobotForm(forms.Form):
-    recaptcha = ReCaptchaField()
+    recaptcha = ReCaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name:'), required=False)
