@@ -109,7 +109,7 @@ class TagQuerySet(models.query.QuerySet):
                 ).annotate(
                     local_used_count=models.Count('id')
                 ).order_by(
-                    '-local_used_count'
+                    'name'
                 )
 
         if ignored_tag_names:
