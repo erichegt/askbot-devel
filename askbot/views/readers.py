@@ -36,6 +36,7 @@ from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 import askbot.conf
+from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
 
 # used in index page
@@ -223,6 +224,7 @@ def questions(request):
                 'summary': question.summary,
                 'id': question.id,
                 'tags': question.get_tag_names(),
+                'tag_list_type': tag_list_type,
                 'font_size': font_size,
                 'votes': extra_filters.humanize_counter(question.score),
                 'votes_class': votes_class,
@@ -298,6 +300,7 @@ def questions(request):
         'sort': search_state.sort,
         'tab_id' : search_state.sort,
         'tags' : related_tags,
+        'tag_list_type' : tag_list_type,
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
     }
