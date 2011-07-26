@@ -6,6 +6,7 @@ By main textual content is meant - text of Questions, Answers and Comments.
 The "read-only" requirement here is not 100% strict, as for example "question" view does
 allow adding new comments via Ajax form post.
 """
+import math
 import datetime
 import logging
 import urllib
@@ -90,7 +91,9 @@ def questions(request):
                                             request_user = request.user,
                                             search_state = search_state,
                                         )
-
+    
+    font_size = get_tag_font_size(tags)
+    
     paginator = Paginator(qs, search_state.page_size)
 
     if paginator.num_pages < search_state.page:
@@ -215,6 +218,7 @@ def questions(request):
                 'summary': question.summary,
                 'id': question.id,
                 'tags': question.get_tag_names(),
+                'font_size': font_size,
                 'votes': extra_filters.humanize_counter(question.score),
                 'votes_class': votes_class,
                 'votes_word': ungettext('vote', 'votes', question.score),
@@ -289,6 +293,7 @@ def questions(request):
         'sort': search_state.sort,
         'tab_id' : search_state.sort,
         'tags' : related_tags,
+        'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
     }
 
@@ -328,47 +333,55 @@ def tags(request):#view showing a listing of available tags - plain list
             else:
                 objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
 
-    try:
-        tags = objects_list.page(page)
-    except (EmptyPage, InvalidPage):
-        tags = objects_list.page(objects_list.num_pages)
-    
-    #tag cloud params
-    max_tag = 0
-    for tag in tags.objects_list:
-        if tag.used_count > max_tag:
-            max_tag = tag.used_count
+    tags = models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name")
 
-    min_tag = max_tag
-    for tag in tags.objects_list:
-        if tag.used_count < min_tag:
-            min_tag = tag.used_count
+    font_size = get_tag_font_size(tags)
 
-    for tag in tags.objects_list:
-        font_size[tag] = tag_font_size(max_tag,min_tag,tag.used_count)
-    
-    paginator_data = {
-        'is_paginated' : is_paginated,
-        'pages': objects_list.num_pages,
-        'page': page,
-        'has_previous': tags.has_previous(),
-        'has_next': tags.has_next(),
-        'previous': tags.previous_page_number(),
-        'next': tags.next_page_number(),
-        'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
-    }
-    paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
         'active_tab': 'tags',
         'page_class': 'tags-page',
         'tags' : tags,
-        'tag_font_size' : tag_font_size,
+        'max' : max_tag,
+        'min' : min_tag,
+        'font_size' : font_size,
         'stag' : stag,
         'tab_id' : sortby,
         'keywords' : stag,
-        'paginator_context' : paginator_context
     }
+
     return render_into_skin('tags.html', data, request)
+
+def get_tag_font_size(tags):
+    max_tag = 0
+    for tag in tags:
+        if tag.used_count > max_tag:
+            max_tag = tag.used_count
+
+    min_tag = max_tag
+    for tag in tags:
+        if tag.used_count < min_tag:
+            min_tag = tag.used_count
+
+    font_size = {}
+    for tag in tags:
+        font_size[tag.name] = tag_font_size(max_tag,min_tag,tag.used_count)
+    
+    return font_size
+
+def tag_font_size(max_size, min_size, current_size):
+    """
+    do a logarithmic mapping calcuation for a proper size for tagging cloud
+    Algorithm from http://blogs.dekoh.com/dev/2007/10/29/choosing-a-good-
+    font-size-variation-algorithm-for-your-tag-cloud/
+    """
+    MAX_FONTSIZE = 7
+    MIN_FONTSIZE = 1
+
+    #avoid invalid calculation
+    if current_size == 0:
+        current_size = 1
+    weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
+    return MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight)
 
 @csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments

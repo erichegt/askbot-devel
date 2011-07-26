@@ -374,6 +374,31 @@ blockquote {
    because it must be the same in the emails
    askbot/models/__init__.py:format_instant_notification_email()
 */
+
+/* tag cloud */
+
+.tag-size-1 {
+    font-size:12;
+}
+.tag-size-2 {
+    font-size:13;
+}
+.tag-size-3 {
+    font-size:14;
+}
+.tag-size-4 {
+    font-size:15;
+}
+.tag-size-5 {
+    font-size:16;
+}
+.tag-size-6 {
+    font-size:17;
+}
+.tag-size-7 {
+    font-size:18;
+}
+
 ul.tags,
 .boxC ul.tags,
 ul.tags.marked-tags,
