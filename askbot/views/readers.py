@@ -9,6 +9,7 @@ allow adding new comments via Ajax form post.
 import datetime
 import logging
 import urllib
+import operator
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -96,7 +97,7 @@ def questions(request):
     
     #force cloud to sort by name
     if tag_list_type == 'cloud':
-        related_tags = sorted(related_tags, key=itemgetter('name'))
+        related_tags = sorted(related_tags, key=operator.attrgetter('name'))
 
     font_size = extra_tags.get_tag_font_size(related_tags)
     
