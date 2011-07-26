@@ -45,9 +45,25 @@ def gravatar(user, size):
         'alt_text': _('%(username)s gravatar image') % {'username': username},
         'username': username,
     })
+    
+@register.simple_tag
+def get_tag_font_size(tags):
+    max_tag = 0
+    for tag in tags:
+        if tag.used_count > max_tag:
+            max_tag = tag.used_count
 
-MAX_FONTSIZE = 18
-MIN_FONTSIZE = 12
+    min_tag = max_tag
+    for tag in tags:
+        if tag.used_count < min_tag:
+            min_tag = tag.used_count
+
+    font_size = {}
+    for tag in tags:
+        font_size[tag.name] = tag_font_size(max_tag,min_tag,tag.used_count)
+    
+    return font_size
+
 @register.simple_tag
 def tag_font_size(max_size, min_size, current_size):
     """
@@ -55,16 +71,14 @@ def tag_font_size(max_size, min_size, current_size):
     Algorithm from http://blogs.dekoh.com/dev/2007/10/29/choosing-a-good-
     font-size-variation-algorithm-for-your-tag-cloud/
     """
+    MAX_FONTSIZE = 7
+    MIN_FONTSIZE = 1
+
     #avoid invalid calculation
     if current_size == 0:
         current_size = 1
-    try:
-        weight = (math.log10(current_size) - math.log10(min_size)) / \
-                (math.log10(max_size) - math.log10(min_size))
-    except Exception:
-        weight = 0
-    return MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight)
-
+    weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
+    return int(MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight))
 
 #todo: this function may need to be removed to simplify the paginator functionality
 LEADING_PAGE_RANGE_DISPLAYED = TRAILING_PAGE_RANGE_DISPLAYED = 5
