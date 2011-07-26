@@ -92,7 +92,7 @@ def questions(request):
                                             search_state = search_state,
                                         )
     
-    font_size = get_tag_font_size(tags)
+    font_size = get_tag_font_size(related_tags)
     
     paginator = Paginator(qs, search_state.page_size)
 
