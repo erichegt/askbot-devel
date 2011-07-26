@@ -17,7 +17,7 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import get_template, render_into_skin, render_text
+from askbot.skins.loaders import get_template, render_into_skin, render_text_into_skin
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
