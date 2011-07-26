@@ -312,7 +312,7 @@ def tags(request):#view showing a listing of available tags - plain list
     if request.method == "GET":
         stag = request.GET.get("query", "").strip()
         if stag != '':
-            tags = .objects.filter(deleted=False, name__icontains=stag).exclude(used_count=0)
+            tags = models.Tag.objects.filter(deleted=False, name__icontains=stag).exclude(used_count=0)
         else:
             if sortby == "name":
                 tags = models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name")

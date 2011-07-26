@@ -97,7 +97,7 @@ class TagQuerySet(models.query.QuerySet):
             search query is the most common - just return a list
             of top tags"""
             cheating = True
-            tags = Tag.objects.all().order_by('-used_count')
+            tags = Tag.objects.all().order_by('name')
         else:
             cheating = False
             #getting id's is necessary to avoid hitting a heavy query
@@ -117,7 +117,8 @@ class TagQuerySet(models.query.QuerySet):
 
         tags = tags.exclude(deleted = True)
 
-        tags = tags[:50]#magic number
+        #tags = tags[:50]#magic number
+        
         if cheating:
             for tag in tags:
                 tag.local_used_count = tag.used_count
@@ -142,7 +143,7 @@ class Tag(DeletableContent):
 
     class Meta(DeletableContent.Meta):
         db_table = u'tag'
-        ordering = ('name','-used_count')
+        ordering = ('-used_count', 'name')
 
     def __unicode__(self):
         return self.name
