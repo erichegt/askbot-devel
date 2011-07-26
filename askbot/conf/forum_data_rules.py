@@ -116,7 +116,7 @@ settings.register(
 )
 
 settings.register(
-    livesettings.BooleanValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
         'TAG_LIST_FORMAT',
         default = 'list',

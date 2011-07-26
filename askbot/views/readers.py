@@ -95,7 +95,7 @@ def questions(request):
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     
     #force cloud to sort by name
-    if tag_list_type = 'cloud':
+    if tag_list_type == 'cloud':
         related_tags = sorted(related_tags, key=itemgetter('name'))
 
     font_size = extra_tags.get_tag_font_size(related_tags)
@@ -318,7 +318,7 @@ def tags(request):#view showing a listing of available tags - plain list
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     
-    if tag_list_type = 'list':
+    if tag_list_type == 'list':
 
         stag = ""
         is_paginated = True
