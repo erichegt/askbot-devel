@@ -307,32 +307,17 @@ def questions(request):
 
 def tags(request):#view showing a listing of available tags - plain list
     stag = ""
-    is_paginated = True
-    sortby = request.GET.get('sort', 'used')
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    sortby = request.GET.get('sort', 'name')
 
     if request.method == "GET":
         stag = request.GET.get("query", "").strip()
         if stag != '':
-            objects_list = Paginator(
-                            models.Tag.objects.filter(
-                                                deleted=False,
-                                                name__icontains=stag
-                                            ).exclude(
-                                                used_count=0
-                                            ),
-                            DEFAULT_PAGE_SIZE
-                        )
+            tags = .objects.filter(deleted=False, name__icontains=stag).exclude(used_count=0)
         else:
             if sortby == "name":
-                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
+                tags = models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name")
             else:
-                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
-
-    tags = models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name")
+                tags = models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count")
 
     font_size = extra_tags.get_tag_font_size(tags)
 

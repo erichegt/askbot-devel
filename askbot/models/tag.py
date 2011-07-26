@@ -142,7 +142,7 @@ class Tag(DeletableContent):
 
     class Meta(DeletableContent.Meta):
         db_table = u'tag'
-        ordering = ('-used_count', 'name')
+        ordering = ('name','-used_count')
 
     def __unicode__(self):
         return self.name
