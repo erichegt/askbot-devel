@@ -398,6 +398,15 @@ blockquote {
 .tag-size-7 {
     font-size:18px;
 }
+.tag-size-8 {
+    font-size:19px;
+}
+.tag-size-9 {
+    font-size:20px;
+}
+.tag-size-10 {
+    font-size:21px;
+}
 
 ul.tags,
 .boxC ul.tags,

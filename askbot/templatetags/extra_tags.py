@@ -71,7 +71,7 @@ def tag_font_size(max_size, min_size, current_size):
     Algorithm from http://blogs.dekoh.com/dev/2007/10/29/choosing-a-good-
     font-size-variation-algorithm-for-your-tag-cloud/
     """
-    MAX_FONTSIZE = 7
+    MAX_FONTSIZE = 10
     MIN_FONTSIZE = 1
 
     #avoid invalid calculation
