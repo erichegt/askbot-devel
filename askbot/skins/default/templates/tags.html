@@ -30,20 +30,10 @@
     {% endif %}
 </p>
 {% if tags.object_list %}
-    <ul class='tags'>
-        {% for tag in tags.object_list %}
-        <li>
-            {{ macros.tag_widget(
-                        tag = tag.name,
-                        url_params = 'start_over=true',
-                        html_tag = 'div',
-                        extra_content = '<span class="tag-number">&#215; ' ~
-                                        tag.used_count|intcomma ~ '</span>'
-                )
-            }}
-        </li>
-        {% endfor %}
-    </ul>
+    {% for tag in tags.object_list %}
+    <span style="font-size: {{ tag_font_size[tag] }}px;">
+        <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="/blog/tags/all/{{ tag.name }}">{{ tag.name }}</a>
+    </span>
 {% endif %}
 <div class="pager">
     {{macros.paginator(paginator_context)}}

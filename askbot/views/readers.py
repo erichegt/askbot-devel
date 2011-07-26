@@ -332,7 +332,21 @@ def tags(request):#view showing a listing of available tags - plain list
         tags = objects_list.page(page)
     except (EmptyPage, InvalidPage):
         tags = objects_list.page(objects_list.num_pages)
+    
+    #tag cloud params
+    max_tag = 0
+    for tag in tags.objects_list:
+        if tag.used_count > max_tag:
+            max_tag = tag.used_count
 
+    min_tag = max_tag
+    for tag in tags.objects_list:
+        if tag.used_count < min_tag:
+            min_tag = tag.used_count
+
+    for tag in tags.objects_list:
+        font_size[tag] = tag_font_size(max_tag,min_tag,tag.used_count)
+    
     paginator_data = {
         'is_paginated' : is_paginated,
         'pages': objects_list.num_pages,
@@ -348,6 +362,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'active_tab': 'tags',
         'page_class': 'tags-page',
         'tags' : tags,
+        'tag_font_size' : tag_font_size,
         'stag' : stag,
         'tab_id' : sortby,
         'keywords' : stag,
