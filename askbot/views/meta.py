@@ -44,14 +44,13 @@ def server_error(request, template='500.html'):
 def faq(request):
     if getattr(askbot_settings, 'FORUM_FAQ',''):
         text = _(getattr(askbot_settings, 'FORUM_FAQ',''))
-        forum_faq = text
         data = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
             #'send_email_key_url': reverse('send_email_key'),
             'ask_question_url': reverse('ask'),
             'page_class': 'meta',
         }
-        forum_faq = render_text(text, data, request)
+        forum_faq = render_text_into_skin(text, data, request)
         data_out = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
             #'send_email_key_url': reverse('send_email_key'),

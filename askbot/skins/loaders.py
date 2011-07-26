@@ -144,7 +144,7 @@ def render_into_skin(template, data, request, mimetype = 'text/html'):
     template = get_template(template, request)
     return HttpResponse(template.render(context), mimetype = mimetype)
 
-def render_text(text, data, request):
+def render_text_into_skin(text, data, request):
     context = RequestContext(request, data)
     skin = get_skin(request)
     template = skin.from_string(text)
