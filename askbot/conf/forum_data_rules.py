@@ -118,6 +118,21 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'TAG_LIST_FORMAT',
+        default = 'list',
+        choices=const.TAG_LIST_FORMAT_CHOICES,
+        description = _('Format of tag list'),
+        help_text = _(
+                        'Select the format to show tags in, '
+                        'either as a simple list, or as a '
+                        'tag cloud'
+                     )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'USE_WILDCARD_TAGS',
         default = False,
         description = _('Use wildcard tags'),

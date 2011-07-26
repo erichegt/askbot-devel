@@ -58,6 +58,11 @@ POST_SCOPE_LIST = (
 )
 DEFAULT_POST_SCOPE = 'all'
 
+TAG_LIST_FORMAT_CHOICES = (
+    ('list', _('list')),
+    ('cloud', _('cloud')),
+)
+
 PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
 ANSWERS_PAGE_SIZE = 10
 #todo: remove this duplication
