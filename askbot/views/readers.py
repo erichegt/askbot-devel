@@ -381,7 +381,7 @@ def tag_font_size(max_size, min_size, current_size):
     if current_size == 0:
         current_size = 1
     weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
-    return MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight)
+    return int(MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight))
 
 @csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
