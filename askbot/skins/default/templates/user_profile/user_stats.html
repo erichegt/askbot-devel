@@ -107,7 +107,7 @@
                             <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
                             {% for abt in awarded_badge_context %}
                                 {% if abt.badge == badge.id %}
-                                    {% if abt.content_type == 31 %}{# question #}
+                                    {% if abt.content_type == question_type %}
                                         {% for question in questions %}{# could also create a new dict #}
                                             {% if question.id == abt.object_id %}
                                                 <li>
@@ -117,7 +117,7 @@
                                             {% endif %}   
                                         {% endfor %}   
                                     {% endif %}
-                                    {% if abt.content_type == 36 %}{# answer #}
+                                    {% if abt.content_type == answer_type %}
                                         {% for answered_question in answered_questions %}{# could also create a new dict #}
                                             {% if answered_question.answer_id == abt.object_id %}
                                                 <li>

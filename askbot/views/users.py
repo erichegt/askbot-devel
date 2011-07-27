@@ -388,6 +388,8 @@ def user_stats(request, user, context):
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
+        'question_type' : question_type,
+        'answer_type' : answer_type,
         'favorited_myself': favorited_myself,
         'answered_questions' : answered_questions,
         'up_votes' : up_votes,
