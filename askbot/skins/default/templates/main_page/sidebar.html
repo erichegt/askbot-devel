@@ -36,7 +36,7 @@
         {% else %}
             {% for tag in tags %}
             <span class="tag-size-{{ font_size[tag.name] }}">
-                <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="/questions/?tags={{ tag.name }}">{{ tag.name }}</a>
+                <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="{% url questions %}?tags={{ tag.name }}">{{ tag.name }}</a>
             </span>
             {% endfor %}
         {% endif %}
