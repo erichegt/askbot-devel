@@ -58,7 +58,7 @@ settings.register(
                     ) % {'favicon_info_url': const.DEPENDENCY_URLS['favicon']},
         upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
         upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
-        default = '/images/favicon.gif',
+        default = '/m/default/media/images/favicon.gif',
         url_resolver = skin_utils.get_media_url
     )
 )
