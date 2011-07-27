@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 
-{% settings.SIDEBAR_HEADER %}
+{{ settings.SIDEBAR_HEADER }}
 
 {% if contributors and settings.SIDEBAR_SHOW_AVATARS %}
     {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
@@ -47,4 +47,4 @@
     {% endcache %}
 {% endif %}
 
-{% settings.SIDEBAR_FOOTER %}
+{{ settings.SIDEBAR_FOOTER }}
