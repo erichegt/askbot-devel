@@ -1,4 +1,9 @@
 {% import "macros.html" as macros %}
+
+{% if settings.SIDEBAR_HEADER %} 
+   {% settings.SIDEBAR_HEADER %}
+{% endif %}
+
 {% if contributors and settings.SIDEBAR_SHOW_AVATARS %}
     {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
     <div id="contrib-users" class="boxC">
@@ -42,4 +47,8 @@
         {% endif %}
     </div>
     {% endcache %}
+{% endif %}
+
+{% if settings.SIDEBAR_FOOTER %} 
+   {% settings.SIDEBAR_FOOTER %}
 {% endif %}

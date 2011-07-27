@@ -17,6 +17,22 @@ SIDEBAR_SETTINGS = ConfigurationGroup(
 settings.register(
     values.BooleanValue(
         SIDEBAR_SETTINGS,
+        'SIDEBAR_HEADER',
+        description = _('Custom sidebar header'),
+        default = '',
+        help_text = _(
+                    'Use this area to enter content at the TOP of the sidebar'
+                    'in HTML format.   When using this option '
+                    '(as well as the sidebar footer), please '
+                    'use the HTML validation service to make sure that '
+                    'your input is valid and works well in all browsers.'
+                    )
+    )
+)
+
+settings.register(
+    values.BooleanValue(
+        SIDEBAR_SETTINGS,
         'SIDEBAR_SHOW_AVATARS',
         description = _('Show avatar block in sidebar'),
         help_text = _(
@@ -50,6 +66,22 @@ settings.register(
                     'cloud or tag list from the sidebar ' 
                     ),
         default = True
+    )
+)
+
+settings.register(
+    values.BooleanValue(
+        SIDEBAR_SETTINGS,
+        'SIDEBAR_FOOTER',
+        description = _('Custom sidebar footer'),
+        default = '',
+        help_text = _(
+                    'Use this area to enter content at the BOTTOM of the sidebar'
+                    'in HTML format.   When using this option '
+                    '(as well as the sidebar header), please '
+                    'use the HTML validation service to make sure that '
+                    'your input is valid and works well in all browsers.'
+                    )
     )
 )
 
