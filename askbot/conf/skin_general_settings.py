@@ -210,6 +210,19 @@ settings.register(
 settings.register(
     values.BooleanValue(
         GENERAL_SKIN_SETTINGS,
+        'SIDEBAR_SHOW_AVATARS',
+        description = _('Show avatar block in sidebar'),
+        help_text = _(
+                    'Uncheck this if you want to hide the avatar '
+                    'block from the sidebar ' 
+                    ),
+        default = True
+    )
+)
+
+settings.register(
+    values.BooleanValue(
+        GENERAL_SKIN_SETTINGS,
         'USE_CUSTOM_CSS',
         description = _('Apply custom style sheet (CSS)'),
         help_text = _(
