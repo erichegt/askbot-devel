@@ -103,7 +103,6 @@ MIDDLEWARE_CLASSES = (
     'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
     'askbot.middleware.cancel.CancelActionMiddleware',
-    'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'askbot.middleware.view_log.ViewLogMiddleware',
@@ -165,6 +164,7 @@ INSTALLED_APPS = (
     'djcelery',
     'djkombu',
     'followit',
+    'captcha',#needs custom django-recaptcha https://github.com/ASKBOT/django-recaptcha
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
     #requires setting of MEDIA_ROOT and MEDIA_URL
 )

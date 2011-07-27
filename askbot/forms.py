@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.utils.mail import extract_first_email_address
-from askbot.deps.recaptcha_django import ReCaptchaField
+from captcha.fields import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 

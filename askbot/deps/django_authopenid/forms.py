@@ -37,7 +37,7 @@ from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
-from askbot.deps.recaptcha_django import ReCaptchaField
+from captcha.fields import ReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 
 # needed for some linux distributions like debian
