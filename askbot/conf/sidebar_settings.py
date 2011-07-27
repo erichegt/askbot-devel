@@ -15,7 +15,7 @@ SIDEBAR_SETTINGS = ConfigurationGroup(
                 )
 
 settings.register(
-    values.BooleanValue(
+    values.LongStringValue(
         SIDEBAR_SETTINGS,
         'SIDEBAR_HEADER',
         description = _('Custom sidebar header'),
@@ -70,7 +70,7 @@ settings.register(
 )
 
 settings.register(
-    values.BooleanValue(
+    values.LongStringValue(
         SIDEBAR_SETTINGS,
         'SIDEBAR_FOOTER',
         description = _('Custom sidebar footer'),
