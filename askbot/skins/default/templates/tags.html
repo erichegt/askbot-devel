@@ -5,7 +5,12 @@
 {% block content %}
 <!-- Tabs -->
 <div class="tabBar">
-    <h1>{% trans %}Tag list{% endtrans %}</h1>
+    {% if stag %}
+        <h1>{% trans %}Tags, matching "{{ stag }}"{% endtrans %}</h1>
+    {% else %}
+        <h1>{% trans %}Tag list{% endtrans %}</h1>
+    {% endif %}
+
     <div class="tabsA">
         <a
             id="sort_name"
@@ -22,14 +27,9 @@
     </div>
 </div>
 {% if tag_list_type == 'list' %}
-<p>
-    {% if stag %}
-        {% trans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endtrans %}:
-    {% endif %}
     {% if not tags.object_list %}
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
-</p>
     {% if tags.object_list %}
         <ul class='tags'>
             {% for tag in tags.object_list %}
@@ -45,25 +45,18 @@
             </li>
             {% endfor %}
         </ul>
-    <div class="pager">
-        {{macros.paginator(paginator_context)}}
-    </div>
+        <div class="pager">
+            {{macros.paginator(paginator_context)}}
+        </div>
     {% endif %}
 {% else %}
-<p>
-    {% if stag %}
-        {% trans %}All tags matching '<span class="darkred"><strong>{{ stag }}</strong></span>'{% endtrans %}:
-    {% endif %}
+    <div class="clearfix"></div>
     {% if not tags %}
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
-</p>
-    {% for tag in tags %}
-    <span class="tag-size-{{ font_size[tag.name] }}">
-        <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="/questions/?tags={{ tag.name }}">{{ tag.name }}</a>
-    </span>
-    {% endfor %}
+    {{ macros.tag_cloud(tags = tags, font_sizes = font_size) }}
 {% endif %}
+
 {% endblock %}
 {% block endjs %}
     <script type="text/javascript">

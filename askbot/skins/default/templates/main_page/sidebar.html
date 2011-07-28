@@ -37,11 +37,7 @@
             {% endfor %}
         </ul>
         {% else %}
-            {% for tag in tags %}
-            <span class="tag-size-{{ font_size[tag.name] }}">
-                <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="{% url questions %}?tags={{ tag.name }}">{{ tag.name }}</a>
-            </span>
-            {% endfor %}
+            {{ macros.tag_cloud(tags = tags, font_sizes = font_size) }}
         {% endif %}
     </div>
     {% endcache %}

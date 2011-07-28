@@ -97,7 +97,7 @@ def questions(request):
     
     #force cloud to sort by name
     if tag_list_type == 'cloud':
-        related_tags = sorted(related_tags, key=operator.attrgetter('name'))
+        related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
     font_size = extra_tags.get_tag_font_size(related_tags)
     
