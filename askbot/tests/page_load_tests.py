@@ -240,7 +240,7 @@ class PageLoadTests(PageLoadTestCase):
             )
         self.try_url(
                 'faq',
-                template='faq.html',
+                template='faq_static.html',
                 status_code=200,
             )
 
