@@ -600,6 +600,85 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     return render_into_skin('question.html', data, request)
 
+@csrf.csrf_protect
+def question_print(request, id):#refactor - long subroutine. print question body, answers and comments
+    """view that displays body of the question and 
+    all answers to it in print format
+    """
+    #todo: fix inheritance of sort method from questions
+    default_sort_method = request.session.get('questions_sort_method', 'votes')
+    form = ShowQuestionForm(request.GET, default_sort_method)
+    form.full_clean()#always valid
+    show_answer = form.cleaned_data['show_answer']
+    show_comment = form.cleaned_data['show_comment']
+    show_page = form.cleaned_data['show_page']
+    is_permalink = form.cleaned_data['is_permalink']
+    answer_sort_method = form.cleaned_data['answer_sort_method']
+
+    #load question and maybe refuse showing deleted question
+    try:
+        question = get_object_or_404(models.Question, id=id)
+        question.assert_is_visible_to(request.user)
+    except exceptions.QuestionHidden, error:
+        request.user.message_set.create(message = unicode(error))
+        return HttpResponseRedirect(reverse('index'))
+
+    logging.debug('answer_sort_method=' + unicode(answer_sort_method))
+    #load answers
+    answers = question.get_answers(user = request.user)
+    answers = answers.select_related(depth=1)
+
+    user_answer_votes = {}
+    for answer in answers:
+        vote = answer.get_user_vote(request.user)
+        if vote is not None and not user_answer_votes.has_key(answer.id):
+            vote_value = -1
+            if vote.is_upvote():
+                vote_value = 1
+            user_answer_votes[answer.id] = vote_value
+
+    view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
+    orderby = view_dic[answer_sort_method]
+    if answers is not None:
+        answers = answers.order_by("-accepted", orderby)
+
+    filtered_answers = []
+    for answer in answers:
+        if answer.deleted == True:
+            if answer.author_id == request.user.id:
+                filtered_answers.append(answer)
+        else:
+            filtered_answers.append(answer)
+
+    #resolve page number and comment number for permalinks
+    comment_order_number = None
+
+    favorited = question.has_favorite_by_user(request.user)
+    if request.user.is_authenticated():
+        question_vote = question.votes.select_related().filter(user=request.user)
+    else:
+        question_vote = None #is this correct?
+    if question_vote is not None and question_vote.count() > 0:
+        question_vote = question_vote[0]
+
+    data = {
+        'page_class': 'question-page',
+        'active_tab': 'questions',
+        'question' : question,
+        'question_vote' : question_vote,
+        'question_comment_count':question.comments.count(),
+        'answer' : AnswerForm(question,request.user),
+        'answers' : filtered_answers,
+        'user_answer_votes': user_answer_votes,
+        'tags' : question.tags.all(),
+        'tab_id' : answer_sort_method,
+        'favorited' : favorited,
+        'similar_questions' : question.get_similar_questions(),
+        'language_code': translation.get_language(),
+        'comment_order_number': comment_order_number
+    }
+    return render_into_skin('question_print.html', data, request)
+
 def revisions(request, id, object_name=None):
     assert(object_name in ('Question', 'Answer'))
     post = get_object_or_404(models.get_model(object_name), id=id)

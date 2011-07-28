@@ -884,6 +884,20 @@ a:hover.medal {
     margin-bottom: 10px;
     font-size: 100%;
 }
+.question-title {
+    position:relative;
+}
+.print {
+    position:absolute;
+    width:24px;
+    height:24px;
+    top:12px;
+    right:6px;
+    background: url(../images/print.png);
+}
+.print:hover {
+    cursor: pointer;
+}
 
 .question-status {
     margin-top: 10px;
@@ -895,14 +909,12 @@ a:hover.medal {
 .question-status h3 {
     font-size: 125%;
 }
-
 .question-body, .answer-body {
     min-height: 39px;
     line-height: 20px;
     overflow: auto;
     width: 660px;
 }
-
 .question-body IMG, .answer-body IMG {
     max-width: 600px;
 }
