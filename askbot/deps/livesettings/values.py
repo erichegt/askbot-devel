@@ -567,6 +567,10 @@ class LongStringValue(Value):
 class ImageValue(StringValue):
 
     def __init__(self, *args, **kwargs):
+        self.allowed_file_extensions = kwargs.pop(
+            'allowed_file_extensions',
+            ('jpg', 'gif', 'png')
+        )
         self.upload_directory = kwargs.pop('upload_directory')
         self.upload_url = kwargs.pop('upload_url')
         self.url_resolver = kwargs.pop('url_resolver', None)
@@ -575,6 +579,7 @@ class ImageValue(StringValue):
     class field(forms.FileField):
         def __init__(self, *args, **kwargs):
             kwargs['required'] = False
+            self.allowed_file_extensions = kwargs.pop('allowed_file_extensions')
             url_resolver = kwargs.pop('url_resolver')
             kwargs['widget'] = ImageInput(url_resolver = url_resolver)
             forms.FileField.__init__(self, *args, **kwargs)
@@ -583,14 +588,15 @@ class ImageValue(StringValue):
             if not file_data and initial:
                 return initial
             (base_name, ext) = os.path.splitext(file_data.name)
-            image_extensions = ('.jpg', '.gif', '.png')
-            if ext.lower() not in image_extensions:
+            #first character in ext is .
+            if ext[1:].lower() not in self.allowed_file_extensions:
                 error_message = _('Allowed image file types are %(types)s') \
-                        % {'types': ', '.join(image_extensions)}
+                        % {'types': ', '.join(self.allowed_file_extensions)}
                 raise forms.ValidationError(error_message)
 
     def make_field(self, **kwargs):
         kwargs['url_resolver'] = self.url_resolver
+        kwargs['allowed_file_extensions'] = self.allowed_file_extensions
         return super(StringValue, self).make_field(**kwargs)
 
     def update(self, uploaded_file):

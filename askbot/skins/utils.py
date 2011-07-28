@@ -7,6 +7,7 @@ the lookup resolution process for templates and media works as follows:
 """
 import os
 import logging
+import urllib
 from django.conf import settings as django_settings
 from django.utils.datastructures import SortedDict
 
@@ -93,7 +94,7 @@ def get_media_url(url, ignore_missing = False):
     """
     #import datetime
     #before = datetime.datetime.now()
-    url = unicode(url)
+    url = urllib.unquote(unicode(url))
     while url[0] == '/': url = url[1:]
     #todo: handles case of multiple skin directories
 
