@@ -51,9 +51,9 @@ settings.register(
 settings.register(
     livesettings.StringValue(
         USER_SETTINGS,
-        'DEFAULT_GRAVATAR',
+        'GRAVATAR_TYPE',
         default='identicon',
-        choices=const.USER_DEFAULT_GRAVATAR_CHOICES,
+        choices=const.GRAVATAR_TYPE_CHOICES,
         description=_('Default Gravatar icon type'),
         help_text=_(
                     'This option allows you to set the default avatar type for email addresses without associated gravatar images.  For more information, please visit <a href="http://en.gravatar.com/site/implement/images/">this page</a>.'

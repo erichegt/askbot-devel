@@ -222,7 +222,7 @@ NOTIFICATION_DELIVERY_SCHEDULE_CHOICES = (
 USERS_PAGE_SIZE = 28#todo: move it to settings?
 USERNAME_REGEX_STRING = r'^[\w \-.@+\']+$'
 
-USER_DEFAULT_GRAVATAR_CHOICES = (
+GRAVATAR_TYPE_CHOICES = (
                             ('identicon',_('identicon')),
                             ('mm',_('mystery-man')),
                             ('monsterid',_('monsterid')),

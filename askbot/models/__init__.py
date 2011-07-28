@@ -110,7 +110,7 @@ def user_get_gravatar_url(self, size):
     """
     return GRAVATAR_TEMPLATE % {
                 'gravatar': self.gravatar,
-                'type': askbot_settings.DEFAULT_GRAVATAR,
+                'type': askbot_settings.GRAVATAR_TYPE,
                 'size': size,
             }
 
