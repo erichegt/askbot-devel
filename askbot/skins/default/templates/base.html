@@ -12,11 +12,7 @@
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
-        {% if settings.SITE_FAVICON %}
-            <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
-        {% else %}
-            <link rel="shortcut icon" href="{{ '/m/default/media/images/favicon.gif'|media }}" />
-        {% endif %}
+        <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
         <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
         {{ skin.get_extra_css_link() }}
         {% if settings.USE_CUSTOM_CSS %}
