@@ -76,13 +76,12 @@ def tag_font_size(max_size, min_size, current_size):
 
     #avoid invalid calculation
     if current_size == 0:
-        current_size = 1-    
+        current_size = 1    
     try:
         weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
     except Exception:
         weight = 0
         
-    weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
     return int(MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight))
 
 #todo: this function may need to be removed to simplify the paginator functionality
