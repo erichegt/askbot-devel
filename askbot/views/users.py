@@ -52,6 +52,14 @@ question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
 
+#todo: queries in the user activity summary view must be redone
+def get_related_object_type_name(content_type_id):
+    if content_type_id in (question_type_id, question_revision_type_id,):
+        return 'question'
+    elif content_type_id in (answer_type_id, answer_revision_type_id,):
+        return 'answer'
+    return None
+
 def owner_or_moderator_required(f):
     @functools.wraps(f)
     def wrapped_func(request, profile_owner, context):
@@ -414,6 +422,7 @@ def user_recent(request, user, context):
                 return item[1]
 
     class Event:
+        is_badge = False
         def __init__(self, time, type, title, summary, answer_id, question_id):
             self.time = time
             self.type = get_type_name(type)
@@ -429,13 +438,15 @@ def user_recent(request, user, context):
                 self.title_link += '#%s' % answer_id
 
     class AwardEvent:
-        def __init__(self, time, obj, cont, type, id):
+        is_badge = True
+        def __init__(self, time, obj, cont, type, id, related_object_type = None):
             self.time = time
             self.obj = obj
             self.cont = cont
             self.type = get_type_name(type)
             self.type_id = type
             self.badge = get_object_or_404(models.BadgeData, id=id)
+            self.related_object_type = related_object_type
 
     activities = []
     # ask questions
@@ -459,21 +470,17 @@ def user_recent(request, user, context):
             'active_at',
             'activity_type'
             )
-    if len(questions) > 0:
 
-        question_activities = []
-        for q in questions:
-            q_event = Event(
-                        q['active_at'], 
-                        q['activity_type'], 
-                        q['title'], 
-                        '', 
-                        '0', 
-                        q['question_id']
-                    )
-            question_activities.append(q_event)
-
-        activities.extend(question_activities)
+    for q in questions:
+        q_event = Event(
+                    q['active_at'], 
+                    q['activity_type'], 
+                    q['title'], 
+                    '', 
+                    '0', 
+                    q['question_id']
+                )
+        activities.append(q_event)
 
     # answers
     answers = models.Activity.objects.extra(
@@ -671,9 +678,18 @@ def user_recent(request, user, context):
             'content_type_id',
             'activity_type'
             )
-    if len(awards) > 0:
-        awards = [(AwardEvent(q['awarded_at'], q['object_id'], q['content_type_id'], q['activity_type'], q['badge_id'])) for q in awards]
-        activities.extend(awards)
+    for award in awards:
+        related_object_type = get_related_object_type_name(award['content_type_id'])
+        activities.append(
+            AwardEvent(
+                award['awarded_at'],
+                award['object_id'],
+                award['content_type_id'],
+                award['activity_type'],
+                award['badge_id'],
+                related_object_type = related_object_type
+            )
+        )
 
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
