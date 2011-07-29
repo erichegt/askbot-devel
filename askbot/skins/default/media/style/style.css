@@ -2257,12 +2257,15 @@ img.flag {
     vertical-align: text-bottom;
 }
 
+
+.fb-share, .twitter-share, .linkedin-share {
+    width:25px;
+    display:block;
+}
 .fb-share, .twitter-share {
     background: url(../images/sprite.png) no-repeat;
     text-indent:-100em;
-    width:25px;
     height:25px;
-    display:block;
 }
 .fb-share {
     background-position: -25px 0px;
@@ -2270,6 +2273,11 @@ img.flag {
 .twitter-share {
     margin-top:10px;
     background-position: 0px 0px;
+}
+.linkedin-share {
+    background: url("http://static01.linkedin.com/scds/common/u/img/sprite/sprite_connect_v12.png") no-repeat scroll 4px 0 transparent !important;
+    height:20px;
+    margin-bottom:5px;
 }
 /* Pretty printing styles. Used with prettify.js. */
 

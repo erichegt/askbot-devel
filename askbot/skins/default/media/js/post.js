@@ -1494,6 +1494,10 @@ var socialSharing = function(){
         facebook: {
             url: "http://www.facebook.com/sharer.php?u={URL}&ref=fbshare&t={TEXT}",
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
+        linkedin: {
+            url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={{ URL }}&amp;source={{ TEXT }}",
+            params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         }
     };
     var URL = "";
@@ -1517,10 +1521,12 @@ var socialSharing = function(){
             TEXT = escape($('h1 > a').html());
             var fb = $('a.fb-share')
             var tw = $('a.twitter-share');
+            var tw = $('a.linkedin-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
+            setupButtonEventHandlers(tw, function(){share_page("linkedin")});
         }
     }
 }(); 
