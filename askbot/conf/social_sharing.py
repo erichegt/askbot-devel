@@ -13,8 +13,35 @@ SOCIAL_SHARING = ConfigurationGroup(
 settings.register(
     BooleanValue(
         SOCIAL_SHARING,
-        'ENABLE_SOCIAL_SHARING',
+        'ENABLE_SHARING_TWITTER',
         default=True,
-        description=_('Check to enable sharing of questions on Twitter and Facebook')
+        description=_('Check to enable sharing of questions on Twitter')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        SOCIAL_SHARING,
+        'ENABLE_SHARING_FACEBOOK',
+        default=True,
+        description=_('Check to enable sharing of questions on Facebook')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        SOCIAL_SHARING,
+        'ENABLE_SHARING_LINKEDIN',
+        default=True,
+        description=_('Check to enable sharing of questions on LinkedIn')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        SOCIAL_SHARING,
+        'ENABLE_SHARING_GOOGLE',
+        default=True,
+        description=_('Check to enable sharing of questions on Google+')
     )
 )
