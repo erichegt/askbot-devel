@@ -308,7 +308,6 @@
     {% endfor %}
     {{ macros.paginator(paginator_context) }}
 {% else %}
-
     <h2 class="share-question">{% trans url=settings.APP_URL+question.get_absolute_url()|iriencode, name=settings.APP_SHORT_NAME|iriencode %}Know someone who can answer?  Share a <a href="{{ url }}">link</a> to this question via 
         <a href="mailto:?subject={{ name }}&amp;body={{ url }}">email</a>, 
         <a href="http://twitter.com/share?url={{ url }}">Twitter</a>, 
