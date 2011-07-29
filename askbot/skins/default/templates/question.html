@@ -11,7 +11,16 @@
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block content %}
-<div class="question-title"><h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1><div class="print pointer" onclick="window.open('{% url questions %}{{ question.id }}/print/');" title="{% trans %}print page{% endtrans %}"></div></div>
+<table class="question-title">
+    <tr>
+        <td>
+            <h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
+        </td>
+        <td width="24">
+            <div class="print pointer" onclick="window.open('{% url questions %}{{ question.id }}/print/');" title="{% trans %}print page{% endtrans %}"></div>
+        </td>
+    </tr>
+</table>
 
 <table style="width:100%;" id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
     <tr>

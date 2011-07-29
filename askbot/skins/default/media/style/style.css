@@ -885,14 +885,11 @@ a:hover.medal {
     font-size: 100%;
 }
 .question-title {
-    position:relative;
+    width:100%;
 }
 .print {
-    position:absolute;
     width:24px;
     height:24px;
-    top:12px;
-    right:6px;
     background: url(../images/print.png);
 }
 .print:hover {
