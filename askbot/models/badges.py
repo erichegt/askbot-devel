@@ -6,7 +6,7 @@ However, the database does have model BadgeData, that contains
 additional mutable data pertaining to the badges - denormalized award counts
 and lists of recipients.
 
-BadgeData django model is located in askbot/models/meta.py
+BadgeData django model is located in askbot/models/repute.py
 
 Badges in this file are connected with the contents of BadgeData
 via key, determined as a slugified version of badge name.

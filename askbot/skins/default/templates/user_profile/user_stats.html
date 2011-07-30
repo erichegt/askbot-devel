@@ -103,32 +103,26 @@
                 <tr>
                     <td style="line-height:35px">
                         {% for badge in badges %}{# todo: translate badge name properly #}
-                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; <a href="javascript:void(0)" onclick="var div = jQuery('#badge-context-{{badge.id}}'); if(div.css('display') == 'none') div.show(); else(div.hide());">{{ awarded_badge_counts[badge.id]|intcomma }}</a></span>
+                            <a 
+                                href="{{badge.get_absolute_url()}}"
+                                title="{% trans description=badge.description %}{{description}}{% endtrans %}"
+                                class="medal"
+                            ><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}
+                            </a>&nbsp;
+                            <span class="tag-number">&#215;
+                                <span class="badge-context-toggle">{{ badge.award_badge.count()|intcomma }}</span>
+                            </span>
                             <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
-                            {% for abt in awarded_badge_context %}
-                                {% if abt.badge == badge.id %}
-                                    {% if abt.content_type == question_type %}
-                                        {% for question in questions %}{# could also create a new dict #}
-                                            {% if question.id == abt.object_id %}
-                                                <li>
-                                                <a title="{{question.summary|collapse}}" 
-                                                    href="{% url question question.id %}{{question.title|slugify}}">{{question.title}}</a>
-                                                </li>
-                                            {% endif %}   
-                                        {% endfor %}   
+                                {% for award in badge.award_badge.filter(user = view_user) %}
+                                    {% if award.content_type in (question_type, answer_type) %}
+                                    <li>
+                                        <a 
+                                            title="{{ award.content_object.get_snippet|collapse }}"
+                                            href="{{ award.content_object.get_absolute_url() }}"
+                                        >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title }}</a>
+                                    </li>
                                     {% endif %}
-                                    {% if abt.content_type == answer_type %}
-                                        {% for answered_question in answered_questions %}{# could also create a new dict #}
-                                            {% if answered_question.answer_id == abt.object_id %}
-                                                <li>
-                                                <a title="{{answered_question.summary|collapse}}" 
-                                                    href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a>
-                                                </li>
-                                            {% endif %}   
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
+                                {% endfor %}
                             </ul>
                             {% if loop.index is divisibleby 3 %}
                                 </td></tr>
@@ -139,5 +133,26 @@
                 </tr>
             </table>
         </div>
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.badge-context-toggle').each(function(idx, elem){
+                var context_list = $(elem).parent().next('ul');
+                if (context_list.children().length > 0){
+                    $(elem).addClass('active');
+                    var toggle_display = function(){
+                        if (context_list.css('display') == 'none'){
+                            $('.badge-context-list').hide();{# hide all context lists #}
+                            context_list.show();
+                        } else {
+                            context_list.hide();
+                        }
+                    };
+                    $(elem).click(toggle_display);
+                }
+            });
+        });
+    </script>
 {% endblock %}
 <!-- end user_stats.html -->

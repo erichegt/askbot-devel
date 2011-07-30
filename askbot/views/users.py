@@ -347,28 +347,12 @@ def user_stats(request, user, context):
     question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
+
     badges = models.BadgeData.objects.filter(
                             award_badge__user=user
                         )
     total_awards = badges.count()
-    badges = badges.order_by(
-        '-slug'
-    ).distinct()
-    awarded_badge_counts = models.Award.objects.filter(
-                                user = user
-                            ).values(
-                                'badge'
-                            ).annotate(
-                                count = Count('badge__id')
-                            ).values_list(
-                                'badge', 'count'
-                            )
-
-    awarded_badge_context = models.Award.objects.filter(
-                                user = user
-                            ).values(
-                                'object_id', 'badge', 'content_type'
-                            )
+    badges = badges.order_by('-slug').distinct()
 
     user_tags = user_tags.annotate(
                             user_tag_usage_count=Count('name')
@@ -396,8 +380,8 @@ def user_stats(request, user, context):
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
-        'question_type' : question_type_id,
-        'answer_type' : answer_type_id,
+        'question_type' : question_type,
+        'answer_type' : answer_type,
         'favorited_myself': favorited_myself,
         'answered_questions' : answered_questions,
         'up_votes' : up_votes,
@@ -407,8 +391,6 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
         'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
         'badges': badges,
-        'awarded_badge_counts': dict(awarded_badge_counts),
-        'awarded_badge_context': awarded_badge_context,
         'total_awards' : total_awards,
     }
     context.update(data)

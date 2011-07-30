@@ -76,6 +76,11 @@ a:hover {
     text-decoration: underline;
 }
 
+.badge-context-toggle.active {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 h1 {
     font-size: 160%;
     padding: 10px 0 5px 5px;
