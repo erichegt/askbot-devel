@@ -55,6 +55,11 @@ urlpatterns = patterns('',
         kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
+    url(
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('print/')),
+        views.readers.question_print, 
+        name='question_print'
+    ),
     url(#this url works both normally and through ajax
         r'^%s$' % _('questions/'), 
         views.readers.questions, 

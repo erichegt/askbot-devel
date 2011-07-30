@@ -8,10 +8,20 @@
 {% block keywords %}{{question.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
     <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url()}}" />
-    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block content %}
-<h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
+<table class="question-title">
+    <tr>
+        <td>
+            <h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
+        </td>
+        <td width="24">
+            <div class="print pointer" onclick="window.open('{% url questions %}{{ question.id }}/print/');" title="{% trans %}print page{% endtrans %}"></div>
+        </td>
+    </tr>
+</table>
+
 <table style="width:100%;" id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
     <tr>
         <td style="width:30px;vertical-align:top">
@@ -19,9 +29,9 @@
                 {% if question_vote %}
                 <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
                     {% if question_vote.is_upvote() %}
-                        src="{{"/images/vote-arrow-up-on.png"|media}}" 
+                        src="{{'/images/vote-arrow-up-on.png'|media}}" 
                     {% else %}
-                        src="{{"/images/vote-arrow-up.png"|media}}" 
+                        src="{{'/images/vote-arrow-up.png'|media}}"
                     {% endif %}
                     alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
                     title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
@@ -31,46 +41,45 @@
                 </div>
                 <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
                     {% if question_vote.is_downvote() %}
-                        src="{{"/images/vote-arrow-down-on.png"|media}}" 
+                        src="{{'/images/vote-arrow-down-on.png'|media}}" 
                     {% else %}
-                        src="{{"/images/vote-arrow-down.png"|media}}" 
+                        src="{{'/images/vote-arrow-down.png'|media}}" 
                     {% endif %}
                     alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
                     title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
                 {% else %}
                 <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
                     alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
-                    src="{{"/images/vote-arrow-up.png"|media}}" 
+                    src="{{'/images/vote-arrow-up.png'|media}}" 
                     title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
                 <div id="question-vote-number-{{ question.id }}" class="vote-number" 
                     title="{% trans %}current number of votes{% endtrans %}">
                     {{ question.score }}
                 </div>
                 <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-                    src="{{"/images/vote-arrow-down.png"|media}}"
+                    src="{{'/images/vote-arrow-down.png'|media}}"
                     alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
                     title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
                 {% endif %}
                 {% if favorited %}
-                <img class="question-img-favorite" src="{{"/images/vote-favorite-on.png"|media}}"
+                <img class="question-img-favorite" src="{{'/images/vote-favorite-on.png'|media}}"
                     alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}"
                     title="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}" />
                 <div id="favorite-number" class="favorite-number my-favorite-number">
                     {{ question.favourite_count }}
                 </div>
                 {% else %}
-                <img class="question-img-favorite" src="{{"/images/vote-favorite-off.png"|media}}"
+                <img class="question-img-favorite" src="{{'/images/vote-favorite-off.png'|media}}"
                     alt="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}"
                     title="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}" />
                 <div id="favorite-number" class="favorite-number">
                    {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
                 </div>
                 {% endif %}
-                {% if settings.ENABLE_SOCIAL_SHARING %}
-                <a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>
-                <a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>
-                <g:plusone size="small" count="false"></g:plusone>
-                {% endif %}
+                {% if settings.ENABLE_SHARING_TWITTER %}<a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>{% endif %}
+                {% if settings.ENABLE_SHARING_FACEBOOK %}<a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>{% endif %}
+                {% if settings.ENABLE_SHARING_LINKEDIN %}<a class="linkedin-share" alt="{% trans %}Share this question on LinkedIn{% endtrans %}"></a>{% endif %}
+                {% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="small" count="false"></g:plusone>{% endif %}
             </div>
         </td>
         <td>
@@ -191,9 +200,9 @@
                         <div class="vote-buttons">
                             <img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
                                 {% if user_answer_votes[answer.id] == 1 %}
-                                    src="{{"/images/vote-arrow-up-on.png"|media}}" 
+                                    src="{{'/images/vote-arrow-up-on.png'|media}}" 
                                 {% else %}
-                                    src="{{"/images/vote-arrow-up.png"|media}}" 
+                                    src="{{'/images/vote-arrow-up.png'|media}}" 
                                 {% endif %}
                                 alt="{% trans %}i like this answer (click again to cancel){% endtrans %}"
                                 title="{% trans %}i like this answer (click again to cancel){% endtrans %}"/>
@@ -202,18 +211,18 @@
                             </div>
                             <img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
                                 {% if user_answer_votes[answer.id] == -1 %}
-                                    src="{{"/images/vote-arrow-down-on.png"|media}}" 
+                                    src="{{'/images/vote-arrow-down-on.png'|media}}" 
                                 {% else %}
-                                    src="{{"/images/vote-arrow-down.png"|media}}" 
+                                    src="{{'/images/vote-arrow-down.png'|media}}" 
                                 {% endif %}
                                 alt="{% trans %}i dont like this answer (click again to cancel){% endtrans %}"
                                 title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" />
                             {% if request.user == question.author %}
                             <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
                                 {% if answer.accepted %}
-                                    src="{{"/images/vote-accepted-on.png"|media}}"
+                                    src="{{'/images/vote-accepted-on.png'|media}}"
                                 {% else %}
-                                    src="{{"/images/vote-accepted.png"|media}}" 
+                                    src="{{'/images/vote-accepted.png'|media}}" 
                                 {% endif %}
                                 alt="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}"
                                 title="{% trans %}mark this answer as favorite (click again to undo){% endtrans %}" />
@@ -221,9 +230,9 @@
                                 {% if answer.accepted %}
                                 <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
                                     {% if answer.accepted %}
-                                        src="{{"/images/vote-accepted-on.png"|media}}"
+                                        src="{{'/images/vote-accepted-on.png'|media}}"
                                     {% else %}
-                                        src="{{"/images/vote-accepted.png"|media}}"
+                                        src="{{'/images/vote-accepted.png'|media}}"
                                     {% endif %}
                                     alt="{% trans question_author=question.author.username %}{{question_author}} has selected this answer as correct{% endtrans %}"
                                     title="{% trans questsion_author=question.author.username%}{{question_author}} has selected this answer as correct{% endtrans %}"
@@ -306,6 +315,13 @@
         </div>
     {% endfor %}
     {{ macros.paginator(paginator_context) }}
+{% else %}
+    <h2 class="share-question">{% trans url=settings.APP_URL+question.get_absolute_url()|iriencode, name=settings.APP_SHORT_NAME|iriencode %}Know someone who can answer?  Share a <a href="{{ url }}">link</a> to this question via 
+        <a href="mailto:?subject={{ name }}&amp;body={{ url }}">email</a>, 
+        <a href="http://twitter.com/share?url={{ url }}">Twitter</a>, 
+        <a href="http://www.facebook.com/sharer.php?u={{ url }}">Facebook</a>, or
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{ url }}&amp;source={{ name }}">Linkedin</a>.{% endtrans %}
+    </h2>
 {% endif %}
 <form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
     {% if request.user.is_authenticated() %}
@@ -498,8 +514,6 @@
             setupFormValidation($("#fmanswer"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
         }
     </script>
-    {% if settings.ENABLE_SOCIAL_SHARING %}
-        <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-    {% endif %}
+    {% if settings.ENABLE_SHARING_GOOGLE %}<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>{% endif %}
     {% include "blocks/editor_data.html" %}
 {% endblock %}
