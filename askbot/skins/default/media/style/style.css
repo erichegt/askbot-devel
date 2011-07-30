@@ -889,17 +889,6 @@ a:hover.medal {
     margin-bottom: 10px;
     font-size: 100%;
 }
-.question-title {
-    width:100%;
-}
-.print {
-    width:24px;
-    height:24px;
-    background: url(../images/print.png);
-}
-.print:hover {
-    cursor: pointer;
-}
 
 .question-status {
     margin-top: 10px;
