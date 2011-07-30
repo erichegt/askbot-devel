@@ -160,10 +160,6 @@ settings.register(
 )
 
 settings.register(
-    livesettings.StringValue(
-        EXTERNAL_KEYS,
-
-settings.register(
     livesettings.BooleanValue(
         EXTERNAL_KEYS,
         'USE_LDAP_FOR_PASSWORD_LOGIN',
