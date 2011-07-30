@@ -2264,7 +2264,7 @@ img.flag {
     width:25px;
     display:block;
 }
-.fb-share, .twitter-share {
+.fb-share, .twitter-share, .linkedin-share {
     background: url(../images/sprite.png) no-repeat;
     text-indent:-100em;
     height:25px;
@@ -2277,9 +2277,7 @@ img.flag {
     background-position: 0px 0px;
 }
 .linkedin-share {
-    background: url("http://static01.linkedin.com/scds/common/u/img/sprite/sprite_connect_v12.png") no-repeat scroll 4px 0 transparent !important;
-    height:20px;
-    margin-bottom:5px;
+    background-position: -55px 0px;
 }
 /* Pretty printing styles. Used with prettify.js. */
 
