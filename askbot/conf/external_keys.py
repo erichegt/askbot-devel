@@ -139,6 +139,31 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'IDENTICA_KEY',
+        description=_('Ident.ca consumer key'),
+        help_text=_(
+            'Please register your forum at <a href="http://identi.ca/settings/oauthapps">'
+            'Identi.ca applications site</a>'
+        ),
+
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'IDENTICA_SECRET',
+        description=_('Ident.ca consumer secret'),
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+
+settings.register(
     livesettings.BooleanValue(
         EXTERNAL_KEYS,
         'USE_LDAP_FOR_PASSWORD_LOGIN',
