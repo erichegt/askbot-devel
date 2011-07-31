@@ -1496,7 +1496,7 @@ var socialSharing = function(){
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         },
         linkedin: {
-            url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={{ URL }}&amp;source={{ TEXT }}",
+            url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={URL}&amp;source={TEXT}",
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         }
     };
@@ -1516,17 +1516,17 @@ var socialSharing = function(){
     }
 
     return {
-        init: function(page_url, text_to_share){
+        init: function(){
             URL = window.location.href;
             TEXT = escape($('h1 > a').html());
-            var fb = $('a.fb-share')
+            var fb = $('a.facebook-share')
             var tw = $('a.twitter-share');
-            var tw = $('a.linkedin-share');
+            var ln = $('a.linkedin-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
-            setupButtonEventHandlers(tw, function(){share_page("linkedin")});
+            setupButtonEventHandlers(ln, function(){share_page("linkedin")});
         }
     }
 }(); 

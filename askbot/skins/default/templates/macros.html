@@ -20,6 +20,12 @@
     {% endif %}
 {%- endmacro -%}
 
+{%- macro share(site = None, site_label = None, icon = False) -%}
+    <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
+        alt="{% trans %}Share this question on {{site}}{% endtrans %}"
+    >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
+{%- endmacro -%}
+
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 

@@ -66,9 +66,9 @@
                    {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
                 </div>
                 {% endif %}
-                {% if settings.ENABLE_SHARING_TWITTER %}<a class="twitter-share" alt="{% trans %}Share this question on twitter{% endtrans %}"></a>{% endif %}
-                {% if settings.ENABLE_SHARING_FACEBOOK %}<a class="fb-share" alt="{% trans %}Share this question on facebook{% endtrans %}"></a>{% endif %}
-                {% if settings.ENABLE_SHARING_LINKEDIN %}<a class="linkedin-share" alt="{% trans %}Share this question on LinkedIn{% endtrans %}"></a>{% endif %}
+                {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
+                {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', icon = True) }}{% endif %}
+                {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="small" count="false"></g:plusone>{% endif %}
             </div>
         </td>
@@ -306,11 +306,14 @@
     {% endfor %}
     {{ macros.paginator(paginator_context) }}
 {% else %}
-    <h2 class="share-question">{% trans url=settings.APP_URL+question.get_absolute_url()|iriencode, name=settings.APP_SHORT_NAME|iriencode %}Know someone who can answer?  Share a <a href="{{ url }}">link</a> to this question via 
-        <a href="mailto:?subject={{ name }}&amp;body={{ url }}">email</a>, 
-        <a href="http://twitter.com/share?url={{ url }}">Twitter</a>, 
-        <a href="http://www.facebook.com/sharer.php?u={{ url }}">Facebook</a>, or
-        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{ url }}&amp;source={{ name }}">Linkedin</a>.{% endtrans %}
+    <h2 class="share-question">{% trans url=settings.APP_URL+question.get_absolute_url()|iriencode, name=settings.APP_SHORT_NAME|iriencode %}Know someone who can answer?  Share a <a href="{{ url }}">link</a> to this question via{% endtrans %}
+        {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', site_label = 'Twitter') }},{% endif %}
+        {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', site_label = 'Facebook') }},{% endif %}
+        {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', site_label = 'LinkedIn') }},{% endif %}
+        {%- if settings.ENABLE_SHARING_TWITTER or settings.ENABLE_SHARING_FACEBOOK or settings.ENABLE_SHARING_LINKEDIN -%}
+            {% trans %} or{% endtrans %}
+        {% endif %}
+        <a href="mailto:?subject={{ name }}&amp;body={{ url }}">{% trans %}email{% endtrans %}</a>.
     </h2>
 {% endif %}
 <form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
