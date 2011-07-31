@@ -46,6 +46,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
+from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
 
 from openid.consumer.consumer import Consumer, \
@@ -877,6 +878,7 @@ def signin_failure(request, message):
 @not_authenticated
 @decorators.valid_password_login_provider_required
 @csrf.csrf_protect
+@fix_recaptcha_remote_ip
 def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html

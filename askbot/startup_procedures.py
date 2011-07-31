@@ -7,10 +7,12 @@ question: why not run these from askbot/__init__.py?
 
 the main function is run_startup_tests
 """
+import sys
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
+from askbot.utils.loading import load_module
 
 #todo:
 #
@@ -87,12 +89,25 @@ def test_i18n():
             'it is very important for askbot.'
         )
 
+def try_import(module_name, pypi_package_name):
+    try:
+        load_module(module_name)
+    except ImportError, e:
+        message = unicode(e) + 'run "pip install %s"' % pypi_package_name
+        message += '\nalternatively, type "pip install -r askbot_requirements.txt"\n'
+        message += 'to satisfy all requirements for askbot'
+        raise ImproperlyConfigured(message)
+
+def test_modules():
+    try_import('recaptcha_works', 'django-recaptcha-works')
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
 
     #todo: refactor this when another test arrives
+    test_modules()
     test_askbot_url()
     test_i18n()
     test_middleware()
