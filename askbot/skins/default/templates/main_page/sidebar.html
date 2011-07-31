@@ -1,8 +1,8 @@
 {% import "macros.html" as macros %}
 
-{{ settings.SIDEBAR_HEADER }}
+{{ settings.SIDEBAR_MAIN_HEADER }}
 
-{% if contributors and settings.SIDEBAR_SHOW_AVATARS %}
+{% if contributors and settings.SIDEBAR_MAIN_SHOW_AVATARS %}
     {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
     <div id="contrib-users" class="boxC">
     <h2>{% trans %}Contributors{% endtrans %}</h2>
@@ -15,11 +15,11 @@
     {% endcache %}
 {% endif %}
 
-{% if request.user.is_authenticated() and settings.SIDEBAR_SHOW_TAG_SELECTOR %} 
+{% if request.user.is_authenticated() and settings.SIDEBAR_MAIN_SHOW_TAG_SELECTOR %} 
    {% include "blocks/tag_selector.html" %}
 {% endif %}
 
-{% if tags and settings.SIDEBAR_SHOW_TAGS %}
+{% if tags and settings.SIDEBAR_MAIN_SHOW_TAGS %}
     {% cache 0 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
     <div class="boxC">
         <h2>{% trans %}Related tags{% endtrans %}</h2>
@@ -43,4 +43,4 @@
     {% endcache %}
 {% endif %}
 
-{{ settings.SIDEBAR_FOOTER }}
+{{ settings.SIDEBAR_MAIN_FOOTER }}

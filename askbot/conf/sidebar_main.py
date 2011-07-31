@@ -5,19 +5,16 @@ from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import values
 from django.utils.translation import ugettext as _
-from django.conf import settings as django_settings
-from askbot.skins import utils as skin_utils
-from askbot import const
 
-SIDEBAR_SETTINGS = ConfigurationGroup(
-                    'SIDEBAR_SETTINGS',
-                    _('Sidebar Widget settings'),
+SIDEBAR_MAIN = ConfigurationGroup(
+                    'SIDEBAR_MAIN',
+                    _('Sidebar widget settings - main page'),
                 )
 
 settings.register(
     values.LongStringValue(
-        SIDEBAR_SETTINGS,
-        'SIDEBAR_HEADER',
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_HEADER',
         description = _('Custom sidebar header'),
         default = '',
         help_text = _(
@@ -32,8 +29,8 @@ settings.register(
 
 settings.register(
     values.BooleanValue(
-        SIDEBAR_SETTINGS,
-        'SIDEBAR_SHOW_AVATARS',
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_SHOW_AVATARS',
         description = _('Show avatar block in sidebar'),
         help_text = _(
                     'Uncheck this if you want to hide the avatar '
@@ -45,8 +42,8 @@ settings.register(
 
 settings.register(
     values.BooleanValue(
-        SIDEBAR_SETTINGS,
-        'SIDEBAR_SHOW_TAG_SELECTOR',
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_SHOW_TAG_SELECTOR',
         description = _('Show tag selector in sidebar'),
         help_text = _(
                     'Uncheck this if you want to hide the options '
@@ -58,8 +55,8 @@ settings.register(
 
 settings.register(
     values.BooleanValue(
-        SIDEBAR_SETTINGS,
-        'SIDEBAR_SHOW_TAGS',
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_SHOW_TAGS',
         description = _('Show tag list/cloud in sidebar'),
         help_text = _(
                     'Uncheck this if you want to hide the tag '
@@ -71,8 +68,8 @@ settings.register(
 
 settings.register(
     values.LongStringValue(
-        SIDEBAR_SETTINGS,
-        'SIDEBAR_FOOTER',
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_FOOTER',
         description = _('Custom sidebar footer'),
         default = '',
         help_text = _(

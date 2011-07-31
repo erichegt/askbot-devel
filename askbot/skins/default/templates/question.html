@@ -394,25 +394,34 @@
 {% endblock %}
 
 {% block sidebar %}
+
+{{ settings.SIDEBAR_QUESTION_HEADER }}
+
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
+{% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
+    <div class="boxC">
+        <p>
+            {% trans %}Question tags{% endtrans %}:
+        </p>
+        <ul id="related-tags" class="tags">
+            {% for tag in tags %}
+            <li>
+                {{ macros.tag_widget(
+                        tag,
+                        html_tag = 'div',
+                        url_params = 'start_over=true',
+                        extra_content = '<span class="tag-number">&#215; ' ~
+                            tag.used_count|intcomma ~ '</span>'
+                    )
+                }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="boxC">
-    <p>
-        {% trans %}Question tags{% endtrans %}:
-    </p>
-    <ul id="related-tags" class="tags">
-        {% for tag in tags %}
-        <li>
-            {{ macros.tag_widget(
-                    tag,
-                    html_tag = 'div',
-                    url_params = 'start_over=true',
-                    extra_content = '<span class="tag-number">&#215; ' ~
-                        tag.used_count|intcomma ~ '</span>'
-                )
-            }}
-        </li>
-        {% endfor %}
-    </ul>
     <p style="clear:left">
         {% trans %}question asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
     </p>
@@ -423,8 +432,10 @@
         {% trans %}last updated{% endtrans %}: <strong title="{{ question.last_activity_at }}">{{question.last_activity_at|diff_date}}</strong>
     </p>
 </div>
+{% endif %}
 {% endcache %}
-{% if similar_questions.data %}
+
+{% if similar_questions.data and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {% cache 1800 "related_questions" related_questions question.id language_code %}
     <div class="boxC">
         <h2>{% trans %}Related questions{% endtrans %}</h2>
@@ -438,6 +449,9 @@
     </div>
     {% endcache %}
 {% endif %}
+
+{{ settings.SIDEBAR_QUESTION_FOOTER }}
+
 {% endblock %}
 {% block endjs %}
     {% if not question.closed %}
