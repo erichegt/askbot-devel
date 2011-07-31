@@ -93,9 +93,9 @@ def try_import(module_name, pypi_package_name):
     try:
         load_module(module_name)
     except ImportError, e:
-        message = unicode(e) + 'run "pip install %s"' % pypi_package_name
-        message += '\nalternatively, type "pip install -r askbot_requirements.txt"\n'
-        message += 'to satisfy all requirements for askbot'
+        message = unicode(e) + ' run\npip install %s' % pypi_package_name
+        message += '\nTo install all the dependencies at once, type:'
+        message += '\npip install -r askbot_requirements.txt\n'
         raise ImproperlyConfigured(message)
 
 def test_modules():
