@@ -7,10 +7,12 @@ question: why not run these from askbot/__init__.py?
 
 the main function is run_startup_tests
 """
+import sys
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
+from askbot.utils.loading import load_module
 
 #todo:
 #
@@ -57,7 +59,6 @@ def test_middleware():
         'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
         'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
-        'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
         'askbot.middleware.view_log.ViewLogMiddleware',
     )
@@ -88,12 +89,25 @@ def test_i18n():
             'it is very important for askbot.'
         )
 
+def try_import(module_name, pypi_package_name):
+    try:
+        load_module(module_name)
+    except ImportError, e:
+        message = unicode(e) + ' run\npip install %s' % pypi_package_name
+        message += '\nTo install all the dependencies at once, type:'
+        message += '\npip install -r askbot_requirements.txt\n'
+        raise ImproperlyConfigured(message)
+
+def test_modules():
+    try_import('recaptcha_works', 'django-recaptcha-works')
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
 
     #todo: refactor this when another test arrives
+    test_modules()
     test_askbot_url()
     test_i18n()
     test_middleware()

@@ -12,7 +12,6 @@ install_requires = [
     'Coffin>=0.3',
     'South>=0.7.1',
     'oauth2',
-    'recaptcha-client',
     'markdown2',
     'html5lib',
     'django-keyedcache',
@@ -23,6 +22,7 @@ install_requires = [
     'django-celery==2.2.3',
     'django-kombu==0.9.2',
     'django-followit',
+    'django-recaptcha-works',
     'python-openid',
 ]
 
