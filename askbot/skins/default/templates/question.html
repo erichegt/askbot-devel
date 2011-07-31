@@ -306,14 +306,15 @@
     {% endfor %}
     {{ macros.paginator(paginator_context) }}
 {% else %}
-    <h2 class="share-question">{% trans url=settings.APP_URL+question.get_absolute_url()|iriencode, name=settings.APP_SHORT_NAME|iriencode %}Know someone who can answer?  Share a <a href="{{ url }}">link</a> to this question via{% endtrans %}
+    {% set question_url=settings.APP_URL+question.get_absolute_url()|iriencode %}
+    <h2 class="share-question">{% trans %}Know someone who can answer?  Share a <a href="{{ question_url }}">link</a> to this question via{% endtrans %}
         {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', site_label = 'Twitter') }},{% endif %}
         {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', site_label = 'Facebook') }},{% endif %}
         {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', site_label = 'LinkedIn') }},{% endif %}
         {%- if settings.ENABLE_SHARING_TWITTER or settings.ENABLE_SHARING_FACEBOOK or settings.ENABLE_SHARING_LINKEDIN -%}
             {% trans %} or{% endtrans %}
         {% endif %}
-        <a href="mailto:?subject={{ name }}&amp;body={{ url }}">{% trans %}email{% endtrans %}</a>.
+        <a href="mailto:?subject={{ settings.APP_SHORT_NAME|iriencode }}&amp;body={{ question_url }}">{% trans %}email{% endtrans %}</a>.
     </h2>
 {% endif %}
 <form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
