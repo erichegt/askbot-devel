@@ -31,7 +31,7 @@ settings.register(
         help_text=\
         _(
             'Save, then <a href="http://validator.w3.org/">'
-            'use HTML validator</a> on the "about" page to check your input.'
+            'use HTML validator</a> on the "faq" page to check your input.'
         )
     )
 )
