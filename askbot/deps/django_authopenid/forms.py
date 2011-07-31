@@ -37,7 +37,7 @@ from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
-from captcha.fields import ReCaptchaField
+from recaptcha_works.fields import RecaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 
 # needed for some linux distributions like debian
@@ -322,7 +322,7 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    recaptcha = ReCaptchaField(
+    recaptcha = RecaptchaField(
                     private_key = askbot_settings.RECAPTCHA_SECRET,
                     public_key = askbot_settings.RECAPTCHA_KEY
                 )

@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.utils.mail import extract_first_email_address
-from captcha.fields import ReCaptchaField
+from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
@@ -526,7 +526,7 @@ class AdvancedSearchForm(forms.Form):
         return data
 
 class NotARobotForm(forms.Form):
-    recaptcha = ReCaptchaField(
+    recaptcha = RecaptchaField(
                     private_key = askbot_settings.RECAPTCHA_SECRET,
                     public_key = askbot_settings.RECAPTCHA_KEY
                 )
