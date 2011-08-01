@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template
+from askbot.conf import settings as askbot_settings
 
 register = template.Library()
 
@@ -28,7 +29,7 @@ def gravatar(user, size):
     """
     #todo: rewrite using get_from_dict_or_object
     user_id = functions.get_from_dict_or_object(user, 'id')
-    slug = slugify(username)
+    slug = slugify(user.username)
     user_profile_url = reverse(
                         'user_profile',
                         kwargs={'id':user_id, 'slug':slug}
@@ -39,7 +40,7 @@ def gravatar(user, size):
         'size': size,
         'gravatar_hash': functions.get_from_dict_or_object(user, 'gravatar'),
         'gravatar_type': askbot_settings.GRAVATAR_TYPE,
-        'alt_text': _('%(username)s gravatar image') % {'username': username},
+        'alt_text': _('%(username)s gravatar image') % {'username': user.username},
         'username': functions.get_from_dict_or_object(user, 'username'),
     })
     
