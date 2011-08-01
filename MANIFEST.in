@@ -20,3 +20,4 @@ recursive-exclude categories *
 recursive-exclude follow *
 recursive-exclude env *
 recursive-exclude .tox
+exclude db
