@@ -142,7 +142,7 @@ settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
         'IDENTICA_KEY',
-        description=_('Ident.ca consumer key'),
+        description=_('ident.ca consumer key'),
         help_text=_(
             'Please register your forum at <a href="http://identi.ca/settings/oauthapps">'
             'Identi.ca applications site</a>'
@@ -155,7 +155,7 @@ settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
         'IDENTICA_SECRET',
-        description=_('Ident.ca consumer secret'),
+        description=_('ident.ca consumer secret'),
     )
 )
 
