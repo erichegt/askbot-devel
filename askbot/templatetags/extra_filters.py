@@ -10,7 +10,7 @@ register = template.Library()
 
 @register.filter
 def collapse(input):
-    input = str(input)
+    input = unicode(input)
     return ' '.join(input.split())
 
 slugify = register.filter(slugify)
