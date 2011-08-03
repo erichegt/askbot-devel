@@ -117,7 +117,7 @@
                                     {% if award.content_type in (question_type, answer_type) %}
                                     <li>
                                         <a 
-                                            title="{{ award.content_object.get_snippet|collapse }}"
+                                            title="{{ award.content_object.get_snippet()|collapse }}"
                                             href="{{ award.content_object.get_absolute_url() }}"
                                         >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title }}</a>
                                     </li>

@@ -41,7 +41,7 @@ def country_flag_url(country_code):
 
 @register.filter
 def collapse(input):
-    input = str(input)
+    input = unicode(input)
     return ' '.join(input.split())
 
 @register.filter
