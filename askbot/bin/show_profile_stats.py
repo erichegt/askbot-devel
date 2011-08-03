@@ -1,4 +1,3 @@
-#!python
 """script for digesting profiling output
 to profile functions, wrap them into decorator @profile('file_name.prof')
 

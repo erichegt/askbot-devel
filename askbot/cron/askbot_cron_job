@@ -1,4 +1,3 @@
-#!/bin/sh
 # this is a cron job for askbot that includes all
 # commands that need to be run periodically
 # please find introduction to cron here:

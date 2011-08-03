@@ -13,6 +13,7 @@ exclude __init__.py
 exclude urls.py
 exclude askbot/upfiles/*.*
 exclude askbot/upfiles/avatars/*
+recursive-exclude askbot/doc/build/*
 recursive-exclude avatar *
 recursive-exclude adzone *
 recursive-exclude follow *
