@@ -3,10 +3,7 @@ Intro
 ROADMAP aims to streamline activities of the Askbot open source project and
 to minimize ad-hoc approaches of "big-picture" level.
 
-Aksbot is a Question and Asnwer system for the normal people!
-
-Let's discuss stuff that goes into this file on
-http://groups.google.com/group/askbot
+Askbot is a Question and Answer system for the normal people!
 
 Bacic principles of the project
 ==================================
@@ -34,8 +31,7 @@ We try do develop using the following workflow:
 The process doesn't have to be this formal all the time, but trying to stick
 to some subset of this almost always helps! 
 Especially it helps to iron out disagreements between
-individual programmers (which if you are one - you know are qute common
-- and they don't all end well :).
+individual programmers (which if you are one - you know are qute common).
 
 Ad-hoc programming - i.e. simply go and add code - is not really encouraged.
 This works fine in the one person team or when the team consists of 
@@ -49,29 +45,13 @@ the client side Javascript is written using jQuery library.
 
 Our basic principle is that Askbot should be a mashable Q&A component.
 Askbot is an application written in Python/Django. So it should be 
-distributable as a Django App alone or as a whole site (by option).
+distributable as a Django App alone, but can be deployed as a dedicated site
+with the script "askbot-setup", that also ships with askbot.
 
-If we develop sub-systems that can be used in the broader scope - 
-we package that thing as a separate django application (login system is one example).
+If we develop a sub-system that can be used in the broader scope - 
+we package it as a separate django application (login system is one example).
 
 We will start using Google Closure library soon!
-
-Sub-systems
------------------
-* authentication system
-* Q&A system
-* admin interface
-* full text search
-* skins (directory forum/skins)
-
-Authentication system
--------------------------
-Authentication system will be a separate django application
-
-Here is the discussion thread:
-* http://groups.google.com/group/askbot/browse_thread/thread/1916dfcf666dd56c
-
-Most of the requirements are listed in the first message
 
 Skins
 -----------
@@ -80,9 +60,5 @@ skins should not need to change anything if something changes in the code
 
 Admin interface
 -----------------------
-* extend forum/settings.py to list default settings of various groups
-* create Registry database table the will store setting values
-* leave only essential settings that go to the main django settings.py
-Create key-value storage
-* should some settings be accessible to admins and some to staff???
-  for example-secret keys probably should not be shared with staff members
+We use a forked application "livesettings" that ideally should be merged
+back to the original livesettings application.
