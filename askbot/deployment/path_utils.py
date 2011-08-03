@@ -108,7 +108,15 @@ def create_path(directory):
     else:
         os.makedirs(directory)
 
+def touch(file_path, times = None):
+    #http://stackoverflow.com/questions/1158076/implement-touch-using-python
+    with file(file_path, 'a'):
+            os.utime(file_path, times)
+
 SOURCE_DIR = os.path.dirname(os.path.dirname(__file__))
+def get_path_to_help_file():
+    return os.path.join(SOURCE_DIR, 'doc', 'INSTALL')
+
 def deploy_into(directory, new_project = None):
     """will copy necessary files into the directory
     """
@@ -130,19 +138,30 @@ def deploy_into(directory, new_project = None):
                 shutil.copy(src, directory)
         #copy log directory
         src = os.path.join(SOURCE_DIR, 'setup_templates', 'log')
-        dst = os.path.join(directory, 'log')
-        shutil.copytree(src, dst)
+        log_dir = os.path.join(directory, 'log')
+        create_path(log_dir)
+        touch(os.path.join(log_dir, 'askbot.log'))
 
     print ''
     app_dir = os.path.join(directory, 'askbot')
 
-    print 'copying directories: ',
     copy_dirs = ('doc','cron','upfiles')
+    dirs_copied = 0
     for dir_name in copy_dirs:
         src = os.path.join(SOURCE_DIR, dir_name)
         dst = os.path.join(app_dir, dir_name)
-        print dir_name + ' ',
-        shutil.copytree(src, dst)
+        if os.path.abspath(src) != os.path.abspath(dst):
+            if dirs_copied == 0:
+                print 'copying directories: ',
+            print '* ' + dir_name
+            if os.path.exists(dst):
+                if os.path.isdir(dst):
+                    print 'Directory %s not empty - skipped' % dst
+                else:
+                    print 'File %s already exists - skipped' % dst
+                continue
+            shutil.copytree(src, dst)
+            dirs_copied += 1
     print ''
 
 def dir_name_acceptable(directory):

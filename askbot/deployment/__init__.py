@@ -93,7 +93,7 @@ def askbot_setup():
             directory = None
             continue
 
-    help_file = os.path.join(directory, 'askbot', 'doc', 'INSTALL')
+    help_file = path_utils.get_path_to_help_file()
     if create_new:
         path_utils.create_path(directory)
         path_utils.deploy_into(directory, new_project = True)
