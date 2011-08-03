@@ -1,5 +1,6 @@
 include ez_setup.py
 include tox.ini
+include LICENSE
 recursive-include askbot *
 recursive-exclude askbot *.pyc
 recursive-exclude .git
