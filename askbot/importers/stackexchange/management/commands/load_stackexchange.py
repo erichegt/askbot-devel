@@ -248,7 +248,7 @@ class X(object):#
     #crude method of getting id provider name from the url
     @classmethod
     def get_openid_provider_name(cls, openid_url):
-        openid_str = str(openid_url)
+        openid_str = unicode(openid_url)
         bits = openid_str.split('/')
         base_url = bits[2] #assume this is base url
         url_bits = base_url.split('.')

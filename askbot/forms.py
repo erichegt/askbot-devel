@@ -291,7 +291,7 @@ class ShowQuestionForm(forms.Form):
         or invalid"""
         if self._errors:
             #since the form is always valid, clear the errors
-            logging.error(str(self._errors))
+            logging.error(unicode(self._errors))
             self._errors = {}
 
         in_data = self.get_pruned_data()
