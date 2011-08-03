@@ -9,7 +9,7 @@ Basic principles of the project
 ==================================
 
 We favor plain and minimalistic style of programming, but pay
-attention to detail - especially details of user experience.
+  attention to detail - especially details of user experience.
 
 We try do develop using the following workflow:
 
