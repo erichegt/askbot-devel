@@ -1,4 +1,10 @@
-Copyright (C) 2009.  Chen Gang
+Askbot - Django Q&A forum application.
+Copyright (C) 2009. Chen Gang and Sailing Cai.
+2009-2011 Evgeny Fadeev and individual contributors of Askbot project (see AUTHORS).
+All rights reserved.
+
+LICENSE
+=======
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
