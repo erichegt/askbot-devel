@@ -12,9 +12,9 @@ Installing Askbot as a new Django project (standalone app)
 
 When installing Askbot for the first time, you will need to initialize the site setup files by typing::
 
-    startforum
+    askbot-setup
 
-and answering the questions. The `startforum` script will ask you where to deploy Askbot. If you are in
+and answering the questions. The `askbot-setup` script will ask you where to deploy Askbot. If you are in
 the directory where the Askbot project resides, you can answer `.` (`.` refers to the current directory).
 There may be an error message; ignore it.
 
@@ -27,10 +27,10 @@ There may be an error message; ignore it.
         __init__.py - often empty but needed for Python
         manage.py   - the hook allowing to run management commands
 
-    `startforum` adds those files to the directory you select (and some more things specific to Askbot).
+    `askbot-setup` adds those files to the directory you select (and some more things specific to Askbot).
 
 
-Note that if you already have a Django site you will not want to use `startforum`, because you don't want to just overwrite your existing settings.py. See below for instructions.
+Note that if you already have a Django site you will not want to use `askbot-setup`, because you don't want to just overwrite your existing settings.py. See below for instructions.
 
 Another thing you have to do if you are creating a brand new Django project is edit the file `settings.py`_. At the very minimum, you will need to provide the correct values to::
 

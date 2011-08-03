@@ -47,7 +47,7 @@ setup(
     keywords = 'forum, community, wiki, Q&A',
     entry_points = {
         'console_scripts' : [
-            'startforum = askbot.deployment:startforum',
+            'askbot-setup = askbot.deployment:askbot_setup',
         ]
     },
     url = 'http://askbot.org',
