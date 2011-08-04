@@ -2,6 +2,7 @@ include ez_setup.py
 include tox.ini
 include LICENSE
 include AUTHORS
+include COPYING
 recursive-include askbot *
 recursive-exclude askbot *.pyc
 recursive-exclude .git
