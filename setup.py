@@ -110,7 +110,7 @@ Methods to install code
 Create/configure django site
 ----------------------------
 
-Either run command **startforum** or merge contents of directory **askbot/setup_templates** in the source code into your project directory.
+Either run command **askbot-setup** or merge contents of directory **askbot/setup_templates** in the source code into your project directory.
 
 
 Create/update database tables
@@ -154,7 +154,7 @@ if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
 print '**************************************************************'
 print '*                                                            *'
 print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >python startforum               *'
+print '*  To start deploying type: >python askbot-setup             *'
 print '*  Please take a look at the manual askbot/doc/INSTALL       *'
 print '*  And please do not hesitate to ask your questions at       *'
 print '*  at http://askbot.org                                      *'
