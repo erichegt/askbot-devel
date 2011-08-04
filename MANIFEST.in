@@ -3,6 +3,7 @@ include tox.ini
 include LICENSE
 include AUTHORS
 include COPYING
+include README.rst
 recursive-include askbot *
 recursive-exclude askbot *.pyc
 recursive-exclude .git
