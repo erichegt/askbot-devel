@@ -14,6 +14,18 @@ from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
 from askbot.utils.loading import load_module
 
+PREAMBLE = """\n
+************************
+*                      *
+*   Askbot self-test   *
+*                      *
+************************"""
+
+def format_as_text_tuple_entries(items):
+    """prints out as entries or tuple containing strings
+    ready for copy-pasting into say django settings file"""
+    return "    '%s'," % "',\n    '".join(items)
+
 #todo:
 #
 # *validate emails in settings.py
@@ -56,30 +68,44 @@ def test_middleware():
     case - raises an ImproperlyConfigured exception.
     """
     required_middleware = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
         'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
         'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
         'askbot.middleware.view_log.ViewLogMiddleware',
     )
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
-    missing_middleware = list()
-    for middleware in required_middleware:
-        if middleware not in django_settings.MIDDLEWARE_CLASSES:
-            missing_middleware.append(middleware)
-
-    debug_toolbar_middleware = 'debug_toolbar.middleware.DebugToolbarMiddleware'
     if 'debug_toolbar' in django_settings.INSTALLED_APPS:
-        if debug_toolbar_middleware not in django_settings.MIDDLEWARE_CLASSES:
-            missing_middleware.append(debug_toolbar_middleware)
+        required_middleware += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 
-    if missing_middleware:
-        error_message = """Please add the following middleware (listed 
-after this message) to the MIDDLEWARE_CLASSES variable in your site settings.py file. 
+    installed_middleware_set = set(django_settings.MIDDLEWARE_CLASSES)
+    missing_middleware_set = set(required_middleware) - installed_middleware_set
+
+    if missing_middleware_set:
+        error_message = """\n\nPlease add the following middleware (listed after this message)
+to the MIDDLEWARE_CLASSES variable in your site settings.py file. 
 The order the middleware records may be important, please take a look at the example in 
-https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.jy\n\n%s""" \
-        % ', '.join(missing_middleware)
-        raise ImproperlyConfigured(error_message)
+https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.py:\n\n"""
+        middleware_text = format_as_text_tuple_entries(missing_middleware_set)
+        raise ImproperlyConfigured(PREAMBLE + error_message + middleware_text)
+
+
+    #middleware that was used in the past an now removed
+    canceled_middleware = (
+        'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
+    )
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    remove_middleware_set = set(canceled_middleware) & installed_middleware_set
+    if remove_middleware_set:
+        error_message = """\n\nPlease remove the following middleware entries from
+the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more:\n\n"""
+        middleware_text = format_as_text_tuple_entries(remove_middleware_set)
+        raise ImproperlyConfigured(PREAMBLE + error_message + middleware_text)
+
+            
 
 def test_i18n():
     if getattr(django_settings, 'USE_I18N', False) == False:
