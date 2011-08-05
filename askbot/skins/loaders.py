@@ -39,32 +39,6 @@ def load_template_source(name, dirs=None):
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
 
-class SkinLoader(jinja_loaders.BaseLoader):
-    """loads template from the skin directory
-    code largely copy-pasted from the jinja2 internals
-    """
-    def get_source(self, environment, template):
-        pieces = jinja_loaders.split_template_path(template)
-        skin = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_path = utils.get_path_to_skin(skin)
-        filename = os.path.join(skin_path, 'templates', *pieces)
-        print 'want file %s' % filename
-        f = open_if_exists(filename)
-        if f is None:
-            raise TemplateNotFound(template)
-        try:
-            contents = f.read().decode('utf-8')
-        finally:
-            f.close()
-
-        mtime = os.path.getmtime(filename)
-        def uptodate():
-            try:
-                return os.path.getmtime(filename) == mtime
-            except OSError:
-                return False
-        return contents, filename, uptodate
-
 class SkinEnvironment(CoffinEnvironment):
     """Jinja template environment
     that loads templates from askbot skins
