@@ -5,6 +5,10 @@ import sys
 from django.utils.safestring import mark_safe
 from django.utils.functional import lazy
 from django.template import Node
+try:
+    from functools import WRAPPER_ASSIGNMENTS
+except ImportError:
+    from django.utils.functional import WRAPPER_ASSIGNMENTS
 
 def module_has_submodule(package, module_name):
     """See if 'module' is in 'package'."""
@@ -325,3 +329,13 @@ def add_csrf_protection():
     import django.views.decorators
     django.views.decorators.csrf = imp.new_module('csrf') 
     django.views.decorators.csrf.csrf_protect = csrf_protect
+
+def add_available_attrs_decorator():
+    def available_attrs(fn):
+        """
+        Return the list of functools-wrappable attributes on a callable.
+        This is required as a workaround for http://bugs.python.org/issue3445.
+        """
+        return tuple(a for a in WRAPPER_ASSIGNMENTS if hasattr(fn, a))
+    import django.utils.decorators
+    django.utils.decorators.available_attrs = available_attrs
