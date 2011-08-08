@@ -31,6 +31,7 @@ def record_post_update_celery_task(
         updated_by_id = None,
         timestamp = None,
         created = False,
+        diff = None,
     ):
     #reconstitute objects from the database
     updated_by = User.objects.get(id = updated_by_id)
@@ -47,6 +48,7 @@ def record_post_update_celery_task(
         newly_mentioned_users = newly_mentioned_users,
         timestamp = timestamp,
         created = created,
+        diff = diff
     )
 
 def record_post_update(
@@ -54,7 +56,8 @@ def record_post_update(
         updated_by = None,
         newly_mentioned_users = None,
         timestamp = None,
-        created = False
+        created = False,
+        diff = None
     ):
     """Called when a post is updated. Arguments:
 
@@ -72,12 +75,20 @@ def record_post_update(
     #todo: take into account created == True case
     (activity_type, update_object) = post.get_updated_activity_data(created)
 
+    if post.post_type != 'comment':
+        #summary = post.get_latest_revision().summary
+        summary = diff
+    else:
+        #it's just a comment!
+        summary = post.comment
+
     update_activity = Activity(
                     user = updated_by,
-                    active_at = timestamp, 
-                    content_object = post, 
+                    active_at = timestamp,
+                    content_object = post,
                     activity_type = activity_type,
-                    question = post.get_origin_post()
+                    question = post.get_origin_post(),
+                    summary = summary
                 )
     update_activity.save()
 

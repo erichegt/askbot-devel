@@ -2266,6 +2266,7 @@ def record_post_update_activity(
         updated_by = None,
         timestamp = None,
         created = False,
+        diff = None,
         **kwargs
     ):
     """called upon signal askbot.models.signals.post_updated
@@ -2285,6 +2286,7 @@ def record_post_update_activity(
         updated_by_id = updated_by.id,
         timestamp = timestamp,
         created = created,
+        diff = diff,
     )
     #non-celery version
     #tasks.record_post_update(

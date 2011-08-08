@@ -738,10 +738,30 @@ def user_responses(request, user, context):
             'response_snippet': memo.activity.get_preview(),
             'response_title': memo.activity.question.title,
             'response_type': memo.activity.get_activity_type_display(),
+            'response_id': memo.activity.question.id,
+            'nested_responses': [],
         }
         response_list.append(response)
 
+    response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
+    last_response_id = None #flag to know if the response id is different
+    last_response_index = None #flag to know if the response index in the list is different
+    filtered_response_list = list()
+
+    for i, response in enumerate(response_list):
+        #todo: agrupate users
+        if response['response_id'] == last_response_id:
+            original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
+            original_response['nested_responses'].append(response) 
+            filtered_response_list[len(filtered_response_list)-1] = original_response
+        else:
+            filtered_response_list.append(response)
+            last_response_id = response['response_id']
+            last_response_index = i
+
+    response_list = filtered_response_list
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+    filtered_response_list = list()
 
     data = {
         'active_tab':'users',

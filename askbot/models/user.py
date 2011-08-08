@@ -166,6 +166,8 @@ class Activity(models.Model):
     #todo: remove this denorm question field when Post model is set up
     question = models.ForeignKey('Question', null=True)
     is_auditted = models.BooleanField(default=False)
+    #add summary field.
+    summary = models.TextField(default='')
 
     objects = ActivityManager()
     responses_and_mentions = ResponseAndMentionActivityManager()
@@ -196,11 +198,13 @@ class Activity(models.Model):
         return user_qs[0]
 
     def get_preview(self):
-        return strip_tags(self.content_object.html)[:300]
+        if  self.summary == '':
+            return strip_tags(self.content_object.html)[:300]
+        else:
+            return self.summary
 
     def get_absolute_url(self):
         return self.content_object.get_absolute_url()
-        
 
 class EmailFeedSettingManager(models.Manager):
     def filter_subscribers(

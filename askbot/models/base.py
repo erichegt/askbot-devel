@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils import markup
+from askbot.utils.diff import textDiff
 from askbot.utils.html import sanitize_html
 from django.utils import html
 import logging
@@ -124,7 +125,15 @@ def parse_and_save_post(post, author = None, **kwargs):
 
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
-    super(post.__class__, post).save(**kwargs)
+    if post.post_type != 'comment':
+        last_revision = post.get_latest_revision().as_html()
+        super(post.__class__, post).save(**kwargs)
+        current_revision = post.get_latest_revision().as_html()
+        diff = textDiff(current_revision, last_revision)
+    else:
+        #we get comments
+        super(post.__class__, post).save(**kwargs)
+        diff = None 
 
     timestamp = post.get_time_of_last_edit()
 
@@ -147,6 +156,7 @@ def parse_and_save_post(post, author = None, **kwargs):
                     newly_mentioned_users = newly_mentioned_users,
                     timestamp = timestamp,
                     created = created,
+                    diff = diff,
                     sender = post.__class__
                 )
 
@@ -237,6 +247,9 @@ class ContentRevision(models.Model):
         the revision
         """
         raise NotImplementedError()
+
+    def get_snipet(self):
+        pass
 
 
 class AnonymousContent(models.Model):

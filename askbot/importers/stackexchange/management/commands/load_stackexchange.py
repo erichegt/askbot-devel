@@ -1,5 +1,5 @@
 #todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
-DEBUGME = False
+DEBUGME = False 
 import os
 import re
 import sys
