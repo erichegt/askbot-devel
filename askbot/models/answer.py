@@ -310,7 +310,7 @@ class AnswerRevision(ContentRevision):
     def get_question_title(self):
         return self.answer.question.title
 
-    def as_html(self):
+    def as_html(self, **kwargs):
         markdowner = markup.get_parser()
         return sanitize_html(markdowner.convert(self.text))
 

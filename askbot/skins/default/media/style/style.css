@@ -1453,6 +1453,10 @@ ins {
     background-color: #97ff97;
 }
 
+ins p{
+    background-color: #97ff97;
+}
+
 ins .post-tag {
     background-color: #97ff97;
 }
@@ -2198,9 +2202,18 @@ img.gravatar {
     overflow:hidden;
 }
 
+.response-parent {
+    margin-top: 18px;
+}
+
+.response-parent strong{
+    font-size: 20px;
+}
+
 .re {
     min-height: 57px;
     clear: both;
+    margin-top: 10px;
 }
 
 #responses input {

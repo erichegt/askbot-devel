@@ -965,6 +965,8 @@ class FavoriteQuestion(models.Model):
 QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
                               '<div class="text">%(html)s</div>\n'
                               '<div class="tags">%(tags)s</div>')
+QUESTION_REVISION_TEMPLATE_NO_TAGS = ('<h3>%(title)s</h3>\n'
+                              '<div class="text">%(html)s</div>\n')
 class QuestionRevision(ContentRevision):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -983,14 +985,20 @@ class QuestionRevision(ContentRevision):
         #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
 
-    def as_html(self):
+    def as_html(self, include_tags=True):
         markdowner = markup.get_parser()
-        return QUESTION_REVISION_TEMPLATE % {
-            'title': self.title,
-            'html': sanitize_html(markdowner.convert(self.text)),
-            'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                              for tag in self.tagnames.split(' ')]),
-        }
+        if include_tags:
+            return QUESTION_REVISION_TEMPLATE % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text)),
+                'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
+                                  for tag in self.tagnames.split(' ')]),
+            }
+        else:
+            return QUESTION_REVISION_TEMPLATE_NO_TAGS % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text))
+            }
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""

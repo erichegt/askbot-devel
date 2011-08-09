@@ -58,8 +58,9 @@ inbox_section - forum|flags
     {% endif %}
     <div id="responses">
     {% for response in responses %}
+              <div class="response-parent">
                 <p class="headline">
-                <strong>"{{ response.response_title|escape}}"</strong>
+                <strong>"{{ response.response_title.strip()|escape}}"</strong>
                 </p>
                 <div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
                 {% if inbox_section == 'forum' %}<input type="checkbox" />{% endif %}
@@ -70,7 +71,7 @@ inbox_section - forum|flags
                 <a style="text-decoration:none;" href="{{ response.response_url }}">
                     {{ response.response_type }}
                     ({{ response.timestamp|diff_date(3, True) }}):<br/>
-                    {{ response.response_snippet }}
+                    {{ response.response_snippet}}
                 </a>
                 </div>
                 {% if response.nested_responses %}
@@ -84,11 +85,12 @@ inbox_section - forum|flags
                 <a style="text-decoration:none;" href="{{ nested_response.response_url }}">
                     {{ nested_response.response_type }}
                     ({{ nested_response.timestamp|diff_date(3, True) }}):<br/>
-                    {{ nested_response.response_snippet }}
+                    {{ nested_response.response_snippet}}
                 </a>
                 </div>
                 {%endfor%}
                 {%endif%}
+              </div>
     {% endfor %}
     </div>
     </div>

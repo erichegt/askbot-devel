@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils import markup
-from askbot.utils.diff import textDiff
+from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from django.utils import html
 import logging
@@ -126,10 +126,10 @@ def parse_and_save_post(post, author = None, **kwargs):
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
     if post.post_type != 'comment':
-        last_revision = post.get_latest_revision().as_html()
+        last_revision = post.revisions.all().order_by('-revised_at')[1].as_html(include_tags=False)
         super(post.__class__, post).save(**kwargs)
-        current_revision = post.get_latest_revision().as_html()
-        diff = textDiff(current_revision, last_revision)
+        current_revision = post.get_latest_revision().as_html(include_tags=False)
+        diff = htmldiff(last_revision, current_revision)
     else:
         #we get comments
         super(post.__class__, post).save(**kwargs)
@@ -242,7 +242,7 @@ class ContentRevision(models.Model):
         abstract = True
         app_label = 'askbot'
 
-    def as_html(self):
+    def as_html(self, **kwargs):
         """should return html representation of
         the revision
         """
