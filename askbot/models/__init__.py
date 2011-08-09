@@ -1502,19 +1502,29 @@ def user_set_status(self, new_status):
     if new status is applied to user, then the record is 
     committed to the database
     """
+    #d - administrator 
     #m - moderator
     #s - suspended
     #b - blocked
     #w - watched
     #a - approved (regular user)
-    assert(new_status in ('m', 's', 'b', 'w', 'a'))
+    assert(new_status in ('d', 'm', 's', 'b', 'w', 'a'))
     if new_status == self.status:
         return
 
     #clear admin status if user was an administrator
     #because this function is not dealing with the site admins
-    if self.is_administrator():
-        self.remove_admin_status()
+
+    if new_status == 'd':
+        #create a new admin
+        self.set_admin_status()
+    else:
+        #This was the old method, kept in the else clause when changing
+        #to admin, so if you change the status to another thing that 
+        #is not Administrator it will simply remove admin if the user have 
+        #that permission, it will mostly be false.
+        if self.is_administrator():
+            self.remove_admin_status()
 
     self.status = new_status
     self.save()

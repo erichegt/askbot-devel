@@ -127,6 +127,27 @@ def try_import(module_name, pypi_package_name):
 def test_modules():
     try_import('recaptcha_works', 'django-recaptcha-works')
 
+def test_postgres():
+    '''Validates postgres buggy driver 2.4.2'''
+    if hasattr(django_settings, 'DATABASE_ENGINE'):
+        if django_settings.DATABASE_ENGINE in ('postgresql_psycopg2',):
+            try:
+                import psycopg2
+                version = psycopg2.__version__.split(' ')[0].split('.')
+                if version == ['2', '4', '2']:
+                    raise ImproperlyConfigured('Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug')
+                elif version > ['2', '4', '2']:
+                    pass #don't know what to do
+                else:
+                    pass #everythin is ok
+            except ImportError:
+                #Using mysql not a problem
+                pass
+        else:
+            pass #using other thing than postgres
+    else:
+        pass #TODO: test new django dictionary databases
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -136,6 +157,7 @@ def run_startup_tests():
     test_modules()
     test_askbot_url()
     test_i18n()
+    test_postgres()
     test_middleware()
 
 @transaction.commit_manually

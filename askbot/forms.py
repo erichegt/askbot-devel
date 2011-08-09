@@ -343,7 +343,8 @@ MODERATOR_STATUS_CHOICES = (
                                 ('s', _('suspended')),
                                 ('b', _('blocked')),
                            )
-ADMINISTRATOR_STATUS_CHOICES = (('m', _('moderator')), ) \
+ADMINISTRATOR_STATUS_CHOICES = (('d', _('administrator')),
+                               ('m', _('moderator')), ) \
                                + MODERATOR_STATUS_CHOICES
 
 
@@ -426,6 +427,12 @@ class ChangeUserStatusForm(forms.Form):
                 raise forms.ValidationError(
                                 _('Cannot change status of another moderator')
                             )
+
+            #do not allow moderator to change to admin
+            if self.moderator.is_moderator() and user_status == 'd':
+                raise forms.ValidationError(
+                                _("Cannot change status to admin")
+                                )
 
             if user_status == 'select':
                 del self.cleaned_data['user_status']
