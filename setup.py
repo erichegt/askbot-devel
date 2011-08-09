@@ -19,7 +19,7 @@ install_requires = [
     'django-robots',
     'unidecode',
     'django-countries==1.0.5',
-    'django-celery==2.2.3',
+    'django-celery==2.2.7',
     'django-kombu==0.9.2',
     'django-followit',
     'django-recaptcha-works',
