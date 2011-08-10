@@ -107,6 +107,7 @@ def parse_and_save_post(post, author = None, **kwargs):
 
     assert(author is not None)
 
+    last_revision = post.html
     data = post.parse()
 
     post.html = data['html']
@@ -125,15 +126,11 @@ def parse_and_save_post(post, author = None, **kwargs):
 
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
-    if post.post_type != 'comment':
-        last_revision = post.revisions.all().order_by('-revised_at')[1].as_html(include_tags=False)
-        super(post.__class__, post).save(**kwargs)
-        current_revision = post.get_latest_revision().as_html(include_tags=False)
-        diff = htmldiff(last_revision, current_revision)
+    super(post.__class__, post).save(**kwargs)
+    if last_revision:
+        diff = htmldiff(last_revision, post.html)
     else:
-        #we get comments
-        super(post.__class__, post).save(**kwargs)
-        diff = None 
+        diff = post.get_snippet()
 
     timestamp = post.get_time_of_last_edit()
 
