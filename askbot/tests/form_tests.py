@@ -2,6 +2,7 @@ from django import forms as django_forms
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot import forms
+from askbot.utils import forms as util_forms
 from askbot import models
 
 EMAIL_CASES = (#test should fail if the second item is None
@@ -276,3 +277,31 @@ class UserStatusFormTest(AskbotTestCase):
     def test_moderator_cannot_grant_moderator(self):
         self.setup_data('m')
         self.assertEquals(self.form.is_valid(), False)
+
+#Test for askbot.utils.forms
+class UserNameFieldTest(AskbotTestCase):
+    def setUp(self):
+        self.u1 = self.create_user('user1')
+        self.username_field = util_forms.UserNameField()
+
+    def test_clean(self):
+        self.username_field.skip_clean = True
+        self.assertEquals(self.username_field.clean('bar'), 'bar')#will pass anything
+
+        self.username_field.skip_clean = False 
+
+        #will not pass b/c instance is not User model
+        self.username_field.user_instance = dict(foo=1)
+        self.assertRaises(TypeError, self.username_field.clean, 'foo')
+
+        self.username_field.user_instance = self.u1
+        self.assertEquals(self.username_field.clean('user1'), self.u1.username) #will pass
+
+        #not pass username required
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '')
+
+        #invalid username and username in reserved words
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '  ')
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, 'fuck')
+
+        #TODO: test more things
