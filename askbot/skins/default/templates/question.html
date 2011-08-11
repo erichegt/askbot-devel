@@ -51,21 +51,7 @@
                     alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
                     title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
                 {% endif %}
-                {% if favorited %}
-                <img class="question-img-favorite" src="{{'/images/vote-favorite-on.png'|media}}"
-                    alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}"
-                    title="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}" />
-                <div id="favorite-number" class="favorite-number my-favorite-number">
-                    {{ question.favourite_count }}
-                </div>
-                {% else %}
-                <img class="question-img-favorite" src="{{'/images/vote-favorite-off.png'|media}}"
-                    alt="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}"
-                    title="{% trans %}remove favorite mark from this question (click again to restore mark){% endtrans %}" />
-                <div id="favorite-number" class="favorite-number">
-                   {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
-                </div>
-                {% endif %}
+                
                 {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', icon = True) }}{% endif %}
@@ -397,7 +383,28 @@
 {% block sidebar %}
 
 {{ settings.SIDEBAR_QUESTION_HEADER }}
-
+{% if favorited %}
+<div class="boxC vote-buttons">
+  <a class="button followed" 
+    alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+    <b>{%trans%}Following{% endtrans %}</b>
+    <b class='unfollow'>{%trans%}Unfollow{%endtrans%}</b>
+  </a>
+  <div id="favorite-number" class="favorite-number my-favorite-number">
+      {{ question.favourite_count }}
+  </div>
+</div>
+{% else %}
+<div class="boxC vote-buttons">
+  <a class="button follow"
+    alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+    {%trans %}Follow{%endtrans%}
+  </a>
+  <div id="favorite-number" class="favorite-number">
+     {% if question.favourite_count != 0 %}{{ question.favourite_count }}{% endif %}
+  </div>
+</div>
+{% endif %}
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
 {% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
     <div class="boxC">

@@ -259,7 +259,8 @@ var Vote = function(){
     var answerContainerIdPrefix = 'answer-container-';
     var voteContainerId = 'vote-buttons';
     var imgIdPrefixAccept = 'answer-img-accept-';
-    var imgClassPrefixFavorite = 'question-img-favorite';
+    var classPrefixFollow= 'button follow';
+    var classPrefixFollowed= 'button followed';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -309,7 +310,8 @@ var Vote = function(){
     };
 
     var getFavoriteButton = function(){
-        var favoriteButton = 'div.'+ voteContainerId +' img[class='+ imgClassPrefixFavorite +']';
+        var favoriteButton = 'div.'+ voteContainerId +' a[class='+ classPrefixFollow +']';
+        favoriteButton += ', div.'+ voteContainerId +' a[class='+ classPrefixFollowed +']';
         return $(favoriteButton);
     };
     var getFavoriteNumber = function(){
@@ -399,7 +401,8 @@ var Vote = function(){
         // set favorite question
         var favoriteButton = getFavoriteButton();
         favoriteButton.unbind('click').click(function(event){
-           Vote.favorite($(event.target));
+           //Vote.favorite($(event.target));
+           Vote.favorite(favoriteButton);
         });
     
         // question vote up
@@ -509,7 +512,9 @@ var Vote = function(){
             );
         }
         else if(data.status == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-off.png"));
+            var follow_html = $.i18n._('Follow');
+            object.attr("class", 'button follow');
+            object.html(follow_html);
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count === 0){
@@ -518,7 +523,9 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-on.png"));
+            var followed_html = $.i18n._('<b>Following</b><b class="unfollow">Unfollow</b>');
+            object.html(followed_html);
+            object.attr("class", 'button followed');
             var fav = getFavoriteNumber();
             fav.text(data.count);
             fav.addClass("my-favorite-number");

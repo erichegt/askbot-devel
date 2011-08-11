@@ -920,6 +920,57 @@ a:hover.medal {
     cursor: pointer;
 }
 
+.vote-buttons .button{
+    font-size: 15px;
+    text-decoration:none;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    height: 20px;
+    width: 80px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px 8px 8px 8px;
+    float:left;
+}
+
+.vote-buttons .followed{
+    font-color: #000;
+    font-style:normal;
+    background: #4cd46f;
+}
+
+.vote-buttons .followed b{
+    font-weight: normal;
+}
+
+.vote-buttons .followed b.unfollow{
+    display:none;
+}
+
+.vote-buttons .followed:hover{
+    color: #fff;
+    background: #d94849;
+}
+
+.vote-buttons .followed:hover b{
+    display:none;
+}
+
+.vote-buttons .followed:hover b.unfollow{
+    display:inline;
+    font-weight: bold;
+}
+
+.vote-buttons .follow{
+    background: #4cd46f;
+}
+
+.vote-buttons .follow:hover{
+    background: #4cd46f;
+    color: #fff;
+    font-weight: bold;
+}
+
 .vote-number {
     font-family: Arial;
     padding: 0px 0 3px 0;
