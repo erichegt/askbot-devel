@@ -29,13 +29,16 @@
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle follow-{{name}} {% if follow %}follow{% else %}unfollow{% endif %}" 
+        class="follow-toggle" 
         id="follow-{{ name }}-{{ id }}"
     >
-        {% if follow %}
-            {% trans %}follow {{alias}}{% endtrans %}
+        {% if not follow %}
+        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
         {% else %}
-            {% trans %}unfollow {{alias}}{% endtrans %}
+        <div class="unfollow">
+          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
+          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
+        </div>
         {% endif %}
     </div>
 {%- endmacro -%}

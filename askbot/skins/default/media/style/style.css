@@ -921,16 +921,16 @@ a:hover.medal {
 }
 
 .vote-buttons .button{
-    font-size: 15px;
-    text-decoration:none;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     height: 20px;
     width: 80px;
     border-style: solid;
     border-width: 1px;
-    padding: 8px 8px 8px 8px;
+    padding: 8px;
     float:left;
+    margin-right:100%;
+    margin-bottom: 10px;
 }
 
 .vote-buttons .followed{
@@ -939,11 +939,11 @@ a:hover.medal {
     background: #4cd46f;
 }
 
-.vote-buttons .followed b{
+.vote-buttons .followed div{
     font-weight: normal;
 }
 
-.vote-buttons .followed b.unfollow{
+.vote-buttons .followed div.unfollow{
     display:none;
 }
 
@@ -952,11 +952,11 @@ a:hover.medal {
     background: #d94849;
 }
 
-.vote-buttons .followed:hover b{
+.vote-buttons .followed:hover div{
     display:none;
 }
 
-.vote-buttons .followed:hover b.unfollow{
+.vote-buttons .followed:hover div.unfollow{
     display:inline;
     font-weight: bold;
 }
@@ -992,11 +992,16 @@ a:hover.medal {
 }
 
 .favorite-number {
-    padding: 0px;
+    padding: 10px;
     font-size: 100%;
     font-family: Arial;
     font-weight: bold;
     color: #777;
+    float: left;
+}
+
+.notify-me {
+    float: left;
 }
 
 .offensive-flag a {
@@ -2363,17 +2368,45 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 }
 
 .follow-toggle {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    background: #fff0e0;
-    color: #777;
-    font-weight: bolder;
-    border: 1px solid #aaa;
-    cursor: pointer;
+    border-style: solid;
+    border-width: 2px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    height: 20px;
+    width: 200px;
+    float:left;
 }
 
-.follow-toggle.unfollow:hover {
-    background: #a40000;
+.follow-toggle .follow{
+    font-color: #000;
+    font-style:normal;
+    background: #4cd46f;
+}
+
+.follow-toggle .follow:hover{
+    font-weight: bold;
+}
+
+.follow-toggle .unfollow{
+    font-color: #000;
+}
+
+
+.follow-toggle .unfollow div.unfollow-red{
+    display:none;
+}
+
+.follow-toggle .unfollow div.unfollow-green{
+    background: #4cd46f;
+}
+
+.follow-toggle .unfollow div.unfollow-green:hover{
+    display:none;
+}
+
+.follow-toggle .unfollow div.unfollow-red:hover{
     color: #fff;
-    border: 1px solid #d40000;
+    background: #d94849;
+    display:inline;
+    font-weight: bold;
 }

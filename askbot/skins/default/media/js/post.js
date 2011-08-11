@@ -523,7 +523,7 @@ var Vote = function(){
             fav.text(data.count);
         }
         else if(data.success == "1"){
-            var followed_html = $.i18n._('<b>Following</b><b class="unfollow">Unfollow</b>');
+            var followed_html = $.i18n._('<div>Following</div><div class="unfollow">Unfollow</div>');
             object.html(followed_html);
             object.attr("class", 'button followed');
             var fav = getFavoriteNumber();
