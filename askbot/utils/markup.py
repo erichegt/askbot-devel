@@ -40,7 +40,7 @@ def extract_first_matching_mentioned_author(text, anticipated_authors):
         return None, ''
 
     for a in anticipated_authors:
-        if text.startswith(a.username):
+        if text.lower().startswith(a.username.lower()):
             ulen = len(a.username)
             if len(text) == ulen:
                 text = ''

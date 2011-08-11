@@ -58,7 +58,7 @@ def parse_post_text(post):
         extra_authors = set()
         for name_seed in extra_name_seeds:
             extra_authors.update(User.objects.filter(
-                                        username__startswith = name_seed
+                                        username__istartswith = name_seed
                                     )
                             )
 
@@ -67,7 +67,7 @@ def parse_post_text(post):
         anticipated_authors += list(extra_authors)
 
         mentioned_authors, post_html = markup.mentionize_text(
-                                                text, 
+                                                text,
                                                 anticipated_authors
                                             )
 
