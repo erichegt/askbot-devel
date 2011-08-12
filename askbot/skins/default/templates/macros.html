@@ -32,7 +32,7 @@
         class="follow-toggle" 
         id="follow-{{ name }}-{{ id }}"
     >
-        {% if not follow %}
+        {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
         {% else %}
         <div class="unfollow">

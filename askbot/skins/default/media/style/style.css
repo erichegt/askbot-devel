@@ -2370,8 +2370,8 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 .follow-toggle {
     border-style: solid;
     border-width: 2px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
     height: 20px;
     width: 200px;
     float:left;
@@ -2388,8 +2388,13 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 }
 
 .follow-toggle .unfollow{
-    font-color: #000;
+    background: #4cd46f;
 }
+
+.follow-toggle .unfollow:hover{
+    background: #d94849;
+}
+
 
 
 .follow-toggle .unfollow div.unfollow-red{
@@ -2400,13 +2405,12 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
     background: #4cd46f;
 }
 
-.follow-toggle .unfollow div.unfollow-green:hover{
-    display:none;
+.follow-toggle .unfollow:hover div.unfollow-red{
+    display:inline;
+    color:#fff;
+    font-weight:bold;
 }
 
-.follow-toggle .unfollow div.unfollow-red:hover{
-    color: #fff;
-    background: #d94849;
-    display:inline;
-    font-weight: bold;
+.follow-toggle .unfollow:hover div.unfollow-green{
+    display:none;
 }
