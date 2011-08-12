@@ -2368,13 +2368,16 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 }
 
 .follow-toggle {
-    border-style: solid;
-    border-width: 2px;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
-    height: 20px;
+    border: 2px solid;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    height: auto;
     width: 200px;
     float:left;
+    padding: 0;
+    margin-right:100%;
+    margin-bottom: 10px;
 }
 
 .follow-toggle .follow{
@@ -2394,8 +2397,6 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 .follow-toggle .unfollow:hover{
     background: #d94849;
 }
-
-
 
 .follow-toggle .unfollow div.unfollow-red{
     display:none;
