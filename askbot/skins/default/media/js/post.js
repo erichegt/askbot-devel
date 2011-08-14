@@ -1487,6 +1487,10 @@ var socialSharing = function(){
 
     var SERVICE_DATA = {
         //url - template for the sharing service url, params are for the popup
+        identica: {
+            url: "http://identi.ca/index.php?action=newnotice&status_textarea={TEXT}",
+            params: "width=820, height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
         twitter: {
             url: "http://twitter.com/share?url={URL}&ref=twitbtn&text={TEXT}",
             params: "width=820,height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
@@ -1522,11 +1526,13 @@ var socialSharing = function(){
             var fb = $('a.facebook-share')
             var tw = $('a.twitter-share');
             var ln = $('a.linkedin-share');
+            var ica = $('a.identica-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
             setupButtonEventHandlers(ln, function(){share_page("linkedin")});
+            setupButtonEventHandlers(ica, function(){share_page("identica")});
         }
     }
 }(); 
