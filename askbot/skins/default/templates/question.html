@@ -384,26 +384,29 @@
 
 {{ settings.SIDEBAR_QUESTION_HEADER }}
 <div class="boxC vote-buttons">
-{% if favorited %}
-  <a class="button followed" 
-    alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
-    <div>{%trans%}Following{% endtrans %}</div>
-    <div class='unfollow'>{%trans%}Unfollow{%endtrans%}</div>
-  </a>
-  <div id="favorite-number" class="favorite-number my-favorite-number">
-    {{ question.favourite_count }} {%trans%}Followers{%endtrans%}
-  </div>
-{% else %}
-  <a class="button follow"
-    alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
-    {%trans %}Follow{%endtrans%}
-  </a>
-  <div id="favorite-number" class="favorite-number">
-    {% if question.favourite_count != 0 %}{%trans count=question.favourite_count%}{{count}} Follower{%pluralize count%}{{count}} Followers{%endtrans%}{% endif %}
-  </div>
-{% endif %}
-<div class="clearfix"></div>
-<div class="notify-sidebar"><input type="checkbox" id="question-subscribe-sidebar"><label for="id_email_notify"> {%trans%}Notify me for new answers by email{%endtrans%}</label></div> 
+    {% if favorited %}
+        <a class="button followed" 
+            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            <div>{% trans %}Following{% endtrans %}</div>
+            <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
+        </a>
+    {% else %}
+        <a class="button follow"
+            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            {%trans %}Follow{%endtrans%}
+        </a>
+    {% endif %}
+    <div class="clearfix"></div>
+    <div id="favorite-number" class="favorite-number{% if favorited %} my-favorite-number{% endif %}">
+        {% set follower_count = question.favourite_count %}
+        {% if follower_count > 0 %}
+            {% trans count=follower_count %}{{count}} follower{% pluralize %}{{count}} followers{% endtrans %}
+        {% endif %}
+    </div>
+<div class="notify-sidebar">
+    <input type="checkbox" id="question-subscribe-sidebar"/>
+    <label for="question-subscribe-sidebar">{% trans %}email me about the updates{% endtrans %}</label>
+    </div> 
 </div>
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
 {% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}

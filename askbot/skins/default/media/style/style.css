@@ -1001,7 +1001,7 @@ a:hover.medal {
     font-family: Arial;
     font-weight: bold;
     color: #777;
-    float: left;
+    text-align: left;
 }
 
 .notify-me {

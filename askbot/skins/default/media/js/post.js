@@ -539,7 +539,7 @@ var Vote = function(){
                 data.count = '';
                 fav.text('');
             }else{
-                var fmts = ngettext('%s Follower', '%s Followers', data.count);
+                var fmts = ngettext('%s follower', '%s followers', data.count);
                 fav.text(interpolate(fmts, [data.count]));
             }
         }
@@ -548,7 +548,7 @@ var Vote = function(){
             object.html(followed_html);
             object.attr("class", 'button followed');
             var fav = getFavoriteNumber();
-            var fmts = ngettext('%s Follower', '%s Followers', data.count);
+            var fmts = ngettext('%s follower', '%s followers', data.count);
             fav.text(interpolate(fmts, [data.count]));
             fav.addClass("my-favorite-number");
         }
