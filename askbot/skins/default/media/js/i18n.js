@@ -117,7 +117,9 @@ var i18nEn = {
     'click to edit this comment':'click to edit this comment',
     'confirm abandon comment':'Are you sure you do not want to post this comment?',
     'save comment': 'save comment',
-    'enter more characters': 'please enter at least {0} more characters'
+    'enter more characters': 'please enter at least {0} more characters',
+    'Follow': 'Follow',
+    '<b>Following</b><b class="unfollow">Unfollow</b>': '<b>Following</b><b class="unfollow">Unfollow</b>',
 };
 
 var i18nFi = {

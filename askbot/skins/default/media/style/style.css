@@ -855,7 +855,7 @@ a:hover.medal {
     height: 20px;
     line-height: 22px;
     margin: 5px 0 0 4px;
-    padding: 0 7px;
+    padding: 0 2px;
     text-decoration: none;
 }
 
@@ -920,12 +920,69 @@ a:hover.medal {
     cursor: pointer;
 }
 
+.vote-buttons .button{
+    -moz-border-radius: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    height: 20px;
+    width: 80px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px;
+    float:left;
+}
+
+.vote-buttons .followed{
+    font-color: #000;
+    font-style:normal;
+    background: #cccccc;
+}
+
+.vote-buttons .followed div{
+    font-weight: normal;
+}
+
+.vote-buttons .followed div.unfollow{
+    display:none;
+}
+
+.vote-buttons .followed:hover{
+    color: #fff;
+    background: #8b0000;
+}
+
+.vote-buttons .followed:hover div{
+    display:none;
+}
+
+.vote-buttons .followed:hover div.unfollow{
+    display:inline;
+    font-weight: bold;
+}
+
+.vote-buttons .follow{
+    background: #cccccc;
+}
+
+.vote-buttons .follow:hover{
+    background: #234f32;
+    color: #fff;
+    font-weight: bold;
+}
+
 .vote-number {
     font-family: Arial;
     padding: 0px 0 3px 0;
     font-size: 140%;
     font-weight: bold;
     color: #777;
+}
+
+.vote-buttons .notify-sidebar {
+    text-align: left;
+}
+.vote-buttons .notify-sidebar label {
+    vertical-align: top;
 }
 
 .question-img-upvote:hover {
@@ -941,11 +998,16 @@ a:hover.medal {
 }
 
 .favorite-number {
-    padding: 0px;
+    padding: 5px 0 0 10px;
     font-size: 100%;
     font-family: Arial;
     font-weight: bold;
     color: #777;
+    text-align: left;
+}
+
+.notify-me {
+    float: left;
 }
 
 .offensive-flag a {
@@ -2312,17 +2374,50 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 }
 
 .follow-toggle {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    background: #fff0e0;
-    color: #777;
-    font-weight: bolder;
-    border: 1px solid #aaa;
-    cursor: pointer;
+    border: 2px solid;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    height: auto;
+    width: 200px;
+    float:left;
+    padding: 0;
+    margin-right:100%;
+    margin-bottom: 10px;
 }
 
-.follow-toggle.unfollow:hover {
-    background: #a40000;
-    color: #fff;
-    border: 1px solid #d40000;
+.follow-toggle .follow{
+    font-color: #000;
+    font-style:normal;
+    background: #4cd46f;
+}
+
+.follow-toggle .follow:hover{
+    font-weight: bold;
+}
+
+.follow-toggle .unfollow{
+    background: #4cd46f;
+}
+
+.follow-toggle .unfollow:hover{
+    background: #d94849;
+}
+
+.follow-toggle .unfollow div.unfollow-red{
+    display:none;
+}
+
+.follow-toggle .unfollow div.unfollow-green{
+    background: #4cd46f;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-red{
+    display:inline;
+    color:#fff;
+    font-weight:bold;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-green{
+    display:none;
 }

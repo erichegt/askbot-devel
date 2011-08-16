@@ -119,7 +119,7 @@ FollowUser.prototype.setUserName = function(user_name){
 FollowUser.prototype.decorate = function(element){
     this._element = element;
     this._user_id = parseInt(element.attr('id').split('-').pop());
-    this._available_action = element.hasClass('follow') ? 'follow':'unfollow';
+    this._available_action = element.children().hasClass('follow') ? 'follow':'unfollow';
     var me = this;
     setupButtonEventHandlers(this._element, function(){ me.go() });
 };
@@ -154,20 +154,28 @@ FollowUser.prototype.go = function(){
 FollowUser.prototype.toggleState = function(){
     if (this._available_action === 'follow'){
         this._available_action = 'unfollow';
-        this._element.removeClass('follow');
-        this._element.addClass('unfollow');
-        var fmts = gettext('unfollow %s');
+        var unfollow_div = document.createElement('div'); 
+        unfollow_div.setAttribute('class', 'unfollow');
+        var red_div = document.createElement('div');
+        red_div.setAttribute('class', 'unfollow-red');
+        red_div.innerHTML = interpolate(gettext('unfollow %s'), [this._user_name]);
+        var green_div = document.createElement('div');
+        green_div.setAttribute('class', 'unfollow-green');
+        green_div.innerHTML = interpolate(gettext('following %s'), [this._user_name]);
+        unfollow_div.appendChild(red_div);
+        unfollow_div.appendChild(green_div);
+        this._element.html(unfollow_div);
     } else {
+        var follow_div = document.createElement('div'); 
+        follow_div.innerHTML = interpolate(gettext('follow %s'), [this._user_name]);
+        follow_div.setAttribute('class', 'follow');
         this._available_action = 'follow';
-        this._element.removeClass('unfollow');
-        this._element.addClass('follow');
-        var fmts = gettext('follow %s');
+        this._element.html(follow_div);
     }
-    this._element.html(interpolate(fmts, [this._user_name]));
 };
 
 (function(){
-    var fbtn = $('.follow-user');
+    var fbtn = $('.follow-toggle');
     if (fbtn.length === 1){
         var follow_user = new FollowUser();
         follow_user.decorate(fbtn);

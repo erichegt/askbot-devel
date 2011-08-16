@@ -385,13 +385,13 @@ def get_enabled_major_login_providers():
             'password_changeable': True
         }
 
-    #if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
-    #    data['facebook'] = {
-    #        'name': 'facebook',
-    #        'display_name': 'Facebook',
-    #        'type': 'facebook',
-    #        'icon_media_path': '/jquery-openid/images/facebook.gif',
-    #    }
+    if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
+        data['facebook'] = {
+            'name': 'facebook',
+            'display_name': 'Facebook',
+            'type': 'facebook',
+            'icon_media_path': '/jquery-openid/images/facebook.gif',
+        }
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',

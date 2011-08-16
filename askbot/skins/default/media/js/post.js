@@ -259,7 +259,8 @@ var Vote = function(){
     var answerContainerIdPrefix = 'answer-container-';
     var voteContainerId = 'vote-buttons';
     var imgIdPrefixAccept = 'answer-img-accept-';
-    var imgClassPrefixFavorite = 'question-img-favorite';
+    var classPrefixFollow= 'button follow';
+    var classPrefixFollowed= 'button followed';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -274,6 +275,7 @@ var Vote = function(){
     var removeQuestionLinkIdPrefix = 'question-delete-link-';
     var removeAnswerLinkIdPrefix = 'answer-delete-link-';
     var questionSubscribeUpdates = 'question-subscribe-updates';
+    var questionSubscribeSidebar= 'question-subscribe-sidebar';
     
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
@@ -283,7 +285,7 @@ var Vote = function(){
                     + "'>"
                     + $.i18n._('please login') + "</a>";
 
-    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') + pleaseLogin;
+    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot follow questions') + pleaseLogin;
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
     var offensiveConfirmation = $.i18n._('please confirm offensive');
@@ -309,7 +311,8 @@ var Vote = function(){
     };
 
     var getFavoriteButton = function(){
-        var favoriteButton = 'div.'+ voteContainerId +' img[class='+ imgClassPrefixFavorite +']';
+        var favoriteButton = 'div.'+ voteContainerId +' a[class='+ classPrefixFollow +']';
+        favoriteButton += ', div.'+ voteContainerId +' a[class='+ classPrefixFollowed +']';
         return $(favoriteButton);
     };
     var getFavoriteNumber = function(){
@@ -359,6 +362,10 @@ var Vote = function(){
     var getquestionSubscribeUpdatesCheckbox = function(){
         return $('#' + questionSubscribeUpdates);
     };
+
+    var getquestionSubscribeSidebarCheckbox= function(){
+        return $('#' + questionSubscribeSidebar);
+    };
     
     var getremoveAnswersLinks = function(){
         var removeAnswerLinks = 'div.answer-controls a[id^='+ removeAnswerLinkIdPrefix +']';
@@ -399,7 +406,8 @@ var Vote = function(){
         // set favorite question
         var favoriteButton = getFavoriteButton();
         favoriteButton.unbind('click').click(function(event){
-           Vote.favorite($(event.target));
+           //Vote.favorite($(event.target));
+           Vote.favorite(favoriteButton);
         });
     
         // question vote up
@@ -438,12 +446,25 @@ var Vote = function(){
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function(event){
             if (this.checked){
                 Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
+                getquestionSubscribeSidebarCheckbox().attr({'checked': true});
             }
             else {
                 Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
+                getquestionSubscribeSidebarCheckbox().attr({'checked': false});
             }
         });
-    
+
+        getquestionSubscribeSidebarCheckbox().unbind('click').click(function(event){
+            if (this.checked){
+                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
+                getquestionSubscribeUpdatesCheckbox().attr({'checked': true});
+            }
+            else {
+                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
+                getquestionSubscribeUpdatesCheckbox().attr({'checked': false});
+            }
+        });
+
         getremoveAnswersLinks().unbind('click').click(function(event){
             Vote.remove(this, VoteType.removeAnswer);
         });
@@ -509,18 +530,26 @@ var Vote = function(){
             );
         }
         else if(data.status == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-off.png"));
+            var follow_html = gettext('Follow');
+            object.attr("class", 'button follow');
+            object.html(follow_html);
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count === 0){
                 data.count = '';
+                fav.text('');
+            }else{
+                var fmts = ngettext('%s follower', '%s followers', data.count);
+                fav.text(interpolate(fmts, [data.count]));
             }
-            fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-on.png"));
+            var followed_html = gettext('<div>Following</div><div class="unfollow">Unfollow</div>');
+            object.html(followed_html);
+            object.attr("class", 'button followed');
             var fav = getFavoriteNumber();
-            fav.text(data.count);
+            var fmts = ngettext('%s follower', '%s followers', data.count);
+            fav.text(interpolate(fmts, [data.count]));
             fav.addClass("my-favorite-number");
         }
         else{

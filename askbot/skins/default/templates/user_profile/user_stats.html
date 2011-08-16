@@ -135,6 +135,7 @@
         </div>
 {% endblock %}
 {% block endjs %}
+    {{ super() }}
     <script type="text/javascript">
         $(document).ready(function(){
             $('.badge-context-toggle').each(function(idx, elem){
