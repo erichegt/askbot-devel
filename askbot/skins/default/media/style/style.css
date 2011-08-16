@@ -936,7 +936,7 @@ a:hover.medal {
 .vote-buttons .followed{
     font-color: #000;
     font-style:normal;
-    background: #4cd46f;
+    background: #cccccc;
 }
 
 .vote-buttons .followed div{
@@ -949,7 +949,7 @@ a:hover.medal {
 
 .vote-buttons .followed:hover{
     color: #fff;
-    background: #d94849;
+    background: #8b0000;
 }
 
 .vote-buttons .followed:hover div{
@@ -962,11 +962,11 @@ a:hover.medal {
 }
 
 .vote-buttons .follow{
-    background: #4cd46f;
+    background: #cccccc;
 }
 
 .vote-buttons .follow:hover{
-    background: #4cd46f;
+    background: #234f32;
     color: #fff;
     font-weight: bold;
 }
@@ -977,6 +977,10 @@ a:hover.medal {
     font-size: 140%;
     font-weight: bold;
     color: #777;
+}
+
+.vote-buttons .notify-sidebar {
+    text-align: left;
 }
 
 .question-img-upvote:hover {

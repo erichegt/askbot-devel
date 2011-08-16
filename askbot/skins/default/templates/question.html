@@ -399,12 +399,11 @@
     {%trans %}Follow{%endtrans%}
   </a>
   <div id="favorite-number" class="favorite-number">
-     {% if question.favourite_count != 0 %}{{ question.favourite_count }}{%trans%}Followers{%endtrans%}{% endif %}
+    {% if question.favourite_count != 0 %}{%trans count=question.favourite_count%}{{count}} Follower{%pluralize%}{{count}} Followers{%endtrans%}{% endif %}
   </div>
 {% endif %}
-  <form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
-    <div class="notify-me">{{ answer.email_notify }}<label for="id_email_notify"> {%trans%}Notify me for new answers{%endtrans%}</label></div> 
-  </form>
+<div class="clearfix"></div>
+<div class="notify-sidebar"><input type="checkbox" id="question-subscribe-sidebar"><label for="id_email_notify"> {%trans%}Notify me for new answers by email{%endtrans%}</label></div> 
 </div>
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
 {% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
@@ -497,6 +496,9 @@
         // define reputation needs for comments
         var repNeededForComments = 50;
         $().ready(function(){
+            if ($('#question-subscribe-updates')[0].checked){
+               $('#question-subscribe-sidebar').attr({'checked': 'checked'});
+             }
             $("#nav_questions").attr('className',"on");
             var answer_sort_tab = "{{ tab_id }}";
             $("#" + answer_sort_tab).attr('className',"on");
