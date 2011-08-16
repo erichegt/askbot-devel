@@ -399,7 +399,7 @@
     {%trans %}Follow{%endtrans%}
   </a>
   <div id="favorite-number" class="favorite-number">
-    {% if question.favourite_count != 0 %}{%trans count=question.favourite_count%}{{count}} Follower{%pluralize%}{{count}} Followers{%endtrans%}{% endif %}
+    {% if question.favourite_count != 0 %}{%trans count=question.favourite_count%}{{count}} Follower{%pluralize count%}{{count}} Followers{%endtrans%}{% endif %}
   </div>
 {% endif %}
 <div class="clearfix"></div>

@@ -537,9 +537,11 @@ var Vote = function(){
             fav.removeClass("my-favorite-number");
             if(data.count === 0){
                 data.count = '';
+                fav.text('');
+            }else{
+                var fmts = ngettext('%s Follower', '%s Followers', data.count);
+                fav.text(interpolate(fmts, [data.count]));
             }
-            var fmts = ngettext('%s Follower', '%s Followers', data.count);
-            fav.text(interpolate(fmts, [data.count]));
         }
         else if(data.success == "1"){
             var followed_html = gettext('<div>Following</div><div class="unfollow">Unfollow</div>');
