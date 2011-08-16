@@ -512,6 +512,7 @@
             if (window.location.hash === 'fmanswer'){
                 $('#fmanswer textarea').focus();
             }
+            {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
         });
         
         function initEditor(){
@@ -531,7 +532,6 @@
             });
             setupFormValidation($("#fmanswer"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
         }
-    {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
     </script>
     {% include "blocks/editor_data.html" %}
 {% endblock %}
