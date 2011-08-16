@@ -384,6 +384,7 @@
 
 {{ settings.SIDEBAR_QUESTION_HEADER }}
 <div class="boxC vote-buttons">
+    <h2 style="font-size: 22px;margin-top: 11px; text-align: left;">{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
         <a class="button followed" 
             alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
@@ -405,15 +406,16 @@
     </div>
 <div class="notify-sidebar">
     <input type="checkbox" id="question-subscribe-sidebar"/>
-    <label for="question-subscribe-sidebar">{% trans %}email me about the updates{% endtrans %}</label>
+    <label for="question-subscribe-sidebar">{% trans %}email the updates{% endtrans %}</label>
     </div> 
 </div>
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
 {% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
     <div class="boxC">
-        <p>
+        <div class="clearfix"></div>
+        <h2>
             {% trans %}Question tags{% endtrans %}:
-        </p>
+        </h2>
         <ul id="related-tags" class="tags">
             {% for tag in tags %}
             <li>
@@ -433,13 +435,15 @@
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="boxC">
-    <p style="clear:left">
+    <div class="clearfix"></div>
+    <h2>{% trans %}Stats:{% endtrans %}</h2>
+    <p>
         {% trans %}question asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
     </p>
     <p> 
         {% trans %}question was seen{% endtrans %}: <strong>{{ question.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>
     </p>
-    <p> 
+    <p>
         {% trans %}last updated{% endtrans %}: <strong title="{{ question.last_activity_at }}">{{question.last_activity_at|diff_date}}</strong>
     </p>
 </div>
