@@ -531,7 +531,7 @@
             });
             setupFormValidation($("#fmanswer"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
         }
+    {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
     </script>
-    {% if settings.ENABLE_SHARING_GOOGLE %}<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>{% endif %}
     {% include "blocks/editor_data.html" %}
 {% endblock %}
