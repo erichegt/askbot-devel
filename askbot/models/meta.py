@@ -91,7 +91,7 @@ class Comment(base.MetaContent, base.UserContent):
     offensive_flag_count = models.IntegerField(default = 0)
 
     _urlize = True
-    _use_markdown = False
+    _use_markdown = True 
     _escape_html = True
     is_anonymous = False #comments are never anonymous - may change
 
