@@ -21,6 +21,9 @@ PREAMBLE = """\n
 *                      *
 ************************"""
 
+def askbot_warning(line):
+    print PREAMBLE + line
+
 def format_as_text_tuple_entries(items):
     """prints out as entries or tuple containing strings
     ready for copy-pasting into say django settings file"""
@@ -148,12 +151,22 @@ def test_postgres():
     else:
         pass #TODO: test new django dictionary databases
 
+def test_encoding():
+    """prints warning if encoding error is not UTF-8"""
+    if sys.stdout.encoding != 'UTF-8':
+        askbot_warning(
+            'Your output encoding is not UTF-8, there may be '
+            'issues with the software when anything is printed '
+            'to the terminal or log files'
+        )
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
 
     #todo: refactor this when another test arrives
+    test_encoding()
     test_modules()
     test_askbot_url()
     test_i18n()
