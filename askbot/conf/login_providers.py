@@ -5,6 +5,7 @@ from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
+from askbot.skins import utils as skin_utils
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
@@ -32,7 +33,7 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
-        'WORDPRESS_SITE_LOGIN',
+        'SIGNIN_WORDPRESS_SITE_ENABLED',
         default = False,
         description=_('Activate to allow login with self-hosted wordpress site'),
         help_text=_('to activate this feature you must fill out the wordpress xml-rpc setting bellow')
@@ -46,6 +47,18 @@ settings.register(
         default = '',
         description=_('Fill it with the wordpress url to the xml-rpc, normally http://mysite.com/xmlrpc.php'),
         help_text=_('To enable, go to Settings->Writing->Remote Publishing and check the box for XML-RPC')
+    )
+)
+
+settings.register(
+    livesettings.ImageValue(
+        LOGIN_PROVIDERS,
+        'WORDPRESS_SITE_ICON',
+        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
+        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
+        default = '/images/logo.gif',
+        description = _('Upload your icon'),
+        url_resolver = skin_utils.get_media_url
     )
 )
 
