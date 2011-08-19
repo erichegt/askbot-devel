@@ -29,6 +29,26 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
+        'WORDPRESS_SITE_LOGIN',
+        default = False,
+        description=_('Activate to allow login with self-hosted wordpress site'),
+        help_text=_('to activate this feature you must fill out the wordpress xml-rpc setting bellow')
+    )
+)
+
+settings.register(
+    livesettings.URLValue(
+        LOGIN_PROVIDERS,
+        'WORDPRESS_SITE_URL',
+        default = '',
+        description=_('Fill it with the wordpress url to the xml-rpc, normally http://mysite.com/xmlrpc.php'),
+        help_text=_('To enable, go to Settings->Writing->Remote Publishing and check the box for XML-RPC')
+    )
+)
+
 providers = (
     'local',
     'AOL',
