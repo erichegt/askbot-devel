@@ -286,6 +286,7 @@ var Vote = function(){
                     + $.i18n._('please login') + "</a>";
 
     var favoriteAnonymousMessage = $.i18n._('anonymous users cannot follow questions') + pleaseLogin;
+    var subscribeAnonymousMessage = $.i18n._('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
     var offensiveConfirmation = $.i18n._('please confirm offensive');
@@ -444,24 +445,25 @@ var Vote = function(){
         });
 
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function(event){
+            //despeluchar esto
             if (this.checked){
-                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
                 getquestionSubscribeSidebarCheckbox().attr({'checked': true});
+                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
             }
             else {
-                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
                 getquestionSubscribeSidebarCheckbox().attr({'checked': false});
+                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
             }
         });
 
         getquestionSubscribeSidebarCheckbox().unbind('click').click(function(event){
             if (this.checked){
-                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
                 getquestionSubscribeUpdatesCheckbox().attr({'checked': true});
+                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
             }
             else {
-                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
                 getquestionSubscribeUpdatesCheckbox().attr({'checked': false});
+                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
             }
         });
 
@@ -654,16 +656,22 @@ var Vote = function(){
             
         vote: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(
-                    $(object),
-                    voteAnonymousMessage.replace(
-                            "{{QuestionID}}",
-                            questionId
-                        ).replace(
-                            '{{questionSlug}}',
-                            questionSlug
-                        )
-                );
+                if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
+                    getquestionSubscribeSidebarCheckbox().removeAttr('checked');
+                    getquestionSubscribeUpdatesCheckbox().removeAttr('checked');
+                    showMessage(object, subscribeAnonymousMessage);
+                }else {
+                    showMessage(
+                        $(object),
+                        voteAnonymousMessage.replace(
+                                "{{QuestionID}}",
+                                questionId
+                            ).replace(
+                                '{{questionSlug}}',
+                                questionSlug
+                            )
+                    );
+                }
                 return false;
             }
             // up and downvote processor

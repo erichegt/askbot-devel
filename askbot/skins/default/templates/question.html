@@ -323,7 +323,7 @@
         </p>
     {% else %}
         <p style="padding-left:3px">
-            <input class="nomargin" type="checkbox" disabled="disabled" />
+            {{ answer.email_notify }} 
             <label>{% trans %}once you sign in you will be able to subscribe for any updates here{% endtrans %}</label>
         </p>
     {% endif %}
@@ -409,7 +409,7 @@
     <input type="checkbox" id="question-subscribe-sidebar"/>
     <label for="question-subscribe-sidebar">{% trans %}email the updates{% endtrans %}</label>
     {%else%}
-    <input type="checkbox" disabled="disabled"/>
+    <input type="checkbox" id="question-subscribe-sidebar"/>
     <label for="question-subscribe-sidebar">{% trans %}<strong>Here</strong> (once you log in) you will be able to sign up for the periodic email updates about this question.{% endtrans %}</label>
     {%endif%}
     </div> 
