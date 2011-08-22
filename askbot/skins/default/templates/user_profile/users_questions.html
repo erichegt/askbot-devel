@@ -2,27 +2,6 @@
 {% import "macros.html" as macros %}
 <div class="user-stats-table">
     {% for question in questions %}
-        {% if question.favourite_count %}
-            {% if question.id in favorited_myself %}
-                <div class="favorites-count">
-                    <img 
-                        title="{% trans cnt=question.favourite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
-                        alt="{% trans %}thumb-up on{% endtrans %}"
-                        src="{{"/images/vote-favorite-on.png"|media}}"/>
-                    <div><b>{{question.favourite_count|intcomma}}</b></div>
-                </div>
-            {% else %}
-                <div class="favorites-count-off">
-                    <img 
-                        title="{% trans cnt=question.favourite_count %}this questions was selected as favorite {{cnt}} time{% pluralize %}this questions was selected as favorite {{cnt}} times{% endtrans %}"
-                        alt="{% trans %}thumb-up off{% endtrans %}"
-                        src="{{"/images/vote-favorite-off.png"|media}}"/>
-                    <div><b>{{question.favourite_count|intcomma}}</b></div>
-                </div>
-            {% endif %}
-        {% else %}
-            <div class="favorites-empty"> </div>
-        {% endif %}
     {{macros.question_summary(question, extra_class='narrow')}}
     {% endfor %}
 </div>

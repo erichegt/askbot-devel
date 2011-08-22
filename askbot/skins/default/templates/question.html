@@ -387,13 +387,13 @@
     <h2 style="font-size: 22px;margin-top: 11px; text-align: left;">{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
         <a class="button followed" 
-            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            alt="{% trans %}click to unfollow this question{% endtrans %}">
             <div>{% trans %}Following{% endtrans %}</div>
             <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
         </a>
     {% else %}
         <a class="button follow"
-            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            alt="{% trans %}click to follow this question{% endtrans %}">
             {%trans %}Follow{%endtrans%}
         </a>
     {% endif %}
