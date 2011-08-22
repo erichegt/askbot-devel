@@ -3,12 +3,14 @@ Changes in Askbot
 
 0.7.20 (Current Version)
 ------------------------
-All changes by Adolfo Fitoria, excluding the last one.
+Changes by Adolfo Fitoria, Benoit Lavigne, Ratnadeep Debnath and Byron Corrales.
 
 * Added support for login via self-hosted Wordpress site
 * Allowed basic markdown in the comments
 * Added this changelog
-* Added support for threaded emails (by Benoit Lavigne)
+* Added support for threaded emails
+* A few more Spanish translation strings
+* Social sharing support on identi.ca
 
 0.7.19
 ------
