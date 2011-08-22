@@ -55,6 +55,7 @@
                 {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', icon = True) }}{% endif %}
+                {% if settings.ENABLE_SHARING_IDENTICA %}{{ macros.share(site = 'identica', icon = True) }}{% endif %}
                 {% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="small" count="false"></g:plusone>{% endif %}
             </div>
         </td>
@@ -297,7 +298,8 @@
         {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', site_label = 'Twitter') }},{% endif %}
         {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', site_label = 'Facebook') }},{% endif %}
         {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', site_label = 'LinkedIn') }},{% endif %}
-        {%- if settings.ENABLE_SHARING_TWITTER or settings.ENABLE_SHARING_FACEBOOK or settings.ENABLE_SHARING_LINKEDIN -%}
+        {% if settings.ENABLE_SHARING_IDENTICA %}{{ macros.share(site = 'identica', site_label = 'Identi.ca') }},{% endif %}
+        {%- if settings.ENABLE_SHARING_TWITTER or settings.ENABLE_SHARING_FACEBOOK or settings.ENABLE_SHARING_LINKEDIN or settings.ENABLE_SHARING_IDENTICA -%}
             {% trans %} or{% endtrans %}
         {% endif %}
         <a href="mailto:?subject={{ settings.APP_SHORT_NAME|urlencode }}&amp;body={{ question_url }}">{% trans %}email{% endtrans %}</a>.

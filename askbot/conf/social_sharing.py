@@ -40,6 +40,15 @@ settings.register(
 settings.register(
     BooleanValue(
         SOCIAL_SHARING,
+        'ENABLE_SHARING_IDENTICA',
+        default=True,
+        description=_('Check to enable sharing of questions on Identi.ca')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        SOCIAL_SHARING,
         'ENABLE_SHARING_GOOGLE',
         default=True,
         description=_('Check to enable sharing of questions on Google+')
