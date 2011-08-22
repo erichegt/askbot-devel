@@ -1170,6 +1170,12 @@ div.comment .upvote:hover {
     text-decoration: none;
 }
 
+.comments .help-text{
+    float: right;
+    text-align:right;
+    color: gray;
+}
+
 span.text-counter {
     margin-right: 20px;
 }
