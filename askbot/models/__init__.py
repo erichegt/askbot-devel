@@ -1297,14 +1297,11 @@ def user_post_answer(
             minutes = int(diff.seconds/60)
 
             if days > 2:
-                if date.year == now.year:
-                    date_token = date.strftime("%b %d")
+                if asked.year == now.year:
+                    date_token = asked.strftime("%b %d")
                 else:
-                    date_token = date.strftime("%b %d '%y")
-                if use_on_prefix:
-                    left = _('on %(date)s') % { 'date': date_token }
-                else:
-                    left = date_token
+                    date_token = asked.strftime("%b %d '%y")
+                left = _('on %(date)s') % { 'date': date_token }
             elif days == 2:
                 left = _('in two days')
             elif days == 1:
@@ -2257,7 +2254,8 @@ def send_instant_notifications_about_activity_in_post(
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         )
 
 

@@ -1,8 +1,17 @@
 Changes in Askbot
 =================
 
-0.7.19 (Current Version)
+0.7.20 (Current Version)
 ------------------------
+All changes by Adolfo Fitoria, excluding the last one.
+
+* Added support for login via self-hosted Wordpress site
+* Allowed basic markdown in the comments
+* Added this changelog
+* Added support for threaded emails (by Benoit Lavigne)
+
+0.7.19
+------
 * Changed the Favorite question function for Follow question.
 * Fixed issues with page load time.
 * Added notify me checkbox to the sidebar.
