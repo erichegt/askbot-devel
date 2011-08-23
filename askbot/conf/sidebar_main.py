@@ -41,6 +41,16 @@ settings.register(
 )
 
 settings.register(
+    values.IntegerValue(
+        SIDEBAR_MAIN,
+        'SIDEBAR_MAIN_AVATAR_LIMIT',
+        description = _('Limit how many avatars will be displayed on the sidebar'),
+        default = 16 
+    )
+)
+
+
+settings.register(
     values.BooleanValue(
         SIDEBAR_MAIN,
         'SIDEBAR_MAIN_SHOW_TAG_SELECTOR',
