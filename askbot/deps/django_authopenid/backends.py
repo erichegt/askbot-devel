@@ -30,6 +30,8 @@ class AuthBackend(object):
                 oauth_user_id = None,#used with oauth
                 facebook_user_id = None,#user with facebook
                 ldap_user_id = None,#for ldap
+                wordpress_url = None, # required for self hosted wordpress
+                wp_user_id = None, # required for self hosted wordpress
                 method = None,#requried parameter
             ):
         """this authentication function supports many login methods
@@ -149,6 +151,16 @@ class AuthBackend(object):
             except UserAssociation.DoesNotExist:
                 return None
 
+        elif method == 'wordpress_site':
+            try:
+                custom_wp_openid_url = '%s?user_id=%s' % (wordpress_url, wp_user_id)
+                assoc = UserAssociation.objects.get(
+                                            openid_url = custom_wp_openid_url,
+                                            provider_name = 'wordpress_site'
+                                            )
+                user = assoc.user
+            except UserAssociation.DoesNotExist:
+                return None
         elif method == 'force':
             return self.get_user(user_id)
         else:

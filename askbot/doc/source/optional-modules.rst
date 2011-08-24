@@ -123,3 +123,16 @@ Also, settings ``MEDIA_ROOT`` and ``MEDIA_URL`` will need to be added to your ``
     Version of the ``avatar`` application available at pypi may not
     be up to date, so please take the development version from the 
     github repository
+
+Wordpress Integration 
+=====================
+
+To enable authentication for self hosted wordpress sites(wordpress.com blogs will work with openid login). To enable it follow the following steps:
+
+* Check if you have the package `"python_wordpress_xmlrpc <http://pypi.python.org/pypi/python-wordpress-xmlrpc/1.4>`_ from pypi.
+* Go to your wordpress blog admin panel and serch for: Settings->Writing->Remote Publishing then check the box for XML-RPC.
+* Go back to your askbot site settings and click on *Login Provider Settings* and then activate the option *Activate to allow login with self-hosted wordpress site*, 
+* Input your blog url to the xmlrpc.php file it will look something like this http://yoursite.com/xmlrpc.php
+* Upload an icon for display in the login area.
+
+After doing this steps you should be able to login with your self hosted wordpress site user/password combination.

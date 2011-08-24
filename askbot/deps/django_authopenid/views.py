@@ -59,6 +59,14 @@ try:
 except ImportError:
     from yadis import xri
 
+try:
+    from xmlrpclib import Fault as WpFault
+    from wordpress_xmlrpc import Client
+    from wordpress_xmlrpc.methods.users import GetUserInfo
+except ImportError:
+    pass
+
+
 import urllib
 from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
@@ -438,6 +446,28 @@ def signin(request):
                         ) % {'provider': 'Facebook'}
                     request.user.message_set.create(message = msg)
 
+            elif login_form.cleaned_data['login_type'] == 'wordpress_site':
+                #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
+                wp = Client(askbot_settings.WORDPRESS_SITE_URL, login_form.cleaned_data['username'], login_form.cleaned_data['password'])
+                try:
+                    wp_user = wp.call(GetUserInfo())
+                    custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
+                    user = authenticate(
+                            method = 'wordpress_site',
+                            wordpress_url = wp.url,
+                            wp_user_id = wp_user.user_id 
+                           )
+                    return finalize_generic_signin(
+                                    request = request,
+                                    user = user,
+                                    user_identifier = custom_wp_openid_url,
+                                    login_provider_name = provider_name,
+                                    redirect_url = next_url
+                                    )
+                except WpFault, e:
+                    logging.critical(unicode(e))
+                    msg = _('The login password combination was not correct')
+                    request.user.message_set.create(message = msg)
             else:
                 #raise 500 error - unknown login type
                 pass

@@ -215,6 +215,8 @@ class LoginForm(forms.Form):
         elif provider_type == 'facebook':
             self.cleaned_data['login_type'] = 'facebook'
             #self.do_clean_oauth_fields()
+        elif provider_type == 'wordpress_site':
+            self.cleaned_data['login_type'] = 'wordpress_site'
 
         return self.cleaned_data
 
