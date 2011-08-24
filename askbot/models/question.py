@@ -373,7 +373,10 @@ class QuestionQuerySet(models.query.QuerySet):
         u_id = u_id.union(
                     set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
                 )
-        contributors = User.objects.filter(id__in=u_id).order_by('?')
+
+        from askbot.conf import settings as askbot_settings
+        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
+        contributors = User.objects.filter(id__in=u_id).order_by('-has_valid_gravatar', '?')[:avatar_limit]
         #print contributors
         #could not optimize this query with indices so it was split into what's now above
         #contributors = User.objects.filter(
