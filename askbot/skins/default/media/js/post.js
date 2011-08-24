@@ -1040,6 +1040,12 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea = $('<textarea></textarea>');
     this._textarea.attr('id', this._id);
 
+    this._help_text = $('<span></span>').attr('class', 'help-text');
+    this._help_text.html(gettext('Markdown is allowed in the comments')); 
+    div.append(this._help_text);
+
+    this._help_text = $('<div></div>').attr('class', 'clearfix');
+    div.append(this._help_text);
 
     this._element.append(div);
     div.append(this._textarea);
