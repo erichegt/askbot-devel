@@ -2574,13 +2574,14 @@ def make_admin_if_first_user(instance, **kwargs):
     if user_count == 0:
         instance.set_admin_status()
 
-def set_user_has_valid_gravatar_flag(instance, created, **kwargs):
-    instance.user.update_has_valid_gravatar()
+def set_user_has_valid_gravatar_flag(instance, **kwargs):
+    instance.update_has_valid_gravatar()
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
+#django_signals.post_save.connect(set_user_has_valid_gravatar_flag, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
@@ -2589,7 +2590,6 @@ django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
-django_signals.post_save.connect(set_user_has_valid_gravatar_flag, sender=User)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
