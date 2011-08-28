@@ -706,7 +706,7 @@ msgstr "Bloquear entradas"
 #: conf/reputation_changes.py:12
 msgid "Reputation loss and gain rules"
 msgstr ""
-###################################################################################################################3
+
 #: conf/reputation_changes.py:21
 msgid "Maximum daily reputation gain per user"
 msgstr ""
@@ -792,7 +792,7 @@ msgstr "Acerca de"
 
 #: conf/site_settings.py:59
 msgid "Short name for your Q&A forum"
-msgstr ""
+msgstr "Nombre corto para tu foro"
 
 #: conf/site_settings.py:69
 msgid "Base URL for your Q&A forum, must start with http or https"
@@ -1508,7 +1508,7 @@ msgstr ""
 
 #: deps/django_authopenid/views.py:513
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "Se envio el correo para recuperación de cuenta"
 
 #: deps/django_authopenid/views.py:516
 msgid "Please add one or more login methods."
