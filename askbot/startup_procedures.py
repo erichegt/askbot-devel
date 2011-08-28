@@ -22,7 +22,7 @@ PREAMBLE = """\n
 ************************"""
 
 def askbot_warning(line):
-    print PREAMBLE + line
+    print >> sys.stderr, PREAMBLE + '\n' + line
 
 def format_as_text_tuple_entries(items):
     """prints out as entries or tuple containing strings
@@ -153,12 +153,13 @@ def test_postgres():
 
 def test_encoding():
     """prints warning if encoding error is not UTF-8"""
-    if sys.stdout.encoding != 'UTF-8':
-        askbot_warning(
-            'Your output encoding is not UTF-8, there may be '
-            'issues with the software when anything is printed '
-            'to the terminal or log files'
-        )
+    if hasattr(sys.stdout, 'encoding'):
+        if sys.stdout.encoding != 'UTF-8':
+            askbot_warning(
+                'Your output encoding is not UTF-8, there may be '
+                'issues with the software when anything is printed '
+                'to the terminal or log files'
+            )
 
 def run_startup_tests():
     """function that runs
