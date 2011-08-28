@@ -163,6 +163,8 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED:
+        return True
     if askbot_settings.USE_RECAPTCHA:
         if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
             return True
