@@ -584,7 +584,8 @@ ul#search-tags {
 
 .short-summary .counts .votes div,
 .short-summary .counts .views div,
-.short-summary .counts .answers div
+.short-summary .counts .answers div,
+.short-summary .counts .favorites div
 {
     font-size: 12px;
     line-height:14px;
@@ -607,9 +608,17 @@ ul#search-tags {
     background: #b63333;
     color: yellow;
 }
+.no-favorites .item-count {
+    background: #b63333;
+    color: yellow;
+}
 .some-answers .item-count {
     background: #ffed9c;
     color: #a4a4a4;
+}
+.some-favorites .item-count {
+    background:#338333;
+    color:#d0f5a9;
 }
 .accepted .item-count {
     background:#338333;
@@ -626,6 +635,7 @@ ul#search-tags {
 
 .short-summary .votes,
 .short-summary .answers,
+.short-summary .favorites,
 .short-summary .views {
     text-align: center;
     margin: 0 3px;
@@ -1559,21 +1569,19 @@ ins .post-tag {
     width: 90%;
 }
 
+/*
 .favorites-count-off {
     color: #919191;
     float: left;
-    padding: 3px;
-    margin: 10px 0 0 0;
     text-align: center;
 }
 
 .favorites-count {
     color: #D4A849;
     float: left;
-    padding: 3px;
-    margin: 10px 0 0 0;
     text-align: center;
 }
+*/
 
 /* todo: get rid of this in html */
 .favorites-empty {

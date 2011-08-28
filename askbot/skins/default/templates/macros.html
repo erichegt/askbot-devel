@@ -415,6 +415,17 @@ poor design of the data or methods on data objects #}
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">
+            <div class="favorites
+                     {% if question.favourite_count == 0 -%}
+                          no-favorites
+                     {%else -%}
+                          some-favorites
+                     {%- endif -%}">
+                <span class="item-count">{{question.favourite_count|humanize_counter}}</span>
+                <div>
+                {% trans cnt=question.favourite_count %}follower{% pluralize %}followers{%endtrans%}</b>
+                </div>
+            </div> 
             <div class="views
                  {% if question.view_count == 0 -%}
                     no-views
@@ -454,6 +465,7 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div>
+            
             <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>

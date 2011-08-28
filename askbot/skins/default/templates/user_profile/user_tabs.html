@@ -22,9 +22,9 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=reputation"
         ><span>{% trans %}reputation history{% endtrans %}</span></a>
         <a id="favorites" {% if tab_name=="favorites" %}class="on"{% endif %} 
-            title="{% trans %}questions that user selected as his/her favorite{% endtrans %}"
+            title="{% trans %}questions that user is following{% endtrans %}"
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=favorites"
-        ><span>{% trans %}favorites{% endtrans %}</span></a>
+        ><span>{% trans %}followed questions{% endtrans %}</span></a>
         <a id="recent" {% if tab_name=="recent" %}class="on"{% endif %} 
             title="{% trans %}recent activity{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=recent"

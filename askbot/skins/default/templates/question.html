@@ -325,7 +325,7 @@
         </p>
     {% else %}
         <p style="padding-left:3px">
-            <input class="nomargin" type="checkbox" disabled="disabled" />
+            {{ answer.email_notify }} 
             <label>{% trans %}once you sign in you will be able to subscribe for any updates here{% endtrans %}</label>
         </p>
     {% endif %}
@@ -389,13 +389,13 @@
     <h2 style="font-size: 22px;margin-top: 11px; text-align: left;">{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
         <a class="button followed" 
-            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            alt="{% trans %}click to unfollow this question{% endtrans %}">
             <div>{% trans %}Following{% endtrans %}</div>
             <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
         </a>
     {% else %}
         <a class="button follow"
-            alt="{% trans %}mark this question as favorite (click again to cancel){% endtrans %}">
+            alt="{% trans %}click to follow this question{% endtrans %}">
             {%trans %}Follow{%endtrans%}
         </a>
     {% endif %}
@@ -411,7 +411,7 @@
     <input type="checkbox" id="question-subscribe-sidebar"/>
     <label for="question-subscribe-sidebar">{% trans %}email the updates{% endtrans %}</label>
     {%else%}
-    <input type="checkbox" disabled="disabled"/>
+    <input type="checkbox" id="question-subscribe-sidebar"/>
     <label for="question-subscribe-sidebar">{% trans %}<strong>Here</strong> (once you log in) you will be able to sign up for the periodic email updates about this question.{% endtrans %}</label>
     {%endif%}
     </div> 
