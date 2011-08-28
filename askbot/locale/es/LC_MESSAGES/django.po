@@ -119,11 +119,11 @@ msgstr ""
 
 #: forms.py:175 const/__init__.py:219
 msgid "approved"
-msgstr ""
+msgstr "aprobado"
 
 #: forms.py:176 const/__init__.py:220
 msgid "watched"
-msgstr ""
+msgstr "visto"
 
 #: forms.py:177 const/__init__.py:221
 #, fuzzy
@@ -132,7 +132,7 @@ msgstr "actualizado"
 
 #: forms.py:178 const/__init__.py:222
 msgid "blocked"
-msgstr ""
+msgstr "bloqueado"
 
 #: forms.py:180 const/__init__.py:218
 #, fuzzy
@@ -155,11 +155,11 @@ msgstr "no se puede votar por sus propias publicaciones"
 
 #: forms.py:254
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "No tiene permitido habilitar a otros usuarios como moderadores"
 
 #: forms.py:261
 msgid "Cannot change status of another moderator"
-msgstr "No esta permitido cambiar el estado de otro moderador"
+msgstr "No tiene permitido cambiar el estado de otro moderador"
 
 #: forms.py:267
 #, python-format
@@ -168,7 +168,7 @@ msgstr ""
 
 #: forms.py:276
 msgid "Subject line"
-msgstr ""
+msgstr "Sujeto"
 
 #: forms.py:283
 msgid "Message text"
@@ -401,12 +401,12 @@ msgstr ""
 
 #: conf/email.py:47
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "Es requerida una verificación via email antes de poder publicar"
 
 #: conf/email.py:48
 msgid ""
 "Active email verification is done by sending a verification key in email"
-msgstr ""
+msgstr "Se ha comenzado el proceso de verificación con una llave enviada a su correo electrónico"
 
 #: conf/email.py:57
 #, fuzzy
@@ -423,7 +423,7 @@ msgstr ""
 
 #: conf/email.py:76
 msgid "Prefix for the email subject line"
-msgstr ""
+msgstr "Prefijo para el campo de correo electrónico"
 
 #: conf/external_keys.py:11
 msgid "Keys to connect the site with external services like Facebook, etc."
@@ -431,7 +431,7 @@ msgstr ""
 
 #: conf/external_keys.py:18
 msgid "Google site verification key"
-msgstr ""
+msgstr "Llave de verificación de Google site"
 
 #: conf/external_keys.py:20
 #, python-format
@@ -442,7 +442,7 @@ msgstr ""
 
 #: conf/external_keys.py:34
 msgid "Google Analytics key"
-msgstr ""
+msgstr "LLave de Googne Analytics"
 
 #: conf/external_keys.py:36
 #, python-format
@@ -453,8 +453,7 @@ msgstr ""
 
 #: conf/external_keys.py:49
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
-
+msgstr "Habilitar recaptcha (las llaves de abajo son requeridas)"
 #: conf/external_keys.py:58
 msgid "Recaptcha public key"
 msgstr "Llave pública de Recaptcha"
@@ -483,7 +482,7 @@ msgstr ""
 
 #: conf/external_keys.py:95
 msgid "Facebook secret key"
-msgstr ""
+msgstr "Llave privada de Facebook"
 
 #: conf/external_keys.py:103
 msgid "Twitter consumer key"
@@ -530,7 +529,7 @@ msgstr ""
 
 #: conf/flatpages.py:17
 msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
+msgstr "Texto para la página de descripción del foro (formato html)"
 
 #: conf/flatpages.py:20
 msgid ""
@@ -540,7 +539,7 @@ msgstr ""
 
 #: conf/flatpages.py:30
 msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr ""
+msgstr "Texto para la página de politicas de privacidad del foro (formato html)"
 
 #: conf/flatpages.py:33
 msgid ""
@@ -571,7 +570,7 @@ msgstr "Tamaño máximo de un comentario, debe ser menor a %(max_len)s"
 
 #: conf/forum_data_rules.py:60
 msgid "Minimum length of search term for Ajax search"
-msgstr ""
+msgstr "Tamaño minimo para terminos de búsqueda Ajax "
 
 #: conf/forum_data_rules.py:61
 msgid "Must match the corresponding database backend setting"
@@ -630,7 +629,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:11
 msgid "Minimum reputation required to perform actions"
-msgstr ""
+msgstr "Para realizar acciones es requerido una reputación mínima"
 
 #: conf/minimum_reputation.py:20
 #, fuzzy
@@ -702,12 +701,12 @@ msgstr "ver preguntas etiquetadas"
 
 #: conf/minimum_reputation.py:146
 msgid "Lock posts"
-msgstr ""
+msgstr "Bloquear entradas"
 
 #: conf/reputation_changes.py:12
 msgid "Reputation loss and gain rules"
 msgstr ""
-
+###################################################################################################################3
 #: conf/reputation_changes.py:21
 msgid "Maximum daily reputation gain per user"
 msgstr ""
