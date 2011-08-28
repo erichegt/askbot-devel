@@ -1,16 +1,18 @@
 Changes in Askbot
 =================
 
+Development version (not yet on pypi)
+-------------------------------------
+* First user automatically becomes site administrator (Adolfo Fitoria)
+
 0.7.20 (Current Version)
 ------------------------
-Changes by Adolfo Fitoria, Benoit Lavigne, Ratnadeep Debnath and Byron Corrales.
-
-* Added support for login via self-hosted Wordpress site
-* Allowed basic markdown in the comments
-* Added this changelog
-* Added support for threaded emails
-* A few more Spanish translation strings
-* Social sharing support on identi.ca
+* Added support for login via self-hosted Wordpress site (Adolfo Fitoria)
+* Allowed basic markdown in the comments (Adolfo)
+* Added this changelog (Adolfo)
+* Added support for threaded emails (Benoit Lavigne)
+* A few more Spanish translation strings (Byron Corrales)
+* Social sharing support on identi.ca (Rantadeep Debnath)
 
 0.7.19
 ------
