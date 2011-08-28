@@ -2553,7 +2553,13 @@ def set_user_has_custom_avatar_flag(instance, created, **kwargs):
 def update_user_has_custom_avatar_flag(instance, **kwargs):
     instance.user.update_has_custom_avatar()
 
+def make_admin_if_first_user(instance, **kwargs):
+    user_count = User.objects.all().count()
+    if user_count == 0:
+        instance.set_admin_status()
+
 #signal for User model save changes
+django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
