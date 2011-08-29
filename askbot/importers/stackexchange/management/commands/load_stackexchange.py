@@ -3,6 +3,7 @@ DEBUGME = False
 import os
 import re
 import sys
+from unidecode import unidecode
 import zipfile
 from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
@@ -735,7 +736,7 @@ class Command(BaseCommand):
     def _report_missing_badges(self):
         d = self._missing_badges
         unused = [name for name in d.keys() if d[name] == 0]
-        dropped = [name for name in d.keys() if d[name] > 0]
+        dropped = [unidecode(name) for name in d.keys() if d[name] > 0]
         print 'Warning - following unsupported badges were dropped:'
         print ', '.join(dropped)
         sys.stdout.flush()

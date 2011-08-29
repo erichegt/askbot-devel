@@ -21,7 +21,7 @@ import os
 
 __all__ = ['BASE_GROUP', 'ConfigurationGroup', 'Value', 'BooleanValue', 'DecimalValue', 'DurationValue',
       'FloatValue', 'IntegerValue', 'ModuleValue', 'PercentValue', 'PositiveIntegerValue', 'SortedDotDict',
-      'StringValue', 'ImageValue', 'LongStringValue', 'MultipleStringValue']
+      'StringValue', 'ImageValue', 'LongStringValue', 'MultipleStringValue', 'URLValue']
 
 _WARN = {}
 
@@ -544,6 +544,14 @@ class StringValue(Value):
         return unicode(value)
 
     to_editor = to_python
+
+class URLValue(Value):
+
+    class field(forms.URLField):
+
+        def __init__(self, *args, **kwargs):
+            kwargs['required'] = False
+            forms.URLField.__init__(self, *args, **kwargs)
 
 class LongStringValue(Value):
 

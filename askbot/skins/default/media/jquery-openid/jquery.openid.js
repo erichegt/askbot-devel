@@ -410,6 +410,10 @@ $.fn.authenticator = function() {
             signin_page.find('input.password'),
             start_password_login_or_change
         );
+        setup_event_handlers( 
+            signin_page.find('input.wordpress_site'),
+            start_password_login_or_change
+        );
 
         setup_event_handlers(account_recovery_link, start_account_recovery);
 

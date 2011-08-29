@@ -38,9 +38,13 @@ Connect to the Django development server with your Web browser. The address is t
 Once the fresh copy of Askbot appears in your browser, create a new account at the site.
 This will be your administrator account.
 
-Finally, turn the newly added user into a superuser by running::
+.. deprecated:: 0.7.20.
+   Finally, turn the newly added user into a superuser by running::
 
-    python manage.py add_admin 1
+       python manage.py add_admin 1
+
+.. versionadded:: 0.7.20.
+   In the new version of Askbot the first user you create on the site will be added as administrator.
 
 Here number 1 is the numeric id of the first user, enter a different number, if it is indeed different.
 

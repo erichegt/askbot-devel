@@ -64,7 +64,7 @@
                 logged_in = user.is_authenticated()
             )
         }}
-        {% if use_password_login==True %}
+          {% if use_password_login == True %}
         <fieldset 
             id="password-fs"
             {% if user.is_anonymous() %}
