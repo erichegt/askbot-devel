@@ -4,6 +4,7 @@ Changes in Askbot
 Development version (not yet on pypi)
 -------------------------------------
 * First user automatically becomes site administrator (Adolfo Fitoria)
+* Django's createsuperuser now works with askbot (Adolfo Fitoria)
 
 0.7.20 (Current Version)
 ------------------------
