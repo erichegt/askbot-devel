@@ -8,7 +8,11 @@ When you install Askbot the first time and any time you upgrade the software, ru
 
     python manage.py syncdb
 
-When the script asks you if you want to create a superuser, answer **no**.
+.. versionchanged:: 0.7.21
+    When the script asks you if you want to create a superuser, answer yes if you want to create one. By default Askbot sets admin status(superuser) for the first user created automatically but also supports this form.
+
+.. deprecated:: 0.7.21
+    When the script asks you if you want to create a superuser, answer **no**.
 
 Then run::
 
@@ -38,12 +42,12 @@ Connect to the Django development server with your Web browser. The address is t
 Once the fresh copy of Askbot appears in your browser, create a new account at the site.
 This will be your administrator account.
 
-.. deprecated:: 0.7.20.
+.. deprecated:: 0.7.20
    Finally, turn the newly added user into a superuser by running::
 
        python manage.py add_admin 1
 
-.. versionadded:: 0.7.20.
+.. versionadded:: 0.7.20
    In the new version of Askbot the first user you create on the site will be added as administrator.
 
 Here number 1 is the numeric id of the first user, enter a different number, if it is indeed different.
