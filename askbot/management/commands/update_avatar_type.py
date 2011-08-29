@@ -19,4 +19,5 @@ class Command(NoArgsCommand):
 
         print 'Updated all the users'
         has_avatar = User.objects.exclude(avatar_type='n').count()
+        transaction.commit()
         print '%s users in total, %s have valid avatar' % (total_users, has_avatar)
