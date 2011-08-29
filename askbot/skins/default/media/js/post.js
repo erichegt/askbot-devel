@@ -1531,7 +1531,7 @@ var socialSharing = function(){
     var SERVICE_DATA = {
         //url - template for the sharing service url, params are for the popup
         identica: {
-            url: "http://identi.ca/notice/new?status_textarea={TEXT}? {URL}",
+            url: "http://identi.ca/notice/new?status_textarea={TEXT}%20{URL}",
             params: "width=820, height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
         },
         twitter: {
