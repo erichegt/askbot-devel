@@ -159,7 +159,7 @@ msgstr ""
 
 #: forms.py:261
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "No esta permitido cambiar el estado de otro moderador"
 
 #: forms.py:267
 #, python-format
@@ -172,7 +172,7 @@ msgstr ""
 
 #: forms.py:283
 msgid "Message text"
-msgstr ""
+msgstr "Mensaje de Texto"
 
 #: forms.py:360
 msgid "Your name:"
@@ -457,11 +457,11 @@ msgstr ""
 
 #: conf/external_keys.py:58
 msgid "Recaptcha public key"
-msgstr ""
+msgstr "Llave pública de Recaptcha"
 
 #: conf/external_keys.py:66
 msgid "Recaptcha private key"
-msgstr ""
+msgstr "Llave privada de Recaptcha"
 
 #: conf/external_keys.py:68
 msgid ""
@@ -472,7 +472,7 @@ msgstr ""
 
 #: conf/external_keys.py:80
 msgid "Facebook public API key"
-msgstr ""
+msgstr "Llave pública para API de Facebook"
 
 #: conf/external_keys.py:82
 msgid ""
@@ -558,16 +558,16 @@ msgstr ""
 
 #: conf/forum_data_rules.py:29
 msgid "Maximum length of tag (number of characters)"
-msgstr ""
+msgstr "Tamaño máximo de una etiqueta (número de caracteres)"
 
 #: conf/forum_data_rules.py:39
 msgid "Default max number of comments to display under posts"
-msgstr ""
+msgstr "Cantidad máxima por defecto, de comentarios a mostrarse para cada entrada"
 
 #: conf/forum_data_rules.py:50
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
-msgstr ""
+msgstr "Tamaño máximo de un comentario, debe ser menor a %(max_len)s"
 
 #: conf/forum_data_rules.py:60
 msgid "Minimum length of search term for Ajax search"
@@ -579,11 +579,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:70
 msgid "Maximum number of tags per question"
-msgstr ""
+msgstr "Número máximo de etiquetas por cada pregunta"
 
 #: conf/forum_data_rules.py:82
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr "Número máximo de preguntas a listar por defecto"
 
 #: conf/forum_data_rules.py:92
 #, fuzzy
@@ -654,7 +654,7 @@ msgstr "comentar"
 
 #: conf/minimum_reputation.py:56
 msgid "Delete comments posted by others"
-msgstr ""
+msgstr "Borrar comentarios creados por otros usuarios"
 
 #: conf/minimum_reputation.py:65
 #, fuzzy
@@ -674,7 +674,7 @@ msgstr "Cerrar pregunta"
 
 #: conf/minimum_reputation.py:92
 msgid "Retag questions posted by other people"
-msgstr ""
+msgstr "Re-etiquetar las preguntas creadas por otros usuarios"
 
 #: conf/minimum_reputation.py:101
 #, fuzzy

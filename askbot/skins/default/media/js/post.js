@@ -1040,6 +1040,12 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea = $('<textarea></textarea>');
     this._textarea.attr('id', this._id);
 
+    this._help_text = $('<span></span>').attr('class', 'help-text');
+    this._help_text.html(gettext('Markdown is allowed in the comments')); 
+    div.append(this._help_text);
+
+    this._help_text = $('<div></div>').attr('class', 'clearfix');
+    div.append(this._help_text);
 
     this._element.append(div);
     div.append(this._textarea);
@@ -1524,6 +1530,10 @@ var socialSharing = function(){
 
     var SERVICE_DATA = {
         //url - template for the sharing service url, params are for the popup
+        identica: {
+            url: "http://identi.ca/index.php?action=newnotice&status_textarea={TEXT}",
+            params: "width=820, height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
         twitter: {
             url: "http://twitter.com/share?url={URL}&ref=twitbtn&text={TEXT}",
             params: "width=820,height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
@@ -1559,11 +1569,13 @@ var socialSharing = function(){
             var fb = $('a.facebook-share')
             var tw = $('a.twitter-share');
             var ln = $('a.linkedin-share');
+            var ica = $('a.identica-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
             setupButtonEventHandlers(ln, function(){share_page("linkedin")});
+            setupButtonEventHandlers(ica, function(){share_page("identica")});
         }
     }
 }(); 

@@ -1297,14 +1297,11 @@ def user_post_answer(
             minutes = int(diff.seconds/60)
 
             if days > 2:
-                if date.year == now.year:
-                    date_token = date.strftime("%b %d")
+                if asked.year == now.year:
+                    date_token = asked.strftime("%b %d")
                 else:
-                    date_token = date.strftime("%b %d '%y")
-                if use_on_prefix:
-                    left = _('on %(date)s') % { 'date': date_token }
-                else:
-                    left = date_token
+                    date_token = asked.strftime("%b %d '%y")
+                left = _('on %(date)s') % { 'date': date_token }
             elif days == 2:
                 left = _('in two days')
             elif days == 1:
@@ -2257,7 +2254,8 @@ def send_instant_notifications_about_activity_in_post(
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         )
 
 
@@ -2555,7 +2553,13 @@ def set_user_has_custom_avatar_flag(instance, created, **kwargs):
 def update_user_has_custom_avatar_flag(instance, **kwargs):
     instance.user.update_has_custom_avatar()
 
+def make_admin_if_first_user(instance, **kwargs):
+    user_count = User.objects.all().count()
+    if user_count == 0:
+        instance.set_admin_status()
+
 #signal for User model save changes
+django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)

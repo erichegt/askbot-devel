@@ -31,6 +31,42 @@ def extract_first_email_address(text):
     else:
         return None
 
+def thread_headers(post, orig_post, update):
+    suffix_id = django_settings.SERVER_EMAIL
+    if update == const.TYPE_ACTIVITY_ASK_QUESTION:
+       id = "NQ-%s-%s" % (post.id, suffix_id)
+       headers = {'Message-ID': id}
+    elif update == const.TYPE_ACTIVITY_ANSWER:
+       id = "NA-%s-%s" % (post.id, suffix_id)
+       orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+       headers = {'Message-ID': id,
+                  'In-Reply-To': orig_id}
+    elif update == const.TYPE_ACTIVITY_UPDATE_QUESTION:
+       id = "UQ-%s-%s-%s" % (post.id, post.last_edited_at, suffix_id)
+       orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+       headers = {'Message-ID': id,
+                  'In-Reply-To': orig_id}
+    elif update == const.TYPE_ACTIVITY_COMMENT_QUESTION:
+       id = "CQ-%s-%s" % (post.id, suffix_id)
+       orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+       headers = {'Message-ID': id,
+                  'In-Reply-To': orig_id}
+    elif update == const.TYPE_ACTIVITY_UPDATE_ANSWER:
+       id = "UA-%s-%s-%s" % (post.id, post.last_edited_at, suffix_id)
+       orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+       headers = {'Message-ID': id,
+                  'In-Reply-To': orig_id}
+    elif update == const.TYPE_ACTIVITY_COMMENT_ANSWER:
+       id = "CA-%s-%s" % (post.id, suffix_id)
+       orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+       headers = {'Message-ID': id,
+                  'In-Reply-To': orig_id}
+    else:
+       # Unknown type -> Can't set headers
+       return {}
+
+    return headers
+
 def send_mail(
             subject_line = None,
             body_text = None,

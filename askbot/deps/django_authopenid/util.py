@@ -34,7 +34,7 @@ from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -163,6 +163,8 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED:
+        return True
     if askbot_settings.USE_RECAPTCHA:
         if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
             return True
@@ -436,7 +438,14 @@ def get_enabled_major_login_providers():
             if matches:
                 return matches.group(1)
         raise OAuthError()
-        
+
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED and askbot_settings.WORDPRESS_SITE_URL:
+        data['wordpress_site'] = {
+            'name': 'wordpress_site',
+            'display_name': 'Self hosted wordpress blog', #need to be added as setting.
+            'icon_media_path': askbot_settings.WORDPRESS_SITE_ICON,
+            'type': 'wordpress_site',
+        }
     if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
         data['linkedin'] = {
             'name': 'linkedin',

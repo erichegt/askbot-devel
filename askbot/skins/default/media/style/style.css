@@ -1180,6 +1180,12 @@ div.comment .upvote:hover {
     text-decoration: none;
 }
 
+.comments .help-text{
+    float: right;
+    text-align:right;
+    color: gray;
+}
+
 span.text-counter {
     margin-right: 20px;
 }
@@ -2331,7 +2337,7 @@ img.flag {
     vertical-align: text-bottom;
 }
 
-.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon {
+.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon, .identica-share.icon {
     background: url(../images/sprite.png) no-repeat;
     display:block;
     text-indent:-100em;
@@ -2340,6 +2346,9 @@ img.flag {
 }
 .facebook-share.icon {
     background-position: -25px 0px;
+}
+.identica-share.icon {
+    background-position: -85px 0px;
 }
 .twitter-share.icon {
     margin-top:10px;
