@@ -72,6 +72,10 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | , including the questions that are themselves               |
 |                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
+| .. versionadded:: 0.7.21        | For every user checks for changes in avatar types, basically|
+|    `update_avatar_type`         | checks if the user have a valid gravatar not a default      |
+|                                 | image.                                                      |
++---------------------------------+-------------------------------------------------------------+
 
 .. _email-related-commands:
 

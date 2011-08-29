@@ -58,7 +58,13 @@ User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
-User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
+#User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
+User.add_to_class(
+    'avatar_type', 
+    models.CharField(max_length=1, 
+        choices=const.AVATAR_STATUS_CHOICE,
+        default='n')
+)
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -120,28 +126,31 @@ def user_get_avatar_url(self, size):
     it will use avatar provided through that app
     """
     if 'avatar' in django_settings.INSTALLED_APPS:
-        if self.has_custom_avatar == False:
+        if self.avatar_type == 'n':
             import avatar
             if avatar.settings.AVATAR_GRAVATAR_BACKUP:
                 return self.get_gravatar_url(size)
             else:
                 return avatar.utils.get_default_avatar_url()
-        kwargs = {'user_id': self.id, 'size': size}
-        try:
-            return reverse('avatar_render_primary', kwargs = kwargs)
-        except NoReverseMatch:
-            message = 'Please, make sure that avatar urls are in the urls.py '\
-                      'or update your django-avatar app, '\
-                      'currently it is impossible to serve avatars.'
-            logging.critical(message)
-            raise django_exceptions.ImproperlyConfigured(message)
+        elif self.avatar_type == 'a':
+            kwargs = {'user_id': self.id, 'size': size}
+            try:
+                return reverse('avatar_render_primary', kwargs = kwargs)
+            except NoReverseMatch:
+                message = 'Please, make sure that avatar urls are in the urls.py '\
+                          'or update your django-avatar app, '\
+                          'currently it is impossible to serve avatars.'
+                logging.critical(message)
+                raise django_exceptions.ImproperlyConfigured(message)
+        else:
+            return self.get_gravatar_url(size)
     else:
         return self.get_gravatar_url(size)
 
 
-def user_update_has_custom_avatar(self):
+def user_update_avatar_type(self):
     """counts number of custom avatars
-    and if zero, sets has_custom_avatar to False,
+    and if zero, sets avatar_type to False,
     True otherwise. The method is called only if
     avatar application is installed.
     Saves the object.
@@ -149,20 +158,20 @@ def user_update_has_custom_avatar(self):
 
     if 'avatar' in django_settings.INSTALLED_APPS:
         if self.avatar_set.count() > 0:
-            self.has_custom_avatar = True
+            self.avatar_type = 'a' 
         else:
-            self.has_custom_avatar = _check_gravatar(self.gravatar)
+            self.avatar_type = _check_gravatar(self.gravatar)
     else:
-            self.has_custom_avatar = _check_gravatar(self.gravatar)
+            self.avatar_type = _check_gravatar(self.gravatar)
     self.save()
 
 def _check_gravatar(gravatar):
     gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
     code = urllib.urlopen(gravatar_url).getcode()
     if urllib.urlopen(gravatar_url).getcode() != 404:
-        return True
+        return 'g' #gravatar
     else:
-        return False
+        return 'n' #none
 
 def user_get_old_vote_for_post(self, post):
     """returns previous vote for this post
@@ -2018,7 +2027,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
-User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
+User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -2558,11 +2567,11 @@ def post_anonymous_askbot_content(
     they are not used in this function"""
     user.post_anonymous_askbot_content(session_key)
 
-def set_user_has_custom_avatar_flag(instance, created, **kwargs):
-    instance.user.update_has_custom_avatar()
+def set_user_avatar_type_flag(instance, created, **kwargs):
+    instance.user.update_avatar_type()
 
-def update_user_has_custom_avatar_flag(instance, **kwargs):
-    instance.user.update_has_custom_avatar()
+def update_user_avatar_type_flag(instance, **kwargs):
+    instance.user.update_avatar_type()
 
 
 def make_admin_if_first_user(instance, **kwargs):
@@ -2586,11 +2595,11 @@ django_signals.post_save.connect(
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
     django_signals.post_save.connect(
-                        set_user_has_custom_avatar_flag,
+                        set_user_avatar_type_flag,
                         sender=Avatar
                     )
     django_signals.post_delete.connect(
-                        update_user_has_custom_avatar_flag,
+                        update_user_avatar_type_flag,
                         sender=Avatar
                     )
 
@@ -2657,5 +2666,3 @@ __all__ = [
 
         'get_model'
 ]
-
-

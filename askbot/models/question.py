@@ -376,7 +376,7 @@ class QuestionQuerySet(models.query.QuerySet):
 
         from askbot.conf import settings as askbot_settings
         avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
-        contributors = User.objects.filter(id__in=u_id).order_by('-has_custom_avatar', '?')[:avatar_limit]
+        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
         #print contributors
         #could not optimize this query with indices so it was split into what's now above
         #contributors = User.objects.filter(

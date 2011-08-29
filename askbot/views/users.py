@@ -1009,8 +1009,8 @@ def user(request, id, slug=None, tab_name=None):
     }
     return user_view_func(request, profile_owner, context)
 
-@login_required
 def update_has_custom_avatar(request):
-    if request.is_ajax() and request.user.has_custom_avatar == False:
-        request.user.update_has_custom_avatar()
-        return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
+    if request.is_ajax() and request.user.is_authenticated():
+        if request.user.avatar_type in ('n', 'g'):
+            request.user.update_avatar_type()
+            return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
