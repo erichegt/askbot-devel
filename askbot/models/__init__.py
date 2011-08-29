@@ -58,6 +58,7 @@ User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
+User.add_to_class('has_valid_gravatar', models.BooleanField(default=False))
 User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
@@ -146,10 +147,22 @@ def user_update_has_custom_avatar(self):
     avatar application is installed.
     Saves the object.
     """
+
     if self.avatar_set.count() > 0:
         self.has_custom_avatar = True
     else:
         self.has_custom_avatar = False
+    self.save()
+
+def user_update_has_valid_gravatar(self):
+    '''updates the field has_valid_gravatar'''
+
+    gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % self.gravatar
+    code = urllib.urlopen(gravatar_url).getcode()
+    if urllib.urlopen(gravatar_url).getcode() != 404:
+        self.has_valid_gravatar = True
+    else:
+        self.has_valid_gravatar = False
     self.save()
 
 
@@ -2008,6 +2021,7 @@ User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
+User.add_to_class('update_has_valid_gravatar', user_update_has_valid_gravatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -2558,10 +2572,14 @@ def make_admin_if_first_user(instance, **kwargs):
     if user_count == 0:
         instance.set_admin_status()
 
+def set_user_has_valid_gravatar_flag(instance, **kwargs):
+    instance.update_has_valid_gravatar()
+
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
+#django_signals.post_save.connect(set_user_has_valid_gravatar_flag, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
@@ -2570,6 +2588,7 @@ django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
+
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
     django_signals.post_save.connect(
