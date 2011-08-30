@@ -1100,6 +1100,10 @@ div.comment .comment-body {
     color: #666;
 }
 
+div.comment .comment-body p{
+    font-size:inherit;
+}
+
 div.comment .comment-delete {
     float: right;
     width: 14px;
