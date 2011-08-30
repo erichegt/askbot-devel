@@ -1102,6 +1102,8 @@ div.comment .comment-body {
 
 div.comment .comment-body p{
     font-size:inherit;
+    margin-bottom: 3px;
+    padding: 0;
 }
 
 div.comment .comment-delete {
@@ -1151,13 +1153,15 @@ div.comment .upvote:hover {
 
 .comments textarea {
     display: block;
-    height: 48px;
-    width: 560px;
-    margin: 3px 0px;
+    height: 42px;
+    width: 572px;
+    margin: 6px 0 5px 1px;
     font-family: sans-serif;
+    outline: none;
+    overflow:auto;
     font-size: 12px;
-    line-height: 130%;
-    padding: 4px;
+    line-height: 140%;
+    padding-left:2px;
 }
 
 .comments input {
@@ -1188,6 +1192,9 @@ div.comment .upvote:hover {
     float: right;
     text-align:right;
     color: gray;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    line-height: 50%;
 }
 
 span.text-counter {
