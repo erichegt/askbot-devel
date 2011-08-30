@@ -275,6 +275,11 @@ BADGE_DISPLAY_SYMBOL = '&#9679;'
 
 MIN_REPUTATION = 1
 
+AVATAR_STATUS_CHOICE = (
+    ('n', _('None')),
+    ('g', _('Gravatar')),
+    ('a', _('Uploaded Avatar')),
+)
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

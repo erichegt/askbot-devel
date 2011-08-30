@@ -20,6 +20,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 from django.views.decorators import csrf
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
@@ -1007,3 +1008,9 @@ def user(request, id, slug=None, tab_name=None):
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
     return user_view_func(request, profile_owner, context)
+
+def update_has_custom_avatar(request):
+    if request.is_ajax() and request.user.is_authenticated():
+        if request.user.avatar_type in ('n', 'g'):
+            request.user.update_avatar_type()
+            return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
