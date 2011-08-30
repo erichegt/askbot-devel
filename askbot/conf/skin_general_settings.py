@@ -266,9 +266,9 @@ settings.register(
         default = 1,
         description = _('Skin media revision number'),
         help_text = _(
-                    'Will be set automatically'
-                    'but you can modify it if you desire.'
-                    )
+            'Will be set automatically '
+            'but you can modify it if necessary.'
+       )
     )
 )
 
@@ -276,7 +276,9 @@ settings.register(
     values.StringValue(
         GENERAL_SKIN_SETTINGS,
         'MEDIA_RESOURCE_REVISION_HASH',
-        description = _('Hash to update the media revision number automatically.'),
+        description = _(
+            'Hash to update the media revision number automatically.'
+        ),
         default='',
         help_text = _(
             'Will be set automatically, it is not necesary to modify manually.'
