@@ -6,6 +6,7 @@ Development version (not yet on pypi)
 * First user automatically becomes site administrator (Adolfo Fitoria)
 * Avatar displayed on the sidebar can be controlled with livesettings.(Adolfo Fitoria, Evgeny Fadeev)
 * Avatar box in the sidebar is ordered with priority for real faces.(Adolfo Fitoria)
+* Django's createsuperuser now works with askbot (Adolfo Fitoria)
 
 0.7.20 (Current Version)
 ------------------------
