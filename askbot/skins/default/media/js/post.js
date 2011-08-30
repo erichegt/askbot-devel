@@ -1040,12 +1040,14 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea = $('<textarea></textarea>');
     this._textarea.attr('id', this._id);
 
+    /*
     this._help_text = $('<span></span>').attr('class', 'help-text');
     this._help_text.html(gettext('Markdown is allowed in the comments')); 
     div.append(this._help_text);
 
     this._help_text = $('<div></div>').attr('class', 'clearfix');
     div.append(this._help_text);
+    */
 
     this._element.append(div);
     div.append(this._textarea);
@@ -1270,7 +1272,7 @@ Comment.prototype.setContent = function(data){
     
     this._comment_body = $('<div class="comment-body"></div>');
     this._comment_body.html(this._data['html']);
-    this._comment_body.append(' &ndash; ');
+    //this._comment_body.append(' &ndash; ');
 
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
