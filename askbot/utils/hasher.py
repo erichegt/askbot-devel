@@ -1,9 +1,10 @@
 import hashlib, os
+import logging
 from askbot.conf import settings as askbot_settings
-use_skin = askbot_settings.ASKBOT_DEFAULT_SKIN
-resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
+from askbot.skins.utils import get_path_to_skin, get_skin_choices
 
-def GetHashofDirs(directory, verbose=0):
+
+def get_hash_of_dirs(directory):
   SHAhash = hashlib.sha1()
   if not os.path.exists (directory):
     return -1
@@ -34,7 +35,19 @@ def GetHashofDirs(directory, verbose=0):
 
   return SHAhash.hexdigest()
 
-if __name__ == '__main__':
-    #directory = raw_input('directory:')
-    #print GetHashofDirs(directory, 0)
-    print GetHashofDirs('skins/default/media', 0)
+def update_revision(skin = None):
+    resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
+    if skin:
+        if skin in get_skin_choices():
+            skin_path = get_path_to_skin(skin)
+        else:
+            raise MediaNotFound('Skin not found') 
+    else:
+        skin_path = get_path_to_skin(askbot_settings.ASKBOT_DEFAULT_SKIN)
+
+    current_hash = get_hash_of_dirs(skin_path)
+
+    if current_hash != askbot_settings.MEDIA_RESOURCE_REVISION_HASH:
+        askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
+        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash) 
+        logging.debug('MEDIA_RESOURCE_REVISION changed')
