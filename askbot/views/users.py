@@ -17,7 +17,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
@@ -1014,3 +1014,7 @@ def update_has_custom_avatar(request):
         if request.user.avatar_type in ('n', 'g'):
             request.user.update_avatar_type()
             return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
+        else:
+            return HttpResponseForbidden()
+    else:
+        return HttpResponseForbidden()
