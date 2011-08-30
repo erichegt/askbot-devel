@@ -280,6 +280,13 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
+    #Avatar check  stuff
+    days_diff = (datetime.datetime.today() - request.user.last_login).days 
+    if  days_diff > 10 and request.user.consecutive_days_visit_count <= 1:
+        update_avatar_type = True
+    else:
+        update_avatar_type = False
+
     template_data = {
         'active_tab': 'questions',
         'author_name' : meta_data.get('author_name',None),
@@ -304,6 +311,7 @@ def questions(request):
         'tag_list_type' : tag_list_type,
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+        'update_avatar_type': update_avatar_type,
     }
 
     assert(request.is_ajax() == False)
