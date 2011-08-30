@@ -13,6 +13,7 @@ from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
 from askbot.utils.loading import load_module
+from askbot.utils import hasher
 
 PREAMBLE = """\n
 ************************
@@ -181,5 +182,6 @@ def run():
     try:
         badges.init_badges()
         transaction.commit()
+        hasher.update_revision()
     except:
         transaction.rollback()

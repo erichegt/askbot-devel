@@ -56,7 +56,7 @@ Possible approaches to customize skins
 There are several methods at your disposal,
 would you like to customize askbot's appearance.
 
-.. note::
+.. deprecated:: 0.7.21
     Whenever you change any media files on disk, it will be necessary
     to increment "skin media revision number" in the 
     skin settings and restart the app,
