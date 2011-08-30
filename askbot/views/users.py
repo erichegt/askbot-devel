@@ -1010,11 +1010,11 @@ def user(request, id, slug=None, tab_name=None):
     return user_view_func(request, profile_owner, context)
 
 def update_has_custom_avatar(request):
+    """updates current avatar type data for the user
+    """
     if request.is_ajax() and request.user.is_authenticated():
         if request.user.avatar_type in ('n', 'g'):
             request.user.update_avatar_type()
+            request.session['avatar_data_updated_at'] = datetime.datetime.now()
             return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
-        else:
-            return HttpResponseForbidden()
-    else:
-        return HttpResponseForbidden()
+    return HttpResponseForbidden()

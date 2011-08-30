@@ -145,6 +145,10 @@ The commands from this section will help fix those issues.
 |                                | saved, but tags were not updated, and the symptom is that   |
 |                                | the question cannot be found via the tag search.            |
 +--------------------------------+-------------------------------------------------------------+
+| `update_avatar_data`           | set denormalized values of avatar types for all users;      |
+|                                | this command may take up to 2s per user, because it makes   |
+|                                | up to one http request per user to gravatar.com.            |
++--------------------------------+-------------------------------------------------------------+
 
 The above commands are safe to run at any time, also they do not require 
 additional parameters. In the future all these will be replaced with just one simple command.

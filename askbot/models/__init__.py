@@ -147,7 +147,6 @@ def user_get_avatar_url(self, size):
     else:
         return self.get_gravatar_url(size)
 
-
 def user_update_avatar_type(self):
     """counts number of custom avatars
     and if zero, sets avatar_type to False,
@@ -2014,7 +2013,10 @@ User.add_to_class(
     'add_missing_askbot_subscriptions',
     user_add_missing_askbot_subscriptions
 )
-User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
+User.add_to_class(
+    'is_username_taken',
+    classmethod(user_is_username_taken)
+)
 User.add_to_class(
     'get_followed_question_alert_frequency',
     user_get_followed_question_alert_frequency
