@@ -10,8 +10,11 @@ from django.utils.translation import ugettext as _
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
+from askbot.skins.utils import update_media_revision
 
 admin.autodiscover()
+update_media_revision()#needs to be run once, so put it here
+
 feeds = {
     'rss': RssLastestQuestionsFeed
 }

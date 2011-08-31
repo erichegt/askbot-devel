@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version (not yet on pypi)
 -------------------------------------
+* Media resource revision is now incremented 
+  automatically any time when media is updated (Adolfo Fitoria, Evgeny Fadeev)
 * First user automatically becomes site administrator (Adolfo Fitoria)
 * Avatar displayed on the sidebar can be controlled with livesettings.(Adolfo Fitoria, Evgeny Fadeev)
 * Avatar box in the sidebar is ordered with priority for real faces.(Adolfo Fitoria)
