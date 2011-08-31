@@ -287,6 +287,9 @@ $.fn.authenticator = function() {
                     signin_form.submit();
                 }
                 else {
+                    if (FB.getSession()){
+                      signin_form.submit();
+                    }
                     FB.login();
                 }
             });
