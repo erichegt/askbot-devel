@@ -10,6 +10,7 @@ import logging
 import urllib
 from django.conf import settings as django_settings
 from django.utils.datastructures import SortedDict
+from askbot.utils import hasher
 
 class MediaNotFound(Exception):
     """raised when media file is not found"""
@@ -140,7 +141,7 @@ def get_media_url(url, ignore_missing = False):
     #determine from which skin take the media file
     try:
         use_skin = resolve_skin_for_media(media=url, preferred_skin = use_skin)
-    except MediaNotFound, e:
+    except MediaNotFound:
         log_message = 'missing media resource %s in skin %s' \
                         % (url, use_skin)
         logging.critical(log_message)
@@ -160,3 +161,33 @@ def get_media_url(url, ignore_missing = False):
     #after = datetime.datetime.now()
     #print after - before
     return url
+
+def update_media_revision(skin = None):
+    """update skin media revision number based on the contents
+    of the skin media directory"""
+    from askbot.conf import settings as askbot_settings
+    resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
+
+    if skin:
+        if skin in get_skin_choices():
+            skin_path = get_path_to_skin(skin)
+        else:
+            raise MediaNotFound('Skin %s not found' % skin) 
+    else:
+        skin = 'default'
+        skin_path = get_path_to_skin(askbot_settings.ASKBOT_DEFAULT_SKIN)
+
+    media_dirs = [os.path.join(skin_path, 'media'),]
+
+    if skin != 'default':
+        #we have default skin as parent of the custom skin
+        default_skin_path = get_path_to_skin('default')
+        media_dirs.append(os.path.join(default_skin_path, 'media'))
+
+    current_hash = hasher.get_hash_of_dirs(media_dirs)
+
+    if current_hash != askbot_settings.MEDIA_RESOURCE_REVISION_HASH:
+        askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
+        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash) 
+        logging.debug('MEDIA_RESOURCE_REVISION changed')
+    askbot_settings.MEDIA_RESOURCE_REVISION
