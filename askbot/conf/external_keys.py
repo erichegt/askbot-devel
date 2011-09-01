@@ -123,8 +123,8 @@ settings.register(
         'LINKEDIN_KEY',
         description=_('LinkedIn consumer key'),
         help_text=_(
-            'Please register your forum at <a href="http://dev.twitter.com/apps/">'
-            'twitter applications site</a>'
+            'Please register your forum at <a href="https://www.linkedin.com/secure/developer">'
+            'LinkedIn developer site</a>'
         ),
 
     )
