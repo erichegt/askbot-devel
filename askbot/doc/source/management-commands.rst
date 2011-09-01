@@ -72,9 +72,11 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | , including the questions that are themselves               |
 |                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
-| .. versionadded:: 0.7.21        | For every user checks for changes in avatar types, basically|
-|    `update_avatar_type`         | checks if the user have a valid gravatar not a default      |
-|                                 | image.                                                      |
+| `update_avatar_data`            | Set values of avatar types for all users;                   |
+|                                 | this command may take up to 2s per user, because it makes   |
+|                                 | up to one http request per user to gravatar.com.            |
+|                                 | This data is used to display preferentially real faces      |
+|                                 | on the main page.                                           |
 +---------------------------------+-------------------------------------------------------------+
 
 .. _email-related-commands:
@@ -144,10 +146,6 @@ The commands from this section will help fix those issues.
 |                                | the server process is interrupted after the question was    |
 |                                | saved, but tags were not updated, and the symptom is that   |
 |                                | the question cannot be found via the tag search.            |
-+--------------------------------+-------------------------------------------------------------+
-| `update_avatar_data`           | set denormalized values of avatar types for all users;      |
-|                                | this command may take up to 2s per user, because it makes   |
-|                                | up to one http request per user to gravatar.com.            |
 +--------------------------------+-------------------------------------------------------------+
 
 The above commands are safe to run at any time, also they do not require 
