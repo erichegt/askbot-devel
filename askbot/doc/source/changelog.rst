@@ -1,7 +1,11 @@
 Changes in Askbot
 =================
 
-0.7.21 (Current Version)
+Development version
+-------------------
+* Added noscript message (Arun SAG)
+
+0.7.22 (Current Version)
 ------------------------
 * Media resource revision is now incremented 
   automatically any time when media is updated (Adolfo Fitoria, Evgeny Fadeev)
@@ -9,6 +13,10 @@ Changes in Askbot
 * Avatar displayed on the sidebar can be controlled with livesettings.(Adolfo Fitoria, Evgeny Fadeev)
 * Avatar box in the sidebar is ordered with priority for real faces.(Adolfo Fitoria)
 * Django's createsuperuser now works with askbot (Adolfo Fitoria)
+
+0.7.21
+------
+This version was skipped
 
 0.7.20
 ------
