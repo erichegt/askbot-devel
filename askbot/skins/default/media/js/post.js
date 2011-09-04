@@ -1574,6 +1574,8 @@ var socialSharing = function(){
             var ica = $('a.identica-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
+            copyAltToTitle(ln);
+            copyAltToTitle(ica);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
             setupButtonEventHandlers(ln, function(){share_page("linkedin")});
