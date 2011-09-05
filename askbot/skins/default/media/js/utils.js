@@ -3,6 +3,11 @@ var mediaUrl = function(resource){
     return scriptUrl + 'm/' + askbotSkin + '/' + resource;
 };
 
+var cleanUrl = function(url){
+    var re = new RegExp('//', 'g');
+    return url.replace(re, '/');
+};
+
 var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };

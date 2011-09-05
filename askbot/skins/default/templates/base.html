@@ -60,6 +60,11 @@
         {% include "blocks/bottom_scripts.html" %}
         {% block endjs %}
         {% endblock %}
+        <script type="text/javascript">
+            for (url_name in askbot['urls']){
+                askbot['urls'][url_name] = cleanUrl(askbot['urls'][url_name]);
+            }
+        </script>
     </body>
 </html>
 <!-- end template base.html -->
