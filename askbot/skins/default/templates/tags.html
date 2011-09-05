@@ -31,6 +31,7 @@
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
     {% if tags.object_list %}
+        <div class='clearfix'></div>
         <ul class='tags'>
             {% for tag in tags.object_list %}
             <li>

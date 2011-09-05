@@ -142,9 +142,10 @@ def get_media_url(url, ignore_missing = False):
     try:
         use_skin = resolve_skin_for_media(media=url, preferred_skin = use_skin)
     except MediaNotFound:
-        log_message = 'missing media resource %s in skin %s' \
-                        % (url, use_skin)
-        logging.critical(log_message)
+        if ignore_missing == False:
+            log_message = 'missing media resource %s in skin %s' \
+                            % (url, use_skin)
+            logging.critical(log_message)
         return None
 
     url = use_skin + '/media/' + url
