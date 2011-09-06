@@ -24,7 +24,7 @@ class Command(NoArgsCommand):
 
         for i in range(DELETE_LIMIT, range_limit, DELETE_LIMIT):
             lower_limit = i
-            higher_limit += DELETE_LIMIT
+            higher_limit = lower_limit + DELETE_LIMIT
             sublist = expired_session_list[lower_limit:higher_limit]
             Session.objects.filter(session_key__in = sublist).delete()
             transaction.commit()
