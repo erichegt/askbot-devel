@@ -4,6 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * Added noscript message (Arun SAG)
+* Support for url shortening with TinyUrl on link sharing (Rtnpro)
 
 0.7.22 (Current Version)
 ------------------------
