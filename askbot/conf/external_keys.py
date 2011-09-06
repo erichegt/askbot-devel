@@ -68,7 +68,7 @@ settings.register(
                         'Recaptcha is a tool that helps distinguish '
                         'real people from annoying spam robots. '
                         'Please get this and a public key at '
-                        'the <a href="http://recaptcha.net">recaptcha.net</a>'
+                        'the <a href="http://google.com/recaptcha">http://google.com/recaptcha</a>'
                     )
     )
 )
