@@ -26,15 +26,16 @@ class Command(NoArgsCommand):
             lower_limit = i
             higher_limit += DELETE_LIMIT
             sublist = expired_session_list[lower_limit:higher_limit]
-            Session.objects.filter(session__key__in = sublist).delete()
+            Session.objects.filter(session_key__in = sublist).delete()
             transaction.commit()
             if verbosity > '1':
                 print_progress(higher_limit-1, expired_session_count)
 
         if higher_limit < expired_session_list:
-            sublist = expired_session_list[higher_limit:expired_session_count
-            Session.objects.filter(session__key__in = sublist).delete()
+            sublist = expired_session_list[higher_limit:expired_session_count]
+            Session.objects.filter(session_key__in = sublist).delete()
             print_progress(expired_session_count, expired_session_count)
+            transaction.commit()
 
         if verbosity > '1':
             print "sessions cleared"
