@@ -669,6 +669,7 @@ div.logo a, div.logo a:visited
     text-decoration: none;
     color: #333;
     border: none;
+    font-family: "Droid Sans", sans-serif;
 }
 
 div.logo{
