@@ -688,7 +688,7 @@ div.logo a, div.logo a:visited
 
 div.topnav{
     float: right;
-    position: absolute;
-    right:15%;
-    top:5%;
+    position: relative;
+    right:6px;
+    top:-65px;
 }
