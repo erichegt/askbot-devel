@@ -890,7 +890,7 @@ class Command(BaseCommand):
                     u_openid.save()
                 except AssertionError:
                     print u'User %s (id=%d) does not have openid' % \
-                            (se_u.display_name, se_u.id)
+                            (unidecode(se_u.display_name), se_u.id)
                     sys.stdout.flush()
                 except IntegrityError:
                     print "Warning: have duplicate openid: %s" % se_u.open_id
