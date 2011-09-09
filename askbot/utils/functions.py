@@ -2,6 +2,7 @@ import re
 import datetime
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
+from django.contrib.auth.models import User
 
 def get_from_dict_or_object(source, key):
     try:
@@ -126,3 +127,10 @@ def setup_paginator(context):
             "pages_outside_trailing_range": pages_outside_trailing_range,
             "extend_url" : extend_url
         }
+
+def get_admin():
+    '''Returns an admin users, usefull for raising flags'''
+    try:
+        return User.objects.filter(is_superuser=True)[0]
+    except:
+        raise Exception('there is no admin users')

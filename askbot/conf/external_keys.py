@@ -73,6 +73,25 @@ settings.register(
     )
 )
 
+
+
+settings.register(
+    livesettings.BooleanValue(
+        EXTERNAL_KEYS,
+        'USE_AKISMET',
+        description=_('Enable Akismet spam detection(keys below are required)'),
+        default=False
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'AKISMET_API_KEY',
+        description=_('Akismet key for spam detection')
+    )
+)
+
 settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
