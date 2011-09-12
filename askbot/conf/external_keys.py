@@ -80,7 +80,10 @@ settings.register(
         EXTERNAL_KEYS,
         'USE_AKISMET',
         description=_('Enable Akismet spam detection(keys below are required)'),
-        default=False
+        default=False,
+        help_text = _(
+                         'To get an Akismet key please visit <a href="https://akismet.com/signup/">Akismet site</a>'
+                     )
     )
 )
 
