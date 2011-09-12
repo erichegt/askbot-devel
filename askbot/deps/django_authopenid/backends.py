@@ -60,7 +60,7 @@ class AuthBackend(object):
                         logging.critical(
                             ('have more than one user with email %s ' +
                             'he/she will not be able to authenticate with ' +
-                            'the email addres in the place of user name') % email_address
+                            'the email address in the place of user name') % email_address
                         )
                         return None
             else:
