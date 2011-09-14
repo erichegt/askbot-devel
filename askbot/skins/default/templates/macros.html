@@ -138,8 +138,7 @@
 {%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div class="paginator">
-        <div style="float:{{position}}">
+        <div class="paginator" style="float:{{position}}">
         {% if p.has_previous %}
             <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ p.extend_url }}" title="{% trans %}previous{% endtrans %}">
         &laquo; {% trans %}previous{% endtrans %}</a></span>
@@ -169,7 +168,6 @@
             <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ p.extend_url }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
         {% endif %}
         </div>
-        </div> 
     {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
