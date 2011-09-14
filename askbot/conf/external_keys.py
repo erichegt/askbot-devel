@@ -1,6 +1,4 @@
-"""
-External service key settings
-"""
+"""External service key settings"""
 from askbot import const
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
@@ -73,27 +71,6 @@ settings.register(
                         'Please get this and a public key at '
                         'the <a href="%(url)s">%(url)s</a>'
                     ) % {'url': const.DEPENDENCY_URLS['recaptcha']}
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        EXTERNAL_KEYS,
-        'USE_AKISMET',
-        description=_('Enable Akismet spam detection(keys below are required)'),
-        default=False,
-        help_text = _(
-                         'To get an Akismet key please visit '
-                         '<a href="%(url)s">Akismet site</a>'
-                     ) % {'url': const.DEPENDENCY_URLS['akismet']}
-    )
-)
-
-settings.register(
-    livesettings.StringValue(
-        EXTERNAL_KEYS,
-        'AKISMET_API_KEY',
-        description=_('Akismet key for spam detection')
     )
 )
 
