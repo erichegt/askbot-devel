@@ -1,6 +1,7 @@
 """
 External service key settings
 """
+from askbot import const
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
@@ -8,7 +9,8 @@ from django.conf import settings as django_settings
 
 EXTERNAL_KEYS = livesettings.ConfigurationGroup(
                     'EXTERNAL_KEYS',
-                    _('Keys to connect the site with external services like Facebook, etc.')
+                    _('Keys to connect the site with external '
+                        'services like Facebook, etc.')
                 )
 
 settings.register(
@@ -19,11 +21,12 @@ settings.register(
         help_text=_(
                         'This key helps google index your site '
                         'please obtain is at '
-                        '<a href="%(google_webmasters_tools_url)s">'
+                        '<a href="%(url)s?hl=%(lang)s">'
                         'google webmasters tools site</a>'
-                    ) % {'google_webmasters_tools_url':
-                        'https://www.google.com/webmasters/tools/home?hl=' \
-                        + django_settings.LANGUAGE_CODE}
+                    ) % {
+                        'url': const.DEPENDENCY_URLS['google-webmaster-tools'],
+                        'lang': django_settings.LANGUAGE_CODE,
+                    }
     )
 )
 
@@ -33,12 +36,12 @@ settings.register(
         'GOOGLE_ANALYTICS_KEY',
         description=_('Google Analytics key'),
         help_text=_(
-                        'Obtain is at <a href="%(ga_site)s">'
-                        'Google Analytics</a> site, if you '
-                        'wish to use Google Analytics to monitor '
-                        'your site'
-                    ) % {'ga_site':'http://www.google.com/intl/%s/analytics/' \
-                            % django_settings.LANGUAGE_CODE }
+            'Obtain is at <a href="%(url)s">'
+            'Google Analytics</a> site, if you '
+            'wish to use Google Analytics to monitor '
+            'your site'
+        ) % {'url': 'http://www.google.com/intl/%s/analytics/' \
+                % django_settings.LANGUAGE_CODE }
     )
 )
 
@@ -68,12 +71,10 @@ settings.register(
                         'Recaptcha is a tool that helps distinguish '
                         'real people from annoying spam robots. '
                         'Please get this and a public key at '
-                        'the <a href="http://google.com/recaptcha">http://google.com/recaptcha</a>'
-                    )
+                        'the <a href="%(url)s">%(url)s</a>'
+                    ) % {'url': const.DEPENDENCY_URLS['recaptcha']}
     )
 )
-
-
 
 settings.register(
     livesettings.BooleanValue(
@@ -82,8 +83,9 @@ settings.register(
         description=_('Enable Akismet spam detection(keys below are required)'),
         default=False,
         help_text = _(
-                         'To get an Akismet key please visit <a href="https://akismet.com/signup/">Akismet site</a>'
-                     )
+                         'To get an Akismet key please visit '
+                         '<a href="%(url)s">Akismet site</a>'
+                     ) % {'url': const.DEPENDENCY_URLS['akismet']}
     )
 )
 
@@ -104,9 +106,9 @@ settings.register(
                      'Facebook API key and Facebook secret '
                      'allow to use Facebook Connect login method '
                      'at your site. Please obtain these keys '
-                     'at <a href="http://www.facebook.com/developers/createapp.php">'
+                     'at <a href="%(url)s">'
                      'facebook create app</a> site'
-                    )
+                    ) % {'url': const.DEPENDENCY_URLS['facebook-apps']}
     )
 )
 
@@ -124,9 +126,9 @@ settings.register(
         'TWITTER_KEY',
         description=_('Twitter consumer key'),
         help_text=_(
-            'Please register your forum at <a href="http://dev.twitter.com/apps/">'
+            'Please register your forum at <a href="%(url)s">'
             'twitter applications site</a>'
-        ),
+        ) % {'url': const.DEPENDENCY_URLS['twitter-apps']},
 
     )
 )
@@ -145,9 +147,9 @@ settings.register(
         'LINKEDIN_KEY',
         description=_('LinkedIn consumer key'),
         help_text=_(
-            'Please register your forum at <a href="https://www.linkedin.com/secure/developer">'
+            'Please register your forum at <a href="%(url)s">'
             'LinkedIn developer site</a>'
-        ),
+        ) % {'url': const.DEPENDENCY_URLS['linkedin-apps']},
 
     )
 )
@@ -166,9 +168,9 @@ settings.register(
         'IDENTICA_KEY',
         description=_('ident.ca consumer key'),
         help_text=_(
-            'Please register your forum at <a href="http://identi.ca/settings/oauthapps">'
+            'Please register your forum at <a href="%(url)s">'
             'Identi.ca applications site</a>'
-        ),
+        ) % {'url': const.DEPENDENCY_URLS['identica-apps']},
 
     )
 )

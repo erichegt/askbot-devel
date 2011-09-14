@@ -8,7 +8,7 @@ def get_from_dict_or_object(source, key):
     try:
         return source[key]
     except:
-        return getattr(source,key)
+        return getattr(source, key)
 
 
 def is_iterable(thing):
@@ -54,7 +54,7 @@ def not_a_robot_request(request):
 
     return False
 
-def diff_date(date, limen=2, use_on_prefix = False):
+def diff_date(date, use_on_prefix = False):
     now = datetime.datetime.now()#datetime(*time.localtime()[0:6])#???
     diff = now - date
     days = diff.days
@@ -75,9 +75,17 @@ def diff_date(date, limen=2, use_on_prefix = False):
     elif days == 1:
         return _('yesterday')
     elif minutes >= 60:
-        return ungettext('%(hr)d hour ago','%(hr)d hours ago',hours) % {'hr':hours}
+        return ungettext(
+            '%(hr)d hour ago',
+            '%(hr)d hours ago',
+            hours
+        ) % {'hr':hours}
     else:
-        return ungettext('%(min)d min ago','%(min)d mins ago',minutes) % {'min':minutes}
+        return ungettext(
+            '%(min)d min ago',
+            '%(min)d mins ago',
+            minutes
+        ) % {'min':minutes}
 
 #todo: this function may need to be removed to simplify the paginator functionality
 LEADING_PAGE_RANGE_DISPLAYED = TRAILING_PAGE_RANGE_DISPLAYED = 5

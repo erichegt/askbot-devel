@@ -249,7 +249,7 @@ def ask(request):#view used to ask a new question
                 form.initial['title'] = request.GET['title']
             else:
                 #attempt to extract title from previous search query
-                search_state = request.session.get('search_state',None)
+                search_state = request.session.get('search_state', None)
                 if search_state:
                     query = search_state.query
                     form.initial['title'] = query
@@ -262,7 +262,7 @@ def ask(request):#view used to ask a new question
             form.initial['title'] = request.GET['title']
         else:
             #attempt to extract title from previous search query
-            search_state = request.session.get('search_state',None)
+            search_state = request.session.get('search_state', None)
             if search_state:
                 query = search_state.query
                 form.initial['title'] = query

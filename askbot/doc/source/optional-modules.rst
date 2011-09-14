@@ -136,11 +136,3 @@ To enable authentication for self hosted wordpress sites(wordpress.com blogs wil
 * Upload an icon for display in the login area.
 
 After doing this steps you should be able to login with your self hosted wordpress site user/password combination.
-
-Akismet spam detection tool
-===========================
-
-To enable Akismet for spam detection you will need to install `akismet <http://pypi.python.org/pypi/akismet/0.2.0>`_  from pypi and in the live settins for 
-external keys activate click on "Enable Akismet for spam detection" and enter the Akismet keys below. To get an Akismet key signup into `Akismet and select your plan. <https://akismet.com/signup/>`_
-
-Currently it will just block every spam positive content of being posted to the site, including, questions, answers and comments.

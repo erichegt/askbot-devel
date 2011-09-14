@@ -7,7 +7,6 @@ import inspect
 import logging
 from django.conf import settings
 from django.core import exceptions as django_exceptions
-from django.core import urlresolvers
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseForbidden, Http404
@@ -190,18 +189,27 @@ def check_spam(field):
                     data.update({'comment_author_email': request.user.email})
 
                 from akismet import Akismet
-                api = Akismet(askbot_settings.AKISMET_API_KEY, 
-                        smart_str(askbot_settings.APP_URL), 
-                        "Askbot/%s" % get_version())
+                api = Akismet(
+                    askbot_settings.AKISMET_API_KEY, 
+                    smart_str(askbot_settings.APP_URL), 
+                    "Askbot/%s" % get_version()
+                )
 
                 if api.comment_check(comment, data, build_data=False):
-                    logging.debug('Spam detected in %s post at: %s' % 
-                            (request.user.username, datetime.datetime.now()))
-                    spam_message = _("Spam was detected on your post, sorry \
-                            for that if you are not a spammer")
+                    logging.debug(
+                        'Spam detected in %s post at: %s',
+                        request.user.username,
+                        datetime.datetime.now()
+                    )
+                    spam_message = _(
+                        'Spam was detected on your post, sorry '
+                        'for if this is a mistake'
+                    )
                     if request.is_ajax():
-                        return HttpResponseForbidden(spam_message, 
-                                mimetype="application/json")
+                        return HttpResponseForbidden(
+                                spam_message, 
+                                mimetype="application/json"
+                            )
                     else:
                         request.user.message_set.create(message=spam_message)
                         return HttpResponseRedirect(reverse('index'))
