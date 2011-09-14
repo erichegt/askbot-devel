@@ -123,24 +123,27 @@ def get_path_to_help_file():
     """returns path to the main plain text help file"""
     return os.path.join(SOURCE_DIR, 'doc', 'INSTALL')
 
-def deploy_into(directory, new_project = None):
+def deploy_into(directory, new_project = None, verbosity=1):
     """will copy necessary files into the directory
     """
     assert(new_project is not None)
     if new_project:
         copy_files = ('__init__.py', 'settings.py', 'manage.py', 'urls.py')
         blank_files = ('__init__.py', 'manage.py')
-        print 'Copying files: '
+        if verbosity >=1:
+            print 'Copying files: '
         for file_name in copy_files:
             src = os.path.join(SOURCE_DIR, 'setup_templates', file_name)
             if os.path.exists(os.path.join(directory, file_name)):
                 if file_name in blank_files:
                     continue
                 else:
-                    print '* %s' % file_name,
-                    print "- you already have one, please add contents of %s" % src
+                    if verbosity >=1:
+                        print '* %s' % file_name,
+                        print "- you already have one, please add contents of %s" % src
             else:
-                print '* %s ' % file_name
+                if verbosity >=1:
+                    print '* %s ' % file_name
                 shutil.copy(src, directory)
         #copy log directory
         src = os.path.join(SOURCE_DIR, 'setup_templates', 'log')
@@ -148,7 +151,8 @@ def deploy_into(directory, new_project = None):
         create_path(log_dir)
         touch(os.path.join(log_dir, 'askbot.log'))
 
-    print ''
+    if verbosity >=1:
+        print ''
     app_dir = os.path.join(directory, 'askbot')
 
     copy_dirs = ('doc', 'cron', 'upfiles')
@@ -158,17 +162,22 @@ def deploy_into(directory, new_project = None):
         dst = os.path.join(app_dir, dir_name)
         if os.path.abspath(src) != os.path.abspath(dst):
             if dirs_copied == 0:
-                print 'copying directories: ',
-            print '* ' + dir_name
+                if verbosity >=1:
+                    print 'copying directories: ',
+            if verbosity >=1:
+                print '* ' + dir_name
             if os.path.exists(dst):
                 if os.path.isdir(dst):
-                    print 'Directory %s not empty - skipped' % dst
+                    if verbosity >=1:
+                        print 'Directory %s not empty - skipped' % dst
                 else:
-                    print 'File %s already exists - skipped' % dst
+                    if verbosity >=1:
+                        print 'File %s already exists - skipped' % dst
                 continue
             shutil.copytree(src, dst)
             dirs_copied += 1
-    print ''
+    if verbosity >=1:
+        print ''
 
 def dir_name_acceptable(directory):
     """True if directory is not taken by another python module"""
