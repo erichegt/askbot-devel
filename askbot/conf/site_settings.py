@@ -17,7 +17,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_TITLE',
-        default=u'ASKBOT: Open Source Q&A Forum',
+        default=u'Askbot: Open Source Q&A Forum',
         description=_('Site title for the Q&A forum')
     )
 )
@@ -26,7 +26,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_KEYWORDS',
-        default=u'ASKBOT,CNPROG,forum,community',
+        default=u'Askbot,CNPROG,forum,community',
         description=_('Comma separated list of Q&A site keywords')
     )
 )
@@ -35,8 +35,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_COPYRIGHT',
-        default='Copyright ASKBOT, 2010. Some rights reserved ' + \
-                'under creative commons license.',
+        default='Copyright Askbot, 2010-2011.',
         description=_('Copyright message to show in the footer')
     )
 )
