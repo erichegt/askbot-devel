@@ -1,7 +1,7 @@
 import os
 import pystache
-from path_utils import SOURCE_DIR
 
+SOURCE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 class SettingsTemplate(pystache.View):
     '''Class for settings'''

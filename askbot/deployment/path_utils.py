@@ -11,6 +11,7 @@ import re
 import glob
 import shutil
 import imp
+from askbot.deployment.template_loader import SettingsTemplate
 
 def split_at_break_point(directory):
     """splits directory path into two pieces
@@ -123,12 +124,12 @@ def get_path_to_help_file():
     """returns path to the main plain text help file"""
     return os.path.join(SOURCE_DIR, 'doc', 'INSTALL')
 
-def deploy_into(directory, new_project = None, verbosity=1):
+def deploy_into(directory, new_project = None, verbosity=1, context=None):
     """will copy necessary files into the directory
     """
     assert(new_project is not None)
     if new_project:
-        copy_files = ('__init__.py', 'settings.py', 'manage.py', 'urls.py')
+        copy_files = ('__init__.py', 'manage.py', 'urls.py')
         blank_files = ('__init__.py', 'manage.py')
         if verbosity >=1:
             print 'Copying files: '
@@ -150,6 +151,21 @@ def deploy_into(directory, new_project = None, verbosity=1):
         log_dir = os.path.join(directory, 'log')
         create_path(log_dir)
         touch(os.path.join(log_dir, 'askbot.log'))
+
+        #creating settings file from template
+        if verbosity>=1:
+            print "Creating settings file"
+        settings_contents = SettingsTemplate(context).render()
+        settings_path = os.path.join(directory, 'settings.py')
+        if os.path.exists(settings_path):
+            if verbosity>=1:
+                print "* you already have a settings file please merge the contents"
+        else:
+            settings_file = open(settings_path, 'w+')
+            settings_file.write(settings_contents)
+            settings_file.close()
+            if verbosity>=1:
+                print "settings file created"
 
     if verbosity >=1:
         print ''

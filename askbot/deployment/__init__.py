@@ -162,15 +162,25 @@ def askbot_setup():
 def deploy_askbot(directory, create_new, options):
     '''function that copies the templates'''
     help_file = path_utils.get_path_to_help_file()
+    context = {'database_name': options.database_name,
+               'database_password': options.database_password,
+               'database_user': options.database_user
+              }
+    for key in context.keys():
+        if context[key] == None:
+            input_message = 'Please enter a value for %s:' % (key.replace('_', ' '))
+            new_value = raw_input(input_message)
+            context[key] = new_value
+
     if create_new:
         path_utils.create_path(directory)
         path_utils.deploy_into(directory, new_project = True, 
-                verbosity = options.verbosity)
+                verbosity = options.verbosity, context = context)
         if options.verbosity >= 1:
             print messages.HOW_TO_DEPLOY_NEW % {'help_file': help_file}
     else:
         path_utils.deploy_into(directory, new_project = False, 
-                verbosity = options.verbosity)
+                verbosity = options.verbosity, context = context)
         if options.verbosity >= 1:
             print messages.HOW_TO_ADD_ASKBOT_TO_DJANGO % {'help_file': help_file}
 
