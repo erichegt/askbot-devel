@@ -263,6 +263,7 @@ DEPENDENCY_URLS = {
     'facebook-apps': 'http://www.facebook.com/developers/createapp.php',
     'google-webmaster-tools': 'https://www.google.com/webmasters/tools/home',
     'identica-apps': 'http://identi.ca/settings/oauthapps',
+    'noscript': 'https://www.google.com/support/bin/answer.py?answer=23852',
     'linkedin-apps': 'https://www.linkedin.com/secure/developer',
     'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
     'recaptcha': 'http://google.com/recaptcha',
