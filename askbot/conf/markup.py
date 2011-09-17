@@ -15,6 +15,13 @@ MARKUP = ConfigurationGroup(
                     _('Markup formatting')
                 )
 
+AUTOLINK = ConfigurationGroup(
+    'AUTOLINK',
+    _('Auto link a pattern to an URL')
+
+)
+
+
 settings.register(
     BooleanValue(
         MARKUP,
@@ -63,3 +70,51 @@ settings.register(
         default = ''
     )
 )
+
+
+settings.register(
+        BooleanValue(
+            AUTOLINK,
+            'ENABLE_AUTO_LINK',
+            description=_('Enable autolinking a specifc pattern'),
+            help_text=_(
+                'If you enable this feature, '
+                'the application  will be able to '
+                'detect patterns and auto link to URLs'        
+                ),
+        
+            default = False
+            )
+        )
+
+
+settings.register(
+        StringValue(
+            AUTOLINK,
+            'Pattern',
+            description=_('Regex to detect the pattern'),
+            help_text=_(
+                'Enter a valid regular expression to'
+                'detect the pattern. For example to'
+                'detect something like #rhbz 637402 '
+                'use a regular expression like r"#rhbz\s(\d+)"'
+                ),
+            default = ''
+            )
+        )
+
+settings.register(
+        StringValue(
+            AUTOLINK,
+            'AutoLinkURL',
+            description=_('URL for autolinking'),
+            help_text=_(
+                'Let us assume that to detect a pattern  #rhbz 637402'
+                ' the regex is  r"#rhbz\s(\d+)" '
+                'then the autolink URL should be https://bugzilla.redhat.com/show_bug.cgi?id=\\1'
+                ' Where \\1 is the saved match from the regular expression'
+                ),
+            default = ''
+            )
+        )
+
