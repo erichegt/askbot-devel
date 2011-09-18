@@ -10,6 +10,7 @@ LINK_PATTERNS = [
     (URL_RE, r'\1'),
 ]
 
+
 def get_parser():
     extras = ['link-patterns', 'video']  
     if askbot_settings.ENABLE_MATHJAX or \
@@ -21,6 +22,10 @@ def get_parser():
         #pip uninstall markdown2
         #pip install -e git+git://github.com/andryuha/python-markdown2.git
         extras.append('video')
+
+    if askbot_settings.ENABLE_AUTO_LINKING:
+        LINK_PATTERNS.append((re.compile(askbot_settings.PATTERN),askbot_settings.AUTO_LINK_URL))
+    
 
     return Markdown(
                 html4tags=True,

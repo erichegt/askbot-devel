@@ -75,7 +75,7 @@ settings.register(
 settings.register(
         BooleanValue(
             AUTOLINK,
-            'ENABLE_AUTO_LINK',
+            'ENABLE_AUTO_LINKING',
             description=_('Enable autolinking a specifc pattern'),
             help_text=_(
                 'If you enable this feature, '
@@ -91,7 +91,7 @@ settings.register(
 settings.register(
         StringValue(
             AUTOLINK,
-            'Pattern',
+            'PATTERN',
             description=_('Regex to detect the pattern'),
             help_text=_(
                 'Enter a valid regular expression to'
@@ -106,7 +106,7 @@ settings.register(
 settings.register(
         StringValue(
             AUTOLINK,
-            'AutoLinkURL',
+            'AUTO_LINK_URL',
             description=_('URL for autolinking'),
             help_text=_(
                 'Let us assume that to detect a pattern  #rhbz 637402'
