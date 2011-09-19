@@ -29,6 +29,7 @@ from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
 from askbot import models
+from askbot import schedules
 from askbot.models.badges import award_badges_signal
 from askbot import const
 from askbot.utils import functions
@@ -304,6 +305,7 @@ def questions(request):
         'tag_list_type' : tag_list_type,
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+        'update_avatar_data': schedules.should_update_avatar_data(request),
     }
 
     assert(request.is_ajax() == False)

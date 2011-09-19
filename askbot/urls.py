@@ -10,8 +10,11 @@ from django.utils.translation import ugettext as _
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
+from askbot.skins.utils import update_media_revision
 
 admin.autodiscover()
+update_media_revision()#needs to be run once, so put it here
+
 feeds = {
     'rss': RssLastestQuestionsFeed
 }
@@ -203,6 +206,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'
+    ),
+    url(
+        r'^%s$' % _('users/update_has_custom_avatar/'),
+        views.users.update_has_custom_avatar,
+        name='user_update_has_custom_avatar'
     ),
     url(
         r'^%s$' % _('badges/'),

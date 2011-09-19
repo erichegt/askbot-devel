@@ -3,6 +3,7 @@ multiple login methods supported by the authenticator
 application
 """
 import datetime
+import logging
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext as _
@@ -48,7 +49,20 @@ class AuthBackend(object):
                     if not user.check_password(password):
                         return None
                 except User.DoesNotExist:
-                    return None
+                    try:
+                        email_address = username
+                        user = User.objects.get(email = email_address)
+                        if not user.check_password(password):
+                            return None
+                    except User.DoesNotExist:
+                        return None
+                    except User.MultipleObjectsReturned:
+                        logging.critical(
+                            ('have more than one user with email %s ' +
+                            'he/she will not be able to authenticate with ' +
+                            'the email address in the place of user name') % email_address
+                        )
+                        return None
             else:
                 if login_providers[provider_name]['check_password'](username, password):
                     try:

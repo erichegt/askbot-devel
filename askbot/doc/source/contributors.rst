@@ -11,6 +11,7 @@ Programming and documentation
 * Mike Chen & Sailing Cai - original authors of CNPROG forum
 * Evgeny Fadeev - founder of askbot
 * `Adolfo Fitoria <http://fitoria.net>`_
+* `Arun SAG  <http://zer0c00l.in/>`_
 * Andy Knotts
 * Benoit Lavine (with Windriver Software, Inc.)
 * Jeff Madynski

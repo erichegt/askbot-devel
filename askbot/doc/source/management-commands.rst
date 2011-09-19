@@ -72,6 +72,12 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | , including the questions that are themselves               |
 |                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
+| `update_avatar_data`            | Set values of avatar types for all users;                   |
+|                                 | this command may take up to 2s per user, because it makes   |
+|                                 | up to one http request per user to gravatar.com.            |
+|                                 | This data is used to display preferentially real faces      |
+|                                 | on the main page.                                           |
++---------------------------------+-------------------------------------------------------------+
 
 .. _email-related-commands:
 

@@ -106,20 +106,7 @@ settings.register(
     )
 )
 
-settings.register(
-    values.IntegerValue(
-        GENERAL_SKIN_SETTINGS,
-        'MEDIA_RESOURCE_REVISION',
-        default = 1,
-        description = _('Skin media revision number'),
-        help_text = _(
-                    'Increment this number when you change '
-                    'image in skin media or stylesheet. '
-                    'This helps avoid showing your users '
-                    'outdated images from their browser cache.'
-                    )
-    )
-)
+
 
 settings.register(
     values.BooleanValue(
@@ -268,6 +255,33 @@ settings.register(
             'not be consistent across different browsers '
             '(<strong>to enable your custom code</strong>, check '
             '"Add custom javascript" option above).'
+        )
+    )
+)
+
+settings.register(
+    values.IntegerValue(
+        GENERAL_SKIN_SETTINGS,
+        'MEDIA_RESOURCE_REVISION',
+        default = 1,
+        description = _('Skin media revision number'),
+        help_text = _(
+            'Will be set automatically '
+            'but you can modify it if necessary.'
+       )
+    )
+)
+
+settings.register(
+    values.StringValue(
+        GENERAL_SKIN_SETTINGS,
+        'MEDIA_RESOURCE_REVISION_HASH',
+        description = _(
+            'Hash to update the media revision number automatically.'
+        ),
+        default='',
+        help_text = _(
+            'Will be set automatically, it is not necesary to modify manually.'
         )
     )
 )

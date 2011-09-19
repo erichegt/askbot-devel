@@ -22,6 +22,7 @@ PREAMBLE = """\n
 ************************"""
 
 def askbot_warning(line):
+    """prints a warning with the nice header, but does not quit"""
     print >> sys.stderr, PREAMBLE + '\n' + line
 
 def format_as_text_tuple_entries(items):
@@ -81,7 +82,9 @@ def test_middleware():
         'askbot.middleware.view_log.ViewLogMiddleware',
     )
     if 'debug_toolbar' in django_settings.INSTALLED_APPS:
-        required_middleware += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+        required_middleware += (
+            'debug_toolbar.middleware.DebugToolbarMiddleware',
+        )
 
     installed_middleware_set = set(django_settings.MIDDLEWARE_CLASSES)
     missing_middleware_set = set(required_middleware) - installed_middleware_set
@@ -101,7 +104,8 @@ https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settin
     )
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 
-    remove_middleware_set = set(canceled_middleware) & installed_middleware_set
+    remove_middleware_set = set(canceled_middleware) \
+                                & installed_middleware_set
     if remove_middleware_set:
         error_message = """\n\nPlease remove the following middleware entries from
 the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more:\n\n"""
@@ -111,6 +115,7 @@ the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more
             
 
 def test_i18n():
+    """askbot requires use of USE_I18N setting"""
     if getattr(django_settings, 'USE_I18N', False) == False:
         raise ImproperlyConfigured(
             'Please set USE_I18N = True in settings.py and '
@@ -119,26 +124,32 @@ def test_i18n():
         )
 
 def try_import(module_name, pypi_package_name):
+    """tries importing a module and advises to install 
+    A corresponding Python package in the case import fails"""
     try:
         load_module(module_name)
-    except ImportError, e:
-        message = unicode(e) + ' run\npip install %s' % pypi_package_name
+    except ImportError, error:
+        message = unicode(error) + ' run\npip install %s' % pypi_package_name
         message += '\nTo install all the dependencies at once, type:'
         message += '\npip install -r askbot_requirements.txt\n'
         raise ImproperlyConfigured(message)
 
 def test_modules():
+    """tests presence of required modules"""
+    try_import('akismet', 'akismet')
     try_import('recaptcha_works', 'django-recaptcha-works')
 
 def test_postgres():
-    '''Validates postgres buggy driver 2.4.2'''
+    """Checks for the postgres buggy driver, version 2.4.2"""
     if hasattr(django_settings, 'DATABASE_ENGINE'):
         if django_settings.DATABASE_ENGINE in ('postgresql_psycopg2',):
             try:
                 import psycopg2
                 version = psycopg2.__version__.split(' ')[0].split('.')
                 if version == ['2', '4', '2']:
-                    raise ImproperlyConfigured('Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug')
+                    raise ImproperlyConfigured(
+                        'Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug'
+                    )
                 elif version > ['2', '4', '2']:
                     pass #don't know what to do
                 else:
@@ -181,5 +192,6 @@ def run():
     try:
         badges.init_badges()
         transaction.commit()
-    except:
+    except Exception, error:
+        print error
         transaction.rollback()

@@ -1,12 +1,29 @@
 Changes in Askbot
 =================
 
-Development version (not yet on pypi)
--------------------------------------
-* First user automatically becomes site administrator (Adolfo Fitoria)
+Development version
+-------------------
+* Added support for Akismet spam detection service (Adolfo Fitoria)
+* Added noscript message (Arun SAG)
+* Support for url shortening with TinyUrl on link sharing (Rtnpro)
+* Allowed logging in with password and email in the place of login name (Evgeny)
+* Added config settings allowing adjust license information (Evgeny)
 
-0.7.20 (Current Version)
+0.7.22 (Current Version)
 ------------------------
+* Media resource revision is now incremented 
+  automatically any time when media is updated (Adolfo Fitoria, Evgeny Fadeev)
+* First user automatically becomes site administrator (Adolfo Fitoria)
+* Avatar displayed on the sidebar can be controlled with livesettings.(Adolfo Fitoria, Evgeny Fadeev)
+* Avatar box in the sidebar is ordered with priority for real faces.(Adolfo Fitoria)
+* Django's createsuperuser now works with askbot (Adolfo Fitoria)
+
+0.7.21
+------
+This version was skipped
+
+0.7.20
+------
 * Added support for login via self-hosted Wordpress site (Adolfo Fitoria)
 * Allowed basic markdown in the comments (Adolfo Fitoria)
 * Added this changelog (Adolfo Fitoria)

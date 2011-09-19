@@ -1040,12 +1040,14 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea = $('<textarea></textarea>');
     this._textarea.attr('id', this._id);
 
+    /*
     this._help_text = $('<span></span>').attr('class', 'help-text');
     this._help_text.html(gettext('Markdown is allowed in the comments')); 
     div.append(this._help_text);
 
     this._help_text = $('<div></div>').attr('class', 'clearfix');
     div.append(this._help_text);
+    */
 
     this._element.append(div);
     div.append(this._textarea);
@@ -1270,7 +1272,7 @@ Comment.prototype.setContent = function(data){
     
     this._comment_body = $('<div class="comment-body"></div>');
     this._comment_body.html(this._data['html']);
-    this._comment_body.append(' &ndash; ');
+    //this._comment_body.append(' &ndash; ');
 
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
@@ -1531,7 +1533,7 @@ var socialSharing = function(){
     var SERVICE_DATA = {
         //url - template for the sharing service url, params are for the popup
         identica: {
-            url: "http://identi.ca/index.php?action=newnotice&status_textarea={TEXT}",
+            url: "http://identi.ca/notice/new?status_textarea={TEXT}%20{URL}",
             params: "width=820, height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
         },
         twitter: {
@@ -1553,12 +1555,25 @@ var socialSharing = function(){
     var share_page = function(service_name){
         if (SERVICE_DATA[service_name]){
             var url = SERVICE_DATA[service_name]['url'];
-            url = url.replace('{URL}', URL);
-            url = url.replace('{TEXT}', TEXT);
-            var params = SERVICE_DATA[service_name]['params'];
-            if(!window.open(url, "sharing", params)){
-                window.location.href=share_url;
-            }
+            $.ajax({
+                async: false,
+                url: "http://json-tinyurl.appspot.com/?&callback=?",
+                dataType: "json",
+                data: {'url':URL},
+                success: function(data){
+                    url = url.replace('{URL}', data.tinyurl);
+                },
+                error: function(data){
+                    url = url.replace('{URL}', URL);
+                },
+                complete: function(data){
+                    url = url.replace('{TEXT}', TEXT);
+                    var params = SERVICE_DATA[service_name]['params'];
+                    if(!window.open(url, "sharing", params)){
+                        window.location.href=share_url;
+                    }
+                }
+            });
         }
     }
 
@@ -1572,6 +1587,8 @@ var socialSharing = function(){
             var ica = $('a.identica-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
+            copyAltToTitle(ln);
+            copyAltToTitle(ica);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
             setupButtonEventHandlers(ln, function(){share_page("linkedin")});

@@ -28,7 +28,7 @@
 }
 
 .acLoading {
-	background : url('indicator.gif') right center no-repeat;
+	background : url('../images/indicator.gif') right center no-repeat;
 }
 
 .acSelect {
