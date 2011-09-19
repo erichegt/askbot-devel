@@ -24,9 +24,12 @@ def get_parser():
         extras.append('video')
 
     if askbot_settings.ENABLE_AUTO_LINKING:
-        LINK_PATTERNS.append((re.compile(askbot_settings.PATTERN),askbot_settings.AUTO_LINK_URL))
-    
-
+        pattern_list = askbot_settings.PATTERN.split('\n')
+        url_list = askbot_settings.AUTO_LINK_URL.split('\n')
+        
+        for i in range(0,len(pattern_list)):
+            LINK_PATTERNS.append((re.compile(pattern_list[i].strip()),url_list[i].strip()))
+            
     return Markdown(
                 html4tags=True,
                 extras=extras,
