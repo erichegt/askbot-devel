@@ -2232,7 +2232,6 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    subject_line = mail.prefix_the_subject_line(subject_line)
     return subject_line, template.render(Context(update_data))
 
 #todo: action
