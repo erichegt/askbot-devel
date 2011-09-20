@@ -47,6 +47,12 @@ def askbot_setup():
                       help="the database password"
                      )
 
+    parser.add_option("--domain",
+                      dest="domain_name",
+                      default=None,
+                      help="the domain name of the instance"
+                     )
+
     (options, args) = parser.parse_args()
     #ask 
     if options.verbosity >= 1:
@@ -164,7 +170,8 @@ def deploy_askbot(directory, create_new, options):
     help_file = path_utils.get_path_to_help_file()
     context = {'database_name': options.database_name,
                'database_password': options.database_password,
-               'database_user': options.database_user
+               'database_user': options.database_user,
+               'domain_name': options.domain_name
               }
     for key in context.keys():
         if context[key] == None:
