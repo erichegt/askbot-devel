@@ -1202,6 +1202,8 @@ def user_post_question(
                     is_anonymous = False,
                     timestamp = None
                 ):
+    """makes an assertion whether user can post the question
+    then posts it and returns the question object"""
 
     self.assert_can_post_question()
 
