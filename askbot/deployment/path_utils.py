@@ -163,6 +163,12 @@ def deploy_into(directory, new_project = None, verbosity=1, context=None):
         else:
             settings_file = open(settings_path, 'w+')
             settings_file.write(settings_contents)
+            #Grab the file!
+            if exists(context['local_settings']):
+                local_settings = open(context['local_settings'], 'r').read()
+                settings_file.write('\n')
+                settings_file.write(local_settings)
+
             settings_file.close()
             if verbosity>=1:
                 print "settings file created"
