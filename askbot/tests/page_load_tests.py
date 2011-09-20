@@ -55,10 +55,11 @@ class PageLoadTestCase(TestCase):
                 print 'templates are %s' % template_names
                 if follow == False:
                     self.fail(
+                        ('Have issue accessing %s. '
                         'This should not have happened, '
                         'since you are not expecting a redirect '
                         'i.e. follow == False, there should be only '
-                        'one template'
+                        'one template') % url
                     )
 
                 self.assertEqual(r.template[0].name, template)
