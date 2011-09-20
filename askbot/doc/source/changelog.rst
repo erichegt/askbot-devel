@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added support for Akismet spam detection service (Adolfo Fitoria)
 * Added noscript message (Arun SAG)
 * Support for url shortening with TinyUrl on link sharing (Rtnpro)
 * Allowed logging in with password and email in the place of login name (Evgeny)
