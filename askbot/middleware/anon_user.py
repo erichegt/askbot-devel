@@ -37,7 +37,7 @@ class ConnectToSessionMessagesMiddleware(object):
                 request.user.message_set.create(message=msg)
 
     def process_response(self, request, response):
-        """ Sets the stranger flag if user ever authenticates so that the
+        """ Adds the stranger key to cookie if user ever authenticates so that the
         anonymous user message won't be shown. """
         if request.user.is_authenticated() and \
                 'stranger' not in request.COOKIES :
