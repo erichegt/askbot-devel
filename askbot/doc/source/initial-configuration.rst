@@ -30,7 +30,8 @@ There may be an error message; ignore it.
     `askbot-setup` adds those files to the directory you select (and some more things specific to Askbot).
 
 .. versionadded:: 0.7.23
-    `askbot-setup` also have command line arguments such as folder name(name), database name, database password and database user also added verbosity support.
+    `askbot-setup` also have command line arguments such as folder name(name), database name, database password and database user also added verbosity support. 
+    You can also specify a local settings file to append it's contents to the deployment settings file.
 
 .. note::
 
