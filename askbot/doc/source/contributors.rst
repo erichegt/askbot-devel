@@ -20,6 +20,7 @@ Programming and documentation
 * Ramiro Morales (with Machinalis)
 * `NoahY <https://github.com/NoahY>`_
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
+* `Rag Sagar <https://github.com/ragsagar>`_
 * Alex Robbins (celery support)
 * `Tomasz Szynalski <http://antimoon.com>`_
 
