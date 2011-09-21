@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Greeting for anonymuos users can be changed from live settings (Hrishi)
+* Greeting for anonymous users is shown only once (Rag Sagar)
 * Added support for Akismet spam detection service (Adolfo Fitoria)
 * Added noscript message (Arun SAG)
 * Support for url shortening with TinyUrl on link sharing (Rtnpro)
