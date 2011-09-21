@@ -11,13 +11,6 @@ _ = lambda v:v
 #because you don't want to import _ from here with import *
 __all__ = []
 
-
-
-
-
-
-
-
 #messages loaded in the templates via direct _ calls
 _('most relevant questions')
 _('click to see most relevant questions')
