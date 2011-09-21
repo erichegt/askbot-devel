@@ -15,6 +15,7 @@ Programming and documentation
 * Andy Knotts
 * Benoit Lavine (with Windriver Software, Inc.)
 * Jeff Madynski
+* `Hrishi <https://github.com/stultus>`_
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)
 * `NoahY <https://github.com/NoahY>`_
