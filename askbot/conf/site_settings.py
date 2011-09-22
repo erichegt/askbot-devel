@@ -5,8 +5,6 @@ keywords
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
-from django.utils.html import escape
-from askbot import const
 
 QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
                     'QA_SITE_SETTINGS',
@@ -74,19 +72,16 @@ settings.register(
 settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
-        'GREETING_URL',
-        default='/' + _('faq/'),#cannot reverse url here, must be absolute also
-        hidden=True,
+        'GREETING_FOR_ANONYMOUS_USER',
+        default='First time here? Check out the FAQ!',
+        hidden=False,
         description=_(
-                'Link shown in the greeting message '
+                'Text shown in the greeting message '
                 'shown to the anonymous user'
             ),
-        help_text=_('If you change this url from the default - '
-                    'then you will also probably want to adjust translation of '
-                    'the following string: ') + '"' 
-                    + escape(const.GREETING_FOR_ANONYMOUS_USER + '"'
-                    ' You can find this string in your locale django.po file'
-                    )
+        help_text=_(
+                'Use HTML to format the message '
+            )
     )
 )
 
