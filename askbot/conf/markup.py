@@ -113,12 +113,12 @@ settings.register(
         'PATTERN',
         description=_('Regex to detect the pattern'),
         help_text=_(
-            'Enter a valid regular expression to '
-            'detect the pattern. For example to'
-            'detect something like #rhbz 637402 '
-            'use a regular expression like #rhbz\s(\d+)'
-            'If you want to process multiple regex enter'
-            ' them line by line'
+            ' Enter valid regular expressions to'
+            ' detect patterns. If you want to auto'
+            ' link more than one key terms enter them'
+            ' line by line. For example to'
+            ' detect a bug pattern like #rhbz 637402'
+            ' you will have use the following regex  #rhbz\s(\d+)'
             ),
         update_callback=regex_settings_validation,
         default = ''
@@ -131,13 +131,14 @@ settings.register(
         'AUTO_LINK_URL',
         description=_('URL for autolinking'),
         help_text=_(
-            'Let us assume that to detect a pattern  #rhbz 637402'
-            ' the regex is  #rhbz\s(\d+) '
-            'then the autolink URL should be https://bugzilla.redhat.com/show_bug.cgi?id=\1'
-            ' Where \1 is the saved match (bugid) from the regular expression'
-            ' If you want to process multiple regex enter'
-            ' them line by line. The URL in first line will be used to link the'
-            ' pattern on the first line'
+            ' The regex to  detect pattern  #rhbz 637402'
+            ' is  #rhbz\s(\d+), If you want to auto link it to the actual bug'
+            ' then the autolink URL should be entered here. Example URL can be'
+            ' https://bugzilla.redhat.com/show_bug.cgi?id=\\1'
+            ' where \\1 is the saved match (bugid) from the regular expression.'
+            ' Multiple URLs should be entered in separate lines.'
+            ' The URL entered in first line'
+            ' will be used to auto link the first pattern or key term'
             ),
         default = ''
         )
