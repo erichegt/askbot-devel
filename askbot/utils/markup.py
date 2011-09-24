@@ -27,8 +27,10 @@ def get_parser():
         pattern_list = askbot_settings.PATTERN.split('\n')
         url_list = askbot_settings.AUTO_LINK_URL.split('\n')
         
-        for i in range(0,len(pattern_list)):
-            LINK_PATTERNS.append((re.compile(pattern_list[i].strip()),url_list[i].strip()))
+        #  Check whether  we have matching links for all key terms, Other wise we ignore the key terms
+        if len(pattern_list) == len(url_list):
+            for i in range(0,len(pattern_list)):
+                LINK_PATTERNS.append((re.compile(pattern_list[i].strip()),url_list[i].strip()))
             
     return Markdown(
                 html4tags=True,
