@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 import askbot
 from askbot import const
 import os
+import re
 
 MARKUP = ConfigurationGroup(
                     'MARKUP',
@@ -20,6 +21,24 @@ AUTOLINK = ConfigurationGroup(
     _('Auto link a pattern to an URL')
 
 )
+
+def regex_settings_validation(*args):
+    """
+    Validate the regular expressions
+   
+    """
+    try:
+
+        new_value = args[1]
+        regex_list = new_value.split('\n')
+        
+        for i in range(0,len(regex_list)):
+            re.compile(regex_list[i].strip())
+        return args[1]
+    
+    except Exception, e:
+        # The regex is invalid, so we overwrite it with empty string
+        return ""
 
 
 settings.register(
@@ -101,6 +120,7 @@ settings.register(
             'If you want to process multiple regex enter'
             ' them line by line'
             ),
+        update_callback=regex_settings_validation,
         default = ''
         )
     )
