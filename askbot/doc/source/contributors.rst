@@ -15,6 +15,7 @@ Programming and documentation
 * Andy Knotts
 * Benoit Lavine (with Windriver Software, Inc.)
 * Jeff Madynski
+* `Jishnu <http://thecodecracker.com/>`_
 * `Hrishi <https://github.com/stultus>`_
 * Andrei Mamoutkine
 * Ramiro Morales (with Machinalis)

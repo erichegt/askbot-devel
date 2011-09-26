@@ -72,19 +72,19 @@
         $("#id_user_status").change(function () {
             var optionValue = $(this).attr('value');
             if (optionValue == "d") {
-                $('#id_user_status_info').html("{% trans %}Administrator is the top-level user privilege set. This amounts to the same as an Operational user's privileges, plus the ability to manage users and alter system settings.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Administrators have privileges of normal users, but in addition they can assign/revoke any status to any user, and are exempt from the reputation limits.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "m"){
-                $('#id_user_status_info').html("{% trans %}Moderator differ from admins in that they cannot set anyone's status to 'moderator' or remove it.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Moderators have the same privileges as administrators, but cannot add or remove user status of 'moderator' or 'administrator'.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "a"){
-                $('#id_user_status_info').html("{% trans %}Approved status is for a regular user.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}'Approved' status means the same as regular user.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "s"){
-                $('#id_user_status_info').html("{% trans %}Suspended users can only edit or delete his/her own posts.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Suspended users can only edit or delete their own posts.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "b"){
-                $('#id_user_status_info').html("{% trans %}Blocked user can login and send feedback. nothing else.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Blocked users can only login and send feedback to the site administrators.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else {
                 $('#id_user_status_info').hide('slow');

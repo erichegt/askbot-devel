@@ -1,7 +1,11 @@
 Changes in Askbot
 =================
 
-0.7.23 (Current Version)
+0.7.24 (development version - not released)
+-------------------------------------------
+* Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
+
+0.7.23 (Current)
 -------------------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)
 * Greeting for anonymous users is shown only once (Rag Sagar)
