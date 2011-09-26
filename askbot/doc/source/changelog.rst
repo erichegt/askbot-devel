@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version (not released yet)
+--------------------------------------
+* Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
+
 0.7.23 (Current Version)
 -------------------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)

@@ -6,9 +6,7 @@ from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue, StringValue, LongStringValue
 from django.utils.translation import ugettext as _
-import askbot
 from askbot import const
-import os
 import re
 
 MARKUP = ConfigurationGroup(
@@ -16,27 +14,20 @@ MARKUP = ConfigurationGroup(
                     _('Markup formatting')
                 )
 
-AUTOLINK = ConfigurationGroup(
-    'AUTOLINK',
-    _('Auto link a pattern to an URL')
-
-)
-
 def regex_settings_validation(*args):
     """
     Validate the regular expressions
-   
     """
     try:
 
         new_value = args[1]
         regex_list = new_value.split('\n')
         
-        for i in range(0,len(regex_list)):
+        for i in range(0, len(regex_list)):
             re.compile(regex_list[i].strip())
         return args[1]
     
-    except Exception, e:
+    except Exception:
         # The regex is invalid, so we overwrite it with empty string
         return ""
 
@@ -92,34 +83,36 @@ settings.register(
 
 
 settings.register(
-        BooleanValue(
-            AUTOLINK,
-            'ENABLE_AUTO_LINKING',
-            description=_('Enable autolinking a specifc pattern'),
-            help_text=_(
-                'If you enable this feature, '
-                'the application  will be able to '
-                'detect patterns and auto link to URLs'        
-                ),
-        
-            default = False
-            )
-        )
+    BooleanValue(
+        MARKUP,
+        'ENABLE_AUTO_LINKING',
+        description=_('Enable autolinking with specific patterns'),
+        help_text=_(
+            'If you enable this feature, '
+            'the application  will be able to '
+            'detect patterns and auto link to URLs'        
+        ),
+        default = False
+    )
+)
 
 
 settings.register(
     LongStringValue(
-        AUTOLINK,
-        'PATTERN',
-        description=_('Regex to detect the pattern'),
+        MARKUP,
+        'AUTO_LINK_PATTERNS',
+        description=_('Regexes to detect the link patterns'),
         help_text=_(
-            ' Enter valid regular expressions to'
-            ' detect patterns. If you want to auto'
-            ' link more than one key terms enter them'
-            ' line by line. For example to'
-            ' detect a bug pattern like #rhbz 637402'
-            ' you will have use the following regex  #rhbz\s(\d+)'
-            ),
+            'Enter valid regular expressions for the patters,'
+            ' one per line.'
+            ' For example to'
+            ' detect a bug pattern like #bug123,'
+            ' use the following regex: #bug(\d+). The numbers'
+            ' captured by the pattern in the parentheses will'
+            ' be transferred to the link url template.'
+            ' Please look up more information about regular'
+            ' expressions elsewhere.'
+        ),
         update_callback=regex_settings_validation,
         default = ''
         )
@@ -127,20 +120,20 @@ settings.register(
 
 settings.register(
     LongStringValue(
-        AUTOLINK,
-        'AUTO_LINK_URL',
-        description=_('URL for autolinking'),
+        MARKUP,
+        'AUTO_LINK_URLS',
+        description=_('URLs for autolinking'),
         help_text=_(
-            ' The regex to  detect pattern  #rhbz 637402'
-            ' is  #rhbz\s(\d+), If you want to auto link it to the actual bug'
-            ' then the autolink URL should be entered here. Example URL can be'
+            'Here, please enter url templates for the patterns'
+            ' entered in the previous setting, also one entry per line.'
+            ' <strong>Make sure that number of lines in this setting'
+            ' and the previous one are the same</strong>'
+            ' For example template'
             ' https://bugzilla.redhat.com/show_bug.cgi?id=\\1'
-            ' where \\1 is the saved match (bugid) from the regular expression.'
-            ' Multiple URLs should be entered in separate lines.'
-            ' The URL entered in first line'
-            ' will be used to auto link the first pattern or key term'
-            ),
+            ' together with the pattern shown above'
+            ' and the entry in the post #123'
+            ' will produce link to the bug 123 in the redhat bug tracker.'
+        ),
         default = ''
-        )
     )
-
+)
