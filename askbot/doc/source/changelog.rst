@@ -1,12 +1,13 @@
 Changes in Askbot
 =================
 
-0.7.24 (development version - not released)
--------------------------------------------
+Development version (not released yet)
+--------------------------------------
 * Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
+* Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
 
-0.7.23 (Current)
--------------------
+0.7.23 (Current Version)
+------------------------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)
 * Greeting for anonymous users is shown only once (Rag Sagar)
 * Added support for Akismet spam detection service (Adolfo Fitoria)
