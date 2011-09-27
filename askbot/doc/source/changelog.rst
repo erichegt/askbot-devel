@@ -1,8 +1,13 @@
 Changes in Askbot
 =================
 
-Development version
--------------------
+Development version (not released yet)
+--------------------------------------
+* Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
+* Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
+
+0.7.23 (Current Version)
+------------------------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)
 * Greeting for anonymous users is shown only once (Rag Sagar)
 * Added support for Akismet spam detection service (Adolfo Fitoria)
@@ -11,8 +16,8 @@ Development version
 * Allowed logging in with password and email in the place of login name (Evgeny)
 * Added config settings allowing adjust license information (Evgeny)
 
-0.7.22 (Current Version)
-------------------------
+0.7.22
+------
 * Media resource revision is now incremented 
   automatically any time when media is updated (Adolfo Fitoria, Evgeny Fadeev)
 * First user automatically becomes site administrator (Adolfo Fitoria)
