@@ -328,7 +328,7 @@ msgstr "<b>输入图片地址</b></p><p>示例：<br />http://www.example.com/im
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr "<b>输入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的网站\"</p>""
+msgstr "<b>输入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的网站\"</p>"
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"

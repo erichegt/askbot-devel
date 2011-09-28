@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-28 00:33-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-09-28 04:13-0800\n"
+"Last-Translator: Rosandra Cuello <rosandra.cuello@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,7 @@ msgid "Please add one or more login methods."
 msgstr ""
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
-msgid ""
-"You don't have a method to log in right now, please add one or more by "
-"clicking any of the icons below."
+msgid "You don't have a method to log in right now, please add one or more by clicking any of the icons below."
 msgstr ""
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
@@ -73,39 +71,41 @@ msgstr ""
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "yükleniyor..."
 
-#: skins/common/media/js/post.js:127 skins/common/media/js/post.js.c:856
+#: skins/common/media/js/post.js:127
+#: skins/common/media/js/post.js.c:856
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "etiketler boş olamaz"
 
 #: skins/common/media/js/post.js:133
 msgid "content cannot be empty"
-msgstr ""
+msgstr "içerik boş olamaz"
 
 #: skins/common/media/js/post.js:134
 msgid "content minchars"
-msgstr ""
+msgstr "Lütfen en az (0) karakter girin"
 
 #: skins/common/media/js/post.js:137
 msgid "please enter title"
-msgstr ""
+msgstr "lütfen bir başlık yazın"
 
-#: skins/common/media/js/post.js:138 skins/common/media/js/post.js.c:981
+#: skins/common/media/js/post.js:138
+#: skins/common/media/js/post.js.c:981
 msgid "title minchars"
-msgstr ""
+msgstr "Lütfen en az (0) karakter girin"
 
 #: skins/common/media/js/post.js:281
 msgid "insufficient privilege"
-msgstr ""
+msgstr "buna yetkiniz yoktur"
 
 #: skins/common/media/js/post.js:282
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "en cevap olarak kendi cevabınızı seçemezsiniz"
 
 #: skins/common/media/js/post.js:287
 msgid "please login"
-msgstr ""
+msgstr "lütfen üye girişi yapınız"
 
 #: skins/common/media/js/post.js:289
 msgid "anonymous users cannot follow questions"
@@ -117,62 +117,67 @@ msgstr ""
 
 #: skins/common/media/js/post.js:291
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "üye girişi yapmadan oy kullanamazsınız"
 
 #: skins/common/media/js/post.js:293
 msgid "please confirm offensive"
-msgstr ""
+msgstr "şikayetinizi onaylayın"
 
 #: skins/common/media/js/post.js:294
 msgid "anonymous users cannot flag offensive posts"
-msgstr ""
+msgstr "üye girişi yapmadan şikayet gönderemezsiniz"
 
 #: skins/common/media/js/post.js:295
 msgid "confirm delete"
-msgstr ""
+msgstr "Bunu silmek istediğinizden emin misiniz?"
 
 #: skins/common/media/js/post.js:296
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "üye girişi yapmadan yazı silemez yada geri alamazsınız"
 
 #: skins/common/media/js/post.js:297
 msgid "post recovered"
-msgstr ""
+msgstr "yazı geri alındı"
 
 #: skins/common/media/js/post.js:298
 msgid "post deleted"
-msgstr ""
+msgstr "yazı silindi"
 
-#: skins/common/media/js/post.js:536 skins/default/media/js/post.js:535
+#: skins/common/media/js/post.js:536
+#: skins/default/media/js/post.js:535
 #: skins/old/media/js/post.js:535
 msgid "Follow"
 msgstr ""
 
-#: skins/common/media/js/post.js:545 skins/common/media/js/post.js.c:554
-#: skins/default/media/js/post.js:544 skins/default/media/js/post.js.c:553
-#: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
+#: skins/common/media/js/post.js:545
+#: skins/common/media/js/post.js.c:554
+#: skins/default/media/js/post.js:544
+#: skins/default/media/js/post.js.c:553
+#: skins/old/media/js/post.js:544
+#: skins/old/media/js/post.js.c:553
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/common/media/js/post.js:550 skins/default/media/js/post.js:549
+#: skins/common/media/js/post.js:550
+#: skins/default/media/js/post.js:549
 #: skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 msgstr ""
 
 #: skins/common/media/js/post.js:612
 msgid "undelete"
-msgstr ""
+msgstr "geri al"
 
 #: skins/common/media/js/post.js:617
 msgid "delete"
-msgstr ""
+msgstr "sil"
 
 #: skins/common/media/js/post.js:954
 msgid "add comment"
-msgstr ""
+msgstr "yorum ekle"
 
 #: skins/common/media/js/post.js:957
 msgid "save comment"
@@ -185,7 +190,7 @@ msgstr ""
 #: skins/common/media/js/post.js:989
 #, c-format
 msgid "%s characters left"
-msgstr ""
+msgstr "yazılabilir %s karakter eksik"
 
 #: skins/common/media/js/post.js:1060
 msgid "cancel"
@@ -197,13 +202,14 @@ msgstr ""
 
 #: skins/common/media/js/post.js:1177
 msgid "delete this comment"
-msgstr ""
+msgstr "bu yorumu sil"
 
 #: skins/common/media/js/post.js:1381
 msgid "confirm delete comment"
-msgstr ""
+msgstr "yorumu silmek istediğinizden emin misiniz?"
 
-#: skins/common/media/js/post.js:1622 skins/default/media/js/post.js:1621
+#: skins/common/media/js/post.js:1622
+#: skins/default/media/js/post.js:1621
 #: skins/old/media/js/post.js:1621
 msgid "Please enter question title (>10 characters)"
 msgstr ""
@@ -231,24 +237,28 @@ msgid_plural "Delete these notifications?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/common/media/js/user.js:125 skins/default/media/js/user.js:129
+#: skins/common/media/js/user.js:125
+#: skins/default/media/js/user.js:129
 #: skins/old/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
 msgstr ""
 
-#: skins/common/media/js/user.js:157 skins/default/media/js/user.js:161
+#: skins/common/media/js/user.js:157
+#: skins/default/media/js/user.js:161
 #: skins/old/media/js/user.js:161
 #, c-format
 msgid "unfollow %s"
 msgstr ""
 
-#: skins/common/media/js/user.js:160 skins/default/media/js/user.js:164
+#: skins/common/media/js/user.js:160
+#: skins/default/media/js/user.js:164
 #: skins/old/media/js/user.js:164
 #, c-format
 msgid "following %s"
 msgstr ""
 
-#: skins/common/media/js/user.js:166 skins/default/media/js/user.js:170
+#: skins/common/media/js/user.js:166
+#: skins/default/media/js/user.js:170
 #: skins/old/media/js/user.js:170
 #, c-format
 msgid "follow %s"
@@ -273,27 +283,27 @@ msgstr ""
 
 #: skins/common/media/js/wmd/wmd.js:30
 msgid "bold"
-msgstr ""
+msgstr "kalın"
 
 #: skins/common/media/js/wmd/wmd.js:31
 msgid "italic"
-msgstr ""
+msgstr "italik"
 
 #: skins/common/media/js/wmd/wmd.js:32
 msgid "link"
-msgstr ""
+msgstr "link"
 
 #: skins/common/media/js/wmd/wmd.js:33
 msgid "quote"
-msgstr ""
+msgstr "alıntı"
 
 #: skins/common/media/js/wmd/wmd.js:34
 msgid "preformatted text"
-msgstr ""
+msgstr "hazır metin"
 
 #: skins/common/media/js/wmd/wmd.js:35
 msgid "image"
-msgstr ""
+msgstr "resimler"
 
 #: skins/common/media/js/wmd/wmd.js:36
 msgid "attachment"
@@ -301,35 +311,36 @@ msgstr ""
 
 #: skins/common/media/js/wmd/wmd.js:37
 msgid "numbered list"
-msgstr ""
+msgstr "numaralı liste"
 
 #: skins/common/media/js/wmd/wmd.js:38
 msgid "bulleted list"
-msgstr ""
+msgstr "işaretli liste"
 
 #: skins/common/media/js/wmd/wmd.js:39
 msgid "heading"
-msgstr ""
+msgstr "Başlık"
 
 #: skins/common/media/js/wmd/wmd.js:40
 msgid "horizontal bar"
-msgstr ""
+msgstr "yatay bar"
 
 #: skins/common/media/js/wmd/wmd.js:41
 msgid "undo"
-msgstr ""
+msgstr "geri"
 
-#: skins/common/media/js/wmd/wmd.js:42 skins/common/media/js/wmd/wmd.js:1116
+#: skins/common/media/js/wmd/wmd.js:42
+#: skins/common/media/js/wmd/wmd.js:1116
 msgid "redo"
-msgstr ""
+msgstr "yeniden"
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr ""
+msgstr "örnek resmin URLsini girin： <br />http://www.example.com/image.jpg   \"resim başlığı\""
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr ""
+msgstr "web adresini girin： <br />http://www.cnprog.com/   \"başlık bağlantısı\"</p>"
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"
@@ -346,3 +357,4 @@ msgstr ""
 #: skins/common/media/js/wmd/wmd.js:1785
 msgid "link text"
 msgstr ""
+

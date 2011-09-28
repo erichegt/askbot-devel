@@ -77,7 +77,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:127 skins/common/media/js/post.js.c:856
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "please enter at least one tag"
 
 #: skins/common/media/js/post.js:133
 msgid "content cannot be empty"
@@ -85,7 +85,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:134
 msgid "content minchars"
-msgstr ""
+msgstr "please enter more than {0} characters"
 
 #: skins/common/media/js/post.js:137
 msgid "please enter title"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:138 skins/common/media/js/post.js.c:981
 msgid "title minchars"
-msgstr ""
+msgstr "please enter at least {0} characters"
 
 #: skins/common/media/js/post.js:281
 msgid "insufficient privilege"
@@ -101,7 +101,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:282
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "sorry, you cannot accept your own answer"
 
 #: skins/common/media/js/post.js:287
 msgid "please login"
@@ -117,11 +117,11 @@ msgstr ""
 
 #: skins/common/media/js/post.js:291
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "sorry, anonymous users cannot vote "
 
 #: skins/common/media/js/post.js:293
 msgid "please confirm offensive"
-msgstr ""
+msgstr "are you sure this post is offensive, contains spam, advertising, malicious remarks, etc.?"
 
 #: skins/common/media/js/post.js:294
 msgid "anonymous users cannot flag offensive posts"
@@ -129,24 +129,24 @@ msgstr ""
 
 #: skins/common/media/js/post.js:295
 msgid "confirm delete"
-msgstr ""
+msgstr "are you sure you want to delete this?"
 
 #: skins/common/media/js/post.js:296
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "sorry, anonymous users cannot delete or undelete posts"
 
 #: skins/common/media/js/post.js:297
 msgid "post recovered"
-msgstr ""
+msgstr "your post is now restored!"
 
 #: skins/common/media/js/post.js:298
 msgid "post deleted"
-msgstr ""
+msgstr "your post has been deleted"
 
 #: skins/common/media/js/post.js:536 skins/default/media/js/post.js:535
 #: skins/old/media/js/post.js:535
 msgid "Follow"
-msgstr ""
+msgstr "Follow"
 
 #: skins/common/media/js/post.js:545 skins/common/media/js/post.js.c:554
 #: skins/default/media/js/post.js:544 skins/default/media/js/post.js.c:553
@@ -160,7 +160,7 @@ msgstr[1] ""
 #: skins/common/media/js/post.js:550 skins/default/media/js/post.js:549
 #: skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<b>Following</b><b class=\"unfollow\">Unfollow</b>"
 
 #: skins/common/media/js/post.js:612
 msgid "undelete"
@@ -176,11 +176,11 @@ msgstr ""
 
 #: skins/common/media/js/post.js:957
 msgid "save comment"
-msgstr ""
+msgstr "save comment"
 
 #: skins/common/media/js/post.js:984
 msgid "enter more characters"
-msgstr ""
+msgstr "please enter at least {0} more characters"
 
 #: skins/common/media/js/post.js:989
 #, c-format
@@ -193,7 +193,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:1103
 msgid "confirm abandon comment"
-msgstr ""
+msgstr "Are you sure you do not want to post this comment?"
 
 #: skins/common/media/js/post.js:1177
 msgid "delete this comment"
@@ -201,7 +201,7 @@ msgstr ""
 
 #: skins/common/media/js/post.js:1381
 msgid "confirm delete comment"
-msgstr ""
+msgstr "do you really want to delete this comment?"
 
 #: skins/common/media/js/post.js:1622 skins/default/media/js/post.js:1621
 #: skins/old/media/js/post.js:1621
@@ -260,11 +260,11 @@ msgstr ""
 
 #: skins/common/media/js/utils.js:214
 msgid "click to edit this comment"
-msgstr ""
+msgstr "click to edit this comment"
 
 #: skins/common/media/js/utils.js:215
 msgid "edit"
-msgstr ""
+msgstr "edit"
 
 #: skins/common/media/js/utils.js:369
 #, c-format
@@ -325,15 +325,15 @@ msgstr ""
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr ""
+msgstr "enter URL of the image, e.g. http://www.example.com/image.jpg or upload an image file"
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr ""
+msgstr "enter Web address, e.g. http://www.example.com \"page title\""
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"
-msgstr ""
+msgstr "Please choose and upload a file:"
 
 #: skins/common/media/js/wmd/wmd.js:1778
 msgid "image description"

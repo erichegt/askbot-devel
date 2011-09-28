@@ -73,39 +73,39 @@ msgstr ""
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "讀取中..."
 
 #: skins/common/media/js/post.js:127 skins/common/media/js/post.js.c:856
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "標籤不能為空白"
 
 #: skins/common/media/js/post.js:133
 msgid "content cannot be empty"
-msgstr ""
+msgstr "內容不能為空白"
 
 #: skins/common/media/js/post.js:134
 msgid "content minchars"
-msgstr ""
+msgstr "請輸入至少 {0} 字符。"
 
 #: skins/common/media/js/post.js:137
 msgid "please enter title"
-msgstr ""
+msgstr "請輸入標題。"
 
 #: skins/common/media/js/post.js:138 skins/common/media/js/post.js.c:981
 msgid "title minchars"
-msgstr ""
+msgstr "請輸入至少 {0} 字符。"
 
 #: skins/common/media/js/post.js:281
 msgid "insufficient privilege"
-msgstr ""
+msgstr "權限不足"
 
 #: skins/common/media/js/post.js:282
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "不能蔽掃自珍"
 
 #: skins/common/media/js/post.js:287
 msgid "please login"
-msgstr ""
+msgstr "請先登錄"
 
 #: skins/common/media/js/post.js:289
 msgid "anonymous users cannot follow questions"
@@ -121,27 +121,27 @@ msgstr ""
 
 #: skins/common/media/js/post.js:293
 msgid "please confirm offensive"
-msgstr ""
+msgstr "確定要歸類該帖為廣告、人身攻擊、惡意言論嗎？"
 
 #: skins/common/media/js/post.js:294
 msgid "anonymous users cannot flag offensive posts"
-msgstr ""
+msgstr "匿名用戶不能操作"
 
 #: skins/common/media/js/post.js:295
 msgid "confirm delete"
-msgstr ""
+msgstr "確定刪除"
 
 #: skins/common/media/js/post.js:296
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "匿名用戶不能刪除或恢復帖子"
 
 #: skins/common/media/js/post.js:297
 msgid "post recovered"
-msgstr ""
+msgstr "操作成功！該帖子已被恢複。"
 
 #: skins/common/media/js/post.js:298
 msgid "post deleted"
-msgstr ""
+msgstr "操作成功！該帖子已刪除。"
 
 #: skins/common/media/js/post.js:536 skins/default/media/js/post.js:535
 #: skins/old/media/js/post.js:535
@@ -164,15 +164,15 @@ msgstr ""
 
 #: skins/common/media/js/post.js:612
 msgid "undelete"
-msgstr ""
+msgstr "取消"
 
 #: skins/common/media/js/post.js:617
 msgid "delete"
-msgstr ""
+msgstr "刪除"
 
 #: skins/common/media/js/post.js:954
 msgid "add comment"
-msgstr ""
+msgstr "添加評論"
 
 #: skins/common/media/js/post.js:957
 msgid "save comment"
@@ -185,7 +185,7 @@ msgstr ""
 #: skins/common/media/js/post.js:989
 #, c-format
 msgid "%s characters left"
-msgstr ""
+msgstr "還可寫%s字"
 
 #: skins/common/media/js/post.js:1060
 msgid "cancel"
@@ -197,11 +197,11 @@ msgstr ""
 
 #: skins/common/media/js/post.js:1177
 msgid "delete this comment"
-msgstr ""
+msgstr "刪除此評論"
 
 #: skins/common/media/js/post.js:1381
 msgid "confirm delete comment"
-msgstr ""
+msgstr "刪除評論確認"
 
 #: skins/common/media/js/post.js:1622 skins/default/media/js/post.js:1621
 #: skins/old/media/js/post.js:1621
@@ -255,7 +255,7 @@ msgstr ""
 
 #: skins/common/media/js/utils.js:43
 msgid "click to close"
-msgstr ""
+msgstr "點擊消息框關閉"
 
 #: skins/common/media/js/utils.js:214
 msgid "click to edit this comment"
@@ -272,27 +272,27 @@ msgstr ""
 
 #: skins/common/media/js/wmd/wmd.js:30
 msgid "bold"
-msgstr ""
+msgstr "粗體"
 
 #: skins/common/media/js/wmd/wmd.js:31
 msgid "italic"
-msgstr ""
+msgstr "斜體"
 
 #: skins/common/media/js/wmd/wmd.js:32
 msgid "link"
-msgstr ""
+msgstr "超連接"
 
 #: skins/common/media/js/wmd/wmd.js:33
 msgid "quote"
-msgstr ""
+msgstr "引用"
 
 #: skins/common/media/js/wmd/wmd.js:34
 msgid "preformatted text"
-msgstr ""
+msgstr "代碼"
 
 #: skins/common/media/js/wmd/wmd.js:35
 msgid "image"
-msgstr ""
+msgstr "圖片"
 
 #: skins/common/media/js/wmd/wmd.js:36
 msgid "attachment"
@@ -300,35 +300,35 @@ msgstr ""
 
 #: skins/common/media/js/wmd/wmd.js:37
 msgid "numbered list"
-msgstr ""
+msgstr "數字編號列表"
 
 #: skins/common/media/js/wmd/wmd.js:38
 msgid "bulleted list"
-msgstr ""
+msgstr "項目符號列表"
 
 #: skins/common/media/js/wmd/wmd.js:39
 msgid "heading"
-msgstr ""
+msgstr "標題"
 
 #: skins/common/media/js/wmd/wmd.js:40
 msgid "horizontal bar"
-msgstr ""
+msgstr "水平線"
 
 #: skins/common/media/js/wmd/wmd.js:41
 msgid "undo"
-msgstr ""
+msgstr "撤銷"
 
 #: skins/common/media/js/wmd/wmd.js:42 skins/common/media/js/wmd/wmd.js:1116
 msgid "redo"
-msgstr ""
+msgstr "重做"
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr ""
+msgstr "<b>輸入圖片地址</b></p><p>示例：<br />http://www.example.com/image.jpg   \"我的截圖\""
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr ""
+msgstr "<b>輸入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的網站\"</p>"
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"
