@@ -53,14 +53,26 @@ class RssParticularQuestionFeed(Feed):
         return results
     
     def item_title(self, item):
+	"""returns the title for the item
+	"""
         title = item
         if item.__class__.__name__ == "Question":
             self.title = item
-        if item.__class__.__name__ == "Answer":
-            title = "Answer for %s " %self.title
+        elif item.__class__.__name__ == "Answer":
+            title = "Answer by %s for %s " %(item.author,self.title)
         elif item.__class__.__name__ == "Comment":
-            title = "Comment for %s" %self.title
+            title = "Comment by %s for %s" %(item.user,self.title)
         return title
+        
+    def item_description(self,item):
+	"""returns the description for the item
+	"""
+	if item.__class__.__name__ == "Question":
+            return item.text
+        if item.__class__.__name__ == "Answer":
+            return item.text
+        elif item.__class__.__name__ == "Comment":
+            return item.comment
 
 class RssLastestQuestionsFeed(Feed):
     """rss feed class for the latest questions
@@ -96,6 +108,11 @@ class RssLastestQuestionsFeed(Feed):
         because the slug can change
         """
         return self.link + item.get_absolute_url(no_slug = True)
+        
+    def item_description(self, item):
+	"""returns the desciption for the item
+	"""
+	return item.text
 
     def items(self, item):
         """get questions for the feed
