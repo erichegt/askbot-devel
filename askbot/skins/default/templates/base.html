@@ -22,6 +22,7 @@
                 type="text/css"
             />
         {% endif %}
+        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700' rel='stylesheet' type='text/css'>
         {% block forestyle %}{% endblock %}
         {% if user_messages %}
         <style type="text/css">
@@ -46,7 +47,8 @@
     <body class="{% block body_class %}{% endblock %}{% if page_class %} {{page_class}}{% endif %}">
         {% include "blocks/system_messages.html" %}
         {% include "custom_header.html" ignore missing %}
-        {% include "blocks/header.html" %}
+        {% include "blocks/header.html" %} {# Logo, user tool navigation and meta navitation #}
+        {% include "blocks/secundary_header.html" %} {# Scope selector, search input and ask button #}
         <div class="content-wrapper">
             {% block body %}
             {% endblock %}
