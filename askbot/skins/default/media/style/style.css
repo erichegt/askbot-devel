@@ -204,7 +204,7 @@ h1 {
     padding: 5px 0px 5px 0px;
 }
 
-#user-tools-navigation {
+#user-tools-nav {
     height: 20px;
     position:absolute;
     bottom: 0;
@@ -212,7 +212,7 @@ h1 {
     padding-bottom:5px;
 }
 
-#user-tools-navigation a {
+#user-tools-nav a {
     height: 35px;
     text-align: right;
     margin-left: 20px;
@@ -221,48 +221,40 @@ h1 {
     font-size:16px;
 }
 
-#user-tools-navigation a:first-child {
+#user-tools-nav a:first-child {
     margin-left: 0;
 }
 
-#user-tools-navigation a#ab-responses {
+#user-tools-nav a#ab-responses {
     margin-left: 3px;
 }
 
 
-#user-tools-navigation .user-info,
-#user-tools-navigation .user-micro-info{
+#user-tools-nav .user-info,
+#user-tools-nav .user-micro-info{
     color:#b5b593;
 }
 
-#user-tools-navigation a img {
+#user-tools-nav a img {
     vertical-align:middle;
     margin-bottom:2px;
 }
 
-#user-tools-navigation .user-info a {
+#user-tools-nav .user-info a {
     margin: 0;
     text-decoration: none;
 }
 
-#main-nav {
-    position: absolute;
-    left: 100px;
+#meta-nav {
+    float:right;
 }
 
-#main-nav {
-    bottom: 0;
-}
-
-#main-nav a {
-    color: #333333;
-    background-color: #fff0e0;
-    border: 1px solid #888888;
-    border-bottom: none;
-    padding: 0px 12px 3px 12px;
+#meta-nav a {
+    color: #e2e2ae;
+    padding: 0px 0px 0px 35px;
     height: 25px;
     line-height: 30px;
-    margin-right: 10px;
+    margin:5px 10px 0px 0px;
     font-size: 18px;
     font-weight: 100;
     text-decoration: none;
@@ -270,34 +262,45 @@ h1 {
     float: left;
 }
 
-#main-nav a:hover {
+#meta-nav a:hover {
     text-decoration: underline;
 }
 
-#main-nav a.on {
-    height: 24px;
-    line-height: 28px;
-    border-bottom: 1px solid #a40000;
-    border-right: 1px solid #820000;
-    border-top: 1px solid #d40000;
-    border-left: 1px solid #d40000; /*background:#A31E39; */
-    background: #b03a48;
+#meta-nav a.on {
+    font-weight:bold;
     color: #FFF;
-    font-weight: 800;
-    text-decoration: none
+    text-decoration: none;
 }
 
-#main-nav a.special {
+#meta-nav a.special {
     font-size: 18px;
     color: #B02B2C;
     font-weight: bold;
     text-decoration: none;
 }
 
-#main-nav a.special:hover {
+#meta-nav a.special:hover {
     text-decoration: underline;
 }
 
+#meta-nav #nav_tags{
+    background: url(../images/sprites.png) -50px -5px no-repeat;
+}
+
+#meta-nav #nav_users{
+    background: url(../images/sprites.png) -125px -5px no-repeat;
+}
+
+#meta-nav #nav_badges{
+    background: url(../images/sprites.png) -210px -5px no-repeat;
+}
+
+#secundary-header{
+    height:55px;
+    background:#e9e9e1;
+    border-bottom:#d3d3c2 1px solid;
+    margin-bottom:10px;
+}
 
 .users-page h1, .tags-page h1 {
     float: left;

@@ -8,12 +8,12 @@
             title="{% trans %}back to home page{% endtrans %}"
             alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/></a>
         {% endif %}
-        <div id="user-tools-navigation">
-            {% include "blocks/header_meta_links.html" %}
+        <div id="user-tools-nav">
+            {% include "blocks/user_navigation.html" %}
             {{settings.CUSTOM_HEADER}}
         </div>
         
-        <div id="main-nav">
+        <div id="meta-nav">
             <!--
             <a 
                 id="nav_questions"
@@ -44,7 +44,6 @@
             >{% trans %}ask a question{% endtrans %}</a>
             -->
         </div>
-        
         <div class="clean"></div>
     </div>
 </div>
