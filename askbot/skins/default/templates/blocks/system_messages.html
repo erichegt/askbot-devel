@@ -1,8 +1,8 @@
 <div class="notify" style="display:none">
     {% if user_messages %}
         {% for message in user_messages %}
-              <p class="darkred">{{ message }}</p>
+              <p class="greymessage">{{ message }}</p>
         {% endfor %}
     {% endif %}
-    <a id="close-notify" onclick="notify.close(true)">&times;</a>
+    <a id="close-notify" onclick="notify.close(true)"></a>
 </div>
