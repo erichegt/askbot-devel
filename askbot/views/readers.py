@@ -71,7 +71,7 @@ def questions(request):
     #don't allow to post to this view
     if request.method == 'POST':
         raise Http404
-
+    #import pdb; pdb.set_trace()
     #update search state
     form = AdvancedSearchForm(request.GET)
     if form.is_valid():
@@ -119,7 +119,7 @@ def questions(request):
         'has_next': page.has_next(),
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
-        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
+        'base_url' : request.path + search_state.query_string() + '&',#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
@@ -280,6 +280,7 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
+    #import pdb; pdb.set_trace()
     template_data = {
         'active_tab': 'questions',
         'author_name' : meta_data.get('author_name',None),
@@ -291,6 +292,7 @@ def questions(request):
         'language_code': translation.get_language(),
         'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
         'page_class': 'main-page',
+        'page_size': search_state.page_size,
         'query': search_state.query,
         'questions' : page,
         'questions_count' : paginator.count,
@@ -305,6 +307,7 @@ def questions(request):
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
         'update_avatar_data': schedules.should_update_avatar_data(request),
+        'query_string': search_state.query_string(),
     }
 
     assert(request.is_ajax() == False)

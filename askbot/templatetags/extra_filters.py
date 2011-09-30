@@ -156,3 +156,29 @@ def humanize_counter(number):
 @register.filter
 def absolute_value(number):
     return abs(number)
+
+
+@register.filter
+def replace_in_url(query_string, param):
+    type, value = param.split('=')
+    params = query_string.lstrip('?').split('&')
+
+    for p in params:
+        if type in p:
+            params[params.index(p)] = param
+
+    query_string = "?"+'&'.join(params)
+    return query_string
+
+@register.filter
+def add_tag_to_url(query_string, param):
+    if query_string:
+        params = query_string.lstrip('?').split('&')
+
+        for p in params:
+            if param in p:
+                return ''
+
+    return '&'+param
+    
+    

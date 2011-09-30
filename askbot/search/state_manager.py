@@ -295,6 +295,20 @@ class SearchState(object):
     def reset_scope(self):
         self.scope = const.DEFAULT_POST_SCOPE
 
+    def query_string(self):
+        out = 'scope=%s' % self.scope
+        out += '&sort=%s' % self.sort
+        if self.query:
+            out += '&query=%s' % self.query
+        if hasattr(self, 'search'):
+            if self.search == 'search':
+                out += '&search = search'
+        if self.tags:
+            for tag in self.tags:
+                out += '&tags=%s' % tag
+        #out += '&page=%d' % self.page
+        return '?'+out
+
 class ViewLog(object):
     """The ViewLog helper obejcts store the trail of the page visits for a
     given user. The trail is recorded only up to a certain depth.

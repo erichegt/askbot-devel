@@ -2,7 +2,7 @@
 <div id="question-list">
 {% cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
     {% for question in questions.object_list %}
-        {{macros.question_summary(question)}}
+        {{macros.question_summary(question, query_string=query_string)}}
     {% endfor %}
 {% endcache %}
 {# comment todo: fix css here #}

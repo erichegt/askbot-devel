@@ -1,16 +1,17 @@
 {% import "macros.html" as macros %}
-{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
+{% load extra_filters %}
+{# cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code #}
 <div class="tabBar">
     <div class="tabsC">
         <span class="label">{% trans %}In:{% endtrans %}</span>
         <a id="all" 
             class="{% if scope == 'all' %}on{% else %}off{% endif %}"
-            href="?scope=all" 
+            href="{{ query_string|replace_in_url("scope=all") }}"
             title="{% trans %}see all questions{% endtrans %}"
         ><span>{% trans %}all{% endtrans %}</span></a>
         <a id="unanswered" 
             class="{% if scope == 'unanswered' %}on{% else %}off{% endif %}"
-            href="?scope=unanswered&amp;sort=answers-asc" 
+            href="{{ query_string|replace_in_url("scope=unanswered")|replace_in_url("sort=answers-asc") }}" 
             title="{% trans %}see unanswered questions{% endtrans %}"
         ><span>{% trans %}unanswered{% endtrans %}</span></a>
         {% if request.user.is_authenticated() %} 
@@ -30,7 +31,7 @@
             {% if query %}
             <a id="by_relevance"
                 {% if sort == "relevance-desc" %}
-                    href="?sort=relevance-desc"
+                    href={{ query_string|replace_in_url("sort=relevance-desc") }}
                     class="on"
                     title="{{asc_relevance_tooltip}}"><span>{{relevance_label}} &#9660;</span>
                 {% else %}
@@ -54,7 +55,8 @@
                 label = gettext('by date'),
                 asc_tooltip = gettext('click to see the oldest questions'),
                 desc_tooltip = gettext('click to see the newest questions'),
-                current_sort_method = sort
+                current_sort_method = sort,
+                query_string = query_string,
             )
         }}
         {{macros.reversible_sort_button(
@@ -62,7 +64,8 @@
                 label = gettext('by activity'),
                 asc_tooltip = gettext('click to see the least recently updated questions'),
                 desc_tooltip = gettext('click to see the most recently updated questions'),
-                current_sort_method = sort
+                current_sort_method = sort,
+                query_string = query_string,
             )
         }}
         {{macros.reversible_sort_button(
@@ -70,7 +73,8 @@
                 label = gettext('by answers'),
                 asc_tooltip = gettext('click to see the least answered questions'),
                 desc_tooltip = gettext('click to see the most answered questions'),
-                current_sort_method = sort
+                current_sort_method = sort,
+                query_string = query_string,
             )
         }}
         {{macros.reversible_sort_button(
@@ -78,9 +82,10 @@
                 label = gettext('by votes'),
                 asc_tooltip = gettext('click to see least voted questions'),
                 desc_tooltip = gettext('click to see most voted questions'),
-                current_sort_method = sort
+                current_sort_method = sort,
+                query_string = query_string,
             )
         }}
     </div>
 </div>
-{% endcache %}
+{# endcache #}
