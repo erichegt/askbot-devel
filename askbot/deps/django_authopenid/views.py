@@ -550,13 +550,23 @@ def show_signin_view(
         for login_method in existing_login_methods:
             if login_method.provider_name == 'facebook':
                 continue#it is disabled
-            provider_data = providers[login_method.provider_name]
-            if provider_data['type'] == 'password':
-                #only external password logins will not be deletable
-                #this is because users with those can lose access to their accounts permanently
-                login_method.is_deletable = provider_data.get('password_changeable', False)
-            else:
-                login_method.is_deletable = True
+            try:
+                provider_data = providers[login_method.provider_name]
+                if provider_data['type'] == 'password':
+                    #only external password logins will not be deletable
+                    #this is because users with those can lose access to their accounts permanently
+                    login_method.is_deletable = provider_data.get('password_changeable', False)
+                else:
+                    login_method.is_deletable = True
+            except KeyError:
+                logging.critical(
+                    'login method %s is no longer available '
+                    'please delete records for this login method '
+                    'from the UserAssociation table',
+                    login_method.provider_name
+                )
+                continue
+
 
 
     if view_subtype == 'default':
