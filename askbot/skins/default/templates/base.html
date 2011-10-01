@@ -13,7 +13,8 @@
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
-        <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
+        <link href="{{"/style/style.css"|media }}" rel="stylesheet/less" type="text/css" />
+        <script type="text/javascript" src="{{"/js/less.min.js"|media}}"></script>
         {{ skin.get_extra_css_link() }}
         {% if settings.USE_CUSTOM_CSS %}
             <link 
@@ -22,7 +23,6 @@
                 type="text/css"
             />
         {% endif %}
-        <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700' rel='stylesheet' type='text/css'>
         {% block forestyle %}{% endblock %}
         {% if user_messages %}
         <style type="text/css">

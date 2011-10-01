@@ -1,7 +1,7 @@
 <div class="notify" style="display:none">
     {% if user_messages %}
         {% for message in user_messages %}
-              <p class="greymessage">{{ message }}</p>
+              <p>{{ message }}</p>
         {% endfor %}
     {% endif %}
     <a id="close-notify" onclick="notify.close(true)"></a>
