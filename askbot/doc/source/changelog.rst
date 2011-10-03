@@ -1,14 +1,14 @@
 Changes in Askbot
 =================
 
-Development version (not released yet)
---------------------------------------
+0.7.24 (Current Version)
+------------------------
 * Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
 * Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
 * Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
 
-0.7.23 (Current Version)
-------------------------
+0.7.23
+------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)
 * Greeting for anonymous users is shown only once (Rag Sagar)
 * Added support for Akismet spam detection service (Adolfo Fitoria)
