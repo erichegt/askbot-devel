@@ -529,6 +529,18 @@
                 $('#fmanswer textarea').focus();
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
+            var answer_id = window.location.hash.substring(1);
+            if (answer_id!=""){
+              $("#answer-container-" + answer_id).addClass('highlight');
+              $("#answer-container-" + answer_id).hide();
+              $("#answer-container-" + answer_id).fadeIn(2000);
+              //using window.setTimeout
+              /*function foo(){
+                $("#answer-container-" + answer_id).removeClass('highlight')
+              }
+              var timeout = window.setTimeout(foo, 2000);
+              */
+            }
         });
         
         function initEditor(){
