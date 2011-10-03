@@ -282,11 +282,11 @@ poor design of the data or methods on data objects #}
     {% endif %}
     </div>
 {% elif contributor_type=="last_updater" %}
-    {% if post.post_type in ('Question', 'Answer') %}
+    {% if post.post_type in ('question', 'answer') %}
         {% set last_edited_at = post.last_edited_at %}
         {% set original_author = post.author %}
         {% set update_author = post.last_edited_by %}
-    {% elif post.post_type in ('QuestionRevision', 'AnswerRevision') %}
+    {% elif post.__class__.__name__ in ('QuestionRevision', 'AnswerRevision') %}
         {% set last_edited_at = post.revised_at %}
         {% set original_author = None %}{# fake value to force display widget in the revision views #}
         {% set update_author = post.author %}
@@ -295,7 +295,7 @@ poor design of the data or methods on data objects #}
     <div class='post-update-info'>
         <p style="line-height:12px;">
             <a 
-        {% if post.post_type == 'Question' %}
+        {% if post.post_type == 'question' %}
             href="{% url question_revisions post.id %}"
         {% else %}
             href="{% url answer_revisions post.id %}"
