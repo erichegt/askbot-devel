@@ -11,6 +11,8 @@
             <a class="scope-selector {% if scope == 'favorite' %}on{% endif %}"
             href="?scope=favorite" title="{% trans %}see your followed questions{% endtrans %}">FOLLOWED</a>
         {% endif %}
+        
+        {% include "blocks/input_bar.html" %} {# include search form block #}
         <div class="clean"></div>
     </div>
 </div>

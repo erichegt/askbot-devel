@@ -11,6 +11,14 @@
             action="{% url questions %}" 
         {% endif %}
         method="get">
+            <input type="submit" value="" name="search" class="searchBtn" />
+            {% if active_tab == "tags" %}
+                <input type="hidden" name="t" value="tag"/>
+            {% else %}
+                {% if active_tab == "users" %}
+                    <input type="hidden" name="t" value="user"/>
+                {% endif %}
+            {% endif %}
             {# class was searchInput #}
             <input 
                 {% if query %}
@@ -25,20 +33,13 @@
                 id="keywords"/>
             {% if query %}{# query is only defined by questions view #}
             <input type="button"
-                value="x"
+                value="X"
                 name="reset_query"
                 {# todo - make sure it works on Enter keypress #}
                 onclick="window.location.href='{% url questions %}?reset_query=true'"
                 class="cancelSearchBtn"/>
             {% endif %}
-            <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" />
-            {% if active_tab == "tags" %}
-                <input type="hidden" name="t" value="tag"/>
-            {% else %}
-                {% if active_tab == "users" %}
-                    <input type="hidden" name="t" value="user"/>
-                {% endif %}
-            {% endif %}
+
     </form>
 </div>
 {% endspaceless %}

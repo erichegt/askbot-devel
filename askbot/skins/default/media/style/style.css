@@ -330,8 +330,87 @@ h1 {
 }
 
 
+#searchBar {
+    display:inline-block;
+    background-color: #fff;
+    width:400px;
+    border: 1px solid #c9c9b5;
+    float:left;
+    height:42px;
+    margin:6px 0px 0px 15px;
 
+    .searchInput, .searchInputCancelable {
+        font-size: 18px;
+        height: 40px;
+        background:#FFF;
+        border:0px;
+        color:#c2c2c2;
+        padding-left:10px;
+        font-family: 'Yanone Kaffeesatz', sans-serif;
+    }
 
+    .searchInput, .searchInputCancelable {
+        width: 342px;
+    }
+
+    .searchInputCancelable {
+        width: 307px;
+    }
+
+    .searchBtn {
+        font-size: 10px;
+        color: #666;
+        background-color: #eee;
+        height: 42px;
+        border:#FFF 1px solid;
+        line-height: 22px;
+        text-align: center;
+        float:right;
+        margin: 0px;
+        width:48px;
+        .sprites(-98px,-36px);
+        cursor:pointer;
+    }
+
+    .searchBtn:hover {
+        .sprites(-98px-48,-36px);
+    }
+
+    .cancelSearchBtn {
+        font-size: 30px;
+        color: #ce8888;
+        background:#fff;
+        height: 42px;
+        border:0px;
+        border-left:#deded0 1px solid;
+        text-align: center;
+        width: 35px;
+        cursor:pointer;
+    }
+
+    .cancelSearchBtn:hover {
+        color: #d84040;
+    }
+}
+
+/* ----- Content layout ----- */
+
+#ContentLeft {
+    width: 710px;
+    float: left;
+    position: relative;
+}
+
+#ContentRight {
+    width: 230px;
+    float: right;
+    padding: 0 5px 10px 5px;
+}
+
+#ContentFull {
+    float: left;
+    width: 950px;
+}
 
 
 .users-page h1, .tags-page h1 {
@@ -347,24 +426,7 @@ h1 {
 
 
 
-#CALeft {
-    width: 710px;
-    float: left;
-    position: relative;
-    padding: 0 5px 10px 5px;
-}
 
-#CARight {
-    width: 230px;
-    float: right;
-    padding: 0 5px 10px 5px;
-}
-
-#CAFull {
-    float: left;
-    padding: 0 5px 10px 5px;
-    width: 950px;
-}
 
 #ground {
     width: 100%;
@@ -385,51 +447,6 @@ img.license-logo {
     margin: 6px 0 10px 0;
 }
 
-
-#searchBar {
-    display:inline-block;
-    background-color: #cccccc;/*888a85; /*#e9b96e;*/
-    width:700px;
-    border: 1px solid #aaaaaa;
-    padding: 4px 5px 4px 4px;
-}
-
-#searchBar .searchInput, #searchBar .searchInputCancelable {
-    font-size: 24px;
-    line-height: 24px;
-    height: 31px;
-    margin: 0px 4px 0px 0px;
-    padding: 5px 0 0 5px;
-}
-
-#searchBar .searchInput, #searchBar .searchInputCancelable {
-    width: 607px;
-}
-
-#searchBar .searchInputCancelable {
-    width: 564px;
-}
-
-#searchBar .searchBtn, #searchBar .cancelSearchBtn {
-    font-size: 20px;
-    color: #666;
-    background-color: #eee;
-    height: 40px;
-    border: 1px solid #aaa;
-    line-height: 22px;
-    text-align: center;
-    padding-bottom: 4px;
-}
-
-#searchBar .searchBtn {
-    margin: 0px;
-    width: 78px;
-}
-
-#searchBar .cancelSearchBtn {
-    width: 40px;
-    margin: 0px 3px 0px 0px;
-}
 
 #askFormBar {
     display:inline-block;

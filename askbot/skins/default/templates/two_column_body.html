@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% block body_class %}two-col{% endblock %}
 {% block body %}
-<div id="CALeft">
-    {% include "blocks/input_bar.html" %}
+<div id="ContentLeft">
     {% block content%}
     {% endblock%}
 </div>
-<div id="CARight">
+<div id="ContentRight">
     {% block sidebar%}
     {% endblock%}
 </div>
