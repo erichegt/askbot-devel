@@ -72,7 +72,7 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         QA_SITE_SETTINGS,
-        'GREETING_FOR_ANON_USER_ON',
+        'ENABLE_GREETING_FOR_ANON_USER',
         default = True,
         description = _('Check to enable greeting for anonymous user')
    )
