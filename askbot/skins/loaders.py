@@ -27,8 +27,6 @@ def filesystem_load_template_source(name, dirs=None):
     """Django template loader
     """
 
-    import pdb
-    pdb.set_trace()
     if dirs is None:
         dirs = (ASKBOT_SKIN_COLLECTION_DIR, )
     else:
