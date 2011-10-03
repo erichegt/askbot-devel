@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (not released yet)
 --------------------------------------
+* Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
 * Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
 * Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
 

@@ -24,6 +24,7 @@ Programming and documentation
 * `Rag Sagar <https://github.com/ragsagar>`_
 * Alex Robbins (celery support)
 * `Tomasz Szynalski <http://antimoon.com>`_
+* `Raghu Udiyar <http://raags.tumblr.com/>`_
 
 Translations
 ------------
