@@ -8,7 +8,7 @@ from django.conf.urls.defaults import handler500, handler404
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 from askbot import views
-from askbot.feed import RssLastestQuestionsFeed
+from askbot.feed import RssLastestQuestionsFeed, RssIndividualQuestionFeed
 from askbot.sitemap import QuestionsSitemap
 from askbot.skins.utils import update_media_revision
 
@@ -16,7 +16,8 @@ admin.autodiscover()
 update_media_revision()#needs to be run once, so put it here
 
 feeds = {
-    'rss': RssLastestQuestionsFeed
+    'rss': RssLastestQuestionsFeed,
+    'question':RssIndividualQuestionFeed
 }
 sitemaps = {
     'questions': QuestionsSitemap
@@ -39,7 +40,12 @@ urlpatterns = patterns('',
     url(
         r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
         'django.views.static.serve',
-        {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
+        {'document_root': os.path.join(
+                settings.PROJECT_ROOT,
+                'askbot',
+                'upfiles'
+            ).replace('\\','/')
+        },
         name='uploaded_file',
     ),
     #no translation for this url!!
@@ -298,8 +304,16 @@ if 'avatar' in settings.INSTALLED_APPS:
     #use jinja2 templates
     urlpatterns += (
         url('^avatar/add/$', views.avatar_views.add, name='avatar_add'),
-        url('^avatar/change/$', views.avatar_views.change, name='avatar_change'),
-        url('^avatar/delete/$', views.avatar_views.delete, name='avatar_delete'),
+        url(
+            '^avatar/change/$',
+            views.avatar_views.change,
+            name='avatar_change'
+        ),
+        url(
+            '^avatar/delete/$',
+            views.avatar_views.delete,
+            name='avatar_delete'
+        ),
         url(#this urs we inherit from the original avatar app
             '^avatar/render_primary/(?P<user_id>[\+\d]+)/(?P<size>[\d]+)/$',
             views.avatar_views.render_primary,
