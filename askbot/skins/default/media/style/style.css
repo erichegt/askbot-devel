@@ -792,6 +792,18 @@ p.rss a {
     background: url(../images/feed-icon-small.png) no-repeat;
 }
 
+.question-page p.rss {
+    float:none;
+    clear:both;
+    padding: 3px 0 0 1px;
+    font-size: 14px;
+}
+
+.question-page p.rss a {
+    padding-left: 18px;
+    vertical-align: top;
+}
+
 /* badges */
 a.medal {
     font-size: 14px;
