@@ -13,16 +13,17 @@
 #!/usr/bin/env python
 #encoding:utf-8
 from django.contrib.syndication.feeds import Feed
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from askbot.models import Question, Answer, Comment
 from askbot.conf import settings as askbot_settings
 import itertools
 
-class RssParticularQuestionFeed(Feed):
+class RssIndividualQuestionFeed(Feed):
     """rss feed class for particular questions
     """
-    title = askbot_settings.APP_TITLE + _(' - ')+ _('Particular Question')
+    title = askbot_settings.APP_TITLE + _(' - ')+ _('Individual question feed')
     link = askbot_settings.APP_URL
     description = askbot_settings.APP_DESCRIPTION
     copyright = askbot_settings.APP_COPYRIGHT
@@ -43,35 +44,54 @@ class RssParticularQuestionFeed(Feed):
         return item.added_at
 
     def items(self, item):
-        """get questions for the feed
-	"""
-        results = itertools.chain(
-                              Question.objects.filter(id = item.id),
-                              Answer.objects.filter(question = item.id),
-                              Comment.objects.filter(question = item.id),
-                              )
-        return results
+        """get content items for the feed
+        ordered as: question, question comments,
+        then for each answer - the answer itself, then
+        answer comments
+        """
+
+        chain_elements = list()
+        chain_elements.append([item,])
+        chain_elements.append(
+            Comment.objects.filter(
+                object_id = item.id,
+                content_type = ContentType.objects.get_for_model(Question)
+            )
+        )
+        
+        answer_content_type = ContentType.objects.get_for_model(Answer)
+        answers = Answer.objects.filter(question = item.id)
+        for answer in answers:
+            chain_elements.append([answer,])
+            chain_elements.append(
+                Comment.objects.filter(
+                    object_id = answer.id,
+                    content_type = answer_content_type
+                )
+            )
+
+        return itertools.chain(*chain_elements)
     
     def item_title(self, item):
-	"""returns the title for the item
-	"""
+        """returns the title for the item
+        """
         title = item
-        if item.__class__.__name__ == "Question":
+        if item.post_type == "question":
             self.title = item
-        elif item.__class__.__name__ == "Answer":
-            title = "Answer by %s for %s " %(item.author,self.title)
-        elif item.__class__.__name__ == "Comment":
-            title = "Comment by %s for %s" %(item.user,self.title)
+        elif item.post_type == "answer":
+            title = "Answer by %s for %s " % (item.author, self.title)
+        elif item.post_type == "comment":
+            title = "Comment by %s for %s" % (item.user, self.title)
         return title
         
-    def item_description(self,item):
-	"""returns the description for the item
-	"""
-	if item.__class__.__name__ == "Question":
+    def item_description(self, item):
+        """returns the description for the item
+        """
+        if item.post_type == "question":
             return item.text
-        if item.__class__.__name__ == "Answer":
+        if item.post_type == "answer":
             return item.text
-        elif item.__class__.__name__ == "Comment":
+        elif item.post_type == "comment":
             return item.comment
 
 class RssLastestQuestionsFeed(Feed):
@@ -110,9 +130,9 @@ class RssLastestQuestionsFeed(Feed):
         return self.link + item.get_absolute_url(no_slug = True)
         
     def item_description(self, item):
-	"""returns the desciption for the item
-	"""
-	return item.text
+        """returns the desciption for the item
+        """
+        return item.text
 
     def items(self, item):
         """get questions for the feed

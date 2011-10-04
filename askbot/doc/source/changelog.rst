@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version (Not yet released)
+--------------------------------------
+* RSS feed for individual question (Sayan Chowdhury)
+
 0.7.24 (Current Version)
 ------------------------
 * Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
