@@ -12,6 +12,11 @@ from askbot.conf import badges, minimum_reputation
 def bootstrap_callback(current_value, new_value):
     '''Callback to update settings'''
 
+    if current_value == new_value:
+        #do not overwrite settings in case that tha value 
+        #is the same
+        return new_value
+
     if new_value == True:
         #minimum reputation settgins.
         settings.update('MIN_REP_TO_VOTE_UP', 5)
