@@ -267,6 +267,17 @@ def ask(request):#view used to ask a new question
                 query = search_state.query
                 form.initial['title'] = query
 
+        if 'tags' in request.GET:
+            #pre-populate tags.
+            clean_tags = request.GET['tags'].replace(',', ' ')
+            form.initial['tags'] = clean_tags
+        else:
+            #attemp to get tags from search state
+            search_state = request.session.get('search_state', None)
+            if search_state.tags:
+                tags = ' '.join(search_state.tags)
+                form.initial['tags'] = tags
+
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
