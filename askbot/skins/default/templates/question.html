@@ -492,6 +492,7 @@
 {% block endjs %}
     {% if not question.closed %}
         <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/jquery.animate-colors.js"|media}}'></script>
         <script type='text/javascript'>
             {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
             var codeFriendlyMarkdown = true;
@@ -543,12 +544,20 @@
                 $('#fmanswer textarea').focus();
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
+            var queryset = window.location.search.substring(1);
+            var element_type = queryset.split('=')[0];
+            var hash_value = window.location.hash.substring(1);
 
-            var answer_id = window.location.hash.substring(1);
-            if (answer_id!=""){
-              var answer_color = $("#answer-container-" + answer_id).css('background-color');
-              $("#answer-container-" + answer_id).animate({ backgroundColor: '#BEDA53' }, 500);
-              $("#answer-container-" + answer_id).animate({backgroundColor: answer_color}, 500); 
+            if (element_type == 'answer'){
+              var id_value = "#answer-container-" + hash_value;
+            }else if(element_type == "comment"){
+              var id_value = '#' + hash_value;   
+            }
+
+            if (id_value != ""){
+              var previous_color = $(id_value).css('background-color');
+              $(id_value).animate({ backgroundColor: '#BEDA53' }, 500);
+              $(id_value).animate({backgroundColor: previous_color}, 500); 
             }
 
             {% if request.user == question.author %}
