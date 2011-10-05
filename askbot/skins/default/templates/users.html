@@ -10,25 +10,25 @@
             id="sort_reputation"
             href="{% url users %}?sort=reputation"
             {% if tab_id == 'reputation' %}class="on"{% endif %}
-            title="{% trans %}People sorted by reputation{% endtrans %}"
+            title="{% trans %}see people with the highest reputation{% endtrans %}"
         ><span>{% trans %}reputation{% endtrans %}</span></a>
         <a 
             id="sort_newest"
             href="{% url users %}?sort=newest"
             {% if tab_id == 'newest' %}class="on"{% endif %}
-            class="off" title="{% trans %}People sorted by join newer date{% endtrans %}"
+            class="off" title="{% trans %}see people who joined most recently{% endtrans %}"
         ><span>{% trans %}recent{% endtrans %}</span></a>
         <a 
             id="sort_last"
             href="{% url users %}?sort=last"
             {% if tab_id == 'last' %}class="on"{% endif %}
-            class="off" title="{% trans %}People sorted by oldest join date{% endtrans %}"
+            class="off" title="{% trans %}see people who joined the site first{% endtrans %}"
         ><span>{% trans %}oldest{% endtrans %}<span></a>
         <a 
             id="sort_user"
             href="{% url users %}?sort=user"
             {% if tab_id == 'user' %}class="on"{% endif %}
-            title="{% trans %}People sorted by username{% endtrans %}"
+            title="{% trans %}see people sorted by name{% endtrans %}"
         ><span>{% trans %}by username{% endtrans %}</span></a>
     </div>
 </div>
