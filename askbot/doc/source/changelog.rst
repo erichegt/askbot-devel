@@ -4,6 +4,8 @@ Changes in Askbot
 Development version (Not yet released)
 --------------------------------------
 * RSS feed for individual question (Sayan Chowdhury)
+* Allow pre-population of tags via ask a questios link (Adolfo)
+* Make answering own question one click harder (Adolfo)
 
 0.7.24 (Current Version)
 ------------------------
