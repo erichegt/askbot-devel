@@ -543,22 +543,9 @@
                 $('#fmanswer textarea').focus();
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
-            var queryset = window.location.search.substring(1);
-            var element_type = queryset.split('=')[0];
-            var hash_value = window.location.hash.substring(1);
 
-            if (element_type == 'answer'){
-              var id_value = "#answer-container-" + hash_value;
-            }else if(element_type == "comment"){
-              var id_value = '#' + hash_value;   
-            }
-
-            if (id_value != ""){
-              var previous_color = $(id_value).css('background-color');
-              $(id_value).animate({ backgroundColor: '#BEDA53' }, 500);
-              $(id_value).animate({backgroundColor: previous_color}, 500); 
-            }
-
+            animate_hashes();
+            
             {% if request.user == question.author %}
                 $("#fmanswer_button").click(function() {
                     $("#fmanswer").show();
@@ -566,6 +553,27 @@
                 });
             {%endif%}
         });
+
+        $(window).bind('hashchange', animate_hashes);
+
+        function animate_hashes(){
+          var queryset = window.location.search.substring(1);
+          var element_type = queryset.split('=')[0];
+          var hash_value = window.location.hash.substring(1);
+
+          if (element_type == 'answer'){
+            var id_value = "#answer-container-" + hash_value;
+          }else if(element_type == "comment"){
+            var id_value = '#' + hash_value;   
+          }
+
+          if (id_value != ""){
+            var previous_color = $(id_value).css('background-color');
+            $(id_value).animate({ backgroundColor: '#BEDA53' }, 500);
+            $(id_value).animate({backgroundColor: previous_color}, 500); 
+          }
+        }
+
         
         function initEditor(){
             $('#editor').TextAreaResizer();
