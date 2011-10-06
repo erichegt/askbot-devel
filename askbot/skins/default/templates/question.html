@@ -305,7 +305,12 @@
         <a href="mailto:?subject={{ settings.APP_SHORT_NAME|urlencode }}&amp;body={{ question_url }}">{% trans %}email{% endtrans %}</a>.
     </h2>
 {% endif %}
-<form id="fmanswer" action="{% url answer question.id %}" method="post">{% csrf_token %}
+<form 
+    id="fmanswer"
+    {% if user == question.author %}style="display:none"{% endif %}
+    action="{% url answer question.id %}"
+    method="post"
+>{% csrf_token %}
     {% if request.user.is_authenticated() %}
         <p style="padding-left:3px">
         {{ answer.email_notify }} 
@@ -380,6 +385,9 @@
         {% endif %}
     {% endif %}
     </form>
+    {% if request.user == question.author %}
+    <input type="button" class="submit after-editor" id="fmanswer_button"  value="{% trans %}Answer Your Own Question{% endtrans %}"/>
+    {%endif%}
 {% endblock %}
 
 {% block sidebar %}
@@ -535,6 +543,13 @@
                 $('#fmanswer textarea').focus();
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
+
+            {% if request.user == question.author %}
+                $("#fmanswer_button").click(function() {
+                    $("#fmanswer").show();
+                    $("#fmanswer_button").hide();
+                });
+            {%endif%}
         });
         
         function initEditor(){
