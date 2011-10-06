@@ -411,7 +411,7 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro question_summary(question, extra_class=None) -%}
-    <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
+      <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
         <div class="counts">
             <div class="views
                  {% if question.view_count == 0 -%}
