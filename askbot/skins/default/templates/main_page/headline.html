@@ -1,12 +1,6 @@
 {% import "macros.html" as macros %}
 {% if questions_count > 0 %}
     <div style="clear:both">
-        <p class="rss">
-            (<a
-                href="{{settings.APP_URL}}/feeds/rss/"
-                title="{% trans %}subscribe to the questions feed{% endtrans %}"
-                >{% trans %}rss feed{% endtrans %}</a>)
-        </p>
         <h1 id="question-count" class="search-result-summary">
         {% if search_tags %}
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}{{q_num}} question, tagged{% pluralize %}{{q_num}} questions, tagged{% endtrans %}

@@ -4,8 +4,8 @@
 
 {% if contributors and settings.SIDEBAR_MAIN_SHOW_AVATARS %}
     {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
-    <div id="contrib-users" class="boxC">
-    <h2>{% trans %}Contributors{% endtrans %}</h2>
+    <div id="contrib-users" class="box">
+    <h2 class="contributorback">{% trans %}Contributors{% endtrans %}</h2>
     {% spaceless %}
         {% for person in contributors %}
             {{ macros.gravatar(person,48) }}
@@ -21,7 +21,7 @@
 
 {% if tags and settings.SIDEBAR_MAIN_SHOW_TAGS %}
     {% cache 0 "tags" tags search_tags scope sort query context.page context.page_size language_code %}
-    <div class="boxC">
+    <div class="box">
         <h2>{% trans %}Related tags{% endtrans %}</h2>
         {% if tag_list_type == 'list' %}
         <ul id="related-tags" class="tags">

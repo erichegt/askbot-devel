@@ -1,8 +1,8 @@
 {% import "macros.html" as macros %}
-{% cache 600 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
+{% cache 0 "scope_sort_tabs" search_tags request.user scope sort query context.page context.page_size language_code %}
 <div class="tabBar">
     <div id="sort_tabs" class="tabsA">
-        <span class="label">{% trans %}Sort by:{% endtrans %}</span>
+        <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
         {% if show_sort_by_relevance %}
             {% set asc_relevance_tooltip = gettext('most relevant questions') %}
             {% set desc_relevance_tooltip = gettext('click to see most relevant questions') %}
@@ -61,6 +61,11 @@
                 current_sort_method = sort
             )
         }}
+        <a class="rss"
+            href="{{settings.APP_URL}}/feeds/rss/"
+            title="{% trans %}subscribe to the questions feed{% endtrans %}"
+            >{% trans %}RSS{% endtrans %}
+        </a>
     </div>
 </div>
 {% endcache %}
