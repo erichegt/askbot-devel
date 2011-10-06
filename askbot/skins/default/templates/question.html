@@ -560,8 +560,10 @@
           var id_value = window.location.hash;
           if (id_value != ""){
             var previous_color = $(id_value).css('background-color');
-            $(id_value).animate({ backgroundColor: '#BEDA53' }, 500);
-            $(id_value).animate({backgroundColor: previous_color}, 500); 
+            $(id_value).css('backgroundColor', '#FFF8C6');
+            $(id_value).animate({backgroundColor: '#ff7f2a'}, 1000).animate({backgroundColor: '#FFF8C6'}, 1000, function(){
+                $(id_value).css('backgroundColor', previous_color);
+            });
           }
         }
 
