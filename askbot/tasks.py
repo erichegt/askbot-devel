@@ -100,7 +100,21 @@ def record_post_update(
                                 exclude_list = [updated_by, ]
                             )
 
-    update_activity.add_recipients(recipients)
+    #create new mentions
+    for u in newly_mentioned_users:
+        from askbot.models.user import Activity
+        Activity.objects.create_new_mention(
+                                mentioned_whom = u,
+                                mentioned_in = post,
+                                mentioned_by = updated_by,
+                                mentioned_at = timestamp
+                            )
+
+    #we don't want to save a mention and a separate notification
+    #about the response
+    update_activity.add_recipients(
+        recipients# - set(newly_mentioned_users)
+    )
 
     assert(updated_by not in recipients)
 
