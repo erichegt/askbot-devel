@@ -492,7 +492,6 @@
 {% block endjs %}
     {% if not question.closed %}
         <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/jquery.animate-colors.js"|media}}'></script>
         <script type='text/javascript'>
             {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
             var codeFriendlyMarkdown = true;

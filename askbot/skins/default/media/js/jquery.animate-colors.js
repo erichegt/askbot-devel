@@ -97,7 +97,9 @@
 			triplet = [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10),parseFloat(match[4])];
 
 			// No browser returns rgb(n%, n%, n%), so little reason to support this format.
-		}
+		} else if (color == 'transparent'){
+            triplet = [0,0,0,0]
+        }
 		return triplet;
 	}
 })(jQuery);
