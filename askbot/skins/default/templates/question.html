@@ -557,16 +557,7 @@
         $(window).bind('hashchange', animate_hashes);
 
         function animate_hashes(){
-          var queryset = window.location.search.substring(1);
-          var element_type = queryset.split('=')[0];
-          var hash_value = window.location.hash.substring(1);
-
-          if (element_type == 'answer'){
-            var id_value = "#answer-container-" + hash_value;
-          }else if(element_type == "comment"){
-            var id_value = '#' + hash_value;   
-          }
-
+          var id_value = window.location.hash;
           if (id_value != ""){
             var previous_color = $(id_value).css('background-color');
             $(id_value).animate({ backgroundColor: '#BEDA53' }, 500);
