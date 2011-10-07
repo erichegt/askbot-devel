@@ -638,7 +638,15 @@ def get_comment(request):
 @ajax_only
 @get_only
 def get_question_body(request):
-    from jinja2 import escape
-    id = int(request.GET['id'])
-    question = models.Question.objects.get(id = id)
-    return {'text': escape(question.summary)}
+    search_state = request.session.get('search_state', SearchState())
+    view_log = request.session['view_log']
+    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
+                                            request_user = request.user,
+                                            search_state = search_state)
+    paginator = Paginator(qs, search_state.page_size)
+    page = paginator.page(search_state.page)
+    questions_dict = {}
+    for id, summary in page.object_list.values_list('id', 'summary'):
+        questions_dict['question-%s' % id] = summary 
+
+    return {'questions-titles': questions_dict}
