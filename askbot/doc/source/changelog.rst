@@ -7,6 +7,7 @@ Changes in Askbot
 * Allow pre-population of tags via ask a questions link (Adolfo)
 * Make answering own question one click harder (Adolfo)
 * Bootstrap mode (Adolfo, Evgeny)
+* Color-animated urls with the hash fragments (Adolfo)
 
 0.7.24
 ------
