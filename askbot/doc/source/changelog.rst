@@ -1,12 +1,15 @@
 Changes in Askbot
 =================
 
-Development version (Not yet released)
---------------------------------------
-* RSS feed for individual question (Sayan Chowdhury)
-
-0.7.24 (Current Version)
+0.7.25 (Current Version)
 ------------------------
+* RSS feed for individual question (Sayan Chowdhury)
+* Allow pre-population of tags via ask a questions link (Adolfo)
+* Make answering own question one click harder (Adolfo)
+* Bootstrap mode (Adolfo, Evgeny)
+
+0.7.24
+------
 * Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
 * Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
 * Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
