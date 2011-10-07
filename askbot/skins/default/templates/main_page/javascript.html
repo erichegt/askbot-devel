@@ -27,9 +27,10 @@
       }
     }
 
+    askbot['data']['questions-titles'] = {};
     function load_question_body(element, question_id){
       var key = 'question-' + question_id;
-      if (askbot['data']['questions-titles'] == null){
+      if ( askbot['data']['questions-titles'][key] == null){
         $.getJSON('{% url get_question_body %}', function(data){
           askbot['data']['questions-titles'] = data['questions-titles'];
           element.title = askbot['data']['questions-titles'][key];//repeated due to async

@@ -223,7 +223,6 @@ def questions(request):
 
             question_data = {
                 'title': question.title,
-                'summary': question.summary,
                 'id': question.id,
                 'tags': question.get_tag_names(),
                 'tag_list_type': tag_list_type,
