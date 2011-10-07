@@ -134,16 +134,6 @@ def parse_and_save_post(post, author = None, **kwargs):
 
     timestamp = post.get_time_of_last_edit()
 
-    #create new mentions
-    for u in newly_mentioned_users:
-        from askbot.models.user import Activity
-        Activity.objects.create_new_mention(
-                                mentioned_whom = u,
-                                mentioned_in = post,
-                                mentioned_by = author,
-                                mentioned_at = timestamp
-                            )
-
     #todo: this is handled in signal because models for posts
     #are too spread out
     from askbot.models import signals
