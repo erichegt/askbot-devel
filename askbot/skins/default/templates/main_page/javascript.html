@@ -29,7 +29,7 @@
 
     function load_question_body(element, question_id){
       var key = 'question-' + question_id;
-      if (askbot['data'][key] != null){
+      if (askbot['data'][key] == null){
         $.getJSON('{% url get_question_body %}?id=' + question_id, function(data){
             element.title = data.text;
             askbot['data'][key] = data.text;
