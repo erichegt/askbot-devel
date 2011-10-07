@@ -634,3 +634,11 @@ def get_comment(request):
     comment = models.Comment.objects.get(id = id)
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.comment}
+
+@ajax_only
+@get_only
+def get_question_body(request):
+    from jinja2 import escape
+    id = int(request.GET['id'])
+    question = models.Question.objects.get(id = id)
+    return {'text': escape(question.summary)}
