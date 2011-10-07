@@ -11,6 +11,7 @@ recursive-exclude .git
 prune dist
 prune tmp
 prune build
+exclude db
 exclude lint
 exclude settings.py
 exclude manage.py
@@ -26,4 +27,3 @@ recursive-exclude categories *
 recursive-exclude follow *
 recursive-exclude env *
 recursive-exclude .tox
-exclude db
