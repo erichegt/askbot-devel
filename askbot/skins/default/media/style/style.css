@@ -473,7 +473,6 @@ ul#related-tags li {
     float: left;
     height: 18px;
     margin: 0 5px 0 0;
-    overflow-x: hidden;
     padding: 0;
 }
 
