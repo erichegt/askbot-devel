@@ -13,7 +13,19 @@
             var today = new Date();{#add timestamp to prevent browser caching #}
             $.getJSON('{% url user_update_has_custom_avatar %}?t=' + today.getTime());
         {% endif %}
+        animate_hashes();
     });
+    $(window).bind('hashchange', animate_hashes);
+    function animate_hashes(){
+      var id_value = window.location.hash;
+      if (id_value != ""){
+        var previous_color = $(id_value).css('background-color');
+        $(id_value).css('backgroundColor', '#FFF8C6');
+        $(id_value).animate({backgroundColor: '#ff7f2a'}, 1000).animate({backgroundColor: '#FFF8C6'}, 1000, function(){
+            $(id_value).css('backgroundColor', previous_color);
+        });
+      }
+    }
     askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% url mark_interesting_tag %}';
     askbot['urls']['mark_ignored_tag'] = scriptUrl + '{% url mark_ignored_tag %}';
     askbot['urls']['unmark_tag'] = scriptUrl + '{% url unmark_tag %}';

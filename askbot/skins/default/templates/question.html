@@ -544,6 +544,8 @@
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
 
+            animate_hashes();
+            
             {% if request.user == question.author %}
                 $("#fmanswer_button").click(function() {
                     $("#fmanswer").show();
@@ -551,6 +553,20 @@
                 });
             {%endif%}
         });
+
+        $(window).bind('hashchange', animate_hashes);
+
+        function animate_hashes(){
+          var id_value = window.location.hash;
+          if (id_value != ""){
+            var previous_color = $(id_value).css('background-color');
+            $(id_value).css('backgroundColor', '#FFF8C6');
+            $(id_value).animate({backgroundColor: '#ff7f2a'}, 1000).animate({backgroundColor: '#FFF8C6'}, 1000, function(){
+                $(id_value).css('backgroundColor', previous_color);
+            });
+          }
+        }
+
         
         function initEditor(){
             $('#editor').TextAreaResizer();
