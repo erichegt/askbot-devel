@@ -14,6 +14,7 @@
             $.getJSON('{% url user_update_has_custom_avatar %}?t=' + today.getTime());
         {% endif %}
     });
+    $(window).bind('hashchange', animate_hashes);
     askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% url mark_interesting_tag %}';
     askbot['urls']['mark_ignored_tag'] = scriptUrl + '{% url mark_ignored_tag %}';
     askbot['urls']['unmark_tag'] = scriptUrl + '{% url unmark_tag %}';
