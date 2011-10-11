@@ -12,6 +12,19 @@ var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
 
+var animateHashes = function(){
+    var id_value = window.location.hash;
+    if (id_value != ""){
+        var previous_color = $(id_value).css('background-color');
+        $(id_value).css('backgroundColor', '#FFF8C6');
+        $(id_value)
+            .animate({backgroundColor: '#ff7f2a'}, 500)
+            .animate({backgroundColor: '#FFF8C6'}, 500, function(){
+                $(id_value).css('backgroundColor', previous_color);
+            });
+    }
+};
+
 var getUniqueWords = function(value){
     var words = $.trim(value).split(/\s+/);
     var uniques = new Object();

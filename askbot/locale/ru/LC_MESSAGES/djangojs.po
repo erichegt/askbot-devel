@@ -3,24 +3,74 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-20 17:36-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-10-08 02:30-0500\n"
+"PO-Revision-Date: 2011-09-05 09:02\n"
+"Last-Translator:   <efadeev@uci.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"X-Translated-Using: django-rosetta 0.6.2\n"
 
-#: skins/default/media/js/live_search.js:278
-msgid "%(q_num)s question"
-msgid_plural "%(q_num)s questions"
-msgstr[0] "%(q_num)s вопрос"
-msgstr[1] "%(q_num)s вопроса"
-msgstr[2] "%(q_num)s вопросов"
+#: skins/default/media/js/post.js:532
+msgid "Follow"
+msgstr "Добавить закладку"
+
+#: skins/default/media/js/post.js:541 skins/default/media/js/post.js.py:550
+#, perl-format
+msgid "%s follower"
+msgid_plural "%s followers"
+msgstr[0] "%s закладка"
+msgstr[1] "%s закладки"
+msgstr[2] "%s закладок"
+
+#: skins/default/media/js/post.js:546
+msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+msgstr "<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
+
+#: skins/default/media/js/post.js:1613
+msgid "Please enter question title (>10 characters)"
+msgstr "Пожалуйста, добавьте заглавие к вопросу (>10 букв)"
+
+#: skins/default/media/js/tag_selector.js:15
+msgid "Tag \"<span></span>\" matches:"
+msgstr "Тег \"<span></span>\" подходит для:"
+
+#: skins/default/media/js/tag_selector.js:84
+#, perl-format
+msgid "and %s more, not shown..."
+msgstr "и ещё %s, не показано..."
+
+#: skins/default/media/js/user.js:129
+msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
+msgstr ""
+"Пожалуйста <a href=\"%(signin_url)s\">авторизуйтесь</a> чтобы отметить "
+"профиль %(username)s"
+
+#: skins/default/media/js/user.js:161
+#, perl-format
+msgid "unfollow %s"
+msgstr ""
+
+#: skins/default/media/js/user.js:164
+#, perl-format
+msgid "following %s"
+msgstr ""
+
+#: skins/default/media/js/user.js:170
+#, perl-format
+msgid "follow %s"
+msgstr ""
+
+#~ msgid "%(q_num)s question"
+#~ msgid_plural "%(q_num)s questions"
+#~ msgstr[0] "%(q_num)s вопрос"
+#~ msgstr[1] "%(q_num)s вопроса"
+#~ msgstr[2] "%(q_num)s вопросов"

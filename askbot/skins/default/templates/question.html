@@ -544,8 +544,6 @@
             }
             {% if settings.ENABLE_SHARING_GOOGLE %}$.getScript("http://apis.google.com/js/plusone.js"){% endif %}
 
-            animate_hashes();
-            
             {% if request.user == question.author %}
                 $("#fmanswer_button").click(function() {
                     $("#fmanswer").show();
