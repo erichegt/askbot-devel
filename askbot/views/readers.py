@@ -645,7 +645,7 @@ def get_question_body(request):
     paginator = Paginator(qs, search_state.page_size)
     page = paginator.page(search_state.page)
     questions_dict = {}
-    for id, summary in page.object_list.values_list('id', 'summary'):
-        questions_dict['question-%s' % id] = summary 
+    for question in page.object_list:
+        questions_dict['question-%s' % question.id] = question.summary
 
     return {'questions-titles': questions_dict}
