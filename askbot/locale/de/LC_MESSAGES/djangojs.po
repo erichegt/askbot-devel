@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-08 02:24-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: skins/default/media/js/post.js:532
+msgid "Follow"
+msgstr ""
+
+#: skins/default/media/js/post.js:541 skins/default/media/js/post.js.py:550
+#, perl-format
+msgid "%s follower"
+msgid_plural "%s followers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/default/media/js/post.js:546
+msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+msgstr ""
+
+#: skins/default/media/js/post.js:1613
+msgid "Please enter question title (>10 characters)"
+msgstr ""
+
+#: skins/default/media/js/tag_selector.js:15
+msgid "Tag \"<span></span>\" matches:"
+msgstr ""
+
+#: skins/default/media/js/tag_selector.js:84
+#, perl-format
+msgid "and %s more, not shown..."
+msgstr ""
+
+#: skins/default/media/js/user.js:129
+msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
+msgstr ""
+
+#: skins/default/media/js/user.js:161
+#, perl-format
+msgid "unfollow %s"
+msgstr ""
+
+#: skins/default/media/js/user.js:164
+#, perl-format
+msgid "following %s"
+msgstr ""
+
+#: skins/default/media/js/user.js:170
+#, perl-format
+msgid "follow %s"
+msgstr ""
