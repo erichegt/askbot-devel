@@ -17,6 +17,7 @@ exclude settings.py
 exclude manage.py
 exclude __init__.py
 exclude urls.py
+exclude rebuild-locales.pl
 exclude askbot/upfiles/*.*
 exclude askbot/upfiles/avatars/*
 recursive-exclude askbot/doc/build/*
