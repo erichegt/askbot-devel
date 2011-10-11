@@ -15,7 +15,7 @@ var liveSearch = function(){
                 query.attr('class', 'searchInputCancelable');
                 x_button = $('<input class="cancelSearchBtn" type="button" name="reset_query"/>');
                 //x_button.click(reset_query);
-                x_button.val('x');
+                x_button.val('X');
                 x_button.click(
                     function(){
                         query.val('');
