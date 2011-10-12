@@ -1,25 +1,3 @@
-{%- macro user_score_and_badge_summary(user) -%}
-    <span class="reputation-score"
-          title="{{user.get_karma_summary}}"
-    >{{user.reputation}}</span>
-    {% if user.gold or user.silver or user.bronze %}
-    <span title="{{user.get_badge_summary}}">
-        {% if user.gold %}
-        <span class='badge1'>&#9679;</span>
-        <span class="badgecount">{{user.gold}}</span>
-        {% endif %}
-        {% if user.silver %}
-        <span class='badge2'>&#9679;</span>
-        <span class="badgecount">{{user.silver}}</span>
-        {% endif %}
-        {% if user.bronze %}
-        <span class='badge3'>&#9679;</span>
-        <span class="badgecount">{{user.bronze}}</span>
-        {% endif %}
-    </span>
-    {% endif %}
-{%- endmacro -%}
-
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
         title="{% trans %}Share this question on {{site}}{% endtrans %}"
@@ -41,98 +19,6 @@
         </div>
         {% endif %}
     </div>
-{%- endmacro -%}
-
-{%- macro follow_user_toggle(visitor = None, subject = None) -%}
-    {% if visitor.is_anonymous() %}
-        {{ follow_toggle(True, 'user', subject.username, subject.id) }}
-    {% else %}
-        {% if visitor != subject %}
-            {% if visitor.is_following(subject) %}
-                {{ follow_toggle(False, 'user', subject.username, subject.id) }}
-            {% else %}
-                {{ follow_toggle(True, 'user', subject.username, subject.id) }}
-            {% endif %}
-        {% endif %}
-    {% endif %}
-{%- endmacro -%}
-
-{%- macro user_long_score_and_badge_summary(user) -%}
-    <a class="user-micro-info" 
-       href="{{user.get_absolute_url()}}?sort=reputation"
-    >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
-    {%- if user.gold or user.silver or user.bronze %}
-    <a class="user-micro-info"
-       href="{{user.get_absolute_url()}}#badges"
-    ><span title="{{user.get_badge_summary}}">{% trans %}badges:{% endtrans %}
-        {% if user.gold %}
-        <span class='badge1'>&#9679;</span>
-        <span class="badgecount">{{user.gold}}</span>
-        {% endif %}
-        {% if user.silver %}
-        <span class='badge2'>&#9679;</span>
-        <span class="badgecount">{{user.silver}}</span>
-        {% endif %}
-        {% if user.bronze %}
-        <span class='badge3'>&#9679;</span>
-        <span class="badgecount">{{user.bronze}}</span>
-        {%- endif -%}
-    </span></a>
-    {%- endif -%}
-{%- endmacro -%}
-
-{%- macro user_country_flag(user) -%}
-    {% if user.country and user.show_country %}
-        <img class="flag" 
-            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
-            alt="{% trans 
-                    country=user.country.name 
-                    %}flag of {{country}}{% 
-                endtrans %}"
-            title="{% trans 
-                    country=user.country.name, 
-                    person=user.username %}{{person}} is from {{country}}{%
-                 endtrans %}"
-        />
-    {% endif %}
-{%- endmacro -%}
-
-{%- macro user_country_name_and_flag(user) -%}
-    {% if user.country and user.show_country %}
-        {{ user.country.name }}
-        {{ user_country_flag(user) }}
-    {% endif %}
-{%- endmacro -%}
-
-{%- macro user_full_location(user) -%}
-    {% if user.location %}
-        {{ user.location }},
-    {% endif %}
-    {{ user_country_name_and_flag(user) }}
-{%- endmacro -%}
-
-{%- macro user_list(users, profile_section = None) -%}
-<div class="userList">
-    <table class="list-table">
-        <tr>
-            <td class="list-td">
-                {% for user in users %}
-                <div class="user">
-                    <ul>
-                            <li class="thumb">{{ gravatar(user, 32) }}</li>
-                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username}}</a>{{ user_country_flag(user) }}</li>
-                            <li>{{ user_score_and_badge_summary(user) }}</li>
-                        </ul>
-                </div>
-                    {% if loop.index is divisibleby 7 %}
-            </td>
-            <td>
-                    {% endif %}
-                {% endfor %}
-            </td>
-        </tr>   
-    </table>
-</div>
 {%- endmacro -%}
 
 {%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
@@ -211,20 +97,6 @@
     alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
 /></a>
 {% endspaceless %}
-{%- endmacro -%}
-
-{%- macro user_website_link(user, max_display_length=25) -%}
-    {% if user.website %}
-        <a 
-            href="{{user.website}}"
-            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
-            {% if user.can_have_strong_url() == False %}
-            rel="nofollow"
-            {% endif %}
-        >
-        {{user.website|truncate(length=max_display_length, killwords=True, end='...')}}
-        </a>
-    {% endif %}
 {%- endmacro -%}
 
 {%- macro post_contributor_avatar_and_credentials(post, user) -%}
