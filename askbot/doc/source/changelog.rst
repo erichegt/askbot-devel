@@ -1,6 +1,13 @@
 Changes in Askbot
 =================
 
+Development version (not released yet)
+--------------------------------------
+* Added settings for email subscription defaults (Adolfo)
+* Resolved `bug #102<http://bugs.askbot.org/issues/102>`_ - duplicate notifications on posts with mentions (Evegeny)
+* Added color-animated transitions when urls with hash tags are visited (Adolfo)
+* Repository tags will be `automatically added <http://askbot.org/en/question/345/can-git-tags-be-created-for-each-of-the-releases>`_ to new releases (Evgeny)
+
 0.7.25 (Current Version)
 ------------------------
 * RSS feed for individual question (Sayan Chowdhury)

@@ -1092,7 +1092,6 @@ class SimpleEmailSubscribeForm(forms.Form):
         )
 
     def __init__(self, *args, **kwargs):
-        self.frequency = kwargs.pop('frequency', 'w') 
         super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
 
     def save(self, user=None):
@@ -1101,7 +1100,7 @@ class SimpleEmailSubscribeForm(forms.Form):
         #with the frequency variable - needs to be fixed
         if self.is_bound and self.cleaned_data['subscribe'] == 'y':
             email_settings_form = EFF()
-            email_settings_form.set_frequency(self.frequency)
+            email_settings_form.set_initial_values(user)
             logging.debug('%s wants to subscribe' % user.username)
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)

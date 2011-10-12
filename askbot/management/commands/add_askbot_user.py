@@ -67,17 +67,8 @@ class Command(BaseCommand):
             user.set_password(password)
             user.save()
         subscription = {'subscribe': 'y'}
-        if frequency in ('i', 'd', 'w', 'n'):
-            email_feeds_form = forms.SimpleEmailSubscribeForm(
-                                                    subscription,
-                                                    frequency = frequency
-                                                )
-            if email_feeds_form.is_valid():
-                email_feeds_form.save(user)
-            else:
-                raise CommandError('\n'.join(email_feeds_form.errors))
-        elif frequency is not None:
-            raise CommandError(
-                        'value of --frequency must be one of: '
-                        'i, d, w, n'
-                    )
+        email_feeds_form = forms.SimpleEmailSubscribeForm(subscription)
+        if email_feeds_form.is_valid():
+            email_feeds_form.save(user)
+        else:
+            raise CommandError('\n'.join(email_feeds_form.errors))
