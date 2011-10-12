@@ -198,3 +198,93 @@ These are not set in stone yet.
 | /faq/                      |                        |
 | /feedback/                 |                        |
 +----------------------------+------------------------+
+
+Template Distrubution.
+======================
+
+The general template layout is controlled by a few files described below:
+
++------------------------------------+------------------------------------------------------+
+| Template File                      | Description                                          |
++====================================+======================================================+
+| blocks/answer_edit_tips.html       | Contains text displayed as "Answer Edit Tips" in the |
+|                                    | answer edit page.                                    |
++------------------------------------+------------------------------------------------------+
+| blocks/ask_form.html               | Contains the form to ask a question.                 |
++------------------------------------+------------------------------------------------------+
+| blocks/bottom_scripts.html         | Contains javascript calls and some javascript        |
+|                                    | functions needed for askbot this is included at the  |
+|                                    | bottom of every page.                                |
++------------------------------------+------------------------------------------------------+
+| blocks/editor_data.html            | Contains data necessary for the post editor this is  |
+|                                    | included in block endjs.                             |
++------------------------------------+------------------------------------------------------+
+| blocks/footer.html                 | Contains the html displayed on the footer.           |
++------------------------------------+------------------------------------------------------+
+| blocks/header.html                 | Contains the header section of the web. Normaly      |
+|                                    | includes the site logo and navitation tools.         |
++------------------------------------+------------------------------------------------------+
+| blocks/input_bar.html              | Contains the search bar.                             |
++------------------------------------+------------------------------------------------------+
+| blocks/mandatory_tags_js.html      |                                                      |
++------------------------------------+------------------------------------------------------+
+| blocks/paginator.html              | Renders the paginator in the main page.              |
++------------------------------------+------------------------------------------------------+
+| blocks/question_edit_tips.html     | Contains text displayed as "Question Edit Tips" in   |
+|                                    | the question edit page.                              |
++------------------------------------+------------------------------------------------------+
+| blocks/secondary_header.html       | Containter for the search bar section.               |
++------------------------------------+------------------------------------------------------+
+| blocks/system_messages.html        | Containter for notification messages in the top of   |
+|                                    | the page.                                            |
++------------------------------------+------------------------------------------------------+
+| blocks/user_navigation.html        | User links to login/logout.                          |
++------------------------------------+------------------------------------------------------+
+
+According to the URL some template files are called, the detail on 
+which file is called is in the following table.
+
++----------------------------+-----------------------------+--------------------------------+
+| Page url                   | Template file               | Macros used                    |
++============================+=============================+================================+
+| /questions/                |                             |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /questions/ask/            | ask.html                    |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /tags                      | tags.html                   | tag_widget, paginator,         | 
+|                            |                             | tag_cloud                      |
++----------------------------+-----------------------------+--------------------------------+
+| /question/<id>/<slug>      | question.html               | tag_widget, edit_post          |
+|                            |                             | checkbox_in_div, share         |
++----------------------------+-----------------------------+--------------------------------+
+| /questions/<id>/revisions  | revisions.html              | post_contributor_info          |
++----------------------------+-----------------------------+--------------------------------+
+| /questions/<id>/edit       | question-edit.html          | tag_autocomplete_js,           |
+|                            |                             | checkbox_in_div,               |
+|                            |                             | edit_post                      |
++----------------------------+-----------------------------+--------------------------------+
+| /answers/<id>/revisions    | revisions.html              | post_contributor_info          |
++----------------------------+-----------------------------+--------------------------------+
+| /users/                    | users.html                  | users_list, paginator          |
++----------------------------+-----------------------------+--------------------------------+
+| /users/<id>/slug           | user_profile/user.html      |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /users/<id>/edit (bug!)    | user_profile/user_edit.html | gravatar                       |
++----------------------------+-----------------------------+--------------------------------+
+| /account/signin/           | authopenid/signin.html      | provider_buttons               |
+|                            |                             | (from authopenid/macros)       |
++----------------------------+-----------------------------+--------------------------------+
+| /avatar/change/            | avatar/change.html          | gravatar                       |
++----------------------------+-----------------------------+--------------------------------+
+| /about/                    | about.html                  |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /badges/                   | badges.html                 |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /badges/<id>/              | badge.html                  | user_score_and_badge_summary   |
++----------------------------+-----------------------------+--------------------------------+
+| /account/logout/           | authopenid/logout.html      |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /faq/                      | faq.html                    |                                |
++----------------------------+-----------------------------+--------------------------------+
+| /feedback/                 | feedback.html               |                                |
++----------------------------+-----------------------------+--------------------------------+
