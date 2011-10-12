@@ -2,6 +2,7 @@
 *.swp
 *.log
 db
+rebuild-locales.pl
 cache/??
 run
 *.wsgi
