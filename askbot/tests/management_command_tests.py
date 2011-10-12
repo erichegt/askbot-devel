@@ -21,7 +21,6 @@ class ManagementCommandTests(AskbotTestCase):
         #check thath subscrptions are correct
         subs = models.EmailFeedSetting.objects.filter(
                                                 subscriber = user,
-                                                frequency = 'd'
                                             )
         self.assertEquals(subs.count(), 5)
         #try to log in
