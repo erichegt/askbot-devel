@@ -177,12 +177,12 @@ def test_template_loader():
     loader that used to send a warning"""
     old_template_loader = 'askbot.skins.loaders.load_template_source'
     if old_template_loader in django_settings.TEMPLATE_LOADERS:
-        askbot_warning(
-                'In TEMPLATE_LOADERS settings you have an old style '
-                'template loader that throws a Warning on logs '
-                'please change: askbot.skins.loaders.load_template_source '
-                'for: askbot.skins.loaders.filesystem_load_template_source'
-                )
+        raise ImproperlyConfigured(PREAMBLE + \
+                "\nPlease change: \n"
+                "'askbot.skins.loaders.load_template_source', to\n" 
+                "'askbot.skins.loaders.filesystem_load_template_source',\n"
+                "in the TEMPLATE_LOADERS of your settings.py file"
+        )
 
 def run_startup_tests():
     """function that runs
