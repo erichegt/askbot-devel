@@ -1,5 +1,6 @@
 {% extends "two_column_body.html" %}
 {% import "macros/macros.html" as macros %}
+{% import "macros/utils_macros.html" as utils_macros %}
 <!-- question.html -->
 {% block title %}{% spaceless %}{{ question.get_question_title() }}{% endspaceless %}{% endblock %}
 {% block meta_description %}
@@ -166,7 +167,7 @@
             ><span>{% trans %}popular answers{% endtrans %}</span></a>   
         </div>
     </div>
-    {{ macros.paginator(paginator_context) }}
+    {{ utils_macros.paginator(paginator_context) }}
 
     {% for answer in answers %}
         <a name="{{ answer.id }}"></a>
@@ -291,7 +292,7 @@
             </table>
         </div>
     {% endfor %}
-    {{ macros.paginator(paginator_context) }}
+    {{ utils_macros.paginator(paginator_context) }}
 {% else %}
     {% set question_url=settings.APP_URL+question.get_absolute_url()|urlencode %}
     <h2 class="share-question">{% trans %}Know someone who can answer?  Share a <a href="{{ question_url }}">link</a> to this question via{% endtrans %}

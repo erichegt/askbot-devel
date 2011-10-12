@@ -1,8 +1,8 @@
 {% if request.user.is_authenticated() %}
     <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username }}</a> 
     <span class="user-info">
-    {{ macros.inbox_link(request.user) }}
-    {{ macros.moderation_items_link(request.user, moderation_items) }}
+    {{ utils_macros.inbox_link(request.user) }}
+    {{ utils_macros.moderation_items_link(request.user, moderation_items) }}
     ({{ user_macros.user_long_score_and_badge_summary(user) }})
     </span>
     <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">{% trans %}logout{% endtrans %}</a>
