@@ -1,4 +1,4 @@
-{% import "macros.html" as macros %}
+{% import "macros/macros.html" as macros %}
 {% if questions_count > 10 %}{# todo: remove magic number #}
     <div id="pager" class="pager">
         {{ macros.paginator(context|setup_paginator, position='left') }}
