@@ -7,6 +7,7 @@
         {% include "head/meta.html" %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
         {% include "head/stylesheets.html" %}
+        {% block forestyle %}{% endblock %}
         {% include "head/javascript.html" %}
         {% if settings.USE_CUSTOM_HTML_HEAD %}
             {{ settings.CUSTOM_HTML_HEAD }}
