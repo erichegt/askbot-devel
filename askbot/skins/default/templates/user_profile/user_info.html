@@ -1,10 +1,10 @@
 <!-- user_info.html -->
-{% import "macros/macros.html" as macros %}
+{% import "macros/user_macros.html" as user_macros %}
 <table class="user-info-table">
     <tr>
         <td style="vertical-align:top;text-align:center;">
             <div class='avatar'>
-                {{ macros.gravatar(view_user, 128) }}
+                {{ user_macros.gravatar(view_user, 128) }}
                 {% if request.user == view_user %}
                     <p><a 
                         {% if support_custom_avatars %}
@@ -24,7 +24,7 @@
             <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
             <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
             {% if user_follow_feature_on %}
-                {{ macros.follow_user_toggle(visitor = request.user, subject = view_user) }}
+                {{ user_macros.follow_user_toggle(visitor = request.user, subject = view_user) }}
             {% endif %}
         </td>
         <td width="360" style="padding-left:5px;vertical-align: top;">
@@ -67,13 +67,13 @@
                 {% if view_user.website %}
                 <tr>
                     <td>{% trans %}user website{% endtrans %}</td>
-                    <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
+                    <td>{{ user_macros.user_website_link(view_user, max_display_length = 30) }}</td>
                 </tr>
                 {% endif  %}
                 {% if view_user.location or view_user.country %}
                 <tr>
                     <td>{% trans %}location{% endtrans %}</td>
-                    <td>{{ macros.user_full_location(view_user) }}</td>
+                    <td>{{ user_macros.user_full_location(view_user) }}</td>
                 </tr>
                 {% endif %}
                 {% if view_user.date_of_birth%}

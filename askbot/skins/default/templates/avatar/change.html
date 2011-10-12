@@ -1,11 +1,11 @@
 {% extends "user_profile/user.html" %}
-{% import "macros.html" as macros %}
+{% import "macros/user_macros.html" as user_macros %}
 {% block profilesection %}
     {% trans %}change avatar{% endtrans %}
 {% endblock %}
 {% block usercontent %}
     <p>{% trans %}Your current avatar: {% endtrans %}<br/>
-    {{ macros.gravatar(user, 128) }}
+    {{ user_macros.gravatar(user, 128) }}
     </p>
     {% if not avatars %}
         <p>{% trans %}You haven't uploaded an avatar yet. Please upload one now.{% endtrans %}</p>

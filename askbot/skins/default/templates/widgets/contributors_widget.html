@@ -3,7 +3,7 @@
   <h2 class="contributorback">{% trans %}Contributors{% endtrans %}</h2>
   {% spaceless %}
   {% for person in contributors %}
-    {{ macros.gravatar(person,48) }}
+    {{ user_macros.gravatar(person,48) }}
   {% endfor %}
   {% endspaceless %}
   </div>

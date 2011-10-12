@@ -1,5 +1,5 @@
 {% extends "user_profile/user.html" %}
-{% import "macros/macros.html" as macros %}
+{% import "macros/user_macros.html" as user_macros %}
 <!-- user_responses.html -->
 {#
 This template accepts a list of response list
@@ -65,7 +65,7 @@ inbox_section - forum|flags
                 <div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
                 {% if inbox_section == 'forum' %}<input type="checkbox" />{% endif %}
                 <div class="face">
-                {{ macros.gravatar(response.user, 48) }}
+                {{ user_macros.gravatar(response.user, 48) }}
                 </div>
                 <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username }}</a>
                 <a style="text-decoration:none;" href="{{ response.response_url }}">
@@ -79,7 +79,7 @@ inbox_section - forum|flags
                 <div id="re_{{nested_response.id}}" class="re{% if nested_response.is_new %} new highlight{% else %} seen{% endif %}">
                 {% if inbox_section == 'forum' %}<input type="checkbox" />{% endif %}
                 <div class="face">
-                {{ macros.gravatar(nested_response.user, 48) }}
+                {{ user_macros.gravatar(nested_response.user, 48) }}
                 </div>
                 <a style="font-size:12px" href="{{ nested_response.user.get_absolute_url() }}">{{ nested_response.user.username }}</a>
                 <a style="text-decoration:none;" href="{{ nested_response.response_url }}">

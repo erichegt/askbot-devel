@@ -1,5 +1,6 @@
 {% extends "two_column_body.html" %}
 {% import "macros/macros.html" as macros %}
+{% import "macros/user_macros.html" as user_macros %}
 <!-- users.html -->
 {% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
@@ -40,7 +41,7 @@
         <span>{% trans %}Nothing found.{% endtrans %}</span>
     {% endif %}
 </p>
-{{ macros.user_list(users.object_list) }}
+{{ user_macros.user_list(users.object_list) }}
 <div class="pager">
     {{ macros.paginator(paginator_context) }}
 </div>              
