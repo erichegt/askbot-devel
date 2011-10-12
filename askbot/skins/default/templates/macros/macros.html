@@ -1,4 +1,4 @@
-{% from "macros/user_macros.html" import user_country_flag, gravatar %}
+{% from "macros/user_macros.html" import user_country_flag, gravatar, user_score_and_badge_summary, user_website_link %}
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
         title="{% trans %}Share this question on {{site}}{% endtrans %}"
