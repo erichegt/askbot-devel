@@ -1,10 +1,9 @@
 <!-- template secundary_header.html -->
 
-<div id="secundary-header">
+<div id="secundaryHeader">
     <div class="content-wrapper">
-        
-        <a id="home-button" href="{% url questions %}"></a>
-        <div id="scope-wrapper">
+        <a id="homeButton" href="{% url questions %}"></a>
+        <div id="scopeWrapper">
             <a class="scope-selector {% if scope == 'all' %}on{% endif %}"
             href="{% url questions %}?scope=all" title="{% trans %}see all questions{% endtrans %}">ALL</a>
             <a class="scope-selector {% if scope == 'unanswered' %}on{% endif %}"
@@ -16,7 +15,7 @@
             
             {% include "blocks/input_bar.html" %} {# include search form block #}
         </div>
-        <a id="ask-button" href="{% url ask %}">{% trans %}ask a question{% endtrans %}</a>
+        <a id="askButton" href="{% url ask %}">{% trans %}ask a question{% endtrans %}</a>
         <div class="clean"></div>
     </div>
 </div>
