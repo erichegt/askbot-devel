@@ -297,7 +297,7 @@ h1 {
     }
 }
 
-#secundaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
+#secondaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
     height:55px;
     background:#e9e9e1;
     border-bottom:#d3d3c2 1px solid;
