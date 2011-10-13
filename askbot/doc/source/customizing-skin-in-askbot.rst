@@ -202,11 +202,21 @@ These are not set in stone yet.
 Template Distrubution.
 ======================
 
+Layouts
+-------
+
 The general template layout is controlled by a few files described below:
 
 +------------------------------------+------------------------------------------------------+
 | Template File                      | Description                                          |
 +====================================+======================================================+
+| base.html                          | This is the base template, a container to call all   |
+|                                    | the template files required.                         |
++------------------------------------+------------------------------------------------------+
+| one_column_body.html               | This is a base layout for one column style pages.    |
++------------------------------------+------------------------------------------------------+
+| two_column_body.html               | This is a base layout for two column style pages.    |
++------------------------------------+------------------------------------------------------+
 | blocks/answer_edit_tips.html       | Contains text displayed as "Answer Edit Tips" in the |
 |                                    | answer edit page.                                    |
 +------------------------------------+------------------------------------------------------+
@@ -224,9 +234,7 @@ The general template layout is controlled by a few files described below:
 | blocks/header.html                 | Contains the header section of the web. Normaly      |
 |                                    | includes the site logo and navitation tools.         |
 +------------------------------------+------------------------------------------------------+
-| blocks/input_bar.html              | Contains the search bar.                             |
-+------------------------------------+------------------------------------------------------+
-| blocks/mandatory_tags_js.html      |                                                      |
+| blocks/mandatory_tags_js.html      | Javascript functions for mandatory tags.             |
 +------------------------------------+------------------------------------------------------+
 | blocks/paginator.html              | Renders the paginator in the main page.              |
 +------------------------------------+------------------------------------------------------+
@@ -241,13 +249,60 @@ The general template layout is controlled by a few files described below:
 | blocks/user_navigation.html        | User links to login/logout.                          |
 +------------------------------------+------------------------------------------------------+
 
+Widgets
+-------
+
+Widgets are pieces of html code separated to be easily modified, they are located in the 
+widgets folder and are called from several places in the templates.
+
++----------------------------+------------------------------+--------------------------------+
+| Widget name                | Used in                      | Description                    |
++============================+==============================+================================+
+| ask_button.html            | blocks/secondary_header.html | Just the "ask a question"      | 
+|                            |                              | button                         |
++----------------------------+------------------------------+--------------------------------+
+| answer_controls.html       | question.html                | Answer operation links, edit   | 
+|                            |                              | report as spam and more.       |
++----------------------------+------------------------------+--------------------------------+
+| contributors.html          | main_page/sidebar.html       | Widget to display contributors | 
+|                            |                              | avatars.                       |
++----------------------------+------------------------------+--------------------------------+
+| logo.html                  | blocks/header.html           | Contains the site logo.        | 
++----------------------------+------------------------------+--------------------------------+
+| main_menu.html             | blocks/secondary_header.html | Contains the main menu html    | 
++----------------------------+------------------------------+--------------------------------+
+| meta_nav.html              | blocks/header.html           | Widget for the me logo.        | 
++----------------------------+------------------------------+--------------------------------+
+| question_controls.html     | question.html                | Question operation links, edit | 
+|                            |                              | report as spam and more.       |
++----------------------------+------------------------------+--------------------------------+
+| question_vote_buttons.html | question.html                | Vote buttons used in question  | 
++----------------------------+------------------------------+--------------------------------+
+| related_tags.html          | main_page/sidebar.html       | Question operation links, edit | 
+|                            |                              | report as spam and more.       |
++----------------------------+------------------------------+--------------------------------+
+| search_bar.html            | blocks/secondary_header.html | Contains the search bar.       | 
++----------------------------+------------------------------+--------------------------------+
+| share_buttons.html         | question.html                | Widget to show the social      | 
+|                            |                              | sharing buttons.               |
++----------------------------+------------------------------+--------------------------------+
+| tag_selector.html          | main_page/sidebar.html       | Contains the tag selector for  | 
+|                            |                              | search.                        |
++----------------------------+------------------------------+--------------------------------+
+| user_navigation.html       | blocks/header.html           | User navigation links like     | 
+|                            |                              | login, logout.                 |
++----------------------------+------------------------------+--------------------------------+
+
+Template per URL
+----------------
+
 According to the URL some template files are called, the detail on 
 which file is called is in the following table.
 
 +----------------------------+-----------------------------+--------------------------------+
 | Page url                   | Template file               | Macros used                    |
 +============================+=============================+================================+
-| /questions/                |                             |                                |
+| /questions/                | main_page.html              |                                |
 +----------------------------+-----------------------------+--------------------------------+
 | /questions/ask/            | ask.html                    |                                |
 +----------------------------+-----------------------------+--------------------------------+
