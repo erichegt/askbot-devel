@@ -298,7 +298,7 @@ var liveSearch = function(){
     };
 
     var render_search_tags = function(tags){
-        var search_tags = $('#search-tags');
+        var search_tags = $('#searchTags');
         search_tags.children().remove();
         var tags_html = '';
         $.each(tags, function(idx, tag_name){
@@ -381,7 +381,7 @@ var liveSearch = function(){
     };
 
     var activate_search_tags = function(){
-        var search_tags = $('#search-tags .tag-left');
+        var search_tags = $('#searchTags .tag-left');
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
             tag.decorate($(element));
