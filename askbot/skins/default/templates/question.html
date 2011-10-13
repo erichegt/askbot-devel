@@ -17,47 +17,8 @@
     <tr>
         <td style="width:30px;vertical-align:top">
             <div class="vote-buttons">
-                {% if question_vote %}
-                <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
-                    {% if question_vote.is_upvote() %}
-                        src="{{'/images/vote-arrow-up-on.png'|media}}" 
-                    {% else %}
-                        src="{{'/images/vote-arrow-up.png'|media}}"
-                    {% endif %}
-                    alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
-                    title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
-                <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-                    title="{% trans %}current number of votes{% endtrans %}">
-                    {{ question.score }}
-                </div>
-                <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-                    {% if question_vote.is_downvote() %}
-                        src="{{'/images/vote-arrow-down-on.png'|media}}" 
-                    {% else %}
-                        src="{{'/images/vote-arrow-down.png'|media}}" 
-                    {% endif %}
-                    alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
-                    title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
-                {% else %}
-                <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
-                    alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
-                    src="{{'/images/vote-arrow-up.png'|media}}" 
-                    title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
-                <div id="question-vote-number-{{ question.id }}" class="vote-number" 
-                    title="{% trans %}current number of votes{% endtrans %}">
-                    {{ question.score }}
-                </div>
-                <img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
-                    src="{{'/images/vote-arrow-down.png'|media}}"
-                    alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
-                    title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
-                {% endif %}
-                
-                {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
-                {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', icon = True) }}{% endif %}
-                {% if settings.ENABLE_SHARING_LINKEDIN %}{{ macros.share(site = 'linkedin', icon = True) }}{% endif %}
-                {% if settings.ENABLE_SHARING_IDENTICA %}{{ macros.share(site = 'identica', icon = True) }}{% endif %}
-                {% if settings.ENABLE_SHARING_GOOGLE %}<g:plusone size="small" count="false"></g:plusone>{% endif %}
+                {% include "widgets/question_vote_buttons.html"%} 
+                {% include "widgets/share_buttons.html"%} 
             </div>
         </td>
         <td>
@@ -75,37 +36,7 @@
                 {% endfor %}
             </ul>
             <div id="question-controls" class="post-controls">
-                {% set pipe=joiner('<span class="sep">|</span>') %}
-                {% if request.user|can_edit_post(question) %}{{ pipe() }}
-                    <a href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
-                {% endif %}
-                {% if request.user|can_retag_question(question) %}{{ pipe() }}
-                    <a id="retag" href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
-                    <script type="text/javascript">
-                        var retagUrl = "{% url retag_question question.id %}";
-                    </script>
-                {% endif %}
-                {% if question.closed %}
-                    {% if request.user|can_reopen_question(question) %}{{ pipe() }}
-                    <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
-                    {% endif %}
-                {% else %}
-                    {% if request.user|can_close_question(question) %}{{ pipe() }}
-                    <a href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
-                    {% endif %}
-                {% endif %}
-                {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
-                <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
-                    title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                    <a>{% trans %}flag offensive{% endtrans %}</a>
-                    {% if request.user|can_see_offensive_flags(question) %}
-                        <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
-                    {% endif %}
-                </span>
-                {% endif %}
-                {% if request.user|can_delete_post(question) %}{{ pipe() }}
-                    <a id="question-delete-link-{{question.id}}">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                {% endif %}
+              {% include "widgets/question_controls.html" %} 
             </div>
             <div class="post-update-info-container">
                     {{ 
@@ -224,39 +155,7 @@
                                 {{ answer.html }}
                             </div>
                             <div class="answer-controls post-controls">
-                                {% set pipe=joiner('<span class="sep">|</span>') %}
-                                <span class="linksopt">{{ pipe() }}
-                                    <a 
-                                        href="{{ answer.get_absolute_url() }}" 
-                                        title="{% trans %}answer permanent link{% endtrans %}">
-                                        {% trans %}permanent link{% endtrans %}
-                                    </a>
-                                </span>
-                                {% if request.user|can_edit_post(answer) %}{{ pipe() }}
-                                <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
-                                {% endif %}
-                                {% if request.user|can_flag_offensive(answer) %}{{ pipe() }}
-                                <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
-                                    title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                                    <a>{% trans %}flag offensive{% endtrans %}</a>
-                                    {% if request.user|can_see_offensive_flags(answer) %}
-                                        <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
-                                    {% endif %}
-                                </span>
-                                {% endif %}
-                                {% if request.user|can_delete_post(answer) %}{{ pipe() }}
-                                    {% spaceless %}
-                                    <span class="action-link">
-                                        <a id="answer-delete-link-{{answer.id}}">
-                                        {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                                    </span>
-                                    {% endspaceless %}
-                                {% endif %}
-                                {% if settings.ALLOW_SWAPPING_QUESTION_WITH_ANSWER and request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}{{ pipe() }}
-                                    <span class="action-link">
-                                        <a id="swap-question-with-answer-{{answer.id}}">{% trans %}swap with question{% endtrans %}</a>
-                                    </span>
-                                {% endif %}
+                              {% include "widgets/answer_controls.html" %} 
                             </div>
                             <div class="post-update-info-container">
                                     {{
