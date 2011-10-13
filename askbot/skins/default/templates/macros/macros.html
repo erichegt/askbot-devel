@@ -231,7 +231,7 @@ poor design of the data or methods on data objects #}
                     {%- endif -%}"> 
                 <span 
                     class="item-count"
-                >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}&#10003;{% endif %}</span>
+                >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}{% endif %}</span>
                 <div>
                 {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
                 </div>
