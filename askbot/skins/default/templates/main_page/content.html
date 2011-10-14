@@ -9,9 +9,9 @@
 {% if questions_count == 0 %}
     {% include "main_page/nothing_found.html" %}
 {% else %}
-    <p class="evenMore" style="padding-left:9px">
+    <div class="evenMore">
         {% trans %}Did not find what you were looking for?{% endtrans %} 
         <a href="{% url ask %}">{% trans %}Please, post your question!{% endtrans %}</a>
-    </p>
+    </div>
 {% endif %}
 </div>
