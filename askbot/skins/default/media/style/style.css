@@ -1150,11 +1150,24 @@ ul#searchTags {
 .answer-table {
     margin: 2px 0 10px 0;
     border-spacing: 0px;
+    width: 100%;
 }
 
 .answer-table {
     border-bottom: 1px solid #bbb;
     clear: both;
+}
+
+.answer-table td,
+#question-table td {
+    width:30px;
+    vertical-align:top;
+}
+
+#questionTools {
+    font-size: 22px;
+    margin-top: 11px;
+    text-align: left;
 }
 
 
@@ -1196,6 +1209,7 @@ a:hover.medal {
 
 .question-status {
     margin-top: 10px;
+    margin-bottom:15px
     padding: 20px;
     background-color: #F5F5F5;
     text-align: center;

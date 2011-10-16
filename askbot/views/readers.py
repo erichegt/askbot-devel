@@ -507,10 +507,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             filtered_answers.append(answer)
 
     #resolve page number and comment number for permalinks
-    comment_order_number = None
+    show_comment_position = None
     if show_comment:
         show_page = show_comment.get_page_number(answers = filtered_answers)
-        comment_order_number = show_comment.get_order_number()
+        show_comment_position = show_comment.get_order_number()
     elif show_answer:
         show_page = show_post.get_page_number(answers = filtered_answers)
 
@@ -597,7 +597,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'paginator_context' : paginator_context,
         'show_post': show_post,
         'show_comment': show_comment,
-        'comment_order_number': comment_order_number
+        'show_comment_position': show_comment_position
     }
     return render_into_skin('question.html', data, request)
 

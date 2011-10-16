@@ -122,13 +122,15 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro tag_list_widget(
-            tags,
-            id = None,
-            deletable = False,
-            make_links = True,
-            url_params = None,
-            css_class = None
-        )
+        tags,
+        id = None,
+        deletable = False,
+        make_links = True,
+        url_params = None,
+        css_class = None,
+        tag_css_class = None,
+        tag_html_tag = 'li'
+    )
 -%}
 <ul {% if id %}id="{{ id }}"{% endif %}
     class="tags{% if css_class %} {{css_class}}{% endif %}"
@@ -137,10 +139,11 @@ poor design of the data or methods on data objects #}
         {% for tag in tags %}
             {{ tag_widget(
                 tag,
+                css_class = tag_css_class,
                 deletable = deletable,
                 is_link = make_links,
                 url_params = url_params,
-                html_tag = 'li'
+                html_tag = tag_html_tag 
             )}}
         {% endfor %}
     {% endif %}
@@ -324,14 +327,22 @@ for the purposes of the AJAX comment editor #}
     {% endif %}
 {%- endmacro -%}
 
-{%- macro post_comments_widget(post=None, show_post = None, show_comment = None, comment_order_number = None, user=None, max_comments=None) -%}
+{%- macro post_comments_widget(
+        post=None,
+        show_post = None,
+        show_comment = None,
+        show_comment_position = None,
+        user=None,
+        max_comments=None
+    )
+-%}
     {% spaceless %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
             {% if show_post == post and show_comment %}
-                {% if comment_order_number > max_comments %}
-                    {% set comments = post.get_comments(visitor = user)[:comment_order_number] %}
+                {% if show_comment_position > max_comments %}
+                    {% set comments = post.get_comments(visitor = user)[:show_comment_position] %}
                     {{ comment_list(comments = comments, user = user) }}
                 {% else %}
                     {% set comments = post.get_comments(visitor = user)[:max_comments] %}
@@ -345,12 +356,12 @@ for the purposes of the AJAX comment editor #}
         <div class="controls">
             {% set can_post = user|can_post_comment(post) %}
             {% if show_post == post and show_comment %}
-                {% if comment_order_number > max_comments %}
+                {% if show_comment_position > max_comments %}
                     {{
                         add_or_show_comments_button(
                                             post = post,
                                             can_post = can_post,
-                                            max_comments = comment_order_number,
+                                            max_comments = show_comment_position,
                                             widget_id = widget_id
                                         )
                     }}

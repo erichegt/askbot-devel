@@ -1,0 +1,53 @@
+<table id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
+    <tr>
+        <td>
+            <div class="vote-buttons">
+                {% include "widgets/question_vote_buttons.html"%} 
+                {% include "widgets/share_buttons.html"%} 
+            </div>
+        </td>
+        <td>
+            <div class="question-body">
+                {{question.html}}
+            </div>
+            {{ macros.tag_list_widget(
+                    tags = question.get_tag_names(),
+                    id = 'question-tags',
+                    css_class = 'post-tags tags',
+                    tag_css_class = 'post-tag',
+                )
+            }}
+            <div id="question-controls" class="post-controls">
+                {% include "widgets/question_controls.html" %} 
+            </div>
+            <div class="post-update-info-container">
+                    {{ 
+                        macros.post_contributor_info(
+                                        question,
+                                        "original_author",
+                                        question.wiki,
+                                        settings.MIN_REP_TO_EDIT_WIKI
+                                    )
+                    }}
+                    {{ 
+                        macros.post_contributor_info(
+                                        question,
+                                        "last_updater",
+                                        question.wiki,
+                                        settings.MIN_REP_TO_EDIT_WIKI,
+                                    )
+                    }}
+            </div>
+            {{
+                macros.post_comments_widget(
+                        post = question,
+                        show_post = show_post,
+                        show_comment = show_comment,
+                        show_comment_position = show_comment_position,
+                        user = request.user,
+                        max_comments = settings.MAX_COMMENTS_TO_SHOW
+                    )
+            }}
+        </td>
+    </tr>
+</table>
