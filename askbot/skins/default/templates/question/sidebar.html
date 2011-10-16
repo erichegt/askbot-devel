@@ -1,7 +1,7 @@
 {% import "macros/macros.html" as macros %}
 {{ settings.SIDEBAR_QUESTION_HEADER }}
 <div class="boxC vote-buttons">
-    <h2 style="font-size: 22px;margin-top: 11px; text-align: left;">{% trans %}Question tools{% endtrans %}</h2>
+    <h2 id="questionTools">{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
         <a class="button followed" 
             alt="{% trans %}click to unfollow this question{% endtrans %}">
@@ -94,5 +94,3 @@
 {% endif %}
 
 {{ settings.SIDEBAR_QUESTION_FOOTER }}
-
-
