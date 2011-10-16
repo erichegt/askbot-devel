@@ -677,26 +677,6 @@ ul#related-tags li {
     margin-right: 5px;
 }
 
-#ground {
-    width: 100%;
-    clear: both;
-    border-top: 1px solid #000;
-    padding: 6px 0 0 0;
-    text-align: center;
-    background: #777;
-}
-
-#ground p {
-    margin-bottom:0;
-}
-
-
-
-img.license-logo {
-    margin: 6px 0 10px 0;
-}
-
-
 #askFormBar {
     display:inline-block;
     background-color: #e3e3e3;/*888a85; /*#e9b96e;*/
@@ -1022,25 +1002,13 @@ ul#searchTags {
 
 }
 
-/* ----- Question list Pager , check main_page/content.html and main_content/pager.html----- */
-
-
-#question-table,
-.answer-table {
-    margin: 2px 0 10px 0;
-    border-spacing: 0px;
-}
-
-.answer-table {
-    border-bottom: 1px solid #bbb;
-    clear: both;
-}
+/* ----- Question list Paginator , check main_content/pager.html and macros/utils_macros.html----- */
 
 .evenMore {
     font-size: 16px;
     color:@info-text;
-    padding:10px 0px 10px 0px;
-    clear:bot;
+    padding:15px 0px 10px 0px;
+    clear:both;
 }
 
 .evenMore a {
@@ -1048,11 +1016,7 @@ ul#searchTags {
     color:@link;
 }
 
-
-
 .pager {
-    clear:both;
-    border-top: 1px solid #777;
     margin-top: 10px;
     margin-bottom: 16px;
 }
@@ -1063,65 +1027,111 @@ ul#searchTags {
     float: right;
 }
 
-/** PAGINATOR **/
 .paginator {
     padding: 5px 0 10px 0;
-    font: normal 12px sans-serif;
+    font-size:16px;
+
+    .prev a, .prev a:visited,
+    .next a, .next a:visited {
+         background-color: #fff;
+        color: #777;
+        padding: 2px 4px 3px 4px;
+        font-family:@yanone;
+    }
+    a{
+        color:@section-title;
+    }
+    .prev {
+        margin-right: .5em;
+    }
+
+    .next {
+        margin-left: .5em;
+    }
+
+    .page a, .page a:visited, .curr {
+        padding: .25em;
+        background-color: #fff;
+        margin: 0em .25em;
+        color: #ff;
+    }
+
+    .curr {
+        background-color: #8ebcc7;
+        color: #fff;
+        font-weight: bold;
+    }
+    .next a, .prev a{
+        color:@section-title
+    }
+    .page a:hover,
+    .curr a:hover,
+    .prev a:hover,
+    .next a:hover {
+        color: #8C8C8C;
+        background-color: #E1E1E1;
+        text-decoration: none;
+    }
+
+    .text {
+        color: #777;
+        padding: .3em;
+    }
+
+    .paginator-container-left {
+        padding: 5px 0 10px 0;
+    }
+
 }
 
-.paginator .prev a, .paginator .prev a:visited,
-.paginator .next a, .paginator .next a:visited {
-    border: 1px solid #fff;
-    background-color: #fff;
-    color: #777;
-    padding: 2px 4px 3px 4px;
-    font: bold 100% sans-serif;
+/* ----- Footer links , check blocks/footer.html----- */
+
+#ground {
+    width: 100%;
+    clear: both;
+    border-top: 1px solid #000;
+    padding: 6px 0 0 0;
+    background: @header-color;
+    font-size:16px;
+
+    p {
+        margin-bottom:0;
+    }
 }
 
-.paginator .prev {
-    margin-right: .5em;
+.footer-links {
+    color: #EEE;
+    text-align:left;
+    width:500px;
+    float:left;
+    a {
+        color: #e7e8a8;
+    }
 }
 
-.paginator .next {
-    margin-left: .5em;
+.powered-link{
+    width:500px;
+    float:left;
+    text-align:left;
+    a{
+        color:#8ebcc7;
+    }
 }
 
-.paginator .page a, .paginator .page a:visited, .paginator .curr {
-    padding: .25em;
-    font: normal .875em verdana;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin: 0em .25em;
-    color: #777;
-}
+.copyright{
+    color:#616161;
+    width:450px;
+    float:right;
+    text-align:right;
 
-.paginator .curr {
-    background-color: #777;
-    color: #fff;
-    border: 1px solid #777;
-    font-weight: bold;
+    a{
+        color:#8ebcc7;
+    }
+    img.license-logo {
+        margin: 6px 0px 20px 10px;
+        float:right;
+    }
 }
-
-.paginator .page a:hover,
-.paginator .curr a:hover,
-.paginator .prev a:hover,
-.paginator .next a:hover {
-    color: #fff;
-    background-color: #777;
-    border: 1px solid #777;
-    text-decoration: none;
-}
-
-.paginator .text {
-    color: #777;
-    padding: .3em;
-    font: bold 100% sans-serif;
-}
-
-.paginator-container-left {
-    padding: 5px 0 10px 0;
-}
-
 
 .question-page p.rss {
     float:none;
@@ -1134,6 +1144,18 @@ ul#searchTags {
     padding-left: 18px;
     vertical-align: top;
 }
+
+#question-table,
+.answer-table {
+    margin: 2px 0 10px 0;
+    border-spacing: 0px;
+}
+
+.answer-table {
+    border-bottom: 1px solid #bbb;
+    clear: both;
+}
+
 
 /* badges */
 a.medal {
@@ -2031,15 +2053,6 @@ ins .post-tag {
     color: #333;
 }
 
-.footerLinks {
-    color: #EEE;
-    font-size: 13px; /* letter-spacing:1px;*/
-}
-
-.footerLinks a {
-    color: #FFF;
-    font-size: 13px;
-}
 
 a.comment {
     background: #EEE;
