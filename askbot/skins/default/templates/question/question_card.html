@@ -3,8 +3,8 @@
     <tr>
         <td>
             <div class="vote-buttons">
-                {% include "widgets/question_vote_buttons.html"%} 
-                {% include "widgets/share_buttons.html"%} 
+                {% include "question/question_vote_buttons.html"%} 
+                {% include "question/share_buttons.html"%} 
             </div>
         </td>
         <td>
@@ -13,7 +13,7 @@
             </div>
             {% include "question/question_tags.html" %}
             <div id="question-controls" class="post-controls">
-                {% include "widgets/question_controls.html" %} 
+                {% include "question/question_controls.html" %} 
             </div>
             <div class="post-update-info-container">
                 {% include "question/question_author_info.html" %}
