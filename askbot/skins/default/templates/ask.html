@@ -20,9 +20,9 @@
         var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     </script>
     <script type='text/javascript' src='{{"/js/live_search.js"|media}}'></script>
-    {% include "blocks/editor_data.html" %}
+    {% include "meta/editor_data.html" %}
     {% if mandatory_tags %}
-        {% include "blocks/mandatory_tags_js.html" %}
+        {% include "meta/mandatory_tags_js.html" %}
     {% endif %}
     <script type='text/javascript'>
         askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
