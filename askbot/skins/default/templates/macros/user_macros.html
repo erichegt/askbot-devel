@@ -1,23 +1,5 @@
 {%- macro user_score_and_badge_summary(user) -%}
-    <span class="reputation-score"
-          title="{{user.get_karma_summary}}"
-    >{{user.reputation}}</span>
-    {% if user.gold or user.silver or user.bronze %}
-    <span title="{{user.get_badge_summary}}">
-        {% if user.gold %}
-        <span class='badge1'>&#9679;</span>
-        <span class="badgecount">{{user.gold}}</span>
-        {% endif %}
-        {% if user.silver %}
-        <span class='badge2'>&#9679;</span>
-        <span class="badgecount">{{user.silver}}</span>
-        {% endif %}
-        {% if user.bronze %}
-        <span class='badge3'>&#9679;</span>
-        <span class="badgecount">{{user.bronze}}</span>
-        {% endif %}
-    </span>
-    {% endif %}
+  {%include "widgets/user_long_score_and_badge_summary.html"%}
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}
@@ -52,27 +34,7 @@
 {%- endmacro -%}
 
 {%- macro user_long_score_and_badge_summary(user) -%}
-    <a class="user-micro-info" 
-       href="{{user.get_absolute_url()}}?sort=reputation"
-    >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
-    {%- if user.gold or user.silver or user.bronze %}
-    <a class="user-micro-info"
-       href="{{user.get_absolute_url()}}#badges"
-    ><span title="{{user.get_badge_summary}}">{% trans %}badges:{% endtrans %}
-        {% if user.gold %}
-        <span class='badge1'>&#9679;</span>
-        <span class="badgecount">{{user.gold}}</span>
-        {% endif %}
-        {% if user.silver %}
-        <span class='badge2'>&#9679;</span>
-        <span class="badgecount">{{user.silver}}</span>
-        {% endif %}
-        {% if user.bronze %}
-        <span class='badge3'>&#9679;</span>
-        <span class="badgecount">{{user.bronze}}</span>
-        {%- endif -%}
-    </span></a>
-    {%- endif -%}
+  {% include "widgets/user_long_score_and_badge_summary.html" %}
 {%- endmacro -%}
 
 {%- macro user_country_flag(user) -%}
@@ -106,27 +68,7 @@
 {%- endmacro -%}
 
 {%- macro user_list(users, profile_section = None) -%}
-<div class="userList">
-    <table class="list-table">
-        <tr>
-            <td class="list-td">
-                {% for user in users %}
-                <div class="user">
-                    <ul>
-                            <li class="thumb">{{ gravatar(user, 32) }}</li>
-                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username}}</a>{{ user_country_flag(user) }}</li>
-                            <li>{{ user_score_and_badge_summary(user) }}</li>
-                        </ul>
-                </div>
-                    {% if loop.index is divisibleby 7 %}
-            </td>
-            <td>
-                    {% endif %}
-                {% endfor %}
-            </td>
-        </tr>   
-    </table>
-</div>
+{% include "widgets/user_list.html"%}
 {%- endmacro -%}
 
 {#todo: rename this to avatar #}

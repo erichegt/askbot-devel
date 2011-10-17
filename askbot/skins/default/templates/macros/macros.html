@@ -228,62 +228,7 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro question_summary(question, extra_class=None) -%}
-      <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
-        <div class="counts">
-            <div class="views
-                 {% if question.view_count == 0 -%}
-                    no-views
-                 {% else -%}
-                    some-views
-                 {%- endif -%}">
-                 <span class="item-count">{{question.view_count|humanize_counter}}</span>
-                <div>
-                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
-                </div>
-            </div>
-            <div class="answers
-                    {% if question.answer_count == 0 -%}
-                        no-answers
-                    {% else -%}
-                        {%- if question.answer_accepted -%}
-                            accepted
-                        {%- else -%}
-                            some-answers
-                        {%- endif -%}
-                    {%- endif -%}"> 
-                <span 
-                    class="item-count"
-                >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}{% endif %}</span>
-                <div>
-                {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
-                </div>
-            </div>
-            <div class="votes 
-                        {% if question.score == 0 -%}
-                            no-votes
-                        {% else -%}
-                            some-votes
-                        {%- endif -%}">
-                <span class="item-count">{{question.score|humanize_counter}}</span>
-                <div>
-                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
-                </div>
-            </div>
-            
-            <div style="clear:both"></div>
-            <div class="userinfo">
-                <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-                {% if question.is_anonymous %}
-                    <span class="anonymous">{{ question.last_activity_by.get_anonymous_name() }}</span>
-                {% else %}
-                    <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>{{ user_country_flag(question.last_activity_by) }}
-                {#{user_score_and_badge_summary(question.last_activity_by)}#}
-                {% endif %}
-            </div>
-        </div>
-        <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-        {{ tag_list_widget(question.get_tag_names()) }}
-    </div>
+{%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 
 {%- macro comment_votes(comment = None) -%}
@@ -463,67 +408,7 @@ for the purposes of the AJAX comment editor #}
                 edit_title = False
             )
 -%}
-    {% if edit_title %}
-        <div class="form-item">
-            <label for="id_title" ><strong>{{ post_form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
-            {{ post_form.title }} {{ post_form.title.errors }}
-            <div class="title-desc">
-                {{ post_form.title.help_text }}
-            </div>
-        </div>
-    {% endif %}
-    <div id="wmd-button-bar" class="wmd-panel"></div>
-    <div class="form-item">
-        {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
-        <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
-    </div>
-    {# need label element for resizable input, b/c form validation won't find span #}
-    {% if post_type == 'question' %}
-        <div class="form-item">
-            {% if mandatory_tags  %}
-                <label for="id_tags">
-                    <strong>{% trans %}tags{% endtrans %},</strong>
-                    {% trans %}one of these is required{% endtrans %}
-                </label>
-                {{
-                    tag_list_widget(
-                        mandatory_tags,
-                        make_links = False,
-                        css_class = 'clearfix'
-                    )
-                }}
-            {% else %}
-                <label for="id_tags">
-                    <strong>{% trans %}tags{% endtrans %}:</strong>
-                    {% trans %}(required){% endtrans %}
-                </label>
-            {% endif %}
-            <span class="form-error">{{ post_form.tags.errors }}</span><br/>
-            {{ post_form.tags }}
-            <div class="title-desc">
-                {{ post_form.tags.help_text }}
-            </div>
-        </div>
-    {% endif %}
-    {% if 'summary' in post_form['fields'] %}
-        <div class="form-item">
-            <strong>{{ post_form.summary.label_tag() }}</strong> <br/>
-            {{ post_form.summary }}
-            <div class="title-desc">
-                {{ post_form.summary.help_text }}
-            </div>
-            <div class="form-error" >{{ post_form.summary.errors }}</div>
-        </div>
-    {% endif %}
-    <div class="preview-toggle">
-        <span 
-            id="pre-collapse" 
-            title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
-        >
-            [{% trans %}hide preview{% endtrans %}]
-        </span>
-    </div>
-    <div id="previewer" class="wmd-preview"></div>
+{%include "widgets/edit_post.html" %}
 {%- endmacro -%}
 
 {%- macro tag_autocomplete_js(id = '#id_tags') -%}
