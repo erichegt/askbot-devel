@@ -1,8 +1,8 @@
-{% import "macros/utils_macros.html" as utils_macros %}
+{% import "macros/macros.html" as macros %}
 {% if questions_count > 10 %}{# todo: remove magic number #}
     <div id="pager" class="pager">
-        {{ utils_macros.paginator(context|setup_paginator, position='left') }}
-        {{ utils_macros.pagesize_switch(context, position='right') }}
+        {{ macros.paginator(context|setup_paginator, position='left') }}
+        {{ macros.pagesize_switch(context, position='right') }}
         <div class="clean"></div>
     </div>
 {% endif %}

@@ -1,4 +1,3 @@
-{% from "macros/user_macros.html" import user_country_flag, gravatar, user_score_and_badge_summary, user_website_link %}
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
         title="{% trans %}Share this question on {{site}}{% endtrans %}"
@@ -426,4 +425,211 @@ for the purposes of the AJAX comment editor #}
 
 {%- macro answer_classes(answer, question) -%}
 answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
+{%- endmacro -%}
+
+{%- macro user_score_and_badge_summary(user) -%}
+  {%include "widgets/user_long_score_and_badge_summary.html"%}
+{%- endmacro -%}
+
+{%- macro follow_toggle(follow, name, alias, id) -%}
+    {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
+    <div 
+        class="follow-toggle" 
+        id="follow-{{ name }}-{{ id }}"
+    >
+        {% if follow %}
+        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
+        {% else %}
+        <div class="unfollow">
+          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
+          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
+        </div>
+        {% endif %}
+    </div>
+{%- endmacro -%}
+
+{%- macro follow_user_toggle(visitor = None, subject = None) -%}
+    {% if visitor.is_anonymous() %}
+        {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+    {% else %}
+        {% if visitor != subject %}
+            {% if visitor.is_following(subject) %}
+                {{ follow_toggle(False, 'user', subject.username, subject.id) }}
+            {% else %}
+                {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro user_long_score_and_badge_summary(user) -%}
+  {% include "widgets/user_long_score_and_badge_summary.html" %}
+{%- endmacro -%}
+
+{%- macro user_country_flag(user) -%}
+    {% if user.country and user.show_country %}
+        <img class="flag" 
+            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
+            alt="{% trans 
+                    country=user.country.name 
+                    %}flag of {{country}}{% 
+                endtrans %}"
+            title="{% trans 
+                    country=user.country.name, 
+                    person=user.username %}{{person}} is from {{country}}{%
+                 endtrans %}"
+        />
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro user_country_name_and_flag(user) -%}
+    {% if user.country and user.show_country %}
+        {{ user.country.name }}
+        {{ user_country_flag(user) }}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro user_full_location(user) -%}
+    {% if user.location %}
+        {{ user.location }},
+    {% endif %}
+    {{ user_country_name_and_flag(user) }}
+{%- endmacro -%}
+
+{%- macro user_list(users, profile_section = None) -%}
+{% include "widgets/user_list.html"%}
+{%- endmacro -%}
+
+{#todo: rename this to avatar #}
+{%- macro gravatar(user, size) -%}
+{% spaceless %}
+<a style="text-decoration:none"
+    href="{{ user.get_absolute_url() }}"
+><img class="gravatar" 
+    width="{{size}}" height="{{size}}"
+    src="{{ user.get_avatar_url(size) }}"
+    title="{{user.username}}" 
+    alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
+/></a>
+{% endspaceless %}
+{%- endmacro -%}
+
+{%- macro user_website_link(user, max_display_length=25) -%}
+    {% if user.website %}
+        <a 
+            href="{{user.website}}"
+            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
+            {% if user.can_have_strong_url() == False %}
+            rel="nofollow"
+            {% endif %}
+        >
+        {{user.website|truncate(length=max_display_length, killwords=True, end='...')}}
+        </a>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
+{% spaceless %}
+    {% if p.is_paginated %}
+        <div class="paginator" style="float:{{position}}">
+        {% if p.has_previous %}
+            <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ p.extend_url }}" title="{% trans %}previous{% endtrans %}">
+        &laquo; {% trans %}previous{% endtrans %}</a></span>
+        {% endif %}
+        {% if not p.in_leading_range %}
+            {% for num in p.pages_outside_trailing_range %}
+                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ p.extend_url }}" >{{ num }}</a></span>
+            {% endfor %}
+        ...
+        {% endif %}
+         
+        {% for num in p.page_numbers %}
+          {% if num == p.page and p.pages != 1%}
+            <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+          {% else %}
+            <span class="page"><a href="{{p.base_url}}page={{ num }}{{ p.extend_url }}" title="{% trans %}page number {{num}}{% endtrans %}">{{ num }}</a></span>
+          {% endif %}
+        {% endfor %}
+         
+        {% if not p.in_trailing_range %}
+            ...
+            {% for num in p.pages_outside_leading_range|reverse %}
+                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ p.extend_url }}" title="{% trans %}page number {{ num }}{% endtrans %}">{{ num }}</a></span>
+            {% endfor %}
+        {% endif %}
+        {% if p.has_next %}
+            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ p.extend_url }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
+        {% endif %}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{%- endmacro -%}
+
+{%- macro pagesize_switch(p, position='left') -%}{# p is paginator context #}
+{% spaceless %}
+{% if p.is_paginated %}
+    <div class="paginator" style="float:{{position}}">
+        <span class="text">{% trans %}posts per page{% endtrans %}</span>
+        {% if p.page_size == 10 %}
+            <span class="curr">10</span>
+        {% else %}
+            <span class="page"><a href="{{p.base_url}}page_size=10">10</a></span>
+        {% endif %}
+        
+        {% if p.page_size == 30 %}
+            <span class="curr">30</span>
+        {% else %}
+            <span class="page"><a href="{{p.base_url}}page_size=30">30</a></span>
+        {% endif %}
+        
+        {% if p.page_size == 50 %}
+            <span class="curr">50</span>
+        {% else %}
+            <span class="page"><a href="{{p.base_url}}page_size=50">50</a></span>
+        {% endif %}
+    </div> 
+{% endif %}
+{% endspaceless %}
+{%- endmacro -%}
+
+{%- macro inbox_link(user) -%}
+    {% if user.new_response_count > 0 or user.seen_response_count > 0 %}
+    <a id='ab-responses' href="{{user.get_absolute_url()}}?sort=inbox&section=forum">
+        <img 
+            alt="{% trans username=user.username %}responses for {{username}}{% endtrans %}"
+            {% if user.new_response_count > 0 %}
+                src="{{ "/images/mail-envelope-full.png"|media }}"
+                title="{% trans response_count=user.new_response_count %}you have a new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"
+            {% elif user.seen_response_count > 0 %}
+                src="{{ "/images/mail-envelope-empty.png"|media }}"
+                title="{% trans %}no new responses yet{% endtrans %}"
+            {% endif %}
+        />
+    </a>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro moderation_items_link(user, moderation_items) -%}
+    {% if moderation_items %}
+        <a id="ab-responses"
+            href="{{user.get_absolute_url()}}?sort=inbox&section=flags"
+        >
+        {% if moderation_items['new_count'] > 0 %}
+            <img src="{{'/images/dialog-warning.png'|media}}"
+            {% if moderation_items['seen_count'] > 0 %}
+                alt="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+            {% else %}
+                alt="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+            {% endif %}
+            />
+        {% elif moderation_items['seen_count'] > 0 %}
+            <img src={{'/images/dialog-warning-off.png'|media}} 
+                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+            />
+        {% endif %}
+        </a>
+    {% endif %}
 {%- endmacro -%}

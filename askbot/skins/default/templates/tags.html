@@ -1,6 +1,5 @@
 {% extends "two_column_body.html" %}
 {% import "macros/macros.html" as macros %}
-{% import "macros/utils_macros.html" as utils_macros%}
 <!-- tags.html -->
 {% block title %}{% spaceless %}{% trans %}Tag list{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
@@ -48,7 +47,7 @@
             {% endfor %}
         </ul>
         <div class="pager">
-            {{utils_macros.paginator(paginator_context)}}
+            {{macros.paginator(paginator_context)}}
         </div>
     {% endif %}
 {% else %}

@@ -1,5 +1,5 @@
 {% extends "one_column_body.html" %}
-{% import "macros/user_macros.html" as user_macros %}
+{% import "macros/macros.html" as macros %}
 <!-- user_edit.html -->
 {% block title %}{% spaceless %}{% trans %}Edit user profile{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
@@ -10,7 +10,7 @@
     <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
         <div id="left" style="float:left;width:180px">
             {% if request.user.email %}
-                {{ user_macros.gravatar(request.user, 128) }}
+                {{ macros.gravatar(request.user, 128) }}
             {% else %}
                 <img src="{{"/images/nophoto.png"|media}}">
             {% endif %}

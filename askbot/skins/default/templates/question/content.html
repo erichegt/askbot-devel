@@ -1,16 +1,15 @@
 {% import "macros/macros.html" as macros %}
-{% import "macros/utils_macros.html" as utils_macros %}
 {% include "question/question_card.html" %}
 {% if question.closed %}
     {% include "question/closed_question_info.html" %}
 {% endif %}
 {% if answers %}
     {% include "question/answer_tab_bar.html" %}
-    {{ utils_macros.paginator(paginator_context) }}
+    {{ macros.paginator(paginator_context) }}
     {% for answer in answers %}
         {% include "question/answer_card.html" %}
     {% endfor %}
-    {{ utils_macros.paginator(paginator_context) }}
+    {{ macros.paginator(paginator_context) }}
 {% else %}
     {% include "question/sharing_prompt_phrase.html" %}
 {% endif %}
