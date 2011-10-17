@@ -105,6 +105,25 @@ poor design of the data or methods on data objects #}
 {% endif %}
 {%- endmacro -%}
 
+{%- macro post_last_updater_and_creator_info(post, min_rep_to_edit_wiki) -%}
+    {{ 
+       post_contributor_info(
+            post,
+            "original_author",
+            post.wiki,
+            min_rep_to_edit_wiki
+        )
+    }}
+    {{ 
+        post_contributor_info(
+            post,
+            "last_updater",
+            post.wiki,
+            min_rep_to_edit_wiki,
+        )
+    }}
+{%- endmacro -%}
+
 {%- macro if_else(condition, if_true, if_false) -%}
     {%- if condition == True -%}
         {{if_true}}
@@ -518,4 +537,8 @@ for the purposes of the AJAX comment editor #}
             delay: 10
     });
     tagAc.decorate($("{{ id }}"));
+{%- endmacro -%}
+
+{%- macro answer_classes(answer, question) -%}
+answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
 {%- endmacro -%}

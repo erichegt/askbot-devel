@@ -1,13 +1,11 @@
 {% import "macros/macros.html" as macros %}
 {% import "macros/utils_macros.html" as utils_macros %}
-<h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
 {% include "question/question_card.html" %}
 {% if question.closed %}
     {% include "question/closed_question_info.html" %}
 {% endif %}
 {% if answers %}
     {% include "question/answer_tab_bar.html" %}
-
     {{ utils_macros.paginator(paginator_context) }}
     {% for answer in answers %}
         {% include "question/answer_card.html" %}
@@ -16,27 +14,7 @@
 {% else %}
     {% include "question/sharing_prompt_phrase.html" %}
 {% endif %}
-<form 
-    id="fmanswer"
-    {% if user == question.author %}style="display:none"{% endif %}
-    action="{% url answer question.id %}"
-    method="post"
->{% csrf_token %}
-    {% include "question/subscribe_by_email_prompt.html" %}
-    <div style="clear:both"></div>
-    {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
-        {% if not question.closed %}
-            <a 
-                class="submit"
-                href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
-            >{% trans %}Login/Signup to Answer{% endtrans %}</a>
-        {% endif %}
-    {% else %}
-        {% if not question.closed %}
-            {% include "question/new_answer_input.html" %}
-        {% endif %}
-    {% endif %}
-</form>
-    {% if request.user == question.author %}
+    {% include "question/new_answer_form.html" %}
+    {% if request.user == question.author %}{# this is outside the form on purpose #}
         <input type="button" class="submit after-editor" id="fmanswer_button"  value="{% trans %}Answer Your Own Question{% endtrans %}"/>
     {%endif%}
