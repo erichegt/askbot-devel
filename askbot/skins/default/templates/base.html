@@ -4,11 +4,11 @@
     {% spaceless %}
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
-        {% include "html_head/meta.html" %}
+        {% include "meta/html_head_meta.html" %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
-        {% include "html_head/stylesheets.html" %}
+        {% include "meta/html_head_stylesheets.html" %}
         {% block forestyle %}{% endblock %}
-        {% include "html_head/javascript.html" %}
+        {% include "meta/html_head_javascript.html" %}
         {% if settings.USE_CUSTOM_HTML_HEAD %}
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}
