@@ -206,45 +206,6 @@ var liveSearch = function(){
         return tags_html;
     };
 
-    var render_question = function(question){
-        var entry_html = 
-        '<div class="short-summary">' + 
-            '<div class="counts">' +
-                render_counter(
-                    question['views'],
-                    question['views_word'],
-                    'views',
-                    question['views_class']
-                ) +
-                render_counter(
-                    question['answers'],
-                    question['answers_word'],
-                    'answers',
-                    question['answers_class']
-                ) +
-                render_counter(
-                    question['votes'],
-                    question['votes_word'],
-                    'votes',
-                    question['votes_class']
-                ) +
-                '<div style="clear:both"></div>' +
-                render_user_info(question) +
-            '</div>' + 
-            render_title(question) +
-            render_tags(question['tags'], true, false) +
-        '</div>';
-        return entry_html;
-    };
-
-    var render_question_list = function(questions){
-        var output = '';
-        for (var i=0; i<questions.length; i++){
-            output += render_question(questions[i]);
-        }
-        return output;
-    };
-
     var render_faces = function(faces){
         if (faces.length === 0){
             return;
@@ -427,15 +388,12 @@ var liveSearch = function(){
     };
 
     var render_main_page_result = function(data, text_status, xhr){
-        var start_date = new Date();
-        var epoc_time = start_date.getTime();
-        console.debug(epoc_time);
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
             old_list.stop(true);
 
-            new_list.html(render_question_list(data['questions']));
+            new_list.html(data['questions']);
             //old_list.hide();
             old_list.after(new_list);
             //old_list.remove();
@@ -456,8 +414,6 @@ var liveSearch = function(){
                 new_list.fadeIn(400);            
             });
         }
-        var end_date = new Date();
-        console.debug(end_date.getTime() - epoc_time);
     }
 
     var try_again = function(){

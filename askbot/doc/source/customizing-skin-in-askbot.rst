@@ -217,36 +217,36 @@ The general template layout is controlled by a few files described below:
 +------------------------------------+------------------------------------------------------+
 | two_column_body.html               | This is a base layout for two column style pages.    |
 +------------------------------------+------------------------------------------------------+
-| blocks/answer_edit_tips.html       | Contains text displayed as "Answer Edit Tips" in the |
+| widgets/answer_edit_tips.html      | Contains text displayed as "Answer Edit Tips" in the |
 |                                    | answer edit page.                                    |
 +------------------------------------+------------------------------------------------------+
-| blocks/ask_form.html               | Contains the form to ask a question.                 |
+| widgets/ask_form.html              | Contains the form to ask a question.                 |
 +------------------------------------+------------------------------------------------------+
-| blocks/bottom_scripts.html         | Contains javascript calls and some javascript        |
+| widgets/bottom_scripts.html        | Contains javascript calls and some javascript        |
 |                                    | functions needed for askbot this is included at the  |
 |                                    | bottom of every page.                                |
 +------------------------------------+------------------------------------------------------+
-| blocks/editor_data.html            | Contains data necessary for the post editor this is  |
+| widgets/editor_data.html           | Contains data necessary for the post editor this is  |
 |                                    | included in block endjs.                             |
 +------------------------------------+------------------------------------------------------+
-| blocks/footer.html                 | Contains the html displayed on the footer.           |
+| widgets/footer.html                | Contains the html displayed on the footer.           |
 +------------------------------------+------------------------------------------------------+
-| blocks/header.html                 | Contains the header section of the web. Normaly      |
+| widgets/header.html                | Contains the header section of the web. Normaly      |
 |                                    | includes the site logo and navitation tools.         |
 +------------------------------------+------------------------------------------------------+
-| blocks/mandatory_tags_js.html      | Javascript functions for mandatory tags.             |
+| widgets/mandatory_tags_js.html     | Javascript functions for mandatory tags.             |
 +------------------------------------+------------------------------------------------------+
-| blocks/paginator.html              | Renders the paginator in the main page.              |
+| widgets/paginator.html             | Renders the paginator in the main page.              |
 +------------------------------------+------------------------------------------------------+
-| blocks/question_edit_tips.html     | Contains text displayed as "Question Edit Tips" in   |
+| widgets/question_edit_tips.html    | Contains text displayed as "Question Edit Tips" in   |
 |                                    | the question edit page.                              |
 +------------------------------------+------------------------------------------------------+
-| blocks/secondary_header.html       | Containter for the search bar section.               |
+| widgets/secondary_header.html      | Containter for the search bar section.               |
 +------------------------------------+------------------------------------------------------+
-| blocks/system_messages.html        | Containter for notification messages in the top of   |
+| widgets/system_messages.html       | Containter for notification messages in the top of   |
 |                                    | the page.                                            |
 +------------------------------------+------------------------------------------------------+
-| blocks/user_navigation.html        | User links to login/logout.                          |
+| widgets/user_navigation.html       | User links to login/logout.                          |
 +------------------------------------+------------------------------------------------------+
 
 Widgets
@@ -258,7 +258,7 @@ widgets folder and are called from several places in the templates.
 +----------------------------+------------------------------+--------------------------------+
 | Widget name                | Used in                      | Description                    |
 +============================+==============================+================================+
-| ask_button.html            | blocks/secondary_header.html | Just the "ask a question"      | 
+| ask_button.html            | widgets/secondary_header.html | Just the "ask a question"      | 
 |                            |                              | button                         |
 +----------------------------+------------------------------+--------------------------------+
 | answer_controls.html       | question.html                | Answer operation links, edit   | 
@@ -267,11 +267,11 @@ widgets folder and are called from several places in the templates.
 | contributors.html          | main_page/sidebar.html       | Widget to display contributors | 
 |                            |                              | avatars.                       |
 +----------------------------+------------------------------+--------------------------------+
-| logo.html                  | blocks/header.html           | Contains the site logo.        | 
+| logo.html                  | widgets/header.html          | Contains the site logo.        | 
 +----------------------------+------------------------------+--------------------------------+
-| main_menu.html             | blocks/secondary_header.html | Contains the main menu html    | 
+| main_menu.html             | widgets/secondary_header.html| Contains the main menu html    | 
 +----------------------------+------------------------------+--------------------------------+
-| meta_nav.html              | blocks/header.html           | Widget for the me logo.        | 
+| meta_nav.html              | widgets/header.html          | Widget for the me logo.        | 
 +----------------------------+------------------------------+--------------------------------+
 | question_controls.html     | question.html                | Question operation links, edit | 
 |                            |                              | report as spam and more.       |
@@ -281,7 +281,7 @@ widgets folder and are called from several places in the templates.
 | related_tags.html          | main_page/sidebar.html       | Question operation links, edit | 
 |                            |                              | report as spam and more.       |
 +----------------------------+------------------------------+--------------------------------+
-| search_bar.html            | blocks/secondary_header.html | Contains the search bar.       | 
+| search_bar.html            | widgets/secondary_header.html| Contains the search bar.       | 
 +----------------------------+------------------------------+--------------------------------+
 | share_buttons.html         | question.html                | Widget to show the social      | 
 |                            |                              | sharing buttons.               |
@@ -289,7 +289,7 @@ widgets folder and are called from several places in the templates.
 | tag_selector.html          | main_page/sidebar.html       | Contains the tag selector for  | 
 |                            |                              | search.                        |
 +----------------------------+------------------------------+--------------------------------+
-| user_navigation.html       | blocks/header.html           | User navigation links like     | 
+| user_navigation.html       | widgets/header.html          | User navigation links like     | 
 |                            |                              | login, logout.                 |
 +----------------------------+------------------------------+--------------------------------+
 

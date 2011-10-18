@@ -144,11 +144,12 @@ def questions(request):
                                 }
 
         if q_count > search_state.page_size:
-            paginator_tpl = get_template('blocks/paginator.html', request)
+            paginator_tpl = get_template('main_page/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
             paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
-                'paginator_context': extra_tags.cnprog_paginator(paginator_context)
+                'context': extra_tags.cnprog_paginator(paginator_context),
+                'questions_count': q_count
             }
             paginator_html = paginator_tpl.render(Context(data))
         else:
@@ -195,13 +196,20 @@ def questions(request):
 
         for contributor in contributors:
             ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
-        import time
-        start_time = time.time()
         #we render the template
         #from django.template import RequestContext
-        partial_template = render_into_skin('main_page/ajax_questions.html', {'questions': page}, request)
-        ajax_data['rendered_questions'] = partial_template
-        print time.time() - start_time
+        questions_tpl = get_template('main_page/questions_loop.html', request)
+        #todo: remove this patch on context after all templates are moved to jinja
+        data = {
+            'questions': page,
+            'questions_count': q_count,
+            'context': paginator_context,
+            'language_code': translation.get_language(),
+            'query': search_state.query,
+        }
+
+        questions_html = questions_tpl.render(Context(data))
+        ajax_data['questions'] = questions_html.replace('\n','')
         return HttpResponse(
                     simplejson.dumps(ajax_data),
                     mimetype = 'application/json'
