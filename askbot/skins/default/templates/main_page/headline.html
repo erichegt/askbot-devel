@@ -1,6 +1,5 @@
 {% import "macros.html" as macros %}
 {% if questions_count > 0 %}
-    <div style="clear:both">
         <h1 id="questionCount" class="search-result-summary">
             {% trans cnt=questions_count, q_num=questions_count|intcomma %}{{q_num}} question{% pluralize %}{{q_num}} questions{% endtrans %}
         {% if author_name %}
@@ -39,6 +38,4 @@
         {% else %}
             <p class="search-tips"><b>{% trans %}Search tip:{% endtrans %}</b> {% trans %}add tags and a query to focus your search{% endtrans %}</p>
         {% endif %}
-        <div class="clean"></div>
-    </div>
 {% endif %}
