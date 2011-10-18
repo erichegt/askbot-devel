@@ -512,7 +512,7 @@ h1 {
 
     .inputs{
         #interestingTagInput, #ignoredTagInput{
-              width:160px;
+            width:159px;
             border:#c9c9b5 1px solid;
             height:25px;
         }
@@ -964,7 +964,7 @@ ul#ab-user-tags li {
 }
 
 ul#related-tags li {
-    margin: 0 5px 3px 0;
+    margin: 0 5px 5px 0;
     float: left;
     clear: left;
 }
