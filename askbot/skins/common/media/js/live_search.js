@@ -427,6 +427,9 @@ var liveSearch = function(){
     };
 
     var render_main_page_result = function(data, text_status, xhr){
+        var start_date = new Date();
+        var epoc_time = start_date.getTime();
+        console.debug(epoc_time);
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
@@ -453,6 +456,8 @@ var liveSearch = function(){
                 new_list.fadeIn(400);            
             });
         }
+        var end_date = new Date();
+        console.debug(end_date.getTime() - epoc_time);
     }
 
     var try_again = function(){
