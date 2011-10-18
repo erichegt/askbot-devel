@@ -1,5 +1,5 @@
 """utilities in addition to os.path
-that 
+that
 * help to test existing paths on usability for the installation
 * create necessary directories
 * install deployment files
@@ -48,7 +48,7 @@ def directory_is_writable(directory):
 
 
 def can_create_path(directory):
-    """returns True if user can write file into 
+    """returns True if user can write file into
     directory even if it does not exist yet
     and False otherwise
     """
@@ -139,9 +139,13 @@ def deploy_into(directory, new_project = None, verbosity=1, context=None):
                 if file_name in blank_files:
                     continue
                 else:
-                    if verbosity >=1:
-                        print '* %s' % file_name,
-                        print "- you already have one, please add contents of %s" % src
+                    if file_name == 'urls.py' and new_project:
+                        #overwrite urls.py
+                        shutil.copy(src, directory)
+                    else:
+                        if verbosity >=1:
+                            print '* %s' % file_name,
+                            print "- you already have one, please add contents of %s" % src
             else:
                 if verbosity >=1:
                     print '* %s ' % file_name
@@ -157,7 +161,7 @@ def deploy_into(directory, new_project = None, verbosity=1, context=None):
             print "Creating settings file"
         settings_contents = SettingsTemplate(context).render()
         settings_path = os.path.join(directory, 'settings.py')
-        if os.path.exists(settings_path):
+        if os.path.exists(settings_path) and new_project==False:
             if verbosity>=1:
                 print "* you already have a settings file please merge the contents"
         else:

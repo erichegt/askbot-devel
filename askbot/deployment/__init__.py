@@ -15,7 +15,7 @@ def askbot_setup():
     Django project
     """
     parser = OptionParser(usage="%prog [options]")
-    
+
     parser.add_option("-v", "--verbose",
                       dest="verbosity",
                       type="int",
@@ -23,10 +23,10 @@ def askbot_setup():
                       help="verbosity level available values 0, 1, 2."
                      )
 
-    parser.add_option("-n",
+    parser.add_option("-n", "--dir-name",
                       dest="name",
                       default=None,
-                      help="Destination name"
+                      help="Directory where you want to install."
                      )
 
     parser.add_option("-d", "--db-name",
@@ -59,8 +59,15 @@ def askbot_setup():
                       help="Extra settings file to append custom settings"
                      )
 
+    parser.add_option("--force",
+                      dest="force",
+                      action='store_true',
+                      help="Force overwrite settings.py file"
+                     )
+
+
     (options, args) = parser.parse_args()
-    #ask 
+    #ask
     if options.verbosity >= 1:
         print messages.DEPLOY_PREAMBLE
 
@@ -82,7 +89,7 @@ def askbot_setup():
                         if path_utils.has_existing_django_project(directory):
                             message = messages.SHOULD_ADD_APP_HERE % \
                                                             {
-                                                                'path': directory 
+                                                                'path': directory
                                                             }
                             should_add_app = console.choice_dialog(
                                                     message,
@@ -115,9 +122,9 @@ def askbot_setup():
                         continue
                 else:
                     #creates dir
-                    message = messages.format_msg_create(directory) 
+                    message = messages.format_msg_create(directory)
                     should_create_new = console.choice_dialog(
-                                        message, 
+                                        message,
                                         choices = ['yes','no'],
                                         invalid_phrase = messages.INVALID_INPUT
                                     )
@@ -178,7 +185,7 @@ def deploy_askbot(directory, create_new, options):
                'database_password': options.database_password,
                'database_user': options.database_user,
                'domain_name': options.domain_name,
-               'local_settings': options.local_settings
+               'local_settings': options.local_settings,
               }
     for key in context.keys():
         if context[key] == None:
@@ -186,14 +193,17 @@ def deploy_askbot(directory, create_new, options):
             new_value = raw_input(input_message)
             context[key] = new_value
 
+    if options.force:
+        create_new = options.force
+
     if create_new:
         path_utils.create_path(directory)
-        path_utils.deploy_into(directory, new_project = True, 
+        path_utils.deploy_into(directory, new_project = True,
                 verbosity = options.verbosity, context = context)
         if options.verbosity >= 1:
             print messages.HOW_TO_DEPLOY_NEW % {'help_file': help_file}
     else:
-        path_utils.deploy_into(directory, new_project = False, 
+        path_utils.deploy_into(directory, new_project = False,
                 verbosity = options.verbosity, context = context)
         if options.verbosity >= 1:
             print messages.HOW_TO_ADD_ASKBOT_TO_DJANGO % {'help_file': help_file}
