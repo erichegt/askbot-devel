@@ -97,11 +97,10 @@ var liveSearch = function(){
 
     var render_title = function(result){
         return '<h2>' +
-                    '<a title="' + result['summary'] + '" ' +
-                        'href="' + 
+                    '<a href="' + 
                             askbot['urls']['question_url_template']
                             .replace('{{QuestionID}}', result['id']) +
-                    '">' +
+                    '" onmouseover="load_question_body(this,' + result['id'] + ')">' +
                         result['title'] +
                     '</a>' +
                 '</h2>';
@@ -286,7 +285,7 @@ var liveSearch = function(){
     };
 
     var set_question_count = function(count_html){
-        $('#question-count').html(count_html);
+        $('#questionCount').html(count_html);
     };
 
     var get_old_tags = function(container){
@@ -299,7 +298,7 @@ var liveSearch = function(){
     };
 
     var render_search_tags = function(tags){
-        var search_tags = $('#search-tags');
+        var search_tags = $('#searchTags');
         search_tags.children().remove();
         var tags_html = '';
         $.each(tags, function(idx, tag_name){
@@ -382,7 +381,7 @@ var liveSearch = function(){
     };
 
     var activate_search_tags = function(){
-        var search_tags = $('#search-tags .tag-left');
+        var search_tags = $('#searchTags .tag-left');
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
             tag.decorate($(element));
