@@ -24,6 +24,7 @@ Programming and documentation
 * `Arun SAG  <http://zer0c00l.in/>`_
 * `Rag Sagar <https://github.com/ragsagar>`_
 * `Alex Robbins <https://github.com/alexrobbins>`_
+* `Tomasz Zielinski <http://pyconsultant.eu/>`_
 * `Tomasz Szynalski <http://antimoon.com>`_
 * `Raghu Udiyar <http://raags.tumblr.com/>`_
 

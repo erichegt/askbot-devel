@@ -473,7 +473,6 @@ ul#related-tags li {
     float: left;
     height: 18px;
     margin: 0 5px 0 0;
-    overflow-x: hidden;
     padding: 0;
 }
 
@@ -887,6 +886,7 @@ a:hover.medal {
     margin: 5px 0 0 4px;
     padding: 0 2px;
     text-decoration: none;
+    font-size: 12.5px;
 }
 
 .tabsA .label, .tabsC .label {

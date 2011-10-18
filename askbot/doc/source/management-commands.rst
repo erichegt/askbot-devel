@@ -29,11 +29,8 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | the `add_admin` command                                     |
 +---------------------------------+-------------------------------------------------------------+
 | `add_askbot_user --user-name    | Create a user account. If password is not given, an         |
-| --email [--password]            | unusable password will be set. Possible values for the      |
-| [--email-frequency]`            | --email-frequency are: **i**, **d**, **w**, **n**           |
-|                                 | that stand for                                              |
-|                                 | instant, daily, weekly and never - respectively. The default|
-|                                 | value is w. The command does not create associations with   |
+| --email [--password]            | unusable password will be set.                              |
+|                                 | The command does not create associations with               |
 |                                 | any of the external login providers.                        |
 +---------------------------------+-------------------------------------------------------------+
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |

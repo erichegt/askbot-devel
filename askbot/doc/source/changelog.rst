@@ -1,12 +1,27 @@
 Changes in Askbot
 =================
 
-Development version (Not yet released)
---------------------------------------
-* RSS feed for individual question (Sayan Chowdhury)
+Development version (not yet published)
+---------------------------------------
+* Show unused vote count (Tomasz Zielinski)
 
-0.7.24 (Current Version)
+0.7.26 (Current Version)
 ------------------------
+* Added settings for email subscription defaults (Adolfo)
+* Resolved `bug #102<http://bugs.askbot.org/issues/102>`_ - duplicate notifications on posts with mentions (Evegeny)
+* Added color-animated transitions when urls with hash tags are visited (Adolfo)
+* Repository tags will be `automatically added <http://askbot.org/en/question/345/can-git-tags-be-created-for-each-of-the-releases>`_ to new releases (Evgeny, suggsted by ajmirsky)
+
+0.7.25
+------
+* RSS feed for individual question (Sayan Chowdhury)
+* Allow pre-population of tags via ask a questions link (Adolfo)
+* Make answering own question one click harder (Adolfo)
+* Bootstrap mode (Adolfo, Evgeny)
+* Color-animated urls with the hash fragments (Adolfo)
+
+0.7.24
+------
 * Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
 * Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
 * Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
