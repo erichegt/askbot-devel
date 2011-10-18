@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version (not yet published)
+---------------------------------------
+* Show unused vote count (Tomasz Zielinski)
+
 0.7.26 (Current Version)
 ------------------------
 * Added settings for email subscription defaults (Adolfo)
