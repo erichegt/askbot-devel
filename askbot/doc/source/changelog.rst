@@ -4,6 +4,7 @@ Changes in Askbot
 Development version (not yet published)
 ---------------------------------------
 * Show unused vote count (Tomasz Zielinski)
+* Categorized live settings (Evgeny)
 
 0.7.26 (Current Version)
 ------------------------

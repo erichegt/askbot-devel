@@ -5,6 +5,7 @@ Site modes settings:
     Default - for sites that already have a momentum.
 """
 from askbot.conf.settings_wrapper import settings
+from askbot.conf.super_groups import REP_AND_BADGES
 from askbot.deps.livesettings import ConfigurationGroup, BooleanValue
 from django.utils.translation import ugettext as _
 
@@ -60,7 +61,8 @@ def bootstrap_callback(current_value, new_value):
 
 SITE_MODES = ConfigurationGroup(
                     'SITE_MODES',
-                    _('Site modes'),
+                    _('Bootstrap mode'),
+                    super_group = REP_AND_BADGES
                 )
 
 settings.register(
