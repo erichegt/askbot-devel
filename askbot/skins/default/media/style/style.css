@@ -738,7 +738,7 @@ ul#searchTags {
     .tags {
         margin-top: 0;
         position:absolute;
-        bottom:20px;
+        bottom:15px;
     }
     
     .votes, .answers, .favorites, .views {
