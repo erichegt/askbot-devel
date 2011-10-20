@@ -716,7 +716,8 @@ ul#searchTags {
         font-weight:normal;
         line-height: 26px;
         padding-left: 0;
-        margin-bottom:20px;
+        margin-bottom:8px;
+        display:block;
     }
     
     a {
@@ -768,8 +769,6 @@ ul#searchTags {
     
     .tags {
         margin-top: 0;
-        position:absolute;
-        bottom:15px;
     }
     
     .votes, .answers, .favorites, .views {
@@ -1094,11 +1093,13 @@ span.delete-icon:hover {
 }
 
 /* ----- Ask Question Form template----- */
-
+#fmask{
+    margin-bottom:30px;
+}
 #askFormBar {
     display:inline-block;
     padding: 4px 7px 5px 0px;
-    margin-top:10px;
+    margin-top:0px;
     
     p{
         width: 670px;
