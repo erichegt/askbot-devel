@@ -3,15 +3,17 @@ Settings that modify processing of user text input
 """
 
 from askbot.conf.settings_wrapper import settings
+from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue, StringValue, LongStringValue
-from django.utils.translation import ugettext as _
 from askbot import const
+from django.utils.translation import ugettext as _
 import re
 
 MARKUP = ConfigurationGroup(
                     'MARKUP',
-                    _('Markup formatting')
+                    _('Markup in posts'),
+                    super_group = DATA_AND_FORMATTING
                 )
 
 def regex_settings_validation(*args):
