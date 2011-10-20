@@ -9,9 +9,9 @@ Problems installing? -> please email admin@askbot.org
 
 To CANCEL - hit Ctr-C at any time"""
 
-WHERE_TO_DEPLOY = 'Where to deploy (in which directory)?'
+WHERE_TO_DEPLOY = 'In which directory to deploy the forum?'
 
-WHERE_TO_DEPLOY_QUIT = 'Where deploy forum (directory)? (Ctrl-C to quit)'
+WHERE_TO_DEPLOY_QUIT = 'Where deploy the forum (directory)? Ctrl-C to quit.'
 
 CANT_INSTALL_INTO_FILE = '%(path)s is a file\ncannot install there'
 
@@ -78,7 +78,7 @@ def format_msg_dir_unclean_django(directory):
     directories contains a django project
     so that users don't create nested projects
     """
-    parent_django_dir = path_utils.find_parent_dir_with_django(directory)
+    return path_utils.find_parent_dir_with_django(directory)
 
 def format_msg_bad_dir_name(directory):
     """directory name must be bad - i.e. taken by other python module
