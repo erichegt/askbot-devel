@@ -11,6 +11,7 @@ import re
 import glob
 import shutil
 import imp
+from askbot.utils import console
 from askbot.deployment.template_loader import SettingsTemplate
 
 
@@ -33,11 +34,19 @@ def split_at_break_point(directory):
 def clean_directory(directory):
     """Returns normalized absolute path to the directory
     regardless of whether it exists or not
-    or None - if the path is a file"""
+    or ``None`` - if the path is a file or if ``directory``
+    parameter is ``None``"""
+    if directory is None:
+        return None
+
     directory = os.path.normpath(directory)
     directory = os.path.abspath(directory)
 
     if os.path.isfile(directory):
+        if options.verbosity >= 1 and os.path.isfile(directory):
+            print messages.CANT_INSTALL_INTO_FILE % {'path':directory}
+        sys.exit(1)
+
         return None
     return directory
 
@@ -68,7 +77,7 @@ def can_create_path(directory):
         if not os.path.isdir(directory):
             return False
     else:
-        directory, junk = split_at_break_point(directory)
+        directory = split_at_break_point(directory)[0]
     return directory_is_writable(directory)
 
 
@@ -137,14 +146,14 @@ def get_path_to_help_file():
     """returns path to the main plain text help file"""
     return os.path.join(SOURCE_DIR, 'doc', 'INSTALL')
 
-def deploy_into(directory, new_project = None, verbosity = 1, context = None):
+def deploy_into(directory, new_project = False, verbosity = 1, context = None):
     """will copy necessary files into the directory
     """
     assert(isinstance(new_project, bool))
     if new_project:
         copy_files = ('__init__.py', 'manage.py', 'urls.py')
         blank_files = ('__init__.py', 'manage.py')
-        if verbosity >=1:
+        if verbosity >= 1:
             print 'Copying files: '
         for file_name in copy_files:
             src = os.path.join(SOURCE_DIR, 'setup_templates', file_name)
@@ -233,7 +242,7 @@ def get_install_directory(force = False):
     If ``force`` is ``True`` - will permit
     using a directory with an existing django project.
     """
-
+    from askbot.deployment import messages
     where_to_deploy_msg = messages.WHERE_TO_DEPLOY_QUIT
     directory = raw_input(where_to_deploy_msg + ' ')
     directory = clean_directory(directory)
@@ -248,8 +257,9 @@ def get_install_directory(force = False):
     if os.path.exists(directory):
         if path_is_clean_for_django(directory):
             if has_existing_django_project(directory):
-                if force == False:
-                    print messages.CANNOT_OVERWRITE_EXISTING_DJANGO_PROJECT
+                if not force:
+                    print messages.CANNOT_OVERWRITE_DJANGO_PROJECT % \
+                        {'directory': directory}
                     return None
         else:
             print messages.format_msg_dir_unclean_django(directory)
@@ -268,3 +278,4 @@ def get_install_directory(force = False):
         print messages.format_msg_bad_dir_name(directory)
         return None
 
+    return directory
