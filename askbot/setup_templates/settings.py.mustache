@@ -212,6 +212,7 @@ CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
+DOMAIN_NAME = '{{domain_name}}'
 
-CSRF_COOKIE_NAME = '{{domain_name}}_scrf'
-CSRF_COOKIE_DOMAIN = '{{domain_name}}'#enter domain name here - e.g. example.com
+CSRF_COOKIE_NAME = '{{domain_name}}_csrf'
+CSRF_COOKIE_DOMAIN = DOMAIN_NAME
