@@ -1009,7 +1009,7 @@ ul#related-tags li {
     float: left;
 }
 .deletable-tag.tag-left {
-    padding-right: 3px;
+    padding-right: 0px;
 }
 
 .tags a.tag-right,
@@ -1021,7 +1021,6 @@ ul#related-tags li {
 .tags a:hover{
     color: #1A1A1A;
 }
-
 
 .users-page h1, .tags-page h1 {
     float: left;
@@ -1075,25 +1074,28 @@ ul#related-tags li {
 span.delete-icon {
     padding-left: 13px;
     vertical-align: bottom;
-    background: url(../images/close-small-dark.png) no-repeat;
+    background: url(../images/close-tag.png) bottom no-repeat;
     cursor: default;
 }
 span.delete-icon:hover {
-    background: url(../images/close-small-hover.png) no-repeat;
+    background: url(../images/close-tag.png) top no-repeat;
+    
 }
 
 .tags span.delete-icon {
     float: left;
-    height: 15px;
-    margin: 2px 0 0 1px;
+    height: 20px;
+    width:8px;
+    margin-left:10px;
+    border-left:#fff 1px solid;
     display: block;
 }
 
 .tag-number {
-    font-weight: 700;
-    display: block;
+    font-weight: normal;
     float: left;
-    font-family: sans-serif;
+    font-size:16px;
+    color:#5d5d5d;
 }
 
 .badges .tag-number {
