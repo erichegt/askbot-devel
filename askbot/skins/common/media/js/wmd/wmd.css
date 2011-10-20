@@ -9,7 +9,13 @@
 
 #wmd-button-bar 
 {
-	background-color: White; 
+	background: url(images/editor-toolbar-background.png) repeat-x bottom;
+    height:36px;
+    border-left:#cce6ec 3px solid;
+    border-top:#cce6ec 3px solid;
+    border-right:#cce6ec 3px solid;
+    float:left;
+    width:670px;
 }
 
 #wmd-input 
@@ -35,7 +41,7 @@
 	position: relative; 
 	margin-left: 5px;
 	margin-right: 5px;
-	margin-bottom: 5px;
+	margin-bottom: 0px;
 	margin-top: 10px;
 	padding: 0px;  
 	height: 20px;
