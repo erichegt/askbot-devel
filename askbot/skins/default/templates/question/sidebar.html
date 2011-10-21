@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 {{ settings.SIDEBAR_QUESTION_HEADER }}
-<div class="boxC vote-buttons">
+<div class="box vote-buttons">
     <h2 id="questionTools">{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
         <a class="button followed" 
@@ -39,7 +39,7 @@
 </div>
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
 {% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
-    <div class="boxC">
+    <div class="box">
         <div class="clearfix"></div>
         <h2>
             {% trans %}Question tags{% endtrans %}:
@@ -62,7 +62,7 @@
 {% endif %}
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
-<div class="boxC">
+<div class="box">
     <div class="clearfix"></div>
     <h2>{% trans %}Stats:{% endtrans %}</h2>
     <p>
@@ -80,7 +80,7 @@
 
 {% if similar_questions.data and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {#% cache 1800 "related_questions" related_questions question.id language_code %#}
-    <div class="boxC">
+    <div class="box">
         <h2>{% trans %}Related questions{% endtrans %}</h2>
         <div class="questions-related">
             {% for question in similar_questions.data() %}

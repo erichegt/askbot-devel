@@ -1261,13 +1261,76 @@ span.delete-icon:hover {
     vertical-align: text-bottom;
 }
 
-
 .edit-content-html {
     border-top: 1px dotted #D8D2A9;
     border-bottom: 1px dotted #D8D2A9;
     margin: 5px 0 5px 0;
 }
 
+/* ----- Question template ----- */
+
+.question-page{
+
+    h1 a{
+         color:@question-link;
+        font-size:30px;
+        font-weight:normal;
+        line-height:1;
+    }
+
+    p.rss {
+        float:none;
+        clear:both;
+        padding: 3px 0 0 1px;
+        font-size: 14px;
+    }
+
+    p.rss a {
+        padding-left: 18px;
+        vertical-align: top;
+    }
+}
+
+.question-body, .answer-body {
+    min-height: 39px;
+    line-height: 20px;
+    overflow: auto;
+    width: 660px;
+    font-family:@trebuchet;
+    color:#4b4b4b;
+}
+
+.question-body p, .answer-body p{
+    font-size:13px;
+}
+.question-body IMG, .answer-body IMG {
+    max-width: 600px;
+}
+
+
+#question-table,
+.answer-table {
+    margin: 2px 0 10px 0;
+    border-spacing: 0px;
+    width: 100%;
+}
+
+.answer-table {
+    border-bottom: 1px solid #bbb;
+    clear: both;
+}
+
+.answer-table td,
+#question-table td {
+    width:30px;
+    vertical-align:top;
+}
+
+#questionTools {
+    font-size: 22px;
+    margin-top: 11px;
+    text-align: left;
+}
 
 /* ----- Footer links , check blocks/footer.html----- */
 
@@ -1318,42 +1381,6 @@ span.delete-icon:hover {
     }
 }
 
-.question-page p.rss {
-    float:none;
-    clear:both;
-    padding: 3px 0 0 1px;
-    font-size: 14px;
-}
-
-.question-page p.rss a {
-    padding-left: 18px;
-    vertical-align: top;
-}
-
-#question-table,
-.answer-table {
-    margin: 2px 0 10px 0;
-    border-spacing: 0px;
-    width: 100%;
-}
-
-.answer-table {
-    border-bottom: 1px solid #bbb;
-    clear: both;
-}
-
-.answer-table td,
-#question-table td {
-    width:30px;
-    vertical-align:top;
-}
-
-#questionTools {
-    font-size: 22px;
-    margin-top: 11px;
-    text-align: left;
-}
-
 
 /* badges */
 a.medal {
@@ -1401,15 +1428,6 @@ a:hover.medal {
 
 .question-status h3 {
     font-size: 125%;
-}
-.question-body, .answer-body {
-    min-height: 39px;
-    line-height: 20px;
-    overflow: auto;
-    width: 660px;
-}
-.question-body IMG, .answer-body IMG {
-    max-width: 600px;
 }
 
 .vote-buttons {

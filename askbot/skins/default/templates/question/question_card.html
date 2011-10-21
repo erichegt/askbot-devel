@@ -1,4 +1,5 @@
 <h1><a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a></h1>
+{% include "question/question_tags.html" %}
 <table id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
     <tr>
         <td>
@@ -11,7 +12,6 @@
             <div class="question-body">
                 {{question.html}}
             </div>
-            {% include "question/question_tags.html" %}
             <div id="question-controls" class="post-controls">
                 {% include "question/question_controls.html" %} 
             </div>
