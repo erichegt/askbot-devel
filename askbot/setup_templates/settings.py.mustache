@@ -18,9 +18,9 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'postgresql_psycopg2' # only postgres (>8.3) and mysql are supported so far others have not been tested yet
-DATABASE_NAME = ''             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_NAME = '{{database_name}}'             # Or path to database file if using sqlite3.
+DATABASE_USER = '{{database_user}}'             # Not used with sqlite3.
+DATABASE_PASSWORD = '{{database_password}}'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -40,7 +40,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #go to the site's live settings and enable the feature
 #"Email settings" -> "allow asking by email"
 #
-#   WARNING: command post_emailed_questions DELETES all
+#   WARNING: command post_emailed_questions DELETES all 
 #            emails from the mailbox each time
 #            do not use your personal mail box here!!!
 #
@@ -78,14 +78,13 @@ PROJECT_ROOT = os.path.dirname(__file__)
 ADMIN_MEDIA_PREFIX = '/admin/media/'
 
 # Make up some unique string, and don't share it with anybody.
-SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s '
+SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s ' 
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
     #below is askbot stuff for this tuple
-    #'askbot.skins.loaders.load_template_source', #changed due to bug 97
     'askbot.skins.loaders.filesystem_load_template_source',
     #'django.template.loaders.eggs.load_template_source',
 )
@@ -116,7 +115,7 @@ ROOT_URLCONF = os.path.basename(os.path.dirname(__file__)) + '.urls'
 
 #UPLOAD SETTINGS
 FILE_UPLOAD_TEMP_DIR = os.path.join(
-                                os.path.dirname(__file__),
+                                os.path.dirname(__file__), 
                                 'tmp'
                             ).replace('\\','/')
 
@@ -214,5 +213,5 @@ CELERY_ALWAYS_EAGER = True
 import djcelery
 djcelery.setup_loader()
 
-CSRF_COOKIE_NAME = 'askbot_scrf'
-CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+CSRF_COOKIE_NAME = '{{domain_name}}_scrf'
+CSRF_COOKIE_DOMAIN = '{{domain_name}}'#enter domain name here - e.g. example.com
