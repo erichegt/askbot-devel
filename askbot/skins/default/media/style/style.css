@@ -348,7 +348,8 @@ h1 {
     height:42px;
     margin:6px 0px 0px 15px;
 
-    .searchInput, .searchInputCancelable {
+    .searchInput, .searchInputCancelable 
+    .searchInputAuth .searchInputCancelableAuth {
         font-size: 30px;
         height: 40px;
         font-weight:300;
@@ -367,6 +368,15 @@ h1 {
     .searchInputCancelable {
         width: 317px;
     }
+
+    .searchInputAuth{
+        width: 340px; 
+    }
+
+    .searchInputCancelableAuth {
+        width: 310px; /*FIXME byron */
+    }
+
     .logoutsearch {
         width: 337px;
     }
