@@ -354,9 +354,10 @@ h1 {
         font-weight:300;
         background:#FFF;
         border:0px;
-        color:#AEAD84;
+        color:#484848;
         padding-left:10px;
-        font-family:@yanone;
+        font-family:@trebuchet;
+        vertical-align: middle;
     }
 
     .searchInput, .searchInputCancelable {
