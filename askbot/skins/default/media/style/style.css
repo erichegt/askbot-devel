@@ -336,6 +336,10 @@ h1 {
         .on{
             background:url(../images/scopearrow.png) no-repeat center bottom;
         }
+
+        .ask-message{
+            font-size:24px;
+        }
     }
 }
 
