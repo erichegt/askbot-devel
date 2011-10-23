@@ -261,19 +261,26 @@ var liveSearch = function(){
     var render_search_tags = function(tags){
         var search_tags = $('#searchTags');
         search_tags.children().remove();
-        var tags_html = '';
-        $.each(tags, function(idx, tag_name){
-            var tag = new Tag();
-            tag.setName(tag_name);
-            tag.setDeletable(true);
-            tag.setLinkable(false);
-            tag.setDeleteHandler(
-                function(){
-                    remove_search_tag(tag_name);
-                }
-            );
-            search_tags.append(tag.getElement());
-        });
+        if (tags.length == 0){
+            $('#listSearchTags').hide();
+            $('#search-tips').hide();//wrong - if there are search users
+        } else {
+            $('#listSearchTags').show();
+            $('#search-tips').show();
+            var tags_html = '';
+            $.each(tags, function(idx, tag_name){
+                var tag = new Tag();
+                tag.setName(tag_name);
+                tag.setDeletable(true);
+                tag.setLinkable(false);
+                tag.setDeleteHandler(
+                    function(){
+                        remove_search_tag(tag_name);
+                    }
+                );
+                search_tags.append(tag.getElement());
+            });
+        }
     };
 
     var create_relevance_tab = function(){
@@ -360,13 +367,6 @@ var liveSearch = function(){
         var container = $('#' + q_list_sel);
         container.fadeOut(200, function() {
             container.children().remove();
-            if (data.length > 5){
-                container.css('overflow-y', 'scroll');
-                container.css('height', '120px');
-            } else {
-                container.css('height', data.length * 24 + 'px');
-                container.css('overflow-y', 'hidden');
-            }
             $.each(data, function(idx, question){
                 var url = question['url'];
                 var title = question['title'];
@@ -383,6 +383,16 @@ var liveSearch = function(){
                 link.append(title)
                 container.append(list_item);
             });
+            container.show();//show just to measure
+            var unit_height = container.children(':first').outerHeight();
+            container.hide();//now hide
+            if (data.length > 5){
+                container.css('overflow-y', 'scroll');
+                container.css('height', unit_height*5 + 'px');
+            } else {
+                container.css('height', data.length*unit_height + 'px');
+                container.css('overflow-y', 'hidden');
+            }
             container.fadeIn();
         });
     };
