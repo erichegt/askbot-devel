@@ -490,7 +490,11 @@ h1 {
     }
 
     label {
-        color: #333;
+        color: @info-text;
+        font-size:15px;
+        display: block;
+        float: right;
+        width: 172px;
     }
 
     ul {
@@ -541,9 +545,13 @@ h1 {
        }
     }
     
+    img.gravatar {
+        margin:1px;
+    }
+
 /* widgets for question template */
 
-    a.follow{
+    a.followed, a.follow{
         background: url(../images/medium-button.png) top repeat-x;
         height:34px;
         line-height:34px;
@@ -555,22 +563,62 @@ h1 {
         font-size:21px;
         margin-top:3px;
         display:block;
-        width:150px;
+        width:120px;
+        text-decoration:none;
         .rounded-corners(4px);
         .box-shadow(1px, 1px, 2px, #636363);
     }
-    a.follow:hover{
+
+    a.followed:hover, a.follow:hover{
         text-decoration:none;
         background: url(../images/medium-button.png) bottom repeat-x;
         .text-shadow(0px, 1px, 0px, #c6d9dd);
     }
 
+    a.followed div.unfollow{
+        display:none;
+    }
+
+    a.followed:hover div{
+        display:none;
+    }
+    a.followed:hover div.unfollow{
+        display:inline;
+        color:#a05736;
+    }
+    
+    .favorite-number {
+        padding: 5px 0 0 5px;
+        font-size: 100%;
+        font-family: Arial;
+        font-weight: bold;
+        color: #777;
+        text-align: left;
+    }
+
 }
 
-img.gravatar {
-    margin:1px;
+.statsWidget p{
+    color:@info-text;
+    font-size:16px;
+    border-bottom:#cccccc 1px solid;
+    
+    strong{
+        float:right;
+        padding-right:10px;
+    }
 }
-
+.questions-related {
+    word-wrap: break-word;
+    
+    p {
+        line-height: 20px;
+        padding: 4px 0px 4px 0px;
+        font-size: 16px;
+        font-weight:normal;
+        border-bottom:#cccccc 1px solid;
+    }
+}
 /* tips and markdown help are widgets for ask template */
 
 #tips{
@@ -593,6 +641,7 @@ img.gravatar {
         font-size:16px;
     }
 }
+
 
 /* ----- Sorting top Tab, check main_page/tab_bar.html ------*/
 
@@ -1310,11 +1359,13 @@ span.delete-icon:hover {
         float:none;
         clear:both;
         padding: 3px 0 0 1px;
-        font-size: 14px;
+        font-size: 15px;
+        width:110px;
+        
     }
 
     p.rss a {
-        padding-left: 18px;
+        font-family:@yanone;
         vertical-align: top;
     }
 }
@@ -1435,16 +1486,6 @@ a:hover.medal {
     border-right: 1px solid #D1CA3D;
 }
 
-.questions-related {
-    font-weight: 700;
-    word-wrap: break-word;
-}
-
-.questions-related p {
-    line-height: 20px;
-    margin-bottom: 10px;
-    font-size: 100%;
-}
 
 .question-status {
     margin-top: 10px;
@@ -1466,56 +1507,6 @@ a:hover.medal {
 
 .vote-buttons IMG {
     cursor: pointer;
-}
-
-.vote-buttons .button{
-    -moz-border-radius: 10px;
-    margin-top: 20px;
-    border-radius: 10px;
-    height: 20px;
-    width: 80px;
-    border-style: solid;
-    border-width: 1px;
-    padding: 8px;
-    float:left;
-}
-
-.vote-buttons .followed{
-    font-color: #000;
-    font-style:normal;
-    background: #cccccc;
-}
-
-.vote-buttons .followed div{
-    font-weight: normal;
-}
-
-.vote-buttons .followed div.unfollow{
-    display:none;
-}
-
-.vote-buttons .followed:hover{
-    color: #fff;
-    background: #8b0000;
-}
-
-.vote-buttons .followed:hover div{
-    display:none;
-}
-
-.vote-buttons .followed:hover div.unfollow{
-    display:inline;
-    font-weight: bold;
-}
-
-.vote-buttons .follow{
-    background: #cccccc;
-}
-
-.vote-buttons .follow:hover{
-    background: #234f32;
-    color: #fff;
-    font-weight: bold;
 }
 
 .vote-number {
@@ -1545,14 +1536,6 @@ a:hover.medal {
     background: url(../images/vote-favorite-on.png)
 }
 
-.favorite-number {
-    padding: 5px 0 0 10px;
-    font-size: 100%;
-    font-family: Arial;
-    font-weight: bold;
-    color: #777;
-    text-align: left;
-}
 
 .notify-me {
     float: left;

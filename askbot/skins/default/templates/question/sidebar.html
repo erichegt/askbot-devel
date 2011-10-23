@@ -1,15 +1,15 @@
 {% import "macros.html" as macros %}
 {{ settings.SIDEBAR_QUESTION_HEADER }}
-<div class="box">
+<div class="box vote-buttons">
     <h2 >{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
-        <a class="button follow" 
+        <a class="button followed" 
             alt="{% trans %}click to unfollow this question{% endtrans %}">
             <div>{% trans %}Following{% endtrans %}</div>
             <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
         </a>
     {% else %}
-        <a class="button follow"
+        <a class="button followed"
             alt="{% trans %}click to follow this question{% endtrans %}">
             {%trans %}Follow{%endtrans%}
         </a>
@@ -41,9 +41,9 @@
 
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
-<div class="box">
+<div class="box statsWidget">
     <div class="clearfix"></div>
-    <h2>{% trans %}Stats:{% endtrans %}</h2>
+    <h2>{% trans %}Stats{% endtrans %}</h2>
     <p>
         {% trans %}question asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
     </p>
