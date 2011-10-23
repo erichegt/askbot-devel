@@ -336,6 +336,10 @@ h1 {
         .on{
             background:url(../images/scopearrow.png) no-repeat center bottom;
         }
+
+        .ask-message{
+            font-size:24px;
+        }
     }
 }
 
@@ -457,7 +461,7 @@ h1 {
     width: 950px;
 }
 
-/* ----- Sidebar Widgets Box, check main_page/sidebar.html ----- */
+/* ----- Sidebar Widgets Box, check main_page/sidebar.html or question/sidebar.html ----- */
 
 .box {
     background: #fff;
@@ -545,6 +549,30 @@ h1 {
         #interestingTagAdd:hover, #ignoredTagAdd:hover{
             background:url(../images/small-button-blue.png) repeat-x bottom;
        }
+    }
+    
+/* widgets for question template */
+
+    a.follow{
+        background: url(../images/medium-button.png) top repeat-x;
+        height:34px;
+        line-height:34px;
+        text-align:center;
+        border:0;
+        font-family:@yanone;
+        color:@button-label;
+        font-weight:normal;
+        font-size:21px;
+        margin-top:3px;
+        display:block;
+        width:150px;
+        .rounded-corners(4px);
+        .box-shadow(1px, 1px, 2px, #636363);
+    }
+    a.follow:hover{
+        text-decoration:none;
+        background: url(../images/medium-button.png) bottom repeat-x;
+        .text-shadow(0px, 1px, 0px, #c6d9dd);
     }
 
 }

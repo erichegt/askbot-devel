@@ -1,9 +1,9 @@
 {% import "macros.html" as macros %}
 {{ settings.SIDEBAR_QUESTION_HEADER }}
-<div class="box vote-buttons">
-    <h2 id="questionTools">{% trans %}Question tools{% endtrans %}</h2>
+<div class="box">
+    <h2 >{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
-        <a class="button followed" 
+        <a class="button follow" 
             alt="{% trans %}click to unfollow this question{% endtrans %}">
             <div>{% trans %}Following{% endtrans %}</div>
             <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
@@ -38,28 +38,7 @@
     </div> 
 </div>
 {% cache 0 "questions_tags" questions_tags question.id language_code %}
-{% if settings.SIDEBAR_QUESTION_SHOW_TAGS %}
-    <div class="box">
-        <div class="clearfix"></div>
-        <h2>
-            {% trans %}Question tags{% endtrans %}:
-        </h2>
-        <ul id="related-tags" class="tags">
-            {% for tag in tags %}
-            <li>
-                {{ macros.tag_widget(
-                        tag,
-                        html_tag = 'div',
-                        url_params = 'start_over=true',
-                        extra_content = '<span class="tag-number">&#215; ' ~
-                            tag.used_count|intcomma ~ '</span>'
-                    )
-                }}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
+
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="box">
