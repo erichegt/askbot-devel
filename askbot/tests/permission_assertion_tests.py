@@ -1382,7 +1382,8 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
     def test_moderator_can_accept_others_old_answer(self):
         self.other_post_answer()
         self.answer.added_at -= datetime.timedelta(
-            days=askbot_settings.MIN_DAYS_TO_STAFF_ACCEPT_ANSWER+1)
+            days = askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER + 1
+        )
         self.answer.save()
         self.create_user(username = 'third_user')
         self.third_user.set_admin_status()
@@ -1405,24 +1406,12 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
     def test_admin_can_accept_others_old_answer(self):
         self.other_post_answer()
         self.answer.added_at -= datetime.timedelta(
-            days=askbot_settings.MIN_DAYS_TO_STAFF_ACCEPT_ANSWER+1)
+            days = askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER + 1
+        )
         self.answer.save()
         self.create_user(username = 'third_user')
         self.third_user.set_admin_status()
         self.third_user.save()
-        self.assert_user_can(user = self.third_user)
-
-class VotePermissionAssertionTests(PermissionAssertionTestCase):
-    """Tests permission for voting
-    """
-    def extraSetUp(self):
-        self.min_rep_up = askbot_settings.MIN_REP_TO_VOTE_UP
-        self.min_rep_down = askbot_settings.MIN_REP_TO_VOTE_DOWN
-        self.other_user = self.create_other_user()
-
-    def assert_cannot_vote(self, user = None, dir = None):
-        self.create_user(username = 'third_user')
-        self.third_user.set_status('m')
         self.assert_user_can(user = self.third_user)
 
 class VotePermissionAssertionTests(PermissionAssertionTestCase):
