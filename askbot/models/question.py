@@ -360,6 +360,48 @@ class QuestionQuerySet(models.query.QuerySet):
             meta_data['ignored_tag_names'].extend(tagnames.split())
         return qs, meta_data, related_tags
 
+    def added_between(self, start, end):
+        """questions added between ``start`` and ``end`` timestamps"""
+        return self.filter(
+            added_at__gt = start
+        ).exclude(
+            added_at__gt = end
+        )
+
+    def get_questions_needing_reminder(self,
+                                    user = None,
+                                    activity_type = None,
+                                    recurrence_delay = None):
+        """returns list of questions that need a reminder,
+        corresponding the given ``activity_type``
+        ``user`` - is the user receiving the reminder
+        ``recurrence_delay`` - interval between sending the
+        reminders about the same question
+        """
+        from askbot.models import Activity#avoid circular import
+        question_list = list()
+        for question in self:
+            try:
+                activity = Activity.objects.get(
+                    user = user,
+                    question = question,
+                    activity_type = activity_type
+                )
+                now = datetime.datetime.now()
+                if now < activity.active_at + recurrence_delay:
+                    continue
+            except Activity.DoesNotExist:
+                activity = Activity(
+                    user = user,
+                    question = question,
+                    activity_type = activity_type,
+                    content_object = question,
+                )
+            activity.active_at = datetime.datetime.now()
+            activity.save()
+            question_list.append(question)
+        return question_list
+
     #todo: this function is similar to get_response_receivers
     #profile this function against the other one
     #todo: maybe this must be a query set method, not manager method

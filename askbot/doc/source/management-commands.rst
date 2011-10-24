@@ -111,6 +111,11 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | of :ref:`live settings <live-settings>`, as well as         |
 |                                     | an initial wait period and the recurrence delay may be set. |
 +-------------------------------------+-------------------------------------------------------------+
+| `send_accept_answer_reminders`      | Sends periodic reminders about accepting best answers.      |
+|                                     | This command may be disabled from the "email" section       |
+|                                     | of the live settings, as well as the appropriate delay      |
+|                                     | parameters may be set.                                      |
++-------------------------------------+-------------------------------------------------------------+
 
 Data repair commands
 ====================

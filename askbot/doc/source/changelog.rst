@@ -5,6 +5,8 @@ Development version (not yet published)
 ---------------------------------------
 * Show unused vote count (Tomasz Zielinski)
 * Categorized live settings (Evgeny)
+* Added management command ``send_accept_answer_reminders`` (Evgeny)
+* Improved the ``askbot-setup`` script (Adolfo, Evgeny)
 
 0.7.26 (Current Version)
 ------------------------
