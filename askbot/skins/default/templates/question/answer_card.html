@@ -12,14 +12,15 @@
             <td>
                 <div class="item-right">
                     <div class="answer-body">
+                        <div class="post-update-info-container">
+                            {% include "question/answer_author_info.html" %}
+                        </div>
                         {{ answer.html }}
                     </div>
                     <div class="answer-controls post-controls">
                         {% include "question/answer_controls.html" %} 
                     </div>
-                    <div class="post-update-info-container">
-                        {% include "question/answer_author_info.html" %}
-                    </div>
+
                     {% include "question/answer_comments.html" %}
                 </div>
             </td>
