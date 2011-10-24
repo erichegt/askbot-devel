@@ -456,7 +456,7 @@ h1 {
 .box {
     background: #fff;
     padding: 4px 0px 10px 0px;
-
+    width:200px;
 
     p {
         margin-bottom: 4px;
@@ -595,7 +595,6 @@ h1 {
         color: #777;
         text-align: left;
     }
-
 }
 
 .statsWidget p{
@@ -1368,41 +1367,316 @@ span.delete-icon:hover {
         font-family:@yanone;
         vertical-align: top;
     }
-}
 
-.question-body, .answer-body {
-    min-height: 39px;
-    line-height: 20px;
-    overflow: auto;
-    width: 660px;
-    font-family:@trebuchet;
-    color:#4b4b4b;
-}
+    .question-content{
+        float:right;
+        width:690px;
+    }
 
-.question-body p, .answer-body p{
-    font-size:13px;
-}
-.question-body IMG, .answer-body IMG {
-    max-width: 600px;
-}
+    #question-table{
+        float:left;
+        border-top:#f0f0f0 1px solid;
+    }
 
+    #question-table,
+    .answer-table {
+        margin: 6px 0 10px 0;
+        border-spacing: 0px;
+        width: 100%;
+    }
 
-#question-table,
-.answer-table {
-    margin: 2px 0 10px 0;
-    border-spacing: 0px;
-    width: 100%;
-}
+    .answer-table {
+        border-bottom: 1px solid #bbb;
+        clear: both;
+    }
 
-.answer-table {
-    border-bottom: 1px solid #bbb;
-    clear: both;
-}
+    .answer-table td,
+    #question-table td {
+        width:30px;
+        vertical-align:top;
+    }
+    .question-body, .answer-body {
+        overflow: auto;
+        margin-top:10px;
+        font-family:@trebuchet;
+        color:#4b4b4b;
 
-.answer-table td,
-#question-table td {
-    width:30px;
-    vertical-align:top;
+        p{
+            margin-bottom:15px;
+          line-height:1.4;
+          font-size:13px;
+        }
+    }
+
+    .question-body IMG, .answer-body IMG {
+        max-width: 600px;
+    }
+
+    .post-update-info-container {
+        float: right;
+        width: 190px;
+    }
+
+    .post-update-info {
+        background: #fff url(../images/background-user-info.png) repeat-x bottom;
+        float: right;
+        font-size: 9px;
+        font-family:@arial;
+        width: 173px;
+        padding:4px;
+        margin:0px 0px 5px 5px;
+        line-height: 14px;
+        .rounded-corners(4px);
+        .box-shadow (0px, 2px,1px,#bfbfbf);
+        
+         p {
+             line-height: 13px;
+            font-size: 11px;
+            margin: 0 0 2px 1px;
+            padding: 0;
+        }
+        a{
+            color:#444;
+        }
+        .gravatar {
+            float: left;
+            margin-right: 4px;
+        }
+
+        p.tip {
+            color: #444;
+            line-height: 13px;
+            font-size: 10px;
+        }
+    }
+
+    .post-controls{
+        font-size: 11px;
+        line-height: 12px;
+        min-width: 200px;
+        padding-left: 5px;
+        text-align:right;
+        clear: left;
+        float: right;
+        margin-top:10px;
+        
+        a {
+             color: #777;
+            padding: 0px 3px 3px 22px;
+            cursor: pointer;
+            border: none;
+            font-size:12px;
+            font-family:@trebuchet;
+            text-decoration: none;
+            height:18px;
+            display:block;
+            float:left;
+            line-height:18px;
+            margin-top:-2px;
+            margin-left:4px;
+        }
+        
+         a:hover {
+            background-color: #f5f0c9;
+            
+        }
+        .sep {
+            color: #ccc;
+            float:left;
+            height:18px;
+            font-size:18px;
+        }
+    }
+    .post-controls,.answer-controls{
+        .question-delete{
+            background: url(../images/delete.png) no-repeat center left;
+            padding-left:16px;
+        }
+        .question-flag{
+            background: url(../images/flag.png) no-repeat center left;
+        }
+        .question-edit{
+            background: url(../images/edit2.png) no-repeat center left;
+        }
+        .question-retag{
+            background: url(../images/retag.png) no-repeat center left;
+        }
+        .question-close{
+            background: url(../images/close.png) no-repeat center left;
+        }
+    }
+    .tabBar{
+       width:100%;
+    }
+    
+    #questionCount{
+        float:left;
+        font-family:@yanone;
+        line-height:15px;
+    }
+    
+    div.comments {
+        padding: 0;
+    }
+
+    .comments .button {
+        color: black;
+        font-size: 11px;
+        background: #eeeeee;
+        padding: 3px;
+        cursor: pointer;
+    }
+
+    .comment a {
+        background-color: inherit;
+        color: blue;
+        padding: 0;
+    }
+
+    .comment a.author, a.author:hover {
+        background-color: inherit;
+        color: blue;
+        padding: 0;
+    }
+
+    .comment a.author:hover {
+        text-decoration: underline;
+    }
+
+    .comments {
+        font-size: 12px;
+        width: 650px;    
+        clear: both;
+    }
+
+    .comments .comment {
+        border-top: 1px dotted #cccccc;
+        margin: 0;
+        overflow: auto;
+    }
+
+    .comments .content {
+        margin-bottom: 7px;    
+    }
+
+    .comments div.comment {
+        min-height: 25px;
+    }
+
+    .comments div.comment:hover {
+        background-color: #eee;
+    }
+
+    div.comment .comment-votes {
+        float: left;
+        width: 37px;
+        line-height: 130%;
+        padding: 6px 5px 6px 3px;
+    }
+
+    div.comment .comment-body {
+        line-height: 140%;
+        margin: 3px 26px 0 46px;
+        padding: 5px 3px;
+        color: #666;
+    }
+
+    div.comment .comment-body p{
+        font-size:inherit;
+        margin-bottom: 3px;
+        padding: 0;
+    }
+
+    div.comment .comment-delete {
+        float: right;
+        width: 14px;
+        line-height: 130%;
+        padding: 8px 6px;
+    }
+
+    div.comment .upvote {
+        margin: 0px;
+        padding-right: 17px;
+        padding-top: 2px;
+        text-align: right;
+        height: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #777;
+    }
+
+    div.comment .upvote.upvoted {
+        color: #d64000;
+    }
+
+    div.comment .upvote.hover {
+        background: url(../images/go-up-grey.png) no-repeat;
+        background-position: right 1px;
+    }
+
+    div.comment .upvote:hover {
+        background: url(../images/go-up-orange.png) no-repeat;
+        background-position: right 1px;
+    }
+
+    .comments div.controls {
+        clear: both;
+        background: url(../images/gray-up-arrow-h18px.png) no-repeat;
+        width: 100%;
+        padding-left: 12px;
+        margin: 3px 0 20px 5px;
+    }
+
+    .comments form.post-comments {
+        width: 560px;
+        margin: 3px 30px 4px 45px;
+    }
+
+    .comments textarea {
+        display: block;
+        height: 42px;
+        width: 572px;
+        margin: 6px 0 5px 1px;
+        font-family: sans-serif;
+        outline: none;
+        overflow:auto;
+        font-size: 12px;
+        line-height: 140%;
+        padding-left:2px;
+    }
+
+    .comments input {
+        margin-left: 10px;
+        margin-top: 1px;
+        vertical-align: top;
+        width: 100px;
+    }
+
+    .comments .counter {
+        display: inline-block;
+        width: 245px;
+        vertical-align: top;
+    }
+
+    .comments .controls a {
+        color: #888888;
+        padding: 0 3px 2px;
+    }
+
+    .comments .controls a:hover {
+        background-color: #777777;
+        color: white;
+        text-decoration: none;
+    }
+
+    .comments .help-text{
+        float: right;
+        text-align:right;
+        color: gray;
+        margin-bottom: 0px;
+        margin-top: 0px;
+        line-height: 50%;
+    }
 }
 
 #questionTools {
@@ -1410,6 +1684,57 @@ span.delete-icon:hover {
     margin-top: 11px;
     text-align: left;
 }
+
+
+.question-status {
+    margin-top: 10px;
+    margin-bottom:15px
+    padding: 20px;
+    background-color: #F5F5F5;
+    text-align: center;
+}
+
+.question-status h3 {
+    font-size: 125%;
+}
+
+.vote-buttons {
+    float: left;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.vote-buttons IMG {
+    cursor: pointer;
+}
+
+.vote-number {
+    font-family: Arial;
+    padding: 0px 0 3px 0;
+    font-size: 140%;
+    font-weight: bold;
+    color: #777;
+}
+
+.vote-buttons .notify-sidebar {
+    text-align: left;
+}
+.vote-buttons .notify-sidebar label {
+    vertical-align: top;
+}
+
+.question-img-upvote:hover {
+    background: url(../images/vote-arrow-up-on.png)
+}
+
+.question-img-downvote:hover {
+    background: url(../images/vote-arrow-down-on.png)
+}
+
+.question-img-favorite:hover {
+    background: url(../images/vote-favorite-on.png)
+}
+
 
 /* ----- Footer links , check blocks/footer.html----- */
 
@@ -1486,72 +1811,10 @@ a:hover.medal {
     border-right: 1px solid #D1CA3D;
 }
 
-
-.question-status {
-    margin-top: 10px;
-    margin-bottom:15px
-    padding: 20px;
-    background-color: #F5F5F5;
-    text-align: center;
-}
-
-.question-status h3 {
-    font-size: 125%;
-}
-
-.vote-buttons {
-    float: left;
-    text-align: center;
-    padding-top: 2px;
-}
-
-.vote-buttons IMG {
-    cursor: pointer;
-}
-
-.vote-number {
-    font-family: Arial;
-    padding: 0px 0 3px 0;
-    font-size: 140%;
-    font-weight: bold;
-    color: #777;
-}
-
-.vote-buttons .notify-sidebar {
-    text-align: left;
-}
-.vote-buttons .notify-sidebar label {
-    vertical-align: top;
-}
-
-.question-img-upvote:hover {
-    background: url(../images/vote-arrow-up-on.png)
-}
-
-.question-img-downvote:hover {
-    background: url(../images/vote-arrow-down-on.png)
-}
-
-.question-img-favorite:hover {
-    background: url(../images/vote-favorite-on.png)
-}
-
-
 .notify-me {
     float: left;
 }
 
-.offensive-flag a {
-    color: #777;
-    padding: 3px;
-    cursor: pointer;
-}
-
-.offensive-flag a:hover {
-    background-color: #777;
-    text-decoration: none;
-    color: #fff;
-}
 
 .linksopt a {
     color: #777;
@@ -1565,158 +1828,6 @@ a:hover.medal {
     color: #fff;
 }
 
-.post-controls a {
-    color: #777;
-    padding: 3px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    text-decoration: none;
-}
-
-.post-controls a:hover {
-    background-color: #777;
-    color: #fff;
-}
-
-.post-controls .sep {
-    color: #ccc;
-}
-
-.comments {
-    font-size: 12px;
-    width: 650px;    
-    clear: both;
-}
-
-.comments .comment {
-    border-top: 1px dotted #cccccc;
-    margin: 0;
-    overflow: auto;
-}
-
-.comments .content {
-    margin-bottom: 7px;    
-}
-
-.comments div.comment {
-    min-height: 25px;
-}
-
-.comments div.comment:hover {
-    background-color: #eee;
-}
-
-div.comment .comment-votes {
-    float: left;
-    width: 37px;
-    line-height: 130%;
-    padding: 6px 5px 6px 3px;
-}
-
-div.comment .comment-body {
-    line-height: 140%;
-    margin: 3px 26px 0 46px;
-    padding: 5px 3px;
-    color: #666;
-}
-
-div.comment .comment-body p{
-    font-size:inherit;
-    margin-bottom: 3px;
-    padding: 0;
-}
-
-div.comment .comment-delete {
-    float: right;
-    width: 14px;
-    line-height: 130%;
-    padding: 8px 6px;
-}
-
-div.comment .upvote {
-    margin: 0px;
-    padding-right: 17px;
-    padding-top: 2px;
-    text-align: right;
-    height: 20px;
-    font-size: 13px;
-    font-weight: bold;
-    color: #777;
-}
-
-div.comment .upvote.upvoted {
-    color: #d64000;
-}
-
-div.comment .upvote.hover {
-    background: url(../images/go-up-grey.png) no-repeat;
-    background-position: right 1px;
-}
-
-div.comment .upvote:hover {
-    background: url(../images/go-up-orange.png) no-repeat;
-    background-position: right 1px;
-}
-
-.comments div.controls {
-    clear: both;
-    background: url(../images/gray-up-arrow-h18px.png) no-repeat;
-    width: 100%;
-    padding-left: 12px;
-    margin: 3px 0 20px 5px;
-}
-
-.comments form.post-comments {
-    width: 560px;
-    margin: 3px 30px 4px 45px;
-}
-
-.comments textarea {
-    display: block;
-    height: 42px;
-    width: 572px;
-    margin: 6px 0 5px 1px;
-    font-family: sans-serif;
-    outline: none;
-    overflow:auto;
-    font-size: 12px;
-    line-height: 140%;
-    padding-left:2px;
-}
-
-.comments input {
-    margin-left: 10px;
-    margin-top: 1px;
-    vertical-align: top;
-    width: 100px;
-}
-
-.comments .counter {
-    display: inline-block;
-    width: 245px;
-    vertical-align: top;
-}
-
-.comments .controls a {
-    color: #888888;
-    padding: 0 3px 2px;
-}
-
-.comments .controls a:hover {
-    background-color: #777777;
-    color: white;
-    text-decoration: none;
-}
-
-.comments .help-text{
-    float: right;
-    text-align:right;
-    color: gray;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    line-height: 50%;
-}
 
 span.text-counter {
     margin-right: 20px;
@@ -1732,33 +1843,6 @@ p.form-item {
     margin: 0px;
 }
 
-div.comments {
-    padding: 0;
-}
-
-.comments .button {
-    color: black;
-    font-size: 11px;
-    background: #eeeeee;
-    padding: 3px;
-    cursor: pointer;
-}
-
-.comment a {
-    background-color: inherit;
-    color: blue;
-    padding: 0;
-}
-
-.comment a.author, a.author:hover {
-    background-color: inherit;
-    color: blue;
-    padding: 0;
-}
-
-.comment a.author:hover {
-    text-decoration: underline;
-}
 
 .accepted-answer {
     background-color: #EBFFE6;
@@ -1806,8 +1890,6 @@ div.comments {
 .deleted {
     background: #F4E7E7 none repeat scroll 0 0;
 }
-
-
 
 
 /* openid styles */
@@ -2464,18 +2546,6 @@ ul.form-horizontal-rows li input {
     vertical-align: top;
 }
 
-.post-controls, .post-tags {
-    font-size: 11px;
-    line-height: 12px;
-    min-width: 200px;
-    padding-left: 5px;
-    margin-bottom: 5px;
-}
-
-.post-controls {
-    clear: left;
-    float: left;
-}
 
 ul.post-tags {
     margin-left: 7px;
@@ -2492,37 +2562,6 @@ ul.post-retag {
 
 #question-controls .tags {
     margin: 0 0 3px 0;
-}
-
-.post-update-info-container {
-    float: right;
-    min-width: 85px;
-}
-
-.post-update-info {
-    display: inline-block;
-    float: right;
-    font-size: 11px;
-    width: 190px;
-    margin-bottom: 5px;
-    line-height: 14px
-}
-
-.post-update-info p {
-    line-height: 13px;
-    font-size: 11px;
-    margin: 0 0 2px 1px;
-    padding: 0;
-}
-
-.post-update-info .gravatar {
-    float: left;
-    margin-right: 4px;
-}
-
-
-.post-update-info p.tip {
-    color: #444;
 }
 
 #tagSelector {

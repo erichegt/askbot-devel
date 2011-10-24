@@ -1,12 +1,16 @@
 <div class="tabBar">
-    <h2 id="sort-top">
-    {% trans counter=answers|length %}
-    {{counter}} Answer:
-    {% pluralize %}
-    {{counter}} Answers:
-    {% endtrans %}
-    </h2>
+    <h1 id="questionCount">
+        {% trans counter=answers|length %}
+        {{counter}} Answer
+        {% pluralize %}
+        {{counter}} Answers
+        {% endtrans %}
+    </h1>
     <div class="tabsA">
+
+        <span class="label">
+        Sort by »
+        </span>
         <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top" 
             title="{% trans %}oldest answers will be shown first{% endtrans %}"
         ><span>{% trans %}oldest answers{% endtrans %}</span></a>
