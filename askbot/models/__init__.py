@@ -345,7 +345,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
 
     elif self.is_administrator() or self.is_moderator():
         will_be_able_at = (answer.added_at + 
-            datetime.timedelta(days=askbot_settings.MIN_DAYS_TO_STAFF_ACCEPT_ANSWER))
+            datetime.timedelta(days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER))
 
         if datetime.datetime.now() < will_be_able_at:
             error_message = _(
