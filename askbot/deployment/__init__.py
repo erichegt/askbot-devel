@@ -117,7 +117,10 @@ def deploy_askbot(directory, options):
 
     create_new_project = False
     if os.path.exists(directory):
-        create_new_project = bool(options.force)
+        if path_utils.has_existing_django_project(directory):
+            create_new_project = bool(options.force)
+        else:
+            create_new_project = True
     else:
         create_new_project = True
 

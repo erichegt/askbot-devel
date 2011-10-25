@@ -90,6 +90,9 @@ def has_existing_django_project(directory):
     directory = os.path.normpath(directory)
     file_list = glob.glob(directory  + os.path.sep + '*.py')
     for file_name in file_list:
+        if file_name.endswith(os.path.sep + 'manage.py'):
+            #a hack allowing to install into the distro directory
+            continue
         py_file = open(file_name)
         for line in py_file:
             if IMPORT_RE1.match(line) or IMPORT_RE2.match(line):
