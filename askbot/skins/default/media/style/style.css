@@ -1347,6 +1347,10 @@ span.delete-icon:hover {
 
 .question-page{
 
+    h1{
+        padding-top:0px;
+    }
+    
     h1 a{
          color:@question-link;
         font-size:30px;
@@ -1514,169 +1518,214 @@ span.delete-icon:hover {
         font-family:@yanone;
         line-height:15px;
     }
-    
+    .question-img-upvote:hover {
+        background: url(../images/vote-arrow-up-on-new.png)
+    }
+
+    .question-img-downvote:hover {
+        background: url(../images/vote-arrow-down-on-new.png)
+    }
+
+    .question-img-favorite:hover {
+        background: url(../images/vote-favorite-on.png)
+    }
     div.comments {
         padding: 0;
     }
-
-    .comments .button {
-        color: black;
-        font-size: 11px;
-        background: #eeeeee;
-        padding: 3px;
-        cursor: pointer;
+    #comment-title{
+       font-weight:bold;
+       font-size:23px;
+       color:@section-title;
+       width:200px;
+       float:left;
     }
-
-    .comment a {
-        background-color: inherit;
-        color: blue;
-        padding: 0;
-    }
-
-    .comment a.author, a.author:hover {
-        background-color: inherit;
-        color: blue;
-        padding: 0;
-    }
-
-    .comment a.author:hover {
-        text-decoration: underline;
-    }
-
     .comments {
-        font-size: 12px;
-        width: 650px;    
+        font-size: 12px;    
         clear: both;
+        
+        div.controls {
+              clear: both;
+            float:left;
+            width: 100%;
+            margin: 3px 0 20px 5px;
+        }
+        
+        .controls a {
+             color: #988e4c;
+            padding: 0 3px 2px 22px;
+            font-family:@trebuchet;
+            font-size:13px;
+            background:url(../images/comment.png) no-repeat center left;
+        }
+
+        .controls a:hover {
+            background-color: #f5f0c9;
+            text-decoration: none;
+        }
+
+        .button {
+            color: #988e4c;
+            font-size: 11px;
+            padding: 3px;
+            cursor: pointer;
+        }
+        a {
+            background-color: inherit;
+            color: @link;
+            padding: 0;
+        }
+        
+        form.post-comments {
+            margin: 3px 30px 4px 5px;
+        }
+
+        textarea {
+            height: 42px;
+            width:100%;
+            margin: 12px 0 5px 1px;
+            font-family: @trebuchet;
+            outline: none;
+            overflow:auto;
+            font-size: 12px;
+            line-height: 140%;
+            padding-left:2px;
+            padding-top:4px;
+            border:#cce6ec 3px solid;
+        }
+
+        input {
+            margin-left: 10px;
+            margin-top: 1px;
+            vertical-align: top;
+            width: 100px;
+        }
+        button{
+            background:url(../images/small-button-blue.png) repeat-x top;
+            border:0;
+            color:@button-label;
+            font-size:12px;
+            width:95px;
+            font-weight:bold;
+            height:24px;
+            margin-top:-2px;
+            cursor:pointer;
+            .rounded-corners(4px);
+             .text-shadow(0px,1px,0px,#E6F6FA);
+             .box-shadow(1px, 1px, 2px, #808080);
+             float:left;
+        }
+        button:hover{
+            background: url(../images/small-button-blue.png) bottom repeat-x;
+            .text-shadow(0px, 1px, 0px, #c6d9dd);
+        }
+        .counter {
+            display: inline-block;
+            width: 245px;
+            float:right;
+            color:#b6a475 !important;
+            vertical-align: top;
+            font-family:@trebuchet;
+            float:right;
+            text-align:right;
+        }
+        .comment {
+            border-bottom: 1px solid #edeeeb;
+            margin: 0;
+            margin-top:8px;
+            padding-bottom:4px;
+            overflow: auto;
+            font-family:@trebuchet;
+            font-size:11px;
+            min-height: 25px;
+            background:url(../images/comment-background.png) bottom repeat-x;
+            .rounded-corners(5px);
+        }
+        div.comment:hover {
+            background-color: #efefef;
+        }
+        a.author{
+            background-color: inherit;
+            color: @link;
+            padding: 0;
+        }
+
+        a.author:hover {
+            text-decoration: underline;
+        }
+        span.delete-icon{
+            background:url(../images/close-small.png) no-repeat;
+        }
+        span.delete-icon:hover{
+            border:#BC564B 2px solid;
+            .rounded-corners(10px);
+            
+        }
+        .content {
+            margin-bottom: 7px;    
+        }
+        
+        .comment-votes {
+            float: left;
+            width: 37px;
+            line-height: 130%;
+            padding: 6px 5px 6px 3px;
+        }
+
+        .comment-body {
+            line-height: 140%;
+            margin: 3px 26px 0 46px;
+            padding: 5px 3px;
+            color: #666;
+        }
+
+        .comment-body p{
+            font-size:inherit;
+            margin-bottom: 3px;
+            padding: 0;
+        }
+
+        .comment-delete {
+            float: right;
+            width: 14px;
+            line-height: 130%;
+            padding: 8px 6px;
+        }
+
+        .upvote {
+            margin: 0px;
+            padding-right: 17px;
+            padding-top: 2px;
+            text-align: right;
+            height: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #777;
+        }
+
+        .upvote.upvoted {
+            color: #d64000;
+        }
+
+        .upvote.hover {
+            background: url(../images/go-up-grey.png) no-repeat;
+            background-position: right 1px;
+        }
+
+        .upvote:hover {
+            background: url(../images/go-up-orange.png) no-repeat;
+            background-position: right 1px;
+        }
+
+        .help-text{
+            float: right;
+            text-align:right;
+            color: gray;
+            margin-bottom: 0px;
+            margin-top: 0px;
+            line-height: 50%;
+        }
     }
 
-    .comments .comment {
-        border-top: 1px dotted #cccccc;
-        margin: 0;
-        overflow: auto;
-    }
-
-    .comments .content {
-        margin-bottom: 7px;    
-    }
-
-    .comments div.comment {
-        min-height: 25px;
-    }
-
-    .comments div.comment:hover {
-        background-color: #eee;
-    }
-
-    div.comment .comment-votes {
-        float: left;
-        width: 37px;
-        line-height: 130%;
-        padding: 6px 5px 6px 3px;
-    }
-
-    div.comment .comment-body {
-        line-height: 140%;
-        margin: 3px 26px 0 46px;
-        padding: 5px 3px;
-        color: #666;
-    }
-
-    div.comment .comment-body p{
-        font-size:inherit;
-        margin-bottom: 3px;
-        padding: 0;
-    }
-
-    div.comment .comment-delete {
-        float: right;
-        width: 14px;
-        line-height: 130%;
-        padding: 8px 6px;
-    }
-
-    div.comment .upvote {
-        margin: 0px;
-        padding-right: 17px;
-        padding-top: 2px;
-        text-align: right;
-        height: 20px;
-        font-size: 13px;
-        font-weight: bold;
-        color: #777;
-    }
-
-    div.comment .upvote.upvoted {
-        color: #d64000;
-    }
-
-    div.comment .upvote.hover {
-        background: url(../images/go-up-grey.png) no-repeat;
-        background-position: right 1px;
-    }
-
-    div.comment .upvote:hover {
-        background: url(../images/go-up-orange.png) no-repeat;
-        background-position: right 1px;
-    }
-
-    .comments div.controls {
-        clear: both;
-        background: url(../images/gray-up-arrow-h18px.png) no-repeat;
-        width: 100%;
-        padding-left: 12px;
-        margin: 3px 0 20px 5px;
-    }
-
-    .comments form.post-comments {
-        width: 560px;
-        margin: 3px 30px 4px 45px;
-    }
-
-    .comments textarea {
-        display: block;
-        height: 42px;
-        width: 572px;
-        margin: 6px 0 5px 1px;
-        font-family: sans-serif;
-        outline: none;
-        overflow:auto;
-        font-size: 12px;
-        line-height: 140%;
-        padding-left:2px;
-    }
-
-    .comments input {
-        margin-left: 10px;
-        margin-top: 1px;
-        vertical-align: top;
-        width: 100px;
-    }
-
-    .comments .counter {
-        display: inline-block;
-        width: 245px;
-        vertical-align: top;
-    }
-
-    .comments .controls a {
-        color: #888888;
-        padding: 0 3px 2px;
-    }
-
-    .comments .controls a:hover {
-        background-color: #777777;
-        color: white;
-        text-decoration: none;
-    }
-
-    .comments .help-text{
-        float: right;
-        text-align:right;
-        color: gray;
-        margin-bottom: 0px;
-        margin-top: 0px;
-        line-height: 50%;
-    }
 }
 
 #questionTools {
@@ -1721,18 +1770,6 @@ span.delete-icon:hover {
 }
 .vote-buttons .notify-sidebar label {
     vertical-align: top;
-}
-
-.question-img-upvote:hover {
-    background: url(../images/vote-arrow-up-on.png)
-}
-
-.question-img-downvote:hover {
-    background: url(../images/vote-arrow-down-on.png)
-}
-
-.question-img-favorite:hover {
-    background: url(../images/vote-favorite-on.png)
 }
 
 
