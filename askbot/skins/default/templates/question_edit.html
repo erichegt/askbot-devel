@@ -39,14 +39,14 @@
 {% endblock %}
 
 {% block sidebar %}
-{% include "blocks/question_edit_tips.html" %}
+{% include "widgets/question_edit_tips.html" %}
 {% endblock %}
 
 {% block endjs %}
-    {% include "blocks/editor_data.html" %}
+    {% include "meta/editor_data.html" %}
     <script type='text/javascript' src='{{"/js/editor.js"|media }}'></script>
     {% if mandatory_tags %}
-        {% include "blocks/mandatory_tags_js.html" %}
+        {% include "meta/mandatory_tags_js.html" %}
     {% endif %}
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>

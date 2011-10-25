@@ -95,13 +95,13 @@ def questions(request):
                                         )
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
-    
+
     #force cloud to sort by name
     if tag_list_type == 'cloud':
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
     font_size = extra_tags.get_tag_font_size(related_tags)
-    
+
     paginator = Paginator(qs, search_state.page_size)
 
     if paginator.num_pages < search_state.page:
@@ -144,11 +144,12 @@ def questions(request):
                                 }
 
         if q_count > search_state.page_size:
-            paginator_tpl = get_template('blocks/paginator.html', request)
+            paginator_tpl = get_template('main_page/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
             paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
-                'paginator_context': extra_tags.cnprog_paginator(paginator_context)
+                'context': extra_tags.cnprog_paginator(paginator_context),
+                'questions_count': q_count
             }
             paginator_html = paginator_tpl.render(Context(data))
         else:
@@ -178,7 +179,7 @@ def questions(request):
                 '%(badge_count)d %(badge_level)s badges',
                 count
             ) % {
-                'badge_count': count, 
+                'badge_count': count,
                 'badge_level': badge_levels[level]
             }
 
@@ -195,78 +196,20 @@ def questions(request):
 
         for contributor in contributors:
             ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
+        #we render the template
+        #from django.template import RequestContext
+        questions_tpl = get_template('main_page/questions_loop.html', request)
+        #todo: remove this patch on context after all templates are moved to jinja
+        data = {
+            'questions': page,
+            'questions_count': q_count,
+            'context': paginator_context,
+            'language_code': translation.get_language(),
+            'query': search_state.query,
+        }
 
-        for question in page.object_list:
-            timestamp = question.last_activity_at
-            author = question.last_activity_by
-
-            if question.score == 0:
-                votes_class = 'no-votes'
-            else:
-                votes_class = 'some-votes'
-
-            if question.answer_count == 0:
-                answers_class = 'no-answers'
-            elif question.answer_accepted:
-                answers_class = 'accepted'
-            else:
-                answers_class = 'some-answers'
-
-            if question.view_count == 0:
-                views_class = 'no-views'
-            else:
-                views_class = 'some-views'
-
-            country_code = None
-            if author.country and author.show_country:
-                country_code = author.country.code
-
-            question_data = {
-                'title': question.title,
-                'id': question.id,
-                'tags': question.get_tag_names(),
-                'tag_list_type': tag_list_type,
-                'font_size': font_size,
-                'votes': extra_filters.humanize_counter(question.score),
-                'votes_class': votes_class,
-                'votes_word': ungettext('vote', 'votes', question.score),
-                'answers': extra_filters.humanize_counter(question.answer_count),
-                'answers_class': answers_class,
-                'answers_word': ungettext('answer', 'answers', question.answer_count),
-                'views': extra_filters.humanize_counter(question.view_count),
-                'views_class': views_class,
-                'views_word': ungettext('view', 'views', question.view_count),
-                'timestamp': unicode(timestamp),
-                'timesince': functions.diff_date(timestamp),
-                'u_id': author.id,
-                'u_name': author.username,
-                'u_rep': author.reputation,
-                'u_gold': author.gold,
-                'u_gold_title': pluralize_badge_count(
-                                                author.gold,
-                                                const.GOLD_BADGE
-                                            ),
-                'u_gold_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
-                'u_gold_css_class': gold_badge_css_class,
-                'u_silver': author.silver,
-                'u_silver_title': pluralize_badge_count(
-                                            author.silver,
-                                            const.SILVER_BADGE
-                                        ),
-                'u_silver_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
-                'u_silver_css_class': silver_badge_css_class,
-                'u_bronze': author.bronze,
-                'u_bronze_title': pluralize_badge_count(
-                                            author.bronze,
-                                            const.BRONZE_BADGE
-                                        ),
-                'u_bronze_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
-                'u_bronze_css_class': bronze_badge_css_class,
-                'u_country_code': country_code,
-                'u_is_anonymous': question.is_anonymous,
-            }
-            ajax_data['questions'].append(question_data)
-
+        questions_html = questions_tpl.render(Context(data))
+        ajax_data['questions'] = questions_html.replace('\n','')
         return HttpResponse(
                     simplejson.dumps(ajax_data),
                     mimetype = 'application/json'
@@ -287,7 +230,7 @@ def questions(request):
         'context' : paginator_context,
         'is_unanswered' : False,#remove this from template
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-        'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
+        'ignored_tag_names': meta_data.get('ignored_tag_names',None),
         'language_code': translation.get_language(),
         'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
         'page_class': 'main-page',
@@ -319,7 +262,7 @@ def questions(request):
 def tags(request):#view showing a listing of available tags - plain list
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
-    
+
     if tag_list_type == 'list':
 
         stag = ""
@@ -368,15 +311,15 @@ def tags(request):#view showing a listing of available tags - plain list
             'active_tab': 'tags',
             'page_class': 'tags-page',
             'tags' : tags,
-            'tag_list_type' : tag_list_type, 
+            'tag_list_type' : tag_list_type,
             'stag' : stag,
             'tab_id' : sortby,
             'keywords' : stag,
             'paginator_context' : paginator_context
         }
-        
+
     else:
-    
+
         stag = ""
         sortby = request.GET.get('sort', 'name')
 
@@ -396,18 +339,18 @@ def tags(request):#view showing a listing of available tags - plain list
             'active_tab': 'tags',
             'page_class': 'tags-page',
             'tags' : tags,
-            'tag_list_type' : tag_list_type, 
+            'tag_list_type' : tag_list_type,
             'font_size' : font_size,
             'stag' : stag,
             'tab_id' : sortby,
             'keywords' : stag,
         }
-    
+
     return render_into_skin('tags.html', data, request)
 
 @csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
-    """view that displays body of the question and 
+    """view that displays body of the question and
     all answers to it
     """
     #todo: fix inheritance of sort method from questions
@@ -507,10 +450,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             filtered_answers.append(answer)
 
     #resolve page number and comment number for permalinks
-    comment_order_number = None
+    show_comment_position = None
     if show_comment:
         show_page = show_comment.get_page_number(answers = filtered_answers)
-        comment_order_number = show_comment.get_order_number()
+        show_comment_position = show_comment.get_order_number()
     elif show_answer:
         show_page = show_post.get_page_number(answers = filtered_answers)
 
@@ -534,7 +477,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if updated_who != request.user:
             if last_seen:
                 if last_seen < updated_when:
-                    update_view_count = True 
+                    update_view_count = True
             else:
                 update_view_count = True
 
@@ -551,7 +494,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.user.visit_question(question)
 
         #3) send award badges signal for any badges
-        #that are awarded for question views 
+        #that are awarded for question views
         award_badges_signal.send(None,
                         event = 'view_question',
                         actor = request.user,
@@ -597,7 +540,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'paginator_context' : paginator_context,
         'show_post': show_post,
         'show_comment': show_comment,
-        'comment_order_number': comment_order_number
+        'show_comment_position': show_comment_position
     }
     return render_into_skin('question.html', data, request)
 
@@ -648,4 +591,5 @@ def get_question_body(request):
     for question in page.object_list:
         questions_dict['question-%s' % question.id] = question.summary
 
+    return {'questions-titles': questions_dict}
     return {'questions-titles': questions_dict}

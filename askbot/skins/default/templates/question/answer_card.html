@@ -1,0 +1,28 @@
+<a name="{{ answer.id }}"></a>
+<div 
+    id="answer-container-{{ answer.id }}"
+    class="{{ macros.answer_classes(answer, question) }}">
+    <table class="answer-table">
+        <tr>
+            <td>
+                <div class="vote-buttons">
+                    {% include "question/answer_vote_buttons.html" %}
+                </div>
+            </td>
+            <td>
+                <div class="item-right">
+                    <div class="answer-body">
+                        {{ answer.html }}
+                    </div>
+                    <div class="answer-controls post-controls">
+                        {% include "question/answer_controls.html" %} 
+                    </div>
+                    <div class="post-update-info-container">
+                        {% include "question/answer_author_info.html" %}
+                    </div>
+                    {% include "question/answer_comments.html" %}
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

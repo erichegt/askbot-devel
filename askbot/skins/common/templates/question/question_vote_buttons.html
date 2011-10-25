@@ -1,0 +1,35 @@
+{% if question_vote %}
+ <img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
+    {% if question_vote.is_upvote() %}
+        src="{{'/images/vote-arrow-up-on.png'|media}}" 
+    {% else %}
+        src="{{'/images/vote-arrow-up.png'|media}}"
+    {% endif %}
+    alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
+    title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
+<div id="question-vote-number-{{ question.id }}" class="vote-number" 
+    title="{% trans %}current number of votes{% endtrans %}">
+    {{ question.score }}
+</div>
+<img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
+    {% if question_vote.is_downvote() %}
+        src="{{'/images/vote-arrow-down-on.png'|media}}" 
+    {% else %}
+        src="{{'/images/vote-arrow-down.png'|media}}" 
+    {% endif %}
+    alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
+    title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
+{% else %}
+<img id="question-img-upvote-{{ question.id }}" class="question-img-upvote" 
+    alt="{% trans %}i like this post (click again to cancel){% endtrans %}"
+    src="{{'/images/vote-arrow-up.png'|media}}" 
+    title="{% trans %}i like this post (click again to cancel){% endtrans %}" />
+<div id="question-vote-number-{{ question.id }}" class="vote-number" 
+    title="{% trans %}current number of votes{% endtrans %}">
+    {{ question.score }}
+</div>
+<img id="question-img-downvote-{{ question.id }}" class="question-img-downvote" 
+    src="{{'/images/vote-arrow-down.png'|media}}"
+    alt="{% trans %}i dont like this post (click again to cancel){% endtrans %}"
+    title="{% trans %}i dont like this post (click again to cancel){% endtrans %}" />
+{% endif %}
