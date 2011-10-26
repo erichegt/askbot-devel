@@ -1519,11 +1519,11 @@ span.delete-icon:hover {
         line-height:15px;
     }
     .question-img-upvote:hover {
-        background: url(../images/vote-arrow-up-on-new.png)
+        background: url(../images/vote-arrow-up-on.png)
     }
 
     .question-img-downvote:hover {
-        background: url(../images/vote-arrow-down-on-new.png)
+        background: url(../images/vote-arrow-down-on.png)
     }
 
     .question-img-favorite:hover {
