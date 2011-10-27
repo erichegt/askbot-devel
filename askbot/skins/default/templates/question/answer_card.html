@@ -2,14 +2,14 @@
 <div 
     id="answer-container-{{ answer.id }}"
     class="{{ macros.answer_classes(answer, question) }}">
-    <table class="answer-table">
-        <tr>
-            <td>
+    <div class="answer-table">
+        <div>
+            <div>
                 <div class="vote-buttons">
                     {% include "question/answer_vote_buttons.html" %}
                 </div>
-            </td>
-            <td>
+            </div>
+            <div>
                 <div class="item-right">
                     <div class="answer-body">
                         <div class="post-update-info-container">
@@ -26,7 +26,7 @@
                     <h1 id="comment-title">Comments</h1>
                     {% include "question/answer_comments.html" %}
                 </div>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 </div>
