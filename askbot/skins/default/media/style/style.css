@@ -1541,11 +1541,28 @@ span.delete-icon:hover {
         font-family:@yanone;
         line-height:15px;
     }
-    .question-img-upvote:hover {
+
+    .question-img-upvote, .question-img-downvote,
+    .answer-img-upvote, .answer-img-downvote {
+        width: 25px;
+        height: 25px;
+    }
+
+    .question-img-upvote, .answer-img-upvote {
+        background: url(../images/vote-arrow-up.png)
+    }
+
+    .question-img-downvote, .answer-img-downvote {
+        background: url(../images/vote-arrow-down.png)
+    }
+
+    .question-img-upvote:hover, .question-img-upvote.on,
+    .answer-img-upvote:hover, .answer-img-upvote.on {
         background: url(../images/vote-arrow-up-on.png)
     }
 
-    .question-img-downvote:hover {
+    .question-img-downvote:hover, .question-img-downvote.on,
+    .answer-img-downvote:hover, .answer-img-downvote.on {
         background: url(../images/vote-arrow-down-on.png)
     }
 

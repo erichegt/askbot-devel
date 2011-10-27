@@ -1,22 +1,8 @@
-<img id="answer-img-upvote-{{ answer.id }}" class="answer-img-upvote" 
-    {% if user_answer_votes[answer.id] == 1 %}
-        src="{{'/images/vote-arrow-up-on.png'|media}}" 
-    {% else %}
-        src="{{'/images/vote-arrow-up.png'|media}}" 
-    {% endif %}
-    alt="{% trans %}i like this answer (click again to cancel){% endtrans %}"
-    title="{% trans %}i like this answer (click again to cancel){% endtrans %}"/>
-<div id="answer-vote-number-{{ answer.id }}" class="vote-number" title="{% trans %}current number of votes{% endtrans %}">
-    {{ answer.score }}
-</div>
-<img id="answer-img-downvote-{{ answer.id }}" class="answer-img-downvote" 
-    {% if user_answer_votes[answer.id] == -1 %}
-        src="{{'/images/vote-arrow-down-on.png'|media}}" 
-    {% else %}
-        src="{{'/images/vote-arrow-down.png'|media}}" 
-    {% endif %}
-    alt="{% trans %}i dont like this answer (click again to cancel){% endtrans %}"
-    title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" />
+{{ macros.post_vote_buttons(
+        post = answer,
+        visitor_vote = user_answer_votes[answer.id]
+    )
+}}
 {% if request.user == question.author %}
 <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
     {% if answer.accepted %}
