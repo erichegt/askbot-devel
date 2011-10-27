@@ -3,30 +3,20 @@
     id="answer-container-{{ answer.id }}"
     class="{{ macros.answer_classes(answer, question) }}">
     <div class="answer-table">
-        <div>
-            <div>
-                <div class="vote-buttons">
-                    {% include "question/answer_vote_buttons.html" %}
+        <div class="vote-buttons">
+            {% include "question/answer_vote_buttons.html" %}
+        </div>
+        <div class="item-right">
+            <div class="answer-body">
+                <div class="post-update-info-container">
+                    {% include "question/answer_author_info.html" %}
                 </div>
+                {{ answer.html }}
             </div>
-            <div>
-                <div class="item-right">
-                    <div class="answer-body">
-                        <div class="post-update-info-container">
-                            {% include "question/answer_author_info.html" %}
-                        </div>
-                        {{ answer.html }}
-                    </div>
-                    
-                    <div class="answer-controls post-controls">
-                        
-                        {% include "question/answer_controls.html" %} 
-                    </div>
-                    <!-- Needs a validation if comments exists -->
-                    <h1 id="comment-title">Comments</h1>
-                    {% include "question/answer_comments.html" %}
-                </div>
+            <div class="answer-controls post-controls">
+                {% include "question/answer_controls.html" %} 
             </div>
+            {% include "question/answer_comments.html" %}
         </div>
     </div>
 </div>

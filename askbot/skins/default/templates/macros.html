@@ -326,6 +326,9 @@ for the purposes of the AJAX comment editor #}
     )
 -%}
     {% spaceless %}
+    {% if post.comment_count > 0 %}
+        <h2 id="comment-title">Comments</h2>
+    {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
