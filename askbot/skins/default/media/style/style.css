@@ -1300,8 +1300,9 @@ span.delete-icon:hover {
     font-family:@trebuchet;
 
     p{
-        font-size:13px;
-       margin-bottom:14px;
+        margin-bottom:14px;
+       line-height:1.4;
+       font-size:14px;
     }
 }
 
@@ -1418,9 +1419,9 @@ span.delete-icon:hover {
         color:#4b4b4b;
 
         p{
-            margin-bottom:15px;
+            margin-bottom:14px;
           line-height:1.4;
-          font-size:13px;
+          font-size:14px;
         }
         
         a {
@@ -1545,25 +1546,26 @@ span.delete-icon:hover {
     .question-img-upvote, .question-img-downvote,
     .answer-img-upvote, .answer-img-downvote {
         width: 25px;
-        height: 25px;
+        height: 20px;
+        cursor:pointer;
     }
 
     .question-img-upvote, .answer-img-upvote {
-        background: url(../images/vote-arrow-up.png)
+        background: url(../images/vote-arrow-up-new.png)  no-repeat;
     }
 
     .question-img-downvote, .answer-img-downvote {
-        background: url(../images/vote-arrow-down.png)
+        background: url(../images/vote-arrow-down-new.png) no-repeat;
     }
 
     .question-img-upvote:hover, .question-img-upvote.on,
     .answer-img-upvote:hover, .answer-img-upvote.on {
-        background: url(../images/vote-arrow-up-on.png)
+        background: url(../images/vote-arrow-up-on-new.png) no-repeat;
     }
 
     .question-img-downvote:hover, .question-img-downvote.on,
     .answer-img-downvote:hover, .answer-img-downvote.on {
-        background: url(../images/vote-arrow-down-on.png)
+        background: url(../images/vote-arrow-down-on-new.png) no-repeat;
     }
 
     .question-img-favorite:hover {
@@ -1773,14 +1775,17 @@ span.delete-icon:hover {
 
     .question-status {
         margin-top: 10px;
-        margin-bottom:15px
+        margin-bottom:15px;
         padding: 20px;
-        background-color: #F5F5F5;
+        background-color: #fef7cc;
         text-align: center;
+        border:#e1c04a 1px solid;
     }
 
     .question-status h3 {
-        font-size: 125%;
+        font-size: 20px;
+        color:@info-text;
+        font-weight:normal;
     }
 
     .vote-buttons {
