@@ -1169,7 +1169,18 @@ span.delete-icon:hover {
     padding-right: 15px;
 }
 
-/* ----- Ask Question Form template----- */
+/* ----- Ask and Edit Question Form template----- */
+
+.section-title{
+    color:@section-title;
+    font-family:@yanone;
+    font-weight:bold;
+    font-size:24px;
+}
+
+.ask-body {
+    padding-right: 10px;
+}
 
 #fmask{
     margin-bottom:30px;
@@ -1198,7 +1209,7 @@ span.delete-icon:hover {
     }
 }
 
-.ask-page{
+.ask-page, .edit-question-page{
 
     div#question-list {
          float: none;
@@ -1241,6 +1252,7 @@ span.delete-icon:hover {
         height:25px;
         padding-left:5px;
         width:395px;
+        font-size:14px;
     }
 }
 
@@ -1263,6 +1275,7 @@ span.delete-icon:hover {
     margin-top:3px;
     .rounded-corners(4px);
     .box-shadow(1px, 1px, 2px, #636363);
+    margin-right:7px;
 }
 
 #fmanswer input.submit:hover,
@@ -1341,9 +1354,9 @@ span.delete-icon:hover {
 
 .question-options {
     margin-top: 1px;
-    float: left;
     color: #666;
     line-height: 13px;
+    margin-bottom:5px;
 }
 .question-options label {
     vertical-align: text-bottom;
@@ -1353,6 +1366,33 @@ span.delete-icon:hover {
     border-top: 1px dotted #D8D2A9;
     border-bottom: 1px dotted #D8D2A9;
     margin: 5px 0 5px 0;
+}
+
+.edit-question-page{
+    #id_revision{
+        font-size:14px;
+        margin-top:10px;
+    }
+    #id_title{
+        font-size: 24px;
+        line-height: 24px;
+        height: 36px;
+        margin: 0px;
+        padding: 0px 0 0 5px;
+        border:#cce6ec 3px solid;
+        width:725px;
+        margin-bottom:10px;
+    }
+    #id_summary{
+        border:#cce6ec 3px solid;
+        height:25px;
+        padding-left:5px;
+        width:395px;
+        font-size:14px;
+    }
+    .title-desc{
+        margin-bottom:10px;
+    }
 }
 
 /* ----- Question template ----- */
@@ -1429,7 +1469,7 @@ span.delete-icon:hover {
         }
         
         li {
-            margin-bottom:0.7em;
+            margin-bottom:7px;
         }
     }
 
@@ -2456,11 +2496,6 @@ button::-moz-focus-inner {
     *display: inline;
 }
 
-.ask-body {
-    padding-right: 10px;
-}
-
-
 .noscript {
     position: fixed;
     top: 0px;
@@ -2692,7 +2727,7 @@ p.signup_p {
     color:@link;
 }
 .wmd-preview li {
-    margin-bottom:0.7em;
+    margin-bottom:7px;
 }
 
 .karma-summary {
