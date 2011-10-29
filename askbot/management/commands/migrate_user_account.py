@@ -1,42 +1,35 @@
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import NoArgsCommand, CommandError, BaseCommand
 from django.db.models import get_model
 from django.contrib.auth.models import User
 
 
-class Command(NoArgsCommand):
-  def find_relations(self, **options):
-    rel = User._meta.get_all_related_objects()
-    print 'simple:'
-    for r in rel:
-        print r.model, r.field.name
-    print 'm2m:'
-    rel_m2m = User._meta.get_all_related_many_to_many_objects()
-    for r in rel_m2m:
-      print r.model, r.field.name
+class Command(BaseCommand):
+  args = '<from_user_id> <to_user_id>'
+  help = 'Migrate an account and all information from a <user_id> to a <user_id>, deleting the <from_user>'
 
-  def handle_noargs(self, **options):
-    from_id = 2 
-    to_id = 1 
+  def parse_arguments(self, *arguments):
+    if len(arguments) != 2:
+      raise CommandError('Arguments are <from_user_id> to <to_user_id>')
+    self.from_user = User.objects.get(id = arguments[0])
+    self.to_user = User.objects.get(id = arguments[1])
 
-    self.from_user = User.objects.get(id = from_id)
-    self.to_user = User.objects.get(id = to_id)
+  def handle(self, *arguments, **options):
+    self.parse_arguments(*arguments)
 
-    # Process all foreign key Relationships
     for rel in User._meta.get_all_related_objects():
       try:
         self.process_field(rel.model, rel.field.name)
-      except:
+      except Exception, e:
         if rel.field.name == 'UserAssociation':
-          print 'had problem with UserAssociation uniquiness'
+          self.stdout.write('had problem with UserAssociation uniquiness')
         elif rel.field.name == 'UserPasswordQueue':
-          print 'had problem with UserPasswordQueue uniquiness'
+          self.stdout.write('had problem with UserPasswordQueue uniquiness')
+        else:
+          self.stdout.write('Recieved Error: %s' % (e))
 
-    #Get all the many_to_many items
-    #import ipdb; ipdb.set_trace()
     for rel in User._meta.get_all_related_many_to_many_objects():
       self.process_m2m_field(rel.model, rel.field.name)
            
-
     self.to_user.reputation += self.from_user.reputation - 1
     self.to_user.gold += self.from_user.gold
     self.to_user.silver += self.from_user.silver
