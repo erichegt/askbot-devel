@@ -1070,6 +1070,7 @@ ul.tags.marked-tags li,
 .tags-page ul.tags li,
 ul#ab-user-tags li {
     width: 160px;
+    margin:5px;
 }
 
 ul#related-tags li {
@@ -1995,6 +1996,7 @@ span.delete-icon:hover {
 .tabBar-user{
     width:375px;
 }
+
 .user {
     padding: 5px;
     line-height: 140%;
@@ -2018,6 +2020,153 @@ span.delete-icon:hover {
     float: left;
     margin-right: 4px;
     display: inline;
+}
+
+/* tags page */
+
+.tabBar-tags{
+    width:270px;
+    margin-bottom:15px;
+}
+
+/* badges page */
+
+a.medal {
+    font-size: 17px;
+    line-height: 250%;
+    margin-right:5px;
+    color: #333;
+    text-decoration: none;
+    background: url(../images/medala.gif) no-repeat;
+    border-left: 1px solid #EEE;
+    border-top: 1px solid #EEE;
+    border-bottom: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    padding: 4px 12px 4px 6px;
+}
+
+a:hover.medal {
+    color: #333;
+    text-decoration: none;
+    background: url(../images/medala_on.gif) no-repeat;
+    border-left: 1px solid #E7E296;
+    border-top: 1px solid #E7E296;
+    border-bottom: 1px solid #D1CA3D;
+    border-right: 1px solid #D1CA3D;
+}
+
+#award-list{
+    .user{
+        float:left;
+       margin:5px;
+    }
+}
+
+/* profile page */
+
+.tabBar-profile{
+    width:100%;
+    margin-bottom:15px;
+    float:left;
+}
+
+.user-profile-page{
+    font-size:15px;
+    color:@info-text-dark;
+    .avatar img{
+        border:#eee 1px solid;
+       padding:5px;
+    }
+    h2{
+        padding:10px 0px 10px 0px;
+    }
+}
+
+.user-details {
+    font-size: 15px;
+}
+
+.user-about {
+    background-color: #EEEEEE;
+    height: 200px;
+    line-height: 20px;
+    overflow: auto;
+    padding: 10px;
+    width: 90%;
+    p{font-size:18px;}
+}
+
+.user-info-table td{
+    padding-bottom:5px;
+}
+
+.follow-toggle {
+    border:0;
+    color:@button-label;
+    font-weight:bold;
+    font-size:12px;
+    height:26px;
+    line-height:26px;
+    margin-top:-2px;
+    font-size:15px;
+    cursor:pointer;
+    background:url(../images/small-button-blue.png) repeat-x top;
+    .rounded-corners(4px);
+    .text-shadow(0px,1px,0px,#E6F6FA);
+    .box-shadow(1px, 1px, 2px, #808080)
+}
+
+.follow-toggle:hover {
+    background:url(../images/small-button-blue.png) repeat-x bottom;
+}
+
+.follow-toggle .follow{
+    font-color: #000;
+    font-style:normal;
+}
+
+.follow-toggle .unfollow div.unfollow-red{
+    display:none;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-red{
+    display:inline;
+    color:#fff;
+    font-weight:bold;
+    color:#A05736;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-green{
+    display:none;
+}
+
+.vote-count {
+    font-family: Arial;
+    font-size: 160%;
+    font-weight: 700;
+    color: #777;
+}
+
+.answer-summary {
+    display: block;
+    clear: both;
+    padding: 3px;
+}
+
+.answer-votes {
+    background-color: #EEEEEE;
+    color: #555555;
+    float: left;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    height: 17px;
+    padding: 2px 4px 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 20px;
+    margin-right: 10px;
+    .rounded-corners(4px);
 }
 
 /* ----- Footer links , check blocks/footer.html----- */
@@ -2069,31 +2218,6 @@ span.delete-icon:hover {
     }
 }
 
-
-/* badges */
-a.medal {
-    font-size: 14px;
-    line-height: 250%;
-    font-weight: 800;
-    color: #333;
-    text-decoration: none;
-    background: url(../images/medala.gif) no-repeat;
-    border-left: 1px solid #EEE;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 4px 12px 4px 6px;
-}
-
-a:hover.medal {
-    color: #333;
-    text-decoration: none;
-    background: url(../images/medala_on.gif) no-repeat;
-    border-left: 1px solid #E7E296;
-    border-top: 1px solid #E7E296;
-    border-bottom: 1px solid #D1CA3D;
-    border-right: 1px solid #D1CA3D;
-}
 
 .notify-me {
     float: left;
@@ -2284,18 +2408,6 @@ ins .post-tag {
     margin-top: 3px;
 }
 
-.user-details {
-    font-size: 13px;
-}
-
-.user-about {
-    background-color: #EEEEEE;
-    height: 200px;
-    line-height: 20px;
-    overflow: auto;
-    padding: 10px;
-    width: 90%;
-}
 
 /*
 .favorites-count-off {
@@ -2342,33 +2454,8 @@ ins .post-tag {
     float: left;
 }
 
-.answer-summary {
-    display: block;
-    clear: both;
-    padding: 3px;
-}
 
-.answer-votes {
-    background-color: #EEEEEE;
-    color: #555555;
-    float: left;
-    font-family: Arial;
-    font-size: 110%;
-    font-weight: bold;
-    height: 15px;
-    padding: 4px 4px 5px;
-    text-align: center;
-    text-decoration: none;
-    width: 20px;
-    margin-right: 10px;
-}
 
-.vote-count {
-    font-family: Arial;
-    font-size: 160%;
-    font-weight: 700;
-    color: #777;
-}
 
 /* todo: make these more semantic */
 .user-action-1 {
@@ -2986,53 +3073,4 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .tag { color: #006; font-weight: bold; }
   .atn { color: #404; }
   .atv { color: #060; }
-}
-
-.follow-toggle {
-    border: 2px solid;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    border-radius: 5px;
-    height: auto;
-    width: 200px;
-    float:left;
-    padding: 0;
-    margin-right:100%;
-    margin-bottom: 10px;
-}
-
-.follow-toggle .follow{
-    font-color: #000;
-    font-style:normal;
-    background: #4cd46f;
-}
-
-.follow-toggle .follow:hover{
-    font-weight: bold;
-}
-
-.follow-toggle .unfollow{
-    background: #4cd46f;
-}
-
-.follow-toggle .unfollow:hover{
-    background: #d94849;
-}
-
-.follow-toggle .unfollow div.unfollow-red{
-    display:none;
-}
-
-.follow-toggle .unfollow div.unfollow-green{
-    background: #4cd46f;
-}
-
-.follow-toggle .unfollow:hover div.unfollow-red{
-    display:inline;
-    color:#fff;
-    font-weight:bold;
-}
-
-.follow-toggle .unfollow:hover div.unfollow-green{
-    display:none;
 }
