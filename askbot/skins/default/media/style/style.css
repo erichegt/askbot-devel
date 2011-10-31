@@ -143,7 +143,7 @@ a:hover {
 
 h1 {
     font-size: 160%;
-    padding: 10px 0 5px 5px;
+    padding: 10px 0 5px 0px;
 }
 
 /* ----- Custom positions ----- */
@@ -504,9 +504,10 @@ h1 {
 
     li {
         list-style-type: disc;
-        font-size: 13px;
+        font-size: 16px;
         line-height: 20px;
         margin-bottom: 10px;
+        color:@info-text;
     }
     ul.tags {
         list-style: none;
@@ -1918,8 +1919,106 @@ span.delete-icon:hover {
 
 }
 
+/* -----Content pages, Login, About, FAQ, Users----- */
 
+.openid-signin,
+.meta,
+.users-page,
+{
+    p{
+        font-size:15px;
+        color:@info-text;
+    }
+    h2{
+        color:@info-text-dark;
+        padding-left:0px;
+    }
+}
 
+#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
+    margin-top:10px;
+    #id_email,#id_username,#id_password,input{
+         font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+        margin: 0px;
+        padding: 0px 0 0 5px;
+        border:#cce6ec 3px solid;
+        width:200px;
+    }
+    .submit-b{
+        background:url(../images/small-button-blue.png) repeat-x top;
+        border:0;
+        color:@button-label;
+        font-weight:bold;
+        font-size:12px;
+        height:24px;
+        margin-top:-2px;
+        cursor:pointer;
+        .rounded-corners(4px);
+        .text-shadow(0px,1px,0px,#E6F6FA);
+        .box-shadow(1px, 1px, 2px, #808080)
+    }
+    .submit-b:hover{
+        background:url(../images/small-button-blue.png) repeat-x bottom;
+    }
+}
+.openid-input {
+    background: url(../images/openid.gif) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+
+.openid-login-input {
+    background-position: center left;
+    background: url(../images/openid.gif) no-repeat 0% 50%;
+    padding: 5px 5px 5px 15px;
+    cursor: pointer;
+    font-family: Trebuchet MS;
+    font-weight: 300;
+    font-size: 150%;
+    width: 500px;
+}
+
+.openid-login-submit {
+    height: 40px;
+    width: 80px;
+    line-height: 40px;
+    cursor: pointer;
+    border: 1px solid #777;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+/* People page */
+
+.tabBar-user{
+    width:375px;
+}
+.user {
+    padding: 5px;
+    line-height: 140%;
+    width: 166px;
+    border:#eee 1px solid;
+    margin-bottom:5px;
+    .rounded-corners(3px);
+    .user-micro-info{
+        color:@info-text-dark;
+    }
+ 
+}
+
+.user ul {
+    margin: 0;
+    list-style-type: none;
+}
+
+.user .thumb {
+    clear: both;
+    float: left;
+    margin-right: 4px;
+    display: inline;
+}
 
 /* ----- Footer links , check blocks/footer.html----- */
 
@@ -2088,32 +2187,6 @@ label.retag-error {
     padding: 10px;
 }
 
-.openid-input {
-    background: url(../images/openid.gif) no-repeat;
-    padding-left: 15px;
-    cursor: pointer;
-}
-
-.openid-login-input {
-    background-position: center left;
-    background: url(../images/openid.gif) no-repeat 0% 50%;
-    padding: 5px 5px 5px 15px;
-    cursor: pointer;
-    font-family: Trebuchet MS;
-    font-weight: 300;
-    font-size: 150%;
-    width: 500px;
-}
-
-.openid-login-submit {
-    height: 40px;
-    width: 80px;
-    line-height: 40px;
-    cursor: pointer;
-    border: 1px solid #777;
-    font-weight: bold;
-    font-size: 120%;
-}
 
 span.form-error {
     color: #990000;
@@ -2422,24 +2495,6 @@ a.comment {
 
 a.offensive {
     color: #999;
-}
-
-.user {
-    padding: 5px;
-    line-height: 140%;
-    width: 170px;
-}
-
-.user ul {
-    margin: 0;
-    list-style-type: none;
-}
-
-.user .thumb {
-    clear: both;
-    float: left;
-    margin-right: 4px;
-    display: inline;
 }
 
 .message h1 {
