@@ -18,6 +18,7 @@ Programming and documentation
 * `Jishnu <http://thecodecracker.com/>`_
 * `Hrishi <https://github.com/stultus>`_
 * Andrei Mamoutkine
+* `Daniel Mican <http://www.crunchbase.com/person/daniel-mican>`_
 * `Ramiro Morales <http://rmorales.com.ar/>`_ (with Machinalis)
 * `NoahY <https://github.com/NoahY>`_
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
