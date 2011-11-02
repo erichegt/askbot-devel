@@ -143,7 +143,7 @@ a:hover {
 
 h1 {
     font-size: 160%;
-    padding: 10px 0 5px 5px;
+    padding: 10px 0 5px 0px;
 }
 
 /* ----- Custom positions ----- */
@@ -514,9 +514,10 @@ h1 {
 
     li {
         list-style-type: disc;
-        font-size: 13px;
+        font-size: 16px;
         line-height: 20px;
         margin-bottom: 10px;
+        color:@info-text;
     }
     ul.tags {
         list-style: none;
@@ -1079,6 +1080,7 @@ ul.tags.marked-tags li,
 .tags-page ul.tags li,
 ul#ab-user-tags li {
     width: 160px;
+    margin:5px;
 }
 
 ul#related-tags li {
@@ -1179,7 +1181,18 @@ span.delete-icon:hover {
     padding-right: 15px;
 }
 
-/* ----- Ask Question Form template----- */
+/* ----- Ask and Edit Question Form template----- */
+
+.section-title{
+    color:@section-title;
+    font-family:@yanone;
+    font-weight:bold;
+    font-size:24px;
+}
+
+.ask-body {
+    padding-right: 10px;
+}
 
 #fmask{
     margin-bottom:30px;
@@ -1208,7 +1221,7 @@ span.delete-icon:hover {
     }
 }
 
-.ask-page{
+.ask-page, .edit-question-page{
 
     div#question-list {
          float: none;
@@ -1251,6 +1264,7 @@ span.delete-icon:hover {
         height:25px;
         padding-left:5px;
         width:395px;
+        font-size:14px;
     }
 }
 
@@ -1273,6 +1287,7 @@ span.delete-icon:hover {
     margin-top:3px;
     .rounded-corners(4px);
     .box-shadow(1px, 1px, 2px, #636363);
+    margin-right:7px;
 }
 
 #fmanswer input.submit:hover,
@@ -1310,8 +1325,9 @@ span.delete-icon:hover {
     font-family:@trebuchet;
 
     p{
-        font-size:13px;
-       margin-bottom:14px;
+        margin-bottom:14px;
+       line-height:1.4;
+       font-size:14px;
     }
 }
 
@@ -1350,9 +1366,9 @@ span.delete-icon:hover {
 
 .question-options {
     margin-top: 1px;
-    float: left;
     color: #666;
     line-height: 13px;
+    margin-bottom:5px;
 }
 .question-options label {
     vertical-align: text-bottom;
@@ -1362,6 +1378,33 @@ span.delete-icon:hover {
     border-top: 1px dotted #D8D2A9;
     border-bottom: 1px dotted #D8D2A9;
     margin: 5px 0 5px 0;
+}
+
+.edit-question-page{
+    #id_revision{
+        font-size:14px;
+        margin-top:10px;
+    }
+    #id_title{
+        font-size: 24px;
+        line-height: 24px;
+        height: 36px;
+        margin: 0px;
+        padding: 0px 0 0 5px;
+        border:#cce6ec 3px solid;
+        width:725px;
+        margin-bottom:10px;
+    }
+    #id_summary{
+        border:#cce6ec 3px solid;
+        height:25px;
+        padding-left:5px;
+        width:395px;
+        font-size:14px;
+    }
+    .title-desc{
+        margin-bottom:10px;
+    }
 }
 
 /* ----- Question template ----- */
@@ -1428,9 +1471,9 @@ span.delete-icon:hover {
         color:#4b4b4b;
 
         p{
-            margin-bottom:15px;
+            margin-bottom:14px;
           line-height:1.4;
-          font-size:13px;
+          font-size:14px;
         }
         
         a {
@@ -1438,7 +1481,7 @@ span.delete-icon:hover {
         }
         
         li {
-            margin-bottom:0.7em;
+            margin-bottom:7px;
         }
     }
 
@@ -1551,12 +1594,30 @@ span.delete-icon:hover {
         font-family:@yanone;
         line-height:15px;
     }
-    .question-img-upvote:hover {
-        background: url(../images/vote-arrow-up-on.png)
+
+    .question-img-upvote, .question-img-downvote,
+    .answer-img-upvote, .answer-img-downvote {
+        width: 25px;
+        height: 20px;
+        cursor:pointer;
     }
 
-    .question-img-downvote:hover {
-        background: url(../images/vote-arrow-down-on.png)
+    .question-img-upvote, .answer-img-upvote {
+        background: url(../images/vote-arrow-up-new.png)  no-repeat;
+    }
+
+    .question-img-downvote, .answer-img-downvote {
+        background: url(../images/vote-arrow-down-new.png) no-repeat;
+    }
+
+    .question-img-upvote:hover, .question-img-upvote.on,
+    .answer-img-upvote:hover, .answer-img-upvote.on {
+        background: url(../images/vote-arrow-up-on-new.png) no-repeat;
+    }
+
+    .question-img-downvote:hover, .question-img-downvote.on,
+    .answer-img-downvote:hover, .answer-img-downvote.on {
+        background: url(../images/vote-arrow-down-on-new.png) no-repeat;
     }
 
     .question-img-favorite:hover {
@@ -1766,14 +1827,17 @@ span.delete-icon:hover {
 
     .question-status {
         margin-top: 10px;
-        margin-bottom:15px
+        margin-bottom:15px;
         padding: 20px;
-        background-color: #F5F5F5;
+        background-color: #fef7cc;
         text-align: center;
+        border:#e1c04a 1px solid;
     }
 
     .question-status h3 {
-        font-size: 125%;
+        font-size: 20px;
+        color:@info-text;
+        font-weight:normal;
     }
 
     .vote-buttons {
@@ -1866,8 +1930,254 @@ span.delete-icon:hover {
 
 }
 
+/* -----Content pages, Login, About, FAQ, Users----- */
 
+.openid-signin,
+.meta,
+.users-page,
+{
+    p{
+        font-size:15px;
+        color:@info-text;
+    }
+    h2{
+        color:@info-text-dark;
+        padding-left:0px;
+    }
+}
 
+#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
+    margin-top:10px;
+    #id_email,#id_username,#id_password,input{
+         font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+        margin: 0px;
+        padding: 0px 0 0 5px;
+        border:#cce6ec 3px solid;
+        width:200px;
+    }
+    .submit-b{
+        background:url(../images/small-button-blue.png) repeat-x top;
+        border:0;
+        color:@button-label;
+        font-weight:bold;
+        font-size:12px;
+        height:24px;
+        margin-top:-2px;
+        cursor:pointer;
+        .rounded-corners(4px);
+        .text-shadow(0px,1px,0px,#E6F6FA);
+        .box-shadow(1px, 1px, 2px, #808080)
+    }
+    .submit-b:hover{
+        background:url(../images/small-button-blue.png) repeat-x bottom;
+    }
+}
+.openid-input {
+    background: url(../images/openid.gif) no-repeat;
+    padding-left: 15px;
+    cursor: pointer;
+}
+
+.openid-login-input {
+    background-position: center left;
+    background: url(../images/openid.gif) no-repeat 0% 50%;
+    padding: 5px 5px 5px 15px;
+    cursor: pointer;
+    font-family: Trebuchet MS;
+    font-weight: 300;
+    font-size: 150%;
+    width: 500px;
+}
+
+.openid-login-submit {
+    height: 40px;
+    width: 80px;
+    line-height: 40px;
+    cursor: pointer;
+    border: 1px solid #777;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+/* People page */
+
+.tabBar-user{
+    width:375px;
+}
+
+.user {
+    padding: 5px;
+    line-height: 140%;
+    width: 166px;
+    border:#eee 1px solid;
+    margin-bottom:5px;
+    .rounded-corners(3px);
+    .user-micro-info{
+        color:@info-text-dark;
+    }
+ 
+}
+
+.user ul {
+    margin: 0;
+    list-style-type: none;
+}
+
+.user .thumb {
+    clear: both;
+    float: left;
+    margin-right: 4px;
+    display: inline;
+}
+
+/* tags page */
+
+.tabBar-tags{
+    width:270px;
+    margin-bottom:15px;
+}
+
+/* badges page */
+
+a.medal {
+    font-size: 17px;
+    line-height: 250%;
+    margin-right:5px;
+    color: #333;
+    text-decoration: none;
+    background: url(../images/medala.gif) no-repeat;
+    border-left: 1px solid #EEE;
+    border-top: 1px solid #EEE;
+    border-bottom: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    padding: 4px 12px 4px 6px;
+}
+
+a:hover.medal {
+    color: #333;
+    text-decoration: none;
+    background: url(../images/medala_on.gif) no-repeat;
+    border-left: 1px solid #E7E296;
+    border-top: 1px solid #E7E296;
+    border-bottom: 1px solid #D1CA3D;
+    border-right: 1px solid #D1CA3D;
+}
+
+#award-list{
+    .user{
+        float:left;
+       margin:5px;
+    }
+}
+
+/* profile page */
+
+.tabBar-profile{
+    width:100%;
+    margin-bottom:15px;
+    float:left;
+}
+
+.user-profile-page{
+    font-size:15px;
+    color:@info-text-dark;
+    .avatar img{
+        border:#eee 1px solid;
+       padding:5px;
+    }
+    h2{
+        padding:10px 0px 10px 0px;
+    }
+}
+
+.user-details {
+    font-size: 15px;
+}
+
+.user-about {
+    background-color: #EEEEEE;
+    height: 200px;
+    line-height: 20px;
+    overflow: auto;
+    padding: 10px;
+    width: 90%;
+    p{font-size:18px;}
+}
+
+.user-info-table td{
+    padding-bottom:5px;
+}
+
+.follow-toggle {
+    border:0;
+    color:@button-label;
+    font-weight:bold;
+    font-size:12px;
+    height:26px;
+    line-height:26px;
+    margin-top:-2px;
+    font-size:15px;
+    cursor:pointer;
+    background:url(../images/small-button-blue.png) repeat-x top;
+    .rounded-corners(4px);
+    .text-shadow(0px,1px,0px,#E6F6FA);
+    .box-shadow(1px, 1px, 2px, #808080)
+}
+
+.follow-toggle:hover {
+    background:url(../images/small-button-blue.png) repeat-x bottom;
+}
+
+.follow-toggle .follow{
+    font-color: #000;
+    font-style:normal;
+}
+
+.follow-toggle .unfollow div.unfollow-red{
+    display:none;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-red{
+    display:inline;
+    color:#fff;
+    font-weight:bold;
+    color:#A05736;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-green{
+    display:none;
+}
+
+.vote-count {
+    font-family: Arial;
+    font-size: 160%;
+    font-weight: 700;
+    color: #777;
+}
+
+.answer-summary {
+    display: block;
+    clear: both;
+    padding: 3px;
+}
+
+.answer-votes {
+    background-color: #EEEEEE;
+    color: #555555;
+    float: left;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    height: 17px;
+    padding: 2px 4px 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 20px;
+    margin-right: 10px;
+    .rounded-corners(4px);
+}
 
 /* ----- Footer links , check blocks/footer.html----- */
 
@@ -1918,31 +2228,6 @@ span.delete-icon:hover {
     }
 }
 
-
-/* badges */
-a.medal {
-    font-size: 14px;
-    line-height: 250%;
-    font-weight: 800;
-    color: #333;
-    text-decoration: none;
-    background: url(../images/medala.gif) no-repeat;
-    border-left: 1px solid #EEE;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 4px 12px 4px 6px;
-}
-
-a:hover.medal {
-    color: #333;
-    text-decoration: none;
-    background: url(../images/medala_on.gif) no-repeat;
-    border-left: 1px solid #E7E296;
-    border-top: 1px solid #E7E296;
-    border-bottom: 1px solid #D1CA3D;
-    border-right: 1px solid #D1CA3D;
-}
 
 .notify-me {
     float: left;
@@ -2036,32 +2321,6 @@ label.retag-error {
     padding: 10px;
 }
 
-.openid-input {
-    background: url(../images/openid.gif) no-repeat;
-    padding-left: 15px;
-    cursor: pointer;
-}
-
-.openid-login-input {
-    background-position: center left;
-    background: url(../images/openid.gif) no-repeat 0% 50%;
-    padding: 5px 5px 5px 15px;
-    cursor: pointer;
-    font-family: Trebuchet MS;
-    font-weight: 300;
-    font-size: 150%;
-    width: 500px;
-}
-
-.openid-login-submit {
-    height: 40px;
-    width: 80px;
-    line-height: 40px;
-    cursor: pointer;
-    border: 1px solid #777;
-    font-weight: bold;
-    font-size: 120%;
-}
 
 span.form-error {
     color: #990000;
@@ -2159,18 +2418,6 @@ ins .post-tag {
     margin-top: 3px;
 }
 
-.user-details {
-    font-size: 13px;
-}
-
-.user-about {
-    background-color: #EEEEEE;
-    height: 200px;
-    line-height: 20px;
-    overflow: auto;
-    padding: 10px;
-    width: 90%;
-}
 
 /*
 .favorites-count-off {
@@ -2217,33 +2464,8 @@ ins .post-tag {
     float: left;
 }
 
-.answer-summary {
-    display: block;
-    clear: both;
-    padding: 3px;
-}
 
-.answer-votes {
-    background-color: #EEEEEE;
-    color: #555555;
-    float: left;
-    font-family: Arial;
-    font-size: 110%;
-    font-weight: bold;
-    height: 15px;
-    padding: 4px 4px 5px;
-    text-align: center;
-    text-decoration: none;
-    width: 20px;
-    margin-right: 10px;
-}
 
-.vote-count {
-    font-family: Arial;
-    font-size: 160%;
-    font-weight: 700;
-    color: #777;
-}
 
 /* todo: make these more semantic */
 .user-action-1 {
@@ -2372,24 +2594,6 @@ a.offensive {
     color: #999;
 }
 
-.user {
-    padding: 5px;
-    line-height: 140%;
-    width: 170px;
-}
-
-.user ul {
-    margin: 0;
-    list-style-type: none;
-}
-
-.user .thumb {
-    clear: both;
-    float: left;
-    margin-right: 4px;
-    display: inline;
-}
-
 .message h1 {
     padding-top: 0px;
     font-size: 15px;
@@ -2443,11 +2647,6 @@ button::-moz-focus-inner {
     padding: 0 5px;
     *display: inline;
 }
-
-.ask-body {
-    padding-right: 10px;
-}
-
 
 .noscript {
     position: fixed;
@@ -2680,7 +2879,7 @@ p.signup_p {
     color:@link;
 }
 .wmd-preview li {
-    margin-bottom:0.7em;
+    margin-bottom:7px;
 }
 
 .karma-summary {
@@ -2884,53 +3083,4 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .tag { color: #006; font-weight: bold; }
   .atn { color: #404; }
   .atv { color: #060; }
-}
-
-.follow-toggle {
-    border: 2px solid;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    border-radius: 5px;
-    height: auto;
-    width: 200px;
-    float:left;
-    padding: 0;
-    margin-right:100%;
-    margin-bottom: 10px;
-}
-
-.follow-toggle .follow{
-    font-color: #000;
-    font-style:normal;
-    background: #4cd46f;
-}
-
-.follow-toggle .follow:hover{
-    font-weight: bold;
-}
-
-.follow-toggle .unfollow{
-    background: #4cd46f;
-}
-
-.follow-toggle .unfollow:hover{
-    background: #d94849;
-}
-
-.follow-toggle .unfollow div.unfollow-red{
-    display:none;
-}
-
-.follow-toggle .unfollow div.unfollow-green{
-    background: #4cd46f;
-}
-
-.follow-toggle .unfollow:hover div.unfollow-red{
-    display:inline;
-    color:#fff;
-    font-weight:bold;
-}
-
-.follow-toggle .unfollow:hover div.unfollow-green{
-    display:none;
 }

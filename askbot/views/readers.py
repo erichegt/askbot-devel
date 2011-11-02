@@ -428,13 +428,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = answers.select_related(depth=1)
 
     user_answer_votes = {}
-    for answer in answers:
-        vote = answer.get_user_vote(request.user)
-        if vote is not None and not user_answer_votes.has_key(answer.id):
-            vote_value = -1
-            if vote.is_upvote():
-                vote_value = 1
-            user_answer_votes[answer.id] = vote_value
+    if request.user.is_authenticated():
+        for answer in answers:
+            vote = answer.get_user_vote(request.user)
+            if vote is not None and not answer.id in user_answer_votes:
+                user_answer_votes[answer.id] = int(vote)
 
     view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
     orderby = view_dic[answer_sort_method]
@@ -515,19 +513,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
 
     favorited = question.has_favorite_by_user(request.user)
+    user_question_vote = 0
     if request.user.is_authenticated():
-        question_vote = question.votes.select_related().filter(user=request.user)
-    else:
-        question_vote = None #is this correct?
-    if question_vote is not None and question_vote.count() > 0:
-        question_vote = question_vote[0]
-
+        votes = question.votes.select_related().filter(user=request.user)
+        if votes.count() > 0:
+            user_question_vote = int(votes[0])
+        else:
+            user_question_vote = 0
 
     data = {
         'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question,
-        'question_vote' : question_vote,
+        'user_question_vote' : user_question_vote,
         'question_comment_count':question.comments.count(),
         'answer' : AnswerForm(question,request.user),
         'answers' : page_objects.object_list,

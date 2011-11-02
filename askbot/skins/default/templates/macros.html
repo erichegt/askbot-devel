@@ -21,6 +21,32 @@
     </div>
 {%- endmacro -%}
 
+{%- macro post_vote_buttons(post = None, visitor_vote = None) -%}
+<div
+    id="{{post.post_type}}-img-upvote-{{ post.id }}"
+    class="{{post.post_type}}-img-upvote post-vote{% if visitor_vote == 1 %} on{% endif %}" 
+    {% if post.post_type == 'question' %}
+        title="{% trans %}i like this question (click again to cancel){% endtrans %}"
+    {% else %}
+        title="{% trans %}i like this answer (click again to cancel){% endtrans %}"
+    {% endif %}
+/></div>
+<div 
+    id="{{post.post_type}}-vote-number-{{ post.id }}"
+    class="vote-number"
+    title="{% trans %}current number of votes{% endtrans %}"
+>{{ post.score }}</div>
+<div
+    id="{{post.post_type}}-img-downvote-{{ post.id }}"
+    class="{{post.post_type}}-img-downvote post-vote{% if visitor_vote == -1 %} on{% endif %}" 
+    {% if post.post_type == 'question' %}
+        title="{% trans %}i dont like this question (click again to cancel){% endtrans %}" 
+    {% else %}
+        title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" 
+    {% endif %}
+/></div>
+{%- endmacro -%}
+
 {%- macro post_contributor_avatar_and_credentials(post, user) -%}
     {% if post.is_anonymous %}
         <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
@@ -300,6 +326,9 @@ for the purposes of the AJAX comment editor #}
     )
 -%}
     {% spaceless %}
+    {% if post.comment_count > 0 %}
+        <h2 id="comment-title">Comments</h2>
+    {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
         <div class="content">

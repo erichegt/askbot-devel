@@ -1,4 +1,4 @@
-div#login-icons {margin:10px 0 0 0;padding:0}
+div#login-icons {margin:10px 0 0 0;padding:10px;border:#eee 1px solid;}
 ul.login-icons {width: 450px; margin:0;padding:0;text-align:left; list-style-type:none; display:block;}
 ul.login-icons li {display:inline;} 
 ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
