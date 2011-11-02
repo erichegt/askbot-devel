@@ -10,7 +10,7 @@ body {
     margin: 0;
     padding: 0;
     color: #000;
-    font-family: @yanone;
+    font-family: @main-font;
 }
 
 div {
@@ -360,7 +360,7 @@ h1 {
         border:0px;
         color:#484848;
         padding-left:10px;
-        font-family:@trebuchet;
+        font-family:@body-font;
         vertical-align: middle;
     }
 
@@ -559,7 +559,7 @@ h1 {
         line-height:34px;
         text-align:center;
         border:0;
-        font-family:@yanone;
+        font-family:@main-font;
         color:@button-label;
         font-weight:normal;
         font-size:21px;
@@ -653,7 +653,7 @@ h1 {
     margin-bottom: 3px;
     margin-top: 3px;
     float:right;
-    font-family:@georgia;
+    font-family:@sort-font;
     font-size:16px;
     .rounded-corners(5px);
 }
@@ -722,7 +722,7 @@ h1 {
     padding-top:3px;
     background:#fff url(../images/feed-icon-small.png) no-repeat center right;
     float:right;
-    font-family:@georgia;
+    font-family:@sort-font;
     font-size:16px;
 }
 
@@ -806,7 +806,7 @@ ul#searchTags {
     .userinfo {
         text-align:right;
         line-height:16px;
-        font-family:@trebuchet;
+        font-family:@body-font;
         padding-right:4px;
     }
     
@@ -832,7 +832,7 @@ ul#searchTags {
     .counts .item-count {
         padding:0px 5px 0px 5px;
         font-size: 25px;
-        font-family:@yanone;
+        font-family:@main-font;
     }
     
     .counts .votes div,
@@ -946,7 +946,7 @@ ul#searchTags {
          background-color: #fff;
         color: #777;
         padding: 2px 4px 3px 4px;
-        font-family:@yanone;
+        font-family:@main-font;
     }
     a{
         color:@section-title;
@@ -1106,7 +1106,7 @@ ul#related-tags li {
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    font-family:@trebuchet;
+    font-family:@body-font;
     color:#717179;
 }
 .deletable-tag {
@@ -1175,7 +1175,7 @@ span.delete-icon:hover {
 
 .section-title{
     color:@section-title;
-    font-family:@yanone;
+    font-family:@main-font;
     font-weight:bold;
     font-size:24px;
 }
@@ -1270,7 +1270,7 @@ span.delete-icon:hover {
     background: url(../images/medium-button.png) top repeat-x;
     height:34px;
     border:0;
-    font-family:@yanone;
+    font-family:@main-font;
     color:@button-label;
     font-weight:normal;
     font-size:21px;
@@ -1312,7 +1312,7 @@ span.delete-icon:hover {
     min-height: 20px;
     overflow: auto;
     font-size:13px;
-    font-family:@trebuchet;
+    font-family:@body-font;
 
     p{
         margin-bottom:14px;
@@ -1422,7 +1422,7 @@ span.delete-icon:hover {
     }
 
     p.rss a {
-        font-family:@yanone;
+        font-family:@main-font;
         vertical-align: top;
     }
        
@@ -1457,7 +1457,7 @@ span.delete-icon:hover {
     .question-body, .answer-body {
         overflow: auto;
         margin-top:10px;
-        font-family:@trebuchet;
+        font-family:@body-font;
         color:#4b4b4b;
 
         p{
@@ -1488,7 +1488,7 @@ span.delete-icon:hover {
         background: #fff url(../images/background-user-info.png) repeat-x bottom;
         float: right;
         font-size: 9px;
-        font-family:@arial;
+        font-family:@secundary-font;
         width: 173px;
         padding:4px;
         margin:0px 0px 5px 5px;
@@ -1533,7 +1533,7 @@ span.delete-icon:hover {
             cursor: pointer;
             border: none;
             font-size:12px;
-            font-family:@trebuchet;
+            font-family:@body-font;
             text-decoration: none;
             height:18px;
             display:block;
@@ -1581,7 +1581,7 @@ span.delete-icon:hover {
     
     #questionCount{
         float:left;
-        font-family:@yanone;
+        font-family:@main-font;
         line-height:15px;
     }
 
@@ -1637,7 +1637,7 @@ span.delete-icon:hover {
         .controls a {
              color: #988e4c;
             padding: 0 3px 2px 22px;
-            font-family:@trebuchet;
+            font-family:@body-font;
             font-size:13px;
             background:url(../images/comment.png) no-repeat center left;
         }
@@ -1667,7 +1667,7 @@ span.delete-icon:hover {
             height: 42px;
             width:100%;
             margin: 12px 0 5px 1px;
-            font-family: @trebuchet;
+            font-family: @body-font;
             outline: none;
             overflow:auto;
             font-size: 12px;
@@ -1708,7 +1708,7 @@ span.delete-icon:hover {
             float:right;
             color:#b6a475 !important;
             vertical-align: top;
-            font-family:@trebuchet;
+            font-family:@body-font;
             float:right;
             text-align:right;
         }
@@ -1718,7 +1718,7 @@ span.delete-icon:hover {
             margin-top:8px;
             padding-bottom:4px;
             overflow: auto;
-            font-family:@trebuchet;
+            font-family:@body-font;
             font-size:11px;
             min-height: 25px;
             background:url(../images/comment-background.png) bottom repeat-x;
@@ -1841,7 +1841,7 @@ span.delete-icon:hover {
     }
 
     .vote-number {
-        font-family: @yanone;
+        font-family: @main-font;
         padding: 0px 0 5px 0;
         font-size: 25px;
         font-weight: bold;
