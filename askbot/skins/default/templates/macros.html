@@ -286,7 +286,7 @@ for the purposes of the AJAX comment editor #}
             >{{comment.user.username}}</a>
             <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
             {% if user|can_edit_comment(comment) %}
-                <a class="edit">{% trans %}edit{% endtrans %}</a>
+                &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>
             {% endif %}
         </div>
     </div>
