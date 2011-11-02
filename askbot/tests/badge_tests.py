@@ -413,6 +413,7 @@ class BadgeTests(AskbotTestCase):
         self.assert_have_badge('strunk-and-white', self.u2, 1)
 
     def test_organizer_badge(self):
+        #import ipdb; ipdb.set_trace()
         question = self.post_question(user = self.u1)
         self.u1.retag_question(question = question, tags = 'blah boom')
         self.assert_have_badge('organizer', self.u1, 1)

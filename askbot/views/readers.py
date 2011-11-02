@@ -606,6 +606,7 @@ def revisions(request, id, object_name=None):
     post = get_object_or_404(models.get_model(object_name), id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
+    #import ipdb; ipdb.set_trace()
     for i, revision in enumerate(revisions):
         revision.html = revision.as_html()
         if i == 0:

@@ -304,27 +304,10 @@ class AnswerRevision(ContentRevision):
     """A revision of an Answer."""
     answer     = models.ForeignKey('Answer', related_name='revisions')
 
-    def get_absolute_url(self):
-        return reverse('answer_revisions', kwargs={'id':self.answer.id})
-
-    def get_question_title(self):
-        return self.answer.question.title
-
-    def as_html(self, **kwargs):
-        markdowner = markup.get_parser()
-        return sanitize_html(markdowner.convert(self.text))
-
     class Meta(ContentRevision.Meta):
         db_table = u'answer_revision'
-        ordering = ('-revision',)
+        unique_together = ('answer', 'revision')
 
-    def save(self, **kwargs):
-        """Looks up the next available revision number if not set."""
-        if not self.revision:
-            self.revision = AnswerRevision.objects.filter(
-                answer=self.answer).values_list('revision',
-                                                flat=True)[0] + 1
-        super(AnswerRevision, self).save(**kwargs)
 
 class AnonymousAnswer(AnonymousContent):
     question = models.ForeignKey('Question', related_name='anonymous_answers')
