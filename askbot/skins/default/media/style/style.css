@@ -151,6 +151,10 @@ h1 {
 .left{float:left}
 .right{float:right}
 .clean{clear:both}
+.center{
+    margin: 0 auto;
+    padding: 0;
+}
 
 
 /* ----- Notify message bar , check blocks/system_messages.html ----- */
@@ -569,6 +573,7 @@ h1 {
         text-decoration:none;
         .rounded-corners(4px);
         .box-shadow(1px, 1px, 2px, #636363);
+        .center;
     }
 
     a.followed:hover, a.follow:hover{
@@ -1415,9 +1420,10 @@ span.delete-icon:hover {
     p.rss {
         float:none;
         clear:both;
-        padding: 3px 0 0 1px;
+        padding: 3px 0 0 22px;
         font-size: 15px;
         width:110px;
+        background-position:center left;
         
     }
 
@@ -1488,7 +1494,7 @@ span.delete-icon:hover {
         background: #fff url(../images/background-user-info.png) repeat-x bottom;
         float: right;
         font-size: 9px;
-        font-family:@secundary-font;
+        font-family:@secondary-font;
         width: 173px;
         padding:4px;
         margin:0px 0px 5px 5px;
@@ -1854,6 +1860,12 @@ span.delete-icon:hover {
     .vote-buttons .notify-sidebar label {
         vertical-align: top;
     }
+
+    .tabBar-answer{
+        margin-bottom:15px;
+        padding-left:15px;
+    }
+
     .accepted-answer {
         background-color: #f7fecc;
         border-bottom-color: #9BD59B;
@@ -2167,6 +2179,38 @@ a:hover.medal {
     width: 20px;
     margin-right: 10px;
     .rounded-corners(4px);
+}
+
+.vote-notification {
+    z-index: 1;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    font-family:@secondary-font;
+    font-size:14px;
+    font-weight:normal;
+    color: white;
+    background-color: #8e0000;
+    text-align: center;
+    padding-bottom:10px;
+    .box-shadow(0px, 2px, 4px, #370000);
+    .rounded-corners(4px);
+
+    h3{
+        background:url(../images/notification.png) repeat-x top;
+       padding:10px 10px 10px 10px;
+       font-size:13px;
+       margin-bottom:5px;
+       border-top:#8e0000 1px solid;
+       color:#fff;
+       font-weight:normal;
+    }
+    a {
+        color: #fb7321;
+        text-decoration: underline;
+        font-weight:bold;
+    }
+
 }
 
 /* ----- Footer links , check blocks/footer.html----- */
@@ -2931,22 +2975,6 @@ p.signup_p {
 
 .user-info-table .gravatar {
     margin:0;
-}
-
-.vote-notification {
-    z-index: 1;
-    cursor: pointer;
-    display: none;
-    position: absolute;
-    padding: 15px;
-    color: white;
-    background-color: darkred;
-    text-align: center;
-}
-
-.vote-notification a {
-    color: white;
-    text-decoration: underline;
 }
 
 #responses {
