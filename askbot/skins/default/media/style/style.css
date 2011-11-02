@@ -1447,12 +1447,14 @@ span.delete-icon:hover {
     .answer-table {
         margin: 6px 0 0px 0;
         border-spacing: 0px;
-        width: 100%;
+        width: 680px;
+        padding-right:3px;
     }
 
     .answer-table {
+        margin-top:0px;
         border-bottom: 1px solid #D4D4D4;
-        clear: both;
+        float:left;
     }
 
     .answer-table td,
@@ -1488,7 +1490,7 @@ span.delete-icon:hover {
 
     .post-update-info-container {
         float: right;
-        width: 190px;
+        width: 175px;
     }
 
     .post-update-info {
@@ -1496,7 +1498,7 @@ span.delete-icon:hover {
         float: right;
         font-size: 9px;
         font-family:@secondary-font;
-        width: 173px;
+        width: 158px;
         padding:4px;
         margin:0px 0px 5px 5px;
         line-height: 14px;
@@ -1843,6 +1845,7 @@ span.delete-icon:hover {
         float: left;
         text-align: center;
         padding-top: 2px;
+        margin:3px 10px 0px 4px;
     }
 
     .vote-buttons IMG {
@@ -1866,15 +1869,21 @@ span.delete-icon:hover {
 
     .tabBar-answer{
         margin-bottom:15px;
-        padding-left:15px;
+        padding-left:7px;
+        width:723px;
     }
-
+    .answer{
+        .vote-buttons {
+            float:left;
+        }
+    }
     .accepted-answer {
         background-color: #f7fecc;
         border-bottom-color: #9BD59B;
         
         .vote-buttons {
             width:27px;
+           margin-right:10px;
         }
     }
 
@@ -1909,6 +1918,9 @@ span.delete-icon:hover {
         .comments {
             background-color: #E6ECFF;
        }
+        .vote-buttons {
+           margin-right:10px;
+        }
     }
 
     .answer-img-accept:hover {

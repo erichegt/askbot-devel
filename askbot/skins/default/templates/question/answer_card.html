@@ -2,10 +2,11 @@
 <div 
     id="answer-container-{{ answer.id }}"
     class="{{ macros.answer_classes(answer, question) }}">
+    <div class="vote-buttons">
+        {% include "question/answer_vote_buttons.html" %}
+    </div>
     <div class="answer-table">
-        <div class="vote-buttons">
-            {% include "question/answer_vote_buttons.html" %}
-        </div>
+
         <div class="item-right">
             <div class="answer-body">
                 <div class="post-update-info-container">
@@ -19,4 +20,5 @@
             {% include "question/answer_comments.html" %}
         </div>
     </div>
+    <div class="clean"></div>
 </div>
