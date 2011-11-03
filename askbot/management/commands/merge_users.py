@@ -18,11 +18,14 @@ class Command(BaseCommand):
         for rel in User._meta.get_all_related_objects():
             try:
                 self.process_field(rel.model, rel.field.name)
-            except Exception, e:
-                self.stdout.write(u'Warning: %s' % e)
+            except Exception, error:
+                self.stdout.write(u'Warning: %s\n' % error)
 
         for rel in User._meta.get_all_related_many_to_many_objects():
-            self.process_m2m_field(rel.model, rel.field.name)
+            try:
+                self.process_m2m_field(rel.model, rel.field.name)
+            except Exception, error:
+                self.stdout.write(u'Warning: %s\n' % error)
            
         self.to_user.reputation += self.from_user.reputation - 1
         self.to_user.gold += self.from_user.gold
