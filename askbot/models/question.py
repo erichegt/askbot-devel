@@ -15,7 +15,7 @@ from askbot import exceptions
 from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent
 from askbot.models.base import DeletableContent
-from askbot.models.base import ContentRevision
+from askbot.models.post import PostRevision
 from askbot.models.base import BaseQuerySetManager
 from askbot.models.base import parse_post_text
 from askbot.models.base import parse_and_save_post
@@ -1007,13 +1007,12 @@ class FavoriteQuestion(models.Model):
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
-class QuestionRevision(ContentRevision):
+class QuestionRevision(PostRevision):
     """A revision of a Question."""
-    question   = models.ForeignKey(Question, related_name='revisions')
 
-    class Meta(ContentRevision.Meta):
-        db_table = u'question_revision'
-        unique_together = ('question', 'revision')
+    class Meta:
+        app_label = 'askbot'
+        proxy = True
 
 
 class AnonymousQuestion(AnonymousContent):

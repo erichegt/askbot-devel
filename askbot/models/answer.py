@@ -7,7 +7,7 @@ from django.core import exceptions as django_exceptions
 from django.conf import settings
 from askbot import exceptions
 from askbot.models.base import AnonymousContent, DeletableContent
-from askbot.models.base import ContentRevision
+from askbot.models.post import PostRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
 from askbot import const
@@ -300,13 +300,13 @@ class Answer(content.Content, DeletableContent):
         return self.html
         
 
-class AnswerRevision(ContentRevision):
+class AnswerRevision(PostRevision):
     """A revision of an Answer."""
-    answer     = models.ForeignKey('Answer', related_name='revisions')
 
-    class Meta(ContentRevision.Meta):
-        db_table = u'answer_revision'
-        unique_together = ('answer', 'revision')
+    class Meta:
+        app_label = 'askbot'
+        proxy = True
+
 
 
 class AnonymousAnswer(AnonymousContent):
