@@ -36,6 +36,7 @@ hr {
 input, select {
     vertical-align: middle;
     font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
+    margin-left:0px;
 }
 
 p {
@@ -499,7 +500,7 @@ h1 {
         font-size:15px;
         display: block;
         float: right;
-        width: 172px;
+        width: 177px;
     }
 
     ul {
@@ -1420,11 +1421,11 @@ span.delete-icon:hover {
     p.rss {
         float:none;
         clear:both;
-        padding: 3px 0 0 25px;
+        padding: 3px 0 0 23px;
         font-size: 15px;
         width:110px;
         background-position:center left;
-        margin-left:4px;
+        margin-left:0px !important;
     }
 
     p.rss a {
@@ -2957,8 +2958,10 @@ p.signup_p {
 .wmd-preview a {
     color:@link;
 }
+
 .wmd-preview li {
     margin-bottom:7px;
+    font-size:14px;
 }
 
 .karma-summary {
