@@ -1,4 +1,7 @@
 import datetime
+from django.test.client import Client
+from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.test import TestCase
 from django.core import exceptions
 from askbot.tests import utils
@@ -1573,3 +1576,32 @@ class UploadPermissionAssertionTests(PermissionAssertionTestCase):
             self.user.assert_can_upload_file()
         except exceptions.PermissionDenied:
             self.fail('high rep user must be able to upload')
+
+class ClosedForumTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.password = '123'
+        self.create_user()
+        self.create_user(username = 'other_user')
+        self.other_user.set_password(self.password)
+        self.other_user.save()
+        self.question = self.post_question()
+        self.test_url = reverse('question', kwargs={'id':self.question.id})
+        self.redirect_to = settings.LOGIN_URL
+        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
+
+    def test_anonymous_access(self):
+        client = Client()
+        response = client.get(self.test_url)
+        self.assertEquals(response.status_code, 302)
+        self.assertTrue(self.redirect_to in response['Location'])
+
+    def test_authentificated_access(self):
+        client = Client()
+        client.login(username=self.other_user.username, password=self.password)
+        response = client.get(self.test_url)
+        self.assertEquals(response.status_code, 302)
+        self.assertTrue(self.redirect_to not in response['Location'])
+        self.assertTrue(self.test_url in response['Location'])
+
+    def tearDown(self):
+        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = False

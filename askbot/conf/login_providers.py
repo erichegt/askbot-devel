@@ -64,6 +64,17 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
+        'ASKBOT_CLOSED_FORUM_MODE',
+        default = django_settings.ASKBOT_CLOSED_FORUM_MODE,
+        description=_('Support mode where only registered users can access the forum'),
+        help_text=_('to activate this permanently use ASKBOT_CLOSED_FORUM_MODE '
+            'in your settings.py')
+    )
+)
+
 providers = (
     'local',
     'AOL',

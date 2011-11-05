@@ -45,6 +45,8 @@ class ConnectToSessionMessagesMiddleware(object):
         if request.user.is_anonymous():
             #1) Attach the ability to receive messages
             #plug on deepcopy which may be called by django db "driver"
+            #from copy import deepcopy
+            #request.user = deepcopy(request.user)
             request.user.__deepcopy__ = dummy_deepcopy
             #here request is linked to anon user
             request.user.message_set = AnonymousMessageManager(request)
@@ -63,7 +65,8 @@ class ConnectToSessionMessagesMiddleware(object):
         """Adds the ``'askbot_visitor'``key to cookie if user ever
         authenticates so that the anonymous user message won't
         be shown after the user logs out"""
-        if request.user.is_authenticated() and \
+        if hasattr(request, 'user') and \
+                request.user.is_authenticated() and \
                 'askbot_visitor' not in request.COOKIES :
             #import datetime
             #max_age = 365*24*60*60
