@@ -45,8 +45,6 @@ class ConnectToSessionMessagesMiddleware(object):
         if request.user.is_anonymous():
             #1) Attach the ability to receive messages
             #plug on deepcopy which may be called by django db "driver"
-            #from copy import deepcopy
-            #request.user = deepcopy(request.user)
             request.user.__deepcopy__ = dummy_deepcopy
             #here request is linked to anon user
             request.user.message_set = AnonymousMessageManager(request)
