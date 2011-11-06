@@ -1585,7 +1585,7 @@ class ClosedForumTests(utils.AskbotTestCase):
         self.other_user.set_password(self.password)
         self.other_user.save()
         self.question = self.post_question()
-        self.test_url = reverse('question', kwargs={'id':self.question.id})
+        self.test_url = self.question.get_absolute_url()
         self.redirect_to = settings.LOGIN_URL
         askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
 
