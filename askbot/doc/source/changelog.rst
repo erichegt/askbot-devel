@@ -5,6 +5,7 @@ Development version (not yet published)
 ---------------------------------------
 * Show unused vote count (Tomasz Zielinski)
 * Categorized live settings (Evgeny)
+* Anonymous caching of the question page (Vlad Bokov)
 
 0.7.26 (Current Version)
 ------------------------
