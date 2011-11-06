@@ -10,7 +10,7 @@ body {
     margin: 0;
     padding: 0;
     color: #000;
-    font-family: @main-font;
+    font-family:@body-font;
 }
 
 div {
@@ -43,7 +43,6 @@ p {
     font-size: 14px;
     line-height: 140%;
     margin-bottom: 6px;
-    padding-left: 5px;
 }
 
 a {
@@ -53,12 +52,12 @@ a {
 }
 
 h2 {
-    font-size: 140%;
+    font-size: 21px;
     padding: 3px 0 3px 5px;
 }
 
 h3 {
-    font-size: 120%;
+    font-size: 19px;
     padding: 3px 0 3px 5px;
 }
 
@@ -143,7 +142,7 @@ a:hover {
 }
 
 h1 {
-    font-size: 160%;
+    font-size: 24px;
     padding: 10px 0 5px 0px;
 }
 
@@ -170,6 +169,7 @@ h1 {
     text-align: center;
     background-color: #f5dd69;
     border-top:#fff 1px solid;
+    font-family:@main-font;
 
     p {
          margin-top: 6px;
@@ -201,6 +201,7 @@ h1 {
 #header {
     margin-top: 0px;
     background: @header-color;
+    font-family:@main-font;
 }
 
 .content-wrapper {/* wrapper positioning class */
@@ -308,6 +309,7 @@ h1 {
     border-bottom:#d3d3c2 1px solid;
     border-top:#fcfcfc 1px solid;
     margin-bottom:10px;
+    font-family:@main-font;
 
     #homeButton{
         border-right:#afaf9e 1px solid;
@@ -479,17 +481,19 @@ h1 {
         height:30px;
         line-height:30px;
         text-align:right;
-        font-size:24px;
+        font-size:18px !important;
         font-weight:normal;
         color:#656565;
         padding-right:10px;
         margin-bottom:10px;
+        font-family:@main-font;
     }
     h3{
         color:#4a757f;
         font-size:18px;
         text-align:left;
         font-weight:normal;
+        font-family:@main-font;
     }
     .contributorback{
         background: #eceeeb url(../images/contributorsback.png) no-repeat center left;
@@ -501,6 +505,7 @@ h1 {
         display: block;
         float: right;
         width: 177px;
+        font-family:@main-font;
     }
 
     ul {
@@ -509,7 +514,7 @@ h1 {
 
     li {
         list-style-type: disc;
-        font-size: 16px;
+        font-size: 13px;
         line-height: 20px;
         margin-bottom: 10px;
         color:@info-text;
@@ -538,13 +543,14 @@ h1 {
             color:@button-label;
             font-weight:bold;
             font-size:12px;
-            width:33px;
+            width:30px;
             height:27px;
             margin-top:-2px;
             cursor:pointer;
             .rounded-corners(4px);
              .text-shadow(0px,1px,0px,#E6F6FA);
-             .box-shadow(1px, 1px, 2px, #808080)
+             .box-shadow(1px, 1px, 2px, #808080);
+             
             
        }
         #interestingTagAdd:hover, #ignoredTagAdd:hover{
@@ -609,6 +615,7 @@ h1 {
     color:@info-text;
     font-size:16px;
     border-bottom:#cccccc 1px solid;
+    font-size:13px;
     
     strong{
         float:right;
@@ -625,13 +632,16 @@ h1 {
         font-weight:normal;
         border-bottom:#cccccc 1px solid;
     }
+    a{
+        font-size:13px;
+    }
 }
 /* tips and markdown help are widgets for ask template */
 
 #tips{
     li{
         color:@info-text;
-       font-size:16px;
+       font-size:13px;
        list-style-image: url(../images/tips.png);
     }
     a{
@@ -642,7 +652,7 @@ h1 {
 #markdownHelp{
     li{
         color:@info-text;
-       font-size:16px;
+       font-size:13px;
     }
     a{
         font-size:16px;
@@ -746,6 +756,7 @@ h1 {
     float:left;
     margin-bottom:8px;
     padding-top:6px;
+    font-family:@main-font;
 }
 
 #listSearchTags{
@@ -753,6 +764,7 @@ h1 {
     margin-top:3px;
     color:@info-text;
     font-size:16px;
+    font-family:@main-font;
 }
 
 ul#searchTags {
@@ -768,6 +780,7 @@ ul#searchTags {
     margin:5px 0 10px 0;
     padding:0px;
     float:left;
+    font-family:@main-font;
 
     a {
         text-decoration: underline;
@@ -803,6 +816,7 @@ ul#searchTags {
         padding-left: 0;
         margin-bottom:8px;
         display:block;
+        font-family:@main-font;
     }
     
     a {
@@ -833,6 +847,7 @@ ul#searchTags {
     .counts {
         float: right;
         margin: 4px 0 0 5px;
+        font-family:@main-font;
     }
     
     .counts .item-count {
@@ -921,7 +936,7 @@ ul#searchTags {
 /* ----- Question list Paginator , check main_content/pager.html and macros/utils_macros.html----- */
 
 .evenMore {
-    font-size: 16px;
+    font-size: 13px;
     color:@info-text;
     padding:15px 0px 10px 0px;
     clear:both;
@@ -945,14 +960,13 @@ ul#searchTags {
 
 .paginator {
     padding: 5px 0 10px 0;
-    font-size:16px;
+    font-size:13px;
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
          background-color: #fff;
         color: #777;
         padding: 2px 4px 3px 4px;
-        font-family:@main-font;
     }
     a{
         color:@section-title;
@@ -1202,9 +1216,9 @@ span.delete-icon:hover {
     
     p{
        margin:0 0 5px 0;
-       font-size:16px;
+       font-size:14px;
        color:@info-text-dark;
-       line-height:1.2;
+       line-height:1.4;
     }
     .questionTitleInput {
         font-size: 24px;
@@ -1224,11 +1238,14 @@ span.delete-icon:hover {
         border-bottom:#f0f0ec 1px solid;
         float:left;
         margin-bottom:10px;
+        a{
+            line-height:30px;
+        }
 
     }
 
     div#question-list h2 {
-        font-size: 16px;
+        font-size: 13px;
         padding-bottom: 0;
         color:@link;
         border-top:#f0f0ec 1px solid;
@@ -1252,7 +1269,7 @@ span.delete-icon:hover {
     }
     label{
         color:@info-text-dark;
-        font-size:15px;
+        font-size:13px;
     }
 
     #id_tags{
@@ -1266,7 +1283,7 @@ span.delete-icon:hover {
 
 .title-desc {
     color: @info-text;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 #fmanswer input.submit,
@@ -1409,6 +1426,7 @@ span.delete-icon:hover {
 
     h1{
         padding-top:0px;
+       font-family:@main-font;
     }
     
     h1 a{
@@ -1632,6 +1650,7 @@ span.delete-icon:hover {
        color:@section-title;
        width:200px;
        float:left;
+       font-family:@main-font;
     }
     .comments {
         font-size: 12px;    
@@ -1937,13 +1956,24 @@ span.delete-icon:hover {
 
     #fmanswer{
         color:@info-text;
-        font-size:16px;
         line-height:1.2;
         margin-top:10px;
+        p{
+            font-size:13px;
+          line-height:1.3;
+        }
+        h2{
+          font-family:@main-font;
+          color:@section-title;
+          font-size:24px;
+        }
+        label{
+          font-size:13px;
+        }
     }
     .message {
         padding: 5px;
-        margin: 10px 0 10px 0;
+        margin: 0px 0 10px 0;
 
     }
 
@@ -1983,13 +2013,19 @@ span.delete-icon:hover {
 .meta,
 .users-page,
 {
+    font-size:14px;
+    line-height:1.4;
+    color:@info-text-dark;
     p{
-        font-size:15px;
+        font-size:13px;
         color:@info-text;
+        line-height:1.3;
+        font-family:@body-font;
     }
     h2{
         color:@info-text-dark;
         padding-left:0px;
+        font-size:16px;
     }
 }
 
@@ -2136,11 +2172,15 @@ a:hover.medal {
     }
     h2{
         padding:10px 0px 10px 0px;
+        font-family:@main-font;
     }
 }
 
 .user-details {
-    font-size: 15px;
+    font-size: 13px;
+    h3{
+        font-size:16px;
+    }
 }
 
 .user-about {
@@ -2150,11 +2190,7 @@ a:hover.medal {
     overflow: auto;
     padding: 10px;
     width: 90%;
-    p{font-size:18px;}
-}
-
-.user-info-table td{
-    padding-bottom:5px;
+    p{font-size:13px;}
 }
 
 .follow-toggle {
@@ -2167,6 +2203,7 @@ a:hover.medal {
     margin-top:-2px;
     font-size:15px;
     cursor:pointer;
+    font-family:@main-font;
     background:url(../images/small-button-blue.png) repeat-x top;
     .rounded-corners(4px);
     .text-shadow(0px,1px,0px,#E6F6FA);
@@ -2197,6 +2234,22 @@ a:hover.medal {
     display:none;
 }
 
+.count {
+    font-family: @main-font;
+    font-size: 200%;
+    font-weight: 700;
+    color: #777
+}
+
+.scoreNumber {
+    font-family: @main-font;
+    font-size: 35px;
+    font-weight: 800;
+    color: #777;
+    line-height: 40px; /*letter-spacing:0px*/
+    margin-top: 3px;
+}
+
 .vote-count {
     font-family: Arial;
     font-size: 160%;
@@ -2225,6 +2278,8 @@ a:hover.medal {
     margin-right: 10px;
     .rounded-corners(4px);
 }
+
+/* ----- Red Popup notification ----- */
 
 .vote-notification {
     z-index: 1;
@@ -2259,6 +2314,7 @@ a:hover.medal {
 
 }
 
+
 /* ----- Footer links , check blocks/footer.html----- */
 
 #ground {
@@ -2268,6 +2324,7 @@ a:hover.medal {
     padding: 6px 0 0 0;
     background: @header-color;
     font-size:16px;
+    font-family:@main-font;
 
     p {
         margin-bottom:0;
@@ -2480,24 +2537,6 @@ ins p{
 ins .post-tag {
     background-color: #97ff97;
 }
-
-/*用户资料页面*/
-.count {
-    font-family: Arial;
-    font-size: 200%;
-    font-weight: 700;
-    color: #777
-}
-
-.scoreNumber {
-    font-family: Arial;
-    font-size: 35px;
-    font-weight: 800;
-    color: #777;
-    line-height: 40px; /*letter-spacing:0px*/
-    margin-top: 3px;
-}
-
 
 /*
 .favorites-count-off {
@@ -2744,7 +2783,7 @@ button::-moz-focus-inner {
 }
 
 .big {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .strong {
