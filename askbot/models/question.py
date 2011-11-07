@@ -15,7 +15,7 @@ from askbot import exceptions
 from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent
 from askbot.models.base import DeletableContent
-from askbot.models.base import ContentRevision
+from askbot.models.post import PostRevision
 from askbot.models.base import BaseQuerySetManager
 from askbot.models.base import parse_post_text
 from askbot.models.base import parse_and_save_post
@@ -1007,54 +1007,13 @@ class FavoriteQuestion(models.Model):
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
-QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
-                              '<div class="text">%(html)s</div>\n'
-                              '<div class="tags">%(tags)s</div>')
-QUESTION_REVISION_TEMPLATE_NO_TAGS = ('<h3>%(title)s</h3>\n'
-                              '<div class="text">%(html)s</div>\n')
-class QuestionRevision(ContentRevision):
+class QuestionRevision(PostRevision):
     """A revision of a Question."""
-    question   = models.ForeignKey(Question, related_name='revisions')
-    title      = models.CharField(max_length=300)
-    tagnames   = models.CharField(max_length=125)
-    is_anonymous = models.BooleanField(default=False)
 
-    class Meta(ContentRevision.Meta):
-        db_table = u'question_revision'
-        ordering = ('-revision',)
+    class Meta:
+        app_label = 'askbot'
+        proxy = True
 
-    def get_question_title(self):
-        return self.question.title
-
-    def get_absolute_url(self):
-        #print 'in QuestionRevision.get_absolute_url()'
-        return reverse('question_revisions', args=[self.question.id])
-
-    def as_html(self, include_tags=True):
-        markdowner = markup.get_parser()
-        if include_tags:
-            return QUESTION_REVISION_TEMPLATE % {
-                'title': self.title,
-                'html': sanitize_html(markdowner.convert(self.text)),
-                'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                                  for tag in self.tagnames.split(' ')]),
-            }
-        else:
-            return QUESTION_REVISION_TEMPLATE_NO_TAGS % {
-                'title': self.title,
-                'html': sanitize_html(markdowner.convert(self.text))
-            }
-
-    def save(self, **kwargs):
-        """Looks up the next available revision number."""
-        if not self.revision:
-            self.revision = QuestionRevision.objects.filter(
-                question=self.question).values_list('revision',
-                                                    flat=True)[0] + 1
-        super(QuestionRevision, self).save(**kwargs)
-
-    def __unicode__(self):
-        return u'revision %s of %s' % (self.revision, self.title)
 
 class AnonymousQuestion(AnonymousContent):
     """question that was asked before logging in
