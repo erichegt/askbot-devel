@@ -456,7 +456,7 @@ h1 {
 
 #ContentFull {
     float: left;
-    width: 950px;
+    width: 960px;
 }
 
 /* ----- Sidebar Widgets Box, check main_page/sidebar.html or question/sidebar.html ----- */
@@ -2204,8 +2204,15 @@ a:hover.medal {
 }
 
 .user-profile-page{
-    font-size:15px;
+    font-size:13px;
+    line-height:1.3;
     color:@info-text-dark;
+
+    p{
+        font-size:13px;
+        line-height:1.3;
+        color:@info-text-dark;
+    }
     .avatar img{
         border:#eee 1px solid;
        padding:5px;
@@ -2233,8 +2240,8 @@ a:hover.medal {
     p{font-size:13px;}
 }
 
-.follow-toggle {
-    border:0;
+.follow-toggle,.submit {
+    border:0 !important;
     color:@button-label;
     font-weight:bold;
     font-size:12px;
@@ -2250,8 +2257,9 @@ a:hover.medal {
     .box-shadow(1px, 1px, 2px, #808080)
 }
 
-.follow-toggle:hover {
+.follow-toggle:hover, .submit:hover {
     background:url(../images/small-button-blue.png) repeat-x bottom;
+    text-decoration:none !important;
 }
 
 .follow-toggle .follow{
@@ -2317,6 +2325,63 @@ a:hover.medal {
     width: 20px;
     margin-right: 10px;
     .rounded-corners(4px);
+}
+
+.karma-summary {
+    padding:5px;
+    font-size:13px;
+}
+
+.karma-summary h3 {
+    text-align: center;
+    font-weight: bold;
+    padding:5px;
+}
+
+.karma-diagram {
+    width:477px;
+    height:300px;
+    float:left;
+    margin-right:10px;
+}
+
+.karma-details {
+    float:right;
+    width:450px;
+    height:250px;
+    overflow-y:auto;
+    word-wrap:break-word;
+    p{margin-bottom:10px;}
+}
+
+.karma-gained {
+    font-weight:bold;
+    background:#eee;
+    width:25px;
+    margin-right:5px;
+    color:green;
+    padding:3px;
+    display:block;
+    float:left;
+    text-align:center;
+    .rounded-corners(3px);
+}
+
+.karma-lost {
+    font-weight:bold;
+    background:#eee;
+    width:25px;
+    color:red;
+    padding:3px;
+    display:block;
+    margin-right:5px;
+    float:left;
+    text-align:center;
+    .rounded-corners(3px);
+}
+
+.submit-row{
+    margin-bottom:10px;
 }
 
 /* ----- Red Popup notification ----- */
@@ -3041,48 +3106,6 @@ p.signup_p {
 .wmd-preview li {
     margin-bottom:7px;
     font-size:14px;
-}
-
-.karma-summary {
-    padding:5px;
-    font-size:13px;
-}
-
-.karma-summary h3 {
-    text-align: center;
-    font-weight: bold;
-    padding:5px;
-}
-
-.karma-diagram {
-    width:377px;
-    height:300px;
-    float:left;
-    margin-right:10px;
-}
-
-.karma-details {
-    float:right;
-    width:300px;
-    height:250px;
-    overflow-y:auto;
-    word-wrap:break-word;
-}
-
-.karma-gained {
-    font-weight:bold;
-    background:#eee;
-    width:20px;
-    color:green;
-    padding:5px;
-}
-
-.karma-lost {
-    font-weight:bold;
-    background:#eee;
-    width:20px;
-    color:red;
-    padding:5px;
 }
 
 .search-result-summary {
