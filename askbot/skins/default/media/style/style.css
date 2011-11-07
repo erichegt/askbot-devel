@@ -2013,19 +2013,59 @@ span.delete-icon:hover {
 .meta,
 .users-page,
 {
-    font-size:14px;
-    line-height:1.4;
+    font-size:13px;
+    line-height:1.3;
     color:@info-text-dark;
     p{
         font-size:13px;
         color:@info-text;
         line-height:1.3;
         font-family:@body-font;
+        color:@info-text-dark;
+        margin-bottom:12px;
     }
     h2{
         color:@info-text-dark;
         padding-left:0px;
         font-size:16px;
+    }
+    #id_email,#id_name{
+        border:#cce6ec 3px solid;
+        height:25px;
+        padding-left:5px;
+        width:395px;
+        font-size:14px;
+    }
+    textarea{
+        border:#cce6ec 3px solid;
+        padding-left:5px;
+        padding-top:5px;
+        width:395px;
+        font-size:14px;
+    }
+    input.submit{
+        background:url(../images/small-button-blue.png) repeat-x top;
+        border:0;
+        color:@button-label;
+        font-weight:bold;
+        font-size:12px;
+        height:24px;
+        margin-top:-2px;
+        cursor:pointer;
+        .rounded-corners(4px);
+        .text-shadow(0px,1px,0px,#E6F6FA);
+        .box-shadow(1px, 1px, 2px, #808080);
+    }
+    input.submit:hover{
+        background:url(../images/small-button-blue.png) repeat-x bottom;
+        text-decoration:none;
+    }
+    .cancel{
+        background:url(../images/small-button-cancel.png) repeat-x top !important;
+        color:#525252 !important;
+    }
+    .cancel:hover{
+        background:url(../images/small-button-cancel.png) repeat-x bottom !important;
     }
 }
 
