@@ -19,6 +19,7 @@ Programming and documentation
 * `Hrishi <https://github.com/stultus>`_
 * Andrei Mamoutkine
 * `Ramiro Morales <http://rmorales.com.ar/>`_ (with Machinalis)
+* Vladimir Bokov
 * `NoahY <https://github.com/NoahY>`_
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
 * `Arun SAG  <http://zer0c00l.in/>`_
