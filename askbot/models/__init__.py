@@ -19,10 +19,10 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.question import Question, QuestionRevision
+from askbot.models.question import Question
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
+from askbot.models.answer import Answer, AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
@@ -2644,13 +2644,11 @@ __all__ = [
         'signals',
 
         'Question',
-        'QuestionRevision',
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
 
         'Answer',
-        'AnswerRevision',
         'AnonymousAnswer',
 
         'PostRevision',
