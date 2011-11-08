@@ -24,8 +24,6 @@ from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
-from askbot.utils import markup
-from askbot.utils.html import sanitize_html
 from askbot.utils import mysql
 
 #todo: too bad keys are duplicated see const sort methods
@@ -760,7 +758,7 @@ class Question(content.Content, DeletableContent):
 
         # Create a new revision
         latest_revision = self.get_latest_revision()
-        QuestionRevision.objects.create(
+        PostRevision.objects.create_question_revision(
             question   = self,
             title      = latest_revision.title,
             author     = retagged_by,
@@ -838,7 +836,7 @@ class Question(content.Content, DeletableContent):
             else:
                 comment = 'No.%s Revision' % rev_no
             
-        return QuestionRevision.objects.create(
+        return PostRevision.objects.create_question_revision(
             question   = self,
             revision   = rev_no,
             title      = self.title,
@@ -1006,13 +1004,6 @@ class FavoriteQuestion(models.Model):
         db_table = u'favorite_question'
     def __unicode__(self):
         return '[%s] favorited at %s' %(self.user, self.added_at)
-
-class QuestionRevision(PostRevision):
-    """A revision of a Question."""
-
-    class Meta:
-        app_label = 'askbot'
-        proxy = True
 
 
 class AnonymousQuestion(AnonymousContent):

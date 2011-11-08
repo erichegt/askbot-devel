@@ -1,18 +1,20 @@
 import datetime
 import cgi
-from django.core.urlresolvers import reverse
+import logging
+
 from django.db import models
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
+
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils import markup
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from django.utils import html
-import logging
+
 
 #todo: following methods belong to a future common post class
 def parse_post_text(post):
@@ -214,102 +216,6 @@ class DeletableContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'askbot'
-
-
-class ContentRevision(models.Model):
-    """
-        Base class for QuestionRevision and AnswerRevision
-    """
-    QUESTION_REVISION_TEMPLATE_NO_TAGS = (
-        '<h3>%(title)s</h3>\n'
-        '<div class="text">%(html)s</div>\n'
-    )
-
-    QUESTION_REVISION = 1
-    ANSWER_REVISION = 2
-    REVISION_TYPE_CHOICES = (
-        (QUESTION_REVISION, 'question'),
-        (ANSWER_REVISION, 'answer'),
-    )
-    REVISION_TYPE_CHOICES_DICT = dict(REVISION_TYPE_CHOICES)
-
-    revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES)
-
-    revision   = models.PositiveIntegerField()
-    author     = models.ForeignKey(User, related_name='%(class)ss')
-    revised_at = models.DateTimeField()
-    summary    = models.CharField(max_length=300, blank=True)
-    text       = models.TextField()
-
-    # Question-specific fields
-    title      = models.CharField(max_length=300, blank=True, default='')
-    tagnames   = models.CharField(max_length=125, blank=True, default='')
-    is_anonymous = models.BooleanField(default=False)
-
-    class Meta:
-        abstract = True
-        app_label = 'askbot'
-        ordering = ('-revision',)
-
-    def revision_type_str(self):
-        return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
-
-    def __unicode__(self):
-        return u'%s - revision %s of %s' % (self.revision_type_str(), self.revision, self.title)
-
-    def parent(self):
-        if self.is_question_revision():
-            return self.question
-        elif self.is_answer_revision():
-            return self.answer
-
-    def save(self, **kwargs):
-        """Determines the revistion type and then looks up the next available revision number if not set."""
-
-        if not self.revision_type:
-            # HACK: determine revision_type based on class name - until we have a better way or until make a switch to PostRevision
-            #       After `revision_type` is set, we can just use it
-            if self.__class__.__name__ == 'QuestionRevision':
-                self.revision_type = self.QUESTION_REVISION
-            elif self.__class__.__name__ == 'AnswerRevision':
-                self.revision_type = self.ANSWER_REVISION
-
-        if not self.revision:
-            # TODO: Maybe use Max() aggregation?
-            # TODO: Handle IntegrityError if revision id is already occupied?
-            self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
-
-        super(ContentRevision, self).save(**kwargs)
-
-    def is_question_revision(self):
-        return self.revision_type == self.QUESTION_REVISION
-
-    def is_answer_revision(self):
-        return self.revision_type == self.ANSWER_REVISION
-
-    @models.permalink
-    def get_absolute_url(self):
-        if self.is_question_revision():
-            return 'question_revisions', (self.question.id,), {}
-        elif self.is_answer_revision():
-            return 'answer_revisions', (), {'id':self.answer.id}
-
-    def get_question_title(self):
-        #INFO: ack-grepping shows that it's only used for Questions, so there's no code for Answers
-        return self.question.title
-
-    def as_html(self, **kwargs):
-        markdowner = markup.get_parser()
-        sanitized_html = sanitize_html(markdowner.convert(self.text))
-
-        if self.is_question_revision():
-            return self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
-                'title': self.title,
-                'html': sanitized_html
-            }
-        elif self.is_answer_revision():
-            return sanitized_html
-
 
 
 class AnonymousContent(models.Model):

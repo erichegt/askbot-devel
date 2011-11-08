@@ -217,7 +217,7 @@ class Answer(content.Content, DeletableContent):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
-        return AnswerRevision.objects.create(
+        return PostRevision.objects.create_answer_revision(
                                   answer=self,
                                   author=author,
                                   revised_at=revised_at,
@@ -299,15 +299,6 @@ class Answer(content.Content, DeletableContent):
     def __unicode__(self):
         return self.html
         
-
-class AnswerRevision(PostRevision):
-    """A revision of an Answer."""
-
-    class Meta:
-        app_label = 'askbot'
-        proxy = True
-
-
 
 class AnonymousAnswer(AnonymousContent):
     question = models.ForeignKey('Question', related_name='anonymous_answers')
