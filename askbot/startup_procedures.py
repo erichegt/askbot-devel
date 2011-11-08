@@ -184,6 +184,14 @@ def test_template_loader():
                 "in the TEMPLATE_LOADERS of your settings.py file"
         )
 
+def test_celery():
+    """Tests celery settings"""
+    if hasattr(django_settings, 'BROKER_BACKEND'):
+        raise ImproperlyConfigured(PREAMBLE + \
+            "\nPlease rename setting BROKER_BACKEND to BROKER_TRANSPORT\n"
+            "in your settings.py file"
+        )
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -197,6 +205,7 @@ def run_startup_tests():
     test_i18n()
     test_postgres()
     test_middleware()
+    test_celery()
 
 @transaction.commit_manually
 def run():

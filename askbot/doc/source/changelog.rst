@@ -6,6 +6,9 @@ Development version (not yet published)
 * Show unused vote count (Tomasz Zielinski)
 * Categorized live settings (Evgeny)
 * Anonymous caching of the question page (Vlad Bokov)
+* Added management command ``send_accept_answer_reminders`` (Evgeny)
+* Improved the ``askbot-setup`` script (Adolfo, Evgeny)
+* Merge users management command (Daniel Mican)
 
 0.7.26 (Current Version)
 ------------------------
