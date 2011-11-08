@@ -1,11 +1,11 @@
 <div class="tabBar tabBar-answer">
-    <h1 id="questionCount">
+    <h2 id="questionCount">
         {% trans counter=answers|length %}
         {{counter}} Answer
         {% pluralize %}
         {{counter}} Answers
         {% endtrans %}
-    </h1>
+    </h2>
     <div class="tabsA">
         <span class="label">
         Sort by »
@@ -21,3 +21,4 @@
         ><span>{% trans %}popular answers{% endtrans %}</span></a>   
     </div>
 </div>
+<div class="clean"></div>

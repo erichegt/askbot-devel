@@ -10,7 +10,7 @@ body {
     margin: 0;
     padding: 0;
     color: #000;
-    font-family: @main-font;
+    font-family:@body-font;
 }
 
 div {
@@ -36,13 +36,13 @@ hr {
 input, select {
     vertical-align: middle;
     font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
+    margin-left:0px;
 }
 
 p {
     font-size: 14px;
     line-height: 140%;
     margin-bottom: 6px;
-    padding-left: 5px;
 }
 
 a {
@@ -52,12 +52,12 @@ a {
 }
 
 h2 {
-    font-size: 140%;
+    font-size: 21px;
     padding: 3px 0 3px 5px;
 }
 
 h3 {
-    font-size: 120%;
+    font-size: 19px;
     padding: 3px 0 3px 5px;
 }
 
@@ -142,7 +142,7 @@ a:hover {
 }
 
 h1 {
-    font-size: 160%;
+    font-size: 24px;
     padding: 10px 0 5px 0px;
 }
 
@@ -169,6 +169,7 @@ h1 {
     text-align: center;
     background-color: #f5dd69;
     border-top:#fff 1px solid;
+    font-family:@main-font;
 
     p {
          margin-top: 6px;
@@ -200,6 +201,7 @@ h1 {
 #header {
     margin-top: 0px;
     background: @header-color;
+    font-family:@main-font;
 }
 
 .content-wrapper {/* wrapper positioning class */
@@ -307,6 +309,7 @@ h1 {
     border-bottom:#d3d3c2 1px solid;
     border-top:#fcfcfc 1px solid;
     margin-bottom:10px;
+    font-family:@main-font;
 
     #homeButton{
         border-right:#afaf9e 1px solid;
@@ -463,7 +466,7 @@ h1 {
 
 #ContentFull {
     float: left;
-    width: 950px;
+    width: 960px;
 }
 
 /* ----- Sidebar Widgets Box, check main_page/sidebar.html or question/sidebar.html ----- */
@@ -488,17 +491,19 @@ h1 {
         height:30px;
         line-height:30px;
         text-align:right;
-        font-size:24px;
+        font-size:18px !important;
         font-weight:normal;
         color:#656565;
         padding-right:10px;
         margin-bottom:10px;
+        font-family:@main-font;
     }
     h3{
         color:#4a757f;
         font-size:18px;
         text-align:left;
         font-weight:normal;
+        font-family:@main-font;
     }
     .contributorback{
         background: #eceeeb url(../images/contributorsback.png) no-repeat center left;
@@ -509,7 +514,8 @@ h1 {
         font-size:15px;
         display: block;
         float: right;
-        width: 172px;
+        width: 177px;
+        font-family:@main-font;
     }
 
     ul {
@@ -518,7 +524,7 @@ h1 {
 
     li {
         list-style-type: disc;
-        font-size: 16px;
+        font-size: 13px;
         line-height: 20px;
         margin-bottom: 10px;
         color:@info-text;
@@ -547,13 +553,14 @@ h1 {
             color:@button-label;
             font-weight:bold;
             font-size:12px;
-            width:33px;
+            width:30px;
             height:27px;
             margin-top:-2px;
             cursor:pointer;
             .rounded-corners(4px);
              .text-shadow(0px,1px,0px,#E6F6FA);
-             .box-shadow(1px, 1px, 2px, #808080)
+             .box-shadow(1px, 1px, 2px, #808080);
+             
             
        }
         #interestingTagAdd:hover, #ignoredTagAdd:hover{
@@ -610,7 +617,7 @@ h1 {
         font-family: Arial;
         font-weight: bold;
         color: #777;
-        text-align: left;
+        text-align:center;
     }
 }
 
@@ -618,6 +625,7 @@ h1 {
     color:@info-text;
     font-size:16px;
     border-bottom:#cccccc 1px solid;
+    font-size:13px;
     
     strong{
         float:right;
@@ -634,13 +642,16 @@ h1 {
         font-weight:normal;
         border-bottom:#cccccc 1px solid;
     }
+    a{
+        font-size:13px;
+    }
 }
 /* tips and markdown help are widgets for ask template */
 
 #tips{
     li{
         color:@info-text;
-       font-size:16px;
+       font-size:13px;
        list-style-image: url(../images/tips.png);
     }
     a{
@@ -651,7 +662,7 @@ h1 {
 #markdownHelp{
     li{
         color:@info-text;
-       font-size:16px;
+       font-size:13px;
     }
     a{
         font-size:16px;
@@ -755,6 +766,7 @@ h1 {
     float:left;
     margin-bottom:8px;
     padding-top:6px;
+    font-family:@main-font;
 }
 
 #listSearchTags{
@@ -762,6 +774,7 @@ h1 {
     margin-top:3px;
     color:@info-text;
     font-size:16px;
+    font-family:@main-font;
 }
 
 ul#searchTags {
@@ -777,6 +790,7 @@ ul#searchTags {
     margin:5px 0 10px 0;
     padding:0px;
     float:left;
+    font-family:@main-font;
 
     a {
         text-decoration: underline;
@@ -812,6 +826,7 @@ ul#searchTags {
         padding-left: 0;
         margin-bottom:8px;
         display:block;
+        font-family:@main-font;
     }
     
     a {
@@ -842,6 +857,7 @@ ul#searchTags {
     .counts {
         float: right;
         margin: 4px 0 0 5px;
+        font-family:@main-font;
     }
     
     .counts .item-count {
@@ -930,7 +946,7 @@ ul#searchTags {
 /* ----- Question list Paginator , check main_content/pager.html and macros/utils_macros.html----- */
 
 .evenMore {
-    font-size: 16px;
+    font-size: 13px;
     color:@info-text;
     padding:15px 0px 10px 0px;
     clear:both;
@@ -954,14 +970,13 @@ ul#searchTags {
 
 .paginator {
     padding: 5px 0 10px 0;
-    font-size:16px;
+    font-size:13px;
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
          background-color: #fff;
         color: #777;
         padding: 2px 4px 3px 4px;
-        font-family:@main-font;
     }
     a{
         color:@section-title;
@@ -1211,9 +1226,9 @@ span.delete-icon:hover {
     
     p{
        margin:0 0 5px 0;
-       font-size:16px;
+       font-size:14px;
        color:@info-text-dark;
-       line-height:1.2;
+       line-height:1.4;
     }
     .questionTitleInput {
         font-size: 24px;
@@ -1233,11 +1248,14 @@ span.delete-icon:hover {
         border-bottom:#f0f0ec 1px solid;
         float:left;
         margin-bottom:10px;
+        a{
+            line-height:30px;
+        }
 
     }
 
     div#question-list h2 {
-        font-size: 16px;
+        font-size: 13px;
         padding-bottom: 0;
         color:@link;
         border-top:#f0f0ec 1px solid;
@@ -1261,7 +1279,7 @@ span.delete-icon:hover {
     }
     label{
         color:@info-text-dark;
-        font-size:15px;
+        font-size:13px;
     }
 
     #id_tags{
@@ -1275,7 +1293,7 @@ span.delete-icon:hover {
 
 .title-desc {
     color: @info-text;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 #fmanswer input.submit,
@@ -1385,10 +1403,13 @@ span.delete-icon:hover {
     margin: 5px 0 5px 0;
 }
 
-.edit-question-page{
+.edit-question-page, #fmedit{
+    color:@info-text-dark;
+    
     #id_revision{
         font-size:14px;
-        margin-top:10px;
+        margin-top:5px;
+        margin-bottom:5px;
     }
     #id_title{
         font-size: 24px;
@@ -1418,6 +1439,7 @@ span.delete-icon:hover {
 
     h1{
         padding-top:0px;
+       font-family:@main-font;
     }
     
     h1 a{
@@ -1430,11 +1452,11 @@ span.delete-icon:hover {
     p.rss {
         float:none;
         clear:both;
-        padding: 3px 0 0 22px;
+        padding: 3px 0 0 23px;
         font-size: 15px;
         width:110px;
         background-position:center left;
-        
+        margin-left:0px !important;
     }
 
     p.rss a {
@@ -1457,12 +1479,14 @@ span.delete-icon:hover {
     .answer-table {
         margin: 6px 0 0px 0;
         border-spacing: 0px;
-        width: 100%;
+        width: 680px;
+        padding-right:3px;
     }
 
     .answer-table {
+        margin-top:0px;
         border-bottom: 1px solid #D4D4D4;
-        clear: both;
+        float:left;
     }
 
     .answer-table td,
@@ -1480,6 +1504,7 @@ span.delete-icon:hover {
             margin-bottom:14px;
           line-height:1.4;
           font-size:14px;
+          padding:0px 5px 5px 0px;
         }
         
         a {
@@ -1497,7 +1522,7 @@ span.delete-icon:hover {
 
     .post-update-info-container {
         float: right;
-        width: 190px;
+        width: 175px;
     }
 
     .post-update-info {
@@ -1505,7 +1530,7 @@ span.delete-icon:hover {
         float: right;
         font-size: 9px;
         font-family:@secondary-font;
-        width: 173px;
+        width: 158px;
         padding:4px;
         margin:0px 0px 5px 5px;
         line-height: 14px;
@@ -1638,6 +1663,7 @@ span.delete-icon:hover {
        color:@section-title;
        width:200px;
        float:left;
+       font-family:@main-font;
     }
     .comments {
         font-size: 12px;    
@@ -1772,14 +1798,16 @@ span.delete-icon:hover {
         }
 
         .comment-body {
-            line-height: 140%;
+            line-height: 1.3;
             margin: 3px 26px 0 46px;
             padding: 5px 3px;
             color: #666;
+            font-size:13px;
         }
 
         .comment-body p{
-            font-size:inherit;
+            font-size:13px;
+            line-height:1.3;
             margin-bottom: 3px;
             padding: 0;
         }
@@ -1850,6 +1878,7 @@ span.delete-icon:hover {
         float: left;
         text-align: center;
         padding-top: 2px;
+        margin:3px 10px 0px 3px;
     }
 
     .vote-buttons IMG {
@@ -1873,15 +1902,22 @@ span.delete-icon:hover {
 
     .tabBar-answer{
         margin-bottom:15px;
-        padding-left:15px;
+        padding-left:7px;
+        width:723px;
+        margin-top:10px;
     }
-
+    .answer{
+        .vote-buttons {
+            float:left;
+        }
+    }
     .accepted-answer {
         background-color: #f7fecc;
         border-bottom-color: #9BD59B;
         
         .vote-buttons {
             width:27px;
+           margin-right:10px;
         }
     }
 
@@ -1916,6 +1952,9 @@ span.delete-icon:hover {
         .comments {
             background-color: #E6ECFF;
        }
+        .vote-buttons {
+           margin-right:10px;
+        }
     }
 
     .answer-img-accept:hover {
@@ -1930,16 +1969,55 @@ span.delete-icon:hover {
 
     #fmanswer{
         color:@info-text;
-        font-size:16px;
         line-height:1.2;
         margin-top:10px;
+        p{
+            font-size:13px;
+          line-height:1.3;
+        }
+        h2{
+          font-family:@main-font;
+          color:@section-title;
+          font-size:24px;
+        }
+        label{
+          font-size:13px;
+        }
     }
     .message {
         padding: 5px;
-        margin: 10px 0 10px 0;
+        margin: 0px 0 10px 0;
 
     }
 
+}
+
+.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon, .identica-share.icon {
+    background: url(../images/socialsprite.png) no-repeat;
+    display:block;
+    text-indent:-100em;
+    height:25px;
+    width:25px;
+    margin-bottom:3px;
+}
+
+.facebook-share.icon:hover, .twitter-share.icon:hover, .linkedin-share.icon:hover, .identica-share.icon:hover{
+    opacity:0.8;
+    filter: alpha(opacity=80);
+}
+
+.facebook-share.icon {
+    background-position: -26px 0px;
+}
+.identica-share.icon {
+    background-position: -78px 0px;
+}
+.twitter-share.icon {
+    margin-top:10px;
+    background-position: 0px 0px;
+}
+.linkedin-share.icon {
+    background-position: -52px 0px;
 }
 
 /* -----Content pages, Login, About, FAQ, Users----- */
@@ -1948,13 +2026,59 @@ span.delete-icon:hover {
 .meta,
 .users-page,
 {
+    font-size:13px;
+    line-height:1.3;
+    color:@info-text-dark;
     p{
-        font-size:15px;
+        font-size:13px;
         color:@info-text;
+        line-height:1.3;
+        font-family:@body-font;
+        color:@info-text-dark;
+        margin-bottom:12px;
     }
     h2{
         color:@info-text-dark;
         padding-left:0px;
+        font-size:16px;
+    }
+    #id_email,#id_name{
+        border:#cce6ec 3px solid;
+        height:25px;
+        padding-left:5px;
+        width:395px;
+        font-size:14px;
+    }
+    textarea{
+        border:#cce6ec 3px solid;
+        padding-left:5px;
+        padding-top:5px;
+        width:395px;
+        font-size:14px;
+    }
+    input.submit{
+        background:url(../images/small-button-blue.png) repeat-x top;
+        border:0;
+        color:@button-label;
+        font-weight:bold;
+        font-size:12px;
+        height:24px;
+        margin-top:-2px;
+        cursor:pointer;
+        .rounded-corners(4px);
+        .text-shadow(0px,1px,0px,#E6F6FA);
+        .box-shadow(1px, 1px, 2px, #808080);
+    }
+    input.submit:hover{
+        background:url(../images/small-button-blue.png) repeat-x bottom;
+        text-decoration:none;
+    }
+    .cancel{
+        background:url(../images/small-button-cancel.png) repeat-x top !important;
+        color:#525252 !important;
+    }
+    .cancel:hover{
+        background:url(../images/small-button-cancel.png) repeat-x bottom !important;
     }
 }
 
@@ -2093,19 +2217,29 @@ a:hover.medal {
 }
 
 .user-profile-page{
-    font-size:15px;
+    font-size:13px;
     color:@info-text-dark;
+
+    p{
+        font-size:13px;
+        line-height:1.3;
+        color:@info-text-dark;
+    }
     .avatar img{
         border:#eee 1px solid;
        padding:5px;
     }
     h2{
         padding:10px 0px 10px 0px;
+        font-family:@main-font;
     }
 }
 
 .user-details {
-    font-size: 15px;
+    font-size: 13px;
+    h3{
+        font-size:16px;
+    }
 }
 
 .user-about {
@@ -2115,15 +2249,11 @@ a:hover.medal {
     overflow: auto;
     padding: 10px;
     width: 90%;
-    p{font-size:18px;}
+    p{font-size:13px;}
 }
 
-.user-info-table td{
-    padding-bottom:5px;
-}
-
-.follow-toggle {
-    border:0;
+.follow-toggle,.submit {
+    border:0 !important;
     color:@button-label;
     font-weight:bold;
     font-size:12px;
@@ -2132,14 +2262,16 @@ a:hover.medal {
     margin-top:-2px;
     font-size:15px;
     cursor:pointer;
+    font-family:@main-font;
     background:url(../images/small-button-blue.png) repeat-x top;
     .rounded-corners(4px);
     .text-shadow(0px,1px,0px,#E6F6FA);
     .box-shadow(1px, 1px, 2px, #808080)
 }
 
-.follow-toggle:hover {
+.follow-toggle:hover, .submit:hover {
     background:url(../images/small-button-blue.png) repeat-x bottom;
+    text-decoration:none !important;
 }
 
 .follow-toggle .follow{
@@ -2160,6 +2292,22 @@ a:hover.medal {
 
 .follow-toggle .unfollow:hover div.unfollow-green{
     display:none;
+}
+
+.count {
+    font-family: @main-font;
+    font-size: 200%;
+    font-weight: 700;
+    color: #777
+}
+
+.scoreNumber {
+    font-family: @main-font;
+    font-size: 35px;
+    font-weight: 800;
+    color: #777;
+    line-height: 40px; /*letter-spacing:0px*/
+    margin-top: 3px;
 }
 
 .vote-count {
@@ -2191,6 +2339,139 @@ a:hover.medal {
     .rounded-corners(4px);
 }
 
+.karma-summary {
+    padding:5px;
+    font-size:13px;
+}
+
+.karma-summary h3 {
+    text-align: center;
+    font-weight: bold;
+    padding:5px;
+}
+
+.karma-diagram {
+    width:477px;
+    height:300px;
+    float:left;
+    margin-right:10px;
+}
+
+.karma-details {
+    float:right;
+    width:450px;
+    height:250px;
+    overflow-y:auto;
+    word-wrap:break-word;
+    p{margin-bottom:10px;}
+}
+
+.karma-gained {
+    font-weight:bold;
+    background:#eee;
+    width:25px;
+    margin-right:5px;
+    color:green;
+    padding:3px;
+    display:block;
+    float:left;
+    text-align:center;
+    .rounded-corners(3px);
+}
+
+.karma-lost {
+    font-weight:bold;
+    background:#eee;
+    width:25px;
+    color:red;
+    padding:3px;
+    display:block;
+    margin-right:5px;
+    float:left;
+    text-align:center;
+    .rounded-corners(3px);
+}
+
+.submit-row{
+    margin-bottom:10px;
+}
+
+/*-----  Revision pages ----- */
+
+.revision {
+    margin: 10px 0 10px 0;
+    font-size: 13px;
+    color:@info-text-dark;
+    
+    p{
+        font-size:13px;
+        line-height:1.3;
+        color:@info-text-dark;
+    }
+    
+    h3{
+        font-family:@main-font;
+        font-size:21px;
+        padding-left:0px;
+    }
+    
+    .header {
+        background-color: #F5F5F5;
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .author {
+        background-color: #e9f3f5;
+    }
+
+    .summary {
+        padding: 5px 0 10px 0;
+    }
+
+    .summary span {
+        background-color:#fde785;
+        padding:6px;
+        .rounded-corners(4px);
+        display: inline;
+        .box-shadow(1px, 1px, 4px, #cfb852);
+    }
+
+    .answerbody {
+        padding: 10px 0 5px 10px;
+    }
+
+    .revision-mark {
+        width: 150px;
+        text-align: left;
+        display: inline-block;
+        font-size: 11px;
+        overflow: hidden;
+
+        .gravatar{
+             float:left;
+            margin-right:4px;
+            padding-top:5px;
+        }
+    }
+
+    .revision-number {
+        font-size: 300%;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+}
+
+del, del .post-tag {
+    color: #C34719;
+}
+
+ins .post-tag, ins p, ins {
+    background-color: #E6F0A2;
+}
+
+/* ----- Red Popup notification ----- */
+
 .vote-notification {
     z-index: 1;
     cursor: pointer;
@@ -2214,6 +2495,7 @@ a:hover.medal {
        border-top:#8e0000 1px solid;
        color:#fff;
        font-weight:normal;
+       .rounded-corners-top(4px);
     }
     a {
         color: #fb7321;
@@ -2222,6 +2504,7 @@ a:hover.medal {
     }
 
 }
+
 
 /* ----- Footer links , check blocks/footer.html----- */
 
@@ -2232,6 +2515,7 @@ a:hover.medal {
     padding: 6px 0 0 0;
     background: @header-color;
     font-size:16px;
+    font-family:@main-font;
 
     p {
         margin-bottom:0;
@@ -2371,95 +2655,6 @@ span.form-error {
     font-size: 90%;
     font-weight: normal;
     margin-left: 5px;
-}
-
-.revision {
-    margin: 10px 0 10px 0;
-    width: 100%;
-    font-size: 13px;
-}
-
-.revision .header {
-    background-color: #eee;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.revision .author {
-    background-color: #E9E9FF;
-}
-
-.revision .summary {
-    padding: 5px 0 10px 0;
-}
-
-.revision .summary span {
-    background-color: yellow;
-    padding-left: 3px;
-    padding-right: 3px;
-    display: inline;
-}
-
-.revision h1 {
-    font-size: 130%;
-    font-weight: 600;
-    padding: 15px 0 15px 0;
-}
-
-.revision-mark {
-    width: 200px;
-    text-align: left;
-    display: inline-block;
-    font-size: 90%;
-    overflow: hidden;
-}
-
-.revision-number {
-    font-size: 300%;
-    font-weight: bold;
-    font-family: sans-serif;
-}
-
-.revision .answerbody {
-    padding: 10px 0 5px 10px;
-}
-
-/* Revision pages */
-del {
-    color: #FF5F5F;
-}
-
-del .post-tag {
-    color: #FF5F5F;
-}
-
-ins {
-    background-color: #97ff97;
-}
-
-ins p{
-    background-color: #97ff97;
-}
-
-ins .post-tag {
-    background-color: #97ff97;
-}
-
-/*用户资料页面*/
-.count {
-    font-family: Arial;
-    font-size: 200%;
-    font-weight: 700;
-    color: #777
-}
-
-.scoreNumber {
-    font-family: Arial;
-    font-size: 35px;
-    font-weight: 800;
-    color: #777;
-    line-height: 40px; /*letter-spacing:0px*/
-    margin-top: 3px;
 }
 
 
@@ -2708,7 +2903,7 @@ button::-moz-focus-inner {
 }
 
 .big {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .strong {
@@ -2922,50 +3117,10 @@ p.signup_p {
 .wmd-preview a {
     color:@link;
 }
+
 .wmd-preview li {
     margin-bottom:7px;
-}
-
-.karma-summary {
-    padding:5px;
-    font-size:13px;
-}
-
-.karma-summary h3 {
-    text-align: center;
-    font-weight: bold;
-    padding:5px;
-}
-
-.karma-diagram {
-    width:377px;
-    height:300px;
-    float:left;
-    margin-right:10px;
-}
-
-.karma-details {
-    float:right;
-    width:300px;
-    height:250px;
-    overflow-y:auto;
-    word-wrap:break-word;
-}
-
-.karma-gained {
-    font-weight:bold;
-    background:#eee;
-    width:20px;
-    color:green;
-    padding:5px;
-}
-
-.karma-lost {
-    font-weight:bold;
-    background:#eee;
-    width:20px;
-    color:red;
-    padding:5px;
+    font-size:14px;
 }
 
 .search-result-summary {
@@ -3060,26 +3215,7 @@ img.flag {
     vertical-align: text-bottom;
 }
 
-.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon, .identica-share.icon {
-    background: url(../images/sprite.png) no-repeat;
-    display:block;
-    text-indent:-100em;
-    height:25px;
-    width:25px;
-}
-.facebook-share.icon {
-    background-position: -25px 0px;
-}
-.identica-share.icon {
-    background-position: -85px 0px;
-}
-.twitter-share.icon {
-    margin-top:10px;
-    background-position: 0px 0px;
-}
-.linkedin-share.icon {
-    background-position: -55px 0px;
-}
+
 /* Pretty printing styles. Used with prettify.js. */
 
 a.edit {
