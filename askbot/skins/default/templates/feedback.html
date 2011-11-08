@@ -2,7 +2,7 @@
 <!-- template feedback.html -->
 {% block title %}{% spaceless %}{% trans %}Feedback{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Give us your feedback!{% endtrans %}</h1>
+<h1 class="section-title">{% trans %}Give us your feedback!{% endtrans %}</h1>
 <form method="post" action="{% url feedback %}" accept-charset="utf-8">{% csrf_token %}
     {% if user.is_authenticated() %}
         <p class="message">
@@ -39,7 +39,7 @@
     {{form.next}}
     <div class="submit-row">
         <input type="submit" class="submit" value="{% trans %}Send Feedback{% endtrans %}"/>&nbsp;
-        <input type="submit" class="submit" name="cancel" value="{% trans %}Cancel{% endtrans %}"/>
+        <input type="submit" class="submit cancel" name="cancel" value="{% trans %}Cancel{% endtrans %}"/>
     </div>
 </form>
 {% endblock %}
