@@ -185,9 +185,24 @@ def test_template_loader():
         )
 
 def test_celery():
-    """Tests celery settings"""
+    """Tests celery settings
+    todo: we are testing two things here
+    that correct name is used for the setting
+    and that a valid value is chosen
+    """
     broker_backend = getattr(django_settings, 'BROKER_BACKEND', None)
     broker_transport = getattr(django_settings, 'BROKER_TRANSPORT', None)
+
+    if broker_backend is None:
+        if broker_transport is None:
+            raise ImproperlyConfigured(PREAMBLE + \
+                "\nPlease add\n"
+                'BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"\n'
+                "or other valid value to your settings.py file"
+            )
+        else:
+            #todo: check that broker transport setting is valid
+            return
 
     if broker_backend != broker_transport:
         raise ImproperlyConfigured(PREAMBLE + \
