@@ -192,6 +192,15 @@ def test_celery():
             "in your settings.py file"
         )
 
+def test_cache():
+    """Tests cache settings"""
+    if not hasattr(django_settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY'):
+        raise ImproperlyConfigured(PREAMBLE + \
+            "\nPlease set\n"
+            "CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True\n"
+            "in your settings.py file"
+        )
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -206,6 +215,7 @@ def run_startup_tests():
     test_postgres()
     test_middleware()
     test_celery()
+    test_cache()
 
 @transaction.commit_manually
 def run():
