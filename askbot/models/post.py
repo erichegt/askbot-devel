@@ -8,6 +8,9 @@ from askbot.utils.html import sanitize_html
 #    pass
 
 class PostRevisionManager(models.Manager):
+    # TODO: Make sure this manager /with the "blocked" .create() method/ is used also as a `related` manager:
+    # - https://docs.djangoproject.com/en/1.3/topics/db/managers/#controlling-automatic-manager-types
+    # - use_for_related_fields
     def create(self, *kargs, **kwargs):
         raise NotImplementedError  # Prevent accidental creation of PostRevision instance without `revision_type` set
 
