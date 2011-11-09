@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
@@ -7,13 +8,16 @@ from askbot.utils.html import sanitize_html
 #    pass
 
 class PostRevisionManager(models.Manager):
+    def create(self, *kargs, **kwargs):
+        raise NotImplementedError  # Prevent accidental creation of PostRevision instance without `revision_type` set
+
     def create_question_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.QUESTION_REVISION
-        return self.create(*kargs, **kwargs)
+        return super(PostRevisionManager, self).create(*kargs, **kwargs)
 
     def create_answer_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.ANSWER_REVISION
-        return self.create(*kargs, **kwargs)
+        return super(PostRevisionManager, self).create(*kargs, **kwargs)
 
     def question_revisions(self):
         return self.filter(revision_type=self.model.QUESTION_REVISION)
@@ -74,15 +78,21 @@ class PostRevision(models.Model):
         elif self.is_answer_revision():
             return self.answer
 
-    def save(self, **kwargs):
-        """Determines the revistion type and then looks up the next available revision number if not set."""
+    def clean(self):
+        "Internal cleaning method, called from self.save() by self.full_clean()"
+        if bool(self.question) == bool(self.answer): # one and only one has to be set (!xor)
+            raise ValidationError('One (and only one) of question/answer fields has to be set.')
+        if (self.question and not self.is_question_revision()) or (self.answer and not self.is_answer_revision()):
+            raise ValidationError('Revision_type doesn`t match values in question/answer fields.')
 
+    def save(self, **kwargs):
+        # Determine the revision number, if not set
         if not self.revision:
-            # TODO: Maybe use Max() aggregation?
-            # TODO: Handle IntegrityError if revision id is already occupied?
+            # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
             self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
 
-        self.full_clean() # Make sure that everything is ok, in particular that `revision_type` and `revision` are set to valid values
+        # Make sure that everything is ok, in particular that `revision_type` and `revision` are set to valid values
+        self.full_clean()
 
         super(PostRevision, self).save(**kwargs)
 
