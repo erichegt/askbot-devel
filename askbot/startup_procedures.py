@@ -191,8 +191,10 @@ def test_celery():
 
     if broker_backend != broker_transport:
         raise ImproperlyConfigured(PREAMBLE + \
-            "\nPlese check that BROKER_BACKEND and BROKER_TRANSPORT have \n"
-            "then same value in your settings.py file"
+            "\nPlease rename setting BROKER_BACKEND to BROKER_TRANSPORT\n"
+            "in your settings.py file\n"
+            "If you have both in your settings.py - then\n"
+            "delete the BROKER_BACKEND setting and leave the BROKER_TRANSPORT"
         )
 
     if hasattr(django_settings, 'BROKER_BACKEND') and not hasattr(django_settings, 'BROKER_TRANSPORT'):
