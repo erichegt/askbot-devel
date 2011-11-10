@@ -14,6 +14,7 @@ class PostRevisionManager(models.Manager):
     def create(self, *kargs, **kwargs):
         raise NotImplementedError  # Prevent accidental creation of PostRevision instance without `revision_type` set
 
+
     def create_question_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.QUESTION_REVISION
         return super(PostRevisionManager, self).create(*kargs, **kwargs)

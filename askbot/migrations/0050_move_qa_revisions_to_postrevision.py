@@ -1,7 +1,6 @@
 # encoding: utf-8
 import datetime
 
-from django.contrib.contenttypes import generic
 from django.db import models
 
 from south.db import db
@@ -19,7 +18,7 @@ class Migration(DataMigration):
         if (question and source_revision.revision_type != 1) or (answer and source_revision.revision_type != 2):
             raise ValueError('Data problem! Check this manually')
 
-        post_revision = orm.PostRevision.objects.create(
+        orm.PostRevision.objects.create(
             question=question,
             answer=answer,
 
@@ -36,23 +35,12 @@ class Migration(DataMigration):
             is_anonymous=source_revision.is_anonymous
         )
 
-        # Update the related activities
-        for activity in source_revision.activity_set.all():
-            activity.content_object = post_revision
-            activity.save()
+        # INFO: There's no need to migrate also the related Activity instances
+        # - it's because `revision edited` Activities point to Question&Answer instances
+        # ans not to their relevant revisions. (BTW this might be considered a bug)
 
 
     def forwards(self, orm):
-        # Set up generic links
-        gfk = generic.GenericForeignKey('content_type', 'object_id')
-        gfk.contribute_to_class(orm.Activity, 'content_object')
-
-        gr1 = generic.GenericRelation(orm.Activity)
-        gr1.contribute_to_class(orm.QuestionRevision, 'activity_set')
-
-        gr2 = generic.GenericRelation(orm.Activity)
-        gr2.contribute_to_class(orm.AnswerRevision, 'activity_set')
-
         # Process revisions
         for qr in orm.QuestionRevision.objects.all():
             self.copy_revision(orm=orm, source_revision=qr)
