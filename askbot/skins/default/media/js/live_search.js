@@ -189,24 +189,25 @@ var liveSearch = function(){
         return user_html;
     };
 
-    var render_tag = function(tag_name, linkable, deletable){
+    var render_tag = function(tag_name, linkable, deletable, query_string){
         var tag = new Tag();
         tag.setName(tag_name);
         tag.setDeletable(deletable);
         tag.setLinkable(linkable);
+        tag.setUrlParams(query_string);
         return tag.getElement().outerHTML();
     };
 
-    var render_tags = function(tags, linkable, deletable){
+    var render_tags = function(tags, linkable, deletable, query_string){
         var tags_html = '<ul class="tags">';
         $.each(tags, function(idx, item){
-            tags_html += render_tag(item, linkable, deletable);
+            tags_html += render_tag(item, linkable, deletable, query_string);
         });
         tags_html += '</ul>';
         return tags_html;
     };
 
-    var render_question = function(question){
+    var render_question = function(question, query_string){
         var entry_html = 
         '<div class="short-summary">' + 
             '<div class="counts">' +
@@ -232,15 +233,15 @@ var liveSearch = function(){
                 render_user_info(question) +
             '</div>' + 
             render_title(question) +
-            render_tags(question['tags'], true, false) +
+            render_tags(question['tags'], true, false, query_string) +
         '</div>';
         return entry_html;
     };
 
-    var render_question_list = function(questions){
+    var render_question_list = function(questions, query_string){
         var output = '';
         for (var i=0; i<questions.length; i++){
-            output += render_question(questions[i]);
+            output += render_question(questions[i], query_string);
         }
         return output;
     };
@@ -257,13 +258,13 @@ var liveSearch = function(){
         $('#contrib-users').append(html);
     };
 
-    var render_related_tags = function(tags){
+    var render_related_tags = function(tags, query_string){
         if (tags.length === 0){
             return;
         }
         var html = '';
         for (var i=0; i<tags.length; i++){
-            html += render_tag(tags[i]['name'], true, false);
+            html += render_tag(tags[i]['name'], true, false, query_string);
             html += '<span class="tag-number">&#215; ' +
                         tags[i]['used_count'] +
                     '</span>' +
@@ -315,7 +316,7 @@ var liveSearch = function(){
         });
     };
 
-    var create_relevance_tab = function(){
+    var create_relevance_tab = function(query_string){
         relevance_tab = $('<a></a>');
         relevance_tab.attr('href', '?sort=relevance-desc');
         relevance_tab.attr('id', 'by_relevance');
@@ -323,7 +324,7 @@ var liveSearch = function(){
         return relevance_tab;
     }
 
-    var set_active_sort_tab = function(sort_method){
+    var set_active_sort_tab = function(sort_method, query_string){
         var tabs = $('#sort_tabs>a');
         tabs.attr('class', 'off');
         tabs.each(function(index, element){
@@ -352,14 +353,14 @@ var liveSearch = function(){
         active_tab.html(sortButtonData[name]['label'] + arrow);
     };
 
-    var render_relevance_sort_tab = function(){
+    var render_relevance_sort_tab = function(query_string){
         if (showSortByRelevance === false){
             return;
         }
         var relevance_tab = $('#by_relevance');
         if (prev_text && prev_text.length > 0){
             if (relevance_tab.length == 0){
-                relevance_tab = create_relevance_tab();
+                relevance_tab = create_relevance_tab(query_string);
                 $('#sort_tabs>span').after(relevance_tab);
             }
         }
@@ -432,7 +433,7 @@ var liveSearch = function(){
         if (data['questions'].length > 0){
             old_list.stop(true);
 
-            new_list.html(render_question_list(data['questions']));
+            new_list.html(render_question_list(data['questions'], data['query_string']));
             //old_list.hide();
             old_list.after(new_list);
             //old_list.remove();
@@ -441,9 +442,9 @@ var liveSearch = function(){
             set_question_count(data['question_counter']);
             render_search_tags(data['query_data']['tags']);
             render_faces(data['faces']);
-            render_related_tags(data['related_tags']);
-            render_relevance_sort_tab();
-            set_active_sort_tab(sortMethod);
+            render_related_tags(data['related_tags'], data['query_string']);
+            render_relevance_sort_tab(data['query_string']);
+            set_active_sort_tab(sortMethod, query_string);
             query.focus();
 
             //show new div with a fadeIn effect

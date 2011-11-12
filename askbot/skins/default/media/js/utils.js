@@ -356,10 +356,21 @@ Tag.prototype.createDom = function(){
     this._inner_element = this.makeElement(this._inner_html_tag);
     if (this.isLinkable()){
         var url = askbot['urls']['questions'];
-        url += '?tags=' + escape(this.getName());
         if (this._url_params !== null){
-            url += escape('&' + this._url_params);
+            params = this._url_params.split('&')
+            tag_p = 'tags=' + escape(this.getName());
+            for (var i = 0; i < params.length; i++){
+                if (params[i] !== tag_p){
+                    url += params[i] + '&';
+                }
+            }
+            //url += params + '&';
         }
+        else{
+            url += '?'
+        }
+        url += 'tags=' + escape(this.getName());
+        
         this._inner_element.attr('href', url);
     }
     this._inner_element.addClass('tag tag-right');

@@ -168,7 +168,8 @@ def questions(request):
             'question_counter': question_counter,
             'questions': list(),
             'related_tags': list(),
-            'faces': list()
+            'faces': list(),
+            'query_string': search_state.query_string(),
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
