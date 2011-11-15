@@ -125,6 +125,24 @@ def questions(request):
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
+    # We need to pass the rss feed url based
+    # on the search state to the template.
+    # We use QueryDict to get a querystring
+    # from dicts and arrays. Much cleaner
+    # than parsing and string formating.
+    rss_query_dict = QueryDict("").copy()
+    if search_state.query:
+        # We have search string in session - pass it to
+        # the QueryDict
+        rss_query_dict.update({"q": search_state.query})
+    if search_state.tags:
+        # We have tags in session - pass it to the
+        # QueryDict but as a list - we want tags+
+        rss_query_dict.setlist("tags", search_state.tags)
+    
+    # Format the url with the QueryDict
+    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
+
     if request.is_ajax():
 
         q_count = paginator.count
@@ -171,7 +189,8 @@ def questions(request):
             'question_counter': question_counter,
             'questions': list(),
             'related_tags': list(),
-            'faces': list()
+            'faces': list(),
+            'feed_url': context_feed_url,
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
@@ -225,14 +244,6 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
     
-    rss_query_dict = QueryDict("").copy()
-    if search_state.query:
-        rss_query_dict.update({"q": search_state.query})
-    if search_state.tags:
-        rss_query_dict.setlist("tags", search_state.tags)
-    
-
-    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
 
     template_data = {
         'active_tab': 'questions',
