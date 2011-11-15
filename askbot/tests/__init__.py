@@ -11,3 +11,5 @@ from askbot.tests.form_tests import *
 from askbot.tests.follow_tests import *
 from askbot.tests.templatefilter_tests import *
 from askbot.tests.markup_test import *
+from askbot.tests.misc_tests import *
+from askbot.tests.post_model_tests import *
