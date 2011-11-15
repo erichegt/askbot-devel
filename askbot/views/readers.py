@@ -24,6 +24,7 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 from django.views.decorators.cache import cache_page
+from django.http import QueryDict
 
 import askbot
 from askbot import exceptions
@@ -223,6 +224,15 @@ def questions(request):
         reset_method_count += 1
     if meta_data.get('author_name',None):
         reset_method_count += 1
+    
+    rss_query_dict = QueryDict("").copy()
+    if search_state.query:
+        rss_query_dict.update({"q": search_state.query})
+    if search_state.tags:
+        rss_query_dict.setlist("tags", search_state.tags)
+    
+
+    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
 
     template_data = {
         'active_tab': 'questions',
@@ -249,6 +259,7 @@ def questions(request):
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
         'update_avatar_data': schedules.should_update_avatar_data(request),
+        'feed_url': context_feed_url,
     }
 
     assert(request.is_ajax() == False)

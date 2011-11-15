@@ -18,6 +18,7 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from askbot.models import Question, Answer, Comment
 from askbot.conf import settings as askbot_settings
+from askbot.search.state_manager import SearchState
 import itertools
 
 class RssIndividualQuestionFeed(Feed):
@@ -137,11 +138,20 @@ class RssLastestQuestionsFeed(Feed):
     def items(self, item):
         """get questions for the feed
         """
-        return Question.objects.filter(
-                                    deleted=False
-                                ).order_by(
-                                    '-last_activity_at'
-                                )[:30]
+        qs = Question.objects.filter(deleted=False)
+        query = self.request.GET.get("q", None)
+        tags = self.request.GET.getlist("tags")
+
+        if query:
+            qs = qs.get_by_text_query(query)
+
+        if tags:
+            for tag in tags:
+                qs = qs.filter(tags__name = tag)
+        
+        return qs.order_by('-last_activity_at')
+
+        
 
 def main():
     """main function for use as a script
