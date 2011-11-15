@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (not yet published)
 ---------------------------------------
+* Context-sensitive RSS url (`Dejan Noveski <http://www.atomidata.com/>`_)
 * Implemented new version of skin (Byron Corrales)
 * Show unused vote count (Tomasz Zielinski)
 * Categorized live settings (Evgeny)
