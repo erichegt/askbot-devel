@@ -611,6 +611,5 @@ def widget_questions(request):
                              matching_question.get_absolute_url()),
             'title': matching_question.title
         })  
-    #import ipdb; ipdb.set_trace()
     return render_into_skin('question_widget.html', {'questions': data}, request) 
     
