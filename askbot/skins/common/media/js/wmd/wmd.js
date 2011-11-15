@@ -244,7 +244,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             text = text.replace('http://https://', 'https://');
             text = text.replace('http://ftp://', 'ftp://');
             
-            if (text.indexOf('http://') === -1 && text.indexOf('ftp://') === -1) {
+            if (text.indexOf('http://') === -1 && text.indexOf('ftp://') === -1 && text.indexOf('https://') === -1) {
                 if (dialogType == 'link'){
                     //add http only to urls
                     text = 'http://' + text;
