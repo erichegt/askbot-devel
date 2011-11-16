@@ -11,6 +11,9 @@ Development version (not yet published)
 * Improved the ``askbot-setup`` script (Adolfo, Evgeny)
 * Merge users management command (Daniel Mican)
 * Anonymous caching of the question page (Vlad Bokov)
+* Fixed sharing button bug, css fixes for new template (Alexander Werner)
+* Added ASKBOT_TRANSLATE_URL setting for url localization(Alexander Werner)
+
 
 0.7.26 (Current Version)
 ------------------------
