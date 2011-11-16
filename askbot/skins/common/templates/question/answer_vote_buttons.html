@@ -3,7 +3,7 @@
         visitor_vote = user_answer_votes[answer.id]
     )
 }}
-{% if request.user == question.author or request.user.is_authenticated() and (request.user.is_moderator() or request.user.is_superuser()) %}
+{% if request.user == question.author or request.user.is_authenticated() and (request.user.is_moderator() or request.user.is_administrator()) %}
 <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
     {% if answer.accepted %}
         src="{{'/images/vote-accepted-on.png'|media}}"
@@ -22,5 +22,6 @@
         {% endif %}
         alt="{% trans question_author=question.author.username %}{{question_author}} has selected this answer as correct{% endtrans %}"
         title="{% trans questsion_author=question.author.username%}{{question_author}} has selected this answer as correct{% endtrans %}"
+    />
     {% endif %}
 {% endif %}

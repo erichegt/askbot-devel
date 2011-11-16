@@ -175,6 +175,7 @@ CACHE_BACKEND = 'locmem://'
 #needed for django-keyedcache
 CACHE_TIMEOUT = 6000
 CACHE_PREFIX = 'askbot' #make this unique
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
 
@@ -198,6 +199,7 @@ logging.basicConfig(
 #   ASKBOT_URL = 'forum/'
 #
 ASKBOT_URL = '' #no leading slash, default = '' empty string
+ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 #note - it is important that upload dir url is NOT translated!!!
@@ -207,11 +209,12 @@ ALLOW_UNICODE_SLUGS = False
 ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
-BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
 CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
+DOMAIN_NAME = '{{domain_name}}'
 
-CSRF_COOKIE_NAME = '{{domain_name}}_scrf'
-CSRF_COOKIE_DOMAIN = '{{domain_name}}'#enter domain name here - e.g. example.com
+CSRF_COOKIE_NAME = '{{domain_name}}_csrf'
+CSRF_COOKIE_DOMAIN = DOMAIN_NAME

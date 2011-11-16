@@ -200,6 +200,7 @@ logging.basicConfig(
 #   ASKBOT_URL = 'forum/'
 #
 ASKBOT_URL = '' #no leading slash, default = '' empty string
+ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 #note - it is important that upload dir url is NOT translated!!!
@@ -209,11 +210,11 @@ ALLOW_UNICODE_SLUGS = False
 ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
-BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
 CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
 
-CSRF_COOKIE_NAME = 'askbot_scrf'
+CSRF_COOKIE_NAME = 'askbot_csrf'
 CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
