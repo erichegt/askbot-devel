@@ -160,7 +160,7 @@ msgstr[1] ""
 #: skins/common/media/js/post.js:550 skins/default/media/js/post.js:549
 #: skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr "<b>Following</b><b class=\"unfollow\">Unfollow</b>"
+msgstr "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 
 #: skins/common/media/js/post.js:612
 msgid "undelete"
