@@ -335,7 +335,10 @@ h1 {
   height: 42px;
   margin: 6px 0px 0px 15px;
 }
-#searchBar .searchInput, #searchBar .searchInputCancelable .searchInputAuth .searchInputCancelableAuth {
+#searchBar .searchInput,
+#searchBar .searchInputCancelable,
+#searchBar .searchInputAuth,
+#searchBar .searchInputCancelableAuth {
   font-size: 30px;
   height: 40px;
   font-weight: 300;
