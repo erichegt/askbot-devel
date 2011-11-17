@@ -322,27 +322,27 @@ var Vote = function(){
         return $(favoriteNumber);
     };
     var getQuestionVoteUpButton = function(){
-        var questionVoteUpButton = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixQuestionVoteup +']';
+        var questionVoteUpButton = 'div.'+ voteContainerId +' div[id^='+ imgIdPrefixQuestionVoteup +']';
         return $(questionVoteUpButton);
     };
     var getQuestionVoteDownButton = function(){
-        var questionVoteDownButton = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixQuestionVotedown +']';
+        var questionVoteDownButton = 'div.'+ voteContainerId +' div[id^='+ imgIdPrefixQuestionVotedown +']';
         return $(questionVoteDownButton);
     };
     var getAnswerVoteUpButtons = function(){
-        var answerVoteUpButton = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAnswerVoteup +']';
+        var answerVoteUpButton = 'div.'+ voteContainerId +' div[id^='+ imgIdPrefixAnswerVoteup +']';
         return $(answerVoteUpButton);
     };
     var getAnswerVoteDownButtons = function(){
-        var answerVoteDownButton = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAnswerVotedown +']';
+        var answerVoteDownButton = 'div.'+ voteContainerId +' div[id^='+ imgIdPrefixAnswerVotedown +']';
         return $(answerVoteDownButton);
     };
     var getAnswerVoteUpButton = function(id){
-        var answerVoteUpButton = 'div.'+ voteContainerId +' img[id='+ imgIdPrefixAnswerVoteup + id + ']';
+        var answerVoteUpButton = 'div.'+ voteContainerId +' div[id='+ imgIdPrefixAnswerVoteup + id + ']';
         return $(answerVoteUpButton);
     };
     var getAnswerVoteDownButton = function(id){
-        var answerVoteDownButton = 'div.'+ voteContainerId +' img[id='+ imgIdPrefixAnswerVotedown + id + ']';
+        var answerVoteDownButton = 'div.'+ voteContainerId +' div[id='+ imgIdPrefixAnswerVotedown + id + ']';
         return $(answerVoteDownButton);
     };
     
@@ -375,19 +375,21 @@ var Vote = function(){
     };
    
     var setVoteImage = function(voteType, undo, object){
-        var flag = undo ? "" : "-on";
-        var arrow = (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote) ? "up" : "down";
-        object.attr("src", mediaUrl("media/images/vote-arrow-"+ arrow + flag +".png"));
+        var flag = undo ? false : true;
+        if (object.hasClass("on")) {
+          object.removeClass("on");
+        }else{
+          object.addClass("on");
+        }
         
-        // if undo voting, then undo the pair of arrows.
         if(undo){
             if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote){
-                $(getQuestionVoteUpButton()).attr("src", mediaUrl("media/images/vote-arrow-up.png"));
-                $(getQuestionVoteDownButton()).attr("src", mediaUrl("media/images/vote-arrow-down.png"));
+                $(getQuestionVoteUpButton()).removeClass("on");
+                $(getQuestionVoteDownButton()).removeClass("on");
             }
             else{
-                $(getAnswerVoteUpButton(postId)).attr("src", mediaUrl("media/images/vote-arrow-up.png"));
-                $(getAnswerVoteDownButton(postId)).attr("src", mediaUrl("media/images/vote-arrow-down.png"));
+                $(getAnswerVoteUpButton(postId)).removeClass("on");
+                $(getAnswerVoteDownButton(postId)).removeClass("on");
             }
         }
     };
