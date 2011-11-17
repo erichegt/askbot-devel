@@ -65,7 +65,7 @@ urlpatterns = patterns('',
         name='answer_revisions'
     ),
     url(#this url works both normally and through ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\-\+]+)/$' % _('questions'), 
+        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/$' % _('questions'), 
         views.readers.questions, 
         name='questions'
     ),
@@ -74,7 +74,32 @@ urlpatterns = patterns('',
         views.readers.questions, 
         name='questions'
     ),
-    url(#this url works both normally and through ajax
+    url(
+        r'^%s/remove_tag:(?P<remove_tag>[\w\d\-\#]+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(
+        r'^%s/reset_tags:(?P<reset_tags>\w+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(
+        r'^%s/reset_author:(?P<reset_author>\w+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(
+        r'^%s/reset_query:(?P<reset_query>\w+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(
+        r'^%s/start_over:(?P<start_over>\w+)/$' % _('questions'),  #Nota: hay start over con mas parametros
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(
         r'^%s$' % _('questions/'), 
         views.readers.questions, 
         name='questions'

@@ -8,7 +8,7 @@
         {% elif active_tab == "users" %}
             action="{% url users %}" 
         {% else %}
-            action="{% url questions %}" 
+            action="{% url questions %}" id="searchForm"
         {% endif %}
         method="get">
             {# class was searchInput #}
@@ -28,10 +28,10 @@
                 value="x"
                 name="reset_query"
                 {# todo - make sure it works on Enter keypress #}
-                onclick="window.location.href='{% url questions %}?reset_query=true'"
+                onclick="window.location.href='{% url questions %}reset_query:true/'"
                 class="cancelSearchBtn"/>
             {% endif %}
-            <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" />
+            <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" id='searchButton'/>
             {% if active_tab == "tags" %}
                 <input type="hidden" name="t" value="tag"/>
             {% else %}

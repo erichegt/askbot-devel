@@ -373,8 +373,7 @@ var liveSearch = function(){
 
     var remove_search_tag = function(tag_name){
         $.ajax({
-            url: askbot['urls']['questions'],
-            data: {remove_tag: tag_name},
+            url: askbot['urls']['questions']+'remove_tag:'+escape(tag_name)+'/',
             dataType: 'json',
             success: render_result,
             complete: try_again
@@ -444,7 +443,7 @@ var liveSearch = function(){
             render_faces(data['faces']);
             render_related_tags(data['related_tags'], data['query_string']);
             render_relevance_sort_tab(data['query_string']);
-            set_active_sort_tab(sortMethod, query_string);
+            set_active_sort_tab(sortMethod, data['query_string']);
             query.focus();
 
             //show new div with a fadeIn effect
@@ -465,7 +464,7 @@ var liveSearch = function(){
         var post_data = {query: query_text};
         $.ajax({
             url: search_url,
-            data: {query: query_text, sort: sort_method},
+            //data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
             complete: try_again
@@ -498,7 +497,7 @@ var liveSearch = function(){
             query = $('input#keywords');
             refresh_main_page();
         },
-        init: function(mode){
+        init: function(mode, query_string){
             if (mode === 'main_page'){
                 //live search for the main page
                 query = $('input#keywords');
@@ -510,6 +509,18 @@ var liveSearch = function(){
                         if (sortMethod === 'activity-desc'){
                             prevSortMethod = sortMethod;
                             sortMethod = 'relevance-desc';
+                        }
+                    }
+                    params = query_string.split('/')
+                    for (var i = 0; i < params.length; i++){
+                        if (params[i] !== ''){
+                            if (params[i].substring(0, 5) == "sort:"){ //change the sort method
+                                search_url += 'sort:'+sortMethod+'/'
+                                search_url += 'query:'+ cur_text.split(' ').join('+') + '/' //we add the query here
+                            }
+                            else{
+                                search_url += params[i] + '/';
+                            }
                         }
                     }
                     send_query(cur_text, sortMethod);

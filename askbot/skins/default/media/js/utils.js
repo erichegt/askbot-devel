@@ -357,19 +357,30 @@ Tag.prototype.createDom = function(){
     if (this.isLinkable()){
         var url = askbot['urls']['questions'];
         if (this._url_params !== null){
-            params = this._url_params.split('&')
-            tag_p = 'tags=' + escape(this.getName());
+            params = this._url_params.split('/')
             for (var i = 0; i < params.length; i++){
-                if (params[i] !== tag_p){
-                    url += params[i] + '&';
+                if (params[i] !== ''){
+                    if (params[i].substring(0, 5) == "tags:"){
+                        tags = params[i].substr(5).split('+');
+                        new_tags = ''
+                        for(var j = 0; j < tags.length; j++){
+                            if(tags[j] !== this.getName()){
+                                new_tags += tags[j] + '+';
+                            }
+                        }
+                        new_tags += escape(this.getName())
+                        url += 'tags:'+new_tags+'/'
+                    }
+                    else{
+                        url += params[i] + '/';
+                    }
                 }
             }
-            //url += params + '&';
         }
         else{
-            url += '?'
+            url += 'tags:' + escape(this.getName()) + '/';
         }
-        url += 'tags=' + escape(this.getName());
+        
         
         this._inner_element.attr('href', url);
     }

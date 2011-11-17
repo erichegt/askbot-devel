@@ -68,7 +68,8 @@
                     {{ macros.tag_widget(
                             tag,
                             css_class = 'post-tag',
-                            html_tag = 'li'
+                            html_tag = 'li',
+                            url_params = 'start_over:true',
                         )
                     }}
                 {% endfor %}
@@ -443,7 +444,7 @@
                 {{ macros.tag_widget(
                         tag,
                         html_tag = 'div',
-                        url_params = 'start_over=true',
+                        url_params = 'start_over:true',
                         extra_content = '<span class="tag-number">&#215; ' ~
                             tag.used_count|intcomma ~ '</span>'
                     )

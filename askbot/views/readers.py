@@ -94,7 +94,7 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     if start_over:
         params_dict['start_over'] = start_over
     if remove_tag:
-        params_dict['remove_tag'] = remove_tag
+        params_dict['remove_tag'] = remove_tag.decode("utf8")
     if page_size:
         params_dict['page_size'] = page_size
     
@@ -151,7 +151,7 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
         'has_next': page.has_next(),
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
-        'base_url' : request.path + search_state.query_string() + '&',#todo in T sort=>sort_method
+        'base_url' : search_state.query_string(),#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
         'parameters': search_state.make_parameters(),
     }
