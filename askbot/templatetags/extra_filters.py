@@ -160,25 +160,44 @@ def absolute_value(number):
 
 @register.filter
 def replace_in_url(query_string, param):
-    type, value = param.split('=')
-    params = query_string.lstrip('?').split('&')
+    try:
+        type, value = param.split(':')
+        params = query_string.rstrip('/').split('/')
 
-    for p in params:
-        if type in p:
-            params[params.index(p)] = param
+        for p in params:
+            if type in p:
+                params[params.index(p)] = param
 
-    query_string = "?"+'&'.join(params)
+        query_string = '/'.join(params)+'/'
+    except:
+        type, value = param.split('=')
+        params = query_string.lstrip('?').split('&')
+
+        for p in params:
+            if type in p:
+                params[params.index(p)] = param
+
+        query_string = '?'+'&'.join(params)
     return query_string
 
 @register.filter
 def add_tag_to_url(query_string, param):
     if query_string:
-        params = query_string.lstrip('?').split('&')
-
+        params = query_string.rstrip('/').split('/')
+        flag = False
         for p in params:
-            if param in p:
-                return ''
-
-    return '&'+param
+            if p.startswith('tags:'):
+                flag = True
+                type, value = p.split(':')
+                values = value.split('+')
+                if param in values:
+                    return query_string
+                else:
+                    values.append(param)
+                    params[params.index(p)] = 'tags:'+'+'.join(values)
+        if not flag:
+            params.append('tags:'+param)
+        query_string = '/'.join(params)+'/'
+        return query_string
     
     

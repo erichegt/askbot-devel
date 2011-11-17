@@ -296,18 +296,29 @@ class SearchState(object):
         self.scope = const.DEFAULT_POST_SCOPE
 
     def query_string(self):
-        out = 'scope=%s' % self.scope
-        out += '&sort=%s' % self.sort
+        out = 'section:%s' % self.scope
+        out += '/sort:%s' % self.sort
         if self.query:
-            out += '&query=%s' % self.query
-        if hasattr(self, 'search'):
-            if self.search == 'search':
-                out += '&search = search'
+            out += '/query:%s' % '+'.join(self.query.split(' '))
+        #import pdb; pdb.set_trace()
         if self.tags:
-            for tag in self.tags:
-                out += '&tags=%s' % tag
+            out += '/tags:%s' % '+'.join(self.tags)
+        if self.author:
+            out += '/author:%s' % self.author
         #out += '&page=%d' % self.page
-        return '?'+out
+        return out+'/'
+
+    def make_parameters(self):
+        #import pdb; pdb.set_trace()
+        params_dict = {
+            'scope': self.scope,
+            'sort': self.sort,
+            'query': '+'.join(self.query.split(' ')) if self.query else None,
+            'tags': '+'.join(self.tags) if self.tags else None,
+            'author': self.author,
+            'page_size': self.page_size
+        }
+        return params_dict
 
 class ViewLog(object):
     """The ViewLog helper obejcts store the trail of the page visits for a

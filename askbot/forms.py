@@ -481,6 +481,7 @@ class AdvancedSearchForm(forms.Form):
     page = forms.IntegerField(required=False)
 
     def clean_tags(self):
+        #import pdb;pdb.set_trace()
         if 'tags' in self.cleaned_data:
             tags_input = self.cleaned_data['tags'].strip()
             split_re = re.compile(const.TAG_SPLIT_REGEX)
@@ -516,6 +517,7 @@ class AdvancedSearchForm(forms.Form):
 
     def clean(self):
         #todo rewrite
+        #import pdb;pdb.set_trace()
         data = self.cleaned_data
         cleanup_dict(data, 'scope', '')
         cleanup_dict(data, 'tags', None)

@@ -62,18 +62,50 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request):
+def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None, \
+        search=None, tags=None, author=None, page=None, reset_tags=None, \
+        reset_author=None, reset_query=None, start_over=None, \
+        remove_tag=None, page_size=None):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    #make parameters dictionary
+    params_dict = {
+        'scope': scope,
+        'sort': sort,
+    }
+    if query:
+        params_dict['query'] = ' '.join(query.split('+'))
+    if search:
+        params_dict['search'] = search
+    if tags:
+        params_dict['tags'] = ' '.join(tags.split('+'))
+    if author:
+        params_dict['author'] = author
+    if page:
+        params_dict['page'] = page
+    if reset_tags:
+        params_dict['reset_tags'] = reset_tags
+    if reset_author:
+        params_dict['reset_author'] = reset_author
+    if reset_query:
+        params_dict['reset_query'] = reset_query
+    if start_over:
+        params_dict['start_over'] = start_over
+    if remove_tag:
+        params_dict['remove_tag'] = remove_tag
+    if page_size:
+        params_dict['page_size'] = page_size
+    
     #before = datetime.datetime.now()
     #don't allow to post to this view
     if request.method == 'POST':
         raise Http404
     #import pdb; pdb.set_trace()
     #update search state
-    form = AdvancedSearchForm(request.GET)
+    #form = AdvancedSearchForm(request.GET)
+    form = AdvancedSearchForm(params_dict)
     if form.is_valid():
         user_input = form.cleaned_data
     else:
@@ -121,6 +153,7 @@ def questions(request):
         'next': page.next_page_number(),
         'base_url' : request.path + search_state.query_string() + '&',#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+        'parameters': search_state.make_parameters(),
     }
 
     if request.is_ajax():
@@ -170,6 +203,7 @@ def questions(request):
             'related_tags': list(),
             'faces': list(),
             'query_string': search_state.query_string(),
+            'parameters': search_state.make_parameters(),
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
@@ -309,6 +343,7 @@ def questions(request):
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
         'update_avatar_data': schedules.should_update_avatar_data(request),
         'query_string': search_state.query_string(),
+        'parameters': search_state.make_parameters(),
     }
 
     assert(request.is_ajax() == False)

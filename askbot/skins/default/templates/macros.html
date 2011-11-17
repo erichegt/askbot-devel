@@ -370,13 +370,7 @@ poor design of the data or methods on data objects #}
     <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
-            href="{% url questions %}{{ 
-                                        if_else(
-                                            url_params != None,
-                                            url_params,
-                                            '?'
-                                        )|escape
-                                    }}{{url_params|add_tag_to_url("tags="+tag|urlencode)}}"
+            href="{% url questions %}{{url_params|add_tag_to_url(tag|urlencode)}}"
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
@@ -599,17 +593,17 @@ for the purposes of the AJAX comment editor #}
     {% set sort = current_sort_method %}
     {% if sort == key_name + "-asc" %}{# "worst" first #}
     <a id="by_{{key_name}}" 
-        href={{ query_string|replace_in_url("sort="+key_name+"-desc") }}
+        href={% url questions %}{{ query_string|replace_in_url("sort:"+key_name+"-desc") }}
         class="rev on" 
         title="{{desc_tooltip}}"><span>{{label}} &#9650;</span></a>
     {% elif sort == key_name + "-desc" %}{# "best first" #}
     <a id="by_{{key_name}}"
-        href={{ query_string|replace_in_url("sort="+key_name+"-asc") }}
+        href={% url questions %}{{ query_string|replace_in_url("sort:"+key_name+"-asc") }}
         class="rev on"
         title="{{asc_tooltip}}"><span>{{label}} &#9660;</span></a>
     {% else %}{# default, when other button is active #}
     <a id="by_{{key_name}}"
-        href={{ query_string|replace_in_url("sort="+key_name+"-desc") }} 
+        href={% url questions %}{{ query_string|replace_in_url("sort:"+key_name+"-desc") }} 
         class="off"
         title="{{desc_tooltip}}"><span>{{label}}</span></a>
     {% endif %}

@@ -65,6 +65,16 @@ urlpatterns = patterns('',
         name='answer_revisions'
     ),
     url(#this url works both normally and through ajax
+        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\-\+]+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(#this url works both normally and through ajax
+        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/$' % _('questions'), 
+        views.readers.questions, 
+        name='questions'
+    ),
+    url(#this url works both normally and through ajax
         r'^%s$' % _('questions/'), 
         views.readers.questions, 
         name='questions'
