@@ -28,7 +28,7 @@
                 value="x"
                 name="reset_query"
                 {# todo - make sure it works on Enter keypress #}
-                onclick="window.location.href='{% url questions %}reset_query:true/'"
+                onclick="window.location.href='{% url questions %}{{ query_string|remove_from_url('query') }}'"
                 class="cancelSearchBtn"/>
             {% endif %}
             <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" id='searchButton'/>

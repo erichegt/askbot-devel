@@ -64,7 +64,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
 
 def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None, \
         search=None, tags=None, author=None, page=None, reset_tags=None, \
-        reset_author=None, reset_query=None, start_over=None, \
+        reset_author=None, reset_query=None, start_over=True, \
         remove_tag=None, page_size=None):
     """
     List of Questions, Tagged questions, and Unanswered questions.

@@ -356,6 +356,8 @@ Tag.prototype.createDom = function(){
     this._inner_element = this.makeElement(this._inner_html_tag);
     if (this.isLinkable()){
         var url = askbot['urls']['questions'];
+        var flag = false
+        var author = ''
         if (this._url_params !== null){
             params = this._url_params.split('/')
             for (var i = 0; i < params.length; i++){
@@ -370,18 +372,26 @@ Tag.prototype.createDom = function(){
                         }
                         new_tags += escape(this.getName())
                         url += 'tags:'+new_tags+'/'
+                        flag = true
+                    }
+                    else if (params[i].substring(0, 7) == "author:"){
+                        author = params[i];
                     }
                     else{
                         url += params[i] + '/';
                     }
                 }
             }
+            if (flag == false) {
+                url += 'tags:'+escape(this.getName())+'/'
+            }
+            if (author !== '') {
+                url += author+'/'
+            }
         }
         else{
             url += 'tags:' + escape(this.getName()) + '/';
         }
-        
-        
         this._inner_element.attr('href', url);
     }
     this._inner_element.addClass('tag tag-right');

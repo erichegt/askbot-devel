@@ -69,7 +69,7 @@
                             tag,
                             css_class = 'post-tag',
                             html_tag = 'li',
-                            url_params = 'start_over:true',
+                            url_params = '',
                         )
                     }}
                 {% endfor %}
@@ -444,7 +444,7 @@
                 {{ macros.tag_widget(
                         tag,
                         html_tag = 'div',
-                        url_params = 'start_over:true',
+                        url_params = '',
                         extra_content = '<span class="tag-number">&#215; ' ~
                             tag.used_count|intcomma ~ '</span>'
                     )
