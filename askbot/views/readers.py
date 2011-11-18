@@ -102,7 +102,6 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     #don't allow to post to this view
     if request.method == 'POST':
         raise Http404
-    #import pdb; pdb.set_trace()
     #update search state
     #form = AdvancedSearchForm(request.GET)
     form = AdvancedSearchForm(params_dict)
@@ -315,7 +314,6 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
-    #import pdb; pdb.set_trace()
     template_data = {
         'active_tab': 'questions',
         'author_name' : meta_data.get('author_name',None),

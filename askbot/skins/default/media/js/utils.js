@@ -366,8 +366,8 @@ Tag.prototype.createDom = function(){
                         tags = params[i].substr(5).split('+');
                         new_tags = ''
                         for(var j = 0; j < tags.length; j++){
-                            if(tags[j] !== this.getName()){
-                                new_tags += tags[j] + '+';
+                            if(escape(tags[j]) !== escape(this.getName())){
+                                new_tags += escape(tags[j]) + '+';
                             }
                         }
                         new_tags += escape(this.getName())

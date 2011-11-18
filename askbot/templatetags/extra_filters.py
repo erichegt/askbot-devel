@@ -5,6 +5,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot import auth
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
+import urllib2
 
 register = template.Library()
 
@@ -182,11 +183,10 @@ def add_tag_to_url(query_string, param):
             flag = True
             type, value = tags.split(':')
             values = value.split('+')
-            if param in values:
-                return query_string
-            else:
+            if not urllib2.unquote(param) in values:
                 values.append(param)
-                params[params.index(tags)] = 'tags:'+'+'.join(values)
+            values = [urllib2.quote(value) for value in values]
+            params[params.index(tags)] = 'tags:'+'+'.join(values)
 
         if not flag:
             author = [s for s in params if "author:" in s]

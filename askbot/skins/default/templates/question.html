@@ -473,7 +473,7 @@
 {% endcache %}
 
 {% if similar_questions.data and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
-    {#% cache 1800 "related_questions" related_questions question.id language_code %#}
+    {% cache 1800 "related_questions" related_questions question.id language_code %}
     <div class="boxC">
         <h2>{% trans %}Related questions{% endtrans %}</h2>
         <div class="questions-related">
@@ -484,7 +484,7 @@
             {% endfor %}
         </div>
     </div>
-    {#% endcache %#}
+    {% endcache %}
 {% endif %}
 
 {{ settings.SIDEBAR_QUESTION_FOOTER }}

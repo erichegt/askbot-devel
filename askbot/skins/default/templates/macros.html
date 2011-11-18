@@ -370,7 +370,7 @@ poor design of the data or methods on data objects #}
     <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
-            href="{% url questions %}{% if url_params %}{{url_params|add_tag_to_url(tag|urlencode)}}{% else %}tags:{{ tag }}/{% endif %}"
+            href="{% url questions %}{% if url_params %}{{url_params|add_tag_to_url(tag|urlencode)}}{% else %}tags:{{ tag|urlencode }}/{% endif %}"
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"

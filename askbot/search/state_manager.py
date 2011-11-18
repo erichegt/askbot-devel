@@ -152,13 +152,14 @@ class SearchState(object):
         self.__init__()
         self.logged_in = is_logged_in
 
-    def update_value(self, key, store):
+    def update_value(self, key, store, reset_page=True):
         if key in store:
             old_value = getattr(self, key)
             new_value = store[key]
             if new_value != old_value:
                 setattr(self, key, new_value)
-                self.reset_page()
+                if reset_page == True:
+                    self.reset_page()
 
     def relax_stickiness(self, input_dict, view_log):
         if view_log.get_previous(1) == 'questions':
@@ -172,22 +173,20 @@ class SearchState(object):
         if 'start_over' in input_dict:
             self.reset()
 
+        reset_page = True
         if 'page' in input_dict:
             self.page = input_dict['page']
-            #special case - on page flip no other input is accepted
-            return
+            reset_page = False # This is done to keep page from resetting in other sorting modes
 
         if 'page_size' in input_dict:
             self.update_value('page_size', input_dict)
             self.reset_page()#todo may be smarter here - start with ~same q
-            #same as with page - return right away
-            return
 
         if 'scope' in input_dict:
             if input_dict['scope'] == 'favorite' and self.logged_in == False:
                 self.reset_scope()
             else:
-                self.update_value('scope', input_dict)
+                self.update_value('scope', input_dict, reset_page=reset_page)
 
         if 'tags' in input_dict:
             if self.tags:
@@ -223,20 +222,20 @@ class SearchState(object):
                 self.reset_sort()
             return
 
-        self.update_value('author', input_dict)
+        self.update_value('author', input_dict, reset_page=reset_page)
 
         if 'query' in input_dict:
             query_bits = parse_query(input_dict['query'])
             tmp_input_dict = copy.deepcopy(input_dict)
             tmp_input_dict.update(query_bits)
-            self.update_value('query', tmp_input_dict)#the original query
+            self.update_value('query', tmp_input_dict, reset_page=reset_page)#the original query
             #pull out values of [title:xxx], [user:some one]
             #[tag: sometag], title:'xxx', title:"xxx", @user, @'some user',
             #and  #tag - (hash symbol to delineate the tag
-            self.update_value('stripped_query', tmp_input_dict)
-            self.update_value('query_tags', tmp_input_dict)
-            self.update_value('query_users', tmp_input_dict)
-            self.update_value('query_title', tmp_input_dict)
+            self.update_value('stripped_query', tmp_input_dict, reset_page=reset_page)
+            self.update_value('query_tags', tmp_input_dict, reset_page=reset_page)
+            self.update_value('query_users', tmp_input_dict, reset_page=reset_page)
+            self.update_value('query_title', tmp_input_dict, reset_page=reset_page)
             self.sort = 'relevance-desc'
         elif 'search' in input_dict:
             #a case of use nulling search query by hand
@@ -253,7 +252,7 @@ class SearchState(object):
             if input_dict['sort'] == 'relevance-desc' and self.query is None:
                 self.reset_sort()
             else:
-                self.update_value('sort', input_dict)
+                self.update_value('sort', input_dict, reset_page=reset_page)
 
         #todo: plug - mysql has no relevance sort
         if not askbot.conf.should_show_sort_by_relevance():
@@ -300,16 +299,13 @@ class SearchState(object):
         out += '/sort:%s' % self.sort
         if self.query:
             out += '/query:%s' % '+'.join(self.query.split(' '))
-        #import pdb; pdb.set_trace()
         if self.tags:
             out += '/tags:%s' % '+'.join(self.tags)
         if self.author:
             out += '/author:%s' % self.author
-        #out += '&page=%d' % self.page
         return out+'/'
 
     def make_parameters(self):
-        #import pdb; pdb.set_trace()
         params_dict = {
             'scope': self.scope,
             'sort': self.sort,
