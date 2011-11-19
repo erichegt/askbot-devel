@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-18 19:14+0100\n"
-"PO-Revision-Date: 2010-08-25 06:29\n"
-"Last-Translator: <fph@ngi.it>\n"
+"PO-Revision-Date: 2011-11-19 11:27\n"
+"Last-Translator: <tapion@pdp.linux.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -390,7 +390,7 @@ msgstr "iscrizioni/"
 
 #: urls.py:226
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "utenti/aggiornamenti_ha_avatar_personalizzzato"
 
 #: urls.py:231 urls.py:236
 msgid "badges/"
@@ -430,7 +430,7 @@ msgstr "Moderato: voti positivi minimi per il post cancellato"
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr ""
+msgstr "Pressione tra pari: voti negativi minimi per i contenuti cancellati"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
@@ -765,7 +765,7 @@ msgstr "Facebook secret key"
 
 #: conf/external_keys.py:105
 msgid "Twitter consumer key"
-msgstr "La chiave consumatore di Twitter"
+msgstr "Il codice utente di Twitter"
 
 #: conf/external_keys.py:107
 #, python-format
@@ -776,11 +776,11 @@ msgstr "Per favore registra il tuo form a <a href=\"%(url)s\">sito dell'applicaz
 
 #: conf/external_keys.py:118
 msgid "Twitter consumer secret"
-msgstr "La chiave segreta consumatore di Twitter"
+msgstr "Il codice segreto dell'utente di Twitter"
 
 #: conf/external_keys.py:126
 msgid "LinkedIn consumer key"
-msgstr "La chiave utente di LinkedIn"
+msgstr "Il codice utente di LinkedIn"
 
 #: conf/external_keys.py:128
 #, python-format
@@ -791,7 +791,7 @@ msgstr ""
 
 #: conf/external_keys.py:139
 msgid "LinkedIn consumer secret"
-msgstr "Utente segreto di LinkedIn"
+msgstr "Codice segreto di LinkedIn"
 
 #: conf/external_keys.py:147
 msgid "ident.ca consumer key"
@@ -894,7 +894,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:56
 msgid "Allow posting before logging in"
-msgstr ""
+msgstr "Permetti di postare prima del login"
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -903,6 +903,10 @@ msgid ""
 "to check for pending posts every time the user logs in. The builtin Askbot "
 "login system supports this feature."
 msgstr ""
+"Seleziona se vuoi permettere agli utenti di inserire domande o risposte prima "
+"di fare login. Questa impostazione richiede una modifica nel sistema dei login "
+"per verificare se ci sono inserimenti in attesa ogni volta che un utente accede."
+"Il sistema di login integrato in Askbot supporta questa funzionalità."
 
 #: conf/forum_data_rules.py:73
 msgid "Allow swapping answer with question"
@@ -913,6 +917,8 @@ msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
 msgstr ""
+"Questa impostazione aiuterà ad importare i dati da altri forum come zendesk, quando "
+"l'importazione automatica dei dati non riesce ad identificare correttamente la domanda originale."
 
 #: conf/forum_data_rules.py:87
 msgid "Maximum length of tag (number of characters)"
@@ -927,6 +933,8 @@ msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr ""
+"Almeno uno di questi tag sarà richiesto per ogni domanda creata o modificata."
+"Il tag obbligatorio può essere anche un wildcard, se i tag wilcard sono attivi."
 
 #: conf/forum_data_rules.py:110
 msgid "Force lowercase the tags"
@@ -938,15 +946,19 @@ msgid ""
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr ""
+"Attenzione: dopo aver selezionato questa impostazione fai un backup del database "
+"ed esegui il comando <code>python manage.py fix_question_tags</code> per "
+"aggiornare i tag globalmente"
 
 #: conf/forum_data_rules.py:126
 msgid "Format of tag list"
-msgstr ""
+msgstr "Formato della lista dei tag"
 
 #: conf/forum_data_rules.py:128
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag cloud"
 msgstr ""
+"Seleziona il formato con cui mostrare i tag: lista semplice o come una nuvola di tag"
 
 #: conf/forum_data_rules.py:140
 msgid "Use wildcard tags"
@@ -957,15 +969,17 @@ msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr ""
+"I tag wildcards possono essere usati per selezionare o ignorare più tag insieme, un "
+"tag wildcard valido ha una wildcard singola alla fine"
 
 #: conf/forum_data_rules.py:155
 msgid "Default max number of comments to display under posts"
-msgstr ""
+msgstr "Numero massimo di commenti da mostrare sotto il post"
 
 #: conf/forum_data_rules.py:166
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
-msgstr ""
+msgstr "La lunghezza massima del commento deve essere < %(max_len)s"
 
 #: conf/forum_data_rules.py:176
 msgid "Limit time to edit comments"
@@ -981,23 +995,23 @@ msgstr "Minuti concessi per modificare un commento"
 
 #: conf/forum_data_rules.py:190
 msgid "To enable this setting, check the previous one"
-msgstr ""
+msgstr "Per abilitare questa impostazione devi selezionare la precedente"
 
 #: conf/forum_data_rules.py:199
 msgid "Save comment by pressing <Enter> key"
-msgstr ""
+msgstr "Salva i commenti premendo <Enter>"
 
 #: conf/forum_data_rules.py:208
 msgid "Minimum length of search term for Ajax search"
-msgstr ""
+msgstr "Lunghezza minima dei termini di ricerca per la ricerca Ajax"
 
 #: conf/forum_data_rules.py:209
 msgid "Must match the corresponding database backend setting"
-msgstr ""
+msgstr "Deve corrispondere all'analoga impostazione backend del database"
 
 #: conf/forum_data_rules.py:218
 msgid "Do not make text query sticky in search"
-msgstr ""
+msgstr "Non rendere il campo di ricerca adesivo"
 
 #: conf/forum_data_rules.py:220
 msgid ""
@@ -1005,6 +1019,9 @@ msgid ""
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr ""
+"Seleziona per disabilitare il comportamento \"adesivo\" della barra di ricerca. Questo può "
+"essere utile se vuoi spostare la barra di ricerca dalla sua posizione predefinita o "
+"non ti piace il comportamento adesivo predefinito della barra di ricerca."
 
 #: conf/forum_data_rules.py:233
 msgid "Maximum number of tags per question"
@@ -1020,89 +1037,93 @@ msgstr "Cosa dovrebbe significare \"domande senza risposta\"?"
 
 #: conf/license.py:13
 msgid "Content LicensContent License"
-msgstr ""
+msgstr "Contenuto LicensaContenuto Licensa"
 
 #: conf/license.py:21
 msgid "Show license clause in the site footer"
-msgstr ""
+msgstr "Mostra le clausole di licenza nel footer del sito"
 
 #: conf/license.py:30
 msgid "Short name for the license"
-msgstr ""
+msgstr "Nome breve per la licenza"
 
 #: conf/license.py:39
 msgid "Full name of the license"
-msgstr ""
+msgstr "Nome completo della licenza"
 
 #: conf/license.py:40
 msgid "Creative Commons Attribution Share Alike 3.0"
-msgstr ""
+msgstr "Creative Commons Attribuzione Condividi allo stesso modo 3.0"
 
 #: conf/license.py:48
 msgid "Add link to the license page"
-msgstr ""
+msgstr "Aggiungi link alla pagina della licenza"
 
 #: conf/license.py:57
-#, fuzzy
 msgid "License homepage"
-msgstr "torna alla home page"
+msgstr "Home page della licenza"
 
 #: conf/license.py:59
 msgid "URL of the official page with all the license legal clauses"
-msgstr ""
+msgstr "URL della pagina ufficiale del testo della licenza"
 
 #: conf/license.py:69
-#, fuzzy
 msgid "Use license logo"
-msgstr "Logo del forum Q&A"
+msgstr "Usa il logo della licenza"
 
 #: conf/license.py:78
 msgid "License logo image"
-msgstr ""
+msgstr "Immagine di logo della licenza"
 
 #: conf/login_providers.py:13
 msgid "Login provider setings"
-msgstr ""
+msgstr "Impostazioni del login"
 
 #: conf/login_providers.py:22
 msgid ""
 "Show alternative login provider buttons on the password \"Sign Up\" page"
 msgstr ""
+"Mostra un bottone alternativo per il login nella pagina \"Iscriviti\""
 
 #: conf/login_providers.py:31
 msgid "Always display local login form and hide \"Askbot\" button."
-msgstr ""
+msgstr "Mostra sempre il campo per il login e nascondi il bottone \"Askbot\""
 
 #: conf/login_providers.py:40
 msgid "Activate to allow login with self-hosted wordpress site"
-msgstr ""
+msgstr "Attiva per permettere il login nel sito wordpress ospitato"
 
 #: conf/login_providers.py:41
 msgid ""
 "to activate this feature you must fill out the wordpress xml-rpc setting "
 "bellow"
 msgstr ""
+"per attivare questa funzione devi compilare le impostazioni xml-rpc di wordpress "
+"quà sotto"
 
 #: conf/login_providers.py:50
 msgid ""
 "Fill it with the wordpress url to the xml-rpc, normally http://mysite.com/"
 "xmlrpc.php"
 msgstr ""
+"Inserisci l'url dell'xml-rpc di wordpress, di solito questo è http://miosito.com/xmlrpc.php"
 
 #: conf/login_providers.py:51
 msgid ""
 "To enable, go to Settings->Writing->Remote Publishing and check the box for "
 "XML-RPC"
 msgstr ""
+"Per abilitarlo, vai in Impostazioni->Scrittura->Pubblicazione Remota e seleziona la casella per "
+"XML-RPC"
 
 #: conf/login_providers.py:62
 msgid "Upload your icon"
-msgstr ""
+msgstr "Carica la tua icona"
 
 #: conf/login_providers.py:92
 #, python-format
 msgid "Activate %(provider)s login"
-msgstr ""
+msgstr "Attiva il login per %(provider)s"
 
 #: conf/login_providers.py:97
 #, python-format
@@ -1110,14 +1131,16 @@ msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
 "need to be set in the \"External keys\" section"
 msgstr ""
+"Nota: per abilitare veramente il login per %(provider)s devi aggiungere dei paramentri "
+"nella sezione \"Chiavi esterne\""
 
 #: conf/markup.py:15
 msgid "Markup in posts"
-msgstr ""
+msgstr "Markup nei post"
 
 #: conf/markup.py:41
 msgid "Enable code-friendly Markdown"
-msgstr ""
+msgstr "Abilita Markdown che supporta il codice"
 
 #: conf/markup.py:43
 msgid ""
@@ -1199,14 +1222,12 @@ msgid "Downvote"
 msgstr "Dare un voto negativo"
 
 #: conf/minimum_reputation.py:40
-#, fuzzy
 msgid "Answer own question immediately"
-msgstr "Rispondi alla tua domanda"
+msgstr "Rispondi alla tua domanda subito"
 
 #: conf/minimum_reputation.py:49
-#, fuzzy
 msgid "Accept own answer"
-msgstr "modificare ogni risposta"
+msgstr "Accetta la tua riposta"
 
 #: conf/minimum_reputation.py:58
 msgid "Flag offensive"
@@ -1271,7 +1292,6 @@ msgid ""
 msgstr ""
 
 #: conf/reputation_changes.py:13
-#, fuzzy
 msgid "Karma loss and gain rules"
 msgstr "Regole relative all'ottenimento e cessione di punti reputazione"
 
@@ -1405,14 +1425,12 @@ msgid ""
 msgstr ""
 
 #: conf/sidebar_profile.py:12
-#, fuzzy
 msgid "User profile sidebar"
 msgstr "Profilo utente"
 
 #: conf/sidebar_question.py:11
-#, fuzzy
 msgid "Question page sidebar"
-msgstr "Tag"
+msgstr "Pagina delle domande nella barra laterale"
 
 #: conf/sidebar_question.py:35
 msgid "Show tag list in sidebar"
@@ -1433,14 +1451,12 @@ msgid ""
 msgstr ""
 
 #: conf/sidebar_question.py:62
-#, fuzzy
 msgid "Show related questions in sidebar"
-msgstr "Domande simili"
+msgstr "Mostra domande simili nella barra laterale"
 
 #: conf/sidebar_question.py:64
-#, fuzzy
 msgid "Uncheck this if you want to hide the list of related questions. "
-msgstr "clicca qui per vedere le domande modificate meno recentemente"
+msgstr "Non selezionare questa impostazione se vuoi nascondere la lista di domande collegate."
 
 #: conf/site_modes.py:64
 msgid "Bootstrap mode"
@@ -1487,18 +1503,16 @@ msgid "Base URL for your Q&A forum, must start with http or https"
 msgstr "URL base per il tuo forum Q&A (deve cominciare con http o https)"
 
 #: conf/site_settings.py:79
-#, fuzzy
 msgid "Check to enable greeting for anonymous user"
-msgstr "Email fasulla per gli utenti non registrati"
+msgstr "Seleziona per abilitare i saluti agli utenti anonimi"
 
 #: conf/site_settings.py:90
-#, fuzzy
 msgid "Text shown in the greeting message shown to the anonymous user"
-msgstr "Link mostrato agli utenti non registrati nel messaggio di benvenuto"
+msgstr "Testo mostrato nel benvenuto agli utenti anonimi"
 
 #: conf/site_settings.py:94
 msgid "Use HTML to format the message "
-msgstr ""
+msgstr "Usa l'HTML per formattare il messaggio"
 
 #: conf/site_settings.py:103
 msgid "Feedback site URL"
@@ -1530,9 +1544,8 @@ msgstr "colore di sfondo quando non ci sono voti"
 #: conf/skin_counter_settings.py:206 conf/skin_counter_settings.py:216
 #: conf/skin_counter_settings.py:228 conf/skin_counter_settings.py:239
 #: conf/skin_counter_settings.py:252 conf/skin_counter_settings.py:262
-#, fuzzy
 msgid "HTML color name or hex value"
-msgstr "Nome di colore HTML o valore esadecimale"
+msgstr "Nome del colore HTML o valore esadecimale"
 
 #: conf/skin_counter_settings.py:40
 msgid "Foreground color for votes = 0"
@@ -1804,9 +1817,8 @@ msgid "Sharing content on social networks"
 msgstr ""
 
 #: conf/social_sharing.py:20
-#, fuzzy
 msgid "Check to enable sharing of questions on Twitter"
-msgstr "Riapri questa domanda"
+msgstr "Seleziona per abilitare la condivisione delle domande su Twitter"
 
 #: conf/social_sharing.py:29
 msgid "Check to enable sharing of questions on Facebook"
@@ -1862,18 +1874,16 @@ msgid "Login, Users & Communication"
 msgstr ""
 
 #: conf/user_settings.py:12
-#, fuzzy
 msgid "User settings"
-msgstr "Impostazioni dei diritti degli utenti"
+msgstr "Impostazioni degli utenti"
 
 #: conf/user_settings.py:21
 msgid "Allow editing user screen name"
 msgstr "Permetti di modificare il nome utente visualizzato"
 
 #: conf/user_settings.py:30
-#, fuzzy
 msgid "Allow account recovery by email"
-msgstr "Consenti solo un account per indirizzo email"
+msgstr "Consenti il recupero dell'account per email"
 
 #: conf/user_settings.py:39
 msgid "Allow adding and removing login methods"
@@ -1895,9 +1905,8 @@ msgid ""
 msgstr ""
 
 #: conf/user_settings.py:71
-#, fuzzy
 msgid "Name for the Anonymous user"
-msgstr "Email fasulla per gli utenti non registrati"
+msgstr "Nome per gli utenti anonimi"
 
 #: conf/vote_rules.py:14
 msgid "Vote and flag limits"
@@ -1922,9 +1931,8 @@ msgid "Number of days to allow canceling votes"
 msgstr "Numero di giorni per consentire di cancellare voti"
 
 #: conf/vote_rules.py:60
-#, fuzzy
 msgid "Number of days required before answering own question"
-msgstr "Numero di giorni per consentire di cancellare voti"
+msgstr "Numero di giorni richiesti per rispondere alla propria domanda"
 
 #: conf/vote_rules.py:69
 msgid "Number of flags required to automatically hide posts"
@@ -2030,9 +2038,8 @@ msgid "favorite"
 msgstr "preferite"
 
 #: const/__init__.py:64
-#, fuzzy
 msgid "list"
-msgstr "Lista dei tag"
+msgstr "lista"
 
 #: const/__init__.py:65
 msgid "cloud"
@@ -2119,14 +2126,12 @@ msgid "email update sent to user"
 msgstr "aggiornamento via mail inviato all'utente"
 
 #: const/__init__.py:142
-#, fuzzy
 msgid "reminder about unanswered questions sent"
-msgstr "vedi domande senza risposta"
+msgstr "notifica le domande inviate che non hanno avuto risposta"
 
 #: const/__init__.py:146
-#, fuzzy
 msgid "reminder about accepting the best answer sent"
-msgstr "Guadagno per aver accettato una migliore risposta"
+msgstr "notifica quando la risposta viene considerata la migliore"
 
 #: const/__init__.py:148
 msgid "mentioned in the post"
@@ -2169,14 +2174,12 @@ msgid "off"
 msgstr ""
 
 #: const/__init__.py:218
-#, fuzzy
 msgid "exclude ignored"
-msgstr "escludi tag ignorati"
+msgstr "escludi gli ignorati"
 
 #: const/__init__.py:219
-#, fuzzy
 msgid "only selected"
-msgstr "Selezionato individualmente"
+msgstr "unico selezionato"
 
 #: const/__init__.py:223
 msgid "instantly"
@@ -2199,19 +2202,16 @@ msgid "identicon"
 msgstr ""
 
 #: const/__init__.py:234
-#, fuzzy
 msgid "mystery-man"
-msgstr "ieri"
+msgstr "mystery-man"
 
 #: const/__init__.py:235
 msgid "monsterid"
 msgstr ""
 
 #: const/__init__.py:236
-#, fuzzy
 msgid "wavatar"
-msgstr ""
-"Come cambio la mia immagine personale (gravatar)? Che cos'è il gravatar?"
+msgstr "wavatar"
 
 #: const/__init__.py:237
 msgid "retro"
@@ -2242,28 +2242,24 @@ msgid "Uploaded Avatar"
 msgstr ""
 
 #: const/message_keys.py:15
-#, fuzzy
 msgid "most relevant questions"
-msgstr "poni una domanda interessante per gli altri"
+msgstr "la domanda più rilevante"
 
 #: const/message_keys.py:16
-#, fuzzy
 msgid "click to see most relevant questions"
-msgstr "clicca qui per vedere le domande più votate"
+msgstr "clicca qui se vuoi vedere le domande più rilevanti"
 
 #: const/message_keys.py:17
-#, fuzzy
 msgid "by relevance"
-msgstr "rilevanza"
+msgstr "per rilevanza"
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
 msgstr "clicca qui per vedere le domande più vecchie"
 
 #: const/message_keys.py:19
-#, fuzzy
 msgid "by date"
-msgstr "Conferma"
+msgstr "per data"
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
@@ -2274,37 +2270,32 @@ msgid "click to see the least recently updated questions"
 msgstr "clicca qui per vedere le domande modificate meno recentemente"
 
 #: const/message_keys.py:22
-#, fuzzy
 msgid "by activity"
-msgstr "attività"
+msgstr "per attività"
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
 msgstr "clicca qui per vedere le domande modificate più di recente"
 
 #: const/message_keys.py:24
-#, fuzzy
 msgid "click to see the least answered questions"
-msgstr "clicca qui per vedere le domande più vecchie"
+msgstr "clicca qui per vedere l'ultima domanda risposta"
 
 #: const/message_keys.py:25
-#, fuzzy
 msgid "by answers"
-msgstr "risposte"
+msgstr "per risposte"
 
 #: const/message_keys.py:26
-#, fuzzy
 msgid "click to see the most answered questions"
-msgstr "clicca qui per vedere le domande più votate"
+msgstr "clicca qui per vedere le domande più risposte"
 
 #: const/message_keys.py:27
 msgid "click to see least voted questions"
 msgstr "clicca per vedere le domande meno votate"
 
 #: const/message_keys.py:28
-#, fuzzy
 msgid "by votes"
-msgstr "voti"
+msgstr "per voti"
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
@@ -2321,28 +2312,24 @@ msgid "i-names are not supported"
 msgstr "i-names non sono supportati"
 
 #: deps/django_authopenid/forms.py:233
-#, fuzzy, python-format
 msgid "Please enter your %(username_token)s"
-msgstr "Per favore inserisci il tuo username"
+msgstr "Per favore inserisci il tuo %(username_token)s"
 
 #: deps/django_authopenid/forms.py:259
-#, fuzzy
 msgid "Please, enter your user name"
 msgstr "Per favore inserisci il tuo username"
 
 #: deps/django_authopenid/forms.py:263
-#, fuzzy
 msgid "Please, enter your password"
 msgstr "Per favore inserisci la tua password"
 
 #: deps/django_authopenid/forms.py:270 deps/django_authopenid/forms.py:274
-#, fuzzy
 msgid "Please, enter your new password"
-msgstr "Per favore inserisci la tua password"
+msgstr "Per favore inserisci la tua nuova password"
 
 #: deps/django_authopenid/forms.py:285
 msgid "Passwords did not match"
-msgstr ""
+msgstr "Le password non corrispondono"
 
 #: deps/django_authopenid/forms.py:297
 #, python-format
@@ -2387,9 +2374,8 @@ msgid "complete/"
 msgstr "complete/"
 
 #: deps/django_authopenid/urls.py:15
-#, fuzzy
 msgid "complete-oauth/"
-msgstr "complete/"
+msgstr "complete-oauth/"
 
 #: deps/django_authopenid/urls.py:19
 msgid "register/"
@@ -2404,21 +2390,18 @@ msgid "logout/"
 msgstr "logout/"
 
 #: deps/django_authopenid/urls.py:30
-#, fuzzy
 msgid "recover/"
-msgstr "riapri/"
+msgstr "recupera/"
 
 #: deps/django_authopenid/util.py:378
-#, fuzzy, python-format
 msgid "%(site)s user name and password"
-msgstr "Per favore inserisci username e password"
+msgstr "Per favore inserisci username e password di %(site)s"
 
 #: deps/django_authopenid/util.py:384
 msgid "Create a password-protected account"
 msgstr ""
 
 #: deps/django_authopenid/util.py:385
-#, fuzzy
 msgid "Change your password"
 msgstr "Cambia password"
 
@@ -2427,24 +2410,20 @@ msgid "Sign in with Yahoo"
 msgstr ""
 
 #: deps/django_authopenid/util.py:480
-#, fuzzy
 msgid "AOL screen name"
 msgstr "Nome utente"
 
 #: deps/django_authopenid/util.py:488
-#, fuzzy
 msgid "OpenID url"
 msgstr "url OpenID:"
 
 #: deps/django_authopenid/util.py:517
-#, fuzzy
 msgid "Flickr user name"
-msgstr "nome utente"
+msgstr "nome utente Flickr"
 
 #: deps/django_authopenid/util.py:525
-#, fuzzy
 msgid "Technorati user name"
-msgstr "Scegli un nome utente"
+msgstr "nome utente di Technorati"
 
 #: deps/django_authopenid/util.py:533
 msgid "WordPress blog name"
@@ -2459,24 +2438,20 @@ msgid "LiveJournal blog name"
 msgstr ""
 
 #: deps/django_authopenid/util.py:557
-#, fuzzy
 msgid "ClaimID user name"
-msgstr "nome utente"
+msgstr "nome utente di ClaimID"
 
 #: deps/django_authopenid/util.py:565
-#, fuzzy
 msgid "Vidoop user name"
-msgstr "nome utente"
+msgstr "nome utente di Vidoop"
 
 #: deps/django_authopenid/util.py:573
-#, fuzzy
 msgid "Verisign user name"
-msgstr "nome utente"
+msgstr "nome utente Verisign"
 
 #: deps/django_authopenid/util.py:608
-#, fuzzy, python-format
 msgid "Change your %(provider)s password"
-msgstr "Cambia password"
+msgstr "Cambia password di %(provider)s"
 
 #: deps/django_authopenid/util.py:612
 #, python-format
@@ -2489,12 +2464,10 @@ msgid "Create password for %(provider)s"
 msgstr ""
 
 #: deps/django_authopenid/util.py:625
-#, fuzzy, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
-msgstr "Utilizza OpenID per accedere a questo sito"
+msgstr "Collega il tuo account %(provider)s per %(site_name)s"
 
 #: deps/django_authopenid/util.py:634
-#, fuzzy, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Per favore inserisci username e password"
 
@@ -2517,9 +2490,8 @@ msgid ""
 msgstr ""
 
 #: deps/django_authopenid/views.py:365
-#, fuzzy
 msgid "Your new password saved"
-msgstr "New password created"
+msgstr "Nuova password salvata"
 
 #: deps/django_authopenid/views.py:469
 msgid "The login password combination was not correct"
@@ -2555,9 +2527,8 @@ msgid "Login method %(provider_name)s does not exist"
 msgstr ""
 
 #: deps/django_authopenid/views.py:663
-#, fuzzy
 msgid "Oops, sorry - there was some error - please try again"
-msgstr "le due password non coincidono, riprova"
+msgstr "Oops! C'è stato un errore, per favore riprova"
 
 #: deps/django_authopenid/views.py:754
 #, python-format
@@ -2571,9 +2542,8 @@ msgstr ""
 "Il tuo indirizzo e-mail dev'essere verificato &mdash; vedi %(details_url)s"
 
 #: deps/django_authopenid/views.py:1092
-#, fuzzy, python-format
 msgid "Recover your %(site)s account"
-msgstr "Scegli una nuova password"
+msgstr "Recupera la password su %(site)s"
 
 #: deps/django_authopenid/views.py:1162
 msgid "Please check your email and visit the enclosed link."
@@ -2727,14 +2697,12 @@ msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr ""
 
 #: management/commands/send_accept_answer_reminders.py:62
-#, fuzzy
 msgid "Please accept the best answer for this question:"
-msgstr "Rispondi per primo!"
+msgstr "Per favore accetta la migliore risposta per questa domanda:"
 
 #: management/commands/send_accept_answer_reminders.py:64
-#, fuzzy
 msgid "Please accept the best answer for these questions:"
-msgstr "clicca qui per vedere le domande più vecchie"
+msgstr "Per favore accetta la migliore risposta per queste domande:"
 
 #: management/commands/send_email_alerts.py:411
 #, python-format
@@ -2829,11 +2797,10 @@ msgid ""
 msgstr "Mi spiace, non puoi accettare risposte perché il tuo account è sospeso"
 
 #: models/__init__.py:334
-#, fuzzy, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
-msgstr "Mi spiace, non puoi accettare una tua risposta a una tua domanda"
+msgstr "Ti servono più di %(points)s punti per accettare o negare la risposta alla tua stessa domanda"
 
 #: models/__init__.py:353
 #, python-format
@@ -2842,13 +2809,11 @@ msgid ""
 msgstr ""
 
 #: models/__init__.py:361
-#, fuzzy, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr ""
-"Mi spiace, solo l'autore della domanda, %(username)s, può accettare una "
-"risposta"
+"Mi spiace, solo il moderatore o l'autore della domanda, %(username)s, può accettare la risposta migliore"
 
 #: models/__init__.py:389
 msgid "cannot vote for own posts"
@@ -2916,11 +2881,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: models/__init__.py:490
-#, fuzzy
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 "Mi spiace, solo gli autori, i moderatori e gli amministratori  possono "
-"cambiare i tag di una domanda cancellata"
+"modificare i commenti"
 
 #: models/__init__.py:503
 msgid ""
@@ -2940,7 +2904,6 @@ msgstr ""
 "reputazione. "
 
 #: models/__init__.py:535
-#, fuzzy
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
@@ -2968,7 +2931,6 @@ msgstr ""
 "Mi spiace, puoi modificare solo i tuoi post perché il tuo account è sospeso"
 
 #: models/__init__.py:576
-#, fuzzy, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
@@ -2976,7 +2938,6 @@ msgstr ""
 "%(min_rep)s punti reputazione"
 
 #: models/__init__.py:583
-#, fuzzy, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
@@ -3158,14 +3119,12 @@ msgid "tomorrow"
 msgstr ""
 
 #: models/__init__.py:1345
-#, fuzzy, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "%(hr)d ora fa"
 msgstr[1] "%(hr)d ore fa"
 
 #: models/__init__.py:1347
-#, fuzzy, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "%(min)d minuto fa"
@@ -3186,7 +3145,6 @@ msgid ""
 msgstr ""
 
 #: models/__init__.py:1516
-#, fuzzy
 msgid "Anonymous"
 msgstr "utente non registrato"
 
@@ -3219,9 +3177,8 @@ msgid "Approved User"
 msgstr "Utente approvato"
 
 #: models/__init__.py:1733
-#, fuzzy, python-format
 msgid "%(username)s karma is %(reputation)s"
-msgstr "hai %(reputation)s punti reputazione"
+msgstr "%(username)s ha %(reputation)s punti reputazione"
 
 #: models/__init__.py:1743
 #, python-format
@@ -3231,26 +3188,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: models/__init__.py:1750
-#, fuzzy, python-format
+#, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] ""
-"Per ottenere le medaglie d'argento ci vuole del tempo. Se ne hai ottenuta "
-"una, vuol dire che hai dato un grande contributo alla comunità."
-msgstr[1] ""
-"Per ottenere le medaglie d'argento ci vuole del tempo. Se ne hai ottenuta "
-"una, vuol dire che hai dato un grande contributo alla comunità."
+msgstr[0] "una medaglia d'argento"
+msgstr[1] "%(count)d medaglie d'argento"
 
 #: models/__init__.py:1757
-#, fuzzy, python-format
+#, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
-msgstr[0] ""
-"Se partecipi regolarmente a questa comunità, verrai sicuramente premiato con "
-"delle medaglie di bronzo."
-msgstr[1] ""
-"Se partecipi regolarmente a questa comunità, verrai sicuramente premiato con "
-"delle medaglie di bronzo."
+msgstr[0] "una medaglia di bronzo"
+msgstr[1] "%(count)d medaglie di bronzo"
 
 #: models/__init__.py:1768
 #, python-format
@@ -3264,14 +3213,14 @@ msgstr ""
 
 #: models/__init__.py:2179 models/__init__.py:2185 models/__init__.py:2190
 #: models/__init__.py:2195
-#, fuzzy, python-format
+#, python-format
 msgid "Re: \"%(title)s\""
-msgstr "nuova domanda"
+msgstr "Re:\"%(title)s\""
 
 #: models/__init__.py:2200 models/__init__.py:2205
-#, fuzzy, python-format
+#, python-format
 msgid "Question: \"%(title)s\""
-msgstr "nuova domanda"
+msgstr "Domanda: \"%(title)s\""
 
 #: models/__init__.py:2386
 #, python-format
@@ -3293,23 +3242,22 @@ msgid ""
 msgstr ""
 
 #: models/answer.py:112
-#, fuzzy
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "Mi spiace, questa domanda è stata cancellata e non è più accessibile"
 
 #: models/badges.py:129
-#, fuzzy, python-format
+#, python-format
 msgid "Deleted own post with %(votes)s or more upvotes"
-msgstr "Ha cancellato un proprio post con un punteggio di -3 o meno"
+msgstr "Ha cancellato un proprio post con un punteggio di %(votes)s o più"
 
 #: models/badges.py:133
 msgid "Disciplined"
 msgstr "Ordinato"
 
 #: models/badges.py:151
-#, fuzzy, python-format
+#, python-format
 msgid "Deleted own post with %(votes)s or more downvotes"
-msgstr "Ha cancellato un proprio post con un punteggio di -3 o meno"
+msgstr "Ha cancellato un proprio post con un punteggio di %(votes)s o più"
 
 #: models/badges.py:155
 msgid "Peer Pressure"
@@ -3329,7 +3277,6 @@ msgid "Supporter"
 msgstr "Sostenitore"
 
 #: models/badges.py:219
-#, fuzzy
 msgid "First upvote"
 msgstr "Primo voto positivo"
 
@@ -3338,38 +3285,35 @@ msgid "Critic"
 msgstr "Critico"
 
 #: models/badges.py:228
-#, fuzzy
 msgid "First downvote"
 msgstr "Primo voto negativo"
 
 #: models/badges.py:237
-#, fuzzy
 msgid "Civic Duty"
 msgstr "Senso civico"
 
 #: models/badges.py:238
-#, fuzzy, python-format
+#, python-format
 msgid "Voted %(num)s times"
 msgstr "Ha votato almeno 300 volte"
 
 #: models/badges.py:252
-#, fuzzy, python-format
+#, python-format
 msgid "Answered own question with at least %(num)s up votes"
-msgstr "Ha risposto da solo a una sua domanda con almeno 3 voti"
+msgstr "Ha risposto da solo a una sua domanda con almeno %(num)s voti"
 
 #: models/badges.py:256
 msgid "Self-Learner"
 msgstr "Autodidatta"
 
 #: models/badges.py:304
-#, fuzzy
 msgid "Nice Answer"
 msgstr "Buona risposta"
 
 #: models/badges.py:309 models/badges.py:321 models/badges.py:333
-#, fuzzy, python-format
+#, python-format
 msgid "Answer voted up %(num)s times"
-msgstr "Risposta votata 10 volte"
+msgstr "Risposta votata %(num)s volte"
 
 #: models/badges.py:316
 msgid "Good Answer"
@@ -3384,9 +3328,9 @@ msgid "Nice Question"
 msgstr "Buona domanda"
 
 #: models/badges.py:345 models/badges.py:357 models/badges.py:369
-#, fuzzy, python-format
+#, python-format
 msgid "Question voted up %(num)s times"
-msgstr "Domanda votata 10 volte"
+msgstr "Domanda votata %(num)s volte"
 
 #: models/badges.py:352
 msgid "Good Question"
@@ -3409,23 +3353,21 @@ msgid "Popular Question"
 msgstr "Domanda gettonata"
 
 #: models/badges.py:418 models/badges.py:429 models/badges.py:441
-#, fuzzy, python-format
+#, python-format
 msgid "Asked a question with %(views)s views"
-msgstr "Ha posto una domanda con più di 1000 consultazioni"
+msgstr "Ha posto una domanda con %(views)s consultazioni"
 
 #: models/badges.py:425
 msgid "Notable Question"
 msgstr "Domanda notevole"
 
 #: models/badges.py:436
-#, fuzzy
 msgid "Famous Question"
-msgstr "Domanda famosa"
+msgstr "Domande famose"
 
 #: models/badges.py:450
-#, fuzzy
 msgid "Asked a question and accepted an answer"
-msgstr "La domanda non ha risposte accettate"
+msgstr "Domanda inserita e risposta accettata"
 
 #: models/badges.py:453
 msgid "Scholar"
@@ -3436,33 +3378,32 @@ msgid "Enlightened"
 msgstr "Illuminato"
 
 #: models/badges.py:499
-#, fuzzy, python-format
+#, python-format
 msgid "First answer was accepted with %(num)s or more votes"
-msgstr "La sua prima risposta è stata accettata con almeno 10 voti"
+msgstr "La sua prima risposta è stata accettata con almeno %(num)s voti"
 
 #: models/badges.py:507
 msgid "Guru"
 msgstr "Guru"
 
 #: models/badges.py:510
-#, fuzzy, python-format
+#, python-format
 msgid "Answer accepted with %(num)s or more votes"
-msgstr "La sua prima risposta è stata accettata con almeno 10 voti"
+msgstr "La sua prima risposta è stata accettata con almeno %(num)s voti"
 
 #: models/badges.py:518
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Answered a question more than %(days)s days later with at least %(votes)s "
 "votes"
 msgstr ""
-"Ha risposto a una domanda vecchia di almeno 60 giorni ottenendo almeno 5 voti"
+"Ha risposto a una domanda vecchia di almeno %(days)s giorni ottenendo almeno %(votes)s voti"
 
 #: models/badges.py:525
 msgid "Necromancer"
 msgstr "Negromante"
 
 #: models/badges.py:548
-#, fuzzy
 msgid "Citizen Patrol"
 msgstr "Sempre in guardia"
 
@@ -3499,7 +3440,6 @@ msgid "Associate Editor"
 msgstr ""
 
 #: models/badges.py:627
-#, fuzzy, python-format
 msgid "Edited %(num)s entries"
 msgstr "Ha fatto almeno 100 revisioni"
 
@@ -3520,7 +3460,6 @@ msgid "Completed all user profile fields"
 msgstr "Ha completato tutti i campi del suo profilo utente"
 
 #: models/badges.py:663
-#, fuzzy, python-format
 msgid "Question favorited by %(num)s users"
 msgstr "Domanda inserita tra le \"preferite\" da almeno 25 utenti"
 
@@ -3542,21 +3481,18 @@ msgid "Visited site every day for %(num)s days in a row"
 msgstr ""
 
 #: models/badges.py:732
-#, fuzzy
 msgid "Commentator"
-msgstr "Documentazione"
+msgstr "Commentatore"
 
 #: models/badges.py:736
-#, fuzzy, python-format
 msgid "Posted %(num_comments)s comments"
-msgstr "(%(comment_count)s commento)"
+msgstr "Inseriti (%(comment_count)s commenti"
 
 #: models/badges.py:752
 msgid "Taxonomist"
 msgstr "Tassonomista"
 
 #: models/badges.py:756
-#, fuzzy, python-format
 msgid "Created a tag used by %(num)s questions"
 msgstr "Ha creato un tag usato da almeno 50 domande"
 
@@ -3586,9 +3522,8 @@ msgid "\" and \"%s\""
 msgstr ""
 
 #: models/question.py:73
-#, fuzzy
 msgid "\" and more"
-msgstr "Scopri di più"
+msgstr "\" ed altro ancora"
 
 #: models/question.py:492
 msgid "Sorry, this question has been deleted and is no longer accessible"
@@ -3708,9 +3643,8 @@ msgid "Oops, apologies - there was some error"
 msgstr ""
 
 #: utils/decorators.py:109
-#, fuzzy
 msgid "Please login to post"
-msgstr "Accedi o registrati"
+msgstr "Accedi o registrati per inserire domande"
 
 #: utils/decorators.py:205
 msgid "Spam was detected on your post, sorry for if this is a mistake"
@@ -3834,9 +3768,8 @@ msgid "You have %(votes_left)s votes left for today"
 msgstr "Puoi votare ancora %(votes_left)s volte oggi"
 
 #: views/commands.py:122
-#, fuzzy
 msgid "Sorry, but anonymous users cannot access the inbox"
-msgstr "mi spiace, devi essere registrato per accettare una risposta"
+msgstr "Spiacenti, gli utenti anonimi non possono accedere ai messaggi in arrivo"
 
 #: views/commands.py:192
 msgid "Sorry, something is not right here..."
@@ -3865,14 +3798,12 @@ msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr ""
 
 #: views/commands.py:409
-#, fuzzy, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
-msgstr "Accedi o registrati"
+msgstr "Accedi per sottoscrivere i tag: %(tags)s"
 
 #: views/commands.py:542
-#, fuzzy
 msgid "Please sign in to vote"
-msgstr "Puoi accedere al tuo account da qui:"
+msgstr "Accedi per votare"
 
 #: views/meta.py:83
 msgid "Q&A forum feedback"
@@ -3888,11 +3819,10 @@ msgstr ""
 "Siamo curiosi di sentire la tua opinione! Sarà per la prossima volta :)"
 
 #: views/readers.py:151
-#, fuzzy, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
-msgstr[0] "%(q_num)s domanda"
-msgstr[1] "%(q_num)s domande"
+msgstr[0] "%(q_num)s domanda, taggata"
+msgstr[1] "%(q_num)s domande, taggate"
 
 #: views/readers.py:159
 #, python-format
@@ -3909,11 +3839,10 @@ msgstr[0] "%(badge_count)d%(badge_level)s medaglia"
 msgstr[1] "%(badge_count)d%(badge_level)s medaglie"
 
 #: views/readers.py:407
-#, fuzzy
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr "Mi spiace, questa domanda è stata cancellata e non è più accessibile"
+msgstr "Mi spiace, questo commento è stata cancellato e non è più accessibile"
 
 #: views/users.py:227
 msgid "moderate this user"
@@ -4006,14 +3935,12 @@ msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "Errore nel caricamento del file. Contatta un amministratore."
 
 #: views/writers.py:191
-#, fuzzy
 msgid "Please log in to ask questions"
-msgstr "Ricorda, puoi sempre porre tu stesso una domanda!"
+msgstr "Accedi per fare una domanda"
 
 #: views/writers.py:492
-#, fuzzy
 msgid "Please log in to answer questions"
-msgstr "vedi domande senza risposta"
+msgstr "Accedi per rispondere alle domande"
 
 #: views/writers.py:598
 #, python-format
@@ -4025,9 +3952,8 @@ msgstr ""
 "\"%(sign_in_url)s\">Accedi o registrati</a>."
 
 #: views/writers.py:646
-#, fuzzy
 msgid "Sorry, anonymous users cannot edit comments"
-msgstr "Mi spiace, gli utenti non registrati non possono caricare file."
+msgstr "Mi spiace, gli utenti non registrati non possono modificare i commenti."
 
 #: views/writers.py:654
 #, python-format
