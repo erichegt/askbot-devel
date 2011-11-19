@@ -19,36 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: exceptions.py:13
-#, fuzzy
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "mi spiace, devi essere registrato per accettare una risposta"
+msgstr "Mi spiace, ma devi essere registrato per usare questa funzionalità"
 
 #: feed.py:26 feed.py:100
 msgid " - "
-msgstr "-"
+msgstr " - "
 
 #: feed.py:26
-#, fuzzy
 msgid "Individual question feed"
-msgstr "Domande selezionate individualmente"
+msgstr "Feed di un'unica domanda"
 
 #: feed.py:100
 msgid "latest questions"
 msgstr "domande recenti"
 
 #: forms.py:74
-#, fuzzy
 msgid "select country"
-msgstr "Cancella il tuo utente"
+msgstr "scegli lo Stato"
 
 #: forms.py:83
 msgid "Country"
-msgstr ""
+msgstr "Paese"
 
 #: forms.py:91
-#, fuzzy
 msgid "Country field is required"
-msgstr "campo obbligatorio"
+msgstr "Il campo Stato è obbligatorio"
 
 #: forms.py:104
 msgid "title"
@@ -95,7 +91,7 @@ msgstr[1] "per favore usa un numero uguale o inferiore a %(tag_count)d tags"
 #: forms.py:181
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "Devi inserire almeno uno di questi tag: %(tags)s"
 
 #: forms.py:190
 #, python-format
@@ -110,7 +106,7 @@ msgstr "usa-questi-caratteri-nei-tag"
 
 #: forms.py:233
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr ""
+msgstr "wiki della comunità (il karma non è ricompensato & molti altri possono modificare le pagine del wiki)"
 
 #: forms.py:234
 msgid ""
@@ -134,7 +130,7 @@ msgstr ""
 
 #: forms.py:327
 msgid "Enter number of points to add or subtract"
-msgstr "inserisci un numero di punti da aggiungere o rimuovere"
+msgstr "Inserisci un numero di punti da aggiungere o rimuovere"
 
 #: forms.py:341 const/__init__.py:250
 msgid "approved"
@@ -153,9 +149,8 @@ msgid "blocked"
 msgstr "bloccato"
 
 #: forms.py:346
-#, fuzzy
 msgid "administrator"
-msgstr "Amministratore del sito"
+msgstr "Amministratore"
 
 #: forms.py:347 const/__init__.py:249
 msgid "moderator"
@@ -182,16 +177,15 @@ msgid "Cannot change status of another moderator"
 msgstr "Non è possibile cambiare lo stato di un altro moderatore"
 
 #: forms.py:434
-#, fuzzy
 msgid "Cannot change status to admin"
-msgstr "Non è possibile cambiare il proprio stato"
+msgstr "Non è possibile cambiare il proprio stato ad amministratore"
 
 #: forms.py:440
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr "Se desideri cambiare lo stato di %(username)s, "
+msgstr "Se desideri cambiare lo stato di %(username)s, per piacere fai una selezione sensata."
 
 #: forms.py:449
 msgid "Subject line"
@@ -214,41 +208,43 @@ msgid "Your message:"
 msgstr "Il tuo messaggio:"
 
 #: forms.py:581
-#, fuzzy
 msgid "ask anonymously"
-msgstr "utente non registrato"
+msgstr "chiedi come utente anonimo"
 
 #: forms.py:583
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "Controlla se non vuoi rivelare il tuo nome quando fai questa domanda"
 
 #: forms.py:743
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
-msgstr ""
+msgstr "Hai posto questa domanda in modo anonimo. se decidi di rivelare la tua "
+"identità, per favore seleziona questo campo."
 
 #: forms.py:747
 msgid "reveal identity"
-msgstr ""
+msgstr "rivela l'identità"
 
 #: forms.py:805
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
-msgstr ""
+msgstr "Spiacenti, solo il proprietario della domanda anonima può rivelare la sua identità, "
+"per favore togli la spunta dal campo"
 
 #: forms.py:818
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
-msgstr ""
+msgstr "Spiacenti, sembra che le regole siano cambiate e che non è più possibile "
+"porre domande anonime. Controlla il box \"rivela identità\" oppure ricarica questa "
+"pagina e prova a modificare la domanda ancora"
 
 #: forms.py:856
-#, fuzzy
 msgid "this email will be linked to gravatar"
-msgstr "questa email non deve essere linkata al gravatar"
+msgstr "questa email verrà linkata a gravatar"
 
 #: forms.py:863
 msgid "Real name"
@@ -260,11 +256,11 @@ msgstr "Sito web"
 
 #: forms.py:877
 msgid "City"
-msgstr ""
+msgstr "Città"
 
 #: forms.py:886
 msgid "Show country"
-msgstr ""
+msgstr "Mostra paese"
 
 #: forms.py:891
 msgid "Date of birth"
@@ -382,16 +378,15 @@ msgstr "tag/"
 
 #: urls.py:196
 msgid "subscribe-for-tags/"
-msgstr ""
+msgstr "iscrivi-per-tag/"
 
 #: urls.py:201 urls.py:207 urls.py:213 urls.py:221
 msgid "users/"
 msgstr "utenti/"
 
 #: urls.py:214
-#, fuzzy
 msgid "subscriptions/"
-msgstr "notifiche"
+msgstr "iscrizioni/"
 
 #: urls.py:226
 msgid "users/update_has_custom_avatar/"
@@ -426,13 +421,12 @@ msgid "account/"
 msgstr "account/"
 
 #: conf/badges.py:13
-#, fuzzy
 msgid "Badge settings"
-msgstr "Impostazioni base"
+msgstr "Impostazioni del badge"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "Moderato: voti positivi minimi per il post cancellato"
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
@@ -440,172 +434,166 @@ msgstr ""
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "Insegnante: voti positivi minimi per la risposta"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Bella risposta: minimi voti positivi per la risposta"
 
 #: conf/badges.py:59
 msgid "Good Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Buona Risposta: voti positivi minimi per la risposta"
 
 #: conf/badges.py:68
 msgid "Great Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Ottima Risposta: voti positivi minimi per la risposta"
 
 #: conf/badges.py:77
 msgid "Nice Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Bella Domanda: voti positivi minimi per la domanda"
 
 #: conf/badges.py:86
 msgid "Good Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Buona Domanda: messaggi positivi minimi per la domanda"
 
 #: conf/badges.py:95
 msgid "Great Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Grande Domanda: voti positivi minimi per la domanda"
 
 #: conf/badges.py:104
-#, fuzzy
 msgid "Popular Question: minimum views"
-msgstr "Domanda gettonata"
+msgstr "Domanda Gettonata: visualizzazioni minime"
 
 #: conf/badges.py:113
-#, fuzzy
 msgid "Notable Question: minimum views"
-msgstr "Domanda notevole"
+msgstr "Domanda notevole: visualizzazioni minime"
 
 #: conf/badges.py:122
-#, fuzzy
 msgid "Famous Question: minimum views"
-msgstr "Domanda famosa"
+msgstr "Domanda famosa: visualizzazioni minime"
 
 #: conf/badges.py:131
 msgid "Self-Learner: minimum answer upvotes"
-msgstr ""
+msgstr "Autodidatta: votazioni positive minime alle risposte"
 
 #: conf/badges.py:140
 msgid "Civic Duty: minimum votes"
-msgstr ""
+msgstr "Senso Civico: votazioni minime"
 
 #: conf/badges.py:149
 msgid "Enlightened Duty: minimum upvotes"
-msgstr ""
+msgstr "Dovere Illuminato: votazioni positive minime"
 
 #: conf/badges.py:158
 msgid "Guru: minimum upvotes"
-msgstr ""
+msgstr "Guru: votazioni positive minime"
 
 #: conf/badges.py:167
 msgid "Necromancer: minimum upvotes"
-msgstr ""
+msgstr "Negromante"
 
 #: conf/badges.py:176
 msgid "Necromancer: minimum delay in days"
-msgstr ""
+msgstr "Necromante: ritardo minimo in giorni"
 
 #: conf/badges.py:185
 msgid "Associate Editor: minimum number of edits"
-msgstr ""
+msgstr "Editore Assiciato: numero minimo di modifiche"
 
 #: conf/badges.py:194
-#, fuzzy
 msgid "Favorite Question: minimum stars"
-msgstr "Domanda apprezzata"
+msgstr "Domanda apprezzata: numero minimo di stellette"
 
 #: conf/badges.py:203
-#, fuzzy
 msgid "Stellar Question: minimum stars"
-msgstr "Domanda stellare"
+msgstr "Domanda stellare: numero minimo di stellette"
 
 #: conf/badges.py:212
 msgid "Commentator: minimum comments"
-msgstr ""
+msgstr "Commentatore: numero minimo di commenti"
 
 #: conf/badges.py:221
 msgid "Taxonomist: minimum tag use count"
-msgstr ""
+msgstr "Tassonomista: numero minimo di tag"
 
 #: conf/badges.py:230
 msgid "Enthusiast: minimum days"
-msgstr ""
+msgstr "Entusiasta: numero minimo di giorni"
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
 msgstr "Configurazione email ed avvisi tramite mail"
 
 #: conf/email.py:24
-#, fuzzy
 msgid "Prefix for the email subject line"
-msgstr "Benvenuto!"
+msgstr "Prefisso per l'oggetto delle email"
 
 #: conf/email.py:26
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
-"value entered here will overridethe default."
-msgstr ""
+"value entered here will override the default."
+msgstr "Questa impostazione vengono prese dalle impostazioni predefinite di django EMAIL_SUBJECT_PREFIX. A"
+"il valore inserito quà sovrascriverà il predefinito."
 
 #: conf/email.py:38
 msgid "Maximum number of news entries in an email alert"
 msgstr "Massimo numero di news in un avviso tramite mail"
 
 #: conf/email.py:48
-#, fuzzy
 msgid "Default notification frequency all questions"
 msgstr "Frequenza di notifica news predefinita"
 
 #: conf/email.py:50
 msgid "Option to define frequency of emailed updates for: all questions."
-msgstr ""
+msgstr "Opzione per determinare la frequenza di email autovalutate"
 
 #: conf/email.py:62
-#, fuzzy
 msgid "Default notification frequency questions asked by the user"
-msgstr "Frequenza di notifica news predefinita"
+msgstr "Frequenza predefinita della notifica delle domande fatte dagli utenti"
 
 #: conf/email.py:64
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
-msgstr ""
+msgstr "Opzione per definire la frequenza degli aggiornamenti per email per: Domande chieste dall'"
+"utente"
 
 #: conf/email.py:76
-#, fuzzy
 msgid "Default notification frequency questions answered by the user"
-msgstr "Frequenza di notifica news predefinita"
+msgstr "Frequenza predefinita di invio delle notifiche per risposte date dall'utente"
 
 #: conf/email.py:78
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
-msgstr ""
+msgstr "Opzione per definire la frequenza degli aggiornamenti email per: Domande risposte da "
+"utente."
 
 #: conf/email.py:90
 msgid ""
 "Default notification frequency questions individually                        "
 "selected by the user"
-msgstr ""
+msgstr "Frequenza predefinita di aggiornamento per le domande selezionate individualmente dall'utente"
 
 #: conf/email.py:93
 msgid ""
 "Option to define frequency of emailed updates for: Question individually "
 "selected by the user."
-msgstr ""
+msgstr "Opzione per definire la frequenza di aggiornamenti email per: Domande individuali, selezionati dall'utente."
 
 #: conf/email.py:105
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
-msgstr ""
+msgstr "Frequenza predefinita per le notifiche per menzionare          e"
+"commenti"
 
 #: conf/email.py:108
 msgid ""
 "Option to define frequency of emailed updates for: Mentions and comments."
-msgstr ""
+msgstr "Opzione per definire la frequenza degli aggiornamenti email per: Menzionati e commenti."
 
 #: conf/email.py:119
-#, fuzzy
 msgid "Send periodic reminders about unanswered questions"
 msgstr "Non ci sono domande senza risposte"
 
@@ -617,24 +605,22 @@ msgid ""
 msgstr ""
 
 #: conf/email.py:134
-#, fuzzy
 msgid "Days before starting to send reminders about unanswered questions"
-msgstr "Non ci sono domande senza risposte"
+msgstr "Giorni trascorsi prima di inviare promemoria riguardo domande non risposte"
 
 #: conf/email.py:145
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
-msgstr ""
+msgstr "Quanto spesso inviare i promemoria riguardo alle domande senza risposta"
 
 #: conf/email.py:157
 msgid "Max. number of reminders to send about unanswered questions"
-msgstr ""
+msgstr "Numero massimo di promemoria da inviare riguardo alle domande non risposte"
 
 #: conf/email.py:168
-#, fuzzy
 msgid "Send periodic reminders to accept the best answer"
-msgstr "Non ci sono domande senza risposte"
+msgstr "Manda promemoria periodici per accettare la risposta migliore"
 
 #: conf/email.py:170
 msgid ""
@@ -644,19 +630,18 @@ msgid ""
 msgstr ""
 
 #: conf/email.py:183
-#, fuzzy
 msgid "Days before starting to send reminders to accept an answer"
-msgstr "Non ci sono domande senza risposte"
+msgstr "Giorni trascorsi prima di inviare un promemoria  per accettare una risposta"
 
 #: conf/email.py:194
 msgid ""
 "How often to send accept answer reminders (in days between the reminders "
 "sent)."
-msgstr ""
+msgstr "Quanto spesso "
 
 #: conf/email.py:206
 msgid "Max. number of reminders to send to accept the best answer"
-msgstr ""
+msgstr "Numero massimo di promemoria da inviare per accettare la miglior risposta"
 
 #: conf/email.py:218
 msgid "Require email verification before allowing to post"
@@ -683,47 +668,43 @@ msgstr ""
 "Utilizza questi settaggi per controllare il gravatar per utenti senza email"
 
 #: conf/email.py:247
-#, fuzzy
 msgid "Allow posting questions by email"
-msgstr ""
-"<span class=\"strong big\">Puoi cominciare ora a scrivere la tua domanda "
-"come utente non registrato</span>. Quando avrai finito, sarai reindirizzato "
-"alla pagina di accesso/registrazione. La tua domanda sarà salvata e "
-"pubblicata non appena ti sarai registrato. Accedere al proprio account "
-"richiede circa 30 secondi, registrarne uno nuovo meno di un minuto."
+msgstr "Consenti di inviare domande per email"
 
 #: conf/email.py:249
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the settings."
 "py file"
-msgstr ""
+msgstr "Prima di abilitare questa opzione, prima compila le impostazioni IMAP nelle impostazioni."
+"file py"
 
 #: conf/email.py:260
 msgid "Replace space in emailed tags with dash"
-msgstr ""
+msgstr "Sostituisci lo spazio nei tag delle email con un trattino"
 
 #: conf/email.py:262
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
-msgstr ""
+msgstr "Queste impostazioni si applicano ai tag scritti nel campo oggetto della domanda risolta"
+"per email"
 
 #: conf/external_keys.py:11
 msgid "Keys for external services"
-msgstr ""
+msgstr "Chiave per servizi esterni"
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
 msgstr "Site verification key di Google"
 
 #: conf/external_keys.py:21
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "This key helps google index your site please obtain is at <a href=\"%(url)s?"
 "hl=%(lang)s\">google webmasters tools site</a>"
 msgstr ""
 "Questa chiave aiuta google ad indicizzare il tuo sito. Per favore ottienila "
-"presso gli <a href=\"%(google_webmasters_tools_url)s\">strumenti per i "
+"presso gli <a href=\"%(url)s hl=%(lang)s\">strumenti per i "
 "webmaster di Google</a>"
 
 #: conf/external_keys.py:36
@@ -731,17 +712,17 @@ msgid "Google Analytics key"
 msgstr "Chiave Google Analytics"
 
 #: conf/external_keys.py:38
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Obtain is at <a href=\"%(url)s\">Google Analytics</a> site, if you wish to "
 "use Google Analytics to monitor your site"
 msgstr ""
-"Ottieni un account <a href=\"%(ga_site)s\">Google Analytics</a>, se vuoi "
+"Ottieni un account <a href=\"%(url)s\">Google Analytics</a>, se vuoi "
 "utilizzare Google Analytics per monitorare il tuo sito web"
 
 #: conf/external_keys.py:51
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
+msgstr "Abilita il recaptcha (le chiavi quà sotto sono necessarie)"
 
 #: conf/external_keys.py:60
 msgid "Recaptcha public key"
@@ -752,7 +733,7 @@ msgid "Recaptcha private key"
 msgstr "Chiave privata Recaptcha"
 
 #: conf/external_keys.py:70
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Recaptcha is a tool that helps distinguish real people from annoying spam "
 "robots. Please get this and a public key at the <a href=\"%(url)s\">%(url)s</"
@@ -760,14 +741,14 @@ msgid ""
 msgstr ""
 "Recaptcha è un tool che aiuta a distinguere persone reali da fastidisosi "
 "spam robots. Per favore ottieni questa ed una chiave pubblica all'indirizzo "
-"<a href=\"http://recaptcha.net\">recaptcha.net</a>"
+"<a href=\"%(url)s\">recaptcha.net</a>"
 
 #: conf/external_keys.py:82
 msgid "Facebook public API key"
 msgstr "Facebook API key"
 
 #: conf/external_keys.py:84
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Facebook API key and Facebook secret allow to use Facebook Connect login "
 "method at your site. Please obtain these keys at <a href=\"%(url)s"
@@ -775,7 +756,7 @@ msgid ""
 msgstr ""
 "La Facebook API key ed il Facebook secret ti permettono di usare  Facebook "
 "Connect per i login al tuo sito. Per favore ottieni queste chiavi presso la "
-"pagina <a href=\"http://www.facebook.com/developers/createapp.php\">facebook "
+"pagina <a href=\"%(url)s\">facebook "
 "create app</a>"
 
 #: conf/external_keys.py:97
@@ -784,36 +765,37 @@ msgstr "Facebook secret key"
 
 #: conf/external_keys.py:105
 msgid "Twitter consumer key"
-msgstr ""
+msgstr "La chiave consumatore di Twitter"
 
 #: conf/external_keys.py:107
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications site</"
 "a>"
-msgstr ""
+msgstr "Per favore registra il tuo form a <a href=\"%(url)s\">sito dell'applicazione twitter</a>" 
 
 #: conf/external_keys.py:118
 msgid "Twitter consumer secret"
-msgstr ""
+msgstr "La chiave segreta consumatore di Twitter"
 
 #: conf/external_keys.py:126
 msgid "LinkedIn consumer key"
-msgstr ""
+msgstr "La chiave utente di LinkedIn"
 
 #: conf/external_keys.py:128
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer site</a>"
 msgstr ""
+"Per favore, registra il tuo form a <a href=\"%(url)s\">sito di sviluppo di LinkedIn"
 
 #: conf/external_keys.py:139
 msgid "LinkedIn consumer secret"
-msgstr ""
+msgstr "Utente segreto di LinkedIn"
 
 #: conf/external_keys.py:147
 msgid "ident.ca consumer key"
-msgstr ""
+msgstr "codice utente di ident.ca"
 
 #: conf/external_keys.py:149
 #, python-format
@@ -821,27 +803,27 @@ msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
 "site</a>"
 msgstr ""
+"Per favore registra il tuo forum a <a href\"%(url)s\">Identi.ca"
 
 #: conf/external_keys.py:160
 msgid "ident.ca consumer secret"
-msgstr ""
+msgstr "codice utente di identi.ca"
 
 #: conf/external_keys.py:168
 msgid "Use LDAP authentication for the password login"
-msgstr ""
+msgstr "Usa l'autenticazione LDAP per le passwird "
 
 #: conf/external_keys.py:177
 msgid "LDAP service provider name"
-msgstr ""
+msgstr "Nome utente del provider LDAP"
 
 #: conf/external_keys.py:185
 msgid "URL for the LDAP service"
-msgstr ""
+msgstr "URL del servizio LDAP"
 
 #: conf/external_keys.py:193
-#, fuzzy
 msgid "Explain how to change LDAP password"
-msgstr "Cambia password"
+msgstr "Spiega come modificare la password LDAP"
 
 #: conf/flatpages.py:11
 msgid "Flatpages - about, privacy policy, etc."
@@ -860,12 +842,10 @@ msgstr ""
 "HTML<a> sulla pagina \"about\" per controllare il tuo input."
 
 #: conf/flatpages.py:32
-#, fuzzy
 msgid "Text of the Q&A forum FAQ page (html format)"
 msgstr "Testo della pagina About del Q&A forum (formato html)"
 
 #: conf/flatpages.py:35
-#, fuzzy
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
@@ -886,7 +866,6 @@ msgstr ""
 "HTML<a> sulla pagina \"about\" per controllare il tuo input."
 
 #: conf/forum_data_rules.py:12
-#, fuzzy
 msgid "Data entry and display rules"
 msgstr "Impostazioni per la visualizzazione dei dati di Askbot"
 
@@ -896,6 +875,8 @@ msgid ""
 "Enable embedding videos. <em>Note: please read <a href=\"%(url)s>read this</"
 "a> first.</em>"
 msgstr ""
+"Abilita l'inserimento di video. <em>Nota: per favore leggi <a href=\"%(url)s>leggi questo</"
+"a> prima </em>"
 
 #: conf/forum_data_rules.py:33
 msgid "Check to enable community wiki feature"
@@ -903,7 +884,7 @@ msgstr "Spunta per impostare come 'domanda comunitaria'"
 
 #: conf/forum_data_rules.py:42
 msgid "Allow asking questions anonymously"
-msgstr ""
+msgstr "Permetti di rispondere alle domande anonimamente"
 
 #: conf/forum_data_rules.py:44
 msgid ""
@@ -924,9 +905,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:73
-#, fuzzy
 msgid "Allow swapping answer with question"
-msgstr "Rispondi alla domanda"
+msgstr "Consenti di scambiare la domanda con la risposta"
 
 #: conf/forum_data_rules.py:75
 msgid ""
@@ -939,9 +919,8 @@ msgid "Maximum length of tag (number of characters)"
 msgstr "Massima lunghezza di un tag (numero di caratteri)"
 
 #: conf/forum_data_rules.py:95
-#, fuzzy
 msgid "Mandatory tags"
-msgstr "ha aggiornato i tag"
+msgstr "Tag obbligatori"
 
 #: conf/forum_data_rules.py:98
 msgid ""
@@ -951,7 +930,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:110
 msgid "Force lowercase the tags"
-msgstr ""
+msgstr "Forza tag con lettere minuscole"
 
 #: conf/forum_data_rules.py:112
 msgid ""
@@ -970,9 +949,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:140
-#, fuzzy
 msgid "Use wildcard tags"
-msgstr "Tag"
+msgstr "Usa tag multipli"
 
 #: conf/forum_data_rules.py:142
 msgid ""
@@ -991,15 +969,15 @@ msgstr ""
 
 #: conf/forum_data_rules.py:176
 msgid "Limit time to edit comments"
-msgstr ""
+msgstr "Limita il tempo per modificare i commenti"
 
 #: conf/forum_data_rules.py:178
 msgid "If unchecked, there will be no time limit to edit the comments"
-msgstr ""
+msgstr "Se non selezionato, non ci sarà un limite di tempo per modificare i commenti"
 
 #: conf/forum_data_rules.py:189
 msgid "Minutes allowed to edit a comment"
-msgstr ""
+msgstr "Minuti concessi per modificare un commento"
 
 #: conf/forum_data_rules.py:190
 msgid "To enable this setting, check the previous one"
