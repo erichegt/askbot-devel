@@ -3295,12 +3295,12 @@ msgstr "Senso civico"
 #: models/badges.py:238
 #, python-format
 msgid "Voted %(num)s times"
-msgstr "Ha votato almeno 300 volte"
+msgstr "Votata almeno %(num)s volte"
 
 #: models/badges.py:252
 #, python-format
 msgid "Answered own question with at least %(num)s up votes"
-msgstr "Ha risposto da solo a una sua domanda con almeno %(num)s voti"
+msgstr "Ha risposto da solo ad una sua domanda con almeno %(num)s voti"
 
 #: models/badges.py:256
 msgid "Self-Learner"
