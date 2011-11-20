@@ -377,6 +377,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """view that displays body of the question and
     all answers to it
     """
+    #process url parameters
     #todo: fix inheritance of sort method from questions
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
@@ -395,7 +396,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
     if show_comment is not None:
-        #comments
+        #if url calls for display of a specific comment,
+        #check that comment exists, that it belongs to
+        #the current question
+        #if it is an answer comment and the answer is hidden -
+        #redirect to the default view of the question
+        #if the question is hidden - redirect to the main page
+        #in addition - if url points to a comment and the comment
+        #is for the answer - we need the answer object
         try:
             show_comment = models.Comment.objects.get(id = show_comment)
             if str(show_comment.get_origin_post().id) != id:
@@ -418,7 +426,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             return HttpResponseRedirect(reverse('index'))
 
     elif show_answer is not None:
-        #answers
+        #if the url calls to view a particular answer to 
+        #question - we must check whether the question exists
+        #whether answer is actually corresponding to the current question
+        #and that the visitor is allowed to see it
         try:
             show_post = get_object_or_404(models.Answer, id = show_answer)
             if str(show_post.question.id) != id:
