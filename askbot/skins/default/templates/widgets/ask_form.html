@@ -30,11 +30,6 @@
             mandatory_tags = mandatory_tags
         )
     }}
-    {% if not request.user.is_authenticated() %}
-    <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
-    {% else %}
-    <input type="submit" name="post" value="{% trans %}Ask your question{% endtrans %}" class="submit" />
-    {% endif %}
     <div class="question-options">
         {% if settings.WIKI_ON %}
             {{ macros.checkbox_in_div(form.wiki) }}
@@ -43,5 +38,10 @@
             {{ macros.checkbox_in_div(form.ask_anonymously) }}
         {% endif %}
     </div>
+    {% if not request.user.is_authenticated() %}
+    <input type="submit" name="post_anon" value="{% trans %}Login/signup to post your question{% endtrans %}" class="submit" />
+    {% else %}
+    <input type="submit" name="post" value="{% trans %}Ask your question{% endtrans %}" class="submit" />
+    {% endif %}
     <div class="clean"></div>
 </form>

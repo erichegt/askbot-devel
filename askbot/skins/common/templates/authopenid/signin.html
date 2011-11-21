@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 {% if have_buttons or view_subtype == 'email_sent' %}
-    <h1>{{page_title}}</h1>
+    <h1 class="section-title">{{page_title}}</h1>
 {% endif %}
     {% if answer %}
         <div class="message">
@@ -212,7 +212,7 @@
 
 {% block sidebar %}
     {% if have_buttons %}
-        <div class="boxC">
+        <div class="box">
             <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
             <ul>
                 <li>

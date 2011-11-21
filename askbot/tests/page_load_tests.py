@@ -25,9 +25,10 @@ def patch_jinja2():
 
 (CMAJOR, CMINOR, CMICRO) = package_utils.get_coffin_version()
 if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
+    import ipdb; ipdb.set_trace()
     patch_jinja2()
 
-class PageLoadTestCase(TestCase):
+class PageLoadTestCase(AskbotTestCase):
     def try_url(
             self,
             url_name, status_code=200, template=None, 
@@ -66,8 +67,29 @@ class PageLoadTestCase(TestCase):
             else:
                 raise Exception('unexpected error while runnig test')
 
-class PageLoadTests(PageLoadTestCase):
-    fixtures = ['tmp/fixture2.json', ]
+    def setUp(self):
+        self.u1 = self.create_user(username='user1')
+        self.u2 = self.create_user(username='user2')
+        self.u3 = self.create_user(username='user3')
+
+        self.question = self.post_question(user=self.u1)
+
+        self.answer = self.post_answer(user=self.u1, question=self.question)
+        self.answer.id = 38 # one of the tests tries this id
+        self.answer.save()
+
+        self.question2 = self.post_question(user=self.u2)
+        self.question2.id = 2
+        self.question2.save()
+
+        self.question3 = self.post_question(user=self.u3)
+        self.question3.id = 3
+        self.question3.save()
+
+        self.question17 = self.post_question(user=self.u1)
+        self.question17.id = 17
+        self.question17.save()
+
 
     def test_index(self):
         #todo: merge this with all reader url tests

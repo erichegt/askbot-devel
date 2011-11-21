@@ -21,6 +21,32 @@
     </div>
 {%- endmacro -%}
 
+{%- macro post_vote_buttons(post = None, visitor_vote = None) -%}
+<div
+    id="{{post.post_type}}-img-upvote-{{ post.id }}"
+    class="{{post.post_type}}-img-upvote post-vote{% if visitor_vote == 1 %} on{% endif %}" 
+    {% if post.post_type == 'question' %}
+        title="{% trans %}i like this question (click again to cancel){% endtrans %}"
+    {% else %}
+        title="{% trans %}i like this answer (click again to cancel){% endtrans %}"
+    {% endif %}
+/></div>
+<div 
+    id="{{post.post_type}}-vote-number-{{ post.id }}"
+    class="vote-number"
+    title="{% trans %}current number of votes{% endtrans %}"
+>{{ post.score }}</div>
+<div
+    id="{{post.post_type}}-img-downvote-{{ post.id }}"
+    class="{{post.post_type}}-img-downvote post-vote{% if visitor_vote == -1 %} on{% endif %}" 
+    {% if post.post_type == 'question' %}
+        title="{% trans %}i dont like this question (click again to cancel){% endtrans %}" 
+    {% else %}
+        title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" 
+    {% endif %}
+/></div>
+{%- endmacro -%}
+
 {%- macro post_contributor_avatar_and_credentials(post, user) -%}
     {% if post.is_anonymous %}
         <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
@@ -49,7 +75,7 @@ poor design of the data or methods on data objects #}
            {% endif %}
            <strong>{{post.added_at|diff_date}}</strong>
         </p>
-        <img 
+        <img width="35" height="35"
             src="{{'/images/wiki.png'|media}}"
             alt="{% trans %}this post is marked as community wiki{% endtrans %}"
             style="float:left"
@@ -66,7 +92,7 @@ poor design of the data or methods on data objects #}
             {% else %}
                 {% trans %}posted{% endtrans %}
             {% endif %}
-            {% if post.__class__.__name__ in ('QuestionRevision', 'AnswerRevision') %}
+            {% if post.__class__.__name__ == 'PostRevision' %}
                 <strong>{{post.revised_at|diff_date}}</strong>
             {% else %}
                 <strong>{{post.added_at|diff_date}}</strong>
@@ -80,7 +106,7 @@ poor design of the data or methods on data objects #}
         {% set last_edited_at = post.last_edited_at %}
         {% set original_author = post.author %}
         {% set update_author = post.last_edited_by %}
-    {% elif post.__class__.__name__ in ('QuestionRevision', 'AnswerRevision') %}
+    {% elif post.__class__.__name__ == 'PostRevision' %}
         {% set last_edited_at = post.revised_at %}
         {% set original_author = None %}{# fake value to force display widget in the revision views #}
         {% set update_author = post.author %}
@@ -260,7 +286,7 @@ for the purposes of the AJAX comment editor #}
             >{{comment.user.username}}</a>
             <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
             {% if user|can_edit_comment(comment) %}
-                <a class="edit">{% trans %}edit{% endtrans %}</a>
+                &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>
             {% endif %}
         </div>
     </div>
@@ -300,6 +326,9 @@ for the purposes of the AJAX comment editor #}
     )
 -%}
     {% spaceless %}
+    {% if post.comment_count > 0 %}
+        <h2 id="comment-title">Comments</h2>
+    {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
@@ -428,7 +457,7 @@ answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id
 {%- endmacro -%}
 
 {%- macro user_score_and_badge_summary(user) -%}
-  {%include "widgets/user_long_score_and_badge_summary.html"%}
+  {%include "widgets/user_score_and_badge_summary.html"%}
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}
