@@ -122,6 +122,7 @@ var CPValidator = function(){
             };
         },
         getQuestionFormMessages: function(){
+            //todo: here use pluralization function instead of replace
             return {
                 tags: {
                     required: " " + gettext('tags cannot be empty'),
@@ -978,6 +979,9 @@ EditCommentForm.prototype.getCounterUpdater = function(){
             length2 = Math.round(0.9*maxCommentLength);
         }
         
+        //todo:
+        //1) use class instead of color - move color def to css
+        //2) use pluralization and interpolation instead of string replacement
         var color = 'maroon';
         if (length === 0){
             var feedback = gettext('title minchars').replace('{0}', 10);
