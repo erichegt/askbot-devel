@@ -8,6 +8,8 @@ from askbot.tests import utils
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot.templatetags import extra_filters as template_filters
+from askbot.tests.utils import skipIf
+
 
 class PermissionAssertionTestCase(TestCase):
     """base TestCase class for permission
@@ -1587,18 +1589,31 @@ class ClosedForumTests(utils.AskbotTestCase):
         self.question = self.post_question()
         self.test_url = reverse('question', kwargs={'id':self.question.id})
         self.redirect_to = settings.LOGIN_URL
+        self.client = Client()
         askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
 
+    @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
+        not in settings.MIDDLEWARE_CLASSES,
+        'no ForumModeMiddleware set')
+    def test_login_page_accessable(self):
+        # futher see in page_load_tests.py
+        response = self.client.get(reverse('user_signin'))
+        self.assertEquals(response.status_code, 200)
+
+    @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
+        not in settings.MIDDLEWARE_CLASSES,
+        'no ForumModeMiddleware set')
     def test_anonymous_access(self):
-        client = Client()
-        response = client.get(self.test_url)
+        response = self.client.get(self.test_url)
         self.assertEquals(response.status_code, 302)
         self.assertTrue(self.redirect_to in response['Location'])
 
+    @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
+        not in settings.MIDDLEWARE_CLASSES,
+        'no ForumModeMiddleware set')
     def test_authentificated_access(self):
-        client = Client()
-        client.login(username=self.other_user.username, password=self.password)
-        response = client.get(self.test_url)
+        self.client.login(username=self.other_user.username, password=self.password)
+        response = self.client.get(self.test_url)
         self.assertEquals(response.status_code, 302)
         self.assertTrue(self.redirect_to not in response['Location'])
         self.assertTrue(self.test_url in response['Location'])

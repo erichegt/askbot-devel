@@ -56,22 +56,11 @@ settings.register(
     livesettings.ImageValue(
         LOGIN_PROVIDERS,
         'WORDPRESS_SITE_ICON',
-        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
-        default = '/images/logo.gif',
-        description = _('Upload your icon'),
-        url_resolver = skin_utils.get_media_url
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'ASKBOT_CLOSED_FORUM_MODE',
-        default = django_settings.ASKBOT_CLOSED_FORUM_MODE,
-        description=_('Support mode where only registered users can access the forum'),
-        help_text=_('to activate this permanently use ASKBOT_CLOSED_FORUM_MODE '
-            'in your settings.py')
+        upload_directory=django_settings.ASKBOT_FILE_UPLOAD_DIR,
+        upload_url='/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
+        default='/images/logo.gif',
+        description=_('Upload your icon'),
+        url_resolver=skin_utils.get_media_url
     )
 )
 
