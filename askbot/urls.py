@@ -284,7 +284,7 @@ urlpatterns = patterns('',
     url(
         r'^jsi18n/$',
         'django.views.i18n.javascript_catalog',
-        {'packages': ('askbot',)},
+        {'domain': 'djangojs','packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
 )

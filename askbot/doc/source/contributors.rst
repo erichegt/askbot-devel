@@ -31,6 +31,7 @@ Programming and documentation
 * `Tomasz Szynalski <http://antimoon.com>`_
 * `Raghu Udiyar <http://raags.tumblr.com/>`_
 * Alexander Werner
+* Rosandra Cuello Suñol 
 
 Translations
 ------------
