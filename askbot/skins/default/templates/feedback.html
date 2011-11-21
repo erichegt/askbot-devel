@@ -26,6 +26,14 @@
                 {% endif %}
             </label><br/>{{form.email}}
         </div>
+        <div class="form-row">
+        <label>{{form.no_email.label}}
+        {% if form.errors.no_email %}
+        <span class="error">{% trans %}(this field is required){% endtrans %}</span>
+        {% endif %}
+        {{form.no_email}}
+        </label>
+        </div>
     {% endif %}
     <div class="form-row">
         <label>{{form.message.label}}
@@ -36,6 +44,11 @@
         <br/>
         {{form.message}}
     </div>
+    {% if form.recaptcha %}
+    <div class="form-row">
+      {{form.recaptcha}}
+    </div>
+    {% endif %}
     {{form.next}}
     <div class="submit-row">
         <input type="submit" class="submit" value="{% trans %}Send Feedback{% endtrans %}"/>&nbsp;
