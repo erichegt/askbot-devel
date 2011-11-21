@@ -668,7 +668,10 @@ def user_recent(request, user, context):
             'activity_type'
             )
     for award in awards:
-        related_object_type = get_related_object_type_name(content_type_id=award['content_type_id'], object_id=award['object_id'])
+        related_object_type = get_related_object_type_name(
+            content_type_id=award['content_type_id'],
+            object_id=award['object_id']
+        )
         activities.append(
             AwardEvent(
                 award['awarded_at'],
