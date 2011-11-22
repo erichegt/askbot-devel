@@ -23,6 +23,8 @@ from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
+from django.views.decorators.cache import cache_page
+from django.http import QueryDict
 
 import askbot
 from askbot import exceptions
@@ -123,6 +125,24 @@ def questions(request):
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
+    # We need to pass the rss feed url based
+    # on the search state to the template.
+    # We use QueryDict to get a querystring
+    # from dicts and arrays. Much cleaner
+    # than parsing and string formating.
+    rss_query_dict = QueryDict("").copy()
+    if search_state.query:
+        # We have search string in session - pass it to
+        # the QueryDict
+        rss_query_dict.update({"q": search_state.query})
+    if search_state.tags:
+        # We have tags in session - pass it to the
+        # QueryDict but as a list - we want tags+
+        rss_query_dict.setlist("tags", search_state.tags)
+    
+    # Format the url with the QueryDict
+    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
+
     if request.is_ajax():
 
         q_count = paginator.count
@@ -169,7 +189,8 @@ def questions(request):
             'question_counter': question_counter,
             'questions': list(),
             'related_tags': list(),
-            'faces': list()
+            'faces': list(),
+            'feed_url': context_feed_url,
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
@@ -222,6 +243,7 @@ def questions(request):
         reset_method_count += 1
     if meta_data.get('author_name',None):
         reset_method_count += 1
+    
 
     template_data = {
         'active_tab': 'questions',
@@ -248,6 +270,7 @@ def questions(request):
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
         'update_avatar_data': schedules.should_update_avatar_data(request),
+        'feed_url': context_feed_url,
     }
 
     assert(request.is_ajax() == False)
@@ -349,10 +372,12 @@ def tags(request):#view showing a listing of available tags - plain list
     return render_into_skin('tags.html', data, request)
 
 @csrf.csrf_protect
+@cache_page(60 * 5)
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
     """
+    #process url parameters
     #todo: fix inheritance of sort method from questions
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
@@ -371,7 +396,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
     if show_comment is not None:
-        #comments
+        #if url calls for display of a specific comment,
+        #check that comment exists, that it belongs to
+        #the current question
+        #if it is an answer comment and the answer is hidden -
+        #redirect to the default view of the question
+        #if the question is hidden - redirect to the main page
+        #in addition - if url points to a comment and the comment
+        #is for the answer - we need the answer object
         try:
             show_comment = models.Comment.objects.get(id = show_comment)
             if str(show_comment.get_origin_post().id) != id:
@@ -394,7 +426,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             return HttpResponseRedirect(reverse('index'))
 
     elif show_answer is not None:
-        #answers
+        #if the url calls to view a particular answer to 
+        #question - we must check whether the question exists
+        #whether answer is actually corresponding to the current question
+        #and that the visitor is allowed to see it
         try:
             show_post = get_object_or_404(models.Answer, id = show_answer)
             if str(show_post.question.id) != id:
@@ -428,13 +463,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = answers.select_related(depth=1)
 
     user_answer_votes = {}
-    for answer in answers:
-        vote = answer.get_user_vote(request.user)
-        if vote is not None and not user_answer_votes.has_key(answer.id):
-            vote_value = -1
-            if vote.is_upvote():
-                vote_value = 1
-            user_answer_votes[answer.id] = vote_value
+    if request.user.is_authenticated():
+        for answer in answers:
+            vote = answer.get_user_vote(request.user)
+            if vote is not None and not answer.id in user_answer_votes:
+                user_answer_votes[answer.id] = int(vote)
 
     view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
     orderby = view_dic[answer_sort_method]
@@ -515,19 +548,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
 
     favorited = question.has_favorite_by_user(request.user)
+    user_question_vote = 0
     if request.user.is_authenticated():
-        question_vote = question.votes.select_related().filter(user=request.user)
-    else:
-        question_vote = None #is this correct?
-    if question_vote is not None and question_vote.count() > 0:
-        question_vote = question_vote[0]
-
+        votes = question.votes.select_related().filter(user=request.user)
+        if votes.count() > 0:
+            user_question_vote = int(votes[0])
+        else:
+            user_question_vote = 0
 
     data = {
         'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question,
-        'question_vote' : question_vote,
+        'user_question_vote' : user_question_vote,
         'question_comment_count':question.comments.count(),
         'answer' : AnswerForm(question,request.user),
         'answers' : page_objects.object_list,
