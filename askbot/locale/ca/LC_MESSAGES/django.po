@@ -156,7 +156,7 @@ msgstr "moderador"
 
 #: forms.py:367
 msgid "Change status to"
-msgstr "Canviar estatus a"
+msgstr "Canviar estat a"
 
 #: forms.py:394
 msgid "which one?"
@@ -164,70 +164,72 @@ msgstr "quin?"
 
 #: forms.py:415
 msgid "Cannot change own status"
-msgstr ""
+msgstr "No es pot canviar el pròpi estat"
 
 #: forms.py:421
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "No es pot canviar l'altre usuari a moderador"
 
 #: forms.py:428
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "No es pot canviar l'estat d'un altre moderador"
 
 #: forms.py:434
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "No es pot canviar a l'estat d'administrador "
 
 #: forms.py:440
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr ""
+msgstr "Si es vol canviar l'estat de %(username)s, feu una selecció "
+"amb significat"
 
 #: forms.py:449
 msgid "Subject line"
-msgstr ""
+msgstr "Línia d'assumpte"
 
 #: forms.py:456
 msgid "Message text"
-msgstr ""
+msgstr "Text del missatge"
 
 #: forms.py:542
 msgid "Your name:"
-msgstr ""
+msgstr "El seu nom:"
 
 #: forms.py:543
 msgid "Email (not shared with anyone):"
-msgstr ""
+msgstr "Correu electrònic (no es comparteix amb ningú)"
 
 #: forms.py:544
 msgid "Your message:"
-msgstr ""
+msgstr "El vostre missatge:"
 
 #: forms.py:581
 msgid "ask anonymously"
-msgstr ""
+msgstr "preguntar anònimament"
 
 #: forms.py:583
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "Marcar si no voleu mostrar el vostre nom al fer aquesta pregunta"
 
 #: forms.py:743
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
-msgstr ""
+msgstr "Heu fet aquesta pregunta anònimament, si voleu mostrar la vostra "
+"identitat marqueu aquesta opció."
 
 #: forms.py:747
 msgid "reveal identity"
-msgstr ""
+msgstr "mostrar identitat"
 
 #: forms.py:805
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
-msgstr ""
+msgstr "Només l'autor de la pregunta anònima pot mostrar la seva identitat. Desmarqueu l'opció"
 
 #: forms.py:818
 msgid ""
@@ -235,54 +237,56 @@ msgid ""
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr ""
-
+"Sembla què les regles han canviat; ara no es poden fer preguntes anònimament."
+"Si us plau, marqueu «mostrar identitat» o tornareu a carregar aquesta pàgina i "
+"editeu de nou la pregunta"
 #: forms.py:856
 msgid "this email will be linked to gravatar"
-msgstr ""
+msgstr "aquest correu electrònic s'enllaçarà al Gravatar"
 
 #: forms.py:863
 msgid "Real name"
-msgstr ""
+msgstr "Nom real"
 
 #: forms.py:870
 msgid "Website"
-msgstr ""
+msgstr "Lloc web"
 
 #: forms.py:877
 msgid "City"
-msgstr ""
+msgstr "Ciutat"
 
 #: forms.py:886
 msgid "Show country"
-msgstr ""
+msgstr "Mostrar país"
 
 #: forms.py:891
 msgid "Date of birth"
-msgstr ""
+msgstr "Data de naixament"
 
 #: forms.py:892
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "no es mostrarà, s'usa per calcular l'edat, format: AAAA-MM-DD"
 
 #: forms.py:898
 msgid "Profile"
-msgstr ""
+msgstr "Perfil"
 
 #: forms.py:907
 msgid "Screen name"
-msgstr ""
+msgstr "Nom a mostrar"
 
 #: forms.py:938 forms.py:939
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "aquesta adreça de correu ja està registrada, useu una altra"
 
 #: forms.py:946
 msgid "Choose email tag filter"
-msgstr ""
+msgstr "Escollir etiqueta filtre per el correu electrònic"
 
 #: forms.py:993
 msgid "Asked by me"
-msgstr ""
+msgstr "Preguntat per mi"
 
 #: forms.py:996
 msgid "Answered by me"
