@@ -14,9 +14,7 @@ settings.register(
         ACCESS_CONTROL,
         'ASKBOT_CLOSED_FORUM_MODE',
         default = False,
-        description=_('Support mode where only registered users can access the forum'),
-        help_text=_('to activate this permanently use ASKBOT_CLOSED_FORUM_MODE '
-            'in your settings.py')
+        description=_('Allow only registered user to access the forum'),
     )
 )
 

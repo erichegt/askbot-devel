@@ -128,6 +128,10 @@ class PageLoadTestCase(AskbotTestCase):
                 status_code=status_code,
                 template='about.html')
         self.try_url(
+                'ask',
+                status_code=status_code,
+                template='about.html')
+        self.try_url(
                 'privacy',
                 status_code=status_code,
                 template='privacy.html')

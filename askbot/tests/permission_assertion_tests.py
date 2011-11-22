@@ -1611,12 +1611,10 @@ class ClosedForumTests(utils.AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
-    def test_authentificated_access(self):
+    def test_authenticated_access(self):
         self.client.login(username=self.other_user.username, password=self.password)
         response = self.client.get(self.test_url)
-        self.assertEquals(response.status_code, 302)
-        self.assertTrue(self.redirect_to not in response['Location'])
-        self.assertTrue(self.test_url in response['Location'])
+        self.assertEquals(response.status_code, 200)
 
     def tearDown(self):
         askbot_settings.ASKBOT_CLOSED_FORUM_MODE = False
