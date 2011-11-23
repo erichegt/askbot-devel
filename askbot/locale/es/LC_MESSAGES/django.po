@@ -139,11 +139,11 @@ msgstr ""
 
 #: forms.py:341 const/__init__.py:245
 msgid "approved"
-msgstr ""
+msgstr "aprobado"
 
 #: forms.py:342 const/__init__.py:246
 msgid "watched"
-msgstr ""
+msgstr "visto"
 
 #: forms.py:343 const/__init__.py:247
 #, fuzzy
@@ -152,7 +152,7 @@ msgstr "actualizado"
 
 #: forms.py:344 const/__init__.py:248
 msgid "blocked"
-msgstr ""
+msgstr "bloqueado"
 
 #: forms.py:346
 #, fuzzy
@@ -180,11 +180,11 @@ msgstr "no se puede votar por sus propias publicaciones"
 
 #: forms.py:421
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "No tiene permitido habilitar a otros usuarios como moderadores"
 
 #: forms.py:428
 msgid "Cannot change status of another moderator"
-msgstr "No esta permitido cambiar el estado de otro moderador"
+msgstr "No tiene permitido cambiar el estado de otro moderador"
 
 #: forms.py:434
 #, fuzzy
@@ -200,7 +200,7 @@ msgstr ""
 
 #: forms.py:449
 msgid "Subject line"
-msgstr ""
+msgstr "Sujeto"
 
 #: forms.py:456
 msgid "Message text"
@@ -541,10 +541,6 @@ msgstr ""
 msgid "Email and email alert settings"
 msgstr ""
 
-#: conf/email.py:22
-msgid "Prefix for the email subject line"
-msgstr ""
-
 #: conf/email.py:24
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
@@ -639,12 +635,12 @@ msgstr ""
 
 #: conf/email.py:186
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "Es requerida una verificación via email antes de poder publicar"
 
 #: conf/email.py:187
 msgid ""
 "Active email verification is done by sending a verification key in email"
-msgstr ""
+msgstr "Se ha comenzado el proceso de verificación con una llave enviada a su correo electrónico"
 
 #: conf/email.py:196
 #, fuzzy
@@ -658,6 +654,10 @@ msgstr ""
 #: conf/email.py:206
 msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
+
+#: conf/email.py:76
+msgid "Prefix for the email subject line"
+msgstr "Prefijo para el campo de correo electrónico"
 
 #: conf/email.py:215
 #, fuzzy
@@ -686,7 +686,7 @@ msgstr ""
 
 #: conf/external_keys.py:18
 msgid "Google site verification key"
-msgstr ""
+msgstr "Llave de verificación de Google site"
 
 #: conf/external_keys.py:20
 #, python-format
@@ -697,7 +697,7 @@ msgstr ""
 
 #: conf/external_keys.py:35
 msgid "Google Analytics key"
-msgstr ""
+msgstr "LLave de Googne Analytics"
 
 #: conf/external_keys.py:37
 #, python-format
@@ -708,7 +708,7 @@ msgstr ""
 
 #: conf/external_keys.py:50
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
+msgstr "Habilitar recaptcha (las llaves de abajo son requeridas)"
 
 #: conf/external_keys.py:59
 msgid "Recaptcha public key"
@@ -740,7 +740,7 @@ msgstr ""
 
 #: conf/external_keys.py:96
 msgid "Facebook secret key"
-msgstr ""
+msgstr "Llave privada de Facebook"
 
 #: conf/external_keys.py:104
 msgid "Twitter consumer key"
@@ -809,7 +809,7 @@ msgstr ""
 
 #: conf/flatpages.py:17
 msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
+msgstr "Texto para la página de descripción del foro (formato html)"
 
 #: conf/flatpages.py:20
 msgid ""
@@ -818,17 +818,13 @@ msgid ""
 msgstr ""
 
 #: conf/flatpages.py:30
-msgid "Text of the Q&A forum FAQ page (html format)"
-msgstr ""
+msgid "Text of the Q&A forum Privacy Policy (html format)"
+msgstr "Texto para la página de politicas de privacidad del foro (formato html)"
 
 #: conf/flatpages.py:33
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
-msgstr ""
-
-#: conf/flatpages.py:44
-msgid "Text of the Q&A forum Privacy Policy (html format)"
 msgstr ""
 
 #: conf/flatpages.py:47
@@ -964,7 +960,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:206
 msgid "Minimum length of search term for Ajax search"
-msgstr ""
+msgstr "Tamaño minimo para terminos de búsqueda Ajax "
 
 #: conf/forum_data_rules.py:207
 msgid "Must match the corresponding database backend setting"
@@ -1164,7 +1160,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:11
 msgid "Minimum reputation required to perform actions"
-msgstr ""
+msgstr "Para realizar acciones es requerido una reputación mínima"
 
 #: conf/minimum_reputation.py:20
 #, fuzzy
@@ -1246,7 +1242,7 @@ msgstr "ver preguntas etiquetadas"
 
 #: conf/minimum_reputation.py:164
 msgid "Lock posts"
-msgstr ""
+msgstr "Bloquear entradas"
 
 #: conf/minimum_reputation.py:173
 msgid "Remove rel=nofollow from own homepage"
@@ -1458,7 +1454,7 @@ msgstr ""
 
 #: conf/site_settings.py:56
 msgid "Short name for your Q&A forum"
-msgstr ""
+msgstr "Nombre corto para tu foro"
 
 #: conf/site_settings.py:66
 msgid "Base URL for your Q&A forum, must start with http or https"
@@ -2487,7 +2483,7 @@ msgstr ""
 
 #: deps/django_authopenid/views.py:575
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "Se envio el correo para recuperación de cuenta"
 
 #: deps/django_authopenid/views.py:578
 msgid "Please add one or more login methods."

@@ -1,8 +1,10 @@
 # encoding: utf-8
 import datetime
+
+from django.db import models
+
 from south.db import db
 from south.v2 import DataMigration
-from django.db import models
 
 class Migration(DataMigration):
 
@@ -33,16 +35,18 @@ class Migration(DataMigration):
             is_anonymous=source_revision.is_anonymous
         )
 
+        # INFO: There's no need to migrate also the related Activity instances
+        # - it's because `revision edited` Activities point to Question&Answer instances
+        # ans not to their relevant revisions. (BTW this might be considered a bug)
+
+
     def forwards(self, orm):
+        # Process revisions
         for qr in orm.QuestionRevision.objects.all():
             self.copy_revision(orm=orm, source_revision=qr)
 
         for ar in orm.AnswerRevision.objects.all():
             self.copy_revision(orm=orm, source_revision=ar)
-
-        # TODO:
-        #      In the next migration (0050) QuestionRevision and AnswerRevision tables are dropped.
-        #      So if there is anything else to migrate here, we have to figure that out before merging this to trunk.
 
 
     def backwards(self, orm):

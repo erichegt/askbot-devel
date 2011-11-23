@@ -19,7 +19,9 @@ Programming and documentation
 * `Hrishi <https://github.com/stultus>`_
 * Andrei Mamoutkine
 * `Daniel Mican <http://www.crunchbase.com/person/daniel-mican>`_
+* `Dejan Noveski <http://www.atomidata.com/>`_
 * `Ramiro Morales <http://rmorales.com.ar/>`_ (with Machinalis)
+* Vladimir Bokov
 * `NoahY <https://github.com/NoahY>`_
 * `Gael Pasgrimaud <http://www.gawel.org/>`_ (bearstech)
 * `Arun SAG  <http://zer0c00l.in/>`_
@@ -28,6 +30,9 @@ Programming and documentation
 * `Tomasz Zielinski <http://pyconsultant.eu/>`_
 * `Tomasz Szynalski <http://antimoon.com>`_
 * `Raghu Udiyar <http://raags.tumblr.com/>`_
+* `Alexander Werner <https://twitter.com/#!/bundeswerner>`_
+* Rosandra Cuello Suñol 
+* `hjwp <https://github.com/hjwp>`_
 
 Translations
 ------------
@@ -40,5 +45,6 @@ Translations
 * Pekka Gaiser - German
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
-* Dario Ghilardi, Federico Poloni - Italian
+* Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
+* `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
 

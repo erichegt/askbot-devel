@@ -19,10 +19,10 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.question import Question, QuestionRevision
+from askbot.models.question import Question
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
+from askbot.models.answer import Answer, AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
@@ -343,9 +343,22 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                     low_rep_error_message = low_rep_error_message
                 )
         return # success
+
+    elif self.is_administrator() or self.is_moderator():
+        will_be_able_at = (answer.added_at + 
+            datetime.timedelta(days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER))
+
+        if datetime.datetime.now() < will_be_able_at:
+            error_message = _(
+                'Sorry, you will be able to accept this answer '
+                'only after %(will_be_able_at)s'
+                ) % {'will_be_able_at': will_be_able_at.strftime('%d/%m/%Y')}
+        else:
+            return
+
     else:
         error_message = _(
-            'Sorry, only original author of the question '
+            'Sorry, only moderators or original author of the question '
             ' - %(username)s - can accept or unaccept the best answer'
             ) % {'username': answer.get_owner().username}
 
@@ -2644,13 +2657,11 @@ __all__ = [
         'signals',
 
         'Question',
-        'QuestionRevision',
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
 
         'Answer',
-        'AnswerRevision',
         'AnonymousAnswer',
 
         'PostRevision',
