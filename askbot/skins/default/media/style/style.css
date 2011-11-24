@@ -139,6 +139,10 @@ h1 {
   font-size: 24px;
   padding: 10px 0 5px 0px;
 }
+/* ----- Extra space above for messages ----- */
+body.user-messages {
+  margin-top: 2.4em;
+}
 /* ----- Custom positions ----- */
 .left {
   float: left;
@@ -449,6 +453,8 @@ h1 {
   width: 200px;
   /* widgets for question template */
 
+  /* notify by email box */
+
 }
 .box p {
   margin-bottom: 4px;
@@ -591,6 +597,9 @@ h1 {
   font-weight: bold;
   color: #777;
   text-align: center;
+}
+.box .notify-sidebar #question-subscribe-sidebar {
+  margin: 7px 0 0 3px;
 }
 .statsWidget p {
   color: #707070;
@@ -1871,7 +1880,16 @@ span.delete-icon:hover {
 .users-page #id_email,
 .openid-signin #id_name,
 .meta #id_name,
-.users-page #id_name {
+.users-page #id_name,
+.openid-signin #id_username,
+.meta #id_username,
+.users-page #id_username,
+.openid-signin #id_password1,
+.meta #id_password1,
+.users-page #id_password1,
+.openid-signin #id_password2,
+.meta #id_password2,
+.users-page #id_password2 {
   border: #cce6ec 3px solid;
   height: 25px;
   padding-left: 5px;
@@ -1890,7 +1908,7 @@ span.delete-icon:hover {
   border: 0;
   color: #4a757f;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 16px;
   height: 24px;
   margin-top: -2px;
   cursor: pointer;
