@@ -113,6 +113,22 @@ class PageLoadTestCase(AskbotTestCase):
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
         self.assertEquals(response.template.name, 'main_page.html')
 
+    def proto_test_ask_page(self, allow_anonymous, status_code):
+        prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
+        askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', allow_anonymous)
+        self.try_url(
+            'ask',
+            status_code = status_code,
+            template = 'ask.html'
+        )
+        askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', prev_setting)
+
+    def test_ask_page_allowed_anonymous(self):
+        self.proto_test_ask_page(True, 200)
+
+    def test_ask_page_disallowed_anonymous(self):
+        self.proto_test_ask_page(False, 302)
+
     def proto_test_non_user_urls(self, status_code):
         """test all reader views thoroughly
         on non-crashiness (no correcteness tests here)
@@ -125,10 +141,6 @@ class PageLoadTestCase(AskbotTestCase):
                 kwargs={'url':'rss'})
         self.try_url(
                 'about',
-                status_code=status_code,
-                template='about.html')
-        self.try_url(
-                'ask',
                 status_code=status_code,
                 template='about.html')
         self.try_url(
