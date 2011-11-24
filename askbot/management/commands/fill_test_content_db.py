@@ -1,7 +1,5 @@
 from django.core.management.base import NoArgsCommand
-from django.contrib.auth.models import User
 from askbot.models import User
-from askbot.models.repute import Repute
 
 
 NUM_USERS = 40
