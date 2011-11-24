@@ -30,7 +30,7 @@ Programming and documentation
 * `Tomasz Zielinski <http://pyconsultant.eu/>`_
 * `Tomasz Szynalski <http://antimoon.com>`_
 * `Raghu Udiyar <http://raags.tumblr.com/>`_
-* Alexander Werner
+* `Alexander Werner <https://twitter.com/#!/bundeswerner>`_
 * Rosandra Cuello Suñol 
 
 Translations
