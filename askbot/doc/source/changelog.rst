@@ -15,6 +15,7 @@ Development version (not yet published)
 * Fixed sharing button bug, css fixes for new template (Alexander Werner)
 * Added ASKBOT_TRANSLATE_URL setting for url localization(Alexander Werner)
 * Changed javascript translation model, moved from jqueryi18n to django(Rosandra Cuello Suñol)
+* Private forum mode (Vlad Bokov)
 
 
 0.7.26 (Current Version)
