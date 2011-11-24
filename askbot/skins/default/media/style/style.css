@@ -124,6 +124,9 @@ blockquote {
   height: 0;
   visibility: hidden;
 }
+body.user-messages {
+    margin-top: 2.4em;
+}
 .badges a {
   color: #763333;
   text-decoration: underline;
@@ -166,7 +169,7 @@ h1 {
   border-top: #fff 1px solid;
   font-family: 'Yanone Kaffeesatz', sans-serif;
 }
-.notify p {
+.notify p.notification {
   margin-top: 6px;
   margin-bottom: 6px;
   font-size: 16px;
@@ -204,6 +207,7 @@ h1 {
   padding: 5px 0px 5px 0px;
   height: 75px;
   width: auto;
+  float: left;
 }
 #userToolsNav {
   /* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
