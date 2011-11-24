@@ -18,7 +18,7 @@ class MiscTests(AskbotTestCase):
 
     def test_get_related_object_type_name_for_question(self):
         question = self.post_question(user=self.u1)
-        import ipdb; ipdb.set_trace()
+        #import ipdb; ipdb.set_trace()
         ct = ContentType.objects.get_for_model(question)
         self.assertEqual('question', get_related_object_type_name(ct.id, question.id))
 
