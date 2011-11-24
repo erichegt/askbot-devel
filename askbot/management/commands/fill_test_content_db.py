@@ -220,4 +220,11 @@ class Command(NoArgsCommand):
                         )
         self.print_if_verbose("User has edited the active question comment")
 
+        # Accept best answer
+        active_question.author.accept_best_answer(
+                            answer = active_answer,
+                            force = True,
+                        )
+        self.print_if_verbose("User has accepted a best answer")
+
         self.print_if_verbose("DONE")
