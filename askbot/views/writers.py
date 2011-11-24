@@ -274,7 +274,7 @@ def ask(request):#view used to ask a new question
         else:
             #attemp to get tags from search state
             search_state = request.session.get('search_state', None)
-            if search_state.tags:
+            if search_state and search_state.tags:
                 tags = ' '.join(search_state.tags)
                 form.initial['tags'] = tags
 
