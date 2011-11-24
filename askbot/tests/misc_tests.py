@@ -7,6 +7,7 @@ from askbot import models
 from askbot.models.badges import award_badges_signal
 
 from askbot.views.users import get_related_object_type_name
+from askbot.models.post import PostRevision
 
 class MiscTests(AskbotTestCase):
 
@@ -17,6 +18,7 @@ class MiscTests(AskbotTestCase):
 
     def test_get_related_object_type_name_for_question(self):
         question = self.post_question(user=self.u1)
+        import ipdb; ipdb.set_trace()
         ct = ContentType.objects.get_for_model(question)
         self.assertEqual('question', get_related_object_type_name(ct.id, question.id))
 
@@ -48,3 +50,11 @@ class MiscTests(AskbotTestCase):
         comment = self.post_comment(user=self.u1, parent_post=question)
         ct = ContentType.objects.get_for_model(comment)
         self.assertIsNone(get_related_object_type_name(ct.id, comment.id))
+
+    def test_proper_PostRevision_manager_is_used(self):
+        "Makes sure that both normal and related managers for PostRevision don't implement .create() method"
+        question = self.post_question(user=self.u1)
+        with self.assertRaises(NotImplementedError):
+            question.revisions.create()
+        with self.assertRaises(NotImplementedError):
+            PostRevision.objects.create()
