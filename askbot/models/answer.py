@@ -81,7 +81,7 @@ class AnswerManager(models.Manager):
     #    cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
     #    return cursor.fetchall()
 
-class Answer(content.Content, DeletableContent):
+class Answer(content.Content):
     post_type = 'answer'
     question = models.ForeignKey('Question', related_name='answers')
     accepted    = models.BooleanField(default=False)
@@ -92,8 +92,6 @@ class Answer(content.Content, DeletableContent):
     class Meta(content.Content.Meta):
         db_table = u'answer'
 
-    parse = parse_post_text
-    parse_and_save = parse_and_save_post
     is_anonymous = False #answers are never anonymous - may change
 
     def assert_is_visible_to(self, user):
@@ -161,51 +159,6 @@ class Answer(content.Content, DeletableContent):
         self.question.last_activity_by = edited_by
         self.question.save()
 
-    def repost_as_question(self, new_title = None):
-        """posts answer as question, together with all the comments
-        while preserving time stamps and authors
-        does not delete the answer itself though
-        """
-        revisions = self.revisions.all().order_by('revised_at')
-        rev0 = revisions[0]
-        new_question = rev0.author.post_question(
-            title = new_title,
-            body_text = rev0.text,
-            tags = self.question.tagnames,
-            wiki = self.question.wiki,
-            is_anonymous = self.question.is_anonymous,
-            timestamp = rev0.revised_at
-        )
-        if len(revisions) > 1:
-            for rev in revisions[1:]:
-                rev.author.edit_question(
-                    question = new_question,
-                    body_text = rev.text,
-                    revision_comment = rev.summary,
-                    timestamp = rev.revised_at
-                )
-        for comment in self.comments.all():
-            comment.content_object = new_question
-            comment.save()
-        return new_question
-
-    def swap_with_question(self, new_title = None):
-        """swaps answer with the question it belongs to and
-        sets the title of question to ``new_title``
-        """
-        #1) make new question by using new title, tags of old question
-        #   and the answer body, as well as the authors of all revisions
-        #   and repost all the comments
-        new_question = self.repost_as_question(new_title = new_title)
-
-        #2) post question (all revisions and comments) as answer
-        new_answer = self.question.repost_as_answer(question = new_question)
-
-        #3) assign all remaining answers to the new question
-        self.question.answers.update(question = new_question)
-        self.question.delete()
-        self.delete()
-        return new_question
 
     def add_revision(self, author=None, revised_at=None, text=None, comment=None):
         #todo: this may be identical to Question.add_revision
@@ -225,27 +178,6 @@ class Answer(content.Content, DeletableContent):
                                   summary=comment,
                                   revision=rev_no
                                   )
-
-    def save(self, *args, **kwargs):
-        super(Answer, self).save(*args, **kwargs);
-        if 'postgres' in settings.DATABASE_ENGINE:
-            #hit the database to trigger update of full text search vector
-            self.question.save()
-
-    def get_origin_post(self):
-        return self.question
-
-    def get_page_number(self, answers = None):
-        """When question has many answers, answers are
-        paginated. This function returns number of the page
-        on which the answer will be shown, using the default
-        sort order. The result may depend on the visitor."""
-        order_number = 0
-        for answer in answers:
-            if self == answer:
-                break
-            order_number += 1
-        return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
 
     def get_response_receivers(self, exclude_list = None):
         """get list of users interested in this response
@@ -274,16 +206,6 @@ class Answer(content.Content, DeletableContent):
         recipients -= set(exclude_list)
 
         return list(recipients)
-
-    def get_user_vote(self, user):
-        if user.is_anonymous():
-            return None
-
-        votes = self.votes.filter(user=user)
-        if votes and votes.count() > 0:
-            return votes[0]
-        else:
-            return None
 
     def get_question_title(self):
         return self.question.title

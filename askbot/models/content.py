@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -9,6 +10,7 @@ from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
+from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.conf import settings as askbot_settings
 
 class Content(models.Model):
@@ -17,6 +19,10 @@ class Content(models.Model):
     """
     author = models.ForeignKey(User, related_name='%(class)ss')
     added_at = models.DateTimeField(default=datetime.datetime.now)
+
+    deleted     = models.BooleanField(default=False)
+    deleted_at  = models.DateTimeField(null=True, blank=True)
+    deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_%(class)ss')
 
     wiki = models.BooleanField(default=False)
     wikified_at = models.DateTimeField(null=True, blank=True)
@@ -47,6 +53,22 @@ class Content(models.Model):
     class Meta:
         abstract = True
         app_label = 'askbot'
+
+    parse = parse_post_text
+    parse_and_save = parse_and_save_post
+
+    def is_answer(self):
+        return self.post_type == 'answer'
+
+    def is_question(self):
+        return self.post_type == 'question'
+
+    def save(self, *args, **kwargs):
+        models.Model.save(self, *args, **kwargs) # TODO: figure out how to use super() here
+        if self.is_answer() and 'postgres' in settings.DATABASE_ENGINE:
+            #hit the database to trigger update of full text search vector
+            self.question.save()
+
 
     def get_comments(self, visitor = None):
         """returns comments for a post, annotated with
@@ -396,3 +418,93 @@ class Content(models.Model):
                     when = c.added_at
                     who = c.user
         return when, who
+
+    def tagname_meta_generator(self):
+        return u','.join([unicode(tag) for tag in self.get_tag_names()])
+
+    def get_origin_post(self):
+        if self.is_answer():
+            return self.question
+        elif self.is_question():
+            return self
+        raise NotImplementedError
+
+    def _repost_as_question(self, new_title = None):
+        """posts answer as question, together with all the comments
+        while preserving time stamps and authors
+        does not delete the answer itself though
+        """
+        if not self.is_answer():
+            raise NotImplementedError
+        revisions = self.revisions.all().order_by('revised_at')
+        rev0 = revisions[0]
+        new_question = rev0.author.post_question(
+            title = new_title,
+            body_text = rev0.text,
+            tags = self.question.tagnames,
+            wiki = self.question.wiki,
+            is_anonymous = self.question.is_anonymous,
+            timestamp = rev0.revised_at
+        )
+        if len(revisions) > 1:
+            for rev in revisions[1:]:
+                rev.author.edit_question(
+                    question = new_question,
+                    body_text = rev.text,
+                    revision_comment = rev.summary,
+                    timestamp = rev.revised_at
+                )
+        for comment in self.comments.all():
+            comment.content_object = new_question
+            comment.save()
+        return new_question
+
+    def swap_with_question(self, new_title = None):
+        """swaps answer with the question it belongs to and
+        sets the title of question to ``new_title``
+        """
+        if not self.is_answer():
+            raise NotImplementedError
+        #1) make new question by using new title, tags of old question
+        #   and the answer body, as well as the authors of all revisions
+        #   and repost all the comments
+        new_question = self._repost_as_question(new_title = new_title)
+
+        #2) post question (all revisions and comments) as answer
+        new_answer = self.question.repost_as_answer(question = new_question)
+
+        #3) assign all remaining answers to the new question
+        self.question.answers.update(question = new_question)
+        self.question.delete()
+        self.delete()
+        return new_question
+
+
+    def get_page_number(self, answers = None):
+        """When question has many answers, answers are
+        paginated. This function returns number of the page
+        on which the answer will be shown, using the default
+        sort order. The result may depend on the visitor."""
+        if self.is_question():
+            return 1
+        elif self.is_answer():
+            order_number = 0
+            for answer in answers:
+                if self == answer:
+                    break
+                order_number += 1
+            return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
+        raise NotImplementedError
+
+    def get_user_vote(self, user):
+        if not self.is_answer():
+            raise NotImplementedError
+        
+        if user.is_anonymous():
+            return None
+
+        votes = self.votes.filter(user=user)
+        if votes and votes.count() > 0:
+            return votes[0]
+        else:
+            return None

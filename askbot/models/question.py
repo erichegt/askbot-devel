@@ -450,7 +450,7 @@ class QuestionManager(BaseQuerySetManager):
         return QuestionQuerySet(self.model)
 
 
-class Question(content.Content, DeletableContent):
+class Question(content.Content):
     post_type = 'question'
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
@@ -481,9 +481,6 @@ class Question(content.Content, DeletableContent):
 
     class Meta(content.Content.Meta):
         db_table = u'question'
-
-    parse = parse_post_text
-    parse_and_save = parse_and_save_post
 
     def assert_is_visible_to(self, user):
         """raises QuestionHidden"""
@@ -563,13 +560,6 @@ class Question(content.Content, DeletableContent):
                 return similar_questions
 
         return LazyList(get_data)
-
-    def get_page_number(self, answers = None):
-        """question always appears on its own
-        first page by definition. The answers 
-        parameter is not used here. The extra parameter is necessary
-        to maintain generality of the function call signature"""
-        return 1
 
     def get_similarity(self, other_question = None):
         """return number of tags in the other question
@@ -768,9 +758,6 @@ class Question(content.Content, DeletableContent):
             text       = latest_revision.text
         )
 
-    def get_origin_post(self):
-        return self
-
     def apply_edit(self, edited_at=None, edited_by=None, title=None,\
                     text=None, comment=None, tags=None, wiki=False, \
                     edit_anonymously = False):
@@ -859,9 +846,6 @@ class Question(content.Content, DeletableContent):
         """
         self.tagnames = u' '.join(tag_names)
 
-    def tagname_meta_generator(self):
-        return u','.join([unicode(tag) for tag in self.get_tag_names()])
-
     def get_absolute_url(self, no_slug = False):
         url = reverse('question', args=[self.id])
         if no_slug == True:
@@ -880,11 +864,6 @@ class Question(content.Content, DeletableContent):
 
         return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
 
-    def get_answer_count_by_user(self, user_id):
-        from askbot.models.answer import Answer
-        query_set = Answer.objects.filter(author__id=user_id)
-        return query_set.filter(question=self).count()
-
     def get_question_title(self):
         if self.closed:
             attr = const.POST_STATUS['closed']
@@ -896,9 +875,6 @@ class Question(content.Content, DeletableContent):
             return u'%s %s' % (self.title, attr)
         else:
             return self.title
-
-    def get_revision_url(self):
-        return reverse('question_revisions', args=[self.id])
 
     def get_last_update_info(self):
         when, who = self.post_get_last_update_info()
