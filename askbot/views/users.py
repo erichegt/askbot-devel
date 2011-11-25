@@ -1,7 +1,7 @@
 """
 :synopsis: user-centric views for askbot
 
-This module includes all views that are specific to a given user - his or her profile, 
+This module includes all views that are specific to a given user - his or her profile,
 and other views showing profile-related information.
 
 Also this module includes the view listing all forum users.
@@ -75,7 +75,7 @@ def owner_or_moderator_required(f):
             params = '?next=%s' % request.path
             return HttpResponseRedirect(reverse('user_signin') + params)
         return f(request, profile_owner, context)
-    return wrapped_func 
+    return wrapped_func
 
 def users(request):
     is_paginated = True
@@ -100,7 +100,7 @@ def users(request):
         objects_list = Paginator(
                             models.User.objects.all().order_by(
                                                 order_by_parameter
-                                            ), 
+                                            ),
                             const.USERS_PAGE_SIZE
                         )
         base_url = reverse('users') + '?sort=%s&' % sortby
@@ -111,7 +111,7 @@ def users(request):
                                                 username__icontains = suser
                                             ).order_by(
                                                 '-reputation'
-                                            ), 
+                                            ),
                             const.USERS_PAGE_SIZE
                         )
         base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
@@ -145,7 +145,7 @@ def users(request):
 
 @csrf.csrf_protect
 def user_moderate(request, subject, context):
-    """user subview for moderation 
+    """user subview for moderation
     """
     moderator = request.user
 
@@ -174,7 +174,7 @@ def user_moderate(request, subject, context):
             if send_message_form.is_valid():
                 subject_line = send_message_form.cleaned_data['subject_line']
                 body_text = send_message_form.cleaned_data['body_text']
-                
+
                 try:
                     send_mail(
                             subject_line = subject_line,
@@ -244,7 +244,7 @@ def set_new_email(user, new_email, nomessage=False):
         user.email_isvalid = False
         user.save()
         #if askbot_settings.EMAIL_VALIDATION == True:
-        #    send_new_email_key(user,nomessage=nomessage)    
+        #    send_new_email_key(user,nomessage=nomessage)
 
 @login_required
 @csrf.csrf_protect
@@ -309,7 +309,26 @@ def user_stats(request, user, context):
                                     'last_activity_by__silver',
                                     'last_activity_by__bronze'
                                 )[:100]
+
     questions = list(questions)
+
+    #added this if to avoid another query if questions is less than 100
+    if len(questions) < 100:
+        question_count = len(questions)
+    else:
+        question_count = models.Question.objects.filter(
+                                        **question_filter
+                                    ).order_by(
+                                        '-score', '-last_activity_at'
+                                    ).select_related(
+                                        'last_activity_by__id',
+                                        'last_activity_by__username',
+                                        'last_activity_by__reputation',
+                                        'last_activity_by__gold',
+                                        'last_activity_by__silver',
+                                        'last_activity_by__bronze'
+                                    ).count()
+
     favorited_myself = models.FavoriteQuestion.objects.filter(
                                     question__in = questions,
                                     user = user
@@ -384,6 +403,7 @@ def user_stats(request, user, context):
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
+        'question_count': question_count,
         'question_type' : question_type,
         'answer_type' : answer_type,
         'favorited_myself': favorited_myself,
@@ -417,7 +437,7 @@ def user_recent(request, user, context):
             self.summary = summary
             slug_title = slugify(title)
             self.title_link = reverse(
-                                'question', 
+                                'question',
                                 kwargs={'id':question_id}
                             ) + u'%s' % slug_title
             if int(answer_id) > 0:
@@ -459,11 +479,11 @@ def user_recent(request, user, context):
 
     for q in questions:
         q_event = Event(
-                    q['active_at'], 
-                    q['activity_type'], 
-                    q['title'], 
-                    '', 
-                    '0', 
+                    q['active_at'],
+                    q['activity_type'],
+                    q['title'],
+                    '',
+                    '0',
                     q['question_id']
                 )
         activities.append(q_event)
@@ -479,8 +499,8 @@ def user_recent(request, user, context):
             'activity_type' : 'activity.activity_type'
             },
         tables=['activity', 'answer', 'question'],
-        where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' + 
-            'answer.question_id=question.id AND NOT answer.deleted AND activity.user_id=%s AND '+ 
+        where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' +
+            'answer.question_id=question.id AND NOT answer.deleted AND activity.user_id=%s AND '+
             'activity.activity_type=%s AND NOT question.deleted'],
         params=[answer_type_id, user.id, const.TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
@@ -701,7 +721,7 @@ def user_recent(request, user, context):
 @owner_or_moderator_required
 def user_responses(request, user, context):
     """
-    We list answers for question, comments, and 
+    We list answers for question, comments, and
     answer accepted by others for this user.
     as well as mentions of the user
 
@@ -762,7 +782,7 @@ def user_responses(request, user, context):
         #todo: agrupate users
         if response['response_id'] == last_response_id:
             original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
-            original_response['nested_responses'].append(response) 
+            original_response['nested_responses'].append(response)
             filtered_response_list[len(filtered_response_list)-1] = original_response
         else:
             filtered_response_list.append(response)
@@ -864,8 +884,8 @@ def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
     #select_related() adds stuff needed for the query
     reputes = reputes.select_related(
-                            'question__title', 
-                            'question__id', 
+                            'question__title',
+                            'question__id',
                             'user__username'
                         )
     #prepare data for the graph
