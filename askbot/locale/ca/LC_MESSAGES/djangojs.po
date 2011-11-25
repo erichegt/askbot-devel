@@ -25,41 +25,41 @@ msgstr ""
 #, perl-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s seguidor"
+msgstr[1] "%s seguidors"
 
 #: skins/default/media/js/post.js:546
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<div>Seguint</div><div class=\"unfollow\">Deixar de seguir</div>"
 
 #: skins/default/media/js/post.js:1613
 msgid "Please enter question title (>10 characters)"
-msgstr ""
+msgstr "Títol de la pregunta (més de 10 caràcters)"
 
 #: skins/default/media/js/tag_selector.js:15
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "Coincidències de la etiqueta:"
 
 #: skins/default/media/js/tag_selector.js:84
 #, perl-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "i %s més què no es mostren ..."
 
 #: skins/default/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "<a href=\"%(signin_url)s\">Entrar</a> per seguir a %(username)s"
 
 #: skins/default/media/js/user.js:161
 #, perl-format
 msgid "unfollow %s"
-msgstr ""
+msgstr "deixar de seguir a %s"
 
 #: skins/default/media/js/user.js:164
 #, perl-format
 msgid "following %s"
-msgstr ""
+msgstr "seguint a %s"
 
 #: skins/default/media/js/user.js:170
 #, perl-format
 msgid "follow %s"
-msgstr ""
+msgstr "seguir a %s"

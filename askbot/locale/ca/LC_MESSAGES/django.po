@@ -1953,143 +1953,143 @@ msgstr "La pregunta no té respostes acceptades"
 
 #: const/__init__.py:121
 msgid "asked a question"
-msgstr ""
+msgstr "ha fet una pregunta"
 
 #: const/__init__.py:122
 msgid "answered a question"
-msgstr ""
+msgstr "ha respost una pregunta"
 
 #: const/__init__.py:123
 msgid "commented question"
-msgstr ""
+msgstr "ha comentat una pregunta"
 
 #: const/__init__.py:124
 msgid "commented answer"
-msgstr ""
+msgstr "ha commentat una resposta"
 
 #: const/__init__.py:125
 msgid "edited question"
-msgstr ""
+msgstr "ha editat una pregunta"
 
 #: const/__init__.py:126
 msgid "edited answer"
-msgstr ""
+msgstr "ha editat una resposta"
 
 #: const/__init__.py:127
 msgid "received award"
-msgstr "received badge"
+msgstr "ha rebut una insígnia"
 
 #: const/__init__.py:128
 msgid "marked best answer"
-msgstr ""
+msgstr "ha marcat la millor resposta"
 
 #: const/__init__.py:129
 msgid "upvoted"
-msgstr ""
+msgstr "votat positivament"
 
 #: const/__init__.py:130
 msgid "downvoted"
-msgstr ""
+msgstr "votat negativament"
 
 #: const/__init__.py:131
 msgid "canceled vote"
-msgstr ""
+msgstr "cancelat el vot"
 
 #: const/__init__.py:132
 msgid "deleted question"
-msgstr ""
+msgstr "pregunta esborrada"
 
 #: const/__init__.py:133
 msgid "deleted answer"
-msgstr ""
+msgstr "resposta esborrada"
 
 #: const/__init__.py:134
 msgid "marked offensive"
-msgstr ""
+msgstr "marcat com ofensiu"
 
 #: const/__init__.py:135
 msgid "updated tags"
-msgstr ""
+msgstr "etiquetes actualitzades"
 
 #: const/__init__.py:136
 msgid "selected favorite"
-msgstr ""
+msgstr "seleccionat com a favorit"
 
 #: const/__init__.py:137
 msgid "completed user profile"
-msgstr ""
+msgstr "completat perfil d'usuari"
 
 #: const/__init__.py:138
 msgid "email update sent to user"
-msgstr ""
+msgstr "enviat missatge d'actualitació a l'usuari"
 
 #: const/__init__.py:141
 msgid "reminder about unanswered questions sent"
-msgstr ""
+msgstr "enviat recordatori d'una pregunta sense resposta"
 
 #: const/__init__.py:143
 msgid "mentioned in the post"
-msgstr ""
+msgstr "citat en l'entrada"
 
 #: const/__init__.py:194
 msgid "question_answered"
-msgstr "answered question"
+msgstr "pregunta resposta"
 
 #: const/__init__.py:195
 msgid "question_commented"
-msgstr "commented question"
+msgstr "pregunta comentada"
 
 #: const/__init__.py:196
 msgid "answer_commented"
-msgstr ""
+msgstr "resposta comentada"
 
 #: const/__init__.py:197
 msgid "answer_accepted"
-msgstr ""
+msgstr "resposta acceptada"
 
 #: const/__init__.py:201
 msgid "[closed]"
-msgstr ""
+msgstr "[tancat]"
 
 #: const/__init__.py:202
 msgid "[deleted]"
-msgstr ""
+msgstr "[esborrat]"
 
 #: const/__init__.py:203 views/readers.py:613
 msgid "initial version"
-msgstr ""
+msgstr "versió inicial"
 
 #: const/__init__.py:204
 msgid "retagged"
-msgstr ""
+msgstr "reetiquetat"
 
 #: const/__init__.py:212
 msgid "off"
-msgstr ""
+msgstr "no"
 
 #: const/__init__.py:213
 msgid "exclude ignored"
-msgstr ""
+msgstr "excloure ignorades"
 
 #: const/__init__.py:214
 msgid "only selected"
-msgstr ""
+msgstr "només seleccionades"
 
 #: const/__init__.py:218
 msgid "instantly"
-msgstr ""
+msgstr "instantàniament"
 
 #: const/__init__.py:219
 msgid "daily"
-msgstr ""
+msgstr "diari"
 
 #: const/__init__.py:220
 msgid "weekly"
-msgstr ""
+msgstr "setmanal"
 
 #: const/__init__.py:221
 msgid "no email"
-msgstr ""
+msgstr "no correu electrònic"
 
 #: const/__init__.py:228
 msgid "identicon"
@@ -2114,19 +2114,19 @@ msgstr ""
 
 #: const/__init__.py:279 skins/default/templates/badges.html:37
 msgid "gold"
-msgstr ""
+msgstr "or"
 
 #: const/__init__.py:280 skins/default/templates/badges.html:46
 msgid "silver"
-msgstr ""
+msgstr "plata"
 
 #: const/__init__.py:281 skins/default/templates/badges.html:53
 msgid "bronze"
-msgstr ""
+msgstr "bronze"
 
 #: const/__init__.py:293
 msgid "None"
-msgstr ""
+msgstr "Cap"
 
 #: const/__init__.py:294
 #, fuzzy
@@ -2144,65 +2144,65 @@ msgstr ""
 
 #: const/message_keys.py:16
 msgid "click to see most relevant questions"
-msgstr ""
+msgstr "clicar per mostra les preguntes més rellevants"
 
 #: const/message_keys.py:17
 msgid "by relevance"
-msgstr "relevance"
+msgstr "rellevància"
 
 #: const/message_keys.py:18
 msgid "click to see the oldest questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes més antigues"
 
 #: const/message_keys.py:19
 msgid "by date"
-msgstr "date"
+msgstr "data"
 
 #: const/message_keys.py:20
 msgid "click to see the newest questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes més recents"
 
 #: const/message_keys.py:21
 msgid "click to see the least recently updated questions"
-msgstr ""
+msgstr "clicar per mostar les preguntes que porten més temps sense actualitzar"
 
 #: const/message_keys.py:22
 msgid "by activity"
-msgstr "activity"
+msgstr "activitat"
 
 #: const/message_keys.py:23
 msgid "click to see the most recently updated questions"
-msgstr ""
+msgstr "clicar per mostar les preguntes actualitzades recentment"
 
 #: const/message_keys.py:24
 msgid "click to see the least answered questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes amb menys respostes"
 
 #: const/message_keys.py:25
 msgid "by answers"
-msgstr "answers"
+msgstr "respostes"
 
 #: const/message_keys.py:26
 msgid "click to see the most answered questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes amb més respostes"
 
 #: const/message_keys.py:27
 msgid "click to see least voted questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes amb menys votades"
 
 #: const/message_keys.py:28
 msgid "by votes"
-msgstr "votes"
+msgstr "vots"
 
 #: const/message_keys.py:29
 msgid "click to see most voted questions"
-msgstr ""
+msgstr "clicar per mostrar les preguntes amb més votades"
 
 #: deps/django_authopenid/backends.py:88
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
-msgstr ""
+msgstr "Us donem la benvinguda. Indiqueu la vostra adreça de correu electrònic (important) i el nom a mostrar, si ho creieu necessari."
 
 #: deps/django_authopenid/forms.py:110 deps/django_authopenid/views.py:151
 msgid "i-names are not supported"
@@ -2211,59 +2211,59 @@ msgstr ""
 #: deps/django_authopenid/forms.py:233
 #, python-format
 msgid "Please enter your %(username_token)s"
-msgstr ""
+msgstr "Introduïu el vostre %(username_token)s"
 
 #: deps/django_authopenid/forms.py:259
 msgid "Please, enter your user name"
-msgstr ""
+msgstr "Introduïu el vostre nom d'usuari"
 
 #: deps/django_authopenid/forms.py:263
 msgid "Please, enter your password"
-msgstr ""
+msgstr "Introduïu la vostra contrasenya"
 
 #: deps/django_authopenid/forms.py:270 deps/django_authopenid/forms.py:274
 msgid "Please, enter your new password"
-msgstr ""
+msgstr "Introduïu la vostra contrasenya nova"
 
 #: deps/django_authopenid/forms.py:285
 msgid "Passwords did not match"
-msgstr ""
+msgstr "Les contrasenyes no coincideixen"
 
 #: deps/django_authopenid/forms.py:297
 #, python-format
 msgid "Please choose password > %(len)s characters"
-msgstr ""
+msgstr "Escollir una contrasenya de més de %(len)s caràcters"
 
 #: deps/django_authopenid/forms.py:335
 msgid "Current password"
-msgstr ""
+msgstr "Contrasenya actual"
 
 #: deps/django_authopenid/forms.py:346
 msgid ""
 "Old password is incorrect.                     Please enter the correct "
 "password."
-msgstr ""
+msgstr "La contrasenya antiga és incorrecta. Introduïu la contrasenya correcta."
 
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
-msgstr ""
+msgstr "Adreça de correu electrònic inexistent a la base de dades"
 
 #: deps/django_authopenid/forms.py:435
 msgid "Your user name (<i>required</i>)"
-msgstr ""
+msgstr "El vostre nom d'usuari (<i>requerit</i>)"
 
 #: deps/django_authopenid/forms.py:450
 msgid "Incorrect username."
-msgstr "sorry, there is no such user name"
+msgstr "Nom d'usuari inexistent"
 
 #: deps/django_authopenid/urls.py:9 deps/django_authopenid/urls.py:12
 #: deps/django_authopenid/urls.py:15 setup_templates/settings.py:203
 msgid "signin/"
-msgstr ""
+msgstr "entrar/"
 
 #: deps/django_authopenid/urls.py:10
 msgid "signout/"
-msgstr ""
+msgstr "sortir/"
 
 #: deps/django_authopenid/urls.py:12
 msgid "complete/"
@@ -2279,33 +2279,33 @@ msgstr ""
 
 #: deps/django_authopenid/urls.py:21
 msgid "signup/"
-msgstr ""
+msgstr "registre/"
 
 #: deps/django_authopenid/urls.py:25
 msgid "logout/"
-msgstr ""
+msgstr "sortir/"
 
 #: deps/django_authopenid/urls.py:30
 msgid "recover/"
-msgstr ""
+msgstr "recuperar/"
 
 #: deps/django_authopenid/util.py:378
 #, python-format
 msgid "%(site)s user name and password"
-msgstr ""
+msgstr "nom d'usuari i contrasenya %(site)s"
 
 #: deps/django_authopenid/util.py:384
 #: skins/default/templates/authopenid/signin.html:108
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Crear un compte amb contrasenya"
 
 #: deps/django_authopenid/util.py:385
 msgid "Change your password"
-msgstr ""
+msgstr "Canviar la vostra contrasenya"
 
 #: deps/django_authopenid/util.py:473
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "Registrar-se mitjançant Yahoo"
 
 #: deps/django_authopenid/util.py:480
 msgid "AOL screen name"
@@ -5533,20 +5533,20 @@ msgstr ""
 #: skins/default/templates/blocks/header.html:20
 #, fuzzy
 msgid "questions"
-msgstr "Tips"
+msgstr "Consells"
 
 #: skins/default/templates/blocks/header.html:30
 msgid "users"
-msgstr "people"
+msgstr "gent"
 
 #: skins/default/templates/blocks/header.html:35
 msgid "badges"
-msgstr ""
+msgstr "insígnies"
 
 #: skins/default/templates/blocks/header.html:40
 #, fuzzy
 msgid "ask a question"
-msgstr "Ask Your Question"
+msgstr "La Teva Pregunta"
 
 #: skins/default/templates/blocks/header_meta_links.html:8
 msgid "logout"
@@ -5593,7 +5593,7 @@ msgstr "Retag question"
 
 #: skins/default/templates/blocks/tag_selector.html:36
 msgid "Display tag filter"
-msgstr "Mostrar el filtre per etiquetes"
+msgstr "Filtre per etiquetes"
 
 #: skins/default/templates/main_page/content.html:13
 msgid "Did not find what you were looking for?"
@@ -5604,7 +5604,6 @@ msgid "Please, post your question!"
 msgstr "Fes la teva pregunta"
 
 #: skins/default/templates/main_page/headline.html:7
-#, fuzzy
 msgid "subscribe to the questions feed"
 msgstr "Post Your Answer"
 
