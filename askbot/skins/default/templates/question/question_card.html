@@ -9,7 +9,7 @@
     <div id="question-table" {% if question.deleted %}class="deleted"{%endif%}>
         <div class="question-body">
             <div class="post-update-info-container">
-                {#% include "question/question_author_info.html" %#}
+                {% include "question/question_author_info.html" %}
             </div>
             {{question.html}}
         </div>

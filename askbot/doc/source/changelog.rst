@@ -21,6 +21,7 @@ Development version (not yet published)
 * Added support for LOGIN_REDIRECT_URL to the login app (hjwp, Evgeny)
 * Updated Italian localization (Luca Ferroni)
 * Added Catalan localization (Jordi Bofill)
+* Added management command ``askbot_add_test_content`` (Dejan Noveski)
 
 0.7.26 (Current Version)
 ------------------------
