@@ -10,7 +10,9 @@
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block content %}
+    {% cache 100 "booo" %}
     {%include "question/content.html" %}
+    {% endcache %}
 {% endblock %}
 {% block sidebar %}
     {%include "question/sidebar.html" %}
