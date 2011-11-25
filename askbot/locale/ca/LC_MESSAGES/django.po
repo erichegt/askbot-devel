@@ -290,35 +290,35 @@ msgstr "Preguntat per mi"
 
 #: forms.py:996
 msgid "Answered by me"
-msgstr ""
+msgstr "Respost per mi"
 
 #: forms.py:999
 msgid "Individually selected"
-msgstr ""
+msgstr "Seleccionat individualment"
 
 #: forms.py:1002
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Forum senser (filtrar per etiqueta)"
 
 #: forms.py:1006
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "Comentaris i entrades us mencionen"
 
 #: forms.py:1085
 msgid "okay, let's try!"
-msgstr ""
+msgstr "d'acord, provem-ho!"
 
 #: forms.py:1086
 msgid "no community email please, thanks"
-msgstr "no askbot email please, thanks"
+msgstr "no correus electrònics de la comunitat"
 
 #: forms.py:1090
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "escollir una de les opcions anteriors"
 
 #: urls.py:53
 msgid "about/"
-msgstr ""
+msgstr "sobre/"
 
 #: urls.py:54
 msgid "faq/"
@@ -326,116 +326,116 @@ msgstr ""
 
 #: urls.py:55
 msgid "privacy/"
-msgstr ""
+msgstr "privacitat"
 
 #: urls.py:57 urls.py:62
 msgid "answers/"
-msgstr ""
+msgstr "respostes"
 
 #: urls.py:57 urls.py:83 urls.py:203
 msgid "edit/"
-msgstr ""
+msgstr "editar"
 
 #: urls.py:62 urls.py:113
 msgid "revisions/"
-msgstr ""
+msgstr "revisions/"
 
 #: urls.py:68 urls.py:78 urls.py:83 urls.py:88 urls.py:93 urls.py:98
 #: urls.py:103 urls.py:108 urls.py:113 urls.py:290
 #: skins/default/templates/question.html:508
 msgid "questions/"
-msgstr ""
+msgstr "preguntes/"
 
 #: urls.py:78
 msgid "ask/"
-msgstr ""
+msgstr "preguntar/"
 
 #: urls.py:88
 msgid "retag/"
-msgstr ""
+msgstr "reetiquetar/"
 
 #: urls.py:93
 msgid "close/"
-msgstr ""
+msgstr "tancar/"
 
 #: urls.py:98
 msgid "reopen/"
-msgstr ""
+msgstr "reobrir/"
 
 #: urls.py:103
 msgid "answer/"
-msgstr ""
+msgstr "resposta/"
 
 #: urls.py:108 skins/default/templates/question.html:508
 msgid "vote/"
-msgstr ""
+msgstr "vot/"
 
 #: urls.py:149
 msgid "tags/"
-msgstr ""
+msgstr "etiquetes/"
 
 #: urls.py:192
 msgid "subscribe-for-tags/"
-msgstr ""
+msgstr "subscriure-per-etiquetes"
 
 #: urls.py:197 urls.py:203 urls.py:209 urls.py:217
 #: skins/default/templates/main_page/javascript.html:38
 msgid "users/"
-msgstr ""
+msgstr "usuaris/"
 
 #: urls.py:210
 msgid "subscriptions/"
-msgstr ""
+msgstr "subscripcions/"
 
 #: urls.py:222
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "usuaris/actualitzacio_te_avatar_personalitzat/"
 
 #: urls.py:227 urls.py:232
 msgid "badges/"
-msgstr ""
+msgstr "insignies/"
 
 #: urls.py:237
 msgid "messages/"
-msgstr ""
+msgstr "missatges/"
 
 #: urls.py:237
 msgid "markread/"
-msgstr ""
+msgstr "marcarllegit/"
 
 #: urls.py:253
 msgid "upload/"
-msgstr ""
+msgstr "penjar/"
 
 #: urls.py:254
 msgid "feedback/"
-msgstr ""
+msgstr "comentaris/"
 
 #: urls.py:296 skins/default/templates/question.html:506
 #: skins/default/templates/main_page/javascript.html:37
 msgid "question/"
-msgstr ""
+msgstr "pregunta/"
 
 #: urls.py:303 setup_templates/settings.py:203
 #: skins/default/templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr ""
+msgstr "compte/"
 
 #: conf/badges.py:12
 msgid "Badge settings"
-msgstr ""
+msgstr "Configuració de les insígnies"
 
 #: conf/badges.py:21
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "Disciplinat: mínim vots positius per entrada esborrada"
 
 #: conf/badges.py:30
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr ""
+msgstr "Pressió Companys: mínim vots negatius per a l'entrada eliminada"
 
 #: conf/badges.py:39
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "Mestre: mínim vots positius per la resposta"
 
 #: conf/badges.py:48
 msgid "Nice Answer: minimum upvotes for the answer"
@@ -523,11 +523,11 @@ msgstr ""
 
 #: conf/email.py:14
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "Configuració del correu electrònic i alertes per correu electrònic"
 
 #: conf/email.py:22
 msgid "Prefix for the email subject line"
-msgstr ""
+msgstr "Prefix de assumpte del correu electrònic "
 
 #: conf/email.py:24
 msgid ""
@@ -537,35 +537,35 @@ msgstr ""
 
 #: conf/email.py:36
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "Màxim nombre de missatges en un avís per correu electrònic"
 
 #: conf/email.py:64
 msgid "Default notification frequency all questions"
-msgstr ""
+msgstr "Freqüència predeterminada de notificació per a totes les preguntes"
 
 #: conf/email.py:66
 msgid "Option to define frequency of emailed updates for: all questions."
-msgstr ""
+msgstr "Opció per definir la freqüència de les actualitzacions per correu de: totes les preguntes."
 
 #: conf/email.py:78
 msgid "Default notification frequency questions asked by the user"
-msgstr ""
+msgstr "Freqüència predeterminada de notificació de preguntes fets per l'usuari"
 
 #: conf/email.py:80
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
-msgstr ""
+msgstr "Opció per definir la freqüència de les actualitzacions per correu de: Preguntes fetes per l'usuari"
 
 #: conf/email.py:92
 msgid "Default notification frequency questions answered by the user"
-msgstr ""
+msgstr "Freqüència predeterminada de notificació de respostes fetes per l'usuari"
 
 #: conf/email.py:94
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
-msgstr ""
+msgstr "Opció per definir la freqüència de les actualitzacions per correu de: Respostes fetes per l'usuari"
 
 #: conf/email.py:106
 msgid ""
@@ -1851,23 +1851,23 @@ msgstr ""
 
 #: const/__init__.py:10
 msgid "duplicate question"
-msgstr ""
+msgstr "pregunta repetida"
 
 #: const/__init__.py:11
 msgid "question is off-topic or not relevant"
-msgstr ""
+msgstr "pregunta no pertinent o fora de tema"
 
 #: const/__init__.py:12
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "massa subjectiva o argumentativa"
 
 #: const/__init__.py:13
 msgid "not a real question"
-msgstr ""
+msgstr "no és una pregunta real"
 
 #: const/__init__.py:14
 msgid "the question is answered, right answer was accepted"
-msgstr ""
+msgstr "s'ha respost la pregunta, es va acceptar la resposta correcta"
 
 #: const/__init__.py:15
 msgid "question is not relevant or outdated"
@@ -1887,23 +1887,23 @@ msgstr ""
 
 #: const/__init__.py:41
 msgid "newest"
-msgstr ""
+msgstr "més recent"
 
 #: const/__init__.py:42 skins/default/templates/users.html:26
 msgid "oldest"
-msgstr ""
+msgstr "més antic"
 
 #: const/__init__.py:43
 msgid "active"
-msgstr ""
+msgstr "actiu"
 
 #: const/__init__.py:44
 msgid "inactive"
-msgstr ""
+msgstr "inactiu"
 
 #: const/__init__.py:45
 msgid "hottest"
-msgstr ""
+msgstr "més populars"
 
 #: const/__init__.py:46
 msgid "coldest"
@@ -1915,7 +1915,7 @@ msgstr ""
 
 #: const/__init__.py:48
 msgid "least voted"
-msgstr ""
+msgstr "més votat"
 
 #: const/__init__.py:49
 msgid "relevance"
@@ -1924,32 +1924,32 @@ msgstr ""
 #: const/__init__.py:57 skins/default/templates/main_page/tab_bar.html:10
 #: skins/default/templates/user_profile/user_inbox.html:50
 msgid "all"
-msgstr ""
+msgstr "tot"
 
 #: const/__init__.py:58 skins/default/templates/main_page/tab_bar.html:15
 msgid "unanswered"
-msgstr ""
+msgstr "sense resposta"
 
 #: const/__init__.py:59
 msgid "favorite"
-msgstr ""
+msgstr "favorit"
 
 #: const/__init__.py:64
 #, fuzzy
 msgid "list"
-msgstr "Tags"
+msgstr "llista"
 
 #: const/__init__.py:65
 msgid "cloud"
-msgstr ""
+msgstr "núbol"
 
 #: const/__init__.py:78
 msgid "Question has no answers"
-msgstr ""
+msgstr "La pregunta no té respostes"
 
 #: const/__init__.py:79
 msgid "Question has no accepted answers"
-msgstr ""
+msgstr "La pregunta no té respostes acceptades"
 
 #: const/__init__.py:121
 msgid "asked a question"
@@ -5550,43 +5550,41 @@ msgstr "Ask Your Question"
 
 #: skins/default/templates/blocks/header_meta_links.html:8
 msgid "logout"
-msgstr "sign out"
+msgstr "sortir"
 
 #: skins/default/templates/blocks/header_meta_links.html:10
 msgid "login"
-msgstr "Hi, there! Please sign in"
+msgstr "Registrar-se"
 
 #: skins/default/templates/blocks/header_meta_links.html:15
-#, fuzzy
 msgid "settings"
 msgstr "User login"
 
 #: skins/default/templates/blocks/input_bar.html:34
 msgid "search"
-msgstr ""
+msgstr "cerca"
 
 #: skins/default/templates/blocks/question_edit_tips.html:3
 msgid "question tips"
-msgstr "Tips"
+msgstr "Consells"
 
 #: skins/default/templates/blocks/question_edit_tips.html:5
 msgid "please ask a relevant question"
-msgstr "ask a question interesting to this community"
+msgstr "fes una pregunta interessant per a la comunitat"
 
 #: skins/default/templates/blocks/question_edit_tips.html:8
 msgid "please try provide enough details"
-msgstr "provide enough details"
+msgstr "dóna detalls suficients"
 
 #: skins/default/templates/blocks/tag_selector.html:4
-#, fuzzy
 msgid "Interesting tags"
-msgstr "Tags"
+msgstr "Etiquetes interessants"
 
 #: skins/default/templates/blocks/tag_selector.html:18
 #: skins/default/templates/blocks/tag_selector.html:34
 #: skins/default/templates/user_profile/user_moderate.html:40
 msgid "Add"
-msgstr ""
+msgstr "Afegir"
 
 #: skins/default/templates/blocks/tag_selector.html:20
 #, fuzzy
@@ -5595,16 +5593,15 @@ msgstr "Retag question"
 
 #: skins/default/templates/blocks/tag_selector.html:36
 msgid "Display tag filter"
-msgstr ""
+msgstr "Mostrar el filtre per etiquetes"
 
 #: skins/default/templates/main_page/content.html:13
 msgid "Did not find what you were looking for?"
 msgstr ""
 
 #: skins/default/templates/main_page/content.html:14
-#, fuzzy
 msgid "Please, post your question!"
-msgstr "Ask Your Question"
+msgstr "Fes la teva pregunta"
 
 #: skins/default/templates/main_page/headline.html:7
 #, fuzzy
