@@ -76,6 +76,7 @@ def test_middleware():
         'django.middleware.common.CommonMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
+        'askbot.middleware.forum_mode.ForumModeMiddleware',
         'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
