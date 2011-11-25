@@ -46,4 +46,5 @@ Translations
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
 * Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
+* `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
 

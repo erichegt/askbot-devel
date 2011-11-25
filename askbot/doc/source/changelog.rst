@@ -20,6 +20,7 @@ Development version (not yet published)
 * Take LANGUAGE_CODE from request (Alexander Werner)
 * Added support for LOGIN_REDIRECT_URL to the login app (hjwp, Evgeny)
 * Updated Italian localization (Luca Ferroni)
+* Added Catalan localization (Jordi Bofill)
 
 0.7.26 (Current Version)
 ------------------------
