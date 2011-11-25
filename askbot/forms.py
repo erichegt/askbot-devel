@@ -541,8 +541,15 @@ class NotARobotForm(forms.Form):
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name (optional):'), required=False)
     email = forms.EmailField(label=_('Email:'), required=False)
-    message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
-    no_email = forms.BooleanField(label=_("I don't want to give my email:"), required=False)
+    message = forms.CharField(
+        label=_('Your message:'),
+        max_length=800,
+        widget=forms.Textarea(attrs={'cols':60})
+    )
+    no_email = forms.BooleanField(
+        label=_("I don't want to give my email or receive a response:"),
+        required=False
+    )
     next = NextUrlField()
 
     def __init__(self, is_auth=False, *args, **kwargs):
@@ -557,6 +564,7 @@ class FeedbackForm(forms.Form):
                                 private_key = askbot_settings.RECAPTCHA_SECRET,
                                 public_key = askbot_settings.RECAPTCHA_KEY
                                 )
+
     def clean(self):
         super(FeedbackForm, self).clean()
         if not self.is_auth:
