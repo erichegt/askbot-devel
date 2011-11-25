@@ -32,6 +32,7 @@ Programming and documentation
 * `Raghu Udiyar <http://raags.tumblr.com/>`_
 * `Alexander Werner <https://twitter.com/#!/bundeswerner>`_
 * Rosandra Cuello Suñol 
+* `hjwp <https://github.com/hjwp>`_
 
 Translations
 ------------
@@ -44,5 +45,5 @@ Translations
 * Pekka Gaiser - German
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
-* Dario Ghilardi, Federico Poloni - Italian
+* Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
 

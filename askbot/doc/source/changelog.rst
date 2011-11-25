@@ -18,6 +18,8 @@ Development version (not yet published)
 * Private forum mode (Vlad Bokov)
 * Improved text search query in Postgresql (Alexander Werner)
 * Take LANGUAGE_CODE from request (Alexander Werner)
+* Added support for LOGIN_REDIRECT_URL to the login app (hjwp, Evgeny)
+* Updated Italian localization (Luca Ferroni)
 
 0.7.26 (Current Version)
 ------------------------
