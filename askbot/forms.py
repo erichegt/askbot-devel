@@ -540,14 +540,14 @@ class NotARobotForm(forms.Form):
 
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name (optional):'), required=False)
-    email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False,
-                            help_text=_("if you don't want to give your email, check the box below, please note that we won't be able to contact you later."))
+    email = forms.EmailField(label=_('Email:'), required=False)
     message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
-    no_email = forms.BooleanField(label=_("I don't want to give my email"), required=False)
+    no_email = forms.BooleanField(label=_("I don't want to give my email:"), required=False)
     next = NextUrlField()
 
     def __init__(self, is_auth=False, *args, **kwargs):
         super(FeedbackForm, self).__init__(*args, **kwargs)
+        self.is_auth = is_auth
         if not is_auth:
             if askbot_settings.USE_RECAPTCHA:
                 self._add_recaptcha_field()
@@ -559,8 +559,11 @@ class FeedbackForm(forms.Form):
                                 )
     def clean(self):
         super(FeedbackForm, self).clean()
-        if not self.cleaned_data['no_email'] and not self.cleaned_data['email']:
-            raise forms.ValidationError(_('Please mark "I dont want to give my mail" field.'))
+        if not self.is_auth:
+            if not self.cleaned_data['no_email'] and not self.cleaned_data['email']:
+                msg = _('Please mark "I dont want to give my mail" field.')
+                self._errors['email'] = self.error_class([msg])
+
         return self.cleaned_data
 
 class FormWithHideableFields(object):
