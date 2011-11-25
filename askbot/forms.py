@@ -539,8 +539,9 @@ class NotARobotForm(forms.Form):
                 )
 
 class FeedbackForm(forms.Form):
-    name = forms.CharField(label=_('Your name:'), required=False)
-    email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False)
+    name = forms.CharField(label=_('Your name (optional):'), required=False)
+    email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False,
+                            help_text=_("if you don't want to give your email, check the box below, please note that we won't be able to contact you later."))
     message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
     no_email = forms.BooleanField(label=_("I don't want to give my email"), required=False)
     next = NextUrlField()

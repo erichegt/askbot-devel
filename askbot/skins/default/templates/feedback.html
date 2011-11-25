@@ -3,6 +3,11 @@
 {% block title %}{% spaceless %}{% trans %}Feedback{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <h1 class="section-title">{% trans %}Give us your feedback!{% endtrans %}</h1>
+{% if form.errors %}
+<span class="error">
+  {{form.errors.__all__}}
+</span>
+{%endif%}
 <form method="post" action="{% url feedback %}" accept-charset="utf-8">{% csrf_token %}
     {% if user.is_authenticated() %}
         <p class="message">
@@ -25,6 +30,7 @@
                     <span class='error'>{% trans %}(please enter a valid email){% endtrans %}</span>
                 {% endif %}
             </label><br/>{{form.email}}
+            <p>{{form.email.help_text}}</p>
         </div>
         <div class="form-row">
         <label>{{form.no_email.label}}
@@ -46,6 +52,10 @@
     </div>
     {% if form.recaptcha %}
     <div class="form-row">
+        {% if form.errors.recaptcha%}
+        <span class="error">{% trans %}(Please solve the captcha){% endtrans %}</span>
+        </label>
+        {% endif %}
       {{form.recaptcha}}
     </div>
     {% endif %}
