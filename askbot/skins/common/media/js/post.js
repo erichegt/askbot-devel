@@ -122,7 +122,7 @@ var CPValidator = function(){
             };
         },
         getQuestionFormMessages: function(){
-            //todo: here use pluralization function instead of replace
+            var chars = 10
             return {
                 tags: {
                     required: " " + gettext('tags cannot be empty'),
@@ -132,11 +132,11 @@ var CPValidator = function(){
                 },
                 text: {
                     required: " " + gettext('content cannot be empty'),
-                    minlength: gettext('content minchars').replace('{0}', 10)
+                    minlength: interpolate(gettext('%s content minchars'), [chars]) 
                 },
                 title: {
                     required: " " + gettext('please enter title'),
-                    minlength: gettext('title minchars').replace('{0}', 10)
+                    minlength: interpolate(gettext('%s title minchars'), [chars]) 
                 }
             };
         }
@@ -981,13 +981,13 @@ EditCommentForm.prototype.getCounterUpdater = function(){
         
         //todo:
         //1) use class instead of color - move color def to css
-        //2) use pluralization and interpolation instead of string replacement
         var color = 'maroon';
+        var chars = 10;
         if (length === 0){
-            var feedback = gettext('title minchars').replace('{0}', 10);
+            var feedback = interpolate(gettext('%s title minchars'), [chars]);
         }
         else if (length < 10){
-            var feedback = gettext('enter more characters').replace('{0}', 10 - length);
+            var feedback = interpolate(gettext('enter %s more characters'), [chars - length]);
         }
         else {
             color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999"

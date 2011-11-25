@@ -8,6 +8,7 @@ question: why not run these from askbot/__init__.py?
 the main function is run_startup_tests
 """
 import sys
+import os
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
@@ -113,17 +114,6 @@ the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more
         middleware_text = format_as_text_tuple_entries(remove_middleware_set)
         raise ImproperlyConfigured(PREAMBLE + error_message + middleware_text)
 
-
-
-def test_i18n():
-    """askbot requires use of USE_I18N setting"""
-    if getattr(django_settings, 'USE_I18N', False) == False:
-        raise ImproperlyConfigured(
-            'Please set USE_I18N = True in settings.py and '
-            'set the LANGUAGE_CODE parameter correctly '
-            'it is very important for askbot.'
-        )
-
 def try_import(module_name, pypi_package_name):
     """tries importing a module and advises to install
     A corresponding Python package in the case import fails"""
@@ -219,14 +209,44 @@ def test_celery():
             "in your settings.py file"
         )
 
-def test_cache():
-    """Tests cache settings"""
-    if not hasattr(django_settings, 'CACHE_MIDDLEWARE_ANONYMOUS_ONLY'):
-        raise ImproperlyConfigured(PREAMBLE + \
-            "\nPlease set\n"
-            "CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True\n"
-            "in your settings.py file"
-        )
+class SettingsTester(object):
+    """class to test contents of the settings.py file"""
+
+    def __init__(self, requirements = None):
+        """loads the settings module and inits some variables
+        parameter `requirements` is a dictionary with keys
+        as setting names and values - another dictionary, which
+        has keys (optional, if noted and required otherwise)::
+
+        * required_value (optional)
+        * error_message
+        """
+        self.settings = load_module(os.environ['DJANGO_SETTINGS_MODULE'])
+        self.messages = list()
+        self.requirements = requirements
+
+
+    def test_setting(self, name, value = None, message = None):
+        """if setting does is not present or if the value != required_value,
+        adds an error message
+        """
+        if not hasattr(self.settings, name):
+            self.messages.append(message)
+        elif value and getattr(self.settings, name) != value:
+            self.messages.append(message)
+
+    def run(self):
+        for setting_name in self.requirements:
+            self.test_setting(
+                setting_name,
+                **self.requirements[setting_name]
+            )
+        if len(self.messages) != 0:
+            raise ImproperlyConfigured(
+                PREAMBLE + 
+                '\n\nTime to do some maintenance of your settings.py:\n\n* ' + 
+                '\n\n* '.join(self.messages)
+            )
 
 def run_startup_tests():
     """function that runs
@@ -238,11 +258,27 @@ def run_startup_tests():
     test_encoding()
     test_modules()
     test_askbot_url()
-    test_i18n()
     test_postgres()
     test_middleware()
     test_celery()
-    test_cache()
+    settings_tester = SettingsTester({
+        'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
+            'value': True,
+            'message': "add line CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True"
+        },
+        'USE_I18N': {
+            'value': True,
+            'message': 'Please set USE_I18N = True and\n'
+                'set the LANGUAGE_CODE parameter correctly'
+        },
+        'LOGIN_REDIRECT_URL': {
+            'message': 'add setting LOGIN_REDIRECT_URL - an url\n'
+                'where you want to send users after they log in\n'
+                'a reasonable default is\n'
+                'LOGIN_REDIRECT_URL = ASKBOT_URL'
+        }
+    })
+    settings_tester.run()
 
 @transaction.commit_manually
 def run():

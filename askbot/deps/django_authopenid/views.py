@@ -289,7 +289,13 @@ def signin(request):
     on_failure = signin_failure
     email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
-    next_url = get_next_url(request)
+    #we need a special priority on where to redirect on successful login
+    #here:
+    #1) url parameter "next" - if explicitly set
+    #2) url from django setting LOGIN_REDIRECT_URL
+    #3) home page of the forum
+    login_redirect_url = getattr(settings, 'LOGIN_REDIRECT_URL', None)
+    next_url = get_next_url(request, default = login_redirect_url)
     logging.debug('next url is %s' % next_url)
 
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
