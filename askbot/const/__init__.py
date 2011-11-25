@@ -296,8 +296,8 @@ MIN_REPUTATION = 1
 
 AVATAR_STATUS_CHOICE = (
     ('n', _('None')),
-    ('g', _('Gravatar')),
-    ('a', _('Uploaded Avatar')),
+    ('g', _('Gravatar')),#only if user has real uploaded gravatar
+    ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
 )
 
 #an exception import * because that file has only strings
