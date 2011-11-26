@@ -4,21 +4,14 @@ from django.conf import settings
 from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.http import urlquote as django_urlquote
-from django.core.urlresolvers import reverse
-from django.core import exceptions as django_exceptions
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
 import askbot
 import askbot.conf
-from askbot import exceptions
 from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent
-from askbot.models.base import DeletableContent
 from askbot.models.post import PostRevision
 from askbot.models.base import BaseQuerySetManager
-from askbot.models.base import parse_post_text
-from askbot.models.base import parse_and_save_post
 from askbot.models import content
 from askbot.models import signals
 from askbot import const
@@ -482,20 +475,6 @@ class Question(content.Content):
     class Meta(content.Content.Meta):
         db_table = u'question'
 
-    def assert_is_visible_to(self, user):
-        """raises QuestionHidden"""
-        if self.deleted:
-            message = _(
-                    'Sorry, this question has been '
-                    'deleted and is no longer accessible'
-                )
-            if user.is_anonymous():
-                raise exceptions.QuestionHidden(message)
-            try:
-                user.assert_can_see_deleted_post(self)
-            except django_exceptions.PermissionDenied:
-                raise exceptions.QuestionHidden(message)
-
     def remove_author_anonymity(self):
         """removes anonymous flag from the question
         and all its revisions
@@ -702,35 +681,6 @@ class Question(content.Content):
                                 | models.Q(deleted_by = user)
                             )
 
-    def get_updated_activity_data(self, created = False):
-        if created:
-            return const.TYPE_ACTIVITY_ASK_QUESTION, self
-        else:
-            latest_revision = self.get_latest_revision()
-            return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
-
-    def get_response_receivers(self, exclude_list = None):
-        """returns list of users who might be interested
-        in the question update based on their participation 
-        in the question activity
-
-        exclude_list is mandatory - it normally should have the
-        author of the update so the he/she is not notified about the update
-        """
-        assert(exclude_list != None)
-        recipients = set()
-        recipients.update(
-                            self.get_author_list(
-                                    include_comments = True
-                                )
-                        )
-        #do not include answer commenters here
-        for a in self.answers.all():
-            recipients.update(a.get_author_list())
-
-        recipients -= set(exclude_list)
-        return recipients
-
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
@@ -758,100 +708,12 @@ class Question(content.Content):
             text       = latest_revision.text
         )
 
-    def apply_edit(self, edited_at=None, edited_by=None, title=None,\
-                    text=None, comment=None, tags=None, wiki=False, \
-                    edit_anonymously = False):
-
-        latest_revision = self.get_latest_revision()
-        #a hack to allow partial edits - important for SE loader
-        if title is None:
-            title = self.title
-        if text is None:
-            text = latest_revision.text
-        if tags is None:
-            tags = latest_revision.tagnames
-
-        if edited_by is None:
-            raise Exception('parameter edited_by is required')
-
-        if edited_at is None:
-            edited_at = datetime.datetime.now()
-
-        # Update the Question itself
-        self.title = title
-        self.last_edited_at = edited_at
-        self.last_activity_at = edited_at
-        self.last_edited_by = edited_by
-        self.last_activity_by = edited_by
-        self.tagnames = tags
-        self.text = text
-        self.is_anonymous = edit_anonymously
-
-        #wiki is an eternal trap whence there is no exit
-        if self.wiki == False and wiki == True:
-            self.wiki = True
-
-        # Update the Question tag associations
-        if latest_revision.tagnames != tags:
-            self.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
-
-        # Create a new revision
-        self.add_revision(
-            author = edited_by,
-            text = text,
-            revised_at = edited_at,
-            is_anonymous = edit_anonymously,
-            comment = comment,
-        )
-
-        self.parse_and_save(author = edited_by)
-
-    def add_revision(
-                self,
-                author = None,
-                is_anonymous = False,
-                text = None,
-                comment = None,
-                revised_at = None
-            ):
-        if None in (author, text, comment):
-            raise Exception('author, text and comment are required arguments')
-        rev_no = self.revisions.all().count() + 1
-        if comment in (None, ''):
-            if rev_no == 1:
-                comment = const.POST_STATUS['default_version']
-            else:
-                comment = 'No.%s Revision' % rev_no
-            
-        return PostRevision.objects.create_question_revision(
-            question   = self,
-            revision   = rev_no,
-            title      = self.title,
-            author     = author,
-            is_anonymous = is_anonymous,
-            revised_at = revised_at,
-            tagnames   = self.tagnames,
-            summary    = comment,
-            text       = text
-        )
-
-    def get_tag_names(self):
-        """Creates a list of Tag names from the ``tagnames`` attribute."""
-        return self.tagnames.split(u' ')
-
     def set_tag_names(self, tag_names):
         """expects some iterable of unicode string tag names
         joins the names with a space and assigns to self.tagnames
         does not save the object
         """
         self.tagnames = u' '.join(tag_names)
-
-    def get_absolute_url(self, no_slug = False):
-        url = reverse('question', args=[self.id])
-        if no_slug == True:
-            return url
-        else:
-            return url + django_urlquote(self.slug)
 
     def _get_slug(self):
         return slugify(self.title)
@@ -863,18 +725,6 @@ class Question(content.Content):
             return False
 
         return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
-
-    def get_question_title(self):
-        if self.closed:
-            attr = const.POST_STATUS['closed']
-        elif self.deleted:
-            attr = const.POST_STATUS['deleted']
-        else:
-            attr = None
-        if attr is not None:
-            return u'%s %s' % (self.title, attr)
-        else:
-            return self.title
 
     def get_last_update_info(self):
         when, who = self.post_get_last_update_info()
@@ -945,9 +795,6 @@ class Question(content.Content):
             return retval
         else:
             return None
-
-    def __unicode__(self):
-        return self.title
 
 if getattr(settings, 'USE_SPHINX_SEARCH', False):
     from djangosphinx.models import SphinxSearch
