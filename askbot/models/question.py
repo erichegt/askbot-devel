@@ -71,6 +71,7 @@ def get_tag_summary_from_questions(questions):
 class QuestionQuerySet(models.query.QuerySet):
     """Custom query set subclass for :class:`~askbot.models.Question`
     """
+    #todo: becomes thread query set
     def create_new(
                 self,
                 title = None,
@@ -81,7 +82,8 @@ class QuestionQuerySet(models.query.QuerySet):
                 tagnames = None,
                 text = None
             ):
-
+        #todo: some work from this method will go to thread
+        #and some - merged with the Answer.objects.create_new
         question = Question(
             title = title,
             author = author,
@@ -120,6 +122,7 @@ class QuestionQuerySet(models.query.QuerySet):
         """returns a query set of questions, 
         matching the full text query
         """
+        #todo - goes to thread - we search whole threads
         if getattr(settings, 'USE_SPHINX_SEARCH', False):
             matching_questions = Question.sphinx_search.query(search_query)
             question_ids = [q.id for q in matching_questions] 
@@ -158,7 +161,7 @@ class QuestionQuerySet(models.query.QuerySet):
         however may not relate to database - in that case
         a relvant filter will be silently dropped
         """
-
+        #todo: same as for get_by_text_query - goes to Tread
         scope_selector = getattr(
                             search_state,
                             'scope',
@@ -353,6 +356,7 @@ class QuestionQuerySet(models.query.QuerySet):
 
     def added_between(self, start, end):
         """questions added between ``start`` and ``end`` timestamps"""
+        #todo: goes to thread
         return self.filter(
             added_at__gt = start
         ).exclude(
@@ -369,6 +373,7 @@ class QuestionQuerySet(models.query.QuerySet):
         ``recurrence_delay`` - interval between sending the
         reminders about the same question
         """
+        #todo: goes to thread
         from askbot.models import Activity#avoid circular import
         question_list = list()
         for question in self:
@@ -397,6 +402,9 @@ class QuestionQuerySet(models.query.QuerySet):
     #profile this function against the other one
     #todo: maybe this must be a query set method, not manager method
     def get_question_and_answer_contributors(self, question_list):
+        """returns query set of Thread contributors
+        """
+        #todo: goes to thread - queries will be simplified too
         answer_list = []
         #question_list = list(question_list)#important for MySQL, b/c it does not support
         from askbot.models.answer import Answer
@@ -407,6 +415,11 @@ class QuestionQuerySet(models.query.QuerySet):
                     set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
                 )
 
+        #todo: this does not belong gere - here we select users with real faces
+        #first and limit the number of users in the result for display
+        #on the main page, we might also want to completely hide fake gravatars
+        #and show only real images and the visitors - even if he does not have
+        #a real image and try to prompt him/her to upload a picture
         from askbot.conf import settings as askbot_settings
         avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
         contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
@@ -423,6 +436,7 @@ class QuestionQuerySet(models.query.QuerySet):
         #todo: - this is duplication - answer manager also has this method
         #will be gone when models are consolidated
         #note that method get_question_and_answer_contributors is similar in function
+        #todo: goes to thread
         authors = set()
         for question in self:
             authors.update(question.get_author_list(**kwargs))
@@ -432,6 +446,7 @@ class QuestionQuerySet(models.query.QuerySet):
         """
         update counter+1 when user browse question page
         """
+        #todo: moves to thread
         self.filter(id=question.id).update(view_count = question.view_count + 1)
 
 
@@ -439,14 +454,19 @@ class QuestionManager(BaseQuerySetManager):
     """chainable custom query set manager for 
     questions
     """
+    #todo: becomes thread manager
     def get_query_set(self):
         return QuestionQuerySet(self.model)
 
 
 class Question(content.Content):
+    #todo: this really becomes thread,
+    #except property post_type goes to Post
     post_type = 'question'
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
+    #todo: answer accepted will be replaced with
+    #accepted_answer foreign key (nullable)
     answer_accepted = models.BooleanField(default=False)
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True, related_name='closed_questions')
@@ -468,6 +488,13 @@ class Question(content.Content):
     summary              = models.CharField(max_length=180)
 
     favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
+    #note: anonymity here applies to question only, but
+    #the field will still go to thread
+    #maybe we should rename it to is_question_anonymous
+    #we might have to duplicate the is_anonymous on the Post,
+    #if we are to allow anonymous answers
+    #the reason is that the title and tags belong to thread,
+    #but the question body to Post
     is_anonymous = models.BooleanField(default=False) 
 
     objects = QuestionManager()
@@ -481,6 +508,7 @@ class Question(content.Content):
         the function calls update method to make sure that
         signals are not called
         """
+        #note: see note for the is_anonymous field
         #it is important that update method is called - not save,
         #because we do not want the signals to fire here
         Question.objects.filter(id = self.id).update(is_anonymous = False)
@@ -490,6 +518,7 @@ class Question(content.Content):
         """updates the denormalized field 'answer_count'
         on the question
         """
+        #todo: goes to thread
         self.answer_count = self.get_answers().count()
         if save: 
             self.save()
@@ -497,6 +526,7 @@ class Question(content.Content):
     def update_favorite_count(self):
         """update favourite_count for given question
         """
+        #todo: goes to thread
         self.favourite_count = FavoriteQuestion.objects.filter(
                                                             question=self
                                                         ).count()
@@ -513,6 +543,7 @@ class Question(content.Content):
         be very expensive - this function will benefit from
         some sort of optimization
         """
+        #todo: goes to thread
         #print datetime.datetime.now()
 
         def get_data():
@@ -635,6 +666,7 @@ class Question(content.Content):
         """posts question as answer to another question,
         but does not delete the question,
         but moves all the comments to the new answer"""
+        #todo: goes to Thread.
         revisions = self.revisions.all().order_by('revised_at')
         rev0 = revisions[0]
         new_answer = rev0.author.post_answer(
