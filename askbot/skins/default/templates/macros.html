@@ -221,7 +221,7 @@ poor design of the data or methods on data objects #}
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
-        >{{ tag|replace('*', '&#10045;') }}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
+        >{{ tag|replace('*', '&#10045;')|truncate(20,True)}}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <span class="delete-icon"
                 {% if delete_link_title %}

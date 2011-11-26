@@ -175,3 +175,5 @@ the developers of the Askbot project:
 |                                | remaining commands that are expected to be run from the     |
 |                                | site root directory.                                        |
 +--------------------------------+-------------------------------------------------------------+
+| `askbot_add_test_content`      | Creates content with dummy data for testing                 |
++--------------------------------+-------------------------------------------------------------+
