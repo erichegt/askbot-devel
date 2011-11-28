@@ -225,9 +225,6 @@ body.user-messages {
 
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
     height: 20px;
-    position:absolute;
-    bottom: 0;
-    right:0px;
     padding-bottom:5px;
 
     a {
@@ -263,7 +260,7 @@ body.user-messages {
 }
 
 #metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
-    float:right;
+    float: right;/* for #header.with-logo it is modified */
 
     a {
         color: #e2e2ae;
@@ -310,6 +307,21 @@ body.user-messages {
     #navBadges{
         .sprites(-210px,-5px)
     }
+}
+
+#header.with-logo #userToolsNav {
+    position:absolute;
+    bottom: 0;
+    right:0px;
+}
+
+#header.without-logo #userToolsNav {
+    float:left;
+    margin-top: 7px;
+}
+
+#header.without-logo #metaNav {
+    margin-bottom: 7px;
 }
 
 #secondaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
