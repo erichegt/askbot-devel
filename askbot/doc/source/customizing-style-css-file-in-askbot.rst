@@ -4,9 +4,17 @@
 Customizing style.css file in Askbot
 ====================================
 
-File style.css is produced by the `lesscss compiler <http://lesscss.org>`_ - ``lessc``.
+File `style.css` is produced by the `lesscss compiler <http://lesscss.org>`_ - ``lessc``.
+Secondly, `style.css` is used in production mode - with an entry
+`ASKBOT_CSS_DEVEL = True` in the `settings.py` file.
+When `ASKBOT_CSS_DEVEL` setting is absent or set to ``False``,
+the source `style.less` will be loaded and compiled by the browser.
+A side-effect of that is a possible momentary flash of unstyled content
+and some delay in the page load.
 
-Please read documentation about the lesscss format.
+`ASKBOT_CSS_DEVEL = True` is a convenient setting for the designer.
+
+Please find documentation about the lesscss format elsewhere.
 
 Compiling lesscss files
 =======================
