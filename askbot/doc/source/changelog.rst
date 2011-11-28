@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version (Not yet released)
+--------------------------------------
+* Added ``askbot_create_test_fixture`` management command (Dejan Noveski)
+
 0.7.30 (Current Version)
 ------------------------
 Note: some of these features were added in one of the three previous versions.
