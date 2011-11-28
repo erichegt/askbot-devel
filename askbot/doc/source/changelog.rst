@@ -1,8 +1,10 @@
 Changes in Askbot
 =================
 
-Development version (not yet published)
----------------------------------------
+0.7.30 (Current Version)
+------------------------
+Note: some of these features were added in one of the three previous versions.
+
 * Context-sensitive RSS url (`Dejan Noveski <http://www.atomidata.com/>`_)
 * Implemented new version of skin (Byron Corrales)
 * Show unused vote count (Tomasz Zielinski)
@@ -22,9 +24,14 @@ Development version (not yet published)
 * Updated Italian localization (Luca Ferroni)
 * Added Catalan localization (Jordi Bofill)
 * Added management command ``askbot_add_test_content`` (Dejan Noveski)
+* Continued work on refactoring the database schema (Tomasz Zielinski)
 
-0.7.26 (Current Version)
-------------------------
+0.7.27 - 0.7.29
+---------------
+For these versions we did not keep consistent record of features.
+
+0.7.26
+------
 * Added settings for email subscription defaults (Adolfo)
 * Resolved `bug #102<http://bugs.askbot.org/issues/102>`_ - duplicate notifications on posts with mentions (Evegeny)
 * Added color-animated transitions when urls with hash tags are visited (Adolfo)
