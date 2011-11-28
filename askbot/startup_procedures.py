@@ -258,7 +258,7 @@ def run_startup_tests():
     test_encoding()
     test_modules()
     test_askbot_url()
-    test_postgres()
+    #test_postgres()
     test_middleware()
     test_celery()
     settings_tester = SettingsTester({
