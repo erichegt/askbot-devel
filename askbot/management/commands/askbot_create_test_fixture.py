@@ -5,7 +5,7 @@ import askbot
 
 
 # FULL PATH HERE
-# DEFAULTS TO askbot_path/fixtures/test_data.json
+# DEFAULTS TO askbot_path/tests/test_data.json
 FIXTURE_NAME = os.path.join(os.path.dirname(askbot.__file__),
                                 "tests", "test_data.json")
 
