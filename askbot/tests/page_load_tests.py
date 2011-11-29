@@ -252,7 +252,15 @@ class PageLoadTestCase(AskbotTestCase):
             )
         self.try_url('users',
                 status_code=status_code,
-                template='users.html')
+                template='users.html'
+            )
+        import pdb; pdb.set_trace()
+        self.try_url(
+                'widget_questions',
+                status_code = status_code,
+                data={'tags': 'test'},
+                template='question_widget.html',
+            )
         #todo: really odd naming conventions for sort methods
         self.try_url(
                 'users',
