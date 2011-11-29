@@ -211,16 +211,12 @@ msgid "Message text"
 msgstr "Text del missatge"
 
 #: forms.py:542
-#, fuzzy
 msgid "Your name (optional):"
-msgstr "Nom (opcional):"
+msgstr "El vostre nom (opcional):"
 
 #: forms.py:543
-#, fuzzy
 msgid "Email:"
-msgstr ""
-"<strong>Correu electrònic</strong> (<i>ha de ser vàlid, no es mostra a "
-"altres persones</i>)"
+msgstr "Correu electrònic:"
 
 #: forms.py:545
 msgid "Your message:"
@@ -460,9 +456,8 @@ msgid "account/"
 msgstr "compte/"
 
 #: conf/access_control.py:8
-#, fuzzy
 msgid "Access control settings"
-msgstr "User login"
+msgstr "Configuració control d'accés"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
@@ -717,14 +712,8 @@ msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
 
 #: conf/email.py:247
-#, fuzzy
 msgid "Allow posting questions by email"
-msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr "Permetre publicar preguntes per correu electrònic"
 
 #: conf/email.py:249
 msgid ""
@@ -924,14 +913,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:56
-#, fuzzy
 msgid "Allow posting before logging in"
-msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr "Permetre publicar abans de registrar-se"
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -942,9 +925,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:73
-#, fuzzy
 msgid "Allow swapping answer with question"
-msgstr "Post Your Answer"
+msgstr "Permetre intercanviar la resposta amb la pregunta"
 
 #: conf/forum_data_rules.py:75
 msgid ""
@@ -987,9 +969,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:140
-#, fuzzy
 msgid "Use wildcard tags"
-msgstr "Tags"
+msgstr "Usar etiquetes comodí"
 
 #: conf/forum_data_rules.py:142
 msgid ""
@@ -1236,9 +1217,8 @@ msgid "Downvote"
 msgstr ""
 
 #: conf/minimum_reputation.py:40
-#, fuzzy
 msgid "Answer own question immediately"
-msgstr "Post Your Answer"
+msgstr "Respondre immediatament la pròpia pregunta"
 
 #: conf/minimum_reputation.py:49
 msgid "Accept own answer"
@@ -1430,14 +1410,12 @@ msgid ""
 msgstr ""
 
 #: conf/sidebar_profile.py:12
-#, fuzzy
 msgid "User profile sidebar"
-msgstr "User login"
+msgstr "Barra lateral del perfil d'usuari"
 
 #: conf/sidebar_question.py:11
-#, fuzzy
 msgid "Question page sidebar"
-msgstr "Tags"
+msgstr "Barra lateral de preguntes"
 
 #: conf/sidebar_question.py:35
 msgid "Show tag list in sidebar"
@@ -1877,23 +1855,16 @@ msgid "Login, Users & Communication"
 msgstr ""
 
 #: conf/user_settings.py:12
-#, fuzzy
 msgid "User settings"
-msgstr "User login"
+msgstr "Configuració d'usuari"
 
 #: conf/user_settings.py:21
 msgid "Allow editing user screen name"
 msgstr ""
 
 #: conf/user_settings.py:30
-#, fuzzy
 msgid "Allow account recovery by email"
-msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr "Permetre recuperar el compte per correu electrònic"
 
 #: conf/user_settings.py:39
 msgid "Allow adding and removing login methods"
@@ -2045,13 +2016,12 @@ msgid "favorite"
 msgstr "favorit"
 
 #: const/__init__.py:64
-#, fuzzy
 msgid "list"
 msgstr "llista"
 
 #: const/__init__.py:65
 msgid "cloud"
-msgstr "núbol"
+msgstr "núvol"
 
 #: const/__init__.py:78
 msgid "Question has no answers"
@@ -2138,9 +2108,8 @@ msgid "reminder about unanswered questions sent"
 msgstr "enviat recordatori d'una pregunta sense resposta"
 
 #: const/__init__.py:146
-#, fuzzy
 msgid "reminder about accepting the best answer sent"
-msgstr "enviat recordatori d'una pregunta sense resposta"
+msgstr "enviat recordatori sobre acceptar la millor resposta"
 
 #: const/__init__.py:148
 msgid "mentioned in the post"
@@ -2219,9 +2188,8 @@ msgid "monsterid"
 msgstr ""
 
 #: const/__init__.py:236
-#, fuzzy
 msgid "wavatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:237
 msgid "retro"
@@ -2247,14 +2215,12 @@ msgid "None"
 msgstr "Cap"
 
 #: const/__init__.py:299
-#, fuzzy
 msgid "Gravatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:300
-#, fuzzy
 msgid "Uploaded Avatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr "Avatar penjat"
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
@@ -2610,17 +2576,15 @@ msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
-#, fuzzy
 msgid "Documentation"
-msgstr "Hi, there! Please sign in"
+msgstr "Documentació"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/common/templates/authopenid/signin.html:132
 #: skins/old/templates/authopenid/signin.html:132
-#, fuzzy
 msgid "Change password"
-msgstr "Canviar la vostra contrasenya"
+msgstr "Canviar contrasenya"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
@@ -2633,9 +2597,8 @@ msgid "Home"
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:15
-#, fuzzy
 msgid "Edit Group Settings"
-msgstr "Post Your Answer"
+msgstr "Editar paràmetres del grup"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:22
 #: deps/livesettings/templates/livesettings/site_settings.html:50
@@ -2655,9 +2618,8 @@ msgid "You don't have permission to edit values."
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
-#, fuzzy
 msgid "Edit Site Settings"
-msgstr "Configuració de les insígnies"
+msgstr "Editar paràmetres del lloc"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
@@ -2726,20 +2688,12 @@ msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr ""
 
 #: management/commands/send_accept_answer_reminders.py:62
-#, fuzzy
 msgid "Please accept the best answer for this question:"
-msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
+msgstr "Acceptar la millor resposta d'aquesta pregunta:"
 
 #: management/commands/send_accept_answer_reminders.py:64
-#, fuzzy
 msgid "Please accept the best answer for these questions:"
-msgstr "clicar per mostrar les preguntes amb menys respostes"
+msgstr "Acceptar la millor resposta d'aquestes preguntes:"
 
 #: management/commands/send_email_alerts.py:411
 #, python-format
@@ -2810,14 +2764,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: middleware/forum_mode.py:31
-#, fuzzy, python-format
+#, python-format
 msgid "Please log in to use %s"
-msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr "Entrar per usar %s"
 
 #: models/__init__.py:317
 msgid ""
@@ -3609,21 +3558,20 @@ msgstr ""
 
 #: skins/common/templates/authopenid/authopenid_macros.html:53
 #: skins/old/templates/authopenid/macros.html:53
-#, fuzzy
 msgid "Please enter your <span>user name</span>, then sign in"
-msgstr "Introduïu el vostre %(username_token)s"
+msgstr "Introduïu el vostre <span>nom d'usuari</span> i inicieu la sessió"
 
 #: skins/common/templates/authopenid/authopenid_macros.html:54
 #: skins/common/templates/authopenid/signin.html:90
 #: skins/old/templates/authopenid/macros.html:54
 #: skins/old/templates/authopenid/signin.html:90
 msgid "(or select another login method above)"
-msgstr ""
+msgstr "(o escolliu un dels altres mètodes d'entrada)"
 
 #: skins/common/templates/authopenid/authopenid_macros.html:56
 #: skins/old/templates/authopenid/macros.html:56
 msgid "Sign in"
-msgstr ""
+msgstr "Entrar"
 
 #: skins/common/templates/authopenid/changeemail.html:2
 #: skins/common/templates/authopenid/changeemail.html:8
@@ -3632,22 +3580,19 @@ msgstr ""
 #: skins/old/templates/authopenid/changeemail.html:8
 #: skins/old/templates/authopenid/changeemail.html:36
 msgid "Change email"
-msgstr "Change Email"
+msgstr "Canviar correu electrònic"
 
 #: skins/common/templates/authopenid/changeemail.html:10
 #: skins/old/templates/authopenid/changeemail.html:10
-#, fuzzy
 msgid "Save your email address"
-msgstr "Your email <i>(never shared)</i>"
+msgstr "Canviar la vostra adreça de correu electrònic"
 
 #: skins/common/templates/authopenid/changeemail.html:15
 #: skins/old/templates/authopenid/changeemail.html:15
 #, python-format
 msgid "change %(email)s info"
-msgstr ""
-"<span class=\"strong big\">Enter your new email into the box below</span> if "
-"you'd like to use another email for <strong>update subscriptions</strong>."
-"<br>Currently you are using <strong>%(email)s</strong>"
+msgstr "canviar informació  %(email)s"
+
 
 #: skins/common/templates/authopenid/changeemail.html:17
 #: skins/old/templates/authopenid/changeemail.html:17
@@ -3677,9 +3622,8 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:36
 #: skins/old/templates/authopenid/changeemail.html:36
-#, fuzzy
 msgid "Save Email"
-msgstr "Change Email"
+msgstr "Canviar correu electrònic"
 
 #: skins/common/templates/authopenid/changeemail.html:38
 #: skins/default/templates/answer_edit.html:25
@@ -3703,9 +3647,8 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:45
 #: skins/old/templates/authopenid/changeemail.html:45
-#, fuzzy
 msgid "Validate email"
-msgstr "How to validate email and why?"
+msgstr "Validar correu electrònic"
 
 #: skins/common/templates/authopenid/changeemail.html:48
 #: skins/old/templates/authopenid/changeemail.html:48
@@ -3783,21 +3726,14 @@ msgstr ""
 #: skins/common/templates/authopenid/complete.html:23
 #: skins/old/templates/authopenid/complete.html:21
 #: skins/old/templates/authopenid/complete.html:23
-#, fuzzy
 msgid "Registration"
-msgstr "karma"
+msgstr "Registre"
 
 #: skins/common/templates/authopenid/complete.html:27
 #: skins/old/templates/authopenid/complete.html:27
 #, python-format
 msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">You are here for the first time with your "
-"%(provider)s login.</span> Please create your <strong>screen name</strong> "
-"and save your <strong>email</strong> address. Saved email address will let "
-"you <strong>subscribe for the updates</strong> on the most interesting "
-"questions and will be used to create and retrieve your unique avatar image - "
-"<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgstr "registrar-se a través de %(provider)s; consulteu %(gravatar_faq_url)s"
 
 #: skins/common/templates/authopenid/complete.html:30
 #: skins/old/templates/authopenid/complete.html:30
@@ -3807,60 +3743,39 @@ msgid ""
 "                            %(provider)s. Email is required too, see "
 "%(gravatar_faq_url)s\n"
 "                        "
-msgstr ""
-"<p><span class='strong big'>Oops... looks like screen name %(username)s is "
-"already used in another account.</span></p><p>Please choose another screen "
-"name to use with your %(provider)s login. Also, a valid email address is "
-"required on the <span class='orange'>Q&amp;A</span> forum. Your email is "
-"used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</"
-"strong></a> image for your account. If you like, you can <strong>receive "
-"updates</strong> on the interesting questions or entire forum by email. "
-"Email addresses are never shown or otherwise shared with anybody else.</p>"
+msgstr "%(username)s ja existeix, escolliu un altre nom per \n"
+"                             %(provider)s. També és necessari el correu electrònic: consulteu"
+"%(gravatar_faq_url)s\n"
+""
 
 #: skins/common/templates/authopenid/complete.html:34
 #: skins/old/templates/authopenid/complete.html:34
 #, python-format
 msgid ""
 "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">You are here for the first time with your "
-"%(provider)s login.</span></p><p>You can either keep your <strong>screen "
-"name</strong> the same as your %(provider)s login name  or choose some other "
-"nickname.</p><p>Also, please save a valid <strong>email</strong> address. "
-"With the email you can <strong>subscribe for the updates</strong> on the "
-"most interesting questions. Email address is also used to create and "
-"retrieve your unique avatar image - <a "
-"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgstr "informació del nou compte de registre extern %(provider)s; consulteu %(gravatar_faq_url)s"
+
 
 #: skins/common/templates/authopenid/complete.html:37
 #: skins/old/templates/authopenid/complete.html:37
 #, python-format
 msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">You are here for the first time with your "
-"Facebook login.</span> Please create your <strong>screen name</strong> and "
-"save your <strong>email</strong> address. Saved email address will let you "
-"<strong>subscribe for the updates</strong> on the most interesting questions "
-"and will be used to create and retrieve your unique avatar image - <a "
-"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgstr "registrar nova connexió Facebook; consulteu %(gravatar_faq_url)s"
 
 #: skins/common/templates/authopenid/complete.html:40
 #: skins/old/templates/authopenid/complete.html:40
-#, fuzzy
 msgid "This account already exists, please use another."
-msgstr "aquesta adreça de correu ja està registrada, useu una altra"
+msgstr "Aquest compte ja existeix, useu un altre."
 
 #: skins/common/templates/authopenid/complete.html:59
 #: skins/old/templates/authopenid/complete.html:59
 msgid "Screen name label"
-msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
+msgstr "Nom d'usuari"
 
 #: skins/common/templates/authopenid/complete.html:66
 #: skins/old/templates/authopenid/complete.html:66
 msgid "Email address label"
-msgstr ""
-"<strong>Email Address</strong> (<i>will <strong>not</strong> be shared with "
-"anyone, must be valid</i>)"
+msgstr "Adreça de correu electrònic"
 
 #: skins/common/templates/authopenid/complete.html:72
 #: skins/common/templates/authopenid/signup_with_password.html:36
@@ -3878,7 +3793,6 @@ msgstr ""
 #: skins/common/templates/authopenid/signup_with_password.html:40
 #: skins/old/templates/authopenid/complete.html:76
 #: skins/old/templates/authopenid/signup_with_password.html:40
-#, fuzzy
 msgid "please select one of the options above"
 msgstr "escollir una de les opcions anteriors"
 
@@ -3904,38 +3818,29 @@ msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:5
 #: skins/old/templates/authopenid/confirm_email.txt:5
-#, fuzzy
 msgid "Username:"
-msgstr "Choose screen name"
+msgstr "Nom d'usuari:"
 
 #: skins/common/templates/authopenid/confirm_email.txt:6
 #: skins/old/templates/authopenid/confirm_email.txt:6
-#, fuzzy
 msgid "Password:"
-msgstr "Password"
+msgstr "Contrasenya:"
 
 #: skins/common/templates/authopenid/confirm_email.txt:8
 #: skins/old/templates/authopenid/confirm_email.txt:8
-#, fuzzy
 msgid "Please sign in here:"
-msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
+msgstr "Registrar-se aquí:"
 
 #: skins/common/templates/authopenid/confirm_email.txt:11
 #: skins/common/templates/authopenid/email_validation.txt:13
 #: skins/old/templates/authopenid/confirm_email.txt:11
 #: skins/old/templates/authopenid/email_validation.txt:13
-#, fuzzy
 msgid ""
 "Sincerely,\n"
 "Forum Administrator"
 msgstr ""
-"Sincerely,\n"
-"Q&A Forum Administrator"
+"Salutacions,\n"
+"Administrador del fòrum de preguntes i respostes"
 
 #: skins/common/templates/authopenid/email_validation.txt:1
 #: skins/old/templates/authopenid/email_validation.txt:1
@@ -4062,20 +3967,18 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:97
 #: skins/old/templates/authopenid/signin.html:97
-#, fuzzy
 msgid "Login or email"
-msgstr "no correu electrònic"
+msgstr "Usuari o correu electrònic"
 
 #: skins/common/templates/authopenid/signin.html:101
 #: skins/old/templates/authopenid/signin.html:101
-#, fuzzy
 msgid "Password"
-msgstr "Password"
+msgstr "Contrasenya"
 
 #: skins/common/templates/authopenid/signin.html:106
 #: skins/old/templates/authopenid/signin.html:106
 msgid "Login"
-msgstr "Sign in"
+msgstr "Entrar"
 
 #: skins/common/templates/authopenid/signin.html:113
 #: skins/old/templates/authopenid/signin.html:113
@@ -4084,9 +3987,8 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:117
 #: skins/old/templates/authopenid/signin.html:117
-#, fuzzy
 msgid "New password"
-msgstr "Password"
+msgstr "Contrasenya nova"
 
 #: skins/common/templates/authopenid/signin.html:124
 #: skins/old/templates/authopenid/signin.html:124
@@ -4100,9 +4002,8 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:150
 #: skins/old/templates/authopenid/signin.html:150
-#, fuzzy
 msgid "provider"
-msgstr "aprovat"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:151
 #: skins/old/templates/authopenid/signin.html:151
@@ -4120,21 +4021,18 @@ msgstr ""
 #: skins/common/templates/question/question_controls.html:30
 #: skins/old/templates/question.html:106 skins/old/templates/question.html:250
 #: skins/old/templates/authopenid/signin.html:166
-#, fuzzy
 msgid "delete"
-msgstr "[esborrat]"
+msgstr "esborra"
 
 #: skins/common/templates/authopenid/signin.html:168
 #: skins/old/templates/authopenid/signin.html:168
-#, fuzzy
 msgid "cannot be deleted"
-msgstr "sorry, but older votes cannot be revoked"
+msgstr "no es pot esborrar"
 
 #: skins/common/templates/authopenid/signin.html:181
 #: skins/old/templates/authopenid/signin.html:181
-#, fuzzy
 msgid "Still have trouble signing in?"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:186
 #: skins/old/templates/authopenid/signin.html:186
@@ -4200,24 +4098,21 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:4
 #: skins/old/templates/authopenid/signup_with_password.html:4
-#, fuzzy
 msgid "Signup"
-msgstr "registre/"
+msgstr "Registrar-se"
 
 #: skins/common/templates/authopenid/signup_with_password.html:10
 #: skins/old/templates/authopenid/signup_with_password.html:10
 msgid "Please register by clicking on any of the icons below"
-msgstr ""
+msgstr "Registrar-se clicant una de les icones "
 
 #: skins/common/templates/authopenid/signup_with_password.html:23
 #: skins/old/templates/authopenid/signup_with_password.html:23
-#, fuzzy
 msgid "or create a new user name and password here"
-msgstr "nom d'usuari i contrasenya %(site)s"
+msgstr "o crear un nou nom d'usuari i contrasenya aquí"
 
 #: skins/common/templates/authopenid/signup_with_password.html:25
 #: skins/old/templates/authopenid/signup_with_password.html:25
-#, fuzzy
 msgid "Create login name and password"
 msgstr "nom d'usuari i contrasenya %(site)s"
 
@@ -4225,11 +4120,7 @@ msgstr "nom d'usuari i contrasenya %(site)s"
 #: skins/old/templates/authopenid/signup_with_password.html:26
 msgid "Traditional signup info"
 msgstr ""
-"<span class='strong big'>If you prefer, create your forum login name and "
-"password here. However</span>, please keep in mind that we also support "
-"<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can "
-"simply reuse your external login (e.g. Gmail or AOL) without ever sharing "
-"your login details with anyone and having to remember yet another password."
+
 
 #: skins/common/templates/authopenid/signup_with_password.html:44
 #: skins/old/templates/authopenid/signup_with_password.html:44
@@ -4240,9 +4131,8 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:47
 #: skins/old/templates/authopenid/signup_with_password.html:47
-#, fuzzy
 msgid "Create Account"
-msgstr "Signup"
+msgstr "Crear un compte"
 
 #: skins/common/templates/authopenid/signup_with_password.html:49
 #: skins/old/templates/authopenid/signup_with_password.html:49
@@ -4256,15 +4146,13 @@ msgstr ""
 
 #: skins/common/templates/avatar/add.html:3
 #: skins/old/templates/avatar/add.html:3
-#, fuzzy
 msgid "add avatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr "afegir avatar"
 
 #: skins/common/templates/avatar/add.html:5
 #: skins/old/templates/avatar/add.html:5
-#, fuzzy
 msgid "Change avatar"
-msgstr "Retag question"
+msgstr "Canviar avatar"
 
 #: skins/common/templates/avatar/add.html:6
 #: skins/common/templates/avatar/change.html:7
@@ -4287,9 +4175,8 @@ msgstr ""
 
 #: skins/common/templates/avatar/change.html:4
 #: skins/old/templates/avatar/change.html:4
-#, fuzzy
 msgid "change avatar"
-msgstr "Retag question"
+msgstr "canviar avatar"
 
 #: skins/common/templates/avatar/change.html:17
 #: skins/old/templates/avatar/change.html:17
@@ -4298,15 +4185,14 @@ msgstr ""
 
 #: skins/common/templates/avatar/change.html:22
 #: skins/old/templates/avatar/change.html:22
-#, fuzzy
 msgid "Upload"
-msgstr "penjar/"
+msgstr "Penjar"
 
 #: skins/common/templates/avatar/confirm_delete.html:2
 #: skins/old/templates/avatar/confirm_delete.html:3
-#, fuzzy
+
 msgid "delete avatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr "esborrar avatar"
 
 #: skins/common/templates/avatar/confirm_delete.html:4
 #: skins/old/templates/avatar/confirm_delete.html:5
@@ -4323,19 +4209,18 @@ msgstr ""
 
 #: skins/common/templates/avatar/confirm_delete.html:12
 #: skins/old/templates/avatar/confirm_delete.html:13
-#, fuzzy
 msgid "Delete These"
-msgstr "resposta esborrada"
+msgstr "Esborrar Aquests"
 
 #: skins/common/templates/question/answer_controls.html:5
 #: skins/old/templates/question.html:230
 msgid "answer permanent link"
-msgstr "permanent link"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:6
 #: skins/old/templates/question.html:231
 msgid "permanent link"
-msgstr "link"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:10
 #: skins/common/templates/question/question_controls.html:3
@@ -4343,7 +4228,6 @@ msgstr "link"
 #: skins/default/templates/revisions.html:37
 #: skins/old/templates/macros.html:502 skins/old/templates/question.html:79
 #: skins/old/templates/question.html:235 skins/old/templates/revisions.html:37
-#, fuzzy
 msgid "edit"
 msgstr "editar"
 
@@ -4357,22 +4241,19 @@ msgstr ""
 #: skins/common/templates/question/answer_controls.html:15
 #: skins/common/templates/question/question_controls.html:23
 #: skins/old/templates/question.html:99 skins/old/templates/question.html:240
-#, fuzzy
 msgid "flag offensive"
 msgstr "marcat com ofensiu"
 
 #: skins/common/templates/question/answer_controls.html:25
 #: skins/common/templates/question/question_controls.html:30
 #: skins/old/templates/question.html:106 skins/old/templates/question.html:250
-#, fuzzy
 msgid "undelete"
-msgstr "[esborrat]"
+msgstr "recuperar"
 
 #: skins/common/templates/question/answer_controls.html:31
 #: skins/old/templates/question.html:256
-#, fuzzy
 msgid "swap with question"
-msgstr "Post Your Answer"
+msgstr "intercanviar amb la pregunta"
 
 #: skins/common/templates/question/answer_vote_buttons.html:13
 #: skins/common/templates/question/answer_vote_buttons.html:14
@@ -4401,27 +4282,23 @@ msgstr ""
 
 #: skins/common/templates/question/question_controls.html:6
 #: skins/old/templates/question.html:82
-#, fuzzy
 msgid "retag"
-msgstr "reetiquetar/"
+msgstr "reetiquetar"
 
 #: skins/common/templates/question/question_controls.html:13
 #: skins/old/templates/question.html:89
-#, fuzzy
 msgid "reopen"
-msgstr "You can safely re-use the same login for all OpenID-enabled websites."
+msgstr "reobrir"
 
 #: skins/common/templates/question/question_controls.html:17
 #: skins/old/templates/question.html:93
-#, fuzzy
 msgid "close"
-msgstr "tancar/"
+msgstr "tancar"
 
 #: skins/common/templates/widgets/edit_post.html:21
 #: skins/old/templates/macros.html:661
-#, fuzzy
 msgid "one of these is required"
-msgstr "Els país és necessari"
+msgstr "és necessari un d'aquestes"
 
 #: skins/common/templates/widgets/edit_post.html:33
 #: skins/old/templates/macros.html:673
@@ -4462,15 +4339,13 @@ msgstr "Etiquetes interessants"
 
 #: skins/common/templates/widgets/tag_selector.html:18
 #: skins/common/templates/widgets/tag_selector.html:34
-#, fuzzy
 msgid "add"
-msgstr "Afegir"
+msgstr "afegir"
 
 #: skins/common/templates/widgets/tag_selector.html:20
 #: skins/old/templates/blocks/tag_selector.html:20
-#, fuzzy
 msgid "Ignored tags"
-msgstr "Retag question"
+msgstr "Etiquetes ignorades"
 
 #: skins/common/templates/widgets/tag_selector.html:36
 #: skins/old/templates/blocks/tag_selector.html:36
@@ -4495,9 +4370,8 @@ msgstr ""
 
 #: skins/default/templates/404.jinja.html:17
 #: skins/old/templates/404.jinja.html:17
-#, fuzzy
 msgid "this question or answer has been deleted;"
-msgstr "s'ha respost la pregunta, es va acceptar la resposta correcta"
+msgstr "aquesta pregunta o resposta ha estat esborrada;"
 
 #: skins/default/templates/404.jinja.html:18
 #: skins/old/templates/404.jinja.html:18
@@ -4540,15 +4414,13 @@ msgstr ""
 #: skins/default/templates/widgets/scope_nav.html:3
 #: skins/old/templates/404.jinja.html:31
 #: skins/old/templates/main_page/tab_bar.html:9
-#, fuzzy
 msgid "see all questions"
-msgstr "Ask Your Question"
+msgstr "veure totes les preguntes"
 
 #: skins/default/templates/404.jinja.html:32
 #: skins/old/templates/404.jinja.html:32
-#, fuzzy
 msgid "see all tags"
-msgstr "Tags"
+msgstr "veure totes les etiquetes"
 
 #: skins/default/templates/500.jinja.html:3
 #: skins/default/templates/500.jinja.html:5
@@ -4568,15 +4440,13 @@ msgstr ""
 
 #: skins/default/templates/500.jinja.html:12
 #: skins/old/templates/500.jinja.html:12
-#, fuzzy
 msgid "see latest questions"
-msgstr "Post Your Answer"
+msgstr "veure preguntes recentes"
 
 #: skins/default/templates/500.jinja.html:13
 #: skins/old/templates/500.jinja.html:13
-#, fuzzy
 msgid "see tags"
-msgstr "Tags"
+msgstr "veure etiquetes"
 
 #: skins/default/templates/about.html:3 skins/default/templates/about.html:5
 #: skins/old/templates/about.html:3 skins/old/templates/about.html.py:5
@@ -4588,9 +4458,8 @@ msgstr ""
 #: skins/default/templates/answer_edit.html:10
 #: skins/old/templates/answer_edit.html:4
 #: skins/old/templates/answer_edit.html:10
-#, fuzzy
 msgid "Edit answer"
-msgstr "oldest"
+msgstr "Editar resposta"
 
 #: skins/default/templates/answer_edit.html:10
 #: skins/default/templates/question_edit.html:9
@@ -4600,31 +4469,27 @@ msgstr "oldest"
 #: skins/old/templates/question_edit.html:9
 #: skins/old/templates/question_retag.html:5
 #: skins/old/templates/revisions.html:7
-#, fuzzy
 msgid "back"
-msgstr "comentaris/"
+msgstr "enrere"
 
 #: skins/default/templates/answer_edit.html:14
 #: skins/old/templates/answer_edit.html:14
-#, fuzzy
 msgid "revision"
-msgstr "revisions/"
+msgstr "revisió"
 
 #: skins/default/templates/answer_edit.html:17
 #: skins/default/templates/question_edit.html:16
 #: skins/old/templates/answer_edit.html:17
 #: skins/old/templates/question_edit.html:16
-#, fuzzy
 msgid "select revision"
-msgstr "revisions/"
+msgstr "seleccionar revisió"
 
 #: skins/default/templates/answer_edit.html:24
 #: skins/default/templates/question_edit.html:35
 #: skins/old/templates/answer_edit.html:21
 #: skins/old/templates/question_edit.html:27
-#, fuzzy
 msgid "Save edit"
-msgstr "Change Email"
+msgstr "Guardar edició"
 
 #: skins/default/templates/answer_edit.html:64
 #: skins/default/templates/ask.html:52
@@ -4637,9 +4502,8 @@ msgid "show preview"
 msgstr ""
 
 #: skins/default/templates/ask.html:4 skins/old/templates/ask.html:4
-#, fuzzy
 msgid "Ask a question"
-msgstr "Ask Your Question"
+msgstr "Feu una pregunta"
 
 #: skins/default/templates/badge.html:5 skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:16
@@ -5916,7 +5780,7 @@ msgstr ""
 #: skins/old/templates/question.html:305
 #, fuzzy
 msgid "email"
-msgstr "no correu electrònic"
+msgstr "correu electrònic"
 
 #: skins/default/templates/question/sidebar.html:4
 #: skins/old/templates/question.html:389
