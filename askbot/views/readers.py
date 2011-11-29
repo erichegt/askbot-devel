@@ -175,6 +175,14 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     # Format the url with the QueryDict
     context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
 
+    reset_method_count = 0
+    if search_state.query:
+        reset_method_count += 1
+    if search_state.tags:
+        reset_method_count += 1
+    if meta_data.get('author_name',None):
+        reset_method_count += 1
+
     if request.is_ajax():
 
         q_count = paginator.count
@@ -198,10 +206,11 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
         if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
-            paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
+            #paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
                 'context': extra_tags.cnprog_paginator(paginator_context),
-                'questions_count': q_count
+                'questions_count': q_count,
+                'page_size' : search_state.page_size,
             }
             paginator_html = paginator_tpl.render(Context(data))
         else:
@@ -225,6 +234,7 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
             'parameters': search_state.make_parameters(),
+            'page_size' : search_state.page_size,
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
@@ -261,23 +271,17 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
             'context': paginator_context,
             'language_code': translation.get_language(),
             'query': search_state.query,
+            'reset_method_count': reset_method_count,
+            'query_string': search_state.query_string(),
         }
 
         questions_html = questions_tpl.render(Context(data))
+        #import pdb; pdb.set_trace()
         ajax_data['questions'] = questions_html.replace('\n','')
         return HttpResponse(
                     simplejson.dumps(ajax_data),
                     mimetype = 'application/json'
                 )
-
-    reset_method_count = 0
-    if search_state.query:
-        reset_method_count += 1
-    if search_state.tags:
-        reset_method_count += 1
-    if meta_data.get('author_name',None):
-        reset_method_count += 1
-    
 
     template_data = {
         'active_tab': 'questions',

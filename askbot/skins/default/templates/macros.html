@@ -553,7 +553,7 @@ answer {% if answer.accepted %}accepted-answer{% endif %} {% if answer.author_id
     {% endif %}
 {%- endmacro -%}
 
-{%- macro paginator(p, position='left') -%}{# p is paginator context dictionary #}
+{%- macro paginator(p, position='left', active_tab='') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
         <div class="paginator" style="float:{{position}}">

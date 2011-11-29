@@ -344,9 +344,7 @@ var liveSearch = function(){
                 }
             }
         }
-
         return url   
-
     }
 
     var remove_from_url = function (query_string, type){

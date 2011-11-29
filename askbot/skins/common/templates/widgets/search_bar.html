@@ -8,7 +8,7 @@
         {% elif active_tab == "users" %}
             action="{% url users %}" 
         {% else %}
-            action="{% url questions %}" 
+            action="{% url questions %}" id="searchForm"
         {% endif %}
         method="get">
             <input type="submit" value="" name="search" class="searchBtn" />
