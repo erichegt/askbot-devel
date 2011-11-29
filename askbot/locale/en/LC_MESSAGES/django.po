@@ -193,10 +193,8 @@ msgid "Your name (optional):"
 msgstr ""
 
 #: forms.py:543
-#, fuzzy
 msgid "Email:"
 msgstr ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
 
 #: forms.py:545
 msgid "Your message:"
@@ -419,9 +417,8 @@ msgid "account/"
 msgstr ""
 
 #: conf/access_control.py:8
-#, fuzzy
 msgid "Access control settings"
-msgstr "User login"
+msgstr ""
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
@@ -668,14 +665,8 @@ msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
 
 #: conf/email.py:247
-#, fuzzy
 msgid "Allow posting questions by email"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/email.py:249
 msgid ""
@@ -875,14 +866,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:56
-#, fuzzy
 msgid "Allow posting before logging in"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -893,9 +878,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:73
-#, fuzzy
 msgid "Allow swapping answer with question"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: conf/forum_data_rules.py:75
 msgid ""
@@ -938,9 +922,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:140
-#, fuzzy
 msgid "Use wildcard tags"
-msgstr "Tags"
+msgstr ""
 
 #: conf/forum_data_rules.py:142
 msgid ""
@@ -1187,9 +1170,8 @@ msgid "Downvote"
 msgstr ""
 
 #: conf/minimum_reputation.py:40
-#, fuzzy
 msgid "Answer own question immediately"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: conf/minimum_reputation.py:49
 msgid "Accept own answer"
@@ -1381,14 +1363,12 @@ msgid ""
 msgstr ""
 
 #: conf/sidebar_profile.py:12
-#, fuzzy
 msgid "User profile sidebar"
-msgstr "User login"
+msgstr ""
 
 #: conf/sidebar_question.py:11
-#, fuzzy
 msgid "Question page sidebar"
-msgstr "Tags"
+msgstr ""
 
 #: conf/sidebar_question.py:35
 msgid "Show tag list in sidebar"
@@ -1828,23 +1808,16 @@ msgid "Login, Users & Communication"
 msgstr ""
 
 #: conf/user_settings.py:12
-#, fuzzy
 msgid "User settings"
-msgstr "User login"
+msgstr ""
 
 #: conf/user_settings.py:21
 msgid "Allow editing user screen name"
 msgstr ""
 
 #: conf/user_settings.py:30
-#, fuzzy
 msgid "Allow account recovery by email"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/user_settings.py:39
 msgid "Allow adding and removing login methods"
@@ -1992,9 +1965,8 @@ msgid "favorite"
 msgstr ""
 
 #: const/__init__.py:64
-#, fuzzy
 msgid "list"
-msgstr "Tags"
+msgstr ""
 
 #: const/__init__.py:65
 msgid "cloud"
@@ -2165,9 +2137,8 @@ msgid "monsterid"
 msgstr ""
 
 #: const/__init__.py:236
-#, fuzzy
 msgid "wavatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:237
 msgid "retro"
@@ -2190,14 +2161,12 @@ msgid "None"
 msgstr ""
 
 #: const/__init__.py:299
-#, fuzzy
 msgid "Gravatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:300
-#, fuzzy
 msgid "Uploaded Avatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
@@ -2592,26 +2561,12 @@ msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr ""
 
 #: management/commands/send_accept_answer_reminders.py:62
-#, fuzzy
 msgid "Please accept the best answer for this question:"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: management/commands/send_accept_answer_reminders.py:64
-#, fuzzy
 msgid "Please accept the best answer for these questions:"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: management/commands/send_email_alerts.py:411
 #, python-format
@@ -2682,14 +2637,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: middleware/forum_mode.py:31
-#, fuzzy, python-format
+#, python-format
 msgid "Please log in to use %s"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: models/__init__.py:317
 msgid ""
@@ -3491,32 +3441,23 @@ msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:5
 #: skins/old/templates/authopenid/confirm_email.txt:5
-#, fuzzy
 msgid "Username:"
-msgstr "Choose screen name"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:6
 #: skins/old/templates/authopenid/confirm_email.txt:6
-#, fuzzy
 msgid "Password:"
-msgstr "Password"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:8
 #: skins/old/templates/authopenid/confirm_email.txt:8
-#, fuzzy
 msgid "Please sign in here:"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/common/templates/authopenid/confirm_email.txt:11
 #: skins/common/templates/authopenid/email_validation.txt:13
 #: skins/old/templates/authopenid/confirm_email.txt:11
 #: skins/old/templates/authopenid/email_validation.txt:13
-#, fuzzy
 msgid ""
 "Sincerely,\n"
 "Forum Administrator"
@@ -3747,11 +3688,11 @@ msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
 #: views/readers.py:151
-#, fuzzy, python-format
+#, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
-msgstr[0] "Asked"
-msgstr[1] "Asked"
+msgstr[0] ""
+msgstr[1] ""
 
 #: views/readers.py:159
 #, python-format
@@ -3864,7 +3805,6 @@ msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 
 #: views/writers.py:191
-#, fuzzy
 msgid "Please log in to ask questions"
 msgstr ""
 "<span class=\"strong big\">You are welcome to start submitting your question "
@@ -3874,15 +3814,8 @@ msgstr ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: views/writers.py:492
-#, fuzzy
 msgid "Please log in to answer questions"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: views/writers.py:598
 #, python-format
@@ -4017,17 +3950,17 @@ msgstr ""
 #~ "entire forum by email. Email addresses are never shown or otherwise "
 #~ "shared with anybody else.</p>"
 
-#~ msgid ""
-#~ "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "%(provider)s login.</span></p><p>You can either keep your <strong>screen "
-#~ "name</strong> the same as your %(provider)s login name  or choose some "
-#~ "other nickname.</p><p>Also, please save a valid <strong>email</strong> "
-#~ "address. With the email you can <strong>subscribe for the updates</"
-#~ "strong> on the most interesting questions. Email address is also used to "
-#~ "create and retrieve your unique avatar image - <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+msgid ""
+"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your "
+"%(provider)s login.</span></p><p>You can either keep your <strong>screen "
+"name</strong> the same as your %(provider)s login name  or choose some "
+"other nickname.</p><p>Also, please save a valid <strong>email</strong> "
+"address. With the email you can <strong>subscribe for the updates</"
+"strong> on the most interesting questions. Email address is also used to "
+"create and retrieve your unique avatar image - <a "
+"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
 
 #~ msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
 #~ msgstr ""
