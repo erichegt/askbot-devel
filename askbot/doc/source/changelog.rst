@@ -1,12 +1,14 @@
 Changes in Askbot
 =================
 
-Development version (Not yet released)
---------------------------------------
-* Added ``askbot_create_test_fixture`` management command (Dejan Noveski)
-
-0.7.30 (Current Version)
+0.7.31 (Current Version)
 ------------------------
+* Added ``askbot_create_test_fixture`` management command (Dejan Noveski)
+* Integrated new test fixture into the page load test cases (Dejan Noveski)
+* Added an embeddable widget for the questions list matching tags (Daniel Mican, Evgeny Fadeev, Dejan Noveski)
+
+0.7.30
+------
 Note: some of these features were added in one of the three previous versions.
 
 * Context-sensitive RSS url (`Dejan Noveski <http://www.atomidata.com/>`_)
