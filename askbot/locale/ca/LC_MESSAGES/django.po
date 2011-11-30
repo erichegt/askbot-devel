@@ -156,7 +156,7 @@ msgstr "vist"
 
 #: forms.py:343 const/__init__.py:252
 msgid "suspended"
-msgstr "suspès"
+msgstr "deshabilitat"
 
 #: forms.py:344 const/__init__.py:253
 msgid "blocked"
@@ -2698,66 +2698,72 @@ msgstr "Acceptar la millor resposta d'aquesta pregunta:"
 
 #: management/commands/send_accept_answer_reminders.py:64
 msgid "Please accept the best answer for these questions:"
-msgstr "Acceptar la millor resposta d'aquestes preguntes:"
+msgstr "Acceptar la millor resposta per aquestes preguntes:"
 
 #: management/commands/send_email_alerts.py:411
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d pregunta actualitzada de %(topics)s"
+msgstr[1] "%(question_count)d preguntes actualitzades de %(topics)s"
 
 #: management/commands/send_email_alerts.py:421
 #, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(name)s, aquest és un missatge d'actualització de %(num)d pregunta"
+msgstr[1] "%(name)s, aquest és un missatge d'actualització de %(num)d preguntes"
 
 #: management/commands/send_email_alerts.py:438
 msgid "new question"
-msgstr ""
+msgstr "pregunta nova"
 
 #: management/commands/send_email_alerts.py:455
 msgid ""
 "Please visit the askbot and see what's new! Could you spread the word about "
 "it - can somebody you know help answering those questions or benefit from "
 "posting one?"
-msgstr ""
+msgstr "Visita el fòrum i mira les noves preguntes i respostes. Potser algú que coneixes pot "
+"ajudar responen alguna de les preguntes o pot estar interessat en publicar alguna"
+"pregunta."
 
 #: management/commands/send_email_alerts.py:465
 msgid ""
 "Your most frequent subscription setting is 'daily' on selected questions. If "
 "you are receiving more than one email per dayplease tell about this issue to "
 "the askbot administrator."
-msgstr ""
+msgstr "La subscripció més freqüent que té és la 'diària' de preguntes seleccionades. "
+"Si rep més d'un missatge al dia, informi aquest fet a l'administrador del lloc."
 
 #: management/commands/send_email_alerts.py:471
 msgid ""
 "Your most frequent subscription setting is 'weekly' if you are receiving "
 "this email more than once a week please report this issue to the askbot "
 "administrator."
-msgstr ""
+msgstr "La subscripció més freqüent que té és 'setmanal'. Si rep aquest missatge "
+"més d'un cop per setmana, informi aquest fet a l'administrador del lloc."
 
 #: management/commands/send_email_alerts.py:477
 msgid ""
 "There is a chance that you may be receiving links seen before - due to a "
 "technicality that will eventually go away. "
-msgstr ""
+msgstr "És possible que rebi enllaços ja consultats abans, es tracte d'una qüestió"
+" tècnica que es resoldrà."
 
 #: management/commands/send_email_alerts.py:490
 #, python-format
 msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or "
 "%(admin_email)s administrator"
-msgstr ""
+msgstr "per canviar la freqüencia de recepció de missatges anar a %(email_settings_link)s "
+"o %(admin_email)s administrador"
 
 #: management/commands/send_unanswered_question_reminders.py:56
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d pregunta sense contestar de %(topics)s"
+msgstr[1] "%(question_count)d preguntes sense contestar de %(topics)s"
 
 #: middleware/forum_mode.py:31
 #, python-format
@@ -2768,77 +2774,81 @@ msgstr "Entrar per usar %s"
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
-msgstr ""
+msgstr "No pot acceptar o rebutjar les millors respostes ja que el seu compte "
+"està bloquejat"
 
 #: models/__init__.py:321
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
-msgstr ""
+msgstr "No pot acceptar o rebutjar les millors respostes ja que el seu compte "
+"està deshabilitat"
 
 #: models/__init__.py:334
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
-msgstr ""
+msgstr "S'ha de tenir més de %(points)s per acceptar o rebutjar la pròpia resposta "
+"a la vostre pròpia pregunta"
 
 #: models/__init__.py:353
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
-msgstr ""
+msgstr "Podrà acceptar aquesta resposta a partir de %(will_be_able_at)s"
 
 #: models/__init__.py:361
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
-msgstr ""
+msgstr "Només els moderadors o l'autor original de la pregunta -%(username)s- "
+"poden acceptar i rebutjar la millor resposta"
 
 #: models/__init__.py:389
 msgid "cannot vote for own posts"
-msgstr "Sorry, you cannot vote for your own posts"
+msgstr "no es pot votar una entrada pròpia"
 
 #: models/__init__.py:392
 msgid "Sorry your account appears to be blocked "
-msgstr ""
+msgstr "El seu compte sembla que està bloquejat"
 
 #: models/__init__.py:397
 msgid "Sorry your account appears to be suspended "
-msgstr ""
+msgstr "El seu compte sembla que està deshabilitat"
 
 #: models/__init__.py:407
 #, python-format
 msgid ">%(points)s points required to upvote"
-msgstr ""
+msgstr "s'han de tenir més de %(points) per votar positivament"
 
 #: models/__init__.py:413
 #, python-format
 msgid ">%(points)s points required to downvote"
-msgstr ""
+msgstr "s'han de tenir més de %(points) per votar negativament"
 
 #: models/__init__.py:428
 msgid "Sorry, blocked users cannot upload files"
-msgstr ""
+msgstr "Els usuaris bloquejats no poden penjar fitxers"
 
 #: models/__init__.py:429
 msgid "Sorry, suspended users cannot upload files"
-msgstr ""
+msgstr "Els usuaris deshabilitats no poden penjar fitxers"
 
 #: models/__init__.py:431
 #, python-format
 msgid ""
 "uploading images is limited to users with >%(min_rep)s reputation points"
-msgstr ""
+msgstr "només els usuaris amb més de %(min_rep)s punts de reputació poden penjar imatges"
 
 #: models/__init__.py:450 models/__init__.py:517 models/__init__.py:932
 msgid "blocked users cannot post"
-msgstr ""
+msgstr "els usuaris bloquejats no poden publicar"
 
 #: models/__init__.py:451 models/__init__.py:935
 msgid "suspended users cannot post"
-msgstr ""
+msgstr "els usuaris deshabilitats no poden publicar"
 
 #: models/__init__.py:478
 #, python-format
@@ -2848,57 +2858,62 @@ msgid ""
 msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Els comentaris (excepte el darrer) es poden editar durant %(minutes)s "
+"minut des de que es publiquen"
+msgstr[1] "Els comentaris (excepte el darrer) es poden editar durant %(minutes)s "
+"minuts des de que es publiquen"
 
 #: models/__init__.py:490
 msgid "Sorry, but only post owners or moderators can edit comments"
-msgstr ""
+msgstr "Només els propietaris de l'entrada o els moderadors poden editar comentaris"
 
 #: models/__init__.py:503
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
-msgstr ""
+msgstr "Des de què el vostre compte esta deshabilitat només pot comentar les entrades pròpies"
 
 #: models/__init__.py:507
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
-msgstr ""
+msgstr "Per comentar una entrada es cal tenir una reputació de %(min_rep)s punts"
+"Sí podeu comentar les entrades i les respostes a les vostres preguntes"
 
 #: models/__init__.py:535
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
-msgstr ""
+msgstr "Aquesta entrada s'ha esborrat. Només els seus propietaris, l'administrador"
+" del lloc i els moderadors la poden veure."
 
 #: models/__init__.py:552
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
-msgstr ""
+msgstr "Una entrada esborrada només la poden editar els moderadors, els administradors "
+"el lloc o els propietaris de l'entrada."
 
 #: models/__init__.py:567
 msgid "Sorry, since your account is blocked you cannot edit posts"
-msgstr ""
+msgstr "No podeu editar entrades des de que el vostre compte està bloquejat"
 
 #: models/__init__.py:571
 msgid "Sorry, since your account is suspended you can edit only your own posts"
-msgstr ""
+msgstr "Només podeu editar entrades pròpies des de que el vostre compte està deshabilitat"
 
 #: models/__init__.py:576
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
-msgstr ""
+msgstr "Per editar entrades wiki s'ha de tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:583
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
-msgstr ""
+msgstr "Per editar entrades d'altres persones s'ha de tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:646
 msgid ""
@@ -2907,45 +2922,45 @@ msgid ""
 msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "No es pot esborrar la pregunta ja que hi ha una resposta amb vots positius d'un altre usuari"
+msgstr[1] "No es pot esborrar la pregunta ja que hi ha respostes d'altres usuaris amb vots positius"
 
 #: models/__init__.py:661
 msgid "Sorry, since your account is blocked you cannot delete posts"
-msgstr ""
+msgstr "Des de que el vostre compte està bloquejat no pot esborrar entrades"
 
 #: models/__init__.py:665
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
-msgstr ""
+msgstr "Des de que el vostre compte està deshabilitat només pot esborrar entrades pròpies"
 
 #: models/__init__.py:669
 #, python-format
 msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
 "is required"
-msgstr ""
+msgstr "per esborrar entrades d'altres persones cal una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:689
 msgid "Sorry, since your account is blocked you cannot close questions"
-msgstr ""
+msgstr "Des de que el seu compte està bloquejat no pot tancar preguntes"
 
 #: models/__init__.py:693
 msgid "Sorry, since your account is suspended you cannot close questions"
-msgstr ""
+msgstr "Des de que el seu compte està deshabilitat no pot tancar preguntes"
 
 #: models/__init__.py:697
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
-msgstr ""
+msgstr "Per tancar entrades d'altres persones cal tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:706
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
-msgstr ""
+msgstr "Per tancar una pregunta pròpia cal tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:730
 #, python-format
