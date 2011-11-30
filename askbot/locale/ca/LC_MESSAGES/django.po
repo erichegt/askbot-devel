@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 12:07-0600\n"
+"POT-Creation-Date: 2011-11-30 05:50-0600\n"
 "PO-Revision-Date: 2011-11-28 19:26+0200\n"
 "Last-Translator: Jordi Bofill <jordi.bofill@upc.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -606,7 +606,8 @@ msgstr ""
 
 #: conf/email.py:76
 msgid "Default notification frequency questions answered by the user"
-msgstr "Freqüència predeterminada de notificació de respostes fetes per l'usuari"
+msgstr ""
+"Freqüència predeterminada de notificació de respostes fetes per l'usuari"
 
 #: conf/email.py:78
 msgid ""
@@ -2223,7 +2224,7 @@ msgstr "Avatar penjat"
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
-msgstr ""
+msgstr "preguntes més rellevants"
 
 #: const/message_keys.py:16
 msgid "click to see most relevant questions"
@@ -2291,7 +2292,7 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:110 deps/django_authopenid/views.py:151
 msgid "i-names are not supported"
-msgstr ""
+msgstr "no es permet l'us de i-names"
 
 #: deps/django_authopenid/forms.py:233
 #, python-format
@@ -2353,15 +2354,15 @@ msgstr "sortir/"
 
 #: deps/django_authopenid/urls.py:12
 msgid "complete/"
-msgstr ""
+msgstr "complet/"
 
 #: deps/django_authopenid/urls.py:15
 msgid "complete-oauth/"
-msgstr ""
+msgstr "complet-oauth/"
 
 #: deps/django_authopenid/urls.py:19
 msgid "register/"
-msgstr ""
+msgstr "registrar/"
 
 #: deps/django_authopenid/urls.py:21
 msgid "signup/"
@@ -2396,78 +2397,78 @@ msgstr "Registrar-se mitjançant Yahoo"
 
 #: deps/django_authopenid/util.py:480
 msgid "AOL screen name"
-msgstr ""
+msgstr "nom a mostrar AOL"
 
 #: deps/django_authopenid/util.py:488
 msgid "OpenID url"
-msgstr ""
+msgstr "url OpenID"
 
 #: deps/django_authopenid/util.py:517
 msgid "Flickr user name"
-msgstr ""
+msgstr "nom d'usuari Flickr"
 
 #: deps/django_authopenid/util.py:525
 msgid "Technorati user name"
-msgstr ""
+msgstr "nom d'usuari Technorati"
 
 #: deps/django_authopenid/util.py:533
 msgid "WordPress blog name"
-msgstr ""
+msgstr "nom del blog WordPress"
 
 #: deps/django_authopenid/util.py:541
 msgid "Blogger blog name"
-msgstr ""
+msgstr "nom del blog Blogger"
 
 #: deps/django_authopenid/util.py:549
 msgid "LiveJournal blog name"
-msgstr ""
+msgstr "nom del blog LiveJournal"
 
 #: deps/django_authopenid/util.py:557
 msgid "ClaimID user name"
-msgstr ""
+msgstr "nom d'usuari ClaimID"
 
 #: deps/django_authopenid/util.py:565
 msgid "Vidoop user name"
-msgstr ""
+msgstr "nom d'usuari Vidoop"
 
 #: deps/django_authopenid/util.py:573
 msgid "Verisign user name"
-msgstr ""
+msgstr "nom d'usuari  Verisign"
 
 #: deps/django_authopenid/util.py:608
 #, python-format
 msgid "Change your %(provider)s password"
-msgstr ""
+msgstr "Canviar la vostre contrasenya de %(provider)s"
 
 #: deps/django_authopenid/util.py:612
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
-msgstr ""
+msgstr "Clicar per comprovar que funciona el vostre registre %(provider)s per %(site_name)s"
 
 #: deps/django_authopenid/util.py:621
 #, python-format
 msgid "Create password for %(provider)s"
-msgstr ""
+msgstr "Crear contrasenya per %(provider)s"
 
 #: deps/django_authopenid/util.py:625
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
-msgstr ""
+msgstr "Connectar el vostre compte de %(provider)s amb %(site_name)s"
 
 #: deps/django_authopenid/util.py:634
 #, python-format
 msgid "Signin with %(provider)s user name and password"
-msgstr ""
+msgstr "Registrar-se amb el nom d'usuari i la contrasenya de %(provider)s"
 
 #: deps/django_authopenid/util.py:641
 #, python-format
 msgid "Sign in with your %(provider)s account"
-msgstr ""
+msgstr "Registrar-se amb el vostre compte de %(provider)s"
 
 #: deps/django_authopenid/views.py:158
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr ""
+msgstr "OpenID de %(openid_url)s és invalid"
 
 #: deps/django_authopenid/views.py:270 deps/django_authopenid/views.py:421
 #: deps/django_authopenid/views.py:449
@@ -2476,100 +2477,102 @@ msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr ""
+"hi ha problemes connectant amb %(provider)s,"
+"torneu a provar-ho i useu un altre proveïdor"
 
 #: deps/django_authopenid/views.py:371
 msgid "Your new password saved"
-msgstr ""
+msgstr "S'ha desat la nova contrasenya"
 
 #: deps/django_authopenid/views.py:475
 msgid "The login password combination was not correct"
-msgstr ""
+msgstr "La combinació usuari/contrasenya no és correcte"
 
 #: deps/django_authopenid/views.py:579
 msgid "Please click any of the icons below to sign in"
-msgstr ""
+msgstr "Clicar una de les icones per registrar-se"
 
 #: deps/django_authopenid/views.py:581
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "S'han enviat el missatge de correu per recuperar el compte"
 
 #: deps/django_authopenid/views.py:584
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Afegir un o més mètodes de registre."
 
 #: deps/django_authopenid/views.py:586
 msgid "If you wish, please add, remove or re-validate your login methods"
-msgstr ""
+msgstr "Afegir, treure o revalidar els seus mètodes d'entrada"
 
 #: deps/django_authopenid/views.py:588
 msgid "Please wait a second! Your account is recovered, but ..."
-msgstr ""
+msgstr "S'ha recuperat el seu compte, però ..."
 
 #: deps/django_authopenid/views.py:590
 msgid "Sorry, this account recovery key has expired or is invalid"
-msgstr ""
+msgstr "La clau de recuperació d'aquest compte ha expirat o és invàlida"
 
 #: deps/django_authopenid/views.py:663
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
-msgstr ""
+msgstr "El mètode de registre %(provider_name)s no existeix"
 
 #: deps/django_authopenid/views.py:669
 msgid "Oops, sorry - there was some error - please try again"
-msgstr ""
+msgstr "S'ha produït un error - torneu-ho a provar"
 
 #: deps/django_authopenid/views.py:760
 #, python-format
 msgid "Your %(provider)s login works fine"
-msgstr ""
+msgstr "La vostra entrada amb %(provider)s funciona bé"
 
 #: deps/django_authopenid/views.py:1071 deps/django_authopenid/views.py:1077
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
-msgstr ""
+msgstr "s'ha de validar el vostre correu electrònic, consulteu %(details_url)s"
 
 #: deps/django_authopenid/views.py:1098
 #, python-format
 msgid "Recover your %(site)s account"
-msgstr ""
+msgstr "Recuperar el vostre compte %(site)s"
 
 #: deps/django_authopenid/views.py:1168
 msgid "Please check your email and visit the enclosed link."
-msgstr ""
+msgstr "Comproveu el vostre correu electrònic i visiteu l'enllaç inclòs."
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
 msgid "Site"
-msgstr ""
+msgstr "Lloc"
 
 #: deps/livesettings/values.py:68
 msgid "Main"
-msgstr ""
+msgstr "Principal"
 
 #: deps/livesettings/values.py:127
 msgid "Base Settings"
-msgstr ""
+msgstr "Configuració base"
 
 #: deps/livesettings/values.py:234
 msgid "Default value: \"\""
-msgstr ""
+msgstr "Valor per defecte:  \"\""
 
 #: deps/livesettings/values.py:241
 msgid "Default value: "
-msgstr ""
+msgstr "Valor per defecte: "
 
 #: deps/livesettings/values.py:244
 #, python-format
 msgid "Default value: %s"
-msgstr ""
+msgstr "Valor per defecte:  %s"
 
 #: deps/livesettings/values.py:622
 #, python-format
 msgid "Allowed image file types are %(types)s"
-msgstr ""
+msgstr "Tipus de fitxers d'imatges admesos %(types)s"
 
 #: deps/livesettings/templates/livesettings/_admin_site_views.html:4
 msgid "Sites"
-msgstr ""
+msgstr "Llocs"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
@@ -2586,12 +2589,12 @@ msgstr "Canviar contrasenya"
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 msgid "Log out"
-msgstr ""
+msgstr "Sortir"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:14
 #: deps/livesettings/templates/livesettings/site_settings.html:26
 msgid "Home"
-msgstr ""
+msgstr "Inici"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:15
 msgid "Edit Group Settings"
@@ -2601,18 +2604,18 @@ msgstr "Editar paràmetres del grup"
 #: deps/livesettings/templates/livesettings/site_settings.html:50
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "corregir l'error següent"
+msgstr[1] "corregir els errors següents"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:28
 #, python-format
 msgid "Settings included in %(name)s."
-msgstr ""
+msgstr "Configuracions incloses a %(name)s."
 
 #: deps/livesettings/templates/livesettings/group_settings.html:62
 #: deps/livesettings/templates/livesettings/site_settings.html:97
 msgid "You don't have permission to edit values."
-msgstr ""
+msgstr "No té permís per editar valors"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
 msgid "Edit Site Settings"
@@ -2620,24 +2623,24 @@ msgstr "Editar paràmetres del lloc"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
-msgstr ""
+msgstr "Livesettings estan deshabilitats per aquest lloc"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:44
 msgid "All configuration options must be edited in the site settings.py file"
-msgstr ""
+msgstr "Totes les opcions de configuració s'han d'editar en el fitxer settings.py del lloc. "
 
 #: deps/livesettings/templates/livesettings/site_settings.html:66
 #, python-format
 msgid "Group settings: %(name)s"
-msgstr ""
+msgstr "Configuracions del grup:  %(name)s"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
 msgid "Uncollapse all"
-msgstr ""
+msgstr "Desplegar tot"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:141
 msgid "Congratulations, you are now an Administrator"
-msgstr ""
+msgstr "Ara ja ets Administrador"
 
 #: management/commands/initialize_ldap_logins.py:51
 msgid ""
@@ -2657,27 +2660,32 @@ msgid ""
 "</ul>\n"
 "<p>Note that tags may consist of more than one word, and tags\n"
 "may be separated by a semicolon or a comma</p>\n"
-msgstr ""
+msgstr "<p>Per preguntar per correu electrònic:</p>\n"
+"<ul>\n"
+"    <li>Escriviu l'assumpte com: [Etiqueta1; Etiqueta12] Títol de la pregunta</li>\n"
+"    <li>En el cos del missatge escriviu els detalls de la vostre pregunta</li>\n"
+"</ul>\n"
+"<p>Les etiquetes poden esta formades per més d'una paraula. Les etiquetes estan separades per una coma o un punt i coma</p>\n"
 
 #: management/commands/post_emailed_questions.py:55
 #, python-format
 msgid ""
 "<p>Sorry, there was an error posting your question please contact the "
 "%(site)s administrator</p>"
-msgstr ""
+msgstr "<p>S'ha produït un error publicant la vostre pregunta; contacteu amb l'administrador de %(site)s</p> "
 
 #: management/commands/post_emailed_questions.py:61
 #, python-format
 msgid ""
 "<p>Sorry, in order to post questions on %(site)s by email, please <a href="
 "\"%(url)s\">register first</a></p>"
-msgstr ""
+msgstr "<p>Cal estar <a href=\"%(url)s\">registrat</a> per publicar preguntes s %(site)s a través del correu electrònic</p>"
 
 #: management/commands/post_emailed_questions.py:69
 msgid ""
 "<p>Sorry, your question could not be posted due to insufficient privileges "
 "of your user account</p>"
-msgstr ""
+msgstr "<p>La seva pregunta no s'ha publicat ja que el vostre compte d'usuari no té suficients privilegis</p>"
 
 #: management/commands/send_accept_answer_reminders.py:57
 #, python-format
@@ -3567,7 +3575,6 @@ msgstr "Canviar la vostra adreça de correu electrònic"
 msgid "change %(email)s info"
 msgstr "canviar informació  %(email)s"
 
-
 #: skins/common/templates/authopenid/changeemail.html:17
 #: skins/old/templates/authopenid/changeemail.html:17
 #, python-format
@@ -3686,8 +3693,8 @@ msgid ""
 "                        "
 msgstr ""
 "%(username)s ja existeix, escolliu un altre nom per \n"
-"                             %(provider)s. També és necessari el correu electrònic: consulteu"
-"%(gravatar_faq_url)s\n"
+"                             %(provider)s. També és necessari el correu "
+"electrònic: consulteu%(gravatar_faq_url)s\n"
 "                        "
 
 #: skins/common/templates/authopenid/complete.html:34
@@ -3696,8 +3703,8 @@ msgstr ""
 msgid ""
 "register new external %(provider)s account info, see %(gravatar_faq_url)s"
 msgstr ""
-"informació del nou compte de registre extern %(provider)s; consulteu %(gravatar_faq_url)s"
-
+"informació del nou compte de registre extern %(provider)s; consulteu "
+"%(gravatar_faq_url)s"
 
 #: skins/common/templates/authopenid/complete.html:37
 #: skins/old/templates/authopenid/complete.html:37
@@ -4049,7 +4056,6 @@ msgstr "nom d'usuari i contrasenya %(site)s"
 msgid "Traditional signup info"
 msgstr ""
 
-
 #: skins/common/templates/authopenid/signup_with_password.html:44
 #: skins/old/templates/authopenid/signup_with_password.html:44
 msgid ""
@@ -4118,7 +4124,6 @@ msgstr "Penjar"
 
 #: skins/common/templates/avatar/confirm_delete.html:2
 #: skins/old/templates/avatar/confirm_delete.html:3
-
 msgid "delete avatar"
 msgstr "esborrar avatar"
 
@@ -4265,10 +4270,11 @@ msgstr ""
 msgid "Interesting tags"
 msgstr "Etiquetes interessants"
 
+# posem un signe + per què 'afegir' es talla i queda 'afegi'
 #: skins/common/templates/widgets/tag_selector.html:18
 #: skins/common/templates/widgets/tag_selector.html:34
 msgid "add"
-msgstr "afegir"
+msgstr "+"
 
 #: skins/common/templates/widgets/tag_selector.html:20
 #: skins/old/templates/blocks/tag_selector.html:20
@@ -4667,7 +4673,6 @@ msgstr "votar negativament"
 #: skins/old/templates/faq_static.html:49
 msgid " accept own answer to own questions"
 msgstr "acceptar resposta pròpia a preguntes pròpies"
-
 
 #: skins/default/templates/faq_static.html:53
 #: skins/old/templates/faq_static.html:53
@@ -5238,7 +5243,7 @@ msgstr ""
 #: skins/default/templates/tags.html:14 skins/default/templates/users.html:9
 #: skins/default/templates/main_page/tab_bar.html:14
 msgid "Sort by &raquo;"
-msgstr ""
+msgstr "Ordenar per &raquo;"
 
 #: skins/default/templates/tags.html:19 skins/old/templates/tags.html:19
 msgid "sorted alphabetically"
@@ -5375,7 +5380,6 @@ msgstr ""
 msgid "There are no unanswered questions here"
 msgstr "Aquí no hi ha preguntes sense resposta"
 
-
 #: skins/default/templates/main_page/nothing_found.html:7
 #: skins/old/templates/main_page/nothing_found.html:7
 msgid "No questions here. "
@@ -5411,7 +5415,6 @@ msgstr ""
 #: skins/old/templates/main_page/nothing_found.html:30
 msgid "Please always feel free to ask your question!"
 msgstr "Feu la vostra pregunta!"
-
 
 #: skins/default/templates/main_page/questions_loop.html:12
 #: skins/old/templates/main_page/content.html:13
@@ -5462,7 +5465,9 @@ msgstr[1] "usar %(tag_count)s etiquetes o menys"
 #, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
-msgstr "usar fins a %(tag_count)s etiquetes, de menys de %(max_chars)s caràcters cada una"
+msgstr ""
+"usar fins a %(tag_count)s etiquetes, de menys de %(max_chars)s caràcters "
+"cada una"
 
 #: skins/default/templates/question/answer_tab_bar.html:3
 #, python-format
@@ -5737,7 +5742,6 @@ msgstr "subscripcions"
 #: skins/old/templates/user_profile/user_email_subscriptions.html:7
 msgid "Email subscription settings"
 msgstr ""
-
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:8
 #: skins/old/templates/user_profile/user_email_subscriptions.html:8
@@ -6223,7 +6227,7 @@ msgstr ""
 #: skins/old/templates/blocks/answer_edit_tips.html:15
 #: skins/old/templates/blocks/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr ""
+msgstr "sigues clar i concís"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16
@@ -6232,41 +6236,40 @@ msgstr ""
 msgid "see frequently asked questions"
 msgstr ""
 
-
 #: skins/default/templates/widgets/answer_edit_tips.html:27
 #: skins/default/templates/widgets/question_edit_tips.html:22
 #: skins/old/templates/blocks/answer_edit_tips.html:25
 #: skins/old/templates/blocks/question_edit_tips.html:20
 msgid "Markdown tips"
-msgstr ""
+msgstr "Consells llenguatge de marques"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:31
 #: skins/default/templates/widgets/question_edit_tips.html:26
 #: skins/old/templates/blocks/answer_edit_tips.html:29
 #: skins/old/templates/blocks/question_edit_tips.html:24
 msgid "*italic*"
-msgstr ""
+msgstr "*itàlica*"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:34
 #: skins/default/templates/widgets/question_edit_tips.html:29
 #: skins/old/templates/blocks/answer_edit_tips.html:32
 #: skins/old/templates/blocks/question_edit_tips.html:27
 msgid "**bold**"
-msgstr ""
+msgstr "**negreta**"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:38
 #: skins/default/templates/widgets/question_edit_tips.html:33
 #: skins/old/templates/blocks/answer_edit_tips.html:36
 #: skins/old/templates/blocks/question_edit_tips.html:31
 msgid "*italic* or _italic_"
-msgstr ""
+msgstr "*itàlica* o _itàlica_"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:41
 #: skins/default/templates/widgets/question_edit_tips.html:36
 #: skins/old/templates/blocks/answer_edit_tips.html:39
 #: skins/old/templates/blocks/question_edit_tips.html:34
 msgid "**bold** or __bold__"
-msgstr ""
+msgstr "**negreta** o _negreta_"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/question_edit_tips.html:40
@@ -6284,35 +6287,35 @@ msgstr "enllaç"
 #: skins/old/templates/blocks/question_edit_tips.html:38
 #: skins/old/templates/blocks/question_edit_tips.html:43
 msgid "text"
-msgstr ""
+msgstr "text"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:49
 #: skins/default/templates/widgets/question_edit_tips.html:45
 #: skins/old/templates/blocks/answer_edit_tips.html:47
 #: skins/old/templates/blocks/question_edit_tips.html:43
 msgid "image"
-msgstr ""
+msgstr "imatge"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:53
 #: skins/default/templates/widgets/question_edit_tips.html:49
 #: skins/old/templates/blocks/answer_edit_tips.html:51
 #: skins/old/templates/blocks/question_edit_tips.html:47
 msgid "numbered list:"
-msgstr ""
+msgstr "llista numerada:"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:58
 #: skins/default/templates/widgets/question_edit_tips.html:54
 #: skins/old/templates/blocks/answer_edit_tips.html:56
 #: skins/old/templates/blocks/question_edit_tips.html:52
 msgid "basic HTML tags are also supported"
-msgstr ""
+msgstr "es poden posar etiquetes HTML bàsiques"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:63
 #: skins/default/templates/widgets/question_edit_tips.html:59
 #: skins/old/templates/blocks/answer_edit_tips.html:60
 #: skins/old/templates/blocks/question_edit_tips.html:56
 msgid "learn more about Markdown"
-msgstr ""
+msgstr "aprendre més sobre Markdown"
 
 #: skins/default/templates/widgets/ask_button.html:2
 #: skins/old/templates/blocks/header.html:40
@@ -6322,7 +6325,7 @@ msgstr "fes una pregunta"
 #: skins/default/templates/widgets/ask_form.html:6
 #: skins/old/templates/blocks/ask_form.html:6
 msgid "login to post question info"
-msgstr ""
+msgstr "entrar per publicar una pregunta2"
 
 #: skins/default/templates/widgets/ask_form.html:10
 #: skins/old/templates/blocks/ask_form.html:10
@@ -6332,7 +6335,6 @@ msgid ""
 "                            see %(email_validation_faq_url)s\n"
 "                            "
 msgstr ""
-
 
 #: skins/default/templates/widgets/ask_form.html:42
 #: skins/old/templates/blocks/ask_form.html:34
@@ -6428,15 +6430,27 @@ msgid_plural "votes"
 msgstr[0] "vot"
 msgstr[1] "vots"
 
+#: skins/default/templates/widgets/scope_nav.html:3
+msgid "ALL"
+msgstr "TOTES"
+
 #: skins/default/templates/widgets/scope_nav.html:5
 #: skins/old/templates/main_page/tab_bar.html:14
 msgid "see unanswered questions"
 msgstr "veure preguntes sense respondre"
 
+#: skins/default/templates/widgets/scope_nav.html:5
+msgid "UNANSWERED"
+msgstr "SENSE RESPONDRE"
+
 #: skins/default/templates/widgets/scope_nav.html:8
 #: skins/old/templates/main_page/tab_bar.html:20
 msgid "see your followed questions"
 msgstr ""
+ 
+#: skins/default/templates/widgets/scope_nav.html:8
+msgid "FOLLOWED"
+msgstr "SEQUIDES"
 
 #: skins/default/templates/widgets/scope_nav.html:11
 msgid "Please ask your question here"
@@ -6465,7 +6479,7 @@ msgstr "Registrar-se"
 #: skins/default/templates/widgets/user_navigation.html:14
 #: skins/old/templates/blocks/header_meta_links.html:15
 msgid "settings"
-msgstr ""
+msgstr "configuació"
 
 #: skins/old/templates/feedback.html:25
 msgid "(please enter a valid email)"
@@ -6701,7 +6715,6 @@ msgstr ""
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
-
 
 #: views/commands.py:295
 msgid "email update frequency has been set to daily"
