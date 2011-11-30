@@ -19,7 +19,7 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.question import Question
+from askbot.models.question import Question, Thread
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import Answer, AnonymousAnswer
@@ -1799,7 +1799,7 @@ def toggle_favorite_question(
         fave = FavoriteQuestion.objects.get(question=question, user=self)
         fave.delete()
         result = False
-        question.update_favorite_count()
+        question.thread.update_favorite_count()
     except FavoriteQuestion.DoesNotExist:
         if timestamp is None:
             timestamp = datetime.datetime.now()
@@ -1810,7 +1810,7 @@ def toggle_favorite_question(
         )
         fave.save()
         result = True
-        question.update_favorite_count()
+        question.thread.update_favorite_count()
         award_badges_signal.send(None,
             event = 'select_favorite_question',
             actor = self,
@@ -2642,6 +2642,7 @@ except ImportError:
 __all__ = [
         'signals',
 
+        'Thread',
         'Question',
         'QuestionView',
         'FavoriteQuestion',

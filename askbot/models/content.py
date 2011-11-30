@@ -25,6 +25,7 @@ class Content(models.Model):
     """
         Base class for Question and Answer
     """
+
     author = models.ForeignKey(User, related_name='%(class)ss')
     added_at = models.DateTimeField(default=datetime.datetime.now)
 

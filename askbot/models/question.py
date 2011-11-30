@@ -458,8 +458,23 @@ class QuestionManager(BaseQuerySetManager):
     def get_query_set(self):
         return QuestionQuerySet(self.model)
 
+class Thread(models.Model):
+    # Denormalised data, transplanted from Question
+    favourite_count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        app_label = 'askbot'
+        
+    def update_favorite_count(self):
+        if self.questions.count() != 1:
+            raise ValueError('Thread.questions.count() != 1')
+        self.favourite_count = FavoriteQuestion.objects.filter(question=self.questions.all()[0]).count()
+        self.save()
 
 class Question(content.Content):
+    # TODO: Eventually move this into Content/Post model
+    thread = models.ForeignKey('Thread', unique=True, null=True, blank=True, related_name='questions')
+
     #todo: this really becomes thread,
     #except property post_type goes to Post
     post_type = 'question'
@@ -481,7 +496,6 @@ class Question(content.Content):
     # Denormalised data
     answer_count         = models.PositiveIntegerField(default=0)
     view_count           = models.PositiveIntegerField(default=0)
-    favourite_count      = models.PositiveIntegerField(default=0)
     last_activity_at     = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by     = models.ForeignKey(User, related_name='last_active_in_questions')
     tagnames             = models.CharField(max_length=125)
@@ -520,17 +534,8 @@ class Question(content.Content):
         """
         #todo: goes to thread
         self.answer_count = self.get_answers().count()
-        if save: 
+        if save:
             self.save()
-   
-    def update_favorite_count(self):
-        """update favourite_count for given question
-        """
-        #todo: goes to thread
-        self.favourite_count = FavoriteQuestion.objects.filter(
-                                                            question=self
-                                                        ).count()
-        self.save()
 
     def get_similar_questions(self):
         """
