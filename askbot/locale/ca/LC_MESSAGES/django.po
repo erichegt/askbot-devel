@@ -59,7 +59,7 @@ msgstr "títol"
 
 #: forms.py:105
 msgid "please enter a descriptive title for your question"
-msgstr "Introduir un títol descriptiu de la pregunta"
+msgstr "Escriviu un títol descriptiu de la pregunta"
 
 #: forms.py:110
 msgid "title must be > 10 characters"
