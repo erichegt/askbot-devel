@@ -1,8 +1,12 @@
 Changes in Askbot
 =================
 
-0.7.31 (Current Version)
+0.7.32 (Current Version)
 ------------------------
+* Bugfixes in English locale (Evgeny)
+
+0.7.31 
+------
 * Added ``askbot_create_test_fixture`` management command (Dejan Noveski)
 * Integrated new test fixture into the page load test cases (Dejan Noveski)
 * Added an embeddable widget for the questions list matching tags (Daniel Mican, Evgeny Fadeev, Dejan Noveski)
