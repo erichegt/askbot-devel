@@ -84,7 +84,9 @@ class QuestionQuerySet(models.query.QuerySet):
             ):
         #todo: some work from this method will go to thread
         #and some - merged with the Answer.objects.create_new
+
         question = Question(
+            thread=Thread.objects.create(),
             title = title,
             author = author,
             added_at = added_at,
@@ -473,7 +475,7 @@ class Thread(models.Model):
 
 class Question(content.Content):
     # TODO: Eventually move this into Content/Post model
-    thread = models.ForeignKey('Thread', unique=True, null=True, blank=True, related_name='questions')
+    thread = models.ForeignKey('Thread', unique=True, related_name='questions')
 
     #todo: this really becomes thread,
     #except property post_type goes to Post
