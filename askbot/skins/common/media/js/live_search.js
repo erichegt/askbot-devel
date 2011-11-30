@@ -5,6 +5,7 @@ var liveSearch = function(){
     var running = false;
     var q_list_sel = 'question-list';//id of question listing div
     var search_url = undefined;
+    var current_url = undefined;
     var restart_query = function(){};
     var process_query = function(){};
     var render_result = function(){};
@@ -23,8 +24,9 @@ var liveSearch = function(){
                             sortMethod = prevSortMethod;
                         }
                         refresh_x_button();
+                        new_url = remove_from_url(search_url, 'query')
                         search_url = askbot['urls']['questions'] + 'reset_query:true/';
-                        reset_query(sortMethod);
+                        reset_query(new_url,sortMethod);
                     }
                 );
                 query.after(x_button);
@@ -299,7 +301,7 @@ var liveSearch = function(){
         return old_tags;
     };
 
-    var render_search_tags = function(tags){
+    var render_search_tags = function(tags, query_string){
         var search_tags = $('#searchTags');
         search_tags.children().remove();
         if (tags.length == 0){
@@ -316,7 +318,7 @@ var liveSearch = function(){
                 tag.setLinkable(false);
                 tag.setDeleteHandler(
                     function(){
-                        remove_search_tag(tag_name);
+                        remove_search_tag(tag_name, query_string);
                     }
                 );
                 search_tags.append(tag.getElement());
@@ -363,7 +365,47 @@ var liveSearch = function(){
                 }
             }
         }
-        return url   
+        return '/'+url   
+    }
+
+    var remove_tag_from_url =function (query_string, tag){
+        url = askbot['urls']['questions'];
+        flag = false
+        author = ''
+        if (query_string !== null){
+            params = query_string.split('/')
+            for (var i = 0; i < params.length; i++){
+                if (params[i] !== ''){
+                    if (params[i].substring(0, 5) == "tags:"){
+                        tags = params[i].substr(5).split('+');
+                        new_tags = ''
+                        for(var j = 0; j < tags.length; j++){
+                            if(escape(tags[j]) !== escape(tag)){
+                                if (new_tags !== ''){
+                                    new_tags += '+'
+                                }
+                                new_tags += escape(tags[j]);
+                            }
+                        }
+                        if(new_tags !== ''){
+                            url += 'tags:'+new_tags+'/'
+                        }
+                        flag = true
+                    }
+                    else if (params[i].substring(0, 7) == "author:"){
+                        author = params[i];
+                    }
+                    else{
+                        url += params[i] + '/';
+                    }
+                }
+            }
+            if (author !== '') {
+                url += author+'/'
+            }
+        }
+        return url
+
     }
 
     var set_section_tabs = function(query_string){
@@ -427,13 +469,17 @@ var liveSearch = function(){
         }
     };
 
-    var remove_search_tag = function(tag_name){
+    var remove_search_tag = function(tag_name, query_string){
         $.ajax({
             url: askbot['urls']['questions']+'remove_tag:'+escape(tag_name)+'/',
             dataType: 'json',
             success: render_result,
             complete: try_again
         });
+        search_url = remove_tag_from_url(query_string, tag_name)
+        this.current_url = search_url
+        var stateObj = { page: search_url };
+        window.history.pushState(stateObj, "Questions", search_url);
     };
 
     var change_rss_url = function(feed_url){
@@ -442,7 +488,7 @@ var liveSearch = function(){
         }
     }
 
-    var activate_search_tags = function(){
+    var activate_search_tags = function(query_string){
         var search_tags = $('#searchTags .tag-left');
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
@@ -451,7 +497,7 @@ var liveSearch = function(){
             //must work after decorate & must have getName
             tag.setDeleteHandler(
                 function(){
-                    remove_search_tag(tag.getName());
+                    remove_search_tag(tag.getName(), query_string);
                 }
             );
         });
@@ -504,7 +550,7 @@ var liveSearch = function(){
             //rename new div to old
             render_paginator(data['paginator']);
             set_question_count(data['question_counter']);
-            render_search_tags(data['query_data']['tags']);
+            render_search_tags(data['query_data']['tags'], data['query_string']);
             render_faces(data['faces']);
             render_related_tags(data['related_tags'], data['query_string']);
             render_relevance_sort_tab(data['query_string']);
@@ -520,8 +566,6 @@ var liveSearch = function(){
                 new_list.fadeIn(400);            
             });
         }
-        var stateObj = { page: data['query_string'] };
-        Path.history.pushState(stateObj, "Questions", data['query_string']);
     }
 
     var try_again = function(){
@@ -539,9 +583,11 @@ var liveSearch = function(){
             complete: try_again
         });
         prev_text = query_text;
+        var stateObj = { page: search_url };
+        window.history.pushState(stateObj, "Questions", search_url);
     }
 
-    var reset_query = function(sort_method){
+    var reset_query = function(new_url, sort_method){
         $.ajax({
             url: search_url,
             //data: {reset_query: true, sort: sort_method},
@@ -550,6 +596,9 @@ var liveSearch = function(){
             complete: try_again
         });
         prev_text = '';
+        window.location.hash = new_url
+        //var stateObj = { page: new_url };
+        //window.history.pushState(stateObj, "Questions", new_url);
     }
 
     var refresh_main_page = function(){
@@ -559,6 +608,8 @@ var liveSearch = function(){
             dataType: 'json',
             success: render_main_page_result
         });
+        var stateObj = { page: askbot['urls']['questions'] };
+        window.history.pushState(stateObj, "Questions", askbot['urls']['questions']);
     };
 
     return {
@@ -572,7 +623,7 @@ var liveSearch = function(){
                 query = $('input#keywords');
                 search_url = askbot['urls']['questions'];
                 render_result = render_main_page_result;
-
+                this.current_url = search_url + query_string
                 process_query = function(){
                     if (prev_text.length === 0 && showSortByRelevance){
                         if (sortMethod === 'activity-desc'){
@@ -580,7 +631,13 @@ var liveSearch = function(){
                             sortMethod = 'relevance-desc';
                         }
                     }
-                    search_url = askbot['urls']['questions']; //resetting search_url every times
+                    if (this.current_url !== undefined){
+                        search_url = '/'; //resetting search_url every times
+                        query_string = this.current_url
+                    }
+                    else{
+                        search_url = askbot['urls']['questions']; //resetting search_url every times
+                    }
                     params = query_string.split('/')
                     for (var i = 0; i < params.length; i++){
                         if (params[i] !== ''){
@@ -593,18 +650,18 @@ var liveSearch = function(){
                             }
                         }
                     }
-                    //search_url = '/questions/'+search_url
                     send_query(cur_text, sortMethod);
                 };
                 restart_query = function() {
                     reset_sort_method();
                     refresh_x_button();
+                    new_url = remove_from_url(search_url, 'query')
                     search_url = askbot['urls']['questions'] + 'reset_query:true/';
-                    reset_query(sortMethod);
+                    reset_query(new_url, sortMethod);
                     running = true;
                 };
 
-                activate_search_tags();
+                activate_search_tags(query_string);
                 main_page_search_listen();
             } else {
                 query = $('input#id_title.questionTitleInput');

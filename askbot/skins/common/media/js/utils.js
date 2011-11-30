@@ -398,7 +398,7 @@ Tag.prototype.createDom = function(){
     this._inner_element.attr('rel', 'tag');
     if (this._title === null){
         this.setTitle(
-			interpolate(gettext("see questions tagged '%s'"), [this.getName()])
+            interpolate(gettext("see questions tagged '%s'"), [this.getName()])
         );
     }
     this._inner_element.attr('title', this._title);

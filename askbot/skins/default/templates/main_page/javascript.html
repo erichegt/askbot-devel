@@ -3,6 +3,7 @@
     var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     $(document).ready(function(){
+        hash = window.location.hash.replace('#','/').replace(/&/g,'/').replace(/=/g,':')
         /*var on_tab = '#nav_questions';
         $(on_tab).attr('className','on');*/
         liveSearch().init('main_page', '{{query_string}}');
