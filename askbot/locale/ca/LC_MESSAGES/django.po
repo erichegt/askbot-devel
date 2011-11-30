@@ -606,8 +606,7 @@ msgstr ""
 
 #: conf/email.py:76
 msgid "Default notification frequency questions answered by the user"
-msgstr ""
-"Freqüència predeterminada de notificació de respostes fetes per l'usuari"
+msgstr "Freqüència predeterminada de notificació de respostes fetes per l'usuari"
 
 #: conf/email.py:78
 msgid ""
@@ -615,7 +614,7 @@ msgid ""
 "user."
 msgstr ""
 "Opció per definir la freqüència de les actualitzacions per correu de: "
-"Respostes fetes per l'usuari"
+"Respostes fetes per l'usuari."
 
 #: conf/email.py:90
 msgid ""
@@ -2528,8 +2527,6 @@ msgstr ""
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
-"Your email needs to be validated. Please see details <a "
-"id='validate_email_alert' href='%(details_url)s'>here</a>."
 
 #: deps/django_authopenid/views.py:1098
 #, python-format
@@ -2707,11 +2704,7 @@ msgstr[1] ""
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
-"<p>Dear %(name)s,</p></p>The following question has been updated on the Q&A "
-"forum:</p>"
 msgstr[1] ""
-"<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
-"the Q&A forum:</p>"
 
 #: management/commands/send_email_alerts.py:438
 msgid "new question"
@@ -2750,11 +2743,6 @@ msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or "
 "%(admin_email)s administrator"
 msgstr ""
-"<p>Please remember that you can always <a "
-"href='%(email_settings_link)s'>adjust</a> frequency of the email updates or "
-"turn them off entirely.<br/>If you believe that this message was sent in an "
-"error, please email about it the forum administrator at %(admin_email)s.</"
-"p><p>Sincerely,</p><p>Your friendly Q&A forum server.</p>"
 
 #: management/commands/send_unanswered_question_reminders.py:56
 #, python-format
@@ -2815,12 +2803,12 @@ msgstr ""
 #: models/__init__.py:407
 #, python-format
 msgid ">%(points)s points required to upvote"
-msgstr ">%(points)s points required to upvote "
+msgstr ""
 
 #: models/__init__.py:413
 #, python-format
 msgid ">%(points)s points required to downvote"
-msgstr ">%(points)s points required to downvote "
+msgstr ""
 
 #: models/__init__.py:428
 msgid "Sorry, blocked users cannot upload files"
@@ -2834,21 +2822,15 @@ msgstr ""
 #, python-format
 msgid ""
 "uploading images is limited to users with >%(min_rep)s reputation points"
-msgstr "sorry, file uploading requires karma >%(min_rep)s"
+msgstr ""
 
 #: models/__init__.py:450 models/__init__.py:517 models/__init__.py:932
 msgid "blocked users cannot post"
 msgstr ""
-"Sorry, your account appears to be blocked and you cannot make new posts "
-"until this issue is resolved. Please contact the forum administrator to "
-"reach a resolution."
 
 #: models/__init__.py:451 models/__init__.py:935
 msgid "suspended users cannot post"
 msgstr ""
-"Sorry, your account appears to be suspended and you cannot make new posts "
-"until this issue is resolved. You can, however edit your existing posts. "
-"Please contact the forum administrator to reach a resolution."
 
 #: models/__init__.py:478
 #, python-format
@@ -2972,33 +2954,25 @@ msgstr ""
 
 #: models/__init__.py:756
 msgid "cannot flag message as offensive twice"
-msgstr "You have flagged this question before and cannot do it more than once"
+msgstr ""
 
 #: models/__init__.py:761
 msgid "blocked users cannot flag posts"
 msgstr ""
-"Sorry, since your account is blocked you cannot flag posts as offensive"
 
 #: models/__init__.py:763
 msgid "suspended users cannot flag posts"
 msgstr ""
-"Sorry, your account appears to be suspended and you cannot make new posts "
-"until this issue is resolved. You can, however edit your existing posts. "
-"Please contact the forum administrator to reach a resolution."
 
 #: models/__init__.py:765
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
 msgstr ""
-"Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
-"required"
 
 #: models/__init__.py:784
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
 msgstr ""
-"Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
-"offensive flags per day."
 
 #: models/__init__.py:799
 msgid ""
@@ -3037,7 +3011,7 @@ msgstr ""
 
 #: models/__init__.py:864
 msgid "cannot revoke old vote"
-msgstr "sorry, but older votes cannot be revoked"
+msgstr ""
 
 #: models/__init__.py:1339 utils/functions.py:70
 #, python-format
@@ -3599,26 +3573,16 @@ msgstr "canviar informació  %(email)s"
 #, python-format
 msgid "here is why email is required, see %(gravatar_faq_url)s"
 msgstr ""
-"<span class='strong big'>Please enter your email address in the box below.</"
-"span> Valid email address is required on this Q&amp;A forum. If you like, "
-"you can <strong>receive updates</strong> on interesting questions or entire "
-"forum via email. Also, your email is used to create a unique <a "
-"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your "
-"account. Email addresses are never shown or otherwise shared with anybody "
-"else."
 
 #: skins/common/templates/authopenid/changeemail.html:29
 #: skins/old/templates/authopenid/changeemail.html:29
 msgid "Your new Email"
 msgstr ""
-"<strong>Your new Email:</strong> (will <strong>not</strong> be shown to "
-"anyone, must be valid)"
 
 #: skins/common/templates/authopenid/changeemail.html:29
 #: skins/old/templates/authopenid/changeemail.html:29
 msgid "Your Email"
 msgstr ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
 
 #: skins/common/templates/authopenid/changeemail.html:36
 #: skins/old/templates/authopenid/changeemail.html:36
@@ -3655,12 +3619,6 @@ msgstr "Validar correu electrònic"
 #, python-format
 msgid "validate %(email)s info or go to %(change_email_url)s"
 msgstr ""
-"<span class=\"strong big\">An email with a validation link has been sent to "
-"%(email)s.</span> Please <strong>follow the emailed link</strong> with your "
-"web browser. Email validation is necessary to help insure the proper use of "
-"email on <span class=\"orange\">Q&amp;A</span>. If you would like to use "
-"<strong>another email</strong>, please <a "
-"href='%(change_email_url)s'><strong>change it again</strong></a>."
 
 #: skins/common/templates/authopenid/changeemail.html:52
 #: skins/old/templates/authopenid/changeemail.html:52
@@ -3672,10 +3630,6 @@ msgstr ""
 #, python-format
 msgid "old %(email)s kept, if you like go to %(change_email_url)s"
 msgstr ""
-"<span class=\"strong big\">Your email address %(email)s has not been changed."
-"</span> If you decide to change it later - you can always do it by editing "
-"it in your user profile or by using the <a "
-"href='%(change_email_url)s'><strong>previous form</strong></a> again."
 
 #: skins/common/templates/authopenid/changeemail.html:59
 #: skins/old/templates/authopenid/changeemail.html:59
@@ -3687,10 +3641,6 @@ msgstr ""
 #, python-format
 msgid "your current %(email)s can be used for this"
 msgstr ""
-"<span class='big strong'>Your email address is now set to %(email)s.</span> "
-"Updates on the questions that you like most will be sent to this address. "
-"Email notifications are sent once a day or less frequently - only when there "
-"are any news."
 
 #: skins/common/templates/authopenid/changeemail.html:66
 #: skins/old/templates/authopenid/changeemail.html:66
@@ -3701,11 +3651,6 @@ msgstr ""
 #: skins/old/templates/authopenid/changeemail.html:69
 msgid "thanks for verifying email"
 msgstr ""
-"<span class=\"big strong\">Thank you for verifying your email!</span> Now "
-"you can <strong>ask</strong> and <strong>answer</strong> questions. Also if "
-"you find a very interesting question you can <strong>subscribe for the "
-"updates</strong> - then will be notified about changes <strong>once a day</"
-"strong> or less frequently."
 
 #: skins/common/templates/authopenid/changeemail.html:73
 #: skins/old/templates/authopenid/changeemail.html:73
@@ -3717,10 +3662,6 @@ msgstr "Validation email not sent"
 #, python-format
 msgid "email key not sent %(email)s change email here %(change_link)s"
 msgstr ""
-"<span class='big strong'>Your current email address %(email)s has been "
-"validated before</span> so the new key was not sent. You can <a "
-"href='%(change_link)s'>change</a> email used for update subscriptions if "
-"necessary."
 
 #: skins/common/templates/authopenid/complete.html:21
 #: skins/common/templates/authopenid/complete.html:23
@@ -3743,17 +3684,19 @@ msgid ""
 "                            %(provider)s. Email is required too, see "
 "%(gravatar_faq_url)s\n"
 "                        "
-msgstr "%(username)s ja existeix, escolliu un altre nom per \n"
+msgstr ""
+"%(username)s ja existeix, escolliu un altre nom per \n"
 "                             %(provider)s. També és necessari el correu electrònic: consulteu"
 "%(gravatar_faq_url)s\n"
-""
+"                        "
 
 #: skins/common/templates/authopenid/complete.html:34
 #: skins/old/templates/authopenid/complete.html:34
 #, python-format
 msgid ""
 "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr "informació del nou compte de registre extern %(provider)s; consulteu %(gravatar_faq_url)s"
+msgstr ""
+"informació del nou compte de registre extern %(provider)s; consulteu %(gravatar_faq_url)s"
 
 
 #: skins/common/templates/authopenid/complete.html:37
@@ -3783,11 +3726,6 @@ msgstr "Adreça de correu electrònic"
 #: skins/old/templates/authopenid/signup_with_password.html:36
 msgid "receive updates motivational blurb"
 msgstr ""
-"<strong>Receive forum updates by email</strong> - this will help our "
-"community grow and become more useful.<br/>By default <span "
-"class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest per "
-"week</strong>  - only when there is anything new.<br/>If you like, please "
-"adjust this now or any time later from your user account."
 
 #: skins/common/templates/authopenid/complete.html:76
 #: skins/common/templates/authopenid/signup_with_password.html:40
@@ -3884,7 +3822,7 @@ msgstr ""
 #: skins/common/templates/authopenid/signin.html:4
 #: skins/old/templates/authopenid/signin.html:4
 msgid "User login"
-msgstr "User login"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:14
 #: skins/old/templates/authopenid/signin.html:14
@@ -3894,10 +3832,6 @@ msgid ""
 "        Your answer to %(title)s %(summary)s will be posted once you log in\n"
 "        "
 msgstr ""
-"\n"
-"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
-"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
-"posted once you log in.</span>"
 
 #: skins/common/templates/authopenid/signin.html:21
 #: skins/old/templates/authopenid/signin.html:21
@@ -3907,9 +3841,6 @@ msgid ""
 "        %(title)s %(summary)s will be posted once you log in\n"
 "        "
 msgstr ""
-"<span class=\"strong big\">Your question</span> <i>\"<strong>%(title)s</"
-"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
-"posted once you log in.</span>"
 
 #: skins/common/templates/authopenid/signin.html:28
 #: skins/old/templates/authopenid/signin.html:28
@@ -4066,24 +3997,22 @@ msgstr ""
 #: skins/common/templates/authopenid/signin.html:219
 #: skins/old/templates/authopenid/signin.html:219
 msgid "with openid it is easier"
-msgstr "With the OpenID you don't need to create new username and password."
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:222
 #: skins/old/templates/authopenid/signin.html:222
 msgid "reuse openid"
-msgstr "You can safely re-use the same login for all OpenID-enabled websites."
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:225
 #: skins/old/templates/authopenid/signin.html:225
 msgid "openid is widely adopted"
 msgstr ""
-"There are > 160,000,000 OpenID account in use. Over 10,000 sites are OpenID-"
-"enabled."
 
 #: skins/common/templates/authopenid/signin.html:228
 #: skins/old/templates/authopenid/signin.html:228
 msgid "openid is supported open standard"
-msgstr "OpenID is based on an open standard, supported by many organizations."
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:232
 #: skins/old/templates/authopenid/signin.html:232
@@ -4329,7 +4258,7 @@ msgstr ""
 #: skins/common/templates/widgets/related_tags.html:3
 #: skins/old/templates/main_page/sidebar.html:25
 msgid "Related tags"
-msgstr "Tags"
+msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:4
 #: skins/old/templates/blocks/tag_selector.html:4
@@ -4558,9 +4487,6 @@ msgid ""
 "of times each type of badge has been awarded. Give us feedback at "
 "%(feedback_faq_url)s.\n"
 msgstr ""
-"Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Have ideas about fun "
-"badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>\n"
 
 #: skins/default/templates/badges.html:35 skins/old/templates/badges.html:35
 msgid "Community badges"
@@ -4573,8 +4499,6 @@ msgstr ""
 #: skins/default/templates/badges.html:40 skins/old/templates/badges.html:40
 msgid "gold badge description"
 msgstr ""
-"Gold badge is the highest award in this community. To obtain it have to show "
-"profound knowledge and ability in addition to your active participation."
 
 #: skins/default/templates/badges.html:45 skins/old/templates/badges.html:45
 msgid ""
@@ -4584,7 +4508,6 @@ msgstr ""
 #: skins/default/templates/badges.html:49 skins/old/templates/badges.html:49
 msgid "silver badge description"
 msgstr ""
-"silver badge: occasionally awarded for the very high quality contributions"
 
 #: skins/default/templates/badges.html:52 skins/old/templates/badges.html:52
 msgid "bronze badge: often given as a special honor"
@@ -4592,7 +4515,7 @@ msgstr ""
 
 #: skins/default/templates/badges.html:56 skins/old/templates/badges.html:56
 msgid "bronze badge description"
-msgstr "bronze badge: often given as a special honor"
+msgstr ""
 
 #: skins/default/templates/close.html:3 skins/default/templates/close.html:5
 #: skins/old/templates/close.html:3 skins/old/templates/close.html.py:5
@@ -4644,13 +4567,11 @@ msgid ""
 "Before asking the question - please make sure to use search to see whether "
 "your question has alredy been answered."
 msgstr ""
-"Before you ask - please make sure to search for a similar question. You can "
-"search questions by their title or tags."
 
 #: skins/default/templates/faq_static.html:10
 #: skins/old/templates/faq_static.html:10
 msgid "What questions should I avoid asking?"
-msgstr "What kinds of questions should be avoided?"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:11
 #: skins/old/templates/faq_static.html:11
@@ -4671,10 +4592,6 @@ msgid ""
 "discussions in your answers, comment facility allows some space for brief "
 "discussions."
 msgstr ""
-"is a <strong>question and answer</strong> site - <strong>it is not a "
-"discussion group</strong>. Please avoid holding debates in your answers as "
-"they tend to dilute the essense of questions and answers. For the brief "
-"discussions please use commenting facility."
 
 #: skins/default/templates/faq_static.html:15
 #: skins/old/templates/faq_static.html:15
@@ -4697,8 +4614,6 @@ msgid ""
 "The reputation system allows users earn the authorization to perform a "
 "variety of moderation tasks."
 msgstr ""
-"Karma system allows users to earn rights to perform a variety of moderation "
-"tasks"
 
 #: skins/default/templates/faq_static.html:20
 #: skins/old/templates/faq_static.html:20
@@ -4709,10 +4624,6 @@ msgstr "How does karma system work?"
 #: skins/old/templates/faq_static.html:21
 msgid "Rep system summary"
 msgstr ""
-"When a question or answer is upvoted, the user who posted them will gain "
-"some points, which are called \"karma points\". These points serve as a "
-"rough measure of the community trust to him/her. Various moderation tasks "
-"are gradually assigned to the users based on those points."
 
 #: skins/default/templates/faq_static.html:22
 #: skins/old/templates/faq_static.html:22
@@ -4792,19 +4703,6 @@ msgstr "How to change my picture (gravatar) and what is gravatar?"
 #: skins/old/templates/faq_static.html:75
 msgid "gravatar faq info"
 msgstr ""
-"<p>The picture that appears on the users profiles is called "
-"<strong>gravatar</strong> (which means <strong>g</strong>lobally <strong>r</"
-"strong>ecognized <strong>avatar</strong>).</p><p>Here is how it works: a "
-"<strong>cryptographic key</strong> (unbreakable code) is calculated from "
-"your email address. You upload your picture (or your favorite alter ego "
-"image) the website <a href='http://gravatar.com'><strong>gravatar.com</"
-"strong></a> from where we later retreive your image using the key.</"
-"p><p>This way all the websites you trust can show your image next to your "
-"posts and your email address remains private.</p><p>Please "
-"<strong>personalize your account</strong> with an image - just register at "
-"<a href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please "
-"be sure to use the same email address that you used to register with us). "
-"Default image that looks like a kitchen tile is generated automatically.</p>"
 
 #: skins/default/templates/faq_static.html:76
 #: skins/old/templates/faq_static.html:76
@@ -4858,8 +4756,6 @@ msgid ""
 "Please ask your question at %(ask_question_url)s, help make our community "
 "better!"
 msgstr ""
-"Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
-"community better!"
 
 #: skins/default/templates/feedback.html:3 skins/old/templates/feedback.html:3
 msgid "Feedback"
@@ -5236,7 +5132,7 @@ msgstr "Editar pregunta"
 #: skins/old/templates/question_retag.html:3
 #: skins/old/templates/question_retag.html:5
 msgid "Change tags"
-msgstr "Retag question"
+msgstr ""
 
 #: skins/default/templates/question_retag.html:21
 #: skins/old/templates/question_retag.html:21
@@ -5332,7 +5228,7 @@ msgstr ""
 #: skins/default/templates/tags.html:4 skins/default/templates/tags.html:10
 #: skins/old/templates/tags.html:4 skins/old/templates/tags.html.py:11
 msgid "Tag list"
-msgstr "Tags"
+msgstr ""
 
 #: skins/default/templates/tags.html:8 skins/old/templates/tags.html:9
 #, python-format
@@ -5368,7 +5264,7 @@ msgstr ""
 #: skins/default/templates/users.html:4 skins/default/templates/users.html:6
 #: skins/old/templates/users.html:4 skins/old/templates/users.html.py:7
 msgid "Users"
-msgstr "People"
+msgstr "Usuaris"
 
 #: skins/default/templates/users.html:14
 msgid "see people with the highest reputation"
@@ -5550,16 +5446,16 @@ msgstr ""
 #, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] "les etiquetes han de tenir menys de %(max_chars)d caràcter"
-msgstr[1] "les etiquetes han de tenir menys de %(max_chars)d caràcters"
+msgstr[0] "les etiquetes han de tenir menys de %(max_chars)s caràcter"
+msgstr[1] "les etiquetes han de tenir menys de %(max_chars)s caràcters"
 
 #: skins/default/templates/meta/editor_data.html:7
 #: skins/old/templates/blocks/editor_data.html:7
 #, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
-msgstr[0] "usar %(tag_count)d etiqueta"
-msgstr[1] "usar %(tag_count)d etiquetes o menys"
+msgstr[0] "usar %(tag_count)s etiqueta"
+msgstr[1] "usar %(tag_count)s etiquetes o menys"
 
 #: skins/default/templates/meta/editor_data.html:8
 #: skins/old/templates/blocks/editor_data.html:8
@@ -5599,7 +5495,7 @@ msgstr ""
 #: skins/default/templates/question/answer_tab_bar.html:18
 #: skins/old/templates/question.html:163
 msgid "newest answers"
-msgstr "newest"
+msgstr ""
 
 #: skins/default/templates/question/answer_tab_bar.html:20
 #: skins/old/templates/question.html:165
@@ -5650,12 +5546,12 @@ msgstr ""
 #: skins/default/templates/question/new_answer_form.html:43
 #: skins/old/templates/question.html:368
 msgid "Login/Signup to Post Your Answer"
-msgstr "Login/Signup to Post"
+msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:48
 #: skins/old/templates/question.html:373
 msgid "Answer the question"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:2
 #: skins/old/templates/question.html:297
@@ -5740,12 +5636,12 @@ msgstr ""
 #: skins/default/templates/question/sidebar.html:48
 #: skins/old/templates/question.html:448
 msgid "question asked"
-msgstr "Asked"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:51
 #: skins/old/templates/question.html:451
 msgid "question was seen"
-msgstr "Seen"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:51
 #: skins/old/templates/question.html:451
@@ -5755,12 +5651,12 @@ msgstr ""
 #: skins/default/templates/question/sidebar.html:54
 #: skins/old/templates/question.html:454
 msgid "last updated"
-msgstr "Last updated"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:63
 #: skins/old/templates/question.html:463
 msgid "Related questions"
-msgstr "Preguntes relacionades"
+msgstr ""
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:7
 #: skins/default/templates/question/subscribe_by_email_prompt.html:9
@@ -5851,7 +5747,7 @@ msgstr ""
 #: skins/default/templates/user_profile/user_email_subscriptions.html:22
 #: skins/old/templates/user_profile/user_email_subscriptions.html:22
 msgid "Stop sending email"
-msgstr "Stop Email"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_favorites.html:4
 #: skins/default/templates/user_profile/user_tabs.html:27
@@ -5870,7 +5766,7 @@ msgstr ""
 #: skins/default/templates/user_profile/user_inbox.html:34
 #: skins/old/templates/user_profile/user_inbox.html:34
 msgid "Sections:"
-msgstr "Seccions"
+msgstr "Seccions:"
 
 #: skins/default/templates/user_profile/user_inbox.html:38
 #: skins/old/templates/user_profile/user_inbox.html:38
@@ -6260,12 +6156,12 @@ msgstr ""
 #: skins/default/templates/user_profile/user_tabs.html:21
 #: skins/old/templates/user_profile/user_tabs.html:21
 msgid "graph of user reputation"
-msgstr "Graph of user karma"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_tabs.html:23
 #: skins/old/templates/user_profile/user_tabs.html:23
 msgid "reputation history"
-msgstr "karma"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_tabs.html:25
 #: skins/old/templates/user_profile/user_tabs.html:25
@@ -6305,12 +6201,12 @@ msgstr "vots"
 #: skins/default/templates/widgets/answer_edit_tips.html:3
 #: skins/old/templates/blocks/answer_edit_tips.html:3
 msgid "answer tips"
-msgstr "Tips"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:6
 #: skins/old/templates/blocks/answer_edit_tips.html:6
 msgid "please make your answer relevant to this community"
-msgstr "ask a question interesting to this community"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:9
 #: skins/old/templates/blocks/answer_edit_tips.html:9
@@ -6342,7 +6238,7 @@ msgstr ""
 #: skins/old/templates/blocks/answer_edit_tips.html:25
 #: skins/old/templates/blocks/question_edit_tips.html:20
 msgid "Markdown tips"
-msgstr "Markdown basics"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:31
 #: skins/default/templates/widgets/question_edit_tips.html:26
@@ -6377,7 +6273,7 @@ msgstr ""
 #: skins/old/templates/blocks/answer_edit_tips.html:43
 #: skins/old/templates/blocks/question_edit_tips.html:38
 msgid "link"
-msgstr "Enllaç"
+msgstr "enllaç"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/answer_edit_tips.html:49
@@ -6569,7 +6465,7 @@ msgstr "Registrar-se"
 #: skins/default/templates/widgets/user_navigation.html:14
 #: skins/old/templates/blocks/header_meta_links.html:15
 msgid "settings"
-msgstr "User login"
+msgstr ""
 
 #: skins/old/templates/feedback.html:25
 msgid "(please enter a valid email)"
@@ -6680,7 +6576,7 @@ msgstr ""
 
 #: utils/forms.py:46
 msgid "choose a username"
-msgstr "Choose screen name"
+msgstr "escollir un nom d'usuari"
 
 #: utils/forms.py:52
 msgid "user name is required"
@@ -6708,7 +6604,7 @@ msgstr ""
 
 #: utils/forms.py:118
 msgid "your email address"
-msgstr "Your email <i>(never shared)</i>"
+msgstr "la vostre adreça de correu electrònic"
 
 #: utils/forms.py:119
 msgid "email address is required"
@@ -6724,7 +6620,7 @@ msgstr ""
 
 #: utils/forms.py:149
 msgid "choose password"
-msgstr "Password"
+msgstr "escollir contrasenya"
 
 #: utils/forms.py:150
 msgid "password is required"
@@ -6732,7 +6628,7 @@ msgstr ""
 
 #: utils/forms.py:153
 msgid "retype password"
-msgstr "Password <i>(please retype)</i>"
+msgstr ""
 
 #: utils/forms.py:154
 msgid "please, retype your password"
@@ -6778,7 +6674,7 @@ msgstr ""
 
 #: views/commands.py:39
 msgid "anonymous users cannot vote"
-msgstr "Sorry, anonymous users cannot vote"
+msgstr ""
 
 #: views/commands.py:59
 msgid "Sorry you ran out of votes for today"
@@ -6805,8 +6701,7 @@ msgstr ""
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
-"Your subscription is saved, but email address %(email)s needs to be "
-"validated, please see <a href='%(details_url)s'>more details here</a>"
+
 
 #: views/commands.py:295
 msgid "email update frequency has been set to daily"
@@ -6881,11 +6776,11 @@ msgstr ""
 
 #: views/users.py:896
 msgid "user reputation in the community"
-msgstr "user karma"
+msgstr ""
 
 #: views/users.py:897
 msgid "profile - user reputation"
-msgstr "Profile - User's Karma"
+msgstr ""
 
 #: views/users.py:924
 msgid "users favorite questions"
