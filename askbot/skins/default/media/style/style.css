@@ -144,7 +144,7 @@ ul#searchTags{margin-left:10px;float:right;padding-top:2px;}
 .evenMore a{text-decoration:underline;color:#1b79bd;}
 .pager{margin-top:10px;margin-bottom:16px;}
 .pagesize{margin-top:10px;margin-bottom:16px;float:right;}
-.paginator{padding:5px 0 10px 0;font-size:13px;}.paginator .prev a,.paginator .prev a:visited,.paginator .next a,.paginator .next a:visited{background-color:#fff;color:#777;padding:2px 4px 3px 4px;}
+.paginator{padding:5px 0 10px 0;font-size:13px;margin-bottom:10px;}.paginator .prev a,.paginator .prev a:visited,.paginator .next a,.paginator .next a:visited{background-color:#fff;color:#777;padding:2px 4px 3px 4px;}
 .paginator a{color:#7ea9b3;}
 .paginator .prev{margin-right:.5em;}
 .paginator .next{margin-left:.5em;}
@@ -221,7 +221,7 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .question-page p.rss a{font-family:'Yanone Kaffeesatz',sans-serif;vertical-align:top;}
 .question-page .question-content{float:right;width:690px;margin-bottom:10px;}
 .question-page #question-table{float:left;border-top:#f0f0f0 1px solid;}
-.question-page #question-table,.question-page .answer-table{margin:6px 0 0px 0;border-spacing:0px;width:680px;padding-right:3px;}
+.question-page #question-table,.question-page .answer-table{margin:6px 0 6px 0;border-spacing:0px;width:680px;padding-right:3px;}
 .question-page .answer-table{margin-top:0px;border-bottom:1px solid #D4D4D4;float:left;}
 .question-page .answer-table td,.question-page #question-table td{width:20px;vertical-align:top;}
 .question-page .question-body,.question-page .answer-body{overflow:auto;margin-top:10px;font-family:Arial;color:#4b4b4b;}.question-page .question-body p,.question-page .answer-body p{margin-bottom:14px;line-height:1.4;font-size:14px;padding:0px 5px 5px 0px;}
@@ -263,7 +263,7 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .question-page .comments button{background:url(../images/small-button-blue.png) repeat-x top;border:0;color:#4a757f;font-size:12px;width:95px;font-weight:bold;height:24px;margin-top:-2px;cursor:pointer;border-radius:4px;-ms-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-khtml-border-radius:4px;text-shadow:0px 1px 0px #e6f6fa;-moz-text-shadow:0px 1px 0px #e6f6fa;-webkit-text-shadow:0px 1px 0px #e6f6fa;-webkit-box-shadow:1px 1px 2px #808080;-moz-box-shadow:1px 1px 2px #808080;box-shadow:1px 1px 2px #808080;float:left;}
 .question-page .comments button:hover{background:url(../images/small-button-blue.png) bottom repeat-x;text-shadow:0px 1px 0px #c6d9dd;-moz-text-shadow:0px 1px 0px #c6d9dd;-webkit-text-shadow:0px 1px 0px #c6d9dd;}
 .question-page .comments .counter{display:inline-block;width:245px;float:right;color:#b6a475 !important;vertical-align:top;font-family:Arial;float:right;text-align:right;}
-.question-page .comments .comment{border-bottom:1px solid #edeeeb;margin:0;margin-top:8px;padding-bottom:4px;overflow:auto;font-family:Arial;font-size:11px;min-height:25px;background:url(../images/comment-background.png) bottom repeat-x;border-radius:5px;-ms-border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;-khtml-border-radius:5px;}
+.question-page .comments .comment{border-bottom:1px solid #edeeeb;margin:0;margin-top:8px;padding-bottom:4px;overflow:auto;font-family:Arial;font-size:11px;min-height:25px;background:#ffffff url(../images/comment-background.png) bottom repeat-x;border-radius:5px;-ms-border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;-khtml-border-radius:5px;}
 .question-page .comments div.comment:hover{background-color:#efefef;}
 .question-page .comments a.author{background-color:inherit;color:#1b79bd;padding:0;}
 .question-page .comments a.author:hover{text-decoration:underline;}
@@ -291,7 +291,6 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .question-page .answer .vote-buttons{float:left;}
 .question-page .accepted-answer{background-color:#f7fecc;border-bottom-color:#9BD59B;}.question-page .accepted-answer .vote-buttons{width:27px;margin-right:10px;}
 .question-page .answer .post-update-info a{color:#444444;}
-.question-page .accepted-answer .comments{background-color:#f1f6d4;}
 .question-page .answered{background:#CCC;color:#999;}
 .question-page .answered-accepted{background:#DCDCDC;color:#763333;}.question-page .answered-accepted strong{color:#E1E818;}
 .question-page .answered-by-owner{background:#F1F1FF;}.question-page .answered-by-owner .comments .button{background-color:#E6ECFF;}
