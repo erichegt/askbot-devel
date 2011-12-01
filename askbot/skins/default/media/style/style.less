@@ -2055,6 +2055,7 @@ span.delete-icon:hover {
 .openid-signin,
 .meta,
 .users-page,
+.user-profile-edit-page,
 {
     font-size:13px;
     line-height:1.3;
@@ -2072,12 +2073,16 @@ span.delete-icon:hover {
         padding-left:0px;
         font-size:16px;
     }
-    #id_email,#id_name,#id_username,#id_password1,#id_password2{
+    input[type="text"],input[type="password"],select{
         border:#cce6ec 3px solid;
         height:25px;
         padding-left:5px;
         width:395px;
         font-size:14px;
+    }
+    select{
+        width:405px;
+        height:30px;
     }
     textarea{
         border:#cce6ec 3px solid;
