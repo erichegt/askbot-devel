@@ -376,7 +376,6 @@ var liveSearch = function(){
             $.each(data, function(idx, question){
                 var url = question['url'];
                 var title = question['title'];
-                // TODO: `answer_count` has been transplanted from Question to Thread - this has to be updated somehow
                 var answer_count = question['answer_count'];
                 var list_item = $('<h2></h2>');
                 var count_element = $('<span class="item-count"></span>');

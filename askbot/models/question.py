@@ -689,15 +689,6 @@ class Question(content.Content):
             comment.save()
         return new_answer
 
-    def delete(self):
-        super(Question, self).delete()
-        try:
-            from askbot.conf import settings as askbot_settings
-            if askbot_settings.GOOGLE_SITEMAP_CODE != '':
-                ping_google()
-        except Exception:
-            logging.debug('problem pinging google did you register you sitemap with google?')
-
     def get_answers(self, user = None):
         """returns query set for answers to this question
         that may be shown to the given user
@@ -741,13 +732,6 @@ class Question(content.Content):
             text       = latest_revision.text
         )
 
-    def set_tag_names(self, tag_names):
-        """expects some iterable of unicode string tag names
-        joins the names with a space and assigns to self.tagnames
-        does not save the object
-        """
-        self.tagnames = u' '.join(tag_names)
-
     def _get_slug(self):
         return slugify(self.title)
 
@@ -771,63 +755,6 @@ class Question(content.Content):
                     who = a_who
 
         return when, who
-
-    def get_update_summary(self,last_reported_at=None,recipient_email=''):
-        edited = False
-        if self.last_edited_at and self.last_edited_at > last_reported_at:
-            if self.last_edited_by.email != recipient_email:
-                edited = True
-        comments = []
-        for comment in self.comments.all():
-            if comment.added_at > last_reported_at and comment.user.email != recipient_email:
-                comments.append(comment)
-        new_answers = []
-        answer_comments = []
-        modified_answers = []
-        commented_answers = []
-        import sets
-        commented_answers = sets.Set([])
-        for answer in self.answers.all():
-            if (answer.added_at > last_reported_at and answer.author.email != recipient_email):
-                new_answers.append(answer)
-            if (answer.last_edited_at
-                and answer.last_edited_at > last_reported_at
-                and answer.last_edited_by.email != recipient_email):
-                modified_answers.append(answer)
-            for comment in answer.comments.all():
-                if comment.added_at > last_reported_at and comment.user.email != recipient_email:
-                    commented_answers.add(answer)
-                    answer_comments.append(comment)
-
-        #create the report
-        from askbot.conf import settings as askbot_settings
-        if edited or new_answers or modified_answers or answer_comments:
-            out = []
-            if edited:
-                out.append(_('%(author)s modified the question') % {'author':self.last_edited_by.username})
-            if new_answers:
-                names = sets.Set(map(lambda x: x.author.username,new_answers))
-                people = ', '.join(names)
-                out.append(_('%(people)s posted %(new_answer_count)s new answers') \
-                                % {'new_answer_count':len(new_answers),'people':people})
-            if comments:
-                names = sets.Set(map(lambda x: x.user.username,comments))
-                people = ', '.join(names)
-                out.append(_('%(people)s commented the question') % {'people':people})
-            if answer_comments:
-                names = sets.Set(map(lambda x: x.user.username,answer_comments))
-                people = ', '.join(names)
-                if len(commented_answers) > 1:
-                    out.append(_('%(people)s commented answers') % {'people':people})
-                else:
-                    out.append(_('%(people)s commented an answer') % {'people':people})
-            url = askbot_settings.APP_URL + self.get_absolute_url()
-            retval = '<a href="%s">%s</a>:<br>\n' % (url,self.title)
-            out = map(lambda x: '<li>' + x + '</li>',out)
-            retval += '<ul>' + '\n'.join(out) + '</ul><br>\n'
-            return retval
-        else:
-            return None
 
 if getattr(settings, 'USE_SPHINX_SEARCH', False):
     from djangosphinx.models import SphinxSearch
