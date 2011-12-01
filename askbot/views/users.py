@@ -340,7 +340,7 @@ def user_stats(request, user, context):
                         'author_id',
                         'answer_accepted',
                         'answer_score',
-                        'answer_count',
+                        #'answer_count', Moved from Question to Thread and doesn't seem to be referenced anywhere !?
                         'vote_up_count',
                         'vote_down_count')[:100]
 

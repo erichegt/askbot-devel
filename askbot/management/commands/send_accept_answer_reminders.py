@@ -30,7 +30,7 @@ class Command(NoArgsCommand):
                                         start = schedule.start_cutoff_date,
                                         end = schedule.end_cutoff_date
                                     ).filter(
-                                        answer_count__gt = 0
+                                        thread__answer_count__gt = 0
                                     ).filter(
                                         answer_accepted = False
                                     ).order_by('-added_at')

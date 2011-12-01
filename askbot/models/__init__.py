@@ -1087,8 +1087,8 @@ def user_delete_answer(
     answer.deleted_at = timestamp
     answer.save()
 
-    answer.question.update_answer_count()
-    logging.debug('updated answer count to %d' % answer.question.answer_count)
+    answer.question.thread.update_answer_count()
+    logging.debug('updated answer count to %d' % answer.question.thread.answer_count)
 
     signals.delete_question_or_answer.send(
         sender = answer.__class__,
@@ -1196,7 +1196,7 @@ def user_restore_post(
         post.deleted_at = None 
         post.save()
         if isinstance(post, Answer):
-            post.question.update_answer_count()
+            post.question.thread.update_answer_count()
         elif isinstance(post, Question):
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good 

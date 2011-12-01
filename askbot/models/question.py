@@ -25,8 +25,8 @@ QUESTION_ORDER_BY_MAP = {
     'age-asc': 'added_at',
     'activity-desc': '-last_activity_at',
     'activity-asc': 'last_activity_at',
-    'answers-desc': '-answer_count',
-    'answers-asc': 'answer_count',
+    'answers-desc': '-thread__answer_count',
+    'answers-asc': 'thread__answer_count',
     'votes-desc': '-score',
     'votes-asc': 'score',
     'relevance-desc': None#this is a special case for postges only
@@ -218,7 +218,7 @@ class QuestionQuerySet(models.query.QuerySet):
             if scope_selector == 'unanswered':
                 qs = qs.filter(closed = False)#do not show closed questions in unanswered section
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
-                    qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
+                    qs = qs.filter(thread__answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
                     qs = qs.filter(answer_accepted=False)
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
@@ -463,15 +463,25 @@ class QuestionManager(BaseQuerySetManager):
 class Thread(models.Model):
     # Denormalised data, transplanted from Question
     favourite_count = models.PositiveIntegerField(default=0)
+    answer_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         app_label = 'askbot'
-        
-    def update_favorite_count(self):
-        if self.questions.count() != 1:
+
+    def _question(self):
+        questions = self.questions
+        if len(questions) != 1:
             raise ValueError('Thread.questions.count() != 1')
-        self.favourite_count = FavoriteQuestion.objects.filter(question=self.questions.all()[0]).count()
+        return questions.all()[0]
+
+    def update_favorite_count(self):
+        self.favourite_count = FavoriteQuestion.objects.filter(question=self._question()).count()
         self.save()
+
+    def update_answer_count(self):
+        self.answer_count = self._question().get_answers().count()
+        self.save()
+
 
 class Question(content.Content):
     # TODO: Eventually move this into Content/Post model
@@ -496,7 +506,6 @@ class Question(content.Content):
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
-    answer_count         = models.PositiveIntegerField(default=0)
     view_count           = models.PositiveIntegerField(default=0)
     last_activity_at     = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by     = models.ForeignKey(User, related_name='last_active_in_questions')
@@ -529,15 +538,6 @@ class Question(content.Content):
         #because we do not want the signals to fire here
         Question.objects.filter(id = self.id).update(is_anonymous = False)
         self.revisions.all().update(is_anonymous = False)
-
-    def update_answer_count(self, save = True):
-        """updates the denormalized field 'answer_count'
-        on the question
-        """
-        #todo: goes to thread
-        self.answer_count = self.get_answers().count()
-        if save:
-            self.save()
 
     def get_similar_questions(self):
         """

@@ -32,7 +32,7 @@ class Command(NoArgsCommand):
                                         start = schedule.start_cutoff_date,
                                         end = schedule.end_cutoff_date
                                     ).filter(
-                                        answer_count = 0
+                                        thread__answer_count = 0
                                     ).order_by('-added_at')
         #for all users, excluding blocked
         #for each user, select a tag filtered subset

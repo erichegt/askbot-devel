@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="answers
-                {% if question.answer_count == 0 -%}
+                {% if question.thread.answer_count == 0 -%}
                     no-answers
                 {% else -%}
                     {%- if question.answer_accepted -%}
@@ -24,9 +24,9 @@
                 {%- endif -%}"> 
             <span 
                 class="item-count"
-            >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}{% endif %}</span>
+            >{{question.thread.answer_count|humanize_counter}}{% if question.answer_accepted%}{% endif %}</span>
             <div>
-            {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
+            {% trans cnt=question.thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
             </div>
         </div>
         <div class="votes 
