@@ -469,7 +469,7 @@ class Thread(models.Model):
         app_label = 'askbot'
 
     def _question(self):
-        questions = self.questions
+        questions = self.questions.all()
         if len(questions) != 1:
             raise ValueError('Thread.questions.count() != 1')
         return questions.all()[0]
