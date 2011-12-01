@@ -569,7 +569,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'tags' : question.tags.all(),
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_questions' : question.get_similar_questions(),
+        'similar_questions' : question.thread.get_similar_questions(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,

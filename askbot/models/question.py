@@ -1,11 +1,14 @@
 import logging
 import datetime
+import operator
+
 from django.conf import settings
 from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
+
 import askbot
 import askbot.conf
 from askbot.models.tag import Tag
@@ -483,6 +486,36 @@ class Thread(models.Model):
         self.save()
 
 
+    def get_similar_questions(self):
+        """
+        Get 10 similar questions for given one.
+        Questions with the individual tags will be added to list if above questions are not full.
+
+        This function has a limitation that it will
+        retrieve only 100 records then select 10 most similar
+        from that list as querying entire database may
+        be very expensive - this function will benefit from
+        some sort of optimization
+        """
+
+        def get_data():
+            thread_question = self._question()
+
+            tags_list = thread_question.tags.all()
+            similar_questions = Question.objects.filter(tags__in=tags_list).\
+                                    exclude(id = self.id).exclude(deleted = True).distinct()[:100]
+
+            similar_questions = list(similar_questions)
+            for question in similar_questions:
+                question.similarity = thread_question.get_similarity(other_question=question)
+
+            similar_questions.sort(key=operator.attrgetter('similarity'), reverse=True)
+            return similar_questions[:10]
+
+        return LazyList(get_data)
+
+
+
 class Question(content.Content):
     # TODO: Eventually move this into Content/Post model
     thread = models.ForeignKey('Thread', unique=True, related_name='questions')
@@ -538,45 +571,6 @@ class Question(content.Content):
         #because we do not want the signals to fire here
         Question.objects.filter(id = self.id).update(is_anonymous = False)
         self.revisions.all().update(is_anonymous = False)
-
-    def get_similar_questions(self):
-        """
-        Get 10 similar questions for given one.
-        Questions with the individual tags will be added to list if above questions are not full.
-
-        This function has a limitation that it will
-        retrieve only 100 records then select 10 most similar
-        from that list as querying entire database may
-        be very expensive - this function will benefit from
-        some sort of optimization
-        """
-        #todo: goes to thread
-        #print datetime.datetime.now()
-
-        def get_data():
-
-            tags_list = self.tags.all()
-            similar_questions = self.__class__.objects.filter(
-                                            tags__in = self.tags.all()
-                                        ).exclude(
-                                            id = self.id,
-                                        ).exclude(
-                                            deleted = True
-                                        ).distinct()[:100]
-            similar_questions = list(similar_questions)
-            output = list()
-            for question in similar_questions:
-                question.similarity = self.get_similarity(
-                                                    other_question = question
-                                                )
-            #sort in reverse order - x and y are interchanged in cmp() call
-            similar_questions.sort(lambda x,y: cmp(y.similarity, x.similarity))
-            if len(similar_questions) > 10:
-                return similar_questions[:10]
-            else:
-                return similar_questions
-
-        return LazyList(get_data)
 
     def get_similarity(self, other_question = None):
         """return number of tags in the other question
