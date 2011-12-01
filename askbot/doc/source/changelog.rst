@@ -1,6 +1,13 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* Made on log in redirect to the forum index page by default
+  and to the question page, if user was reading the question
+  it is still possible to override the ``next`` url parameter
+  or just rely on django's ``LOGIN_REDIRECT_URL`` (Evgeny)
+
 0.7.32 (Current Version)
 ------------------------
 * Bugfixes in English locale (Evgeny)
