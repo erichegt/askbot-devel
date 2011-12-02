@@ -460,7 +460,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
     #load answers
-    answers = question.get_answers(user = request.user)
+    answers = question.thread.get_answers(user = request.user)
     answers = answers.select_related(depth=1)
 
     user_answer_votes = {}
@@ -506,7 +506,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.session['question_view_times'] = {}
 
         last_seen = request.session['question_view_times'].get(question.id, None)
-        updated_when, updated_who = question.get_last_update_info()
+        updated_when, updated_who = question.thread.get_last_update_info()
 
         if updated_who != request.user:
             if last_seen:
@@ -548,7 +548,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
 
-    favorited = question.has_favorite_by_user(request.user)
+    favorited = question.thread.has_favorite_by_user(request.user)
     user_question_vote = 0
     if request.user.is_authenticated():
         votes = question.votes.select_related().filter(user=request.user)

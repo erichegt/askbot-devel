@@ -1011,7 +1011,7 @@ def user_retag_question(
                     silent = False
                 ):
     self.assert_can_retag_question(question)
-    question.retag(
+    question.thread.retag(
         retagged_by = self,
         retagged_at = timestamp,
         tagnames = tags,

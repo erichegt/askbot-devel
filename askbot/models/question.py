@@ -112,7 +112,7 @@ class QuestionQuerySet(models.query.QuerySet):
             question.wikified_at = added_at
 
         question.parse_and_save(author = author)
-        question.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+        question.thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
 
         question.add_revision(
             author = author,
@@ -482,9 +482,34 @@ class Thread(models.Model):
         self.save()
 
     def update_answer_count(self):
-        self.answer_count = self._question().get_answers().count()
+        self.answer_count = self.get_answers().count()
         self.save()
 
+    def get_answers(self, user=None):
+        """returns query set for answers to this question
+        that may be shown to the given user
+        """
+        thread_question = self._question()
+
+        if user is None or user.is_anonymous():
+            return thread_question.answers.filter(deleted=False)
+        else:
+            if user.is_administrator() or user.is_moderator():
+                return thread_question.answers.all()
+            else:
+                return thread_question.answers.filter(
+                                models.Q(deleted = False) | models.Q(author = user) \
+                                | models.Q(deleted_by = user)
+                            )
+
+
+    def get_similarity(self, other_question = None):
+        """return number of tags in the other question
+        that overlap with the current question (self)
+        """
+        my_tags = set(self._question().get_tag_names())
+        others_tags = set(other_question.get_tag_names())
+        return len(my_tags & others_tags)
 
     def get_similar_questions(self):
         """
@@ -507,13 +532,159 @@ class Thread(models.Model):
 
             similar_questions = list(similar_questions)
             for question in similar_questions:
-                question.similarity = thread_question.get_similarity(other_question=question)
+                question.similarity = self.get_similarity(other_question=question)
 
             similar_questions.sort(key=operator.attrgetter('similarity'), reverse=True)
             return similar_questions[:10]
 
         return LazyList(get_data)
 
+    def remove_author_anonymity(self):
+        """removes anonymous flag from the question
+        and all its revisions
+        the function calls update method to make sure that
+        signals are not called
+        """
+        #note: see note for the is_anonymous field
+        #it is important that update method is called - not save,
+        #because we do not want the signals to fire here
+        thread_question = self._question()
+        Question.objects.filter(id=thread_question.id).update(is_anonymous=False)
+        thread_question.revisions.all().update(is_anonymous=False)
+
+    def update_tags(self, tagnames = None, user = None, timestamp = None):
+        """
+        Updates Tag associations for a question to match the given
+        tagname string.
+
+        When tags are removed and their use count hits 0 - the tag is
+        automatically deleted.
+
+        When an added tag does not exist - it is created
+
+        Tag use counts are recalculated
+
+        A signal tags updated is sent
+        """
+        thread_question = self._question()
+
+        previous_tags = list(thread_question.tags.all())
+
+        previous_tagnames = set([tag.name for tag in previous_tags])
+        updated_tagnames = set(t for t in tagnames.split(' '))
+
+        removed_tagnames = previous_tagnames - updated_tagnames
+        added_tagnames = updated_tagnames - previous_tagnames
+
+        modified_tags = list()
+        #remove tags from the question's tags many2many relation
+        if removed_tagnames:
+            removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
+            thread_question.tags.remove(*removed_tags)
+
+            #if any of the removed tags reached use count == 1 that means they must be deleted
+            for tag in removed_tags:
+                if tag.used_count == 1:
+                    #we won't modify used count b/c it's done below anyway
+                    removed_tags.remove(tag)
+                    #todo - do we need to use fields deleted_by and deleted_at?
+                    tag.delete()#auto-delete tags whose use count dwindled
+
+            #remember modified tags, we'll need to update use counts on them
+            modified_tags = removed_tags
+
+        #add new tags to the relation
+        if added_tagnames:
+            #find reused tags
+            reused_tags = Tag.objects.filter(name__in = added_tagnames)
+            #undelete them, because we are using them
+            reused_count = reused_tags.update(
+                                    deleted = False,
+                                    deleted_by = None,
+                                    deleted_at = None
+                                )
+            #if there are brand new tags, create them and finalize the added tag list
+            if reused_count < len(added_tagnames):
+                added_tags = list(reused_tags)
+
+                reused_tagnames = set([tag.name for tag in reused_tags])
+                new_tagnames = added_tagnames - reused_tagnames
+                for name in new_tagnames:
+                    new_tag = Tag.objects.create(
+                                            name = name,
+                                            created_by = user,
+                                            used_count = 1
+                                        )
+                    added_tags.append(new_tag)
+            else:
+                added_tags = reused_tags
+
+            #finally add tags to the relation and extend the modified list
+            thread_question.tags.add(*added_tags)
+            modified_tags.extend(added_tags)
+
+        #if there are any modified tags, update their use counts
+        if modified_tags:
+            Tag.objects.update_use_counts(modified_tags)
+            signals.tags_updated.send(None,
+                                question = thread_question,
+                                tags = modified_tags,
+                                user = user,
+                                timestamp = timestamp
+                            )
+            return True
+
+        return False
+
+    def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
+        if None in (retagged_by, retagged_at, tagnames):
+            raise Exception('arguments retagged_at, retagged_by and tagnames are required')
+
+        thread_question = self._question()
+
+        # Update the Question itself
+        thread_question.tagnames = tagnames
+        if silent == False:
+            thread_question.last_edited_at = retagged_at
+            #thread_question.last_activity_at = retagged_at
+            thread_question.last_edited_by = retagged_by
+            #thread_question.last_activity_by = retagged_by
+        thread_question.save()
+
+        # Update the Question's tag associations
+        self.update_tags(tagnames=tagnames, user=retagged_by, timestamp=retagged_at)
+
+        # Create a new revision
+        latest_revision = thread_question.get_latest_revision()
+        PostRevision.objects.create_question_revision(
+            question   = thread_question,
+            title      = latest_revision.title,
+            author     = retagged_by,
+            revised_at = retagged_at,
+            tagnames   = tagnames,
+            summary    = const.POST_STATUS['retagged'],
+            text       = latest_revision.text
+        )
+
+    def has_favorite_by_user(self, user):
+        if not user.is_authenticated():
+            return False
+
+        return FavoriteQuestion.objects.filter(question=self._question(), user=user).exists()
+
+    def get_last_update_info(self):
+        thread_question = self._question()
+
+        when, who = thread_question.post_get_last_update_info()
+
+        answers = thread_question.answers.all()
+        for a in answers:
+            a_when, a_who = a.post_get_last_update_info()
+            if a_when > when:
+                when = a_when
+                who = a_who
+
+        return when, who
 
 
 class Question(content.Content):
@@ -560,201 +731,10 @@ class Question(content.Content):
     class Meta(content.Content.Meta):
         db_table = u'question'
 
-    def remove_author_anonymity(self):
-        """removes anonymous flag from the question
-        and all its revisions
-        the function calls update method to make sure that
-        signals are not called
-        """
-        #note: see note for the is_anonymous field
-        #it is important that update method is called - not save,
-        #because we do not want the signals to fire here
-        Question.objects.filter(id = self.id).update(is_anonymous = False)
-        self.revisions.all().update(is_anonymous = False)
-
-    def get_similarity(self, other_question = None):
-        """return number of tags in the other question
-        that overlap with the current question (self)
-        """
-        my_tags = set(self.get_tag_names())
-        others_tags = set(other_question.get_tag_names())
-        return len(my_tags & others_tags)
-
-    def update_tags(self, tagnames = None, user = None, timestamp = None):
-        """
-        Updates Tag associations for a question to match the given
-        tagname string.
-
-        When tags are removed and their use count hits 0 - the tag is 
-        automatically deleted.
-
-        When an added tag does not exist - it is created
-
-        Tag use counts are recalculated
-
-        A signal tags updated is sent
-        """
-
-        previous_tags = list(self.tags.all())
-
-        previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(t for t in tagnames.split(' '))
-
-        removed_tagnames = previous_tagnames - updated_tagnames
-        added_tagnames = updated_tagnames - previous_tagnames
-
-        modified_tags = list()
-        #remove tags from the question's tags many2many relation
-        if removed_tagnames:
-            removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
-            self.tags.remove(*removed_tags)
-
-            #if any of the removed tags reached use count == 1 that means they must be deleted
-            for tag in removed_tags:
-                if tag.used_count == 1:
-                    #we won't modify used count b/c it's done below anyway
-                    removed_tags.remove(tag)
-                    #todo - do we need to use fields deleted_by and deleted_at?
-                    tag.delete()#auto-delete tags whose use count dwindled
-
-            #remember modified tags, we'll need to update use counts on them
-            modified_tags = removed_tags
-
-        #add new tags to the relation
-        if added_tagnames:
-            #find reused tags
-            reused_tags = Tag.objects.filter(name__in = added_tagnames)
-            #undelete them, because we are using them
-            reused_count = reused_tags.update(
-                                    deleted = False,
-                                    deleted_by = None,
-                                    deleted_at = None
-                                )
-            #if there are brand new tags, create them and finalize the added tag list
-            if reused_count < len(added_tagnames):
-                added_tags = list(reused_tags)
-
-                reused_tagnames = set([tag.name for tag in reused_tags])
-                new_tagnames = added_tagnames - reused_tagnames
-                for name in new_tagnames:
-                    new_tag = Tag.objects.create(
-                                            name = name,
-                                            created_by = user,
-                                            used_count = 1
-                                        )
-                    added_tags.append(new_tag)
-            else:
-                added_tags = reused_tags
-
-            #finally add tags to the relation and extend the modified list
-            self.tags.add(*added_tags)
-            modified_tags.extend(added_tags)
-
-        #if there are any modified tags, update their use counts
-        if modified_tags:
-            Tag.objects.update_use_counts(modified_tags)
-            signals.tags_updated.send(None,
-                                question = self,
-                                tags = modified_tags,
-                                user = user,
-                                timestamp = timestamp
-                            )
-            return True
-
-        return False
-
-    def repost_as_answer(self, question = None):
-        """posts question as answer to another question,
-        but does not delete the question,
-        but moves all the comments to the new answer"""
-        #todo: goes to Thread.
-        revisions = self.revisions.all().order_by('revised_at')
-        rev0 = revisions[0]
-        new_answer = rev0.author.post_answer(
-            question = question,
-            body_text = rev0.text,
-            wiki = self.wiki,
-            timestamp = rev0.revised_at
-        )
-        if len(revisions) > 1:
-            for rev in revisions:
-                rev.author.edit_answer(
-                    answer = new_answer,
-                    body_text = rev.text,
-                    revision_comment = rev.summary,
-                    timestamp = rev.revised_at
-                )
-        for comment in self.comments.all():
-            comment.content_object = new_answer
-            comment.save()
-        return new_answer
-
-    def get_answers(self, user = None):
-        """returns query set for answers to this question
-        that may be shown to the given user
-        """
-
-        if user is None or user.is_anonymous():
-            return self.answers.filter(deleted=False)
-        else:
-            if user.is_administrator() or user.is_moderator():
-                return self.answers.all()
-            else:
-                return self.answers.filter(
-                                models.Q(deleted = False) | models.Q(author = user) \
-                                | models.Q(deleted_by = user)
-                            )
-
-    def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
-        if None in (retagged_by, retagged_at, tagnames):
-            raise Exception('arguments retagged_at, retagged_by and tagnames are required')
-        # Update the Question itself
-        self.tagnames = tagnames
-        if silent == False:
-            self.last_edited_at = retagged_at
-            #self.last_activity_at = retagged_at
-            self.last_edited_by = retagged_by
-            #self.last_activity_by = retagged_by
-        self.save()
-
-        # Update the Question's tag associations
-        self.update_tags(tagnames = tagnames, user = retagged_by, timestamp = retagged_at)
-
-        # Create a new revision
-        latest_revision = self.get_latest_revision()
-        PostRevision.objects.create_question_revision(
-            question   = self,
-            title      = latest_revision.title,
-            author     = retagged_by,
-            revised_at = retagged_at,
-            tagnames   = tagnames,
-            summary    = const.POST_STATUS['retagged'],
-            text       = latest_revision.text
-        )
-
     def _get_slug(self):
         return slugify(self.title)
 
     slug = property(_get_slug)
-
-    def has_favorite_by_user(self, user):
-        if not user.is_authenticated():
-            return False
-
-        return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
-
-    def get_last_update_info(self):
-        when, who = self.post_get_last_update_info()
-
-        answers = self.answers.all()
-        if len(answers) > 0:
-            for a in answers:
-                a_when, a_who = a.post_get_last_update_info()
-                if a_when > when:
-                    when = a_when
-                    who = a_who
-
-        return when, who
 
 if getattr(settings, 'USE_SPHINX_SEARCH', False):
     from djangosphinx.models import SphinxSearch

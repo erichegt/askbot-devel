@@ -85,7 +85,7 @@ class DBApiTests(AskbotTestCase):
                             tags = 'aoeuaoeu',
                             revision_comment = 'hahahah'
                         )
-        q.remove_author_anonymity()
+        q.thread.remove_author_anonymity()
         q = self.reload_object(q)
         self.assertFalse(q.is_anonymous)
         for rev in q.revisions.all():
@@ -127,7 +127,7 @@ class DBApiTests(AskbotTestCase):
         self.post_answer(user = self.other_user)
         self.user.delete_question(self.question)
         self.assert_post_is_deleted(self.question)
-        answer_count = self.question.get_answers(user = self.user).count()
+        answer_count = self.question.thread.get_answers(user = self.user).count()
         answer = self.question.answers.all()[0]
         self.assert_post_is_not_deleted(answer)
         self.assertTrue(answer_count == 1)

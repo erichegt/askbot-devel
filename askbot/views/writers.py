@@ -392,7 +392,7 @@ def edit_question(request, id):
                     if form.has_changed():
 
                         if form.cleaned_data['reveal_identity']:
-                            question.remove_author_anonymity()
+                            question.thread.remove_author_anonymity()
 
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)

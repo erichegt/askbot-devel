@@ -492,6 +492,34 @@ class Content(models.Model):
             comment.save()
         return new_question
 
+    def _repost_as_answer(self, question = None):
+        """posts question as answer to another question,
+        but does not delete the question,
+        but moves all the comments to the new answer"""
+        if not self.is_question():
+            raise NotImplementedError
+        revisions = self.revisions.all().order_by('revised_at')
+        rev0 = revisions[0]
+        new_answer = rev0.author.post_answer(
+            question = question,
+            body_text = rev0.text,
+            wiki = self.wiki,
+            timestamp = rev0.revised_at
+        )
+        if len(revisions) > 1:
+            for rev in revisions:
+                rev.author.edit_answer(
+                    answer = new_answer,
+                    body_text = rev.text,
+                    revision_comment = rev.summary,
+                    timestamp = rev.revised_at
+                )
+        for comment in self.comments.all():
+            comment.content_object = new_answer
+            comment.save()
+        return new_answer
+
+
     def swap_with_question(self, new_title = None):
         """swaps answer with the question it belongs to and
         sets the title of question to ``new_title``
@@ -504,7 +532,7 @@ class Content(models.Model):
         new_question = self._repost_as_question(new_title = new_title)
 
         #2) post question (all revisions and comments) as answer
-        new_answer = self.question.repost_as_answer(question = new_question)
+        new_answer = self.question._repost_as_answer(question = new_question)
 
         #3) assign all remaining answers to the new question
         self.question.answers.update(question = new_question)
@@ -678,7 +706,7 @@ class Content(models.Model):
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
-            self.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
+            self.thread.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
 
         # Create a new revision
         self.add_revision(

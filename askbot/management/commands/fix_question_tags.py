@@ -59,7 +59,7 @@ class Command(NoArgsCommand):
 
                 tagnames = forms.TagNamesField().clean(question.tagnames)
 
-                question.update_tags(
+                question.thread.update_tags(
                     tagnames = tagnames,
                     user = user,
                     timestamp = timestamp
