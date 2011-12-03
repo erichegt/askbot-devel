@@ -58,8 +58,8 @@ body.user-messages{margin-top:2.4em;}
 #secondaryHeader #scopeWrapper .scope-selector{font-size:21px;color:#5a5a4b;height:55px;line-height:55px;margin-left:24px;}
 #secondaryHeader #scopeWrapper .on{background:url(../images/scopearrow.png) no-repeat center bottom;}
 #secondaryHeader #scopeWrapper .ask-message{font-size:24px;}
-#searchBar{display:inline-block;background-color:#fff;width:412px;border:1px solid #c9c9b5;float:right;height:42px;margin:6px 0px 0px 15px;}#searchBar .searchInput,#searchBar .searchInputCancelable{font-size:30px;height:40px;font-weight:300;background:#FFF;border:0px;color:#484848;padding-left:10px;font-family:Arial;vertical-align:middle;}
-#searchBar .searchInput{width:352px;}
+#searchBar{display:inline-block;background-color:#fff;width:412px;border:1px solid #c9c9b5;float:right;height:42px;margin:6px 0px 0px 15px;}#searchBar .searchInput,#searchBar .searchInputCancelable,#searchBar .searchInputAuth{font-size:30px;height:40px;font-weight:300;background:#FFF;border:0px;color:#484848;padding-left:10px;font-family:Arial;vertical-align:middle;}
+#searchBar .searchInput,#searchBar .searchInputAuth{width:352px;}
 #searchBar .searchInputCancelable{width:317px;}
 #searchBar .logoutsearch{width:337px;}
 #searchBar .searchBtn{font-size:10px;color:#666;background-color:#eee;height:42px;border:#FFF 1px solid;line-height:22px;text-align:center;float:right;margin:0px;width:48px;background:-98px -36px url(../images/sprites.png) no-repeat;cursor:pointer;}
