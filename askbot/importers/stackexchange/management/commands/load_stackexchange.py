@@ -756,8 +756,8 @@ class Command(BaseCommand):
             q = X.get_post(se_q)
             if q is None:
                 continue
-            q.view_count = se_q.view_count
-            q.save()
+            q.thread.view_count = se_q.view_count
+            q.thread.save()
 
 
     def transfer_QA_votes(self):

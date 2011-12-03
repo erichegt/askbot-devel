@@ -519,8 +519,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                                                     datetime.datetime.now()
 
         if update_view_count:
-            question.view_count += 1
-            question.save()
+            question.thread.increase_view_count()
 
         #2) question view count per user and clear response displays
         if request.user.is_authenticated():
@@ -625,7 +624,6 @@ def get_question_body(request):
     for question in page.object_list:
         questions_dict['question-%s' % question.id] = question.summary
 
-    return {'questions-titles': questions_dict}
     return {'questions-titles': questions_dict}
 
 def widget_questions(request):

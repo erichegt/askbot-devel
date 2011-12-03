@@ -404,7 +404,7 @@ class FrequentedQuestion(Badge):
                 context_object = None, timestamp = None):
         if context_object.post_type != 'question':
             return False
-        if context_object.view_count >= self.min_views:
+        if context_object.thread.view_count >= self.min_views:
             return self.award(context_object.author, context_object, timestamp)
         return False
 

@@ -447,13 +447,6 @@ class QuestionQuerySet(models.query.QuerySet):
             authors.update(question.get_author_list(**kwargs))
         return list(authors)
 
-    def update_view_count(self, question):
-        """
-        update counter+1 when user browse question page
-        """
-        #todo: moves to thread
-        self.filter(id=question.id).update(view_count = question.view_count + 1)
-
 
 class QuestionManager(BaseQuerySetManager):
     """chainable custom query set manager for 
@@ -465,6 +458,7 @@ class QuestionManager(BaseQuerySetManager):
 
 class Thread(models.Model):
     # Denormalised data, transplanted from Question
+    view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
 
@@ -484,6 +478,11 @@ class Thread(models.Model):
     def update_answer_count(self):
         self.answer_count = self.get_answers().count()
         self.save()
+
+    def increase_view_count(self, increment=1):
+        qset = Thread.objects.filter(id=self.id)
+        qset.update(view_count=models.F('view_count') + increment)
+        self.view_count = qset.values('view_count')[0]['view_count'] # get the new view_count back because other pieces of code relies on such behaviour
 
     def get_answers(self, user=None):
         """returns query set for answers to this question
@@ -710,7 +709,6 @@ class Question(content.Content):
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
-    view_count           = models.PositiveIntegerField(default=0)
     last_activity_at     = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by     = models.ForeignKey(User, related_name='last_active_in_questions')
     tagnames             = models.CharField(max_length=125)

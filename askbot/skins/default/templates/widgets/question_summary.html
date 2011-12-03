@@ -2,14 +2,14 @@
 <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
     <div class="counts">
         <div class="views
-             {% if question.view_count == 0 -%}
+             {% if question.thread.view_count == 0 -%}
                 no-views
              {% else -%}
                 some-views
              {%- endif -%}">
-             <span class="item-count">{{question.view_count|humanize_counter}}</span>
+             <span class="item-count">{{question.thread.view_count|humanize_counter}}</span>
             <div>
-            {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
+            {% trans cnt=question.thread.view_count %}view{% pluralize %}views{% endtrans %}
             </div>
         </div>
         <div class="answers
