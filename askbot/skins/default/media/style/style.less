@@ -384,8 +384,7 @@ body.user-messages {
     height:42px;
     margin:6px 0px 0px 15px;
 
-    .searchInput, .searchInputCancelable,
-    .searchInputAuth, .searchInputCancelableAuth {
+    .searchInput, .searchInputCancelable {
         font-size: 30px;
         height: 40px;
         font-weight:300;
@@ -397,20 +396,12 @@ body.user-messages {
         vertical-align: middle;
     }
 
-    .searchInput, .searchInputCancelable {
+    .searchInput {
         width: 352px;
     }
 
     .searchInputCancelable {
         width: 317px;
-    }
-
-    .searchInputAuth{
-        width: 340px; 
-    }
-
-    .searchInputCancelableAuth {
-        width: 310px; /*FIXME byron */
     }
 
     .logoutsearch {
@@ -452,6 +443,20 @@ body.user-messages {
         color: #d84040;
     }
 }
+
+body.anon {
+    #searchBar {
+        width: 500px;
+        .searchInput {
+            width: 440px;
+        }
+
+        .searchInputCancelable {
+            width: 405px;
+        }
+    }
+}
+
 
 #askButton{ /* check blocks/secondary_header.html and widgets/ask_button.html*/
     background: url(../images/bigbutton.png) repeat-x bottom;
