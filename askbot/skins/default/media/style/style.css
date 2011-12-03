@@ -32,7 +32,7 @@ body.user-messages{margin-top:2.4em;}
 .notify{position:fixed;top:0px;left:0px;width:100%;z-index:100;padding:0;text-align:center;background-color:#f5dd69;border-top:#fff 1px solid;font-family:'Yanone Kaffeesatz',sans-serif;}.notify p.notification{margin-top:6px;margin-bottom:6px;font-size:16px;color:#424242;}
 #closeNotify{position:absolute;right:5px;top:7px;color:#735005;text-decoration:none;line-height:18px;background:-6px -5px url(../images/sprites.png) no-repeat;cursor:pointer;width:20px;height:20px;}
 #closeNotify:hover{background:-26px -5px url(../images/sprites.png) no-repeat;}
-#header{margin-top:0px;background:#16160f;font-family:'Yanone Kaffeesatz',sans-serif;}
+#header{margin-top:0px;background:#16160f;font-family:'Yanone Kaffeesatz',sans-serif;min-height:70px;}
 .content-wrapper{width:960px;margin:auto;position:relative;}
 #logo img{padding:5px 0px 5px 0px;height:75px;width:auto;float:left;}
 #userToolsNav{height:20px;padding-bottom:5px;}#userToolsNav a{height:35px;text-align:right;margin-left:20px;text-decoration:underline;color:#d0e296;font-size:16px;}
