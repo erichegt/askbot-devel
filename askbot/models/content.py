@@ -842,7 +842,7 @@ class Content(models.Model):
         if self.is_answer():
             return self.question.title
         elif self.is_question():
-            if self.closed:
+            if self.thread.closed:
                 attr = const.POST_STATUS['closed']
             elif self.deleted:
                 attr = const.POST_STATUS['deleted']

@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 {% include "question/question_card.html" %}
-{% if question.closed %}
+{% if question.thread.closed %}
     {% include "question/closed_question_info.html" %}
 {% endif %}
 {% if answers %}

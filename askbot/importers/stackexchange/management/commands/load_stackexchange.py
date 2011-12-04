@@ -572,15 +572,9 @@ class Command(BaseCommand):
                 if p is None:
                     return
                 if rev_type == 'Post Closed':
-                    p.closed = True
-                    p.closed_at = t
-                    p.closed_by = u
-                    p.close_reason = X.get_close_reason(rev.comment)
+                    p.thread.set_closed_status(closed=True, closed_at=t, closed_by=u, close_reason=X.get_close_reason(rev.comment))
                 elif rev_type == 'Post Reopened':
-                    p.closed = False 
-                    p.closed_at = None
-                    p.closed_by = None
-                    p.close_reason = None
+                    p.thread.set_closed_status(closed=False, closed_at=None, closed_by=None, close_reason=None)
                 self.mark_activity(p,u,t)
                 p.save()
                 return

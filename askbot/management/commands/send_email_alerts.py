@@ -135,7 +135,7 @@ class Command(NoArgsCommand):
                             ).exclude(
                                 deleted=True
                             ).exclude(
-                                closed=True
+                                thread__closed=True
                             ).order_by('-last_activity_at')
         #todo: for some reason filter on did not work as expected ~Q(viewed__who=user) | 
         #      Q(viewed__who=user,viewed__when__lt=F('last_activity_at'))

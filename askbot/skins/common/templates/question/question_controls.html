@@ -8,7 +8,7 @@
         var retagUrl = "{% url retag_question question.id %}";
     </script>
 {% endif %}
-{% if question.closed %}
+{% if question.thread.closed %}
     {% if request.user|can_reopen_question(question) %}{{ pipe() }}
     <a  class="question-close" href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
     {% endif %}

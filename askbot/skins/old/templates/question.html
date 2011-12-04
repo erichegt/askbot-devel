@@ -84,7 +84,7 @@
                         var retagUrl = "{% url retag_question question.id %}";
                     </script>
                 {% endif %}
-                {% if question.closed %}
+                {% if question.thread.closed %}
                     {% if request.user|can_reopen_question(question) %}{{ pipe() }}
                     <a href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
                     {% endif %}
@@ -138,11 +138,11 @@
         </td>
     </tr>
 </table>
-{% if question.closed %}
+{% if question.thread.closed %}
 <div class="question-status" style="margin-bottom:15px">
-<h3>{% trans close_reason=question.get_close_reason_display() %}The question has been closed for the following reason "{{ close_reason }}" by{% endtrans %} 
-<a href="{{ question.closed_by.get_profile_url() }}">{{ question.closed_by.username }}</a> 
-{% trans closed_at=question.closed_at %}close date {{closed_at}}{% endtrans %}</h3>
+<h3>{% trans close_reason=question.thread.get_close_reason_display() %}The question has been closed for the following reason "{{ close_reason }}" by{% endtrans %}
+<a href="{{ question.thread.closed_by.get_profile_url() }}">{{ question.thread.closed_by.username }}</a>
+{% trans closed_at=question.thread.closed_at %}close date {{closed_at}}{% endtrans %}</h3>
 </div>
 {% endif %}
 {% if answers %}
@@ -332,14 +332,14 @@
     <div style="clear:both">
     </div>
     {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
-        {% if not question.closed %}
+        {% if not question.thread.closed %}
             <a 
                 class="submit"
                 href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
             >{% trans %}Login/Signup to Answer{% endtrans %}</a>
         {% endif %}
     {% else %}
-        {% if not question.closed %}
+        {% if not question.thread.closed %}
             <div style="padding:10px 0 0 0;">
                 {% spaceless %}
                 <h2>
@@ -476,7 +476,7 @@
 
 {% endblock %}
 {% block endjs %}
-    {% if not question.closed %}
+    {% if not question.thread.closed %}
         <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
         <script type='text/javascript'>
             {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
@@ -521,7 +521,7 @@
             
             Vote.init({{ question.id }}, '{{ question.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
             
-            {% if not question.closed and request.user.is_authenticated %}initEditor();{% endif %}
+            {% if not question.thread.closed and request.user.is_authenticated %}initEditor();{% endif %}
             
             lanai.highlightSyntax();
             $('#btLogin').bind('click', function(){window.location.href='{{ settings.LOGIN_URL }}'; } )

@@ -7,14 +7,14 @@
     {% include "question/subscribe_by_email_prompt.html" %}
     <div style="clear:both"></div>
     {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
-        {% if not question.closed %}
+        {% if not question.thread.closed %}
             <a 
                 class="submit"
                 href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
             >{% trans %}Login/Signup to Answer{% endtrans %}</a>
         {% endif %}
     {% else %}
-        {% if not question.closed %}
+        {% if not question.thread.closed %}
             <div>
                 {% spaceless %}
                 <h2>

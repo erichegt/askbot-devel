@@ -25,7 +25,7 @@ class Command(NoArgsCommand):
         )
 
         questions = models.Question.objects.exclude(
-                                        closed = True
+                                        thread__closed = True
                                     ).exclude(
                                         deleted = True
                                     ).added_between(

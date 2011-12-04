@@ -219,7 +219,7 @@ class QuestionQuerySet(models.query.QuerySet):
         from askbot.conf import settings as askbot_settings
         if scope_selector:
             if scope_selector == 'unanswered':
-                qs = qs.filter(closed = False)#do not show closed questions in unanswered section
+                qs = qs.filter(thread__closed = False)#do not show closed questions in unanswered section
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(thread__answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
@@ -462,6 +462,15 @@ class Thread(models.Model):
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
 
+    closed          = models.BooleanField(default=False)
+    closed_by       = models.ForeignKey(User, null=True, blank=True) #, related_name='closed_questions')
+    closed_at       = models.DateTimeField(null=True, blank=True)
+    close_reason    = models.SmallIntegerField(
+                                            choices=const.CLOSE_REASONS,
+                                            null=True,
+                                            blank=True
+                                        )
+
     class Meta:
         app_label = 'askbot'
 
@@ -483,6 +492,14 @@ class Thread(models.Model):
         qset = Thread.objects.filter(id=self.id)
         qset.update(view_count=models.F('view_count') + increment)
         self.view_count = qset.values('view_count')[0]['view_count'] # get the new view_count back because other pieces of code relies on such behaviour
+
+    def set_closed_status(self, closed, closed_by, closed_at, close_reason):
+        self.closed = closed
+        self.closed_by = closed_by
+        self.closed_at = closed_at
+        self.close_reason = close_reason
+        self.save()
+
 
     def get_answers(self, user=None):
         """returns query set for answers to this question
@@ -698,14 +715,7 @@ class Question(content.Content):
     #todo: answer accepted will be replaced with
     #accepted_answer foreign key (nullable)
     answer_accepted = models.BooleanField(default=False)
-    closed          = models.BooleanField(default=False)
-    closed_by       = models.ForeignKey(User, null=True, blank=True, related_name='closed_questions')
-    closed_at       = models.DateTimeField(null=True, blank=True)
-    close_reason    = models.SmallIntegerField(
-                                            choices=const.CLOSE_REASONS, 
-                                            null=True, 
-                                            blank=True
-                                        )
+
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data

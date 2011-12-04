@@ -504,8 +504,8 @@ def reopen(request, id):#re-open question
             return HttpResponseRedirect(question.get_absolute_url())
         else:
             request.user.assert_can_reopen_question(question)
-            closed_by_profile_url = question.closed_by.get_profile_url()
-            closed_by_username = question.closed_by.username
+            closed_by_profile_url = question.thread.closed_by.get_profile_url()
+            closed_by_username = question.thread.closed_by.username
             data = {
                 'question' : question,
                 'closed_by_profile_url': closed_by_profile_url,

@@ -1,4 +1,4 @@
-{% if not question.closed %}
+{% if not question.thread.closed %}
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript'>
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
@@ -48,7 +48,7 @@
         
         Vote.init({{ question.id }}, '{{ question.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
         
-        {% if not question.closed and request.user.is_authenticated %}initEditor();{% endif %}
+        {% if not question.thread.closed and request.user.is_authenticated %}initEditor();{% endif %}
         
         lanai.highlightSyntax();
         $('#btLogin').bind('click', function(){window.location.href='{{ settings.LOGIN_URL }}'; } )
