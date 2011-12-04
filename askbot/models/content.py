@@ -474,7 +474,7 @@ class Content(models.Model):
         new_question = rev0.author.post_question(
             title = new_title,
             body_text = rev0.text,
-            tags = self.question.tagnames,
+            tags = self.question.thread.tagnames,
             wiki = self.question.wiki,
             is_anonymous = self.question.is_anonymous,
             timestamp = rev0.revised_at
@@ -635,7 +635,7 @@ class Content(models.Model):
     def get_tag_names(self):
         if self.is_question():
             """Creates a list of Tag names from the ``tagnames`` attribute."""
-            return self.tagnames.split(u' ')
+            return self.thread.tagnames.split(u' ')
         elif self.is_answer():
             """return tag names on the question"""
             return self.question.get_tag_names()
@@ -692,7 +692,6 @@ class Content(models.Model):
         self.title = title
         self.last_edited_at = edited_at
         self.last_edited_by = edited_by
-        self.tagnames = tags
         self.text = text
         self.is_anonymous = edit_anonymously
 
@@ -714,6 +713,10 @@ class Content(models.Model):
         )
 
         self.parse_and_save(author = edited_by)
+
+        self.thread.tagnames = tags
+        self.thread.save()
+
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def apply_edit(self, *kargs, **kwargs):
@@ -766,7 +769,7 @@ class Content(models.Model):
             author     = author,
             is_anonymous = is_anonymous,
             revised_at = revised_at,
-            tagnames   = self.tagnames,
+            tagnames   = self.thread.tagnames,
             summary    = comment,
             text       = text
         )

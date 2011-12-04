@@ -744,7 +744,7 @@ class RetagQuestionForm(forms.Form):
     # initialize the default values
     def __init__(self, question, *args, **kwargs):
         super(RetagQuestionForm, self).__init__(*args, **kwargs)
-        self.fields['tags'].initial = question.tagnames
+        self.fields['tags'].initial = question.thread.tagnames
 
 class RevisionForm(forms.Form):
     """

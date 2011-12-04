@@ -680,17 +680,17 @@ class InstantQAnsEmailAlertTests(EmailAlertTests):
 
 class DelayedAlertSubjectLineTests(TestCase):
     def test_topics_in_subject_line(self):
-        q1 = models.Question(id=1, tagnames='one two three four five')
-        q2 = models.Question(id=2, tagnames='two three four five')
-        q3 = models.Question(id=3, tagnames='three four five')
-        q4 = models.Question(id=4, tagnames='four five')
-        q5 = models.Question(id=5, tagnames='five')
-        q6 = models.Question(id=6, tagnames='six')
-        q7 = models.Question(id=7, tagnames='six')
-        q8 = models.Question(id=8, tagnames='six')
-        q9 = models.Question(id=9, tagnames='six')
-        q10 = models.Question(id=10, tagnames='six')
-        q11 = models.Question(id=11, tagnames='six')
+        q1 = models.Question(id=1, thread=models.Thread(tagnames='one two three four five'))
+        q2 = models.Question(id=2, thread=models.Thread(tagnames='two three four five'))
+        q3 = models.Question(id=3, thread=models.Thread(tagnames='three four five'))
+        q4 = models.Question(id=4, thread=models.Thread(tagnames='four five'))
+        q5 = models.Question(id=5, thread=models.Thread(tagnames='five'))
+        q6 = models.Question(id=6, thread=models.Thread(tagnames='six'))
+        q7 = models.Question(id=7, thread=models.Thread(tagnames='six'))
+        q8 = models.Question(id=8, thread=models.Thread(tagnames='six'))
+        q9 = models.Question(id=9, thread=models.Thread(tagnames='six'))
+        q10 = models.Question(id=10, thread=models.Thread(tagnames='six'))
+        q11 = models.Question(id=11, thread=models.Thread(tagnames='six'))
         q_dict = {
                     q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
                     q8:'', q9:'', q10:'', q11:'',

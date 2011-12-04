@@ -307,7 +307,7 @@ def retag_question(request, id):
                 if request.is_ajax():
                     response_data = {
                         'success': True,
-                        'new_tags': question.tagnames
+                        'new_tags': question.thread.tagnames
                     }
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")

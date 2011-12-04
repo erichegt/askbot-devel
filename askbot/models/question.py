@@ -6,7 +6,6 @@ from django.conf import settings
 from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
 
 import askbot
@@ -89,13 +88,12 @@ class QuestionQuerySet(models.query.QuerySet):
         #and some - merged with the Answer.objects.create_new
 
         question = Question(
-            thread=Thread.objects.create(last_activity_at=added_at, last_activity_by=author),
+            thread=Thread.objects.create(tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
             title = title,
             author = author,
             added_at = added_at,
             wiki = wiki,
             is_anonymous = is_anonymous,
-            tagnames = tagnames,
             #html field is denormalized in .save() call
             text = text,
             #summary field is denormalized in .save() call
@@ -134,7 +132,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.filter( 
                         models.Q(title__search = search_query) \
                        | models.Q(text__search = search_query) \
-                       | models.Q(tagnames__search = search_query) \
+                       | models.Q(thread__tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
                     )
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
@@ -456,6 +454,7 @@ class QuestionManager(BaseQuerySetManager):
 
 class Thread(models.Model):
     # Denormalised data, transplanted from Question
+    tagnames = models.CharField(max_length=125)
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
@@ -672,8 +671,10 @@ class Thread(models.Model):
 
         thread_question = self._question()
 
+        self.tagnames = tagnames
+        self.save()
+
         # Update the Question itself
-        thread_question.tagnames = tagnames
         if silent == False:
             thread_question.last_edited_at = retagged_at
             #thread_question.thread.last_activity_at = retagged_at
@@ -728,7 +729,6 @@ class Question(content.Content):
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
-    tagnames             = models.CharField(max_length=125)
     summary              = models.CharField(max_length=180)
 
     favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 

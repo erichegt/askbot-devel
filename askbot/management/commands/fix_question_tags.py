@@ -64,8 +64,8 @@ class Command(NoArgsCommand):
                     user = user,
                     timestamp = timestamp
                 )
-                question.tagnames = tagnames
-                question.save()
+                question.thread.tagnames = tagnames
+                question.thread.save()
                 found_count += 1
 
             transaction.commit()
