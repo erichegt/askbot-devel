@@ -643,7 +643,10 @@ var Vote = function(){
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == "1"){
-            $(object).children('span[class=darkred]').text("("+ data.count +")");
+            if(data.count > 0)
+                $(object).children('span[class=darkred]').text("("+ data.count +")");
+            else
+                $(object).children('span[class=darkred]').text("");
 
             // Change the link text and rebind events
             $(object).find("a.question-flag").html(gettext("remove flag"));
@@ -669,7 +672,10 @@ var Vote = function(){
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == "1"){
-            $(object).children('span[class=darkred]').text("("+ data.count +")");
+            if(data.count > 0)
+                $(object).children('span[class=darkred]').text("("+ data.count +")");
+            else
+                $(object).children('span[class=darkred]').text("");
             // Change the link text and rebind events
             $(object).find("a.question-flag").html(gettext("flag offensive"));
             var obj_id = $(object).attr("id");
