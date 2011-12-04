@@ -1883,21 +1883,14 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     return vote
 
 def user_unfollow_question(self, question = None):
-    if self in question.followed_by.all():
-        question.followed_by.remove(self)
+    self.followed_threads.remove(question.thread)
 
 def user_follow_question(self, question = None):
-    if self not in question.followed_by.all():
-        question.followed_by.add(self)
+    self.followed_threads.add(question.thread)
 
 def user_is_following_question(user, question):
     """True if user is following a question"""
-    followers = question.followed_by.all()
-    try:
-        followers.get(id = user.id)
-        return True
-    except User.DoesNotExist:
-        return False
+    return question.thread.followed_by.filter(id=user.id).exists()
 
 
 def upvote(self, post, timestamp=None, cancel=False, force = False):

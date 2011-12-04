@@ -180,9 +180,9 @@ class Command(NoArgsCommand):
                 cutoff_time = feed.get_previous_report_cutoff_time() 
 
                 if feed.feed_type == 'q_sel':
-                    q_sel_A = Q_set_A.filter(followed_by=user)
+                    q_sel_A = Q_set_A.filter(thread__followed_by=user)
                     q_sel_A.cutoff_time = cutoff_time #store cutoff time per query set
-                    q_sel_B = Q_set_B.filter(followed_by=user)
+                    q_sel_B = Q_set_B.filter(thread__followed_by=user)
                     q_sel_B.cutoff_time = cutoff_time #store cutoff time per query set
 
                 elif feed.feed_type == 'q_ask':

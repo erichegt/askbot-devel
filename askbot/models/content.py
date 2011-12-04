@@ -335,7 +335,8 @@ class Content(models.Model):
 
         #2) individually selected - make sure that users
         #are individual subscribers to this question
-        selective_subscribers = origin_post.followed_by.all()
+        # TODO: The line below works only if origin_post is Question !
+        selective_subscribers = origin_post.thread.followed_by.all()
         #print 'question followers are ', [s for s in selective_subscribers]
         if selective_subscribers:
             selective_subscribers = EmailFeedSetting.objects.filter_subscribers(

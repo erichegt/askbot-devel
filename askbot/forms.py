@@ -712,7 +712,7 @@ class AnswerForm(forms.Form):
         if question.wiki and askbot_settings.WIKI_ON:
             self.fields['wiki'].initial = True
         if user.is_authenticated():
-            if user in question.followed_by.all():
+            if user in question.thread.followed_by.all():
                 self.fields['email_notify'].initial = True
                 return
         self.fields['email_notify'].initial = False
@@ -1107,7 +1107,7 @@ class EditUserEmailFeedsForm(forms.Form):
                     s.save()
             if form_field == 'individually_selected':
                 feed_type = ContentType.objects.get_for_model(models.Question)
-                user.followed_questions.clear()
+                user.followed_threads.clear()
         return changed
 
 class SimpleEmailSubscribeForm(forms.Form):

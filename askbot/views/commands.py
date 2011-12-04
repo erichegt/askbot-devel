@@ -279,7 +279,7 @@ def vote(request, id):
             elif vote_type == '11':#subscribe q updates
                 user = request.user
                 if user.is_authenticated():
-                    if user not in question.followed_by.all():
+                    if user not in question.thread.followed_by.all():
                         user.follow_question(question)
                         if askbot_settings.EMAIL_VALIDATION == True \
                             and user.email_isvalid == False:

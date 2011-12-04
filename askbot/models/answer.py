@@ -45,14 +45,10 @@ class AnswerManager(models.Manager):
 
         #set notification/delete
         if email_notify:
-            if author not in question.followed_by.all():
-                question.followed_by.add(author)
+            question.thread.followed_by.add(author)
         else:
-            #not sure if this is necessary. ajax should take care of this...
-            try:
-                question.followed_by.remove(author)
-            except:
-                pass
+            question.thread.followed_by.remove(author)
+
         return answer
 
     #todo: I think this method is not being used anymore, I'll just comment it for now

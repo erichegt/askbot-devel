@@ -227,7 +227,8 @@ class Comment(base.MetaContent, base.UserContent):
             #print 'comment subscribers: ', comment_subscribers
 
         origin_post = self.get_origin_post()
-        selective_subscribers = origin_post.followed_by.all()
+        # TODO: The line below works only if origin_post is Question !
+        selective_subscribers = origin_post.thread.followed_by.all()
         if selective_subscribers:
             selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                     potential_subscribers = selective_subscribers,

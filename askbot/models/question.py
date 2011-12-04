@@ -461,6 +461,8 @@ class Thread(models.Model):
     last_activity_at = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
 
+    followed_by     = models.ManyToManyField(User, related_name='followed_threads')
+
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True) #, related_name='closed_questions')
     closed_at       = models.DateTimeField(null=True, blank=True)
@@ -725,8 +727,6 @@ class Question(content.Content):
     #todo: this really becomes thread,
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
-
-    followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
     summary              = models.CharField(max_length=180)
