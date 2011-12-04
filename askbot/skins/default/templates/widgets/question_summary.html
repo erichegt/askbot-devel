@@ -43,12 +43,12 @@
         
         <div style="clear:both"></div>
         <div class="userinfo">
-            <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
+            <span class="relativetime" title="{{question.thread.last_activity_at}}">{{ question.thread.last_activity_at|diff_date }}</span>
             {% if question.is_anonymous %}
-                <span class="anonymous">{{ question.last_activity_by.get_anonymous_name() }}</span>
+                <span class="anonymous">{{ question.thread.last_activity_by.get_anonymous_name() }}</span>
             {% else %}
-                <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>{{ user_country_flag(question.last_activity_by) }}
-            {#{user_score_and_badge_summary(question.last_activity_by)}#}
+                <a href="{% url user_profile question.thread.last_activity_by.id, question.thread.last_activity_by.username|slugify %}">{{question.thread.last_activity_by.username}}</a>{{ user_country_flag(question.thread.last_activity_by) }}
+            {#{user_score_and_badge_summary(question.thread.last_activity_by)}#}
             {% endif %}
         </div>
     </div>

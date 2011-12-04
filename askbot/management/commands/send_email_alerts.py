@@ -129,16 +129,16 @@ class Command(NoArgsCommand):
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
         base_qs = Question.objects.exclude(
-                                last_activity_by=user
+                                thread__last_activity_by=user
                             ).exclude(
-                                last_activity_at__lt=user.date_joined#exclude old stuff
+                                thread__last_activity_at__lt=user.date_joined#exclude old stuff
                             ).exclude(
                                 deleted=True
                             ).exclude(
                                 thread__closed=True
-                            ).order_by('-last_activity_at')
+                            ).order_by('-thread__last_activity_at')
         #todo: for some reason filter on did not work as expected ~Q(viewed__who=user) | 
-        #      Q(viewed__who=user,viewed__when__lt=F('last_activity_at'))
+        #      Q(viewed__who=user,viewed__when__lt=F('thread__last_activity_at'))
         #returns way more questions than you might think it should
         #so because of that I've created separate query sets Q_set2 and Q_set3
         #plus two separate queries run faster!
@@ -151,7 +151,7 @@ class Command(NoArgsCommand):
         seen_before_last_mod_qs = base_qs.filter(
                                     Q(
                                         viewed__who=user,
-                                        viewed__when__lt=F('last_activity_at')
+                                        viewed__when__lt=F('thread__last_activity_at')
                                     )
                                 )
 
@@ -330,7 +330,7 @@ class Command(NoArgsCommand):
             #skip question if we need to wait longer because
             #the delay before the next email has not yet elapsed
             #or if last email was sent after the most recent modification
-            if emailed_at > cutoff_time or emailed_at > q.last_activity_at:
+            if emailed_at > cutoff_time or emailed_at > q.thread.last_activity_at:
                 meta_data['skip'] = True
                 continue
 

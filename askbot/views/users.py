@@ -284,14 +284,14 @@ def user_stats(request, user, context):
     questions = models.Question.objects.filter(
                                     **question_filter
                                 ).order_by(
-                                    '-score', '-last_activity_at'
+                                    '-score', '-thread__last_activity_at'
                                 ).select_related(
-                                    'last_activity_by__id',
-                                    'last_activity_by__username',
-                                    'last_activity_by__reputation',
-                                    'last_activity_by__gold',
-                                    'last_activity_by__silver',
-                                    'last_activity_by__bronze'
+                                    'thread__last_activity_by__id',
+                                    'thread__last_activity_by__username',
+                                    'thread__last_activity_by__reputation',
+                                    'thread__last_activity_by__gold',
+                                    'thread__last_activity_by__silver',
+                                    'thread__last_activity_by__bronze'
                                 )[:100]
 
     questions = list(questions)
@@ -303,14 +303,14 @@ def user_stats(request, user, context):
         question_count = models.Question.objects.filter(
                                         **question_filter
                                     ).order_by(
-                                        '-score', '-last_activity_at'
+                                        '-score', '-thread__last_activity_at'
                                     ).select_related(
-                                        'last_activity_by__id',
-                                        'last_activity_by__username',
-                                        'last_activity_by__reputation',
-                                        'last_activity_by__gold',
-                                        'last_activity_by__silver',
-                                        'last_activity_by__bronze'
+                                        'thread__last_activity_by__id',
+                                        'thread__last_activity_by__username',
+                                        'thread__last_activity_by__reputation',
+                                        'thread__last_activity_by__gold',
+                                        'thread__last_activity_by__silver',
+                                        'thread__last_activity_by__bronze'
                                     ).count()
 
     favorited_myself = models.FavoriteQuestion.objects.filter(
@@ -909,14 +909,14 @@ def user_favorites(request, user, context):
     questions = models.Question.objects.filter(
                                     id__in=favorited_q_id_list
                                 ).order_by(
-                                    '-score', '-last_activity_at'
+                                    '-score', '-thread__last_activity_at'
                                 ).select_related(
-                                    'last_activity_by__id',
-                                    'last_activity_by__username',
-                                    'last_activity_by__reputation',
-                                    'last_activity_by__gold',
-                                    'last_activity_by__silver',
-                                    'last_activity_by__bronze'
+                                    'thread__last_activity_by__id',
+                                    'thread__last_activity_by__username',
+                                    'thread__last_activity_by__reputation',
+                                    'thread__last_activity_by__gold',
+                                    'thread__last_activity_by__silver',
+                                    'thread__last_activity_by__bronze'
                                 )[:const.USER_VIEW_DATA_SIZE]
     data = {
         'active_tab':'users',

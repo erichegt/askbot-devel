@@ -51,7 +51,7 @@
         {% trans %}question was seen{% endtrans %}: <strong>{{ question.thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>
     </p>
     <p>
-        {% trans %}last updated{% endtrans %}: <strong title="{{ question.last_activity_at }}">{{question.last_activity_at|diff_date}}</strong>
+        {% trans %}last updated{% endtrans %}: <strong title="{{ question.thread.last_activity_at }}">{{question.thread.last_activity_at|diff_date}}</strong>
     </p>
 </div>
 {% endif %}

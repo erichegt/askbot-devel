@@ -8,7 +8,7 @@ class QuestionsSitemap(Sitemap):
         return Question.objects.exclude(deleted=True)
 
     def lastmod(self, obj):
-        return obj.last_activity_at
+        return obj.thread.last_activity_at
 
     def location(self, obj):
         return obj.get_absolute_url()

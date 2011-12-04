@@ -162,7 +162,7 @@ class Content(models.Model):
         #
         #origin_post = self.get_origin_post()
         #if origin_post == self:
-        #    self.last_activity_at = added_at
+        #    self.last_activity_at = added_at # WARNING: last_activity_* are now in Thread
         #    self.last_activity_by = user
         #else:
         #    origin_post.last_activity_at = added_at
@@ -667,9 +667,7 @@ class Content(models.Model):
 
         self.parse_and_save(author = edited_by)
 
-        self.question.last_activity_at = edited_at
-        self.question.last_activity_by = edited_by
-        self.question.save()
+        self.question.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                     text=None, comment=None, tags=None, wiki=False, \
@@ -693,9 +691,7 @@ class Content(models.Model):
         # Update the Question itself
         self.title = title
         self.last_edited_at = edited_at
-        self.last_activity_at = edited_at
         self.last_edited_by = edited_by
-        self.last_activity_by = edited_by
         self.tagnames = tags
         self.text = text
         self.is_anonymous = edit_anonymously
@@ -718,6 +714,7 @@ class Content(models.Model):
         )
 
         self.parse_and_save(author = edited_by)
+        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def apply_edit(self, *kargs, **kwargs):
         if self.is_answer():

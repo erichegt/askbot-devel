@@ -523,12 +523,9 @@ class Command(BaseCommand):
         """p,u,t - post, user, timestamp
         """
         if isinstance(p, askbot.Question):
-            p.last_activity_by = u
-            p.last_activity_at = t
+            p.thread.set_last_activity(last_activity_by=u, last_activity_at=t)
         elif isinstance(p, askbot.Answer):
-            p.question.last_activity_by = u
-            p.question.last_activity_at = t
-            p.question.save()
+            p.question.thread.set_last_activity(last_activity_by=u, last_activity_at=t)
 
     def _process_post_rollback_revision_group(self, rev_group):
         #todo: don't know what to do here as there were no

@@ -26,8 +26,8 @@ from askbot.utils import mysql
 QUESTION_ORDER_BY_MAP = {
     'age-desc': '-added_at',
     'age-asc': 'added_at',
-    'activity-desc': '-last_activity_at',
-    'activity-asc': 'last_activity_at',
+    'activity-desc': '-thread__last_activity_at',
+    'activity-asc': 'thread__last_activity_at',
     'answers-desc': '-thread__answer_count',
     'answers-asc': 'thread__answer_count',
     'votes-desc': '-score',
@@ -89,12 +89,10 @@ class QuestionQuerySet(models.query.QuerySet):
         #and some - merged with the Answer.objects.create_new
 
         question = Question(
-            thread=Thread.objects.create(),
+            thread=Thread.objects.create(last_activity_at=added_at, last_activity_by=author),
             title = title,
             author = author,
             added_at = added_at,
-            last_activity_at = added_at,
-            last_activity_by = author,
             wiki = wiki,
             is_anonymous = is_anonymous,
             tagnames = tagnames,
@@ -336,14 +334,14 @@ class QuestionQuerySet(models.query.QuerySet):
 
         qs = qs.distinct()
         qs = qs.select_related(
-                        'last_activity_by__id',
-                        'last_activity_by__username',
-                        'last_activity_by__reputation',
-                        'last_activity_by__gold',
-                        'last_activity_by__silver',
-                        'last_activity_by__bronze',
-                        'last_activity_by__country',
-                        'last_activity_by__show_country',
+                        'thread__last_activity_by__id',
+                        'thread__last_activity_by__username',
+                        'thread__last_activity_by__reputation',
+                        'thread__last_activity_by__gold',
+                        'thread__last_activity_by__silver',
+                        'thread__last_activity_by__bronze',
+                        'thread__last_activity_by__country',
+                        'thread__last_activity_by__show_country',
                     )
 
         related_tags = Tag.objects.get_related_to_search(
@@ -461,6 +459,8 @@ class Thread(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
+    last_activity_at = models.DateTimeField(default=datetime.datetime.now)
+    last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
 
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True) #, related_name='closed_questions')
@@ -508,6 +508,11 @@ class Thread(models.Model):
             raise ValueError("Answer doesn't belong to this thread")
         self.accepted_answer = answer
         self.answer_accepted_at = timestamp
+        self.save()
+
+    def set_last_activity(self, last_activity_at, last_activity_by):
+        self.last_activity_at = last_activity_at
+        self.last_activity_by = last_activity_by
         self.save()
 
     def get_answers(self, user=None):
@@ -671,9 +676,9 @@ class Thread(models.Model):
         thread_question.tagnames = tagnames
         if silent == False:
             thread_question.last_edited_at = retagged_at
-            #thread_question.last_activity_at = retagged_at
+            #thread_question.thread.last_activity_at = retagged_at
             thread_question.last_edited_by = retagged_by
-            #thread_question.last_activity_by = retagged_by
+            #thread_question.thread.last_activity_by = retagged_by
         thread_question.save()
 
         # Update the Question's tag associations
@@ -723,8 +728,6 @@ class Question(content.Content):
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
-    last_activity_at     = models.DateTimeField(default=datetime.datetime.now)
-    last_activity_by     = models.ForeignKey(User, related_name='last_active_in_questions')
     tagnames             = models.CharField(max_length=125)
     summary              = models.CharField(max_length=180)
 

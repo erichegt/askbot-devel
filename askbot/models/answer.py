@@ -38,9 +38,7 @@ class AnswerManager(models.Manager):
         )
 
         #update question data
-        question.last_activity_at = added_at
-        question.last_activity_by = author
-        question.save()
+        question.thread.set_last_activity(last_activity_at=added_at, last_activity_by=author)
 
         question.thread.answer_count +=1
         question.thread.save()
