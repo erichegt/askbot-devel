@@ -55,6 +55,9 @@ class Content(models.Model):
     comments = generic.GenericRelation(Comment)
     votes = generic.GenericRelation(Vote)
 
+    # Denormalised data
+    summary = models.CharField(max_length=180)
+
     _use_markdown = True
     _escape_html = False #markdow does the escaping
     _urlize = False

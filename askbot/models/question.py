@@ -728,10 +728,7 @@ class Question(content.Content):
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
 
-    # Denormalised data
-    summary              = models.CharField(max_length=180)
-
-    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
+    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions')
     #note: anonymity here applies to question only, but
     #the field will still go to thread
     #maybe we should rename it to is_question_anonymous
