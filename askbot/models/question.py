@@ -225,7 +225,7 @@ class QuestionQuerySet(models.query.QuerySet):
                 else:
                     raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
-                favorite_filter = models.Q(favorited_by = request_user)
+                favorite_filter = models.Q(thread__favorited_by = request_user)
                 if 'followit' in settings.INSTALLED_APPS:
                     followed_users = request_user.get_followed_users()
                     favorite_filter |= models.Q(author__in = followed_users)
@@ -462,6 +462,7 @@ class Thread(models.Model):
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
 
     followed_by     = models.ManyToManyField(User, related_name='followed_threads')
+    favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
 
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True) #, related_name='closed_questions')
@@ -479,13 +480,10 @@ class Thread(models.Model):
         app_label = 'askbot'
 
     def _question(self):
-        questions = self.questions.all()
-        if len(questions) != 1:
-            raise ValueError('Thread.questions.count() != 1')
-        return questions.all()[0]
+        return Question.objects.get(thread=self)
 
     def update_favorite_count(self):
-        self.favourite_count = FavoriteQuestion.objects.filter(question=self._question()).count()
+        self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()
 
     def update_answer_count(self):
@@ -703,7 +701,7 @@ class Thread(models.Model):
         if not user.is_authenticated():
             return False
 
-        return FavoriteQuestion.objects.filter(question=self._question(), user=user).exists()
+        return FavoriteQuestion.objects.filter(thread=self, user=user).exists()
 
     def get_last_update_info(self):
         thread_question = self._question()
@@ -728,7 +726,6 @@ class Question(content.Content):
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
 
-    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions')
     #note: anonymity here applies to question only, but
     #the field will still go to thread
     #maybe we should rename it to is_question_anonymous
@@ -770,8 +767,8 @@ class QuestionView(models.Model):
 
 class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
-    question      = models.ForeignKey(Question)
-    user          = models.ForeignKey(User, related_name='user_favorite_questions')
+    thread        = models.ForeignKey(Thread)
+    user          = models.ForeignKey(User, related_name='unused_user_favorite_questions')
     added_at      = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:

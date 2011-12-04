@@ -283,9 +283,7 @@ def vote(request, id):
             if vote_type == '4':
                 has_favorited = False
                 fave = request.user.toggle_favorite_question(question)
-                response_data['count'] = models.FavoriteQuestion.objects.filter(
-                                            question = question
-                                        ).count()
+                response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
                 if fave == False:
                     response_data['status'] = 1
 

@@ -674,7 +674,7 @@ class FavoriteTypeBadge(Badge):
         question = context_object
         #model FavoriteQuestion imported under alias of Fave
         count = Fave.objects.filter(
-                                        question = question
+                                        thread = question.thread
                                     ).exclude(
                                         user = question.author
                                     ).count()

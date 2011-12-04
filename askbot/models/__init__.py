@@ -1836,7 +1836,7 @@ def toggle_favorite_question(
     returns a value
     """
     try:
-        fave = FavoriteQuestion.objects.get(question=question, user=self)
+        fave = FavoriteQuestion.objects.get(thread=question.thread, user=self)
         fave.delete()
         result = False
         question.thread.update_favorite_count()
@@ -1844,7 +1844,7 @@ def toggle_favorite_question(
         if timestamp is None:
             timestamp = datetime.datetime.now()
         fave = FavoriteQuestion(
-            question = question,
+            thread = question.thread,
             user = self,
             added_at = timestamp,
         )
@@ -2577,10 +2577,10 @@ def record_favorite_question(instance, created, **kwargs):
                         active_at=datetime.datetime.now(),
                         content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_FAVORITE,
-                        question=instance.question
+                        question=instance.thread._question()
                     )
         activity.save()
-        recipients = instance.question.get_author_list(
+        recipients = instance.thread._question().get_author_list(
                                             exclude_list = [instance.user]
                                         )
         activity.add_recipients(recipients)

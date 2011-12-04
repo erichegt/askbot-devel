@@ -286,6 +286,7 @@ def user_stats(request, user, context):
                                 ).order_by(
                                     '-score', '-thread__last_activity_at'
                                 ).select_related(
+                                    'thread',
                                     'thread__last_activity_by__id',
                                     'thread__last_activity_by__username',
                                     'thread__last_activity_by__reputation',
@@ -313,10 +314,12 @@ def user_stats(request, user, context):
                                         'thread__last_activity_by__bronze'
                                     ).count()
 
-    favorited_myself = models.FavoriteQuestion.objects.filter(
-                                    question__in = questions,
-                                    user = user
-                                ).values_list('question__id', flat=True)
+# Commented out, doesn't seem to be used
+#    threads = [quest.thread for quest in questions]
+#    favorited_myself = models.FavoriteQuestion.objects.filter(
+#                                    thread__in = threads,
+#                                    user = user
+#                                ).values_list('thread__id', flat=True)
 
     #this is meant for the questions answered by the user (or where answers were edited by him/her?)
     answered_questions = models.Question.objects.extra(
@@ -391,7 +394,8 @@ def user_stats(request, user, context):
         'question_count': question_count,
         'question_type' : ContentType.objects.get_for_model(models.Question),
         'answer_type' : ContentType.objects.get_for_model(models.Answer),
-        'favorited_myself': favorited_myself,
+# Commented out, doesn't seem to be used
+#        'favorited_myself': favorited_myself,
         'answered_questions' : answered_questions,
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -903,11 +907,11 @@ def user_reputation(request, user, context):
     return render_into_skin('user_profile/user_reputation.html', context, request)
 
 def user_favorites(request, user, context):
-    favorited_q_id_list= models.FavoriteQuestion.objects.filter(
+    favorited_thread_id_list= models.FavoriteQuestion.objects.filter(
                                     user = user
-                                ).values_list('question__id', flat=True)
+                                ).values_list('thread__id', flat=True)
     questions = models.Question.objects.filter(
-                                    id__in=favorited_q_id_list
+                                    thread__id__in=favorited_thread_id_list
                                 ).order_by(
                                     '-score', '-thread__last_activity_at'
                                 ).select_related(
@@ -925,7 +929,8 @@ def user_favorites(request, user, context):
         'tab_description' : _('users favorite questions'),
         'page_title' : _('profile - favorite questions'),
         'questions' : questions,
-        'favorited_myself': favorited_q_id_list,
+# Commented out, doesn't seem to be used
+#        'favorited_myself': favorited_q_id_list,
     }
     context.update(data)
     return render_into_skin('user_profile/user_favorites.html', context, request)
