@@ -428,7 +428,7 @@ poor design of the data or methods on data objects #}
                     {% if question.thread.answer_count == 0 -%}
                         no-answers
                     {% else -%}
-                        {%- if question.answer_accepted -%}
+                        {%- if question.thread.accepted_answer -%}
                             accepted
                         {%- else -%}
                             some-answers
@@ -436,7 +436,7 @@ poor design of the data or methods on data objects #}
                     {%- endif -%}"> 
                 <span 
                     class="item-count"
-                >{{question.thread.answer_count|humanize_counter}}{% if question.answer_accepted%}&#10003;{% endif %}</span>
+                >{{question.thread.answer_count|humanize_counter}}{% if question.thread.accepted_answer %}&#10003;{% endif %}</span>
                 <div>
                 {% trans cnt=question.thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
                 </div>

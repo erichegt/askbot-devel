@@ -853,3 +853,8 @@ class Content(models.Model):
             else:
                 return self.title
         raise NotImplementedError
+
+    def accepted(self):
+        if self.is_answer():
+            return self.question.thread.accepted_answer == self
+        raise NotImplementedError

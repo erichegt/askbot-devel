@@ -223,7 +223,7 @@ class QuestionQuerySet(models.query.QuerySet):
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(thread__answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
-                    qs = qs.filter(answer_accepted=False)
+                    qs = qs.filter(thread__accepted_answer__isnull=True) #answer_accepted=False
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
                     raise NotImplementedError()
                 else:
@@ -471,6 +471,9 @@ class Thread(models.Model):
                                             blank=True
                                         )
 
+    accepted_answer = models.ForeignKey('askbot.Answer', null=True, blank=True)
+    answer_accepted_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         app_label = 'askbot'
 
@@ -500,6 +503,12 @@ class Thread(models.Model):
         self.close_reason = close_reason
         self.save()
 
+    def set_accepted_answer(self, answer, timestamp):
+        if answer and answer.question.thread != self:
+            raise ValueError("Answer doesn't belong to this thread")
+        self.accepted_answer = answer
+        self.answer_accepted_at = timestamp
+        self.save()
 
     def get_answers(self, user=None):
         """returns query set for answers to this question
@@ -704,17 +713,12 @@ class Thread(models.Model):
 
 
 class Question(content.Content):
-    # TODO: Eventually move this into Content/Post model
+    post_type = 'question'
     thread = models.ForeignKey('Thread', unique=True, related_name='questions')
 
     #todo: this really becomes thread,
-    #except property post_type goes to Post
-    post_type = 'question'
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
-    #todo: answer accepted will be replaced with
-    #accepted_answer foreign key (nullable)
-    answer_accepted = models.BooleanField(default=False)
 
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 

@@ -76,10 +76,6 @@ class AnswerManager(models.Manager):
 class Answer(content.Content):
     post_type = 'answer'
     question = models.ForeignKey('Question', related_name='answers')
-    #todo: probably remove these denormalized fields?
-    accepted    = models.BooleanField(default=False)
-    accepted_at = models.DateTimeField(null=True, blank=True)
-    #todo: we'll need to add "accepted_by" b/c sometimes non-askers can accept
 
     objects = AnswerManager()
 

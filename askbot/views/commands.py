@@ -197,7 +197,7 @@ def vote(request, id):
                 answer = get_object_or_404(models.Answer, id = answer_id)
                 question = answer.question
                 # make sure question author is current user
-                if answer.accepted:
+                if answer.accepted():
                     request.user.unaccept_best_answer(answer)
                     response_data['status'] = 1 #cancelation
                 else:

@@ -20,8 +20,8 @@
             <div class="answer-summary">
                 <a title="{{answered_question.summary|collapse}}" 
                     href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
-                    <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
-                          title="{% trans answer_score=answered_question.answer_score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if answered_question.accepted %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
+                    <span class="answer-votes {% if answered_question.answer_accepted %}answered-accepted{% endif %}"
+                          title="{% trans answer_score=answered_question.answer_score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if answered_question.answer_accepted %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
                         {{ answered_question.answer_score }}
                     </span>
                 </a>

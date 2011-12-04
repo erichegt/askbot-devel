@@ -324,12 +324,12 @@ def user_stats(request, user, context):
             'vote_up_count' : 'answer.vote_up_count',
             'vote_down_count' : 'answer.vote_down_count',
             'answer_id' : 'answer.id',
-            'answer_accepted' : 'answer.accepted',
+            'answer_accepted' : 'askbot_thread.accepted_answer_id',
             'answer_score' : 'answer.score',
             'comment_count' : 'answer.comment_count'
             },
-        tables=['question', 'answer'],
-        where=['NOT answer.deleted AND NOT question.deleted AND answer.author_id=%s AND answer.question_id=question.id'],
+        tables=['question', 'answer', 'askbot_thread'],
+        where=['NOT answer.deleted AND NOT question.deleted AND answer.author_id=%s AND answer.question_id=question.id AND question.thread_id=askbot_thread.id'],
         params=[user.id],
         order_by=['-answer_score', '-answer_id'],
         select_params=[user.id]
@@ -343,6 +343,7 @@ def user_stats(request, user, context):
                         #'answer_count', Moved from Question to Thread and doesn't seem to be referenced anywhere !?
                         'vote_up_count',
                         'vote_down_count')[:100]
+
 
     up_votes = models.Vote.objects.get_up_vote_count_from_user(user)
     down_votes = models.Vote.objects.get_down_vote_count_from_user(user)

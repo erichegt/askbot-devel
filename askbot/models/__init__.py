@@ -1039,12 +1039,12 @@ def user_accept_best_answer(
                             )
     if force == False:
         self.assert_can_accept_best_answer(answer)
-    if answer.accepted == True:
+    if answer.accepted() == True:
         return
 
-    prev_accepted_answers = answer.question.answers.filter(accepted = True)
-    for prev_answer in prev_accepted_answers:
-        auth.onAnswerAcceptCanceled(prev_answer, self)
+    prev_accepted_answer = answer.question.thread.accepted_answer
+    if prev_accepted_answer:
+        auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
 
     auth.onAnswerAccept(answer, self, timestamp = timestamp)
     award_badges_signal.send(None,
@@ -1062,7 +1062,7 @@ def user_unaccept_best_answer(
             ):
     if force == False:
         self.assert_can_unaccept_best_answer(answer)
-    if answer.accepted == False:
+    if not answer.accepted():
         return
     auth.onAnswerAcceptCanceled(answer, self)
 
@@ -2375,7 +2375,7 @@ def record_answer_accepted(instance, created, **kwargs):
     when answer is accepted, we record this for question author 
     - who accepted it.
     """
-    if not created and instance.accepted:
+    if not created and instance.accepted():
         activity = Activity(
                         user=instance.question.author,
                         active_at=datetime.datetime.now(),

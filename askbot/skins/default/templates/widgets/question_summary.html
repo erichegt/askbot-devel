@@ -16,7 +16,7 @@
                 {% if question.thread.answer_count == 0 -%}
                     no-answers
                 {% else -%}
-                    {%- if question.answer_accepted -%}
+                    {%- if question.thread.accepted_answer -%}
                         accepted
                     {%- else -%}
                         some-answers
@@ -24,7 +24,7 @@
                 {%- endif -%}"> 
             <span 
                 class="item-count"
-            >{{question.thread.answer_count|humanize_counter}}{% if question.answer_accepted%}{% endif %}</span>
+            >{{question.thread.answer_count|humanize_counter}}{% if question.thread.accepted_answer %}{% endif %}</span>
             <div>
             {% trans cnt=question.thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
             </div>

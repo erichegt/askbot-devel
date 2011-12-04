@@ -32,7 +32,7 @@ class Command(NoArgsCommand):
                                     ).filter(
                                         thread__answer_count__gt = 0
                                     ).filter(
-                                        answer_accepted = False
+                                        thread__accepted_answer__isnull=True #answer_accepted = False
                                     ).order_by('-added_at')
         #for all users, excluding blocked
         #for each user, select a tag filtered subset

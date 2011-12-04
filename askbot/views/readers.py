@@ -472,8 +472,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
     orderby = view_dic[answer_sort_method]
-    if answers is not None:
-        answers = answers.order_by("-accepted", orderby)
+#    if answers is not None:
+#        answers = answers.order_by("-accepted", orderby)
+    if answers:
+        # INFO: if there's a backlink to thread, then it's the accepted answer
+        # TODO: Make this sorting more explicit
+        answers = answers.order_by('-thread', orderby)
 
     filtered_answers = []
     for answer in answers:

@@ -5,7 +5,7 @@
 }}
 {% if request.user == question.author or (request.user.is_authenticated() and (request.user.is_moderator() or request.user.is_administrator())) %}
 <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
-    {% if answer.accepted %}
+    {% if answer.accepted() %}
         src="{{'/images/vote-accepted-on.png'|media}}"
     {% else %}
         src="{{'/images/vote-accepted.png'|media}}" 
@@ -13,9 +13,9 @@
     alt="{% trans %}mark this answer as correct (click again to undo){% endtrans %}"
     title="{% trans %}mark this answer as correct (click again to undo){% endtrans %}" />
 {% else %}
-    {% if answer.accepted %}
+    {% if answer.accepted() %}
     <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept" 
-        {% if answer.accepted %}
+        {% if answer.accepted() %}
             src="{{'/images/vote-accepted-on.png'|media}}"
         {% else %}
             src="{{'/images/vote-accepted.png'|media}}"

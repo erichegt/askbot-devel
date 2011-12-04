@@ -104,11 +104,7 @@ def onFlaggedItem(post, user, timestamp=None):
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):
-    answer.accepted = True
-    answer.accepted_at = timestamp
-    answer.question.answer_accepted = True
-    answer.save()
-    answer.question.save()
+    answer.question.thread.set_accepted_answer(answer=answer, timestamp=timestamp)
     if answer.author != user:
         answer.author.receive_reputation(
             askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
@@ -136,11 +132,7 @@ def onAnswerAccept(answer, user, timestamp=None):
 def onAnswerAcceptCanceled(answer, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
-    answer.accepted = False
-    answer.accepted_at = None
-    answer.question.answer_accepted = False
-    answer.save()
-    answer.question.save()
+    answer.question.thread.set_accepted_answer(answer=None, timestamp=None)
 
     answer.author.receive_reputation(
         askbot_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE
