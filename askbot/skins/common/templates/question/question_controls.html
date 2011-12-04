@@ -20,10 +20,11 @@
 {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
 <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag" 
     title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-    <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
+    <a class="question-flag">{% trans %}flag offensive{% endtrans %}
     {% if request.user|can_see_offensive_flags(question) %}
         <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
     {% endif %}
+    </a>
 </span>
 {% endif %}
 {% if request.user|can_delete_post(question) %}{{ pipe() }}
