@@ -234,7 +234,7 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .question-page .post-update-info .gravatar{float:left;margin-right:4px;}
 .question-page .post-update-info p.tip{color:#444;line-height:13px;font-size:10px;}
 .question-page .post-controls{font-size:11px;line-height:12px;min-width:200px;padding-left:5px;text-align:right;clear:left;float:right;margin-top:10px;}.question-page .post-controls a{color:#777;padding:0px 3px 3px 22px;cursor:pointer;border:none;font-size:12px;font-family:Arial;text-decoration:none;height:18px;display:block;float:right;line-height:18px;margin-top:-2px;margin-left:4px;}
-.question-page .post-controls a:hover{background-color:#f5f0c9;}
+.question-page .post-controls a:hover{background-color:#f5f0c9;border-radius:3px;-ms-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-khtml-border-radius:3px;}
 .question-page .post-controls .sep{color:#ccc;float:right;height:18px;font-size:18px;}
 .question-page .post-controls .question-delete,.question-page .answer-controls .question-delete{background:url(../images/delete.png) no-repeat center left;padding-left:16px;}
 .question-page .post-controls .question-flag,.question-page .answer-controls .question-flag{background:url(../images/flag.png) no-repeat center left;}
