@@ -163,7 +163,16 @@ def can_moderate_user(user, other_user):
 can_flag_offensive = make_template_filter_from_permission_assertion(
                         assertion_name = 'assert_can_flag_offensive',
                         filter_name = 'can_flag_offensive',
-                        allowed_exception = askbot_exceptions.DuplicateCommand
+                    )
+
+can_remove_flag_offensive = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_remove_flag_offensive',
+                        filter_name = 'can_remove_flag_offensive',
+                    )
+
+can_remove_all_flags_offensive = make_template_filter_from_permission_assertion(
+                        assertion_name = 'assert_can_remove_all_flags_offensive',
+                        filter_name = 'can_remove_all_flags_offensive',
                     )
 
 can_post_comment = make_template_filter_from_permission_assertion(

@@ -4524,12 +4524,6 @@ msgstr "ask a question interesting to this community"
 
 msgid "try to give an answer, rather than engage into a discussion"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. "
-"If you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always "
-"<strong>revise your answers</strong> - no need to answer the same "
-"question twice. Also, please <strong>don't forget to vote</strong> - it "
-"really helps to select the best questions and answers!"
 
 msgid "please try to provide details"
 msgstr "provide enough details"
