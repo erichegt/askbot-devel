@@ -138,7 +138,7 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     paginator = Paginator(qs, search_state.page_size)
 
     if paginator.num_pages < search_state.page:
-        raise Http404
+        search_state.page = 1
 
     page = paginator.page(search_state.page)
 
