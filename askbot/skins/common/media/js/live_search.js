@@ -478,8 +478,13 @@ var liveSearch = function(){
         });
         search_url = remove_tag_from_url(query_string, tag_name)
         this.current_url = search_url
-        var stateObj = { page: search_url };
-        window.history.pushState(stateObj, "Questions", search_url);
+        var context = { state:1, rand:Math.random() };
+        var title = "Questions";
+        var query = search_url;
+        History.pushState( context, title, query );
+
+        //var stateObj = { page: search_url };
+        //window.history.pushState(stateObj, "Questions", search_url);
     };
 
     var change_rss_url = function(feed_url){
@@ -583,8 +588,13 @@ var liveSearch = function(){
             complete: try_again
         });
         prev_text = query_text;
-        var stateObj = { page: search_url };
-        window.history.pushState(stateObj, "Questions", search_url);
+        var context = { state:1, rand:Math.random() };
+        var title = "Questions";
+        var query = search_url;
+        History.pushState( context, title, query );
+        
+        //var stateObj = { page: search_url };
+        //window.history.pushState(stateObj, "Questions", search_url);
     }
 
     var reset_query = function(new_url, sort_method){
@@ -596,7 +606,11 @@ var liveSearch = function(){
             complete: try_again
         });
         prev_text = '';
-        window.location.hash = new_url
+        var context = { state:1, rand:Math.random() };
+        var title = "Questions";
+        var query = new_url;
+        History.pushState( context, title, query );
+
         //var stateObj = { page: new_url };
         //window.history.pushState(stateObj, "Questions", new_url);
     }
@@ -608,8 +622,15 @@ var liveSearch = function(){
             dataType: 'json',
             success: render_main_page_result
         });
-        var stateObj = { page: askbot['urls']['questions'] };
-        window.history.pushState(stateObj, "Questions", askbot['urls']['questions']);
+
+
+        var context = { state:1, rand:Math.random() };
+        var title = "Questions";
+        var query = askbot['urls']['questions'];
+        History.pushState( context, title, query );
+
+        //var stateObj = { page: askbot['urls']['questions'] };
+        //window.history.pushState(stateObj, "Questions", askbot['urls']['questions']);
     };
 
     return {

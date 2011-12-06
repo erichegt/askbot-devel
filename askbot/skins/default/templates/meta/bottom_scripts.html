@@ -38,7 +38,7 @@
     {% endif %}
 ></script>
 <!-- History.js --> 
-<script defer src="http://balupton.github.com/history.js/scripts/bundled/html4+html5/jquery.history.js"></script> 
+<script defer src="{{"/js/jquery.history.js"|media }}"></script> 
 <script type='text/javascript' src="{{"/js/utils.js"|media }}"></script>
 <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
 {% if settings.ENABLE_MATHJAX %}
@@ -54,6 +54,21 @@
 {% if active_tab != "tags" and active_tab != "users" %}
 {# start asking question with title from search query #}
     $(document).ready(function(){
+        if (Modernizr.history) {
+          // history management works!
+        } else {
+          // no history support :(
+          hash = unescape(window.location.hash).replace('#','').split("?")[0]
+          if (hash.substring(0,11)==askbot['urls']['questions']){
+            url = hash
+          }else{
+            url = askbot['urls']['questions']+hash
+          }
+          if (hash !== ''){
+              window.location = 'http://'+window.location.host+url
+          }
+        }
+        
         $('#nav_ask').click(
             function(){
                 var starting_title = $('#keywords').attr('value');
