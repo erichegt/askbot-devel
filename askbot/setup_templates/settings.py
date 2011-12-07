@@ -5,7 +5,8 @@ import sys
 import askbot
 
 #this line is added so that we can import pre-packaged askbot dependencies
-sys.path.append(os.path.join(os.path.dirname(askbot.__file__), 'deps'))
+ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
+sys.path.append(os.path.join(ASKBOT_ROOT, 'deps'))
 
 DEBUG = False#set to True to enable debugging
 TEMPLATE_DEBUG = False#keep false when debugging jinja2 templates
@@ -222,3 +223,21 @@ djcelery.setup_loader()
 
 CSRF_COOKIE_NAME = 'askbot_csrf'
 CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+
+# === Settings for django.contrib.staticfiles
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "site_media", "static")
+
+STATIC_URL = "/site_media/static/"
+
+# Additional directories which hold static files
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, "static"),
+    os.path.join(ASKBOT_ROOT, 'skins'),
+]
+
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+#    "django.contrib.staticfiles.finders.LegacyAppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
