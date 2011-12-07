@@ -36,7 +36,10 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 
 class PageLoadTestCase(AskbotTestCase):
-    fixtures = [ os.path.join(os.path.dirname(__file__), 'test_data.json'),]
+    #fixtures = [ os.path.join(os.path.dirname(__file__), 'test_data.json'),]
+    def setUp(self):
+        from django.core import management
+        management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
 
     def try_url(
             self,
