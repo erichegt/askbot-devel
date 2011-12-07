@@ -736,10 +736,6 @@ class Question(content.Content):
     class Meta(content.Content.Meta):
         db_table = u'question'
 
-    def _get_slug(self):
-        return slugify(self.thread.title)
-
-    slug = property(_get_slug)
 
 if getattr(settings, 'USE_SPHINX_SEARCH', False):
     from djangosphinx.models import SphinxSearch

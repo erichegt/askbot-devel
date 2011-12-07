@@ -105,6 +105,11 @@ class Content(models.Model):
             #hit the database to trigger update of full text search vector
             self.question.save()
 
+    def _get_slug(self):
+        if not self.is_question():
+            raise NotImplementedError
+        return slugify(self.thread.title)
+    slug = property(_get_slug)
 
     def get_comments(self, visitor = None):
         """returns comments for a post, annotated with
