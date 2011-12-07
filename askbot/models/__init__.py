@@ -208,7 +208,7 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
     else:
         raise ValueError('unexpected affinity type %s' % str(affinity_type))
 
-    question_tags = question.tags.all()
+    question_tags = question.thread.tags.all()
     intersecting_tag_selections = self.tag_selections.filter(
                                                 tag__in = question_tags,
                                                 reason = tag_selection_type
@@ -1164,7 +1164,7 @@ def user_delete_question(
     question.deleted_at = timestamp
     question.save()
 
-    for tag in list(question.tags.all()):
+    for tag in list(question.thread.tags.all()):
         if tag.used_count == 1:
             tag.deleted = True
             tag.deleted_by = self
@@ -1241,7 +1241,7 @@ def user_restore_post(
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good
             #or merged into others
-            for tag in list(post.tags.all()):
+            for tag in list(post.thread.tags.all()):
                 if tag.used_count == 1 and tag.deleted:
                     tag.deleted = False
                     tag.deleted_by = None
@@ -1724,9 +1724,9 @@ def user_get_tag_filtered_questions(self, questions = None):
         ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
         return questions.exclude(
-                        tags__in = ignored_tags
+                        thread__tags__in = ignored_tags
                     ).exclude(
-                        tags__in = ignored_by_wildcards
+                        thread__tags__in = ignored_by_wildcards
                     )
     elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
         selected_tags = Tag.objects.filter(
@@ -1737,8 +1737,8 @@ def user_get_tag_filtered_questions(self, questions = None):
         wk = self.interesting_tags.strip().split()
         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
-        tag_filter = models.Q(tags__in = list(selected_tags)) \
-                    | models.Q(tags__in = list(selected_by_wildcards))
+        tag_filter = models.Q(thread__tags__in = list(selected_tags)) \
+                    | models.Q(thread__tags__in = list(selected_by_wildcards))
 
         return questions.filter( tag_filter )
     else:

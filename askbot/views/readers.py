@@ -569,7 +569,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answer' : AnswerForm(question,request.user),
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
-        'tags' : question.tags.all(),
+        'tags' : question.thread.tags.all(),
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
         'similar_questions' : question.thread.get_similar_questions(),
@@ -640,7 +640,7 @@ def widget_questions(request):
     tags_input = request.GET.get('tags','').strip()
     if len(tags_input) > 0:
         tags = [tag.strip() for tag in tags_input.split(',')]
-        questions = questions.filter(tags__name__in = tags)
+        questions = questions.filter(thread__tags__name__in = tags)
     data = {
         'questions': questions[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
     }

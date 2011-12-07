@@ -358,7 +358,9 @@ def user_stats(request, user, context):
     #todo: there may be a better way to do these queries
     question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
-    user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
+    #user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
+    user_tag_ids = models.Question.objects.filter(id__in=question_id_set).values_list('thread__tags__id', flat=True)
+    user_tags = models.Tag.objects.filter(id__in=user_tag_ids)
 
     badges = models.BadgeData.objects.filter(
                             award_badge__user=user

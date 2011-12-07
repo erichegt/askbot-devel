@@ -189,7 +189,7 @@ class QuestionQuerySet(models.query.QuerySet):
             if search_state.query_title:
                 qs = qs.filter(thread__title__icontains = search_state.query_title)
             if len(search_state.query_tags) > 0:
-                qs = qs.filter(tags__name__in = search_state.query_tags)
+                qs = qs.filter(thread__tags__name__in = search_state.query_tags)
             if len(search_state.query_users) > 0:
                 query_users = list()
                 for username in search_state.query_users:
@@ -203,7 +203,7 @@ class QuestionQuerySet(models.query.QuerySet):
 
         if tag_selector: 
             for tag in tag_selector:
-                qs = qs.filter(tags__name = tag)
+                qs = qs.filter(thread__tags__name = tag)
 
 
         #have to import this at run time, otherwise there
@@ -266,59 +266,64 @@ class QuestionQuerySet(models.query.QuerySet):
                 if request_user.display_tag_filter_strategy == \
                         const.INCLUDE_INTERESTING:
                     #filter by interesting tags only
-                    interesting_tag_filter = models.Q(tags__in = interesting_tags)
+                    interesting_tag_filter = models.Q(thread__tags__in = interesting_tags)
                     if request_user.has_interesting_wildcard_tags():
                         interesting_wildcards = request_user.interesting_tags.split() 
                         extra_interesting_tags = Tag.objects.get_by_wildcards(
                                                             interesting_wildcards
                                                         )
-                        interesting_tag_filter |= models.Q(tags__in = extra_interesting_tags)
+                        interesting_tag_filter |= models.Q(thread__tags__in = extra_interesting_tags)
 
                     qs = qs.filter(interesting_tag_filter)
                 else:
+                    pass
                     #simply annotate interesting questions
-                    qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'interesting_score', 
-                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-                                 + 'WHERE askbot_markedtag.user_id = %s '
-                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                                 + 'AND askbot_markedtag.reason = \'good\' '
-                                 + 'AND question_tags.question_id = question.id'
-                            ),
-                                ]),
-                        select_params = (uid_str,),
-                     )
+#                    qs = qs.extra(
+#                        select = SortedDict([
+#                            (
+#                                # TODO: [tags] Update this query so that it fetches tags from Thread
+#                                'interesting_score',
+#                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
+#                                 + 'WHERE askbot_markedtag.user_id = %s '
+#                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+#                                 + 'AND askbot_markedtag.reason = \'good\' '
+#                                 + 'AND question_tags.question_id = question.id'
+#                            ),
+#                                ]),
+#                        select_params = (uid_str,),
+#                     )
+
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
             if ignored_tags or request_user.has_ignored_wildcard_tags():
                 if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED:
                     #exclude ignored tags if the user wants to
-                    qs = qs.exclude(tags__in=ignored_tags)
+                    qs = qs.exclude(thread__tags__in=ignored_tags)
                     if request_user.has_ignored_wildcard_tags():
                         ignored_wildcards = request_user.ignored_tags.split() 
                         extra_ignored_tags = Tag.objects.get_by_wildcards(
                                                             ignored_wildcards
                                                         )
-                        qs = qs.exclude(tags__in = extra_ignored_tags)
+                        qs = qs.exclude(thread__tags__in = extra_ignored_tags)
                 else:
-                    #annotate questions tagged with ignored tags
-                    #expensive query
-                    qs = qs.extra(
-                        select = SortedDict([
-                            (
-                                'ignored_score', 
-                                'SELECT COUNT(1) '
-                                  + 'FROM askbot_markedtag, question_tags '
-                                  + 'WHERE askbot_markedtag.user_id = %s '
-                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND askbot_markedtag.reason = \'bad\' '
-                                  + 'AND question_tags.question_id = question.id'
-                            )
-                                ]),
-                        select_params = (uid_str, )
-                     )
+                    pass
+#                    #annotate questions tagged with ignored tags
+#                    #expensive query
+#                    qs = qs.extra(
+#                        select = SortedDict([
+#                            (
+#                                'ignored_score',
+#                                # TODO: [tags] Update this query so that it fetches tags from Thread
+#                                'SELECT COUNT(1) '
+#                                  + 'FROM askbot_markedtag, question_tags '
+#                                  + 'WHERE askbot_markedtag.user_id = %s '
+#                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+#                                  + 'AND askbot_markedtag.reason = \'bad\' '
+#                                  + 'AND question_tags.question_id = question.id'
+#                            )
+#                                ]),
+#                        select_params = (uid_str, )
+#                     )
 
         if sort_method != 'relevance-desc':
             #relevance sort is set in the extra statement
@@ -451,6 +456,8 @@ class QuestionManager(BaseQuerySetManager):
 class Thread(models.Model):
     title = models.CharField(max_length=300)
 
+    tags = models.ManyToManyField('Tag', related_name='threads')
+
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
     view_count = models.PositiveIntegerField(default=0)
@@ -553,8 +560,8 @@ class Thread(models.Model):
         def get_data():
             thread_question = self._question()
 
-            tags_list = thread_question.tags.all()
-            similar_questions = Question.objects.filter(tags__in=tags_list).\
+            tags_list = self.tags.all()
+            similar_questions = Question.objects.filter(thread__tags__in=tags_list).\
                                     exclude(id = self.id).exclude(deleted = True).distinct()[:100]
 
             similar_questions = list(similar_questions)
@@ -595,7 +602,7 @@ class Thread(models.Model):
         """
         thread_question = self._question()
 
-        previous_tags = list(thread_question.tags.all())
+        previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
         updated_tagnames = set(t for t in tagnames.split(' '))
@@ -607,7 +614,7 @@ class Thread(models.Model):
         #remove tags from the question's tags many2many relation
         if removed_tagnames:
             removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
-            thread_question.tags.remove(*removed_tags)
+            self.tags.remove(*removed_tags)
 
             #if any of the removed tags reached use count == 1 that means they must be deleted
             for tag in removed_tags:
@@ -647,7 +654,7 @@ class Thread(models.Model):
                 added_tags = reused_tags
 
             #finally add tags to the relation and extend the modified list
-            thread_question.tags.add(*added_tags)
+            self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
 
         #if there are any modified tags, update their use counts
@@ -719,8 +726,6 @@ class Thread(models.Model):
 class Question(content.Content):
     post_type = 'question'
     thread = models.ForeignKey('Thread', unique=True, related_name='questions')
-
-    tags     = models.ManyToManyField('Tag', related_name='questions')
 
     objects = QuestionManager()
 

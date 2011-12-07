@@ -762,9 +762,7 @@ class Taxonomist(Badge):
 
         tag = context_object
         taxonomist_threshold = askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
-        #the "-1" is used because tag counts are updated in a bulk query
-        #that does not update the value in the python object
-        if tag.used_count == taxonomist_threshold - 1:
+        if tag.used_count == taxonomist_threshold:
             return self.award(tag.created_by, tag, timestamp)
         return False
 
