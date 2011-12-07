@@ -76,8 +76,6 @@ class Answer(content.Content):
     class Meta(content.Content.Meta):
         db_table = u'answer'
 
-    is_anonymous = False #answers are never anonymous - may change
-
 
 class AnonymousAnswer(AnonymousContent):
     question = models.ForeignKey('Question', related_name='anonymous_answers')

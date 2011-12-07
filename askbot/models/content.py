@@ -58,6 +58,15 @@ class Content(models.Model):
     # Denormalised data
     summary = models.CharField(max_length=180)
 
+    #note: anonymity here applies to question only, but
+    #the field will still go to thread
+    #maybe we should rename it to is_question_anonymous
+    #we might have to duplicate the is_anonymous on the Post,
+    #if we are to allow anonymous answers
+    #the reason is that the title and tags belong to thread,
+    #but the question body to Post
+    is_anonymous = models.BooleanField(default=False)
+
     _use_markdown = True
     _escape_html = False #markdow does the escaping
     _urlize = False
@@ -100,6 +109,8 @@ class Content(models.Model):
         return self.post_type == 'question'
 
     def save(self, *args, **kwargs):
+        if self.is_answer() and self.is_anonymous:
+            raise ValueError('Answer cannot be anonymous!')
         models.Model.save(self, *args, **kwargs) # TODO: figure out how to use super() here
         if self.is_answer() and 'postgres' in settings.DATABASE_ENGINE:
             #hit the database to trigger update of full text search vector

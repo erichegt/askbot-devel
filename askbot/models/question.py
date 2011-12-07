@@ -722,15 +722,6 @@ class Question(content.Content):
 
     tags     = models.ManyToManyField('Tag', related_name='questions')
 
-    #note: anonymity here applies to question only, but
-    #the field will still go to thread
-    #maybe we should rename it to is_question_anonymous
-    #we might have to duplicate the is_anonymous on the Post,
-    #if we are to allow anonymous answers
-    #the reason is that the title and tags belong to thread,
-    #but the question body to Post
-    is_anonymous = models.BooleanField(default=False) 
-
     objects = QuestionManager()
 
     class Meta(content.Content.Meta):
