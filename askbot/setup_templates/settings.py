@@ -142,6 +142,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'askbot.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
     'django.core.context_processors.csrf', #necessary for csrf protection
+    "django.core.context_processors.static",
 )
 
 
@@ -150,6 +151,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    "django.contrib.staticfiles",
 
     #all of these are needed for the askbot
     'django.contrib.admin',
