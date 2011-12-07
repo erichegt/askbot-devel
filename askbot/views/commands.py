@@ -445,7 +445,7 @@ def api_get_questions(request):
         for question in questions:
             question_list.append({
                 'url': question.get_absolute_url(),
-                'title': question.title,
+                'title': question.thread.title,
                 'answer_count': question.thread.answer_count
             })
         json_data = simplejson.dumps(question_list)

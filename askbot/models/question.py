@@ -88,8 +88,7 @@ class QuestionQuerySet(models.query.QuerySet):
         #and some - merged with the Answer.objects.create_new
 
         question = Question(
-            thread=Thread.objects.create(tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
-            title = title,
+            thread=Thread.objects.create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
             author = author,
             added_at = added_at,
             wiki = wiki,
@@ -130,7 +129,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return Question.objects.filter(deleted = False, id__in = question_ids)
         if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
             return self.filter( 
-                        models.Q(title__search = search_query) \
+                        models.Q(thread__title__search = search_query) \
                        | models.Q(text__search = search_query) \
                        | models.Q(thread__tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
@@ -148,10 +147,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.extra(**extra_kwargs)
         else:
             #fallback to dumb title match search
-            return self.extra(
-                        where=['title like %s'], 
-                        params=['%' + search_query + '%']
-                    )
+            return self.filter(thread__title__icontains=search_query)
 
     def run_advanced_search(
                         self,
@@ -191,7 +187,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     if sort_method == 'relevance-desc':
                         qs = qs.extra(order_by = ['-relevance',])
             if search_state.query_title:
-                qs = qs.filter(title__icontains = search_state.query_title)
+                qs = qs.filter(thread__title__icontains = search_state.query_title)
             if len(search_state.query_tags) > 0:
                 qs = qs.filter(tags__name__in = search_state.query_tags)
             if len(search_state.query_users) > 0:
@@ -453,6 +449,8 @@ class QuestionManager(BaseQuerySetManager):
         return QuestionQuerySet(self.model)
 
 class Thread(models.Model):
+    title = models.CharField(max_length=300)
+
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
     view_count = models.PositiveIntegerField(default=0)
@@ -722,8 +720,6 @@ class Question(content.Content):
     post_type = 'question'
     thread = models.ForeignKey('Thread', unique=True, related_name='questions')
 
-    #todo: this really becomes thread,
-    title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
 
     #note: anonymity here applies to question only, but
@@ -741,7 +737,7 @@ class Question(content.Content):
         db_table = u'question'
 
     def _get_slug(self):
-        return slugify(self.title)
+        return slugify(self.thread.title)
 
     slug = property(_get_slug)
 

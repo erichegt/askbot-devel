@@ -12,7 +12,7 @@
         <ul>
             {% for question in questions %}
                 <li><a href="{{settings.APP_URL}}{{ question.get_absolute_url() }}">
-                  {{ question.title }}</a></li>
+                  {{ question.thread.title }}</a></li>
             {% endfor %}
         </ul>
     </div> 

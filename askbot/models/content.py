@@ -71,7 +71,7 @@ class Content(models.Model):
 
     def __unicode__(self):
         if self.is_question():
-            return self.title
+            return self.thread.title
         elif self.is_answer():
             return self.html
         raise NotImplementedError
@@ -81,7 +81,7 @@ class Content(models.Model):
             return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % \
                     {
                         'base': urlresolvers.reverse('question', args=[self.question.id]),
-                        'slug': django_urlquote(slugify(self.question.title)),
+                        'slug': django_urlquote(slugify(self.question.thread.title)),
                         'id': self.id
                     }
         elif self.is_question():
@@ -680,7 +680,7 @@ class Content(models.Model):
         latest_revision = self.get_latest_revision()
         #a hack to allow partial edits - important for SE loader
         if title is None:
-            title = self.title
+            title = self.thread.title
         if text is None:
             text = latest_revision.text
         if tags is None:
@@ -693,7 +693,6 @@ class Content(models.Model):
             edited_at = datetime.datetime.now()
 
         # Update the Question itself
-        self.title = title
         self.last_edited_at = edited_at
         self.last_edited_by = edited_by
         self.text = text
@@ -718,6 +717,7 @@ class Content(models.Model):
 
         self.parse_and_save(author = edited_by)
 
+        self.thread.title = title
         self.thread.tagnames = tags
         self.thread.save()
 
@@ -769,7 +769,7 @@ class Content(models.Model):
         return PostRevision.objects.create_question_revision(
             question   = self,
             revision   = rev_no,
-            title      = self.title,
+            title      = self.thread.title,
             author     = author,
             is_anonymous = is_anonymous,
             revised_at = revised_at,
@@ -844,7 +844,7 @@ class Content(models.Model):
 
     def get_question_title(self):
         if self.is_answer():
-            return self.question.title
+            return self.question.thread.title
         elif self.is_question():
             if self.thread.closed:
                 attr = const.POST_STATUS['closed']
@@ -853,9 +853,9 @@ class Content(models.Model):
             else:
                 attr = None
             if attr is not None:
-                return u'%s %s' % (self.title, attr)
+                return u'%s %s' % (self.thread.title, attr)
             else:
-                return self.title
+                return self.thread.title
         raise NotImplementedError
 
     def accepted(self):

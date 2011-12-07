@@ -11,14 +11,14 @@
 {% endif %}
     {% if answer %}
         <div class="message">
-        {% trans title=answer.question.title, summary=answer.summary %}
+        {% trans title=answer.question.thread.title, summary=answer.summary %}
         Your answer to {{title}} {{summary}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
     {% if question %}
         <div class="message">
-        {% trans title=question.title, summary=question.summary %}Your question 
+        {% trans title=question.thread.title, summary=question.summary %}Your question
         {{title}} {{summary}} will be posted once you log in
         {% endtrans %}
         </div>

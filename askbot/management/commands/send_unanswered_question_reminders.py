@@ -67,7 +67,7 @@ class Command(NoArgsCommand):
                             % (
                                 askbot_settings.APP_URL,
                                 question.get_absolute_url(),
-                                question.title
+                                question.thread.title
                             )
             body_text += '</ul>'
 

@@ -111,7 +111,7 @@ class PostRevision(models.Model):
 
     def get_question_title(self):
         #INFO: ack-grepping shows that it's only used for Questions, so there's no code for Answers
-        return self.question.title
+        return self.question.thread.title
 
     def as_html(self, **kwargs):
         markdowner = markup.get_parser()

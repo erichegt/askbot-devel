@@ -2272,10 +2272,10 @@ def format_instant_notification_email(
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
         'post_url': site_url + post.get_absolute_url(),
-        'origin_post_title': origin_post.title,
+        'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    subject_line = _('"%(title)s"') % {'title': origin_post.title}
+    subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
     return subject_line, template.render(Context(update_data))
 
 #todo: action

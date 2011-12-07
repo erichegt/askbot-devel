@@ -93,7 +93,7 @@ class Command(NoArgsCommand):
                         tags = tags,
                     )
             self.print_if_verbose("Created Question '%s' with tags: '%s'" % (
-                                                active_question.title, tags,)
+                                                active_question.thread.title, tags,)
                                             )
         return active_question
 

@@ -329,7 +329,8 @@ def user_stats(request, user, context):
             'answer_id' : 'answer.id',
             'answer_accepted' : 'askbot_thread.accepted_answer_id',
             'answer_score' : 'answer.score',
-            'comment_count' : 'answer.comment_count'
+            'comment_count' : 'answer.comment_count',
+            'title': 'askbot_thread.title',
             },
         tables=['question', 'answer', 'askbot_thread'],
         where=['NOT answer.deleted AND NOT question.deleted AND answer.author_id=%s AND answer.question_id=question.id AND question.thread_id=askbot_thread.id'],
@@ -447,15 +448,15 @@ def user_recent(request, user, context):
     # ask questions
     questions = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'summary' : 'question.summary',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
             },
-        tables=['activity', 'question'],
-        where=['activity.content_type_id = %s AND activity.object_id = ' +
-            'question.id AND activity.user_id = %s AND activity.activity_type = %s AND NOT question.deleted'],
+        tables=['activity', 'question', 'askbot_thread'],
+        where=['activity.content_type_id = %s AND activity.object_id = question.id AND askbot_thread.id = question.thread_id AND ' +
+               'activity.user_id = %s AND activity.activity_type = %s AND NOT question.deleted'],
         params=[ContentType.objects.get_for_model(models.Question).id, user.id, const.TYPE_ACTIVITY_ASK_QUESTION],
         order_by=['-activity.active_at']
     ).values(
@@ -480,16 +481,16 @@ def user_recent(request, user, context):
     # answers
     answers = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'summary' : 'question.summary',
             'answer_id' : 'answer.id',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
             },
-        tables=['activity', 'answer', 'question'],
+        tables=['activity', 'answer', 'question', 'askbot_thread'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND ' +
-            'answer.question_id=question.id AND NOT answer.deleted AND activity.user_id=%s AND '+
+            'answer.question_id=question.id AND askbot_thread.id=question.thread_id AND NOT answer.deleted AND activity.user_id=%s AND '+
             'activity.activity_type=%s AND NOT question.deleted'],
         params=[ContentType.objects.get_for_model(models.Answer).id, user.id, const.TYPE_ACTIVITY_ANSWER],
         order_by=['-activity.active_at']
@@ -509,15 +510,15 @@ def user_recent(request, user, context):
     # question comments
     comments = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'comment.object_id',
             'added_at' : 'comment.added_at',
             'activity_type' : 'activity.activity_type'
             },
-        tables=['activity', 'question', 'comment'],
+        tables=['activity', 'question', 'comment', 'askbot_thread'],
 
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
-            'activity.user_id = comment.user_id AND comment.object_id=question.id AND '+
+            'activity.user_id = comment.user_id AND comment.object_id=question.id AND askbot_thread.id=question.thread_id AND '+
             'comment.content_type_id=%s AND activity.user_id = %s AND activity.activity_type=%s AND ' +
             'NOT question.deleted'],
         params=[ContentType.objects.get_for_model(models.Comment).id, ContentType.objects.get_for_model(models.Question).id, user.id, const.TYPE_ACTIVITY_COMMENT_QUESTION],
@@ -537,17 +538,17 @@ def user_recent(request, user, context):
     # answer comments
     comments = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'answer_id' : 'answer.id',
             'added_at' : 'comment.added_at',
             'activity_type' : 'activity.activity_type'
             },
-        tables=['activity', 'question', 'answer', 'comment'],
+        tables=['activity', 'question', 'answer', 'comment', 'askbot_thread'],
 
         where=['activity.content_type_id = %s AND activity.object_id = comment.id AND '+
             'activity.user_id = comment.user_id AND comment.object_id=answer.id AND '+
-            'comment.content_type_id=%s AND question.id = answer.question_id AND '+
+            'comment.content_type_id=%s AND question.id = answer.question_id AND askbot_thread.id=question.thread_id AND '+
             'activity.user_id = %s AND activity.activity_type=%s AND '+
             'NOT answer.deleted AND NOT question.deleted'],
         params=[ContentType.objects.get_for_model(models.Comment).id, ContentType.objects.get_for_model(models.Answer).id, user.id, const.TYPE_ACTIVITY_COMMENT_ANSWER],
@@ -599,18 +600,18 @@ def user_recent(request, user, context):
     # answer revisions
     revisions = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'answer_id' : 'answer.id',
             'added_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type',
             'summary' : 'askbot_postrevision.summary'
             },
-        tables=['activity', 'askbot_postrevision', 'question', 'answer'],
+        tables=['activity', 'askbot_postrevision', 'question', 'answer', 'askbot_thread'],
         where=['''
             activity.content_type_id=%s AND activity.object_id=askbot_postrevision.id AND
             askbot_postrevision.answer_id=answer.id AND askbot_postrevision.revision_type=%s AND
-            answer.question_id=question.id AND NOT question.deleted AND NOT answer.deleted AND
+            answer.question_id=question.id AND askbot_thread.id=question.thread_id AND NOT question.deleted AND NOT answer.deleted AND
             activity.user_id=askbot_postrevision.author_id AND activity.user_id=%s AND
             activity.activity_type=%s
         '''],
@@ -633,16 +634,16 @@ def user_recent(request, user, context):
     # accepted answers
     accept_answers = models.Activity.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'added_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type',
             },
-        tables=['activity', 'answer', 'question'],
+        tables=['activity', 'answer', 'question', 'askbot_thread'],
         where=['activity.content_type_id = %s AND activity.object_id = answer.id AND '+
             'activity.user_id = question.author_id AND activity.user_id = %s AND '+
             'NOT answer.deleted AND NOT question.deleted AND '+
-            'answer.question_id=question.id AND activity.activity_type=%s'],
+            'answer.question_id=question.id AND askbot_thread.id=question.thread_id AND activity.activity_type=%s'],
         params=[ContentType.objects.get_for_model(models.Answer).id, user.id, const.TYPE_ACTIVITY_MARK_ANSWER],
         order_by=['-activity.active_at']
     ).values(
@@ -736,7 +737,7 @@ def user_responses(request, user, context):
                     'activity__active_at',
                     'activity__object_id',
                     'activity__content_type',
-                    'activity__question__title',
+                    'activity__question__thread__title',
                     'activity__user__username',
                     'activity__user__id',
                     'activity__user__gravatar',
@@ -755,7 +756,7 @@ def user_responses(request, user, context):
             'is_new': memo.is_new(),
             'response_url': memo.activity.get_absolute_url(),
             'response_snippet': memo.activity.get_preview(),
-            'response_title': memo.activity.question.title,
+            'response_title': memo.activity.question.thread.title,
             'response_type': memo.activity.get_activity_type_display(),
             'response_id': memo.activity.question.id,
             'nested_responses': [],
@@ -811,15 +812,15 @@ def user_votes(request, user, context):
     votes = []
     question_votes = models.Vote.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'answer_id' : 0,
             'voted_at' : 'vote.voted_at',
             'vote' : 'vote',
             },
         select_params=[user.id],
-        tables=['vote', 'question', 'auth_user'],
-        where=['vote.content_type_id = %s AND vote.user_id = %s AND vote.object_id = question.id '+
+        tables=['vote', 'question', 'auth_user', 'askbot_thread'],
+        where=['vote.content_type_id = %s AND vote.user_id = %s AND vote.object_id = question.id AND askbot_thread.id=question.thread_id '+
             'AND vote.user_id=auth_user.id'],
         params=[ContentType.objects.get_for_model(models.Question).id, user.id],
         order_by=['-vote.id']
@@ -835,16 +836,16 @@ def user_votes(request, user, context):
 
     answer_votes = models.Vote.objects.extra(
         select={
-            'title' : 'question.title',
+            'title' : 'askbot_thread.title',
             'question_id' : 'question.id',
             'answer_id' : 'answer.id',
             'voted_at' : 'vote.voted_at',
             'vote' : 'vote',
             },
         select_params=[user.id],
-        tables=['vote', 'answer', 'question', 'auth_user'],
+        tables=['vote', 'answer', 'question', 'auth_user', 'askbot_thread'],
         where=['vote.content_type_id = %s AND vote.user_id = %s AND vote.object_id = answer.id '+
-            'AND answer.question_id = question.id AND vote.user_id=auth_user.id'],
+            'AND answer.question_id = question.id AND askbot_thread.id=question.thread_id AND vote.user_id=auth_user.id'],
         params=[ContentType.objects.get_for_model(models.Answer).id, user.id],
         order_by=['-vote.id']
     ).values(
@@ -873,7 +874,7 @@ def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
     #select_related() adds stuff needed for the query
     reputes = reputes.select_related(
-                            'question__title',
+                            'question__thread__title',
                             'question__id',
                             'user__username'
                         )

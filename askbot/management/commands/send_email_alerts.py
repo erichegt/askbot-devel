@@ -441,7 +441,7 @@ class Command(NoArgsCommand):
                         format_action_count('%(num)d ans rev',meta_data['ans_rev'],act_list)
                         act_token = ', '.join(act_list)
                         text += '<li><a href="%s?sort=latest">%s</a> <font color="#777777">(%s)</font></li>' \
-                                    % (url_prefix + q.get_absolute_url(), q.title, act_token)
+                                    % (url_prefix + q.get_absolute_url(), q.thread.title, act_token)
                 text += '</ul>'
                 text += '<p></p>'
                 #if len(q_list.keys()) >= askbot_settings.MAX_ALERTS_PER_EMAIL:

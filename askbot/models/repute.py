@@ -146,7 +146,7 @@ class Repute(models.Model):
             link_title_data = {
                                 'points': abs(delta),
                                 'username': self.user.username,
-                                'question_title': self.question.title
+                                'question_title': self.question.thread.title
                             }
             if delta > 0:
                 link_title = _(
@@ -162,6 +162,6 @@ class Repute(models.Model):
             return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
                             % {
                                'url': self.question.get_absolute_url(), 
-                               'question_title': self.question.title,
+                               'question_title': self.question.thread.title,
                                'link_title': link_title
                             }
