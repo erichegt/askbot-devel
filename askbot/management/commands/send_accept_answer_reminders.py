@@ -52,7 +52,6 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            #tag_summary = get_tag_summary_from_questions(final_question_list)
             subject_line = _(
                 'Accept the best answer for %(question_count)d of your questions'
             ) % {'question_count': question_count}

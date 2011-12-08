@@ -3,10 +3,9 @@ from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, F
-from askbot.models import User, Question, Answer, Tag, PostRevision
+from askbot.models import User, Question, Answer, Tag, PostRevision, Thread
 from askbot.models import Activity, EmailFeedSetting
 from askbot.models import Comment
-from askbot.models.question import get_tag_summary_from_questions
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings as django_settings
@@ -404,7 +403,9 @@ class Command(NoArgsCommand):
             if num_q > 0:
                 url_prefix = askbot_settings.APP_URL
 
-                tag_summary = get_tag_summary_from_questions(q_list.keys())
+                threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
+                tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
+
                 question_count = len(q_list.keys())
 
                 subject_line = ungettext(

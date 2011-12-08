@@ -14,7 +14,7 @@ from askbot import models
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
-from askbot.models.question import get_tag_summary_from_questions
+from askbot.models.question import Thread
 
 TO_JSON = functools.partial(serializers.serialize, 'json')
 
@@ -680,39 +680,26 @@ class InstantQAnsEmailAlertTests(EmailAlertTests):
 
 class DelayedAlertSubjectLineTests(TestCase):
     def test_topics_in_subject_line(self):
-        q1 = models.Question(id=1, thread=models.Thread(tagnames='one two three four five'))
-        q2 = models.Question(id=2, thread=models.Thread(tagnames='two three four five'))
-        q3 = models.Question(id=3, thread=models.Thread(tagnames='three four five'))
-        q4 = models.Question(id=4, thread=models.Thread(tagnames='four five'))
-        q5 = models.Question(id=5, thread=models.Thread(tagnames='five'))
-        q6 = models.Question(id=6, thread=models.Thread(tagnames='six'))
-        q7 = models.Question(id=7, thread=models.Thread(tagnames='six'))
-        q8 = models.Question(id=8, thread=models.Thread(tagnames='six'))
-        q9 = models.Question(id=9, thread=models.Thread(tagnames='six'))
-        q10 = models.Question(id=10, thread=models.Thread(tagnames='six'))
-        q11 = models.Question(id=11, thread=models.Thread(tagnames='six'))
-        q_dict = {
-                    q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
-                    q8:'', q9:'', q10:'', q11:'',
-                }
-        subject = get_tag_summary_from_questions(q_dict.keys())
+        threads = [
+            models.Thread(tagnames='one two three four five'),
+            models.Thread(tagnames='two three four five'),
+            models.Thread(tagnames='three four five'),
+            models.Thread(tagnames='four five'),
+            models.Thread(tagnames='five'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"five", "four", "three", "two" and "one"', subject)
 
-        self.assertTrue('one' not in subject)
-        self.assertTrue('two' in subject)
-        self.assertTrue('three' in subject)
-        self.assertTrue('four' in subject)
-        self.assertTrue('five' in subject)
-        self.assertTrue('six' in subject)
-        i2 = subject.index('two')
-        i3 = subject.index('three')
-        i4 = subject.index('four')
-        i5 = subject.index('five')
-        i6 = subject.index('six')
-        order = [i6, i5, i4, i3, i2]
-        self.assertEquals(
-            order,
-            sorted(order)
-        )
+        threads += [
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"six", "five", "four", "three", "two" and more', subject)
 
 class FeedbackTests(utils.AskbotTestCase):
     def setUp(self):

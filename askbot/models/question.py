@@ -34,424 +34,40 @@ QUESTION_ORDER_BY_MAP = {
     'relevance-desc': None#this is a special case for postges only
 }
 
-def get_tag_summary_from_questions(questions):
-    """returns a humanized string containing up to 
-    five most frequently used
-    unique tags coming from the ``questions``.
-    Variable ``questions`` is an iterable of 
-    :class:`~askbot.models.Question` model objects.
+class ThreadManager(models.Manager):
+    def get_tag_summary_from_threads(self, threads):
+        """returns a humanized string containing up to
+        five most frequently used
+        unique tags coming from the ``threads``.
+        Variable ``threads`` is an iterable of
+        :class:`~askbot.models.Thread` model objects.
 
-    This is not implemented yet as a query set method,
-    because it is used on a list.
-    """
-    #todo: in python 2.6 there is collections.Counter() thing
-    #which would be very useful here
-    tag_counts = dict()
-    for question in questions:
-        tag_names = question.get_tag_names()
-        for tag_name in tag_names:
-            if tag_name in tag_counts:
-                tag_counts[tag_name] += 1
-            else:
-                tag_counts[tag_name] = 1
-    tag_list = tag_counts.keys()
-    #sort in descending order
-    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
-
-    #note that double quote placement is important here
-    if len(tag_list) == 1:
-        last_topic = '"'
-    elif len(tag_list) <= 5:
-        last_topic = _('" and "%s"') % tag_list.pop()
-    else:
-        tag_list = tag_list[:5]
-        last_topic = _('" and more')
-
-    return '"' + '", "'.join(tag_list) + last_topic
-
-
-class QuestionQuerySet(models.query.QuerySet):
-    """Custom query set subclass for :class:`~askbot.models.Question`
-    """
-    #todo: becomes thread query set
-    def create_new(
-                self,
-                title = None,
-                author = None,
-                added_at = None,
-                wiki = False,
-                is_anonymous = False,
-                tagnames = None,
-                text = None
-            ):
-        #todo: some work from this method will go to thread
-        #and some - merged with the Answer.objects.create_new
-
-        question = Question(
-            thread=Thread.objects.create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
-            author = author,
-            added_at = added_at,
-            wiki = wiki,
-            is_anonymous = is_anonymous,
-            #html field is denormalized in .save() call
-            text = text,
-            #summary field is denormalized in .save() call
-        )
-        if question.wiki:
-            #DATED COMMENT
-            #todo: this is confusing - last_edited_at field
-            #is used as an indicator whether question has been edited
-            #but in principle, post creation should count as edit as well
-            question.last_edited_by = question.author
-            question.last_edited_at = added_at
-            question.wikified_at = added_at
-
-        question.parse_and_save(author = author)
-        question.thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
-
-        question.add_revision(
-            author = author,
-            is_anonymous = is_anonymous,
-            text = text,
-            comment = const.POST_STATUS['default_version'],
-            revised_at = added_at,
-        )
-        return question
-
-    def get_by_text_query(self, search_query):
-        """returns a query set of questions, 
-        matching the full text query
+        This is not implemented yet as a query set method,
+        because it is used on a list.
         """
-        #todo - goes to thread - we search whole threads
-        if getattr(settings, 'USE_SPHINX_SEARCH', False):
-            matching_questions = Question.sphinx_search.query(search_query)
-            question_ids = [q.id for q in matching_questions] 
-            return Question.objects.filter(deleted = False, id__in = question_ids)
-        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
-            return self.filter( 
-                        models.Q(thread__title__search = search_query) \
-                       | models.Q(text__search = search_query) \
-                       | models.Q(thread__tagnames__search = search_query) \
-                       | models.Q(answers__text__search = search_query)
-                    )
-        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
-            search_query = '&'.join(search_query.split())
-            extra_params = (search_query,)
-            extra_kwargs = {
-                'select': {'relevance': rank_clause},
-                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
-                'params': extra_params,
-                'select_params': extra_params,
-            }
-            return self.extra(**extra_kwargs)
+        # TODO: In Python 2.6 there is collections.Counter() thing which would be very useful here
+        # TODO: In Python 2.5 there is `defaultdict` which already would be an improvement
+        tag_counts = dict()
+        for thread in threads:
+            for tag_name in thread.get_tag_names():
+                if tag_name in tag_counts:
+                    tag_counts[tag_name] += 1
+                else:
+                    tag_counts[tag_name] = 1
+        tag_list = tag_counts.keys()
+        tag_list.sort(key=lambda t: tag_counts[t], reverse=True)
+
+        #note that double quote placement is important here
+        if len(tag_list) == 1:
+            last_topic = '"'
+        elif len(tag_list) <= 5:
+            last_topic = _('" and "%s"') % tag_list.pop()
         else:
-            #fallback to dumb title match search
-            return self.filter(thread__title__icontains=search_query)
+            tag_list = tag_list[:5]
+            last_topic = _('" and more')
 
-    def run_advanced_search(
-                        self,
-                        request_user = None,
-                        search_state = None
-                    ):
-        """all parameters are guaranteed to be clean
-        however may not relate to database - in that case
-        a relvant filter will be silently dropped
-        """
-        #todo: same as for get_by_text_query - goes to Tread
-        scope_selector = getattr(
-                            search_state,
-                            'scope',
-                            const.DEFAULT_POST_SCOPE
-                        )
+        return '"' + '", "'.join(tag_list) + last_topic
 
-        search_query = search_state.query
-        tag_selector = search_state.tags
-        author_selector = search_state.author
-
-        sort_method = getattr(
-                            search_state, 
-                            'sort',
-                            const.DEFAULT_POST_SORT_METHOD
-                        )
-
-        qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
-
-        #return metadata
-        meta_data = {}
-        if search_query:
-            if search_state.stripped_query:
-                qs = qs.get_by_text_query(search_state.stripped_query)
-                #a patch for postgres search sort method
-                if askbot.conf.should_show_sort_by_relevance():
-                    if sort_method == 'relevance-desc':
-                        qs = qs.extra(order_by = ['-relevance',])
-            if search_state.query_title:
-                qs = qs.filter(thread__title__icontains = search_state.query_title)
-            if len(search_state.query_tags) > 0:
-                qs = qs.filter(thread__tags__name__in = search_state.query_tags)
-            if len(search_state.query_users) > 0:
-                query_users = list()
-                for username in search_state.query_users:
-                    try:
-                        user = User.objects.get(username__iexact = username)
-                        query_users.append(user)
-                    except User.DoesNotExist:
-                        pass
-                if len(query_users) > 0:
-                    qs = qs.filter(author__in = query_users)
-
-        if tag_selector: 
-            for tag in tag_selector:
-                qs = qs.filter(thread__tags__name = tag)
-
-
-        #have to import this at run time, otherwise there
-        #a circular import dependency...
-        from askbot.conf import settings as askbot_settings
-        if scope_selector:
-            if scope_selector == 'unanswered':
-                qs = qs.filter(thread__closed = False)#do not show closed questions in unanswered section
-                if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
-                    qs = qs.filter(thread__answer_count=0)#todo: expand for different meanings of this
-                elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
-                    qs = qs.filter(thread__accepted_answer__isnull=True) #answer_accepted=False
-                elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
-                    raise NotImplementedError()
-                else:
-                    raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
-            elif scope_selector == 'favorite':
-                favorite_filter = models.Q(thread__favorited_by = request_user)
-                if 'followit' in settings.INSTALLED_APPS:
-                    followed_users = request_user.get_followed_users()
-                    favorite_filter |= models.Q(author__in = followed_users)
-                    favorite_filter |= models.Q(answers__author__in = followed_users)
-                qs = qs.filter(favorite_filter)
-            
-        #user contributed questions & answers
-        if author_selector:
-            try:
-                #todo maybe support selection by multiple authors
-                u = User.objects.get(id=int(author_selector))
-                qs = qs.filter(
-                            models.Q(author=u, deleted=False) \
-                            | models.Q(answers__author=u, answers__deleted=False)
-                        )
-                meta_data['author_name'] = u.username
-            except User.DoesNotExist:
-                meta_data['author_name'] = None
-
-        #get users tag filters
-        ignored_tag_names = None
-        if request_user and request_user.is_authenticated():
-            uid_str = str(request_user.id)
-            #mark questions tagged with interesting tags
-            #a kind of fancy annotation, would be nice to avoid it
-            interesting_tags = Tag.objects.filter(
-                                    user_selections__user=request_user,
-                                    user_selections__reason='good'
-                                )
-            ignored_tags = Tag.objects.filter(
-                                    user_selections__user=request_user,
-                                    user_selections__reason='bad'
-                                )
-
-            meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
-
-            ignored_tag_names = [tag.name for tag in ignored_tags]
-            meta_data['ignored_tag_names'] = ignored_tag_names
-
-            if interesting_tags or request_user.has_interesting_wildcard_tags():
-                #expensive query
-                if request_user.display_tag_filter_strategy == \
-                        const.INCLUDE_INTERESTING:
-                    #filter by interesting tags only
-                    interesting_tag_filter = models.Q(thread__tags__in = interesting_tags)
-                    if request_user.has_interesting_wildcard_tags():
-                        interesting_wildcards = request_user.interesting_tags.split() 
-                        extra_interesting_tags = Tag.objects.get_by_wildcards(
-                                                            interesting_wildcards
-                                                        )
-                        interesting_tag_filter |= models.Q(thread__tags__in = extra_interesting_tags)
-
-                    qs = qs.filter(interesting_tag_filter)
-                else:
-                    pass
-                    #simply annotate interesting questions
-#                    qs = qs.extra(
-#                        select = SortedDict([
-#                            (
-#                                # TODO: [tags] Update this query so that it fetches tags from Thread
-#                                'interesting_score',
-#                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-#                                 + 'WHERE askbot_markedtag.user_id = %s '
-#                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-#                                 + 'AND askbot_markedtag.reason = \'good\' '
-#                                 + 'AND question_tags.question_id = question.id'
-#                            ),
-#                                ]),
-#                        select_params = (uid_str,),
-#                     )
-
-            # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
-
-            if ignored_tags or request_user.has_ignored_wildcard_tags():
-                if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED:
-                    #exclude ignored tags if the user wants to
-                    qs = qs.exclude(thread__tags__in=ignored_tags)
-                    if request_user.has_ignored_wildcard_tags():
-                        ignored_wildcards = request_user.ignored_tags.split() 
-                        extra_ignored_tags = Tag.objects.get_by_wildcards(
-                                                            ignored_wildcards
-                                                        )
-                        qs = qs.exclude(thread__tags__in = extra_ignored_tags)
-                else:
-                    pass
-#                    #annotate questions tagged with ignored tags
-#                    #expensive query
-#                    qs = qs.extra(
-#                        select = SortedDict([
-#                            (
-#                                'ignored_score',
-#                                # TODO: [tags] Update this query so that it fetches tags from Thread
-#                                'SELECT COUNT(1) '
-#                                  + 'FROM askbot_markedtag, question_tags '
-#                                  + 'WHERE askbot_markedtag.user_id = %s '
-#                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-#                                  + 'AND askbot_markedtag.reason = \'bad\' '
-#                                  + 'AND question_tags.question_id = question.id'
-#                            )
-#                                ]),
-#                        select_params = (uid_str, )
-#                     )
-
-        if sort_method != 'relevance-desc':
-            #relevance sort is set in the extra statement
-            #only for postgresql
-            orderby = QUESTION_ORDER_BY_MAP[sort_method]
-            qs = qs.order_by(orderby)
-
-        qs = qs.distinct()
-        qs = qs.select_related(
-                        'thread__last_activity_by__id',
-                        'thread__last_activity_by__username',
-                        'thread__last_activity_by__reputation',
-                        'thread__last_activity_by__gold',
-                        'thread__last_activity_by__silver',
-                        'thread__last_activity_by__bronze',
-                        'thread__last_activity_by__country',
-                        'thread__last_activity_by__show_country',
-                    )
-
-        related_tags = Tag.objects.get_related_to_search(
-                                        questions = qs,
-                                        search_state = search_state,
-                                        ignored_tag_names = ignored_tag_names
-                                    )
-        if askbot_settings.USE_WILDCARD_TAGS == True \
-            and request_user.is_authenticated() == True:
-            tagnames = request_user.interesting_tags
-            meta_data['interesting_tag_names'].extend(tagnames.split())
-            tagnames = request_user.ignored_tags
-            meta_data['ignored_tag_names'].extend(tagnames.split())
-        return qs, meta_data, related_tags
-
-    def added_between(self, start, end):
-        """questions added between ``start`` and ``end`` timestamps"""
-        #todo: goes to thread
-        return self.filter(
-            added_at__gt = start
-        ).exclude(
-            added_at__gt = end
-        )
-
-    def get_questions_needing_reminder(self,
-                                    user = None,
-                                    activity_type = None,
-                                    recurrence_delay = None):
-        """returns list of questions that need a reminder,
-        corresponding the given ``activity_type``
-        ``user`` - is the user receiving the reminder
-        ``recurrence_delay`` - interval between sending the
-        reminders about the same question
-        """
-        #todo: goes to thread
-        from askbot.models import Activity#avoid circular import
-        question_list = list()
-        for question in self:
-            try:
-                activity = Activity.objects.get(
-                    user = user,
-                    question = question,
-                    activity_type = activity_type
-                )
-                now = datetime.datetime.now()
-                if now < activity.active_at + recurrence_delay:
-                    continue
-            except Activity.DoesNotExist:
-                activity = Activity(
-                    user = user,
-                    question = question,
-                    activity_type = activity_type,
-                    content_object = question,
-                )
-            activity.active_at = datetime.datetime.now()
-            activity.save()
-            question_list.append(question)
-        return question_list
-
-    #todo: this function is similar to get_response_receivers
-    #profile this function against the other one
-    #todo: maybe this must be a query set method, not manager method
-    def get_question_and_answer_contributors(self, question_list):
-        """returns query set of Thread contributors
-        """
-        #todo: goes to thread - queries will be simplified too
-        answer_list = []
-        #question_list = list(question_list)#important for MySQL, b/c it does not support
-        from askbot.models.answer import Answer
-        q_id = [question.id for question in question_list]
-        a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
-        u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
-        u_id = u_id.union(
-                    set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
-                )
-
-        #todo: this does not belong gere - here we select users with real faces
-        #first and limit the number of users in the result for display
-        #on the main page, we might also want to completely hide fake gravatars
-        #and show only real images and the visitors - even if he does not have
-        #a real image and try to prompt him/her to upload a picture
-        from askbot.conf import settings as askbot_settings
-        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
-        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
-        #print contributors
-        #could not optimize this query with indices so it was split into what's now above
-        #contributors = User.objects.filter(
-        #                            models.Q(questions__in=question_list) \
-        #                            | models.Q(answers__in=answer_list)
-        #                           ).distinct()
-        #contributors = list(contributors)
-        return contributors
-
-    def get_author_list(self, **kwargs):
-        #todo: - this is duplication - answer manager also has this method
-        #will be gone when models are consolidated
-        #note that method get_question_and_answer_contributors is similar in function
-        #todo: goes to thread
-        authors = set()
-        for question in self:
-            authors.update(question.get_author_list(**kwargs))
-        return list(authors)
-
-
-class QuestionManager(BaseQuerySetManager):
-    """chainable custom query set manager for 
-    questions
-    """
-    #todo: becomes thread manager
-    def get_query_set(self):
-        return QuestionQuerySet(self.model)
 
 class Thread(models.Model):
     title = models.CharField(max_length=300)
@@ -481,6 +97,8 @@ class Thread(models.Model):
     accepted_answer = models.ForeignKey('askbot.Answer', null=True, blank=True)
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
 
+    objects = ThreadManager()
+    
     class Meta:
         app_label = 'askbot'
 
@@ -518,6 +136,10 @@ class Thread(models.Model):
         self.last_activity_at = last_activity_at
         self.last_activity_by = last_activity_by
         self.save()
+
+    def get_tag_names(self):
+        "Creates a list of Tag names from the ``tagnames`` attribute."
+        return self.tagnames.split(u' ')
 
     def get_answers(self, user=None):
         """returns query set for answers to this question
@@ -721,6 +343,390 @@ class Thread(models.Model):
                 who = a_who
 
         return when, who
+
+
+class QuestionQuerySet(models.query.QuerySet):
+    """Custom query set subclass for :class:`~askbot.models.Question`
+    """
+    #todo: becomes thread query set
+    def create_new(
+                self,
+                title = None,
+                author = None,
+                added_at = None,
+                wiki = False,
+                is_anonymous = False,
+                tagnames = None,
+                text = None
+            ):
+        #todo: some work from this method will go to thread
+        #and some - merged with the Answer.objects.create_new
+
+        question = Question(
+            thread=Thread.objects.create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
+            author = author,
+            added_at = added_at,
+            wiki = wiki,
+            is_anonymous = is_anonymous,
+            #html field is denormalized in .save() call
+            text = text,
+            #summary field is denormalized in .save() call
+        )
+        if question.wiki:
+            #DATED COMMENT
+            #todo: this is confusing - last_edited_at field
+            #is used as an indicator whether question has been edited
+            #but in principle, post creation should count as edit as well
+            question.last_edited_by = question.author
+            question.last_edited_at = added_at
+            question.wikified_at = added_at
+
+        question.parse_and_save(author = author)
+        question.thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+
+        question.add_revision(
+            author = author,
+            is_anonymous = is_anonymous,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
+            revised_at = added_at,
+        )
+        return question
+
+    def get_by_text_query(self, search_query):
+        """returns a query set of questions,
+        matching the full text query
+        """
+        #todo - goes to thread - we search whole threads
+        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+            matching_questions = Question.sphinx_search.query(search_query)
+            question_ids = [q.id for q in matching_questions]
+            return Question.objects.filter(deleted = False, id__in = question_ids)
+        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
+            return self.filter(
+                        models.Q(thread__title__search = search_query) \
+                       | models.Q(text__search = search_query) \
+                       | models.Q(thread__tagnames__search = search_query) \
+                       | models.Q(answers__text__search = search_query)
+                    )
+        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
+            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
+            search_query = '&'.join(search_query.split())
+            extra_params = (search_query,)
+            extra_kwargs = {
+                'select': {'relevance': rank_clause},
+                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
+                'params': extra_params,
+                'select_params': extra_params,
+            }
+            return self.extra(**extra_kwargs)
+        else:
+            #fallback to dumb title match search
+            return self.filter(thread__title__icontains=search_query)
+
+    def run_advanced_search(
+                        self,
+                        request_user = None,
+                        search_state = None
+                    ):
+        """all parameters are guaranteed to be clean
+        however may not relate to database - in that case
+        a relvant filter will be silently dropped
+        """
+        #todo: same as for get_by_text_query - goes to Tread
+        scope_selector = getattr(
+                            search_state,
+                            'scope',
+                            const.DEFAULT_POST_SCOPE
+                        )
+
+        search_query = search_state.query
+        tag_selector = search_state.tags
+        author_selector = search_state.author
+
+        sort_method = getattr(
+                            search_state,
+                            'sort',
+                            const.DEFAULT_POST_SORT_METHOD
+                        )
+
+        qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
+
+        #return metadata
+        meta_data = {}
+        if search_query:
+            if search_state.stripped_query:
+                qs = qs.get_by_text_query(search_state.stripped_query)
+                #a patch for postgres search sort method
+                if askbot.conf.should_show_sort_by_relevance():
+                    if sort_method == 'relevance-desc':
+                        qs = qs.extra(order_by = ['-relevance',])
+            if search_state.query_title:
+                qs = qs.filter(thread__title__icontains = search_state.query_title)
+            if len(search_state.query_tags) > 0:
+                qs = qs.filter(thread__tags__name__in = search_state.query_tags)
+            if len(search_state.query_users) > 0:
+                query_users = list()
+                for username in search_state.query_users:
+                    try:
+                        user = User.objects.get(username__iexact = username)
+                        query_users.append(user)
+                    except User.DoesNotExist:
+                        pass
+                if len(query_users) > 0:
+                    qs = qs.filter(author__in = query_users)
+
+        if tag_selector:
+            for tag in tag_selector:
+                qs = qs.filter(thread__tags__name = tag)
+
+
+        #have to import this at run time, otherwise there
+        #a circular import dependency...
+        from askbot.conf import settings as askbot_settings
+        if scope_selector:
+            if scope_selector == 'unanswered':
+                qs = qs.filter(thread__closed = False)#do not show closed questions in unanswered section
+                if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
+                    qs = qs.filter(thread__answer_count=0)#todo: expand for different meanings of this
+                elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
+                    qs = qs.filter(thread__accepted_answer__isnull=True) #answer_accepted=False
+                elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
+                    raise NotImplementedError()
+                else:
+                    raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
+            elif scope_selector == 'favorite':
+                favorite_filter = models.Q(thread__favorited_by = request_user)
+                if 'followit' in settings.INSTALLED_APPS:
+                    followed_users = request_user.get_followed_users()
+                    favorite_filter |= models.Q(author__in = followed_users)
+                    favorite_filter |= models.Q(answers__author__in = followed_users)
+                qs = qs.filter(favorite_filter)
+
+        #user contributed questions & answers
+        if author_selector:
+            try:
+                #todo maybe support selection by multiple authors
+                u = User.objects.get(id=int(author_selector))
+                qs = qs.filter(
+                            models.Q(author=u, deleted=False) \
+                            | models.Q(answers__author=u, answers__deleted=False)
+                        )
+                meta_data['author_name'] = u.username
+            except User.DoesNotExist:
+                meta_data['author_name'] = None
+
+        #get users tag filters
+        ignored_tag_names = None
+        if request_user and request_user.is_authenticated():
+            uid_str = str(request_user.id)
+            #mark questions tagged with interesting tags
+            #a kind of fancy annotation, would be nice to avoid it
+            interesting_tags = Tag.objects.filter(
+                                    user_selections__user=request_user,
+                                    user_selections__reason='good'
+                                )
+            ignored_tags = Tag.objects.filter(
+                                    user_selections__user=request_user,
+                                    user_selections__reason='bad'
+                                )
+
+            meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
+
+            ignored_tag_names = [tag.name for tag in ignored_tags]
+            meta_data['ignored_tag_names'] = ignored_tag_names
+
+            if interesting_tags or request_user.has_interesting_wildcard_tags():
+                #expensive query
+                if request_user.display_tag_filter_strategy == \
+                        const.INCLUDE_INTERESTING:
+                    #filter by interesting tags only
+                    interesting_tag_filter = models.Q(thread__tags__in = interesting_tags)
+                    if request_user.has_interesting_wildcard_tags():
+                        interesting_wildcards = request_user.interesting_tags.split()
+                        extra_interesting_tags = Tag.objects.get_by_wildcards(
+                                                            interesting_wildcards
+                                                        )
+                        interesting_tag_filter |= models.Q(thread__tags__in = extra_interesting_tags)
+
+                    qs = qs.filter(interesting_tag_filter)
+                else:
+                    pass
+                    #simply annotate interesting questions
+#                    qs = qs.extra(
+#                        select = SortedDict([
+#                            (
+#                                # TODO: [tags] Update this query so that it fetches tags from Thread
+#                                'interesting_score',
+#                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
+#                                 + 'WHERE askbot_markedtag.user_id = %s '
+#                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+#                                 + 'AND askbot_markedtag.reason = \'good\' '
+#                                 + 'AND question_tags.question_id = question.id'
+#                            ),
+#                                ]),
+#                        select_params = (uid_str,),
+#                     )
+
+            # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
+
+            if ignored_tags or request_user.has_ignored_wildcard_tags():
+                if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED:
+                    #exclude ignored tags if the user wants to
+                    qs = qs.exclude(thread__tags__in=ignored_tags)
+                    if request_user.has_ignored_wildcard_tags():
+                        ignored_wildcards = request_user.ignored_tags.split()
+                        extra_ignored_tags = Tag.objects.get_by_wildcards(
+                                                            ignored_wildcards
+                                                        )
+                        qs = qs.exclude(thread__tags__in = extra_ignored_tags)
+                else:
+                    pass
+#                    #annotate questions tagged with ignored tags
+#                    #expensive query
+#                    qs = qs.extra(
+#                        select = SortedDict([
+#                            (
+#                                'ignored_score',
+#                                # TODO: [tags] Update this query so that it fetches tags from Thread
+#                                'SELECT COUNT(1) '
+#                                  + 'FROM askbot_markedtag, question_tags '
+#                                  + 'WHERE askbot_markedtag.user_id = %s '
+#                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+#                                  + 'AND askbot_markedtag.reason = \'bad\' '
+#                                  + 'AND question_tags.question_id = question.id'
+#                            )
+#                                ]),
+#                        select_params = (uid_str, )
+#                     )
+
+        if sort_method != 'relevance-desc':
+            #relevance sort is set in the extra statement
+            #only for postgresql
+            orderby = QUESTION_ORDER_BY_MAP[sort_method]
+            qs = qs.order_by(orderby)
+
+        qs = qs.distinct()
+        qs = qs.select_related(
+                        'thread__last_activity_by__id',
+                        'thread__last_activity_by__username',
+                        'thread__last_activity_by__reputation',
+                        'thread__last_activity_by__gold',
+                        'thread__last_activity_by__silver',
+                        'thread__last_activity_by__bronze',
+                        'thread__last_activity_by__country',
+                        'thread__last_activity_by__show_country',
+                    )
+
+        related_tags = Tag.objects.get_related_to_search(
+                                        questions = qs,
+                                        search_state = search_state,
+                                        ignored_tag_names = ignored_tag_names
+                                    )
+        if askbot_settings.USE_WILDCARD_TAGS == True \
+            and request_user.is_authenticated() == True:
+            tagnames = request_user.interesting_tags
+            meta_data['interesting_tag_names'].extend(tagnames.split())
+            tagnames = request_user.ignored_tags
+            meta_data['ignored_tag_names'].extend(tagnames.split())
+        return qs, meta_data, related_tags
+
+    def added_between(self, start, end):
+        """questions added between ``start`` and ``end`` timestamps"""
+        #todo: goes to thread
+        return self.filter(
+            added_at__gt = start
+        ).exclude(
+            added_at__gt = end
+        )
+
+    def get_questions_needing_reminder(self,
+                                    user = None,
+                                    activity_type = None,
+                                    recurrence_delay = None):
+        """returns list of questions that need a reminder,
+        corresponding the given ``activity_type``
+        ``user`` - is the user receiving the reminder
+        ``recurrence_delay`` - interval between sending the
+        reminders about the same question
+        """
+        #todo: goes to thread
+        from askbot.models import Activity#avoid circular import
+        question_list = list()
+        for question in self:
+            try:
+                activity = Activity.objects.get(
+                    user = user,
+                    question = question,
+                    activity_type = activity_type
+                )
+                now = datetime.datetime.now()
+                if now < activity.active_at + recurrence_delay:
+                    continue
+            except Activity.DoesNotExist:
+                activity = Activity(
+                    user = user,
+                    question = question,
+                    activity_type = activity_type,
+                    content_object = question,
+                )
+            activity.active_at = datetime.datetime.now()
+            activity.save()
+            question_list.append(question)
+        return question_list
+
+    #todo: this function is similar to get_response_receivers
+    #profile this function against the other one
+    #todo: maybe this must be a query set method, not manager method
+    def get_question_and_answer_contributors(self, question_list):
+        """returns query set of Thread contributors
+        """
+        #todo: goes to thread - queries will be simplified too
+        answer_list = []
+        #question_list = list(question_list)#important for MySQL, b/c it does not support
+        from askbot.models.answer import Answer
+        q_id = [question.id for question in question_list]
+        a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
+        u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
+        u_id = u_id.union(
+                    set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
+                )
+
+        #todo: this does not belong gere - here we select users with real faces
+        #first and limit the number of users in the result for display
+        #on the main page, we might also want to completely hide fake gravatars
+        #and show only real images and the visitors - even if he does not have
+        #a real image and try to prompt him/her to upload a picture
+        from askbot.conf import settings as askbot_settings
+        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
+        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
+        #print contributors
+        #could not optimize this query with indices so it was split into what's now above
+        #contributors = User.objects.filter(
+        #                            models.Q(questions__in=question_list) \
+        #                            | models.Q(answers__in=answer_list)
+        #                           ).distinct()
+        #contributors = list(contributors)
+        return contributors
+
+    def get_author_list(self, **kwargs):
+        #todo: - this is duplication - answer manager also has this method
+        #will be gone when models are consolidated
+        #note that method get_question_and_answer_contributors is similar in function
+        #todo: goes to thread
+        authors = set()
+        for question in self:
+            authors.update(question.get_author_list(**kwargs))
+        return list(authors)
+
+
+class QuestionManager(BaseQuerySetManager):
+    """chainable custom query set manager for
+    questions
+    """
+    #todo: becomes thread manager
+    def get_query_set(self):
+        return QuestionQuerySet(self.model)
 
 
 class Question(content.Content):
