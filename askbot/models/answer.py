@@ -51,22 +51,6 @@ class AnswerManager(models.Manager):
 
         return answer
 
-    #todo: I think this method is not being used anymore, I'll just comment it for now
-#    def get_author_list(self, **kwargs):
-#        authors = set()
-#        for answer in self:
-#            authors.update(answer.get_author_list(**kwargs))
-#        return list(authors)
-
-    #todo: I think this method is not being used anymore, I'll just comment it for now
-    #def get_answers_from_questions(self, user_id):
-    #    """
-    #    Retrieves visibile answers for the given question. Which are not included own answers
-    #    """
-    #    cursor = connection.cursor()
-    #    cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
-    #    return cursor.fetchall()
-
 class Answer(content.Content):
     post_type = 'answer'
     question = models.ForeignKey('Question', related_name='answers')
