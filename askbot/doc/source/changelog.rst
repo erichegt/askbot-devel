@@ -1,16 +1,17 @@
 Changes in Askbot
 =================
 
-Development version
--------------------
+0.7.33 (Current Version)
+------------------------
 * Made on log in redirect to the forum index page by default
   and to the question page, if user was reading the question
   it is still possible to override the ``next`` url parameter
   or just rely on django's ``LOGIN_REDIRECT_URL`` (Evgeny)
 * Implemented retraction of offensive flags (Dejan Noveski)
+* Made automatic dependency checking more complete (Evgeny)
 
-0.7.32 (Current Version)
-------------------------
+0.7.32
+------
 * Bugfixes in English locale (Evgeny)
 
 0.7.31 

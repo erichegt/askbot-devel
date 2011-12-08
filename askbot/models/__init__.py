@@ -1,3 +1,6 @@
+from askbot import startup_procedures
+startup_procedures.run()
+
 import logging
 import re
 import hashlib
@@ -36,9 +39,6 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mail
-from askbot import startup_procedures
-
-startup_procedures.run()
 
 def get_model(model_name):
     return models.get_model('askbot', model_name)
