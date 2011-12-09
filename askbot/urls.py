@@ -54,22 +54,22 @@ urlpatterns = patterns('',
     ),
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
-    url(r'^%s$' % 'about/', views.meta.about, name='about'),
-    url(r'^%s$' % 'faq/', views.meta.faq, name='faq'),
-    url(r'^%s$' % 'privacy/', views.meta.privacy, name='privacy'),
+    url(r'^%s$' % _('about/'), views.meta.about, name='about'),
+    url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
+    url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('answers/', 'edit/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
         views.writers.edit_answer, 
         name='edit_answer'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('answers/', 'revisions/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
         views.readers.revisions, 
         kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
     url(#this url works both normally and through ajax
-        r'^%s$' % 'questions/',
+        r'^%s$' % _('questions/'), 
         views.readers.questions, 
         name='questions'
     ),
@@ -79,48 +79,48 @@ urlpatterns = patterns('',
         name = 'api_get_questions'
     ),
     url(
-        r'^%s%s$' % ('questions/', 'ask/'),
+        r'^%s%s$' % (_('questions/'), _('ask/')), 
         views.writers.ask, 
         name='ask'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'edit/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
         views.writers.edit_question, 
         name='edit_question'
     ),
     url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'retag/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
         views.writers.retag_question, 
         name='retag_question'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'close/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
         views.commands.close, 
         name='close'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'reopen/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), 
         views.commands.reopen, 
         name='reopen'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'answer/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), 
         views.writers.answer, 
         name='answer'
     ),
     url(#ajax only
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'vote/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), 
         views.commands.vote, 
         name='vote'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('questions/', 'revisions/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
         views.readers.revisions, 
         kwargs = {'object_name': 'Question'},
         name='question_revisions'
     ),
     url(
-        r'^%s%s$' % ('widgets/', 'questions/'),
+        r'^%s%s$' % (_('widgets/'), _('questions/')),
         views.readers.widget_questions, 
         name='widget_questions'
     ),
@@ -155,7 +155,7 @@ urlpatterns = patterns('',
         name='get_question_body'
     ),
     url(
-        r'^%s$' % 'tags/',
+        r'^%s$' % _('tags/'), 
         views.readers.tags, 
         name='tags'
     ),
@@ -198,52 +198,52 @@ urlpatterns = patterns('',
         name = 'swap_question_with_answer'
     ),
     url(
-        r'^%s$' % 'subscribe-for-tags/',
+        r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,
         name = 'subscribe_for_tags'
     ),
     url(
-        r'^%s$' % 'users/',
+        r'^%s$' % _('users/'),
         views.users.users, 
         name='users'
     ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
-        r'^%s(?P<id>\d+)/%s$' % ('users/', 'edit/'),
+        r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
         name='edit_user'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
-            'users/',
-            'subscriptions/',
+            _('users/'),
+            _('subscriptions/'),
         ),
         views.users.user,
         kwargs = {'tab_name': 'email_subscriptions'},
         name = 'user_subscriptions'
     ),
     url(
-        r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % 'users/',
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'
     ),
     url(
-        r'^%s$' % 'users/update_has_custom_avatar/',
+        r'^%s$' % _('users/update_has_custom_avatar/'),
         views.users.update_has_custom_avatar,
         name='user_update_has_custom_avatar'
     ),
     url(
-        r'^%s$' % 'badges/',
+        r'^%s$' % _('badges/'),
         views.meta.badges,
         name='badges'
     ),
     url(
-        r'^%s(?P<id>\d+)//*' % 'badges/',
+        r'^%s(?P<id>\d+)//*' % _('badges/'),
         views.meta.badge,
         name='badge'
     ),
     url(#ajax only
-        r'^%s%s$' % ('messages/', 'markread/'),
+        r'^%s%s$' % (_('messages/'), _('markread/')),
         views.commands.read_message,
         name='read_message'
     ),
@@ -259,8 +259,8 @@ urlpatterns = patterns('',
         name='feeds'
     ),
     #upload url is ajax only
-    url( r'^%s$' % 'upload/', views.writers.upload, name='upload'),
-    url(r'^%s$' % 'feedback/', views.meta.feedback, name='feedback'),
+    url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
@@ -296,20 +296,20 @@ urlpatterns = patterns('',
 
 if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % 'questions/',
+        r'^%s(?P<id>\d+)/' % _('questions/'), 
         views.readers.question, 
         name='question'
     ),)
 else:
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % 'question/',
+        r'^%s(?P<id>\d+)/' % _('question/'), 
         views.readers.question, 
         name='question'
     ),)
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     urlpatterns += (
-        url(r'^%s' % 'account/', include('askbot.deps.django_authopenid.urls')),
+        url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     )
 
 if 'avatar' in settings.INSTALLED_APPS:
