@@ -305,13 +305,12 @@ def user_stats(request, user, context):
     votes_today = models.Vote.objects.get_votes_count_today_from_user(user)
     votes_total = askbot_settings.MAX_VOTES_PER_USER_PER_DAY
 
-    thread_id_set = set()
-    thread_id_set.update([qq.thread_id for qq in questions])
-    thread_id_set.update([aa.thread_id for aa in top_answers])
-    user_tags = models.Tag.objects.filter(threads__id__in=thread_id_set).\
+    # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
+    #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
+    #       Fortunately it looks to return correct results for the test data
+    user_tags = models.Tag.objects.filter(threads__post__author=user).\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
-    user_tags = list(user_tags) # DEBUG: evaluate
 
     user_awards = models.Award.objects.filter(user=user).select_related('badge')
     badges_dict = {}
@@ -325,8 +324,8 @@ def user_stats(request, user, context):
     # TODO: fetch award.content_object in one query, as a list of Post-s, and pass to template to avoid subsequent queries there
     total_badges = len(badges)
 
+#    INFO: Shorter version for fetching badges, but then it's hard to do the postprocessing (i.e. getting user awards per badge etc.)
 #    badges = models.BadgeData.objects.filter(award_badge__user=user).annotate(user_awarded_times=Count('award_badge'))
-#    total_badges = len(badges)
 
     data = {
         'active_tab':'users',
@@ -341,7 +340,6 @@ def user_stats(request, user, context):
         'question_type' : ContentType.objects.get_for_model(models.Question),
         'answer_type' : ContentType.objects.get_for_model(models.Answer),
 
-        #'answered_questions' : answered_questions,
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
 
@@ -357,8 +355,6 @@ def user_stats(request, user, context):
         'total_badges' : total_badges,
     }
     context.update(data)
-
-    len(models.Post.objects.filter(post_type='mikki')) # DEBUG: distinctive query
 
     return render_into_skin('user_profile/user_stats.html', context, request)
 
