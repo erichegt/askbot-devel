@@ -16,7 +16,6 @@ from askbot import const
 from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
-from askbot.models.post import PostRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
@@ -756,6 +755,7 @@ class Content(models.Model):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
+        from askbot.models.post import PostRevision
         return PostRevision.objects.create_answer_revision(
                                   answer=self,
                                   author=author,
@@ -782,6 +782,7 @@ class Content(models.Model):
             else:
                 comment = 'No.%s Revision' % rev_no
 
+        from askbot.models.post import PostRevision
         return PostRevision.objects.create_question_revision(
             question   = self,
             revision   = rev_no,

@@ -68,6 +68,48 @@ class ThreadManager(models.Manager):
 
         return '"' + '", "'.join(tag_list) + last_topic
 
+    def create(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def create_new(self, title, author, added_at, wiki, text, tagnames=None, is_anonymous=False):
+        # TODO: Some of this code will go to Post.objects.create_new
+
+        thread = super(ThreadManager, self).create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author)
+
+        question = Question(
+            thread=thread,
+            author = author,
+            added_at = added_at,
+            wiki = wiki,
+            is_anonymous = is_anonymous,
+            #html field is denormalized in .save() call
+            text = text,
+            #summary field is denormalized in .save() call
+        )
+        if question.wiki:
+            #DATED COMMENT
+            #todo: this is confusing - last_edited_at field
+            #is used as an indicator whether question has been edited
+            #but in principle, post creation should count as edit as well
+            question.last_edited_by = question.author
+            question.last_edited_at = added_at
+            question.wikified_at = added_at
+
+        question.parse_and_save(author = author)
+
+        question.add_revision(
+            author = author,
+            is_anonymous = is_anonymous,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
+            revised_at = added_at,
+        )
+
+        # INFO: Question has to be saved before update_tags() is called
+        thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+
+        return thread
+
 
 class Thread(models.Model):
     title = models.CharField(max_length=300)
@@ -210,7 +252,7 @@ class Thread(models.Model):
 
     def update_tags(self, tagnames = None, user = None, timestamp = None):
         """
-        Updates Tag associations for a question to match the given
+        Updates Tag associations for a thread to match the given
         tagname string.
 
         When tags are removed and their use count hits 0 - the tag is
@@ -221,9 +263,9 @@ class Thread(models.Model):
         Tag use counts are recalculated
 
         A signal tags updated is sent
-        """
-        thread_question = self._question()
 
+        *IMPORTANT*: self._question() has to exist when update_tags() is called!
+        """
         previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
@@ -283,7 +325,7 @@ class Thread(models.Model):
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
             signals.tags_updated.send(None,
-                                question = thread_question,
+                                thread = self,
                                 tags = modified_tags,
                                 user = user,
                                 timestamp = timestamp
@@ -307,9 +349,9 @@ class Thread(models.Model):
             #thread_question.thread.last_activity_at = retagged_at
             thread_question.last_edited_by = retagged_by
             #thread_question.thread.last_activity_by = retagged_by
-        thread_question.save()
+            thread_question.save()
 
-        # Update the Question's tag associations
+        # Update the Thread's tag associations
         self.update_tags(tagnames=tagnames, user=retagged_by, timestamp=retagged_at)
 
         # Create a new revision
@@ -346,52 +388,9 @@ class Thread(models.Model):
 
 
 class QuestionQuerySet(models.query.QuerySet):
-    """Custom query set subclass for :class:`~askbot.models.Question`
     """
-    #todo: becomes thread query set
-    def create_new(
-                self,
-                title = None,
-                author = None,
-                added_at = None,
-                wiki = False,
-                is_anonymous = False,
-                tagnames = None,
-                text = None
-            ):
-        #todo: some work from this method will go to thread
-        #and some - merged with the Answer.objects.create_new
-
-        question = Question(
-            thread=Thread.objects.create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author),
-            author = author,
-            added_at = added_at,
-            wiki = wiki,
-            is_anonymous = is_anonymous,
-            #html field is denormalized in .save() call
-            text = text,
-            #summary field is denormalized in .save() call
-        )
-        if question.wiki:
-            #DATED COMMENT
-            #todo: this is confusing - last_edited_at field
-            #is used as an indicator whether question has been edited
-            #but in principle, post creation should count as edit as well
-            question.last_edited_by = question.author
-            question.last_edited_at = added_at
-            question.wikified_at = added_at
-
-        question.parse_and_save(author = author)
-        question.thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
-
-        question.add_revision(
-            author = author,
-            is_anonymous = is_anonymous,
-            text = text,
-            comment = const.POST_STATUS['default_version'],
-            revised_at = added_at,
-        )
-        return question
+    Custom query set subclass for :class:`~askbot.models.Question`
+    """
 
     def get_by_text_query(self, search_query):
         """returns a query set of questions,
@@ -724,7 +723,12 @@ class QuestionManager(BaseQuerySetManager):
     """chainable custom query set manager for
     questions
     """
-    #todo: becomes thread manager
+    def create(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def create_new(self, *args, **kwargs):
+        raise NotImplementedError
+
     def get_query_set(self):
         return QuestionQuerySet(self.model)
 
@@ -784,13 +788,13 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
-        Question.objects.create_new(
-                                title = self.title,
-                                added_at = added_at,
-                                author = user,
-                                wiki = self.wiki,
-                                is_anonymous = self.is_anonymous,
-                                tagnames = self.tagnames,
-                                text = self.text,
-                                )
+        Thread.objects.create_new(
+            title = self.title,
+            added_at = added_at,
+            author = user,
+            wiki = self.wiki,
+            is_anonymous = self.is_anonymous,
+            tagnames = self.tagnames,
+            text = self.text,
+        )
         self.delete()

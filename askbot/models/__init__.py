@@ -1273,7 +1273,7 @@ def user_post_question(
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    question = Question.objects.create_new(
+    thread = Thread.objects.create_new(
                                     author = self,
                                     title = title,
                                     text = body_text,
@@ -1282,6 +1282,11 @@ def user_post_question(
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
                                 )
+    question = thread._question()
+    if question.author != self:
+        raise ValueError('question.author != self')
+    question.author = self # HACK: Some tests require that question.author IS exactly the same object as self-user (kind of identity map which Django doesn't provide),
+                           #       because they set some attributes for that instance and expect them to be changed also for question.author
     return question
 
 def user_edit_comment(self, comment = None, body_text = None):
@@ -1405,13 +1410,13 @@ def user_post_answer(
     if timestamp is None:
         timestamp = datetime.datetime.now()
     answer = Answer.objects.create_new(
-                                    question = question,
-                                    author = self,
-                                    text = body_text,
-                                    added_at = timestamp,
-                                    email_notify = follow,
-                                    wiki = wiki
-                                )
+        thread = question.thread,
+        author = self,
+        text = body_text,
+        added_at = timestamp,
+        email_notify = follow,
+        wiki = wiki
+    )
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
@@ -2545,7 +2550,7 @@ def remove_flag_offensive(instance, mark_by, **kwargs):
     activity.delete()
 
 
-def record_update_tags(question, tags, user, timestamp, **kwargs):
+def record_update_tags(thread, tags, user, timestamp, **kwargs):
     """
     This function sends award badges signal on each updated tag
     the badges that respond to the 'ta
@@ -2557,6 +2562,8 @@ def record_update_tags(question, tags, user, timestamp, **kwargs):
             context_object = tag,
             timestamp = timestamp
         )
+
+    question = thread._question()
 
     activity = Activity(
                     user=user,

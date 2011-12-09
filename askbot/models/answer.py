@@ -5,18 +5,10 @@ from askbot.models import content
 from askbot import const
 
 class AnswerManager(models.Manager):
-    def create_new(
-                self, 
-                question=None, 
-                author=None, 
-                added_at=None, 
-                wiki=False, 
-                text='', 
-                email_notify=False
-            ):
-
+    def create_new(self, thread, author, added_at, text, wiki=False, email_notify=False):
+        # TODO: Some of this code will go to Post.objects.create_new
         answer = Answer(
-            question = question,
+            question = thread._question(),
             author = author,
             added_at = added_at,
             wiki = wiki,
@@ -28,7 +20,7 @@ class AnswerManager(models.Manager):
             answer.last_edited_at = added_at
             answer.wikified_at = added_at
 
-        answer.parse_and_save(author = author)
+        answer.parse_and_save(author=author)
 
         answer.add_revision(
             author = author,
@@ -37,17 +29,16 @@ class AnswerManager(models.Manager):
             comment = const.POST_STATUS['default_version'],
         )
 
-        #update question data
-        question.thread.set_last_activity(last_activity_at=added_at, last_activity_by=author)
-
-        question.thread.answer_count +=1
-        question.thread.save()
+        #update thread data
+        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author)
+        thread.answer_count +=1
+        thread.save()
 
         #set notification/delete
         if email_notify:
-            question.thread.followed_by.add(author)
+            thread.followed_by.add(author)
         else:
-            question.thread.followed_by.remove(author)
+            thread.followed_by.remove(author)
 
         return answer
 
@@ -64,9 +55,13 @@ class Answer(content.Content):
 class AnonymousAnswer(AnonymousContent):
     question = models.ForeignKey('Question', related_name='anonymous_answers')
 
-    def publish(self,user):
+    def publish(self, user):
         added_at = datetime.datetime.now()
-        Answer.objects.create_new(question=self.question,wiki=self.wiki,
-                            added_at=added_at,text=self.text,
-                            author=user)
+        Answer.objects.create_new(
+            thread=self.question.thread,
+            author=user,
+            added_at=added_at,
+            wiki=self.wiki,
+            text=self.text
+        )
         self.delete()
