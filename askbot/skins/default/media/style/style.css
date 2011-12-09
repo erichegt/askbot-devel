@@ -5,6 +5,7 @@ h1,h2,h3,h4,h5,h6,ul,li,dl,dt,dd,form,img,p{margin:0;padding:0;border:none;}
 label{vertical-align:middle;}
 hr{border:none;border-top:1px dashed #ccccce;}
 input,select{vertical-align:middle;font-family:Trebuchet MS,"segoe ui",Helvetica,Tahoma,Verdana,MingLiu,PMingLiu,Arial,sans-serif;margin-left:0px;}
+textarea:focus,input:focus{outline:none;}
 iframe{border:none;}
 p{font-size:14px;line-height:140%;margin-bottom:6px;}
 a{color:#1b79bd;text-decoration:none;cursor:pointer;}
@@ -111,6 +112,7 @@ body.anon #searchBar .searchInputCancelable{width:405px;}
 .tabsA .label,.tabsC .label{float:left;color:#646464;margin-top:4px;margin-right:5px;}
 .main-page .tabsA .label{margin-left:8px;}
 .tabsB a{background:#eee;border:1px solid #eee;color:#777;display:block;float:left;height:22px;line-height:28px;margin:5px 0px 0 4px;padding:0 11px 0 11px;text-decoration:none;}
+.tabsC .first{border:none;}
 .rss{float:right;font-size:16px;color:#f57900;margin:5px 0px 3px 7px;width:52px;padding-left:2px;padding-top:3px;background:#ffffff url(../images/feed-icon-small.png) no-repeat center right;float:right;font-family:Georgia,serif;font-size:16px;}
 .rss:hover{color:#F4A731 !important;}
 #questionCount{font-weight:bold;font-size:23px;color:#7ea9b3;width:200px;float:left;margin-bottom:8px;padding-top:6px;font-family:'Yanone Kaffeesatz',sans-serif;}
@@ -258,7 +260,7 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .question-page .comments .controls a:hover{background-color:#f5f0c9;text-decoration:none;}
 .question-page .comments .button{color:#988e4c;font-size:11px;padding:3px;cursor:pointer;}
 .question-page .comments a{background-color:inherit;color:#1b79bd;padding:0;}
-.question-page .comments form.post-comments{margin:3px 30px 4px 5px;}
+.question-page .comments form.post-comments{margin:3px 10px 7px 0px;}
 .question-page .comments textarea{height:42px;width:100%;margin:12px 0 5px 1px;font-family:Arial;outline:none;overflow:auto;font-size:12px;line-height:140%;padding-left:2px;padding-top:4px;border:#cce6ec 3px solid;}
 .question-page .comments input{margin-left:10px;margin-top:1px;vertical-align:top;width:100px;}
 .question-page .comments button{background:url(../images/small-button-blue.png) repeat-x top;border:0;color:#4a757f;font-family:Arial;font-size:13px;width:100px;font-weight:bold;height:27px;line-height:25px;margin-top:-2px;cursor:pointer;border-radius:4px;-ms-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-khtml-border-radius:4px;text-shadow:0px 1px 0px #e6f6fa;-moz-text-shadow:0px 1px 0px #e6f6fa;-webkit-text-shadow:0px 1px 0px #e6f6fa;-webkit-box-shadow:1px 1px 2px #808080;-moz-box-shadow:1px 1px 2px #808080;box-shadow:1px 1px 2px #808080;float:left;}
