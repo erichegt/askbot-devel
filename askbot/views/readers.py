@@ -617,6 +617,7 @@ def get_comment(request):
 @ajax_only
 @get_only
 def get_question_body(request):
+    # TODO: Is this used anywhere?
     search_state = request.session.get('search_state', SearchState())
     view_log = request.session['view_log']
     (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
@@ -634,6 +635,7 @@ def widget_questions(request):
     """Returns the first x questions based on certain tags.
     @returns template with those questions listed."""
     # make sure this is a GET request with the correct parameters.
+    # TODO: Is this used anywhere?
     if request.method != 'GET':
         raise Http404
     questions = models.Question.objects.all()

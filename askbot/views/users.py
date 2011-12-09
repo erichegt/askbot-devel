@@ -10,7 +10,9 @@ import calendar
 import functools
 import datetime
 import logging
-from django.db.models import Count
+import operator
+
+from django.db.models import Count, Sum
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -276,114 +278,55 @@ def edit_user(request, id):
     return render_into_skin('user_profile/user_edit.html', data, request)
 
 def user_stats(request, user, context):
-
-    question_filter = {'author': user}
+    question_filter = {}
     if request.user != user:
         question_filter['is_anonymous'] = False
 
-    questions = models.Question.objects.filter(
-                                    **question_filter
-                                ).order_by(
-                                    '-score', '-thread__last_activity_at'
-                                ).select_related(
-                                    'thread',
-                                    'thread__last_activity_by__id',
-                                    'thread__last_activity_by__username',
-                                    'thread__last_activity_by__reputation',
-                                    'thread__last_activity_by__gold',
-                                    'thread__last_activity_by__silver',
-                                    'thread__last_activity_by__bronze'
-                                )[:100]
-
-    questions = list(questions)
+    questions = user.posts.get_questions().filter(**question_filter).\
+                    order_by('-score', '-thread__last_activity_at').\
+                    select_related('thread', 'thread__last_activity_by')[:100]
 
     #added this if to avoid another query if questions is less than 100
     if len(questions) < 100:
         question_count = len(questions)
     else:
-        question_count = models.Question.objects.filter(
-                                        **question_filter
-                                    ).order_by(
-                                        '-score', '-thread__last_activity_at'
-                                    ).select_related(
-                                        'thread__last_activity_by__id',
-                                        'thread__last_activity_by__username',
-                                        'thread__last_activity_by__reputation',
-                                        'thread__last_activity_by__gold',
-                                        'thread__last_activity_by__silver',
-                                        'thread__last_activity_by__bronze'
-                                    ).count()
-
-# Commented out, doesn't seem to be used
-#    threads = [quest.thread for quest in questions]
-#    favorited_myself = models.FavoriteQuestion.objects.filter(
-#                                    thread__in = threads,
-#                                    user = user
-#                                ).values_list('thread__id', flat=True)
+        question_count = user.posts.get_questions().filter(**question_filter).count()
 
     #this is meant for the questions answered by the user (or where answers were edited by him/her?)
-    answered_questions = models.Question.objects.extra(
-        select={
-            'vote_up_count' : 'answer.vote_up_count',
-            'vote_down_count' : 'answer.vote_down_count',
-            'answer_id' : 'answer.id',
-            'answer_accepted' : 'askbot_thread.accepted_answer_id',
-            'answer_score' : 'answer.score',
-            'comment_count' : 'answer.comment_count',
-            'title': 'askbot_thread.title',
-            },
-        tables=['question', 'answer', 'askbot_thread'],
-        where=['NOT answer.deleted AND NOT question.deleted AND answer.author_id=%s AND answer.question_id=question.id AND question.thread_id=askbot_thread.id'],
-        params=[user.id],
-        order_by=['-answer_score', '-answer_id'],
-        select_params=[user.id]
-    ).distinct().values('comment_count',
-                        'id',
-                        'answer_id',
-                        'title',
-                        'author_id',
-                        'answer_accepted',
-                        'answer_score',
-                        #'answer_count', Moved from Question to Thread and doesn't seem to be referenced anywhere !?
-                        'vote_up_count',
-                        'vote_down_count')[:100]
+    top_answers = user.posts.get_answers().filter(
+        deleted=False,
+        parent__deleted=False,
+    ).select_related('thread').order_by('-score', '-id')[:100]
 
+    top_answer_count = len(top_answers)
 
     up_votes = models.Vote.objects.get_up_vote_count_from_user(user)
     down_votes = models.Vote.objects.get_down_vote_count_from_user(user)
     votes_today = models.Vote.objects.get_votes_count_today_from_user(user)
     votes_total = askbot_settings.MAX_VOTES_PER_USER_PER_DAY
 
-    question_id_set = set()
-    #todo: there may be a better way to do these queries
-    question_id_set.update([q.id for q in questions])
-    question_id_set.update([q['id'] for q in answered_questions])
-    #user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
-    user_tag_ids = models.Question.objects.filter(id__in=question_id_set).values_list('thread__tags__id', flat=True)
-    user_tags = models.Tag.objects.filter(id__in=user_tag_ids)
+    thread_id_set = set()
+    thread_id_set.update([qq.thread_id for qq in questions])
+    thread_id_set.update([aa.thread_id for aa in top_answers])
+    user_tags = models.Tag.objects.filter(threads__id__in=thread_id_set).\
+                    annotate(user_tag_usage_count=Count('threads')).\
+                    order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
+    user_tags = list(user_tags) # DEBUG: evaluate
 
-    badges = models.BadgeData.objects.filter(
-                            award_badge__user=user
-                        )
-    total_awards = badges.count()
-    badges = badges.order_by('-slug').distinct()
+    user_awards = models.Award.objects.filter(user=user).select_related('badge')
+    badges_dict = {}
+    for award in user_awards:
+        if award not in badges_dict:
+            badges_dict[award.badge] = [award]
+        else:
+            badges_dict[award.badge].append(award)
+    badges = list(badges_dict.items())
+    badges.sort(key=lambda badge_tuple: len(badge_tuple[1]), reverse=True)
+    # TODO: fetch award.content_object in one query, as a list of Post-s, and pass to template to avoid subsequent queries there
+    total_badges = len(badges)
 
-    user_tags = user_tags.annotate(
-                            user_tag_usage_count=Count('name')
-                        ).order_by(
-                            '-user_tag_usage_count'
-                        )
-
-    if user.is_administrator():
-        user_status = _('Site Adminstrator')
-    elif user.is_moderator():
-        user_status = _('Forum Moderator')
-    elif user.is_suspended():
-        user_status = _('Suspended User')
-    elif user.is_blocked():
-        user_status = _('Blocked User')
-    else:
-        user_status = _('Registered User')
+#    badges = models.BadgeData.objects.filter(award_badge__user=user).annotate(user_awarded_times=Count('award_badge'))
+#    total_badges = len(badges)
 
     data = {
         'active_tab':'users',
@@ -397,19 +340,26 @@ def user_stats(request, user, context):
         'question_count': question_count,
         'question_type' : ContentType.objects.get_for_model(models.Question),
         'answer_type' : ContentType.objects.get_for_model(models.Answer),
-# Commented out, doesn't seem to be used
-#        'favorited_myself': favorited_myself,
-        'answered_questions' : answered_questions,
+
+        #'answered_questions' : answered_questions,
+        'top_answers': top_answers,
+        'top_answer_count': top_answer_count,
+
         'up_votes' : up_votes,
         'down_votes' : down_votes,
         'total_votes': up_votes + down_votes,
-        'votes_today_left': votes_total-votes_today,
+        'votes_today_left': votes_total - votes_today,
         'votes_total_per_day': votes_total,
-        'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
+
+        'user_tags' : user_tags,
+
         'badges': badges,
-        'total_awards' : total_awards,
+        'total_badges' : total_badges,
     }
     context.update(data)
+
+    len(models.Post.objects.filter(post_type='mikki')) # DEBUG: distinctive query
+
     return render_into_skin('user_profile/user_stats.html', context, request)
 
 def user_recent(request, user, context):

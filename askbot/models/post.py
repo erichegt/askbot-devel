@@ -5,13 +5,24 @@ from askbot.utils import markup
 from askbot.utils.html import sanitize_html
 from askbot.models import content
 
+class PostManager(models.Manager):
+    def get_questions(self):
+        return self.filter(post_type='question')
+
+    def get_answers(self):
+        return self.filter(post_type='answer')
+
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
     parent = models.ForeignKey('Post', blank=True, null=True)
+
     self_answer = models.ForeignKey('Answer', blank=True, null=True)
     self_question = models.ForeignKey('Question', blank=True, null=True)
+
     thread = models.ForeignKey('Thread')
+
+    objects = PostManager()
 
     class Meta:
         app_label = 'askbot'
@@ -23,6 +34,12 @@ class Post(content.Content):
         # WARNING: This is not called for batch deletions so watch out!
         real_post = self.self_answer or self.self_question
         real_post.delete(*args, **kwargs)
+
+    def is_answer_accepted(self):
+        if not self.is_answer():
+            raise NotImplementedError
+        return self.thread.accepted_answer_id and (self.thread.accepted_answer_id == self.self_answer_id)
+
 
 for field in Post._meta.fields:
     if isinstance(field, models.ForeignKey):
