@@ -3,9 +3,38 @@ from django.core.exceptions import ValidationError
 
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
+from askbot.models import content
 
-#class Post(models.Model):
-#    pass
+
+class Post(content.Content):
+    post_type = models.CharField(max_length=255)
+    parent = models.ForeignKey('Post', blank=True, null=True)
+    self_answer = models.ForeignKey('Answer', blank=True, null=True)
+    self_question = models.ForeignKey('Question', blank=True, null=True)
+    thread = models.ForeignKey('Thread')
+
+    class Meta:
+        app_label = 'askbot'
+        db_table = 'askbot_post'
+        managed = False
+
+    def delete(self, *args, **kwargs):
+        # Redirect the deletion to the relevant Question or Answer instance
+        # WARNING: This is not called for batch deletions so watch out!
+        if self.self_answer:
+            return self.self_answer.delete(*args, **kwargs)
+        elif self.self_question:
+            return self.self_question.delete(*args, **kwargs)
+        raise NotImplementedError
+
+for field in Post._meta.fields:
+    if isinstance(field, models.ForeignKey):
+        # HACK: Patch all foreign keys to not cascade when deleted
+        # This is required because foreign keys on Post create normal backreferences
+        # in the destination models, so e.g. deleting User instance would trigger Post instance deletion,
+        # which is not what should happen.
+        field.rel.on_delete = models.DO_NOTHING
+
 
 class PostRevisionManager(models.Manager):
     def create(self, *kargs, **kwargs):

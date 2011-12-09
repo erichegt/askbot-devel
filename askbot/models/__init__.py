@@ -29,7 +29,7 @@ from askbot.models.answer import Answer, AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
-from askbot.models.post import PostRevision
+from askbot.models.post import Post, PostRevision
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, init_badges
 #from user import AuthKeyUserAssociation
@@ -2717,6 +2717,7 @@ __all__ = [
         'Answer',
         'AnonymousAnswer',
 
+        'Post',
         'PostRevision',
 
         'Tag',
