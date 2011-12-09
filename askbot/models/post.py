@@ -21,11 +21,8 @@ class Post(content.Content):
     def delete(self, *args, **kwargs):
         # Redirect the deletion to the relevant Question or Answer instance
         # WARNING: This is not called for batch deletions so watch out!
-        if self.self_answer:
-            return self.self_answer.delete(*args, **kwargs)
-        elif self.self_question:
-            return self.self_question.delete(*args, **kwargs)
-        raise NotImplementedError
+        real_post = self.self_answer or self.self_question
+        real_post.delete(*args, **kwargs)
 
 for field in Post._meta.fields:
     if isinstance(field, models.ForeignKey):
