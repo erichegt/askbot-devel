@@ -10,9 +10,8 @@ import calendar
 import functools
 import datetime
 import logging
-import operator
 
-from django.db.models import Count, Sum
+from django.db.models import Count, Q
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -282,6 +281,9 @@ def user_stats(request, user, context):
     if request.user != user:
         question_filter['is_anonymous'] = False
 
+    #
+    # Questions
+    #
     questions = user.posts.get_questions().filter(**question_filter).\
                     order_by('-score', '-thread__last_activity_at').\
                     select_related('thread', 'thread__last_activity_by')[:100]
@@ -292,7 +294,9 @@ def user_stats(request, user, context):
     else:
         question_count = user.posts.get_questions().filter(**question_filter).count()
 
-    #this is meant for the questions answered by the user (or where answers were edited by him/her?)
+    #
+    # Top answers
+    #
     top_answers = user.posts.get_answers().filter(
         deleted=False,
         parent__deleted=False,
@@ -300,32 +304,74 @@ def user_stats(request, user, context):
 
     top_answer_count = len(top_answers)
 
+    #
+    # Votes
+    #
     up_votes = models.Vote.objects.get_up_vote_count_from_user(user)
     down_votes = models.Vote.objects.get_down_vote_count_from_user(user)
     votes_today = models.Vote.objects.get_votes_count_today_from_user(user)
     votes_total = askbot_settings.MAX_VOTES_PER_USER_PER_DAY
 
+    #
+    # Tags
+    #
     # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks to return correct results for the test data
     user_tags = models.Tag.objects.filter(threads__post__author=user).\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
+    user_tags = list(user_tags) # evaluate
+
+
+    #
+    # Badges/Awards (TODO: refactor into Managers/QuerySets when a pattern emerges; Simplify when we get rid of Queastion&Answer models)
+    #
+    question_type = ContentType.objects.get_for_model(models.Question)
+    answer_type = ContentType.objects.get_for_model(models.Answer)
 
     user_awards = models.Award.objects.filter(user=user).select_related('badge')
-    badges_dict = {}
+
+    awarded_answer_ids = []
+    awarded_question_ids = []
     for award in user_awards:
+        if award.content_type_id == question_type.id:
+            awarded_question_ids.append(award.object_id)
+        elif award.content_type_id == answer_type.id:
+            awarded_answer_ids.append(award.object_id)
+
+    awarded_posts = models.Post.objects.filter(
+        Q(self_answer__in=awarded_answer_ids)|Q(self_question__in=awarded_question_ids)
+    ).select_related('self_answer', 'thread') # select related to avoid additional queries in Post.get_absolute_url()
+    awarded_questions_map = {}
+    awarded_answers_map = {}
+    for post in awarded_posts:
+        if post.self_question_id:
+            awarded_questions_map[post.self_question_id] = post
+        elif post.self_answer_id:
+            awarded_answers_map[post.self_answer_id] = post
+
+    badges_dict = {}
+
+    for award in user_awards:
+        # Fetch content object
+        if award.content_type_id == question_type.id:
+            award.content_object = awarded_questions_map[award.object_id]
+        elif award.content_type_id == answer_type.id:
+            award.content_object = awarded_answers_map[award.object_id]
+        else:
+            award.content_object = None
+
+        # "Assign" to its Badge
         if award not in badges_dict:
             badges_dict[award.badge] = [award]
         else:
             badges_dict[award.badge].append(award)
+
     badges = list(badges_dict.items())
     badges.sort(key=lambda badge_tuple: len(badge_tuple[1]), reverse=True)
-    # TODO: fetch award.content_object in one query, as a list of Post-s, and pass to template to avoid subsequent queries there
-    total_badges = len(badges)
 
-#    INFO: Shorter version for fetching badges, but then it's hard to do the postprocessing (i.e. getting user awards per badge etc.)
-#    badges = models.BadgeData.objects.filter(award_badge__user=user).annotate(user_awarded_times=Count('award_badge'))
+    total_badges = len(badges)
 
     data = {
         'active_tab':'users',

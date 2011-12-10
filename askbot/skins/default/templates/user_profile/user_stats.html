@@ -112,20 +112,18 @@
                         <span class="tag-number">&#215;
                             <span class="badge-context-toggle">{{ badge_user_awards|length|intcomma }}</span>
                         </span>
-{# TODO: Uncomment&adjust after Django view can prepare a list of Post-s for each award
                         <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
                             {% for award in badge_user_awards %}
-                                {% if award.content_type in (question_type, answer_type) %}
+                                {% if award.content_object %}
                                 <li>
                                     <a
                                         title="{{ award.content_object.get_snippet()|collapse }}"
                                         href="{{ award.content_object.get_absolute_url() }}"
-                                    >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title }}</a>
+                                    >{% if award.content_type.post_type == 'answer' %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title }}</a>
                                 </li>
                                 {% endif %}
                             {% endfor %}
                         </ul>
-#}
                         {% if loop.index is divisibleby 3 %}
                             </td></tr>
                             <tr><td style="line-height:35px">

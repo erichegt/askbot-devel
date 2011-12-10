@@ -84,7 +84,7 @@ class Content(models.Model):
             return self.html
         raise NotImplementedError
 
-    def get_absolute_url(self, no_slug = False):
+    def get_absolute_url(self, no_slug = False): # OVERRIDEN by Post.get_absolute_url()
         if self.is_answer():
             return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % \
                     {

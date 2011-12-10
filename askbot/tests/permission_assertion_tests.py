@@ -8,10 +8,10 @@ from askbot.tests import utils
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot.templatetags import extra_filters as template_filters
-from askbot.tests.utils import skipIf
+from askbot.tests.utils import skipIf, AskbotTestCase
 
 
-class PermissionAssertionTestCase(TestCase):
+class PermissionAssertionTestCase(AskbotTestCase):
     """base TestCase class for permission
     assertion tests
 
@@ -484,6 +484,7 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
 class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
     
     def setUp(self):
+        super(EditQuestionPermissionAssertionTests, self).setUp()
         self.create_user()
         self.create_user(username = 'other_user')
         self.post = self.post_question()

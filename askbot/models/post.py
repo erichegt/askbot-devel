@@ -1,5 +1,7 @@
+from django.core import urlresolvers
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils.http import urlquote as django_urlquote
 
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
@@ -20,6 +22,8 @@ class Post(content.Content):
     self_answer = models.ForeignKey('Answer', blank=True, null=True)
     self_question = models.ForeignKey('Question', blank=True, null=True)
 
+    question = property(fget=lambda self: self.self_answer.question) # to simulate Answer model
+
     thread = models.ForeignKey('Thread')
 
     objects = PostManager()
@@ -28,6 +32,24 @@ class Post(content.Content):
         app_label = 'askbot'
         db_table = 'askbot_post'
         managed = False
+
+    def get_absolute_url(self, no_slug = False): # OVERRIDE for Content.get_absolute_url()
+        from askbot.utils.slug import slugify
+        if self.is_answer():
+            return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % \
+                    {
+                        'base': urlresolvers.reverse('question', args=[self.self_answer.question_id]),
+                        'slug': django_urlquote(slugify(self.thread.title)),
+                        'id': self.self_answer_id
+                    }
+        elif self.is_question():
+            url = urlresolvers.reverse('question', args=[self.self_question_id])
+            if no_slug == True:
+                return url
+            else:
+                return url + django_urlquote(self.slug)
+        raise NotImplementedError
+
 
     def delete(self, *args, **kwargs):
         # Redirect the deletion to the relevant Question or Answer instance

@@ -62,6 +62,23 @@ class AskbotTestCase(TestCase):
     to django TestCase class
     """
 
+    def _fixture_setup(self):
+        # HACK: Create askbot_post database VIEW for the purpose of performing tests
+        import os.path
+        from django.conf import settings
+        from django.db import connection
+        sql = open(os.path.join(settings.PROJECT_ROOT, 'askbot', 'models', 'post_view.sql'), 'rt').read()
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        super(AskbotTestCase, self)._fixture_setup()
+
+    def _fixture_teardown(self):
+        super(AskbotTestCase, self)._fixture_teardown()
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute('DROP VIEW IF EXISTS askbot_post')
+
+
     def create_user(
                 self,
                 username = 'user',

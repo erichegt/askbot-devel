@@ -6,7 +6,7 @@ Tested with: SQLite3
 
 */
 
-CREATE VIEW askbot_post AS
+CREATE VIEW IF NOT EXISTS askbot_post AS
 
 SELECT
     answer.id + 1000000 AS id,   -- fake unique ID
