@@ -39,6 +39,10 @@ input, select {
     margin-left:0px;
 }
 
+textarea:focus, input:focus{
+    outline: none;
+}
+
 iframe {
     border: none;
 }
@@ -384,7 +388,7 @@ body.user-messages {
     height:42px;
     margin:6px 0px 0px 15px;
 
-    .searchInput, .searchInputCancelable {
+    .searchInput, .searchInputCancelable{
         font-size: 30px;
         height: 40px;
         font-weight:300;
@@ -396,7 +400,7 @@ body.user-messages {
         vertical-align: middle;
     }
 
-    .searchInput {
+    .searchInput,{
         width: 352px;
     }
 
@@ -544,8 +548,10 @@ body.anon {
         font-size:15px;
         display: block;
         float: right;
-        width: 177px;
+        text-align:left;
         font-family:@main-font;
+        width:80px;
+        margin-right:18px;
     }
 
     ul {
@@ -615,6 +621,7 @@ body.anon {
         font-weight:normal;
         font-size:21px;
         margin-top:3px;
+
         display:block;
         width:120px;
         text-decoration:none;
@@ -774,6 +781,10 @@ body.anon {
     margin: 5px 0px 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
+}
+
+.tabsC .first{
+    border:none;
 }
 
 .rss {
@@ -1417,7 +1428,8 @@ span.delete-icon:hover {
 }
 
 .after-editor {
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .checkbox {
@@ -1505,7 +1517,7 @@ span.delete-icon:hover {
        
     .question-content{
         float:right;
-        width:690px;
+        width:682px;
         margin-bottom:10px;
     }
 
@@ -1518,14 +1530,14 @@ span.delete-icon:hover {
     .answer-table {
         margin: 6px 0 6px 0;
         border-spacing: 0px;
-        width: 680px;
-        padding-right:3px;
+        width: 670px;
+        padding-right:10px;
     }
 
     .answer-table {
         margin-top:0px;
         border-bottom: 1px solid #D4D4D4;
-        float:left;
+        float:right;
     }
 
     .answer-table td,
@@ -1625,6 +1637,7 @@ span.delete-icon:hover {
         
          a:hover {
             background-color: #f5f0c9;
+            .rounded-corners(3px);
             
         }
         .sep {
@@ -1690,6 +1703,9 @@ span.delete-icon:hover {
         background: url(../images/vote-arrow-down-on-new.png) no-repeat;
     }
 
+    #fmanswer_button{
+        margin:8px 0px ;
+    }
     .question-img-favorite:hover {
         background: url(../images/vote-favorite-on.png)
     }
@@ -1741,7 +1757,7 @@ span.delete-icon:hover {
         }
         
         form.post-comments {
-            margin: 3px 30px 4px 5px;
+            margin: 3px 10px 7px 0px;
         }
 
         textarea {
@@ -1768,10 +1784,12 @@ span.delete-icon:hover {
             background:url(../images/small-button-blue.png) repeat-x top;
             border:0;
             color:@button-label;
-            font-size:12px;
-            width:95px;
+            font-family:@body-font;
+            font-size:13px;
+            width:100px;
             font-weight:bold;
-            height:24px;
+            height:27px;
+            line-height:25px;
             margin-top:-2px;
             cursor:pointer;
             .rounded-corners(4px);
@@ -1934,6 +1952,7 @@ span.delete-icon:hover {
 
     .vote-buttons .notify-sidebar {
         text-align: left;
+        width:120px;
     }
     .vote-buttons .notify-sidebar label {
         vertical-align: top;
@@ -2078,6 +2097,17 @@ span.delete-icon:hover {
         padding-left:0px;
         font-size:16px;
     }
+}
+
+.openid-signin,
+.meta,
+.users-page,
+.user-profile-edit-page,
+.user-profile-page,
+{
+    form{
+        margin-bottom:15px;
+    }
     input[type="text"],input[type="password"],select{
         border:#cce6ec 3px solid;
         height:25px;
@@ -2101,9 +2131,11 @@ span.delete-icon:hover {
         border:0;
         color:@button-label;
         font-weight:bold;
-        font-size:16px;
-        height:24px;
-        margin-top:-2px;
+        font-size:13px;
+        font-family:@body-font;
+        height:26px;
+        margin:5px 0px;
+        width:100px;
         cursor:pointer;
         .rounded-corners(4px);
         .text-shadow(0px,1px,0px,#E6F6FA);
@@ -2138,9 +2170,12 @@ span.delete-icon:hover {
         border:0;
         color:@button-label;
         font-weight:bold;
-        font-size:12px;
+        font-size:13px;
+        font-family:@body-font;
         height:24px;
         margin-top:-2px;
+        padding-left:10px;
+        padding-right:10px;
         cursor:pointer;
         .rounded-corners(4px);
         .text-shadow(0px,1px,0px,#E6F6FA);
