@@ -554,8 +554,6 @@ def show_signin_view(
         #annotate objects with extra data
         providers = util.get_enabled_login_providers()
         for login_method in existing_login_methods:
-            if login_method.provider_name == 'facebook':
-                continue#it is disabled
             try:
                 provider_data = providers[login_method.provider_name]
                 if provider_data['type'] == 'password':
