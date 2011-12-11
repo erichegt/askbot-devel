@@ -1,7 +1,7 @@
 """utility functions used by Askbot test cases
 """
 from django.test import TestCase
-from django.utils.unittest.compatibility import wraps
+from functools import wraps
 from askbot import models
 
 def create_user(
@@ -94,6 +94,20 @@ class AskbotTestCase(TestCase):
         setattr(self, username, user_object)
 
         return user_object
+
+    def assertRaisesRegexp(self, *args, **kwargs):
+        """a shim for python < 2.7"""
+        try:
+            #run assertRaisesRegex, if available
+            super(AskbotTestCase, self).assertRaisesRegexp(*args, **kwargs)
+        except AttributeError:
+            #in this case lose testing for the error text
+            #second argument is the regex that is supposed
+            #to match the error text
+            args_list = list(args)#conv tuple to list
+            args_list.pop(1)#so we can remove an item
+            self.assertRaises(*args_list, **kwargs)
+
 
     def post_question(
                     self, 

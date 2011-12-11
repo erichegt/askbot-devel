@@ -1,8 +1,12 @@
 Changes in Askbot
 =================
 
-0.7.33 (Current Version)
+0.7.34 (Current Version)
 ------------------------
+* Returned support of Django 1.2
+
+0.7.33
+------
 * Made on log in redirect to the forum index page by default
   and to the question page, if user was reading the question
   it is still possible to override the ``next`` url parameter
