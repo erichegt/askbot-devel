@@ -1,6 +1,6 @@
 {% if active_tab != "ask" %}
     <a class="scope-selector {% if scope == 'all' %}on{% endif %}"
-    href="{% url questions %}?scope=all" title="{% trans %}see all questions{% endtrans %}">ALL</a>
+    href="{% url questions %}?scope=all" title="{% trans %}see all questions{% endtrans %}">{% trans %}ALL{% endtrans %}</a>
     <a class="scope-selector {% if scope == 'unanswered' %}on{% endif %}"
     href="{% url questions %}?scope=unanswered&amp;sort=answers-asc" title="{% trans %}see unanswered questions{% endtrans %}">{% trans %}UNANSWERED{% endtrans %}</a>
     {% if request.user.is_authenticated() %} 
