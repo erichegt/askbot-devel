@@ -14,6 +14,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils import functions
 from askbot.utils.slug import slugify
+from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
 from django_countries import settings as countries_settings
@@ -36,8 +37,9 @@ absolutize_urls = register.filter(absolutize_urls_func)
 def clean_login_url(url):
     """pass through, unless user was originally on the logout page"""
     try:
-        resolver_match = resolve(url)
-        if resolver_match.url_name == 'question':
+        resolver_match = ResolverMatch(resolve(url))
+        from askbot.views.readers import question
+        if resolver_match.func == question:
             return url
     except Http404:
         pass

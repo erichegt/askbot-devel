@@ -65,18 +65,49 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request):
+def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None, \
+        search=None, tags=None, author=None, page=None, reset_tags=None, \
+        reset_author=None, reset_query=None, start_over=True, \
+        remove_tag=None, page_size=None):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    #make parameters dictionary
+    params_dict = {
+        'scope': scope,
+        'sort': sort,
+    }
+    if query:
+        params_dict['query'] = ' '.join(query.split('+'))
+    if search:
+        params_dict['search'] = search
+    if tags:
+        params_dict['tags'] = ' '.join(tags.split('+'))
+    if author:
+        params_dict['author'] = author
+    if page:
+        params_dict['page'] = page
+    if reset_tags:
+        params_dict['reset_tags'] = reset_tags
+    if reset_author:
+        params_dict['reset_author'] = reset_author
+    if reset_query:
+        params_dict['reset_query'] = reset_query
+    if start_over:
+        params_dict['start_over'] = start_over
+    if remove_tag:
+        params_dict['remove_tag'] = remove_tag.decode("utf8")
+    if page_size:
+        params_dict['page_size'] = page_size
+    
     #before = datetime.datetime.now()
     #don't allow to post to this view
     if request.method == 'POST':
         raise Http404
-
     #update search state
-    form = AdvancedSearchForm(request.GET)
+    #form = AdvancedSearchForm(request.GET)
+    form = AdvancedSearchForm(params_dict)
     if form.is_valid():
         user_input = form.cleaned_data
     else:
@@ -108,7 +139,7 @@ def questions(request):
     paginator = Paginator(qs, search_state.page_size)
 
     if paginator.num_pages < search_state.page:
-        raise Http404
+        search_state.page = 1
 
     page = paginator.page(search_state.page)
 
@@ -122,8 +153,9 @@ def questions(request):
         'has_next': page.has_next(),
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
-        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
+        'base_url' : search_state.query_string(),#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+        'parameters': search_state.make_parameters(),
     }
 
     # We need to pass the rss feed url based
@@ -143,6 +175,14 @@ def questions(request):
     
     # Format the url with the QueryDict
     context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
+
+    reset_method_count = 0
+    if search_state.query:
+        reset_method_count += 1
+    if search_state.tags:
+        reset_method_count += 1
+    if meta_data.get('author_name',None):
+        reset_method_count += 1
 
     if request.is_ajax():
 
@@ -167,10 +207,11 @@ def questions(request):
         if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
-            paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
+            #paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
                 'context': extra_tags.cnprog_paginator(paginator_context),
-                'questions_count': q_count
+                'questions_count': q_count,
+                'page_size' : search_state.page_size,
             }
             paginator_html = paginator_tpl.render(Context(data))
         else:
@@ -192,6 +233,9 @@ def questions(request):
             'related_tags': list(),
             'faces': list(),
             'feed_url': context_feed_url,
+            'query_string': search_state.query_string(),
+            'parameters': search_state.make_parameters(),
+            'page_size' : search_state.page_size,
         }
 
         badge_levels = dict(const.BADGE_TYPE_CHOICES)
@@ -228,23 +272,17 @@ def questions(request):
             'context': paginator_context,
             'language_code': translation.get_language(),
             'query': search_state.query,
+            'reset_method_count': reset_method_count,
+            'query_string': search_state.query_string(),
         }
 
         questions_html = questions_tpl.render(Context(data))
+        #import pdb; pdb.set_trace()
         ajax_data['questions'] = questions_html.replace('\n','')
         return HttpResponse(
                     simplejson.dumps(ajax_data),
                     mimetype = 'application/json'
                 )
-
-    reset_method_count = 0
-    if search_state.query:
-        reset_method_count += 1
-    if search_state.tags:
-        reset_method_count += 1
-    if meta_data.get('author_name',None):
-        reset_method_count += 1
-    
 
     template_data = {
         'active_tab': 'questions',
@@ -257,6 +295,7 @@ def questions(request):
         'language_code': translation.get_language(),
         'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
         'page_class': 'main-page',
+        'page_size': search_state.page_size,
         'query': search_state.query,
         'questions' : page,
         'questions_count' : paginator.count,
@@ -271,6 +310,8 @@ def questions(request):
         'font_size' : font_size,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
         'update_avatar_data': schedules.should_update_avatar_data(request),
+        'query_string': search_state.query_string(),
+        'parameters': search_state.make_parameters(),
         'feed_url': context_feed_url,
     }
 

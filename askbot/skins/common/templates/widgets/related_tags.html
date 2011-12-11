@@ -9,7 +9,8 @@
               tag.name,
               html_tag = 'div',
               extra_content = '<span class="tag-number">&#215; ' ~
-              tag.local_used_count|intcomma ~ '</span>'
+              tag.local_used_count|intcomma ~ '</span>',
+              url_params = query_string,
         )}}
         </li>
         {% endfor %}

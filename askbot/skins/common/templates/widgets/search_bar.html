@@ -8,7 +8,7 @@
         {% elif active_tab == "users" %}
             action="{% url users %}" 
         {% else %}
-            action="{% url questions %}" 
+            action="{% url questions %}" id="searchForm"
         {% endif %}
         method="get">
             <input type="submit" value="" name="search" class="searchBtn" />
@@ -36,7 +36,7 @@
                 value="X"
                 name="reset_query"
                 {# todo - make sure it works on Enter keypress #}
-                onclick="window.location.href='{% url questions %}?reset_query=true'"
+                onclick="window.location.href='{% url questions %}{{ query_string|remove_from_url('query') }}'"
                 class="cancelSearchBtn"/>
             {% endif %}
 

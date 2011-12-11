@@ -53,6 +53,6 @@
         </div>
     </div>
     <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-    {{ tag_list_widget(question.get_tag_names()) }}
+    {{ tag_list_widget(question.get_tag_names(), url_params=query_string) }}
 </div>
 

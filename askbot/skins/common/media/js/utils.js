@@ -356,9 +356,41 @@ Tag.prototype.createDom = function(){
     this._inner_element = this.makeElement(this._inner_html_tag);
     if (this.isLinkable()){
         var url = askbot['urls']['questions'];
-        url += '?tags=' + escape(this.getName());
+        var flag = false
+        var author = ''
         if (this._url_params !== null){
-            url += escape('&' + this._url_params);
+            params = this._url_params.split('/')
+            for (var i = 0; i < params.length; i++){
+                if (params[i] !== ''){
+                    if (params[i].substring(0, 5) == "tags:"){
+                        tags = params[i].substr(5).split('+');
+                        new_tags = ''
+                        for(var j = 0; j < tags.length; j++){
+                            if(escape(tags[j]) !== escape(this.getName())){
+                                new_tags += escape(tags[j]) + '+';
+                            }
+                        }
+                        new_tags += escape(this.getName())
+                        url += 'tags:'+new_tags+'/'
+                        flag = true
+                    }
+                    else if (params[i].substring(0, 7) == "author:"){
+                        author = params[i];
+                    }
+                    else{
+                        url += params[i] + '/';
+                    }
+                }
+            }
+            if (flag == false) {
+                url += 'tags:'+escape(this.getName())+'/'
+            }
+            if (author !== '') {
+                url += author+'/'
+            }
+        }
+        else{
+            url += 'tags:' + escape(this.getName()) + '/';
         }
         this._inner_element.attr('href', url);
     }
@@ -366,7 +398,7 @@ Tag.prototype.createDom = function(){
     this._inner_element.attr('rel', 'tag');
     if (this._title === null){
         this.setTitle(
-			interpolate(gettext("see questions tagged '%s'"), [this.getName()])
+            interpolate(gettext("see questions tagged '%s'"), [this.getName()])
         );
     }
     this._inner_element.attr('title', this._title);

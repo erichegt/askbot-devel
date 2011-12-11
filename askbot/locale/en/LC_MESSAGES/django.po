@@ -4026,7 +4026,7 @@ msgid "last used"
 msgstr ""
 
 msgid "cannot be deleted"
-msgstr "sorry, but older votes cannot be revoked"
+msgstr ""
 
 msgid "with openid it is easier"
 msgstr "With the OpenID you don't need to create new username and password."

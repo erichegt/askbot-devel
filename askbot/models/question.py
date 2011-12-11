@@ -448,7 +448,6 @@ class QuestionQuerySet(models.query.QuerySet):
                             'sort',
                             const.DEFAULT_POST_SORT_METHOD
                         )
-
         qs = self.filter(deleted=False)#todo - add a possibility to see deleted questions
 
         #return metadata
