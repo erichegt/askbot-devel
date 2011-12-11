@@ -5,6 +5,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot import auth
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
+import urllib2
 
 register = template.Library()
 
@@ -156,3 +157,54 @@ def humanize_counter(number):
 @register.filter
 def absolute_value(number):
     return abs(number)
+
+
+@register.filter
+def replace_in_url(query_string, param):
+    type, value = param.split(':')
+    params = query_string.rstrip('/').split('/')
+
+    for p in params:
+        if type in p:
+            params[params.index(p)] = param
+
+    query_string = '/'.join(params)+'/'
+    return query_string
+
+@register.filter
+def add_tag_to_url(query_string, param):
+    if query_string:
+        params = query_string.rstrip('/').split('/')
+        flag = False
+
+        tags = [s for s in params if "tags:" in s]
+        if tags:
+            tags = tags[0]
+            flag = True
+            type, value = tags.split(':')
+            values = value.split('+')
+            if not urllib2.unquote(param) in values:
+                values.append(param)
+            values = [urllib2.quote(value) for value in values]
+            params[params.index(tags)] = 'tags:'+'+'.join(values)
+
+        if not flag:
+            author = [s for s in params if "author:" in s]
+            if author:
+                author = author[0]
+                params.insert(params.index(author), 'tags:'+param)
+            else:
+                params.append('tags:'+param)
+        query_string = '/'.join(params)+'/'
+        return query_string
+    
+@register.filter
+def remove_from_url(query_string, param_type):
+    if query_string:
+        params = query_string.rstrip('/').split('/')
+        new_params = []
+        for p in params:
+            if not p.startswith(param_type):
+                new_params.append(p)
+        query_string = '/'.join(new_params)+'/'
+        return query_string
