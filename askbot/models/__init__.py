@@ -1991,24 +1991,12 @@ def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, forc
                         content_type = post_content_type, object_id=post.id
                     )
         for flag in all_flags:
-            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)
-            award_badges_signal.send(None,
-                event = 'flag_post',
-                actor = flag.user,
-                context_object = post,
-                timestamp = timestamp
-            )
+            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)            
 
     elif cancel:#todo: can't unflag?
         if force == False:
             user.assert_can_remove_flag_offensive(post = post)
-        auth.onUnFlaggedItem(post, user, timestamp=timestamp)
-        award_badges_signal.send(None,
-            event = 'flag_post',
-            actor = user,
-            context_object = post,
-            timestamp = timestamp
-        )
+        auth.onUnFlaggedItem(post, user, timestamp=timestamp)        
 
     else:
         if force == False:
