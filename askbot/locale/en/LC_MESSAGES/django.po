@@ -4472,7 +4472,7 @@ msgid "location"
 msgstr ""
 
 msgid "age unit"
-msgstr ""
+msgstr "years old"
 
 msgid "todays unused votes"
 msgstr ""
