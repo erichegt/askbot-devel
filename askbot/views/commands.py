@@ -148,7 +148,11 @@ def vote(request, id):
         answerUpVote: 5,
         answerDownVote:6,
         offensiveQuestion : 7,
+        remove offensiveQuestion flag : 7.5,
+        remove all offensiveQuestion flag : 7.6,
         offensiveAnswer:8,
+        remove offensiveAnswer flag : 8.5,
+        remove all offensiveAnswer flag : 8.6,
         removeQuestion: 9,
         removeAnswer:10
         questionSubscribeUpdates:11
@@ -254,6 +258,19 @@ def vote(request, id):
                 post = get_object_or_404(models.Answer, id=id)
 
             request.user.flag_post(post, cancel = True)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+        
+        elif vote_type in ['7.6', '8.6']:
+            #flag question or answer
+            if vote_type == '7.6':
+                post = get_object_or_404(models.Question, id=id)
+            if vote_type == '8.6':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Answer, id=id)
+
+            request.user.flag_post(post, cancel_all = True)
 
             response_data['count'] = post.offensive_flag_count
             response_data['success'] = 1
