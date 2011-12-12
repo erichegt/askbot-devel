@@ -299,8 +299,8 @@ def user_stats(request, user, context):
     #
     top_answers = user.posts.get_answers().filter(
         deleted=False,
-        parent__deleted=False,
-    ).select_related('thread').order_by('-score', '-id')[:100]
+        self_answer__question__deleted=False,
+    ).select_related('thread', 'self_answer').order_by('-score', '-id')[:100]
 
     top_answer_count = len(top_answers)
 
@@ -318,7 +318,7 @@ def user_stats(request, user, context):
     # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks to return correct results for the test data
-    user_tags = models.Tag.objects.filter(threads__post__author=user).\
+    user_tags = models.Tag.objects.filter(threads__posts__author=user).\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate

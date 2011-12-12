@@ -12,6 +12,9 @@ class Migration(SchemaMigration):
         create_post_view_sql = open(
             askbot.get_path_to('models/post_view.sql')
         ).read()
+        import warnings
+        warnings.filterwarnings("ignore", "Unknown table 'askbot.askbot_post'") # DROP VIEW might raise a warning so let's filter that out
+        db.execute('DROP VIEW IF EXISTS askbot_post')
         db.execute(create_post_view_sql)
 
     def backwards(self, orm):

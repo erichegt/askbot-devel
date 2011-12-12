@@ -12,7 +12,7 @@ import askbot
 import askbot.conf
 from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent
-from askbot.models.post import PostRevision
+from askbot.models.post import Post, PostRevision
 from askbot.models.base import BaseQuerySetManager
 from askbot.models import content
 from askbot.models import signals
@@ -147,6 +147,9 @@ class Thread(models.Model):
     def _question(self):
         return Question.objects.get(thread=self)
 
+    def get_absolute_url(self):
+        return self._question().get_absolute_url()
+
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()
@@ -183,19 +186,32 @@ class Thread(models.Model):
         "Creates a list of Tag names from the ``tagnames`` attribute."
         return self.tagnames.split(u' ')
 
+    def get_title(self):
+        if self.closed:
+            attr = const.POST_STATUS['closed']
+        elif self._question().deleted:
+            attr = const.POST_STATUS['deleted']
+        else:
+            attr = None
+        if attr is not None:
+            return u'%s %s' % (self.title, attr)
+        else:
+            return self.title
+
+    def tagname_meta_generator(self):
+        return u','.join([unicode(tag) for tag in self.get_tag_names()])
+
     def get_answers(self, user=None):
         """returns query set for answers to this question
         that may be shown to the given user
         """
-        thread_question = self._question()
-
         if user is None or user.is_anonymous():
-            return thread_question.answers.filter(deleted=False)
+            return self.posts.get_answers().filter(deleted=False)
         else:
             if user.is_administrator() or user.is_moderator():
-                return thread_question.answers.all()
+                return self.posts.get_answers()
             else:
-                return thread_question.answers.filter(
+                return self.posts.get_answers().filter(
                                 models.Q(deleted = False) | models.Q(author = user) \
                                 | models.Q(deleted_by = user)
                             )
@@ -373,18 +389,41 @@ class Thread(models.Model):
         return FavoriteQuestion.objects.filter(thread=self, user=user).exists()
 
     def get_last_update_info(self):
-        thread_question = self._question()
+#        thread_question = self._question()
+#
+#        when, who = thread_question.post_get_last_update_info()
+#
+#        answers = thread_question.answers.all()
+#        for a in answers:
+#            a_when, a_who = a.post_get_last_update_info()
+#            if a_when > when:
+#                when = a_when
+#                who = a_who
+#
+#        return when, who
 
-        when, who = thread_question.post_get_last_update_info()
+        # INFO: "CASE" is supported by all databases:
+        # - http://dev.mysql.com/doc/refman/5.0/en/control-flow-functions.html#operator_case
+        # - http://www.sqlite.org/lang_expr.html ("The CASE expression")
+        # - http://www.postgresql.org/docs/8.2/static/functions-conditional.html
+        # But the problem is that `extra_last_updated_at` is returned as a string which can differ depedning on the backend,
+        # version etc. so for now let's do it manually
+#        posts = self.posts.extra(select={
+#            'extra_last_updated_at': 'CASE WHEN added_at > last_edited_at THEN added_at ELSE last_edited_at END',
+#            'extra_last_updated_by_id': 'CASE WHEN added_at > last_edited_at THEN author_id ELSE last_edited_by_id END',
+#        }).order_by('-extra_last_updated_at')
 
-        answers = thread_question.answers.all()
-        for a in answers:
-            a_when, a_who = a.post_get_last_update_info()
-            if a_when > when:
-                when = a_when
-                who = a_who
+        posts = self.posts.all()
 
-        return when, who
+        last_updated_at = posts[0].added_at
+        last_updated_by = posts[0].author
+
+        for post in posts:
+            last_updated_at, last_updated_by = max((last_updated_at, last_updated_by), (post.added_at, post.author))
+            if post.last_edited_at:
+                last_updated_at, last_updated_by = max((last_updated_at, last_updated_by), (post.last_edited_at, post.last_edited_by))
+
+        return last_updated_at, last_updated_by
 
 
 class QuestionQuerySet(models.query.QuerySet):

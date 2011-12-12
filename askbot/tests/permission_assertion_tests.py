@@ -484,7 +484,6 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
 class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
     
     def setUp(self):
-        super(EditQuestionPermissionAssertionTests, self).setUp()
         self.create_user()
         self.create_user(username = 'other_user')
         self.post = self.post_question()

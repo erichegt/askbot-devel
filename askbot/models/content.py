@@ -860,9 +860,7 @@ class Content(models.Model):
         raise NotImplementedError
 
     def get_question_title(self):
-        if self.is_answer():
-            return self.question.thread.title
-        elif self.is_question():
+        if self.is_question():
             if self.thread.closed:
                 attr = const.POST_STATUS['closed']
             elif self.deleted:

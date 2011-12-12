@@ -23,8 +23,9 @@ class Post(content.Content):
     self_question = models.ForeignKey('Question', blank=True, null=True)
 
     question = property(fget=lambda self: self.self_answer.question) # to simulate Answer model
+    question_id = property(fget=lambda self: self.self_answer.question_id) # to simulate Answer model
 
-    thread = models.ForeignKey('Thread')
+    thread = models.ForeignKey('Thread', related_name='posts')
 
     objects = PostManager()
 
