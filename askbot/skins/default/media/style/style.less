@@ -39,6 +39,14 @@ input, select {
     margin-left:0px;
 }
 
+textarea:focus, input:focus{
+    outline: none;
+}
+
+iframe {
+    border: none;
+}
+
 p {
     font-size: 14px;
     line-height: 140%;
@@ -225,9 +233,6 @@ body.user-messages {
 
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
     height: 20px;
-    position:absolute;
-    bottom: 0;
-    right:0px;
     padding-bottom:5px;
 
     a {
@@ -263,7 +268,7 @@ body.user-messages {
 }
 
 #metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
-    float:right;
+    float: right;/* for #header.with-logo it is modified */
 
     a {
         color: #e2e2ae;
@@ -310,6 +315,21 @@ body.user-messages {
     #navBadges{
         .sprites(-210px,-5px)
     }
+}
+
+#header.with-logo #userToolsNav {
+    position:absolute;
+    bottom: 0;
+    right:0px;
+}
+
+#header.without-logo #userToolsNav {
+    float:left;
+    margin-top: 7px;
+}
+
+#header.without-logo #metaNav {
+    margin-bottom: 7px;
 }
 
 #secondaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
@@ -368,8 +388,7 @@ body.user-messages {
     height:42px;
     margin:6px 0px 0px 15px;
 
-    .searchInput, .searchInputCancelable,
-    .searchInputAuth, .searchInputCancelableAuth {
+    .searchInput, .searchInputCancelable{
         font-size: 30px;
         height: 40px;
         font-weight:300;
@@ -381,20 +400,12 @@ body.user-messages {
         vertical-align: middle;
     }
 
-    .searchInput, .searchInputCancelable {
+    .searchInput,{
         width: 352px;
     }
 
     .searchInputCancelable {
         width: 317px;
-    }
-
-    .searchInputAuth{
-        width: 340px; 
-    }
-
-    .searchInputCancelableAuth {
-        width: 310px; /*FIXME byron */
     }
 
     .logoutsearch {
@@ -436,6 +447,20 @@ body.user-messages {
         color: #d84040;
     }
 }
+
+body.anon {
+    #searchBar {
+        width: 500px;
+        .searchInput {
+            width: 440px;
+        }
+
+        .searchInputCancelable {
+            width: 405px;
+        }
+    }
+}
+
 
 #askButton{ /* check blocks/secondary_header.html and widgets/ask_button.html*/
     background: url(../images/bigbutton.png) repeat-x bottom;
@@ -523,8 +548,10 @@ body.user-messages {
         font-size:15px;
         display: block;
         float: right;
-        width: 177px;
+        text-align:left;
         font-family:@main-font;
+        width:80px;
+        margin-right:18px;
     }
 
     ul {
@@ -594,6 +621,7 @@ body.user-messages {
         font-weight:normal;
         font-size:21px;
         margin-top:3px;
+
         display:block;
         width:120px;
         text-decoration:none;
@@ -738,6 +766,10 @@ body.user-messages {
     margin-right:5px;
 }
 
+.main-page .tabsA .label {
+    margin-left: 8px;
+}
+
 .tabsB a {
     background: #eee;
     border: 1px solid #eee;
@@ -751,13 +783,17 @@ body.user-messages {
     text-decoration: none;
 }
 
+.tabsC .first{
+    border:none;
+}
+
 .rss {
     float: right;
     font-size: 16px;
     color: #f57900;
     margin: 5px 0px 3px 7px;
     width:52px;
-    padding-left: 16px;
+    padding-left: 2px;
     padding-top:3px;
     background:#fff url(../images/feed-icon-small.png) no-repeat center right;
     float:right;
@@ -984,6 +1020,7 @@ ul#searchTags {
 .paginator {
     padding: 5px 0 10px 0;
     font-size:13px;
+    margin-bottom:10px;
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
@@ -1391,7 +1428,8 @@ span.delete-icon:hover {
 }
 
 .after-editor {
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .checkbox {
@@ -1479,7 +1517,7 @@ span.delete-icon:hover {
        
     .question-content{
         float:right;
-        width:690px;
+        width:682px;
         margin-bottom:10px;
     }
 
@@ -1490,16 +1528,16 @@ span.delete-icon:hover {
 
     #question-table,
     .answer-table {
-        margin: 6px 0 0px 0;
+        margin: 6px 0 6px 0;
         border-spacing: 0px;
-        width: 680px;
-        padding-right:3px;
+        width: 670px;
+        padding-right:10px;
     }
 
     .answer-table {
         margin-top:0px;
         border-bottom: 1px solid #D4D4D4;
-        float:left;
+        float:right;
     }
 
     .answer-table td,
@@ -1599,6 +1637,7 @@ span.delete-icon:hover {
         
          a:hover {
             background-color: #f5f0c9;
+            .rounded-corners(3px);
             
         }
         .sep {
@@ -1664,6 +1703,9 @@ span.delete-icon:hover {
         background: url(../images/vote-arrow-down-on-new.png) no-repeat;
     }
 
+    #fmanswer_button{
+        margin:8px 0px ;
+    }
     .question-img-favorite:hover {
         background: url(../images/vote-favorite-on.png)
     }
@@ -1715,7 +1757,7 @@ span.delete-icon:hover {
         }
         
         form.post-comments {
-            margin: 3px 30px 4px 5px;
+            margin: 3px 10px 7px 0px;
         }
 
         textarea {
@@ -1742,10 +1784,12 @@ span.delete-icon:hover {
             background:url(../images/small-button-blue.png) repeat-x top;
             border:0;
             color:@button-label;
-            font-size:12px;
-            width:95px;
+            font-family:@body-font;
+            font-size:13px;
+            width:100px;
             font-weight:bold;
-            height:24px;
+            height:27px;
+            line-height:25px;
             margin-top:-2px;
             cursor:pointer;
             .rounded-corners(4px);
@@ -1776,7 +1820,7 @@ span.delete-icon:hover {
             font-family:@body-font;
             font-size:11px;
             min-height: 25px;
-            background:url(../images/comment-background.png) bottom repeat-x;
+            background:#fff url(../images/comment-background.png) bottom repeat-x;
             .rounded-corners(5px);
         }
         div.comment:hover {
@@ -1908,6 +1952,7 @@ span.delete-icon:hover {
 
     .vote-buttons .notify-sidebar {
         text-align: left;
+        width:120px;
     }
     .vote-buttons .notify-sidebar label {
         vertical-align: top;
@@ -1938,10 +1983,6 @@ span.delete-icon:hover {
         color:#444444;
     }
     
-    .accepted-answer .comments {
-        background-color: #f1f6d4;
-    }
-
     .answered {
         background: #CCC;
         color: #999;
@@ -2038,6 +2079,7 @@ span.delete-icon:hover {
 .openid-signin,
 .meta,
 .users-page,
+.user-profile-edit-page,
 {
     font-size:13px;
     line-height:1.3;
@@ -2055,12 +2097,27 @@ span.delete-icon:hover {
         padding-left:0px;
         font-size:16px;
     }
-    #id_email,#id_name,#id_username,#id_password1,#id_password2{
+}
+
+.openid-signin,
+.meta,
+.users-page,
+.user-profile-edit-page,
+.user-profile-page,
+{
+    form{
+        margin-bottom:15px;
+    }
+    input[type="text"],input[type="password"],select{
         border:#cce6ec 3px solid;
         height:25px;
         padding-left:5px;
         width:395px;
         font-size:14px;
+    }
+    select{
+        width:405px;
+        height:30px;
     }
     textarea{
         border:#cce6ec 3px solid;
@@ -2074,9 +2131,11 @@ span.delete-icon:hover {
         border:0;
         color:@button-label;
         font-weight:bold;
-        font-size:16px;
-        height:24px;
-        margin-top:-2px;
+        font-size:13px;
+        font-family:@body-font;
+        height:26px;
+        margin:5px 0px;
+        width:100px;
         cursor:pointer;
         .rounded-corners(4px);
         .text-shadow(0px,1px,0px,#E6F6FA);
@@ -2111,9 +2170,12 @@ span.delete-icon:hover {
         border:0;
         color:@button-label;
         font-weight:bold;
-        font-size:12px;
+        font-size:13px;
+        font-family:@body-font;
         height:24px;
         margin-top:-2px;
+        padding-left:10px;
+        padding-right:10px;
         cursor:pointer;
         .rounded-corners(4px);
         .text-shadow(0px,1px,0px,#E6F6FA);

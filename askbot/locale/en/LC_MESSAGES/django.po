@@ -193,10 +193,8 @@ msgid "Your name (optional):"
 msgstr ""
 
 #: forms.py:543
-#, fuzzy
 msgid "Email:"
 msgstr ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
 
 #: forms.py:545
 msgid "Your message:"
@@ -419,9 +417,8 @@ msgid "account/"
 msgstr ""
 
 #: conf/access_control.py:8
-#, fuzzy
 msgid "Access control settings"
-msgstr "User login"
+msgstr ""
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
@@ -668,14 +665,8 @@ msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
 
 #: conf/email.py:247
-#, fuzzy
 msgid "Allow posting questions by email"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/email.py:249
 msgid ""
@@ -875,14 +866,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:56
-#, fuzzy
 msgid "Allow posting before logging in"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -893,9 +878,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:73
-#, fuzzy
 msgid "Allow swapping answer with question"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: conf/forum_data_rules.py:75
 msgid ""
@@ -938,9 +922,8 @@ msgid ""
 msgstr ""
 
 #: conf/forum_data_rules.py:140
-#, fuzzy
 msgid "Use wildcard tags"
-msgstr "Tags"
+msgstr ""
 
 #: conf/forum_data_rules.py:142
 msgid ""
@@ -1187,9 +1170,8 @@ msgid "Downvote"
 msgstr ""
 
 #: conf/minimum_reputation.py:40
-#, fuzzy
 msgid "Answer own question immediately"
-msgstr "Post Your Answer"
+msgstr ""
 
 #: conf/minimum_reputation.py:49
 msgid "Accept own answer"
@@ -1381,14 +1363,12 @@ msgid ""
 msgstr ""
 
 #: conf/sidebar_profile.py:12
-#, fuzzy
 msgid "User profile sidebar"
-msgstr "User login"
+msgstr ""
 
 #: conf/sidebar_question.py:11
-#, fuzzy
 msgid "Question page sidebar"
-msgstr "Tags"
+msgstr ""
 
 #: conf/sidebar_question.py:35
 msgid "Show tag list in sidebar"
@@ -1828,23 +1808,16 @@ msgid "Login, Users & Communication"
 msgstr ""
 
 #: conf/user_settings.py:12
-#, fuzzy
 msgid "User settings"
-msgstr "User login"
+msgstr ""
 
 #: conf/user_settings.py:21
 msgid "Allow editing user screen name"
 msgstr ""
 
 #: conf/user_settings.py:30
-#, fuzzy
 msgid "Allow account recovery by email"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: conf/user_settings.py:39
 msgid "Allow adding and removing login methods"
@@ -1992,9 +1965,8 @@ msgid "favorite"
 msgstr ""
 
 #: const/__init__.py:64
-#, fuzzy
 msgid "list"
-msgstr "Tags"
+msgstr ""
 
 #: const/__init__.py:65
 msgid "cloud"
@@ -2165,9 +2137,8 @@ msgid "monsterid"
 msgstr ""
 
 #: const/__init__.py:236
-#, fuzzy
 msgid "wavatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:237
 msgid "retro"
@@ -2190,14 +2161,12 @@ msgid "None"
 msgstr ""
 
 #: const/__init__.py:299
-#, fuzzy
 msgid "Gravatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/__init__.py:300
-#, fuzzy
 msgid "Uploaded Avatar"
-msgstr "How to change my picture (gravatar) and what is gravatar?"
+msgstr ""
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
@@ -2592,26 +2561,12 @@ msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr ""
 
 #: management/commands/send_accept_answer_reminders.py:62
-#, fuzzy
 msgid "Please accept the best answer for this question:"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: management/commands/send_accept_answer_reminders.py:64
-#, fuzzy
 msgid "Please accept the best answer for these questions:"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: management/commands/send_email_alerts.py:411
 #, python-format
@@ -2682,14 +2637,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: middleware/forum_mode.py:31
-#, fuzzy, python-format
+#, python-format
 msgid "Please log in to use %s"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: models/__init__.py:317
 msgid ""
@@ -3491,32 +3441,23 @@ msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:5
 #: skins/old/templates/authopenid/confirm_email.txt:5
-#, fuzzy
 msgid "Username:"
-msgstr "Choose screen name"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:6
 #: skins/old/templates/authopenid/confirm_email.txt:6
-#, fuzzy
 msgid "Password:"
-msgstr "Password"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:8
 #: skins/old/templates/authopenid/confirm_email.txt:8
-#, fuzzy
 msgid "Please sign in here:"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/common/templates/authopenid/confirm_email.txt:11
 #: skins/common/templates/authopenid/email_validation.txt:13
 #: skins/old/templates/authopenid/confirm_email.txt:11
 #: skins/old/templates/authopenid/email_validation.txt:13
-#, fuzzy
 msgid ""
 "Sincerely,\n"
 "Forum Administrator"
@@ -3747,11 +3688,11 @@ msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
 #: views/readers.py:151
-#, fuzzy, python-format
+#, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
-msgstr[0] "Asked"
-msgstr[1] "Asked"
+msgstr[0] ""
+msgstr[1] ""
 
 #: views/readers.py:159
 #, python-format
@@ -3864,7 +3805,6 @@ msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 
 #: views/writers.py:191
-#, fuzzy
 msgid "Please log in to ask questions"
 msgstr ""
 "<span class=\"strong big\">You are welcome to start submitting your question "
@@ -3874,15 +3814,8 @@ msgstr ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: views/writers.py:492
-#, fuzzy
 msgid "Please log in to answer questions"
 msgstr ""
-"<span class='big strong'>Please try to give a substantial answer</span>. If "
-"you wanted to comment on the question or answer, just <strong>use the "
-"commenting tool</strong>. Please remember that you can always <strong>revise "
-"your answers</strong> - no need to answer the same question twice. Also, "
-"please <strong>don't forget to vote</strong> - it really helps to select the "
-"best questions and answers!"
 
 #: views/writers.py:598
 #, python-format
@@ -3906,960 +3839,798 @@ msgstr ""
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
-#~ msgid "Change email"
-#~ msgstr "Change Email"
-
-#, fuzzy
-#~ msgid "Save your email address"
-#~ msgstr "Your email <i>(never shared)</i>"
-
-#~ msgid "change %(email)s info"
-#~ msgstr ""
-#~ "<span class=\"strong big\">Enter your new email into the box below</span> "
-#~ "if you'd like to use another email for <strong>update subscriptions</"
-#~ "strong>.<br>Currently you are using <strong>%(email)s</strong>"
-
-#~ msgid "here is why email is required, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<span class='strong big'>Please enter your email address in the box below."
-#~ "</span> Valid email address is required on this Q&amp;A forum. If you "
-#~ "like, you can <strong>receive updates</strong> on interesting questions "
-#~ "or entire forum via email. Also, your email is used to create a unique <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your "
-#~ "account. Email addresses are never shown or otherwise shared with anybody "
-#~ "else."
-
-#~ msgid "Your new Email"
-#~ msgstr ""
-#~ "<strong>Your new Email:</strong> (will <strong>not</strong> be shown to "
-#~ "anyone, must be valid)"
-
-#~ msgid "Your Email"
-#~ msgstr ""
-#~ "<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
-
-#, fuzzy
-#~ msgid "Save Email"
-#~ msgstr "Change Email"
-
-#, fuzzy
-#~ msgid "Validate email"
-#~ msgstr "How to validate email and why?"
-
-#~ msgid "validate %(email)s info or go to %(change_email_url)s"
-#~ msgstr ""
-#~ "<span class=\"strong big\">An email with a validation link has been sent "
-#~ "to %(email)s.</span> Please <strong>follow the emailed link</strong> with "
-#~ "your web browser. Email validation is necessary to help insure the proper "
-#~ "use of email on <span class=\"orange\">Q&amp;A</span>. If you would like "
-#~ "to use <strong>another email</strong>, please <a href='%(change_email_url)"
-#~ "s'><strong>change it again</strong></a>."
-
-#~ msgid "old %(email)s kept, if you like go to %(change_email_url)s"
-#~ msgstr ""
-#~ "<span class=\"strong big\">Your email address %(email)s has not been "
-#~ "changed.</span> If you decide to change it later - you can always do it "
-#~ "by editing it in your user profile or by using the <a "
-#~ "href='%(change_email_url)s'><strong>previous form</strong></a> again."
-
-#~ msgid "your current %(email)s can be used for this"
-#~ msgstr ""
-#~ "<span class='big strong'>Your email address is now set to %(email)s.</"
-#~ "span> Updates on the questions that you like most will be sent to this "
-#~ "address. Email notifications are sent once a day or less frequently - "
-#~ "only when there are any news."
-
-#~ msgid "thanks for verifying email"
-#~ msgstr ""
-#~ "<span class=\"big strong\">Thank you for verifying your email!</span> Now "
-#~ "you can <strong>ask</strong> and <strong>answer</strong> questions. Also "
-#~ "if you find a very interesting question you can <strong>subscribe for the "
-#~ "updates</strong> - then will be notified about changes <strong>once a "
-#~ "day</strong> or less frequently."
-
-#~ msgid "email key not sent"
-#~ msgstr "Validation email not sent"
-
-#~ msgid "email key not sent %(email)s change email here %(change_link)s"
-#~ msgstr ""
-#~ "<span class='big strong'>Your current email address %(email)s has been "
-#~ "validated before</span> so the new key was not sent. You can <a "
-#~ "href='%(change_link)s'>change</a> email used for update subscriptions if "
-#~ "necessary."
-
-#, fuzzy
-#~ msgid "Registration"
-#~ msgstr "karma"
-
-#~ msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "%(provider)s login.</span> Please create your <strong>screen name</"
-#~ "strong> and save your <strong>email</strong> address. Saved email address "
-#~ "will let you <strong>subscribe for the updates</strong> on the most "
-#~ "interesting questions and will be used to create and retrieve your unique "
-#~ "avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
-#~ "a>.</p>"
-
-#~ msgid ""
-#~ "%(username)s already exists, choose another name for \n"
-#~ "                            %(provider)s. Email is required too, see "
-#~ "%(gravatar_faq_url)s\n"
-#~ "                        "
-#~ msgstr ""
-#~ "<p><span class='strong big'>Oops... looks like screen name %(username)s "
-#~ "is already used in another account.</span></p><p>Please choose another "
-#~ "screen name to use with your %(provider)s login. Also, a valid email "
-#~ "address is required on the <span class='orange'>Q&amp;A</span> forum. "
-#~ "Your email is used to create a unique <a href='%(gravatar_faq_url)"
-#~ "s'><strong>gravatar</strong></a> image for your account. If you like, you "
-#~ "can <strong>receive updates</strong> on the interesting questions or "
-#~ "entire forum by email. Email addresses are never shown or otherwise "
-#~ "shared with anybody else.</p>"
-
-#~ msgid ""
-#~ "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "%(provider)s login.</span></p><p>You can either keep your <strong>screen "
-#~ "name</strong> the same as your %(provider)s login name  or choose some "
-#~ "other nickname.</p><p>Also, please save a valid <strong>email</strong> "
-#~ "address. With the email you can <strong>subscribe for the updates</"
-#~ "strong> on the most interesting questions. Email address is also used to "
-#~ "create and retrieve your unique avatar image - <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
-
-#~ msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "Facebook login.</span> Please create your <strong>screen name</strong> "
-#~ "and save your <strong>email</strong> address. Saved email address will "
-#~ "let you <strong>subscribe for the updates</strong> on the most "
-#~ "interesting questions and will be used to create and retrieve your unique "
-#~ "avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
-#~ "a>.</p>"
-
-#~ msgid "Screen name label"
-#~ msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
-
-#~ msgid "Email address label"
-#~ msgstr ""
-#~ "<strong>Email Address</strong> (<i>will <strong>not</strong> be shared "
-#~ "with anyone, must be valid</i>)"
-
-#~ msgid "receive updates motivational blurb"
-#~ msgstr ""
-#~ "<strong>Receive forum updates by email</strong> - this will help our "
-#~ "community grow and become more useful.<br/>By default <span "
-#~ "class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest "
-#~ "per week</strong>  - only when there is anything new.<br/>If you like, "
-#~ "please adjust this now or any time later from your user account."
-
-#~ msgid "create account"
-#~ msgstr "Signup"
-
-#~ msgid "Logout"
-#~ msgstr "Sign out"
-
-#~ msgid "User login"
-#~ msgstr "User login"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Your answer to %(title)s %(summary)s will be posted once you log "
-#~ "in\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
-#~ "strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will "
-#~ "be posted once you log in.</span>"
-
-#~ msgid ""
-#~ "Your question \n"
-#~ "        %(title)s %(summary)s will be posted once you log in\n"
-#~ "        "
-#~ msgstr ""
-#~ "<span class=\"strong big\">Your question</span> <i>\"<strong>%(title)s</"
-#~ "strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will "
-#~ "be posted once you log in.</span>"
-
-#, fuzzy
-#~ msgid "Password"
-#~ msgstr "Password"
-
-#~ msgid "Login"
-#~ msgstr "Sign in"
-
-#, fuzzy
-#~ msgid "New password"
-#~ msgstr "Password"
-
-#, fuzzy
-#~ msgid "last used"
-#~ msgstr "Last updated"
-
-#, fuzzy
-#~ msgid "cannot be deleted"
-#~ msgstr "sorry, but older votes cannot be revoked"
-
-#~ msgid "with openid it is easier"
-#~ msgstr "With the OpenID you don't need to create new username and password."
-
-#~ msgid "reuse openid"
-#~ msgstr ""
-#~ "You can safely re-use the same login for all OpenID-enabled websites."
-
-#~ msgid "openid is widely adopted"
-#~ msgstr ""
-#~ "There are > 160,000,000 OpenID account in use. Over 10,000 sites are "
-#~ "OpenID-enabled."
-
-#~ msgid "openid is supported open standard"
-#~ msgstr ""
-#~ "OpenID is based on an open standard, supported by many organizations."
-
-#~ msgid "Traditional signup info"
-#~ msgstr ""
-#~ "<span class='strong big'>If you prefer, create your forum login name and "
-#~ "password here. However</span>, please keep in mind that we also support "
-#~ "<strong>OpenID</strong> login method. With <strong>OpenID</strong> you "
-#~ "can simply reuse your external login (e.g. Gmail or AOL) without ever "
-#~ "sharing your login details with anyone and having to remember yet another "
-#~ "password."
-
-#, fuzzy
-#~ msgid "Create Account"
-#~ msgstr "Signup"
-
-#, fuzzy
-#~ msgid "add avatar"
-#~ msgstr "How to change my picture (gravatar) and what is gravatar?"
-
-#, fuzzy
-#~ msgid "Change avatar"
-#~ msgstr "Retag question"
-
-#, fuzzy
-#~ msgid "change avatar"
-#~ msgstr "Retag question"
-
-#, fuzzy
-#~ msgid "delete avatar"
-#~ msgstr "How to change my picture (gravatar) and what is gravatar?"
-
-#~ msgid "answer permanent link"
-#~ msgstr "permanent link"
-
-#~ msgid "permanent link"
-#~ msgstr "link"
-
-#, fuzzy
-#~ msgid "swap with question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "reopen"
-#~ msgstr ""
-#~ "You can safely re-use the same login for all OpenID-enabled websites."
-
-#~ msgid "Related tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "Interesting tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "Ignored tags"
-#~ msgstr "Retag question"
-
-#, fuzzy
-#~ msgid "see all questions"
-#~ msgstr "Ask Your Question"
-
-#, fuzzy
-#~ msgid "see all tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "see latest questions"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "see tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "Edit answer"
-#~ msgstr "oldest"
-
-#, fuzzy
-#~ msgid "Ask a question"
-#~ msgstr "Ask Your Question"
-
-#~ msgid "Badges summary"
-#~ msgstr "Badges"
-
-#, fuzzy
-#~ msgid "Badges"
-#~ msgstr "Badges"
-
-#~ msgid ""
-#~ "Below is the list of available badges and number \n"
-#~ "of times each type of badge has been awarded. Give us feedback at "
-#~ "%(feedback_faq_url)s.\n"
-#~ msgstr ""
-#~ "Below is the list of available badges and number \n"
-#~ "    of times each type of badge has been awarded. Have ideas about fun "
-#~ "badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>\n"
-
-#~ msgid "Community badges"
-#~ msgstr "Badge levels"
-
-#~ msgid "gold badge description"
-#~ msgstr ""
-#~ "Gold badge is the highest award in this community. To obtain it have to "
-#~ "show profound knowledge and ability in addition to your active "
-#~ "participation."
-
-#~ msgid "silver badge description"
-#~ msgstr ""
-#~ "silver badge: occasionally awarded for the very high quality contributions"
-
-#~ msgid "bronze badge description"
-#~ msgstr "bronze badge: often given as a special honor"
-
-#, fuzzy
-#~ msgid "Close question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Close the question"
-#~ msgstr "Post Your Answer"
-
-#~ msgid ""
-#~ "Before asking the question - please make sure to use search to see "
-#~ "whether your question has alredy been answered."
-#~ msgstr ""
-#~ "Before you ask - please make sure to search for a similar question. You "
-#~ "can search questions by their title or tags."
-
-#~ msgid "What questions should I avoid asking?"
-#~ msgstr "What kinds of questions should be avoided?"
-
-#, fuzzy
-#~ msgid "What should I avoid in my answers?"
-#~ msgstr "What kinds of questions should be avoided?"
-
-#~ msgid ""
-#~ "is a Q&A site, not a discussion group. Therefore - please avoid having "
-#~ "discussions in your answers, comment facility allows some space for brief "
-#~ "discussions."
-#~ msgstr ""
-#~ "is a <strong>question and answer</strong> site - <strong>it is not a "
-#~ "discussion group</strong>. Please avoid holding debates in your answers "
-#~ "as they tend to dilute the essense of questions and answers. For the "
-#~ "brief discussions please use commenting facility."
-
-#~ msgid ""
-#~ "The reputation system allows users earn the authorization to perform a "
-#~ "variety of moderation tasks."
-#~ msgstr ""
-#~ "Karma system allows users to earn rights to perform a variety of "
-#~ "moderation tasks"
-
-#~ msgid "How does reputation system work?"
-#~ msgstr "How does karma system work?"
-
-#~ msgid "Rep system summary"
-#~ msgstr ""
-#~ "When a question or answer is upvoted, the user who posted them will gain "
-#~ "some points, which are called \"karma points\". These points serve as a "
-#~ "rough measure of the community trust to him/her. Various moderation tasks "
-#~ "are gradually assigned to the users based on those points."
-
-#, fuzzy
-#~ msgid "use tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "add comments"
-#~ msgstr "post a comment"
-
-#, fuzzy
-#~ msgid " accept own answer to own questions"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#, fuzzy
-#~ msgid "open and close own questions"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "retag other's questions"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "\"edit any answer"
-#~ msgstr "answers"
-
-#, fuzzy
-#~ msgid "\"delete any comment"
-#~ msgstr "post a comment"
-
-#~ msgid "what is gravatar"
-#~ msgstr "How to change my picture (gravatar) and what is gravatar?"
-
-#~ msgid "gravatar faq info"
-#~ msgstr ""
-#~ "<p>The picture that appears on the users profiles is called "
-#~ "<strong>gravatar</strong> (which means <strong>g</strong>lobally "
-#~ "<strong>r</strong>ecognized <strong>avatar</strong>).</p><p>Here is how "
-#~ "it works: a <strong>cryptographic key</strong> (unbreakable code) is "
-#~ "calculated from your email address. You upload your picture (or your "
-#~ "favorite alter ego image) the website <a href='http://gravatar."
-#~ "com'><strong>gravatar.com</strong></a> from where we later retreive your "
-#~ "image using the key.</p><p>This way all the websites you trust can show "
-#~ "your image next to your posts and your email address remains private.</"
-#~ "p><p>Please <strong>personalize your account</strong> with an image - "
-#~ "just register at <a href='http://gravatar.com'><strong>gravatar.com</"
-#~ "strong></a> (just please be sure to use the same email address that you "
-#~ "used to register with us). Default image that looks like a kitchen tile "
-#~ "is generated automatically.</p>"
-
-#, fuzzy
-#~ msgid "\"Login now!\""
-#~ msgstr "Logout Now"
-
-#, fuzzy
-#~ msgid "Still have questions?"
-#~ msgstr "Post Your Answer"
-
-#~ msgid ""
-#~ "Please ask your question at %(ask_question_url)s, help make our community "
-#~ "better!"
-#~ msgstr ""
-#~ "Please <a href='%(ask_question_url)s'>ask</a> your question, help make "
-#~ "our community better!"
-
-#, fuzzy
-#~ msgid "<p>Sincerely,<br/>Forum Administrator</p>"
-#~ msgstr ""
-#~ "Sincerely,\n"
-#~ "Q&A Forum Administrator"
-
-#, fuzzy
-#~ msgid "anonymous user"
-#~ msgstr "Sorry, anonymous users cannot vote"
-
-#, fuzzy
-#~ msgid "answered"
-#~ msgstr "answers"
-
-#, fuzzy
-#~ msgid "updated"
-#~ msgstr "Last updated"
-
-#, fuzzy
-#~ msgid "see questions tagged '%(tag)s'"
-#~ msgstr "Asked"
-
-#, fuzzy
-#~ msgid "delete this comment"
-#~ msgstr "post a comment"
-
-#~ msgid "add comment"
-#~ msgstr "post a comment"
-
-#~ msgid "page number %(num)s"
-#~ msgstr "page %(num)s"
-
-#, fuzzy
-#~ msgid "responses for %(username)s"
-#~ msgstr "Choose screen name"
-
-#, fuzzy
-#~ msgid "Questions"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "Edit question"
-#~ msgstr "Post Your Answer"
-
-#~ msgid "Change tags"
-#~ msgstr "Retag question"
-
-#, fuzzy
-#~ msgid "Reopen question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Reopen this question?"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Reopen this question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Revision history"
-#~ msgstr "karma"
-
-#, fuzzy
-#~ msgid "click to hide/show revision"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#~ msgid "Tag list"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "by name"
-#~ msgstr "date"
-
-#, fuzzy
-#~ msgid "by popularity"
-#~ msgstr "most voted"
-
-#~ msgid "Users"
-#~ msgstr "People"
-
-#~ msgid "reputation"
-#~ msgstr "karma"
-
-#, fuzzy
-#~ msgid "by username"
-#~ msgstr "Choose screen name"
-
-#, fuzzy
-#~ msgid "Search tips:"
-#~ msgstr "Tips"
-
-#, fuzzy
-#~ msgid "reset tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "There are no unanswered questions here"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#, fuzzy
-#~ msgid "No questions here. "
-#~ msgstr "answered question"
-
-#, fuzzy
-#~ msgid "resetting tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "Please always feel free to ask your question!"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#, fuzzy
-#~ msgid "Please, post your question!"
-#~ msgstr "Ask Your Question"
-
-#, fuzzy
-#~ msgid "subscribe to the questions feed"
-#~ msgstr "Post Your Answer"
-
-#~ msgid "oldest answers"
-#~ msgstr "oldest"
-
-#~ msgid "newest answers"
-#~ msgstr "newest"
-
-#~ msgid "popular answers"
-#~ msgstr "most voted"
-
-#, fuzzy
-#~ msgid "Answer Your Own Question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Login/Signup to Answer"
-#~ msgstr "Login/Signup to Post"
-
-#, fuzzy
-#~ msgid "Your answer"
-#~ msgstr "oldest"
-
-#, fuzzy
-#~ msgid "Be the first one to answer this question!"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#~ msgid "you can answer anonymously and then login"
-#~ msgstr ""
-#~ "<span class='strong big'>Please start posting your answer anonymously</"
-#~ "span> - your answer will be saved within the current session and "
-#~ "published after you log in or create a new account. Please try to give a "
-#~ "<strong>substantial answer</strong>, for discussions, <strong>please use "
-#~ "comments</strong> and <strong>please do remember to vote</strong> (after "
-#~ "you log in)!"
-
-#~ msgid "answer your own question only to give an answer"
-#~ msgstr ""
-#~ "<span class='big strong'>You are welcome to answer your own question</"
-#~ "span>, but please make sure to give an <strong>answer</strong>. Remember "
-#~ "that you can always <strong>revise your original question</strong>. "
-#~ "Please <strong>use comments for discussions</strong>  and <strong>please "
-#~ "don't forget to vote :)</strong> for the answers that you liked (or "
-#~ "perhaps did not like)! "
-
-#~ msgid "please only give an answer, no discussions"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#~ msgid "Login/Signup to Post Your Answer"
-#~ msgstr "Login/Signup to Post"
-
-#~ msgid "Answer the question"
-#~ msgstr "Post Your Answer"
-
-#, fuzzy
-#~ msgid "Question tools"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "click to unfollow this question"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#, fuzzy
-#~ msgid "click to follow this question"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#, fuzzy
-#~ msgid "email the updates"
-#~ msgstr "Last updated"
-
-#~ msgid "question asked"
-#~ msgstr "Asked"
-
-#~ msgid "question was seen"
-#~ msgstr "Seen"
-
-#~ msgid "last updated"
-#~ msgstr "Last updated"
-
-#, fuzzy
-#~ msgid "Related questions"
-#~ msgstr "Tags"
-
-#~ msgid "Notify me once a day when there are any new answers"
-#~ msgstr ""
-#~ "<strong>Notify me</strong> once a day by email when there are any new "
-#~ "answers or updates"
-
-#~ msgid "Notify me weekly when there are any new answers"
-#~ msgstr ""
-#~ "<strong>Notify me</strong> weekly when there are any new answers or "
-#~ "updates"
-
-#~ msgid "Notify me immediately when there are any new answers"
-#~ msgstr ""
-#~ "<strong>Notify me</strong> immediately when there are any new answers or "
-#~ "updates"
-
-#~ msgid ""
-#~ "You can always adjust frequency of email updates from your %(profile_url)s"
-#~ msgstr ""
-#~ "(note: you can always <strong><a href='%(profile_url)s?"
-#~ "sort=email_subscriptions'>change</a></strong> how often you receive "
-#~ "updates)"
-
-#~ msgid "once you sign in you will be able to subscribe for any updates here"
-#~ msgstr ""
-#~ "<span class='strong'>Here</span> (once you log in) you will be able to "
-#~ "sign up for the periodic email updates about this question."
-
-#, fuzzy
-#~ msgid "change picture"
-#~ msgstr "Retag question"
-
-#, fuzzy
-#~ msgid "Screen Name"
-#~ msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
-
-#, fuzzy
-#~ msgid "Update"
-#~ msgstr "date"
-
-#, fuzzy
-#~ msgid "Email subscription settings"
-#~ msgstr ""
-#~ "<span class='big strong'>Adjust frequency of email updates.</span> "
-#~ "Receive updates on interesting questions by email, <strong><br/>help the "
-#~ "community</strong> by answering questions of your colleagues. If you do "
-#~ "not wish to receive emails - select 'no email' on all items below.<br/"
-#~ ">Updates are only sent when there is any new activity on selected items."
-
-#~ msgid "email subscription settings info"
-#~ msgstr ""
-#~ "<span class='big strong'>Adjust frequency of email updates.</span> "
-#~ "Receive updates on interesting questions by email, <strong><br/>help the "
-#~ "community</strong> by answering questions of your colleagues. If you do "
-#~ "not wish to receive emails - select 'no email' on all items below.<br/"
-#~ ">Updates are only sent when there is any new activity on selected items."
-
-#~ msgid "Stop sending email"
-#~ msgstr "Stop Email"
-
-#, fuzzy
-#~ msgid "followed questions"
-#~ msgstr "Ask Your Question"
-
-#~ msgid "member for"
-#~ msgstr "member since"
-
-#~ msgid "user website"
-#~ msgstr "website"
-
-#, fuzzy
-#~ msgid "location"
-#~ msgstr "Hi, there! Please sign in"
-
-#~ msgid "age unit"
-#~ msgstr "years old"
-
-#, fuzzy
-#~ msgid "todays unused votes"
-#~ msgstr "votes"
-
-#, fuzzy
-#~ msgid "moderation"
-#~ msgstr "karma"
-
-#, fuzzy
-#~ msgid "User status changed"
-#~ msgstr "User login"
-
-#, fuzzy
-#~ msgid "User reputation changed"
-#~ msgstr "user karma"
-
-#, fuzzy
-#~ msgid "Message sent"
-#~ msgstr "years old"
-
-#, fuzzy
-#~ msgid "Suspended users can only edit or delete their own posts."
-#~ msgstr ""
-#~ "Sorry, your account appears to be suspended and you cannot make new posts "
-#~ "until this issue is resolved. You can, however edit your existing posts. "
-#~ "Please contact the forum administrator to reach a resolution."
-
-#, fuzzy
-#~ msgid "activity"
-#~ msgstr "activity"
-
-#, fuzzy
-#~ msgid "Answer to:"
-#~ msgstr "Tips"
-
-#, fuzzy
-#~ msgid "User profile"
-#~ msgstr "User login"
-
-#~ msgid "graph of user reputation"
-#~ msgstr "Graph of user karma"
-
-#~ msgid "reputation history"
-#~ msgstr "karma"
-
-#, fuzzy
-#~ msgid "recent activity"
-#~ msgstr "activity"
-
-#~ msgid "casted votes"
-#~ msgstr "votes"
-
-#, fuzzy
-#~ msgid "votes"
-#~ msgstr "votes"
-
-#~ msgid "answer tips"
-#~ msgstr "Tips"
-
-#~ msgid "please make your answer relevant to this community"
-#~ msgstr "ask a question interesting to this community"
-
-#, fuzzy
-#~ msgid "try to give an answer, rather than engage into a discussion"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#~ msgid "please try to provide details"
-#~ msgstr "provide enough details"
-
-#, fuzzy
-#~ msgid "see frequently asked questions"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#~ msgid "Markdown tips"
-#~ msgstr "Markdown basics"
-
-#, fuzzy
-#~ msgid "link"
-#~ msgstr "Hi, there! Please sign in"
-
-#, fuzzy
-#~ msgid "ask a question"
-#~ msgstr "Ask Your Question"
-
-#~ msgid "login to post question info"
-#~ msgstr ""
-#~ "<span class=\"strong big\">You are welcome to start submitting your "
-#~ "question anonymously</span>. When you submit the post, you will be "
-#~ "redirected to the login/signup page. Your question will be saved in the "
-#~ "current session and will be published after you log in. Login/signup "
-#~ "process is very simple. Login takes about 30 seconds, initial signup "
-#~ "takes a minute or less."
-
-#, fuzzy
-#~ msgid ""
-#~ "must have valid %(email)s to post, \n"
-#~ "                            see %(email_validation_faq_url)s\n"
-#~ "                            "
-#~ msgstr ""
-#~ "<span class='strong big'>Looks like your email address, %(email)s has not "
-#~ "yet been validated.</span> To post messages you must verify your email, "
-#~ "please see <a href='%(email_validation_faq_url)s'>more details here</a>."
-#~ "<br>You can submit your question now and validate email after that. Your "
-#~ "question will saved as pending meanwhile. "
-
-#~ msgid "Login/signup to post your question"
-#~ msgstr "Login/Signup to Post"
-
-#~ msgid "Ask your question"
-#~ msgstr "Ask Your Question"
-
-#~ msgid "users"
-#~ msgstr "people"
-
-#~ msgid "question tips"
-#~ msgstr "Tips"
-
-#~ msgid "please ask a relevant question"
-#~ msgstr "ask a question interesting to this community"
-
-#~ msgid "please try provide enough details"
-#~ msgstr "provide enough details"
-
-#, fuzzy
-#~ msgid "see unanswered questions"
-#~ msgstr "Ask Your Question"
-
-#, fuzzy
-#~ msgid "see your followed questions"
-#~ msgstr "Ask Your Question"
-
-#~ msgid "logout"
-#~ msgstr "sign out"
-
-#~ msgid "login"
-#~ msgstr "Hi, there! Please sign in"
-
-#, fuzzy
-#~ msgid "settings"
-#~ msgstr "User login"
-
-#, fuzzy
-#~ msgid "(please enter a valid email)"
-#~ msgstr "provide enough details"
-
-#~ msgid "Question tags"
-#~ msgstr "Tags"
-
-#, fuzzy
-#~ msgid "questions"
-#~ msgstr "Tips"
-
-#~ msgid ""
-#~ "As a registered user you can login with your OpenID, log out of the site "
-#~ "or permanently remove your account."
-#~ msgstr ""
-#~ "Clicking <strong>Logout</strong> will log you out from the forum but will "
-#~ "not sign you off from your OpenID provider.</p><p>If you wish to sign off "
-#~ "completely - please make sure to log out from your OpenID provider as "
-#~ "well."
-
-#~ msgid "Email verification subject line"
-#~ msgstr "Verification Email from Q&A forum"
-
-#~ msgid ""
-#~ "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)"
-#~ "s"
-#~ msgstr ""
-#~ "<form style='margin:0;padding:0;' action='%(send_email_key_url)"
-#~ "s'><p><span class=\"bigger strong\">How?</span> If you have just set or "
-#~ "changed your email address - <strong>check your email and click the "
-#~ "included link</strong>.<br>The link contains a key generated specifically "
-#~ "for you. You can also <button style='display:inline' "
-#~ "type='submit'><strong>get a new key</strong></button> and check your "
-#~ "email again.</p></form><span class=\"bigger strong\">Why?</span> Email "
-#~ "validation is required to make sure that <strong>only you can post "
-#~ "messages</strong> on your behalf and to <strong>minimize spam</strong> "
-#~ "posts.<br>With email you can <strong>subscribe for updates</strong> on "
-#~ "the most interesting questions. Also, when you sign up for the first time "
-#~ "- create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</"
-#~ "strong></a> personal image.</p>"
-
-#~ msgid "reputation points"
-#~ msgstr "karma"
+msgid "Change email"
+msgstr "Change Email"
+
+msgid "Save your email address"
+msgstr ""
+
+msgid "change %(email)s info"
+msgstr ""
+"<span class=\"strong big\">Enter your new email into the box below</span> "
+"if you'd like to use another email for <strong>update subscriptions</"
+"strong>.<br>Currently you are using <strong>%(email)s</strong>"
+
+msgid "here is why email is required, see %(gravatar_faq_url)s"
+msgstr ""
+"<span class='strong big'>Please enter your email address in the box below."
+"</span> Valid email address is required on this Q&amp;A forum. If you "
+"like, you can <strong>receive updates</strong> on interesting questions "
+"or entire forum via email. Also, your email is used to create a unique <a "
+"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your "
+"account. Email addresses are never shown or otherwise shared with anybody "
+"else."
+
+msgid "Your new Email"
+msgstr ""
+"<strong>Your new Email:</strong> (will <strong>not</strong> be shown to "
+"anyone, must be valid)"
+
+msgid "Your Email"
+msgstr ""
+"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
+
+msgid "Save Email"
+msgstr ""
+
+msgid "Validate email"
+msgstr ""
+
+msgid "validate %(email)s info or go to %(change_email_url)s"
+msgstr ""
+"<span class=\"strong big\">An email with a validation link has been sent "
+"to %(email)s.</span> Please <strong>follow the emailed link</strong> with "
+"your web browser. Email validation is necessary to help insure the proper "
+"use of email on <span class=\"orange\">Q&amp;A</span>. If you would like "
+"to use <strong>another email</strong>, please <a href='%(change_email_url)"
+"s'><strong>change it again</strong></a>."
+
+msgid "old %(email)s kept, if you like go to %(change_email_url)s"
+msgstr ""
+"<span class=\"strong big\">Your email address %(email)s has not been "
+"changed.</span> If you decide to change it later - you can always do it "
+"by editing it in your user profile or by using the <a "
+"href='%(change_email_url)s'><strong>previous form</strong></a> again."
+
+msgid "your current %(email)s can be used for this"
+msgstr ""
+"<span class='big strong'>Your email address is now set to %(email)s.</"
+"span> Updates on the questions that you like most will be sent to this "
+"address. Email notifications are sent once a day or less frequently - "
+"only when there are any news."
+
+msgid "thanks for verifying email"
+msgstr ""
+"<span class=\"big strong\">Thank you for verifying your email!</span> Now "
+"you can <strong>ask</strong> and <strong>answer</strong> questions. Also "
+"if you find a very interesting question you can <strong>subscribe for the "
+"updates</strong> - then will be notified about changes <strong>once a "
+"day</strong> or less frequently."
+
+msgid "email key not sent"
+msgstr "Validation email not sent"
+
+msgid "email key not sent %(email)s change email here %(change_link)s"
+msgstr ""
+"<span class='big strong'>Your current email address %(email)s has been "
+"validated before</span> so the new key was not sent. You can <a "
+"href='%(change_link)s'>change</a> email used for update subscriptions if "
+"necessary."
+
+msgid "Registration"
+msgstr ""
+
+msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your "
+"%(provider)s login.</span> Please create your <strong>screen name</"
+"strong> and save your <strong>email</strong> address. Saved email address "
+"will let you <strong>subscribe for the updates</strong> on the most "
+"interesting questions and will be used to create and retrieve your unique "
+"avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
+"a>.</p>"
+
+msgid ""
+"%(username)s already exists, choose another name for \n"
+"                            %(provider)s. Email is required too, see "
+"%(gravatar_faq_url)s\n"
+"                        "
+msgstr ""
+"<p><span class='strong big'>Oops... looks like screen name %(username)s "
+"is already used in another account.</span></p><p>Please choose another "
+"screen name to use with your %(provider)s login. Also, a valid email "
+"address is required on the <span class='orange'>Q&amp;A</span> forum. "
+"Your email is used to create a unique <a href='%(gravatar_faq_url)"
+"s'><strong>gravatar</strong></a> image for your account. If you like, you "
+"can <strong>receive updates</strong> on the interesting questions or "
+"entire forum by email. Email addresses are never shown or otherwise "
+"shared with anybody else.</p>"
+
+msgid ""
+"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your "
+"%(provider)s login.</span></p><p>You can either keep your <strong>screen "
+"name</strong> the same as your %(provider)s login name  or choose some "
+"other nickname.</p><p>Also, please save a valid <strong>email</strong> "
+"address. With the email you can <strong>subscribe for the updates</"
+"strong> on the most interesting questions. Email address is also used to "
+"create and retrieve your unique avatar image - <a "
+"href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+
+msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
+msgstr ""
+"<p><span class=\"big strong\">You are here for the first time with your "
+"Facebook login.</span> Please create your <strong>screen name</strong> "
+"and save your <strong>email</strong> address. Saved email address will "
+"let you <strong>subscribe for the updates</strong> on the most "
+"interesting questions and will be used to create and retrieve your unique "
+"avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
+"a>.</p>"
+
+msgid "Screen name label"
+msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
+
+msgid "Email address label"
+msgstr ""
+"<strong>Email Address</strong> (<i>will <strong>not</strong> be shared "
+"with anyone, must be valid</i>)"
+
+msgid "receive updates motivational blurb"
+msgstr ""
+"<strong>Receive forum updates by email</strong> - this will help our "
+"community grow and become more useful.<br/>By default <span "
+"class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest "
+"per week</strong>  - only when there is anything new.<br/>If you like, "
+"please adjust this now or any time later from your user account."
+
+msgid "create account"
+msgstr "Signup"
+
+msgid "Logout"
+msgstr "Sign out"
+
+msgid "User login"
+msgstr "User login"
+
+msgid ""
+"\n"
+"        Your answer to %(title)s %(summary)s will be posted once you log "
+"in\n"
+"        "
+msgstr ""
+"\n"
+"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will "
+"be posted once you log in.</span>"
+
+msgid ""
+"Your question \n"
+"        %(title)s %(summary)s will be posted once you log in\n"
+"        "
+msgstr ""
+"<span class=\"strong big\">Your question</span> <i>\"<strong>%(title)s</"
+"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will "
+"be posted once you log in.</span>"
+
+msgid "Password"
+msgstr ""
+
+msgid "Login"
+msgstr "Sign in"
+
+msgid "New password"
+msgstr ""
+
+msgid "last used"
+msgstr ""
+
+msgid "cannot be deleted"
+msgstr ""
+
+msgid "with openid it is easier"
+msgstr "With the OpenID you don't need to create new username and password."
+
+msgid "reuse openid"
+msgstr ""
+"You can safely re-use the same login for all OpenID-enabled websites."
+
+msgid "openid is widely adopted"
+msgstr ""
+"There are > 160,000,000 OpenID account in use. Over 10,000 sites are "
+"OpenID-enabled."
+
+msgid "openid is supported open standard"
+msgstr ""
+"OpenID is based on an open standard, supported by many organizations."
+
+msgid "Traditional signup info"
+msgstr ""
+"<span class='strong big'>If you prefer, create your forum login name and "
+"password here. However</span>, please keep in mind that we also support "
+"<strong>OpenID</strong> login method. With <strong>OpenID</strong> you "
+"can simply reuse your external login (e.g. Gmail or AOL) without ever "
+"sharing your login details with anyone and having to remember yet another "
+"password."
+
+msgid "Create Account"
+msgstr "Signup"
+
+msgid "add avatar"
+msgstr ""
+
+msgid "Change avatar"
+msgstr ""
+
+msgid "change avatar"
+msgstr ""
+
+msgid "delete avatar"
+msgstr ""
+
+msgid "answer permanent link"
+msgstr "permanent link"
+
+msgid "permanent link"
+msgstr "link"
+
+msgid "swap with question"
+msgstr ""
+
+msgid "reopen"
+msgstr ""
+
+msgid "Related tags"
+msgstr "Tags"
+
+msgid "Interesting tags"
+msgstr ""
+
+msgid "Ignored tags"
+msgstr ""
+
+msgid "see all questions"
+msgstr ""
+
+msgid "see all tags"
+msgstr ""
+
+msgid "see latest questions"
+msgstr ""
+
+msgid "see tags"
+msgstr ""
+
+msgid "Edit answer"
+msgstr ""
+
+msgid "Ask a question"
+msgstr "Ask Your Question"
+
+msgid "Badges summary"
+msgstr "Badges"
+
+msgid "Badges"
+msgstr ""
+
+msgid ""
+"Below is the list of available badges and number \n"
+"of times each type of badge has been awarded. Give us feedback at "
+"%(feedback_faq_url)s.\n"
+msgstr ""
+"Below is the list of available badges and number \n"
+"    of times each type of badge has been awarded. Have ideas about fun "
+"badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>\n"
+
+msgid "Community badges"
+msgstr "Badge levels"
+
+msgid "gold badge description"
+msgstr ""
+"Gold badge is the highest award in this community. To obtain it have to "
+"show profound knowledge and ability in addition to your active "
+"participation."
+
+msgid "silver badge description"
+msgstr ""
+"silver badge: occasionally awarded for the very high quality contributions"
+
+msgid "bronze badge description"
+msgstr "bronze badge: often given as a special honor"
+
+msgid "Close question"
+msgstr ""
+
+msgid "Close the question"
+msgstr ""
+
+msgid ""
+"Before asking the question - please make sure to use search to see "
+"whether your question has alredy been answered."
+msgstr ""
+"Before you ask - please make sure to search for a similar question. You "
+"can search questions by their title or tags."
+
+msgid "What questions should I avoid asking?"
+msgstr "What kinds of questions should be avoided?"
+
+msgid "What should I avoid in my answers?"
+msgstr ""
+
+msgid ""
+"is a Q&A site, not a discussion group. Therefore - please avoid having "
+"discussions in your answers, comment facility allows some space for brief "
+"discussions."
+msgstr ""
+"is a <strong>question and answer</strong> site - <strong>it is not a "
+"discussion group</strong>. Please avoid holding debates in your answers "
+"as they tend to dilute the essense of questions and answers. For the "
+"brief discussions please use commenting facility."
+
+msgid ""
+"The reputation system allows users earn the authorization to perform a "
+"variety of moderation tasks."
+msgstr ""
+"Karma system allows users to earn rights to perform a variety of "
+"moderation tasks"
+
+msgid "How does reputation system work?"
+msgstr "How does karma system work?"
+
+msgid "Rep system summary"
+msgstr ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some points, which are called \"karma points\". These points serve as a "
+"rough measure of the community trust to him/her. Various moderation tasks "
+"are gradually assigned to the users based on those points."
+
+msgid "use tags"
+msgstr ""
+
+msgid "add comments"
+msgstr ""
+
+msgid " accept own answer to own questions"
+msgstr ""
+
+msgid "open and close own questions"
+msgstr ""
+
+msgid "retag other's questions"
+msgstr ""
+
+msgid "\"edit any answer"
+msgstr ""
+
+msgid "\"delete any comment"
+msgstr ""
+
+msgid "what is gravatar"
+msgstr "How to change my picture (gravatar) and what is gravatar?"
+
+msgid "gravatar faq info"
+msgstr ""
+"<p>The picture that appears on the users profiles is called "
+"<strong>gravatar</strong> (which means <strong>g</strong>lobally "
+"<strong>r</strong>ecognized <strong>avatar</strong>).</p><p>Here is how "
+"it works: a <strong>cryptographic key</strong> (unbreakable code) is "
+"calculated from your email address. You upload your picture (or your "
+"favorite alter ego image) the website <a href='http://gravatar."
+"com'><strong>gravatar.com</strong></a> from where we later retreive your "
+"image using the key.</p><p>This way all the websites you trust can show "
+"your image next to your posts and your email address remains private.</"
+"p><p>Please <strong>personalize your account</strong> with an image - "
+"just register at <a href='http://gravatar.com'><strong>gravatar.com</"
+"strong></a> (just please be sure to use the same email address that you "
+"used to register with us). Default image that looks like a kitchen tile "
+"is generated automatically.</p>"
+
+msgid "\"Login now!\""
+msgstr ""
+
+msgid "Still have questions?"
+msgstr ""
+
+msgid ""
+"Please ask your question at %(ask_question_url)s, help make our community "
+"better!"
+msgstr ""
+"Please <a href='%(ask_question_url)s'>ask</a> your question, help make "
+"our community better!"
+
+msgid "<p>Sincerely,<br/>Forum Administrator</p>"
+msgstr ""
+
+msgid "anonymous user"
+msgstr ""
+
+msgid "answered"
+msgstr ""
+
+msgid "updated"
+msgstr ""
+
+msgid "see questions tagged '%(tag)s'"
+msgstr ""
+
+msgid "delete this comment"
+msgstr ""
+
+msgid "add comment"
+msgstr "post a comment"
+
+msgid "page number %(num)s"
+msgstr "page %(num)s"
+
+msgid "responses for %(username)s"
+msgstr ""
+
+msgid "Questions"
+msgstr ""
+
+msgid "Edit question"
+msgstr ""
+
+msgid "Change tags"
+msgstr "Retag question"
+
+msgid "Reopen question"
+msgstr ""
+
+msgid "Reopen this question?"
+msgstr ""
+
+msgid "Reopen this question"
+msgstr ""
+
+msgid "Revision history"
+msgstr ""
+
+msgid "click to hide/show revision"
+msgstr ""
+
+msgid "Tag list"
+msgstr "Tags"
+
+msgid "by name"
+msgstr ""
+
+msgid "by popularity"
+msgstr ""
+
+msgid "Users"
+msgstr "People"
+
+msgid "reputation"
+msgstr "karma"
+
+msgid "by username"
+msgstr ""
+
+msgid "Search tips:"
+msgstr ""
+
+msgid "reset tags"
+msgstr ""
+
+msgid "There are no unanswered questions here"
+msgstr ""
+
+msgid "No questions here. "
+msgstr ""
+
+msgid "resetting tags"
+msgstr ""
+
+msgid "Please always feel free to ask your question!"
+msgstr ""
+
+msgid "Please, post your question!"
+msgstr ""
+
+msgid "subscribe to the questions feed"
+msgstr ""
+
+msgid "oldest answers"
+msgstr "oldest"
+
+msgid "newest answers"
+msgstr "newest"
+
+msgid "popular answers"
+msgstr "most voted"
+
+msgid "Answer Your Own Question"
+msgstr ""
+
+msgid "Login/Signup to Answer"
+msgstr ""
+
+msgid "Your answer"
+msgstr ""
+
+msgid "Be the first one to answer this question!"
+msgstr ""
+
+msgid "you can answer anonymously and then login"
+msgstr ""
+"<span class='strong big'>Please start posting your answer anonymously</"
+"span> - your answer will be saved within the current session and "
+"published after you log in or create a new account. Please try to give a "
+"<strong>substantial answer</strong>, for discussions, <strong>please use "
+"comments</strong> and <strong>please do remember to vote</strong> (after "
+"you log in)!"
+
+msgid "answer your own question only to give an answer"
+msgstr ""
+"<span class='big strong'>You are welcome to answer your own question</"
+"span>, but please make sure to give an <strong>answer</strong>. Remember "
+"that you can always <strong>revise your original question</strong>. "
+"Please <strong>use comments for discussions</strong>  and <strong>please "
+"don't forget to vote :)</strong> for the answers that you liked (or "
+"perhaps did not like)! "
+
+msgid "please only give an answer, no discussions"
+msgstr ""
+"<span class='big strong'>Please try to give a substantial answer</span>. "
+"If you wanted to comment on the question or answer, just <strong>use the "
+"commenting tool</strong>. Please remember that you can always "
+"<strong>revise your answers</strong> - no need to answer the same "
+"question twice. Also, please <strong>don't forget to vote</strong> - it "
+"really helps to select the best questions and answers!"
+
+msgid "Login/Signup to Post Your Answer"
+msgstr "Login/Signup to Post"
+
+msgid "Answer the question"
+msgstr "Post Your Answer"
+
+msgid "Question tools"
+msgstr ""
+
+msgid "click to unfollow this question"
+msgstr ""
+
+msgid "click to follow this question"
+msgstr ""
+
+msgid "email the updates"
+msgstr ""
+
+msgid "question asked"
+msgstr "Asked"
+
+msgid "question was seen"
+msgstr "Seen"
+
+msgid "last updated"
+msgstr "Last updated"
+
+msgid "Related questions"
+msgstr ""
+
+msgid "Notify me once a day when there are any new answers"
+msgstr ""
+"<strong>Notify me</strong> once a day by email when there are any new "
+"answers or updates"
+
+msgid "Notify me weekly when there are any new answers"
+msgstr ""
+"<strong>Notify me</strong> weekly when there are any new answers or "
+"updates"
+
+msgid "Notify me immediately when there are any new answers"
+msgstr ""
+"<strong>Notify me</strong> immediately when there are any new answers or "
+"updates"
+
+msgid ""
+"You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr ""
+"(note: you can always <strong><a href='%(profile_url)s?"
+"sort=email_subscriptions'>change</a></strong> how often you receive "
+"updates)"
+
+msgid "once you sign in you will be able to subscribe for any updates here"
+msgstr ""
+"<span class='strong'>Here</span> (once you log in) you will be able to "
+"sign up for the periodic email updates about this question."
+
+msgid "change picture"
+msgstr ""
+
+msgid "Screen Name"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Email subscription settings"
+msgstr ""
+
+msgid "email subscription settings info"
+msgstr ""
+"<span class='big strong'>Adjust frequency of email updates.</span> "
+"Receive updates on interesting questions by email, <strong><br/>help the "
+"community</strong> by answering questions of your colleagues. If you do "
+"not wish to receive emails - select 'no email' on all items below.<br/"
+">Updates are only sent when there is any new activity on selected items."
+
+msgid "Stop sending email"
+msgstr "Stop Email"
+
+msgid "followed questions"
+msgstr ""
+
+msgid "member for"
+msgstr "member since"
+
+msgid "user website"
+msgstr "website"
+
+msgid "location"
+msgstr ""
+
+msgid "age unit"
+msgstr ""
+
+msgid "todays unused votes"
+msgstr ""
+
+msgid "moderation"
+msgstr ""
+
+msgid "User status changed"
+msgstr ""
+
+msgid "User reputation changed"
+msgstr ""
+
+msgid "Message sent"
+msgstr ""
+
+msgid "Suspended users can only edit or delete their own posts."
+msgstr ""
+
+msgid "activity"
+msgstr ""
+
+msgid "Answer to:"
+msgstr ""
+
+msgid "User profile"
+msgstr ""
+
+msgid "graph of user reputation"
+msgstr "Graph of user karma"
+
+msgid "reputation history"
+msgstr "karma"
+
+msgid "recent activity"
+msgstr "activity"
+
+msgid "casted votes"
+msgstr "votes"
+
+msgid "votes"
+msgstr ""
+
+msgid "answer tips"
+msgstr "Tips"
+
+msgid "please make your answer relevant to this community"
+msgstr "ask a question interesting to this community"
+
+msgid "try to give an answer, rather than engage into a discussion"
+msgstr ""
+
+msgid "please try to provide details"
+msgstr "provide enough details"
+
+msgid "see frequently asked questions"
+msgstr ""
+
+msgid "Markdown tips"
+msgstr "Markdown basics"
+
+msgid "link"
+msgstr ""
+
+msgid "ask a question"
+msgstr "Ask Your Question"
+
+msgid "login to post question info"
+msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your "
+"question anonymously</span>. When you submit the post, you will be "
+"redirected to the login/signup page. Your question will be saved in the "
+"current session and will be published after you log in. Login/signup "
+"process is very simple. Login takes about 30 seconds, initial signup "
+"takes a minute or less."
+
+msgid ""
+"must have valid %(email)s to post, \n"
+"                            see %(email_validation_faq_url)s\n"
+"                            "
+msgstr ""
+"<span class='strong big'>Looks like your email address, %(email)s has not "
+"yet been validated.</span> To post messages you must verify your email, "
+"please see <a href='%(email_validation_faq_url)s'>more details here</a>."
+"<br>You can submit your question now and validate email after that. Your "
+"question will saved as pending meanwhile. "
+
+msgid "Login/signup to post your question"
+msgstr "Login/Signup to Post"
+
+msgid "Ask your question"
+msgstr "Ask Your Question"
+
+msgid "users"
+msgstr "people"
+
+msgid "question tips"
+msgstr "Tips"
+
+msgid "please ask a relevant question"
+msgstr "ask a question interesting to this community"
+
+msgid "please try provide enough details"
+msgstr "provide enough details"
+
+msgid "see unanswered questions"
+msgstr ""
+
+msgid "see your followed questions"
+msgstr ""
+
+msgid "logout"
+msgstr "sign out"
+
+msgid "login"
+msgstr "Hi, there! Please sign in"
+
+msgid "settings"
+msgstr ""
+
+msgid "(please enter a valid email)"
+msgstr ""
+
+msgid "Question tags"
+msgstr "Tags"
+
+msgid "questions"
+msgstr ""
+
+msgid ""
+"As a registered user you can login with your OpenID, log out of the site "
+"or permanently remove your account."
+msgstr ""
+"Clicking <strong>Logout</strong> will log you out from the forum but will "
+"not sign you off from your OpenID provider.</p><p>If you wish to sign off "
+"completely - please make sure to log out from your OpenID provider as "
+"well."
+
+msgid "Email verification subject line"
+msgstr "Verification Email from Q&A forum"
+
+msgid ""
+"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)"
+"s"
+msgstr ""
+"<form style='margin:0;padding:0;' action='%(send_email_key_url)"
+"s'><p><span class=\"bigger strong\">How?</span> If you have just set or "
+"changed your email address - <strong>check your email and click the "
+"included link</strong>.<br>The link contains a key generated specifically "
+"for you. You can also <button style='display:inline' "
+"type='submit'><strong>get a new key</strong></button> and check your "
+"email again.</p></form><span class=\"bigger strong\">Why?</span> Email "
+"validation is required to make sure that <strong>only you can post "
+"messages</strong> on your behalf and to <strong>minimize spam</strong> "
+"posts.<br>With email you can <strong>subscribe for updates</strong> on "
+"the most interesting questions. Also, when you sign up for the first time "
+"- create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</"
+"strong></a> personal image.</p>"
+
+msgid "reputation points"
+msgstr "karma"

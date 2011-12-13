@@ -33,6 +33,7 @@ Programming and documentation
 * `Alexander Werner <https://twitter.com/#!/bundeswerner>`_
 * Rosandra Cuello Suñol 
 * `hjwp <https://github.com/hjwp>`_
+* `Jacob Oscarson <http://www.aspektratio.net>`_
 
 Translations
 ------------
