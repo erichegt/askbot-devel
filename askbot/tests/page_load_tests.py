@@ -36,14 +36,25 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 
 class PageLoadTestCase(AskbotTestCase):
-    if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
-        fixtures = [ os.path.join(os.path.dirname(__file__), 'test_data.json'),]
-    def setUp(self):
-        if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
-            return
-        else:
-            from django.core import management
-            management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
+
+    def _fixture_setup(self):
+        from django.core import management
+        management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
+        super(PageLoadTestCase, self)._fixture_setup()
+
+    def _fixture_teardown(self):
+        super(PageLoadTestCase, self)._fixture_teardown()
+        from django.core import management
+        management.call_command('flush', verbosity=0, interactive=False)
+
+#    if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
+#        fixtures = [ os.path.join(os.path.dirname(__file__), 'test_data.json'),]
+#    def setUp(self):
+#        if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
+#            return
+#        else:
+#            from django.core import management
+#            management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
 
     def try_url(
             self,

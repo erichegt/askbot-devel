@@ -61,22 +61,29 @@ class AskbotTestCase(TestCase):
     """adds some askbot-specific methods
     to django TestCase class
     """
-
-    def _fixture_setup(self):
-        # HACK: Create askbot_post database VIEW for the purpose of performing tests
-        import os.path
-        from django.conf import settings
-        from django.db import connection
-        sql = open(os.path.join(settings.PROJECT_ROOT, 'askbot', 'models', 'post_view.sql'), 'rt').read()
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        super(AskbotTestCase, self)._fixture_setup()
-
-    def _fixture_teardown(self):
-        super(AskbotTestCase, self)._fixture_teardown()
-        from django.db import connection
-        cursor = connection.cursor()
-        cursor.execute('DROP VIEW IF EXISTS askbot_post')
+# INFO: This fixture has been replaced by migration 0088 (and possibly some subsequent ones)
+#       Therefore we should have South migrations enabled for testing, even though they it's not too efficient
+#    def _fixture_setup(self):
+#        # HACK: Create askbot_post database VIEW for the purpose of performing tests
+#        import os.path
+#        from django.conf import settings
+#        from django.db import connection
+#        sql = open(os.path.join(settings.PROJECT_ROOT, 'askbot', 'models', 'post_view.sql'), 'rt').read()
+#        cursor = connection.cursor()
+#        import warnings
+#        warnings.filterwarnings("ignore", "Unknown table .*?\.askbot_post'") # DROP VIEW might raise a warning so let's filter that out
+#        cursor.execute('DROP VIEW IF EXISTS askbot_post')
+#        cursor.execute(sql)
+##        connection.connection.store_result()
+#        connection.close()
+#        super(AskbotTestCase, self)._fixture_setup()
+#
+#    def _fixture_teardown(self):
+#        super(AskbotTestCase, self)._fixture_teardown()
+#        from django.db import connection
+#        cursor = connection.cursor()
+#        cursor.execute('DROP VIEW IF EXISTS askbot_post')
+#        connection.close()
 
 
     def create_user(
