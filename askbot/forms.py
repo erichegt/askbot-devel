@@ -133,7 +133,13 @@ class TagNamesField(forms.CharField):
         self.max_length = 255
         self.label  = _('tags')
         #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
-        self.help_text = _('Tags are short keywords, with no spaces within. Up to five tags can be used.')
+        self.help_text = ungettext_lazy(
+            'Tags are short keywords, with no spaces within. '
+            'Up to %(max_tags)d tag can be used.',
+            'Tags are short keywords, with no spaces within. '
+            'Up to %(max_tags)d tags can be used.',
+            askbot_settings.MAX_TAGS_PER_POST
+        ) % {'max_tags': askbot_settings.MAX_TAGS_PER_POST}
         self.initial = ''
 
     def need_mandatory_tags(self):
