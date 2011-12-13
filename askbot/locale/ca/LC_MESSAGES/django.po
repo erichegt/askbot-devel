@@ -338,7 +338,7 @@ msgstr "d'acord, provem-ho!"
 
 #: forms.py:1116
 msgid "no community email please, thanks"
-msgstr "no correus electrònics de la comunitat"
+msgstr "no, no rebre correus electrònics de la comunitat"
 
 #: forms.py:1120
 msgid "please choose one of the options above"
@@ -2153,11 +2153,11 @@ msgstr "no"
 
 #: const/__init__.py:218
 msgid "exclude ignored"
-msgstr "excloure ignorades"
+msgstr "sí, excloure ignorades"
 
 #: const/__init__.py:219
 msgid "only selected"
-msgstr "només seleccionades"
+msgstr "sí, només seleccionades"
 
 #: const/__init__.py:223
 msgid "instantly"
@@ -3830,7 +3830,7 @@ msgstr "Adreça de correu electrònic"
 #: skins/old/templates/authopenid/complete.html:72
 #: skins/old/templates/authopenid/signup_with_password.html:36
 msgid "receive updates motivational blurb"
-msgstr ""
+msgstr "rebre actualitzacions"
 
 #: skins/common/templates/authopenid/complete.html:76
 #: skins/common/templates/authopenid/signup_with_password.html:40
@@ -4169,7 +4169,7 @@ msgstr "Registrar-se clicant una de les icones "
 #: skins/common/templates/authopenid/signup_with_password.html:23
 #: skins/old/templates/authopenid/signup_with_password.html:23
 msgid "or create a new user name and password here"
-msgstr "o crear un nou nom d'usuari i contrasenya aquí"
+msgstr "o crear un nou compte d'usuari:"
 
 #: skins/common/templates/authopenid/signup_with_password.html:25
 #: skins/old/templates/authopenid/signup_with_password.html:25
@@ -4399,7 +4399,7 @@ msgstr "Etiquetes relacionades"
 #: skins/common/templates/widgets/tag_selector.html:4
 #: skins/old/templates/blocks/tag_selector.html:4
 msgid "Interesting tags"
-msgstr "Etiquetes interessants"
+msgstr "Etiquetes seleccionades"
 
 # posem un signe + per què 'afegir' es talla i queda 'afegi'
 #: skins/common/templates/widgets/tag_selector.html:18
@@ -4415,7 +4415,7 @@ msgstr "Etiquetes ignorades"
 #: skins/common/templates/widgets/tag_selector.html:36
 #: skins/old/templates/blocks/tag_selector.html:36
 msgid "Display tag filter"
-msgstr "Filtre per etiquetes"
+msgstr "Aplicar el filtre d'etiquetes"
 
 #: skins/default/templates/404.jinja.html:3
 #: skins/default/templates/404.jinja.html:10
@@ -5540,7 +5540,7 @@ msgstr "amb contribució de %(author_name)s"
 #: skins/default/templates/main_page/headline.html:23
 #: skins/old/templates/main_page/headline.html:32
 msgid "Search tips:"
-msgstr "Consells de cerca"
+msgstr "Consell:"
 
 #: skins/default/templates/main_page/headline.html:26
 #: skins/old/templates/main_page/headline.html:35
@@ -5584,7 +5584,7 @@ msgstr "Consells de cerca:"
 #: skins/default/templates/main_page/headline.html:40
 #: skins/old/templates/main_page/headline.html:49
 msgid "add tags and a query to focus your search"
-msgstr "afegir etiquetes i una consulta per centrar la cerca"
+msgstr "per acotar la cerca afegiu etiquetes i feu una consulta"
 
 #: skins/default/templates/main_page/nothing_found.html:4
 #: skins/old/templates/main_page/nothing_found.html:4
@@ -5630,7 +5630,7 @@ msgstr "Feu la vostra pregunta!"
 #: skins/default/templates/main_page/questions_loop.html:12
 #: skins/old/templates/main_page/content.html:13
 msgid "Did not find what you were looking for?"
-msgstr "No ha trobat el que buscava?"
+msgstr "No has trobat el que buscaves?"
 
 #: skins/default/templates/main_page/questions_loop.html:13
 #: skins/old/templates/main_page/content.html:14
@@ -6809,7 +6809,7 @@ msgstr ""
 
 #: templatetags/extra_filters.py:145 templatetags/extra_filters_jinja.py:240
 msgid "no items in counter"
-msgstr "no"
+msgstr ""
 
 #: utils/decorators.py:90 views/commands.py:112 views/commands.py:132
 msgid "Oops, apologies - there was some error"
@@ -6829,7 +6829,7 @@ msgstr "aquesta camp és requerit"
 
 #: utils/forms.py:46
 msgid "choose a username"
-msgstr "seleccionar un nom d'usuari"
+msgstr "nom d'usuari"
 
 #: utils/forms.py:52
 msgid "user name is required"
@@ -6857,7 +6857,7 @@ msgstr ""
 
 #: utils/forms.py:118
 msgid "your email address"
-msgstr "la vostre adreça de correu electrònic"
+msgstr "adreça correu electrònic"
 
 #: utils/forms.py:119
 msgid "email address is required"
@@ -6873,7 +6873,7 @@ msgstr "aquesta adreça de correu ja s'està utilitzant, trieu un altre"
 
 #: utils/forms.py:149
 msgid "choose password"
-msgstr "seleccionar contrasenya"
+msgstr "contrasenya"
 
 #: utils/forms.py:150
 msgid "password is required"
@@ -6881,7 +6881,7 @@ msgstr "la contrasenya és necessaria"
 
 #: utils/forms.py:153
 msgid "retype password"
-msgstr ""
+msgstr "repetir contrasenya"
 
 #: utils/forms.py:154
 msgid "please, retype your password"
