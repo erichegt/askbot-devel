@@ -10,6 +10,7 @@ import datetime
 import logging
 import urllib
 import operator
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.conf import settings as django_settings
@@ -46,6 +47,8 @@ from askbot.skins.loaders import render_into_skin, get_template#jinja2 template 
 
 # used in index page
 #todo: - take these out of const or settings
+from askbot.models import Answer, Vote
+
 INDEX_PAGE_SIZE = 30
 INDEX_AWARD_SIZE = 15
 INDEX_TAGS_SIZE = 25
@@ -473,7 +476,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
         try:
-            show_post = get_object_or_404(models.Answer, id = show_answer)
+            show_post = get_object_or_404(models.Answer, id=show_answer)
             if str(show_post.question.id) != id:
                 return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
@@ -483,14 +486,16 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load question and maybe refuse showing deleted question
     try:
-        question = get_object_or_404(models.Question, id=id)
-        question.assert_is_visible_to(request.user)
+        question_post = get_object_or_404(models.Post, self_question=id)
+        question_post.assert_is_visible_to(request.user)
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
 
+    thread = question_post.thread
+
     #redirect if slug in the url is wrong
-    if request.path.split('/')[-1] != question.slug:
+    if request.path.split('/')[-1] != question_post.slug:
         logging.debug('no slug match!')
         question_url = '?'.join((
                             question.get_absolute_url(),
@@ -498,35 +503,29 @@ def question(request, id):#refactor - long subroutine. display question body, an
                         ))
         return HttpResponseRedirect(question_url)
 
-
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
+
     #load answers
-    answers = question.thread.get_answers(user = request.user)
-    answers = answers.select_related(depth=1)
+    answers = thread.get_answers(user = request.user)
+    answers = answers.select_related('self_answer', 'thread', 'author', 'last_edited_by')
+    answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
+
+    answers = list(answers)
+    
+    if thread.accepted_answer: # Put the accepted answer to front
+        accepted_post = models.Post.objects.get(self_answer=thread.accepted_answer)
+        answers.remove(accepted_post)
+        answers.insert(0, accepted_post)
 
     user_answer_votes = {}
     if request.user.is_authenticated():
-        for answer in answers:
-            vote = answer.get_user_vote(request.user)
-            if vote is not None and not answer.id in user_answer_votes:
-                user_answer_votes[answer.id] = int(vote)
+        votes = Vote.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(Answer), object_id__in=[answer.self_answer_id for answer in answers])
+        for vote in votes:
+            user_answer_votes[vote.object_id] = int(vote) # INFO: vote.object_id == Answer.id == Post.self_answer_id
 
-    view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
-    orderby = view_dic[answer_sort_method]
-#    if answers is not None:
-#        answers = answers.order_by("-accepted", orderby)
-    if answers:
-        # INFO: if there's a backlink to thread, then it's the accepted answer
-        # TODO: Make this sorting more explicit
-        answers = answers.order_by('-thread', orderby)
+    filtered_answer_posts = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
 
-    filtered_answers = []
-    for answer in answers:
-        if answer.deleted == True:
-            if answer.author_id == request.user.id:
-                filtered_answers.append(answer)
-        else:
-            filtered_answers.append(answer)
+    filtered_answers = [answer.self_answer for answer in filtered_answer_posts] # TODO: for now we convert back to Answer instances
 
     #resolve page number and comment number for permalinks
     show_comment_position = None
@@ -538,7 +537,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
-        return HttpResponseRedirect(question.get_absolute_url())
+        return HttpResponseRedirect(question_post.get_absolute_url())
     page_objects = objects_list.page(show_page)
 
     #count visits
@@ -550,8 +549,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if 'question_view_times' not in request.session:
             request.session['question_view_times'] = {}
 
-        last_seen = request.session['question_view_times'].get(question.id, None)
-        updated_when, updated_who = question.thread.get_last_update_info()
+        last_seen = request.session['question_view_times'].get(question_post.self_question_id, None)
+        updated_when, updated_who = thread.get_last_update_info() # TODO: This is a real resource hog
 
         if updated_who != request.user:
             if last_seen:
@@ -560,23 +559,23 @@ def question(request, id):#refactor - long subroutine. display question body, an
             else:
                 update_view_count = True
 
-        request.session['question_view_times'][question.id] = \
+        request.session['question_view_times'][question_post.self_question_id] = \
                                                     datetime.datetime.now()
 
         if update_view_count:
-            question.thread.increase_view_count()
+            thread.increase_view_count()
 
         #2) question view count per user and clear response displays
         if request.user.is_authenticated():
             #get response notifications
-            request.user.visit_question(question)
+            request.user.visit_question(question_post.self_question)
 
         #3) send award badges signal for any badges
         #that are awarded for question views
         award_badges_signal.send(None,
                         event = 'view_question',
                         actor = request.user,
-                        context_object = question,
+                        context_object = question_post.self_question,
                     )
 
     paginator_data = {
@@ -592,34 +591,36 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
 
-    favorited = question.thread.has_favorite_by_user(request.user)
+    favorited = thread.has_favorite_by_user(request.user)
     user_question_vote = 0
     if request.user.is_authenticated():
-        votes = question.votes.select_related().filter(user=request.user)
-        if votes.count() > 0:
+        votes = question_post.self_question.votes.select_related().filter(user=request.user)
+        try:
             user_question_vote = int(votes[0])
-        else:
+        except IndexError:
             user_question_vote = 0
 
     data = {
         'page_class': 'question-page',
         'active_tab': 'questions',
-        'question' : question,
+        'question' : question_post.self_question,
+        'thread': thread,
         'user_question_vote' : user_question_vote,
-        'question_comment_count':question.comments.count(),
-        'answer' : AnswerForm(question,request.user),
+        'question_comment_count': question_post.self_question.comments.count(),
+        'answer' : AnswerForm(question_post.self_question, request.user),
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
-        'tags' : question.thread.tags.all(),
+        'tags' : thread.tags.all(),
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_questions' : question.thread.get_similar_questions(),
+        'similar_questions' : thread.get_similar_questions(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,
         'show_comment': show_comment,
         'show_comment_position': show_comment_position
     }
+
     return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):
