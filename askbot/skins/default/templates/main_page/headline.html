@@ -9,7 +9,7 @@
         <div class="clearfix"></div>
         {% if search_tags %}
             <div id="listSearchTags">
-                <span class="left">Tagged</span>
+                <span class="left">{% trans %}Tagged{% endtrans %}</span>
                 {{ macros.tag_list_widget(
                         search_tags,
                         id = 'searchTags',
