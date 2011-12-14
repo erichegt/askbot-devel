@@ -77,9 +77,10 @@ body.anon #searchBar .searchInputCancelable{width:405px;}
 .box{background:#fff;padding:4px 0px 10px 0px;width:200px;}.box p{margin-bottom:4px;}
 .box p.info-box-follow-up-links{text-align:right;margin:0;}
 .box h2{padding-left:0;background:#eceeeb;height:30px;line-height:30px;text-align:right;font-size:18px !important;font-weight:normal;color:#656565;padding-right:10px;margin-bottom:10px;font-family:'Yanone Kaffeesatz',sans-serif;}
-.box h3{color:#4a757f;font-size:18px;text-align:left;font-weight:normal;font-family:'Yanone Kaffeesatz',sans-serif;}
+.box h3{color:#4a757f;font-size:18px;text-align:left;font-weight:normal;font-family:'Yanone Kaffeesatz',sans-serif;padding-left:0px;}
 .box .contributorback{background:#eceeeb url(../images/contributorsback.png) no-repeat center left;}
 .box label{color:#707070;font-size:15px;display:block;float:right;text-align:left;font-family:'Yanone Kaffeesatz',sans-serif;width:80px;margin-right:18px;}
+.box #displayTagFilterControl label{width:160px;}
 .box ul{margin-left:22px;}
 .box li{list-style-type:disc;font-size:13px;line-height:20px;margin-bottom:10px;color:#707070;}
 .box ul.tags{list-style:none;margin:0;padding:0;line-height:170%;display:block;}
@@ -322,7 +323,7 @@ span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-rep
 .openid-signin input.submit:hover,.meta input.submit:hover,.users-page input.submit:hover,.user-profile-edit-page input.submit:hover,.user-profile-page input.submit:hover{background:url(../images/small-button-blue.png) repeat-x bottom;text-decoration:none;}
 .openid-signin .cancel,.meta .cancel,.users-page .cancel,.user-profile-edit-page .cancel,.user-profile-page .cancel{background:url(../images/small-button-cancel.png) repeat-x top !important;color:#525252 !important;}
 .openid-signin .cancel:hover,.meta .cancel:hover,.users-page .cancel:hover,.user-profile-edit-page .cancel:hover,.user-profile-page .cancel:hover{background:url(../images/small-button-cancel.png) repeat-x bottom !important;}
-#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{margin-top:10px;}#email-input-fs #id_email,#local_login_buttons #id_email,#password-fs #id_email,#openid-fs #id_email,#email-input-fs #id_username,#local_login_buttons #id_username,#password-fs #id_username,#openid-fs #id_username,#email-input-fs #id_password,#local_login_buttons #id_password,#password-fs #id_password,#openid-fs #id_password,#email-input-fs input,#local_login_buttons input,#password-fs input,#openid-fs input{font-size:12px;line-height:20px;height:20px;margin:0px;padding:0px 0 0 5px;border:#cce6ec 3px solid;width:200px;}
+#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{margin-top:10px;}#email-input-fs #id_email,#local_login_buttons #id_email,#password-fs #id_email,#openid-fs #id_email,#email-input-fs #id_username,#local_login_buttons #id_username,#password-fs #id_username,#openid-fs #id_username,#email-input-fs #id_password,#local_login_buttons #id_password,#password-fs #id_password,#openid-fs #id_password{font-size:12px;line-height:20px;height:20px;margin:0px;padding:0px 0 0 5px;border:#cce6ec 3px solid;width:200px;}
 #email-input-fs .submit-b,#local_login_buttons .submit-b,#password-fs .submit-b,#openid-fs .submit-b{background:url(../images/small-button-blue.png) repeat-x top;border:0;color:#4a757f;font-weight:bold;font-size:13px;font-family:Arial;height:24px;margin-top:-2px;padding-left:10px;padding-right:10px;cursor:pointer;border-radius:4px;-ms-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-khtml-border-radius:4px;text-shadow:0px 1px 0px #e6f6fa;-moz-text-shadow:0px 1px 0px #e6f6fa;-webkit-text-shadow:0px 1px 0px #e6f6fa;-webkit-box-shadow:1px 1px 2px #808080;-moz-box-shadow:1px 1px 2px #808080;box-shadow:1px 1px 2px #808080;}
 #email-input-fs .submit-b:hover,#local_login_buttons .submit-b:hover,#password-fs .submit-b:hover,#openid-fs .submit-b:hover{background:url(../images/small-button-blue.png) repeat-x bottom;}
 .openid-input{background:url(../images/openid.gif) no-repeat;padding-left:15px;cursor:pointer;}
