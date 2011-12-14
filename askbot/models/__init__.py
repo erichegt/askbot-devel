@@ -804,9 +804,12 @@ def user_assert_can_remove_flag_offensive(self, post = None):
 
     suspended_error_message = _('suspended users cannot remove flags')
 
-    low_rep_error_message = _('need > %(min_rep)s points to remove flag') % \
-                        {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
+    low_rep_error_message = ungettext(
+        'need > %(min_rep)d point to remove flag',
+        'need > %(min_rep)d points to remove flag',
+        min_rep_setting
+    ) % {'min_rep': min_rep_setting}
 
     _assert_user_can(
         user = self,
