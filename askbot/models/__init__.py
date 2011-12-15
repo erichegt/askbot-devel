@@ -1980,17 +1980,24 @@ def downvote(self, post, timestamp=None, cancel=False, force = False):
     )
 
 @auto_now_timestamp
-def flag_post(user, post, timestamp=None, cancel=False, force = False):
-    if cancel:#todo: can't unflag?
+def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
+    if cancel_all:
+        # remove all flags
+        if force == False:
+            user.assert_can_remove_all_flags_offensive(post = post)
+        post_content_type = ContentType.objects.get_for_model(post)
+        all_flags = Activity.objects.filter(
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        content_type = post_content_type, object_id=post.id
+                    )
+        for flag in all_flags:
+            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)            
+
+    elif cancel:#todo: can't unflag?
         if force == False:
             user.assert_can_remove_flag_offensive(post = post)
-        auth.onUnFlaggedItem(post, user, timestamp=timestamp)
-        award_badges_signal.send(None,
-            event = 'flag_post',
-            actor = user,
-            context_object = post,
-            timestamp = timestamp
-        )
+        auth.onUnFlaggedItem(post, user, timestamp=timestamp)        
+
     else:
         if force == False:
             user.assert_can_flag_offensive(post = post)

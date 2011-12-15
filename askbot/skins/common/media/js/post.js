@@ -271,11 +271,11 @@ var Vote = function(){
     var commentLinkIdPrefix = 'comment-';
     var voteNumberClass = "vote-number";
     var offensiveIdPrefixQuestionFlag = 'question-offensive-flag-';
-    var removeOffensiveIdPrefixQuestionFlag = 'question-offensive-flag-remove-';
-    var removeAllOffensiveIdPrefixQuestionFlag = 'question-offensive-flag-remove-all-';
+    var removeOffensiveIdPrefixQuestionFlag = 'question-offensive-remove-flag-';
+    var removeAllOffensiveIdPrefixQuestionFlag = 'question-offensive-remove-all-flag-';
     var offensiveIdPrefixAnswerFlag = 'answer-offensive-flag-';
-    var removeOffensiveIdPrefixAnswerFlag = 'answer-offensive-flag-remove-';
-    var removeAllOffensiveIdPrefixAnswerFlag = 'answer-offensive-flag-remove-all';
+    var removeOffensiveIdPrefixAnswerFlag = 'answer-offensive-remove-flag-';
+    var removeAllOffensiveIdPrefixAnswerFlag = 'answer-offensive-remove-all-flag-';
     var offensiveClassFlag = 'offensive-flag';
     var questionControlsId = 'question-controls';
     var removeQuestionLinkIdPrefix = 'question-delete-link-';
@@ -472,7 +472,7 @@ var Vote = function(){
         });
 
         getRemoveAllOffensiveQuestionFlag().unbind('click').click(function(event){
-           Vote.remove_offensive(this, VoteType.removeAllOffensiveQuestion);
+           Vote.remove_all_offensive(this, VoteType.removeAllOffensiveQuestion);
         });
 
         getOffensiveAnswerFlags().unbind('click').click(function(event){
@@ -484,7 +484,7 @@ var Vote = function(){
         });
 
         getRemoveAllOffensiveAnswerFlag().unbind('click').click(function(event){
-           Vote.remove_offensive(this, VoteType.removeAllOffensiveAnswer);
+           Vote.remove_all_offensive(this, VoteType.removeAllOffensiveAnswer);
         });
 
         getremoveQuestionLink().unbind('click').click(function(event){
@@ -651,7 +651,7 @@ var Vote = function(){
             // Change the link text and rebind events
             $(object).find("a.question-flag").html(gettext("remove flag"));
             var obj_id = $(object).attr("id");
-            $(object).attr("id", obj_id.replace("flag-", "flag-remove-"));
+            $(object).attr("id", obj_id.replace("flag-", "remove-flag-"));
 
             getRemoveOffensiveQuestionFlag().unbind('click').click(function(event){
                Vote.remove_offensive(this, VoteType.removeOffensiveQuestion);
@@ -672,14 +672,53 @@ var Vote = function(){
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == "1"){
+            if(data.count > 0){
+                $(object).children('span[class=darkred]').text("("+ data.count +")");                
+            }
+            else{
+                $(object).children('span[class=darkred]').text("");
+                // Remove "remove all flags link" since there are no more flags to remove
+                var remove_all = $(object).siblings("span.offensive-flag[id*=-offensive-remove-all-flag-]");
+                $(remove_all).next("span.sep").remove();
+                $(remove_all).remove();
+            }
+            // Change the link text and rebind events
+            $(object).find("a.question-flag").html(gettext("flag offensive"));
+            var obj_id = $(object).attr("id");
+            $(object).attr("id", obj_id.replace("remove-flag-", "flag-"));
+
+             getOffensiveQuestionFlag().unbind('click').click(function(event){
+               Vote.offensive(this, VoteType.offensiveQuestion);
+            });
+
+            getOffensiveAnswerFlags().unbind('click').click(function(event){
+               Vote.offensive(this, VoteType.offensiveAnswer);
+            });
+        }
+        else {
+            object = $(object);
+            showMessage(object, data.message)
+        }
+    };
+
+    var callback_remove_all_offensive = function(object, voteType, data){
+        //todo: transfer proper translations of these from i18n.js
+        //to django.po files
+        //_('anonymous users cannot flag offensive posts') + pleaseLogin;
+        if (data.success == "1"){
             if(data.count > 0)
                 $(object).children('span[class=darkred]').text("("+ data.count +")");
             else
                 $(object).children('span[class=darkred]').text("");
-            // Change the link text and rebind events
-            $(object).find("a.question-flag").html(gettext("flag offensive"));
-            var obj_id = $(object).attr("id");
-            $(object).attr("id", obj_id.replace("flag-remove-", "flag-"));
+            // remove the link. All flags are gone
+            var remove_own = $(object).siblings("span.offensive-flag[id*=-offensive-remove-flag-]")
+            $(remove_own).find("a.question-flag").html(gettext("flag offensive"));
+            $(remove_own).attr("id", $(remove_own).attr("id").replace("remove-flag-", "flag-"));
+            
+            $(object).next("span.sep").remove();
+            $(object).remove();
+
+
 
              getOffensiveQuestionFlag().unbind('click').click(function(event){
                Vote.offensive(this, VoteType.offensiveQuestion);
@@ -813,6 +852,25 @@ var Vote = function(){
             if (confirm(removeOffensiveConfirmation)){
                 postId = object.id.substr(object.id.lastIndexOf('-') + 1);
                 submit(object, voteType, callback_remove_offensive);
+            }
+        },
+        remove_all_offensive: function(object, voteType){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
+                showMessage(
+                    $(object),
+                    offensiveAnonymousMessage.replace(
+                            "{{QuestionID}}",
+                            questionId
+                        ).replace(
+                            '{{questionSlug}}',
+                            questionSlug
+                        )
+                );
+                return false;
+            }
+            if (confirm(removeOffensiveConfirmation)){
+                postId = object.id.substr(object.id.lastIndexOf('-') + 1);
+                submit(object, voteType, callback_remove_all_offensive);
             }
         },
         //delete question or answer (comments are deleted separately)
