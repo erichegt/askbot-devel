@@ -538,6 +538,7 @@ body.anon {
         text-align:left;
         font-weight:normal;
         font-family:@main-font;
+        padding-left:0px;
     }
     .contributorback{
         background: #eceeeb url(../images/contributorsback.png) no-repeat center left;
@@ -552,6 +553,10 @@ body.anon {
         font-family:@main-font;
         width:80px;
         margin-right:18px;
+    }
+
+    #displayTagFilterControl label { /*Especial width just for the display tag filter box in index page*/
+        width:160px;
     }
 
     ul {
@@ -1860,6 +1865,10 @@ span.delete-icon:hover {
             padding: 5px 3px;
             color: #666;
             font-size:13px;
+
+            .edit{
+                padding-left:6px;
+            }
         }
 
         .comment-body p{
@@ -1935,7 +1944,7 @@ span.delete-icon:hover {
         float: left;
         text-align: center;
         padding-top: 2px;
-        margin:3px 10px 0px 3px;
+        margin:10px 10px 0px 3px;
     }
 
     .vote-buttons IMG {
@@ -1976,6 +1985,7 @@ span.delete-icon:hover {
         .vote-buttons {
             width:27px;
            margin-right:10px;
+           margin-top:10px;
         }
     }
 
@@ -2156,7 +2166,7 @@ span.delete-icon:hover {
 
 #email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
     margin-top:10px;
-    #id_email,#id_username,#id_password,input{
+    #id_email,#id_username,#id_password{
          font-size: 12px;
         line-height: 20px;
         height: 20px;
