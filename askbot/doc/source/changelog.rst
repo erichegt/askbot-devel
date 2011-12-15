@@ -1,8 +1,14 @@
 Changes in Askbot
 =================
 
-0.7.34 (Current Version)
-------------------------
+0.7.35
+------
+* Removal of offensive flags (`Dejan Noveski <http://www.atomidata.com/>`_)
+* Fixes in CSS (Byron Corrales)
+* Update of Catalan locale (Jordi Bofill)
+
+0.7.34
+------
 * Returned support of Django 1.2
 
 0.7.33
