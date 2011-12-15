@@ -271,7 +271,8 @@ def edit_user(request, id):
         'active_tab': 'users',
         'page_class': 'user-profile-edit-page',
         'form' : form,
-        'gravatar_faq_url' : reverse('faq') + '#gravatar',
+        'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
+        'view_user': user,
     }
     return render_into_skin('user_profile/user_edit.html', data, request)
 
