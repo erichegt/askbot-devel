@@ -1265,10 +1265,6 @@ span.delete-icon:hover {
     font-size:24px;
 }
 
-.ask-body {
-    padding-right: 10px;
-}
-
 #fmask{
     margin-bottom:30px;
     width:100%;
@@ -1459,7 +1455,7 @@ span.delete-icon:hover {
     margin: 5px 0 5px 0;
 }
 
-.edit-question-page, #fmedit{
+.edit-question-page, #fmedit, .wmd-preview{
     color:@info-text-dark;
     
     #id_revision{
@@ -2035,10 +2031,7 @@ span.delete-icon:hover {
         color:@info-text;
         line-height:1.2;
         margin-top:10px;
-        p{
-            font-size:13px;
-          line-height:1.3;
-        }
+ 
         h2{
           font-family:@main-font;
           color:@section-title;
@@ -3319,7 +3312,7 @@ a.edit {
 .atn { color: #606; }
 .atv { color: #080; }
 .dec { color: #606; }
-pre.prettyprint { padding: 3px; border: 0px solid #888; }
+pre.prettyprint { clear:both;padding: 3px; border: 0px solid #888; }
 
 @media print {
   .str { color: #060; }
