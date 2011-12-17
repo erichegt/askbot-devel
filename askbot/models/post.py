@@ -5,7 +5,7 @@ from django.utils.http import urlquote as django_urlquote
 
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
-from askbot.models import content
+from askbot.models import content, const
 
 class PostManager(models.Manager):
     def get_questions(self):
@@ -17,10 +17,11 @@ class PostManager(models.Manager):
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
-    parent = models.ForeignKey('Post', blank=True, null=True)
+    parent = models.ForeignKey('Post', blank=True, null=True, related_name='comment_posts') # Answer or Question for Comment
 
-    self_answer = models.ForeignKey('Answer', blank=True, null=True)
-    self_question = models.ForeignKey('Question', blank=True, null=True)
+    self_answer = models.ForeignKey('Answer', blank=True, null=True, related_name='unused__posts')
+    self_question = models.ForeignKey('Question', blank=True, null=True, related_name='unused__posts')
+    self_comment = models.ForeignKey('Comment', blank=True, null=True, related_name='unused__posts')
 
     question = property(fget=lambda self: self.self_answer.question) # to simulate Answer model
     question_id = property(fget=lambda self: self.self_answer.question_id) # to simulate Answer model
@@ -33,6 +34,9 @@ class Post(content.Content):
         app_label = 'askbot'
         db_table = 'askbot_post'
         managed = False
+
+    def is_comment(self):
+        return self.post_type == 'comment'
 
     def get_absolute_url(self, no_slug = False): # OVERRIDE for Content.get_absolute_url()
         from askbot.utils.slug import slugify
@@ -62,6 +66,26 @@ class Post(content.Content):
         if not self.is_answer():
             raise NotImplementedError
         return self.thread.accepted_answer_id and (self.thread.accepted_answer_id == self.self_answer_id)
+
+    def get_page_number(self, answer_posts):
+        """When question has many answers, answers are
+        paginated. This function returns number of the page
+        on which the answer will be shown, using the default
+        sort order. The result may depend on the visitor."""
+        if not self.is_answer() and not self.is_comment():
+            raise NotImplementedError
+
+        if self.is_comment():
+            post = self.parent
+        else:
+            post = self
+
+        order_number = 0
+        for answer_post in answer_posts:
+            if post == answer_post:
+                break
+            order_number += 1
+        return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
 
 
 for field in Post._meta.fields:

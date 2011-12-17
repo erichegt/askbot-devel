@@ -1,4 +1,4 @@
-{% if not question.thread.closed %}
+{% if not thread.closed %}
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript'>
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
@@ -46,9 +46,9 @@
         var answer_sort_tab = "{{ tab_id }}";
         $("#" + answer_sort_tab).attr('className',"on");
         
-        Vote.init({{ question.id }}, '{{ question.thread.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
+        Vote.init({{ question.self_question_id }}, '{{ thread.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
         
-        {% if not question.thread.closed and request.user.is_authenticated %}initEditor();{% endif %}
+        {% if not thread.closed and request.user.is_authenticated %}initEditor();{% endif %}
         
         lanai.highlightSyntax();
         $('#btLogin').bind('click', function(){window.location.href='{{ settings.LOGIN_URL }}'; } )

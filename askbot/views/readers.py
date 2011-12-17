@@ -126,7 +126,7 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     #request.session.modified = True
 
     #todo: have this call implemented for sphinx, mysql and pgsql
-    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
+    (qs, meta_data, related_tags) = models.Thread.objects.run_advanced_search(
                                             request_user = request.user,
                                             search_state = search_state,
                                         )
@@ -450,11 +450,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #in addition - if url points to a comment and the comment
         #is for the answer - we need the answer object
         try:
-            show_comment = models.Comment.objects.get(id = show_comment)
-            if str(show_comment.get_origin_post().id) != id:
-                return HttpResponseRedirect(show_comment.get_absolute_url())
-            show_post = show_comment.content_object
-            show_comment.assert_is_visible_to(request.user)
+            show_comment = models.Post.objects.get(self_comment=show_comment)
+            if str(show_comment.thread._question_post().self_question_id) != id:
+                return HttpResponseRedirect(show_comment.thread.get_absolute_url())
+            show_post = show_comment.parent
+            show_comment.self_comment.assert_is_visible_to(request.user)
         except models.Comment.DoesNotExist:
             error_message = _(
                 'Sorry, the comment you are looking for has been '
@@ -476,8 +476,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
         try:
-            show_post = get_object_or_404(models.Answer, id=show_answer)
-            if str(show_post.question.id) != id:
+            show_post = get_object_or_404(models.Post, self_answer=show_answer)
+            if str(show_post.question_id) != id:
                 return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
@@ -487,7 +487,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #load question and maybe refuse showing deleted question
     try:
         question_post = get_object_or_404(models.Post, self_question=id)
-        question_post.assert_is_visible_to(request.user)
+        question_post.self_question.assert_is_visible_to(request.user)
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
@@ -498,7 +498,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if request.path.split('/')[-1] != question_post.slug:
         logging.debug('no slug match!')
         question_url = '?'.join((
-                            question.get_absolute_url(),
+                            question_post.get_absolute_url(),
                             urllib.urlencode(request.GET)
                         ))
         return HttpResponseRedirect(question_url)
@@ -509,6 +509,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = thread.get_answers(user = request.user)
     answers = answers.select_related('self_answer', 'thread', 'author', 'last_edited_by')
     answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
+
+    # TODO: Instead of fetching answer posts, fetch all posts that belong to this thread,
+    #       then manually process them so that `answers` variable is unchanged, and for each answer within it
+    #       answer.get_comments() return a pre-cached list of comment posts
+    #
+    #       Then, in macros.html, we have to adjust the lines with post.get_comments() calls, like:
+    #           {% set comments = post.get_comments(visitor = user)[:show_comment_position] %}
+    #
 
     answers = list(answers)
     
@@ -523,17 +531,15 @@ def question(request, id):#refactor - long subroutine. display question body, an
         for vote in votes:
             user_answer_votes[vote.object_id] = int(vote) # INFO: vote.object_id == Answer.id == Post.self_answer_id
 
-    filtered_answer_posts = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
-
-    filtered_answers = [answer.self_answer for answer in filtered_answer_posts] # TODO: for now we convert back to Answer instances
+    filtered_answers = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
 
     #resolve page number and comment number for permalinks
     show_comment_position = None
     if show_comment:
-        show_page = show_comment.get_page_number(answers = filtered_answers)
-        show_comment_position = show_comment.get_order_number()
+        show_page = show_comment.get_page_number(answer_posts=filtered_answers)
+        show_comment_position = show_comment.self_comment.get_order_number()
     elif show_answer:
-        show_page = show_post.get_page_number(answers = filtered_answers)
+        show_page = show_post.get_page_number(answer_posts=filtered_answers)
 
     objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
@@ -550,7 +556,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.session['question_view_times'] = {}
 
         last_seen = request.session['question_view_times'].get(question_post.self_question_id, None)
-        updated_when, updated_who = thread.get_last_update_info() # TODO: This is a real resource hog
+        updated_when, updated_who = thread.get_last_update_info()
 
         if updated_who != request.user:
             if last_seen:
@@ -603,7 +609,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     data = {
         'page_class': 'question-page',
         'active_tab': 'questions',
-        'question' : question_post.self_question,
+        'question' : question_post,
         'thread': thread,
         'user_question_vote' : user_question_vote,
         'question_comment_count': question_post.self_question.comments.count(),
@@ -613,7 +619,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'tags' : thread.tags.all(),
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_questions' : thread.get_similar_questions(),
+        'similar_threads' : thread.get_similar_threads(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,
@@ -659,10 +665,9 @@ def get_comment(request):
 @ajax_only
 @get_only
 def get_question_body(request):
-    # TODO: Is this used anywhere?
     search_state = request.session.get('search_state', SearchState())
     view_log = request.session['view_log']
-    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
+    (qs, meta_data, related_tags) = models.Thread.objects.run_advanced_search(
                                             request_user = request.user,
                                             search_state = search_state)
     paginator = Paginator(qs, search_state.page_size)
