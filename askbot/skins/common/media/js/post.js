@@ -111,10 +111,12 @@ var CPValidator = function(){
                     limit_tag_count: true,
                     limit_tag_length: true
                 },
+		/* minimum character settings for the title and text can be set in livesettings (under data entry rules)
                 text: {
                     required: true,
                     minlength: 10
                 }
+		*/
                 /*title: {
                     required: true,
                     minlength: 10
