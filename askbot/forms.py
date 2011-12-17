@@ -107,8 +107,7 @@ class TitleField(forms.CharField):
 
     def clean(self, value):
         if len(value) < askbot_settings.MIN_TITLE_LENGTH:
-            msg = ungettext_lazy('title must be > %(min_len) characters'
-                  ) % {'min_len': askbot_settings.MIN_TITLE_LENGTH}
+            msg = _('title must be > %d characters') % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
 
         return value
@@ -124,8 +123,7 @@ class EditorField(forms.CharField):
 
     def clean(self, value):
         if len(value) < askbot_settings.MIN_EDITOR_LENGTH:
-            msg = ungettext_lazy('question content must be > %(min_len)d characters'
-                  ) % {'min_len': askbot_settings.MIN_EDITOR_LENGTH}
+            msg = _('question content must be > %d characters') % askbot_settings.MIN_EDITOR_LENGTH
             raise forms.ValidationError(msg)
         return value
 

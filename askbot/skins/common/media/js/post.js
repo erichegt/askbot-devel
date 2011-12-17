@@ -111,20 +111,15 @@ var CPValidator = function(){
                     limit_tag_count: true,
                     limit_tag_length: true
                 },
-		/* minimum character settings for the title and text can be set in livesettings (under data entry rules)
                 text: {
-                    required: true,
-                    minlength: 10
+                    minlength: askbot['settings']['minEditorLength']
+                },
+                title: {
+                    minlength: askbot['settings']['minTitleLength']
                 }
-		*/
-                /*title: {
-                    required: true,
-                    minlength: 10
-                }*/
             };
         },
         getQuestionFormMessages: function(){
-            var chars = 10
             return {
                 tags: {
                     required: " " + gettext('tags cannot be empty'),
@@ -134,11 +129,11 @@ var CPValidator = function(){
                 },
                 text: {
                     required: " " + gettext('content cannot be empty'),
-                    minlength: interpolate(gettext('%s content minchars'), [chars])
+                    minlength: interpolate(gettext('%s content minchars'), [askbot['settings']['minEditorLength']])
                 },
                 title: {
                     required: " " + gettext('please enter title'),
-                    minlength: interpolate(gettext('%s title minchars'), [chars])
+                    minlength: interpolate(gettext('%s title minchars'), [askbot['settings']['minTitleLength']])
                 }
             };
         }
