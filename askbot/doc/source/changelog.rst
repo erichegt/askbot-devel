@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.7.36 (Dec 20, 2011)
+---------------------
+* bugfix and made the logo not used by default
+
 0.7.35 (Dec 15, 2011)
 ---------------------
 * Removal of offensive flags (`Dejan Noveski <http://www.atomidata.com/>`_)
