@@ -12,7 +12,11 @@
 """
 #!/usr/bin/env python
 #encoding:utf-8
-from django.contrib.syndication.feeds import Feed
+try:
+    from django.contrib.syndication.feeds import Feed
+except ImportError:
+    from django.contrib.syndication.views import Feed
+
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -32,7 +36,7 @@ class RssIndividualQuestionFeed(Feed):
         if len(bits) != 1:
             raise ObjectDoesNotExist
         return Question.objects.get(id__exact = bits[0])
-    
+
     def item_link(self, item):
         """get full url to the item
         """
@@ -58,7 +62,7 @@ class RssIndividualQuestionFeed(Feed):
                 content_type = ContentType.objects.get_for_model(Question)
             )
         )
-        
+
         answer_content_type = ContentType.objects.get_for_model(Answer)
         answers = Answer.objects.filter(question = item.id)
         for answer in answers:
@@ -71,7 +75,7 @@ class RssIndividualQuestionFeed(Feed):
             )
 
         return itertools.chain(*chain_elements)
-    
+
     def item_title(self, item):
         """returns the title for the item
         """
@@ -83,7 +87,7 @@ class RssIndividualQuestionFeed(Feed):
         elif item.post_type == "comment":
             title = "Comment by %s for %s" % (item.user, self.title)
         return title
-        
+
     def item_description(self, item):
         """returns the description for the item
         """
@@ -128,7 +132,7 @@ class RssLastestQuestionsFeed(Feed):
         because the slug can change
         """
         return self.link + item.get_absolute_url(no_slug = True)
-        
+
     def item_description(self, item):
         """returns the desciption for the item
         """
@@ -152,12 +156,12 @@ class RssLastestQuestionsFeed(Feed):
         if tags:
             #if there are tags in GET, filter the
             #questions additionally
-            for tag in tags:                
+            for tag in tags:
                 qs = qs.filter(tags__name = tag)
-        
+
         return qs.order_by('-last_activity_at')[:30]
 
-        
+
 
 def main():
     """main function for use as a script
