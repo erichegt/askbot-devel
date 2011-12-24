@@ -85,7 +85,7 @@ body.anon #searchBar .searchInputCancelable{width:405px;}
 .box li{list-style-type:disc;font-size:13px;line-height:20px;margin-bottom:10px;color:#707070;}
 .box ul.tags{list-style:none;margin:0;padding:0;line-height:170%;display:block;}
 .box #displayTagFilterControl p label{color:#707070;font-size:15px;}
-.box .inputs #interestingTagInput,.box .inputs #ignoredTagInput{width:158px;border:#c9c9b5 1px solid;height:25px;}
+.box .inputs #interestingTagInput,.box .inputs #ignoredTagInput{width:153px;padding-left:5px;border:#c9c9b5 1px solid;height:25px;}
 .box .inputs #interestingTagAdd,.box .inputs #ignoredTagAdd{background:url(../images/small-button-blue.png) repeat-x top;border:0;color:#4a757f;font-weight:bold;font-size:12px;width:30px;height:27px;margin-top:-2px;cursor:pointer;border-radius:4px;-ms-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-khtml-border-radius:4px;text-shadow:0px 1px 0px #e6f6fa;-moz-text-shadow:0px 1px 0px #e6f6fa;-webkit-text-shadow:0px 1px 0px #e6f6fa;-webkit-box-shadow:1px 1px 2px #808080;-moz-box-shadow:1px 1px 2px #808080;box-shadow:1px 1px 2px #808080;}
 .box .inputs #interestingTagAdd:hover,.box .inputs #ignoredTagAdd:hover{background:url(../images/small-button-blue.png) repeat-x bottom;}
 .box img.gravatar{margin:1px;}
@@ -121,7 +121,7 @@ body.anon #searchBar .searchInputCancelable{width:405px;}
 ul#searchTags{margin-left:10px;float:right;padding-top:2px;}
 .search-tips{font-size:16px;line-height:17px;color:#707070;margin:5px 0 10px 0;padding:0px;float:left;font-family:'Yanone Kaffeesatz',sans-serif;}.search-tips a{text-decoration:underline;color:#1b79bd;}
 #question-list{float:left;position:relative;background-color:#FFF;padding:0;width:100%;}
-.short-summary{position:relative;filter:inherit;padding:10px;border-bottom:1px solid #DDDBCE;margin-bottom:1px;overflow:hidden;width:710px;float:left;background:url(../images/summary-background.png) repeat-x;}.short-summary h2{font-size:24px;font-weight:normal;line-height:26px;padding-left:0;margin-bottom:8px;display:block;font-family:'Yanone Kaffeesatz',sans-serif;}
+.short-summary{position:relative;filter:inherit;padding:10px;border-bottom:1px solid #DDDBCE;margin-bottom:1px;overflow:hidden;width:710px;float:left;background:url(../images/summary-background.png) repeat-x;}.short-summary h2{font-size:24px;font-weight:normal;line-height:26px;padding-left:0;margin-bottom:6px;display:block;font-family:'Yanone Kaffeesatz',sans-serif;}
 .short-summary a{color:#464646;}
 .short-summary .userinfo{text-align:right;line-height:16px;font-family:Arial;padding-right:4px;}
 .short-summary .userinfo .relativetime,.short-summary span.anonymous{font-size:11px;clear:both;font-weight:normal;color:#555;}
@@ -168,24 +168,21 @@ ul#searchTags{margin-left:10px;float:right;padding-top:2px;}
 .tag-size-9{font-size:20px;}
 .tag-size-10{font-size:21px;}
 ul.tags,ul.tags.marked-tags,ul#related-tags{list-style:none;margin:0;padding:0;line-height:170%;display:block;}
-ul.tags li{float:left;display:block;margin:0 5px 0 0;padding:0;height:20px;}
+ul.tags li{float:left;display:block;margin:0 8px 0 0;padding:0;height:20px;}
 .wildcard-tags{clear:both;}
 ul.tags.marked-tags li,.wildcard-tags ul.tags li{margin-bottom:5px;}
 #tagSelector div.inputs{clear:both;float:none;margin-bottom:10px;}
 .tags-page ul.tags li,ul#ab-user-tags li{width:160px;margin:5px;}
-ul#related-tags li{margin:0 5px 5px 0;float:left;clear:left;}
-.tag-left{background:url(../images/tag-right.png) no-repeat right center;border:none;cursor:pointer;display:block;float:left;height:20px;margin:0 5px 0 0;padding:0;}
-.tag-right{background:url(../images/tag-left.png) no-repeat left center;border:none;display:block;float:left;height:20px;line-height:20px;font-weight:normal;font-size:11px;padding:0px 10px 0px 15px;text-decoration:none;text-align:center;white-space:nowrap;vertical-align:middle;font-family:Arial;color:#717179;}
-.deletable-tag{margin-right:3px;white-space:nowrap;}
-.deletable-tag .tag-right{padding-right:0px;float:left;}
-.deletable-tag.tag-left{padding-right:0px;}
+ul#related-tags li{margin:0 5px 8px 0;float:left;clear:left;}
+.tag-left{cursor:pointer;display:block;float:left;height:17px;margin:0 5px 0 0;padding:0;-webkit-box-shadow:0px 0px 5px #d3d6d7;-moz-box-shadow:0px 0px 5px #d3d6d7;box-shadow:0px 0px 5px #d3d6d7;}
+.tag-right{background:#f3f6f6;border:#fff 1px solid ;border-top:#fff 2px solid;outline:#cfdbdb 1px solid;display:block;float:left;height:17px;line-height:17px;font-weight:normal;font-size:11px;padding:0px 8px 0px 8px;text-decoration:none;text-align:center;white-space:nowrap;vertical-align:middle;font-family:Arial;color:#717179;}
+.deletable-tag{margin-right:3px;white-space:nowrap;border-top-right-radius:4px;border-bottom-right-radius:4px;-moz-border-radius-topright:4px;-moz-border-radius-bottomright:4px;-webkit-border-bottom-right-radius:4px;-webkit-border-top-right-radius:4px;}
 .tags a.tag-right,.tags span.tag-right{color:#585858;text-decoration:none;}
 .tags a:hover{color:#1A1A1A;}
 .users-page h1,.tags-page h1{float:left;}
 .main-page h1{margin-right:5px;}
-span.delete-icon{padding-left:13px;vertical-align:bottom;background:url(../images/close-small-dark.png) bottom no-repeat;cursor:default;}
-span.delete-icon:hover{background:url(../images/close-small-dark.png) top no-repeat;}
-.tags span.delete-icon{float:left;height:20px;width:8px;margin:0px 0 0 10px;display:block;}
+.delete-icon{margin-top:-1px;float:left;height:21px;width:18px;display:block;line-height:20px;text-align:center;background:#bbcdcd;cursor:default;color:#fff;border-top:#cfdbdb 1px solid;font-family:Arial;border-top-right-radius:4px;border-bottom-right-radius:4px;-moz-border-radius-topright:4px;-moz-border-radius-bottomright:4px;-webkit-border-bottom-right-radius:4px;-webkit-border-top-right-radius:4px;text-shadow:0px 1px 0px #7ea0a0;-moz-text-shadow:0px 1px 0px #7ea0a0;-webkit-text-shadow:0px 1px 0px #7ea0a0;}
+.delete-icon:hover{background:#b32f2f;}
 .tag-number{font-weight:normal;float:left;font-size:16px;color:#5d5d5d;}
 .badges .tag-number{float:none;display:inline;padding-right:15px;}
 .section-title{color:#7ea9b3;font-family:'Yanone Kaffeesatz',sans-serif;font-weight:bold;font-size:24px;}
@@ -469,7 +466,7 @@ ul.form-horizontal-rows label{position:absolute;left:0px;bottom:6px;margin:0px;l
 ul.form-horizontal-rows li input{position:absolute;bottom:0px;left:180px;margin:0px;}
 .narrow .summary{float:left;}
 .user-profile-tool-links{font-weight:bold;vertical-align:top;}
-ul.post-tags{margin-left:7px;}
+ul.post-tags{margin-left:3px;}
 ul.post-tags li{margin-top:4px;margin-bottom:3px;}
 ul.post-retag{margin-bottom:0px;margin-left:5px;}
 #question-controls .tags{margin:0 0 3px 0;}
