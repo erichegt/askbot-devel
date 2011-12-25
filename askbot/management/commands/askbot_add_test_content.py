@@ -47,6 +47,12 @@ class Command(NoArgsCommand):
         "Create the users and return an array of created users"
         users = []
 
+        #add admin with the same password
+        admin = User.objects.create_user('admin', 'admin@example.com')
+        admin.set_password('admin')
+        self.print_if_verbose("Created User 'admin'")
+        users.append(admin)
+
         # Keeping the created users in array - we will iterate over them
         # several times, we don't want querying the model each and every time.
         for i in range(NUM_USERS):
@@ -58,6 +64,7 @@ class Command(NoArgsCommand):
             user.save()
             self.print_if_verbose("Created User '%s'" % user.username)
             users.append(user)
+
         return users
 
 
