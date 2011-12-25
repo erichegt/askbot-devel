@@ -440,7 +440,6 @@ def api_get_questions(request):
         page_size = form.cleaned_data.get('page_size', 30)
         questions = questions[:page_size]
 
-
         question_list = list()
         for question in questions:
             question_list.append({

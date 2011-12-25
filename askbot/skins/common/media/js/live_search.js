@@ -578,20 +578,24 @@ var liveSearch = function(){
         eval_query();
     }
 
-    var send_query = function(query_text, sort_method){
-        var post_data = {query: query_text};
-        $.ajax({
+    var send_query = function(query_text, mode){
+        var post_data = {
             url: search_url,
-            //data: {query: query_text, sort: sort_method},
             dataType: 'json',
             success: render_result,
             complete: try_again
-        });
+        }
+        if (mode === 'ask_page'){
+            post_data['data'] = {query: query_text};
+        }
+        $.ajax(post_data);
         prev_text = query_text;
         var context = { state:1, rand:Math.random() };
         var title = "Questions";
         var query = search_url;
-        History.pushState( context, title, query );
+        if (mode === 'main_page'){
+            History.pushState( context, title, query );
+        }
         
         //var stateObj = { page: search_url };
         //window.history.pushState(stateObj, "Questions", search_url);
@@ -671,7 +675,7 @@ var liveSearch = function(){
                             }
                         }
                     }
-                    send_query(cur_text, sortMethod);
+                    send_query(cur_text, mode);
                 };
                 restart_query = function() {
                     reset_sort_method();
@@ -689,7 +693,7 @@ var liveSearch = function(){
                 search_url = askbot['urls']['api_get_questions'];
                 render_result = render_ask_page_result;
                 process_query = function(){
-                    send_query(cur_text);
+                    send_query(cur_text, mode);
                 };
                 restart_query = function(){
                     $('#' + q_list_sel).css('height',0).children().remove();
