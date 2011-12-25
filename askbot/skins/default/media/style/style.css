@@ -267,8 +267,8 @@ ul#related-tags li{margin:0 5px 8px 0;float:left;clear:left;}
 .question-page .comments div.comment:hover{background-color:#efefef;}
 .question-page .comments a.author{background-color:inherit;color:#1b79bd;padding:0;}
 .question-page .comments a.author:hover{text-decoration:underline;}
-.question-page .comments span.delete-icon{background:url(../images/close-small.png) no-repeat;}
-.question-page .comments span.delete-icon:hover{border:#BC564B 2px solid;border-radius:10px;-ms-border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;-khtml-border-radius:10px;}
+.question-page .comments span.delete-icon{background:url(../images/close-small.png) no-repeat;border:0;width:14px;height:14px;}
+.question-page .comments span.delete-icon:hover{border:#BC564B 2px solid;border-radius:10px;-ms-border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;-khtml-border-radius:10px;margin:-3px 0px 0px -2px;}
 .question-page .comments .content{margin-bottom:7px;}
 .question-page .comments .comment-votes{float:left;width:37px;line-height:130%;padding:6px 5px 6px 3px;}
 .question-page .comments .comment-body{line-height:1.3;margin:3px 26px 0 46px;padding:5px 3px;color:#666;font-size:13px;}.question-page .comments .comment-body .edit{padding-left:6px;}
