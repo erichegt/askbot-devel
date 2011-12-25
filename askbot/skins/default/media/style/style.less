@@ -1778,8 +1778,15 @@ ul#related-tags li {
             font-size: 12px;
             line-height: 140%;
             padding-left:2px;
-            padding-top:4px;
+            padding-top:3px;
             border:#cce6ec 3px solid;
+        }
+        
+        /* A small hack to solve 1px problem on webkit browsers */
+        @media screen and (-webkit-min-device-pixel-ratio:0){
+            textarea{
+                padding-left:3px !important;
+            }
         }
 
         input {
