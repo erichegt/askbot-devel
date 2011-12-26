@@ -223,11 +223,11 @@ poor design of the data or methods on data objects #}
             rel="tag"
         >{{ tag|replace('*', '&#10045;')|truncate(20,True)}}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
-            <span class="delete-icon"
+            <div class="delete-icon"
                 {% if delete_link_title %}
                     title="{{ delete_link_title }}"
                 {% endif %}
-            ></span>
+            >x</div>
         {% endif %}
     </{{ html_tag }}>
     {{ extra_content }}
@@ -328,6 +328,7 @@ for the purposes of the AJAX comment editor #}
     {% spaceless %}
     {% if post.comment_count > 0 %}
         <h2 id="comment-title">Comments</h2>
+        <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
     <div class="comments" id="{{widget_id}}">
