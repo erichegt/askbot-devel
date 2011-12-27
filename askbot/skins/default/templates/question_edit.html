@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 <div class="section-title">{% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</div>
-<form id="fmedit" action="{% url edit_question question.id %}" method="post" >{% csrf_token %}
+<form id="fmedit" action="{% url edit_question question.self_question_id %}" method="post" >{% csrf_token %}
 
     {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
     <div style="vertical-align:middle">

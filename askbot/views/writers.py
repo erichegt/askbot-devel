@@ -344,7 +344,7 @@ def retag_question(request, id):
 def edit_question(request, id):
     """edit question view
     """
-    question = get_object_or_404(models.Question, id = id)
+    question = get_object_or_404(models.Post, self_question=id)
     latest_revision = question.get_latest_revision()
     revision_form = None
     try:
@@ -393,6 +393,7 @@ def edit_question(request, id):
 
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
+
                         request.user.edit_question(
                             question = question,
                             title = form.cleaned_data['title'],
@@ -430,7 +431,8 @@ def edit_question(request, id):
 @csrf.csrf_protect
 @decorators.check_spam('text')
 def edit_answer(request, id):
-    answer = get_object_or_404(models.Answer, id=id)
+    answer = get_object_or_404(models.Post, self_answer=id)
+    latest_revision = answer.get_latest_revision()
     try:
         request.user.assert_can_edit_answer(answer)
         latest_revision = answer.get_latest_revision()
@@ -496,7 +498,7 @@ def answer(request, id):#process a new answer
 
     authenticated users post directly
     """
-    question = get_object_or_404(models.Question, id=id)
+    question = get_object_or_404(models.Post, post_type='question', self_question=id)
     if request.method == "POST":
         form = forms.AnswerForm(question, request.user, request.POST)
         if form.is_valid():
@@ -540,7 +542,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     json_comments = []
     for comment in comments:
 
-        if user != None and user.is_authenticated():
+        if user and user.is_authenticated():
             try:
                 user.assert_can_delete_comment(comment)
                 #/posts/392845/comments/219852/delete
@@ -575,73 +577,62 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     # only support get post comments by ajax now
-    user = request.user
-    if request.is_ajax():
-        post_type = request.REQUEST['post_type']
-        id = request.REQUEST['post_id']
-        if post_type == 'question':
-            post_model = models.Question
-        elif post_type == 'answer':
-            post_model = models.Answer
-        else:
-            raise Http404
 
-        obj = get_object_or_404(post_model, id=id)
-        if request.method == "GET":
+    post_type = request.REQUEST.get('post_type', '')
+    if not request.is_ajax() or post_type not in ('question', 'answer'):
+        raise Http404  # TODO: Shouldn't be 404! More like 400, 403 or sth more specific
+
+    user = request.user
+
+    id = request.REQUEST['post_id']
+    if post_type == 'question':
+        obj = get_object_or_404(models.Post, self_question=id)
+    else: #if post_type == 'answer':
+        obj = get_object_or_404(models.Post, self_answer=id)
+
+    if request.method == "GET":
+        response = __generate_comments_json(obj, user)
+    elif request.method == "POST":
+        try:
+            if user.is_anonymous():
+                msg = _('Sorry, you appear to be logged out and '
+                        'cannot post comments. Please '
+                        '<a href="%(sign_in_url)s">sign in</a>.') % \
+                        {'sign_in_url': url_utils.get_login_url()}
+                raise exceptions.PermissionDenied(msg)
+            user.post_comment(parent_post=obj, body_text=request.POST.get('comment'))
             response = __generate_comments_json(obj, user)
-        elif request.method == "POST":
-            try:
-                if user.is_anonymous():
-                    msg = _('Sorry, you appear to be logged out and '
-                            'cannot post comments. Please '
-                            '<a href="%(sign_in_url)s">sign in</a>.') % \
-                            {'sign_in_url': url_utils.get_login_url()}
-                    raise exceptions.PermissionDenied(msg)
-                user.post_comment(
-                            parent_post = obj,
-                            body_text = request.POST.get('comment')
-                        )
-                response = __generate_comments_json(obj, user)
-            except exceptions.PermissionDenied, e:
-                response = HttpResponseForbidden(
-                                        unicode(e),
-                                        mimetype="application/json"
-                                    )
-        return response
-    else:
-        raise Http404
+        except exceptions.PermissionDenied, e:
+            response = HttpResponseForbidden(unicode(e), mimetype="application/json")
+
+    return response
 
 @decorators.ajax_only
 @decorators.check_spam('comment')
 def edit_comment(request):
-    if request.user.is_authenticated():
-        comment_id = int(request.POST['comment_id'])
-        comment = models.Comment.objects.get(id = comment_id)
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 
-        request.user.edit_comment(
-                        comment = comment,
-                        body_text = request.POST['comment']
-                    )
+    comment_id = int(request.POST['comment_id'])
+    comment_post = models.Post.objects.get(self_comment=comment_id)
 
-        is_deletable = template_filters.can_delete_comment(comment.user, comment)
-        is_editable = template_filters.can_edit_comment(comment.user, comment)
+    request.user.edit_comment(comment_post=comment_post, body_text = request.POST['comment'])
 
-        return {'id' : comment.id,
-            'object_id': comment.content_object.id,
-            'comment_age': diff_date(comment.added_at),
-            'html': comment.html,
-            'user_display_name': comment.user.username,
-            'user_url': comment.user.get_profile_url(),
-            'user_id': comment.user.id,
-            'is_deletable': is_deletable,
-            'is_editable': is_editable,
-            'score': comment.score,
-            'voted': comment.is_upvoted_by(request.user),
-        }
-    else:
-        raise exceptions.PermissionDenied(
-                _('Sorry, anonymous users cannot edit comments')
-            )
+    is_deletable = template_filters.can_delete_comment(comment_post.author, comment_post)
+    is_editable = template_filters.can_edit_comment(comment_post.author, comment_post)
+
+    return {'id' : comment_post.self_comment.id,
+        'object_id': comment_post.self_comment.content_object.id,
+        'comment_age': diff_date(comment_post.added_at),
+        'html': comment_post.html,
+        'user_display_name': comment_post.author.username,
+        'user_url': comment_post.author.get_profile_url(),
+        'user_id': comment_post.author.id,
+        'is_deletable': is_deletable,
+        'is_editable': is_editable,
+        'score': comment_post.score,
+        'voted': comment_post.self_comment.is_upvoted_by(request.user),
+    }
 
 def delete_comment(request):
     """ajax handler to delete comment

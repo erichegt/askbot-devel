@@ -14,6 +14,11 @@ class PostManager(models.Manager):
     def get_answers(self):
         return self.filter(post_type='answer')
 
+    def create_new_answer(self, *args, **kwargs):
+        from askbot.models import Answer
+        answer = Answer.objects.create_new(*args, **kwargs)
+        return self.get(self_answer=answer)
+
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
@@ -86,6 +91,47 @@ class Post(content.Content):
                 break
             order_number += 1
         return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
+
+    def revisions(self):
+        if self.self_question:
+            return self.self_question.revisions.all()
+        elif self.self_answer:
+            return self.self_answer.revisions.all()
+        raise NotImplementedError
+
+    def get_latest_revision(self):
+        return self.revisions().order_by('-revised_at')[0]
+
+    def apply_edit(self, *kargs, **kwargs):
+        post = (self.self_answer or self.self_question)
+        if not post:
+            raise NotImplementedError
+        return post.apply_edit(*kargs, **kwargs)
+
+    def add_comment(self, *args, **kwargs):
+        if self.self_question:
+            comment = self.self_question.add_comment(*args, **kwargs)
+        elif self.self_answer:
+            comment = self.self_answer.add_comment(*args, **kwargs)
+        else:
+            raise NotImplementedError
+        return self.__class__.objects.get(self_comment=comment)
+
+    def get_comments(self, *args, **kwargs):
+        if self.self_question:
+            comments = self.self_question.get_comments(*args, **kwargs)
+        elif self.self_answer:
+            comments = self.self_answer.get_comments(*args, **kwargs)
+        else:
+            raise NotImplementedError
+        # TODO: Convert `comments` to Post-s (there are lots of dependencies, though)
+        return comments
+
+    def accepted(self):
+        if self.is_answer():
+            return self.question.thread.accepted_answer == self
+        raise NotImplementedError
+
 
 
 for field in Post._meta.fields:

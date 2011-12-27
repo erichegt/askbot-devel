@@ -721,8 +721,12 @@ class Content(models.Model):
         if latest_revision.tagnames != tags:
             self.thread.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
 
+        self.thread.title = title
+        self.thread.tagnames = tags
+        self.thread.save()
+
         # Create a new revision
-        self.add_revision(
+        self.add_revision(        # has to be called AFTER updating the thread, otherwise it doesn't see new tags and the new title
             author = edited_by,
             text = text,
             revised_at = edited_at,
@@ -731,10 +735,6 @@ class Content(models.Model):
         )
 
         self.parse_and_save(author = edited_by)
-
-        self.thread.title = title
-        self.thread.tagnames = tags
-        self.thread.save()
 
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 

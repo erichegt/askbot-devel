@@ -583,6 +583,7 @@ def revisions(request, id, object_name=None):
             revision.summary = _('initial version')
         else:
             revision.diff = htmldiff(revisions[i-1].html, revision.html)
+
     data = {
         'page_class':'revisions-page',
         'active_tab':'questions',
@@ -600,9 +601,9 @@ def get_comment(request):
     and request must be ajax
     """
     id = int(request.GET['id'])
-    comment = models.Post.objects.get(post_type='comment', id=id)
-    request.user.assert_can_edit_comment(comment.self_comment)
-    return {'text': comment.self_comment.comment}
+    comment = models.Post.objects.get(post_type='comment', self_comment=id)
+    request.user.assert_can_edit_comment(comment)
+    return {'text': comment.text}
 
 @ajax_only
 @get_only

@@ -172,7 +172,7 @@ SELECT
     NULL AS last_edited_by_id,
 
     comment.html,
-    NULL AS text,
+    comment.comment AS text,
 
     '' AS summary,
 
@@ -235,7 +235,7 @@ SELECT
     NULL AS last_edited_by_id,
 
     comment.html,
-    NULL AS text,
+    comment.comment AS text,
 
     '' AS summary,
 

@@ -601,12 +601,12 @@ def user_assert_can_edit_post(self, post = None):
 
 
 def user_assert_can_edit_question(self, question = None):
-    assert(isinstance(question, Question))
+    assert isinstance(question, Post) and question.post_type=='question'
     self.assert_can_edit_post(question)
 
 
 def user_assert_can_edit_answer(self, answer = None):
-    assert(isinstance(answer, Answer))
+    assert isinstance(answer, Post) and answer.post_type=='answer'
     self.assert_can_edit_post(answer)
 
 
@@ -956,7 +956,7 @@ def user_post_comment(
     award_badges_signal.send(None,
         event = 'post_comment',
         actor = self,
-        context_object = comment,
+        context_object = comment.self_comment,
         timestamp = timestamp
     )
     return comment
@@ -1289,13 +1289,17 @@ def user_post_question(
                            #       because they set some attributes for that instance and expect them to be changed also for question.author
     return question
 
-def user_edit_comment(self, comment = None, body_text = None):
+def user_edit_comment(self, comment_post=None, body_text = None):
     """apply edit to a comment, the method does not
     change the comments timestamp and no signals are sent
     """
-    self.assert_can_edit_comment(comment)
-    comment.comment = body_text
-    comment.parse_and_save(author = self)
+    self.assert_can_edit_comment(comment_post)
+    comment_post.self_comment.comment = body_text
+    comment_post.self_comment.parse_and_save(author = self)
+
+    # HACK: We have to update this `comment_post` instance to reflect comment changes
+    comment_post.text = comment_post.self_comment.comment
+    comment_post.html = comment_post.self_comment.html
 
 @auto_now_timestamp
 def user_edit_question(
@@ -1403,13 +1407,21 @@ def user_post_answer(
 
     self.assert_can_post_answer()
 
-    if not isinstance(question, Question):
+    if not isinstance(question, Post) or not question.post_type == 'question':
         raise TypeError('question argument must be provided')
     if body_text is None:
         raise ValueError('Body text is required to post answer')
     if timestamp is None:
         timestamp = datetime.datetime.now()
-    answer = Answer.objects.create_new(
+#    answer = Answer.objects.create_new(
+#        thread = question.thread,
+#        author = self,
+#        text = body_text,
+#        added_at = timestamp,
+#        email_notify = follow,
+#        wiki = wiki
+#    )
+    answer_post = Post.objects.create_new_answer(
         thread = question.thread,
         author = self,
         text = body_text,
@@ -1420,9 +1432,9 @@ def user_post_answer(
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
-        context_object = answer
+        context_object = answer_post.self_answer
     )
-    return answer
+    return answer_post
 
 def user_visit_question(self, question = None, timestamp = None):
     """create a QuestionView record
