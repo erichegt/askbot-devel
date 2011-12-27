@@ -62,9 +62,9 @@
     <div class="box">
         <h2>{% trans %}Related questions{% endtrans %}</h2>
         <div class="questions-related">
-            {% for threads in similar_threads.data() %}
+            {% for thread in similar_threads.data() %}
             <p>
-                <a href="{{ threads.get_absolute_url() }}">{{ threads.get_question_title() }}</a>
+                <a href="{{ thread.get_absolute_url() }}">{{ thread.get_title() }}</a>
             </p>
             {% endfor %}
         </div>

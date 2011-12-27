@@ -569,9 +569,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
     return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):
-    assert(object_name in ('Question', 'Answer'))
-    post = get_object_or_404(models.get_model(object_name), id=id)
-    revisions = list(post.revisions.all())
+    if object_name == 'Question':
+        post = get_object_or_404(models.Post, post_type='question', self_question=id)
+        revisions = list(models.PostRevision.objects.filter(question=post.self_question))
+    else:
+        post = get_object_or_404(models.Post, post_type='answer', self_answer=id)
+        revisions = list(models.PostRevision.objects.filter(answer=post.self_answer))
     revisions.reverse()
     for i, revision in enumerate(revisions):
         revision.html = revision.as_html()
@@ -597,9 +600,9 @@ def get_comment(request):
     and request must be ajax
     """
     id = int(request.GET['id'])
-    comment = models.Comment.objects.get(id = id)
-    request.user.assert_can_edit_comment(comment)
-    return {'text': comment.comment}
+    comment = models.Post.objects.get(post_type='comment', id=id)
+    request.user.assert_can_edit_comment(comment.self_comment)
+    return {'text': comment.self_comment.comment}
 
 @ajax_only
 @get_only
@@ -613,7 +616,7 @@ def get_question_body(request):
     page = paginator.page(search_state.page)
     questions_dict = {}
     for question in page.object_list:
-        questions_dict['question-%s' % question.id] = question.summary
+        questions_dict['question-%s' % question.self_question_id] = question.summary
 
     return {'questions-titles': questions_dict}
 
@@ -621,16 +624,15 @@ def widget_questions(request):
     """Returns the first x questions based on certain tags.
     @returns template with those questions listed."""
     # make sure this is a GET request with the correct parameters.
-    # TODO: Is this used anywhere?
     if request.method != 'GET':
         raise Http404
-    questions = models.Question.objects.all()
+    threads = models.Thread.objects.all()
     tags_input = request.GET.get('tags','').strip()
     if len(tags_input) > 0:
         tags = [tag.strip() for tag in tags_input.split(',')]
-        questions = questions.filter(thread__tags__name__in = tags)
+        threads = threads.filter(tags__name__in=tags)
     data = {
-        'questions': questions[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+        'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
     }
     return render_into_skin('question_widget.html', data, request) 
     

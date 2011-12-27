@@ -34,7 +34,12 @@
                         </div>
                     {% endif %}
                     {% if request.user|can_edit_post(post) %}
-                    <a href="{% url edit_answer post.id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% if post.post_type == 'answer' %}
+                            <a href="{% url edit_answer post.self_answer_id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% endif %}
+                        {% if post.post_type == 'question' %}
+                            <a href="{% url edit_question post.self_question_id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td align="right">

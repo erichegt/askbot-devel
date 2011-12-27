@@ -292,7 +292,7 @@ def ask(request):#view used to ask a new question
 def retag_question(request, id):
     """retag question view
     """
-    question = get_object_or_404(models.Question, id = id)
+    question = get_object_or_404(models.Post, self_question=id)
 
     try:
         request.user.assert_can_retag_question(question)
@@ -300,10 +300,7 @@ def retag_question(request, id):
             form = forms.RetagQuestionForm(question, request.POST)
             if form.is_valid():
                 if form.has_changed():
-                    request.user.retag_question(
-                                        question = question,
-                                        tags = form.cleaned_data['tags']
-                                    )
+                    request.user.retag_question(question=question, tags=form.cleaned_data['tags'])
                 if request.is_ajax():
                     response_data = {
                         'success': True,
