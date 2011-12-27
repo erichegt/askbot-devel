@@ -1,22 +1,22 @@
 {% from "macros.html" import user_country_flag, tag_list_widget %}
-<div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
+<div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.self_question_id}}">
     <div class="counts">
         <div class="views
-             {% if question.thread.view_count == 0 -%}
+             {% if thread.view_count == 0 -%}
                 no-views
              {% else -%}
                 some-views
              {%- endif -%}">
-             <span class="item-count">{{question.thread.view_count|humanize_counter}}</span>
+             <span class="item-count">{{thread.view_count|humanize_counter}}</span>
             <div>
-            {% trans cnt=question.thread.view_count %}view{% pluralize %}views{% endtrans %}
+            {% trans cnt=thread.view_count %}view{% pluralize %}views{% endtrans %}
             </div>
         </div>
         <div class="answers
-                {% if question.thread.answer_count == 0 -%}
+                {% if thread.answer_count == 0 -%}
                     no-answers
                 {% else -%}
-                    {%- if question.thread.accepted_answer -%}
+                    {%- if thread.accepted_answer -%}
                         accepted
                     {%- else -%}
                         some-answers
@@ -24,9 +24,9 @@
                 {%- endif -%}"> 
             <span 
                 class="item-count"
-            >{{question.thread.answer_count|humanize_counter}}{% if question.thread.accepted_answer %}{% endif %}</span>
+            >{{thread.answer_count|humanize_counter}}{% if thread.accepted_answer %}{% endif %}</span>
             <div>
-            {% trans cnt=question.thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
+            {% trans cnt=thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
             </div>
         </div>
         <div class="votes 
@@ -43,16 +43,16 @@
         
         <div style="clear:both"></div>
         <div class="userinfo">
-            <span class="relativetime" title="{{question.thread.last_activity_at}}">{{ question.thread.last_activity_at|diff_date }}</span>
+            <span class="relativetime" title="{{thread.last_activity_at}}">{{ thread.last_activity_at|diff_date }}</span>
             {% if question.is_anonymous %}
-                <span class="anonymous">{{ question.thread.last_activity_by.get_anonymous_name() }}</span>
+                <span class="anonymous">{{ thread.last_activity_by.get_anonymous_name() }}</span>
             {% else %}
-                <a href="{% url user_profile question.thread.last_activity_by.id, question.thread.last_activity_by.username|slugify %}">{{question.thread.last_activity_by.username}}</a>{{ user_country_flag(question.thread.last_activity_by) }}
-            {#{user_score_and_badge_summary(question.thread.last_activity_by)}#}
+                <a href="{% url user_profile thread.last_activity_by.id, thread.last_activity_by.username|slugify %}">{{thread.last_activity_by.username}}</a>{{ user_country_flag(thread.last_activity_by) }}
+            {#{user_score_and_badge_summary(thread.last_activity_by)}#}
             {% endif %}
         </div>
     </div>
-    <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-    {{ tag_list_widget(question.get_tag_names(), url_params=query_string) }}
+    <h2><a title="{{question.summary|escape}}" href="{{ thread.get_absolute_url() }}">{{thread.get_title()|escape}}</a></h2>
+    {{ tag_list_widget(thread.get_tag_names(), url_params=query_string) }}
 </div>
 

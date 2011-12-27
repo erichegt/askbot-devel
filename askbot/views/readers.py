@@ -76,40 +76,22 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    if request.method == 'POST':    # TODO: This is 405 condition, not 404. Django 1.2+ has decorator for this: https://docs.djangoproject.com/en/1.2/topics/http/decorators/#django.views.decorators.http.require_GET
+        raise Http404
+
     #make parameters dictionary
     params_dict = {
         'scope': scope,
         'sort': sort,
     }
-    if query:
-        params_dict['query'] = ' '.join(query.split('+'))
-    if search:
-        params_dict['search'] = search
-    if tags:
-        params_dict['tags'] = ' '.join(tags.split('+'))
-    if author:
-        params_dict['author'] = author
-    if page:
-        params_dict['page'] = page
-    if reset_tags:
-        params_dict['reset_tags'] = reset_tags
-    if reset_author:
-        params_dict['reset_author'] = reset_author
-    if reset_query:
-        params_dict['reset_query'] = reset_query
-    if start_over:
-        params_dict['start_over'] = start_over
-    if remove_tag:
-        params_dict['remove_tag'] = remove_tag.decode("utf8")
-    if page_size:
-        params_dict['page_size'] = page_size
+    for arg_name in ('query', 'tags'):
+        if locals().get(arg_name, None):
+            params_dict[arg_name] = ' '.join(locals()[arg_name].split('+'))
+    for arg_name in ('search', 'author', 'page', 'reset_tags', 'reset_author', 'reset_query', 'start_over', 'remove_tag', 'page_size'):
+        if locals().get(arg_name, None):
+            params_dict[arg_name] = locals()[arg_name]
     
-    #before = datetime.datetime.now()
-    #don't allow to post to this view
-    if request.method == 'POST':
-        raise Http404
     #update search state
-    #form = AdvancedSearchForm(request.GET)
     form = AdvancedSearchForm(params_dict)
     if form.is_valid():
         user_input = form.cleaned_data
@@ -121,32 +103,19 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     request.session['search_state'] = search_state
     request.session.modified = True
 
-    #force reset for debugging
-    #search_state.reset()
-    #request.session.modified = True
-
-    #todo: have this call implemented for sphinx, mysql and pgsql
-    (qs, meta_data, related_tags) = models.Thread.objects.run_advanced_search(
-                                            request_user = request.user,
-                                            search_state = search_state,
-                                        )
+    qs, meta_data, related_tags = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
-
-    #force cloud to sort by name
-    if tag_list_type == 'cloud':
+    if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
-    font_size = extra_tags.get_tag_font_size(related_tags)
-
     paginator = Paginator(qs, search_state.page_size)
-
     if paginator.num_pages < search_state.page:
         search_state.page = 1
-
     page = paginator.page(search_state.page)
 
-    contributors = models.Question.objects.get_question_and_answer_contributors(page.object_list)
+    contributors_threads = models.Thread.objects.filter(id__in=[post.thread_id for post in page.object_list])
+    contributors = models.Thread.objects.get_thread_contributors(contributors_threads)
 
     paginator_context = {
         'is_paginated' : (paginator.count > search_state.page_size),
@@ -175,17 +144,9 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
         # We have tags in session - pass it to the
         # QueryDict but as a list - we want tags+
         rss_query_dict.setlist("tags", search_state.tags)
-    
-    # Format the url with the QueryDict
-    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
+    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode() # Format the url with the QueryDict
 
-    reset_method_count = 0
-    if search_state.query:
-        reset_method_count += 1
-    if search_state.tags:
-        reset_method_count += 1
-    if meta_data.get('author_name',None):
-        reset_method_count += 1
+    reset_method_count = len(filter(None, [search_state.query, search_state.tags, meta_data.get('author_name', None)]))
 
     if request.is_ajax():
 
@@ -234,27 +195,12 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
             'question_counter': question_counter,
             'questions': list(),
             'related_tags': list(),
-            'faces': list(),
+            'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
             'parameters': search_state.make_parameters(),
             'page_size' : search_state.page_size,
         }
-
-        badge_levels = dict(const.BADGE_TYPE_CHOICES)
-        def pluralize_badge_count(count, level):
-            return ungettext(
-                '%(badge_count)d %(badge_level)s badge',
-                '%(badge_count)d %(badge_level)s badges',
-                count
-            ) % {
-                'badge_count': count,
-                'badge_level': badge_levels[level]
-            }
-
-        gold_badge_css_class = const.BADGE_CSS_CLASSES[const.GOLD_BADGE],
-        silver_badge_css_class = const.BADGE_CSS_CLASSES[const.SILVER_BADGE],
-        bronze_badge_css_class = const.BADGE_CSS_CLASSES[const.BRONZE_BADGE],
 
         for tag in related_tags:
             tag_data = {
@@ -263,8 +209,6 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
             }
             ajax_data['related_tags'].append(tag_data)
 
-        for contributor in contributors:
-            ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
         #we render the template
         #from django.template import RequestContext
         questions_tpl = get_template('main_page/questions_loop.html', request)
@@ -287,45 +231,40 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
                     mimetype = 'application/json'
                 )
 
-    template_data = {
-        'active_tab': 'questions',
-        'author_name' : meta_data.get('author_name',None),
-        'contributors' : contributors,
-        'context' : paginator_context,
-        'is_unanswered' : False,#remove this from template
-        'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-        'ignored_tag_names': meta_data.get('ignored_tag_names',None),
-        'language_code': translation.get_language(),
-        'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
-        'page_class': 'main-page',
-        'page_size': search_state.page_size,
-        'query': search_state.query,
-        'questions' : page,
-        'questions_count' : paginator.count,
-        'reset_method_count': reset_method_count,
-        'scope': search_state.scope,
-        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
-        'search_tags' : search_state.tags,
-        'sort': search_state.sort,
-        'tab_id' : search_state.sort,
-        'tags' : related_tags,
-        'tag_list_type' : tag_list_type,
-        'font_size' : font_size,
-        'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
-        'update_avatar_data': schedules.should_update_avatar_data(request),
-        'query_string': search_state.query_string(),
-        'parameters': search_state.make_parameters(),
-        'feed_url': context_feed_url,
-    }
+    else: # non-AJAX branch
 
-    assert(request.is_ajax() == False)
-    #ajax request is handled in a separate branch above
+        template_data = {
+            'active_tab': 'questions',
+            'author_name' : meta_data.get('author_name',None),
+            'contributors' : contributors,
+            'context' : paginator_context,
+            'is_unanswered' : False,#remove this from template
+            'interesting_tag_names': meta_data.get('interesting_tag_names',None),
+            'ignored_tag_names': meta_data.get('ignored_tag_names',None),
+            'language_code': translation.get_language(),
+            'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
+            'page_class': 'main-page',
+            'page_size': search_state.page_size,
+            'query': search_state.query,
+            'questions' : page,
+            'questions_count' : paginator.count,
+            'reset_method_count': reset_method_count,
+            'scope': search_state.scope,
+            'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+            'search_tags' : search_state.tags,
+            'sort': search_state.sort,
+            'tab_id' : search_state.sort,
+            'tags' : related_tags,
+            'tag_list_type' : tag_list_type,
+            'font_size' : extra_tags.get_tag_font_size(related_tags),
+            'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+            'update_avatar_data': schedules.should_update_avatar_data(request),
+            'query_string': search_state.query_string(),
+            'parameters': search_state.make_parameters(),
+            'feed_url': context_feed_url,
+        }
 
-    #before = datetime.datetime.now()
-    response = render_into_skin('main_page.html', template_data, request)
-    #after = datetime.datetime.now()
-    #print after - before
-    return response
+        return render_into_skin('main_page.html', template_data, request)
 
 def tags(request):#view showing a listing of available tags - plain list
 

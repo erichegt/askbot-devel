@@ -133,7 +133,7 @@ class ThreadManager(models.Manager):
 #            #fallback to dumb title match search
 #            return self.filter(title__icontains=search_query)
 
-    def run_advanced_search(self, request_user=None, search_state=None):
+    def run_advanced_search(self, request_user=None, search_state=None):  # TODO: !! review and fix this
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -235,7 +235,7 @@ class ThreadManager(models.Manager):
         qs_thread = qs.distinct()
         ###
 
-        qs = Question.objects.filter(thread__in=qs_thread)  # HACH: GO BACK To QUESTIONS
+        qs = Post.objects.filter(post_type='question', thread__in=qs_thread)  # HACH: GO BACK To QUESTIONS, otherwise we cannot sort properly!
         qs = qs.select_related('thread__last_activity_by')
 
         if sort_method != 'relevance-desc':
@@ -263,6 +263,21 @@ class ThreadManager(models.Manager):
             meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
 
         return qs, meta_data, related_tags
+
+    #todo: this function is similar to get_response_receivers - profile this function against the other one
+    def get_thread_contributors(self, thread_list):
+        """Returns query set of Thread contributors"""
+        u_id = Post.objects.filter(post_type__in=['question', 'answer'], thread__in=thread_list).values_list('author', flat=True)
+
+        #todo: this does not belong gere - here we select users with real faces
+        #first and limit the number of users in the result for display
+        #on the main page, we might also want to completely hide fake gravatars
+        #and show only real images and the visitors - even if he does not have
+        #a real image and try to prompt him/her to upload a picture
+        from askbot.conf import settings as askbot_settings
+        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
+        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
+        return contributors
 
 
 class Thread(models.Model):
@@ -845,40 +860,6 @@ class QuestionQuerySet(models.query.QuerySet):
             activity.save()
             question_list.append(question)
         return question_list
-
-    #todo: this function is similar to get_response_receivers
-    #profile this function against the other one
-    #todo: maybe this must be a query set method, not manager method
-    def get_question_and_answer_contributors(self, question_list):
-        """returns query set of Thread contributors
-        """
-        #todo: goes to thread - queries will be simplified too
-        answer_list = []
-        #question_list = list(question_list)#important for MySQL, b/c it does not support
-        from askbot.models.answer import Answer
-        q_id = [question.id for question in question_list]
-        a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
-        u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
-        u_id = u_id.union(
-                    set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
-                )
-
-        #todo: this does not belong gere - here we select users with real faces
-        #first and limit the number of users in the result for display
-        #on the main page, we might also want to completely hide fake gravatars
-        #and show only real images and the visitors - even if he does not have
-        #a real image and try to prompt him/her to upload a picture
-        from askbot.conf import settings as askbot_settings
-        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
-        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
-        #print contributors
-        #could not optimize this query with indices so it was split into what's now above
-        #contributors = User.objects.filter(
-        #                            models.Q(questions__in=question_list) \
-        #                            | models.Q(answers__in=answer_list)
-        #                           ).distinct()
-        #contributors = list(contributors)
-        return contributors
 
     def get_author_list(self, **kwargs):
         #todo: - this is duplication - answer manager also has this method

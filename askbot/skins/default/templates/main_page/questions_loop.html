@@ -1,11 +1,11 @@
 {% import "macros.html" as macros %}
 {% cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code %}
-    {% for question in questions.object_list %}
-        {{macros.question_summary(question, query_string=query_string)}}
+    {% for question_post in questions.object_list %}
+        {{macros.question_summary(question_post.thread, question_post, query_string=query_string)}}
     {% endfor %}
 {% endcache %}
 {# comment todo: fix css here #}
-{% if questions_count == 0 %}
+{% if threadss_count == 0 %}
     {% include "main_page/nothing_found.html" %}
 {% else %}
     <div class="evenMore">

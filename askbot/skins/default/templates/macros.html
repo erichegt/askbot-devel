@@ -229,7 +229,7 @@ poor design of the data or methods on data objects #}
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro question_summary(question, extra_class=None, query_string=None) -%}
+{%- macro question_summary(thread, question, extra_class=None, query_string=None) -%}
 {%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 
