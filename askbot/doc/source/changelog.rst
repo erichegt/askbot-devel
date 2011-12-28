@@ -1,6 +1,11 @@
 Changes in Askbot
 =================
 
+Development version (not released yet)
+--------------------------------------
+* added basic slugification treatment to question titles with 
+  ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
+
 0.7.36 (Dec 20, 2011)
 ---------------------
 * bugfix and made the logo not used by default

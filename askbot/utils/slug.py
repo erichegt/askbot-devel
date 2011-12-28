@@ -8,7 +8,7 @@ slug will be simply equal to the input text
 from unidecode import unidecode
 from django.template import defaultfilters
 from django.conf import settings
-
+import re
 
 def slugify(input_text, max_length=50):
     """custom slugify function that
@@ -30,4 +30,4 @@ def slugify(input_text, max_length=50):
                 break
         return slug
     else:
-        return input_text
+        return re.sub(r'\s+', '-', input_text.strip().lower())
