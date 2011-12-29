@@ -1,9 +1,7 @@
 import re
 from django.db import models
-from django.db import connection, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-from askbot.models.base import DeletableContent
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
 
@@ -118,7 +116,7 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
-class Tag(DeletableContent):
+class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)
     created_by      = models.ForeignKey(User, related_name='created_tags')
     # Denormalised data

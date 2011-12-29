@@ -30,7 +30,7 @@ class VoteManager(models.Manager):
             return 0
 
 
-class Vote(base.UserContent):
+class Vote(models.Model):
     VOTE_UP = +1
     VOTE_DOWN = -1
     VOTE_CHOICES = (
@@ -91,8 +91,7 @@ class Vote(base.UserContent):
         return score_after - score_before
 
 
-#todo: move this class to content
-class Comment(base.UserContent):
+class Comment(models.Model):
     post_type = 'comment'
     comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
     added_at = models.DateTimeField(default = datetime.datetime.now)
