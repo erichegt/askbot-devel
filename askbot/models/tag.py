@@ -124,9 +124,14 @@ class Tag(DeletableContent):
     # Denormalised data
     used_count = models.PositiveIntegerField(default=0)
 
+    deleted     = models.BooleanField(default=False)
+    deleted_at  = models.DateTimeField(null=True, blank=True)
+    deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_tags')
+
     objects = TagManager()
 
-    class Meta(DeletableContent.Meta):
+    class Meta:
+        app_label = 'askbot'
         db_table = u'tag'
         ordering = ('-used_count', 'name')
 

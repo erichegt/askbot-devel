@@ -312,7 +312,7 @@ def _assert_user_can(
     raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
-    assert(isinstance(answer, Answer))
+    assert getattr(answer, 'post_type', '') == 'answer'
     blocked_error_message = _(
             'Sorry, you cannot accept or unaccept best answers '
             'because your account is blocked'
@@ -368,7 +368,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
     raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_accept_best_answer(self, answer = None):
-    assert(isinstance(answer, Answer))
+    assert getattr(answer, 'post_type', '') == 'answer'
     self.assert_can_unaccept_best_answer(answer)
 
 def user_assert_can_vote_for_post(
@@ -601,12 +601,12 @@ def user_assert_can_edit_post(self, post = None):
 
 
 def user_assert_can_edit_question(self, question = None):
-    assert isinstance(question, Post) and question.post_type=='question'
+    assert getattr(question, 'post_type', '') == 'question'
     self.assert_can_edit_post(question)
 
 
 def user_assert_can_edit_answer(self, answer = None):
-    assert isinstance(answer, Post) and answer.post_type=='answer'
+    assert getattr(answer, 'post_type', '') == 'answer'
     self.assert_can_edit_post(answer)
 
 
@@ -953,10 +953,12 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
+    if hasattr(comment, 'self_comment'):  # Handle Post-s
+        comment = comment.self_comment
     award_badges_signal.send(None,
         event = 'post_comment',
         actor = self,
-        context_object = comment.self_comment,
+        context_object = comment,
         timestamp = timestamp
     )
     return comment
@@ -1407,7 +1409,7 @@ def user_post_answer(
 
     self.assert_can_post_answer()
 
-    if not isinstance(question, Post) or not question.post_type == 'question':
+    if getattr(question, 'post_type', '') != 'question':
         raise TypeError('question argument must be provided')
     if body_text is None:
         raise ValueError('Body text is required to post answer')

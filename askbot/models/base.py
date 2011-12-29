@@ -5,8 +5,6 @@ import logging
 from django.db import models
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -187,35 +185,6 @@ class BaseQuerySetManager(models.Manager):
             return getattr(self.__class__, attr, *args)
         except AttributeError:
             return getattr(self.get_query_set(), attr, *args)
-
-class UserContent(models.Model):
-    user = models.ForeignKey(User, related_name='%(class)ss')
-
-    class Meta:
-        abstract = True
-        app_label = 'askbot'
-
-
-class MetaContent(models.Model):
-    """
-        Base class for Vote and Comment
-    """
-    content_type   = models.ForeignKey(ContentType)
-    object_id      = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
-
-    class Meta:
-        abstract = True
-        app_label = 'askbot'
-
-class DeletableContent(models.Model):
-    deleted     = models.BooleanField(default=False)
-    deleted_at  = models.DateTimeField(null=True, blank=True)
-    deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_%(class)ss')
-
-    class Meta:
-        abstract = True
-        app_label = 'askbot'
 
 
 class AnonymousContent(models.Model):

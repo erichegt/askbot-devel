@@ -919,7 +919,7 @@ class QuestionView(models.Model):
 class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
     thread        = models.ForeignKey(Thread)
-    user          = models.ForeignKey(User, related_name='unused_user_favorite_questions')
+    user          = models.ForeignKey(User, related_name='user_favorite_questions')
     added_at      = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:

@@ -1,4 +1,5 @@
 import datetime
+from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import html as html_utils
@@ -29,21 +30,26 @@ class VoteManager(models.Manager):
             return 0
 
 
-class Vote(base.MetaContent, base.UserContent):
+class Vote(base.UserContent):
     VOTE_UP = +1
     VOTE_DOWN = -1
     VOTE_CHOICES = (
         (VOTE_UP,   u'Up'),
         (VOTE_DOWN, u'Down'),
     )
+    user = models.ForeignKey('auth.User', related_name='votes')
+    content_type   = models.ForeignKey(ContentType)
+    object_id      = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     vote           = models.SmallIntegerField(choices=VOTE_CHOICES)
     voted_at       = models.DateTimeField(default=datetime.datetime.now)
 
     objects = VoteManager()
 
-    class Meta(base.MetaContent.Meta):
+    class Meta:
         unique_together = ('content_type', 'object_id', 'user')
+        app_label = 'askbot'
         db_table = u'vote'
 
     def __unicode__(self):
@@ -86,7 +92,7 @@ class Vote(base.MetaContent, base.UserContent):
 
 
 #todo: move this class to content
-class Comment(base.MetaContent, base.UserContent):
+class Comment(base.UserContent):
     post_type = 'comment'
     comment = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH)
     added_at = models.DateTimeField(default = datetime.datetime.now)
@@ -94,13 +100,20 @@ class Comment(base.MetaContent, base.UserContent):
     score = models.IntegerField(default = 0)
     offensive_flag_count = models.IntegerField(default = 0)
 
+    user = models.ForeignKey('auth.User', related_name='comments')
+
+    content_type   = models.ForeignKey(ContentType)
+    object_id      = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
     _urlize = True
     _use_markdown = True 
     _escape_html = True
     is_anonymous = False #comments are never anonymous - may change
 
-    class Meta(base.MetaContent.Meta):
+    class Meta:
         ordering = ('-added_at',)
+        app_label = 'askbot'
         db_table = u'comment'
 
     #these two are methods

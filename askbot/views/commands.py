@@ -25,6 +25,65 @@ from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
 
+
+def manage_inbox(request):
+    """delete, mark as new or seen user's
+    response memo objects, excluding flags
+    request data is memo_list  - list of integer id's of the ActivityAuditStatus items
+    and action_type - string - one of delete|mark_new|mark_seen
+    """
+
+    response_data = dict()
+    try:
+        if request.is_ajax():
+            if request.method == 'POST':
+                post_data = simplejson.loads(request.raw_post_data)
+                if request.user.is_authenticated():
+                    activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+                    activity_types += (const.TYPE_ACTIVITY_MENTION, )
+                    user = request.user
+                    memo_set = models.ActivityAuditStatus.objects.filter(
+                        id__in = post_data['memo_list'],
+                        activity__activity_type__in = activity_types,
+                        user = user
+                    )
+
+                    action_type = post_data['action_type']
+                    if action_type == 'delete':
+                        memo_set.delete()
+                    elif action_type == 'mark_new':
+                        memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
+                    elif action_type == 'mark_seen':
+                        memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
+                    else:
+                        raise exceptions.PermissionDenied(
+                            _('Oops, apologies - there was some error')
+                        )
+
+                    user.update_response_counts()
+
+                    response_data['success'] = True
+                    data = simplejson.dumps(response_data)
+                    return HttpResponse(data, mimetype="application/json")
+                else:
+                    raise exceptions.PermissionDenied(
+                        _('Sorry, but anonymous users cannot access the inbox')
+                    )
+            else:
+                raise exceptions.PermissionDenied('must use POST request')
+        else:
+            #todo: show error page but no-one is likely to get here
+            return HttpResponseRedirect(reverse('index'))
+    except Exception, e:
+        message = unicode(e)
+        if message == '':
+            message = _('Oops, apologies - there was some error')
+        response_data['message'] = message
+        response_data['success'] = False
+        data = simplejson.dumps(response_data)
+        return HttpResponse(data, mimetype="application/json")
+
+
 def process_vote(user = None, vote_direction = None, post = None):
     """function (non-view) that actually processes user votes
     - i.e. up- or down- votes
@@ -77,63 +136,6 @@ def process_vote(user = None, vote_direction = None, post = None):
     response_data['success'] = 1
 
     return response_data
-
-def manage_inbox(request):
-    """delete, mark as new or seen user's
-    response memo objects, excluding flags
-    request data is memo_list  - list of integer id's of the ActivityAuditStatus items
-    and action_type - string - one of delete|mark_new|mark_seen
-    """
-
-    response_data = dict()
-    try:
-        if request.is_ajax():
-            if request.method == 'POST':
-                post_data = simplejson.loads(request.raw_post_data)
-                if request.user.is_authenticated():
-                    activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-                    activity_types += (const.TYPE_ACTIVITY_MENTION, )
-                    user = request.user
-                    memo_set = models.ActivityAuditStatus.objects.filter(
-                                    id__in = post_data['memo_list'],
-                                    activity__activity_type__in = activity_types,
-                                    user = user
-                                )
-
-                    action_type = post_data['action_type']
-                    if action_type == 'delete':
-                        memo_set.delete()
-                    elif action_type == 'mark_new':
-                        memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
-                    elif action_type == 'mark_seen':
-                        memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
-                    else:
-                        raise exceptions.PermissionDenied(
-                                    _('Oops, apologies - there was some error')
-                                )
-
-                    user.update_response_counts()
-
-                    response_data['success'] = True
-                    data = simplejson.dumps(response_data)
-                    return HttpResponse(data, mimetype="application/json")
-                else:
-                    raise exceptions.PermissionDenied(
-                            _('Sorry, but anonymous users cannot access the inbox')
-                        )
-            else:
-                raise exceptions.PermissionDenied('must use POST request')
-        else:
-            #todo: show error page but no-one is likely to get here
-            return HttpResponseRedirect(reverse('index'))
-    except Exception, e:
-        message = unicode(e)
-        if message == '':
-            message = _('Oops, apologies - there was some error')
-        response_data['message'] = message
-        response_data['success'] = False
-        data = simplejson.dumps(response_data)
-        return HttpResponse(data, mimetype="application/json")
 
 
 def vote(request, id):
