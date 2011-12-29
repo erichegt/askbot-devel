@@ -14,12 +14,42 @@ class PostManager(models.Manager):
     def get_answers(self):
         return self.filter(post_type='answer')
 
-    def create_new_answer(self, *args, **kwargs):
-        #from askbot.models import Answer
-        #answer = Answer.objects.create_new(*args, **kwargs)
-        #return self.get(self_answer=answer)
-        return None # TODO: Update with proper answer Post creation
+    def create_new_answer(self, thread, author, added_at, text, wiki=False, email_notify=False):
+        # TODO: Some of this code will go to Post.objects.create_new
+        answer = Post(
+            thread=thread,
+            author=author,
+            added_at=added_at,
+            wiki=wiki,
+            text=text,
+            #.html field is denormalized by the save() call
+        )
+        if answer.wiki:
+            answer.last_edited_by = answer.author
+            answer.last_edited_at = added_at
+            answer.wikified_at = added_at
 
+        answer.parse_and_save(author=author)
+
+        answer.add_revision(
+            author=author,
+            revised_at=added_at,
+            text=text,
+            comment = const.POST_STATUS['default_version'],
+        )
+
+        #update thread data
+        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author)
+        thread.answer_count +=1
+        thread.save()
+
+        #set notification/delete
+        if email_notify:
+            thread.followed_by.add(author)
+        else:
+            thread.followed_by.remove(author)
+
+        return answer
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
@@ -176,8 +206,7 @@ class PostRevision(models.Model):
     )
     REVISION_TYPE_CHOICES_DICT = dict(REVISION_TYPE_CHOICES)
 
-    answer = models.ForeignKey('askbot.Answer', related_name='revisions', null=True, blank=True)
-    question = models.ForeignKey('askbot.Question', related_name='revisions', null=True, blank=True)
+    post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
 
     revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES)
 
@@ -198,7 +227,7 @@ class PostRevision(models.Model):
         # INFO: This `unique_together` constraint might be problematic for databases in which
         #       2+ NULLs cannot be stored in an UNIQUE column.
         #       As far as I know MySQL, PostgreSQL and SQLite allow that so we're on the safe side.
-        unique_together = (('answer', 'revision'), ('question', 'revision'))
+        unique_together = ('post', 'revision')
         ordering = ('-revision',)
         app_label = 'askbot'
 

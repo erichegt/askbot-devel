@@ -305,7 +305,7 @@ class Thread(models.Model):
                                             blank=True
                                         )
 
-    accepted_answer = models.ForeignKey('askbot.Answer', null=True, blank=True)
+    accepted_answer_post = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
 
     objects = ThreadManager()
@@ -909,7 +909,7 @@ if getattr(settings, 'USE_SPHINX_SEARCH', False):
 
         
 class QuestionView(models.Model):
-    question = models.ForeignKey(Question, related_name='viewed')
+    question_post = models.ForeignKey(Post, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')
     when = models.DateTimeField()
 

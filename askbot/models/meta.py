@@ -38,9 +38,7 @@ class Vote(models.Model):
         (VOTE_DOWN, u'Down'),
     )
     user = models.ForeignKey('auth.User', related_name='votes')
-    content_type   = models.ForeignKey(ContentType)
-    object_id      = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    voted_post = models.ForeignKey('Post', related_name='post_votes')
 
     vote           = models.SmallIntegerField(choices=VOTE_CHOICES)
     voted_at       = models.DateTimeField(default=datetime.datetime.now)
@@ -48,7 +46,7 @@ class Vote(models.Model):
     objects = VoteManager()
 
     class Meta:
-        unique_together = ('content_type', 'object_id', 'user')
+        unique_together = ('user', 'voted_post')
         app_label = 'askbot'
         db_table = u'vote'
 
