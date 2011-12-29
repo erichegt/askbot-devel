@@ -298,7 +298,7 @@ for the purposes of the AJAX comment editor #}
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
-                        <a class="author" href="{{comment.user.get_profile_url()}}">{{comment.user.username}}</a>
+                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
                         <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
                         {% if user|can_edit_comment(comment) %}
                             &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>

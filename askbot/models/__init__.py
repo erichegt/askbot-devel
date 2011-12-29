@@ -20,12 +20,12 @@ from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.question import Question, Thread
+from askbot.models.question import Thread
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.answer import Answer, AnonymousAnswer
+from askbot.models.answer import AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.meta import Vote, Comment
+from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.post import Post, PostRevision
 from askbot.models import signals
@@ -608,12 +608,15 @@ def user_assert_can_edit_answer(self, answer = None):
 
 
 def user_assert_can_delete_post(self, post = None):
-    if isinstance(post, Question):
+    post_type = getattr(post, 'post_type', '')
+    if post_type == 'question':
         self.assert_can_delete_question(question = post)
-    elif isinstance(post, Answer):
+    elif post_type == 'answer':
         self.assert_can_delete_answer(answer = post)
-    elif isinstance(post, Comment):
+    elif post_type == 'comment':
         self.assert_can_delete_comment(comment = post)
+    else:
+        raise ValueError('Invalid post_type!')
 
 def user_assert_can_restore_post(self, post = None):
     """can_restore_rule is the same as can_delete
@@ -632,11 +635,8 @@ def user_assert_can_delete_question(self, question = None):
     if self == question.get_owner():
         #if there are answers by other people,
         #then deny, unless user in admin or moderator
-        answer_count = question.answers.exclude(
-                                            author = self,
-                                        ).exclude(
-                                            score__lte = 0
-                                        ).count()
+        answer_count = question.thread.all_answers()\
+                        .exclude(author=self).exclude(score__lte=0).count()
 
         if answer_count > 0:
             if self.is_administrator() or self.is_moderator():
@@ -684,7 +684,7 @@ def user_assert_can_delete_answer(self, answer = None):
 
 
 def user_assert_can_close_question(self, question = None):
-    assert(isinstance(question, Question) == True)
+    assert(getattr(question, 'post_type', '') == 'question')
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
                 'you cannot close questions'
@@ -950,8 +950,6 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
-    if hasattr(comment, 'self_comment'):  # Handle Post-s
-        comment = comment.self_comment
     award_badges_signal.send(None,
         event = 'post_comment',
         actor = self,
@@ -1281,7 +1279,7 @@ def user_post_question(
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
                                 )
-    question = thread._question()
+    question = thread._question_post()
     if question.author != self:
         raise ValueError('question.author != self')
     question.author = self # HACK: Some tests require that question.author IS exactly the same object as self-user (kind of identity map which Django doesn't provide),
@@ -1293,12 +1291,9 @@ def user_edit_comment(self, comment_post=None, body_text = None):
     change the comments timestamp and no signals are sent
     """
     self.assert_can_edit_comment(comment_post)
-    comment_post.self_comment.comment = body_text
-    comment_post.self_comment.parse_and_save(author = self)
+    comment_post.text = body_text
+    comment_post.parse_and_save(author = self)
 
-    # HACK: We have to update this `comment_post` instance to reflect comment changes
-    comment_post.text = comment_post.self_comment.comment
-    comment_post.html = comment_post.self_comment.html
 
 @auto_now_timestamp
 def user_edit_question(
@@ -1431,7 +1426,7 @@ def user_post_answer(
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
-        context_object = answer_post.self_answer
+        context_object = answer_post
     )
     return answer_post
 
@@ -1443,21 +1438,14 @@ def user_visit_question(self, question = None, timestamp = None):
     and remove pending on-screen notifications about anything in
     the post - question, answer or comments
     """
-    if not isinstance(question, Question):
-        raise TypeError('question type expected, have %s' % type(question))
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
     try:
-        question_view = QuestionView.objects.get(
-                                        who = self,
-                                        question = question
-                                    )
+        question_view = QuestionView.objects.get(who=self, question=question)
     except QuestionView.DoesNotExist:
-        question_view = QuestionView(
-                                who = self,
-                                question = question
-                            )
+        question_view = QuestionView(who=self, question=question)
+
     question_view.when = timestamp
     question_view.save()
 
@@ -2574,7 +2562,7 @@ def record_update_tags(thread, tags, user, timestamp, **kwargs):
             timestamp = timestamp
         )
 
-    question = thread._question()
+    question = thread._question_post()
 
     activity = Activity(
                     user=user,
@@ -2595,10 +2583,10 @@ def record_favorite_question(instance, created, **kwargs):
                         active_at=datetime.datetime.now(),
                         content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_FAVORITE,
-                        question=instance.thread._question()
+                        question=instance.thread._question_post()
                     )
         activity.save()
-        recipients = instance.thread._question().get_author_list(
+        recipients = instance.thread._question_post().get_author_list(
                                             exclude_list = [instance.user]
                                         )
         activity.add_recipients(recipients)
@@ -2664,7 +2652,7 @@ django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
-django_signals.post_save.connect(record_answer_accepted, sender=Answer)
+#django_signals.post_save.connect(record_answer_accepted, sender=Answer)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(
                             record_favorite_question,
@@ -2685,28 +2673,28 @@ if 'avatar' in django_settings.INSTALLED_APPS:
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
-signals.delete_question_or_answer.connect(record_delete_question, sender=Question)
-signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
-signals.flag_offensive.connect(record_flag_offensive, sender=Question)
-signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
-signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Question)
-signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Answer)
+#signals.delete_question_or_answer.connect(record_delete_question, sender=Question)
+#signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
+#signals.flag_offensive.connect(record_flag_offensive, sender=Question)
+#signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
+#signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Question)
+#signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
-signals.post_updated.connect(
-                           record_post_update_activity,
-                           sender=Comment
-                       )
-signals.post_updated.connect(
-                           record_post_update_activity,
-                           sender=Answer
-                       )
-signals.post_updated.connect(
-                           record_post_update_activity,
-                           sender=Question
-                       )
+#signals.post_updated.connect(
+#                           record_post_update_activity,
+#                           sender=Comment
+#                       )
+#signals.post_updated.connect(
+#                           record_post_update_activity,
+#                           sender=Answer
+#                       )
+#signals.post_updated.connect(
+#                           record_post_update_activity,
+#                           sender=Question
+#                       )
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others
@@ -2720,19 +2708,17 @@ __all__ = [
         'signals',
 
         'Thread',
-        'Question',
+
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
 
-        'Answer',
         'AnonymousAnswer',
 
         'Post',
         'PostRevision',
 
         'Tag',
-        'Comment',
         'Vote',
         'MarkedTag',
 
@@ -2743,7 +2729,6 @@ __all__ = [
         'Activity',
         'ActivityAuditStatus',
         'EmailFeedSetting',
-        #'AuthKeyUserAssociation',
 
         'User',
 

@@ -10,7 +10,7 @@
     {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.question.get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]
 </h1>
 <div id="main-body" class="ask-body">
-    <form id="fmedit" action="{% url edit_answer answer.self_answer_id %}" method="post" >{% csrf_token %}
+    <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >{% csrf_token %}
         <label for="id_revision" >{% trans %}revision{% endtrans %}:</label> <br/> 
         {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
         <div style="vertical-align:middle">

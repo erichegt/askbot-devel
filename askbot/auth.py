@@ -10,7 +10,7 @@ User.assert_can...
 import datetime
 from django.db import transaction
 from askbot.models import Repute
-from askbot.models import Answer
+#from askbot.models import Answer
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 

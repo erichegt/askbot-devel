@@ -1,5 +1,5 @@
 from django.contrib.sitemaps import Sitemap
-from askbot.models import Question
+#from askbot.models import Question
 
 class QuestionsSitemap(Sitemap):
     changefreq = 'daily'

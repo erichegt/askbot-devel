@@ -292,7 +292,7 @@ def ask(request):#view used to ask a new question
 def retag_question(request, id):
     """retag question view
     """
-    question = get_object_or_404(models.Post, self_question=id)
+    question = get_object_or_404(models.Post, id=id)
 
     try:
         request.user.assert_can_retag_question(question)
@@ -344,7 +344,7 @@ def retag_question(request, id):
 def edit_question(request, id):
     """edit question view
     """
-    question = get_object_or_404(models.Post, self_question=id)
+    question = get_object_or_404(models.Post, id=id)
     latest_revision = question.get_latest_revision()
     revision_form = None
     try:
@@ -431,7 +431,7 @@ def edit_question(request, id):
 @csrf.csrf_protect
 @decorators.check_spam('text')
 def edit_answer(request, id):
-    answer = get_object_or_404(models.Post, self_answer=id)
+    answer = get_object_or_404(models.Post, id=id)
     latest_revision = answer.get_latest_revision()
     try:
         request.user.assert_can_edit_answer(answer)
@@ -498,7 +498,7 @@ def answer(request, id):#process a new answer
 
     authenticated users post directly
     """
-    question = get_object_or_404(models.Post, post_type='question', self_question=id)
+    question = get_object_or_404(models.Post, post_type='question', id=id)
     if request.method == "POST":
         form = forms.AnswerForm(question, request.user, request.POST)
         if form.is_valid():
@@ -586,9 +586,9 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     id = request.REQUEST['post_id']
     if post_type == 'question':
-        obj = get_object_or_404(models.Post, self_question=id)
+        obj = get_object_or_404(models.Post, id=id)
     else: #if post_type == 'answer':
-        obj = get_object_or_404(models.Post, self_answer=id)
+        obj = get_object_or_404(models.Post, id=id)
 
     if request.method == "GET":
         response = __generate_comments_json(obj, user)
@@ -614,15 +614,16 @@ def edit_comment(request):
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 
     comment_id = int(request.POST['comment_id'])
-    comment_post = models.Post.objects.get(self_comment=comment_id)
+    comment_post = models.Post.objects.get(id=comment_id)
 
     request.user.edit_comment(comment_post=comment_post, body_text = request.POST['comment'])
 
     is_deletable = template_filters.can_delete_comment(comment_post.author, comment_post)
     is_editable = template_filters.can_edit_comment(comment_post.author, comment_post)
 
-    return {'id' : comment_post.self_comment.id,
-        'object_id': comment_post.self_comment.content_object.id,
+    return {
+        'id' : comment_post.id,
+        'object_id': comment_post.parent.id,
         'comment_age': diff_date(comment_post.added_at),
         'html': comment_post.html,
         'user_display_name': comment_post.author.username,
@@ -631,7 +632,7 @@ def edit_comment(request):
         'is_deletable': is_deletable,
         'is_editable': is_editable,
         'score': comment_post.score,
-        'voted': comment_post.self_comment.is_upvoted_by(request.user),
+        'voted': comment_post.is_upvoted_by(request.user),
     }
 
 def delete_comment(request):

@@ -5,12 +5,12 @@ from askbot.models import content
 from askbot import const
 
 
-class Answer(content.Content):
-    post_type = 'answer'
-    question = models.ForeignKey('Question', related_name='answers')
-
-    class Meta(content.Content.Meta):
-        db_table = u'answer'
+#class Answer(content.Content):
+#    post_type = 'answer'
+#    question = models.ForeignKey('Question', related_name='answers')
+#
+#    class Meta(content.Content.Meta):
+#        db_table = u'answer'
 
 
 class AnonymousAnswer(AnonymousContent):

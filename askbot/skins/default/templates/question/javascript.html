@@ -46,7 +46,7 @@
         var answer_sort_tab = "{{ tab_id }}";
         $("#" + answer_sort_tab).attr('className',"on");
         
-        Vote.init({{ question.self_question_id }}, '{{ thread.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
+        Vote.init({{ question.id }}, '{{ thread.title|slugify }}', '{{ question.author.id }}','{{ request.user.id }}');
         
         {% if not thread.closed and request.user.is_authenticated %}initEditor();{% endif %}
         

@@ -24,7 +24,6 @@ from django.utils.translation import ugettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
-from askbot.models.meta import Comment
 from askbot.models.question import FavoriteQuestion as Fave#name collision
 from askbot import const
 from askbot.conf import settings as askbot_settings

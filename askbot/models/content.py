@@ -1,7 +1,7 @@
 import datetime
+import operator
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core import urlresolvers
 from django.db import models
@@ -13,9 +13,8 @@ from django.core import exceptions as django_exceptions
 
 from askbot.utils.slug import slugify
 from askbot import const
-from askbot.models.meta import Comment, Vote
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
+from askbot.models.tag import MarkedTag, tags_match_some_wildcard
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
@@ -51,8 +50,6 @@ class Content(models.Model):
 
     html = models.TextField(null=True)#html rendition of the latest revision
     text = models.TextField(null=True)#denormalized copy of latest revision
-    comments = generic.GenericRelation(Comment)
-    votes = generic.GenericRelation(Vote)
 
     # Denormalised data
     summary = models.CharField(max_length=180)
@@ -129,20 +126,15 @@ class Content(models.Model):
         if visitor.is_anonymous():
             return self.comments.all().order_by('id')
         else:
-            comment_content_type = ContentType.objects.get_for_model(Comment)
-            #a fancy query to annotate comments with the visitor votes
-            comments = self.comments.extra(
-                select = SortedDict([
-                            (
-                                'upvoted_by_user',
-                                'SELECT COUNT(*) from vote, comment '
-                                'WHERE vote.user_id = %s AND '
-                                'vote.content_type_id = %s AND '
-                                'vote.object_id = comment.id',
-                            )
-                        ]),
-                select_params = (visitor.id, comment_content_type.id)
-            ).order_by('id')
+            upvoted_by_user = list(self.comments.filter(votes__user=visitor))
+            not_upvoted_by_user = list(self.comments.exclude(votes__user=visitor))
+
+            for c in upvoted_by_user:
+                c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
+
+            comments = upvoted_by_user + not_upvoted_by_user
+            comments.sort(key=operator.attrgetter('id'))
+
             return comments
 
     #todo: maybe remove this wnen post models are unified

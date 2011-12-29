@@ -305,7 +305,7 @@ class Thread(models.Model):
                                             blank=True
                                         )
 
-    accepted_answer_post = models.ForeignKey(Post, null=True, blank=True, related_name='+')
+    accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
 
     objects = ThreadManager()
@@ -313,14 +313,11 @@ class Thread(models.Model):
     class Meta:
         app_label = 'askbot'
 
-    def _question(self):
-        return Question.objects.get(thread=self)
-
     def _question_post(self):
-        return Post.objects.get(thread=self)
+        return Post.objects.get(post_type='question', thread=self)
 
     def get_absolute_url(self):
-        return self._question().get_absolute_url()
+        return self._question_post().get_absolute_url()
 
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
@@ -361,7 +358,7 @@ class Thread(models.Model):
     def get_title(self):
         if self.closed:
             attr = const.POST_STATUS['closed']
-        elif self._question().deleted:
+        elif self._question_post().deleted:
             attr = const.POST_STATUS['deleted']
         else:
             attr = None
@@ -372,6 +369,9 @@ class Thread(models.Model):
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
+
+    def all_answers(self):
+        return self.posts.get_answers()
 
     def get_answers(self, user=None):
         """returns query set for answers to this question
@@ -433,8 +433,8 @@ class Thread(models.Model):
         #note: see note for the is_anonymous field
         #it is important that update method is called - not save,
         #because we do not want the signals to fire here
-        thread_question = self._question()
-        Question.objects.filter(id=thread_question.id).update(is_anonymous=False)
+        thread_question = self._question_post()
+        Post.objects.filter(id=thread_question.id).update(is_anonymous=False)
         thread_question.revisions.all().update(is_anonymous=False)
 
     def update_tags(self, tagnames = None, user = None, timestamp = None):
@@ -451,7 +451,7 @@ class Thread(models.Model):
 
         A signal tags updated is sent
 
-        *IMPORTANT*: self._question() has to exist when update_tags() is called!
+        *IMPORTANT*: self._question_post() has to exist when update_tags() is called!
         """
         previous_tags = list(self.tags.all())
 
@@ -525,7 +525,7 @@ class Thread(models.Model):
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
 
-        thread_question = self._question()
+        thread_question = self._question_post()
 
         self.tagnames = tagnames
         self.save()
@@ -886,30 +886,30 @@ class QuestionManager(BaseQuerySetManager):
         return QuestionQuerySet(self.model)
 
 
-class Question(content.Content):
-    post_type = 'question'
-    thread = models.ForeignKey('Thread', unique=True, related_name='questions')
-
-    objects = QuestionManager()
-
-    class Meta(content.Content.Meta):
-        db_table = u'question'
-
-
-if getattr(settings, 'USE_SPHINX_SEARCH', False):
-    from djangosphinx.models import SphinxSearch
-    Question.add_to_class(
-        'sphinx_search',
-        SphinxSearch(
-            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
-            mode = 'SPH_MATCH_ALL'
-        )
-    )
+#class Question(content.Content):
+#    post_type = 'question'
+#    thread = models.ForeignKey('Thread', unique=True, related_name='questions')
+#
+#    objects = QuestionManager()
+#
+#    class Meta(content.Content.Meta):
+#        db_table = u'question'
+#
+#
+#if getattr(settings, 'USE_SPHINX_SEARCH', False):
+#    from djangosphinx.models import SphinxSearch
+#    Question.add_to_class(
+#        'sphinx_search',
+#        SphinxSearch(
+#            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
+#            mode = 'SPH_MATCH_ALL'
+#        )
+#    )
 
 
         
 class QuestionView(models.Model):
-    question_post = models.ForeignKey(Post, related_name='viewed')
+    question = models.ForeignKey(Post, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')
     when = models.DateTimeField()
 

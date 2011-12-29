@@ -47,7 +47,7 @@ from askbot.skins.loaders import render_into_skin, get_template#jinja2 template 
 
 # used in index page
 #todo: - take these out of const or settings
-from askbot.models import Answer, Vote
+from askbot.models import Post, Vote
 
 INDEX_PAGE_SIZE = 30
 INDEX_AWARD_SIZE = 15
@@ -389,11 +389,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #in addition - if url points to a comment and the comment
         #is for the answer - we need the answer object
         try:
-            show_comment = models.Post.objects.get(self_comment=show_comment)
-            if str(show_comment.thread._question_post().self_question_id) != id:
+            show_comment = models.Post.objects.get(id=show_comment.id)
+            if str(show_comment.thread._question_post().id) != id:
                 return HttpResponseRedirect(show_comment.thread.get_absolute_url())
             show_post = show_comment.parent
-            show_comment.self_comment.assert_is_visible_to(request.user)
+            show_comment.assert_is_visible_to(request.user)
         except models.Comment.DoesNotExist:
             error_message = _(
                 'Sorry, the comment you are looking for has been '
@@ -415,7 +415,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
         try:
-            show_post = get_object_or_404(models.Post, self_answer=show_answer)
+            show_post = get_object_or_404(models.Post, id=show_answer)
             if str(show_post.question_id) != id:
                 return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
@@ -425,8 +425,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load question and maybe refuse showing deleted question
     try:
-        question_post = get_object_or_404(models.Post, self_question=id)
-        question_post.self_question.assert_is_visible_to(request.user)
+        question_post = get_object_or_404(models.Post, id=id)
+        question_post.assert_is_visible_to(request.user)
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
@@ -446,7 +446,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load answers
     answers = thread.get_answers(user = request.user)
-    answers = answers.select_related('self_answer', 'thread', 'author', 'last_edited_by')
+    answers = answers.select_related('thread', 'author', 'last_edited_by')
     answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
 
     # TODO: Instead of fetching answer posts, fetch all posts that belong to this thread,
@@ -460,15 +460,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = list(answers)
     
     if thread.accepted_answer: # Put the accepted answer to front
-        accepted_post = models.Post.objects.get(self_answer=thread.accepted_answer)
-        answers.remove(accepted_post)
-        answers.insert(0, accepted_post)
+        answers.remove(thread.accepted_answer)
+        answers.insert(0, thread.accepted_answer)
 
     user_answer_votes = {}
     if request.user.is_authenticated():
-        votes = Vote.objects.filter(user=request.user, content_type=ContentType.objects.get_for_model(Answer), object_id__in=[answer.self_answer_id for answer in answers])
+        votes = Vote.objects.filter(user=request.user, voted_post__in=answers)
         for vote in votes:
-            user_answer_votes[vote.object_id] = int(vote) # INFO: vote.object_id == Answer.id == Post.self_answer_id
+            user_answer_votes[vote.post.id] = int(vote)
 
     filtered_answers = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
 
@@ -476,7 +475,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     show_comment_position = None
     if show_comment:
         show_page = show_comment.get_page_number(answer_posts=filtered_answers)
-        show_comment_position = show_comment.self_comment.get_order_number()
+        show_comment_position = show_comment.get_order_number()
     elif show_answer:
         show_page = show_post.get_page_number(answer_posts=filtered_answers)
 
@@ -494,7 +493,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if 'question_view_times' not in request.session:
             request.session['question_view_times'] = {}
 
-        last_seen = request.session['question_view_times'].get(question_post.self_question_id, None)
+        last_seen = request.session['question_view_times'].get(question_post.id, None)
         updated_when, updated_who = thread.get_last_update_info()
 
         if updated_who != request.user:
@@ -504,7 +503,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             else:
                 update_view_count = True
 
-        request.session['question_view_times'][question_post.self_question_id] = \
+        request.session['question_view_times'][question_post.id] = \
                                                     datetime.datetime.now()
 
         if update_view_count:
@@ -513,14 +512,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #2) question view count per user and clear response displays
         if request.user.is_authenticated():
             #get response notifications
-            request.user.visit_question(question_post.self_question)
+            request.user.visit_question(question_post)
 
         #3) send award badges signal for any badges
         #that are awarded for question views
         award_badges_signal.send(None,
                         event = 'view_question',
                         actor = request.user,
-                        context_object = question_post.self_question,
+                        context_object = question_post,
                     )
 
     paginator_data = {
@@ -539,7 +538,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     favorited = thread.has_favorite_by_user(request.user)
     user_question_vote = 0
     if request.user.is_authenticated():
-        votes = question_post.self_question.votes.select_related().filter(user=request.user)
+        votes = question_post.votes.select_related().filter(user=request.user)
         try:
             user_question_vote = int(votes[0])
         except IndexError:
@@ -551,8 +550,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'question' : question_post,
         'thread': thread,
         'user_question_vote' : user_question_vote,
-        'question_comment_count': question_post.self_question.comments.count(),
-        'answer' : AnswerForm(question_post.self_question, request.user),
+        'question_comment_count': question_post.comments.count(),
+        'answer' : AnswerForm(question_post, request.user),
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
         'tags' : thread.tags.all(),
@@ -570,11 +569,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
 def revisions(request, id, object_name=None):
     if object_name == 'Question':
-        post = get_object_or_404(models.Post, post_type='question', self_question=id)
-        revisions = list(models.PostRevision.objects.filter(question=post.self_question))
+        post = get_object_or_404(models.Post, post_type='question', id=id)
+        revisions = list(models.PostRevision.objects.filter(question=post))
     else:
-        post = get_object_or_404(models.Post, post_type='answer', self_answer=id)
-        revisions = list(models.PostRevision.objects.filter(answer=post.self_answer))
+        post = get_object_or_404(models.Post, post_type='answer', id=id)
+        revisions = list(models.PostRevision.objects.filter(answer=post))
     revisions.reverse()
     for i, revision in enumerate(revisions):
         revision.html = revision.as_html()
@@ -601,7 +600,7 @@ def get_comment(request):
     and request must be ajax
     """
     id = int(request.GET['id'])
-    comment = models.Post.objects.get(post_type='comment', self_comment=id)
+    comment = models.Post.objects.get(post_type='comment', id=id)
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.text}
 
@@ -617,7 +616,7 @@ def get_question_body(request):
     page = paginator.page(search_state.page)
     questions_dict = {}
     for question in page.object_list:
-        questions_dict['question-%s' % question.self_question_id] = question.summary
+        questions_dict['question-%s' % question.id] = question.summary
 
     return {'questions-titles': questions_dict}
 

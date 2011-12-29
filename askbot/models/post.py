@@ -53,18 +53,13 @@ class PostManager(models.Manager):
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
-    parent = models.ForeignKey('Post', blank=True, null=True, related_name='comment_posts') # Answer or Question for Comment
-
-    self_answer = models.ForeignKey('Answer', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
-    self_question = models.ForeignKey('Question', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
-    self_comment = models.ForeignKey('Comment', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
-
-    question = property(fget=lambda self: self.thread._question_post()) # to simulate Answer model
-    question_id = property(fget=lambda self: self.thread._question_post().id) # to simulate Answer model
-
+    parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', related_name='posts')
 
     objects = PostManager()
+
+    question = property(fget=lambda self: self.thread._question_post()) # to simulate Answer model
+    question_id = property(fget=lambda self: self.thread._question_post().id) # to simulate Answer model
 
     class Meta:
         app_label = 'askbot'
@@ -78,12 +73,12 @@ class Post(content.Content):
         if self.is_answer():
             return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % \
                     {
-                        'base': urlresolvers.reverse('question', args=[self.self_answer.question_id]),
+                        'base': urlresolvers.reverse('question', args=[self.thread._question_post().id]),
                         'slug': django_urlquote(slugify(self.thread.title)),
-                        'id': self.self_answer_id
+                        'id': self.id
                     }
         elif self.is_question():
-            url = urlresolvers.reverse('question', args=[self.self_question_id])
+            url = urlresolvers.reverse('question', args=[self.id])
             if no_slug == True:
                 return url
             else:
@@ -92,15 +87,19 @@ class Post(content.Content):
 
 
     def delete(self, *args, **kwargs):
-        # Redirect the deletion to the relevant Question or Answer instance
         # WARNING: This is not called for batch deletions so watch out!
-        real_post = self.self_answer or self.self_question
-        real_post.delete(*args, **kwargs)
+        # TODO: Restore specialized Comment.delete() functionality!
+        self.delete(*args, **kwargs)
 
     def is_answer_accepted(self):
         if not self.is_answer():
             raise NotImplementedError
-        return self.thread.accepted_answer_id and (self.thread.accepted_answer_id == self.self_answer_id)
+        return self == self.thread.accepted_answer
+
+    def accepted(self):
+        if self.is_answer():
+            return self.question.thread.accepted_answer == self
+        raise NotImplementedError
 
     def get_page_number(self, answer_posts):
         """When question has many answers, answers are
@@ -123,54 +122,15 @@ class Post(content.Content):
         return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
 
     def revisions(self):
-        if self.self_question:
-            return self.self_question.revisions.all()
-        elif self.self_answer:
-            return self.self_answer.revisions.all()
-        raise NotImplementedError
+        return self.revisions.all()
 
     def get_latest_revision(self):
         return self.revisions().order_by('-revised_at')[0]
 
     def apply_edit(self, *kargs, **kwargs):
-        post = (self.self_answer or self.self_question)
-        if not post:
+        if self.post_type not in ('question', 'answer'):
             raise NotImplementedError
         return post.apply_edit(*kargs, **kwargs)
-
-    def add_comment(self, *args, **kwargs):
-        if self.self_question:
-            comment = self.self_question.add_comment(*args, **kwargs)
-        elif self.self_answer:
-            comment = self.self_answer.add_comment(*args, **kwargs)
-        else:
-            raise NotImplementedError
-        return self.__class__.objects.get(self_comment=comment)
-
-    def get_comments(self, *args, **kwargs):
-        if self.self_question:
-            comments = self.self_question.get_comments(*args, **kwargs)
-        elif self.self_answer:
-            comments = self.self_answer.get_comments(*args, **kwargs)
-        else:
-            raise NotImplementedError
-        # TODO: Convert `comments` to Post-s (there are lots of dependencies, though)
-        return comments
-
-    def accepted(self):
-        if self.is_answer():
-            return self.question.thread.accepted_answer == self
-        raise NotImplementedError
-
-
-
-for field in Post._meta.fields:
-    if isinstance(field, models.ForeignKey):
-        # HACK: Patch all foreign keys to not cascade when deleted
-        # This is required because foreign keys on Post create normal backreferences
-        # in the destination models, so e.g. deleting User instance would trigger Post instance deletion,
-        # which is not what should happen.
-        field.rel.on_delete = models.DO_NOTHING
 
 
 class PostRevisionManager(models.Manager):

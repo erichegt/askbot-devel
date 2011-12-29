@@ -165,7 +165,7 @@ class Activity(models.Model):
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     #todo: remove this denorm question field when Post model is set up
-    question_post = models.ForeignKey('Post', null=True)
+    question = models.ForeignKey('Post', null=True)
 
     is_auditted = models.BooleanField(default=False)
     #add summary field.

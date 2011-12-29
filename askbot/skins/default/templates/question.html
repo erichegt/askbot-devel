@@ -15,7 +15,7 @@
         {# ==== BEGIN: question/question_card.html ==== #}
             <div class="vote-buttons">
                 {# ==== BEGIN: question/question_vote_buttons.html ==== #}
-                    {{ macros.post_vote_buttons(post = question.self_question, visitor_vote = user_question_vote) }}
+                    {{ macros.post_vote_buttons(post = question, visitor_vote = user_question_vote) }}
                 {# ==== END: question/question_vote_buttons.html ==== #}
                 {# ==== BEGIN: question/share_buttons.html ==== #}
                     {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', icon = True) }}{% endif %}
@@ -45,9 +45,9 @@
                                 {{ macros.post_contributor_info(post, "original_author", post.wiki, min_rep_to_edit_wiki) }}
                                 {{ macros.post_contributor_info(post, "last_updater", post.wiki, min_rep_to_edit_wiki) }}
                             {%- endmacro -%}
-                            {{ post_last_updater_and_creator_info(question.self_question, settings.MIN_REP_TO_EDIT_WIKI) }}
+                            {{ post_last_updater_and_creator_info(question, settings.MIN_REP_TO_EDIT_WIKI) }}
                             {# ==== START: "question/question_author_info.html"
-                            {{ macros.post_last_updater_and_creator_info(question.self_question, settings.MIN_REP_TO_EDIT_WIKI) }}
+                            {{ macros.post_last_updater_and_creator_info(question, settings.MIN_REP_TO_EDIT_WIKI) }}
                                ==== END: "question/question_author_info.html" #}
                         </div>
                         {{ question.html }}
@@ -55,52 +55,52 @@
                     <div id="question-controls" class="post-controls">
                         {# ==== START: include "question/question_controls.html" #}
                             {% set pipe=joiner('<span class="sep">|</span>') %}
-                            {% if request.user|can_edit_post(question.self_question) %}{{ pipe() }}
-                                <a class="question-edit" href="{% url edit_question question.self_question_id %}">{% trans %}edit{% endtrans %}</a>
+                            {% if request.user|can_edit_post(question) %}{{ pipe() }}
+                                <a class="question-edit" href="{% url edit_question question.id %}">{% trans %}edit{% endtrans %}</a>
                             {% endif %}
-                            {% if request.user|can_retag_question(question.self_question) %}{{ pipe() }}
-                                <a id="retag" class="question-retag"href="{% url retag_question question.self_question_id %}">{% trans %}retag{% endtrans %}</a>
+                            {% if request.user|can_retag_question(question) %}{{ pipe() }}
+                                <a id="retag" class="question-retag"href="{% url retag_question question.id %}">{% trans %}retag{% endtrans %}</a>
                                 <script type="text/javascript">
-                                    var retagUrl = "{% url retag_question question.self_question_id %}";
+                                    var retagUrl = "{% url retag_question question.id %}";
                                 </script>
                             {% endif %}
                             {% if thread.closed %}
-                                {% if request.user|can_reopen_question(question.self_question) %}{{ pipe() }}
-                                    <a  class="question-close" href="{% url reopen question.self_question_id %}">{% trans %}reopen{% endtrans %}</a>
+                                {% if request.user|can_reopen_question(question) %}{{ pipe() }}
+                                    <a  class="question-close" href="{% url reopen question.id %}">{% trans %}reopen{% endtrans %}</a>
                                 {% endif %}
                             {% else %}
-                                {% if request.user|can_close_question(question.self_question) %}{{ pipe() }}
-                                    <a class="question-close" href="{% url close question.self_question_id %}">{% trans %}close{% endtrans %}</a>
+                                {% if request.user|can_close_question(question) %}{{ pipe() }}
+                                    <a class="question-close" href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
                                 {% endif %}
                             {% endif %}
-                            {% if request.user|can_flag_offensive(question.self_question) %}{{ pipe() }}
-                                <span id="question-offensive-flag-{{ question.self_question_id }}" class="offensive-flag"
+                            {% if request.user|can_flag_offensive(question) %}{{ pipe() }}
+                                <span id="question-offensive-flag-{{ question.id }}" class="offensive-flag"
                                       title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                                     <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
-                                    {% if request.user|can_see_offensive_flags(question.self_question) %}
+                                    {% if request.user|can_see_offensive_flags(question) %}
                                         <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
                                     {% endif %}
                                 </span>
-                            {% elif request.user|can_remove_flag_offensive(question.self_question)%}{{ pipe() }}
-                                <span id="question-offensive-flag-remove-{{ question.self_question_id }}" class="offensive-flag"
+                            {% elif request.user|can_remove_flag_offensive(question)%}{{ pipe() }}
+                                <span id="question-offensive-flag-remove-{{ question.id }}" class="offensive-flag"
                                       title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                                     <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
-                                    {% if request.user|can_see_offensive_flags(question.self_question) %}
+                                    {% if request.user|can_see_offensive_flags(question) %}
                                         <span class="darkred">{% if question.offensive_flag_count > 0 %}({{ question.offensive_flag_count }}){% endif %}</span>
                                     {% endif %}
                                 </span>
                             {% endif %}
-                            {% if request.user|can_delete_post(question.self_question) %}{{ pipe() }}
-                                <a id="question-delete-link-{{question.self_question_id}}" class="question-delete">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                            {% if request.user|can_delete_post(question) %}{{ pipe() }}
+                                <a id="question-delete-link-{{question.id}}" class="question-delete">{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
                             {% endif %}
                         {# ==== END: include "question/question_controls.html" #}
                     </div>
                     {# ==== START: question/question_comments.html ==== #}
                     {{
                             macros.post_comments_widget(
-                                post = question.self_question,
-                                show_post = show_post.self_answer,
-                                show_comment = show_comment.self_comment,
+                                post = question,
+                                show_post = show_post,
+                                show_comment = show_comment,
                                 show_comment_position = show_comment_position,
                                 user = request.user,
                                 max_comments = settings.MAX_COMMENTS_TO_SHOW
@@ -152,14 +152,14 @@
             <div class="clean"></div>
             {% for answer in answers %}
                 {# ==== START: question/answer_card.html ==== #}
-                <a name="{{ answer.self_answer_id }}"></a>
+                <a name="{{ answer.id }}"></a>
                 <div
-                        id="answer-container-{{ answer.self_answer_id }}"
-                        class="{{ macros.answer_classes(answer.self_answer, question.self_question) }}">
+                        id="answer-container-{{ answer.id }}"
+                        class="{{ macros.answer_classes(answer, question) }}">
                     <div class="vote-buttons">
                         {# ==== START: question/answer_vote_buttons.html ==== #}
-                            {{ macros.post_vote_buttons(post = answer.self_answer, visitor_vote = user_answer_votes[answer.self_answer_id]) }}
-                            <img id="answer-img-accept-{{ answer.self_answer_id }}" class="answer-img-accept"
+                            {{ macros.post_vote_buttons(post = answer, visitor_vote = user_answer_votes[answer.id]) }}
+                            <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept"
                                     {% if answer.is_answer_accepted() %}
                                  src="{{'/images/vote-accepted-on.png'|media}}"
                                     {% else %}
@@ -180,9 +180,9 @@
                         <div class="item-right">
                             <div class="answer-body">
                                 <div class="post-update-info-container">
-                                    {{ post_last_updater_and_creator_info(answer.self_answer, settings.MIN_REP_TO_EDIT_WIKI) }}
+                                    {{ post_last_updater_and_creator_info(answer, settings.MIN_REP_TO_EDIT_WIKI) }}
                                     {# ==== START: question/answer_author_info.html ====
-                                    {{ macros.post_last_updater_and_creator_info(answer.self_answer, settings.MIN_REP_TO_EDIT_WIKI) }}
+                                    {{ macros.post_last_updater_and_creator_info(answer, settings.MIN_REP_TO_EDIT_WIKI) }}
                                       ==== END: question/answer_author_info.html ==== #}
                                 </div>
                                 {{ answer.html }}
@@ -197,37 +197,37 @@
                                             {% trans %}permanent link{% endtrans %}
                                         </a>
                                     </span>
-                                    {% if request.user|can_edit_post(answer.self_answer) %}{{ pipe() }}
-                                        <span class="action-link"><a class="question-edit" href="{% url edit_answer answer.self_answer_id %}">{% trans %}edit{% endtrans %}</a></span>
+                                    {% if request.user|can_edit_post(answer) %}{{ pipe() }}
+                                        <span class="action-link"><a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
                                     {% endif %}
-                                    {% if request.user|can_flag_offensive(answer.self_answer) %}{{ pipe() }}
-                                        <span id="answer-offensive-flag-{{ answer.self_answer_id }}" class="offensive-flag"
+                                    {% if request.user|can_flag_offensive(answer) %}{{ pipe() }}
+                                        <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag"
                                               title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                                             <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
-                                            {% if request.user|can_see_offensive_flags(answer.self_answer) %}
+                                            {% if request.user|can_see_offensive_flags(answer) %}
                                                 <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
                                             {% endif %}
                                         </span>
-                                        {% elif request.user|can_remove_flag_offensive(answer.self_answer)%}{{ pipe() }}
-                                        <span id="answer-offensive-flag-remove-{{ answer.self_answer_id }}" class="offensive-flag"
+                                        {% elif request.user|can_remove_flag_offensive(answer)%}{{ pipe() }}
+                                        <span id="answer-offensive-flag-remove-{{ answer.id }}" class="offensive-flag"
                                               title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                                             <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
-                                            {% if request.user|can_see_offensive_flags(answer.self_answer) %}
+                                            {% if request.user|can_see_offensive_flags(answer) %}
                                                 <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
                                             {% endif %}
                                         </span>
                                     {% endif %}
-                                    {% if request.user|can_delete_post(answer.self_answer) %}{{ pipe() }}
+                                    {% if request.user|can_delete_post(answer) %}{{ pipe() }}
                                         {% spaceless %}
                                             <span class="action-link">
-                                                <a class="question-delete" id="answer-delete-link-{{answer.self_answer_id}}">
+                                                <a class="question-delete" id="answer-delete-link-{{answer.id}}">
                                                     {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
                                             </span>
                                         {% endspaceless %}
                                     {% endif %}
                                     {% if settings.ALLOW_SWAPPING_QUESTION_WITH_ANSWER and request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}{{ pipe() }}
                                         <span class="action-link">
-                                            <a id="swap-question-with-answer-{{answer.self_answer.id}}">{% trans %}swap with question{% endtrans %}</a>
+                                            <a id="swap-question-with-answer-{{answer.id}}">{% trans %}swap with question{% endtrans %}</a>
                                         </span>
                                     {% endif %}
                                 {# ==== END: question/answer_controls.html ==== #}
@@ -235,9 +235,9 @@
                             {# ==== START: question/answer_comments.html ==== #}
                             {{
                                     macros.post_comments_widget(
-                                        post = answer.self_answer,
-                                        show_post = show_post.self_answer,
-                                        show_comment = show_comment.self_comment,
+                                        post = answer,
+                                        show_post = show_post,
+                                        show_comment = show_comment,
                                         show_comment_position = show_comment_position,
                                         user = request.user,
                                         max_comments = settings.MAX_COMMENTS_TO_SHOW
@@ -272,7 +272,7 @@
             <form
                     id="fmanswer"
                     {% if user == question.author %}style="display:none"{% endif %}
-                    action="{% url answer question.self_question_id %}"
+                    action="{% url answer question.id %}"
                     method="post"
                     >{% csrf_token %}
                 {# ==== START: question/subscribe_by_email_prompt.html ==== #}
@@ -305,7 +305,7 @@
                     {% if not thread.closed %}
                         <a
                                 class="submit"
-                                href="{{settings.LOGIN_URL}}?next={% url question question.self_question_id %}"
+                                href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
                                 >{% trans %}Login/Signup to Answer{% endtrans %}</a>
                     {% endif %}
                 {% else %}

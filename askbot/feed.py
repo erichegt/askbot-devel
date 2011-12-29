@@ -16,7 +16,7 @@ from django.contrib.syndication.feeds import Feed
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
-from askbot.models import Question, Answer, Comment
+#from askbot.models import Question, Answer, Comment
 from askbot.conf import settings as askbot_settings
 import itertools
 

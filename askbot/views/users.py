@@ -287,10 +287,12 @@ def user_stats(request, user, context):
     #
     # Top answers
     #
-    top_answers = user.posts.get_answers().filter(
-        deleted=False,
-        self_answer__question__deleted=False,
-    ).select_related('thread', 'self_answer').order_by('-score', '-id')[:100]
+# TODO: Rewrite this without using `self_answer`
+#    top_answers = user.posts.get_answers().filter(
+#        deleted=False,
+#        self_answer__question__deleted=False,
+#    ).select_related('thread', 'self_answer').order_by('-score', '-id')[:100]
+    top_answers = []
 
     top_answer_count = len(top_answers)
 
@@ -330,15 +332,15 @@ def user_stats(request, user, context):
             awarded_answer_ids.append(award.object_id)
 
     awarded_posts = models.Post.objects.filter(
-        Q(self_answer__in=awarded_answer_ids)|Q(self_question__in=awarded_question_ids)
-    ).select_related('self_answer', 'thread') # select related to avoid additional queries in Post.get_absolute_url()
+        Q(post_type='answer', id__in=awarded_answer_ids)|Q(post_type='question', id__in=awarded_question_ids)
+    ).select_related('thread') # select related to avoid additional queries in Post.get_absolute_url()
     awarded_questions_map = {}
     awarded_answers_map = {}
     for post in awarded_posts:
-        if post.self_question_id:
-            awarded_questions_map[post.self_question_id] = post
-        elif post.self_answer_id:
-            awarded_answers_map[post.self_answer_id] = post
+        if post.post_type == 'question':
+            awarded_questions_map[post.id] = post
+        elif post.post_type == 'answer':
+            awarded_answers_map[post.id] = post
 
     badges_dict = collections.defaultdict(list)
 
