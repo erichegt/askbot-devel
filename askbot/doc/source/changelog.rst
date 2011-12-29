@@ -9,6 +9,7 @@ Development version (not released yet)
   make sure it does not contain a `.` (dot) symbol (Evgeny)
 * made askbot compatible with django's `CSRFViewMiddleware`
   that may be used for other projects (Evgeny)
+* added more rigorous test for the user name to make it slug safe (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------
