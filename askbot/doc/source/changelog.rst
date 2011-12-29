@@ -7,6 +7,8 @@ Development version (not released yet)
   ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
 * added verification of the project directory name to
   make sure it does not contain a `.` (dot) symbol (Evgeny)
+* made askbot compatible with django's `CSRFViewMiddleware`
+  that may be used for other projects (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------

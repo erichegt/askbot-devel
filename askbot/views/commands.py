@@ -78,6 +78,7 @@ def process_vote(user = None, vote_direction = None, post = None):
 
     return response_data
 
+@csrf.csrf_exempt
 def manage_inbox(request):
     """delete, mark as new or seen user's
     response memo objects, excluding flags
@@ -136,6 +137,7 @@ def manage_inbox(request):
         return HttpResponse(data, mimetype="application/json")
 
 
+@csrf.csrf_exempt
 def vote(request, id):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
@@ -346,6 +348,7 @@ def vote(request, id):
     return HttpResponse(data, mimetype="application/json")
 
 #internally grouped views - used by the tagging system
+@csrf.csrf_exempt
 @decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
@@ -473,6 +476,7 @@ def api_get_questions(request):
         raise ValidationError('InvalidInput')
 
 
+@csrf.csrf_exempt
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
     """saves data in the ``User.display_tag_filter_strategy``
@@ -548,6 +552,7 @@ def reopen(request, id):#re-open question
         return HttpResponseRedirect(question.get_absolute_url())
 
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 def swap_question_with_answer(request):
     """receives two json parameters - answer id
@@ -565,6 +570,7 @@ def swap_question_with_answer(request):
             }
     raise Http404
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
@@ -585,6 +591,7 @@ def upvote_comment(request):
     return {'score': comment.score}
 
 #askbot-user communication system
+@csrf.csrf_exempt
 def read_message(request):#marks message a read
     if request.method == "POST":
         if request.POST['formdata'] == 'required':
