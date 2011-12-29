@@ -44,6 +44,7 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
+@csrf.csrf_exempt
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax
     """
@@ -288,7 +289,7 @@ def ask(request):#view used to ask a new question
     return render_into_skin('ask.html', data, request)
 
 @login_required
-#@csrf.csrf_protect remove for ajax
+@csrf.csrf_exempt
 def retag_question(request, id):
     """retag question view
     """
@@ -575,6 +576,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
+@csrf.csrf_exempt
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     # only support get post comments by ajax now
@@ -614,6 +616,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     else:
         raise Http404
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.check_spam('comment')
 def edit_comment(request):
@@ -646,6 +649,7 @@ def edit_comment(request):
                 _('Sorry, anonymous users cannot edit comments')
             )
 
+@csrf.csrf_exempt
 def delete_comment(request):
     """ajax handler to delete comment
     """

@@ -26,7 +26,7 @@ settings.register(
                         'then submit this whole form.'
                     ),
         upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
+        upload_url = django_settings.ASKBOT_URL + '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/logo.gif',
         url_resolver = skin_utils.get_media_url
     )

@@ -29,9 +29,9 @@
       }
     }
 
-    askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% url mark_interesting_tag %}';
-    askbot['urls']['mark_ignored_tag'] = scriptUrl + '{% url mark_ignored_tag %}';
-    askbot['urls']['unmark_tag'] = scriptUrl + '{% url unmark_tag %}';
+    askbot['urls']['mark_interesting_tag'] = '{% url mark_interesting_tag %}';
+    askbot['urls']['mark_ignored_tag'] = '{% url mark_ignored_tag %}';
+    askbot['urls']['unmark_tag'] = '{% url unmark_tag %}';
     askbot['urls']['set_tag_filter_strategy'] = '{% url "set_tag_filter_strategy" %}';
     askbot['urls']['questions'] = '{% url "questions" %}';
     {% if settings.ASKBOT_TRANSLATE_URL %}

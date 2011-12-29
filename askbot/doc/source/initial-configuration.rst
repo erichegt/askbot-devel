@@ -10,7 +10,16 @@ While most configuration settings for askbot can be done at any time :ref:`throu
 Installing Askbot as a new Django project (standalone app)
 ==========================================================
 
-When installing Askbot for the first time, you will need to initialize the site setup files by typing::
+.. note::
+    Firstly - if you are preparing the project directory manually,
+    make sure that the directory name does not
+    have the `.` - dot - symbol, because it is illegal for Python modules. 
+    For example::
+
+        mkdir mydjangosite
+        cd mydjangosite
+
+When installing Askbot for the first time, you will need to initialize the project setup files by typing::
 
     askbot-setup
 
