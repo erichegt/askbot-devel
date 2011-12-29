@@ -5,6 +5,8 @@ Development version (not released yet)
 --------------------------------------
 * added basic slugification treatment to question titles with 
   ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
+* added verification of the project directory name to
+  make sure it does not contain a `.` (dot) symbol (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------
