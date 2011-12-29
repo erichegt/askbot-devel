@@ -616,8 +616,8 @@ def post_comments(request):#generic ajax handler to load comments to an object
     else:
         raise Http404
 
-@decorators.ajax_only
 @csrf.csrf_exempt
+@decorators.ajax_only
 @decorators.check_spam('comment')
 def edit_comment(request):
     if request.user.is_authenticated():
