@@ -38,8 +38,8 @@
     askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';
     askbot['urls']['user_url_template'] = scriptUrl + '{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
     {% else %}
-    askbot['urls']['question_url_template'] = scriptUrl + 'question/{{ "{{QuestionID}}/" }}';
-    askbot['urls']['user_url_template'] = scriptUrl + 'users/{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
+    askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';
+    askbot['urls']['user_url_template'] = scriptUrl + '{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
     {% endif %}
     askbot['messages']['name_of_anonymous_user'] = '{{ name_of_anonymous_user }}';
 </script>
