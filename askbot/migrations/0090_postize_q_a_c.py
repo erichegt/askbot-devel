@@ -1,24 +1,133 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 import datetime
+from django.contrib.contenttypes import generic
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
-import askbot
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        create_post_view_sql = open(
-            askbot.get_path_to('models/post_view.sql')
-        ).read()
-        import warnings
-        warnings.filterwarnings("ignore", "Unknown table .*?\.askbot_post'") # DROP VIEW might raise a warning so let's filter that out
-        db.execute('DROP VIEW IF EXISTS askbot_post')
-        db.execute(create_post_view_sql)
+        orm.Post.objects.all().delete() # in case there are some leftovers after this migration failed before
+
+        for q in orm.Question.objects.all():
+            orm.Post.objects.create(
+                post_type='question',
+
+                self_answer=None,
+                self_question=q,
+                self_comment=None,
+
+                thread=q.thread,
+                parent=None,
+
+                author=q.author,
+                added_at=q.added_at,
+                deleted=q.deleted,
+                deleted_at=q.deleted_at,
+                deleted_by=q.deleted_by,
+                wiki=q.wiki,
+                wikified_at=q.wikified_at,
+                locked=q.locked,
+                locked_by=q.locked_by,
+                locked_at=q.locked_at,
+                score=q.score,
+                vote_up_count=q.vote_up_count,
+                vote_down_count=q.vote_down_count,
+                comment_count=q.comment_count,
+                offensive_flag_count=q.offensive_flag_count,
+                last_edited_at=q.last_edited_at,
+                last_edited_by=q.last_edited_by,
+                html=q.html,
+                text=q.text,
+                summary=q.summary,
+                is_anonymous=q.is_anonymous,
+            )
+
+        for ans in orm.Answer.objects.all():
+            orm.Post.objects.create(
+                post_type='answer',
+
+                self_answer=ans,
+                self_question=None,
+                self_comment=None,
+
+                thread=ans.question.thread,
+                parent=None,
+
+                author=ans.author,
+                added_at=ans.added_at,
+                deleted=ans.deleted,
+                deleted_at=ans.deleted_at,
+                deleted_by=ans.deleted_by,
+                wiki=ans.wiki,
+                wikified_at=ans.wikified_at,
+                locked=ans.locked,
+                locked_by=ans.locked_by,
+                locked_at=ans.locked_at,
+                score=ans.score,
+                vote_up_count=ans.vote_up_count,
+                vote_down_count=ans.vote_down_count,
+                comment_count=ans.comment_count,
+                offensive_flag_count=ans.offensive_flag_count,
+                last_edited_at=ans.last_edited_at,
+                last_edited_by=ans.last_edited_by,
+                html=ans.html,
+                text=ans.text,
+                summary=ans.summary,
+                is_anonymous=ans.is_anonymous,
+            )
+
+        gfk = generic.GenericForeignKey('content_type', 'object_id')
+        gfk.contribute_to_class(orm.Comment, 'content_object')
+
+        for cm in orm.Comment.objects.all():
+            if cm.content_object.post_type == 'question':
+                thread = orm.Thread.objects.get(id=cm.content_object.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                parent = orm.Post.objects.get(self_question=cm.content_object)
+            elif cm.content_object.post_type == 'answer':
+                thread = orm.Thread.objects.get(id=cm.content_object.question.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                parent = orm.Post.objects.get(self_answer=cm.content_object)
+            else:
+                raise ValueError('comment.content_object is neither question nor answer!')
+
+            orm.Post.objects.create(
+                post_type='comment',
+
+                self_answer=None,
+                self_question=None,
+                self_comment=cm,
+
+                thread=thread,
+                parent=parent,
+
+                author=cm.user,
+                added_at=cm.added_at,
+                deleted=False,
+                deleted_at=None,
+                deleted_by=None,
+                wiki=False,
+                wikified_at=None,
+                locked=False,
+                locked_by=None,
+                locked_at=None,
+                score=cm.score,
+                vote_up_count=cm.score,
+                vote_down_count=0,
+                comment_count=0,
+                offensive_flag_count=cm.offensive_flag_count,
+                last_edited_at=None,
+                last_edited_by=None,
+                html=cm.html,
+                text=cm.comment,
+                summary='',
+                is_anonymous=False,
+            )
+
 
     def backwards(self, orm):
-        db.execute('DROP VIEW askbot_post')
+        "Write your backwards methods here."
+
 
     models = {
         'askbot.activity': {
@@ -109,7 +218,7 @@ class Migration(SchemaMigration):
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'symmetrical': 'False', 'through': "orm['askbot.Award']", 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
         },
         'askbot.comment': {
             'Meta': {'ordering': "('-added_at',)", 'object_name': 'Comment', 'db_table': "u'comment'"},
@@ -137,7 +246,7 @@ class Migration(SchemaMigration):
             'added_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'thread': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Thread']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'unused_user_favorite_questions'", 'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_favorite_questions'", 'to': "orm['auth.User']"})
         },
         'askbot.markedtag': {
             'Meta': {'object_name': 'MarkedTag'},
@@ -146,36 +255,37 @@ class Migration(SchemaMigration):
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_selections'", 'to': "orm['askbot.Tag']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tag_selections'", 'to': "orm['auth.User']"})
         },
-#        'askbot.post': {
-#            'Meta': {'object_name': 'Post', 'managed': 'False'},
-#            'added_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-#            'author': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'posts'", 'to': "orm['auth.User']"}),
-#            'comment_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-#            'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-#            'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-#            'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
-#            'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-#            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-#            'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-#            'last_edited_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-#            'last_edited_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'last_edited_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
-#            'locked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-#            'locked_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-#            'locked_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'locked_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
-#            'offensive_flag_count': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
-#            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Post']", 'null': 'True', 'blank': 'True'}),
-#            'post_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-#            'score': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-#            'self_answer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Answer']", 'null': 'True', 'blank': 'True'}),
-#            'self_question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']", 'null': 'True', 'blank': 'True'}),
-#            'summary': ('django.db.models.fields.CharField', [], {'max_length': '180'}),
-#            'text': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-#            'thread': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Thread']"}),
-#            'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-#            'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-#            'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-#            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
-#        },
+        'askbot.post': {
+            'Meta': {'object_name': 'Post'},
+            'added_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'posts'", 'to': "orm['auth.User']"}),
+            'comment_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'last_edited_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'last_edited_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'last_edited_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'locked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'locked_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'locked_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'locked_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'offensive_flag_count': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'comment_posts'", 'null': 'True', 'to': "orm['askbot.Post']"}),
+            'post_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'score': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'self_answer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': "orm['askbot.Answer']"}),
+            'self_comment': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': "orm['askbot.Comment']"}),
+            'self_question': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': "orm['askbot.Question']"}),
+            'summary': ('django.db.models.fields.CharField', [], {'max_length': '180'}),
+            'text': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'thread': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'posts'", 'to': "orm['askbot.Thread']"}),
+            'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+        },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},
             'answer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'revisions'", 'null': 'True', 'to': "orm['askbot.Answer']"}),

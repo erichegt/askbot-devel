@@ -15,21 +15,22 @@ class PostManager(models.Manager):
         return self.filter(post_type='answer')
 
     def create_new_answer(self, *args, **kwargs):
-        from askbot.models import Answer
-        answer = Answer.objects.create_new(*args, **kwargs)
-        return self.get(self_answer=answer)
+        #from askbot.models import Answer
+        #answer = Answer.objects.create_new(*args, **kwargs)
+        #return self.get(self_answer=answer)
+        return None # TODO: Update with proper answer Post creation
 
 
 class Post(content.Content):
     post_type = models.CharField(max_length=255)
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comment_posts') # Answer or Question for Comment
 
-    self_answer = models.ForeignKey('Answer', blank=True, null=True, related_name='unused__posts')
-    self_question = models.ForeignKey('Question', blank=True, null=True, related_name='unused__posts')
-    self_comment = models.ForeignKey('Comment', blank=True, null=True, related_name='unused__posts')
+    self_answer = models.ForeignKey('Answer', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
+    self_question = models.ForeignKey('Question', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
+    self_comment = models.ForeignKey('Comment', blank=True, null=True, related_name='+', on_delete=models.SET_NULL)
 
-    question = property(fget=lambda self: self.self_answer.question) # to simulate Answer model
-    question_id = property(fget=lambda self: self.self_answer.question_id) # to simulate Answer model
+    question = property(fget=lambda self: self.thread._question_post()) # to simulate Answer model
+    question_id = property(fget=lambda self: self.thread._question_post().id) # to simulate Answer model
 
     thread = models.ForeignKey('Thread', related_name='posts')
 
@@ -38,7 +39,6 @@ class Post(content.Content):
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_post'
-        managed = False
 
     def is_comment(self):
         return self.post_type == 'comment'
