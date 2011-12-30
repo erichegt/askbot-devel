@@ -10,11 +10,12 @@ from django.template import defaultfilters
 from django.conf import settings
 import re
 
-def slugify(input_text, max_length=50):
+def slugify(input_text, max_length=50, force_unidecode = False):
     """custom slugify function that
     removes diacritic modifiers from the characters
     """
-    if getattr(settings, 'ALLOW_UNICODE_SLUGS', False) == False:
+    allow_unicode_slugs = getattr(settings, 'ALLOW_UNICODE_SLUGS', False)
+    if allow_unicode_slugs == False or force_unidecode == True:
         if input_text == '':
             return input_text
         slug = defaultfilters.slugify(unidecode(input_text))

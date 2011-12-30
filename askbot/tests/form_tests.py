@@ -303,5 +303,6 @@ class UserNameFieldTest(AskbotTestCase):
         #invalid username and username in reserved words
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, '  ')
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, 'fuck')
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '......')
 
         #TODO: test more things
