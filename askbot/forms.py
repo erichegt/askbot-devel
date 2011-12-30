@@ -754,7 +754,7 @@ class RevisionForm(forms.Form):
 
     def __init__(self, post, latest_revision, *args, **kwargs):
         super(RevisionForm, self).__init__(*args, **kwargs)
-        revisions = post.revisions().values_list(
+        revisions = post.revisions.values_list(
             'revision', 'author__username', 'revised_at', 'summary')
         date_format = '%c'
         self.fields['revision'].choices = [

@@ -14,9 +14,13 @@ class PostManager(models.Manager):
     def get_answers(self):
         return self.filter(post_type='answer')
 
+    def get_comments(self):
+        return self.filter(post_type='comment')
+
     def create_new_answer(self, thread, author, added_at, text, wiki=False, email_notify=False):
         # TODO: Some of this code will go to Post.objects.create_new
         answer = Post(
+            post_type='answer',
             thread=thread,
             author=author,
             added_at=added_at,
@@ -58,9 +62,6 @@ class Post(content.Content):
 
     objects = PostManager()
 
-    question = property(fget=lambda self: self.thread._question_post()) # to simulate Answer model
-    question_id = property(fget=lambda self: self.thread._question_post().id) # to simulate Answer model
-
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_post'
@@ -89,7 +90,7 @@ class Post(content.Content):
     def delete(self, *args, **kwargs):
         # WARNING: This is not called for batch deletions so watch out!
         # TODO: Restore specialized Comment.delete() functionality!
-        self.delete(*args, **kwargs)
+        super(Post, self).delete(*args, **kwargs)
 
     def is_answer_accepted(self):
         if not self.is_answer():
@@ -98,7 +99,7 @@ class Post(content.Content):
 
     def accepted(self):
         if self.is_answer():
-            return self.question.thread.accepted_answer == self
+            return self.thread.accepted_answer == self
         raise NotImplementedError
 
     def get_page_number(self, answer_posts):
@@ -121,16 +122,13 @@ class Post(content.Content):
             order_number += 1
         return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
 
-    def revisions(self):
-        return self.revisions.all()
-
     def get_latest_revision(self):
-        return self.revisions().order_by('-revised_at')[0]
+        return self.revisions.order_by('-revised_at')[0]
 
-    def apply_edit(self, *kargs, **kwargs):
-        if self.post_type not in ('question', 'answer'):
-            raise NotImplementedError
-        return post.apply_edit(*kargs, **kwargs)
+    def is_upvoted_by(self, user):
+        from askbot.models.meta import Vote
+        return Vote.objects.filter(user=user, voted_post=self, vote=Vote.VOTE_UP).exists()
+
 
 
 class PostRevisionManager(models.Manager):
@@ -168,7 +166,7 @@ class PostRevision(models.Model):
 
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
 
-    revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES)
+    revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES) # TODO: remove as we have Post now
 
     revision   = models.PositiveIntegerField()
     author     = models.ForeignKey('auth.User', related_name='%(class)ss')
@@ -198,16 +196,13 @@ class PostRevision(models.Model):
         return u'%s - revision %s of %s' % (self.revision_type_str(), self.revision, self.title)
 
     def parent(self):
-        if self.is_question_revision():
-            return self.question
-        elif self.is_answer_revision():
-            return self.answer
+        return self.post
 
     def clean(self):
         "Internal cleaning method, called from self.save() by self.full_clean()"
-        if bool(self.question) == bool(self.answer): # one and only one has to be set (!xor)
-            raise ValidationError('One (and only one) of question/answer fields has to be set.')
-        if (self.question and not self.is_question_revision()) or (self.answer and not self.is_answer_revision()):
+        # TODO: Remove this when we remove `revision_type`
+        if (self.post.post_type == 'question' and not self.is_question_revision()) or \
+           (self.post.post_type == 'answer' and not self.is_answer_revision()):
             raise ValidationError('Revision_type doesn`t match values in question/answer fields.')
 
     def save(self, **kwargs):

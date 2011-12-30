@@ -177,19 +177,12 @@ def user_get_old_vote_for_post(self, post):
     raises assertion_error is number of old votes is > 1
     which is illegal
     """
-    post_content_type = ContentType.objects.get_for_model(post)
-    old_votes = Vote.objects.filter(
-                                user = self,
-                                content_type = post_content_type,
-                                object_id = post.id
-                            )
-    if len(old_votes) == 0:
+    try:
+        return Vote.objects.get(user=self, voted_post=post)
+    except Vote.DoesNotExist:
         return None
-    else:
-        assert(len(old_votes) == 1)
-
-    return old_votes[0]
-
+    except Vote.MultipleObjectsReturned:
+        raise AssertionError
 
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
     """returns True if number of tag overlap of the user tag
@@ -322,7 +315,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         error_message = blocked_error_message
     elif self.is_suspended():
         error_message = suspended_error_message
-    elif self == answer.question.get_owner():
+    elif self == answer.thread._question_post().get_owner():
         if self == answer.get_owner():
             if not self.is_administrator():
                 #check rep
@@ -379,13 +372,7 @@ def user_assert_can_vote_for_post(
     :param:direction can be 'up' or 'down'
     :param:post can be instance of question or answer
     """
-
-    #todo: after unifying models this if else will go away
-    if isinstance(post, Comment):
-        post_author = post.user
-    else:
-        post_author = post.author
-    if self == post_author:
+    if self == post.author:
         raise django_exceptions.PermissionDenied(_('cannot vote for own posts'))
 
     blocked_error_message = _(
@@ -1087,7 +1074,7 @@ def user_accept_best_answer(
     if answer.accepted() == True:
         return
 
-    prev_accepted_answer = answer.question.thread.accepted_answer
+    prev_accepted_answer = answer.thread.accepted_answer
     if prev_accepted_answer:
         auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
 
@@ -1875,15 +1862,10 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     """"private" wrapper function that applies post upvotes/downvotes
     and cancelations
     """
-    post_type = ContentType.objects.get_for_model(post)
     #get or create the vote object
     #return with noop in some situations
     try:
-        vote = Vote.objects.get(
-                    user = user,
-                    content_type = post_type,
-                    object_id = post.id,
-                )
+        vote = Vote.objects.get(user = user, voted_post=post)
     except Vote.DoesNotExist:
         vote = None
     if cancel:
@@ -1901,7 +1883,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
         if vote == None:
             vote = Vote(
                     user = user,
-                    content_object = post,
+                    voted_post=post,
                     vote = vote_type,
                     voted_at = timestamp,
                 )

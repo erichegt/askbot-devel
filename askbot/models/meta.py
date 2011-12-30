@@ -76,15 +76,14 @@ class Vote(models.Model):
         """
         #importing locally because of circular dependency
         from askbot import auth
-        score_before = self.content_object.score
+        score_before = self.voted_post.score
         if self.vote > 0:
             # cancel upvote
-            auth.onUpVotedCanceled(self, self.content_object, self.user)
-
+            auth.onUpVotedCanceled(self, self.voted_post, self.user)
         else:
             # cancel downvote
-            auth.onDownVotedCanceled(self, self.content_object, self.user)
-        score_after = self.content_object.score
+            auth.onDownVotedCanceled(self, self.voted_post, self.user)
+        score_after = self.voted_post.score
 
         return score_after - score_before
 

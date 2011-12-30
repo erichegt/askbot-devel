@@ -152,13 +152,15 @@ class Content(models.Model):
         if None in (comment ,user):
             raise Exception('arguments comment and user are required')
 
-        #Comment = models.get_model('askbot','Comment')#todo: forum hardcoded
-        comment = Comment(
-                            content_object=self, 
-                            comment=comment, 
-                            user=user, 
-                            added_at=added_at
-                        )
+        from askbot.models import Post
+        comment = Post(
+            post_type='comment',
+            thread=self.thread,
+            parent=self,
+            text=comment,
+            author=user,
+            added_at=added_at
+        )
         comment.parse_and_save(author = user)
         self.comment_count = self.comment_count + 1
         self.save()
@@ -468,7 +470,7 @@ class Content(models.Model):
 
     def get_origin_post(self):
         if self.is_answer():
-            return self.question
+            return self.thread._question_post()
         elif self.is_question():
             return self
         raise NotImplementedError
@@ -599,7 +601,7 @@ class Content(models.Model):
     def _answer__assert_is_visible_to(self, user):
         """raises QuestionHidden or AnswerHidden"""
         try:
-            self.question.assert_is_visible_to(user)
+            self.thread._question_post().assert_is_visible_to(user)
         except exceptions.QuestionHidden:
             message = _(
                         'Sorry, the answer you are looking for is '
@@ -678,7 +680,7 @@ class Content(models.Model):
 
         self.parse_and_save(author = edited_by)
 
-        self.question.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                     text=None, comment=None, tags=None, wiki=False, \
@@ -749,7 +751,7 @@ class Content(models.Model):
                 comment = 'No.%s Revision' % rev_no
         from askbot.models.post import PostRevision
         return PostRevision.objects.create_answer_revision(
-                                  answer=self,
+                                  post=self,
                                   author=author,
                                   revised_at=revised_at,
                                   text=text,
@@ -776,7 +778,7 @@ class Content(models.Model):
 
         from askbot.models.post import PostRevision
         return PostRevision.objects.create_question_revision(
-            question   = self,
+            post = self,
             revision   = rev_no,
             title      = self.thread.title,
             author     = author,

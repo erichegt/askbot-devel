@@ -416,7 +416,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #and that the visitor is allowed to see it
         try:
             show_post = get_object_or_404(models.Post, id=show_answer)
-            if str(show_post.question_id) != id:
+            if str(show_post.thread._question_post().id) != id:
                 return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
@@ -467,7 +467,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if request.user.is_authenticated():
         votes = Vote.objects.filter(user=request.user, voted_post__in=answers)
         for vote in votes:
-            user_answer_votes[vote.post.id] = int(vote)
+            user_answer_votes[vote.voted_post.id] = int(vote)
 
     filtered_answers = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
 
@@ -570,10 +570,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
 def revisions(request, id, object_name=None):
     if object_name == 'Question':
         post = get_object_or_404(models.Post, post_type='question', id=id)
-        revisions = list(models.PostRevision.objects.filter(question=post))
     else:
         post = get_object_or_404(models.Post, post_type='answer', id=id)
-        revisions = list(models.PostRevision.objects.filter(answer=post))
+    revisions = list(models.PostRevision.objects.filter(post=post))
     revisions.reverse()
     for i, revision in enumerate(revisions):
         revision.html = revision.as_html()

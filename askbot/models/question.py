@@ -63,7 +63,8 @@ class ThreadManager(models.Manager):
 
         thread = super(ThreadManager, self).create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author)
 
-        question = Question(
+        question = Post(
+            post_type='question',
             thread=thread,
             author = author,
             added_at = added_at,
@@ -340,7 +341,7 @@ class Thread(models.Model):
         self.save()
 
     def set_accepted_answer(self, answer, timestamp):
-        if answer and answer.question.thread != self:
+        if answer and answer.thread != self:
             raise ValueError("Answer doesn't belong to this thread")
         self.accepted_answer = answer
         self.answer_accepted_at = timestamp
@@ -544,7 +545,7 @@ class Thread(models.Model):
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
         PostRevision.objects.create_question_revision(
-            question   = thread_question,
+            post = thread_question,
             title      = latest_revision.title,
             author     = retagged_by,
             revised_at = retagged_at,

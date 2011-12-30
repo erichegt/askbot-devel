@@ -25,17 +25,14 @@ def onFlaggedItem(post, user, timestamp=None):
     post.offensive_flag_count = post.offensive_flag_count + 1
     post.save()
 
-    if post.post_type == 'comment':#todo: fix this
-        flagged_user = post.user
-    else:
-        flagged_user = post.author
+    flagged_user = post.author
 
     flagged_user.receive_reputation(
         askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
     )
     flagged_user.save()
 
-    question = post.get_origin_post()
+    question = post.thread._question_post()
 
     reputation = Repute(
                     user=flagged_user,
@@ -111,17 +108,14 @@ def onUnFlaggedItem(post, user, timestamp=None):
     post.offensive_flag_count = post.offensive_flag_count - 1
     post.save()
 
-    if post.post_type == 'comment':#todo: fix this
-        flagged_user = post.user
-    else:
-        flagged_user = post.author
+    flagged_user = post.author
 
     flagged_user.receive_reputation(
         - askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
     )
     flagged_user.save()
 
-    question = post.get_origin_post()
+    question = post.thread._question_post()
 
     reputation = Repute(
                     user=flagged_user,
@@ -189,7 +183,9 @@ def onUnFlaggedItem(post, user, timestamp=None):
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):
-    answer.question.thread.set_accepted_answer(answer=answer, timestamp=timestamp)
+    answer.thread.set_accepted_answer(answer=answer, timestamp=timestamp)
+    question = answer.thread._question_post()
+
     if answer.author != user:
         answer.author.receive_reputation(
             askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
@@ -197,7 +193,7 @@ def onAnswerAccept(answer, user, timestamp=None):
         answer.author.save()
         reputation = Repute(user=answer.author,
                    positive=askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
-                   question=answer.question,
+                   question=question,
                    reputed_at=timestamp,
                    reputation_type=2,
                    reputation=answer.author.reputation)
@@ -207,7 +203,7 @@ def onAnswerAccept(answer, user, timestamp=None):
     user.save()
     reputation = Repute(user=user,
                positive=askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
-               question=answer.question,
+               question=question,
                reputed_at=timestamp,
                reputation_type=3,
                reputation=user.reputation)
@@ -217,17 +213,20 @@ def onAnswerAccept(answer, user, timestamp=None):
 def onAnswerAcceptCanceled(answer, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
-    answer.question.thread.set_accepted_answer(answer=None, timestamp=None)
+    answer.thread.set_accepted_answer(answer=None, timestamp=None)
 
     answer.author.receive_reputation(
         askbot_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE
     )
     answer.author.save()
+
+    question = answer.thread._question_post()
+
     reputation = Repute(
         user=answer.author,
         negative=\
          askbot_settings.REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE,
-        question=answer.question,
+        question=question,
         reputed_at=timestamp,
         reputation_type=-2,
         reputation=answer.author.reputation
@@ -240,7 +239,7 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     user.save()
     reputation = Repute(user=user,
                negative=askbot_settings.REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE,
-               question=answer.question,
+               question=question,
                reputed_at=timestamp,
                reputation_type=-1,
                reputation=user.reputation)
@@ -270,9 +269,7 @@ def onUpVoted(vote, post, user, timestamp=None):
             )
             author.save()
 
-            question = post
-            if isinstance(post, Answer):
-                question = post.question
+            question = post.thread._question_post() # TODO: this is suboptimal if post is already a question
 
             reputation = Repute(user=author,
                        positive=askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE,
@@ -307,9 +304,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
         )
         author.save()
 
-        question = post
-        if isinstance(post, Answer):
-            question = post.question
+        question = post.thread._question_post() # TODO: this is suboptimal if post is already a question
 
         reputation = Repute(
             user=author,
@@ -336,9 +331,7 @@ def onDownVoted(vote, post, user, timestamp=None):
         author.receive_reputation(askbot_settings.REP_LOSS_FOR_DOWNVOTING)
         author.save()
 
-        question = post
-        if isinstance(post, Answer):
-            question = post.question
+        question = post.thread._question_post() # TODO: this is suboptimal if post is already a question
 
         reputation = Repute(user=author,
                    negative=askbot_settings.REP_LOSS_FOR_DOWNVOTING,
@@ -380,9 +373,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
         )
         author.save()
 
-        question = post
-        if isinstance(post, Answer):
-            question = post.question
+        question = post.thread._question_post() # TODO: this is suboptimal if post is already a question
 
         reputation = Repute(user=author,
                 positive=\

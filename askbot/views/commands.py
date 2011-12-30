@@ -97,11 +97,7 @@ def process_vote(user = None, vote_direction = None, post = None):
     if user.is_anonymous():
         raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
 
-    user.assert_can_vote_for_post(
-                                    post = post,
-                                    direction = vote_direction
-                                )
-
+    user.assert_can_vote_for_post(post = post, direction = vote_direction)
     vote = user.get_old_vote_for_post(post)
     response_data = {}
     if vote != None:
@@ -196,8 +192,7 @@ def vote(request, id):
         if vote_type == '0':
             if request.user.is_authenticated():
                 answer_id = request.POST.get('postId')
-                answer = get_object_or_404(models.Answer, id = answer_id)
-                question = answer.question
+                answer = get_object_or_404(models.Post, post_type='answer', id = answer_id)
                 # make sure question author is current user
                 if answer.accepted():
                     request.user.unaccept_best_answer(answer)
@@ -222,9 +217,9 @@ def vote(request, id):
                 #todo: fix this weirdness - why postId here
                 #and not with question?
                 id = request.POST.get('postId')
-                post = get_object_or_404(models.Answer, id=id)
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
             else:
-                post = get_object_or_404(models.Question, id=id)
+                post = get_object_or_404(models.Post, post_type='question', id=id)
             #
             ######################
 
@@ -237,10 +232,10 @@ def vote(request, id):
         elif vote_type in ['7', '8']:
             #flag question or answer
             if vote_type == '7':
-                post = get_object_or_404(models.Question, id=id)
+                post = get_object_or_404(models.Post, post_type='question', id=id)
             if vote_type == '8':
                 id = request.POST.get('postId')
-                post = get_object_or_404(models.Answer, id=id)
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
 
             request.user.flag_post(post)
 
@@ -250,10 +245,10 @@ def vote(request, id):
         elif vote_type in ['7.5', '8.5']:
             #flag question or answer
             if vote_type == '7.5':
-                post = get_object_or_404(models.Question, id=id)
+                post = get_object_or_404(models.Post, post_type='question', id=id)
             if vote_type == '8.5':
                 id = request.POST.get('postId')
-                post = get_object_or_404(models.Answer, id=id)
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
 
             request.user.flag_post(post, cancel = True)
 
@@ -262,10 +257,10 @@ def vote(request, id):
 
         elif vote_type in ['9', '10']:
             #delete question or answer
-            post = get_object_or_404(models.Question, id = id)
+            post = get_object_or_404(models.Post, post_type='question', id=id)
             if vote_type == '10':
                 id = request.POST.get('postId')
-                post = get_object_or_404(models.Answer, id = id)
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
 
             if post.deleted == True:
                 request.user.restore_post(post = post)
@@ -278,12 +273,11 @@ def vote(request, id):
                 response_data['allowed'] = 0
                 response_data['success'] = 0
 
-            question = get_object_or_404(models.Question, id=id)
+            question = get_object_or_404(models.Post, post_type='question', id=id)
             vote_type = request.POST.get('type')
 
             #accept answer
             if vote_type == '4':
-                has_favorited = False
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
                 if fave == False:
@@ -475,7 +469,7 @@ def close(request, id):#close question
     """view to initiate and process
     question close
     """
-    question = get_object_or_404(models.Question, id=id)
+    question = get_object_or_404(models.Post, post_type='question', id=id)
     try:
         if request.method == 'POST':
             form = forms.CloseForm(request.POST)
@@ -508,7 +502,7 @@ def reopen(request, id):#re-open question
     this is not an ajax view
     """
 
-    question = get_object_or_404(models.Question, id=id)
+    question = get_object_or_404(models.Post, post_type='question', id=id)
     # open question
     try:
         if request.method == 'POST' :
@@ -556,7 +550,7 @@ def upvote_comment(request):
     if form.is_valid():
         comment_id = form.cleaned_data['post_id']
         cancel_vote = form.cleaned_data['cancel_vote']
-        comment = models.Comment.objects.get(id = comment_id)
+        comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
         process_vote(
             post = comment,
             vote_direction = 'up',

@@ -550,7 +550,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
                 is_deletable = True
             except exceptions.PermissionDenied:
                 is_deletable = False
-            is_editable = template_filters.can_edit_comment(comment.user, comment)
+            is_editable = template_filters.can_edit_comment(comment.author, comment)
         else:
             is_deletable = False
             is_editable = False
@@ -585,10 +585,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     user = request.user
 
     id = request.REQUEST['post_id']
-    if post_type == 'question':
-        obj = get_object_or_404(models.Post, id=id)
-    else: #if post_type == 'answer':
-        obj = get_object_or_404(models.Post, id=id)
+    obj = get_object_or_404(models.Post, id=id)
 
     if request.method == "GET":
         response = __generate_comments_json(obj, user)
@@ -614,7 +611,7 @@ def edit_comment(request):
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 
     comment_id = int(request.POST['comment_id'])
-    comment_post = models.Post.objects.get(id=comment_id)
+    comment_post = models.Post.objects.get(post_type='comment', id=comment_id)
 
     request.user.edit_comment(comment_post=comment_post, body_text = request.POST['comment'])
 
@@ -648,17 +645,16 @@ def delete_comment(request):
         if request.is_ajax():
 
             comment_id = request.POST['comment_id']
-            comment = get_object_or_404(models.Comment, id=comment_id)
+            comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
             request.user.assert_can_delete_comment(comment)
 
-            obj = comment.content_object
-            #todo: are the removed comments actually deleted?
-            obj.comments.remove(comment)
+            parent = comment.parent
+            comment.delete()
             #attn: recalc denormalized field
-            obj.comment_count = obj.comment_count - 1
-            obj.save()
+            parent.comment_count = parent.comment_count - 1
+            parent.save()
 
-            return __generate_comments_json(obj, request.user)
+            return __generate_comments_json(parent, request.user)
 
         raise exceptions.PermissionDenied(
                     _('sorry, we seem to have some technical difficulties')

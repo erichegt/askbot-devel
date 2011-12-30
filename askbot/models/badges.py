@@ -25,6 +25,7 @@ from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
 from askbot.models.question import FavoriteQuestion as Fave#name collision
+from askbot.models.post import Post
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
@@ -264,7 +265,7 @@ class SelfLearner(Badge):
             return False
 
         min_upvotes = askbot_settings.SELF_LEARNER_BADGE_MIN_UPVOTES
-        question = context_object.question
+        question = context_object.thread._question_post()
         answer = context_object
 
         if question.author == answer.author and answer.score >= min_upvotes:
@@ -460,7 +461,7 @@ class Scholar(Badge):
         if context_object.post_type != 'answer':
             return False
         answer = context_object
-        if answer.question.author != actor:
+        if answer.thread._question_post().author != actor:
             return False
         return self.award(actor, context_object, timestamp)
 
@@ -532,7 +533,7 @@ class Necromancer(Badge):
         if context_object.post_type != 'answer':
             return False
         answer = context_object
-        question = answer.question
+        question = answer.thread._question_post()
         delta = datetime.timedelta(askbot_settings.NECROMANCER_BADGE_MIN_DELAY)
         min_score = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
         if answer.added_at - question.added_at >= delta \
@@ -738,7 +739,7 @@ class Commentator(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        num_comments = Comment.objects.filter(user = actor).count()
+        num_comments = Post.objects.get_comments().filter(author=actor).count()
         if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
             return self.award(actor, context_object, timestamp)
         return False
