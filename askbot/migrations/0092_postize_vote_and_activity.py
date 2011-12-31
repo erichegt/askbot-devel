@@ -1,6 +1,5 @@
 # encoding: utf-8
 import datetime
-from django.contrib.contenttypes import generic
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -8,17 +7,13 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        gfk = generic.GenericForeignKey('content_type', 'object_id')
-        gfk.contribute_to_class(orm.Vote, 'content_object')
-
         for v in orm.Vote.objects.all():
-            # note that isinstance() doesn't work with orm.Model and GFKey!
-            if getattr(v.content_object, 'post_type', '') == 'question':
-                v.voted_post = orm.Post.objects.get(self_question__id=v.content_object.id)
-            elif getattr(v.content_object, 'post_type', '') == 'answer':
-                v.voted_post = orm.Post.objects.get(self_answer__id=v.content_object.id)
-            elif getattr(v.content_object, 'post_type', '') == 'comment':
-                v.voted_post = orm.Post.objects.get(self_comment__id=v.content_object.id)
+            if (v.content_type.app_label, v.content_type.model) == ('askbot', 'question'):
+                v.voted_post = orm.Post.objects.get(self_question__id=v.object_id)
+            elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'answer'):
+                v.voted_post = orm.Post.objects.get(self_answer__id=v.object_id)
+            elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'comment'):
+                v.voted_post = orm.Post.objects.get(self_comment__id=v.object_id)
             else:
                 raise ValueError('Unknown vote subject!')
             v.save()
@@ -27,16 +22,15 @@ class Migration(DataMigration):
 
         for a in orm.Activity.objects.all():
             save = False
-            
-            # note that isinstance() doesn't work with orm.Model and GFKey!
-            if getattr(a.content_object, 'post_type', '') == 'question':
-                a.content_object = orm.Post.objects.get(self_question__id=a.content_object.id)
+
+            if (a.content_type.app_label, a.content_type.model) == ('askbot', 'question'):
+                a.content_object = orm.Post.objects.get(self_question__id=a.object_id)
                 save = True
-            elif getattr(a.content_object, 'post_type', '') == 'answer':
-                a.content_object = orm.Post.objects.get(self_answer__id=a.content_object.id)
+            elif (a.content_type.app_label, a.content_type.model) == ('askbot', 'answer'):
+                a.content_object = orm.Post.objects.get(self_answer__id=a.object_id)
                 save = True
-            elif getattr(a.content_object, 'post_type', '') == 'comment':
-                a.content_object = orm.Post.objects.get(self_comment__id=a.content_object.id)
+            elif (a.content_type.app_label, a.content_type.model) == ('askbot', 'comment'):
+                a.content_object = orm.Post.objects.get(self_comment__id=a.object_id)
                 save = True
 
             if a.question:

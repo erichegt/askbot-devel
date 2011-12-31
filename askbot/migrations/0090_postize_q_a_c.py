@@ -1,6 +1,5 @@
 # encoding: utf-8
 import datetime
-from django.contrib.contenttypes import generic
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -78,16 +77,17 @@ class Migration(DataMigration):
                 is_anonymous=ans.is_anonymous,
             )
 
-        gfk = generic.GenericForeignKey('content_type', 'object_id')
-        gfk.contribute_to_class(orm.Comment, 'content_object')
-
         for cm in orm.Comment.objects.all():
-            if cm.content_object.post_type == 'question':
-                thread = orm.Thread.objects.get(id=cm.content_object.thread.id) # conver from Thread to orm.Thread - a subtle difference
-                parent = orm.Post.objects.get(self_question=cm.content_object)
-            elif cm.content_object.post_type == 'answer':
-                thread = orm.Thread.objects.get(id=cm.content_object.question.thread.id) # conver from Thread to orm.Thread - a subtle difference
-                parent = orm.Post.objects.get(self_answer=cm.content_object)
+            # Workaround for a strange issue with: http://south.aeracode.org/docs/generics.html
+            # No need to investigate that as this is as simple as the "proper" way
+            if (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'question'):
+                content_object = orm.Question.objects.get(id=cm.object_id)
+                thread = orm.Thread.objects.get(id=content_object.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                parent = orm.Post.objects.get(self_question=content_object)
+            elif (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'answer'):
+                content_object = orm.Answer.objects.get(id=cm.object_id)
+                thread = orm.Thread.objects.get(id=content_object.question.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                parent = orm.Post.objects.get(self_answer=content_object)
             else:
                 raise ValueError('comment.content_object is neither question nor answer!')
 

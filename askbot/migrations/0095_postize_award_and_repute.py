@@ -1,6 +1,5 @@
 # encoding: utf-8
 import datetime
-from django.contrib.contenttypes import generic
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -8,10 +7,6 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Note that objects fetched from GFKeys are not compliant with orm.Model instances!
-        gfk = generic.GenericForeignKey('content_type', 'object_id')
-        gfk.contribute_to_class(orm.Award, 'content_object')
-
         ct_question = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='question')
         ct_answer = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='answer')
         ct_comment = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='comment')
@@ -20,19 +15,13 @@ class Migration(DataMigration):
 
         for aw in orm.Award.objects.all():
             ct = aw.content_type
-            obj = aw.content_object
+            aw.content_type = ct_post
             if ct == ct_question:
-                assert getattr(obj, 'post_type', '') == 'question'
-                aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(self_question__id=obj.id).id
+                aw.object_id = orm.Post.objects.get(self_question__id=aw.object_id).id
             elif ct == ct_answer:
-                assert getattr(obj, 'post_type', '') == 'answer'
-                aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(self_answer__id=obj.id).id
+                aw.object_id = orm.Post.objects.get(self_answer__id=aw.object_id).id
             elif ct == ct_comment:
-                assert getattr(obj, 'post_type', '') == 'comment'
-                aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(self_comment__id=obj.id).id
+                aw.object_id = orm.Post.objects.get(self_comment__id=aw.object_id).id
             else:
                 raise ValueError('Unknown award subject!')
             aw.save()
