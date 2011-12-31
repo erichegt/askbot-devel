@@ -14,7 +14,7 @@ from askbot import const
 
 
 class AnonymousAnswer(AnonymousContent):
-    question_post = models.ForeignKey('Post', related_name='anonymous_answers')
+    question = models.ForeignKey('Post', related_name='anonymous_answers')
 
     def publish(self, user):
         added_at = datetime.datetime.now()

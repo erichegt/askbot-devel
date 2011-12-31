@@ -3,9 +3,8 @@ from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, F
-from askbot.models import User, Question, Answer, Tag, PostRevision, Thread
+from askbot.models import User, Post, PostRevision, Thread
 from askbot.models import Activity, EmailFeedSetting
-from askbot.models import Comment
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings as django_settings
@@ -127,7 +126,7 @@ class Command(NoArgsCommand):
         #base question query set for this user
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
-        base_qs = Question.objects.exclude(
+        base_qs = Post.objects.get_questions().exclude(
                                 thread__last_activity_by=user
                             ).exclude(
                                 thread__last_activity_at__lt=user.date_joined#exclude old stuff

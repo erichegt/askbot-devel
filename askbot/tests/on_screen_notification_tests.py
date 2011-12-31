@@ -106,7 +106,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                             tagnames = 'test', 
                             text = 'hey listen up',
                         )
-        self.question = self.thread._question()
+        self.question = self.thread._question_post()
         self.comment12 = self.question.add_comment(
                             user = self.u12,
                             comment = 'comment12'
@@ -115,7 +115,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                             user = self.u13,
                             comment = 'comment13'
                         )
-        self.answer1 = models.Answer.objects.create_new(
+        self.answer1 = models.Post.objects.create_new_answer(
                             thread = self.thread,
                             author = self.u21,
                             added_at = datetime.datetime.now(),
@@ -129,7 +129,7 @@ class OnScreenUpdateNotificationTests(TestCase):
                             user = self.u23,
                             comment = 'comment23'
                         )
-        self.answer2 = models.Answer.objects.create_new(
+        self.answer2 = models.Post.objects.create_new_answer(
                             thread = self.thread,
                             author = self.u31,
                             added_at = datetime.datetime.now(),
@@ -568,7 +568,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
-        self.answer3 = models.Answer.objects.create_new(
+        self.answer3 = models.Post.objects.create_new_answer(
                             thread = self.thread,
                             author = self.u11,
                             added_at = timestamp,
@@ -596,7 +596,7 @@ class OnScreenUpdateNotificationTests(TestCase):
         self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
-        self.answer3 = models.Answer.objects.create_new(
+        self.answer3 = models.Post.objects.create_new_answer(
                             thread = self.thread,
                             author = self.u31,
                             added_at = timestamp,

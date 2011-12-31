@@ -25,7 +25,7 @@
                         {% elif act.content_object.post_type == 'answer' %}
                             {% set answer=act.content_object %}
                             (<a title="{{answer.text|collapse}}"
-                                href="{% url question answer.question_id %}{{answer.question.thread.title|slugify}}#{{answer.id}}">{% trans %}source{% endtrans %}</a>)
+                                href="{% url question answer.thread._question_post().id %}{{answer.thread.title|slugify}}#{{answer.id}}">{% trans %}source{% endtrans %}</a>)
                         {% endif %}
                     {% else %}
                         <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title|escape }}</a></span>

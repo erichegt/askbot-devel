@@ -318,39 +318,31 @@ def user_stats(request, user, context):
     #
     # Badges/Awards (TODO: refactor into Managers/QuerySets when a pattern emerges; Simplify when we get rid of Question&Answer models)
     #
-    question_type = ContentType.objects.get_for_model(models.Question)
-    answer_type = ContentType.objects.get_for_model(models.Answer)
+    post_type = ContentType.objects.get_for_model(models.Post)
 
     user_awards = models.Award.objects.filter(user=user).select_related('badge')
 
-    awarded_answer_ids = []
-    awarded_question_ids = []
+    awarded_post_ids = []
     for award in user_awards:
-        if award.content_type_id == question_type.id:
-            awarded_question_ids.append(award.object_id)
-        elif award.content_type_id == answer_type.id:
-            awarded_answer_ids.append(award.object_id)
+        if award.content_type_id == post_type.id:
+            awarded_post_ids.append(award.object_id)
 
     awarded_posts = models.Post.objects.filter(
-        Q(post_type='answer', id__in=awarded_answer_ids)|Q(post_type='question', id__in=awarded_question_ids)
+        Q(post_type='answer')|Q(post_type='question'),
+        id__in=awarded_post_ids,
     ).select_related('thread') # select related to avoid additional queries in Post.get_absolute_url()
-    awarded_questions_map = {}
-    awarded_answers_map = {}
+
+    awarded_posts_map = {}
     for post in awarded_posts:
-        if post.post_type == 'question':
-            awarded_questions_map[post.id] = post
-        elif post.post_type == 'answer':
-            awarded_answers_map[post.id] = post
+        if post.post_type in ('question', 'answer'):
+            awarded_posts_map[post.id] = post
 
     badges_dict = collections.defaultdict(list)
 
     for award in user_awards:
         # Fetch content object
-        if award.content_type_id == question_type.id:
-            award.content_object = awarded_questions_map[award.object_id]
-            award.content_object_is_post = True
-        elif award.content_type_id == answer_type.id:
-            award.content_object = awarded_answers_map[award.object_id]
+        if award.content_type_id == post_type.id:
+            award.content_object = awarded_posts_map[award.object_id]
             award.content_object_is_post = True
         else:
             award.content_object_is_post = False
@@ -371,8 +363,6 @@ def user_stats(request, user, context):
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'question_count': question_count,
-        'question_type' : ContentType.objects.get_for_model(models.Question),
-        'answer_type' : ContentType.objects.get_for_model(models.Answer),
 
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
@@ -446,14 +436,15 @@ def user_recent(request, user, context):
 
         elif activity.activity_type == const.TYPE_ACTIVITY_ANSWER:
             ans = activity.content_object
-            if not ans.deleted and not ans.question.deleted:
+            question = ans.thread._question_post()
+            if not ans.deleted and not question.deleted:
                 activities.append(Event(
                     time=activity.active_at,
                     type=activity.activity_type,
-                    title=ans.question.thread.title,
-                    summary=ans.question.summary,
+                    title=ans.thread.title,
+                    summary=question.summary,
                     answer_id=ans.id,
-                    question_id=ans.question.id
+                    question_id=question.id
                 ))
 
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_QUESTION:
@@ -472,14 +463,15 @@ def user_recent(request, user, context):
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_ANSWER:
             cm = activity.content_object
             ans = cm.content_object
-            if not ans.deleted and not ans.question.deleted:
+            question = ans.thread._question_post()
+            if not ans.deleted and not question.deleted:
                 activities.append(Event(
                     time=cm.added_at,
                     type=activity.activity_type,
-                    title=ans.question.thread.title,
+                    title=ans.thread.title,
                     summary='',
                     answer_id=ans.id,
-                    question_id=ans.question.id
+                    question_id=question.id
                 ))
 
         elif activity.activity_type == const.TYPE_ACTIVITY_UPDATE_QUESTION:
@@ -496,26 +488,28 @@ def user_recent(request, user, context):
 
         elif activity.activity_type == const.TYPE_ACTIVITY_UPDATE_ANSWER:
             ans = activity.content_object
-            if not ans.deleted and not ans.question.deleted:
+            question = ans.thread._question_post()
+            if not ans.deleted and not question.deleted:
                 activities.append(Event(
                     time=activity.active_at,
                     type=activity.activity_type,
-                    title=ans.question.thread.title,
+                    title=ans.thread.title,
                     summary=ans.summary,
                     answer_id=ans.id,
-                    question_id=ans.question.id
+                    question_id=question.id
                 ))
 
         elif activity.activity_type == const.TYPE_ACTIVITY_MARK_ANSWER:
             ans = activity.content_object
-            if not ans.deleted and not ans.question.deleted:
+            question = ans.thread._question_post()
+            if not ans.deleted and not question.deleted:
                 activities.append(Event(
                     time=activity.active_at,
                     type=activity.activity_type,
-                    title=ans.question.thread.title,
+                    title=ans.thread.title,
                     summary='',
                     answer_id=0,
-                    question_id=ans.question.id
+                    question_id=question.id
                 ))
 
         elif activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
@@ -637,20 +631,20 @@ def user_network(request, user, context):
     return render_into_skin('user_profile/user_network.html', context, request)
 
 @owner_or_moderator_required
-def user_votes(request, user, context): # TODO: Convert to Post, but first migrate Vote to using Post
+def user_votes(request, user, context):
     all_votes = list(models.Vote.objects.filter(user=user))
     votes = []
     for vote in all_votes:
-        obj = vote.content_object
-        if isinstance(obj, models.Question):
-            vote.title = obj.thread.title
-            vote.question_id = obj.id
+        post = vote.voted_post
+        if post.is_question():
+            vote.title = post.thread.title
+            vote.question_id = post.id
             vote.answer_id = 0
             votes.append(vote)
-        elif isinstance(obj, models.Answer):
-            vote.title = obj.question.thread.title
-            vote.question_id = obj.question.id
-            vote.answer_id = obj.id
+        elif post.is_answer():
+            vote.title = post.thread.title
+            vote.question_id = post.thread._question_post().id
+            vote.answer_id = post.id
             votes.append(vote)
 
     votes.sort(key=operator.attrgetter('id'), reverse=True)

@@ -1106,7 +1106,6 @@ class EditUserEmailFeedsForm(forms.Form):
                 if created:
                     s.save()
             if form_field == 'individually_selected':
-                feed_type = ContentType.objects.get_for_model(models.Question)
                 user.followed_threads.clear()
         return changed
 

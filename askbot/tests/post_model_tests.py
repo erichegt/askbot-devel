@@ -48,7 +48,7 @@ class PostModelTests(AskbotTestCase):
 
         self.assertRaisesRegexp(
             ValidationError,
-            r"{'__all__': \[u'One \(and only one\) of question/answer fields has to be set.'\], 'revision_type': \[u'Value 4 is not a valid choice.'\]}",
+            r"{'__all__': \[u'Post field has to be set.'\], 'revision_type': \[u'Value 4 is not a valid choice.'\]}",
             post_revision.save
         )
 
@@ -56,12 +56,12 @@ class PostModelTests(AskbotTestCase):
 
         question = self.post_question(user=self.u1)
 
-        rev2 = PostRevision(question=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision=2, revision_type=PostRevision.QUESTION_REVISION)
+        rev2 = PostRevision(post=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision=2, revision_type=PostRevision.QUESTION_REVISION)
         rev2.save()
         self.assertFalse(rev2.id is None)
 
         post_revision = PostRevision(
-            question=question,
+            post=question,
             text='blah',
             author=self.u1,
             revised_at=datetime.datetime.now(),
@@ -76,7 +76,7 @@ class PostModelTests(AskbotTestCase):
 
 
         post_revision = PostRevision(
-            question=question,
+            post=question,
             text='blah',
             author=self.u1,
             revised_at=datetime.datetime.now(),
@@ -89,7 +89,7 @@ class PostModelTests(AskbotTestCase):
             post_revision.save
         )
 
-        rev3 = PostRevision.objects.create_question_revision(question=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision_type=123) # revision_type
+        rev3 = PostRevision.objects.create_question_revision(post=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision_type=123) # revision_type
         self.assertFalse(rev3.id is None)
         self.assertEqual(3, rev3.revision) # By the way: let's test the auto-increase of revision number
         self.assertEqual(PostRevision.QUESTION_REVISION, rev3.revision_type)

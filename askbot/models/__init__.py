@@ -454,7 +454,7 @@ def user_assert_can_edit_comment(self, comment = None):
     if self.is_administrator() or self.is_moderator():
         return
     else:
-        if comment.user == self:
+        if comment.author == self:
             if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
                 now = datetime.datetime.now()
                 delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
@@ -507,8 +507,8 @@ def user_assert_can_post_comment(self, parent_post = None):
             low_rep_error_message = low_rep_error_message,
         )
     except askbot_exceptions.InsufficientReputation, e:
-        if isinstance(parent_post, Answer):
-            if self == parent_post.question.author:
+        if parent_post.post_type == 'answer':
+            if self == parent_post.thread._question_post().author:
                 return
         raise e
 
@@ -709,7 +709,7 @@ def user_assert_can_close_question(self, question = None):
 
 
 def user_assert_can_reopen_question(self, question = None):
-    assert(isinstance(question, Question) == True)
+    assert(question.post_type == 'question')
 
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
 
@@ -1119,8 +1119,8 @@ def user_delete_answer(
     answer.deleted_at = timestamp
     answer.save()
 
-    answer.question.thread.update_answer_count()
-    logging.debug('updated answer count to %d' % answer.question.thread.answer_count)
+    answer.thread.update_answer_count()
+    logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
     signals.delete_question_or_answer.send(
         sender = answer.__class__,
@@ -1198,11 +1198,11 @@ def user_delete_post(
 
     if there is no use cases for it, the method will be removed
     """
-    if isinstance(post, Comment):
+    if post.post_type == 'comment':
         self.delete_comment(comment = post, timestamp = timestamp)
-    elif isinstance(post, Answer):
+    elif post.post_type == 'answer':
         self.delete_answer(answer = post, timestamp = timestamp)
-    elif isinstance(post, Question):
+    elif post.post_type == 'question':
         self.delete_question(question = post, timestamp = timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
@@ -1214,14 +1214,14 @@ def user_restore_post(
                 ):
     #here timestamp is not used, I guess added for consistency
     self.assert_can_restore_post(post)
-    if isinstance(post, Question) or isinstance(post, Answer):
+    if post.post_type in ('question', 'answer'):
         post.deleted = False
         post.deleted_by = None
         post.deleted_at = None
         post.save()
-        if isinstance(post, Answer):
-            post.question.thread.update_answer_count()
-        elif isinstance(post, Question):
+        if post.post_type == 'answer':
+            post.thread.update_answer_count()
+        else:
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good
             #or merged into others
@@ -1532,7 +1532,7 @@ def user_is_owner_of(self, obj):
     """True if user owns object
     False otherwise
     """
-    if isinstance(obj, Question):
+    if isinstance(obj, Post) and obj.post_type == 'question':
         return self == obj.author
     else:
         raise NotImplementedError()
@@ -1702,7 +1702,7 @@ def user_get_tag_filtered_questions(self, questions = None):
     or a starting query set.
     """
     if questions == None:
-        questions = Question.objects.all()
+        questions = Post.objects.get_questions()
 
     if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
 
@@ -2205,19 +2205,19 @@ def format_instant_notification_email(
                                 )
 
     if update_type == 'question_comment':
-        assert(isinstance(post, Comment))
-        assert(isinstance(post.content_object, Question))
+        assert(isinstance(post, Post) and post.is_comment())
+        assert(post.parent and post.parent.is_question())
     elif update_type == 'answer_comment':
-        assert(isinstance(post, Comment))
-        assert(isinstance(post.content_object, Answer))
+        assert(isinstance(post, Post) and post.is_comment())
+        assert(post.parent and post.parent.is_answer())
     elif update_type == 'answer_update':
-        assert(isinstance(post, Answer))
+        assert(isinstance(post, Post) and post.is_answer())
     elif update_type == 'new_answer':
-        assert(isinstance(post, Answer))
+        assert(isinstance(post, Post) and post.is_answer())
     elif update_type == 'question_update':
-        assert(isinstance(post, Question))
+        assert(isinstance(post, Post) and post.is_question())
     elif update_type == 'new_question':
-        assert(isinstance(post, Question))
+        assert(isinstance(post, Post) and post.is_question())
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
@@ -2412,17 +2412,22 @@ def record_answer_accepted(instance, created, **kwargs):
     when answer is accepted, we record this for question author
     - who accepted it.
     """
+    if instance.post_type != 'answer':
+        return
+
+    question = instance.thread._question_post()
+
     if not created and instance.accepted():
         activity = Activity(
-                        user=instance.question.author,
+                        user=question.author,
                         active_at=datetime.datetime.now(),
-                        content_object=instance,
+                        content_object=question,
                         activity_type=const.TYPE_ACTIVITY_MARK_ANSWER,
-                        question=instance.question
+                        question=question
                     )
         activity.save()
         recipients = instance.get_author_list(
-                                    exclude_list = [instance.question.author]
+                                    exclude_list = [question.author]
                                 )
         activity.add_recipients(recipients)
 
@@ -2484,10 +2489,12 @@ def record_delete_question(instance, delete_by, **kwargs):
     """
     when user deleted the question
     """
-    if instance.__class__ == "Question":
+    if instance.post_type == 'question':
         activity_type = const.TYPE_ACTIVITY_DELETE_QUESTION
-    else:
+    elif instance.post_type == 'answer':
         activity_type = const.TYPE_ACTIVITY_DELETE_ANSWER
+    else:
+        return
 
     activity = Activity(
                     user=delete_by,
@@ -2634,49 +2641,26 @@ django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
-#django_signals.post_save.connect(record_answer_accepted, sender=Answer)
+django_signals.post_save.connect(record_answer_accepted, sender=Post)
 django_signals.post_save.connect(record_vote, sender=Vote)
-django_signals.post_save.connect(
-                            record_favorite_question,
-                            sender=FavoriteQuestion
-                        )
+django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
-    django_signals.post_save.connect(
-                        set_user_avatar_type_flag,
-                        sender=Avatar
-                    )
-    django_signals.post_delete.connect(
-                        update_user_avatar_type_flag,
-                        sender=Avatar
-                    )
+    django_signals.post_save.connect(set_user_avatar_type_flag,sender=Avatar)
+    django_signals.post_delete.connect(update_user_avatar_type_flag, sender=Avatar)
 
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
-#signals.delete_question_or_answer.connect(record_delete_question, sender=Question)
-#signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
-#signals.flag_offensive.connect(record_flag_offensive, sender=Question)
-#signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
-#signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Question)
-#signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Answer)
+signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
+signals.flag_offensive.connect(record_flag_offensive, sender=Post)
+signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
-#signals.post_updated.connect(
-#                           record_post_update_activity,
-#                           sender=Comment
-#                       )
-#signals.post_updated.connect(
-#                           record_post_update_activity,
-#                           sender=Answer
-#                       )
-#signals.post_updated.connect(
-#                           record_post_update_activity,
-#                           sender=Question
-#                       )
+signals.post_updated.connect(record_post_update_activity)
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others

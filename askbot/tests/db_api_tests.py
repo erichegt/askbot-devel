@@ -111,7 +111,7 @@ class DBApiTests(AskbotTestCase):
         self.post_answer(question = self.question)
         self.user.delete_answer(self.answer)
         self.assert_post_is_deleted(self.answer)
-        saved_question = models.Question.objects.get(id = self.question.id)
+        saved_question = models.Post.objects.get_questions().get(id = self.question.id)
         self.assertEquals(0, saved_question.thread.answer_count)
 
     def test_restore_answer(self):
@@ -128,10 +128,10 @@ class DBApiTests(AskbotTestCase):
         self.user.delete_question(self.question)
         self.assert_post_is_deleted(self.question)
         answer_count = self.question.thread.get_answers(user = self.user).count()
-        answer = self.question.answers.all()[0]
+        answer = self.question.thread.posts.get_answers()[0]
         self.assert_post_is_not_deleted(answer)
         self.assertTrue(answer_count == 1)
-        saved_question = models.Question.objects.get(id = self.question.id)
+        saved_question = models.Post.objects.get_questions().get(id = self.question.id)
         self.assertTrue(saved_question.thread.answer_count == 1)
 
     def test_unused_tag_is_auto_deleted(self):
@@ -149,7 +149,7 @@ class DBApiTests(AskbotTestCase):
             user = self.user,
             body_text = "ahahahahahahah database'"
         )
-        matches = models.Question.objects.get_by_text_query("database'")
+        matches = models.Post.objects.get_questions().get_by_text_query("database'")
         self.assertTrue(len(matches) == 1)
 
 class UserLikeTests(AskbotTestCase):
@@ -372,8 +372,8 @@ class CommentTests(AskbotTestCase):
 
     def test_other_user_can_cancel_upvote(self):
         self.test_other_user_can_upvote_comment()
-        comment = models.Comment.objects.get(id = self.comment.id)
+        comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 1)
         self.other_user.upvote(comment, cancel = True)
-        comment = models.Comment.objects.get(id = self.comment.id)
+        comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 0)

@@ -24,7 +24,7 @@ class Command(NoArgsCommand):
             askbot_settings.MAX_ACCEPT_ANSWER_REMINDERS
         )
 
-        questions = models.Question.objects.exclude(
+        questions = models.Post.objects.get_questions().exclude(
                                         deleted = True
                                     ).added_between(
                                         start = schedule.start_cutoff_date,

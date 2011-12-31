@@ -429,7 +429,7 @@ def api_get_questions(request):
     form = forms.AdvancedSearchForm(request.GET)
     if form.is_valid():
         query = form.cleaned_data['query']
-        questions = models.Question.objects.get_by_text_query(query)
+        questions = models.Post.objects.get_questions().get_by_text_query(query)
         if should_show_sort_by_relevance():
             questions = questions.extra(order_by = ['-relevance'])
         questions = questions.distinct()
@@ -533,7 +533,7 @@ def swap_question_with_answer(request):
     """
     if request.user.is_authenticated():
         if request.user.is_administrator() or request.user.is_moderator():
-            answer = models.Answer.objects.get(id = request.POST['answer_id'])
+            answer = models.Post.objects.get_answers().get(id = request.POST['answer_id'])
             new_question = answer.swap_with_question(new_title = request.POST['new_title'])
             return {
                 'id': new_question.id,

@@ -157,7 +157,7 @@ def import_data(request):
     #allow to use this view to site admins
     #or when the forum in completely empty
     if request.user.is_anonymous() or (not request.user.is_administrator()):
-        if models.Question.objects.count() > 0:
+        if models.Post.objects.get_questions().exists():
             raise Http404
 
     if request.method == 'POST':
@@ -522,7 +522,7 @@ def answer(request, id):#process a new answer
             else:
                 request.session.flush()
                 anon = models.AnonymousAnswer(
-                                       question=question,
+                                       question_post=question,
                                        wiki=wiki,
                                        text=text,
                                        summary=strip_tags(text)[:120],

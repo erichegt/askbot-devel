@@ -220,14 +220,14 @@ class Command(NoArgsCommand):
                         )
         self.print_if_verbose("User has edited the active answer")
 
-        active_answer_comment.user.edit_comment(
-                            comment = active_answer_comment,
+        active_answer_comment.author.edit_comment(
+                            comment_post = active_answer_comment,
                             body_text = ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active answer comment")
 
-        active_question_comment.user.edit_comment(
-                            comment = active_question_comment,
+        active_question_comment.author.edit_comment(
+                            comment_post = active_question_comment,
                             body_text = ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active question comment")

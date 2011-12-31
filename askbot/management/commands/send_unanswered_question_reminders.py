@@ -24,7 +24,7 @@ class Command(NoArgsCommand):
             max_reminders = askbot_settings.MAX_UNANSWERED_REMINDERS
         )
 
-        questions = models.Question.objects.exclude(
+        questions = models.Post.objects.get_questions().exclude(
                                         thread__closed = True
                                     ).exclude(
                                         deleted = True
