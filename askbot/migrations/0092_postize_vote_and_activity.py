@@ -26,8 +26,24 @@ class Migration(DataMigration):
         ###
 
         for a in orm.Activity.objects.all():
+            save = False
+            
+            # note that isinstance() doesn't work with orm.Model and GFKey!
+            if getattr(a.content_object, 'post_type', '') == 'question':
+                a.content_object = orm.Post.objects.get(self_question__id=a.content_object.id)
+                save = True
+            elif getattr(a.content_object, 'post_type', '') == 'answer':
+                a.content_object = orm.Post.objects.get(self_answer__id=a.content_object.id)
+                save = True
+            elif getattr(a.content_object, 'post_type', '') == 'comment':
+                a.content_object = orm.Post.objects.get(self_comment__id=a.content_object.id)
+                save = True
+
             if a.question:
                 a.question_post = orm.Post.objects.get(self_question__id=a.question.id)
+                save = True
+
+            if save:
                 a.save()
 
 
