@@ -1264,7 +1264,7 @@ def user_restore_post(
 def user_post_question(
                     self,
                     title = None,
-                    body_text = None,
+                    body_text = '',
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
@@ -1275,10 +1275,11 @@ def user_post_question(
 
     self.assert_can_post_question()
 
+    if body_text == '':#a hack to allow bodyless question
+        body_text = ' '
+
     if title is None:
         raise ValueError('Title is required to post question')
-    if  body_text is None:
-        raise ValueError('Text body is required to post question')
     if tags is None:
         raise ValueError('Tags are required to post question')
     if timestamp is None:
@@ -1371,6 +1372,7 @@ def user_post_answer(
                     timestamp = None
                 ):
 
+    #todo: move this to assertion - user_assert_can_post_answer
     if self == question.author and not self.is_administrator():
 
         # check date and rep required to post answer to own question

@@ -458,7 +458,7 @@ def api_get_questions(request):
         questions = models.Question.objects.get_by_text_query(query)
         if should_show_sort_by_relevance():
             questions = questions.extra(order_by = ['-relevance'])
-        questions = questions.distinct()
+        questions = questions.filter(deleted = False).distinct()
         page_size = form.cleaned_data.get('page_size', 30)
         questions = questions[:page_size]
 

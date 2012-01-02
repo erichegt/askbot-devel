@@ -7,6 +7,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.conf import settings
+from django import forms
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
@@ -73,6 +74,14 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(q.is_anonymous)
         rev = q.revisions.all()[0]
         self.assertTrue(rev.is_anonymous)
+
+    def test_post_bodyless_question(self):
+        q = self.user.post_question(
+            body_text = '',
+            title = 'aeuaouaousaotuhao',
+            tags = 'test'
+        )
+        self.assertEquals(q.text.strip(), '')
 
     def test_reveal_asker_identity(self):
         q = self.ask_anonymous_question()

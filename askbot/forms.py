@@ -106,12 +106,24 @@ class TitleField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
-        if len(value) < 10:
-            raise forms.ValidationError(_('title must be > 10 characters'))
+        if len(value) < askbot_settings.MIN_TITLE_LENGTH:
+            msg = ungettext_lazy(
+                'title must be > %d character',
+                'title must be > %d characters',
+                askbot_settings.MIN_TITLE_LENGTH
+            ) % askbot_settings.MIN_TITLE_LENGTH
+            raise forms.ValidationError(msg)
 
         return value
 
 class EditorField(forms.CharField):
+    """EditorField is subclassed by the 
+    :class:`QuestionEditorField` and :class:`AnswerEditorField`
+    """
+    length_error_template_singular = 'post content must be > %d character',
+    length_error_template_plural = 'post content must be > %d characters',
+    min_length = 10#sentinel default value
+
     def __init__(self, *args, **kwargs):
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
@@ -121,9 +133,28 @@ class EditorField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
-        if len(value) < 10:
-            raise forms.ValidationError(_('question content must be > 10 characters'))
+        if len(value) < self.min_length:
+            msg = ungettext_lazy(
+                self.length_error_template_singular,
+                self.length_error_template_plural,
+                self.min_length
+            ) % self.min_length 
+            raise forms.ValidationError(msg)
         return value
+
+class QuestionEditorField(EditorField):
+    def __init__(self, *args, **kwargs):
+        super(QuestionEditorField, self).__init__(*args, **kwargs)
+        self.length_error_template_singular = 'question body must be > %d character'
+        self.length_error_template_plural = 'question body must be > %d characters'
+        self.min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
+
+class AnswerEditorField(EditorField):
+    def __init__(self, *args, **kwargs):
+        super(AnswerEditorField, self).__init__(*args, **kwargs)
+        self.length_error_template_singular = 'answer must be > %d character'
+        self.length_error_template_plural = 'answer must be > %d characters'
+        self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -610,7 +641,7 @@ class AskForm(forms.Form, FormWithHideableFields):
     settings forbids anonymous asking
     """
     title  = TitleField()
-    text   = EditorField()
+    text   = QuestionEditorField()
     tags   = TagNamesField()
     wiki = WikiField()
     ask_anonymously = forms.BooleanField(
@@ -661,7 +692,7 @@ class AskByEmailForm(forms.Form):
     """
     sender = forms.CharField(max_length = 255)
     subject = forms.CharField(max_length = 255)
-    body_text = EditorField()
+    body_text = QuestionEditorField()
 
     def clean_sender(self):
         """Cleans the :attr:`~askbot.forms.AskByEmail.sender` attribute
@@ -706,7 +737,7 @@ class AskByEmailForm(forms.Form):
         return self.cleaned_data['subject']
 
 class AnswerForm(forms.Form):
-    text   = EditorField()
+    text   = AnswerEditorField()
     wiki   = WikiField()
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -770,7 +801,7 @@ class RevisionForm(forms.Form):
 
 class EditQuestionForm(forms.Form, FormWithHideableFields):
     title  = TitleField()
-    text   = EditorField()
+    text   = QuestionEditorField()
     tags   = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
@@ -877,7 +908,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         return self.cleaned_data
 
 class EditAnswerForm(forms.Form):
-    text = EditorField()
+    text = AnswerEditorField()
     summary = SummaryField()
     wiki = WikiField()
 

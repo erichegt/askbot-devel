@@ -10,6 +10,9 @@ Development version (not released yet)
 * made askbot compatible with django's `CSRFViewMiddleware`
   that may be used for other projects (Evgeny)
 * added more rigorous test for the user name to make it slug safe (Evgeny)
+* made setting `ASKBOT_FILE_UPLOAD_DIR` work (Radim Řehůřek)
+* added minimal length of question title ond body
+  text to live settings and allowed body-less questions (Radim Řehůřek, Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------

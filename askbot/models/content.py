@@ -691,6 +691,8 @@ class Content(models.Model):
         self.parse_and_save(author = edited_by)
 
     def apply_edit(self, *kargs, **kwargs):
+        if kwargs['text'] == '':
+            kwargs['text'] = ' '#a hack allowing empty body text in posts
         if self.is_answer():
             return self._answer__apply_edit(*kargs, **kwargs)
         elif self.is_question():
