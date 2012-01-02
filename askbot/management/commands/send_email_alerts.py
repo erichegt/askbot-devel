@@ -190,11 +190,11 @@ class Command(NoArgsCommand):
                     q_ask_B.cutoff_time = cutoff_time
 
                 elif feed.feed_type == 'q_ans':
-                    q_ans_A = Q_set_A.filter(answers__author=user)
+                    q_ans_A = Q_set_A.filter(thread__posts__author=user, thread__posts__post_type='answer')
                     q_ans_A = q_ans_A[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_A.cutoff_time = cutoff_time
 
-                    q_ans_B = Q_set_B.filter(answers__author=user)
+                    q_ans_B = Q_set_B.filter(thread__posts__author=user, thread__posts__post_type='answer')
                     q_ans_B = q_ans_B[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_B.cutoff_time = cutoff_time
 
@@ -224,14 +224,14 @@ class Command(NoArgsCommand):
             feed = user_feeds.get(feed_type='m_and_c')
             if feed.should_send_now():
                 cutoff_time = feed.get_previous_report_cutoff_time()
-                comments = Comment.objects.filter(
+                comments = Post.objects.get_comments().filter(
                                             added_at__lt = cutoff_time,
                                         ).exclude(
-                                            user = user
+                                            author = user
                                         )
                 q_commented = list() 
                 for c in comments:
-                    post = c.content_object
+                    post = c.parent
                     if post.author != user:
                         continue
 
@@ -284,7 +284,7 @@ class Command(NoArgsCommand):
             extend_question_list(q_all_A, q_list, limit=True)
             extend_question_list(q_all_B, q_list, limit=True)
 
-        ctype = ContentType.objects.get_for_model(Question)
+        ctype = ContentType.objects.get_for_model(Post)
         EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
 
         #up to this point we still don't know if emails about
@@ -335,7 +335,7 @@ class Command(NoArgsCommand):
             #collect info on all sorts of news that happened after
             #the most recent emailing to the user about this question
             q_rev = PostRevision.objects.question_revisions().filter(
-                                                question=q,
+                                                post=q,
                                                 revised_at__gt=emailed_at
                                             )
 
@@ -349,8 +349,8 @@ class Command(NoArgsCommand):
             else:
                 meta_data['new_q'] = False
                 
-            new_ans = Answer.objects.filter(
-                                            question=q,
+            new_ans = Post.objects.get_answers().filter(
+                                            thread=q.thread,
                                             added_at__gt=emailed_at,
                                             deleted=False,
                                         )
@@ -358,10 +358,12 @@ class Command(NoArgsCommand):
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
             ans_rev = PostRevision.objects.answer_revisions().filter(
-                                            answer__question = q,
-                                            answer__deleted = False,
+                                            # answer__question = q
+                                            post__thread=q.thread,
+
+                                            post__deleted = False,
                                             revised_at__gt = emailed_at
-                                        )
+                                        ).distinct()
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
 

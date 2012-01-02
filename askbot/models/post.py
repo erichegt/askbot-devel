@@ -45,32 +45,38 @@ class PostQuerySet(models.query.QuerySet):
         """returns a query set of questions,
         matching the full text query
         """
-        #todo - goes to thread - we search whole threads
-        if getattr(settings, 'USE_SPHINX_SEARCH', False):
-            matching_questions = Question.sphinx_search.query(search_query)
-            question_ids = [q.id for q in matching_questions]
-            return Question.objects.filter(deleted = False, id__in = question_ids)
-        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
-            return self.filter(
-                models.Q(thread__title__search = search_query)\
-                | models.Q(text__search = search_query)\
-                | models.Q(thread__tagnames__search = search_query)\
-                | models.Q(answers__text__search = search_query)
-            )
-        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
-            search_query = '&'.join(search_query.split())
-            extra_params = (search_query,)
-            extra_kwargs = {
-                'select': {'relevance': rank_clause},
-                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
-                'params': extra_params,
-                'select_params': extra_params,
-                }
-            return self.extra(**extra_kwargs)
-        else:
-            #fallback to dumb title match search
-            return self.filter(thread__title__icontains=search_query)
+        return self.filter(
+            models.Q(thread__title__icontains = search_query)\
+            | models.Q(text__icontains = search_query)\
+            | models.Q(thread__tagnames = search_query)\
+            | models.Q(thread__posts__text__icontains = search_query, thread__posts__post_type='answer')
+        )
+#        #todo - goes to thread - we search whole threads
+#        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+#            matching_questions = Question.sphinx_search.query(search_query)
+#            question_ids = [q.id for q in matching_questions]
+#            return Question.objects.filter(deleted = False, id__in = question_ids)
+#        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
+#            return self.filter(
+#                models.Q(thread__title__search = search_query)\
+#                | models.Q(text__search = search_query)\
+#                | models.Q(thread__tagnames__search = search_query)\
+#                | models.Q(answers__text__search = search_query)
+#            )
+#        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
+#            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
+#            search_query = '&'.join(search_query.split())
+#            extra_params = (search_query,)
+#            extra_kwargs = {
+#                'select': {'relevance': rank_clause},
+#                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
+#                'params': extra_params,
+#                'select_params': extra_params,
+#                }
+#            return self.extra(**extra_kwargs)
+#        else:
+#            #fallback to dumb title match search
+#            return self.filter(thread__title__icontains=search_query)
 
         #    def run_advanced_search(
         #                        self,

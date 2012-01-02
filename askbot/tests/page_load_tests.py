@@ -31,7 +31,6 @@ def patch_jinja2():
 
 (CMAJOR, CMINOR, CMICRO) = package_utils.get_coffin_version()
 if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
-    import ipdb; ipdb.set_trace()
     patch_jinja2()
 
 
@@ -167,7 +166,7 @@ class PageLoadTestCase(AskbotTestCase):
                 'answer_revisions',
                 status_code=status_code,
                 template='revisions.html',
-                kwargs={'id': 20}
+                kwargs={'id': models.Post.objects.get_answers().order_by('id')[0].id}
             )
         #todo: test different sort methods and scopes
         self.try_url(
@@ -244,28 +243,28 @@ class PageLoadTestCase(AskbotTestCase):
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':1},
+                kwargs={'id':1},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':2},
+                kwargs={'id':2},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':3},
+                kwargs={'id':3},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question_revisions',
                 status_code=status_code,
-                kwargs={'id':40},
+                kwargs={'id':40},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 template='revisions.html'
             )
         self.try_url('users',
@@ -354,7 +353,7 @@ class PageLoadTestCase(AskbotTestCase):
         self.try_url(
                 'edit_user',
                 template='authopenid/signin.html',
-                kwargs={'id':4},
+                kwargs={'id':4},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 status_code=status_code,
                 follow=True,
             )
@@ -381,25 +380,25 @@ class PageLoadTestCase(AskbotTestCase):
         #self.proto_test_non_user_urls()
 
     def proto_test_user_urls(self, status_code):
-        user = models.User.objects.get(id=2)
+        user = models.User.objects.get(id=2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
         name_slug = slugify(user.username)
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'stats'},
             template='user_profile/user_stats.html'
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'recent'},
             template='user_profile/user_recent.html'
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'inbox'},
             template='authopenid/signin.html',
@@ -407,14 +406,14 @@ class PageLoadTestCase(AskbotTestCase):
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'reputation'},
             template='user_profile/user_reputation.html'
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'votes'},
             template='authopenid/signin.html',
@@ -422,14 +421,14 @@ class PageLoadTestCase(AskbotTestCase):
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'favorites'},
             template='user_profile/user_favorites.html'
         )
         self.try_url(
             'user_profile',
-            kwargs={'id': 2, 'slug': name_slug},
+            kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'email_subscriptions'},
             template='authopenid/signin.html',
@@ -449,25 +448,25 @@ class PageLoadTestCase(AskbotTestCase):
 
 
     def test_user_urls_logged_in(self):
-        user = models.User.objects.get(id=2)
+        user = models.User.objects.get(id=2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
         name_slug = slugify(user.username)
         #works only with builtin django_authopenid
-        self.client.login(method = 'force', user_id = 2)
+        self.client.login(method = 'force', user_id = 2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
         self.try_url(
             'user_subscriptions',
-            kwargs = {'id': 2, 'slug': name_slug},
+            kwargs = {'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             template = 'user_profile/user_email_subscriptions.html'
         )
         self.client.logout()
 
     def test_inbox_page(self):
-        asker = models.User.objects.get(id = 2)
+        asker = models.User.objects.get(id = 2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
         question = asker.post_question(
             title = 'How can this happen?',
             body_text = 'This is the body of my question',
             tags = 'question answer test',
         )
-        responder = models.User.objects.get(id = 3)
+        responder = models.User.objects.get(id = 3)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
         responder.post_answer(
             question = question,
             body_text = 'this is the answer text'

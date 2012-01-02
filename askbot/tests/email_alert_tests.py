@@ -670,6 +670,7 @@ class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
                     body_text = 'yoyo @target do look here'
                 )
 
+
 class InstantQAnsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):

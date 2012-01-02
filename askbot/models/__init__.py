@@ -1701,7 +1701,7 @@ def user_get_tag_filtered_questions(self, questions = None):
     to the user choices. Parameter ``questions`` can be either ``None``
     or a starting query set.
     """
-    if questions == None:
+    if questions is None:
         questions = Post.objects.get_questions()
 
     if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:

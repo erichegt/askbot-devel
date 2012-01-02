@@ -70,7 +70,7 @@ class PostModelTests(AskbotTestCase):
         )
         self.assertRaisesRegexp(
             ValidationError,
-            r"{'__all__': \[u'Revision_type doesn`t match values in question/answer fields.', u'Post revision with this Question and Revision already exists.'\]}",
+            r"{'__all__': \[u'Revision_type doesn`t match values in question/answer fields.', u'Post revision with this Post and Revision already exists.'\]}",
             post_revision.save
         )
 
