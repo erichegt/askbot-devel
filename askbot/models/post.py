@@ -15,6 +15,7 @@ from django.utils.translation import ugettext as _
 from django.utils.http import urlquote as django_urlquote
 from django.core import exceptions as django_exceptions
 from django.core.exceptions import ValidationError
+from django.contrib.contenttypes.models import ContentType
 
 import askbot
 
@@ -436,15 +437,13 @@ class Post(models.Model):
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
 
-    _use_markdown = True
-    _escape_html = False #markdow does the escaping
-    _urlize = False
-
     objects = PostManager()
 
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_post'
+        ordering = ('-added_at',) # default ordering for comments, for other post types should be overriden per query
+
 
     def parse_post_text(post):
         """typically post has a field to store raw source text
@@ -462,15 +461,26 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
+        if post.is_answer() or post.is_question():
+            _urlize = False
+            _use_markdown = True
+            _escape_html = False #markdow does the escaping
+        elif post.is_comment():
+            _urlize = True
+            _use_markdown = True
+            _escape_html = True
+        else:
+            raise NotImplementedError
+
         text = post.get_text()
 
-        if post._escape_html:
+        if _escape_html:
             text = cgi.escape(text)
 
-        if post._urlize:
+        if _urlize:
             text = html.urlize(text)
 
-        if post._use_markdown:
+        if _use_markdown:
             text = sanitize_html(markup.get_parser().convert(text))
 
         #todo, add markdown parser call conditional on
@@ -615,6 +625,11 @@ class Post(models.Model):
             if no_slug is False:
                 url += django_urlquote(self.slug)
             return url
+        elif self.is_comment():
+            origin_post = self.get_origin_post()
+            return '%(url)s?comment=%(id)d#comment-%(id)d' % \
+                {'url': origin_post.get_absolute_url(), 'id':self.id}
+
         raise NotImplementedError
 
 
@@ -623,12 +638,49 @@ class Post(models.Model):
         # TODO: Restore specialized Comment.delete() functionality!
         super(Post, self).delete(*args, **kwargs)
 
+    def delete(self, **kwargs):
+        """deletes comment and concomitant response activity
+        records, as well as mention records, while preserving
+        integrity or response counts for the users
+        """
+        if self.is_comment():
+            #todo: implement a custom delete method on these
+            #all this should pack into Activity.responses.filter( somehow ).delete()
+            activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+            activity_types += (const.TYPE_ACTIVITY_MENTION,)
+            #todo: not very good import in models of other models
+            #todo: potentially a circular import
+            from askbot.models.user import Activity
+            comment_content_type = ContentType.objects.get_for_model(self)
+            activities = Activity.objects.filter(
+                                content_type = comment_content_type,
+                                object_id = self.id,
+                                activity_type__in = activity_types
+                            )
+
+            recipients = set()
+            for activity in activities:
+                for user in activity.recipients.all():
+                    recipients.add(user)
+
+            #activities need to be deleted before the response
+            #counts are updated
+            activities.delete()
+
+            for user in recipients:
+                user.update_response_counts()
+
+        super(Post, self).delete(**kwargs)
+
+
 
     def __unicode__(self):
         if self.is_question():
             return self.thread.title
         elif self.is_answer():
             return self.html
+        elif self.is_comment():
+            return self.text
         raise NotImplementedError
 
     def is_answer(self):
@@ -827,7 +879,7 @@ class Post(models.Model):
         return subscriber_set
 
 
-    def get_instant_notification_subscribers(
+    def _qa__get_instant_notification_subscribers(
             self,
             potential_subscribers = None,
             mentioned_users = None,
@@ -898,18 +950,14 @@ class Post(models.Model):
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
-        if EmailFeedSetting.objects.filter(
-            subscriber = question_author,
-            frequency = 'i',
-            feed_type = 'q_ask'
-        ):
+        if EmailFeedSetting.objects.filter(subscriber = question_author, frequency = 'i', feed_type = 'q_ask').exists():
             subscriber_set.add(question_author)
 
         #4) questions answered by me -make sure is that people
         #are authors of the answers to this question
         #todo: replace this with a query set method
         answer_authors = set()
-        for answer in origin_post.answers.all():
+        for answer in origin_post.thread.posts.get_answers().all():
             authors = answer.get_author_list()
             answer_authors.update(authors)
 
@@ -928,13 +976,106 @@ class Post(models.Model):
         #print 'final subscriber set is ', subscriber_set
         return list(subscriber_set)
 
+    def _comment__get_instant_notification_subscribers(
+                                    self,
+                                    potential_subscribers = None,
+                                    mentioned_users = None,
+                                    exclude_list = None
+                                ):
+        """get list of users who want instant notifications about comments
+
+        argument potential_subscribers is required as it saves on db hits
+
+        Here is the list of people who will receive the notifications:
+
+        * mentioned users
+        * of response receivers
+          (see :meth:`~askbot.models.meta.Comment.get_response_receivers`) -
+          those who subscribe for the instant
+          updates on comments and @mentions
+        * all who follow the question explicitly
+        * all global subscribers
+          (tag filtered, and subject to personalized settings)
+        """
+        #print 'in meta function'
+        #print 'potential subscribers: ', potential_subscribers
+
+        subscriber_set = set()
+
+        if potential_subscribers:
+            potential_subscribers = set(potential_subscribers)
+        else:
+            potential_subscribers = set()
+
+        if mentioned_users:
+            potential_subscribers.update(mentioned_users)
+
+        if potential_subscribers:
+            comment_subscribers = EmailFeedSetting.objects.filter_subscribers(
+                                        potential_subscribers = potential_subscribers,
+                                        feed_type = 'm_and_c',
+                                        frequency = 'i'
+                                    )
+            subscriber_set.update(comment_subscribers)
+            #print 'comment subscribers: ', comment_subscribers
+
+        origin_post = self.get_origin_post()
+        # TODO: The line below works only if origin_post is Question !
+        selective_subscribers = origin_post.thread.followed_by.all()
+        if selective_subscribers:
+            selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
+                                    potential_subscribers = selective_subscribers,
+                                    feed_type = 'q_sel',
+                                    frequency = 'i'
+                                )
+            for subscriber in selective_subscribers:
+                if origin_post.passes_tag_filter_for_user(subscriber):
+                    subscriber_set.add(subscriber)
+
+            subscriber_set.update(selective_subscribers)
+            #print 'selective subscribers: ', selective_subscribers
+
+        global_subscribers = origin_post.get_global_instant_notification_subscribers()
+        #print 'global subscribers: ', global_subscribers
+
+        subscriber_set.update(global_subscribers)
+
+        #print 'exclude list is: ', exclude_list
+        if exclude_list:
+            subscriber_set -= set(exclude_list)
+
+        #print 'final list of subscribers:', subscriber_set
+
+        return list(subscriber_set)
+
+    def get_instant_notification_subscribers(self, potential_subscribers = None, mentioned_users = None, exclude_list = None):
+        if self.is_question() or self.is_answer():
+            return self._qa__get_instant_notification_subscribers(
+                potential_subscribers=potential_subscribers,
+                mentioned_users=mentioned_users,
+                exclude_list=exclude_list
+            )
+        elif self.is_comment():
+            return self._comment__get_instant_notification_subscribers(
+                potential_subscribers=potential_subscribers,
+                mentioned_users=mentioned_users,
+                exclude_list=exclude_list
+            )
+        raise NotImplementedError
+
     def get_latest_revision(self):
         return self.revisions.all().order_by('-revised_at')[0]
 
     def get_latest_revision_number(self):
-        return self.get_latest_revision().revision
+        if self.is_comment():
+            return 1
+        else:
+            return self.get_latest_revision().revision
 
     def get_time_of_last_edit(self):
+        if self.is_comment():
+            return self.added_at
+
         if self.last_edited_at:
             return self.last_edited_at
         else:
@@ -955,8 +1096,9 @@ class Post(models.Model):
         if include_comments:
             authors.update([c.author for c in self.comments.all()])
         if recursive:
-            if hasattr(self, 'answers'):
-                for a in self.answers.exclude(deleted = True):
+            if self.is_question(): #hasattr(self, 'answers'):
+                #for a in self.answers.exclude(deleted = True):
+                for a in self.thread.posts.get_answers().exclude(deleted = True):
                     authors.update(a.get_author_list( include_comments = include_comments ) )
         if exclude_list:
             authors -= set(exclude_list)
@@ -1153,11 +1295,33 @@ class Post(models.Model):
             except django_exceptions.PermissionDenied:
                 raise exceptions.AnswerHidden(message)
 
+    def _comment__assert_is_visible_to(self, user):
+        """raises QuestionHidden or AnswerHidden"""
+        try:
+            self.parent.assert_is_visible_to(user)
+        except exceptions.QuestionHidden:
+            message = _(
+                        'Sorry, the comment you are looking for is no '
+                        'longer accessible, because the parent question '
+                        'has been removed'
+                       )
+            raise exceptions.QuestionHidden(message)
+        except exceptions.AnswerHidden:
+            message = _(
+                        'Sorry, the comment you are looking for is no '
+                        'longer accessible, because the parent answer '
+                        'has been removed'
+                       )
+            raise exceptions.AnswerHidden(message)
+
+
     def assert_is_visible_to(self, user):
         if self.is_question():
             return self._question__assert_is_visible_to(user)
         elif self.is_answer():
             return self._answer__assert_is_visible_to(user)
+        elif self.is_comment():
+            return _comment__assert_is_visible_to(user)
         raise NotImplementedError
 
     def get_updated_activity_data(self, created = False):
@@ -1175,17 +1339,16 @@ class Post(models.Model):
             else:
                 latest_revision = self.get_latest_revision()
                 return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
+        elif self.is_comment():
+            if self.parent.post_type == 'question':
+                return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
+            elif self.parent.post_type == 'answer':
+                return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
+
         raise NotImplementedError
 
     def get_tag_names(self):
-        if self.is_question():
-            """Creates a list of Tag names from the ``tagnames`` attribute."""
-            return self.thread.tagnames.split(u' ')
-        elif self.is_answer():
-            """return tag names on the question"""
-            return self.question.get_tag_names()
-        raise NotImplementedError
-
+        return self.thread.get_tag_names()
 
     def _answer__apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
 
@@ -1344,12 +1507,13 @@ class Post(models.Model):
                 include_comments = True
             )
         )
+        question = self.thread._question_post()
         recipients.update(
-            self.question.get_author_list(
+            question.get_author_list(
                 include_comments = True
             )
         )
-        for answer in self.question.answers.all():
+        for answer in question.thread.posts.get_answers().all():
             recipients.update(answer.get_author_list())
 
         recipients -= set(exclude_list)
@@ -1372,17 +1536,35 @@ class Post(models.Model):
             )
         )
         #do not include answer commenters here
-        for a in self.answers.all():
+        for a in self.thread.posts.get_answers().all():
             recipients.update(a.get_author_list())
 
         recipients -= set(exclude_list)
         return recipients
+
+    def _comment__get_response_receivers(self, exclude_list = None):
+        """Response receivers are commenters of the
+        same post and the authors of the post itself.
+        """
+        assert(exclude_list is not None)
+        users = set()
+        #get authors of parent object and all associated comments
+        users.update(
+            self.parent.get_author_list(
+                    include_comments = True,
+                )
+        )
+        users -= set(exclude_list)
+        return list(users)
+
 
     def get_response_receivers(self, exclude_list = None):
         if self.is_answer():
             return self._answer__get_response_receivers(exclude_list)
         elif self.is_question():
             return self._question__get_response_receivers(exclude_list)
+        elif self.is_comment():
+            return self._comment__get_response_receivers(exclude_list)
         raise NotImplementedError
 
     def get_question_title(self):
@@ -1437,6 +1619,11 @@ class Post(models.Model):
                 break
             order_number += 1
         return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
+
+    def get_order_number(self):
+        if not self.is_comment():
+            raise NotImplementedError
+        return self.parent.comments.filter(added_at__lt = self.added_at).count() + 1
 
     def get_latest_revision(self):
         return self.revisions.order_by('-revised_at')[0]

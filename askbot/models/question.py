@@ -579,6 +579,7 @@ class Thread(models.Model):
 #    class Meta(content.Content.Meta):
 #        db_table = u'question'
 #
+# TODO: Add sphinx_search() to Post model
 #
 #if getattr(settings, 'USE_SPHINX_SEARCH', False):
 #    from djangosphinx.models import SphinxSearch
