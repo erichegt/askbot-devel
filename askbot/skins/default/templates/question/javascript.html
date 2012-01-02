@@ -94,7 +94,11 @@
             $('#previewer').toggle();
             $('#pre-collapse').text(txt);
         });
-        setupFormValidation($("#fmanswer"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+        setupFormValidation(
+            $("#fmanswer"),
+            CPValidator.getAnswerFormRules(),
+            CPValidator.getAnswerFormMessages()
+        );
     }
 </script>
 {% include "meta/editor_data.html" %}

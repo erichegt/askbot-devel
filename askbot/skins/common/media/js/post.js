@@ -112,7 +112,7 @@ var CPValidator = function(){
                     limit_tag_length: true
                 },
                 text: {
-                    minlength: askbot['settings']['minEditorLength']
+                    minlength: askbot['settings']['minQuestionBodyLength']
                 },
                 title: {
                     minlength: askbot['settings']['minTitleLength']
@@ -129,13 +129,49 @@ var CPValidator = function(){
                 },
                 text: {
                     required: " " + gettext('content cannot be empty'),
-                    minlength: interpolate(gettext('%s content minchars'), [askbot['settings']['minEditorLength']])
+                    minlength: interpolate(
+                                    ngettext(
+                                        'question body must be > %s character',
+                                        'question body must be > %s characters',
+                                        askbot['settings']['minQuestionBodyLength']
+                                    ),
+                                    [askbot['settings']['minQuestionBodyLength'], ]
+                                )
                 },
                 title: {
                     required: " " + gettext('please enter title'),
-                    minlength: interpolate(gettext('%s title minchars'), [askbot['settings']['minTitleLength']])
+                    minlength: interpolate(
+                                    ngettext(
+                                        'title must be > %s character',
+                                        'title must be > %s characters',
+                                        askbot['settings']['minTitleLength']
+                                    ),
+                                    [askbot['settings']['minTitleLength'], ]
+                                )
                 }
             };
+        },
+        getAnswerFormRules : function(){
+            return {
+                text: {
+                    minlength: askbot['settings']['minAnswerBodyLength']
+                },
+            };
+        },
+        getAnswerFormMessages: function(){
+            return {
+                text: {
+                    required: " " + gettext('content cannot be empty'),
+                    minlength: interpolate(
+                                    ngettext(
+                                        'answer must be > %s character',
+                                        'answer must be > %s characters',
+                                        askbot['settings']['minAnswerBodyLength']
+                                    ),
+                                    [askbot['settings']['minAnswerBodyLength'], ]
+                                )
+                },
+            }
         }
     };
 }();
