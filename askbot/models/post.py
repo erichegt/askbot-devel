@@ -1321,7 +1321,7 @@ class Post(models.Model):
         elif self.is_answer():
             return self._answer__assert_is_visible_to(user)
         elif self.is_comment():
-            return _comment__assert_is_visible_to(user)
+            return self._comment__assert_is_visible_to(user)
         raise NotImplementedError
 
     def get_updated_activity_data(self, created = False):
