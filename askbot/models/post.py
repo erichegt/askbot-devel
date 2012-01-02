@@ -37,6 +37,9 @@ class PostQuerySet(models.query.QuerySet):
     """
     Custom query set subclass for :class:`~askbot.models.Post`
     """
+    #todo: we may not need this query set class,
+    #as all methods on this class seem to want to
+    #belong to Thread manager or Query set.
 
     def get_by_text_query(self, search_query):
         """returns a query set of questions,

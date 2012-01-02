@@ -389,7 +389,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #in addition - if url points to a comment and the comment
         #is for the answer - we need the answer object
         try:
-            show_comment = models.Post.objects.get(id=show_comment.id)
+            show_comment = models.Post.objects.get(id=show_comment)
             if str(show_comment.thread._question_post().id) != id:
                 return HttpResponseRedirect(show_comment.thread.get_absolute_url())
             show_post = show_comment.parent
