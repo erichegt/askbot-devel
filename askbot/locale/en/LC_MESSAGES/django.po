@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-12 09:14-0600\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Evgeny Fadeev <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,25 +56,24 @@ msgstr ""
 msgid "please enter a descriptive title for your question"
 msgstr ""
 
-#: forms.py:110
-msgid "title must be > 10 characters"
-msgstr ""
+#: forms.py:111
+#, python-format
+msgid "title must be > %d character"
+msgid_plural "title must be > %d characters"
+msgstr[0] ""
+msgstr[1] ""
 
-#: forms.py:119
+#: forms.py:131
 msgid "content"
 msgstr ""
 
-#: forms.py:125
-msgid "question content must be > 10 characters"
-msgstr ""
-
-#: forms.py:134 skins/common/templates/widgets/edit_post.html:20
+#: forms.py:165 skins/common/templates/widgets/edit_post.html:20
 #: skins/common/templates/widgets/edit_post.html:32
 #: skins/default/templates/widgets/meta_nav.html:5
 msgid "tags"
 msgstr ""
 
-#: forms.py:137
+#: forms.py:168
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -85,352 +84,356 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:170 skins/default/templates/question_retag.html:58
+#: forms.py:201 skins/default/templates/question_retag.html:58
 msgid "tags are required"
 msgstr ""
 
-#: forms.py:179
+#: forms.py:210
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:187
+#: forms.py:218
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr ""
 
-#: forms.py:196
+#: forms.py:227
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:204
+#: forms.py:235
 msgid "use-these-chars-in-tags"
 msgstr ""
 
-#: forms.py:239
+#: forms.py:270
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr ""
 
-#: forms.py:240
+#: forms.py:271
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
 
-#: forms.py:256
+#: forms.py:287
 msgid "update summary:"
 msgstr ""
 
-#: forms.py:257
+#: forms.py:288
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
 
-#: forms.py:333
+#: forms.py:364
 msgid "Enter number of points to add or subtract"
 msgstr ""
 
-#: forms.py:347 const/__init__.py:250
+#: forms.py:378 const/__init__.py:250
 msgid "approved"
 msgstr ""
 
-#: forms.py:348 const/__init__.py:251
+#: forms.py:379 const/__init__.py:251
 msgid "watched"
 msgstr ""
 
-#: forms.py:349 const/__init__.py:252
+#: forms.py:380 const/__init__.py:252
 msgid "suspended"
 msgstr ""
 
-#: forms.py:350 const/__init__.py:253
+#: forms.py:381 const/__init__.py:253
 msgid "blocked"
 msgstr ""
 
-#: forms.py:352
+#: forms.py:383
 msgid "administrator"
 msgstr ""
 
-#: forms.py:353 const/__init__.py:249
+#: forms.py:384 const/__init__.py:249
 msgid "moderator"
 msgstr ""
 
-#: forms.py:373
+#: forms.py:404
 msgid "Change status to"
 msgstr ""
 
-#: forms.py:400
+#: forms.py:431
 msgid "which one?"
 msgstr ""
 
-#: forms.py:421
+#: forms.py:452
 msgid "Cannot change own status"
 msgstr ""
 
-#: forms.py:427
+#: forms.py:458
 msgid "Cannot turn other user to moderator"
 msgstr ""
 
-#: forms.py:434
+#: forms.py:465
 msgid "Cannot change status of another moderator"
 msgstr ""
 
-#: forms.py:440
+#: forms.py:471
 msgid "Cannot change status to admin"
 msgstr ""
 
-#: forms.py:446
+#: forms.py:477
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
 
-#: forms.py:455
+#: forms.py:486
 msgid "Subject line"
 msgstr ""
 
-#: forms.py:462
+#: forms.py:493
 msgid "Message text"
 msgstr ""
 
-#: forms.py:548
+#: forms.py:579
 msgid "Your name (optional):"
 msgstr ""
 
-#: forms.py:549
+#: forms.py:580
 msgid "Email:"
 msgstr ""
 
-#: forms.py:551
+#: forms.py:582
 msgid "Your message:"
 msgstr ""
 
-#: forms.py:556
+#: forms.py:587
 msgid "I don't want to give my email or receive a response:"
 msgstr ""
 
-#: forms.py:578
+#: forms.py:609
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr ""
 
-#: forms.py:617
+#: forms.py:648
 msgid "ask anonymously"
 msgstr ""
 
-#: forms.py:619
+#: forms.py:650
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr ""
 
-#: forms.py:779
+#: forms.py:810
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr ""
 
-#: forms.py:783
+#: forms.py:814
 msgid "reveal identity"
 msgstr ""
 
-#: forms.py:841
+#: forms.py:872
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr ""
 
-#: forms.py:854
+#: forms.py:885
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr ""
 
-#: forms.py:892
+#: forms.py:923
 msgid "this email will be linked to gravatar"
 msgstr ""
 
-#: forms.py:899
+#: forms.py:930
 msgid "Real name"
 msgstr ""
 
-#: forms.py:906
+#: forms.py:937
 msgid "Website"
 msgstr ""
 
-#: forms.py:913
+#: forms.py:944
 msgid "City"
 msgstr ""
 
-#: forms.py:922
+#: forms.py:953
 msgid "Show country"
 msgstr ""
 
-#: forms.py:927
+#: forms.py:958
 msgid "Date of birth"
 msgstr ""
 
-#: forms.py:928
+#: forms.py:959
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr ""
 
-#: forms.py:934
+#: forms.py:965
 msgid "Profile"
 msgstr ""
 
-#: forms.py:943
+#: forms.py:974
 msgid "Screen name"
 msgstr ""
 
-#: forms.py:974 forms.py:975
+#: forms.py:1005 forms.py:1006
 msgid "this email has already been registered, please use another one"
 msgstr ""
 
-#: forms.py:982
+#: forms.py:1013
 msgid "Choose email tag filter"
 msgstr ""
 
-#: forms.py:1029
+#: forms.py:1060
 msgid "Asked by me"
 msgstr ""
 
-#: forms.py:1032
+#: forms.py:1063
 msgid "Answered by me"
 msgstr ""
 
-#: forms.py:1035
+#: forms.py:1066
 msgid "Individually selected"
 msgstr ""
 
-#: forms.py:1038
+#: forms.py:1069
 msgid "Entire forum (tag filtered)"
 msgstr ""
 
-#: forms.py:1042
+#: forms.py:1073
 msgid "Comments and posts mentioning me"
 msgstr ""
 
-#: forms.py:1121
+#: forms.py:1152
 msgid "okay, let's try!"
 msgstr ""
 
-#: forms.py:1122
+#: forms.py:1153
 msgid "no community email please, thanks"
 msgstr "no askbot email please, thanks"
 
-#: forms.py:1126
+#: forms.py:1157
 msgid "please choose one of the options above"
 msgstr ""
 
-#: urls.py:57
+#: urls.py:52
 msgid "about/"
 msgstr ""
 
-#: urls.py:58
+#: urls.py:53
 msgid "faq/"
 msgstr ""
 
-#: urls.py:59
+#: urls.py:54
 msgid "privacy/"
 msgstr ""
 
-#: urls.py:61 urls.py:66
+#: urls.py:56 urls.py:61
 msgid "answers/"
 msgstr ""
 
-#: urls.py:61 urls.py:87 urls.py:212
+#: urls.py:56 urls.py:82 urls.py:207
 msgid "edit/"
 msgstr ""
 
-#: urls.py:66 urls.py:117
+#: urls.py:61 urls.py:112
 msgid "revisions/"
 msgstr ""
 
-#: urls.py:72 urls.py:82 urls.py:87 urls.py:92 urls.py:97 urls.py:102
-#: urls.py:107 urls.py:112 urls.py:117 urls.py:123 urls.py:299
+#: urls.py:67 urls.py:77 urls.py:82 urls.py:87 urls.py:92 urls.py:97
+#: urls.py:102 urls.py:107 urls.py:112 urls.py:118 urls.py:294
 #: skins/default/templates/question/javascript.html:16
+#: skins/default/templates/question/javascript.html:19
 msgid "questions/"
 msgstr ""
 
-#: urls.py:82
+#: urls.py:77
 msgid "ask/"
 msgstr ""
 
-#: urls.py:92
+#: urls.py:87
 msgid "retag/"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:92
 msgid "close/"
 msgstr ""
 
-#: urls.py:102
+#: urls.py:97
 msgid "reopen/"
 msgstr ""
 
-#: urls.py:107
+#: urls.py:102
 msgid "answer/"
 msgstr ""
 
-#: urls.py:112 skins/default/templates/question/javascript.html:16
+#: urls.py:107 skins/default/templates/question/javascript.html:16
 msgid "vote/"
 msgstr ""
 
-#: urls.py:123
+#: urls.py:118
 msgid "widgets/"
 msgstr ""
 
-#: urls.py:158
+#: urls.py:153
 msgid "tags/"
 msgstr ""
 
-#: urls.py:201
+#: urls.py:196
 msgid "subscribe-for-tags/"
 msgstr ""
 
-#: urls.py:206 urls.py:212 urls.py:218 urls.py:226
+#: urls.py:201 urls.py:207 urls.py:213 urls.py:221
 #: skins/default/templates/main_page/javascript.html:39
+#: skins/default/templates/main_page/javascript.html:42
 msgid "users/"
 msgstr ""
 
-#: urls.py:219
+#: urls.py:214
 msgid "subscriptions/"
 msgstr ""
 
-#: urls.py:231
+#: urls.py:226
 msgid "users/update_has_custom_avatar/"
 msgstr ""
 
-#: urls.py:236 urls.py:241
+#: urls.py:231 urls.py:236
 msgid "badges/"
 msgstr ""
 
-#: urls.py:246
+#: urls.py:241
 msgid "messages/"
 msgstr ""
 
-#: urls.py:246
+#: urls.py:241
 msgid "markread/"
 msgstr ""
 
-#: urls.py:262
+#: urls.py:257
 msgid "upload/"
 msgstr ""
 
-#: urls.py:263
+#: urls.py:258
 msgid "feedback/"
 msgstr ""
 
-#: urls.py:305 skins/default/templates/main_page/javascript.html:38
+#: urls.py:300 skins/default/templates/main_page/javascript.html:38
+#: skins/default/templates/main_page/javascript.html:41
 #: skins/default/templates/question/javascript.html:15
+#: skins/default/templates/question/javascript.html:18
 msgid "question/"
 msgstr ""
 
-#: urls.py:312 setup_templates/settings.py:208
+#: urls.py:307 setup_templates/settings.py:208
 #: skins/common/templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr ""
@@ -910,103 +913,115 @@ msgstr ""
 msgid "Maximum length of tag (number of characters)"
 msgstr ""
 
-#: conf/forum_data_rules.py:95
+#: conf/forum_data_rules.py:96
+msgid "Minimum length of title (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:106
+msgid "Minimum length of question body (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:117
+msgid "Minimum length of answer body (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:126
 msgid "Mandatory tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:98
+#: conf/forum_data_rules.py:129
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr ""
 
-#: conf/forum_data_rules.py:110
+#: conf/forum_data_rules.py:141
 msgid "Force lowercase the tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:112
+#: conf/forum_data_rules.py:143
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:126
+#: conf/forum_data_rules.py:157
 msgid "Format of tag list"
 msgstr ""
 
-#: conf/forum_data_rules.py:128
+#: conf/forum_data_rules.py:159
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag cloud"
 msgstr ""
 
-#: conf/forum_data_rules.py:140
+#: conf/forum_data_rules.py:171
 msgid "Use wildcard tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:142
+#: conf/forum_data_rules.py:173
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr ""
 
-#: conf/forum_data_rules.py:155
+#: conf/forum_data_rules.py:186
 msgid "Default max number of comments to display under posts"
 msgstr ""
 
-#: conf/forum_data_rules.py:166
+#: conf/forum_data_rules.py:197
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
 msgstr ""
 
-#: conf/forum_data_rules.py:176
+#: conf/forum_data_rules.py:207
 msgid "Limit time to edit comments"
 msgstr ""
 
-#: conf/forum_data_rules.py:178
+#: conf/forum_data_rules.py:209
 msgid "If unchecked, there will be no time limit to edit the comments"
 msgstr ""
 
-#: conf/forum_data_rules.py:189
+#: conf/forum_data_rules.py:220
 msgid "Minutes allowed to edit a comment"
 msgstr ""
 
-#: conf/forum_data_rules.py:190
+#: conf/forum_data_rules.py:221
 msgid "To enable this setting, check the previous one"
 msgstr ""
 
-#: conf/forum_data_rules.py:199
+#: conf/forum_data_rules.py:230
 msgid "Save comment by pressing <Enter> key"
 msgstr ""
 
-#: conf/forum_data_rules.py:208
+#: conf/forum_data_rules.py:239
 msgid "Minimum length of search term for Ajax search"
 msgstr ""
 
-#: conf/forum_data_rules.py:209
+#: conf/forum_data_rules.py:240
 msgid "Must match the corresponding database backend setting"
 msgstr ""
 
-#: conf/forum_data_rules.py:218
+#: conf/forum_data_rules.py:249
 msgid "Do not make text query sticky in search"
 msgstr ""
 
-#: conf/forum_data_rules.py:220
+#: conf/forum_data_rules.py:251
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr ""
 
-#: conf/forum_data_rules.py:233
+#: conf/forum_data_rules.py:264
 msgid "Maximum number of tags per question"
 msgstr ""
 
-#: conf/forum_data_rules.py:245
+#: conf/forum_data_rules.py:276
 msgid "Number of questions to list by default"
 msgstr ""
 
-#: conf/forum_data_rules.py:255
+#: conf/forum_data_rules.py:286
 msgid "What should \"unanswered question\" mean?"
 msgstr ""
 
@@ -2567,14 +2582,16 @@ msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
+#, fuzzy
 msgid "Documentation"
-msgstr ""
+msgstr "karma"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/common/templates/authopenid/signin.html:132
+#, fuzzy
 msgid "Change password"
-msgstr ""
+msgstr "Password"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
@@ -3009,11 +3026,9 @@ msgstr ""
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
 msgstr[0] ""
-"Sorry, to flag posts a minimum reputation of %(min_rep)d is "
-"required"
+"Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgstr[1] ""
-"Sorry, to flag posts a minimum reputation of %(min_rep)d is "
-"required"
+"Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 
 #: models/__init__.py:828
 msgid "you don't have the permission to remove all flags"
@@ -3062,128 +3077,128 @@ msgstr ""
 msgid "cannot revoke old vote"
 msgstr "sorry, but older votes cannot be revoked"
 
-#: models/__init__.py:1393 utils/functions.py:70
+#: models/__init__.py:1395 utils/functions.py:70
 #, python-format
 msgid "on %(date)s"
 msgstr ""
 
-#: models/__init__.py:1395
+#: models/__init__.py:1397
 msgid "in two days"
 msgstr ""
 
-#: models/__init__.py:1397
+#: models/__init__.py:1399
 msgid "tomorrow"
 msgstr ""
 
-#: models/__init__.py:1399
+#: models/__init__.py:1401
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1401
+#: models/__init__.py:1403
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1402
+#: models/__init__.py:1404
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1404
+#: models/__init__.py:1406
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr ""
 
-#: models/__init__.py:1570 skins/default/templates/feedback_email.txt:9
+#: models/__init__.py:1572 skins/default/templates/feedback_email.txt:9
 msgid "Anonymous"
 msgstr ""
 
-#: models/__init__.py:1666 views/users.py:371
+#: models/__init__.py:1668 views/users.py:372
 msgid "Site Adminstrator"
 msgstr ""
 
-#: models/__init__.py:1668 views/users.py:373
+#: models/__init__.py:1670 views/users.py:374
 msgid "Forum Moderator"
 msgstr ""
 
-#: models/__init__.py:1670 views/users.py:375
+#: models/__init__.py:1672 views/users.py:376
 msgid "Suspended User"
 msgstr ""
 
-#: models/__init__.py:1672 views/users.py:377
+#: models/__init__.py:1674 views/users.py:378
 msgid "Blocked User"
 msgstr ""
 
-#: models/__init__.py:1674 views/users.py:379
+#: models/__init__.py:1676 views/users.py:380
 msgid "Registered User"
 msgstr ""
 
-#: models/__init__.py:1676
+#: models/__init__.py:1678
 msgid "Watched User"
 msgstr ""
 
-#: models/__init__.py:1678
+#: models/__init__.py:1680
 msgid "Approved User"
 msgstr ""
 
-#: models/__init__.py:1787
+#: models/__init__.py:1789
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr ""
 
-#: models/__init__.py:1797
+#: models/__init__.py:1799
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1804
+#: models/__init__.py:1806
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1811
+#: models/__init__.py:1813
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1822
+#: models/__init__.py:1824
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr ""
 
-#: models/__init__.py:1826
+#: models/__init__.py:1828
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr ""
 
-#: models/__init__.py:2296
+#: models/__init__.py:2305
 #, python-format
 msgid "\"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:2433
+#: models/__init__.py:2442
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
 
-#: models/__init__.py:2626 views/commands.py:409
+#: models/__init__.py:2635 views/commands.py:429
 msgid "Your tag subscription was saved, thanks!"
 msgstr ""
 
@@ -3592,8 +3607,9 @@ msgid "Change email"
 msgstr "Change Email"
 
 #: skins/common/templates/authopenid/changeemail.html:10
+#, fuzzy
 msgid "Save your email address"
-msgstr ""
+msgstr "Your email <i>(never shared)</i>"
 
 #: skins/common/templates/authopenid/changeemail.html:15
 #, python-format
@@ -3627,8 +3643,9 @@ msgstr ""
 "<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
 
 #: skins/common/templates/authopenid/changeemail.html:36
+#, fuzzy
 msgid "Save Email"
-msgstr ""
+msgstr "Change Email"
 
 #: skins/common/templates/authopenid/changeemail.html:38
 #: skins/default/templates/answer_edit.html:25
@@ -3638,13 +3655,14 @@ msgstr ""
 #: skins/default/templates/question_retag.html:22
 #: skins/default/templates/reopen.html:27
 #: skins/default/templates/subscribe_for_tags.html:16
-#: skins/default/templates/user_profile/user_edit.html:84
+#: skins/default/templates/user_profile/user_edit.html:96
 msgid "Cancel"
 msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:45
+#, fuzzy
 msgid "Validate email"
-msgstr ""
+msgstr "Change Email"
 
 #: skins/common/templates/authopenid/changeemail.html:48
 #, python-format
@@ -3711,8 +3729,9 @@ msgstr ""
 
 #: skins/common/templates/authopenid/complete.html:21
 #: skins/common/templates/authopenid/complete.html:23
+#, fuzzy
 msgid "Registration"
-msgstr ""
+msgstr "karma"
 
 #: skins/common/templates/authopenid/complete.html:27
 #, python-format
@@ -3944,8 +3963,9 @@ msgid "Login or email"
 msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:101
+#, fuzzy
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: skins/common/templates/authopenid/signin.html:106
 msgid "Login"
@@ -3956,8 +3976,9 @@ msgid "To change your password - please enter the new one twice, then submit"
 msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:117
+#, fuzzy
 msgid "New password"
-msgstr ""
+msgstr "Password"
 
 #: skins/common/templates/authopenid/signin.html:124
 msgid "Please, retype"
@@ -3972,22 +3993,24 @@ msgid "provider"
 msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:151
+#, fuzzy
 msgid "last used"
-msgstr ""
+msgstr "Last updated"
 
 #: skins/common/templates/authopenid/signin.html:152
 msgid "delete, if you like"
 msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:166
-#: skins/common/templates/question/answer_controls.html:34
-#: skins/common/templates/question/question_controls.html:39
+#: skins/common/templates/question/answer_controls.html:44
+#: skins/common/templates/question/question_controls.html:49
 msgid "delete"
 msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:168
+#, fuzzy
 msgid "cannot be deleted"
-msgstr ""
+msgstr "sorry, but older votes cannot be revoked"
 
 #: skins/common/templates/authopenid/signin.html:181
 msgid "Still have trouble signing in?"
@@ -4087,12 +4110,14 @@ msgid "return to OpenID login"
 msgstr ""
 
 #: skins/common/templates/avatar/add.html:3
+#, fuzzy
 msgid "add avatar"
-msgstr ""
+msgstr "How to change my picture (gravatar) and what is gravatar?"
 
 #: skins/common/templates/avatar/add.html:5
+#, fuzzy
 msgid "Change avatar"
-msgstr ""
+msgstr "Retag question"
 
 #: skins/common/templates/avatar/add.html:6
 #: skins/common/templates/avatar/change.html:7
@@ -4109,8 +4134,9 @@ msgid "Upload New Image"
 msgstr ""
 
 #: skins/common/templates/avatar/change.html:4
+#, fuzzy
 msgid "change avatar"
-msgstr ""
+msgstr "Retag question"
 
 #: skins/common/templates/avatar/change.html:17
 msgid "Choose new Default"
@@ -4154,32 +4180,40 @@ msgstr "link"
 msgid "edit"
 msgstr ""
 
-#: skins/common/templates/question/answer_controls.html:14
-#: skins/common/templates/question/answer_controls.html:23
-#: skins/common/templates/question/question_controls.html:22
-#: skins/common/templates/question/question_controls.html:31
+#: skins/common/templates/question/answer_controls.html:15
+#: skins/common/templates/question/answer_controls.html:16
+#: skins/common/templates/question/question_controls.html:23
+#: skins/common/templates/question/question_controls.html:24
+msgid "remove all flags"
+msgstr ""
+
+#: skins/common/templates/question/answer_controls.html:22
+#: skins/common/templates/question/answer_controls.html:32
+#: skins/common/templates/question/question_controls.html:30
+#: skins/common/templates/question/question_controls.html:39
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
 
-#: skins/common/templates/question/answer_controls.html:15
-#: skins/common/templates/question/question_controls.html:23
+#: skins/common/templates/question/answer_controls.html:23
+#: skins/common/templates/question/question_controls.html:31
 msgid "flag offensive"
 msgstr ""
 
-#: skins/common/templates/question/answer_controls.html:24
-#: skins/common/templates/question/question_controls.html:32
+#: skins/common/templates/question/answer_controls.html:33
+#: skins/common/templates/question/question_controls.html:40
 msgid "remove flag"
 msgstr ""
 
-#: skins/common/templates/question/answer_controls.html:34
-#: skins/common/templates/question/question_controls.html:39
+#: skins/common/templates/question/answer_controls.html:44
+#: skins/common/templates/question/question_controls.html:49
 msgid "undelete"
 msgstr ""
 
-#: skins/common/templates/question/answer_controls.html:40
+#: skins/common/templates/question/answer_controls.html:50
+#, fuzzy
 msgid "swap with question"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/common/templates/question/answer_vote_buttons.html:13
 #: skins/common/templates/question/answer_vote_buttons.html:14
@@ -4209,8 +4243,9 @@ msgid "retag"
 msgstr ""
 
 #: skins/common/templates/question/question_controls.html:13
+#, fuzzy
 msgid "reopen"
-msgstr ""
+msgstr "You can safely re-use the same login for all OpenID-enabled websites."
 
 #: skins/common/templates/question/question_controls.html:17
 msgid "close"
@@ -4244,8 +4279,9 @@ msgid "Related tags"
 msgstr "Tags"
 
 #: skins/common/templates/widgets/tag_selector.html:4
+#, fuzzy
 msgid "Interesting tags"
-msgstr ""
+msgstr "Tags"
 
 #: skins/common/templates/widgets/tag_selector.html:18
 #: skins/common/templates/widgets/tag_selector.html:34
@@ -4253,8 +4289,9 @@ msgid "add"
 msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:20
+#, fuzzy
 msgid "Ignored tags"
-msgstr ""
+msgstr "Retag question"
 
 #: skins/common/templates/widgets/tag_selector.html:36
 msgid "Display tag filter"
@@ -4307,8 +4344,9 @@ msgstr ""
 
 #: skins/default/templates/404.jinja.html:31
 #: skins/default/templates/widgets/scope_nav.html:3
+#, fuzzy
 msgid "see all questions"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/404.jinja.html:32
 msgid "see all tags"
@@ -4328,12 +4366,14 @@ msgid "please report the error to the site administrators if you wish"
 msgstr ""
 
 #: skins/default/templates/500.jinja.html:12
+#, fuzzy
 msgid "see latest questions"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/500.jinja.html:13
+#, fuzzy
 msgid "see tags"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/about.html:3 skins/default/templates/about.html:5
 #, python-format
@@ -4342,8 +4382,9 @@ msgstr ""
 
 #: skins/default/templates/answer_edit.html:4
 #: skins/default/templates/answer_edit.html:10
+#, fuzzy
 msgid "Edit answer"
-msgstr ""
+msgstr "oldest"
 
 #: skins/default/templates/answer_edit.html:10
 #: skins/default/templates/question_edit.html:9
@@ -4411,8 +4452,9 @@ msgid "Badges summary"
 msgstr "Badges"
 
 #: skins/default/templates/badges.html:5
+#, fuzzy
 msgid "Badges"
-msgstr ""
+msgstr "Badges"
 
 #: skins/default/templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
@@ -4462,12 +4504,14 @@ msgid "bronze badge description"
 msgstr "bronze badge: often given as a special honor"
 
 #: skins/default/templates/close.html:3 skins/default/templates/close.html:5
+#, fuzzy
 msgid "Close question"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/close.html:6
+#, fuzzy
 msgid "Close the question"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/close.html:11
 msgid "Reasons"
@@ -4518,8 +4562,9 @@ msgid ""
 msgstr ""
 
 #: skins/default/templates/faq_static.html:13
+#, fuzzy
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "What kinds of questions should be avoided?"
 
 #: skins/default/templates/faq_static.html:14
 msgid ""
@@ -4583,12 +4628,14 @@ msgid "upvote"
 msgstr ""
 
 #: skins/default/templates/faq_static.html:37
+#, fuzzy
 msgid "use tags"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/faq_static.html:42
+#, fuzzy
 msgid "add comments"
-msgstr ""
+msgstr "post a comment"
 
 #: skins/default/templates/faq_static.html:46
 #: skins/default/templates/user_profile/user_votes.html:15
@@ -4596,28 +4643,37 @@ msgid "downvote"
 msgstr ""
 
 #: skins/default/templates/faq_static.html:49
+#, fuzzy
 msgid " accept own answer to own questions"
 msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your question "
+"anonymously</span>. When you submit the post, you will be redirected to the "
+"login/signup page. Your question will be saved in the current session and "
+"will be published after you log in. Login/signup process is very simple. "
+"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/faq_static.html:53
 msgid "open and close own questions"
 msgstr ""
 
 #: skins/default/templates/faq_static.html:57
+#, fuzzy
 msgid "retag other's questions"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/faq_static.html:62
 msgid "edit community wiki questions"
 msgstr ""
 
 #: skins/default/templates/faq_static.html:67
+#, fuzzy
 msgid "\"edit any answer"
-msgstr ""
+msgstr "answers"
 
 #: skins/default/templates/faq_static.html:71
+#, fuzzy
 msgid "\"delete any comment"
-msgstr ""
+msgstr "post a comment"
 
 #: skins/default/templates/faq_static.html:74
 msgid "what is gravatar"
@@ -4674,8 +4730,9 @@ msgid "If this approach is not for you, we respect your choice."
 msgstr ""
 
 #: skins/default/templates/faq_static.html:84
+#, fuzzy
 msgid "Still have questions?"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/faq_static.html:85
 #, python-format
@@ -4832,8 +4889,11 @@ msgid ""
 msgstr ""
 
 #: skins/default/templates/instant_notification.html:42
+#, fuzzy
 msgid "<p>Sincerely,<br/>Forum Administrator</p>"
 msgstr ""
+"Sincerely,\n"
+"Q&A Forum Administrator"
 
 #: skins/default/templates/macros.html:3
 #, python-format
@@ -4841,19 +4901,19 @@ msgid "Share this question on %(site)s"
 msgstr ""
 
 #: skins/default/templates/macros.html:14
-#: skins/default/templates/macros.html:470
+#: skins/default/templates/macros.html:471
 #, python-format
 msgid "follow %(alias)s"
 msgstr ""
 
 #: skins/default/templates/macros.html:17
-#: skins/default/templates/macros.html:473
+#: skins/default/templates/macros.html:474
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr ""
 
 #: skins/default/templates/macros.html:18
-#: skins/default/templates/macros.html:474
+#: skins/default/templates/macros.html:475
 #, python-format
 msgid "following %(alias)s"
 msgstr ""
@@ -4879,8 +4939,9 @@ msgid "i dont like this answer (click again to cancel)"
 msgstr ""
 
 #: skins/default/templates/macros.html:52
+#, fuzzy
 msgid "anonymous user"
-msgstr ""
+msgstr "Sorry, anonymous users cannot vote"
 
 #: skins/default/templates/macros.html:80
 msgid "this post is marked as community wiki"
@@ -4898,16 +4959,18 @@ msgid "asked"
 msgstr ""
 
 #: skins/default/templates/macros.html:91
+#, fuzzy
 msgid "answered"
-msgstr ""
+msgstr "answers"
 
 #: skins/default/templates/macros.html:93
 msgid "posted"
 msgstr ""
 
 #: skins/default/templates/macros.html:123
+#, fuzzy
 msgid "updated"
-msgstr ""
+msgstr "Last updated"
 
 #: skins/default/templates/macros.html:221
 #, python-format
@@ -4915,8 +4978,9 @@ msgid "see questions tagged '%(tag)s'"
 msgstr ""
 
 #: skins/default/templates/macros.html:278
+#, fuzzy
 msgid "delete this comment"
-msgstr ""
+msgstr "post a comment"
 
 #: skins/default/templates/macros.html:307
 #: skins/default/templates/macros.html:315
@@ -4940,76 +5004,77 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:541 templatetags/extra_tags.py:43
+#: skins/default/templates/macros.html:542 templatetags/extra_tags.py:43
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr ""
 
-#: skins/default/templates/macros.html:550
+#: skins/default/templates/macros.html:551
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr ""
 
-#: skins/default/templates/macros.html:565
 #: skins/default/templates/macros.html:566
+#: skins/default/templates/macros.html:567
 msgid "previous"
 msgstr ""
 
-#: skins/default/templates/macros.html:577
+#: skins/default/templates/macros.html:578
 msgid "current page"
 msgstr ""
 
-#: skins/default/templates/macros.html:579
-#: skins/default/templates/macros.html:586
+#: skins/default/templates/macros.html:580
+#: skins/default/templates/macros.html:587
 #, python-format
 msgid "page number %(num)s"
 msgstr "page %(num)s"
 
-#: skins/default/templates/macros.html:590
+#: skins/default/templates/macros.html:591
 msgid "next page"
 msgstr ""
 
-#: skins/default/templates/macros.html:601
+#: skins/default/templates/macros.html:602
 msgid "posts per page"
 msgstr ""
 
-#: skins/default/templates/macros.html:628
-#, python-format
+#: skins/default/templates/macros.html:629
+#, fuzzy, python-format
 msgid "responses for %(username)s"
-msgstr ""
+msgstr "Choose screen name"
 
-#: skins/default/templates/macros.html:631
+#: skins/default/templates/macros.html:632
 #, python-format
 msgid "you have a new response"
 msgid_plural "you have %(response_count)s new responses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/default/templates/macros.html:634
+#: skins/default/templates/macros.html:635
 msgid "no new responses yet"
 msgstr ""
 
-#: skins/default/templates/macros.html:649
 #: skins/default/templates/macros.html:650
+#: skins/default/templates/macros.html:651
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr ""
 
-#: skins/default/templates/macros.html:652
 #: skins/default/templates/macros.html:653
+#: skins/default/templates/macros.html:654
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr ""
 
-#: skins/default/templates/macros.html:658
 #: skins/default/templates/macros.html:659
+#: skins/default/templates/macros.html:660
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr ""
 
 #: skins/default/templates/main_page.html:11
+#, fuzzy
 msgid "Questions"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/privacy.html:3
 #: skins/default/templates/privacy.html:5
@@ -5018,8 +5083,9 @@ msgstr ""
 
 #: skins/default/templates/question_edit.html:4
 #: skins/default/templates/question_edit.html:9
+#, fuzzy
 msgid "Edit question"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/question_retag.html:3
 #: skins/default/templates/question_retag.html:5
@@ -5047,8 +5113,9 @@ msgid "up to 5 tags, less than 20 characters each"
 msgstr ""
 
 #: skins/default/templates/reopen.html:3 skins/default/templates/reopen.html:5
+#, fuzzy
 msgid "Reopen question"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/reopen.html:6
 msgid "Title"
@@ -5070,17 +5137,20 @@ msgid "When:"
 msgstr ""
 
 #: skins/default/templates/reopen.html:22
+#, fuzzy
 msgid "Reopen this question?"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/reopen.html:26
+#, fuzzy
 msgid "Reopen this question"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/revisions.html:4
 #: skins/default/templates/revisions.html:7
+#, fuzzy
 msgid "Revision history"
-msgstr ""
+msgstr "karma"
 
 #: skins/default/templates/revisions.html:23
 msgid "click to hide/show revision"
@@ -5168,8 +5238,9 @@ msgid "see people sorted by name"
 msgstr ""
 
 #: skins/default/templates/users.html:33
+#, fuzzy
 msgid "by username"
-msgstr ""
+msgstr "Choose screen name"
 
 #: skins/default/templates/users.html:39
 #, python-format
@@ -5192,9 +5263,14 @@ msgstr[1] ""
 msgid "with %(author_name)s's contributions"
 msgstr ""
 
-#: skins/default/templates/main_page/headline.html:23
-msgid "Search tips:"
+#: skins/default/templates/main_page/headline.html:12
+msgid "Tagged"
 msgstr ""
+
+#: skins/default/templates/main_page/headline.html:23
+#, fuzzy
+msgid "Search tips:"
+msgstr "Tips"
 
 #: skins/default/templates/main_page/headline.html:26
 msgid "reset author"
@@ -5208,8 +5284,9 @@ msgid " or "
 msgstr ""
 
 #: skins/default/templates/main_page/headline.html:29
+#, fuzzy
 msgid "reset tags"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/main_page/headline.html:32
 #: skins/default/templates/main_page/headline.html:35
@@ -5233,8 +5310,9 @@ msgid "There are no unanswered questions here"
 msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:7
+#, fuzzy
 msgid "No questions here. "
-msgstr ""
+msgstr "answered question"
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."
@@ -5249,8 +5327,9 @@ msgid "resetting author"
 msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:19
+#, fuzzy
 msgid "resetting tags"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/main_page/nothing_found.html:22
 #: skins/default/templates/main_page/nothing_found.html:25
@@ -5258,20 +5337,28 @@ msgid "starting over"
 msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:30
+#, fuzzy
 msgid "Please always feel free to ask your question!"
 msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your question "
+"anonymously</span>. When you submit the post, you will be redirected to the "
+"login/signup page. Your question will be saved in the current session and "
+"will be published after you log in. Login/signup process is very simple. "
+"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/main_page/questions_loop.html:12
 msgid "Did not find what you were looking for?"
 msgstr ""
 
 #: skins/default/templates/main_page/questions_loop.html:13
+#, fuzzy
 msgid "Please, post your question!"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/main_page/tab_bar.html:9
+#, fuzzy
 msgid "subscribe to the questions feed"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/main_page/tab_bar.html:10
 msgid "RSS"
@@ -5344,16 +5431,19 @@ msgstr "most voted"
 
 #: skins/default/templates/question/content.html:20
 #: skins/default/templates/question/new_answer_form.html:46
+#, fuzzy
 msgid "Answer Your Own Question"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/question/new_answer_form.html:14
+#, fuzzy
 msgid "Login/Signup to Answer"
-msgstr ""
+msgstr "Login/Signup to Post"
 
 #: skins/default/templates/question/new_answer_form.html:22
+#, fuzzy
 msgid "Your answer"
-msgstr ""
+msgstr "most voted"
 
 #: skins/default/templates/question/new_answer_form.html:24
 msgid "Be the first one to answer this question!"
@@ -5412,8 +5502,9 @@ msgid "email"
 msgstr ""
 
 #: skins/default/templates/question/sidebar.html:4
+#, fuzzy
 msgid "Question tools"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/question/sidebar.html:7
 msgid "click to unfollow this question"
@@ -5428,8 +5519,14 @@ msgid "Unfollow"
 msgstr ""
 
 #: skins/default/templates/question/sidebar.html:13
+#, fuzzy
 msgid "click to follow this question"
 msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your question "
+"anonymously</span>. When you submit the post, you will be redirected to the "
+"login/signup page. Your question will be saved in the current session and "
+"will be published after you log in. Login/signup process is very simple. "
+"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/question/sidebar.html:14
 msgid "Follow"
@@ -5443,8 +5540,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: skins/default/templates/question/sidebar.html:27
+#, fuzzy
 msgid "email the updates"
-msgstr ""
+msgstr "Last updated"
 
 #: skins/default/templates/question/sidebar.html:30
 msgid ""
@@ -5481,8 +5579,9 @@ msgid "last updated"
 msgstr "Last updated"
 
 #: skins/default/templates/question/sidebar.html:63
+#, fuzzy
 msgid "Related questions"
-msgstr ""
+msgstr "Tags"
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:7
 #: skins/default/templates/question/subscribe_by_email_prompt.html:9
@@ -5529,23 +5628,30 @@ msgstr ""
 msgid "edit profile"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_edit.html:17
+#: skins/default/templates/user_profile/user_edit.html:21
 #: skins/default/templates/user_profile/user_info.html:15
 msgid "change picture"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_edit.html:20
+#: skins/default/templates/user_profile/user_edit.html:25
+#: skins/default/templates/user_profile/user_info.html:19
+msgid "remove"
+msgstr ""
+
+#: skins/default/templates/user_profile/user_edit.html:32
 msgid "Registered user"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_edit.html:27
+#: skins/default/templates/user_profile/user_edit.html:39
+#, fuzzy
 msgid "Screen Name"
-msgstr ""
+msgstr "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
 
-#: skins/default/templates/user_profile/user_edit.html:83
+#: skins/default/templates/user_profile/user_edit.html:95
 #: skins/default/templates/user_profile/user_email_subscriptions.html:21
+#, fuzzy
 msgid "Update"
-msgstr ""
+msgstr "date"
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:4
 #: skins/default/templates/user_profile/user_tabs.html:42
@@ -5553,8 +5659,14 @@ msgid "subscriptions"
 msgstr ""
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:7
+#, fuzzy
 msgid "Email subscription settings"
 msgstr ""
+"<span class='big strong'>Adjust frequency of email updates.</span> Receive "
+"updates on interesting questions by email, <strong><br/>help the community</"
+"strong> by answering questions of your colleagues. If you do not wish to "
+"receive emails - select 'no email' on all items below.<br/>Updates are only "
+"sent when there is any new activity on selected items."
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:8
 msgid "email subscription settings info"
@@ -5621,10 +5733,6 @@ msgstr ""
 msgid "dismiss"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_info.html:19
-msgid "remove"
-msgstr ""
-
 #: skins/default/templates/user_profile/user_info.html:36
 msgid "update profile"
 msgstr ""
@@ -5662,8 +5770,9 @@ msgid "age unit"
 msgstr "years old"
 
 #: skins/default/templates/user_profile/user_info.html:88
+#, fuzzy
 msgid "todays unused votes"
-msgstr ""
+msgstr "votes"
 
 #: skins/default/templates/user_profile/user_info.html:89
 msgid "votes left"
@@ -5671,8 +5780,9 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:4
 #: skins/default/templates/user_profile/user_tabs.html:48
+#, fuzzy
 msgid "moderation"
-msgstr ""
+msgstr "karma"
 
 #: skins/default/templates/user_profile/user_moderate.html:8
 #, python-format
@@ -5698,8 +5808,9 @@ msgid "User's current reputation is %(reputation)s points"
 msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:31
+#, fuzzy
 msgid "User reputation changed"
-msgstr ""
+msgstr "user karma"
 
 #: skins/default/templates/user_profile/user_moderate.html:38
 msgid "Subtract"
@@ -5721,8 +5832,9 @@ msgid ""
 msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:46
+#, fuzzy
 msgid "Message sent"
-msgstr ""
+msgstr "years old"
 
 #: skins/default/templates/user_profile/user_moderate.html:64
 msgid "Send message"
@@ -5746,8 +5858,12 @@ msgid "'Approved' status means the same as regular user."
 msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:83
+#, fuzzy
 msgid "Suspended users can only edit or delete their own posts."
 msgstr ""
+"Sorry, your account appears to be suspended and you cannot make new posts "
+"until this issue is resolved. You can, however edit your existing posts. "
+"Please contact the forum administrator to reach a resolution."
 
 #: skins/default/templates/user_profile/user_moderate.html:86
 msgid ""
@@ -5786,8 +5902,9 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_recent.html:4
 #: skins/default/templates/user_profile/user_tabs.html:31
+#, fuzzy
 msgid "activity"
-msgstr ""
+msgstr "activity"
 
 #: skins/default/templates/user_profile/user_recent.html:21
 #: skins/default/templates/user_profile/user_recent.html:28
@@ -5880,14 +5997,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:122
+#, fuzzy
 msgid "Answer to:"
-msgstr ""
+msgstr "Tips"
 
 #: skins/default/templates/user_profile/user_tabs.html:5
+#, fuzzy
 msgid "User profile"
-msgstr ""
+msgstr "User login"
 
-#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:785
+#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:786
 msgid "comments and answers to others questions"
 msgstr ""
 
@@ -5911,7 +6030,7 @@ msgstr ""
 msgid "recent activity"
 msgstr "activity"
 
-#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:860
+#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:861
 msgid "user vote record"
 msgstr ""
 
@@ -5919,7 +6038,7 @@ msgstr ""
 msgid "casted votes"
 msgstr "votes"
 
-#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:973
+#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:974
 msgid "email subscription settings"
 msgstr ""
 
@@ -5928,8 +6047,9 @@ msgid "moderate this user"
 msgstr ""
 
 #: skins/default/templates/user_profile/user_votes.html:4
+#, fuzzy
 msgid "votes"
-msgstr ""
+msgstr "votes"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:3
 msgid "answer tips"
@@ -5940,8 +6060,15 @@ msgid "please make your answer relevant to this community"
 msgstr "ask a question interesting to this community"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:9
+#, fuzzy
 msgid "try to give an answer, rather than engage into a discussion"
 msgstr ""
+"<span class='big strong'>Please try to give a substantial answer</span>. If "
+"you wanted to comment on the question or answer, just <strong>use the "
+"commenting tool</strong>. Please remember that you can always <strong>revise "
+"your answers</strong> - no need to answer the same question twice. Also, "
+"please <strong>don't forget to vote</strong> - it really helps to select the "
+"best questions and answers!"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:12
 msgid "please try to provide details"
@@ -5954,8 +6081,14 @@ msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16
+#, fuzzy
 msgid "see frequently asked questions"
 msgstr ""
+"<span class=\"strong big\">You are welcome to start submitting your question "
+"anonymously</span>. When you submit the post, you will be redirected to the "
+"login/signup page. Your question will be saved in the current session and "
+"will be published after you log in. Login/signup process is very simple. "
+"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/widgets/answer_edit_tips.html:27
 #: skins/default/templates/widgets/question_edit_tips.html:22
@@ -6105,40 +6238,45 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: skins/default/templates/widgets/question_summary.html:29
+#, fuzzy
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "answers"
+msgstr[1] "answers"
 
 #: skins/default/templates/widgets/question_summary.html:40
+#, fuzzy
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "votes"
+msgstr[1] "votes"
 
 #: skins/default/templates/widgets/scope_nav.html:3
 msgid "ALL"
 msgstr ""
 
 #: skins/default/templates/widgets/scope_nav.html:5
+#, fuzzy
 msgid "see unanswered questions"
-msgstr ""
+msgstr "Post Your Answer"
 
 #: skins/default/templates/widgets/scope_nav.html:5
 msgid "UNANSWERED"
 msgstr ""
 
 #: skins/default/templates/widgets/scope_nav.html:8
+#, fuzzy
 msgid "see your followed questions"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "FOLLOWED"
 msgstr ""
 
 #: skins/default/templates/widgets/scope_nav.html:11
+#, fuzzy
 msgid "Please ask your question here"
-msgstr ""
+msgstr "Ask Your Question"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:3
 msgid "karma:"
@@ -6164,7 +6302,7 @@ msgstr ""
 msgid "no items in counter"
 msgstr "no"
 
-#: utils/decorators.py:90 views/commands.py:112 views/commands.py:132
+#: utils/decorators.py:90 views/commands.py:113 views/commands.py:133
 msgid "Oops, apologies - there was some error"
 msgstr ""
 
@@ -6176,71 +6314,75 @@ msgstr ""
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr ""
 
-#: utils/forms.py:32
+#: utils/forms.py:33
 msgid "this field is required"
 msgstr ""
 
-#: utils/forms.py:46
+#: utils/forms.py:60
 msgid "choose a username"
 msgstr "Choose screen name"
 
-#: utils/forms.py:52
+#: utils/forms.py:69
 msgid "user name is required"
 msgstr ""
 
-#: utils/forms.py:53
+#: utils/forms.py:70
 msgid "sorry, this name is taken, please choose another"
 msgstr ""
 
-#: utils/forms.py:54
+#: utils/forms.py:71
 msgid "sorry, this name is not allowed, please choose another"
 msgstr ""
 
-#: utils/forms.py:55
+#: utils/forms.py:72
 msgid "sorry, there is no user with this name"
 msgstr ""
 
-#: utils/forms.py:56
+#: utils/forms.py:73
 msgid "sorry, we have a serious error - user name is taken by several users"
 msgstr ""
 
-#: utils/forms.py:57
+#: utils/forms.py:74
 msgid "user name can only consist of letters, empty space and underscore"
 msgstr ""
 
-#: utils/forms.py:118
+#: utils/forms.py:75
+msgid "please use at least some alphabetic characters in the user name"
+msgstr ""
+
+#: utils/forms.py:138
 msgid "your email address"
 msgstr "Your email <i>(never shared)</i>"
 
-#: utils/forms.py:119
+#: utils/forms.py:139
 msgid "email address is required"
 msgstr ""
 
-#: utils/forms.py:120
+#: utils/forms.py:140
 msgid "please enter a valid email address"
 msgstr ""
 
-#: utils/forms.py:121
+#: utils/forms.py:141
 msgid "this email is already used by someone else, please choose another"
 msgstr ""
 
-#: utils/forms.py:149
+#: utils/forms.py:169
 msgid "choose password"
 msgstr "Password"
 
-#: utils/forms.py:150
+#: utils/forms.py:170
 msgid "password is required"
 msgstr ""
 
-#: utils/forms.py:153
+#: utils/forms.py:173
 msgid "retype password"
 msgstr "Password <i>(please retype)</i>"
 
-#: utils/forms.py:154
+#: utils/forms.py:174
 msgid "please, retype your password"
 msgstr ""
 
-#: utils/forms.py:155
+#: utils/forms.py:175
 msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
 
@@ -6291,40 +6433,40 @@ msgstr ""
 msgid "You have %(votes_left)s votes left for today"
 msgstr ""
 
-#: views/commands.py:122
+#: views/commands.py:123
 msgid "Sorry, but anonymous users cannot access the inbox"
 msgstr ""
 
-#: views/commands.py:192
+#: views/commands.py:198
 msgid "Sorry, something is not right here..."
 msgstr ""
 
-#: views/commands.py:207
+#: views/commands.py:213
 msgid "Sorry, but anonymous users cannot accept answers"
 msgstr ""
 
-#: views/commands.py:301
+#: views/commands.py:320
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href='%(details_url)s'>more details here</a>"
 
-#: views/commands.py:308
+#: views/commands.py:327
 msgid "email update frequency has been set to daily"
 msgstr ""
 
-#: views/commands.py:413
+#: views/commands.py:433
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr ""
 
-#: views/commands.py:422
+#: views/commands.py:442
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr ""
 
-#: views/commands.py:555
+#: views/commands.py:578
 msgid "Please sign in to vote"
 msgstr ""
 
@@ -6364,77 +6506,77 @@ msgstr ""
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:386
+#: views/users.py:387
 msgid "user profile"
 msgstr ""
 
-#: views/users.py:387
+#: views/users.py:388
 msgid "user profile overview"
 msgstr ""
 
-#: views/users.py:698
+#: views/users.py:699
 msgid "recent user activity"
 msgstr ""
 
-#: views/users.py:699
+#: views/users.py:700
 msgid "profile - recent activity"
 msgstr ""
 
-#: views/users.py:786
+#: views/users.py:787
 msgid "profile - responses"
 msgstr ""
 
-#: views/users.py:861
+#: views/users.py:862
 msgid "profile - votes"
 msgstr ""
 
-#: views/users.py:896
+#: views/users.py:897
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: views/users.py:897
+#: views/users.py:898
 msgid "profile - user reputation"
 msgstr "Profile - User's Karma"
 
-#: views/users.py:924
+#: views/users.py:925
 msgid "users favorite questions"
 msgstr ""
 
-#: views/users.py:925
+#: views/users.py:926
 msgid "profile - favorite questions"
 msgstr ""
 
-#: views/users.py:945 views/users.py:949
+#: views/users.py:946 views/users.py:950
 msgid "changes saved"
 msgstr ""
 
-#: views/users.py:955
+#: views/users.py:956
 msgid "email updates canceled"
 msgstr ""
 
-#: views/users.py:974
+#: views/users.py:975
 msgid "profile - email subscriptions"
 msgstr ""
 
-#: views/writers.py:58
+#: views/writers.py:59
 msgid "Sorry, anonymous users cannot upload files"
 msgstr ""
 
-#: views/writers.py:68
+#: views/writers.py:69
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr ""
 
-#: views/writers.py:91
+#: views/writers.py:92
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr ""
 
-#: views/writers.py:99
+#: views/writers.py:100
 msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 
-#: views/writers.py:191
+#: views/writers.py:192
 msgid "Please log in to ask questions"
 msgstr ""
 "<span class=\"strong big\">You are welcome to start submitting your question "
@@ -6443,34 +6585,31 @@ msgstr ""
 "will be published after you log in. Login/signup process is very simple. "
 "Login takes about 30 seconds, initial signup takes a minute or less."
 
-#: views/writers.py:492
+#: views/writers.py:493
 msgid "Please log in to answer questions"
 msgstr ""
 
-#: views/writers.py:598
+#: views/writers.py:600
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:646
+#: views/writers.py:649
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr ""
 
-#: views/writers.py:654
+#: views/writers.py:658
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:675
+#: views/writers.py:679
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
-
-#~ msgid "Question tags"
-#~ msgstr "Tags"
 
 #~ msgid ""
 #~ "As a registered user you can login with your OpenID, log out of the site "
