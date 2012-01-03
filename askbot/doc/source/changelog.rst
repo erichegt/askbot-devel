@@ -14,6 +14,7 @@ Development version (not released yet)
 * added minimal length of question title ond body
   text to live settings and allowed body-less questions (Radim Řehůřek, Evgeny)
 * allowed disabling use of gravatar site-wide (Rosandra Cuello Suñol)
+* when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------
