@@ -25,16 +25,21 @@ class Migration(DataMigration):
 
             for aw in orm.Award.objects.all():
                 ct = aw.content_type
-                aw.content_type = ct_post
+                postize = False
+
                 if ct == ct_question:
                     aw.object_id = orm.Post.objects.get(self_question__id=aw.object_id).id
+                    postize = True
                 elif ct == ct_answer:
                     aw.object_id = orm.Post.objects.get(self_answer__id=aw.object_id).id
+                    postize = True
                 elif ct == ct_comment:
                     aw.object_id = orm.Post.objects.get(self_comment__id=aw.object_id).id
-                else:
-                    raise ValueError('Unknown award subject!')
-                aw.save()
+                    postize = True
+
+                if postize:
+                    aw.content_type = ct_post
+                    aw.save()
 
         ###
 

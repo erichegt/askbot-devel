@@ -106,3 +106,23 @@ class PostModelTests(AskbotTestCase):
         question.apply_edit(edited_by=self.u1, text="blah3", comment="blahc3")
         self.assertEqual(3, question.revisions.all()[0].revision)
         self.assertEqual(3, question.revisions.count())
+
+    def test_comment_ordering_by_date(self):
+        self.user = self.u1
+        q = self.post_question()
+
+        c1 = self.post_comment(parent_post=q)
+        c2 = q.add_comment(user=self.user, comment='blah blah')
+        c3 = self.post_comment(parent_post=q)
+
+        self.assertListEqual([c1, c2, c3], q.get_comments(visitor=self.user))
+        self.assertListEqual([c1, c2, c3], q.get_comments(visitor=self.u2))
+
+        c1.added_at, c3.added_at = c3.added_at, c1.added_at
+        c1.save()
+        c3.save()
+
+        self.assertListEqual([c3, c2, c1], q.get_comments(visitor=self.user))
+        self.assertListEqual([c3, c2, c1], q.get_comments(visitor=self.u2))
+
+        del self.user

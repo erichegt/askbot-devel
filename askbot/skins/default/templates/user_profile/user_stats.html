@@ -13,13 +13,13 @@
     {% include "user_profile/users_questions.html" %}
     <a name="answers"></a>
     {% spaceless %}
-        <h2 style="clear:both;"><span class="count">{{counter}}</span> {% trans counter=top_answer_count %}Answer{% pluralize %}Answers{% endtrans %}</h2>
+        <h2 style="clear:both;"><span class="count">{{ top_answer_count }}</span> {% trans counter=top_answer_count %}Answer{% pluralize %}Answers{% endtrans %}</h2>
     {% endspaceless %}
     <div class="user-stats-table">
         {% for top_answer in top_answers %}
         <div class="answer-summary">
             <a title="{{ top_answer.summary|collapse }}"
-                href="{% url question top_answer.question_id %}{{ top_answer.thread.title|slugify }}#{{ top_answer.id }}">
+                href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{ top_answer.id }}">
                 <span class="answer-votes {% if top_answer.is_answer_accepted() %}answered-accepted{% endif %}"
                       title="{% trans answer_score=top_answer.score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if top_answer.is_answer_accepted() %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
                     {{ top_answer.score }}
@@ -27,7 +27,7 @@
             </a>
             <div class="answer-link">
                 {% spaceless %}
-                <a href="{% url question top_answer.question_id %}{{ top_answer.thread.title|slugify }}#{{top_answer.id}}">{{ top_answer.thread.title }}</a>
+                <a href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{top_answer.id}}">{{ top_answer.thread.title }}</a>
                 {% endspaceless %}
                 {% if top_answer.comment_count > 0 %}
                 <span>

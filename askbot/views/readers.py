@@ -425,7 +425,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load question and maybe refuse showing deleted question
     try:
-        question_post = get_object_or_404(models.Post, id=id)
+        question_post = get_object_or_404(models.Post, post_type='question', id=id)
         question_post.assert_is_visible_to(request.user)
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))

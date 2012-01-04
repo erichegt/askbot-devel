@@ -7,6 +7,16 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
+        if orm.Activity.objects.exists():
+            try:
+                ct_post = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='post')
+            except orm['contenttypes.ContentType'].DoesNotExist:
+                print "The new `Post` models doesn't yet have a matching ContentType instance,"
+                print "but it'll be created by Django automatically, so just re-run ./manage.py migrate"
+                raise ValueError('Just re-run ./manage.py migrate')
+
+        ###
+
         for v in orm.Vote.objects.all():
             if (v.content_type.app_label, v.content_type.model) == ('askbot', 'question'):
                 v.voted_post = orm.Post.objects.get(self_question__id=v.object_id)
@@ -20,17 +30,42 @@ class Migration(DataMigration):
 
         ###
 
+        if not orm.Activity.objects.exists():
+            return
+
+        abandoned_activities = []
+
         for a in orm.Activity.objects.all():
             save = False
+            content_tuple = (a.content_type.app_label, a.content_type.model)
 
-            if (a.content_type.app_label, a.content_type.model) == ('askbot', 'question'):
-                a.content_object = orm.Post.objects.get(self_question__id=a.object_id)
+            if content_tuple == ('askbot', 'question'):
+                try:
+                    orm.Question.objects.get(id=a.object_id)
+                except orm.Question.DoesNotExist:
+                    # TODO: Maybe question can be recovered from activity.question denormalized field
+                    #      only only if activity.question is broken treat this activity as abandoned ?
+                    abandoned_activities.append(a.id)
+                    continue
+                a.object_id = orm.Post.objects.get(self_question__id=a.object_id).id
                 save = True
-            elif (a.content_type.app_label, a.content_type.model) == ('askbot', 'answer'):
-                a.content_object = orm.Post.objects.get(self_answer__id=a.object_id)
+
+            elif content_tuple == ('askbot', 'answer'):
+                try:
+                    orm.Answer.objects.get(id=a.object_id)
+                except orm.Answer.DoesNotExist:
+                    abandoned_activities.append(a.id)
+                    continue
+                a.object_id = orm.Post.objects.get(self_answer__id=a.object_id).id
                 save = True
-            elif (a.content_type.app_label, a.content_type.model) == ('askbot', 'comment'):
-                a.content_object = orm.Post.objects.get(self_comment__id=a.object_id)
+
+            elif content_tuple == ('askbot', 'comment'):
+                try:
+                    orm.Comment.objects.get(id=a.object_id)
+                except orm.Comment.DoesNotExist:
+                    abandoned_activities.append(a.id)
+                    continue
+                a.object_id = orm.Post.objects.get(self_comment__id=a.object_id).id
                 save = True
 
             if a.question:
@@ -38,7 +73,13 @@ class Migration(DataMigration):
                 save = True
 
             if save:
+                a.content_type = ct_post
                 a.save()
+
+        # INFO: non-batch delete to process all dependencies, if there are any
+        print "!!! Abandoned activities (num=%d):" % len(abandoned_activities), abandoned_activities
+        for a in orm.Activity.objects.filter(id__in=abandoned_activities):
+            a.delete()
 
 
     def backwards(self, orm):

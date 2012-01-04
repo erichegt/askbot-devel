@@ -287,12 +287,11 @@ def user_stats(request, user, context):
     #
     # Top answers
     #
-# TODO: Rewrite this without using `self_answer`
-#    top_answers = user.posts.get_answers().filter(
-#        deleted=False,
-#        self_answer__question__deleted=False,
-#    ).select_related('thread', 'self_answer').order_by('-score', '-id')[:100]
-    top_answers = []
+    top_answers = user.posts.get_answers().filter(
+        deleted=False,
+        thread__posts__deleted=False,
+        thread__posts__post_type='question',
+    ).select_related('thread').order_by('-score', '-added_at')[:100]
 
     top_answer_count = len(top_answers)
 
@@ -327,15 +326,12 @@ def user_stats(request, user, context):
         if award.content_type_id == post_type.id:
             awarded_post_ids.append(award.object_id)
 
-    awarded_posts = models.Post.objects.filter(
-        Q(post_type='answer')|Q(post_type='question'),
-        id__in=awarded_post_ids,
-    ).select_related('thread') # select related to avoid additional queries in Post.get_absolute_url()
+    awarded_posts = models.Post.objects.filter(id__in=awarded_post_ids)\
+                    .select_related('thread') # select related to avoid additional queries in Post.get_absolute_url()
 
     awarded_posts_map = {}
     for post in awarded_posts:
-        if post.post_type in ('question', 'answer'):
-            awarded_posts_map[post.id] = post
+        awarded_posts_map[post.id] = post
 
     badges_dict = collections.defaultdict(list)
 
@@ -415,8 +411,6 @@ def user_recent(request, user, context):
 
     activities = []
 
-    # TODO: Convert to Post
-
     for activity in models.Activity.objects.filter(user=user):
 
         # TODO: multi-if means that we have here a construct for which a design pattern should be used
@@ -429,7 +423,7 @@ def user_recent(request, user, context):
                     time=activity.active_at,
                     type=activity.activity_type,
                     title=q.thread.title,
-                    summary=q.summary,  # TODO: was set to '' before, but that was probably wrong
+                    summary='', #q.summary,  # TODO: was set to '' before, but that was probably wrong
                     answer_id=0,
                     question_id=q.id
                 ))

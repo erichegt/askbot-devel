@@ -442,7 +442,6 @@ class Post(models.Model):
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_post'
-        ordering = ('-added_at',) # default ordering for comments, for other post types should be overriden per query
 
 
     def parse_post_text(post):
@@ -472,7 +471,7 @@ class Post(models.Model):
         else:
             raise NotImplementedError
 
-        text = post.get_text()
+        text = post.text
 
         if _escape_html:
             text = cgi.escape(text)
@@ -709,7 +708,7 @@ class Post(models.Model):
         otherwise, returns query set for all comments to a given post
         """
         if visitor.is_anonymous():
-            return self.comments.all().order_by('id')
+            return self.comments.order_by('added_at')
         else:
             upvoted_by_user = list(self.comments.filter(votes__user=visitor))
             not_upvoted_by_user = list(self.comments.exclude(votes__user=visitor))
@@ -718,13 +717,9 @@ class Post(models.Model):
                 c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
 
             comments = upvoted_by_user + not_upvoted_by_user
-            comments.sort(key=operator.attrgetter('id'))
+            comments.sort(key=operator.attrgetter('added_at'))
 
             return comments
-
-    #todo: maybe remove this wnen post models are unified
-    def get_text(self):
-        return self.text
 
     def get_snippet(self):
         """returns an abbreviated snippet of the content
@@ -1081,7 +1076,7 @@ class Post(models.Model):
         else:
             return self.added_at
 
-    def get_owner(self):
+    def get_owner(self): # TODO: remove me
         return self.author
 
     def get_author_list(

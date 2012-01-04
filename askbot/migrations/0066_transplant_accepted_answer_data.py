@@ -14,10 +14,14 @@ class Migration(DataMigration):
                 try:
                     accepted_answer = question.answers.get(accepted=True) # If this raises an error, we have a data integrity problem
                 except orm.Answer.DoesNotExist, orm.Answer.MultipleObjectsReturned:
-                    raise ValueError("There is a data integrity problem with some question/answers")
-                thread.accepted_answer = accepted_answer
-                thread.answer_accepted_at = accepted_answer.accepted_at
-                thread.save()
+                    #raise ValueError("There is a data integrity problem with some question/answers")
+                    # Unfortunately there's probably nothing we can do in this case,
+                    # there's no record of which answer has been accepted (HMM, MAYBE IN ACTIVITIES???)
+                    print "!!! Found a thread with question.answer_accepted, but no answer actually marked as accepted, question.id=%d" % question.id
+                else:
+                    thread.accepted_answer = accepted_answer
+                    thread.answer_accepted_at = accepted_answer.accepted_at
+                    thread.save()
 
         # Verify data integrity
         for question in orm.Question.objects.all():
