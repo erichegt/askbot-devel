@@ -412,6 +412,7 @@ def user_recent(request, user, context):
 
     activities = []
 
+    # TODO: Don't process all activities here for the user, only a subset ([:const.USER_VIEW_DATA_SIZE])
     for activity in models.Activity.objects.filter(user=user):
 
         # TODO: multi-if means that we have here a construct for which a design pattern should be used

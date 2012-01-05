@@ -9,6 +9,9 @@ class Migration(DataMigration):
     def forwards(self, orm):
         orm.Post.objects.all().delete() # in case there are some leftovers after this migration failed before
 
+        # TODO: start post.id from max(q.id, a.id, c.id) + store old_q_id, old_a_id, old_c_id inside - this is to make sure
+        #       we can make old URLs work flawlessly
+
         for q in orm.Question.objects.all():
             orm.Post.objects.create(
                 post_type='question',
@@ -82,11 +85,11 @@ class Migration(DataMigration):
             # No need to investigate that as this is as simple as the "proper" way
             if (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'question'):
                 content_object = orm.Question.objects.get(id=cm.object_id)
-                thread = orm.Thread.objects.get(id=content_object.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                thread = orm.Thread.objects.get(id=content_object.thread.id) # convert from Thread to orm.Thread - a subtle difference
                 parent = orm.Post.objects.get(self_question=content_object)
             elif (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'answer'):
                 content_object = orm.Answer.objects.get(id=cm.object_id)
-                thread = orm.Thread.objects.get(id=content_object.question.thread.id) # conver from Thread to orm.Thread - a subtle difference
+                thread = orm.Thread.objects.get(id=content_object.question.thread.id) # convert from Thread to orm.Thread - a subtle difference
                 parent = orm.Post.objects.get(self_answer=content_object)
             else:
                 raise ValueError('comment.content_object is neither question nor answer!')
@@ -123,6 +126,11 @@ class Migration(DataMigration):
                 summary='',
                 is_anonymous=False,
             )
+
+        # Verify that numbers match
+        sum_all = orm.Question.objects.count() + orm.Answer.objects.count() + orm.Comment.objects.count()
+        if sum_all != orm.Post.objects.count():
+            raise ValueError('sum(#Q,#C,#A) != #Post !')
 
 
     def backwards(self, orm):

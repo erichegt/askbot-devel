@@ -8,7 +8,7 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        if 'test' in sys.argv:  # This migration fails when testing... Ah those: crappy Askbot test suite and broken Django test framework ;;-)
+        if 'test' in sys.argv:  # This migration fails when running tests...
             return
 
         if orm.Award.objects.exists():
