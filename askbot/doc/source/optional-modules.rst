@@ -136,3 +136,31 @@ To enable authentication for self hosted wordpress sites(wordpress.com blogs wil
 * Upload an icon for display in the login area.
 
 After doing this steps you should be able to login with your self hosted wordpress site user/password combination.
+
+
+Celery for background jobs
+==========================
+
+Askbot supports `celery <http://celeryproject.org/>`_ distributed task queue for some task, to enable it follow the following steps:
+
+* Install the following packages: `celery <http://pypi.python.org/pypi/django-celery>`_, `django-celery <http://pypi.python.org/pypi/django-celery>`_,  `django-kombu <http://pypi.python.org/pypi/django-kombu>`_
+* Set **CELERY_ALWAYS_EAGER** setting value to **False**
+* Run the celery daemon: for this you can use generic init scripts or supervisor, `celery documentation have more information <http://docs.celeryproject.org/en/latest/cookbook/daemonizing.html>`_
+
+For `supervisor <http://supervisord.org/>`_: add this sample config file named askbot.conf into /etc/supervisor/conf.d/ directory::
+
+    [program:askbot_celery]
+    command=celeryd --loglevel=INFO
+
+    environment=PYTHONPATH=/path/to/project
+    directory=/path/to/project
+
+    user=nobody
+    numprocs=1
+    stdout_logfile=/var/log/askbot_celery.log
+    stderr_logfile=/var/log/askbot_celery.err
+    autostart=true
+    autorestart=true
+    startsecs=10
+
+Then run **supervisorctl update** and it will be started. For more information about job handling with supervisor please visit `this link <http://supervisord.org/>`_.

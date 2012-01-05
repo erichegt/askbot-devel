@@ -67,7 +67,11 @@
                 $('#pre-collapse').text(txt);
             });
 
-            setupFormValidation($("#fmedit"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+            setupFormValidation(
+                $("#fmedit"),
+                CPValidator.getAnswerFormRules(),
+                CPValidator.getAnswerFormMessages()
+            );
             
             $('#id_revision').unbind().change(function(){
                 $("#select_revision").click();

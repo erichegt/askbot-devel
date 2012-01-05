@@ -20,7 +20,6 @@
         <input type="submit" class="submit" name="change_status" value="{% trans %}Save{% endtrans %}" />
     </form>
 {% endif %}
-<hr/>
 <h3>
 {% if request.user == view_user %}
     {% trans reputation=view_user.reputation %}Your current reputation is {{reputation}} points{% endtrans %}

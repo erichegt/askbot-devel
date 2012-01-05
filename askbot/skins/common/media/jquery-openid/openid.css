@@ -4,7 +4,8 @@ ul.login-icons li {display:inline;}
 ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
 .openid-signin h2 {margin-top:15px;}
 .openid-signin h2#account-recovery-heading {margin-bottom:2px;}
-#account-recovery-form p.hint a {color:blue; text-decoration: underline;}
+#account-recovery-form p.hint a {color:#1b79bd; text-decoration: none;}
+#account-recovery-form p.hint a:hover {text-decoration: underline;}
 .openid-signin fieldset { border-style:none;margin:0;padding:0;}
 .openid-signin p {margin:0;padding:0};
 .openid-signin p.hint {color: #555;}

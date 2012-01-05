@@ -303,5 +303,30 @@ class UserNameFieldTest(AskbotTestCase):
         #invalid username and username in reserved words
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, '  ')
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, 'fuck')
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '......')
 
         #TODO: test more things
+
+class AnswerEditorFieldTests(AskbotTestCase):
+    """don't need to test the QuestionEditorFieldTests, b/c the
+    class is identical"""
+    def setUp(self):
+        self.old_min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', 10)
+        self.field = forms.AnswerEditorField()
+
+    def tearDown(self):
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', self.old_min_length)
+
+    def test_fail_short_body(self):
+        self.assertRaises(
+            django_forms.ValidationError,
+            self.field.clean,
+            'a'
+        )
+    
+    def test_pass_long_body(self):
+        self.assertEquals(
+            self.field.clean(10*'a'),
+            10*'a'
+        )

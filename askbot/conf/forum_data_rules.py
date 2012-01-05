@@ -89,6 +89,37 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_TITLE_LENGTH',
+        default=10,
+        description=_('Minimum length of title (number of characters)')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_QUESTION_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of question body (number of characters)'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_ANSWER_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of answer body (number of characters)'
+        )
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'MANDATORY_TAGS',
@@ -109,11 +140,11 @@ settings.register(
         default = False,
         description = _('Force lowercase the tags'),
         help_text = _(
-                        'Attention: after checking this, please back up the database, '
-                        'and run a management command: '
-                        '<code>python manage.py fix_question_tags</code> to globally '
-                        'rename the tags'
-                     )
+            'Attention: after checking this, please back up the database, '
+            'and run a management command: '
+            '<code>python manage.py fix_question_tags</code> to globally '
+            'rename the tags'
+         )
     )
 )
 

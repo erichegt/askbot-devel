@@ -1,12 +1,37 @@
 Changes in Askbot
 =================
 
-0.7.34 (Current Version)
-------------------------
+Development version (not released yet)
+--------------------------------------
+* added basic slugification treatment to question titles with 
+  ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
+* added verification of the project directory name to
+  make sure it does not contain a `.` (dot) symbol (Evgeny)
+* made askbot compatible with django's `CSRFViewMiddleware`
+  that may be used for other projects (Evgeny)
+* added more rigorous test for the user name to make it slug safe (Evgeny)
+* made setting `ASKBOT_FILE_UPLOAD_DIR` work (Radim Řehůřek)
+* added minimal length of question title ond body
+  text to live settings and allowed body-less questions (Radim Řehůřek, Evgeny)
+* allowed disabling use of gravatar site-wide (Rosandra Cuello Suñol)
+* when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
+
+0.7.36 (Dec 20, 2011)
+---------------------
+* bugfix and made the logo not used by default
+
+0.7.35 (Dec 15, 2011)
+---------------------
+* Removal of offensive flags (`Dejan Noveski <http://www.atomidata.com/>`_)
+* Fixes in CSS (`Byron Corrales <http://byroncorrales.blogspot.com/>`_)
+* Update of Catalan locale (Jordi Bofill)
+
+0.7.34 (Dec 10, 2011)
+---------------------
 * Returned support of Django 1.2
 
-0.7.33
-------
+0.7.33 (Dec 6, 2011)
+--------------------
 * Made on log in redirect to the forum index page by default
   and to the question page, if user was reading the question
   it is still possible to override the ``next`` url parameter
@@ -14,18 +39,18 @@ Changes in Askbot
 * Implemented retraction of offensive flags (Dejan Noveski)
 * Made automatic dependency checking more complete (Evgeny)
 
-0.7.32
-------
+0.7.32 (Nov 30, 2011)
+---------------------
 * Bugfixes in English locale (Evgeny)
 
-0.7.31 
-------
+0.7.31 (Nov 29, 2011)
+---------------------
 * Added ``askbot_create_test_fixture`` management command (Dejan Noveski)
 * Integrated new test fixture into the page load test cases (Dejan Noveski)
 * Added an embeddable widget for the questions list matching tags (Daniel Mican, Evgeny Fadeev, Dejan Noveski)
 
-0.7.30
-------
+0.7.30 (Nov 28, 2011)
+---------------------
 Note: some of these features were added in one of the three previous versions.
 
 * Context-sensitive RSS url (`Dejan Noveski <http://www.atomidata.com/>`_)
@@ -49,19 +74,19 @@ Note: some of these features were added in one of the three previous versions.
 * Added management command ``askbot_add_test_content`` (Dejan Noveski)
 * Continued work on refactoring the database schema (Tomasz Zielinski)
 
-0.7.27 - 0.7.29
----------------
+0.7.27 - 0.7.29 (Nov 8-28, 2011)
+--------------------------------
 For these versions we did not keep consistent record of features.
 
-0.7.26
-------
+0.7.26 (Oct 12, 2011)
+---------------------
 * Added settings for email subscription defaults (Adolfo)
 * Resolved `bug #102<http://bugs.askbot.org/issues/102>`_ - duplicate notifications on posts with mentions (Evegeny)
 * Added color-animated transitions when urls with hash tags are visited (Adolfo)
 * Repository tags will be `automatically added <http://askbot.org/en/question/345/can-git-tags-be-created-for-each-of-the-releases>`_ to new releases (Evgeny, suggsted by ajmirsky)
 
-0.7.25
-------
+0.7.25 (Oct 5 2011)
+-------------------
 * RSS feed for individual question (Sayan Chowdhury)
 * Allow pre-population of tags via ask a questions link (Adolfo)
 * Make answering own question one click harder (Adolfo)
