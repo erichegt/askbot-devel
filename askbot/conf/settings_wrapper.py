@@ -60,6 +60,7 @@ class ConfigSettings(object):
     def update(self, key, value):
         setting = config_get(self.__group_map[key], key) 
         setting.update(value)
+        #self.prime_cache()
 
     def register(self, value):
         """registers the setting
