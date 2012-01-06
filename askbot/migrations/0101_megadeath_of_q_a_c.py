@@ -1,8 +1,11 @@
 # encoding: utf-8
 import datetime
+import sys
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+
+from askbot.migrations import TERM_YELLOW, TERM_RESET
 
 class Migration(SchemaMigration):
 
@@ -18,6 +21,8 @@ class Migration(SchemaMigration):
         # Deleting model 'Question'
         db.delete_table(u'question')
 
+        if 'test' not in sys.argv and not db.dry_run:  # Don't confuse users
+            print TERM_YELLOW, 'You are free now to remove content types for Question/Answer/Comment models', TERM_RESET
 
 
     def backwards(self, orm):
@@ -213,7 +218,12 @@ class Migration(SchemaMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('post', 'revision'),)", 'object_name': 'PostRevision'},

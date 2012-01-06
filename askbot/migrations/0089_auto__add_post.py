@@ -42,6 +42,11 @@ class Migration(SchemaMigration):
             ('self_question', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['askbot.Question'])),
             ('self_comment', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['askbot.Comment'])),
             ('thread', self.gf('django.db.models.fields.related.ForeignKey')(related_name='posts', to=orm['askbot.Thread'])),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            ('old_question_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True, default=None, unique=True)),
+            ('old_answer_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True, default=None, unique=True)),
+            ('old_comment_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True, default=None, unique=True)),
         ))
         db.send_create_signal('askbot', ['Post'])
 
@@ -207,7 +212,12 @@ class Migration(SchemaMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},

@@ -1,8 +1,11 @@
 # encoding: utf-8
 import datetime
+import sys
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+
+from askbot.migrations import TERM_RED_BOLD, TERM_GREEN, TERM_RESET
 
 class Migration(DataMigration):
 
@@ -26,7 +29,8 @@ class Migration(DataMigration):
         # (if migrations are applied in a row then contenttypes update is not called between them)
         ct_post, c = orm['contenttypes.ContentType'].objects.get_or_create(app_label='askbot', model='post', defaults={'name': 'post'})
 
-        print "!!! [Red] Remember to not remove the old content types for Question, Answer and Comment models until all migrations succeed!"
+        if 'test' not in sys.argv: # Don't confuse users
+            print TERM_RED_BOLD, "!!! Remember to not remove the old content types for Question, Answer and Comment models until further notice from migration 0101!", TERM_RESET
 
         abandoned_activities = []
 
@@ -39,9 +43,10 @@ class Migration(DataMigration):
 
             save = False
 
-            model = a.content_type.model
-            if a.content_type.app_label == 'askbot' and model in ('question', 'answer', 'comment'):
-                a.object_id = orm.Post.objects.get(**{'self_%s__id' % model: a.object_id}).id
+            ct = a.content_type
+            if ct.app_label == 'askbot' and ct.model in ('question', 'answer', 'comment'):
+                a.content_type = ct_post
+                a.object_id = orm.Post.objects.get(**{'self_%s__id' % ct.model: a.object_id}).id
                 save = True
 
             if a.question:
@@ -49,7 +54,6 @@ class Migration(DataMigration):
                 save = True
 
             if save:
-                a.content_type = ct_post
                 a.save()
 
         if abandoned_activities:
@@ -58,7 +62,8 @@ class Migration(DataMigration):
                 (a.id, '.'.join([a.content_type.app_label, a.content_type.model]), a.object_id)
                 for a in abandoned_activities
             ]
-            print "!!! Abandoned activities (num=%d):" % len(abandoned_activities), abandoned_activities_lst
+            print TERM_RED_BOLD, "!!! Abandoned activities num=%d, total num=%d:" % (len(abandoned_activities), orm.Activity.objects.count()), TERM_RESET
+            print TERM_GREEN, abandoned_activities_lst, TERM_RESET
             for a in abandoned_activities:
                 a.delete()
 
@@ -223,7 +228,12 @@ class Migration(DataMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},

@@ -4,6 +4,8 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
+from askbot.migrations import TERM_YELLOW, TERM_RESET
+
 class Migration(DataMigration):
 
     def forwards(self, orm):
@@ -12,9 +14,25 @@ class Migration(DataMigration):
         # TODO: start post.id from max(q.id, a.id, c.id) + store old_q_id, old_a_id, old_c_id inside - this is to make sure
         #       we can make old URLs work flawlessly
 
+        post_id = max(
+            # 'or 0' protects against None
+            orm.Question.objects.aggregate(max_id=models.Max('id'))['max_id'] or 0,
+            orm.Answer.objects.aggregate(max_id=models.Max('id'))['max_id'] or 0,
+            orm.Comment.objects.aggregate(max_id=models.Max('id'))['max_id'] or 0,
+        )
+
+        print TERM_YELLOW, '[DEBUG] Initial Post.id ==', post_id + 1, TERM_RESET
+
         for q in orm.Question.objects.all():
+            post_id += 1
             orm.Post.objects.create(
+                id=post_id,
+
                 post_type='question',
+
+                old_answer_id=None,
+                old_question_id=q.id,
+                old_comment_id=None,
 
                 self_answer=None,
                 self_question=q,
@@ -47,8 +65,15 @@ class Migration(DataMigration):
             )
 
         for ans in orm.Answer.objects.all():
+            post_id += 1
             orm.Post.objects.create(
+                id=post_id,
+
                 post_type='answer',
+
+                old_answer_id=ans.id,
+                old_question_id=None,
+                old_comment_id=None,
 
                 self_answer=ans,
                 self_question=None,
@@ -94,8 +119,15 @@ class Migration(DataMigration):
             else:
                 raise ValueError('comment.content_object is neither question nor answer!')
 
+            post_id += 1
             orm.Post.objects.create(
+                id=post_id,
+
                 post_type='comment',
+
+                old_answer_id=None,
+                old_question_id=None,
+                old_comment_id=cm.id,
 
                 self_answer=None,
                 self_question=None,
@@ -292,7 +324,12 @@ class Migration(DataMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},

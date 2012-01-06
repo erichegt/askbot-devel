@@ -7,6 +7,8 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
+        # TODO: Speed this migration up by prefetching data ?
+
         for thread in orm.Thread.objects.all():
             if thread.accepted_answer:
                 thread.accepted_answer_post = orm.Post.objects.get(self_answer__id=thread.accepted_answer.id)
@@ -191,7 +193,12 @@ class Migration(DataMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},

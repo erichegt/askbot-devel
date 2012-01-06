@@ -8,38 +8,15 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        if 'test' in sys.argv:  # This migration fails when running tests...
-            return
+        # ContentType for Post model should be created no later than in migration 0092
+        ct_post = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='post')
 
-        if orm.Award.objects.exists():
-            # Note that for an empty database (most likely a fresh one)
-            # there are no contenttypes for Question/Answer/Comment models installed,
-            # because there are no such models anymore
-            # Therefore we only run this section if there are any Award-s to migrate,
-            # i.e. there is some legacy data and legacy contenttypes are likely to be present in the database
-            ct_question = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='question')
-            ct_answer = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='answer')
-            ct_comment = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='comment')
-
-            ct_post = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='post')
-
-            for aw in orm.Award.objects.all():
-                ct = aw.content_type
-                postize = False
-
-                if ct == ct_question:
-                    aw.object_id = orm.Post.objects.get(self_question__id=aw.object_id).id
-                    postize = True
-                elif ct == ct_answer:
-                    aw.object_id = orm.Post.objects.get(self_answer__id=aw.object_id).id
-                    postize = True
-                elif ct == ct_comment:
-                    aw.object_id = orm.Post.objects.get(self_comment__id=aw.object_id).id
-                    postize = True
-
-                if postize:
-                    aw.content_type = ct_post
-                    aw.save()
+        for aw in orm.Award.objects.all():
+            ct = aw.content_type
+            if ct.app_label == 'askbot' and ct.model in ('question', 'answer', 'comment'):
+                aw.content_type = ct_post
+                aw.object_id = orm.Post.objects.get(**{'self_%s__id' % ct.model: aw.object_id}).id
+                aw.save()
 
         ###
 
@@ -208,7 +185,12 @@ class Migration(DataMigration):
             'vote_down_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'vote_up_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
+            'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+
+            # "Post-processing" - added manually to add support for URL mapping
+            'old_question_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
+            'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': True, 'blank': True, 'default': None, 'unique': 'True'}),
         },
         'askbot.postrevision': {
             'Meta': {'ordering': "('-revision',)", 'unique_together': "(('answer', 'revision'), ('question', 'revision'))", 'object_name': 'PostRevision'},

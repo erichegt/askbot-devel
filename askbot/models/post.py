@@ -395,6 +395,11 @@ class PostManager(BaseQuerySetManager):
 
 class Post(models.Model):
     post_type = models.CharField(max_length=255)
+
+    old_question_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
+    old_answer_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
+    old_comment_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
+
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', related_name='posts')
 
