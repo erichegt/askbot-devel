@@ -696,7 +696,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if self.is_answer() and self.is_anonymous:
             raise ValueError('Answer cannot be anonymous!')
-        super(Post, self).save(self, *args, **kwargs)
+        super(Post, self).save(*args, **kwargs)
         if self.is_answer() and 'postgres' in settings.DATABASE_ENGINE:
             #hit the database to trigger update of full text search vector
             self.thread._question_post().save()

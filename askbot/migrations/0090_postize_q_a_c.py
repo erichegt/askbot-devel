@@ -187,9 +187,9 @@ class Migration(DataMigration):
 
             else:
                 autoincrement = -1
-                print TERM_RED_BOLD, "You are using `%s` database backend which is not officially supported. " \
-                            "Therefore after migrations are applied you should make sure that autoincrement/sequence value for " \
-                            "table `askbot_post` is set to %d" % (post_id + 1), TERM_RESET
+                print TERM_RED_BOLD, ("You are using `%s` database backend which is not officially supported. "
+                            "Therefore after migrations are applied you should make sure that autoincrement/sequence value for "
+                            "table `askbot_post` is set to %d") % (db.backend_name, post_id + 1), TERM_RESET
 
             if autoincrement != -1:
                 if autoincrement != (post_id + 1):
