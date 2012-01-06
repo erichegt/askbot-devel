@@ -11,8 +11,8 @@ class Migration(DataMigration):
     
     def forwards(self, orm):
         "Write your forwards methods here."
-        if 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            management.call_command('init_postgresql_full_text_search')
+#        if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+#            management.call_command('init_postgresql_full_text_search')
     
     def backwards(self, orm):
         "Write your backwards methods here."

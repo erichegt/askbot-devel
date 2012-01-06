@@ -1,18 +1,20 @@
 # encoding: utf-8
 import datetime
+import sys
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from django.conf import settings
 
-from askbot.migrations import TERM_YELLOW, TERM_RESET
+from askbot.migrations import TERM_RED_BOLD, TERM_GREEN, TERM_RESET
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         orm.Post.objects.all().delete() # in case there are some leftovers after this migration failed before
 
-        # TODO: start post.id from max(q.id, a.id, c.id) + store old_q_id, old_a_id, old_c_id inside - this is to make sure
-        #       we can make old URLs work flawlessly
+        if 'test' not in sys.argv: # Don't confuse users
+            print TERM_RED_BOLD, "!!! Remember to not remove the old content types for Question, Answer and Comment models until further notice from migration 0101!", TERM_RESET
 
         post_id = max(
             # 'or 0' protects against None
@@ -21,7 +23,8 @@ class Migration(DataMigration):
             orm.Comment.objects.aggregate(max_id=models.Max('id'))['max_id'] or 0,
         )
 
-        print TERM_YELLOW, '[DEBUG] Initial Post.id ==', post_id + 1, TERM_RESET
+        if 'test' not in sys.argv: # Don't confuse users
+            print TERM_GREEN, '[DEBUG] Initial Post.id ==', post_id + 1, TERM_RESET
 
         for q in orm.Question.objects.all():
             post_id += 1
@@ -158,6 +161,41 @@ class Migration(DataMigration):
                 summary='',
                 is_anonymous=False,
             )
+
+        if orm.Post.objects.exists():
+            # Check Post.id sequence/auto-increment to make sure new Post-s don't start from id=1
+            if db.backend_name == 'mysql':
+                # Docs:
+                # - http://stackoverflow.com/questions/933565/get-auto-increment-value-with-mysql-query
+                # -
+                autoincrement = db.execute("SELECT auto_increment FROM information_schema.tables WHERE table_name='askbot_post' AND table_schema=DATABASE()")[0][0]
+
+            elif db.backend_name == 'sqlite3':
+                # Docs:
+                # - http://www.sqlite.org/autoinc.html
+                # - http://www.sqlite.org/c3ref/last_insert_rowid.html
+                # - http://www.sqlite.org/faq.html#q1
+                # - http://stackoverflow.com/questions/531109/how-to-return-the-value-of-auto-increment-column-in-sqlite-with-vb6
+                autoincrement = db.execute("SELECT last_insert_rowid() FROM askbot_post")[0][0] + 1
+
+            elif db.backend_name == 'postgres':
+                # Docs:
+                # - http://lindsaar.net/2008/11/2/how-to-reset-a-sequence-with-postgresql
+                # - http://www.postgresql.org/docs/8.3/static/functions-sequence.html
+                # Note that SELECT SETVAL(...) returns the value being set
+                autoincrement = db.execute("SELECT SETVAL('askbot_post_id_seq', %s)", params=[post_id + 1])[0][0]
+
+            else:
+                autoincrement = -1
+                print TERM_RED_BOLD, "You are using `%s` database backend which is not officially supported. " \
+                            "Therefore after migrations are applied you should make sure that autoincrement/sequence value for " \
+                            "table `askbot_post` is set to %d" % (post_id + 1), TERM_RESET
+
+            if autoincrement != -1:
+                if autoincrement != (post_id + 1):
+                    raise ValueError('Auto_increment for askbot_post table should be %d but is %d!' % (post_id + 1, autoincrement))
+                print TERM_GREEN, '[DEBUG] %s: auto-increment/sequence-value for askbot_post table is OK (%d)' % (
+                        db.backend_name, autoincrement), TERM_RESET
 
         # Verify that numbers match
         sum_all = orm.Question.objects.count() + orm.Answer.objects.count() + orm.Comment.objects.count()

@@ -29,9 +29,6 @@ class Migration(DataMigration):
         # (if migrations are applied in a row then contenttypes update is not called between them)
         ct_post, c = orm['contenttypes.ContentType'].objects.get_or_create(app_label='askbot', model='post', defaults={'name': 'post'})
 
-        if 'test' not in sys.argv: # Don't confuse users
-            print TERM_RED_BOLD, "!!! Remember to not remove the old content types for Question, Answer and Comment models until further notice from migration 0101!", TERM_RESET
-
         abandoned_activities = []
 
         for a in orm.Activity.objects.all():

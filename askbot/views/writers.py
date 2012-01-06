@@ -522,15 +522,14 @@ def answer(request, id):#process a new answer
                     request.user.message_set.create(message = unicode(e))
             else:
                 request.session.flush()
-                anon = models.AnonymousAnswer(
-                                       question_post=question,
-                                       wiki=wiki,
-                                       text=text,
-                                       summary=strip_tags(text)[:120],
-                                       session_key=request.session.session_key,
-                                       ip_addr=request.META['REMOTE_ADDR'],
-                                       )
-                anon.save()
+                models.AnonymousAnswer.objects.create(
+                    question=question,
+                    wiki=wiki,
+                    text=text,
+                    summary=strip_tags(text)[:120],
+                    session_key=request.session.session_key,
+                    ip_addr=request.META['REMOTE_ADDR'],
+                )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
     return HttpResponseRedirect(question.get_absolute_url())
