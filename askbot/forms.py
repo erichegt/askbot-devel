@@ -334,13 +334,11 @@ class ShowQuestionForm(forms.Form):
         in_data = self.get_pruned_data()
         out_data = dict()
         if ('answer' in in_data) ^ ('comment' in in_data):
-            out_data['is_permalink'] = True
             out_data['show_page'] = None
             out_data['answer_sort_method'] = 'votes'
             out_data['show_comment'] = in_data.get('comment', None)
             out_data['show_answer'] = in_data.get('answer', None)
         else:
-            out_data['is_permalink'] = False
             out_data['show_page'] = in_data.get('page', 1)
             out_data['answer_sort_method'] = in_data.get(
                                                     'sort',

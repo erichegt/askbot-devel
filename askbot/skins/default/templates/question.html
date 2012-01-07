@@ -153,6 +153,10 @@
             {% for answer in answers %}
                 {# ==== START: question/answer_card.html ==== #}
                 <a name="{{ answer.id }}"></a>
+                {% if answer.old_answer_id %}
+                    {# Make old URL anchors/hashes work #}
+                    <a class="old_answer_id_anchor" name="{{ answer.old_answer_id }}"></a>
+                {% endif %}
                 <div
                         id="answer-container-{{ answer.id }}"
                         class="{{ macros.answer_classes(answer, question) }}">

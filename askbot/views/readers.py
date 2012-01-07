@@ -369,8 +369,34 @@ def question(request, id):#refactor - long subroutine. display question body, an
     show_answer = form.cleaned_data['show_answer']
     show_comment = form.cleaned_data['show_comment']
     show_page = form.cleaned_data['show_page']
-    is_permalink = form.cleaned_data['is_permalink']
     answer_sort_method = form.cleaned_data['answer_sort_method']
+
+    # Handle URL mapping - from old Q/A/C/ URLs to the new one
+    if not models.Post.objects.get_questions().filter(id=id).exists() and models.Post.objects.get_questions().filter(old_question_id=id).exists():
+        old_question = models.Post.objects.get_questions().get(old_question_id=id)
+
+        # If we are supposed to show a specific answer or comment, then just redirect to the new URL...
+        if show_answer:
+            try:
+                old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
+                return HttpResponseRedirect(old_answer.get_absolute_url())
+            except models.Post.DoesNotExist:
+                pass
+
+        elif show_comment:
+            try:
+                old_comment = models.Post.objects.get_comments().get(old_comment_id=show_comment)
+                return HttpResponseRedirect(old_comment.get_absolute_url())
+            except models.Post.DoesNotExist:
+                pass
+
+        # ...otherwise just patch question.id, to make URLs like this one work: /question/123#345
+        # This is because URL fragment (hash) (i.e. #345) is not passed to the server so we can't know which
+        # answer user expects to see. If we made a redirect to the new question.id then that hash would be lost.
+        # And if we just hack the question.id (and in question.html template /or its subtemplate/ we create anchors for both old and new id-s)
+        # then everything should work as expected.
+        id = old_question.id
+
 
     #resolve comment and answer permalinks
     #they go first because in theory both can be moved to another question
@@ -379,7 +405,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #in the case if the permalinked items or their parents are gone - redirect
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
-    if show_comment is not None:
+    if show_comment:
         #if url calls for display of a specific comment,
         #check that comment exists, that it belongs to
         #the current question
@@ -389,18 +415,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #in addition - if url points to a comment and the comment
         #is for the answer - we need the answer object
         try:
-            show_comment = models.Post.objects.get(id=show_comment)
-            if str(show_comment.thread._question_post().id) != id:
-                return HttpResponseRedirect(show_comment.thread.get_absolute_url())
-            show_post = show_comment.parent
-            show_comment.assert_is_visible_to(request.user)
-        except models.Comment.DoesNotExist:
+            show_comment = models.Post.objects.get_comments().get(id=show_comment)
+        except models.Post.DoesNotExist:
             error_message = _(
                 'Sorry, the comment you are looking for has been '
                 'deleted and is no longer accessible'
             )
             request.user.message_set.create(message = error_message)
             return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+
+        if str(show_comment.thread._question_post().id) != str(id):
+            return HttpResponseRedirect(show_comment.get_absolute_url())
+        show_post = show_comment.parent
+
+        try:
+            show_comment.assert_is_visible_to(request.user)
         except exceptions.AnswerHidden, error:
             request.user.message_set.create(message = unicode(error))
             #use reverse function here because question is not yet loaded
@@ -409,15 +438,16 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('index'))
 
-    elif show_answer is not None:
+    elif show_answer:
         #if the url calls to view a particular answer to 
         #question - we must check whether the question exists
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
+        show_post = get_object_or_404(models.Post, post_type='answer', id=show_answer)
+        if str(show_post.thread._question_post().id) != str(id):
+            return HttpResponseRedirect(show_post.get_absolute_url())
+
         try:
-            show_post = get_object_or_404(models.Post, id=show_answer)
-            if str(show_post.thread._question_post().id) != id:
-                return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
             request.user.message_set.create(message = unicode(error))
