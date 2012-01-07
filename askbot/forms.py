@@ -920,7 +920,6 @@ class EditAnswerForm(forms.Form):
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',
-                    help_text=_('this email will be linked to gravatar'),
                     required=True,
                     max_length=255,
                     widget=forms.TextInput(attrs={'size' : 35})
