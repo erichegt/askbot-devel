@@ -44,7 +44,7 @@ urlpatterns = patterns('',
     url( # TODO: replace with django.conf.urls.static ?
         r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
         'django.views.static.serve',
-        {'document_root': settings.ASKBOT_FILE_UPLOAD_DIR.replace('\\','/')},
+        {'document_root': settings.MEDIA_ROOT.replace('\\','/')},
         name='uploaded_file',
     ),
     #no translation for this url!!

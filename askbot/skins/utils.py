@@ -109,7 +109,7 @@ def get_media_url(url, ignore_missing = False):
                                 1
                             )
         file_path = os.path.join(
-                            django_settings.ASKBOT_FILE_UPLOAD_DIR,
+                            django_settings.MEDIA_ROOT,
                             file_path
                         )
         if os.path.isfile(file_path):

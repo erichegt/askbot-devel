@@ -4,6 +4,7 @@ http://code.google.com/p/django-values/
 """
 from decimal import Decimal
 from django import forms
+from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
@@ -600,7 +601,10 @@ class ImageValue(StringValue):
             'allowed_file_extensions',
             ('jpg', 'gif', 'png')
         )
-        self.upload_directory = kwargs.pop('upload_directory')
+        self.upload_directory = kwargs.pop(
+                                    'upload_directory',
+                                    django_settings.MEDIA_ROOT
+                                )
         self.upload_url = kwargs.pop('upload_url')
         self.url_resolver = kwargs.pop('url_resolver', None)
         super(ImageValue, self).__init__(*args, **kwargs)

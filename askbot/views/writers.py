@@ -79,7 +79,6 @@ def upload(request):#ajax upload file to a question or answer
                         ) + file_extension
 
         file_storage = FileSystemStorage(
-                    location = settings.ASKBOT_FILE_UPLOAD_DIR,
                     base_url = reverse('uploaded_file', kwargs = {'path':''}),
                 )
         # use default storage to store file
