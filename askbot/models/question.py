@@ -350,10 +350,12 @@ class Thread(models.Model):
         "Creates a list of Tag names from the ``tagnames`` attribute."
         return self.tagnames.split(u' ')
 
-    def get_title(self):
+    def get_title(self, question=None):
+        if not question:
+            question = self._question_post() # allow for optimization if the caller has already fetched the question post for this thread
         if self.closed:
             attr = const.POST_STATUS['closed']
-        elif self._question_post().deleted:
+        elif question.deleted:
             attr = const.POST_STATUS['deleted']
         else:
             attr = None

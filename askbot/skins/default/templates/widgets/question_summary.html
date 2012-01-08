@@ -16,7 +16,7 @@
                 {% if thread.answer_count == 0 -%}
                     no-answers
                 {% else -%}
-                    {%- if thread.accepted_answer -%}
+                    {%- if thread.accepted_answer_id -%}  {# INFO: Use _id to not fetch the whole answer post #}
                         accepted
                     {%- else -%}
                         some-answers
@@ -24,7 +24,7 @@
                 {%- endif -%}"> 
             <span 
                 class="item-count"
-            >{{thread.answer_count|humanize_counter}}{% if thread.accepted_answer %}{% endif %}</span>
+            >{{thread.answer_count|humanize_counter}}{% if thread.accepted_answer_id %}{% endif %}</span>
             <div>
             {% trans cnt=thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
             </div>
@@ -40,7 +40,6 @@
             {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
             </div>
         </div>
-        
         <div style="clear:both"></div>
         <div class="userinfo">
             <span class="relativetime" title="{{thread.last_activity_at}}">{{ thread.last_activity_at|diff_date }}</span>
@@ -52,7 +51,7 @@
             {% endif %}
         </div>
     </div>
-    <h2><a title="{{question.summary|escape}}" href="{{ thread.get_absolute_url() }}">{{thread.get_title()|escape}}</a></h2>
+    <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{thread.get_title(question)|escape}}</a></h2>
     {{ tag_list_widget(thread.get_tag_names(), url_params=query_string) }}
 </div>
 
