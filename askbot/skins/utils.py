@@ -102,9 +102,9 @@ def get_media_url(url, ignore_missing = False):
 
     #if file is in upfiles directory, then give that
     url_copy = url
-    if url_copy.startswith(django_settings.ASKBOT_UPLOADED_FILES_URL):
+    if url_copy.startswith(django_settings.MEDIA_URL[1:]):
         file_path = url_copy.replace(
-                                django_settings.ASKBOT_UPLOADED_FILES_URL,
+                                django_settings.MEDIA_URL[1:],
                                 '',
                                 1
                             )

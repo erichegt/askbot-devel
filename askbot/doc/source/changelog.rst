@@ -16,6 +16,7 @@ Development version (not released yet)
 * allowed disabling use of gravatar site-wide (Rosandra Cuello Suñol)
 * when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
 * replaced setting `ASKBOT_FILE_UPLOAD_DIR` with django's `MEDIA_ROOT` (Evgeny)
+* replaced setting `ASKBOT_UPLOADED_FILES_URL` with django's `MEDIA_URL` (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------

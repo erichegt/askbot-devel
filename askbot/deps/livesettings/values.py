@@ -605,7 +605,10 @@ class ImageValue(StringValue):
                                     'upload_directory',
                                     django_settings.MEDIA_ROOT
                                 )
-        self.upload_url = kwargs.pop('upload_url')
+        self.upload_url = kwargs.pop(
+                                    'upload_url',
+                                    django_settings.MEDIA_URL
+                                )
         self.url_resolver = kwargs.pop('url_resolver', None)
         super(ImageValue, self).__init__(*args, **kwargs)
 

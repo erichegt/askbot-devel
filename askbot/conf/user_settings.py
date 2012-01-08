@@ -70,7 +70,6 @@ settings.register(
                         'To change the avatar image, select new file, '
                         'then submit this whole form.'
                     ),
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/nophoto.png',
         url_resolver = skin_utils.get_media_url
     )

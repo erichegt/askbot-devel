@@ -78,9 +78,7 @@ def upload(request):#ajax upload file to a question or answer
                             str(random.randint(0,100000))
                         ) + file_extension
 
-        file_storage = FileSystemStorage(
-                    base_url = reverse('uploaded_file', kwargs = {'path':''}),
-                )
+        file_storage = FileSystemStorage()
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size

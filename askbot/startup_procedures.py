@@ -211,6 +211,15 @@ def test_celery():
             "in your settings.py file"
         )
 
+def test_media_url():
+    """makes sure that setting `MEDIA_URL`
+    has leading slash"""
+    if not django_settings.MEDIA_URL.startswith('/'):
+        raise ImproperlyConfigured(PREAMBLE + \
+            "\nMEDIA_URL parameter must be a unique url on the site\n"
+            "and must start with a slash - e.g. /media/"
+        )
+
 class SettingsTester(object):
     """class to test contents of the settings.py file"""
 
@@ -291,12 +300,18 @@ def run_startup_tests():
                 'LOGIN_REDIRECT_URL = ASKBOT_URL'
         },
         'ASKBOT_FILE_UPLOAD_DIR': {
-            'message': 'Please replace setting ASKBOT_FILE_UPLOAD_DIR ',
             'test_for_absence': True,
+            'message': 'Please replace setting ASKBOT_FILE_UPLOAD_DIR ',
             'replace_hint': "with MEDIA_ROOT = '%s'"
+        },
+        'ASKBOT_UPLOADED_FILES_URL': {
+            'test_for_absence': True,
+            'message': 'Please replace setting ASKBOT_UPLOADED_FILES_URL ',
+            'replace_hint': "with MEDIA_URL = '/%s'"
         }
     })
     settings_tester.run()
+    test_media_url()
 
 @transaction.commit_manually
 def run():

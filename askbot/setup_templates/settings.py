@@ -69,6 +69,7 @@ LANGUAGE_CODE = 'en'
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+MEDIA_URL = '/upfiles/'
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
@@ -167,8 +168,6 @@ INSTALLED_APPS = (
     'djkombu',
     'followit',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
-    #requires setting MEDIA_URL
-    #values of which can be the same as ASKBOT_UPLOADED_FILES_URL,
 )
 
 
@@ -208,7 +207,6 @@ LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
-ASKBOT_UPLOADED_FILES_URL = 'upfiles/'
 ALLOW_UNICODE_SLUGS = False
 ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 

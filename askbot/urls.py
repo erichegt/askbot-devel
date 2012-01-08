@@ -41,12 +41,6 @@ urlpatterns = patterns('',
         views.meta.media,
         name='askbot_media',
     ),
-    url( # TODO: replace with django.conf.urls.static ?
-        r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
-        'django.views.static.serve',
-        {'document_root': settings.MEDIA_ROOT.replace('\\','/')},
-        name='uploaded_file',
-    ),
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
