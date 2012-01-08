@@ -33,6 +33,10 @@ class Migration(DataMigration):
 
         for a in orm.Activity.objects.all():
             # test if content_object for this activity exists - there might be a bunch of "abandoned" activities
+            #
+            # NOTE  that if activity.content_object is gone then we cannot reliably recover it from activity.question
+            # - the latter is just a thread to which the activity is related! It might occasionally be the actual post
+            # the activity is related to, but it's not the general rule.
             model_signature = '.'.join([a.content_type.app_label, a.content_type.model])
             if not orm[model_signature].objects.filter(id=a.object_id).exists():
                 abandoned_activities.append(a)
