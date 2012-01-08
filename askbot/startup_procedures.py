@@ -214,10 +214,12 @@ def test_celery():
 def test_media_url():
     """makes sure that setting `MEDIA_URL`
     has leading slash"""
-    if not django_settings.MEDIA_URL.startswith('/'):
+    media_url = django_settings.MEDIA_URL
+    #todo: add proper url validation to MEDIA_URL setting
+    if not (media_url.startswith('/') or media_url.startswith('http')):
         raise ImproperlyConfigured(PREAMBLE + \
             "\nMEDIA_URL parameter must be a unique url on the site\n"
-            "and must start with a slash - e.g. /media/"
+            "and must start with a slash - e.g. /media/ or http(s)://"
         )
 
 class SettingsTester(object):

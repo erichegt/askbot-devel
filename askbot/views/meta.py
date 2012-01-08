@@ -29,6 +29,7 @@ def config_variable(request, variable_name = None, mimetype = None):
     """Print value from the configuration settings
     as response content. All parameters are required.
     """
+    #todo add http header-based caching here!!!
     output = getattr(askbot_settings, variable_name, '')
     return HttpResponse(output, mimetype = mimetype)
 
