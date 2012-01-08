@@ -639,13 +639,20 @@ class ImageValue(StringValue):
         """uploaded_file is an instance of
         django UploadedFile object
         """
+        #0) initialize file storage
+        file_storage_class = storage.get_storage_class()
+
+        storage_settings = {}
+        if django_settings.DEFAULT_FILE_STORAGE == \
+            'django.core.files.storage.FileSystemStorage':
+            storage_settings = {
+                'location': self.upload_directory,
+                'base_url': self.upload_url
+            }
+
+        file_storage = file_storage_class(**storage_settings)
+
         #1) come up with a file name
-
-        file_storage = storage.FileSystemStorage(
-                                    location = self.upload_directory,
-                                    base_url = self.upload_url
-                                )
-
         #todo: need better function here to calc name
         file_name = file_storage.get_available_name(uploaded_file.name)
         file_storage.save(file_name, uploaded_file)

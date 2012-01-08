@@ -17,6 +17,7 @@ Development version (not released yet)
 * when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
 * replaced setting `ASKBOT_FILE_UPLOAD_DIR` with django's `MEDIA_ROOT` (Evgeny)
 * replaced setting `ASKBOT_UPLOADED_FILES_URL` with django's `MEDIA_URL` (Evgeny)
+* allowed changing file storage backend for file uploads by configuration (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------

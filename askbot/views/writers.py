@@ -12,7 +12,7 @@ import random
 import sys
 import tempfile
 import time
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import get_storage_class
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -78,7 +78,7 @@ def upload(request):#ajax upload file to a question or answer
                             str(random.randint(0,100000))
                         ) + file_extension
 
-        file_storage = FileSystemStorage()
+        file_storage = get_storage_class()()
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size
