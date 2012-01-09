@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version (not released yet)
---------------------------------------
+0.7.37 (Jan 8, 2012)
+--------------------
 * added basic slugification treatment to question titles with 
   ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
 * added verification of the project directory name to
@@ -15,6 +15,10 @@ Development version (not released yet)
   text to live settings and allowed body-less questions (Radim Řehůřek, Evgeny)
 * allowed disabling use of gravatar site-wide (Rosandra Cuello Suñol)
 * when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
+* replaced setting `ASKBOT_FILE_UPLOAD_DIR` with django's `MEDIA_ROOT` (Evgeny)
+* replaced setting `ASKBOT_UPLOADED_FILES_URL` with django's `MEDIA_URL` (Evgeny)
+* allowed changing file storage backend for file uploads by configuration (Evgeny)
+* file uploads to amazon S3 now work with proper configuration (Evgeny)
 
 0.7.36 (Dec 20, 2011)
 ---------------------

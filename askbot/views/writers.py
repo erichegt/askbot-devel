@@ -12,7 +12,7 @@ import random
 import sys
 import tempfile
 import time
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import get_storage_class
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -78,10 +78,7 @@ def upload(request):#ajax upload file to a question or answer
                             str(random.randint(0,100000))
                         ) + file_extension
 
-        file_storage = FileSystemStorage(
-                    location = settings.ASKBOT_FILE_UPLOAD_DIR,
-                    base_url = reverse('uploaded_file', kwargs = {'path':''}),
-                )
+        file_storage = get_storage_class()()
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size
@@ -106,11 +103,12 @@ def upload(request):#ajax upload file to a question or answer
         result = ''
         file_url = ''
 
-    #<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>
-    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
-    xml = xml_template % (result, error, file_url)
-
-    return HttpResponse(xml, mimetype="application/xml")
+    data = simplejson.dumps({
+        'result': result,
+        'error': error,
+        'file_url': file_url
+    })
+    return HttpResponse(data, mimetype = 'application/json')
 
 def __import_se_data(dump_file):
     """non-view function that imports the SE data
