@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version (not released yet)
---------------------------------------
+0.7.37 (Jan 8, 2012)
+--------------------
 * added basic slugification treatment to question titles with 
   ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
 * added verification of the project directory name to
