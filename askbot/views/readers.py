@@ -475,6 +475,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
     answers = list(answers)
 
+    # TODO: Add unit test to catch the bug where precache_comments() is called above (before) reordering the accepted answer to the top
+    #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
+
     if thread.accepted_answer: # Put the accepted answer to front
         answers.remove(thread.accepted_answer)
         answers.insert(0, thread.accepted_answer)
