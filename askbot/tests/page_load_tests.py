@@ -122,11 +122,11 @@ class PageLoadTestCase(AskbotTestCase):
         self.try_url(
                 'about',
                 status_code=status_code,
-                template='about.html')
+                template='static_page.html')
         self.try_url(
                 'privacy',
                 status_code=status_code,
-                template='privacy.html')
+                template='static_page.html')
         self.try_url('logout', template='authopenid/logout.html')
         #todo: test different tabs
         self.try_url(

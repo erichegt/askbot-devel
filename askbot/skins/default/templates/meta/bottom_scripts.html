@@ -76,7 +76,7 @@
 </script>
 {% if settings.USE_CUSTOM_JS %}
 <script 
-    src="{% url "custom_js"%}?{{ settings.MEDIA_RESOURCE_REVISION }}"
+    src="{% url "custom_js"%}?v={{ settings.MEDIA_RESOURCE_REVISION }}"
     type="text/javascript"
 ></script>
 {% endif %}

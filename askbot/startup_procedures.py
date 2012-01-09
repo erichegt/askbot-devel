@@ -211,6 +211,17 @@ def test_celery():
             "in your settings.py file"
         )
 
+def test_media_url():
+    """makes sure that setting `MEDIA_URL`
+    has leading slash"""
+    media_url = django_settings.MEDIA_URL
+    #todo: add proper url validation to MEDIA_URL setting
+    if not (media_url.startswith('/') or media_url.startswith('http')):
+        raise ImproperlyConfigured(PREAMBLE + \
+            "\nMEDIA_URL parameter must be a unique url on the site\n"
+            "and must start with a slash - e.g. /media/ or http(s)://"
+        )
+
 class SettingsTester(object):
     """class to test contents of the settings.py file"""
 
@@ -228,14 +239,25 @@ class SettingsTester(object):
         self.requirements = requirements
 
 
-    def test_setting(self, name, value = None, message = None):
+    def test_setting(self, name,
+            value = None, message = None,
+            test_for_absence = False,
+            replace_hint = None
+        ):
         """if setting does is not present or if the value != required_value,
         adds an error message
         """
-        if not hasattr(self.settings, name):
-            self.messages.append(message)
-        elif value and getattr(self.settings, name) != value:
-            self.messages.append(message)
+        if test_for_absence:
+            if hasattr(self.settings, name):
+                if replace_hint:
+                    value = getattr(self.settings, name)
+                    message += replace_hint % value
+                self.messages.append(message)
+        else:
+            if not hasattr(self.settings, name):
+                self.messages.append(message)
+            elif value and getattr(self.settings, name) != value:
+                self.messages.append(message)
 
     def run(self):
         for setting_name in self.requirements:
@@ -278,9 +300,20 @@ def run_startup_tests():
                 'where you want to send users after they log in\n'
                 'a reasonable default is\n'
                 'LOGIN_REDIRECT_URL = ASKBOT_URL'
+        },
+        'ASKBOT_FILE_UPLOAD_DIR': {
+            'test_for_absence': True,
+            'message': 'Please replace setting ASKBOT_FILE_UPLOAD_DIR ',
+            'replace_hint': "with MEDIA_ROOT = '%s'"
+        },
+        'ASKBOT_UPLOADED_FILES_URL': {
+            'test_for_absence': True,
+            'message': 'Please replace setting ASKBOT_UPLOADED_FILES_URL ',
+            'replace_hint': "with MEDIA_URL = '/%s'"
         }
     })
     settings_tester.run()
+    test_media_url()
 
 @transaction.commit_manually
 def run():
