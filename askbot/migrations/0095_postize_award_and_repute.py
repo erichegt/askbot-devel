@@ -15,7 +15,7 @@ class Migration(DataMigration):
             ct = aw.content_type
             if ct.app_label == 'askbot' and ct.model in ('question', 'answer', 'comment'):
                 aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(**{'self_%s__id' % ct.model: aw.object_id}).id
+                aw.object_id = orm.Post.objects.get(**{'self_%s__id' % str(ct.model): aw.object_id}).id
                 aw.save()
 
         ###
