@@ -98,6 +98,11 @@ def get_media_url(url, ignore_missing = False):
     #before = datetime.datetime.now()
     url = urllib.unquote(unicode(url))
     while url[0] == '/': url = url[1:]
+
+    #a hack allowing urls media stored on external locations to
+    #just pass through unchanged
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
     #todo: handles case of multiple skin directories
 
     #if file is in upfiles directory, then give that
