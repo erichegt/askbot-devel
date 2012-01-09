@@ -1,12 +1,12 @@
 {% extends "two_column_body.html" %}
 <!-- question.html -->
-{% block title %}{% spaceless %}{{ thread.get_title() }}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ thread.get_title(question) }}{% endspaceless %}{% endblock %}
 {% block meta_description %}
         <meta name="description" content="{{question.summary|striptags|escape}}" />
 {% endblock %}
 {% block keywords %}{{thread.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
-    <link rel="canonical" href="{{settings.APP_URL}}{{thread.get_absolute_url()}}" />
+    <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block content %}
@@ -27,7 +27,7 @@
             </div>
             <div class="question-content">
 
-                <h1><a href="{{ thread.get_absolute_url() }}">{{ thread.get_title() }}</a></h1>
+                <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title(question) }}</a></h1>
                 {# ==== START: question/question_tags.html" #}
                     {{ macros.tag_list_widget(
                            tags = thread.get_tag_names(),
@@ -108,6 +108,7 @@
                     }}
                     {# ==== END: question/question_comments.html ==== #}
                 </div>
+
             </div>
             <div class="clean"></div>
         {# ==== END: question/question_card.html ==== #}
@@ -120,6 +121,7 @@
             </div>
             {# ==== END: question/closed_question_info.html ==== #}
         {% endif %}
+
         {% if answers %}
             {# ==== START: question/answer_tab_bar.html ==== #}
             <div class="tabBar tabBar-answer">
@@ -134,13 +136,13 @@
                     <span class="label">
                     Sort by »
                     </span>
-                    <a id="oldest" href="{{ thread.get_absolute_url() }}?sort=oldest#sort-top"
+                    <a id="oldest" href="{{ question.get_absolute_url() }}?sort=oldest#sort-top"
                        title="{% trans %}oldest answers will be shown first{% endtrans %}"
                             ><span>{% trans %}oldest answers{% endtrans %}</span></a>
-                    <a id="latest" href="{{ thread.get_absolute_url() }}?sort=latest#sort-top"
+                    <a id="latest" href="{{ question.get_absolute_url() }}?sort=latest#sort-top"
                        title="{% trans %}newest answers will be shown first{% endtrans %}"
                             ><span>{% trans %}newest answers{% endtrans %}</span></a>
-                    <a id="votes" href="{{ thread.get_absolute_url() }}?sort=votes#sort-top"
+                    <a id="votes" href="{{ question.get_absolute_url() }}?sort=votes#sort-top"
                        title="{% trans %}most voted answers will be shown first{% endtrans %}"
                             ><span>{% trans %}popular answers{% endtrans %}</span></a>
                 </div>
@@ -150,6 +152,7 @@
 
             {{ macros.paginator(paginator_context) }}
             <div class="clean"></div>
+
             {% for answer in answers %}
                 {# ==== START: question/answer_card.html ==== #}
                 <a name="{{ answer.id }}"></a>
@@ -164,7 +167,7 @@
                         {# ==== START: question/answer_vote_buttons.html ==== #}
                             {{ macros.post_vote_buttons(post = answer, visitor_vote = user_answer_votes[answer.id]) }}
                             <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept"
-                                    {% if answer.is_answer_accepted() %}
+                                    {% if answer.accepted() %}
                                  src="{{'/images/vote-accepted-on.png'|media}}"
                                     {% else %}
                                  src="{{'/images/vote-accepted.png'|media}}"
@@ -196,11 +199,12 @@
                                     {% set pipe=joiner('<span class="sep">|</span>') %}
                                     <span class="linksopt">{{ pipe() }}
                                         <a  class="permant-link"
-                                            href="{{ answer.get_absolute_url() }}"
+                                            href="{{ answer.get_absolute_url(question_post=question) }}"
                                             title="{% trans %}answer permanent link{% endtrans %}">
                                             {% trans %}permanent link{% endtrans %}
                                         </a>
                                     </span>
+
                                     {% if request.user|can_edit_post(answer) %}{{ pipe() }}
                                         <span class="action-link"><a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
                                     {% endif %}
@@ -234,6 +238,7 @@
                                             <a id="swap-question-with-answer-{{answer.id}}">{% trans %}swap with question{% endtrans %}</a>
                                         </span>
                                     {% endif %}
+
                                 {# ==== END: question/answer_controls.html ==== #}
                             </div>
                             {# ==== START: question/answer_comments.html ==== #}
@@ -259,7 +264,7 @@
             <div class="clean"></div>
         {% else %}
             {# ==== START: question/sharing_prompt_phrase.html ==== #}
-                {% set question_url=settings.APP_URL+thread.get_absolute_url()|urlencode %}
+                {% set question_url=settings.APP_URL+question.get_absolute_url()|urlencode %}
                 <h2 class="share-question">{% trans %}Know someone who can answer?  Share a <a href="{{ question_url }}">link</a> to this question via{% endtrans %}
                     {% if settings.ENABLE_SHARING_TWITTER %}{{ macros.share(site = 'twitter', site_label = 'Twitter') }},{% endif %}
                     {% if settings.ENABLE_SHARING_FACEBOOK %}{{ macros.share(site = 'facebook', site_label = 'Facebook') }},{% endif %}
@@ -272,6 +277,7 @@
                 </h2>
             {# ==== END: question/sharing_prompt_phrase.html ==== #}
         {% endif %}
+
         {# ==== START: question/new_answer_form.html ==== #}
             <form
                     id="fmanswer"
@@ -359,6 +365,7 @@
             <input type="button" class="submit after-editor" id="fmanswer_button"  value="{% trans %}Answer Your Own Question{% endtrans %}"/>
         {%endif%}
     {# ==== END: question/content.html ==== #}
+
 {% endblock %}
 {% block sidebar %}
     {%include "question/sidebar.html" %}

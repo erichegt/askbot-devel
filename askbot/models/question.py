@@ -416,8 +416,23 @@ class Thread(models.Model):
                 thread.similarity = self.get_similarity(other_thread=thread)
 
             similar_threads.sort(key=operator.attrgetter('similarity'), reverse=True)
+            similar_threads = similar_threads[:10]
 
-            return similar_threads[:10]
+            # Denormalize questions to speed up template rendering
+            thread_map = dict([(thread.id, thread) for thread in similar_threads])
+            questions = Post.objects.get_questions().select_related('thread').filter(thread__in=similar_threads)
+            for q in questions:
+                thread_map[q.thread_id].question_denorm = q
+
+            # Postprocess data
+            similar_threads = [
+                {
+                    'url': thread.question_denorm.get_absolute_url(),
+                    'title': thread.get_title(thread.question_denorm)
+                } for thread in similar_threads
+            ]
+
+            return similar_threads
 
         return LazyList(get_data)
 
@@ -557,7 +572,7 @@ class Thread(models.Model):
         return FavoriteQuestion.objects.filter(thread=self, user=user).exists()
 
     def get_last_update_info(self):
-        posts = self.posts.all()
+        posts = list(self.posts.select_related('author', 'last_edited_by'))
 
         last_updated_at = posts[0].added_at
         last_updated_by = posts[0].author

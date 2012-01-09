@@ -10,13 +10,10 @@ import datetime
 import logging
 import urllib
 import operator
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.conf import settings as django_settings
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
-from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -25,7 +22,6 @@ from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
-from django.views.decorators.cache import cache_page
 from django.http import QueryDict
 
 import askbot
@@ -40,7 +36,6 @@ from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
-from askbot.templatetags import extra_filters
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
@@ -478,17 +473,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answers = thread.get_answers(user = request.user)
     answers = answers.select_related('thread', 'author', 'last_edited_by')
     answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
-
-    # TODO: Instead of fetching answer posts, fetch all posts that belong to this thread,
-    #       then manually process them so that `answers` variable is unchanged, and for each answer within it
-    #       answer.get_comments() return a pre-cached list of comment posts
-    #
-    #       Then, in macros.html, we have to adjust the lines with post.get_comments() calls, like:
-    #           {% set comments = post.get_comments(visitor = user)[:show_comment_position] %}
-    #
-
     answers = list(answers)
-    
+
+    Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
+
     if thread.accepted_answer: # Put the accepted answer to front
         answers.remove(thread.accepted_answer)
         answers.insert(0, thread.accepted_answer)
@@ -524,6 +512,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.session['question_view_times'] = {}
 
         last_seen = request.session['question_view_times'].get(question_post.id, None)
+
         updated_when, updated_who = thread.get_last_update_info()
 
         if updated_who != request.user:

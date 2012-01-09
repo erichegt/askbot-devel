@@ -20,8 +20,8 @@
         <div class="answer-summary">
             <a title="{{ top_answer.summary|collapse }}"
                 href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{ top_answer.id }}">
-                <span class="answer-votes {% if top_answer.is_answer_accepted() %}answered-accepted{% endif %}"
-                      title="{% trans answer_score=top_answer.score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if top_answer.is_answer_accepted() %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
+                <span class="answer-votes {% if top_answer.accepted() %}answered-accepted{% endif %}"
+                      title="{% trans answer_score=top_answer.score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if top_answer.accepted() %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
                     {{ top_answer.score }}
                 </span>
             </a>

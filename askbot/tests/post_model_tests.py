@@ -2,7 +2,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from askbot.tests.utils import AskbotTestCase
-from askbot.models import PostRevision
+from askbot.models import Post, PostRevision
 
 
 class PostModelTests(AskbotTestCase):
@@ -115,14 +115,38 @@ class PostModelTests(AskbotTestCase):
         c2 = q.add_comment(user=self.user, comment='blah blah')
         c3 = self.post_comment(parent_post=q)
 
-        self.assertListEqual([c1, c2, c3], q.get_comments(visitor=self.user))
-        self.assertListEqual([c1, c2, c3], q.get_comments(visitor=self.u2))
+        Post.objects.precache_comments(for_posts=[q], visitor=self.user)
+        self.assertListEqual([c1, c2, c3], q._cached_comments)
+        Post.objects.precache_comments(for_posts=[q], visitor=self.u2)
+        self.assertListEqual([c1, c2, c3], q._cached_comments)
 
         c1.added_at, c3.added_at = c3.added_at, c1.added_at
         c1.save()
         c3.save()
 
-        self.assertListEqual([c3, c2, c1], q.get_comments(visitor=self.user))
-        self.assertListEqual([c3, c2, c1], q.get_comments(visitor=self.u2))
+        Post.objects.precache_comments(for_posts=[q], visitor=self.user)
+        self.assertListEqual([c3, c2, c1], q._cached_comments)
+        Post.objects.precache_comments(for_posts=[q], visitor=self.u2)
+        self.assertListEqual([c3, c2, c1], q._cached_comments)
+
+        del self.user
+
+    def test_comment_precaching(self):
+        self.user = self.u1
+        q = self.post_question()
+
+        c1 = self.post_comment(parent_post=q)
+        c2 = q.add_comment(user=self.user, comment='blah blah')
+        c3 = self.post_comment(parent_post=q)
+
+        Post.objects.precache_comments(for_posts=[q], visitor=self.user)
+        self.assertListEqual([c1, c2, c3], q._cached_comments)
+
+        c1.added_at, c3.added_at = c3.added_at, c1.added_at
+        c1.save()
+        c3.save()
+
+        Post.objects.precache_comments(for_posts=[q], visitor=self.user)
+        self.assertListEqual([c3, c2, c1], q._cached_comments)
 
         del self.user

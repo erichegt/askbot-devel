@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 import operator
 import cgi
@@ -393,6 +394,49 @@ class PostManager(BaseQuerySetManager):
 
         return answer
 
+    def precache_comments(self, for_posts, visitor):
+        """
+        Fetches comments for given posts, and stores them in post._cached_comments
+        Additionally, annotates posts with ``upvoted_by_user`` parameter, if visitor is logged in
+
+        """
+        qs = Post.objects.get_comments().filter(parent__in=for_posts).select_related('author')
+
+        if visitor.is_anonymous():
+            comments = list(qs.order_by('added_at'))
+        else:
+            upvoted_by_user = list(qs.filter(votes__user=visitor).distinct())
+            not_upvoted_by_user = list(qs.exclude(votes__user=visitor).distinct())
+
+            for c in upvoted_by_user:
+                c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
+
+            comments = upvoted_by_user + not_upvoted_by_user
+            comments.sort(key=operator.attrgetter('added_at'))
+
+        post_map = defaultdict(list)
+        for cm in comments:
+            post_map[cm.parent_id].append(cm)
+        for post in for_posts:
+            post._cached_comments = post_map[post.id]
+
+        # Old Post.get_comment(self, visitor=None) method:
+        #        if visitor.is_anonymous():
+        #            return self.comments.order_by('added_at')
+        #        else:
+        #            upvoted_by_user = list(self.comments.filter(votes__user=visitor).distinct())
+        #            not_upvoted_by_user = list(self.comments.exclude(votes__user=visitor).distinct())
+        #
+        #            for c in upvoted_by_user:
+        #                c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
+        #
+        #            comments = upvoted_by_user + not_upvoted_by_user
+        #            comments.sort(key=operator.attrgetter('added_at'))
+        #
+        #            return comments
+
+
+
 class Post(models.Model):
     post_type = models.CharField(max_length=255)
 
@@ -616,11 +660,13 @@ class Post(models.Model):
     def is_comment(self):
         return self.post_type == 'comment'
 
-    def get_absolute_url(self, no_slug = False):
+    def get_absolute_url(self, no_slug = False, question_post=None):
         from askbot.utils.slug import slugify
         if self.is_answer():
+            if not question_post:
+                question_post = self.thread._question_post()
             return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % {
-                'base': urlresolvers.reverse('question', args=[self.thread._question_post().id]),
+                'base': urlresolvers.reverse('question', args=[question_post.id]),
                 'slug': django_urlquote(slugify(self.thread.title)),
                 'id': self.id
             }
@@ -706,25 +752,6 @@ class Post(models.Model):
             raise NotImplementedError
         return slugify(self.thread.title)
     slug = property(_get_slug)
-
-    def get_comments(self, visitor = None):
-        """returns comments for a post, annotated with
-        ``upvoted_by_user`` parameter, if visitor is logged in
-        otherwise, returns query set for all comments to a given post
-        """
-        if visitor.is_anonymous():
-            return self.comments.order_by('added_at')
-        else:
-            upvoted_by_user = list(self.comments.filter(votes__user=visitor))
-            not_upvoted_by_user = list(self.comments.exclude(votes__user=visitor))
-
-            for c in upvoted_by_user:
-                c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
-
-            comments = upvoted_by_user + not_upvoted_by_user
-            comments.sort(key=operator.attrgetter('added_at'))
-
-            return comments
 
     def get_snippet(self):
         """returns an abbreviated snippet of the content
@@ -1590,14 +1617,9 @@ class Post(models.Model):
     #####
     #####
 
-    def is_answer_accepted(self):
-        if not self.is_answer():
-            raise NotImplementedError
-        return self == self.thread.accepted_answer
-
     def accepted(self):
         if self.is_answer():
-            return self.thread.accepted_answer == self
+            return self.thread.accepted_answer_id == self.id
         raise NotImplementedError
 
     def get_page_number(self, answer_posts):
@@ -1643,6 +1665,8 @@ class Post(models.Model):
             parent=self.parent
         ).exists() is False
 
+    def hack_template_marker(self, name):
+        list(Post.objects.filter(text=name))
 
 
 class PostRevisionManager(models.Manager):

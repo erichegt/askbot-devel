@@ -537,7 +537,9 @@ def answer(request, id):#process a new answer
 def __generate_comments_json(obj, user):#non-view generates json data for the post comments
     """non-view generates json data for the post comments
     """
-    comments = obj.get_comments(visitor = user)
+    models.Post.objects.precache_comments(for_posts=[obj], visitor=user)
+    comments = obj._cached_comments
+
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
     for comment in comments:
@@ -556,7 +558,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             is_editable = False
 
 
-        comment_owner = comment.get_owner()
+        comment_owner = comment.author
         comment_data = {'id' : comment.id,
             'object_id': obj.id,
             'comment_age': diff_date(comment.added_at),

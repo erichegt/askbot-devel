@@ -277,9 +277,9 @@ for the purposes of the AJAX comment editor #}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
             {% if show_post == post and show_comment and show_comment_position > max_comments %}
-                {% set comments = post.get_comments(visitor = user)[:show_comment_position] %}
+                {% set comments = post._cached_comments[:show_comment_position] %}
             {% else %}
-                {% set comments = post.get_comments(visitor = user)[:max_comments] %}
+                {% set comments = post._cached_comments[:max_comments] %}
             {% endif %}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js

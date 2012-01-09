@@ -374,7 +374,8 @@ class CommentTests(AskbotTestCase):
 
     def test_other_user_can_upvote_comment(self):
         self.other_user.upvote(self.comment)
-        comments = self.question.get_comments(visitor = self.other_user)
+        models.Post.objects.precache_comments(for_posts=[self.question], visitor = self.other_user)
+        comments = self.question._cached_comments
         self.assertEquals(len(comments), 1)
         self.assertEquals(comments[0].upvoted_by_user, True)
         self.assertEquals(comments[0].is_upvoted_by(self.other_user), True)
