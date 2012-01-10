@@ -68,38 +68,32 @@ SELECT setup_aggregates();
 
 /* calculates text search vector for the individual thread row
 DOES not include question body post, answers or comments */
-CREATE OR REPLACE FUNCTION get_thread_tsv(tagnames text)
+CREATE OR REPLACE FUNCTION get_thread_tsv(title text, tagnames text)
 RETURNS tsvector AS
 $$
 BEGIN
-    /* todo: add title as it belongs to the whole thread */
-    RETURN setweight(to_tsvector('english', coalesce(tagnames, '')), 'A');
+    /* todo add weight depending on votes */
+    RETURN  setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+            setweight(to_tsvector('english', coalesce(tagnames, '')), 'A');
 END;
 $$ LANGUAGE plpgsql;
 
 /* calculates text seanch vector for the individual question row */
-CREATE OR REPLACE FUNCTION get_question_tsv(title text, text text)
+CREATE OR REPLACE FUNCTION get_post_tsv(text text, post_type text)
 RETURNS tsvector AS
 $$
-   /* todo: move title to get_thread_tsv */
-   RETURN  setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
-            setweight(to_tsvector('english', coalesce(text, '')), 'B') ||
-END;
-$$ LANGUAGE plpgsql;
-
-/* calculates text search vector for answer text */
-CREATE OR REPLACE FUNCTION get_answer_tsv(text text) RETURNS tsvector AS
-$$
 BEGIN
-    RETURN setweight(to_tsvector('english', coalesce(text, '')), 'B');
-END;
-$$ LANGUAGE plpgsql;
-
-/* calculate text search vector for comment text */
-CREATE OR REPLACE FUNCTION get_comment_tsv(comment text) RETURNS tsvector AS
-$$
-BEGIN
-    RETURN setweight(to_tsvector('english', coalesce(comment, '')), 'C');
+    /* todo adjust weights to reflect votes */
+    IF post_type='question' THEN
+        RETURN setweight(to_tsvector('english', coalesce(text, '')), 'B');
+    ELSIF post_type='answer' THEN
+        /* todo reflect whether the answer acepted or not */
+        RETURN setweight(to_tsvector('english', coalesce(text, '')), 'B');
+    ELSIF post_type='comment' THEN
+        RETURN setweight(to_tsvector('english', coalesce(text, '')), 'C');
+    ELSE
+        RETURN to_tsvector('');
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -109,32 +103,32 @@ calculate the text search vector. In the future question
 title will be moved to the askbot_thread table and this function
 will be simpler.
 */
-CREATE OR REPLACE FUNCTION get_thread_question_tsv(thread_id)
+CREATE OR REPLACE FUNCTION get_thread_question_tsv(thread_id integer)
 RETURNS tsvector AS
 $$
 DECLARE
     query text;
     onerow record;
 BEGIN
-    query = 'SELECT title, text FROM question WHERE thread_id=' || thread_id;
+    query = 'SELECT text FROM askbot_post WHERE thread_id=' || thread_id ||
+            ' AND post_type=''question'' AND deleted=false';
     FOR onerow in EXECUTE query LOOP
-        RETURN get_question_tsv(onerow.title, onerow.text);
+        RETURN get_post_tsv(onerow.text, 'question');
     END LOOP;
     RETURN to_tsvector('');
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_dependent_comments_tsv(object_id integer, tablename text)
+CREATE OR REPLACE FUNCTION get_dependent_comments_tsv(parent_id integer)
 RETURNS tsvector AS
 $$
 DECLARE
     query text;
     onerow record;
 BEGIN
-    query = 'SELECT concat_tsvectors(text_search_vector) FROM comment' ||
-        ' WHERE object_id=' || object_id || ' AND content_type_id=(' ||
-            ' SELECT id FROM django_content_type' ||
-            ' WHERE app_label=''askbot'' AND name=''' || tablename || ''')';
+    query = 'SELECT concat_tsvectors(text_search_vector) FROM askbot_post' ||
+        ' WHERE parent_id=' || parent_id || 
+        ' AND post_type=''comment'' AND deleted=false';
     FOR onerow IN EXECUTE query LOOP
         RETURN onerow.concat_tsvectors;
     END LOOP;
@@ -142,7 +136,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_dependent_answers_tsv(question_id integer)
+CREATE OR REPLACE FUNCTION get_dependent_answers_tsv(thread_id integer)
 RETURNS tsvector AS
 $$
 DECLARE
@@ -150,7 +144,7 @@ DECLARE
     onerow record;
 BEGIN
     query = 'SELECT concat_tsvectors(text_search_vector) ' ||
-       'FROM answer WHERE question_id = ' || question_id ||
+       'FROM askbot_post WHERE thread_id = ' || thread_id ||
        ' AND deleted=false';
     FOR onerow IN EXECUTE query LOOP
         RETURN onerow.concat_tsvectors;
@@ -161,83 +155,58 @@ $$ LANGUAGE plpgsql;
 
 /* create tsvector columns in the content tables */
 SELECT add_tsvector_column('text_search_vector', 'askbot_thread');
-SELECT add_tsvector_column('text_search_vector', 'question');
-SELECT add_tsvector_column('text_search_vector', 'answer');
-SELECT add_tsvector_column('text_search_vector', 'comment');
+SELECT add_tsvector_column('text_search_vector', 'askbot_post');
 
 /* populate tsvectors with data */
--- comment tsvectors
-UPDATE comment SET text_search_vector = get_comment_tsv(comment);
+-- post tsvectors
+UPDATE askbot_post set text_search_vector = get_post_tsv(text, 'comment') WHERE post_type='comment';
+UPDATE askbot_post SET text_search_vector = get_post_tsv(text, 'answer') WHERE post_type='answer';
+UPDATE askbot_post SET text_search_vector = get_post_tsv(text, 'question') WHERE post_type='question';
+UPDATE askbot_post as q SET text_search_vector = text_search_vector ||
+    get_dependent_comments_tsv(q.id) WHERE post_type IN ('question', 'answer');
 
--- answer tsvectors
-UPDATE answer SET text_search_vector = get_answer_tsv(text);
-UPDATE answer as a SET text_search_vector = text_search_vector ||
-    get_dependent_comments_tsv(a.id, 'answer');
+--thread tsvector
+UPDATE askbot_thread SET text_search_vector = get_thread_tsv(title, tagnames);
+UPDATE askbot_thread as t SET text_search_vector = text_search_vector ||
+    get_dependent_answers_tsv(t.id) ||
+    get_thread_question_tsv(t.id);
 
---question tsvectors
-UPDATE askbot_thread SET text_search_vector = get_thread_tsv(tagnames);
-UPDATE question SET text_search_vector = get_post_question_tsv(title, text);
-
-UPDATE question as q SET text_search_vector = text_search_vector ||
-    get_dependent_comments_tsv(q.id, 'question');
-
-UPDATE question as q SET text_search_vector = text_search_vector ||
-    get_dependent_answers_tsv(q.id);
+/* one trigger per table for tsv updates */
 
 /* set up update triggers */
 CREATE OR REPLACE FUNCTION thread_trigger() RETURNS trigger AS
 $$
 BEGIN
-    new.text_search_vector = get_thread_tsv(new.tagnames);
-    new.text_search_vector = new.text_search_vector ||
-                            get_thread_question_tsv(new.id)
-    new.text_search_vector = new.text_search_vector ||
-                            get_dependent_comments_tsv(new.id, 'question');
-    new.text_search_vector = new.text_search_vector ||
-                            get_dependent_answers_tsv(new.id);
+    new.text_search_vector = get_thread_tsv(new.tagnames) ||
+                             get_thread_question_tsv(new.id) ||
+                             get_dependent_answers_tsv(new.id);
     RETURN new;
 END;
 $$ LANGUAGE plpgsql;
-DROP TRIGGER IF EXISTS thread_search_vector_update_trigger on question;
+DROP TRIGGER IF EXISTS thread_search_vector_update_trigger on askbot_thread;
 CREATE TRIGGER thread_search_vector_update_trigger 
-BEFORE INSERT OR UPDATE ON question FOR EACH ROW EXECUTE PROCEDURE thread_trigger();
+BEFORE INSERT OR UPDATE ON askbot_thread FOR EACH ROW EXECUTE PROCEDURE thread_trigger();
 
-/* question trigger */
-CREATE OR REPLACE FUNCTION question_trigger RETURNS trigger AS
+/* post trigger */
+CREATE OR REPLACE FUNCTION post_trigger() RETURNS trigger AS
 $$
 BEGIN
-    new.text_search_vector = get_question_tsv(new.title, new.text);
+    IF new.post_type = 'question' THEN
+        new.text_search_vector = get_post_tsv(new.text, 'question');
+        new.text_search_vector = new.text_search_vector ||
+                                get_dependent_comments_tsv(new.id);
+    ELSIF new.post_type = 'answer' THEN
+        new.text_search_vector = get_post_tsv(new.text, 'answer');
+        new.text_search_vector = new.text_search_vector ||
+                                get_dependent_comments_tsv(new.id);
+    ELSIF new.post_type = 'comment' THEN
+        new.text_search_vector = get_post_tsv(new.text, 'comment');
+    END IF;
     return new;
 END;
 $$ LANGUAGE plpgsql;
-DROP TRIGGER IF EXISTS question_search_vector_update_trigger on question;
-CREATE TRIGGER question_search_vector_update_trigger
-BEFORE INSERT OR UPDATE ON question FOR EACH ROW EXECUTE PROCEDURE question_trigger();
+DROP TRIGGER IF EXISTS post_search_vector_update_trigger on askbot_post;
+CREATE TRIGGER post_search_vector_update_trigger 
+BEFORE INSERT OR UPDATE ON askbot_post FOR EACH ROW EXECUTE PROCEDURE post_trigger();
 
-/* comment trigger */
-CREATE OR REPLACE FUNCTION comment_trigger() RETURNS trigger AS
-$$
-BEGIN
-    new.text_search_vector = get_comment_tsv(new.comment);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-DROP TRIGGER IF EXISTS comment_search_vector_update_trigger on comment;
-CREATE TRIGGER comment_search_vector_update_trigger 
-BEFORE INSERT OR UPDATE ON comment FOR EACH ROW EXECUTE PROCEDURE comment_trigger();
-
-/* answer trigger */
-CREATE OR REPLACE FUNCTION answer_trigger() RETURNS trigger AS
-$$
-BEGIN
-    new.text_search_vector = get_answer_tsv(new.text);
-    new.text_search_vector = new.text_search_vector ||
-                            get_dependent_comments_tsv(new.id, 'answer');
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-DROP TRIGGER IF EXISTS answer_search_vector_update_trigger on answer;
-CREATE TRIGGER answer_search_vector_update_trigger 
-BEFORE INSERT OR UPDATE ON answer FOR EACH ROW EXECUTE PROCEDURE answer_trigger();
-
-CREATE INDEX askbot_search_idx ON question USING gin(text_search_vector);
+CREATE INDEX askbot_search_idx ON askbot_thread USING gin(text_search_vector);
