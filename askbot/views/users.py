@@ -310,10 +310,22 @@ def user_stats(request, user, context):
     # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks like it returns correct results for the test data
-    user_tags = models.Tag.objects.filter(threads__posts__author=user).\
+    user_tags = models.Tag.objects.filter(threads__posts__author=user).distinct().\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
+
+#    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
+#    post_ids = set()
+#    thread_ids = set()
+#    tag_ids = set()
+#    for t in tags:
+#        post_ids.add(t['id'])
+#        thread_ids.add(t['thread'])
+#        tag_ids.add(t['thread__tags'])
+#        if t['thread__tags'] == 11:
+#            print t['thread'], t['id']
+#    import ipdb; ipdb.set_trace()
 
     #
     # Badges/Awards (TODO: refactor into Managers/QuerySets when a pattern emerges; Simplify when we get rid of Question&Answer models)

@@ -60,194 +60,22 @@ urlpatterns = patterns('',
 
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
 
-    url( # section/sort/query/search/tags/author
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/search:search/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/tags/author/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/tags/author/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/query/tags/author for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/author/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/author/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/query/author for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/search/author
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/search:search/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/tags/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/tags/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/query/search/tags
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/search:search/tags:(?P<tags>[\w\d\-\+\#]+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/tags for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/tags:(?P<tags>[\w\d\-\+\#]+)/$' % _('questions'), 
+    url(
+        (r'^%s' % _('questions') +
+            r'(%s)?' % r'/section:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/query:(?P<query>[\w\d\-\+\#]+)' +
+            r'(%s)?' % r'/search:search' +
+            r'(%s)?' % r'/tags:(?P<tags>[\w\d\-\+\#]+)' +
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page_size:(?P<page_size>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+        r'/$'),
+
         views.readers.questions, 
         name='questions'
     ),
 
-    url( # section/sort/query/search
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/search:search/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/query/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/query for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/query:(?P<query>[\w\d\-\+\#]+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/tags/author/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/tags/author/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/tags/author for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/author/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/author/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # section/sort/author for use with ajax
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/tags/page_size Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # section/sort/tags/page Note:issues with default start_over
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # include section/sort/tags
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/tags:(?P<tags>[\w\d\-\+\#]+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # tags/author/page_size Note:issues with default start_over
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # tags/author/page Note:issues with default start_over
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # include tags/author
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    
-    url( # author/page_size Note:issues with default start_over
-        r'^%s/author:(?P<author>\d+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # author/page Note:issues with default start_over
-        r'^%s/author:(?P<author>\d+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # include author
-        r'^%s/author:(?P<author>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    
-    url( # tags/page_size Note:issues with default start_over
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # tags/page Note:issues with default start_over
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # include tags
-        r'^%s/tags:(?P<tags>[\w\d\-\+\#]+)/$' % _('questions'), 
-        views.readers.questions,
-        name='questions'
-    ),
-    url( # include section/sort/page_size
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/page_size:(?P<page_size>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # include section/sort/page
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/page:(?P<page>\d+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
-    url( # include section/sort
-        r'^%s/section:(?P<scope>\w+)/sort:(?P<sort>[\w\-]+)/$' % _('questions'), 
-        views.readers.questions, 
-        name='questions'
-    ),
     url( # removes tag, this is used only with ajax and this parameters is always used alone
         r'^%s/remove_tag:(?P<remove_tag>[\w\d\-\#]+)/$' % _('questions'),
         views.readers.questions,
@@ -258,11 +86,6 @@ urlpatterns = patterns('',
         r'^%s/reset_query:(?P<reset_query>\w+)/$' % _('questions'), 
         views.readers.questions,
         {'start_over': (None)}, # this parameter is true by default, so we are making it false here
-        name='questions'
-    ),
-    url(
-        r'^%s$' % _('questions/'),
-        views.readers.questions,
         name='questions'
     ),
 
