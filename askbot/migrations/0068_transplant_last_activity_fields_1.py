@@ -12,7 +12,8 @@ class Migration(SchemaMigration):
         db.add_column('askbot_thread', 'last_activity_at', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now), keep_default=False)
 
         # Adding field 'Thread.last_activity_by'
-        db.add_column('askbot_thread', 'last_activity_by', self.gf('django.db.models.fields.related.ForeignKey')(default=0, related_name='unused_last_active_in_threads', to=orm['auth.User']), keep_default=False)
+        # HACK: Manually added null=True to fix migrations, to be manually removed in 0070
+        db.add_column('askbot_thread', 'last_activity_by', self.gf('django.db.models.fields.related.ForeignKey')(null=True, default=None, related_name='unused_last_active_in_threads', to=orm['auth.User']), keep_default=False)
 
 
     def backwards(self, orm):

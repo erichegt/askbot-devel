@@ -14,6 +14,10 @@ class Migration(SchemaMigration):
         # Deleting field 'Question.last_activity_at'
         db.delete_column(u'question', 'last_activity_at')
 
+        # HACK: Manually reversing `null=True` hack from 0068
+        db.alter_column('askbot_thread', 'last_activity_by_id', self.gf('django.db.models.fields.related.ForeignKey')(related_name='unused_last_active_in_threads', to=orm['auth.User']))
+
+
 
     def backwards(self, orm):
         
