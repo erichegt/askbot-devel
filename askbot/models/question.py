@@ -96,37 +96,35 @@ class ThreadManager(models.Manager):
         """returns a query set of questions,
         matching the full text query
         """
-        return self.filter(
-            models.Q(title__icontains=search_query) |
-            models.Q(tagnames__icontains=search_query) |
-            models.Q(posts__deleted=False, posts__text__icontains = search_query)
-        )
-
 #        if getattr(settings, 'USE_SPHINX_SEARCH', False):
 #            matching_questions = Question.sphinx_search.query(search_query)
 #            question_ids = [q.id for q in matching_questions]
 #            return self.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
-#        elif settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
-#            return self.filter(
-#                models.Q(title__search = search_query) |
-#                models.Q(tagnames__search = search_query) |
-#                models.Q(posts__deleted=False, posts__text__search = search_query)
-#            )
-#        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-#            # TODO: !! Fix Postgres search
-#            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
-#            search_query = '&'.join(search_query.split())
-#            extra_params = (search_query,)
-#            extra_kwargs = {
-#                'select': {'relevance': rank_clause},
-#                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
-#                'params': extra_params,
-#                'select_params': extra_params,
-#                }
-#            return self.extra(**extra_kwargs)
-#        else:
-#            #fallback to dumb title match search
-#            return self.filter(title__icontains=search_query)
+        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
+            return self.filter(
+                models.Q(title__search = search_query) |
+                models.Q(tagnames__search = search_query) |
+                models.Q(posts__deleted=False, posts__text__search = search_query)
+            )
+        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
+            # TODO: !! Fix Postgres search
+            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
+            search_query = '&'.join(search_query.split())
+            extra_params = (search_query,)
+            extra_kwargs = {
+                'select': {'relevance': rank_clause},
+                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
+                'params': extra_params,
+                'select_params': extra_params,
+            }
+            return self.extra(**extra_kwargs)
+        else:
+            return self.filter(
+                models.Q(title__icontains=search_query) |
+                models.Q(tagnames__icontains=search_query) |
+                models.Q(posts__deleted=False, posts__text__icontains = search_query)
+            )
+
 
     def run_advanced_search(self, request_user=None, search_state=None):  # TODO: !! review and fix this
         """

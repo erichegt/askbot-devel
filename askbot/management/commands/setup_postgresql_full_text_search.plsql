@@ -174,10 +174,10 @@ UPDATE askbot_thread as t SET text_search_vector = text_search_vector ||
 /* one trigger per table for tsv updates */
 
 /* set up update triggers */
-CREATE OR REPLACE FUNCTION thread_trigger() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION thread_update_trigger() RETURNS trigger AS
 $$
 BEGIN
-    new.text_search_vector = get_thread_tsv(new.tagnames) ||
+    new.text_search_vector = get_thread_tsv(new.title, new.tagnames) ||
                              get_thread_question_tsv(new.id) ||
                              get_dependent_answers_tsv(new.id);
     RETURN new;
@@ -185,23 +185,33 @@ END;
 $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS thread_search_vector_update_trigger on askbot_thread;
 CREATE TRIGGER thread_search_vector_update_trigger 
-BEFORE INSERT OR UPDATE ON askbot_thread FOR EACH ROW EXECUTE PROCEDURE thread_trigger();
+BEFORE UPDATE ON askbot_thread FOR EACH ROW EXECUTE PROCEDURE thread_update_trigger();
+
+CREATE OR REPLACE FUNCTION thread_insert_trigger() RETURNS trigger AS
+$$
+BEGIN
+    new.text_search_vector = get_thread_tsv(new.title, new.tagnames);
+    RETURN new;
+END;
+$$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS thread_search_vector_insert_trigger on askbot_thread;
+CREATE TRIGGER thread_search_vector_insert_trigger
+BEFORE INSERT ON askbot_thread FOR EACH ROW EXECUTE PROCEDURE thread_insert_trigger();
 
 /* post trigger */
 CREATE OR REPLACE FUNCTION post_trigger() RETURNS trigger AS
 $$
 BEGIN
     IF new.post_type = 'question' THEN
-        new.text_search_vector = get_post_tsv(new.text, 'question');
-        new.text_search_vector = new.text_search_vector ||
-                                get_dependent_comments_tsv(new.id);
+        new.text_search_vector = get_post_tsv(new.text, 'question') ||
+                                 get_dependent_comments_tsv(new.id);
     ELSIF new.post_type = 'answer' THEN
-        new.text_search_vector = get_post_tsv(new.text, 'answer');
-        new.text_search_vector = new.text_search_vector ||
-                                get_dependent_comments_tsv(new.id);
+        new.text_search_vector = get_post_tsv(new.text, 'answer') ||
+                                 get_dependent_comments_tsv(new.id);
     ELSIF new.post_type = 'comment' THEN
         new.text_search_vector = get_post_tsv(new.text, 'comment');
     END IF;
+    UPDATE askbot_thread SET id=new.thread_id WHERE id=new.thread_id;
     return new;
 END;
 $$ LANGUAGE plpgsql;
