@@ -9,7 +9,7 @@ from django.conf import settings as django_settings
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
@@ -442,31 +442,21 @@ def subscribe_for_tags(request):
 
 @decorators.get_only
 def api_get_questions(request):
-    """json api for retrieving questions
-    todo - see if it is possible to integrate this with the
-    questions view
-    """
-    form = forms.AdvancedSearchForm(request.GET)
-    if form.is_valid():
-        query = form.cleaned_data['query']
-        questions = models.Post.objects.get_questions().get_by_text_query(query)
-        if should_show_sort_by_relevance():
-            questions = questions.extra(order_by = ['-relevance'])
-        questions = questions.filter(deleted = False).distinct()
-        page_size = form.cleaned_data.get('page_size', 30)
-        questions = questions[:page_size]
-
-        question_list = list()
-        for question in questions:
-            question_list.append({
-                'url': question.get_absolute_url(),
-                'title': question.thread.title,
-                'answer_count': question.thread.answer_count
-            })
-        json_data = simplejson.dumps(question_list)
-        return HttpResponse(json_data, mimetype = "application/json")
-    else:
-        raise ValidationError('InvalidInput')
+    """json api for retrieving questions"""
+    query = request.GET.get('query', '').strip()
+    if not query:
+        return HttpResponseBadRequest('Invalid query')
+    questions = models.Post.objects.get_questions().get_by_text_query(query)
+    if should_show_sort_by_relevance():
+        questions = questions.extra(order_by = ['-relevance'])
+    questions = questions.filter(deleted=False).select_related('thread').distinct()[:30]
+    question_list = [{
+        'url': question.get_absolute_url(),
+        'title': question.thread.title,
+        'answer_count': question.thread.answer_count
+    } for question in questions]
+    json_data = simplejson.dumps(question_list)
+    return HttpResponse(json_data, mimetype = "application/json")
 
 
 @csrf.csrf_exempt
