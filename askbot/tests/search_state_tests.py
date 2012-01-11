@@ -2,26 +2,18 @@ import re
 import unittest
 from django.test import TestCase
 from django.contrib.auth.models import AnonymousUser
-from askbot.search.state_manager import SearchState, ViewLog, parse_query
+from askbot.search.state_manager import SearchState, parse_query
 from askbot import const
 
 DEFAULT_SORT = const.DEFAULT_POST_SORT_METHOD
 class SearchStateTests(TestCase):
     def setUp(self):
         self.state = SearchState()
-        self.log = ViewLog()
-
-    def visit_page(self, page_name):
-        """page_name is name of the view function
-        that is to be "visited"
-        """
-        self.log.set_current(page_name)
 
     def update(self, data, user = None):
-        self.visit_page('questions')
         if user is None:
             user = AnonymousUser()
-        self.state.update(data, self.log, user)
+        self.state.update_from_user_input(input_dict=data, user_logged_in=user.is_authenticated())
 
     def add_tag(self, tag):
         self.update({'tags': set([tag])})
