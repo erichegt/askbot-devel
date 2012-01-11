@@ -10,15 +10,8 @@ var liveSearch = function(command, query_string) {
     var current_url = search_url + query_string;
     var x_button = $('input[name=reset_query]');
 
-    x_button.click(function(){
-        query.val('');
-        if (sortMethod === 'relevance-desc'){
-            sortMethod = prevSortMethod;
-        }
-        refresh_x_button();
-        new_url = remove_from_url(search_url, 'query')
-        search_url = askbot['urls']['questions'] + 'reset_query:true/';
-        reset_query(new_url,sortMethod);
+    x_button.click(function () {
+        restart_query(); /* wrapped in closure because it's not yet defined at this point */
     });
 
     var refresh_x_button = function(){
@@ -30,18 +23,6 @@ var liveSearch = function(command, query_string) {
         } else {
             x_button.hide();
             query.attr('class', 'searchInput');
-        }
-    };
-
-    var reset_sort_method = function(){
-        if (sortMethod === 'relevance-desc'){
-            sortMethod = prevSortMethod;
-            if (sortMethod === 'relevance-desc'){
-                sortMethod = 'activity-desc';
-            }
-        } else {
-            sortMethod = 'activity-desc';
-            prevSortMethod = 'activity-desc';
         }
     };
 
@@ -75,9 +56,20 @@ var liveSearch = function(command, query_string) {
     };
 
     var restart_query = function() {
-        reset_sort_method();
+        query.val('');
+        (function reset_sort_method(){
+            if (sortMethod === 'relevance-desc'){
+                sortMethod = prevSortMethod;
+                if (sortMethod === 'relevance-desc'){
+                    sortMethod = 'activity-desc';
+                }
+            } else {
+                sortMethod = 'activity-desc';
+                prevSortMethod = 'activity-desc';
+            }
+        })();
         refresh_x_button();
-        new_url = remove_from_url(search_url, 'query')
+        new_url = remove_from_url(search_url, 'query');
         search_url = askbot['urls']['questions'] + 'reset_query:true/';
         reset_query(new_url, sortMethod);
         running = true;
@@ -305,17 +297,8 @@ var liveSearch = function(command, query_string) {
     };
 
     var render_result = function(data, text_status, xhr){
-        var old_list = $('#' + q_list_sel);
-        var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
-            old_list.stop(true);
-
-            new_list.html(data['questions']);
-            //old_list.hide();
-            old_list.after(new_list);
-            //old_list.remove();
-            //rename new div to old
-            $('#pager').toggle(data['paginator'] === '' ? false : true).html(data['paginator']);
+            $('#pager').toggle(data['paginator'] !== '').html(data['paginator']);
             $('#questionCount').html(data['question_counter']);
             render_search_tags(data['query_data']['tags'], data['query_string']);
             if(data['faces'].length > 0) {
@@ -333,8 +316,10 @@ var liveSearch = function(command, query_string) {
 
             query.focus();
 
-            //show new div with a fadeIn effect
-            old_list.fadeOut(200, function() {
+            var old_list = $('#' + q_list_sel);
+            var new_list = $('<div></div>').hide().html(data['questions']);
+            old_list.stop(true).after(new_list).fadeOut(200, function() {
+                //show new div with a fadeIn effect
                 old_list.remove();
                 new_list.attr('id', q_list_sel);
                 new_list.fadeIn(400);            
@@ -411,9 +396,9 @@ var liveSearch = function(command, query_string) {
     };
 
     if(command === 'refresh') {
-        query = $('input#keywords');
         refresh_main_page();
-    } else if(command === 'init') {
+    }
+    else if(command === 'init') {
         //live search for the main page
         activate_search_tags(query_string);
         main_page_search_listen();
