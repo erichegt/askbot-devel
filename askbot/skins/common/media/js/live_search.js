@@ -110,62 +110,30 @@ var liveSearch = function(command, query_string) {
 
     /* *********************************** */
 
-    var render_tag = function(tag_name, linkable, deletable, query_string){
-        var tag = new Tag();
-        tag.setName(tag_name);
-        tag.setDeletable(deletable);
-        tag.setLinkable(linkable);
-        tag.setUrlParams(query_string);
-        return tag.getElement().outerHTML();
-    };
-
     var render_related_tags = function(tags, query_string){
-        if (tags.length === 0){
-            return;
-        }
-        var html = '';
+        if (tags.length === 0) return;
+
+        var html_list = [];
         for (var i=0; i<tags.length; i++){
-            html += render_tag(tags[i]['name'], true, false, query_string);
-            html += '<span class="tag-number">&#215; ' +
-                    tags[i]['used_count'] +
-                    '</span>' +
-                    '<br />';
-        }
-        $('#related-tags').html(html);
-    };
+            var tag = new Tag();
+            tag.setName(tags[i]['name']);
+            tag.setDeletable(true);
+            tag.setLinkable(false);
+            tag.setUrlParams(query_string);
 
-    var render_faces = function(faces){
-        if (faces.length === 0){
-            return;
+            html_list.push(tag.getElement().outerHTML());
+            html_list.push('<span class="tag-number">&#215; ');
+            html_list.push(tags[i]['used_count'])
+            html_list.push('</span>');
+            html_list.push('<br />');
         }
-        $('#contrib-users>a').remove();
-        var html = '';
-        for (var i=0; i<faces.length; i++){
-            html += faces[i];
-        }
-        $('#contrib-users').append(html);
-    };
-
-    var render_paginator = function(paginator){
-        var pager = $('#pager');
-        if (paginator === ''){
-            pager.hide();
-            return;
-        }
-        else {
-            pager.show();
-            pager.html(paginator);
-        }
-    };
-
-    var set_question_count = function(count_html){
-        $('#questionCount').html(count_html);
+        $('#related-tags').html(html_list.join(''));
     };
 
     var render_search_tags = function(tags, query_string){
         var search_tags = $('#searchTags');
-        search_tags.children().remove();
-        if (tags.length == 0){
+        search_tags.empty();
+        if (tags.length === 0){
             $('#listSearchTags').hide();
             $('#search-tips').hide();//wrong - if there are search users
         } else {
@@ -241,11 +209,11 @@ var liveSearch = function(command, query_string) {
                         tags = params[i].substr(5).split('+');
                         new_tags = ''
                         for(var j = 0; j < tags.length; j++){
-                            if(escape(tags[j]) !== escape(tag)){
+                            if(encodeURIComponent(tags[j]) !== encodeURIComponent(tag)){
                                 if (new_tags !== ''){
                                     new_tags += '+'
                                 }
-                                new_tags += escape(tags[j]);
+                                new_tags += encodeURIComponent(tags[j]);
                             }
                         }
                         if(new_tags !== ''){
@@ -270,34 +238,25 @@ var liveSearch = function(command, query_string) {
     }
 
     var set_section_tabs = function(query_string){
-        var tabs = $('#section_tabs>a');
+        var tabs = $('#section_tabs > a'); /* TODO: This doesn't point to anything now */
         tabs.each(function(index, element){
             var tab = $(element);
             var tab_name = tab.attr('id').replace(/^by_/,'');
             href = '/questions/' + replace_in_url(query_string, 'section:'+tab_name)
-            tab.attr(
-                'href',
-                href
-            );
+            tab.attr('href', href);
         });
     };
 
     var set_active_sort_tab = function(sort_method, query_string){
-        var tabs = $('#sort_tabs>a');
+        var tabs = $('#sort_tabs > a');
         tabs.attr('class', 'off');
         tabs.each(function(index, element){
             var tab = $(element);
             var tab_name = tab.attr('id').replace(/^by_/,'');
             if (tab_name in sortButtonData){
                 href = '/questions/' + replace_in_url(query_string, 'sort:'+tab_name+'-desc')
-                tab.attr(
-                    'href',
-                    href
-                );
-                tab.attr(
-                    'title',
-                    sortButtonData[tab_name]['desc_tooltip']
-                );
+                tab.attr('href', href);
+                tab.attr('title', sortButtonData[tab_name]['desc_tooltip']);
                 tab.html(sortButtonData[tab_name]['label']);
             }
         });
@@ -332,7 +291,7 @@ var liveSearch = function(command, query_string) {
 
     var remove_search_tag = function(tag_name, query_string){
         $.ajax({
-            url: askbot['urls']['questions']+'remove_tag:'+escape(tag_name)+'/',
+            url: askbot['urls']['questions']+'remove_tag:'+encodeURIComponent(tag_name)+'/',
             dataType: 'json',
             success: render_result,
             complete: try_again
@@ -343,30 +302,6 @@ var liveSearch = function(command, query_string) {
         var title = "Questions";
         var query = search_url;
         History.pushState( context, title, query );
-
-        //var stateObj = { page: search_url };
-        //window.history.pushState(stateObj, "Questions", search_url);
-    };
-
-    var change_rss_url = function(feed_url){
-        if(feed_url){
-            $("#ContentLeft a.rss:first").attr("href", feed_url);
-        }
-    }
-
-    var activate_search_tags = function(query_string){
-        var search_tags = $('#searchTags .tag-left');
-        $.each(search_tags, function(idx, element){
-            var tag = new Tag();
-            tag.decorate($(element));
-            //todo: setDeleteHandler and setHandler
-            //must work after decorate & must have getName
-            tag.setDeleteHandler(
-                function(){
-                    remove_search_tag(tag.getName(), query_string);
-                }
-            );
-        });
     };
 
     var render_result = function(data, text_status, xhr){
@@ -380,15 +315,22 @@ var liveSearch = function(command, query_string) {
             old_list.after(new_list);
             //old_list.remove();
             //rename new div to old
-            render_paginator(data['paginator']);
-            set_question_count(data['question_counter']);
+            $('#pager').toggle(data['paginator'] === '' ? false : true).html(data['paginator']);
+            $('#questionCount').html(data['question_counter']);
             render_search_tags(data['query_data']['tags'], data['query_string']);
-            render_faces(data['faces']);
+            if(data['faces'].length > 0) {
+                $('#contrib-users > a').remove();
+                $('#contrib-users').append(data['faces'].join(''));
+            }
             render_related_tags(data['related_tags'], data['query_string']);
             render_relevance_sort_tab(data['query_string']);
             set_active_sort_tab(sortMethod, data['query_string']);
             set_section_tabs(data['query_string']);
-            change_rss_url(data['feed_url']);
+            if(data['feed_url']){
+                // Change RSS URL
+                $("#ContentLeft a.rss:first").attr("href", data['feed_url']);
+            }
+
             query.focus();
 
             //show new div with a fadeIn effect
@@ -435,9 +377,6 @@ var liveSearch = function(command, query_string) {
         var title = "Questions";
         var query = new_url;
         History.pushState( context, title, query );
-
-        //var stateObj = { page: new_url };
-        //window.history.pushState(stateObj, "Questions", new_url);
     }
 
     var refresh_main_page = function (){
@@ -448,17 +387,28 @@ var liveSearch = function(command, query_string) {
             success: render_result
         });
 
-
         var context = { state:1, rand:Math.random() };
         var title = "Questions";
         var query = askbot['urls']['questions'];
         History.pushState( context, title, query );
-
-        //var stateObj = { page: askbot['urls']['questions'] };
-        //window.history.pushState(stateObj, "Questions", askbot['urls']['questions']);
     };
 
     /* *************************************** */
+
+    var activate_search_tags = function(query_string){
+        var search_tags = $('#searchTags .tag-left');
+        $.each(search_tags, function(idx, element){
+            var tag = new Tag();
+            tag.decorate($(element));
+            //todo: setDeleteHandler and setHandler
+            //must work after decorate & must have getName
+            tag.setDeleteHandler(
+                    function(){
+                        remove_search_tag(tag.getName(), query_string);
+                    }
+            );
+        });
+    };
 
     if(command === 'refresh') {
         query = $('input#keywords');
