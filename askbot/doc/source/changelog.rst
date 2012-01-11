@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.7.39 (Jan 11, 2012)
+---------------------
+* restored facebook login after FB changed the procedure (Evgeny)
+
 0.7.38 (Jan 11, 2012)
 ---------------------
 * xss vulnerability fix, issue found by Radim Řehůřek (Evgeny)
