@@ -18,7 +18,7 @@
         <div class="user-stats-table">
             {% for answered_question in answered_questions %}
             <div class="answer-summary">
-                <a title="{{answered_question.summary|collapse}}" 
+                <a title="{{answered_question.summary|collapse|escape}}" 
                     href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">
                     <span class="answer-votes {% if answered_question.accepted %}answered-accepted{% endif %}" 
                           title="{% trans answer_score=answered_question.answer_score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if answered_question.accepted %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
@@ -27,7 +27,7 @@
                 </a>
                 <div class="answer-link">
                     {% spaceless %}
-                    <a href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title}}</a> 
+                    <a href="{% url question answered_question.id %}{{answered_question.title|slugify}}#{{answered_question.answer_id}}">{{answered_question.title|escape}}</a> 
                     {% endspaceless %}
                     {% if answered_question.comment_count %}
                     <span>
@@ -119,7 +119,7 @@
                                         <a 
                                             title="{{ award.content_object.get_snippet()|collapse }}"
                                             href="{{ award.content_object.get_absolute_url() }}"
-                                        >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title }}</a>
+                                        >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title|escape }}</a>
                                     </li>
                                     {% endif %}
                                 {% endfor %}

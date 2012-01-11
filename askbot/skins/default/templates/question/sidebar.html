@@ -64,7 +64,7 @@
         <div class="questions-related">
             {% for question in similar_questions.data() %}
             <p>
-                <a href="{{ question.get_absolute_url() }}">{{ question.get_question_title() }}</a>
+                <a href="{{ question.get_absolute_url() }}">{{ question.get_question_title()|escape }}</a>
             </p>
             {% endfor %}
         </div>

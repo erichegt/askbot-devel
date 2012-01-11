@@ -1,6 +1,6 @@
 {% extends "two_column_body.html" %}
 <!-- question.html -->
-{% block title %}{% spaceless %}{{ question.get_question_title() }}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ question.get_question_title()|escape }}{% endspaceless %}{% endblock %}
 {% block meta_description %}
         <meta name="description" content="{{question.summary|striptags|escape}}" />
 {% endblock %}
