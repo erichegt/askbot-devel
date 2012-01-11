@@ -64,7 +64,7 @@ urlpatterns = patterns('',
         (r'^%s' % _('questions') +
             r'(%s)?' % r'/section:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/query:(?P<query>[\w\d\-\+\#]+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +
             r'(%s)?' % r'/search:search' +
             r'(%s)?' % r'/tags:(?P<tags>[\w\d\-\+\#]+)' +
             r'(%s)?' % r'/author:(?P<author>\d+)' +

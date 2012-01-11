@@ -1,38 +1,34 @@
 var prevSortMethod = sortMethod;
-var liveSearch = function(){
-    var query = undefined;
-    var prev_text = undefined;
+
+var liveSearch = function(command, query_string) {
+    var query = $('input#keywords');
+    var query_val = function () {return $.trim(query.val());}
+    var prev_text = query_val();
     var running = false;
     var q_list_sel = 'question-list';//id of question listing div
-    var search_url = undefined;
-    var current_url = undefined;
-    var restart_query = function(){};
-    var process_query = function(){};
-    var render_result = function(){};
+    var search_url = askbot['urls']['questions'];
+    var current_url = search_url + query_string;
+    var x_button = $('input[name=reset_query]');
+
+    x_button.click(function(){
+        query.val('');
+        if (sortMethod === 'relevance-desc'){
+            sortMethod = prevSortMethod;
+        }
+        refresh_x_button();
+        new_url = remove_from_url(search_url, 'query')
+        search_url = askbot['urls']['questions'] + 'reset_query:true/';
+        reset_query(new_url,sortMethod);
+    });
 
     var refresh_x_button = function(){
-        if ($.trim(query.val()).length > 0){
-            if (query.attr('class') === 'searchInput'){
+        if(query_val().length > 0){
+            if (query.hasClass('searchInput')){
                 query.attr('class', 'searchInputCancelable');
-                x_button = $('<input class="cancelSearchBtn" type="button" name="reset_query"/>');
-                //x_button.click(reset_query);
-                x_button.val('X');
-                x_button.click(
-                    function(){
-                        query.val('');
-                        if (sortMethod === 'relevance-desc'){
-                            sortMethod = prevSortMethod;
-                        }
-                        refresh_x_button();
-                        new_url = remove_from_url(search_url, 'query')
-                        search_url = askbot['urls']['questions'] + 'reset_query:true/';
-                        reset_query(new_url,sortMethod);
-                    }
-                );
-                query.after(x_button);
+                x_button.show();
             }
         } else {
-            $('input[name=reset_query]').remove();
+            x_button.hide();
             query.attr('class', 'searchInput');
         }
     };
@@ -49,8 +45,46 @@ var liveSearch = function(){
         }
     };
 
+    var process_query = function(){
+        if (prev_text.length === 0 && showSortByRelevance){
+            if (sortMethod === 'activity-desc'){
+                prevSortMethod = sortMethod;
+                sortMethod = 'relevance-desc';
+            }
+        }
+        if (current_url !== undefined){
+            search_url = '/'; //resetting search_url every times
+            query_string = current_url;
+        }
+        else {
+            search_url = askbot['urls']['questions']; //resetting search_url every times
+        }
+        params = query_string.split('/')
+        for (var i = 0; i < params.length; i++){
+            if (params[i] !== ''){
+                if (params[i].substring(0, 5) == "sort:"){ //change the sort method
+                    search_url += 'sort:'+sortMethod+'/'
+                    search_url += 'query:'+ encodeURIComponent(cur_text); //cur_text.split(' ').join('+') + '/' //we add the query here
+                }
+                else{
+                    search_url += params[i] + '/';
+                }
+            }
+        }
+        send_query(cur_text);
+    };
+
+    var restart_query = function() {
+        reset_sort_method();
+        refresh_x_button();
+        new_url = remove_from_url(search_url, 'query')
+        search_url = askbot['urls']['questions'] + 'reset_query:true/';
+        reset_query(new_url, sortMethod);
+        running = true;
+    };
+
     var eval_query = function(){
-        cur_text = $.trim(query.val());
+        cur_text = query_val();
         if (cur_text !== prev_text && running === false){
             if (cur_text.length >= minSearchWordLength){
                 process_query();
@@ -59,17 +93,6 @@ var liveSearch = function(){
                 restart_query();
             }
         }
-    };
-
-    var ask_page_search_listen = function(){
-        running = false;
-        var ask_page_eval_handle;
-        query.keyup(function(e){
-            if (running === false){
-                clearTimeout(ask_page_eval_handle);
-                ask_page_eval_handle = setTimeout(eval_query, 400);
-            }
-        });
     };
 
     var main_page_search_listen = function(){
@@ -85,112 +108,7 @@ var liveSearch = function(){
         });
     };
 
-    var render_counter = function(count, word, counter_class, counter_subclass){
-        var output = '<div class="' + counter_class + ' ' + counter_subclass + '">' +
-                    '<span class="item-count">' +
-                        count;
-        if (counter_class === 'accepted'){
-            output += '&#10003;';
-        }
-        output +=   '</span>' +
-                    '<div>' + word + '</div>' +
-                '</div>';
-        return output;
-    };
-
-    var render_title = function(result){
-        return '<h2>' +
-                    '<a href="' + 
-                            askbot['urls']['question_url_template']
-                            .replace('{{QuestionID}}', result['id']) +
-                    '" onmouseover="load_question_body(this,' + result['id'] + ')">' +
-                        result['title'] +
-                    '</a>' +
-                '</h2>';
-    };
-
-    var render_user_link = function(result){
-        if (result['u_id'] !== false){
-            if (result['u_is_anonymous'] === true){
-                return '<span class="anonymous">' + 
-                            askbot['messages']['name_of_anonymous_user'] +
-                       '</span>';
-            } else {
-                var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
-                return '<a ' +
-                            'href="' + 
-                                askbot['urls']['user_url_template']
-                                .replace('{{user_id}}', result['u_id'])
-                                .replace('{{slug}}', u_slug) +
-                        '">' +
-                            result['u_name'] +
-                        '</a> ';
-            }
-        }
-        else {
-            return '';
-        }
-    };
-
-    var render_badge = function(result, key){
-        return '<span ' + 
-                    'title="' + result[key + '_title'] + '"' +
-                '>' +
-                '<span ' +
-                    'class="' + result[key + '_css_class'] + '"' +
-                '>' + result[key + '_badge_symbol'] + '</span>' +
-                '<span class="badgecount">' + result[key] + '</span>';
-    };
-
-    var render_user_badge_and_karma = function(result){
-        var rep_title = result['u_rep'] + ' ' + result['u_rep_word'];
-        var html = '<span ' +
-                        'class="reputation-score" ' +
-                        'title="' + rep_title + '"' +
-                    '>' + result['u_rep'] + '</span>';
-        if (result['u_gold'] > 0){
-            html += render_badge(result, 'u_gold');
-        }
-        if (result['u_silver'] > 0){
-            html += render_badge(result, 'u_silver');
-        }
-        if (result['u_bronze'] > 0){
-            html += render_badge(result, 'u_bronze');
-        }
-        return html;
-    };
-
-    var render_user_flag = function(result){
-        var country_code = result['u_country_code'];
-        if (country_code) {
-            return '<img class="flag" src="'+ 
-                   mediaUrl(
-                        'media/images/flags/' + 
-                        country_code.toLowerCase() +
-                        '.gif'
-                   ) +
-                   '"/>';
-        } else {
-            return '';
-        }
-    };
-
-    var render_user_info = function(result){
-        var user_html = 
-        '<div class="userinfo">' +
-            '<span class="relativetime" ' +
-                'title="' + result['timestamp'] + '"' +
-            '>' +
-            result['timesince'] +
-            '</span> ' +
-            render_user_link(result);
-        if (result['u_is_anonymous'] === false){
-            user_html += render_user_flag(result);
-            //render_user_badge_and_karma(result) +
-        }
-        user_html += '</div>';
-        return user_html;
-    };
+    /* *********************************** */
 
     var render_tag = function(tag_name, linkable, deletable, query_string){
         var tag = new Tag();
@@ -201,52 +119,19 @@ var liveSearch = function(){
         return tag.getElement().outerHTML();
     };
 
-    var render_tags = function(tags, linkable, deletable, query_string){
-        var tags_html = '<ul class="tags">';
-        $.each(tags, function(idx, item){
-            tags_html += render_tag(item, linkable, deletable, query_string);
-        });
-        tags_html += '</ul>';
-        return tags_html;
-    };
-
-    var render_question = function(question, query_string){
-        var entry_html = 
-        '<div class="short-summary">' + 
-            '<div class="counts">' +
-                render_counter(
-                    question['views'],
-                    question['views_word'],
-                    'views',
-                    question['views_class']
-                ) +
-                render_counter(
-                    question['answers'],
-                    question['answers_word'],
-                    'answers',
-                    question['answers_class']
-                ) +
-                render_counter(
-                    question['votes'],
-                    question['votes_word'],
-                    'votes',
-                    question['votes_class']
-                ) +
-                '<div style="clear:both"></div>' +
-                render_user_info(question) +
-            '</div>' + 
-            render_title(question) +
-            render_tags(question['tags'], true, false, query_string) +
-        '</div>';
-        return entry_html;
-    };
-
-    var render_question_list = function(questions, query_string){
-        var output = '';
-        for (var i=0; i<questions.length; i++){
-            output += render_question(questions[i], query_string);
+    var render_related_tags = function(tags, query_string){
+        if (tags.length === 0){
+            return;
         }
-        return output;
+        var html = '';
+        for (var i=0; i<tags.length; i++){
+            html += render_tag(tags[i]['name'], true, false, query_string);
+            html += '<span class="tag-number">&#215; ' +
+                    tags[i]['used_count'] +
+                    '</span>' +
+                    '<br />';
+        }
+        $('#related-tags').html(html);
     };
 
     var render_faces = function(faces){
@@ -259,21 +144,6 @@ var liveSearch = function(){
             html += faces[i];
         }
         $('#contrib-users').append(html);
-    };
-
-    var render_related_tags = function(tags, query_string){
-        if (tags.length === 0){
-            return;
-        }
-        var html = '';
-        for (var i=0; i<tags.length; i++){
-            html += render_tag(tags[i]['name'], true, false, query_string);
-            html += '<span class="tag-number">&#215; ' +
-                        tags[i]['used_count'] +
-                    '</span>' +
-                    '<br />';
-        }
-        $('#related-tags').html(html);
     };
 
     var render_paginator = function(paginator){
@@ -290,15 +160,6 @@ var liveSearch = function(){
 
     var set_question_count = function(count_html){
         $('#questionCount').html(count_html);
-    };
-
-    var get_old_tags = function(container){
-        var tag_elements = container.find('.tag');
-        var old_tags = [];
-        tag_elements.each(function(idx, element){
-            old_tags.push($(element).html());
-        });
-        return old_tags;
     };
 
     var render_search_tags = function(tags, query_string){
@@ -477,7 +338,7 @@ var liveSearch = function(){
             complete: try_again
         });
         search_url = remove_tag_from_url(query_string, tag_name)
-        this.current_url = search_url
+        current_url = search_url;
         var context = { state:1, rand:Math.random() };
         var title = "Questions";
         var query = search_url;
@@ -508,41 +369,7 @@ var liveSearch = function(){
         });
     };
 
-    var render_ask_page_result = function(data, text_status, xhr){
-        var container = $('#' + q_list_sel);
-        container.fadeOut(200, function() {
-            container.children().remove();
-            $.each(data, function(idx, question){
-                var url = question['url'];
-                var title = question['title'];
-                var answer_count = question['answer_count'];
-                var list_item = $('<h2></h2>');
-                var count_element = $('<span class="item-count"></span>');
-                count_element.html(answer_count);
-                list_item.append(count_element);
-                var link = $('<a></a>');
-                link.attr('href', url);
-                list_item.append(link);
-                title_element = $('<span class="title"></span>');
-                title_element.html(title);
-                link.append(title)
-                container.append(list_item);
-            });
-            container.show();//show just to measure
-            var unit_height = container.children(':first').outerHeight();
-            container.hide();//now hide
-            if (data.length > 5){
-                container.css('overflow-y', 'scroll');
-                container.css('height', unit_height*5 + 'px');
-            } else {
-                container.css('height', data.length*unit_height + 'px');
-                container.css('overflow-y', 'hidden');
-            }
-            container.fadeIn();
-        });
-    };
-
-    var render_main_page_result = function(data, text_status, xhr){
+    var render_result = function(data, text_status, xhr){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>').hide();
         if (data['questions'].length > 0){
@@ -573,32 +400,26 @@ var liveSearch = function(){
         }
     }
 
+    /* *********************************** */
+
     var try_again = function(){
         running = false;
         eval_query();
     }
 
-    var send_query = function(query_text, mode){
-        var post_data = {
+    var send_query = function(query_text){
+        $.ajax({
             url: search_url,
             dataType: 'json',
             success: render_result,
-            complete: try_again
-        }
-        if (mode === 'ask_page'){
-            post_data['data'] = {query: query_text};
-        }
-        $.ajax(post_data);
+            complete: try_again,
+            cache: false
+        });
         prev_text = query_text;
         var context = { state:1, rand:Math.random() };
         var title = "Questions";
         var query = search_url;
-        if (mode === 'main_page'){
-            History.pushState( context, title, query );
-        }
-        
-        //var stateObj = { page: search_url };
-        //window.history.pushState(stateObj, "Questions", search_url);
+        History.pushState( context, title, query );
     }
 
     var reset_query = function(new_url, sort_method){
@@ -619,12 +440,12 @@ var liveSearch = function(){
         //window.history.pushState(stateObj, "Questions", new_url);
     }
 
-    var refresh_main_page = function(){
+    var refresh_main_page = function (){
         $.ajax({
             url: askbot['urls']['questions'],
             data: {preserve_state: true},
             dataType: 'json',
-            success: render_main_page_result
+            success: render_result
         });
 
 
@@ -637,75 +458,14 @@ var liveSearch = function(){
         //window.history.pushState(stateObj, "Questions", askbot['urls']['questions']);
     };
 
-    return {
-        refresh: function(){
-            query = $('input#keywords');
-            refresh_main_page();
-        },
-        init: function(mode, query_string){
-            if (mode === 'main_page'){
-                //live search for the main page
-                query = $('input#keywords');
-                search_url = askbot['urls']['questions'];
-                render_result = render_main_page_result;
-                this.current_url = search_url + query_string
-                process_query = function(){
-                    if (prev_text.length === 0 && showSortByRelevance){
-                        if (sortMethod === 'activity-desc'){
-                            prevSortMethod = sortMethod;
-                            sortMethod = 'relevance-desc';
-                        }
-                    }
-                    if (this.current_url !== undefined){
-                        search_url = '/'; //resetting search_url every times
-                        query_string = this.current_url
-                    }
-                    else{
-                        search_url = askbot['urls']['questions']; //resetting search_url every times
-                    }
-                    params = query_string.split('/')
-                    for (var i = 0; i < params.length; i++){
-                        if (params[i] !== ''){
-                            if (params[i].substring(0, 5) == "sort:"){ //change the sort method
-                                search_url += 'sort:'+sortMethod+'/'
-                                search_url += 'query:'+ cur_text.split(' ').join('+') + '/' //we add the query here
-                            }
-                            else{
-                                search_url += params[i] + '/';
-                            }
-                        }
-                    }
-                    send_query(cur_text, mode);
-                };
-                restart_query = function() {
-                    reset_sort_method();
-                    refresh_x_button();
-                    new_url = remove_from_url(search_url, 'query')
-                    search_url = askbot['urls']['questions'] + 'reset_query:true/';
-                    reset_query(new_url, sortMethod);
-                    running = true;
-                };
+    /* *************************************** */
 
-                activate_search_tags(query_string);
-                main_page_search_listen();
-            } else {
-                query = $('input#id_title.questionTitleInput');
-                search_url = askbot['urls']['api_get_questions'];
-                render_result = render_ask_page_result;
-                process_query = function(){
-                    send_query(cur_text, mode);
-                };
-                restart_query = function(){
-                    $('#' + q_list_sel).css('height',0).children().remove();
-                    running = false;
-                    prev_text = '';
-                    //ask_page_search_listen();
-                };
-                ask_page_search_listen();
-            }
-            prev_text = $.trim(query.val());
-            running = false;
-        }
-    };
-
+    if(command === 'refresh') {
+        query = $('input#keywords');
+        refresh_main_page();
+    } else if(command === 'init') {
+        //live search for the main page
+        activate_search_tags(query_string);
+        main_page_search_listen();
+    }
 };
