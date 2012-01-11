@@ -17,7 +17,7 @@
                         {% if act.related_object_type == 'question' %}{# question #}
                             {% for question in questions %}{# could also create a new dict #}
                                 {% if question.question_id == act.obj %}
-                                    (<a title="{{question.summary|collapse}}" 
+                                    (<a title="{{question.summary|collapse|escape}}" 
                                       href="{% url question question.question_id %}{{question.title|slugify}}">{% trans %}source{% endtrans %}</a>)
                                 {% endif %}   
                             {% endfor %}   

@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.7.38 (Jan 11, 2012)
+---------------------
+* xss vulnerability fix, issue found by Radim Řehůřek (Evgeny)
+
 0.7.37 (Jan 8, 2012)
 --------------------
 * added basic slugification treatment to question titles with 
