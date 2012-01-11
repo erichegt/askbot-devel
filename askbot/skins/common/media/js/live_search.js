@@ -10,10 +10,6 @@ var liveSearch = function(command, query_string) {
     var current_url = search_url + query_string;
     var x_button = $('input[name=reset_query]');
 
-    x_button.click(function () {
-        restart_query(); /* wrapped in closure because it's not yet defined at this point */
-    });
-
     var refresh_x_button = function(){
         if(query_val().length > 0){
             if (query.hasClass('searchInput')){
@@ -85,19 +81,6 @@ var liveSearch = function(command, query_string) {
                 restart_query();
             }
         }
-    };
-
-    var main_page_search_listen = function(){
-        running = false;
-        refresh_x_button();
-        var main_page_eval_handle;
-        query.keyup(function(e){
-            refresh_x_button();
-            if (running === false){
-                clearTimeout(main_page_eval_handle);
-                main_page_eval_handle = setTimeout(eval_query, 400);
-            }
-        });
     };
 
     /* *********************************** */
@@ -348,7 +331,7 @@ var liveSearch = function(command, query_string) {
         var query = search_url;
         History.pushState( context, title, query );
     }
-
+/*
     var reset_query = function(new_url, sort_method){
         $.ajax({
             url: search_url,
@@ -363,7 +346,7 @@ var liveSearch = function(command, query_string) {
         var query = new_url;
         History.pushState( context, title, query );
     }
-
+*/
     var refresh_main_page = function (){
         $.ajax({
             url: askbot['urls']['questions'],
@@ -380,7 +363,12 @@ var liveSearch = function(command, query_string) {
 
     /* *************************************** */
 
-    var activate_search_tags = function(query_string){
+
+    if(command === 'refresh') {
+        refresh_main_page();
+    }
+    else if(command === 'init') {
+        // Wire search tags
         var search_tags = $('#searchTags .tag-left');
         $.each(search_tags, function(idx, element){
             var tag = new Tag();
@@ -393,14 +381,21 @@ var liveSearch = function(command, query_string) {
                     }
             );
         });
-    };
 
-    if(command === 'refresh') {
-        refresh_main_page();
-    }
-    else if(command === 'init') {
-        //live search for the main page
-        activate_search_tags(query_string);
-        main_page_search_listen();
+        // Wire X button
+        x_button.click(function () {
+            restart_query(); /* wrapped in closure because it's not yet defined at this point */
+        });
+        refresh_x_button();
+
+        // Wire query box
+        var main_page_eval_handle;
+        query.keyup(function(e){
+            refresh_x_button();
+            if (running === false){
+                clearTimeout(main_page_eval_handle);
+                main_page_eval_handle = setTimeout(eval_query, 400);
+            }
+        });
     }
 };
