@@ -123,21 +123,6 @@ class SearchState(object):
         out += 'logged_in=%s\n' % str(self.logged_in)
         return out
 
-    def is_default(self):
-        """True if search state is default
-        False otherwise, but with a few exceptions
-        notably page_size has no effect here
-        """
-        if self.scope != const.DEFAULT_POST_SCOPE:
-            return False
-        if self.author:
-            return False
-        if self.query:
-            return False
-        if self.tags:
-            return False
-        return True
-
     def set_logged_out(self):
         if self.scope == 'favorite':
             self.scope = None
@@ -167,7 +152,7 @@ class SearchState(object):
                 self.reset()
         #todo also relax if 'all' scope was clicked twice
 
-    def update_from_user_input(self, input_dict):
+    def update_from_user_input(self, input_dict, user_logged_in):
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
         if 'start_over' in input_dict:
@@ -183,7 +168,7 @@ class SearchState(object):
             self.reset_page()#todo may be smarter here - start with ~same q
 
         if 'scope' in input_dict:
-            if input_dict['scope'] == 'favorite' and self.logged_in == False:
+            if input_dict['scope'] == 'favorite' and user_logged_in is False:
                 self.reset_scope()
             else:
                 self.update_value('scope', input_dict, reset_page=reset_page)
@@ -259,22 +244,6 @@ class SearchState(object):
             if self.sort == 'relevance-desc':
                 self.reset_sort()
 
-    def update(self, input_dict, view_log, user):
-        """update the search state according to the
-        user input and the queue of the page hits that
-        user made"""
-        if 'preserve_state' in input_dict:
-            return
-
-        if view_log.should_reset_search_state():
-            self.reset()
-
-        if user.is_authenticated():
-            self.set_logged_in()
-
-        self.update_from_user_input(input_dict)
-        self.relax_stickiness(input_dict, view_log)
-
     def reset_page(self):
         self.page = 1
 
@@ -339,14 +308,6 @@ class ViewLog(object):
             return self.views[num]
         else:
             return None
-
-    def should_reset_search_state(self):
-        """return True if user stepped too far from the home page
-        and False otherwise"""
-        if self.get_previous(1) != 'questions':
-            if self.get_previous(2) != 'questions':
-                return True
-        return False
 
     def set_current(self, view_name):
         """insert a new record"""

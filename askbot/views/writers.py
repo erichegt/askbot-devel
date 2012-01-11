@@ -200,24 +200,22 @@ def ask(request):#view used to ask a new question
         form = forms.AskForm(request.POST)
         if form.is_valid():
             timestamp = datetime.datetime.now()
-            #todo: move this to clean_title
-            title = form.cleaned_data['title'].strip()
+            title = form.cleaned_data['title']
             wiki = form.cleaned_data['wiki']
-            #todo: move this to clean_tagnames
-            tagnames = form.cleaned_data['tags'].strip()
+            tagnames = form.cleaned_data['tags']
             text = form.cleaned_data['text']
             ask_anonymously = form.cleaned_data['ask_anonymously']
 
             if request.user.is_authenticated():
                 try:
                     question = request.user.post_question(
-                                                title = title,
-                                                body_text = text,
-                                                tags = tagnames,
-                                                wiki = wiki,
-                                                is_anonymous = ask_anonymously,
-                                                timestamp = timestamp
-                                            )
+                        title = title,
+                        body_text = text,
+                        tags = tagnames,
+                        wiki = wiki,
+                        is_anonymous = ask_anonymously,
+                        timestamp = timestamp
+                    )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
@@ -227,7 +225,7 @@ def ask(request):#view used to ask a new question
                 request.session.flush()
                 session_key = request.session.session_key
                 summary = strip_tags(text)[:120]
-                question = models.AnonymousQuestion(
+                models.AnonymousQuestion.objects.create(
                     session_key = session_key,
                     title       = title,
                     tagnames = tagnames,
@@ -238,44 +236,11 @@ def ask(request):#view used to ask a new question
                     added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
-                question.save()
                 return HttpResponseRedirect(url_utils.get_login_url())
-        else:
-            form = forms.AskForm(request.POST)
-            if 'title' in request.GET:
-                #normally this title is inherited from search query
-                #but it is possible to ask with a parameter title in the url query
-                form.initial['title'] = request.GET['title']
-            else:
-                #attempt to extract title from previous search query
-                search_state = request.session.get('search_state', None)
-                if search_state:
-                    query = search_state.query
-                    form.initial['title'] = query
     else:
-        #this branch is for the initial load of ask form
         form = forms.AskForm()
-        if 'title' in request.GET:
-            #normally this title is inherited from search query
-            #but it is possible to ask with a parameter title in the url query
+        if 'title' in request.GET: # prepopulate title (usually from search query on main page)
             form.initial['title'] = request.GET['title']
-        else:
-            #attempt to extract title from previous search query
-            search_state = request.session.get('search_state', None)
-            if search_state:
-                query = search_state.query
-                form.initial['title'] = query
-
-        if 'tags' in request.GET:
-            #pre-populate tags.
-            clean_tags = request.GET['tags'].replace(',', ' ')
-            form.initial['tags'] = clean_tags
-        else:
-            #attemp to get tags from search state
-            search_state = request.session.get('search_state', None)
-            if search_state and search_state.tags:
-                tags = ' '.join(search_state.tags)
-                form.initial['tags'] = tags
 
     data = {
         'active_tab': 'ask',

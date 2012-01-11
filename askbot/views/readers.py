@@ -63,9 +63,9 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None, \
-        search=None, tags=None, author=None, page=None, reset_tags=None, \
-        reset_author=None, reset_query=None, start_over=True, \
+def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None,
+        search=None, tags=None, author=None, page=None, reset_tags=None,
+        reset_author=None, reset_query=None,
         remove_tag=None, page_size=None):
     """
     List of Questions, Tagged questions, and Unanswered questions.
@@ -85,18 +85,18 @@ def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_S
     for arg_name in ('search', 'author', 'page', 'reset_tags', 'reset_author', 'reset_query', 'start_over', 'remove_tag', 'page_size'):
         if locals().get(arg_name, None):
             params_dict[arg_name] = locals()[arg_name]
-    
+
     #update search state
     form = AdvancedSearchForm(params_dict)
     if form.is_valid():
         user_input = form.cleaned_data
     else:
         user_input = None
-    search_state = request.session.get('search_state', SearchState())
-    view_log = request.session['view_log']
-    search_state.update(user_input, view_log, request.user)
-    request.session['search_state'] = search_state
-    request.session.modified = True
+
+    search_state = SearchState()
+    search_state.update_from_user_input(input_dict=user_input, user_logged_in=request.user.is_authenticated())
+
+    #######
 
     qs, meta_data, related_tags = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
@@ -631,7 +631,6 @@ def get_comment(request):
 @get_only
 def get_question_body(request):
     search_state = request.session.get('search_state', SearchState())
-    view_log = request.session['view_log']
     (qs, meta_data, related_tags) = models.Thread.objects.run_advanced_search(
                                             request_user = request.user,
                                             search_state = search_state)

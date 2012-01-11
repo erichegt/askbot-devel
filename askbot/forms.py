@@ -114,7 +114,7 @@ class TitleField(forms.CharField):
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
 
-        return value
+        return value.strip() # TODO: test me
 
 class EditorField(forms.CharField):
     """EditorField is subclassed by the 

@@ -64,7 +64,7 @@ urlpatterns = patterns('',
         (r'^%s' % _('questions') +
             r'(%s)?' % r'/section:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/query:(?P<query>.+)' +
+            r'(%s)?' % r'/query:(?P<query>[^/]+)' +  # INFO: question string cannot contain slash (/), which is a section terminator
             r'(%s)?' % r'/search:search' +
             r'(%s)?' % r'/tags:(?P<tags>[\w\d\-\+\#]+)' +
             r'(%s)?' % r'/author:(?P<author>\d+)' +
@@ -73,19 +73,6 @@ urlpatterns = patterns('',
         r'/$'),
 
         views.readers.questions, 
-        name='questions'
-    ),
-
-    url( # removes tag, this is used only with ajax and this parameters is always used alone
-        r'^%s/remove_tag:(?P<remove_tag>[\w\d\-\#]+)/$' % _('questions'),
-        views.readers.questions,
-        {'start_over': (None)}, # this parameter is true by default, so we are making it false here
-        name='questions'
-    ),
-    url( # reset_query, for ajax use
-        r'^%s/reset_query:(?P<reset_query>\w+)/$' % _('questions'), 
-        views.readers.questions,
-        {'start_over': (None)}, # this parameter is true by default, so we are making it false here
         name='questions'
     ),
 
