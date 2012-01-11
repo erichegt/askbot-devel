@@ -452,7 +452,7 @@ class Command(NoArgsCommand):
                 #              )
 
                 text += _(
-                            'Please visit the askbot and see what\'s new! '
+                            'Please visit us and see what\'s new! '
                             'Could you spread the word about it - '
                             'can somebody you know help answering those questions or '
                             'benefit from posting one?'
@@ -465,12 +465,12 @@ class Command(NoArgsCommand):
                     text += _('Your most frequent subscription setting is \'daily\' '
                                'on selected questions. If you are receiving more than one '
                                'email per day'
-                               'please tell about this issue to the askbot administrator.'
+                               'please tell about this issue to the site administrator.'
                                )
                 elif 'w' in feed_freq:
                     text += _('Your most frequent subscription setting is \'weekly\' '
                                'if you are receiving this email more than once a week '
-                               'please report this issue to the askbot administrator.'
+                               'please report this issue to the site administrator.'
                                )
                 text += ' '
                 text += _(
