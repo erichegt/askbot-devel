@@ -626,22 +626,6 @@ def get_comment(request):
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.text}
 
-@csrf.csrf_exempt
-@ajax_only
-@get_only
-def get_question_body(request):
-    search_state = request.session.get('search_state', SearchState())
-    (qs, meta_data, related_tags) = models.Thread.objects.run_advanced_search(
-                                            request_user = request.user,
-                                            search_state = search_state)
-    paginator = Paginator(qs, search_state.page_size)
-    page = paginator.page(search_state.page)
-    questions_dict = {}
-    for question in page.object_list:
-        questions_dict['question-%s' % question.id] = question.summary
-
-    return {'questions-titles': questions_dict}
-
 def widget_questions(request):
     """Returns the first x questions based on certain tags.
     @returns template with those questions listed."""

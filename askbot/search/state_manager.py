@@ -123,14 +123,6 @@ class SearchState(object):
         out += 'logged_in=%s\n' % str(self.logged_in)
         return out
 
-    def set_logged_out(self):
-        if self.scope == 'favorite':
-            self.scope = None
-        self.logged_in = False
-
-    def set_logged_in(self):
-        self.logged_in = True
-
     def reset(self):
         #re-initialize, but keep login state
         is_logged_in = self.logged_in
@@ -145,12 +137,6 @@ class SearchState(object):
                 setattr(self, key, new_value)
                 if reset_page == True:
                     self.reset_page()
-
-    def relax_stickiness(self, input_dict, view_log):
-        if view_log.get_previous(1) == 'questions':
-            if not some_in(ACTIVE_COMMANDS, input_dict):
-                self.reset()
-        #todo also relax if 'all' scope was clicked twice
 
     def update_from_user_input(self, input_dict, user_logged_in):
         #todo: this function will probably not 
@@ -168,8 +154,8 @@ class SearchState(object):
             self.reset_page()#todo may be smarter here - start with ~same q
 
         if 'scope' in input_dict:
-            if input_dict['scope'] == 'favorite' and user_logged_in is False:
-                self.reset_scope()
+            if input_dict['scope'] == 'favorite' and not user_logged_in:
+                self.scope = const.DEFAULT_POST_SCOPE
             else:
                 self.update_value('scope', input_dict, reset_page=reset_page)
 
@@ -260,8 +246,6 @@ class SearchState(object):
     def reset_sort(self):
         self.sort = const.DEFAULT_POST_SORT_METHOD
 
-    def reset_scope(self):
-        self.scope = const.DEFAULT_POST_SCOPE
 
     def query_string(self):
         out = 'section:%s' % self.scope
@@ -284,36 +268,3 @@ class SearchState(object):
             'page_size': self.page_size
         }
         return params_dict
-
-class ViewLog(object):
-    """The ViewLog helper obejcts store the trail of the page visits for a
-    given user. The trail is recorded only up to a certain depth.
-
-    The purpose to record this info is to reset the search state
-    when the user walks "too far away" from the search page.
-    
-    These objects must be modified only in this middlware.
-    """
-    def __init__(self):
-        self.views = []
-        self.depth = 3 #todo maybe move this to const.py
-
-    def get_previous(self, num):
-        """get a previous record from a certain depth"""
-        if num > self.depth - 1:
-            raise Exception("view log depth exceeded")
-        elif num < 0:
-            raise Exception("num must be positive")
-        elif num <= len(self.views) - 1:
-            return self.views[num]
-        else:
-            return None
-
-    def set_current(self, view_name):
-        """insert a new record"""
-        self.views.insert(0, view_name)
-        if len(self.views) > self.depth:
-            self.views.pop()
-
-    def __str__(self):
-        return str(self.views) + ' depth=%d' % self.depth
