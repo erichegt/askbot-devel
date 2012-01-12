@@ -61,11 +61,11 @@ urlpatterns = patterns('',
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
 
     url(
+        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
         (r'^%s' % _('questions') +
-            r'(%s)?' % r'/section:(?P<scope>\w+)' +
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
             r'(%s)?' % r'/query:(?P<query>[^/]+)' +  # INFO: question string cannot contain slash (/), which is a section terminator
-            r'(%s)?' % r'/search:search' +
             r'(%s)?' % r'/tags:(?P<tags>[\w\d\-\+\#]+)' +
             r'(%s)?' % r'/author:(?P<author>\d+)' +
             r'(%s)?' % r'/page_size:(?P<page_size>\d+)' +

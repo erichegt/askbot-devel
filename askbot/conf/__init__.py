@@ -31,4 +31,5 @@ def should_show_sort_by_relevance():
     """True if configuration support sorting
     questions by search relevance
     """
-    return ('postgresql_psycopg2' in askbot.get_database_engine_name())
+    return True
+    #return ('postgresql_psycopg2' in askbot.get_database_engine_name())

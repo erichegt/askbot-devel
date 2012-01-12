@@ -19,7 +19,7 @@
             {% set relevance_label = gettext('relevance') %}
             {% if query %}
             <a id="by_relevance"
-                {% if sort == "relevance-desc" %}
+                {% if sortMethod == "relevance-desc" %}
                     href="{% url questions %}{{ query_string|replace_in_url("sort:relevance-desc") }}"
                     class="on"
                     title="{{asc_relevance_tooltip}}"><span>{{relevance_label}} &#9660;</span>
@@ -75,7 +75,6 @@
                 query_string = query_string,
             )
         }}
-
     </div>
 </div>
 

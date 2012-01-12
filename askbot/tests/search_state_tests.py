@@ -59,6 +59,8 @@ class SearchStateTests(TestCase):
         self.assertEquals(self.state.sort, 'age-asc')
         self.update({})
         self.assertEquals(self.state.sort, DEFAULT_SORT)
+
+
 class ParseQueryTests(unittest.TestCase):
     def test_extract_users(self):
         text = '@anna haha @"maria fernanda" @\'diego maradona\' hehe [user:karl  marx] hoho  user:\' george bush  \''

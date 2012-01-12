@@ -11,7 +11,7 @@ import logging
 import urllib
 import operator
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
 from django.utils import simplejson
@@ -27,7 +27,7 @@ from django.http import QueryDict
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
+from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot import schedules
 from askbot.models.badges import award_badges_signal
@@ -63,38 +63,15 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request, scope=const.DEFAULT_POST_SCOPE, sort=const.DEFAULT_POST_SORT_METHOD, query=None,
-        search=None, tags=None, author=None, page=None, reset_tags=None,
-        reset_author=None, reset_query=None,
-        remove_tag=None, page_size=None):
+def questions(request, **kwargs):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    if request.method == 'POST':    # TODO: This is 405 condition, not 404. Django 1.2+ has decorator for this: https://docs.djangoproject.com/en/1.2/topics/http/decorators/#django.views.decorators.http.require_GET
-        raise Http404
+    if request.method != 'GET':
+        return HttpResponseNotAllowed(['GET'])
 
-    #make parameters dictionary
-    params_dict = {
-        'scope': scope,
-        'sort': sort,
-    }
-    for arg_name in ('query', 'tags'):
-        if locals().get(arg_name, None):
-            params_dict[arg_name] = ' '.join(locals()[arg_name].split('+'))
-    for arg_name in ('search', 'author', 'page', 'reset_tags', 'reset_author', 'reset_query', 'start_over', 'remove_tag', 'page_size'):
-        if locals().get(arg_name, None):
-            params_dict[arg_name] = locals()[arg_name]
-
-    #update search state
-    form = AdvancedSearchForm(params_dict)
-    if form.is_valid():
-        user_input = form.cleaned_data
-    else:
-        user_input = None
-
-    search_state = SearchState()
-    search_state.update_from_user_input(input_dict=user_input, user_logged_in=request.user.is_authenticated())
+    search_state = SearchState(user_logged_in=request.user.is_authenticated(), **kwargs)
 
     #######
 
