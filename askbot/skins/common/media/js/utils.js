@@ -192,17 +192,16 @@ QSutils.remove_search_tag = function(query_string, tag){
     }
 
     var tags = tag_string.split(this.TAG_SEP);
-    var new_tags = [];
 
     var pos = $.inArray(encodeURIComponent(tag), tags);
     if(pos > -1) {
-        new_tags = tags.splice(pos, 1);
+        tags.splice(pos, 1); /* array.splice() works in-place */
     }
 
-    if(new_tags.length === 0) {
+    if(tags.length === 0) {
         return this.patch_query_string(query_string, 'tags:', true);
     } else {
-        return this.patch_query_string(query_string, 'tags:' + new_tags.join(this.TAG_SEP));
+        return this.patch_query_string(query_string, 'tags:' + tags.join(this.TAG_SEP));
     }
 };
 

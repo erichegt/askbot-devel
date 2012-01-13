@@ -47,11 +47,12 @@ var liveSearch = function(query_string) {
                 'query:' + encodeURIComponent(query_text),
                 query_text === ''   // remove if empty
         );
+        return query_text;
     };
 
     var send_query = function(query_text){
         running = true;
-        update_query_string(query_text);
+        prev_text = update_query_string(query_text);
         var url = search_url + query_string;
         $.ajax({
             url: url,
@@ -63,7 +64,6 @@ var liveSearch = function(query_string) {
             },
             cache: false
         });
-        prev_text = query_text;
         var context = { state:1, rand:Math.random() };
         History.pushState( context, "Questions", url );
         setTimeout(function (){
