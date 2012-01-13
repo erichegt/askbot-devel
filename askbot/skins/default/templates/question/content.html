@@ -17,7 +17,7 @@
     {# ==== END: question/answer_tab_bar.html ==== #}
 
     <div class="clean"></div>
-    {{ macros.paginator(paginator_context) }}
+    {{ macros.paginator(paginator_context, anchor='#sort-top') }}
     <div class="clean"></div>
 
     {% for answer in answers %}
@@ -25,7 +25,7 @@
         {% include "question/answer_card.html" %}
         {# ==== END: question/answer_card.html ==== #}
     {% endfor %}
-    {{ macros.paginator(paginator_context) }}
+    {{ macros.paginator(paginator_context, anchor='#sort-top') }}
     <div class="clean"></div>
 {% else %}
     {# ==== START: question/sharing_prompt_phrase.html ==== #}

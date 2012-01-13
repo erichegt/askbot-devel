@@ -1,6 +1,8 @@
 """Search state manager object"""
 import re
+import copy
 
+from django.core import urlresolvers
 from django.utils.http import urlquote
 
 import askbot
@@ -79,6 +81,11 @@ def parse_query(query):
     }
 
 class SearchState(object):
+
+    @classmethod
+    def get_empty(cls):
+        return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
+
     def __init__(self, scope, sort, query, tags, author, page, page_size, user_logged_in):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
 
@@ -87,12 +94,7 @@ class SearchState(object):
         else:
             self.scope = scope
 
-        if query:
-            self.query = ' '.join(query.split('+')).strip()
-            if self.query == '':
-                self.query = None
-        else:
-            self.query = None
+        self.query = query.strip() if query else None
 
         if self.query:
             #pull out values of [title:xxx], [user:some one]
@@ -114,21 +116,10 @@ class SearchState(object):
         else:
             self.sort = sort
 
-        if tags:
-            # const.TAG_SPLIT_REGEX, const.TAG_REGEX
-            #' '.join(tags.split('+'))
-            self.tags = tags.split('+')
-        else:
-            self.tags = None
-
-        if author:
-            self.author = int(author)
-        else:
-            self.author = None
-
-        if page:
-            self.page = int(page)
-        else:
+        self.tags = [t.strip() for t in tags.split(const.TAG_SEP)] if tags else []
+        self.author = int(author) if author else None
+        self.page = int(page) if page else 1
+        if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
         if not page_size or page_size not in zip(*const.PAGE_SIZE_CHOICES)[0]:
@@ -137,34 +128,82 @@ class SearchState(object):
             self.page_size = int(page_size)
 
     def __str__(self):
-        out = 'scope=%s\n' % self.scope
-        out += 'query=%s\n' % self.query
-        if self.tags:
-            out += 'tags=%s\n' % ','.join(self.tags)
-        out += 'author=%s\n' % self.author
-        out += 'sort=%s\n' % self.sort
-        out += 'page_size=%d\n' % self.page_size
-        out += 'page=%d\n' % self.page
-        return out
+        return self.query_string()
+
+    def full_url(self):
+        return urlresolvers.reverse('questions') + self.query_string()
+
+    #
+    # Safe characters in urlquote() according to http://www.ietf.org/rfc/rfc1738.txt:
+    #
+    #    Thus, only alphanumerics, the special characters "$-_.+!*'(),", and
+    #    reserved characters used for their reserved purposes may be used
+    #    unencoded within a URL.
+    #
+    # Tag separator (const.TAG_SEP) remains unencoded to clearly mark tag boundaries
+    # _+.- stay unencoded to keep tags in URL as verbose as possible
+    #      (note that urllib.quote() in Python 2.7 treats _.- as safe chars, but let's be explicit)
+    # Hash (#) is not safe and has to be encodeded, as it's used as URL has delimiter
+    #
+    SAFE_CHARS = const.TAG_SEP + '_+.-'
 
     def query_string(self):
-        out = 'scope:%s' % self.scope
-        out += '/sort:%s' % self.sort
+        lst = [
+            'scope:%s' % self.scope,
+            'sort:%s' % self.sort
+        ]
         if self.query:
-            out += '/query:%s' % urlquote(self.query)
+            lst.append('query:%s' % urlquote(self.query, safe=self.SAFE_CHARS))
         if self.tags:
-            out += '/tags:%s' % '+'.join(self.tags)
+            lst.append('tags:%s' % urlquote(const.TAG_SEP.join(self.tags), safe=self.SAFE_CHARS))
         if self.author:
-            out += '/author:%s' % self.author
-        return out+'/'
+            lst.append('author:%d' % self.author)
+        if self.page_size:
+            lst.append('page_size:%d' % self.page_size)
+        if self.page:
+            lst.append('page:%d' % self.page)
+        return '/'.join(lst) + '/'
 
-    def make_parameters(self):
-        params_dict = {
-            'scope': self.scope,
-            'sort': self.sort,
-            'query': '+'.join(self.query.split(' ')) if self.query else None,
-            'tags': '+'.join(self.tags) if self.tags else None,
-            'author': self.author,
-            'page_size': self.page_size
-        }
-        return params_dict
+    def deepcopy(self):
+        "Used to contruct a new SearchState for manipulation, e.g. for adding/removing tags"
+        return copy.deepcopy(self)
+
+    def add_tag(self, tag):
+        ss = self.deepcopy()
+        ss.tags.append(tag)
+        return ss
+
+    def remove_query(self):
+        ss = self.deepcopy()
+        ss.query = None
+        return ss
+
+    def remove_author(self):
+        ss = self.deepcopy()
+        ss.author = None
+        return ss
+
+    def remove_tags(self):
+        ss = self.deepcopy()
+        ss.tags = []
+        return ss
+
+    def change_scope(self, new_scope):
+        ss = self.deepcopy()
+        ss.scope = new_scope
+        return ss
+
+    def change_sort(self, new_sort):
+        ss = self.deepcopy()
+        ss.sort = new_sort
+        return ss
+
+    def change_page(self, new_page):
+        ss = self.deepcopy()
+        ss.page = new_page
+        return ss
+
+    def change_page_size(self, new_page_size):
+        ss = self.deepcopy()
+        ss.page_size = new_page_size
+        return ss

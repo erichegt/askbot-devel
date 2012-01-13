@@ -91,15 +91,16 @@ def questions(request, **kwargs):
 
     paginator_context = {
         'is_paginated' : (paginator.count > search_state.page_size),
+
         'pages': paginator.num_pages,
         'page': search_state.page,
         'has_previous': page.has_previous(),
         'has_next': page.has_next(),
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
+
         'base_url' : search_state.query_string(),#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
-        'parameters': search_state.make_parameters(),
     }
 
     # We need to pass the rss feed url based
@@ -121,87 +122,52 @@ def questions(request, **kwargs):
     reset_method_count = len(filter(None, [search_state.query, search_state.tags, meta_data.get('author_name', None)]))
 
     if request.is_ajax():
-
         q_count = paginator.count
+
         if search_state.tags:
-            question_counter = ungettext(
-                                    '%(q_num)s question, tagged',
-                                    '%(q_num)s questions, tagged',
-                                    q_count
-                                ) % {
-                                    'q_num': humanize.intcomma(q_count),
-                                }
+            question_counter = ungettext('%(q_num)s question, tagged', '%(q_num)s questions, tagged', q_count)
         else:
-            question_counter = ungettext(
-                                    '%(q_num)s question',
-                                    '%(q_num)s questions',
-                                    q_count
-                                ) % {
-                                    'q_num': humanize.intcomma(q_count),
-                                }
+            question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
+        question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
         if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html', request)
-            #todo: remove this patch on context after all templates are moved to jinja
-            #paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
-            data = {
-                'context': extra_tags.cnprog_paginator(paginator_context),
+            paginator_html = paginator_tpl.render(Context({
+                'context': functions.setup_paginator(paginator_context),
                 'questions_count': q_count,
                 'page_size' : search_state.page_size,
-            }
-            paginator_html = paginator_tpl.render(Context(data))
+                'search_state': search_state,
+            }))
         else:
             paginator_html = ''
-        search_tags = list()
-        if search_state.tags:
-            search_tags = list(search_state.tags)
-        query_data = {
-            'tags': search_tags,
-            'sort_order': search_state.sort
-        }
+
+        questions_tpl = get_template('main_page/questions_loop.html', request)
+        questions_html = questions_tpl.render(Context({
+            'questions': page,
+            'search_state': search_state,
+            'reset_method_count': reset_method_count,
+        }))
+
         ajax_data = {
-            #current page is 1 by default now
-            #because ajax is only called by update in the search button
-            'query_data': query_data,
+            'query_data': {
+                'tags': search_state.tags,
+                'sort_order': search_state.sort
+            },
             'paginator': paginator_html,
             'question_counter': question_counter,
             'questions': list(),
-            'related_tags': list(),
             'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
-            'parameters': search_state.make_parameters(),
             'page_size' : search_state.page_size,
+            'questions': questions_html.replace('\n',''),
         }
+        ajax_data['related_tags'] = [{
+            'name': tag.name,
+            'used_count': humanize.intcomma(tag.local_used_count)
+        } for tag in related_tags]
 
-        for tag in related_tags:
-            tag_data = {
-                'name': tag.name,
-                'used_count': humanize.intcomma(tag.local_used_count)
-            }
-            ajax_data['related_tags'].append(tag_data)
-
-        #we render the template
-        #from django.template import RequestContext
-        questions_tpl = get_template('main_page/questions_loop.html', request)
-        #todo: remove this patch on context after all templates are moved to jinja
-        data = {
-            'questions': page,
-            'questions_count': q_count,
-            'context': paginator_context,
-            'language_code': translation.get_language(),
-            'query': search_state.query,
-            'reset_method_count': reset_method_count,
-            'query_string': search_state.query_string(),
-        }
-
-        questions_html = questions_tpl.render(Context(data))
-        #import pdb; pdb.set_trace()
-        ajax_data['questions'] = questions_html.replace('\n','')
-        return HttpResponse(
-                    simplejson.dumps(ajax_data),
-                    mimetype = 'application/json'
-                )
+        return HttpResponse(simplejson.dumps(ajax_data), mimetype = 'application/json')
 
     else: # non-AJAX branch
 
@@ -232,7 +198,7 @@ def questions(request, **kwargs):
             'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
             'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
-            'parameters': search_state.make_parameters(),
+            'search_state': search_state,
             'feed_url': context_feed_url,
         }
 
@@ -285,7 +251,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'next': tags.next_page_number(),
             'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
         }
-        paginator_context = extra_tags.cnprog_paginator(paginator_data)
+        paginator_context = functions.setup_paginator(paginator_data)
         data = {
             'active_tab': 'tags',
             'page_class': 'tags-page',
@@ -294,7 +260,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'stag' : stag,
             'tab_id' : sortby,
             'keywords' : stag,
-            'paginator_context' : paginator_context
+            'paginator_context' : paginator_context,
         }
 
     else:
@@ -530,9 +496,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'previous': page_objects.previous_page_number(),
         'next': page_objects.next_page_number(),
         'base_url' : request.path + '?sort=%s&amp;' % answer_sort_method,
-        'extend_url' : "#sort-top"
     }
-    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+    paginator_context = functions.setup_paginator(paginator_data)
 
     favorited = thread.has_favorite_by_user(request.user)
     user_question_vote = 0
@@ -561,7 +526,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'paginator_context' : paginator_context,
         'show_post': show_post,
         'show_comment': show_comment,
-        'show_comment_position': show_comment_position
+        'show_comment_position': show_comment_position,
     }
 
     return render_into_skin('question.html', data, request)

@@ -25,10 +25,12 @@ from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
 from django.views.decorators import csrf
+
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
 from askbot.utils.http import get_request_info
+from askbot.utils import functions
 from askbot import forms
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -37,6 +39,7 @@ from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
+from askbot.search.state_manager import SearchState
 
 
 def owner_or_moderator_required(f):
@@ -106,7 +109,7 @@ def users(request):
         'next': users_page.next_page_number(),
         'base_url' : base_url
     }
-    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+    paginator_context = functions.setup_paginator(paginator_data) #
     data = {
         'active_tab': 'users',
         'page_class': 'users-page',
@@ -793,8 +796,20 @@ def user(request, id, slug=None, tab_name=None):
 
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
+    search_state = SearchState(
+        scope=None,
+        sort=None,
+        query=None,
+        tags=None,
+        author=profile_owner.id,
+        page=None,
+        page_size=None,
+        user_logged_in=profile_owner.is_authenticated(),
+    )
+
     context = {
         'view_user': profile_owner,
+        'search_state': search_state,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
     return user_view_func(request, profile_owner, context)

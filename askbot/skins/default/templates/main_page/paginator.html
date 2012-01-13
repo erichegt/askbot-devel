@@ -1,8 +1,8 @@
 {% import "macros.html" as macros %}
 {% if questions_count > page_size %}{# todo: remove magic number #}
     <div id="pager" class="pager">
-        {{ macros.paginator(context|setup_paginator, position='left', active_tab=active_tab) }}
-        {{ macros.pagesize_switch(context, position='right') }}
+        {{ macros.paginator_main_page(context|setup_paginator, position='left', search_state=search_state) }}
+        {{ macros.pagesize_switch_main_page(context, position='right', search_state=search_state) }}
         <div class="clean"></div>
     </div>
 {% endif %}

@@ -72,9 +72,7 @@
                         {{ macros.tag_widget(
                             tag.name,
                             html_tag = 'div',
-                            url_params =
-                                "author=" ~ view_user.id ~
-                                "&start_over=true",
+                            search_state = search_state,
                             extra_content =
                                 '<span class="tag-number">&#215; ' ~
                                 tag.user_tag_usage_count|intcomma ~

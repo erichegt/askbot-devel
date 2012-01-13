@@ -275,3 +275,8 @@ def humanize_counter(number):
 @register.filter
 def absolute_value(number):
     return abs(number)
+
+@register.filter
+def get_empty_search_state(unused):
+    from askbot.search.state_manager import SearchState
+    return SearchState.get_empty()

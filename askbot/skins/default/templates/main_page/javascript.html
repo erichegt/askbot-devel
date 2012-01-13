@@ -5,7 +5,7 @@
     $(document).ready(function(){
         /*var on_tab = '#nav_questions';
         $(on_tab).attr('className','on');*/
-        liveSearch('init', '{{ query_string|escapejs }}');
+        liveSearch('{{ search_state.query_string()|escapejs }}');
         Hilite.exact = false;
         Hilite.elementid = "question-list";
         Hilite.debug_referrer = location.href;
@@ -34,19 +34,3 @@
 <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
 {% endif %}
 <script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
-{% if active_tab != "tags" and active_tab != "users" %}
-<script>
-$("form#searchForm").submit(function(event) {
-  event.preventDefault();
-  form_action = $("form#searchForm").attr('action')
-  query = $("input#keywords").attr('value').split(' ').join('+')
-  $("input#keywords").attr('value', '')
-  $("input#searchButton").attr('value', '')
-  form_action += 'section:{{parameters.scope}}/sort:{{parameters.sort}}/'
-    + 'query:' + query + '/search:search/'
-    + '{% if parameters.tags %}tags:{{parameters.tags}}/{% endif %}'
-    + '{% if parameters.author %}author:{{parameters.author}}/{% endif %}'
-  window.location.href = form_action;
-});
-</script>
-{% endif %}

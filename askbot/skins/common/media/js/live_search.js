@@ -1,5 +1,5 @@
 
-var liveSearch = function(command, query_string) {
+var liveSearch = function(query_string) {
     var query = $('input#keywords');
     var query_val = function () {return $.trim(query.val());};
     var prev_text = query_val();
@@ -38,17 +38,20 @@ var liveSearch = function(command, query_string) {
         }
     };
 
-    var send_query = function(query_text){
-        running = true;
+    var update_query_string = function(query_text){
         if(query_text === undefined) { // handle missing parameter
             query_text = query_val();
         }
-        query_string = patch_query_string(
-            query_string,
-            'query:' + encodeURIComponent(query_text),
-            query_text === ''   // remove if empty
+        query_string = QSutils.patch_query_string(
+                query_string,
+                'query:' + encodeURIComponent(query_text),
+                query_text === ''   // remove if empty
         );
+    };
 
+    var send_query = function(query_text){
+        running = true;
+        update_query_string(query_text);
         var url = search_url + query_string;
         $.ajax({
             url: url,
@@ -63,20 +66,13 @@ var liveSearch = function(command, query_string) {
         prev_text = query_text;
         var context = { state:1, rand:Math.random() };
         History.pushState( context, "Questions", url );
-    };
-
-    var refresh_main_page = function (){
-        $.ajax({
-            url: askbot['urls']['questions'],
-            data: {preserve_state: true},
-            dataType: 'json',
-            success: render_result
-        });
-
-        var context = { state:1, rand:Math.random() };
-        var title = "Questions";
-        var query = askbot['urls']['questions'];
-        History.pushState( context, title, query );
+        setTimeout(function (){
+            /* HACK: For some weird reson, sometimes something overrides the above pushState so we re-aplly it
+                     This might be caused by some other JS plugin.
+                     The delay of 10msec allows the other plugin to override the URL.
+            */
+            History.replaceState( context, "Questions", url );
+        }, 10);
     };
 
     /* *********************************** */
@@ -136,67 +132,8 @@ var liveSearch = function(command, query_string) {
 
     /* *************************************** */
 
-    var get_query_string_selector_value = function (query_string, selector) {
-        var params = query_string.split('/');
-        for(var i=0; i<params.length; i++) {
-            var param_split = params[i].split(':');
-            if(param_split[0] === selector) {
-                return param_split[1];
-            }
-        }
-        return undefined;
-    };
-
-    var patch_query_string = function (query_string, patch, remove) {
-        var patch_split = patch.split(':');
-        var mapping = {};
-        var params = query_string.split('/');
-        var new_query_string = '';
-
-        if(!remove) {
-            mapping[patch_split[0]] = patch_split[1]; // prepopulate the patched selector
-        }
-
-        for (var i = 0; i < params.length; i++) {
-            var param_split = params[i].split(':');
-            if(param_split[0] !== patch_split[0] && param_split[1]) {
-                mapping[param_split[0]] = param_split[1];
-            }
-        }
-
-        var add_selector = function(name) {
-            if(name in mapping) {
-                new_query_string += name + ':' + mapping[name] + '/';
-            }
-        };
-
-        /* The order of selectors should match the Django URL */
-        add_selector('scope');
-        add_selector('sort');
-        add_selector('query');
-        add_selector('tags');
-        add_selector('author');
-        add_selector('page_size');
-        add_selector('page');
-
-        return new_query_string;
-    };
-
     var remove_search_tag = function(tag){
-        var tag_string = get_query_string_selector_value(query_string, 'tags');
-        if(!tag_string) return; // early exit
-
-        var tags = tag_string.split('+');
-        var new_tags = [];
-
-        for(var j = 0; j < tags.length; j++){
-            if(tags[j] !== tag) {
-                new_tags.push(tags[j]);
-            }
-        }
-
-        query_string = patch_query_string(query_string, 'tags:' + new_tags.join('+'));
-
+        query_string = QSutils.remove_search_tag(query_string, tag);
         send_query();
     };
 
@@ -207,7 +144,7 @@ var liveSearch = function(command, query_string) {
             var tab = $(element);
             var tab_name = tab.attr('id').replace(/^by_/,'');
             if (tab_name in sortButtonData){
-                href = search_url + patch_query_string(query_string, 'sort:'+tab_name+'-desc');
+                href = search_url + QSutils.patch_query_string(query_string, 'sort:'+tab_name+'-desc');
                 tab.attr('href', href);
                 tab.attr('title', sortButtonData[tab_name]['desc_tooltip']);
                 tab.html(sortButtonData[tab_name]['label']);
@@ -274,38 +211,48 @@ var liveSearch = function(command, query_string) {
 
     /* *********************************** */
 
-    if(command === 'refresh') {
-        refresh_main_page();
-    }
-    else if(command === 'init') {
-        // Wire search tags
-        var search_tags = $('#searchTags .tag-left');
-        $.each(search_tags, function(idx, element){
-            var tag = new Tag();
-            tag.decorate($(element));
-            //todo: setDeleteHandler and setHandler
-            //must work after decorate & must have getName
-            tag.setDeleteHandler(
-                    function(){
-                        remove_search_tag(tag.getName(), query_string);
-                    }
-            );
-        });
+    // Wire search tags
+    var search_tags = $('#searchTags .tag-left');
+    $.each(search_tags, function(idx, element){
+        var tag = new Tag();
+        tag.decorate($(element));
+        //todo: setDeleteHandler and setHandler
+        //must work after decorate & must have getName
+        tag.setDeleteHandler(
+                function(){
+                    remove_search_tag(tag.getName(), query_string);
+                }
+        );
+    });
 
-        // Wire X button
-        x_button.click(function () {
-            restart_query(); /* wrapped in closure because it's not yet defined at this point */
-        });
+    // Wire X button
+    x_button.click(function () {
+        restart_query(); /* wrapped in closure because it's not yet defined at this point */
+    });
+    refresh_x_button();
+
+    // Wire query box
+    var main_page_eval_handle;
+    query.keyup(function(e){
         refresh_x_button();
+        if (running === false){
+            clearTimeout(main_page_eval_handle);
+            main_page_eval_handle = setTimeout(eval_query, 400);
+        }
+    });
 
-        // Wire query box
-        var main_page_eval_handle;
-        query.keyup(function(e){
-            refresh_x_button();
-            if (running === false){
-                clearTimeout(main_page_eval_handle);
-                main_page_eval_handle = setTimeout(eval_query, 400);
-            }
-        });
-    }
+    $("form#searchForm").submit(function(event) {
+        // if user clicks the button the s(h)e probably wants page reload,
+        // so provide that experience but first update the query string
+        event.preventDefault();
+        update_query_string();
+        window.location.href = search_url + query_string;
+    });
+
+    /* *********************************** */
+
+    // Hook for tag_selector.js
+    liveSearch.refresh = function () {
+        send_query();
+    };
 };
