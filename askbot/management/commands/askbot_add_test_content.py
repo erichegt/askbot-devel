@@ -76,7 +76,8 @@ class Command(NoArgsCommand):
         active_question = None
         last_vote = False
         # Each user posts a question
-        for user in users[:NUM_QUESTIONS]:
+        for i in range(NUM_QUESTIONS):
+            user = users[i]
             # Downvote/upvote the questions - It's reproducible, yet
             # gives good randomized data
             if not active_question is None:
@@ -94,6 +95,8 @@ class Command(NoArgsCommand):
 
             # len(TAGS_TEMPLATE) tags per question - each tag is different
             tags = " ".join([t%user.id for t in TAGS_TEMPLATE])
+            if i < NUM_QUESTIONS/2:
+                tags += ' one-tag'
             active_question = user.post_question(
                         title = TITLE_TEMPLATE % user.id,
                         body_text = CONTENT_TEMPLATE,
