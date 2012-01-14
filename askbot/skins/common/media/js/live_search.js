@@ -196,12 +196,19 @@ var liveSearch = function(query_string) {
                 $("#ContentLeft a.rss:first").attr("href", data['feed_url']);
             }
 
+            // Patch scope selectors
             $('#scopeWrapper > a.scope-selector').each(function(index) {
                 var old_qs = $(this).attr('href').replace(search_url, '');
                 var scope = QSutils.get_query_string_selector_value(old_qs, 'scope');
                 qs = QSutils.patch_query_string(data['query_string'], 'scope:' + scope);
                 $(this).attr('href', search_url + qs);
             });
+
+            // Patch "Ask your question"
+            var askButton = $('#askButton');
+            var askHrefBase = askButton.attr('href').split('?')[0];
+            askButton.attr('href', askHrefBase + data['query_data']['ask_query_string']); /* INFO: ask_query_string should already be URL-encoded! */
+
 
             query.focus();
 

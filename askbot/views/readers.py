@@ -151,7 +151,8 @@ def questions(request, **kwargs):
         ajax_data = {
             'query_data': {
                 'tags': search_state.tags,
-                'sort_order': search_state.sort
+                'sort_order': search_state.sort,
+                'ask_query_string': search_state.ask_query_string(),
             },
             'paginator': paginator_html,
             'question_counter': question_counter,

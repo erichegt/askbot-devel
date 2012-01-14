@@ -3,7 +3,7 @@ import re
 import copy
 
 from django.core import urlresolvers
-from django.utils.http import urlquote
+from django.utils.http import urlquote, urlencode
 
 import askbot
 import askbot.conf
@@ -132,6 +132,16 @@ class SearchState(object):
 
     def full_url(self):
         return urlresolvers.reverse('questions') + self.query_string()
+
+    def ask_query_string(self): # TODO: test me
+        """returns string to prepopulate title field on the "Ask your question" page"""
+        ask_title = self.stripped_query or self.query or ''
+        if not ask_title:
+            return ''
+        return '?' + urlencode({'title': ask_title})
+
+    def full_ask_url(self):
+        return urlresolvers.reverse('ask') + self.ask_query_string()
 
     #
     # Safe characters in urlquote() according to http://www.ietf.org/rfc/rfc1738.txt:
