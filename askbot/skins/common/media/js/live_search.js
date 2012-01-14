@@ -196,6 +196,13 @@ var liveSearch = function(query_string) {
                 $("#ContentLeft a.rss:first").attr("href", data['feed_url']);
             }
 
+            $('#scopeWrapper > a.scope-selector').each(function(index) {
+                var old_qs = $(this).attr('href').replace(search_url, '');
+                var scope = QSutils.get_query_string_selector_value(old_qs, 'scope');
+                qs = QSutils.patch_query_string(data['query_string'], 'scope:' + scope);
+                $(this).attr('href', search_url + qs);
+            });
+
             query.focus();
 
             var old_list = $('#' + q_list_sel);
