@@ -1,4 +1,4 @@
-{% load extra_filters %}
+{% load extra_filters_jinja %}
 
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"

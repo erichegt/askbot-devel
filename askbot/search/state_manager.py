@@ -174,31 +174,31 @@ class SearchState(object):
     def add_tag(self, tag):
         ss = self.deepcopy()
         ss.tags.append(tag)
-        return ss
-
-    def remove_query(self):
-        ss = self.deepcopy()
-        ss.query = None
+        ss.page = 1 # state change causes page reset
         return ss
 
     def remove_author(self):
         ss = self.deepcopy()
         ss.author = None
+        ss.page = 1
         return ss
 
     def remove_tags(self):
         ss = self.deepcopy()
         ss.tags = []
+        ss.page = 1
         return ss
 
     def change_scope(self, new_scope):
         ss = self.deepcopy()
         ss.scope = new_scope
+        ss.page = 1
         return ss
 
     def change_sort(self, new_sort):
         ss = self.deepcopy()
         ss.sort = new_sort
+        ss.page = 1
         return ss
 
     def change_page(self, new_page):

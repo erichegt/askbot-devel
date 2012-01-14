@@ -35,8 +35,6 @@
             <input type="button"
                 value="X"
                 name="reset_query"
-                {# todo - make sure it works on Enter keypress #}
-                onclick="window.location.href='{% url questions %}{{ query_string|remove_from_url('query') }}'"
                 class="cancelSearchBtn"
                 {% if not query %}{# query is only defined by questions view (active_tab) #}
                     style="display: none;"

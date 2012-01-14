@@ -7,7 +7,7 @@ from django.core import exceptions
 from askbot.tests import utils
 from askbot.conf import settings as askbot_settings
 from askbot import models
-from askbot.templatetags import extra_filters as template_filters
+from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.tests.utils import skipIf, AskbotTestCase
 
 
