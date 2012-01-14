@@ -179,7 +179,6 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     add_selector('query');
     add_selector('tags');
     add_selector('author');
-    add_selector('page_size');
     add_selector('page');
 
     return new_query_string;

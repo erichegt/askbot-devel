@@ -67,12 +67,7 @@ TAG_LIST_FORMAT_CHOICES = (
 
 PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
 ANSWERS_PAGE_SIZE = 10
-#todo: remove this duplication
-QUESTIONS_PER_PAGE_USER_CHOICES = (
-   (10, u'10'),
-   (30, u'30'),
-   (50, u'50'),
-)
+QUESTIONS_PER_PAGE_USER_CHOICES = ((10, u'10'), (30, u'30'), (50, u'50'),)
 
 UNANSWERED_QUESTION_MEANING_CHOICES = (
     ('NO_ANSWERS', _('Question has no answers')),

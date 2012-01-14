@@ -796,14 +796,13 @@ def user(request, id, slug=None, tab_name=None):
 
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
-    search_state = SearchState(
+    search_state = SearchState( # Non-default SearchState with user data set
         scope=None,
         sort=None,
         query=None,
         tags=None,
         author=profile_owner.id,
         page=None,
-        page_size=None,
         user_logged_in=profile_owner.is_authenticated(),
     )
 

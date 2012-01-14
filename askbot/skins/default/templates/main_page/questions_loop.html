@@ -1,5 +1,5 @@
 {% import "macros.html" as macros %}
-{# cache 0 "questions" questions search_tags scope sort query context.page context.page_size language_code #}
+{# cache 0 "questions" questions search_tags scope sort query context.page language_code #}
 {% for question_post in questions.object_list %}
     {{macros.question_summary(question_post.thread, question_post, search_state=search_state)}}
 {% endfor %}

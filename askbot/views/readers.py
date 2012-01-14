@@ -75,13 +75,15 @@ def questions(request, **kwargs):
 
     #######
 
-    qs, meta_data, related_tags = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
+    page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
+
+    qs, meta_data, related_tags = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state, page_size=page_size)
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
-    paginator = Paginator(qs, search_state.page_size)
+    paginator = Paginator(qs, page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
@@ -90,7 +92,7 @@ def questions(request, **kwargs):
     contributors = models.Thread.objects.get_thread_contributors(contributors_threads)
 
     paginator_context = {
-        'is_paginated' : (paginator.count > search_state.page_size),
+        'is_paginated' : (paginator.count > page_size),
 
         'pages': paginator.num_pages,
         'page': search_state.page,
@@ -100,7 +102,7 @@ def questions(request, **kwargs):
         'next': page.next_page_number(),
 
         'base_url' : search_state.query_string(),#todo in T sort=>sort_method
-        'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+        'page_size' : page_size,#todo in T pagesize -> page_size
     }
 
     # We need to pass the rss feed url based
@@ -130,12 +132,12 @@ def questions(request, **kwargs):
             question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
-        if q_count > search_state.page_size:
+        if q_count > page_size:
             paginator_tpl = get_template('main_page/paginator.html', request)
             paginator_html = paginator_tpl.render(Context({
                 'context': functions.setup_paginator(paginator_context),
                 'questions_count': q_count,
-                'page_size' : search_state.page_size,
+                'page_size' : page_size,
                 'search_state': search_state,
             }))
         else:
@@ -160,7 +162,7 @@ def questions(request, **kwargs):
             'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
-            'page_size' : search_state.page_size,
+            'page_size' : page_size,
             'questions': questions_html.replace('\n',''),
         }
         ajax_data['related_tags'] = [{
@@ -183,7 +185,7 @@ def questions(request, **kwargs):
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
             'page_class': 'main-page',
-            'page_size': search_state.page_size,
+            'page_size': page_size,
             'query': search_state.query,
             'questions' : page,
             'questions_count' : paginator.count,

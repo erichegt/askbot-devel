@@ -126,7 +126,7 @@ class ThreadManager(models.Manager):
             )
 
 
-    def run_advanced_search(self, request_user=None, search_state=None):  # TODO: !! review and fix this
+    def run_advanced_search(self, request_user, search_state, page_size):  # TODO: !! review and fix this
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -249,7 +249,7 @@ class ThreadManager(models.Manager):
             orderby = QUESTION_ORDER_BY_MAP[sort_method]
             qs = qs.order_by(orderby)
 
-        related_tags = Tag.objects.get_related_to_search(questions = qs, search_state = search_state, ignored_tag_names = ignored_tag_names) # TODO: !!
+        related_tags = Tag.objects.get_related_to_search(questions = qs, page_size = page_size, ignored_tag_names = ignored_tag_names) # TODO: !!
 
         if askbot_settings.USE_WILDCARD_TAGS and request_user.is_authenticated():
             meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())

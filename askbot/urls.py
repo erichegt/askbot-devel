@@ -68,7 +68,6 @@ urlpatterns = patterns('',
             r'(%s)?' % r'/query:(?P<query>[^/]+)' +  # INFO: question string cannot contain slash (/), which is a section terminator
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
             r'(%s)?' % r'/author:(?P<author>\d+)' +
-            r'(%s)?' % r'/page_size:(?P<page_size>\d+)' +
             r'(%s)?' % r'/page:(?P<page>\d+)' +
         r'/$'),
 

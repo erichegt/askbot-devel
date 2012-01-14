@@ -12,7 +12,6 @@ class SearchStateTests(AskbotTestCase):
             tags=tags,
             author=None,
             page=None,
-            page_size=None,
 
             user_logged_in=False
         )
@@ -20,7 +19,7 @@ class SearchStateTests(AskbotTestCase):
     def test_no_selectors(self):
         ss = self._ss()
         self.assertEqual(
-            'scope:all/sort:activity-desc/page_size:30/page:1/',  # search defaults
+            'scope:all/sort:activity-desc/page:1/',  # search defaults
             ss.query_string()
         )
 
@@ -34,12 +33,11 @@ class SearchStateTests(AskbotTestCase):
             # INFO: URLs for the following selectors accept only digits!
             author=None,
             page='0',
-            page_size='59',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:all/sort:activity-desc/page_size:30/page:1/',  # search defaults
+            'scope:all/sort:activity-desc/page:1/',  # search defaults
             ss.query_string()
         )
 
@@ -51,12 +49,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:unanswered/sort:age-desc/query:alfa/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:unanswered/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
             ss.query_string()
         )
 
@@ -68,12 +65,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:all/sort:age-desc/query:alfa/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:all/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
             ss.query_string()
         )
 
@@ -84,12 +80,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=True
         )
         self.assertEqual(
-            'scope:favorite/sort:age-desc/query:alfa/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:favorite/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
             ss.query_string()
 
         )
@@ -105,12 +100,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:all/sort:relevance-desc/query:hejho/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:all/sort:relevance-desc/query:hejho/tags:miki,mini/author:12/page:2/',
             ss.query_string()
         )
 
@@ -121,12 +115,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:all/sort:activity-desc/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:all/sort:activity-desc/tags:miki,mini/author:12/page:2/',
             ss.query_string()
         )
 
@@ -139,12 +132,11 @@ class SearchStateTests(AskbotTestCase):
             tags='miki, mini',
             author='12',
             page='2',
-            page_size='50',
 
             user_logged_in=False
         )
         self.assertEqual(
-            'scope:all/sort:activity-desc/query:hejho/tags:miki,mini/author:12/page_size:50/page:2/',
+            'scope:all/sort:activity-desc/query:hejho/tags:miki,mini/author:12/page:2/',
             ss.query_string()
         )
 
@@ -153,14 +145,14 @@ class SearchStateTests(AskbotTestCase):
     def test_query_escaping(self):
         ss = self._ss(query=' alfa miki maki +-%#?= lalala/: ') # query coming from URL is already unescaped
         self.assertEqual(
-            'scope:all/sort:activity-desc/query:alfa%20miki%20maki%20+-%25%23%3F%3D%20lalala%2F%3A/page_size:30/page:1/',
+            'scope:all/sort:activity-desc/query:alfa%20miki%20maki%20+-%25%23%3F%3D%20lalala%2F%3A/page:1/',
             ss.query_string()
         )
 
     def test_tag_escaping(self):
         ss = self._ss(tags=' aA09_+.-#, miki ') # tag string coming from URL is already unescaped
         self.assertEqual(
-            'scope:all/sort:activity-desc/tags:aA09_+.-%23,miki/page_size:30/page:1/',
+            'scope:all/sort:activity-desc/tags:aA09_+.-%23,miki/page:1/',
             ss.query_string()
         )
 
@@ -172,7 +164,7 @@ class SearchStateTests(AskbotTestCase):
         )
         self.assertEquals(ss.stripped_query, '" haha hehe hoho')
         self.assertEqual(
-            'scope:all/sort:activity-desc/query:%22%40anna%20haha%20%40%22maria%20fernanda%22%20%40%27diego%20maradona%27%20hehe%20%5Buser%3Akarl%20%20marx%5D%20hoho%20%20user%3A%27%20george%20bush%20%20%27/page_size:30/page:1/',
+            'scope:all/sort:activity-desc/query:%22%40anna%20haha%20%40%22maria%20fernanda%22%20%40%27diego%20maradona%27%20hehe%20%5Buser%3Akarl%20%20marx%5D%20hoho%20%20user%3A%27%20george%20bush%20%20%27/page:1/',
             ss.query_string()
         )
 

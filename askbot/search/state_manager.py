@@ -84,9 +84,9 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
+        return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
 
-    def __init__(self, scope, sort, query, tags, author, page, page_size, user_logged_in):
+    def __init__(self, scope, sort, query, tags, author, page, user_logged_in):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'favorite' and not user_logged_in):
@@ -121,11 +121,6 @@ class SearchState(object):
         self.page = int(page) if page else 1
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
-
-        if not page_size or page_size not in zip(*const.PAGE_SIZE_CHOICES)[0]:
-            self.page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
-        else:
-            self.page_size = int(page_size)
 
     def __str__(self):
         return self.query_string()
@@ -168,8 +163,6 @@ class SearchState(object):
             lst.append('tags:%s' % urlquote(const.TAG_SEP.join(self.tags), safe=self.SAFE_CHARS))
         if self.author:
             lst.append('author:%d' % self.author)
-        if self.page_size:
-            lst.append('page_size:%d' % self.page_size)
         if self.page:
             lst.append('page:%d' % self.page)
         return '/'.join(lst) + '/'
@@ -211,9 +204,4 @@ class SearchState(object):
     def change_page(self, new_page):
         ss = self.deepcopy()
         ss.page = new_page
-        return ss
-
-    def change_page_size(self, new_page_size):
-        ss = self.deepcopy()
-        ss.page_size = new_page_size
         return ss

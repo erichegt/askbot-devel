@@ -68,7 +68,7 @@ User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
 User.add_to_class(
-    'questions_per_page',
+    'questions_per_page',  # TODO: remove me and const.QUESTIONS_PER_PAGE_USER_CHOICES, we're no longer used!
     models.SmallIntegerField(
         choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
         default=10

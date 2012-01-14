@@ -66,17 +66,12 @@ class TagQuerySet(models.query.QuerySet):
             tag_filter |= models.Q(name__startswith = next_tag[:-1])
         return self.filter(tag_filter)
 
-    def get_related_to_search(
-                            self,
-                            questions = None,
-                            search_state = None,
-                            ignored_tag_names = None
-                        ):
+    def get_related_to_search(self, questions, page_size, ignored_tag_names):
         """must return at least tag names, along with use counts
         handle several cases to optimize the query performance
         """
 
-        if questions.count() > search_state.page_size * 3:
+        if questions.count() > page_size * 3:
             """if we have too many questions or 
             search query is the most common - just return a list
             of top tags"""
