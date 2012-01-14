@@ -475,7 +475,9 @@ Tag.prototype.createDom = function(){
         if (this._delete_icon_title !== null){
             this._delete_icon.setTitle(this._delete_icon_title);
         }
-        this._element.append(this._delete_icon.getElement());
+        var del_icon_elem = this._delete_icon.getElement();
+        del_icon_elem.text('x'); // HACK by Tomasz
+        this._element.append(del_icon_elem);
     }
 };
 

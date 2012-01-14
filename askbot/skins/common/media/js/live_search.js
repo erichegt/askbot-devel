@@ -84,8 +84,8 @@ var liveSearch = function(query_string) {
         for (var i=0; i<tags.length; i++){
             var tag = new Tag();
             tag.setName(tags[i]['name']);
-            tag.setDeletable(true);
-            tag.setLinkable(false);
+            tag.setDeletable(false);
+            tag.setLinkable(true);
             tag.setUrlParams(query_string);
 
             html_list.push(tag.getElement().outerHTML());
@@ -109,8 +109,8 @@ var liveSearch = function(query_string) {
             $.each(tags, function(idx, tag_name){
                 var tag = new Tag();
                 tag.setName(tag_name);
-                tag.setDeletable(true);
                 tag.setLinkable(false);
+                tag.setDeletable(true);
                 tag.setDeleteHandler(
                     function(){
                         remove_search_tag(tag_name, query_string);
