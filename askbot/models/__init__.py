@@ -29,6 +29,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.post import Post, PostRevision
+from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute
@@ -2719,6 +2720,8 @@ __all__ = [
         'EmailFeedSetting',
 
         'User',
+
+        'ReplyAddress',
 
         'get_model'
 ]
