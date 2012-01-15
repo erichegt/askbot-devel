@@ -126,7 +126,7 @@ class ThreadManager(models.Manager):
             )
 
 
-    def run_advanced_search(self, request_user, search_state, page_size):  # TODO: !! review and fix this
+    def run_advanced_search(self, request_user, search_state, page_size):  # TODO: !! review, fix, and write tests for this
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -135,36 +135,24 @@ class ThreadManager(models.Manager):
         """
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
-        search_query = search_state.query
-        tag_selector = search_state.tags
-        author_selector = search_state.author
-        scope_selector = getattr(search_state, 'scope', const.DEFAULT_POST_SCOPE)
-        sort_method = getattr(search_state, 'sort', const.DEFAULT_POST_SORT_METHOD)
-
         qs = self.filter(posts__post_type='question', posts__deleted=False) # TODO: add a possibility to see deleted questions
 
         meta_data = {}
 
-        if search_query:
-            if search_state.stripped_query:
-                qs = self.get_for_query(search_state.stripped_query)
-                #a patch for postgres search sort method
-                if askbot.conf.should_show_sort_by_relevance():
-                    if sort_method == 'relevance-desc':
-                        qs = qs.extra(order_by = ['-relevance',])   # TODO: !! Fix for Postgres
-            if search_state.query_title:
-                qs = qs.filter(title__icontains = search_state.query_title)
-            if search_state.query_tags:
-                qs = qs.filter(tags__name__in = search_state.query_tags)
-            if search_state.query_users:
-                query_users = User.objects.filter(username__in=search_state.query_users)
-                if query_users:
-                    qs = qs.filter(posts__post_type__in=('question', 'answer'), posts__author__in=query_users)
+        if search_state.stripped_query:
+            qs = self.get_for_query(search_state.stripped_query)
+        if search_state.query_title:
+            qs = qs.filter(title__icontains = search_state.query_title)
+        if search_state.query_users:
+            query_users = User.objects.filter(username__in=search_state.query_users)
+            if query_users:
+                qs = qs.filter(posts__post_type='question', posts__author__in=query_users)
 
-        if tag_selector:
-            qs = qs.filter(tags__name__in=tag_selector)
+        tags = search_state.unified_tags()
+        for tag in tags:
+            qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
 
-        if scope_selector == 'unanswered':
+        if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
             if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                 qs = qs.filter(answer_count=0) # TODO: expand for different meanings of this
@@ -175,7 +163,7 @@ class ThreadManager(models.Manager):
             else:
                 raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
 
-        elif scope_selector == 'favorite':
+        elif search_state.scope == 'favorite':
             favorite_filter = models.Q(favorited_by=request_user)
             if 'followit' in settings.INSTALLED_APPS:
                 followed_users = request_user.get_followed_users()
@@ -183,10 +171,10 @@ class ThreadManager(models.Manager):
             qs = qs.filter(favorite_filter)
 
         #user contributed questions & answers
-        if author_selector:
+        if search_state.author:
             try:
                 # TODO: maybe support selection by multiple authors
-                u = User.objects.get(id=int(author_selector))
+                u = User.objects.get(id=int(search_state.author))
             except User.DoesNotExist:
                 meta_data['author_name'] = None
             else:
@@ -225,28 +213,26 @@ class ThreadManager(models.Manager):
                     qs = qs.exclude(tags__in = extra_ignored_tags)
 
         ###
-        qs_thread = qs.distinct()
-        ###
+        # HACK: GO BACK To QUESTIONS, otherwise we cannot sort properly!
+        qs_thread = qs
 
-        qs = Post.objects.filter(post_type='question', thread__in=qs_thread)  # HACH: GO BACK To QUESTIONS, otherwise we cannot sort properly!
+        qs = Post.objects.filter(post_type='question', thread__in=qs_thread)
         qs = qs.select_related('thread__last_activity_by')
 
-        if sort_method != 'relevance-desc':
-            #relevance sort is set in the extra statement
-            #only for postgresql
-            #todo: too bad keys are duplicated see const sort methods
+        if search_state.sort == 'relevance-desc':
+            qs = qs.extra(order_by = ['-relevance',])   # TODO: !! Fix for Postgres
+        else:
             QUESTION_ORDER_BY_MAP = {
-                'age-desc': '-added_at', # TODO: !! Question.added_at
-                'age-asc': 'added_at', # TODO: !! Question.added_at
+                'age-desc': '-added_at',
+                'age-asc': 'added_at',
                 'activity-desc': '-thread__last_activity_at',
                 'activity-asc': 'thread__last_activity_at',
                 'answers-desc': '-thread__answer_count',
                 'answers-asc': 'thread__answer_count',
-                'votes-desc': '-score', # TODO: !! Question.score
-                'votes-asc': 'score', # TODO: !! Question.score
-                #'relevance-desc': None #this is a special case for postges only
+                'votes-desc': '-score',
+                'votes-asc': 'score',
             }
-            orderby = QUESTION_ORDER_BY_MAP[sort_method]
+            orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
             qs = qs.order_by(orderby)
 
         related_tags = Tag.objects.get_related_to_search(questions = qs, page_size = page_size, ignored_tag_names = ignored_tag_names) # TODO: !!
@@ -254,6 +240,8 @@ class ThreadManager(models.Manager):
         if askbot_settings.USE_WILDCARD_TAGS and request_user.is_authenticated():
             meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
             meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
+
+        qs = qs.distinct()
 
         return qs, meta_data, related_tags
 

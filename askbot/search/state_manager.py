@@ -138,6 +138,10 @@ class SearchState(object):
     def full_ask_url(self):
         return urlresolvers.reverse('ask') + self.ask_query_string()
 
+    def unified_tags(self):
+        "Returns tags both from tag selector and extracted from query"
+        return (self.query_tags or []) + (self.tags or [])
+
     #
     # Safe characters in urlquote() according to http://www.ietf.org/rfc/rfc1738.txt:
     #
