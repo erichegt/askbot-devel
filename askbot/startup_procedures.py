@@ -9,6 +9,7 @@ the main function is run_startup_tests
 """
 import sys
 import os
+import re
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
@@ -272,6 +273,33 @@ class SettingsTester(object):
                 '\n\n* '.join(self.messages)
             )
 
+def test_csrf_cookie_domain():
+    """makes sure that csrf cookie domain setting is acceptable"""
+    #todo: maybe use the same steps to clean domain name
+    csrf_cookie_domain = django_settings.CSRF_COOKIE_DOMAIN
+    if csrf_cookie_domain == 'localhost':
+        raise ImproperlyConfigured(
+            PREAMBLE + 
+            '\n\nPlease do not use value "localhost" for the setting '
+            'CSRF_COOKIE_DOMAIN\n'
+            'instead use 127.0.0.1, a real IP '
+            'address or domain name.'
+            '\nThe value must match the network location you type in the '
+            'web browser to reach your site.'
+        )
+    if re.match(r'https?://', csrf_cookie_domain):
+        raise ImproperlyConfigured(
+            PREAMBLE +
+            '\n\nplease remove http(s):// prefix in the CSRF_COOKIE_DOMAIN '
+            'setting'
+        )
+    if ':' in csrf_cookie_domain:
+        raise ImproperlyConfigured(
+            PREAMBLE + 
+            '\n\nPlease do not use port number in the CSRF_COOKIE_DOMAIN '
+            'setting'
+        )
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -285,6 +313,7 @@ def run_startup_tests():
     #test_postgres()
     test_middleware()
     test_celery()
+    test_csrf_cookie_domain()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
