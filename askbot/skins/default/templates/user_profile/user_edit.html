@@ -9,12 +9,24 @@
 <div id="main-body" style="width:100%;padding-top:10px">
     <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
         <div id="left" style="float:left;width:180px">
-            {% if request.user.email %}
-                {{ macros.gravatar(request.user, 128) }}
-            {% else %}
-                <img src="{{"/images/nophoto.png"|media}}">
-            {% endif %}
-            <br><a href="{% url faq %}#gravatar">{% trans %}change picture{% endtrans %}</a>
+            <div class='avatar'>
+                {{ macros.gravatar(view_user, 128) }}
+                {% if request.user == view_user %}
+                    <p><a
+                        {% if support_custom_avatars %}
+                            href="{% url avatar_change %}"
+                        {% else %}
+                            href="{% url faq %}#gravatar"
+                        {% endif %}
+                    >{% trans %}change picture{% endtrans %}</a></p>
+                    {% if support_custom_avatars %}
+                    <p><a
+                        href="{% url avatar_delete %}"
+                        >{% trans %}remove{% endtrans %}</a>
+                    </p>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
         <div style="float:right;width:750px;text-align:left;">
             <h2>{% trans %}Registered user{% endtrans %}</h2>
@@ -30,17 +42,24 @@
                     {{ form.username }}
                     <span class="form-error"></span> {{ form.username.errors }} </td>
                 {% else %}
-                    {{ request.user.username }}
+                    {{ view_user.username }}
                 {% endif %}
                 </td>
                 </tr>
                 <tr>
-                    <td>{{ form.email.label_tag() }}:</td>
-                    <td>{{ form.email }} <span class="form-error"></span> {{ form.email.errors }} </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td class="title-desc">{{ form.email.help_text }}</td>
+                    <td>
+                        {{ form.email.label_tag() }}:
+                    </td>
+                    <td>
+                        {% if settings.EDITABLE_EMAIL %}
+                            {{ form.email }}
+                            <span class="form-error"></span>
+                            {{ form.email.errors }}
+                        {% else %}
+                            {{ view_user.email }}
+                            {% trans %}(cannot be changed){% endtrans %}
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <td>{{ form.realname.label_tag() }}:</td>

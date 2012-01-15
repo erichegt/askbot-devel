@@ -1,7 +1,7 @@
 <!-- user_tabs.html -->
 <div class="tabBar tabBar-profile">
     <div class="tabsC">
-        <a id="stats" {% if tab_name=="stats" %}class="on"{% endif %} 
+        <a id="stats" {% if tab_name=="stats" %}class="on first"{%else%}class="first"{% endif %} 
             title="{% trans %}User profile{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=stats"
         ><span>{% trans %}overview{% endtrans %}</span></a>

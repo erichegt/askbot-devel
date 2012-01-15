@@ -598,6 +598,7 @@ def revisions(request, id, object_name=None):
     }
     return render_into_skin('revisions.html', data, request)
 
+@csrf.csrf_exempt
 @ajax_only
 @anonymous_forbidden
 @get_only
@@ -611,6 +612,7 @@ def get_comment(request):
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.comment}
 
+@csrf.csrf_exempt
 @ajax_only
 @get_only
 def get_question_body(request):

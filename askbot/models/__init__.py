@@ -22,6 +22,7 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.skins import utils as skin_utils
 from askbot.models.question import Question
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
@@ -121,6 +122,11 @@ def user_get_gravatar_url(self, size):
                 'size': size,
             }
 
+def user_get_default_avatar_url(self, size):
+    """returns default avatar url
+    """
+    return skin_utils.get_media_url(askbot_settings.DEFAULT_AVATAR_URL)
+
 def user_get_avatar_url(self, size):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
@@ -129,10 +135,10 @@ def user_get_avatar_url(self, size):
     if 'avatar' in django_settings.INSTALLED_APPS:
         if self.avatar_type == 'n':
             import avatar
-            if avatar.settings.AVATAR_GRAVATAR_BACKUP:
+            if askbot_settings.ENABLE_GRAVATAR: #avatar.settings.AVATAR_GRAVATAR_BACKUP:
                 return self.get_gravatar_url(size)
             else:
-                return avatar.utils.get_default_avatar_url()
+                return self.get_default_avatar_url(size)
         elif self.avatar_type == 'a':
             kwargs = {'user_id': self.id, 'size': size}
             try:
@@ -146,7 +152,10 @@ def user_get_avatar_url(self, size):
         else:
             return self.get_gravatar_url(size)
     else:
-        return self.get_gravatar_url(size)
+        if askbot_settings.ENABLE_GRAVATAR:
+            return self.get_gravatar_url(size)
+        else:
+            return self.get_default_avatar_url(size)
 
 def user_update_avatar_type(self):
     """counts number of custom avatars
@@ -804,9 +813,12 @@ def user_assert_can_remove_flag_offensive(self, post = None):
 
     suspended_error_message = _('suspended users cannot remove flags')
 
-    low_rep_error_message = _('need > %(min_rep)s points to remove flag') % \
-                        {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
+    low_rep_error_message = ungettext(
+        'need > %(min_rep)d point to remove flag',
+        'need > %(min_rep)d points to remove flag',
+        min_rep_setting
+    ) % {'min_rep': min_rep_setting}
 
     _assert_user_can(
         user = self,
@@ -1261,7 +1273,7 @@ def user_restore_post(
 def user_post_question(
                     self,
                     title = None,
-                    body_text = None,
+                    body_text = '',
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
@@ -1272,10 +1284,11 @@ def user_post_question(
 
     self.assert_can_post_question()
 
+    if body_text == '':#a hack to allow bodyless question
+        body_text = ' '
+
     if title is None:
         raise ValueError('Title is required to post question')
-    if  body_text is None:
-        raise ValueError('Text body is required to post question')
     if tags is None:
         raise ValueError('Tags are required to post question')
     if timestamp is None:
@@ -1368,6 +1381,7 @@ def user_post_answer(
                     timestamp = None
                 ):
 
+    #todo: move this to assertion - user_assert_can_post_answer
     if self == question.author and not self.is_administrator():
 
         # check date and rep required to post answer to own question
@@ -1977,17 +1991,24 @@ def downvote(self, post, timestamp=None, cancel=False, force = False):
     )
 
 @auto_now_timestamp
-def flag_post(user, post, timestamp=None, cancel=False, force = False):
-    if cancel:#todo: can't unflag?
+def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
+    if cancel_all:
+        # remove all flags
+        if force == False:
+            user.assert_can_remove_all_flags_offensive(post = post)
+        post_content_type = ContentType.objects.get_for_model(post)
+        all_flags = Activity.objects.filter(
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        content_type = post_content_type, object_id=post.id
+                    )
+        for flag in all_flags:
+            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)            
+
+    elif cancel:#todo: can't unflag?
         if force == False:
             user.assert_can_remove_flag_offensive(post = post)
-        auth.onUnFlaggedItem(post, user, timestamp=timestamp)
-        award_badges_signal.send(None,
-            event = 'flag_post',
-            actor = user,
-            context_object = post,
-            timestamp = timestamp
-        )
+        auth.onUnFlaggedItem(post, user, timestamp=timestamp)        
+
     else:
         if force == False:
             user.assert_can_flag_offensive(post = post)
@@ -2103,6 +2124,7 @@ User.add_to_class(
 )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_avatar_type', user_update_avatar_type)

@@ -65,10 +65,6 @@ class SkinTests(TestCase):
         new_logo = UploadedFile(file = logo_file)
         askbot_settings.update('SITE_LOGO_URL', new_logo)
         logo_url = askbot_settings.SITE_LOGO_URL
-        self.assertTrue(
-                    logo_url.startswith(
-                        '/' + django_settings.ASKBOT_UPLOADED_FILES_URL
-                    )
-                )
+        self.assertTrue(logo_url.startswith(django_settings.MEDIA_URL))
         response = self.client.get(logo_url)
         self.assertTrue(response.status_code == 200)

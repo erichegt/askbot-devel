@@ -12,7 +12,7 @@ import random
 import sys
 import tempfile
 import time
-from django.core.files.storage import FileSystemStorage
+from django.core.files.storage import get_storage_class
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -44,6 +44,7 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
+@csrf.csrf_exempt
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax
     """
@@ -77,10 +78,7 @@ def upload(request):#ajax upload file to a question or answer
                             str(random.randint(0,100000))
                         ) + file_extension
 
-        file_storage = FileSystemStorage(
-                    location = settings.ASKBOT_FILE_UPLOAD_DIR,
-                    base_url = reverse('uploaded_file', kwargs = {'path':''}),
-                )
+        file_storage = get_storage_class()()
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size
@@ -105,11 +103,12 @@ def upload(request):#ajax upload file to a question or answer
         result = ''
         file_url = ''
 
-    #<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>
-    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
-    xml = xml_template % (result, error, file_url)
-
-    return HttpResponse(xml, mimetype="application/xml")
+    data = simplejson.dumps({
+        'result': result,
+        'error': error,
+        'file_url': file_url
+    })
+    return HttpResponse(data, mimetype = 'application/json')
 
 def __import_se_data(dump_file):
     """non-view function that imports the SE data
@@ -288,7 +287,7 @@ def ask(request):#view used to ask a new question
     return render_into_skin('ask.html', data, request)
 
 @login_required
-#@csrf.csrf_protect remove for ajax
+@csrf.csrf_exempt
 def retag_question(request, id):
     """retag question view
     """
@@ -575,6 +574,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
+@csrf.csrf_exempt
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     # only support get post comments by ajax now
@@ -614,6 +614,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     else:
         raise Http404
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.check_spam('comment')
 def edit_comment(request):
@@ -646,6 +647,7 @@ def edit_comment(request):
                 _('Sorry, anonymous users cannot edit comments')
             )
 
+@csrf.csrf_exempt
 def delete_comment(request):
     """ajax handler to delete comment
     """

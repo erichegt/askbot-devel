@@ -5,8 +5,10 @@
     {{ macros.moderation_items_link(request.user, moderation_items) }}
     ({{ macros.user_long_score_and_badge_summary(user) }})
     </span>
-    <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">{% trans %}logout{% endtrans %}</a>
-{% else %}
+    {% if settings.USE_ASKBOT_LOGIN_SYSTEM %}
+         <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">{% trans %}logout{% endtrans %}</a>
+    {% endif %}
+{% elif settings.USE_ASKBOT_LOGIN_SYSTEM %}
     <a href="{{ settings.LOGIN_URL }}?next={{request.path|clean_login_url}}">{% trans %}login{% endtrans %}</a>
 {% endif %}
 

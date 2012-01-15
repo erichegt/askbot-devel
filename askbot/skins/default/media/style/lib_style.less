@@ -26,7 +26,7 @@
 /* CSS3 Elements */
 
 .box-shadow (@hor: 0px, @vert: 0px, @blur: 5px, @shadow: #929292){
-    -webkit-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments ;
     -moz-box-shadow: @arguments;
     box-shadow: @arguments;
 }
@@ -53,3 +53,13 @@
     -webkit-border-top-left-radius:@radio;
     -webkit-border-top-right-radius:@radio;
 }
+
+.rounded-corners-right(@radio:5px){
+    border-top-right-radius:@radio;
+    border-bottom-right-radius:@radio;
+    -moz-border-radius-topright:@radio;
+    -moz-border-radius-bottomright:@radio;
+    -webkit-border-bottom-right-radius:@radio;
+    -webkit-border-top-right-radius:@radio;
+}
+

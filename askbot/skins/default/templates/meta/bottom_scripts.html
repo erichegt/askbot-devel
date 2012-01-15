@@ -25,8 +25,8 @@
     askbot['urls']['mark_read_message'] = '{% url "read_message" %}';
     askbot['urls']['get_tags_by_wildcard'] = '{% url "get_tags_by_wildcard" %}';
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
-    askbot['urls']['follow_user'] = scriptUrl + 'followit/follow/user/{{'{{'}}userId{{'}}'}}/';
-    askbot['urls']['unfollow_user'] = scriptUrl + 'followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
+    askbot['urls']['follow_user'] = '/followit/follow/user/{{'{{'}}userId{{'}}'}}/';
+    askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
 </script>
@@ -77,7 +77,7 @@
 </script>
 {% if settings.USE_CUSTOM_JS %}
 <script 
-    src="{% url "custom_js"%}?{{ settings.MEDIA_RESOURCE_REVISION }}"
+    src="{% url "custom_js"%}?v={{ settings.MEDIA_RESOURCE_REVISION }}"
     type="text/javascript"
 ></script>
 {% endif %}

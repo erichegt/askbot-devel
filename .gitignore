@@ -4,6 +4,7 @@
 db
 rebuild-locales.pl
 /src
+/static
 cache/??
 run
 *.wsgi

@@ -3,10 +3,11 @@ import os.path
 import logging
 import sys
 import askbot
+import site
 
 #this line is added so that we can import pre-packaged askbot dependencies
 ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
-sys.path.append(os.path.join(ASKBOT_ROOT, 'deps'))
+site.addsitedir(os.path.join(ASKBOT_ROOT, 'deps'))
 
 DEBUG = False#set to True to enable debugging
 TEMPLATE_DEBUG = False#keep false when debugging jinja2 templates
@@ -69,9 +70,12 @@ LANGUAGE_CODE = 'en'
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-ASKBOT_FILE_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+MEDIA_URL = '/upfiles/'#url to uploaded media
+STATIC_URL = '/m/'#url to project static files
 
 PROJECT_ROOT = os.path.dirname(__file__)
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')#path to files collected by collectstatic
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -132,7 +136,7 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
 #TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
-#ASKBOT_EXTRA_SKIN_DIR = #path to your private skin collection
+#ASKBOT_EXTRA_SKINS_DIR = #path to your private skin collection
 #take a look here http://askbot.org/en/question/207/
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -142,7 +146,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'askbot.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
     'django.core.context_processors.csrf', #necessary for csrf protection
-    "django.core.context_processors.static",
+    'django.core.context_processors.static',
 )
 
 
@@ -151,7 +155,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
-    "django.contrib.staticfiles",
+    'django.contrib.staticfiles',
 
     #all of these are needed for the askbot
     'django.contrib.admin',
@@ -170,9 +174,6 @@ INSTALLED_APPS = (
     'djkombu',
     'followit',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
-    #requires setting of MEDIA_ROOT and MEDIA_URL
-    #values of which can be the same as ASKBOT_FILE_UPLOAD_DIR and ASKBOT_UPLOADED_FILES_URL,
-    #respectively
 )
 
 
@@ -212,7 +213,6 @@ LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
-ASKBOT_UPLOADED_FILES_URL = '%s%s' % (ASKBOT_URL, 'upfiles/')
 ALLOW_UNICODE_SLUGS = False
 ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
@@ -226,20 +226,4 @@ djcelery.setup_loader()
 CSRF_COOKIE_NAME = 'askbot_csrf'
 CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
 
-# === Settings for django.contrib.staticfiles
-STATIC_ROOT = os.path.join(PROJECT_ROOT, "site_media", "static")
-
-STATIC_URL = "/site_media/static/"
-
-# Additional directories which hold static files
-STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "static"),
-    os.path.join(ASKBOT_ROOT, 'skins'),
-]
-
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-#    "django.contrib.staticfiles.finders.LegacyAppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
-]
+STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)

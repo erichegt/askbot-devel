@@ -48,6 +48,7 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
+from urlparse import urlparse
 
 from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -554,8 +555,6 @@ def show_signin_view(
         #annotate objects with extra data
         providers = util.get_enabled_login_providers()
         for login_method in existing_login_methods:
-            if login_method.provider_name == 'facebook':
-                continue#it is disabled
             try:
                 provider_data = providers[login_method.provider_name]
                 if provider_data['type'] == 'password':
@@ -1096,8 +1095,10 @@ def _send_email_key(user):
     to user's email address
     """
     subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
+
+    url = urlparse(askbot_settings.APP_URL)
     data = {
-        'validation_link': askbot_settings.APP_URL + \
+        'validation_link': url.scheme + '://' + url.netloc + \
                             reverse(
                                     'user_account_recover',
                                     kwargs={'key':user.email_key}

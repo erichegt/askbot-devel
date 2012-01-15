@@ -78,6 +78,7 @@ def process_vote(user = None, vote_direction = None, post = None):
 
     return response_data
 
+@csrf.csrf_exempt
 def manage_inbox(request):
     """delete, mark as new or seen user's
     response memo objects, excluding flags
@@ -136,6 +137,7 @@ def manage_inbox(request):
         return HttpResponse(data, mimetype="application/json")
 
 
+@csrf.csrf_exempt
 def vote(request, id):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
@@ -148,7 +150,11 @@ def vote(request, id):
         answerUpVote: 5,
         answerDownVote:6,
         offensiveQuestion : 7,
+        remove offensiveQuestion flag : 7.5,
+        remove all offensiveQuestion flag : 7.6,
         offensiveAnswer:8,
+        remove offensiveAnswer flag : 8.5,
+        remove all offensiveAnswer flag : 8.6,
         removeQuestion: 9,
         removeAnswer:10
         questionSubscribeUpdates:11
@@ -257,6 +263,19 @@ def vote(request, id):
 
             response_data['count'] = post.offensive_flag_count
             response_data['success'] = 1
+        
+        elif vote_type in ['7.6', '8.6']:
+            #flag question or answer
+            if vote_type == '7.6':
+                post = get_object_or_404(models.Question, id=id)
+            if vote_type == '8.6':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Answer, id=id)
+
+            request.user.flag_post(post, cancel_all = True)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
 
         elif vote_type in ['9', '10']:
             #delete question or answer
@@ -329,6 +348,7 @@ def vote(request, id):
     return HttpResponse(data, mimetype="application/json")
 
 #internally grouped views - used by the tagging system
+@csrf.csrf_exempt
 @decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
@@ -438,7 +458,7 @@ def api_get_questions(request):
         questions = models.Question.objects.get_by_text_query(query)
         if should_show_sort_by_relevance():
             questions = questions.extra(order_by = ['-relevance'])
-        questions = questions.distinct()
+        questions = questions.filter(deleted = False).distinct()
         page_size = form.cleaned_data.get('page_size', 30)
         questions = questions[:page_size]
 
@@ -456,6 +476,7 @@ def api_get_questions(request):
         raise ValidationError('InvalidInput')
 
 
+@csrf.csrf_exempt
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
     """saves data in the ``User.display_tag_filter_strategy``
@@ -531,6 +552,7 @@ def reopen(request, id):#re-open question
         return HttpResponseRedirect(question.get_absolute_url())
 
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 def swap_question_with_answer(request):
     """receives two json parameters - answer id
@@ -548,6 +570,7 @@ def swap_question_with_answer(request):
             }
     raise Http404
 
+@csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
@@ -568,6 +591,7 @@ def upvote_comment(request):
     return {'score': comment.score}
 
 #askbot-user communication system
+@csrf.csrf_exempt
 def read_message(request):#marks message a read
     if request.method == "POST":
         if request.POST['formdata'] == 'required':

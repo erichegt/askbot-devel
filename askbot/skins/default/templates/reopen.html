@@ -5,7 +5,7 @@
 <h1>{% trans %}Reopen question{% endtrans %}</h1>
 <p>{% trans %}Title{% endtrans %}: 
     <a href="{{ question.get_absolute_url() }}">
-        <span class="big">{{ question.get_question_title() }}</span>
+        <span class="big">{{ question.get_question_title()|escape }}</span>
     </a>
 </p>
 <p>{% trans %}This question has been closed by 

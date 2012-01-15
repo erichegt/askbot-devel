@@ -9,23 +9,34 @@
 {% if request.user|can_edit_post(answer) %}{{ pipe() }}
 <span class="action-link"><a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
 {% endif %}
+
+{% if request.user|can_remove_all_flags_offensive(answer)%}{{ pipe() }}
+<span id="answer-offensive-remove-all-flag-{{ answer.id }}" class="offensive-flag"
+    title="{% trans %}remove all flags{% endtrans %}">
+    <a class="question-flag">{% trans %}remove all flags{% endtrans %}</a>
+</span>
+{%endif%}
+
 {% if request.user|can_flag_offensive(answer) %}{{ pipe() }}
 <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag"
     title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-    <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
+    <a class="question-flag">{% trans %}flag offensive{% endtrans %}
     {% if request.user|can_see_offensive_flags(answer) %}
         <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
     {% endif %}
+    </a>
 </span>
+
 {% elif request.user|can_remove_flag_offensive(answer)%}{{ pipe() }}
-<span id="answer-offensive-flag-remove-{{ answer.id }}" class="offensive-flag"
+<span id="answer-offensive-remove-flag-{{ answer.id }}" class="offensive-flag"
     title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-    <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
+    <a class="question-flag">{% trans %}remove flag{% endtrans %}
     {% if request.user|can_see_offensive_flags(answer) %}
         <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
-    {% endif %}
+    {% endif %}</a>
 </span>
 {% endif %}
+
 {% if request.user|can_delete_post(answer) %}{{ pipe() }}
     {% spaceless %}
     <span class="action-link">

@@ -98,18 +98,23 @@ def get_media_url(url, ignore_missing = False):
     #before = datetime.datetime.now()
     url = urllib.unquote(unicode(url))
     while url[0] == '/': url = url[1:]
+
+    #a hack allowing urls media stored on external locations to
+    #just pass through unchanged
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
     #todo: handles case of multiple skin directories
 
     #if file is in upfiles directory, then give that
     url_copy = url
-    if url_copy.startswith(django_settings.ASKBOT_UPLOADED_FILES_URL):
+    if url_copy.startswith(django_settings.MEDIA_URL[1:]):
         file_path = url_copy.replace(
-                                django_settings.ASKBOT_UPLOADED_FILES_URL,
+                                django_settings.MEDIA_URL[1:],
                                 '',
                                 1
                             )
         file_path = os.path.join(
-                            django_settings.ASKBOT_FILE_UPLOAD_DIR,
+                            django_settings.MEDIA_ROOT,
                             file_path
                         )
         if os.path.isfile(file_path):

@@ -60,6 +60,7 @@ class ConfigSettings(object):
     def update(self, key, value):
         setting = config_get(self.__group_map[key], key) 
         setting.update(value)
+        #self.prime_cache()
 
     def register(self, value):
         """registers the setting
@@ -77,9 +78,7 @@ class ConfigSettings(object):
             value.ordering = ordering
         self.__ordering_index[group_key] = ordering
 
-        if key in self.__instance:
-            raise Exception('setting %s is already registered' % key)
-        else:
+        if key not in self.__instance:
             self.__instance[key] = config_register(value)
             self.__group_map[key] = group_key
 
