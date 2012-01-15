@@ -52,6 +52,10 @@ var liveSearch = function(query_string) {
 
     var send_query = function(query_text){
         running = true;
+        if(!prev_text && query_text && showSortByRelevance) {
+            // If there was no query but there is some query now - and we support relevance search - then switch to it */
+            query_string = QSutils.patch_query_string(query_string, 'sort:relevance-desc');
+        }
         prev_text = update_query_string(query_text);
         query_string = QSutils.patch_query_string(query_string, 'page:1'); /* if something has changed, then reset the page no. */
         var url = search_url + query_string;
@@ -124,7 +128,7 @@ var liveSearch = function(query_string) {
 
     var create_relevance_tab = function(query_string){
         relevance_tab = $('<a></a>');
-        href = search_url + patch_query_string(query_string, 'sort:relevance-desc');
+        href = search_url + QSutils.patch_query_string(query_string, 'sort:relevance-desc');
         relevance_tab.attr('href', href);
         relevance_tab.attr('id', 'by_relevance');
         relevance_tab.html('<span>' + sortButtonData['relevance']['label'] + '</span>');
@@ -191,7 +195,7 @@ var liveSearch = function(query_string) {
             }
             render_related_tags(data['related_tags'], data['query_string']);
             render_relevance_sort_tab(data['query_string']);
-            set_active_sort_tab(sortMethod, data['query_string']);
+            set_active_sort_tab(data['query_data']['sort_order'], data['query_string']);
             if(data['feed_url']){
                 // Change RSS URL
                 $("#ContentLeft a.rss:first").attr("href", data['feed_url']);

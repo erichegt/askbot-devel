@@ -220,7 +220,11 @@ class ThreadManager(models.Manager):
         qs = qs.select_related('thread__last_activity_by')
 
         if search_state.sort == 'relevance-desc':
-            qs = qs.extra(order_by = ['-relevance',])   # TODO: !! Fix for Postgres
+            # TODO: askbot_thread.relevance is not available here, so we have to work around it. Ideas:
+            # * convert the whole questions() pipeline to Thread-s
+            # * ...
+            #qs = qs.extra(select={'relevance': 'askbot_thread.relevance'}, order_by=['-relevance',])
+            pass
         else:
             QUESTION_ORDER_BY_MAP = {
                 'age-desc': '-added_at',
