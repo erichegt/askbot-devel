@@ -376,7 +376,7 @@ def test_staticfiles():
             '    python manage.py collectstatic\n'
         )
     print_errors(errors)
-    if django_settings.DEBUG and django_settings.STATICFILES_STORAGE != \
+    if django_settings.DEBUG and django_settings.STATICFILES_STORAGE == \
         'django.contrib.staticfiles.storage.StaticFilesStorage':
         if not os.path.isdir(django_settings.STATIC_ROOT):
             askbot_warning(

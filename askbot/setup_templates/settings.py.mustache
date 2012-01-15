@@ -6,10 +6,10 @@ import askbot
 import site
 
 #this line is added so that we can import pre-packaged askbot dependencies
-ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__)
+ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
 site.addsitedir(os.path.join(ASKBOT_ROOT, 'deps'))
 
-DEBUG = False#set to True to enable debugging
+DEBUG = True#set to True to enable debugging
 TEMPLATE_DEBUG = False#keep false when debugging jinja2 templates
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -80,7 +80,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = STATIC_ROOT + 'admin/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Make up some unique string, and don't share it with anybody.
 SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s ' 
