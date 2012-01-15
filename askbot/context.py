@@ -2,6 +2,7 @@
 from the django settings, all parameters from the askbot livesettings
 and the application available for the templates
 """
+import sys
 from django.conf import settings
 import askbot
 from askbot import api
@@ -18,6 +19,7 @@ def application_settings(request):
     my_settings['STATIC_URL'] = settings.STATIC_URL
     my_settings['ASKBOT_CSS_DEVEL'] = getattr(settings, 'ASKBOT_CSS_DEVEL', False)
     my_settings['DEBUG'] = settings.DEBUG
+    my_settings['USING_RUNSERVER'] = 'runserver' in sys.argv
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
     my_settings['LOGIN_URL'] = url_utils.get_login_url()
     my_settings['LOGOUT_URL'] = url_utils.get_logout_url()

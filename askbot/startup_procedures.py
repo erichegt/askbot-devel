@@ -309,16 +309,25 @@ class SettingsTester(object):
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
-    if 'django.contrib.staticfiles' not in django_settings.INSTALLED_APPS:
+    import django
+    django_version = django.VERSION
+    if django_version[0] == 1 and django_version[1] < 3:
+        staticfiles_app_name = 'staticfiles'
+        try_import('staticfiles', 'django-staticfiles')
+        import staticfiles
+        if staticfiles.__version__[0] != 1:
+            raise AskbotConfigError(
+                'Please use the newest available version of '
+                'django-staticfiles app, type\n'
+                'pip install --upgrade django-staticfiles'
+            )
+    else:
+        staticfiles_app_name = 'django.contrib.staticfiles'
+
+    if staticfiles_app_name not in django_settings.INSTALLED_APPS:
         errors.append(
             'Add to the INSTALLED_APPS section of your settings.py:\n'
-            "    'django.contrib.staticfiles',"
-        )
-    if 'django.core.context_processors.static' not in \
-        django_settings.TEMPLATE_CONTEXT_PROCESSORS:
-        errors.append(
-            'Add to the TEMPLATE_CONTEXT_PROCESSORS section of your settings.py:\n'
-            "    'django.core.context_processors.static',"
+            "    '%s'," % staticfiles_app_name
         )
     static_url = django_settings.STATIC_URL
     if static_url is None or str(static_url).strip() == '':
@@ -333,6 +342,12 @@ def test_staticfiles():
         errors.append(
             'Path in the STATIC_URL must start and end with the /.'
         )
+    if django_settings.ADMIN_MEDIA_PREFIX != static_url + 'admin/':
+        errors.append(
+            'Set ADMIN_MEDIA_PREFIX as: \n'
+            "    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'"
+        )
+
     askbot_root = os.path.dirname(askbot.__file__)
     skin_dir = os.path.abspath(os.path.join(askbot_root, 'skins'))
     if skin_dir not in map(os.path.abspath, django_settings.STATICFILES_DIRS):
@@ -355,7 +370,20 @@ def test_staticfiles():
                 'ASKBOT_EXTRA_SKINS_DIR just above STATICFILES_DIRS.'
             )
 
+    if errors:
+        errors.append(
+            'Run command (after fixing the above errors)\n'
+            '    python manage.py collectstatic\n'
+        )
     print_errors(errors)
+    if django_settings.DEBUG and django_settings.STATICFILES_STORAGE != \
+        'django.contrib.staticfiles.storage.StaticFilesStorage':
+        if not os.path.isdir(django_settings.STATIC_ROOT):
+            askbot_warning(
+                'Please run command\n\n'
+                '    python manage.py collectstatic'
+
+            )
 
 def run_startup_tests():
     """function that runs
