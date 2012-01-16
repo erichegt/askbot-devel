@@ -214,9 +214,9 @@ class ThreadManager(models.Manager):
 
         ###
         # HACK: GO BACK To QUESTIONS, otherwise we cannot sort properly!
+        thread_ids = qs.values_list('id', flat = True)
         qs_thread = qs
-
-        qs = Post.objects.filter(post_type='question', thread__in=qs_thread)
+        qs = Post.objects.filter(post_type='question', thread__id__in=thread_ids)
         qs = qs.select_related('thread__last_activity_by')
 
         if search_state.sort == 'relevance-desc':

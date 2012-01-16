@@ -446,16 +446,17 @@ def api_get_questions(request):
     query = request.GET.get('query', '').strip()
     if not query:
         return HttpResponseBadRequest('Invalid query')
-    questions = models.Post.objects.get_questions().get_by_text_query(query)
+    threads = models.Thread.objects.get_for_query(query)
     if should_show_sort_by_relevance():
-        questions = questions.extra(order_by = ['-relevance'])
-    questions = questions.filter(deleted=False).select_related('thread').distinct()[:30]
-    question_list = [{
-        'url': question.get_absolute_url(),
-        'title': question.thread.title,
-        'answer_count': question.thread.answer_count
-    } for question in questions]
-    json_data = simplejson.dumps(question_list)
+        threads = threads.extra(order_by = ['-relevance'])
+    #todo: filter out deleted threads, for now there is no way
+    threads = threads.distinct()[:30]
+    thread_list = [{
+        'url': thread.get_absolute_url(),
+        'title': thread.title,
+        'answer_count': thread.answer_count
+    } for thread in threads]
+    json_data = simplejson.dumps(thread_list)
     return HttpResponse(json_data, mimetype = "application/json")
 
 
