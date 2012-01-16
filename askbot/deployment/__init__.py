@@ -129,9 +129,9 @@ def deploy_askbot(directory, options):
 
     if django.VERSION[0] == 1 and django.VERSION[1] < 3:
         #force people install the django-staticfiles app
-        context['staticfiles_app'] = 'staticfiles'
+        context['staticfiles_app'] = ''
     else:
-        context['staticfiles_app'] = 'django.contrib.staticfiles'
+        context['staticfiles_app'] = "'django.contrib.staticfiles',"
 
     path_utils.deploy_into(
         directory,

@@ -321,6 +321,12 @@ def test_staticfiles():
                 'django-staticfiles app, type\n'
                 'pip install --upgrade django-staticfiles'
             )
+        if not hasattr(django_settings, 'STATICFILES_STORAGE'):
+            raise AskbotConfigError(
+                'Configure STATICFILES_STORAGE setting as desired, '
+                'a reasonable default is\n'
+                "STATICFILES_STORAGE = 'staticfiles.storage.StaticFilesStorage'"
+            )
     else:
         staticfiles_app_name = 'django.contrib.staticfiles'
 
