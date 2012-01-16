@@ -314,6 +314,7 @@ def test_staticfiles():
     django_version = django.VERSION
     if django_version[0] == 1 and django_version[1] < 3:
         staticfiles_app_name = 'staticfiles'
+        wrong_staticfiles_app_name = 'django.contrib.staticfiles'
         try_import('staticfiles', 'django-staticfiles')
         import staticfiles
         if staticfiles.__version__[0] != 1:
@@ -330,11 +331,17 @@ def test_staticfiles():
             )
     else:
         staticfiles_app_name = 'django.contrib.staticfiles'
+        wrong_staticfiles_app_name = 'staticfiles'
 
     if staticfiles_app_name not in django_settings.INSTALLED_APPS:
         errors.append(
             'Add to the INSTALLED_APPS section of your settings.py:\n'
             "    '%s'," % staticfiles_app_name
+        )
+    if wrong_staticfiles_app_name in django_settings.INSTALLED_APPS:
+        errors.append(
+            'Remove from the INSTALLED_APPS section of your settings.py:\n'
+            "    '%s'," % wrong_staticfiles_app_name
         )
     static_url = django_settings.STATIC_URL
     if static_url is None or str(static_url).strip() == '':
