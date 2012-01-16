@@ -108,7 +108,7 @@ class ThreadManager(models.Manager):
             )
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
             # TODO: !! Fix Postgres search
-            rank_clause = "ts_rank(question.text_search_vector, plainto_tsquery(%s))";
+            rank_clause = "ts_rank(text_search_vector, plainto_tsquery(%s))";
             search_query = '&'.join(search_query.split())
             extra_params = (search_query,)
             extra_kwargs = {
