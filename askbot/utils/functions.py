@@ -11,6 +11,14 @@ def get_from_dict_or_object(source, key):
         return getattr(source, key)
 
 
+def enumerate_string_list(strings):
+    """for a list or a tuple ('one', 'two',) return
+    a list formatted as ['1) one', '2) two',]
+    """
+    numbered_strings = enumerate(strings, start = 1)
+    return [ '%d) %s' % item for item in numbered_strings ]
+
+
 def is_iterable(thing):
     if hasattr(thing, '__iter__'):
         return True

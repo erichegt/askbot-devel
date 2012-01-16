@@ -136,14 +136,3 @@ def badge(request, id):
         'page_class': 'meta',
     }
     return render_into_skin('badge.html', data, request)
-
-def media(request, skin, resource):
-    """view that serves static media from any skin
-    uses django static serve view, where document root is
-    adjusted according to the current skin selection
-
-    in production this views should be by-passed via server configuration
-    for the better efficiency of serving static files
-    """
-    dir = skins.utils.get_path_to_skin(skin)
-    return static.serve(request, '/media/' + resource, document_root = dir)

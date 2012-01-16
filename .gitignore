@@ -4,6 +4,7 @@
 db
 rebuild-locales.pl
 /src
+/static
 cache/??
 run
 *.wsgi
@@ -14,6 +15,7 @@ settings.py
 *.iml
 lint
 env
+/static
 django
 django/*
 nbproject

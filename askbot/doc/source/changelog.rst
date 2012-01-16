@@ -1,6 +1,12 @@
 Changes in Askbot
 =================
 
+Development version (not released yet)
+--------------------------------------
+* Made email recovery link work when askbot is deployed on subdirectory (Evgeny)
+* Added tests for the CSRF_COOKIE_DOMAIN setting in the startup_procedures (Evgeny)
+* Askbot now respects django's staticfiles app (Radim Řehůřek, Evgeny)
+
 0.7.39 (Jan 11, 2012)
 ---------------------
 * restored facebook login after FB changed the procedure (Evgeny)

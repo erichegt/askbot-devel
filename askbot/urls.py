@@ -36,11 +36,6 @@ urlpatterns = patterns('',
         {'sitemaps': sitemaps}, 
         name='sitemap'
     ),
-    url(
-        r'^m/(?P<skin>[^/]+)/media/(?P<resource>.*)$', 
-        views.meta.media,
-        name='askbot_media',
-    ),
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
