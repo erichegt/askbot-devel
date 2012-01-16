@@ -453,33 +453,6 @@ class Command(NoArgsCommand):
                 #                'the askbot and see what\'s new!<br>'
                 #              )
 
-                text += _(
-                            'Please visit the askbot and see what\'s new! '
-                            'Could you spread the word about it - '
-                            'can somebody you know help answering those questions or '
-                            'benefit from posting one?'
-                        )
-
-                feeds = EmailFeedSetting.objects.filter(subscriber = user)
-                feed_freq = [feed.frequency for feed in feeds]
-                text += '<p></p>'
-                if 'd' in feed_freq:
-                    text += _('Your most frequent subscription setting is \'daily\' '
-                               'on selected questions. If you are receiving more than one '
-                               'email per day'
-                               'please tell about this issue to the askbot administrator.'
-                               )
-                elif 'w' in feed_freq:
-                    text += _('Your most frequent subscription setting is \'weekly\' '
-                               'if you are receiving this email more than once a week '
-                               'please report this issue to the askbot administrator.'
-                               )
-                text += ' '
-                text += _(
-                            'There is a chance that you may be receiving links seen '
-                            'before - due to a technicality that will eventually go away. '
-                        )
-
                 link = url_prefix + reverse(
                                         'user_subscriptions', 
                                         kwargs = {

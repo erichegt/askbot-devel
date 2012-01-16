@@ -20,11 +20,11 @@
                         </a>
                         {% if act.content_object.post_type == 'question' %}
                             {% set question=act.content_object %}
-                            (<a title="{{question.summary|collapse}}"
+                            (<a title="{{question.summary|collapse|escape}}"
                                 href="{% url question question.id %}{{question.thread.title|slugify}}">{% trans %}source{% endtrans %}</a>)
                         {% elif act.content_object.post_type == 'answer' %}
                             {% set answer=act.content_object %}
-                            (<a title="{{answer.text|collapse}}"
+                            (<a title="{{answer.text|collapse|escape}}"
                                 href="{% url question answer.thread._question_post().id %}{{answer.thread.title|slugify}}#{{answer.id}}">{% trans %}source{% endtrans %}</a>)
                         {% endif %}
                     {% else %}

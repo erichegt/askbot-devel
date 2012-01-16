@@ -64,7 +64,7 @@
         <div class="questions-related">
             {% for thread_dict in similar_threads.data() %}
             <p>
-                <a href="{{ thread_dict.url }}">{{ thread_dict.title }}</a>
+                <a href="{{ thread_dict.url }}">{{ thread_dict.title|escape }}</a>
             </p>
             {% endfor %}
         </div>

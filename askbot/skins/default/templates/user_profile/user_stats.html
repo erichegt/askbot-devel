@@ -18,7 +18,7 @@
     <div class="user-stats-table">
         {% for top_answer in top_answers %}
         <div class="answer-summary">
-            <a title="{{ top_answer.summary|collapse }}"
+            <a title="{{ top_answer.summary|collapse|escape }}"
                 href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{ top_answer.id }}">
                 <span class="answer-votes {% if top_answer.accepted() %}answered-accepted{% endif %}"
                       title="{% trans answer_score=top_answer.score %}the answer has been voted for {{ answer_score }} times{% endtrans %} {% if top_answer.accepted() %}{% trans %}this answer has been selected as correct{% endtrans %}{%endif%}">
@@ -27,7 +27,7 @@
             </a>
             <div class="answer-link">
                 {% spaceless %}
-                <a href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{top_answer.id}}">{{ top_answer.thread.title }}</a>
+                <a href="{% url question top_answer.thread._question_post().id %}{{ top_answer.thread.title|slugify }}#{{top_answer.id}}">{{ top_answer.thread.title|escape }}</a>
                 {% endspaceless %}
                 {% if top_answer.comment_count > 0 %}
                 <span>
@@ -122,6 +122,7 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
+<<<<<<< HEAD
                         {% if loop.index is divisibleby 3 %}
                             </td></tr>
                             <tr><td style="line-height:35px">
@@ -131,6 +132,51 @@
             </tr>
         </table>
     </div>
+=======
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <a name="badges"></a>
+        {% spaceless %}
+        <h2>{% trans counter=total_awards %}<span class="count">{{counter}}</span> Badge{% pluralize %}<span class="count">{{counter}}</span> Badges{% endtrans %}</h2>
+        {% endspaceless %}
+        <div class="user-stats-table badges">
+            <table>
+                <tr>
+                    <td style="line-height:35px">
+                        {% for badge in badges %}{# todo: translate badge name properly #}
+                            <a 
+                                href="{{badge.get_absolute_url()}}"
+                                title="{% trans description=badge.description %}{{description}}{% endtrans %}"
+                                class="medal"
+                            ><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}
+                            </a>&nbsp;
+                            <span class="tag-number">&#215;
+                                <span class="badge-context-toggle">{{ badge.award_badge.count()|intcomma }}</span>
+                            </span>
+                            <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
+                                {% for award in badge.award_badge.filter(user = view_user) %}
+                                    {% if award.content_type in (question_type, answer_type) %}
+                                    <li>
+                                        <a 
+                                            title="{{ award.content_object.get_snippet()|collapse }}"
+                                            href="{{ award.content_object.get_absolute_url() }}"
+                                        >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title|escape }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% if loop.index is divisibleby 3 %}
+                                </td></tr>
+                                <tr><td style="line-height:35px">
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+>>>>>>> master
 {% endblock %}
 {% block endjs %}
     {{ super() }}

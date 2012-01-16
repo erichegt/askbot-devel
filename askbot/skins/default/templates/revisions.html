@@ -30,7 +30,7 @@
                 <td width="200px" style="vertical-align:middle">
                     {% if revision.summary %}
                         <div class="summary">
-                            <span>{{ revision.summary }}</span>
+                            <span>{{ revision.summary|escape }}</span>
                         </div>
                     {% endif %}
                     {% if request.user|can_edit_post(post) %}

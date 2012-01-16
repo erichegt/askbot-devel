@@ -12,7 +12,7 @@
         <ul>
             {% for thread in threads %}
                 <li><a href="{{settings.APP_URL}}{{ thread.get_absolute_url() }}">
-                  {{ thread.title }}</a></li>
+                  {{ thread.title|escape }}</a></li>
             {% endfor %}
         </ul>
     </div> 

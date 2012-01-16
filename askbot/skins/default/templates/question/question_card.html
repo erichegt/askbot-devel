@@ -9,8 +9,7 @@
 </div>
 <div class="question-content">
 
-    <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title(question) }}</a></h1>
-    {# ==== START: question/question_tags.html" #}
+    <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title(question)|escape }}</a></h1>
     {% include "question/question_tags.html" %}
     {# ==== END: question/question_tags.html" #}
 
