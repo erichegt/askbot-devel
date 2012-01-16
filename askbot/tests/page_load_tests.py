@@ -46,15 +46,6 @@ class PageLoadTestCase(AskbotTestCase):
         from django.core import management
         management.call_command('flush', verbosity=0, interactive=False)
 
-#    if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
-#        fixtures = [ os.path.join(os.path.dirname(__file__), 'test_data.json'),]
-#    def setUp(self):
-#        if getattr(settings, 'ASKBOT_FAST_TESTS', False) == True:
-#            return
-#        else:
-#            from django.core import management
-#            management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
-
     def try_url(
             self,
             url_name, status_code=200, template=None,
