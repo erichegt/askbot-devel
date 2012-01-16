@@ -342,7 +342,7 @@ def test_staticfiles():
             'Remove from the INSTALLED_APPS section of your settings.py:\n'
             "    '%s'," % wrong_staticfiles_app_name
         )
-    static_url = django_settings.STATIC_URL
+    static_url = django_settings.STATIC_URL or ''
     if static_url is None or str(static_url).strip() == '':
         errors.append(
             'Add STATIC_URL setting to your settings.py file. '
