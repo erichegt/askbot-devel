@@ -281,6 +281,18 @@ settings.register(
     )
 )
 
+settings.register(
+     livesettings.StringValue(
+         EMAIL,
+        'REPLY_BY_EMAIL_HOSTNAME',
+        default = "",
+        description=_('Reply by email hostname'),
+        #TODO give a better explanation depending on lamson startup procedure
+        
+    )
+)
+
+
 
 settings.register(
     livesettings.IntegerValue(

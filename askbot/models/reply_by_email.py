@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 import string
 
@@ -6,6 +7,7 @@ from django.contrib.auth.models import User
 
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
+from askbot.conf import settings as askbot_settings
 
 class ReplyAddressManager(BaseQuerySetManager):
     
@@ -29,6 +31,22 @@ class ReplyAddress(models.Model):
 
     objects = ReplyAddressManager()
 
+
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_replyaddress'
+
+    def create_reply(self, content):
+        result = None
+        if self.post.post_type == 'answer' or self.post.post_type == 'comment':
+            result = self.user.post_comment(self.post, content)
+        elif self.post.post_type == 'question':
+            wordcount = len(content.rsplit())
+            if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
+                result = self.user.post_answer(self.post, content)
+            else:
+                result = self.user.post_comment(self.post, content)
+        self.used_at = datetime.now()
+        self.save()
+        return result
+
