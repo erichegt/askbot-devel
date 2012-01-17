@@ -50,7 +50,8 @@ def print_errors(error_messages, header = None, footer = None):
     * ``header`` - text to show above messages
     * ``footer`` - text to show below messages
     """
-    if len(error_messages) == 0: return
+    if len(error_messages) == 0:
+        return
     if len(error_messages) > 1:
         error_messages = enumerate_string_list(error_messages)
 
@@ -58,7 +59,8 @@ def print_errors(error_messages, header = None, footer = None):
     if header: message += header + '\n'
     message += 'Please attend to the following:\n\n'
     message += '\n\n'.join(error_messages)
-    if footer: message += '\n\n' + footer
+    if footer:
+        message += '\n\n' + footer
     raise AskbotConfigError(message)
 
 def format_as_text_tuple_entries(items):
@@ -71,7 +73,7 @@ def format_as_text_tuple_entries(items):
 # *validate emails in settings.py
 def test_askbot_url():
     """Tests the ASKBOT_URL setting for the
-    well-formedness and raises the ImproperlyConfigured
+    well-formedness and raises the :class:`AskbotConfigError`
     exception, if the setting is not good.
     """
     url = django_settings.ASKBOT_URL
@@ -393,10 +395,19 @@ def test_csrf_cookie_domain():
     """makes sure that csrf cookie domain setting is acceptable"""
     #todo: maybe use the same steps to clean domain name
     csrf_cookie_domain = django_settings.CSRF_COOKIE_DOMAIN
+    if csrf_cookie_domain is None or str(csrf_cookie_domain.strip()) == '':
+        raise AskbotConfigError(
+            'Please add settings CSRF_COOKIE_DOMAN and CSRF_COOKIE_NAME '
+            'settings - both are required. '
+            'CSRF_COOKIE_DOMAIN must match the domain name of yor site, '
+            'without the http(s):// prefix and without the port number.\n'
+            'Examples: \n'
+            "    CSRF_COOKIE_DOMAIN = '127.0.0.1'\n"
+            "    CSRF_COOKIE_DOMAIN = 'example.com'\n"
+        )
     if csrf_cookie_domain == 'localhost':
-        raise ImproperlyConfigured(
-            PREAMBLE + 
-            '\n\nPlease do not use value "localhost" for the setting '
+        raise AskbotConfigError(
+            'Please do not use value "localhost" for the setting '
             'CSRF_COOKIE_DOMAIN\n'
             'instead use 127.0.0.1, a real IP '
             'address or domain name.'
@@ -404,15 +415,13 @@ def test_csrf_cookie_domain():
             'web browser to reach your site.'
         )
     if re.match(r'https?://', csrf_cookie_domain):
-        raise ImproperlyConfigured(
-            PREAMBLE +
-            '\n\nplease remove http(s):// prefix in the CSRF_COOKIE_DOMAIN '
+        raise AskbotConfigError(
+            'please remove http(s):// prefix in the CSRF_COOKIE_DOMAIN '
             'setting'
         )
     if ':' in csrf_cookie_domain:
-        raise ImproperlyConfigured(
-            PREAMBLE + 
-            '\n\nPlease do not use port number in the CSRF_COOKIE_DOMAIN '
+        raise AskbotConfigError(
+            'Please do not use port number in the CSRF_COOKIE_DOMAIN '
             'setting'
         )
 
