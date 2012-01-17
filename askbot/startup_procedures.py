@@ -169,26 +169,17 @@ def test_modules():
 
 def test_postgres():
     """Checks for the postgres buggy driver, version 2.4.2"""
-    if hasattr(django_settings, 'DATABASE_ENGINE'):
-        if django_settings.DATABASE_ENGINE in ('postgresql_psycopg2',):
-            try:
-                import psycopg2
-                version = psycopg2.__version__.split(' ')[0].split('.')
-                if version == ['2', '4', '2']:
-                    raise AskbotConfigError(
-                        'Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug'
-                    )
-                elif version > ['2', '4', '2']:
-                    pass #don't know what to do
-                else:
-                    pass #everythin is ok
-            except ImportError:
-                #Using mysql not a problem
-                pass
+    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+        import psycopg2
+        version = psycopg2.__version__.split(' ')[0].split('.')
+        if version == ['2', '4', '2']:
+            raise AskbotConfigError(
+                'Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug'
+            )
+        elif version > ['2', '4', '2']:
+            pass #don't know what to do
         else:
-            pass #using other thing than postgres
-    else:
-        pass #TODO: test new django dictionary databases
+            pass #everythin is ok
 
 def test_encoding():
     """prints warning if encoding error is not UTF-8"""

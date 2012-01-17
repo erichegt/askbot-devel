@@ -100,7 +100,8 @@ class ThreadManager(models.Manager):
 #            matching_questions = Question.sphinx_search.query(search_query)
 #            question_ids = [q.id for q in matching_questions]
 #            return self.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
-        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
+        if askbot.get_database_engine_name().endswith('mysql') \
+            and mysql.supports_full_text_search():
             return self.filter(
                 models.Q(title__search = search_query) |
                 models.Q(tagnames__search = search_query) |
