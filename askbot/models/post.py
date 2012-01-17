@@ -682,12 +682,6 @@ class Post(models.Model):
 
         raise NotImplementedError
 
-
-    def delete(self, *args, **kwargs):
-        # WARNING: This is not called for batch deletions so watch out!
-        # TODO: Restore specialized Comment.delete() functionality!
-        super(Post, self).delete(*args, **kwargs)
-
     def delete(self, **kwargs):
         """deletes comment and concomitant response activity
         records, as well as mention records, while preserving
@@ -722,8 +716,6 @@ class Post(models.Model):
 
         super(Post, self).delete(**kwargs)
 
-
-
     def __unicode__(self):
         if self.is_question():
             return self.thread.title
@@ -732,12 +724,6 @@ class Post(models.Model):
         elif self.is_comment():
             return self.text
         raise NotImplementedError
-
-    def is_answer(self):
-        return self.post_type == 'answer'
-
-    def is_question(self):
-        return self.post_type == 'question'
 
     def save(self, *args, **kwargs):
         if self.is_answer() and self.is_anonymous:
@@ -1091,7 +1077,7 @@ class Post(models.Model):
         raise NotImplementedError
 
     def get_latest_revision(self):
-        return self.revisions.all().order_by('-revised_at')[0]
+        return self.revisions.order_by('-revised_at')[0]
 
     def get_latest_revision_number(self):
         if self.is_comment():
@@ -1254,22 +1240,6 @@ class Post(models.Model):
         self.delete()
         return new_question
 
-
-    def get_page_number(self, answers = None):
-        """When question has many answers, answers are
-        paginated. This function returns number of the page
-        on which the answer will be shown, using the default
-        sort order. The result may depend on the visitor."""
-        if self.is_question():
-            return 1
-        elif self.is_answer():
-            order_number = 0
-            for answer in answers:
-                if self == answer:
-                    break
-                order_number += 1
-            return int(order_number/const.ANSWERS_PAGE_SIZE) + 1
-        raise NotImplementedError
 
     def get_user_vote(self, user):
         if not self.is_answer():
@@ -1610,15 +1580,6 @@ class Post(models.Model):
 
     def accepted(self):
         if self.is_answer():
-            return self.question.thread.accepted_answer == self
-        raise NotImplementedError
-
-    #####
-    #####
-    #####
-
-    def accepted(self):
-        if self.is_answer():
             return self.thread.accepted_answer_id == self.id
         raise NotImplementedError
 
@@ -1646,9 +1607,6 @@ class Post(models.Model):
         if not self.is_comment():
             raise NotImplementedError
         return self.parent.comments.filter(added_at__lt = self.added_at).count() + 1
-
-    def get_latest_revision(self):
-        return self.revisions.order_by('-revised_at')[0]
 
     def is_upvoted_by(self, user):
         from askbot.models.meta import Vote
