@@ -4,19 +4,25 @@ import string
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
 from askbot.conf import settings as askbot_settings
 
+
+
 class ReplyAddressManager(BaseQuerySetManager):
+
+    def get_unused(self, address):
+        return self.get(address = address, used_at__isnull = True)
     
     def create_new(self, post, user):
         reply_address = ReplyAddress(post = post, user = user, allowed_from_email = user.email)
         while True:
             reply_address.address = ''.join(random.choice(string.letters +
                 string.digits) for i in xrange(random.randint(12, 25)))
-            if ReplyAddress.objects.filter(address = reply_address.address).count() == 0:
+            if self.filter(address = reply_address.address).count() == 0:
                 break
         reply_address.save()
         return reply_address
@@ -50,3 +56,10 @@ class ReplyAddress(models.Model):
         self.save()
         return result
 
+
+#TODO move this function to a more appropriate module
+def process_reply_email(message, address, host):
+    reply_address = ReplyAddress.objects.get_unused(address)
+    separator = _("======= Reply above this line. ====-=-=")
+    reply_part = message.body().split(separator)[0]
+    reply_address.create_reply(reply_part)
