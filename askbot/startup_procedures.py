@@ -376,14 +376,27 @@ def test_staticfiles():
                 'ASKBOT_EXTRA_SKINS_DIR just above STATICFILES_DIRS.'
             )
 
+    if django_settings.STATICFILES_STORAGE == \
+        'django.contrib.staticfiles.storage.StaticFilesStorage':
+        if os.path.dirname(django_settings.STATIC_ROOT) == '':
+            #static root is needed only for local storoge of
+            #the static files
+            raise AskbotConfigError(
+                'Specify the static files directory '
+                'with setting STATIC_ROOT'
+            )
+
     if errors:
         errors.append(
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
         )
+
+            
     print_errors(errors)
-    if django_settings.DEBUG and django_settings.STATICFILES_STORAGE == \
+    if django_settings.STATICFILES_STORAGE == \
         'django.contrib.staticfiles.storage.StaticFilesStorage':
+
         if not os.path.isdir(django_settings.STATIC_ROOT):
             askbot_warning(
                 'Please run command\n\n'
