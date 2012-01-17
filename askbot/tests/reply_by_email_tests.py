@@ -10,7 +10,7 @@ class MockMessage(object):
 
     def __init__(self, body, from_email):
         self._body = body
-        self.from_email = from_email
+        self.From= from_email
 
     def body(self):
         return self._body
@@ -46,7 +46,7 @@ class EmailProcessingTests(AskbotTestCase):
         msg = MockMessage("This is a test reply \n%s\nlorem ipsum"%(separator), "user1@domain.com")
         process_reply_email(msg, addr, '')
         self.assertEquals(self.answer.comments.count(), 2)
-        self.assertEquals(self.answer.comments.all().order_by('-timestamp')[0].text, "This is a test reply")
+        self.assertEquals(self.answer.comments.all().order_by('-pk')[0].text, "This is a test reply")
 
 
 
