@@ -44,7 +44,7 @@ class ReplyAddress(models.Model):
 
     def create_reply(self, content):
         result = None
-        if self.post.post_type == 'answer' or self.post.post_type == 'comment':
+        if self.post.post_type == 'answer':
             result = self.user.post_comment(self.post, content)
         elif self.post.post_type == 'question':
             wordcount = len(content.rsplit())
@@ -52,6 +52,8 @@ class ReplyAddress(models.Model):
                 result = self.user.post_answer(self.post, content)
             else:
                 result = self.user.post_comment(self.post, content)
+        elif self.post.post_type == 'comment':
+            result = self.user.post_comment(self.post.parent, content)
         self.used_at = datetime.now()
         self.save()
         return result

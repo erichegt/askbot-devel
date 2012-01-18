@@ -92,6 +92,7 @@ class ReplyAddressModelTests(AskbotTestCase):
         post = result.create_reply("A test reply")
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, "A test reply")
+        self.assertEquals(self.answer.comments.count(), 2)
         
 
     def test_create_question_comment_reply(self):
