@@ -438,6 +438,22 @@ def test_csrf_cookie_domain():
             'setting'
         )
 
+def test_settings_for_test_runner():
+    """makes sure that debug toolbar is disabled when running tests"""
+    errors = list()
+    if 'debug_toolbar' in django_settings.INSTALLED_APPS:
+        errors.append(
+            'When testing - remove debug_toolbar from INSTALLED_APPS'
+        )
+    if 'debug_toolbar.middleware.DebugToolbarMiddleware' in \
+        django_settings.MIDDLEWARE_CLASSES:
+        errors.append(
+            'When testing - remove debug_toolbar.middleware.DebugToolbarMiddleware '
+            'from MIDDLEWARE_CLASSES'
+        )
+    print_errors(errors)
+    
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -482,6 +498,8 @@ def run_startup_tests():
     })
     settings_tester.run()
     test_media_url()
+    if 'manage.py test' in ' '.join(sys.argv):
+        test_settings_for_test_runner()
 
 @transaction.commit_manually
 def run():

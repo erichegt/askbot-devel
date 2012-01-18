@@ -474,11 +474,12 @@ class PageLoadTestCase(AskbotTestCase):
 class AvatarTests(AskbotTestCase):
 
     def test_avatar_for_two_word_user_works(self):
-        self.user = self.create_user('john doe')
-        response = self.client.get(
-                            'avatar_render_primary',
-                            kwargs = {'user': 'john doe', 'size': 48}
-                        )
+        if 'avatar' in settings.INSTALLED_APPS:
+            self.user = self.create_user('john doe')
+            response = self.client.get(
+                                'avatar_render_primary',
+                                kwargs = {'user': 'john doe', 'size': 48}
+                            )
 
 
 class QuestionPageRedirectTests(AskbotTestCase):
