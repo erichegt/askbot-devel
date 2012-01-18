@@ -57,6 +57,36 @@ class ReplyAddress(models.Model):
         return result
 
 
+#we might end up needing to use something like this
+#to distinguish the reply text from the quoted original message
+"""
+def _strip_message_qoute(message_text):
+    import re
+    result = message_text
+    pattern = "(?P<qoute>" + \
+        "On ([a-zA-Z0-9, :/<>@\.\"\[\]]* wrote:.*)|" + \
+        "From: [\w@ \.]* \[mailto:[\w\.]*@[\w\.]*\].*|" + \
+        "From: [\w@ \.]*(\n|\r\n)+Sent: [\*\w@ \.,:/]*(\n|\r\n)+To:.*(\n|\r\n)+.*|" + \
+        "[- ]*Forwarded by [\w@ \.,:/]*.*|" + \
+        "From: [\w@ \.<>\-]*(\n|\r\n)To: [\w@ \.<>\-]*(\n|\r\n)Date: [\w@ \.<>\-:,]*\n.*|" + \
+        "From: [\w@ \.<>\-]*(\n|\r\n)To: [\w@ \.<>\-]*(\n|\r\n)Sent: [\*\w@ \.,:/]*(\n|\r\n).*|" + \
+        "From: [\w@ \.<>\-]*(\n|\r\n)To: [\w@ \.<>\-]*(\n|\r\n)Subject:.*|" + \
+        "(-| )*Original Message(-| )*.*)"
+    groups = re.search(pattern, email_text, re.IGNORECASE + re.DOTALL)
+    qoute = None
+    if not groups is None:
+        if groups.groupdict().has_key("qoute"):
+            qoute = groups.groupdict()["qoute"]
+    if qoute:
+        result = reslut.split(qoute)[0]
+    #if the last line contains an email message remove that one too
+    lines = result.splitlines(True)
+    if re.search(r'[\w\.]*@[\w\.]*\].*', lines[-1]):
+        result = '\n'.join(lines[:-1])
+    return result
+"""
+
+
 #TODO move this function to a more appropriate module
 def process_reply_email(message, address, host):
 
@@ -70,6 +100,7 @@ def process_reply_email(message, address, host):
                 the original notification you received at the end of your reply.")
         else:
             reply_part = parts[0]
+            reply_part = '\n'.join(reply_part.splitlines(True)[:-3])
             reply_address.create_reply(reply_part.strip())
     except ReplyAddress.DoesNotExist:
         error = _("You were replying to an email address\

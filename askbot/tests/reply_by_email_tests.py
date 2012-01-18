@@ -43,10 +43,11 @@ class EmailProcessingTests(AskbotTestCase):
     def test_process_correct_answer_comment(self):
         addr = ReplyAddress.objects.create_new( self.answer, self.u1).address
         separator = _("======= Reply above this line. ====-=-=")
-        msg = MockMessage("This is a test reply \n%s\nlorem ipsum"%(separator), "user1@domain.com")
+        msg = MockMessage("This is a test reply \n\nOn such and such someone\
+            wrote something \n\n%s\nlorem ipsum "%(separator), "user1@domain.com")
         process_reply_email(msg, addr, '')
         self.assertEquals(self.answer.comments.count(), 2)
-        self.assertEquals(self.answer.comments.all().order_by('-pk')[0].text, "This is a test reply")
+        self.assertEquals(self.answer.comments.all().order_by('-pk')[0].text.strip(), "This is a test reply")
 
 
 
