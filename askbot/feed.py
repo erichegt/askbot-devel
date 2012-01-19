@@ -26,7 +26,7 @@ class RssIndividualQuestionFeed(Feed):
     """rss feed class for particular questions
     """
     title = askbot_settings.APP_TITLE + _(' - ')+ _('Individual question feed')
-    link = askbot_settings.APP_URL
+    #link = askbot_settings.APP_URL
     description = askbot_settings.APP_DESCRIPTION
     copyright = askbot_settings.APP_COPYRIGHT
 
@@ -34,11 +34,11 @@ class RssIndividualQuestionFeed(Feed):
         if len(bits) != 1:
             raise ObjectDoesNotExist
         return Post.objects.get_questions().get(id__exact = bits[0])
-    
+
     def item_link(self, item):
         """get full url to the item
         """
-        return self.link + item.get_absolute_url()
+        return askbot_settings.APP_URL + item.get_absolute_url()
 
     def item_pubdate(self, item):
         """get date of creation for the item
@@ -56,7 +56,7 @@ class RssIndividualQuestionFeed(Feed):
         chain_elements.append(
             Post.objects.get_comments().filter(parent=item)
         )
-        
+
         answers = Post.objects.get_answers().filter(thread = item.thread)
         for answer in answers:
             chain_elements.append([answer,])
@@ -65,7 +65,7 @@ class RssIndividualQuestionFeed(Feed):
             )
 
         return itertools.chain(*chain_elements)
-    
+
     def item_title(self, item):
         """returns the title for the item
         """
@@ -77,7 +77,7 @@ class RssIndividualQuestionFeed(Feed):
         elif item.post_type == "comment":
             title = "Comment by %s for %s" % (item.author, self.title)
         return title
-        
+
     def item_description(self, item):
         """returns the description for the item
         """
@@ -88,7 +88,7 @@ class RssLastestQuestionsFeed(Feed):
     """rss feed class for the latest questions
     """
     title = askbot_settings.APP_TITLE + _(' - ')+ _('latest questions')
-    link = askbot_settings.APP_URL
+    #link = askbot_settings.APP_URL
     description = askbot_settings.APP_DESCRIPTION
     #ttl = 10
     copyright = askbot_settings.APP_COPYRIGHT
@@ -96,7 +96,7 @@ class RssLastestQuestionsFeed(Feed):
     def item_link(self, item):
         """get full url to the item
         """
-        return self.link + item.get_absolute_url()
+        return askbot_settings.APP_URL + item.get_absolute_url()
 
     def item_author_name(self, item):
         """get name of author
@@ -117,8 +117,8 @@ class RssLastestQuestionsFeed(Feed):
         """returns url without the slug
         because the slug can change
         """
-        return self.link + item.get_absolute_url(no_slug = True)
-        
+        return askbot_settings.APP_URL + item.get_absolute_url(no_slug = True)
+
     def item_description(self, item):
         """returns the desciption for the item
         """
@@ -142,12 +142,12 @@ class RssLastestQuestionsFeed(Feed):
         if tags:
             #if there are tags in GET, filter the
             #questions additionally
-            for tag in tags:                
+            for tag in tags:
                 qs = qs.filter(thread__tags__name = tag)
-        
+
         return qs.order_by('-thread__last_activity_at')[:30]
 
-        
+
 
 def main():
     """main function for use as a script
