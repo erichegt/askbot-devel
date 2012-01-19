@@ -10,10 +10,13 @@ import datetime
 import logging
 import urllib
 import operator
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
+from django.template.base import Template
+from django.template.context import RequestContext
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -31,6 +34,7 @@ from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot import schedules
 from askbot.models.badges import award_badges_signal
+from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
@@ -72,24 +76,27 @@ def questions(request, **kwargs):
         return HttpResponseNotAllowed(['GET'])
 
     search_state = SearchState(user_logged_in=request.user.is_authenticated(), **kwargs)
-
-    #######
-
     page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
-    qs, meta_data, related_tags = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state, page_size=page_size)
-
-    tag_list_type = askbot_settings.TAG_LIST_FORMAT
-    if tag_list_type == 'cloud': #force cloud to sort by name
-        related_tags = sorted(related_tags, key = operator.attrgetter('name'))
+    qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
     paginator = Paginator(qs, page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
 
-    contributors_threads = models.Thread.objects.filter(id__in=[post.thread_id for post in page.object_list])
-    contributors = models.Thread.objects.get_thread_contributors(contributors_threads)
+    page.object_list = list(page.object_list) # evaluate queryset
+
+    # INFO: Because for the time being we need question posts and thread authors
+    #       down the pipeline, we have to precache them in thread objects
+    models.Thread.objects.precache_view_data_hack(threads=page.object_list)
+
+    related_tags = Tag.objects.get_related_to_search(threads=page.object_list, ignored_tag_names=meta_data.get('ignored_tag_names', []))
+    tag_list_type = askbot_settings.TAG_LIST_FORMAT
+    if tag_list_type == 'cloud': #force cloud to sort by name
+        related_tags = sorted(related_tags, key = operator.attrgetter('name'))
+
+    contributors = list(models.Thread.objects.get_thread_contributors(thread_list=page.object_list).only('id', 'username', 'gravatar'))
 
     paginator_context = {
         'is_paginated' : (paginator.count > page_size),
@@ -101,8 +108,8 @@ def questions(request, **kwargs):
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
 
-        'base_url' : search_state.query_string(),#todo in T sort=>sort_method
-        'page_size' : page_size,#todo in T pagesize -> page_size
+        'base_url' : search_state.query_string(),
+        'page_size' : page_size,
     }
 
     # We need to pass the rss feed url based
@@ -145,7 +152,7 @@ def questions(request, **kwargs):
 
         questions_tpl = get_template('main_page/questions_loop.html', request)
         questions_html = questions_tpl.render(Context({
-            'questions': page,
+            'threads': page,
             'search_state': search_state,
             'reset_method_count': reset_method_count,
         }))
@@ -158,7 +165,6 @@ def questions(request, **kwargs):
             },
             'paginator': paginator_html,
             'question_counter': question_counter,
-            'questions': list(),
             'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
@@ -187,7 +193,7 @@ def questions(request, **kwargs):
             'page_class': 'main-page',
             'page_size': page_size,
             'query': search_state.query,
-            'questions' : page,
+            'threads' : page,
             'questions_count' : paginator.count,
             'reset_method_count': reset_method_count,
             'scope': search_state.scope,

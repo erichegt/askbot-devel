@@ -1,3 +1,4 @@
+from askbot.search.state_manager import SearchState
 from django.test import TestCase
 from django.test import signals
 from django.template import defaultfilters
@@ -50,8 +51,11 @@ class PageLoadTestCase(AskbotTestCase):
             self,
             url_name, status_code=200, template=None,
             kwargs={}, redirect_url=None, follow=False,
-            data={}):
-        url = reverse(url_name, kwargs=kwargs)
+            data={}, plain_url_passed=False):
+        if plain_url_passed:
+            url = url_name
+        else:
+            url = reverse(url_name, kwargs=kwargs)
         if status_code == 302:
             url_info = 'redirecting to LOGIN_URL in closed_mode: %s' % url
         else:
@@ -161,76 +165,81 @@ class PageLoadTestCase(AskbotTestCase):
             )
         #todo: test different sort methods and scopes
         self.try_url(
-                'questions',
-                status_code=status_code,
-                template='main_page.html'
-            )
+            'questions',
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'start_over':'true'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html',
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('favorite').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'favorite'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'age-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'age-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'activity-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'activity-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'answers-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'answers-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'votes-desc'},
-                template='main_page.html'
-            )
-        self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'votes-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
+
         self.try_url(
                 'question',
                 status_code=status_code,

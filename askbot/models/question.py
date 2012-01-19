@@ -1,5 +1,6 @@
 import datetime
 import operator
+from askbot.utils import mysql
 
 from django.conf import settings
 from django.db import models
@@ -127,7 +128,7 @@ class ThreadManager(models.Manager):
             )
 
 
-    def run_advanced_search(self, request_user, search_state, page_size):  # TODO: !! review, fix, and write tests for this
+    def run_advanced_search(self, request_user, search_state):  # TODO: !! review, fix, and write tests for this
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -136,7 +137,8 @@ class ThreadManager(models.Manager):
         """
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
-        qs = self.filter(posts__post_type='question', posts__deleted=False) # TODO: add a possibility to see deleted questions
+        # TODO: add a possibility to see deleted questions
+        qs = self.filter(posts__post_type='question', posts__deleted=False) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
         meta_data = {}
 
@@ -147,7 +149,7 @@ class ThreadManager(models.Manager):
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                qs = qs.filter(posts__post_type='question', posts__author__in=query_users)
+                qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
 
         tags = search_state.unified_tags()
         for tag in tags:
@@ -183,7 +185,6 @@ class ThreadManager(models.Manager):
                 meta_data['author_name'] = u.username
 
         #get users tag filters
-        ignored_tag_names = None
         if request_user and request_user.is_authenticated():
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
@@ -191,9 +192,7 @@ class ThreadManager(models.Manager):
             ignored_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='bad')
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
-
-            ignored_tag_names = [tag.name for tag in ignored_tags]
-            meta_data['ignored_tag_names'] = ignored_tag_names
+            meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
 
             if request_user.display_tag_filter_strategy == const.INCLUDE_INTERESTING and (interesting_tags or request_user.has_interesting_wildcard_tags()):
                 #filter by interesting tags only
@@ -213,47 +212,61 @@ class ThreadManager(models.Manager):
                     extra_ignored_tags = Tag.objects.get_by_wildcards(ignored_wildcards)
                     qs = qs.exclude(tags__in = extra_ignored_tags)
 
-        ###
-        # HACK: GO BACK To QUESTIONS, otherwise we cannot sort properly!
-        thread_ids = qs.values_list('id', flat = True)
-        qs_thread = qs
-        qs = Post.objects.filter(post_type='question', thread__id__in=thread_ids)
-        qs = qs.select_related('thread__last_activity_by')
+            if askbot_settings.USE_WILDCARD_TAGS:
+                meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
+                meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
 
-        if search_state.sort == 'relevance-desc':
-            # TODO: askbot_thread.relevance is not available here, so we have to work around it. Ideas:
-            # * convert the whole questions() pipeline to Thread-s
-            # * ...
-            #qs = qs.extra(select={'relevance': 'askbot_thread.relevance'}, order_by=['-relevance',])
-            pass
-        else:
-            QUESTION_ORDER_BY_MAP = {
-                'age-desc': '-added_at',
-                'age-asc': 'added_at',
-                'activity-desc': '-thread__last_activity_at',
-                'activity-asc': 'thread__last_activity_at',
-                'answers-desc': '-thread__answer_count',
-                'answers-asc': 'thread__answer_count',
-                'votes-desc': '-score',
-                'votes-asc': 'score',
-            }
-            orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
-            qs = qs.order_by(orderby)
+        QUESTION_ORDER_BY_MAP = {
+            'age-desc': '-askbot_post.added_at',
+            'age-asc': 'askbot_post.added_at',
+            'activity-desc': '-last_activity_at',
+            'activity-asc': 'last_activity_at',
+            'answers-desc': '-answer_count',
+            'answers-asc': 'answer_count',
+            'votes-desc': '-askbot_post.score',
+            'votes-asc': 'askbot_post.score',
 
-        related_tags = Tag.objects.get_related_to_search(questions = qs, page_size = page_size, ignored_tag_names = ignored_tag_names) # TODO: !!
+            'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
+        }
+        orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
+        qs = qs.extra(order_by=[orderby])
 
-        if askbot_settings.USE_WILDCARD_TAGS and request_user.is_authenticated():
-            meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
-            meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
+        # HACK: We add 'ordering_key' column as an alias and order by it, because when distict() is used,
+        #       qs.extra(order_by=[orderby,]) is lost if only `orderby` column is from askbot_post!
+        #       Removing distinct() from the queryset fixes the problem, but we have to use it here.
+        # UPDATE: Apparently we don't need distinct, the query don't duplicate Thread rows!
+        # qs = qs.extra(select={'ordering_key': orderby.lstrip('-')}, order_by=['-ordering_key' if orderby.startswith('-') else 'ordering_key'])
+        # qs = qs.distinct()
 
-        qs = qs.distinct()
+        qs = qs.only('id', 'title', 'view_count', 'answer_count', 'last_activity_at', 'last_activity_by', 'closed', 'tagnames', 'accepted_answer')
 
-        return qs, meta_data, related_tags
+        #print qs.query
+
+        return qs, meta_data
+
+    def precache_view_data_hack(self, threads):
+        page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
+                            .only('id', 'thread', 'score', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
+        page_question_map = {}
+        for pq in page_questions:
+            page_question_map[pq.thread_id] = pq
+        for thread in threads:
+            thread._question_cache = page_question_map[thread.id]
+
+        last_activity_by_users = User.objects.filter(id__in=[obj.last_activity_by_id for obj in threads])\
+                                    .only('id', 'username', 'country', 'show_country')
+        user_map = {}
+        for la_user in last_activity_by_users:
+            user_map[la_user.id] = la_user
+        for thread in threads:
+            thread._last_activity_by_cache = user_map[thread.last_activity_by_id]
+
 
     #todo: this function is similar to get_response_receivers - profile this function against the other one
     def get_thread_contributors(self, thread_list):
         """Returns query set of Thread contributors"""
-        u_id = Post.objects.filter(post_type__in=['question', 'answer'], thread__in=thread_list).values_list('author', flat=True)
+        # INFO: Evaluate this query to avoid subquery in the subsequent query below (At least MySQL can be awfully slow on subqueries)
+        u_id = list(Post.objects.filter(post_type__in=('question', 'answer'), thread__in=thread_list).values_list('author', flat=True))
 
         #todo: this does not belong gere - here we select users with real faces
         #first and limit the number of users in the result for display
@@ -300,7 +313,11 @@ class Thread(models.Model):
         app_label = 'askbot'
 
     def _question_post(self):
-        return Post.objects.get(post_type='question', thread=self)
+        post = getattr(self, '_question_cache', None)
+        if post:
+            return post
+        self._question_cache = Post.objects.get(post_type='question', thread=self)
+        return self._question_cache
 
     def get_absolute_url(self):
         return self._question_post().get_absolute_url()

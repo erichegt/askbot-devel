@@ -1,14 +1,15 @@
 """Search state manager object"""
 import re
+import urllib
 import copy
 
 from django.core import urlresolvers
-from django.utils.http import urlquote, urlencode
+from django.utils.http import urlencode
+from django.utils.encoding import smart_str
 
 import askbot
 import askbot.conf
 from askbot import const
-from askbot.conf import settings as askbot_settings
 from askbot.utils.functions import strip_plus
 
 
@@ -122,11 +123,13 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
+        self._questions_url = urlresolvers.reverse('questions')
+
     def __str__(self):
         return self.query_string()
 
     def full_url(self):
-        return urlresolvers.reverse('questions') + self.query_string()
+        return self._questions_url + self.query_string()
 
     def ask_query_string(self): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
@@ -158,27 +161,47 @@ class SearchState(object):
 
     def query_string(self):
         lst = [
-            'scope:%s' % self.scope,
-            'sort:%s' % self.sort
+            'scope:' + self.scope,
+            'sort:' + self.sort
         ]
         if self.query:
-            lst.append('query:%s' % urlquote(self.query, safe=self.SAFE_CHARS))
+            lst.append('query:' + urllib.quote(smart_str(self.query), safe=self.SAFE_CHARS))
         if self.tags:
-            lst.append('tags:%s' % urlquote(const.TAG_SEP.join(self.tags), safe=self.SAFE_CHARS))
+            lst.append('tags:' + urllib.quote(smart_str(const.TAG_SEP.join(self.tags)), safe=self.SAFE_CHARS))
         if self.author:
-            lst.append('author:%d' % self.author)
+            lst.append('author:' + str(self.author))
         if self.page:
-            lst.append('page:%d' % self.page)
+            lst.append('page:' + str(self.page))
         return '/'.join(lst) + '/'
 
-    def deepcopy(self):
+    def deepcopy(self): # TODO: test me
         "Used to contruct a new SearchState for manipulation, e.g. for adding/removing tags"
-        return copy.deepcopy(self)
+        ss = copy.copy(self) #SearchState.get_empty()
+
+        #ss.scope = self.scope
+        #ss.sort = self.sort
+        #ss.query = self.query
+        if ss.tags is not None: # it's important to test against None, because empty lists should also be cloned!
+            ss.tags = ss.tags[:]  # create a copy
+        #ss.author = self.author
+        #ss.page = self.page
+
+        #ss.stripped_query = self.stripped_query
+        if ss.query_tags: # Here we don't have empty lists, only None
+            ss.query_tags = ss.query_tags[:]
+        if ss.query_users:
+            ss.query_users = ss.query_users[:]
+        #ss.query_title = self.query_title
+
+        #ss._questions_url = self._questions_url
+
+        return ss
 
     def add_tag(self, tag):
         ss = self.deepcopy()
-        ss.tags.append(tag)
-        ss.page = 1 # state change causes page reset
+        if tag not in ss.tags:
+            ss.tags.append(tag)
+            ss.page = 1 # state change causes page reset
         return ss
 
     def remove_author(self):

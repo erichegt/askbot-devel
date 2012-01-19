@@ -230,7 +230,7 @@ class PostManager(BaseQuerySetManager):
 
 
 class Post(models.Model):
-    post_type = models.CharField(max_length=255)
+    post_type = models.CharField(max_length=255, db_index=True)
 
     old_question_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     old_answer_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
@@ -242,7 +242,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
 
-    deleted     = models.BooleanField(default=False)
+    deleted     = models.BooleanField(default=False, db_index=True)
     deleted_at  = models.DateTimeField(null=True, blank=True)
     deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_posts')
 
@@ -452,8 +452,10 @@ class Post(models.Model):
     def is_comment(self):
         return self.post_type == 'comment'
 
-    def get_absolute_url(self, no_slug = False, question_post=None):
+    def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
+        if not hasattr(self, '_thread_cache') and thread:
+            self._thread_cache = thread
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
