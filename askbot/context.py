@@ -13,6 +13,15 @@ from askbot.utils import url_utils
 
 def application_settings(request):
     """The context processor function"""
+    if not request.path.startswith('/' + settings.ASKBOT_URL):
+        #todo: this is a really ugly hack, will only work
+        #when askbot is installed not at the home page.
+        #this will not work for the
+        #heavy modders of askbot, because their custom pages
+        #will not receive the askbot settings in the context
+        #to solve this properly we should probably explicitly
+        #add settings to the context per page
+        return {}
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
