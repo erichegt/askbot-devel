@@ -14,6 +14,7 @@ from askbot.models.post import Post, PostRevision
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
+from askbot.utils import mysql
 
 class ThreadManager(models.Manager):
     def get_tag_summary_from_threads(self, threads):
