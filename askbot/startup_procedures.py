@@ -467,7 +467,7 @@ def run_startup_tests():
     #test_postgres()
     test_middleware()
     test_celery()
-    test_csrf_cookie_domain()
+    #test_csrf_cookie_domain()
     test_staticfiles()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
