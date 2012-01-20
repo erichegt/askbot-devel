@@ -126,7 +126,6 @@ def setup_paginator(context):
             pages_outside_leading_range = [n + context["pages"] for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
             pages_outside_trailing_range = [n + 1 for n in range(0, NUM_PAGES_OUTSIDE_RANGE)]
 
-        extend_url = context.get('extend_url', '')
         return {
             "base_url": context["base_url"],
             "is_paginated": context["is_paginated"],
@@ -141,7 +140,6 @@ def setup_paginator(context):
             "in_trailing_range" : in_trailing_range,
             "pages_outside_leading_range": pages_outside_leading_range,
             "pages_outside_trailing_range": pages_outside_trailing_range,
-            "extend_url" : extend_url
         }
 
 def get_admin():

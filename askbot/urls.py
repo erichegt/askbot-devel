@@ -52,11 +52,26 @@ urlpatterns = patterns('',
         kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
-    url(#this url works both normally and through ajax
-        r'^%s$' % _('questions/'), 
+
+    # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
+
+    url(
+        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
+        (r'^%s' % _('questions') +
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/query:(?P<query>[^/]+)' +  # INFO: question string cannot contain slash (/), which is a section terminator
+            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+        r'/$'),
+
         views.readers.questions, 
         name='questions'
     ),
+
+    # END main page urls
+    
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
@@ -132,11 +147,6 @@ urlpatterns = patterns('',
         r'^comment/get_text/$',
         views.readers.get_comment, 
         name='get_comment'
-    ),
-    url(#ajax only
-        r'^question/get_body/$',
-        views.readers.get_question_body, 
-        name='get_question_body'
     ),
     url(
         r'^%s$' % _('tags/'), 

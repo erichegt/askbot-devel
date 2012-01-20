@@ -5,7 +5,7 @@
     $(document).ready(function(){
         /*var on_tab = '#nav_questions';
         $(on_tab).attr('className','on');*/
-        liveSearch().init('main_page');
+        liveSearch('{{ search_state.query_string()|escapejs }}');
         Hilite.exact = false;
         Hilite.elementid = "question-list";
         Hilite.debug_referrer = location.href;
@@ -14,20 +14,6 @@
             $.getJSON('{% url user_update_has_custom_avatar %}?t=' + today.getTime());
         {% endif %}
     });
-
-    askbot['data']['questions-titles'] = {};
-    function load_question_body(element, question_id){
-      var key = 'question-' + question_id;
-      if ( askbot['data']['questions-titles'][key] == null){
-        $.getJSON('{% url get_question_body %}', function(data){
-          askbot['data']['questions-titles'] = data['questions-titles'];
-          console.debug(data);
-          element.title = askbot['data']['questions-titles'][key];//repeated due to async
-        });
-      } else {
-        element.title = askbot['data']['questions-titles'][key];
-      }
-    }
 
     askbot['urls']['mark_interesting_tag'] = '{% url mark_interesting_tag %}';
     askbot['urls']['mark_ignored_tag'] = '{% url mark_ignored_tag %}';

@@ -1,107 +1,193 @@
-import re
-import unittest
-from django.test import TestCase
-from django.contrib.auth.models import AnonymousUser
-from askbot.search.state_manager import SearchState, ViewLog, parse_query
-from askbot import const
+from askbot.tests.utils import AskbotTestCase
+from askbot.search.state_manager import SearchState
+import askbot.conf
 
-DEFAULT_SORT = const.DEFAULT_POST_SORT_METHOD
-class SearchStateTests(TestCase):
-    def setUp(self):
-        self.state = SearchState()
-        self.log = ViewLog()
 
-    def visit_page(self, page_name):
-        """page_name is name of the view function
-        that is to be "visited"
-        """
-        self.log.set_current(page_name)
+class SearchStateTests(AskbotTestCase):
+    def _ss(self, query=None, tags=None):
+        return SearchState(
+            scope=None,
+            sort=None,
+            query=query,
+            tags=tags,
+            author=None,
+            page=None,
 
-    def update(self, data, user = None):
-        self.visit_page('questions')
-        if user is None:
-            user = AnonymousUser()
-        self.state.update(data, self.log, user)
+            user_logged_in=False
+        )
 
-    def add_tag(self, tag):
-        self.update({'tags': set([tag])})
+    def test_no_selectors(self):
+        ss = self._ss()
+        self.assertEqual(
+            'scope:all/sort:activity-desc/page:1/',  # search defaults
+            ss.query_string()
+        )
 
-    def remove_tag(self, tag):
-        self.update({'remove_tag': tag})
+    def test_buggy_selectors(self):
+        ss = SearchState(
+            scope='blah1',
+            sort='blah2',
+            query=None,
+            tags=None,
 
-    def assert_tags_are(self, *args):
-        self.assertEqual(self.state.tags, set(args))
+            # INFO: URLs for the following selectors accept only digits!
+            author=None,
+            page='0',
 
-    def test_add_remove_tags(self):
-        self.add_tag('tag1')
-        self.assert_tags_are('tag1')
-        self.add_tag('tag2')
-        self.assert_tags_are('tag1', 'tag2')
-        self.add_tag('tag3')
-        self.assert_tags_are('tag1', 'tag2', 'tag3')
-        self.remove_tag('tag3')
-        self.assert_tags_are('tag1', 'tag2')
-        self.remove_tag('tag2')
-        self.assert_tags_are('tag1')
-        self.remove_tag('tag1')
-        self.assertEqual(len(self.state.tags), 0)
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:activity-desc/page:1/',  # search defaults
+            ss.query_string()
+        )
 
-    def test_query_and_tags1(self):
-        self.update({'query': 'hahaha'})
-        self.add_tag('tag1')
-        self.assertEquals(self.state.query, 'hahaha')
-        self.assert_tags_are('tag1')
-        self.update({'reset_query': True})
-        self.assertEquals(self.state.query, None)
-        self.assert_tags_are('tag1')
+    def test_all_valid_selectors(self):
+        ss = SearchState(
+            scope='unanswered',
+            sort='age-desc',
+            query=' alfa',
+            tags='miki, mini',
+            author='12',
+            page='2',
 
-    def test_start_over(self):
-        self.update({'query': 'hahaha'})
-        self.add_tag('tag1')
-        self.update({'start_over': True})
-        self.assertEquals(self.state.query, None)
-        self.assertEquals(self.state.tags, None)
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:unanswered/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+        )
 
-    def test_auto_reset_sort(self):
-        self.update({'sort': 'age-asc'})
-        self.assertEquals(self.state.sort, 'age-asc')
-        self.update({})
-        self.assertEquals(self.state.sort, DEFAULT_SORT)
-class ParseQueryTests(unittest.TestCase):
+    def test_edge_cases_1(self):
+        ss = SearchState(
+            scope='favorite', # this is not a valid choice for non-logger users
+            sort='age-desc',
+            query=' alfa',
+            tags='miki, mini',
+            author='12',
+            page='2',
+
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+        )
+
+        ss = SearchState(
+            scope='favorite',
+            sort='age-desc',
+            query=' alfa',
+            tags='miki, mini',
+            author='12',
+            page='2',
+
+            user_logged_in=True
+        )
+        self.assertEqual(
+            'scope:favorite/sort:age-desc/query:alfa/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+
+        )
+
+    def test_edge_cases_2(self):
+        old_func = askbot.conf.should_show_sort_by_relevance
+        askbot.conf.should_show_sort_by_relevance = lambda: True # monkey patch
+
+        ss = SearchState(
+            scope='all',
+            sort='relevance-desc',
+            query='hejho',
+            tags='miki, mini',
+            author='12',
+            page='2',
+
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:relevance-desc/query:hejho/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+        )
+
+        ss = SearchState(
+            scope='all',
+            sort='relevance-desc', # this is not a valid choice for empty queries
+            query=None,
+            tags='miki, mini',
+            author='12',
+            page='2',
+
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:activity-desc/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+        )
+
+        askbot.conf.should_show_sort_by_relevance = lambda: False # monkey patch
+
+        ss = SearchState(
+            scope='all',
+            sort='relevance-desc', # this is also invalid for db-s other than Postgresql
+            query='hejho',
+            tags='miki, mini',
+            author='12',
+            page='2',
+
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:activity-desc/query:hejho/tags:miki,mini/author:12/page:2/',
+            ss.query_string()
+        )
+
+        askbot.conf.should_show_sort_by_relevance = old_func
+
+    def test_query_escaping(self):
+        ss = self._ss(query=' alfa miki maki +-%#?= lalala/: ') # query coming from URL is already unescaped
+        self.assertEqual(
+            'scope:all/sort:activity-desc/query:alfa%20miki%20maki%20+-%25%23%3F%3D%20lalala%2F%3A/page:1/',
+            ss.query_string()
+        )
+
+    def test_tag_escaping(self):
+        ss = self._ss(tags=' aA09_+.-#, miki ') # tag string coming from URL is already unescaped
+        self.assertEqual(
+            'scope:all/sort:activity-desc/tags:aA09_+.-%23,miki/page:1/',
+            ss.query_string()
+        )
+
     def test_extract_users(self):
-        text = '@anna haha @"maria fernanda" @\'diego maradona\' hehe [user:karl  marx] hoho  user:\' george bush  \''
-        parse_results = parse_query(text)
+        ss = self._ss(query='"@anna haha @"maria fernanda" @\'diego maradona\' hehe [user:karl  marx] hoho  user:\' george bush  \'')
         self.assertEquals(
-            sorted(parse_results['query_users']),
+            sorted(ss.query_users),
             sorted(['anna', 'maria fernanda', 'diego maradona', 'karl marx', 'george bush'])
         )
-        self.assertEquals(parse_results['stripped_query'], 'haha hehe hoho')
+        self.assertEquals(ss.stripped_query, '" haha hehe hoho')
+        self.assertEqual(
+            'scope:all/sort:activity-desc/query:%22%40anna%20haha%20%40%22maria%20fernanda%22%20%40%27diego%20maradona%27%20hehe%20%5Buser%3Akarl%20%20marx%5D%20hoho%20%20user%3A%27%20george%20bush%20%20%27/page:1/',
+            ss.query_string()
+        )
 
     def test_extract_tags(self):
-        text = '#tag1 [tag: tag2] some text [tag3] query'
-        parse_results = parse_query(text)
-        self.assertEquals(set(parse_results['query_tags']), set(['tag1', 'tag2', 'tag3']))
-        self.assertEquals(parse_results['stripped_query'], 'some text query')
+        ss = self._ss(query='#tag1 [tag: tag2] some text [tag3] query')
+        self.assertEquals(set(ss.query_tags), set(['tag1', 'tag2', 'tag3']))
+        self.assertEquals(ss.stripped_query, 'some text query')
 
     def test_extract_title1(self):
-        text = 'some text query [title: what is this?]'
-        parse_results = parse_query(text)
-        self.assertEquals(parse_results['query_title'], 'what is this?')
-        self.assertEquals(parse_results['stripped_query'], 'some text query')
+        ss = self._ss(query='some text query [title: what is this?]')
+        self.assertEquals(ss.query_title, 'what is this?')
+        self.assertEquals(ss.stripped_query, 'some text query')
 
     def test_extract_title2(self):
-        text = 'some text query title:"what is this?"'
-        parse_results = parse_query(text)
-        self.assertEquals(parse_results['query_title'], 'what is this?')
-        self.assertEquals(parse_results['stripped_query'], 'some text query')
+        ss = self._ss(query='some text query title:"what is this?"')
+        self.assertEquals(ss.query_title, 'what is this?')
+        self.assertEquals(ss.stripped_query, 'some text query')
 
     def test_extract_title3(self):
-        text = 'some text query title:\'what is this?\''
-        parse_results = parse_query(text)
-        self.assertEquals(parse_results['query_title'], 'what is this?')
-        self.assertEquals(parse_results['stripped_query'], 'some text query')
+        ss = self._ss(query='some text query title:\'what is this?\'')
+        self.assertEquals(ss.query_title, 'what is this?')
+        self.assertEquals(ss.stripped_query, 'some text query')
 
     def test_negative_match(self):
-        text = 'some query text'
-        parse_results = parse_query(text)
-        self.assertEquals(parse_results['stripped_query'], 'some query text')
+        ss = self._ss(query='some query text')
+        self.assertEquals(ss.stripped_query, 'some query text')

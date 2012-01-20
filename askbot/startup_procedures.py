@@ -50,7 +50,8 @@ def print_errors(error_messages, header = None, footer = None):
     * ``header`` - text to show above messages
     * ``footer`` - text to show below messages
     """
-    if len(error_messages) == 0: return
+    if len(error_messages) == 0:
+        return
     if len(error_messages) > 1:
         error_messages = enumerate_string_list(error_messages)
 
@@ -58,7 +59,8 @@ def print_errors(error_messages, header = None, footer = None):
     if header: message += header + '\n'
     message += 'Please attend to the following:\n\n'
     message += '\n\n'.join(error_messages)
-    if footer: message += '\n\n' + footer
+    if footer:
+        message += '\n\n' + footer
     raise AskbotConfigError(message)
 
 def format_as_text_tuple_entries(items):
@@ -71,7 +73,7 @@ def format_as_text_tuple_entries(items):
 # *validate emails in settings.py
 def test_askbot_url():
     """Tests the ASKBOT_URL setting for the
-    well-formedness and raises the ImproperlyConfigured
+    well-formedness and raises the :class:`AskbotConfigError`
     exception, if the setting is not good.
     """
     url = django_settings.ASKBOT_URL
@@ -113,7 +115,6 @@ def test_middleware():
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
         'askbot.middleware.forum_mode.ForumModeMiddleware',
-        'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
         'askbot.middleware.view_log.ViewLogMiddleware',
@@ -170,26 +171,17 @@ def test_modules():
 
 def test_postgres():
     """Checks for the postgres buggy driver, version 2.4.2"""
-    if hasattr(django_settings, 'DATABASE_ENGINE'):
-        if django_settings.DATABASE_ENGINE in ('postgresql_psycopg2',):
-            try:
-                import psycopg2
-                version = psycopg2.__version__.split(' ')[0].split('.')
-                if version == ['2', '4', '2']:
-                    raise AskbotConfigError(
-                        'Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug'
-                    )
-                elif version > ['2', '4', '2']:
-                    pass #don't know what to do
-                else:
-                    pass #everythin is ok
-            except ImportError:
-                #Using mysql not a problem
-                pass
+    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+        import psycopg2
+        version = psycopg2.__version__.split(' ')[0].split('.')
+        if version == ['2', '4', '2']:
+            raise AskbotConfigError(
+                'Please install psycopg2 version 2.4.1,\n version 2.4.2 has a bug'
+            )
+        elif version > ['2', '4', '2']:
+            pass #don't know what to do
         else:
-            pass #using other thing than postgres
-    else:
-        pass #TODO: test new django dictionary databases
+            pass #everythin is ok
 
 def test_encoding():
     """prints warning if encoding error is not UTF-8"""
@@ -343,7 +335,7 @@ def test_staticfiles():
             'Remove from the INSTALLED_APPS section of your settings.py:\n'
             "    '%s'," % wrong_staticfiles_app_name
         )
-    static_url = django_settings.STATIC_URL
+    static_url = django_settings.STATIC_URL or ''
     if static_url is None or str(static_url).strip() == '':
         errors.append(
             'Add STATIC_URL setting to your settings.py file. '
@@ -384,14 +376,27 @@ def test_staticfiles():
                 'ASKBOT_EXTRA_SKINS_DIR just above STATICFILES_DIRS.'
             )
 
+    if django_settings.STATICFILES_STORAGE == \
+        'django.contrib.staticfiles.storage.StaticFilesStorage':
+        if os.path.dirname(django_settings.STATIC_ROOT) == '':
+            #static root is needed only for local storoge of
+            #the static files
+            raise AskbotConfigError(
+                'Specify the static files directory '
+                'with setting STATIC_ROOT'
+            )
+
     if errors:
         errors.append(
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
         )
+
+            
     print_errors(errors)
-    if django_settings.DEBUG and django_settings.STATICFILES_STORAGE == \
+    if django_settings.STATICFILES_STORAGE == \
         'django.contrib.staticfiles.storage.StaticFilesStorage':
+
         if not os.path.isdir(django_settings.STATIC_ROOT):
             askbot_warning(
                 'Please run command\n\n'
@@ -403,10 +408,19 @@ def test_csrf_cookie_domain():
     """makes sure that csrf cookie domain setting is acceptable"""
     #todo: maybe use the same steps to clean domain name
     csrf_cookie_domain = django_settings.CSRF_COOKIE_DOMAIN
+    if csrf_cookie_domain is None or str(csrf_cookie_domain.strip()) == '':
+        raise AskbotConfigError(
+            'Please add settings CSRF_COOKIE_DOMAN and CSRF_COOKIE_NAME '
+            'settings - both are required. '
+            'CSRF_COOKIE_DOMAIN must match the domain name of yor site, '
+            'without the http(s):// prefix and without the port number.\n'
+            'Examples: \n'
+            "    CSRF_COOKIE_DOMAIN = '127.0.0.1'\n"
+            "    CSRF_COOKIE_DOMAIN = 'example.com'\n"
+        )
     if csrf_cookie_domain == 'localhost':
-        raise ImproperlyConfigured(
-            PREAMBLE + 
-            '\n\nPlease do not use value "localhost" for the setting '
+        raise AskbotConfigError(
+            'Please do not use value "localhost" for the setting '
             'CSRF_COOKIE_DOMAIN\n'
             'instead use 127.0.0.1, a real IP '
             'address or domain name.'
@@ -414,17 +428,31 @@ def test_csrf_cookie_domain():
             'web browser to reach your site.'
         )
     if re.match(r'https?://', csrf_cookie_domain):
-        raise ImproperlyConfigured(
-            PREAMBLE +
-            '\n\nplease remove http(s):// prefix in the CSRF_COOKIE_DOMAIN '
+        raise AskbotConfigError(
+            'please remove http(s):// prefix in the CSRF_COOKIE_DOMAIN '
             'setting'
         )
     if ':' in csrf_cookie_domain:
-        raise ImproperlyConfigured(
-            PREAMBLE + 
-            '\n\nPlease do not use port number in the CSRF_COOKIE_DOMAIN '
+        raise AskbotConfigError(
+            'Please do not use port number in the CSRF_COOKIE_DOMAIN '
             'setting'
         )
+
+def test_settings_for_test_runner():
+    """makes sure that debug toolbar is disabled when running tests"""
+    errors = list()
+    if 'debug_toolbar' in django_settings.INSTALLED_APPS:
+        errors.append(
+            'When testing - remove debug_toolbar from INSTALLED_APPS'
+        )
+    if 'debug_toolbar.middleware.DebugToolbarMiddleware' in \
+        django_settings.MIDDLEWARE_CLASSES:
+        errors.append(
+            'When testing - remove debug_toolbar.middleware.DebugToolbarMiddleware '
+            'from MIDDLEWARE_CLASSES'
+        )
+    print_errors(errors)
+    
 
 def run_startup_tests():
     """function that runs
@@ -439,7 +467,7 @@ def run_startup_tests():
     #test_postgres()
     test_middleware()
     test_celery()
-    test_csrf_cookie_domain()
+    #test_csrf_cookie_domain()
     test_staticfiles()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
@@ -470,6 +498,8 @@ def run_startup_tests():
     })
     settings_tester.run()
     test_media_url()
+    if 'manage.py test' in ' '.join(sys.argv):
+        test_settings_for_test_runner()
 
 @transaction.commit_manually
 def run():

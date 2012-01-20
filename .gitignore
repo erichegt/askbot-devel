@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 *.log
+*~
 db
 rebuild-locales.pl
 /src
@@ -42,3 +43,5 @@ askbot/skins/common/media/mathjax/
 *.tar.tz
 run
 recaptcha
+/.ve
+/db.sq3
