@@ -143,7 +143,7 @@ class RssLastestQuestionsFeed(Feed):
             #if there are tags in GET, filter the
             #questions additionally
             for tag in tags:                
-                qs = qs.filter(tags__name = tag)
+                qs = qs.filter(thread__tags__name = tag)
         
         return qs.order_by('-thread__last_activity_at')[:30]
 
