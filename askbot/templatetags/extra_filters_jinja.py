@@ -1,6 +1,7 @@
 import datetime
 import re
 import time
+import urllib
 from coffin import template as coffin_template
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
@@ -10,6 +11,7 @@ from django.core.urlresolvers import reverse, resolve
 from django.http import Http404
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
+from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils import functions
 from askbot.utils.slug import slugify
@@ -43,6 +45,21 @@ def clean_login_url(url):
     except Http404:
         pass
     return reverse('index')
+
+@register.filter
+def transurl(url):
+    """translate url, when appropriate and percent-
+    escape it, that's important, othervise it won't match
+    the urlconf"""
+    try:
+        url.decode('ascii')
+    except UnicodeError:
+        raise ValueError(
+            u'string %s is not good for url - must be ascii' % url
+        )
+    if getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False):
+        return urllib.quote(_(url).encode('utf-8'))
+    return url
 
 @register.filter
 def country_display_name(country_code):
