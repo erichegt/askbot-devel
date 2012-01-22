@@ -148,6 +148,15 @@ class PageLoadTestCase(AskbotTestCase):
                 status_code=status_code,
                 kwargs={'url':'rss'})
         self.try_url(
+                'feeds',
+                kwargs={'url':'rss'},
+                data={'tags':'one-tag'},
+                status_code=status_code)
+        #self.try_url(
+        #        'feeds',
+        #        kwargs={'url':'question'},
+        #        status_code=status_code)
+        self.try_url(
                 'about',
                 status_code=status_code,
                 template='static_page.html')

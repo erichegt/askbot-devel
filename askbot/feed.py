@@ -51,14 +51,13 @@ class RssIndividualQuestionFeed(Feed):
         then for each answer - the answer itself, then
         answer comments
         """
-
         chain_elements = list()
         chain_elements.append([item,])
         chain_elements.append(
             Post.objects.get_comments().filter(parent=item)
         )
         
-        answers = Post.objects.get_answers().filter(question = item.id)
+        answers = Post.objects.get_answers().filter(thread = item.thread)
         for answer in answers:
             chain_elements.append([answer,])
             chain_elements.append(
@@ -144,7 +143,7 @@ class RssLastestQuestionsFeed(Feed):
             #if there are tags in GET, filter the
             #questions additionally
             for tag in tags:                
-                qs = qs.filter(tags__name = tag)
+                qs = qs.filter(thread__tags__name = tag)
         
         return qs.order_by('-thread__last_activity_at')[:30]
 
