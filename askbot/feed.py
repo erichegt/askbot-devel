@@ -51,14 +51,13 @@ class RssIndividualQuestionFeed(Feed):
         then for each answer - the answer itself, then
         answer comments
         """
-
         chain_elements = list()
         chain_elements.append([item,])
         chain_elements.append(
             Post.objects.get_comments().filter(parent=item)
         )
         
-        answers = Post.objects.get_answers().filter(question = item.id)
+        answers = Post.objects.get_answers().filter(thread = item.thread)
         for answer in answers:
             chain_elements.append([answer,])
             chain_elements.append(
