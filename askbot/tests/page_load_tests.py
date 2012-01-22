@@ -1,19 +1,19 @@
 from askbot.search.state_manager import SearchState
-from django.test import TestCase
 from django.test import signals
-from django.template import defaultfilters
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core import management
+
 import coffin
 import coffin.template
+
 from askbot import models
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot.tests.utils import skipIf
-import sys
-import os
+
 
 
 def patch_jinja2():
@@ -37,15 +37,31 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 class PageLoadTestCase(AskbotTestCase):
 
-    def _fixture_setup(self):
-        from django.core import management
+    #############################################
+    #
+    # INFO: We load test data once for all tests in this class (setUpClass + cleanup in tearDownClass)
+    #
+    #       We also disable (by overriding _fixture_setup/teardown) per-test fixture setup,
+    #       which by default flushes the database for non-transactional db engines like MySQL+MyISAM.
+    #       For transactional engines it only messes with transactions, but to keep things uniform
+    #       for both types of databases we disable it all.
+    #
+    @classmethod
+    def setUpClass(cls):
+        management.call_command('flush', verbosity=0, interactive=False)
         management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
-        super(PageLoadTestCase, self)._fixture_setup()
+
+    @classmethod
+    def tearDownClass(self):
+        management.call_command('flush', verbosity=0, interactive=False)
+
+    def _fixture_setup(self):
+        pass
 
     def _fixture_teardown(self):
-        super(PageLoadTestCase, self)._fixture_teardown()
-        from django.core import management
-        management.call_command('flush', verbosity=0, interactive=False)
+        pass
+
+    #############################################
 
     def try_url(
             self,

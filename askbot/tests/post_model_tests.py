@@ -114,9 +114,9 @@ class PostModelTests(AskbotTestCase):
         self.user = self.u1
         q = self.post_question()
 
-        c1 = self.post_comment(parent_post=q)
-        c2 = q.add_comment(user=self.user, comment='blah blah')
-        c3 = self.post_comment(parent_post=q)
+        c1 = self.post_comment(parent_post=q, timestamp=datetime.datetime(2010, 10, 2, 14, 33, 20))
+        c2 = q.add_comment(user=self.user, comment='blah blah', added_at=datetime.datetime(2010, 10, 2, 14, 33, 21))
+        c3 = self.post_comment(parent_post=q, body_text='blah blah 2', timestamp=datetime.datetime(2010, 10, 2, 14, 33, 22))
 
         Post.objects.precache_comments(for_posts=[q], visitor=self.user)
         self.assertListEqual([c1, c2, c3], q._cached_comments)
@@ -138,9 +138,9 @@ class PostModelTests(AskbotTestCase):
         self.user = self.u1
         q = self.post_question()
 
-        c1 = self.post_comment(parent_post=q)
-        c2 = q.add_comment(user=self.user, comment='blah blah')
-        c3 = self.post_comment(parent_post=q)
+        c1 = self.post_comment(parent_post=q, timestamp=datetime.datetime(2010, 10, 2, 14, 33, 20))
+        c2 = q.add_comment(user=self.user, comment='blah blah', added_at=datetime.datetime(2010, 10, 2, 14, 33, 21))
+        c3 = self.post_comment(parent_post=q, timestamp=datetime.datetime(2010, 10, 2, 14, 33, 22))
 
         Post.objects.precache_comments(for_posts=[q], visitor=self.user)
         self.assertListEqual([c1, c2, c3], q._cached_comments)
@@ -209,7 +209,7 @@ class ThreadTagModelsTests(AskbotTestCase):
         tags = Tag.objects.get_related_to_search(threads=[self.q3.thread], ignored_tag_names=['tag6'])
         self.assertListEqual([], [t.name for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q1.thread, self.q2.thread, self.q4], ignored_tag_names=['tag2'])
+        tags = Tag.objects.get_related_to_search(threads=[self.q1.thread, self.q2.thread, self.q4.thread], ignored_tag_names=['tag2'])
         self.assertListEqual(['tag3', 'tag1', 'tag4', 'tag5', 'tag6'], [t.name for t in tags])
         self.assertListEqual([3, 2, 2, 2, 1], [t.local_used_count for t in tags])
         self.assertListEqual([3, 2, 2, 2, 2], [t.used_count for t in tags])
