@@ -58,11 +58,11 @@ msgid "please enter a descriptive title for your question"
 msgstr "Escriviu un títol descriptiu de la pregunta"
 
 #: forms.py:111
-#, fuzzy, python-format
+#, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
-msgstr[0] "el títol ha de tenir més de 10 caràcters"
-msgstr[1] "el títol ha de tenir més de 10 caràcters"
+msgstr[0] "el títol ha de tenir més d'%d caràcter"
+msgstr[1] "el títol ha de tenir més de %d caràcters"
 
 #: forms.py:131
 msgid "content"
@@ -75,7 +75,7 @@ msgid "tags"
 msgstr "etiquetes"
 
 #: forms.py:168
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
 "be used."
@@ -83,10 +83,10 @@ msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
 msgstr[0] ""
-"Les etiquetes són paraules clau curtes, sense espais. Es poden usar fins a 5 "
-"etiquetes."
+"Les etiquetes són paraules clau curtes, sense espais. Es poden usar fins a %(max_tags)d "
+"etiqueta."
 msgstr[1] ""
-"Les etiquetes són paraules clau curtes, sense espais. Es poden usar fins a 5 "
+"Les etiquetes són paraules clau curtes, sense espais. Es poden usar fins a %(max_tags)d "
 "etiquetes."
 
 #: forms.py:201 skins/default/templates/question_retag.html:58
@@ -3106,11 +3106,11 @@ msgid "suspended users cannot remove flags"
 msgstr "els usuaris deshabilitats no poden treure senyals"
 
 #: models/__init__.py:809
-#, fuzzy, python-format
+#, python-format
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
-msgstr[0] "s'han de tenir més de %(min_rep)s punts per poder treure senyals"
-msgstr[1] "s'han de tenir més de %(min_rep)s punts per poder treure senyals"
+msgstr[0] "s'han de tenir més d'%(min_rep)d punt per poder treure senyals"
+msgstr[1] "s'han de tenir més de %(min_rep)d punts per poder treure senyals"
 
 #: models/__init__.py:828
 msgid "you don't have the permission to remove all flags"
@@ -3689,7 +3689,6 @@ msgid "No email"
 msgstr "Cap correu electrònic"
 
 #: skins/common/templates/authopenid/authopenid_macros.html:53
-#, fuzzy
 msgid "Please enter your <span>user name</span>, then sign in"
 msgstr "Introduïu el vostre <span>nom d'usuari i contrasenya</span> per entrar"
 
@@ -4230,9 +4229,8 @@ msgstr "editar"
 #: skins/common/templates/question/answer_controls.html:16
 #: skins/common/templates/question/question_controls.html:23
 #: skins/common/templates/question/question_controls.html:24
-#, fuzzy
 msgid "remove all flags"
-msgstr "treure senyal"
+msgstr "treure senyals"
 
 #: skins/common/templates/question/answer_controls.html:22
 #: skins/common/templates/question/answer_controls.html:32
@@ -4454,9 +4452,8 @@ msgstr "Guardar edició"
 #: skins/default/templates/ask.html:52
 #: skins/default/templates/question_edit.html:76
 #: skins/default/templates/question/javascript.html:92
-#, fuzzy
 msgid "show preview"
-msgstr "ocultar previsualització"
+msgstr "mostrar previsualització"
 
 #: skins/default/templates/ask.html:4
 msgid "Ask a question"
@@ -4465,9 +4462,9 @@ msgstr "Feu una pregunta"
 #: skins/default/templates/badge.html:5 skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:16
 #: skins/default/templates/user_profile/user_stats.html:110
-#, fuzzy, python-format
+#, python-format
 msgid "%(name)s"
-msgstr "Insígnia \"%(name)s\""
+msgstr ""
 
 #: skins/default/templates/badge.html:5
 msgid "Badge"
@@ -4481,9 +4478,9 @@ msgstr "Insígnia \"%(name)s\""
 #: skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:16
 #: skins/default/templates/user_profile/user_stats.html:108
-#, fuzzy, python-format
+#, python-format
 msgid "%(description)s"
-msgstr "subscripcions"
+msgstr ""
 
 #: skins/default/templates/badge.html:14
 msgid "user received this badge:"
@@ -4594,9 +4591,8 @@ msgstr ""
 "s'ha contestat abans."
 
 #: skins/default/templates/faq_static.html:10
-#, fuzzy
 msgid "What questions should I avoid asking?"
-msgstr "Que he d'evitar en les meves respostes?"
+msgstr "Quines qüestions he d'evitar preguntar?"
 
 #: skins/default/templates/faq_static.html:11
 msgid ""
@@ -5113,9 +5109,8 @@ msgstr[0] "teniu una nova resposta"
 msgstr[1] "teniu %(response_count)s noves respostes"
 
 #: skins/default/templates/macros.html:635
-#, fuzzy
 msgid "no new responses yet"
-msgstr "teniu una nova resposta"
+msgstr "no hi ha respostes"
 
 #: skins/default/templates/macros.html:650
 #: skins/default/templates/macros.html:651
@@ -5325,9 +5320,8 @@ msgid "with %(author_name)s's contributions"
 msgstr "amb contribució de %(author_name)s"
 
 #: skins/default/templates/main_page/headline.html:12
-#, fuzzy
 msgid "Tagged"
-msgstr "reetiquetat"
+msgstr "Reetiquetat"
 
 #: skins/default/templates/main_page/headline.html:23
 msgid "Search tips:"
@@ -5782,9 +5776,8 @@ msgid "age"
 msgstr "edat"
 
 #: skins/default/templates/user_profile/user_info.html:83
-#, fuzzy
 msgid "age unit"
-msgstr "Missatge enviat"
+msgstr "unitat d'edat"
 
 #: skins/default/templates/user_profile/user_info.html:88
 msgid "todays unused votes"
@@ -5873,9 +5866,8 @@ msgid "'Approved' status means the same as regular user."
 msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:83
-#, fuzzy
 msgid "Suspended users can only edit or delete their own posts."
-msgstr "els usuaris deshabilitats no poden senyalar entrades"
+msgstr "Els usuaris deshabilitats només poden editar o esborrar les seves entrades"
 
 #: skins/default/templates/user_profile/user_moderate.html:86
 msgid ""
@@ -5929,9 +5921,8 @@ msgid "karma"
 msgstr "reputació"
 
 #: skins/default/templates/user_profile/user_reputation.html:11
-#, fuzzy
 msgid "Your karma change log."
-msgstr "registre de modificacions de reputació de %(user_name)s"
+msgstr "Registre de canvis en la vostre reputació."
 
 #: skins/default/templates/user_profile/user_reputation.html:13
 #, python-format
@@ -6253,9 +6244,8 @@ msgid "UNANSWERED"
 msgstr "SENSE RESPONDRE"
 
 #: skins/default/templates/widgets/scope_nav.html:8
-#, fuzzy
 msgid "see your followed questions"
-msgstr "preguntes seguides"
+msgstr "mostrar les preguntes seguides"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "FOLLOWED"
@@ -6287,7 +6277,7 @@ msgstr "configuració"
 
 #: templatetags/extra_filters.py:145 templatetags/extra_filters_jinja.py:264
 msgid "no items in counter"
-msgstr ""
+msgstr "no"
 
 #: utils/decorators.py:90 views/commands.py:113 views/commands.py:133
 msgid "Oops, apologies - there was some error"
