@@ -69,9 +69,6 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    import time
-    start = time.time()
-
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -211,11 +208,7 @@ def questions(request, **kwargs):
             'feed_url': context_feed_url,
         }
 
-        tstart = time.time()
-        ret =  render_into_skin('main_page.html', template_data, request)
-        print "Jinja - elapsed:", time.time() - tstart
-        print "Elapsed:", time.time() - start
-        return ret
+        return render_into_skin('main_page.html', template_data, request)
 
 
 def tags(request):#view showing a listing of available tags - plain list
