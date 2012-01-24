@@ -665,6 +665,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.assertEqual(html, thread.get_cached_summary_html())
 
 
-# TODO: (in spare time, these cases should already pass but we shold have them eventually for completness)
+# TODO: (in spare time - those cases should pass without changing anything in code but we should have them eventually for completness)
 # - Publishing anonymous questions / answers
 # - Re-posting question as answer and vice versa
+# - Management commands (like post_emailed_questions)
