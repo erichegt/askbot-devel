@@ -98,24 +98,25 @@ class ThreadManager(models.Manager):
 
         return thread
 
-    def get_for_query(self, search_query):
+    def get_for_query(self, search_query, qs=None):
         """returns a query set of questions,
         matching the full text query
         """
+        if not qs:
+            qs = self.all()
 #        if getattr(settings, 'USE_SPHINX_SEARCH', False):
 #            matching_questions = Question.sphinx_search.query(search_query)
 #            question_ids = [q.id for q in matching_questions]
-#            return self.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
+#            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
         if askbot.get_database_engine_name().endswith('mysql') \
             and mysql.supports_full_text_search():
-            return self.filter(
+            return qs.filter(
                 models.Q(title__search = search_query) |
                 models.Q(tagnames__search = search_query) |
                 models.Q(posts__deleted=False, posts__text__search = search_query)
             )
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            # TODO: !! Fix Postgres search
-            rank_clause = "ts_rank(text_search_vector, plainto_tsquery(%s))";
+            rank_clause = "ts_rank(text_search_vector, plainto_tsquery(%s))"
             search_query = '&'.join(search_query.split())
             extra_params = (search_query,)
             extra_kwargs = {
@@ -124,9 +125,9 @@ class ThreadManager(models.Manager):
                 'params': extra_params,
                 'select_params': extra_params,
             }
-            return self.extra(**extra_kwargs)
+            return qs.extra(**extra_kwargs)
         else:
-            return self.filter(
+            return qs.filter(
                 models.Q(title__icontains=search_query) |
                 models.Q(tagnames__icontains=search_query) |
                 models.Q(posts__deleted=False, posts__text__icontains = search_query)
@@ -148,7 +149,7 @@ class ThreadManager(models.Manager):
         meta_data = {}
 
         if search_state.stripped_query:
-            qs = self.get_for_query(search_state.stripped_query)
+            qs = self.get_for_query(search_query=search_state.stripped_query, qs=qs)
         if search_state.query_title:
             qs = qs.filter(title__icontains = search_state.query_title)
         if search_state.query_users:
