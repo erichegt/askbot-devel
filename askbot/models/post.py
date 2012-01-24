@@ -174,9 +174,9 @@ class PostManager(BaseQuerySetManager):
         )
 
         #update thread data
-        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author)
         thread.answer_count +=1
         thread.save()
+        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
 
         #set notification/delete
         if email_notify:

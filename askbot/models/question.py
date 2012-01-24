@@ -1,11 +1,12 @@
 import datetime
 import operator
-from askbot.utils import mysql
+import re
 
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 
 import askbot
 import askbot.conf
@@ -16,6 +17,9 @@ from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils import mysql
+from askbot.skins.loaders import get_template #jinja2 template loading enviroment
+from askbot.search.state_manager import DummySearchState
+
 
 class ThreadManager(models.Manager):
     def get_tag_summary_from_threads(self, threads):
@@ -246,6 +250,13 @@ class ThreadManager(models.Manager):
         return qs, meta_data
 
     def precache_view_data_hack(self, threads):
+        # TODO: Re-enable this when we have a good test cases to verify that it works properly.
+        #
+        #       E.g.: - make sure that not precaching give threads never increase # of db queries for the main page
+        #             - make sure that it really works, i.e. stuff for non-cached threads is fetched properly
+        # Precache data only for non-cached threads - only those will be rendered
+        #threads = [thread for thread in threads if not thread.summary_html_cached()]
+
         page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
                             .only('id', 'thread', 'score', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
         page_question_map = {}
@@ -281,6 +292,8 @@ class ThreadManager(models.Manager):
 
 
 class Thread(models.Model):
+    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
@@ -313,7 +326,9 @@ class Thread(models.Model):
     class Meta:
         app_label = 'askbot'
 
-    def _question_post(self):
+    def _question_post(self, refresh=False):
+        if refresh and hasattr(self, '_question_cache'):
+            delattr(self, '_question_cache')
         post = getattr(self, '_question_cache', None)
         if post:
             return post
@@ -335,6 +350,9 @@ class Thread(models.Model):
         qset = Thread.objects.filter(id=self.id)
         qset.update(view_count=models.F('view_count') + increment)
         self.view_count = qset.values('view_count')[0]['view_count'] # get the new view_count back because other pieces of code relies on such behaviour
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
 
     def set_closed_status(self, closed, closed_by, closed_at, close_reason):
         self.closed = closed
@@ -354,6 +372,9 @@ class Thread(models.Model):
         self.last_activity_at = last_activity_at
         self.last_activity_by = last_activity_by
         self.save()
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
@@ -529,6 +550,10 @@ class Thread(models.Model):
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
 
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
+
         #if there are any modified tags, update their use counts
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
@@ -593,7 +618,47 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
+    def get_summary_html(self, search_state):
+        html = self.get_cached_summary_html()
+        if not html:
+            html = self.update_summary_html()
 
+        # use `<<<` and `>>>` because they cannot be confused with user input
+        # - if user accidentialy types <<<tag-name>>> into question title or body,
+        # then in html it'll become escaped like this: &lt;&lt;&lt;tag-name&gt;&gt;&gt;
+        regex = re.compile(r'<<<(%s)>>>' % const.TAG_REGEX_BARE)
+
+        while True:
+            match = regex.search(html)
+            if not match:
+                break
+            seq = match.group(0)  # e.g "<<<my-tag>>>"
+            tag = match.group(1)  # e.g "my-tag"
+            full_url = search_state.add_tag(tag).full_url()
+            html = html.replace(seq, full_url)
+
+        return html
+
+    def get_cached_summary_html(self):
+        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+
+    def update_summary_html(self):
+        context = {
+            'thread': self,
+            'question': self._question_post(refresh=True),  # fetch new question post to make sure we're up-to-date
+            'search_state': DummySearchState(),
+        }
+        html = get_template('widgets/question_summary.html').render(context)
+        # INFO: Timeout is set to 30 days:
+        # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
+        # * We probably don't need to pollute the cache with threads older than 30 days
+        # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
+        #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
+        cache.cache.set(self.SUMMARY_CACHE_KEY_TPL % self.id, html, timeout=60*60*24*30)
+        return html
+
+    def summary_html_cached(self):
+        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
 
 #class Question(content.Content):

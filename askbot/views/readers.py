@@ -10,13 +10,10 @@ import datetime
 import logging
 import urllib
 import operator
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
-from django.template.base import Template
-from django.template.context import RequestContext
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -42,7 +39,7 @@ from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 import askbot.conf
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
+from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings

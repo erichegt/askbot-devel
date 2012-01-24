@@ -108,7 +108,8 @@ class PageLoadTestCase(AskbotTestCase):
                         'one template') % url
                     )
 
-                self.assertEqual(r.template[0].name, template)
+                #self.assertEqual(r.template[0].name, template)
+                self.assertIn(template, [t.name for t in r.template])
             else:
                 raise Exception('unexpected error while runnig test')
 

@@ -232,3 +232,11 @@ class SearchState(object):
         ss = self.deepcopy()
         ss.page = new_page
         return ss
+
+
+class DummySearchState(object): # Used for caching question/thread summaries
+    def add_tag(self, tag):
+        self.tag = tag
+        return self
+    def full_url(self):
+        return '<<<%s>>>' % self.tag

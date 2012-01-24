@@ -1,7 +1,8 @@
 {% import "macros.html" as macros %}
 {# cache 0 "questions" questions search_tags scope sort query context.page language_code #}
 {% for thread in threads.object_list %}
-    {{macros.question_summary(thread, thread._question_post(), search_state=search_state)}}
+    {# {{macros.question_summary(thread, thread._question_post(), search_state=search_state)}} #}
+    {{ thread.get_summary_html(search_state=search_state) }}
 {% endfor %}
 {% if threads.object_list|length == 0 %}
     {% include "main_page/nothing_found.html" %}
