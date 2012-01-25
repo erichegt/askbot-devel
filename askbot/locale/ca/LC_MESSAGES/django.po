@@ -2141,7 +2141,7 @@ msgstr "completat perfil d'usuari"
 
 #: const/__init__.py:139
 msgid "email update sent to user"
-msgstr "enviat missatge d'actualitació a l'usuari"
+msgstr "enviat missatge d'actualització a l'usuari"
 
 #: const/__init__.py:142
 msgid "reminder about unanswered questions sent"
@@ -2375,23 +2375,18 @@ msgid ""
 "password."
 msgstr ""
 
-# msgstr ""
-# "La contrasenya antiga és incorrecta. Introduïu la contrasenya correcta."
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
-msgstr ""
+msgstr "Aquesta adreça de correu no figura a la base de dades"
 
-# msgstr "Adreça de correu electrònic inexistent a la base de dades"
 #: deps/django_authopenid/forms.py:435
 msgid "Your user name (<i>required</i>)"
-msgstr ""
+msgstr "Nom d'usuari (<i>requerit</i>)"
 
-# msgstr "El vostre nom d'usuari (<i>requerit</i>)"
 #: deps/django_authopenid/forms.py:450
 msgid "Incorrect username."
-msgstr ""
+msgstr "Nom d'usuari incorrecta"
 
-# msgstr "Nom d'usuari inexistent"
 #: deps/django_authopenid/urls.py:9 deps/django_authopenid/urls.py:12
 #: deps/django_authopenid/urls.py:15 setup_templates/settings.py:208
 msgid "signin/"
@@ -6142,7 +6137,7 @@ msgstr "fes una pregunta"
 
 #: skins/default/templates/widgets/ask_form.html:6
 msgid "login to post question info"
-msgstr "entrar per publicar una pregunta2"
+msgstr "cal entrar per publicar una pregunta"
 
 #: skins/default/templates/widgets/ask_form.html:10
 #, python-format
@@ -6412,24 +6407,24 @@ msgstr "Per avui li queden %(votes_left)s restants"
 
 #: views/commands.py:123
 msgid "Sorry, but anonymous users cannot access the inbox"
-msgstr ""
+msgstr "Els usuaris anònims no tenen accés a la safata d'entrada"
 
 #: views/commands.py:198
 msgid "Sorry, something is not right here..."
-msgstr ""
+msgstr "alguna cosa no funciona aqui ..."
 
 #: views/commands.py:213
 msgid "Sorry, but anonymous users cannot accept answers"
-msgstr ""
+msgstr "Els usuaris anònims no poden acceptar respostes"
 
 #: views/commands.py:320
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
-msgstr ""
+msgstr "subscripció desada,  %(email)s s'han de validar, veure  %(details_url)s"
 
 #: views/commands.py:327
 msgid "email update frequency has been set to daily"
-msgstr ""
+msgstr "freqüencia d'actualització de correus diària"
 
 #: views/commands.py:433
 #, python-format
@@ -6475,7 +6470,7 @@ msgstr[1] "%(badge_count)d %(badge_level)s insígnies"
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr ""
+msgstr "el commentari que busca s'ha esborrat i no es pot accedir"
 
 #: views/users.py:212
 msgid "moderate user"
