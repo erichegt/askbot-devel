@@ -6216,14 +6216,14 @@ msgstr "dóna detalls suficients"
 #: skins/default/templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] "vista"
+msgstr[0] "visita"
 msgstr[1] "visites"
 
 #: skins/default/templates/widgets/question_summary.html:29
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] "resposta"
-msgstr[1] "respostes"
+msgstr[0] "resp."
+msgstr[1] "resp."
 
 #: skins/default/templates/widgets/question_summary.html:40
 msgid "vote"
