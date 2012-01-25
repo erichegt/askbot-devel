@@ -201,9 +201,6 @@ Note that in order to be able to bind the daemon to port 25 you will need to exe
 Within the askbot admin interface there are 4 significant configuration points for this feature.
 
 * In the email section, the "Enable posting answers and comments by email" controls whether the feature is enabled or disabled.
-* The "reply by email hostname" needs to be set to the email hostname where you want to receive the email replies. If for example
-this is set to "myaskbot.com" the users will post replies to addresses such as "4wffsw345wsf@myaskbot.com", you need to point the MX
-DNS record for that domain to the address where you will run the lamson SMTP daemon.
-* The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question.
-If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
+* The "reply by email hostname" needs to be set to the email hostname where you want to receive the email replies. If for example this is set to "myaskbot.com" the users will post replies to addresses such as "4wffsw345wsf@myaskbot.com", you need to point the MX DNS record for that domain to the address where you will run the lamson SMTP daemon.
+* The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question. If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
 * In the karma thresholds section the "Post answers and comments by email" defines the minimum karma for users to be able to post replies by email.
