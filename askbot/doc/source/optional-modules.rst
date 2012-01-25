@@ -164,3 +164,46 @@ For `supervisor <http://supervisord.org/>`_: add this sample config file named a
     startsecs=10
 
 Then run **supervisorctl update** and it will be started. For more information about job handling with supervisor please visit `this link <http://supervisord.org/>`_.
+
+
+Receiving replies for email notifications
+===========================================
+
+Askbot supports posting replies by email. For this feature  to work ``Lamson`` and ``django-lamson`` need to be installed on the system.
+To install all the necessery dependencies execute the following command:
+    
+    pip install django-lamson
+
+The lamson daemon needs a folder to store files, create a folder named ``run`` within your project folder by executing the following command:
+
+    mkdir run
+
+The minimum settings required to enable this feature are defining the port and binding address for the lamson SMTP daemon and the
+and the email handlers withing askbot. Edit your settings.py file to include the following:
+
+    LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
+    LAMSON_HANDLERS = ['askbot.lamson_handlers']
+    LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
+
+To recieve internet email you will need to bind to your external ip address and port 25. If you just want to test the feature
+by sending eamil from the same system you could bind to 127.0.0.1 and any higher port.
+
+To run the lamson SMTP daemon you will need to execute the following management command:
+    
+    python manage.py lamson_start
+
+To stop the daemon issue the following command
+
+    python manage.py lamson_stop
+
+Note that in order to be able to bind the daemon to port 25 you will need to execute the command as a superuser.
+
+Within the askbot admin interface there are 4 significant configuration points for this feature.
+
+* In the email section, the "Enable posting answers and comments by email" controls whether the feature is enabled or disabled.
+* The "reply by email hostname" needs to be set to the email hostname where you want to receive the email replies. If for example
+this is set to "myaskbot.com" the users will post replies to addresses such as "4wffsw345wsf@myaskbot.com", you need to point the MX
+DNS record for that domain to the address where you will run the lamson SMTP daemon.
+* The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question.
+If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
+* In the karma thresholds section the "Post answers and comments by email" defines the minimum karma for users to be able to post replies by email.
