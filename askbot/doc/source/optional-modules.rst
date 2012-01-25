@@ -169,12 +169,11 @@ Then run **supervisorctl update** and it will be started. For more information a
 Receiving replies for email notifications
 ===========================================
 
-Askbot supports posting replies by email. For this feature  to work ``Lamson`` and ``django-lamson`` need to be installed on the system.
-To install all the necessery dependencies execute the following command:
+Askbot supports posting replies by email. For this feature  to work ``Lamson`` and ``django-lamson`` need to be installed on the system. To install all the necessery dependencies execute the following command:
     
     pip install django-lamson
 
-The lamson daemon needs a folder to store files, create a folder named ``run`` within your project folder by executing the following command:
+The lamson daemon needs a folder to store it's mail queue files, create a folder named ``run`` within your project folder by executing the following command:
 
     mkdir run
 
@@ -182,11 +181,14 @@ The minimum settings required to enable this feature are defining the port and b
 and the email handlers withing askbot. Edit your settings.py file to include the following:
 
     LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
+    
     LAMSON_HANDLERS = ['askbot.lamson_handlers']
+    
     LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 
-To recieve internet email you will need to bind to your external ip address and port 25. If you just want to test the feature
-by sending eamil from the same system you could bind to 127.0.0.1 and any higher port.
+In the list of ``installed_apps`` add the app ``django-lamson``.
+
+The ``LAMSON_RECEIVER_CONFIG`` parameter defines the binding address/port for the SMTP daemon. To recieve internet email you will need to bind to your external ip address and port 25. If you just want to test the feature by sending eamil from the same system you could bind to 127.0.0.1 and any higher port. 
 
 To run the lamson SMTP daemon you will need to execute the following management command:
     
@@ -204,3 +206,5 @@ Within the askbot admin interface there are 4 significant configuration points f
 * The "reply by email hostname" needs to be set to the email hostname where you want to receive the email replies. If for example this is set to "myaskbot.com" the users will post replies to addresses such as "4wffsw345wsf@myaskbot.com", you need to point the MX DNS record for that domain to the address where you will run the lamson SMTP daemon.
 * The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question. If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
 * In the karma thresholds section the "Post answers and comments by email" defines the minimum karma for users to be able to post replies by email.
+
+If you want to run the lamson daemon on a port other than 25 you can use a mail proxy server such as ``nginx`` that will listen on port 25 and forward any SMTP requests to lamson. Using nginx you can also setup more complex email handling rules, such as for example if the same server where askbot is installed acts as an email server for other domains you can configure nginx to forward any emails directed to your askbot installation to lamson and any other emails to the mail server you're using, such as ``postfix``. For more information on how to use nginx for this please consult the nginx mail module documentation `nginx mail module documentation <http://wiki.nginx.org/MailCoreModule>`_ .
