@@ -228,20 +228,22 @@ settings.register(
     )
 )
 
-settings.register(
-    livesettings.StringValue(
-        EXTERNAL_KEYS,
-        'LDAP_PROXYDN',
-        description=_('LDAP PROXY DN'),
-        default=""
-    )
-)
-
-settings.register(
-    livesettings.StringValue(
-        EXTERNAL_KEYS,
-        'LDAP_PROXYDN_PASSWORD',
-        description=_('LDAP PROXY DN Password'),
-        defalut="",
-    )
-)
+# May be necessary, but not handled properly.
+# --> Commenting out until handled properly in backends.ldap_authenticate()
+#settings.register(
+#    livesettings.StringValue(
+#        EXTERNAL_KEYS,
+#        'LDAP_PROXYDN',
+#        description=_('LDAP PROXY DN'),
+#        default=""
+#    )
+#)
+#
+#settings.register(
+#    livesettings.StringValue(
+#        EXTERNAL_KEYS,
+#        'LDAP_PROXYDN_PASSWORD',
+#        description=_('LDAP PROXY DN Password'),
+#        defalut="",
+#    )
+#)
