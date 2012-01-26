@@ -5,12 +5,22 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
-from askbot.migrations import TERM_YELLOW, TERM_RESET
+from askbot.migrations import TERM_YELLOW, TERM_RESET, innodb_ready_rename_column
+
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.rename_column('askbot_thread', 'accepted_answer_post_id', 'accepted_answer_id')
+        #db.rename_column('askbot_thread', 'accepted_answer_post_id', 'accepted_answer_id')
+        innodb_ready_rename_column(
+            orm=orm,
+            models=self.__class__.models,
+            table='askbot_thread',
+            old_column_name='accepted_answer_post_id',
+            new_column_name='accepted_answer_id',
+            app_model='askbot.thread',
+            new_field_name='accepted_answer'
+        )
 
         # Deleting model 'Comment'
         db.delete_table(u'comment')

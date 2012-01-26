@@ -4,10 +4,23 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+from askbot.migrations import innodb_ready_rename_column
+
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.rename_column('askbot_questionview', 'question_post_id', 'question_id')
+        #db.rename_column('askbot_questionview', 'question_post_id', 'question_id')
+        innodb_ready_rename_column(
+            orm=orm,
+            models=self.__class__.models,
+            table='askbot_questionview',
+            old_column_name='question_post_id',
+            new_column_name='question_id',
+            app_model='askbot.questionview',
+            new_field_name='question'
+        )
+
 
 
     def backwards(self, orm):
