@@ -47,6 +47,13 @@ def page_not_found(request, template='404.html'):
 def server_error(request, template='500.html'):
     return generic_view(request, template)
 
+def help(request):
+    data = {
+        'app_name': askbot_settings.APP_SHORT_NAME,
+        'page_class': 'meta'
+    }
+    return render_into_skin('help.html', data, request)
+
 def faq(request):
     if askbot_settings.FORUM_FAQ.strip() != '':
         return render_into_skin(

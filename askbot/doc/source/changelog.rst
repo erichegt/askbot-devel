@@ -9,6 +9,7 @@ Development version (not released yet)
 * Askbot now respects django's staticfiles app (Radim Řehůřek, Evgeny)
 * Fixed the url translation bug (Evgeny)
 * Added left sidebar option (Evgeny)
+* Added "help" page and links to in the header and the footer (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------
