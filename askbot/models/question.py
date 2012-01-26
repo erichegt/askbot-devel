@@ -1,10 +1,12 @@
 import datetime
 import operator
+import re
 
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 
 import askbot
 import askbot.conf
@@ -15,6 +17,9 @@ from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils import mysql
+from askbot.skins.loaders import get_template #jinja2 template loading enviroment
+from askbot.search.state_manager import DummySearchState
+
 
 class ThreadManager(models.Manager):
     def get_tag_summary_from_threads(self, threads):
@@ -93,42 +98,43 @@ class ThreadManager(models.Manager):
 
         return thread
 
-    def get_for_query(self, search_query):
+    def get_for_query(self, search_query, qs=None):
         """returns a query set of questions,
         matching the full text query
         """
+        if not qs:
+            qs = self.all()
 #        if getattr(settings, 'USE_SPHINX_SEARCH', False):
 #            matching_questions = Question.sphinx_search.query(search_query)
 #            question_ids = [q.id for q in matching_questions]
-#            return self.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
+#            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
         if askbot.get_database_engine_name().endswith('mysql') \
             and mysql.supports_full_text_search():
-            return self.filter(
+            return qs.filter(
                 models.Q(title__search = search_query) |
                 models.Q(tagnames__search = search_query) |
                 models.Q(posts__deleted=False, posts__text__search = search_query)
             )
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            # TODO: !! Fix Postgres search
-            rank_clause = "ts_rank(text_search_vector, plainto_tsquery(%s))";
+            rank_clause = "ts_rank(askbot_thread.text_search_vector, plainto_tsquery(%s))"
             search_query = '&'.join(search_query.split())
             extra_params = (search_query,)
             extra_kwargs = {
                 'select': {'relevance': rank_clause},
-                'where': ['text_search_vector @@ plainto_tsquery(%s)'],
+                'where': ['askbot_thread.text_search_vector @@ plainto_tsquery(%s)'],
                 'params': extra_params,
                 'select_params': extra_params,
             }
-            return self.extra(**extra_kwargs)
+            return qs.extra(**extra_kwargs)
         else:
-            return self.filter(
+            return qs.filter(
                 models.Q(title__icontains=search_query) |
                 models.Q(tagnames__icontains=search_query) |
                 models.Q(posts__deleted=False, posts__text__icontains = search_query)
             )
 
 
-    def run_advanced_search(self, request_user, search_state, page_size):  # TODO: !! review, fix, and write tests for this
+    def run_advanced_search(self, request_user, search_state):  # TODO: !! review, fix, and write tests for this
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -137,18 +143,19 @@ class ThreadManager(models.Manager):
         """
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
-        qs = self.filter(posts__post_type='question', posts__deleted=False) # TODO: add a possibility to see deleted questions
+        # TODO: add a possibility to see deleted questions
+        qs = self.filter(posts__post_type='question', posts__deleted=False) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
         meta_data = {}
 
         if search_state.stripped_query:
-            qs = self.get_for_query(search_state.stripped_query)
+            qs = self.get_for_query(search_query=search_state.stripped_query, qs=qs)
         if search_state.query_title:
             qs = qs.filter(title__icontains = search_state.query_title)
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                qs = qs.filter(posts__post_type='question', posts__author__in=query_users)
+                qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
 
         tags = search_state.unified_tags()
         for tag in tags:
@@ -184,7 +191,6 @@ class ThreadManager(models.Manager):
                 meta_data['author_name'] = u.username
 
         #get users tag filters
-        ignored_tag_names = None
         if request_user and request_user.is_authenticated():
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
@@ -192,9 +198,7 @@ class ThreadManager(models.Manager):
             ignored_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='bad')
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
-
-            ignored_tag_names = [tag.name for tag in ignored_tags]
-            meta_data['ignored_tag_names'] = ignored_tag_names
+            meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
 
             if request_user.display_tag_filter_strategy == const.INCLUDE_INTERESTING and (interesting_tags or request_user.has_interesting_wildcard_tags()):
                 #filter by interesting tags only
@@ -214,47 +218,68 @@ class ThreadManager(models.Manager):
                     extra_ignored_tags = Tag.objects.get_by_wildcards(ignored_wildcards)
                     qs = qs.exclude(tags__in = extra_ignored_tags)
 
-        ###
-        # HACK: GO BACK To QUESTIONS, otherwise we cannot sort properly!
-        thread_ids = qs.values_list('id', flat = True)
-        qs_thread = qs
-        qs = Post.objects.filter(post_type='question', thread__id__in=thread_ids)
-        qs = qs.select_related('thread__last_activity_by')
+            if askbot_settings.USE_WILDCARD_TAGS:
+                meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
+                meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
 
-        if search_state.sort == 'relevance-desc':
-            # TODO: askbot_thread.relevance is not available here, so we have to work around it. Ideas:
-            # * convert the whole questions() pipeline to Thread-s
-            # * ...
-            #qs = qs.extra(select={'relevance': 'askbot_thread.relevance'}, order_by=['-relevance',])
-            pass
-        else:
-            QUESTION_ORDER_BY_MAP = {
-                'age-desc': '-added_at',
-                'age-asc': 'added_at',
-                'activity-desc': '-thread__last_activity_at',
-                'activity-asc': 'thread__last_activity_at',
-                'answers-desc': '-thread__answer_count',
-                'answers-asc': 'thread__answer_count',
-                'votes-desc': '-score',
-                'votes-asc': 'score',
-            }
-            orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
-            qs = qs.order_by(orderby)
+        QUESTION_ORDER_BY_MAP = {
+            'age-desc': '-askbot_post.added_at',
+            'age-asc': 'askbot_post.added_at',
+            'activity-desc': '-last_activity_at',
+            'activity-asc': 'last_activity_at',
+            'answers-desc': '-answer_count',
+            'answers-asc': 'answer_count',
+            'votes-desc': '-askbot_post.score',
+            'votes-asc': 'askbot_post.score',
 
-        related_tags = Tag.objects.get_related_to_search(questions = qs, page_size = page_size, ignored_tag_names = ignored_tag_names) # TODO: !!
+            'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
+        }
+        orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
+        qs = qs.extra(order_by=[orderby])
 
-        if askbot_settings.USE_WILDCARD_TAGS and request_user.is_authenticated():
-            meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
-            meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
+        # HACK: We add 'ordering_key' column as an alias and order by it, because when distict() is used,
+        #       qs.extra(order_by=[orderby,]) is lost if only `orderby` column is from askbot_post!
+        #       Removing distinct() from the queryset fixes the problem, but we have to use it here.
+        # UPDATE: Apparently we don't need distinct, the query don't duplicate Thread rows!
+        # qs = qs.extra(select={'ordering_key': orderby.lstrip('-')}, order_by=['-ordering_key' if orderby.startswith('-') else 'ordering_key'])
+        # qs = qs.distinct()
 
-        qs = qs.distinct()
+        qs = qs.only('id', 'title', 'view_count', 'answer_count', 'last_activity_at', 'last_activity_by', 'closed', 'tagnames', 'accepted_answer')
 
-        return qs, meta_data, related_tags
+        #print qs.query
+
+        return qs, meta_data
+
+    def precache_view_data_hack(self, threads):
+        # TODO: Re-enable this when we have a good test cases to verify that it works properly.
+        #
+        #       E.g.: - make sure that not precaching give threads never increase # of db queries for the main page
+        #             - make sure that it really works, i.e. stuff for non-cached threads is fetched properly
+        # Precache data only for non-cached threads - only those will be rendered
+        #threads = [thread for thread in threads if not thread.summary_html_cached()]
+
+        page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
+                            .only('id', 'thread', 'score', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
+        page_question_map = {}
+        for pq in page_questions:
+            page_question_map[pq.thread_id] = pq
+        for thread in threads:
+            thread._question_cache = page_question_map[thread.id]
+
+        last_activity_by_users = User.objects.filter(id__in=[obj.last_activity_by_id for obj in threads])\
+                                    .only('id', 'username', 'country', 'show_country')
+        user_map = {}
+        for la_user in last_activity_by_users:
+            user_map[la_user.id] = la_user
+        for thread in threads:
+            thread._last_activity_by_cache = user_map[thread.last_activity_by_id]
+
 
     #todo: this function is similar to get_response_receivers - profile this function against the other one
     def get_thread_contributors(self, thread_list):
         """Returns query set of Thread contributors"""
-        u_id = Post.objects.filter(post_type__in=['question', 'answer'], thread__in=thread_list).values_list('author', flat=True)
+        # INFO: Evaluate this query to avoid subquery in the subsequent query below (At least MySQL can be awfully slow on subqueries)
+        u_id = list(Post.objects.filter(post_type__in=('question', 'answer'), thread__in=thread_list).values_list('author', flat=True))
 
         #todo: this does not belong gere - here we select users with real faces
         #first and limit the number of users in the result for display
@@ -268,6 +293,8 @@ class ThreadManager(models.Manager):
 
 
 class Thread(models.Model):
+    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
@@ -300,8 +327,14 @@ class Thread(models.Model):
     class Meta:
         app_label = 'askbot'
 
-    def _question_post(self):
-        return Post.objects.get(post_type='question', thread=self)
+    def _question_post(self, refresh=False):
+        if refresh and hasattr(self, '_question_cache'):
+            delattr(self, '_question_cache')
+        post = getattr(self, '_question_cache', None)
+        if post:
+            return post
+        self._question_cache = Post.objects.get(post_type='question', thread=self)
+        return self._question_cache
 
     def get_absolute_url(self):
         return self._question_post().get_absolute_url()
@@ -318,6 +351,9 @@ class Thread(models.Model):
         qset = Thread.objects.filter(id=self.id)
         qset.update(view_count=models.F('view_count') + increment)
         self.view_count = qset.values('view_count')[0]['view_count'] # get the new view_count back because other pieces of code relies on such behaviour
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
 
     def set_closed_status(self, closed, closed_by, closed_at, close_reason):
         self.closed = closed
@@ -337,6 +373,9 @@ class Thread(models.Model):
         self.last_activity_at = last_activity_at
         self.last_activity_by = last_activity_by
         self.save()
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
@@ -512,6 +551,10 @@ class Thread(models.Model):
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
 
+        ####################################################################
+        self.update_summary_html() # regenerate question/thread summary html
+        ####################################################################
+
         #if there are any modified tags, update their use counts
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
@@ -576,7 +619,47 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
+    def get_summary_html(self, search_state):
+        html = self.get_cached_summary_html()
+        if not html:
+            html = self.update_summary_html()
 
+        # use `<<<` and `>>>` because they cannot be confused with user input
+        # - if user accidentialy types <<<tag-name>>> into question title or body,
+        # then in html it'll become escaped like this: &lt;&lt;&lt;tag-name&gt;&gt;&gt;
+        regex = re.compile(r'<<<(%s)>>>' % const.TAG_REGEX_BARE)
+
+        while True:
+            match = regex.search(html)
+            if not match:
+                break
+            seq = match.group(0)  # e.g "<<<my-tag>>>"
+            tag = match.group(1)  # e.g "my-tag"
+            full_url = search_state.add_tag(tag).full_url()
+            html = html.replace(seq, full_url)
+
+        return html
+
+    def get_cached_summary_html(self):
+        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+
+    def update_summary_html(self):
+        context = {
+            'thread': self,
+            'question': self._question_post(refresh=True),  # fetch new question post to make sure we're up-to-date
+            'search_state': DummySearchState(),
+        }
+        html = get_template('widgets/question_summary.html').render(context)
+        # INFO: Timeout is set to 30 days:
+        # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
+        # * We probably don't need to pollute the cache with threads older than 30 days
+        # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
+        #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
+        cache.cache.set(self.SUMMARY_CACHE_KEY_TPL % self.id, html, timeout=60*60*24*30)
+        return html
+
+    def summary_html_cached(self):
+        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
 
 #class Question(content.Content):

@@ -219,4 +219,5 @@ DROP TRIGGER IF EXISTS post_search_vector_update_trigger on askbot_post;
 CREATE TRIGGER post_search_vector_update_trigger 
 BEFORE INSERT OR UPDATE ON askbot_post FOR EACH ROW EXECUTE PROCEDURE post_trigger();
 
+DROP INDEX IF EXISTS askbot_search_idx;
 CREATE INDEX askbot_search_idx ON askbot_thread USING gin(text_search_vector);
