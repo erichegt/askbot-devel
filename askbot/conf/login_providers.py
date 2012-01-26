@@ -27,7 +27,7 @@ settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
         'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
-        default = False,
+        default = True,
         description=_('Always display local login form and hide "Askbot" button.'),
     )
 )
