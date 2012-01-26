@@ -528,7 +528,10 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         question = self.post_question()
         self.assertEqual(1, Post.objects.count())
 
-        thread = question.thread
+        #thread = question.thread
+        # get fresh Thread instance so that on MySQL it has timestamps without microseconds
+        thread = Thread.objects.get(id=question.thread.id)
+
         self.assertEqual(0, thread.answer_count)
         self.assertEqual(thread.last_activity_at, question.added_at)
         self.assertEqual(thread.last_activity_by, question.author)
@@ -558,6 +561,8 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
     def test_edit_answer(self):
         self.assertEqual(0, Post.objects.count())
         question = self.post_question()
+        # get fresh question Post instance so that on MySQL it has timestamps without microseconds
+        question = Post.objects.get(id=question.id)
         self.assertEqual(question.thread.last_activity_at, question.added_at)
         self.assertEqual(question.thread.last_activity_by, question.author)
 

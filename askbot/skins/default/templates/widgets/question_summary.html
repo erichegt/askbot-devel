@@ -42,7 +42,8 @@
         </div>
         <div style="clear:both"></div>
         <div class="userinfo">
-            <span class="relativetime" title="{{thread.last_activity_at}}">{{ thread.last_activity_at|diff_date }}</span>
+            {# We have to kill microseconds below because InnoDB doesn't support them and all kinds of funny things happen in unit tests #}
+            <span class="relativetime" title="{{thread.last_activity_at.replace(microsecond=0)}}">{{ thread.last_activity_at|diff_date }}</span>
             {% if question.is_anonymous %}
                 <span class="anonymous">{{ thread.last_activity_by.get_anonymous_name() }}</span>
             {% else %}

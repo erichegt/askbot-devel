@@ -3,6 +3,8 @@ from django.test import signals
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core import management
+from django.core.cache.backends.dummy import DummyCache
+from django.core import cache
 
 import coffin
 import coffin.template
@@ -63,6 +65,13 @@ class PageLoadTestCase(AskbotTestCase):
 
     #############################################
 
+    def setUp(self):
+        self.old_cache = cache.cache
+        cache.cache = DummyCache('', {})  # Disable caching (to not interfere with production cache, not sure if that's possible but let's not risk it)
+
+    def tearDown(self):
+        cache.cache = self.old_cache  # Restore caching
+
     def try_url(
             self,
             url_name, status_code=200, template=None,
@@ -99,16 +108,18 @@ class PageLoadTestCase(AskbotTestCase):
                 #asuming that there is more than one template
                 template_names = ','.join([t.name for t in r.template])
                 print 'templates are %s' % template_names
-                if follow == False:
-                    self.fail(
-                        ('Have issue accessing %s. '
-                        'This should not have happened, '
-                        'since you are not expecting a redirect '
-                        'i.e. follow == False, there should be only '
-                        'one template') % url
-                    )
-
-                #self.assertEqual(r.template[0].name, template)
+                # The following code is no longer relevant because we're using
+                # additional templates for cached fragments [e.g. thread.get_summary_html()]
+#                if follow == False:
+#                    self.fail(
+#                        ('Have issue accessing %s. '
+#                        'This should not have happened, '
+#                        'since you are not expecting a redirect '
+#                        'i.e. follow == False, there should be only '
+#                        'one template') % url
+#                    )
+#
+#               self.assertEqual(r.template[0].name, template)
                 self.assertIn(template, [t.name for t in r.template])
             else:
                 raise Exception('unexpected error while runnig test')
@@ -120,7 +131,8 @@ class PageLoadTestCase(AskbotTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        self.assertEquals(response.template.name, 'main_page.html')
+        self.assertTrue(isinstance(response.template, list))
+        self.assertIn('main_page.html', [t.name for t in response.template])
 
     def proto_test_ask_page(self, allow_anonymous, status_code):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
