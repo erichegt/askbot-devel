@@ -205,6 +205,11 @@ def vote(request, id):
                     response_data['status'] = 1 #cancelation
                 else:
                     request.user.accept_best_answer(answer)
+
+                ####################################################################
+                answer.thread.update_summary_html() # regenerate question/thread summary html
+                ####################################################################
+
             else:
                 raise exceptions.PermissionDenied(
                         _('Sorry, but anonymous users cannot accept answers')
@@ -234,6 +239,11 @@ def vote(request, id):
                                         vote_direction = vote_direction,
                                         post = post
                                     )
+
+            ####################################################################
+            if vote_type in ('1', '2'): # up/down-vote question
+                post.thread.update_summary_html() # regenerate question/thread summary html
+            ####################################################################
 
         elif vote_type in ['7', '8']:
             #flag question or answer

@@ -66,42 +66,13 @@ class TagQuerySet(models.query.QuerySet):
             tag_filter |= models.Q(name__startswith = next_tag[:-1])
         return self.filter(tag_filter)
 
-    def get_related_to_search(self, questions, page_size, ignored_tag_names):
-        """must return at least tag names, along with use counts
-        handle several cases to optimize the query performance
-        """
-
-        if questions.count() > page_size * 3:
-            """if we have too many questions or 
-            search query is the most common - just return a list
-            of top tags"""
-            cheating = True
-            tags = Tag.objects.all().order_by('-used_count')
-        else:
-            cheating = False
-            #getting id's is necessary to avoid hitting a heavy query
-            #on entire selection of questions. We actually want
-            #the big questions query to hit only the page to be displayed
-            thread_id_list = questions.values_list('thread_id', flat=True)
-            tags = self.filter(
-                    threads__id__in = thread_id_list,
-                ).annotate(
-                    local_used_count=models.Count('id')
-                ).order_by(
-                    '-local_used_count'
-                )
-
+    def get_related_to_search(self, threads, ignored_tag_names):
+        """Returns at least tag names, along with use counts"""
+        tags = self.filter(threads__in=threads).annotate(local_used_count=models.Count('id')).order_by('-local_used_count', 'name')
         if ignored_tag_names:
             tags = tags.exclude(name__in=ignored_tag_names)
-
         tags = tags.exclude(deleted = True)
-
-        tags = tags[:50]#magic number
-        if cheating:
-            for tag in tags:
-                tag.local_used_count = tag.used_count
-
-        return tags
+        return list(tags[:50])
 
 
 class TagManager(BaseQuerySetManager):

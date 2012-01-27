@@ -27,7 +27,7 @@
         {% include "widgets/secondary_header.html" %} {# Scope selector, search input and ask button #}
         {% if settings.ENABLE_LEADING_SIDEBAR %}
         <div id="leading-sidebar">
-            {{ settings.LEADING_SIDEBAR|safe }}
+            {{ settings.LEADING_SIDEBAR }}
         </div>
         {% endif %}
         <div class="content-wrapper">

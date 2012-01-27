@@ -1,18 +1,21 @@
-from django.test import TestCase
+from askbot.search.state_manager import SearchState
 from django.test import signals
-from django.template import defaultfilters
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core import management
+from django.core.cache.backends.dummy import DummyCache
+from django.core import cache
+
 import coffin
 import coffin.template
+
 from askbot import models
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot.tests.utils import skipIf
-import sys
-import os
+
 
 
 def patch_jinja2():
@@ -36,22 +39,48 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 class PageLoadTestCase(AskbotTestCase):
 
-    def _fixture_setup(self):
-        from django.core import management
+    #############################################
+    #
+    # INFO: We load test data once for all tests in this class (setUpClass + cleanup in tearDownClass)
+    #
+    #       We also disable (by overriding _fixture_setup/teardown) per-test fixture setup,
+    #       which by default flushes the database for non-transactional db engines like MySQL+MyISAM.
+    #       For transactional engines it only messes with transactions, but to keep things uniform
+    #       for both types of databases we disable it all.
+    #
+    @classmethod
+    def setUpClass(cls):
+        management.call_command('flush', verbosity=0, interactive=False)
         management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
-        super(PageLoadTestCase, self)._fixture_setup()
+
+    @classmethod
+    def tearDownClass(self):
+        management.call_command('flush', verbosity=0, interactive=False)
+
+    def _fixture_setup(self):
+        pass
 
     def _fixture_teardown(self):
-        super(PageLoadTestCase, self)._fixture_teardown()
-        from django.core import management
-        management.call_command('flush', verbosity=0, interactive=False)
+        pass
+
+    #############################################
+
+    def setUp(self):
+        self.old_cache = cache.cache
+        cache.cache = DummyCache('', {})  # Disable caching (to not interfere with production cache, not sure if that's possible but let's not risk it)
+
+    def tearDown(self):
+        cache.cache = self.old_cache  # Restore caching
 
     def try_url(
             self,
             url_name, status_code=200, template=None,
             kwargs={}, redirect_url=None, follow=False,
-            data={}):
-        url = reverse(url_name, kwargs=kwargs)
+            data={}, plain_url_passed=False):
+        if plain_url_passed:
+            url = url_name
+        else:
+            url = reverse(url_name, kwargs=kwargs)
         if status_code == 302:
             url_info = 'redirecting to LOGIN_URL in closed_mode: %s' % url
         else:
@@ -79,16 +108,19 @@ class PageLoadTestCase(AskbotTestCase):
                 #asuming that there is more than one template
                 template_names = ','.join([t.name for t in r.template])
                 print 'templates are %s' % template_names
-                if follow == False:
-                    self.fail(
-                        ('Have issue accessing %s. '
-                        'This should not have happened, '
-                        'since you are not expecting a redirect '
-                        'i.e. follow == False, there should be only '
-                        'one template') % url
-                    )
-
-                self.assertEqual(r.template[0].name, template)
+                # The following code is no longer relevant because we're using
+                # additional templates for cached fragments [e.g. thread.get_summary_html()]
+#                if follow == False:
+#                    self.fail(
+#                        ('Have issue accessing %s. '
+#                        'This should not have happened, '
+#                        'since you are not expecting a redirect '
+#                        'i.e. follow == False, there should be only '
+#                        'one template') % url
+#                    )
+#
+#               self.assertEqual(r.template[0].name, template)
+                self.assertIn(template, [t.name for t in r.template])
             else:
                 raise Exception('unexpected error while runnig test')
 
@@ -99,7 +131,8 @@ class PageLoadTestCase(AskbotTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        self.assertEquals(response.template.name, 'main_page.html')
+        self.assertTrue(isinstance(response.template, list))
+        self.assertIn('main_page.html', [t.name for t in response.template])
 
     def proto_test_ask_page(self, allow_anonymous, status_code):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
@@ -170,76 +203,81 @@ class PageLoadTestCase(AskbotTestCase):
             )
         #todo: test different sort methods and scopes
         self.try_url(
-                'questions',
-                status_code=status_code,
-                template='main_page.html'
-            )
+            'questions',
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'start_over':'true'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html',
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('favorite').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'favorite'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'age-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'age-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'activity-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'scope':'unanswered', 'sort':'activity-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'answers-desc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'answers-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-desc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
         self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'votes-desc'},
-                template='main_page.html'
-            )
-        self.try_url(
-                'questions',
-                status_code=status_code,
-                data={'sort':'votes-asc'},
-                template='main_page.html'
-            )
+            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-asc').query_string(),
+            plain_url_passed=True,
+
+            status_code=status_code,
+            template='main_page.html'
+        )
+
         self.try_url(
                 'question',
                 status_code=status_code,
