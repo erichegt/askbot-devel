@@ -42,16 +42,17 @@
         </div>
         <div style="clear:both"></div>
         <div class="userinfo">
-            <span class="relativetime" title="{{thread.last_activity_at}}">{{ thread.last_activity_at|diff_date }}</span>
+            {# We have to kill microseconds below because InnoDB doesn't support them and all kinds of funny things happen in unit tests #}
+            <span class="relativetime" title="{{thread.last_activity_at.replace(microsecond=0)}}">{{ thread.last_activity_at|diff_date }}</span>
             {% if question.is_anonymous %}
                 <span class="anonymous">{{ thread.last_activity_by.get_anonymous_name() }}</span>
             {% else %}
-                <a href="{% url user_profile thread.last_activity_by.id, thread.last_activity_by.username|slugify %}">{{thread.last_activity_by.username}}</a>{{ user_country_flag(thread.last_activity_by) }}
-            {#{user_score_and_badge_summary(thread.last_activity_by)}#}
+                <a href="{% url user_profile thread.last_activity_by.id, thread.last_activity_by.username|slugify %}">{{thread.last_activity_by.username}}</a> {{ user_country_flag(thread.last_activity_by) }}
+                {#{user_score_and_badge_summary(thread.last_activity_by)}#}
             {% endif %}
         </div>
     </div>
-    <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{thread.get_title(question)|escape}}</a></h2>
+    <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title(question)|escape}}</a></h2>
     {{ tag_list_widget(thread.get_tag_names(), search_state=search_state) }}
 </div>
 

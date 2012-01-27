@@ -30,6 +30,13 @@ class BaseQuerySetManager(models.Manager):
     >>>    objects = SomeManager()
     """
     def __getattr__(self, attr, *args):
+        ## The following two lines fix the problem from this ticket:
+        ## https://code.djangoproject.com/ticket/15062#comment:6
+        ## https://code.djangoproject.com/changeset/15220
+        ## Queryset.only() seems to suffer from that on some occasions
+        if attr.startswith('_'):
+            raise AttributeError
+        ##
         try:
             return getattr(self.__class__, attr, *args)
         except AttributeError:
