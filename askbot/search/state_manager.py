@@ -117,7 +117,13 @@ class SearchState(object):
         else:
             self.sort = sort
 
-        self.tags = [t.strip() for t in tags.split(const.TAG_SEP)] if tags else []
+        self.tags = []
+        if tags:
+            for t in tags.split(const.TAG_SEP):
+                tag = t.strip()
+                if tag not in self.tags:
+                    self.tags.append(tag)
+
         self.author = int(author) if author else None
         self.page = int(page) if page else 1
         if self.page == 0:  # in case someone likes jokes :)
