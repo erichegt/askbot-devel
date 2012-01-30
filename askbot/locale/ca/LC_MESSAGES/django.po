@@ -3307,7 +3307,7 @@ msgstr "Disciplinat"
 #: models/badges.py:151
 #, python-format
 msgid "Deleted own post with %(votes)s or more downvotes"
-msgstr "Esborra entrada pròpia amb %(votes)s o més vots negatius"
+msgstr "Elimina entrada pròpia amb %(votes)s o més vots negatius"
 
 #: models/badges.py:155
 msgid "Peer Pressure"
@@ -3446,7 +3446,7 @@ msgstr "Resposta acceptada amb  %(num)s o més vots"
 msgid ""
 "Answered a question more than %(days)s days later with at least %(votes)s "
 "votes"
-msgstr "Respon una pregunta feta fa més %(days)s amb un mínim de %(votes)s"
+msgstr "Respon una pregunta feta fa més %(days)s dies amb un mínim de %(votes)s"
 
 #: models/badges.py:525
 msgid "Necromancer"
@@ -3454,7 +3454,7 @@ msgstr "Nigromàntic"
 
 #: models/badges.py:548
 msgid "Citizen Patrol"
-msgstr "Patrulla ciutadana"
+msgstr "Patrulla Ciutadana"
 
 #: models/badges.py:551
 msgid "First flagged post"
@@ -3482,11 +3482,11 @@ msgstr "Editor"
 
 #: models/badges.py:615
 msgid "First edit"
-msgstr "Primera edició"
+msgstr "Primera Edició"
 
 #: models/badges.py:623
 msgid "Associate Editor"
-msgstr "editor Associat"
+msgstr "Editor Associat"
 
 #: models/badges.py:627
 #, python-format
@@ -3512,15 +3512,15 @@ msgstr "Omple tots el camps del perfil d'usuari"
 #: models/badges.py:663
 #, python-format
 msgid "Question favorited by %(num)s users"
-msgstr "Pregunta marca com a favorita per %(num)s usuaris"
+msgstr "Pregunta marcada com a favorita per %(num)s usuaris"
 
 #: models/badges.py:689
 msgid "Stellar Question"
-msgstr "Pregunta estel·lar"
+msgstr "Pregunta Estel·lar"
 
 #: models/badges.py:698
 msgid "Favorite Question"
-msgstr "Pregunta favorita"
+msgstr "Pregunta Favorita"
 
 #: models/badges.py:710
 msgid "Enthusiast"
@@ -6210,11 +6210,11 @@ msgstr "sobre"
 #: skins/default/templates/widgets/footer.html:40
 #: skins/default/templates/widgets/user_navigation.html:17
 msgid "help"
-msgstr ""
+msgstr "ajuda"
 
 #: skins/default/templates/widgets/footer.html:42
 msgid "privacy policy"
-msgstr "política de privacitat"
+msgstr "avís legal"
 
 #: skins/default/templates/widgets/footer.html:51
 msgid "give feedback"
@@ -6501,7 +6501,7 @@ msgstr ""
 
 #: views/meta.py:100
 msgid "Privacy policy"
-msgstr "Política de privacitat"
+msgstr "Avís legal"
 
 #: views/readers.py:134
 #, python-format
