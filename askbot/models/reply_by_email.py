@@ -47,7 +47,7 @@ class ReplyAddress(models.Model):
         if self.post.post_type == 'answer':
             result = self.user.post_comment(self.post, content)
         elif self.post.post_type == 'question':
-            wordcount = len(content.rsplit())
+            wordcount = len(content)/6
             if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
                 result = self.user.post_answer(self.post, content)
             else:
