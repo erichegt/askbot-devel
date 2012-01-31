@@ -1,9 +1,11 @@
 import re
 import logging
 from lamson.routing import route, route_like, stateless
+from lamson.server import Relay
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
 from askbot.conf import settings as askbot_settings
+from django.conf import settings
 
 
 
@@ -42,6 +44,15 @@ def _strip_message_qoute(message_text):
 @route("(address)@(host)", address=".+")
 @stateless
 def PROCESS(message, address = None, host = None):
+    try:
+        for rule in settings.LAMSON_FORWARD:
+            if re.match(rule['pattern'], message.base['to']):
+                relay = Relay(host=rule['host'], 
+                           port=rule['port'], debug=1)
+                relay.deliver(message)
+                return
+    except AttributeError:
+        pass
 
     error = None
     try:
@@ -71,5 +82,6 @@ def PROCESS(message, address = None, host = None):
             body_text = body_text,
             recipient_list = [message.From],
         )        
+
 
 
