@@ -275,3 +275,19 @@ class SearchStateTests(AskbotTestCase):
         ss = SearchState.get_empty().add_tag('double').add_tag('double')
         self.assertListEqual(['double'], ss.tags)
 
+    def test_prevent_dupped_tags(self):
+        ss = SearchState(
+            scope=None,
+            sort=None,
+            query=None,
+            tags='valid1,dupped,valid2,dupped',
+            author=None,
+            page=None,
+            user_logged_in=False
+        )
+        self.assertEqual(
+            'scope:all/sort:activity-desc/tags:valid1,dupped,valid2/page:1/',
+            ss.query_string()
+        )
+
+
