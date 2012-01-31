@@ -27,6 +27,7 @@ tmp/*
 /manage.py
 /urls.py
 /log
+/prof
 load
 askbot/skins/default/media/js/flot
 askbot/skins/common/media/js/closure/google-closure
