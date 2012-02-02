@@ -15,10 +15,7 @@ To use postgresql - install it (please see documentation elsewhere).
 
 After you have the database inself, add python bindingngs to postgresql::
 
-    pip install psycopg2==2.4.1
-
-.. note::
-    Note the specific version of the library required! There may be issues with the later version.
+    pip install psycopg2
 
 To create a database, log in to postgresql as user postgres, create a user (if necessary), create a database, and enable the user account to log in to the database::
 
