@@ -278,7 +278,7 @@ $.fn.authenticator = function() {
                     signin_form.submit();
                 }
                 else {
-                    if (FB.getSession()){
+                    if (FB.getAuthResponse()){
                       signin_form.submit();
                     }
                     FB.login();
