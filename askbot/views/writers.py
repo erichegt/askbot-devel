@@ -12,6 +12,7 @@ import random
 import sys
 import tempfile
 import time
+import urlparse
 from django.core.files.storage import get_storage_class
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -99,6 +100,15 @@ def upload(request):#ajax upload file to a question or answer
     if error == '':
         result = 'Good'
         file_url = file_storage.url(new_file_name)
+        parsed_url = urlparse.urlparse(file_url)
+        file_url = urlparse.urlunparse(
+            urlparse.ParseResult(
+                parsed_url.scheme, 
+                parsed_url.netloc,
+                parsed_url.path,
+                '', '', ''
+            )
+        )
     else:
         result = ''
         file_url = ''
