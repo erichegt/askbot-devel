@@ -6277,7 +6277,7 @@ msgstr "veure preguntes sense respondre"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "UNANSWERED"
-msgstr "SENSE RESPONDRE"
+msgstr "SENSE RESP."
 
 #: skins/default/templates/widgets/scope_nav.html:11
 msgid "see your followed questions"
