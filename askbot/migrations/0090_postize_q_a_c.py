@@ -26,7 +26,7 @@ class Migration(DataMigration):
         if 'test' not in sys.argv: # Don't confuse users
             print TERM_GREEN, '[DEBUG] Initial Post.id ==', post_id + 1, TERM_RESET
 
-        for q in orm.Question.objects.all():
+        for q in orm.Question.objects.iterator():
             post_id += 1
             orm.Post.objects.create(
                 id=post_id,
@@ -67,7 +67,7 @@ class Migration(DataMigration):
                 is_anonymous=q.is_anonymous,
             )
 
-        for ans in orm.Answer.objects.all():
+        for ans in orm.Answer.objects.iterator():
             post_id += 1
             orm.Post.objects.create(
                 id=post_id,
@@ -108,7 +108,7 @@ class Migration(DataMigration):
                 is_anonymous=ans.is_anonymous,
             )
 
-        for cm in orm.Comment.objects.all():
+        for cm in orm.Comment.objects.iterator():
             # Workaround for a strange issue with: http://south.aeracode.org/docs/generics.html
             # No need to investigate that as this is as simple as the "proper" way
             if (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'question'):

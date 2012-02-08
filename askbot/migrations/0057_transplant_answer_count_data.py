@@ -7,7 +7,7 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
+        for question in orm.Question.objects.iterator():
             thread = question.thread
             thread.answer_count = question.answer_count
             thread.save()

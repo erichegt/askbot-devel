@@ -7,8 +7,8 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
-            question.thread.tags.add(*list(question.tags.all()))
+        for question in orm.Question.objects.iterator():
+            question.thread.tags.add(*list(question.tags.iterator()))
 
         if orm.Question.objects.annotate(tag_num=models.Count('tags'), thread_tag_num=models.Count('thread__tags')).exclude(tag_num=models.F('thread_tag_num')).exists():
             raise ValueError("There are Thread instances for which data doesn't match Question!")

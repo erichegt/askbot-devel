@@ -9,20 +9,20 @@ class Migration(DataMigration):
     def forwards(self, orm):
         # TODO: Speed this migration up by prefetching data ?
 
-        for thread in orm.Thread.objects.all():
+        for thread in orm.Thread.objects.iterator():
             if thread.accepted_answer:
                 thread.accepted_answer_post = orm.Post.objects.get(self_answer__id=thread.accepted_answer.id)
                 thread.save()
 
-        for qv in orm.QuestionView.objects.all():
+        for qv in orm.QuestionView.objects.iterator():
             qv.question_post = orm.Post.objects.get(self_question__id=qv.question.id)
             qv.save()
 
-        for aa in orm.AnonymousAnswer.objects.all():
+        for aa in orm.AnonymousAnswer.objects.iterator():
             aa.question_post = orm.Post.objects.get(self_question__id=aa.question.id)
             aa.save()
 
-        for rev in orm.PostRevision.objects.all():
+        for rev in orm.PostRevision.objects.iterator():
             if rev.question:
                 assert not rev.answer
                 rev.post = orm.Post.objects.get(self_question__id=rev.question.id)
