@@ -37,8 +37,6 @@
         </p>
     </div> 
 </div>
-{% cache 0 "questions_tags" questions_tags question.id language_code %}
-
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="box statsWidget">
@@ -55,7 +53,6 @@
     </p>
 </div>
 {% endif %}
-{% endcache %}
 
 {% if similar_threads.data and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {#% cache 1800 "related_questions" related_questions question.id language_code %#}
