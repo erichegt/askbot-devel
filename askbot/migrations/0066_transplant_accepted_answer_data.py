@@ -5,11 +5,14 @@ from south.v2 import DataMigration
 from django.db import models
 
 from askbot.migrations import TERM_YELLOW, TERM_RESET
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
+        message = "Adding accepted answers to threads"
+        num_questions = orm.Question.objects.count()
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             thread = question.thread
 
             if question.answer_accepted:
@@ -27,7 +30,8 @@ class Migration(DataMigration):
                     thread.save()
 
         # Verify data integrity
-        for question in orm.Question.objects.all():
+        message = "Checking correctness of accepted answer data"
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             accepted_answers = question.answers.filter(accepted=True)
             num_accepted_answers = len(accepted_answers)
 
