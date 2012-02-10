@@ -9,6 +9,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
+        print "Converting question to threads:"
         num_questions = orm.Question.objects.count()
         for question in ProgressBar(orm.Question.objects.iterator(), num_questions):
             thread = orm.Thread.objects.create(favourite_count=question.favourite_count)
