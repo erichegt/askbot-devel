@@ -42,10 +42,10 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         # Process revisions
-        for qr in orm.QuestionRevision.objects.all():
+        for qr in orm.QuestionRevision.objects.iterator():
             self.copy_revision(orm=orm, source_revision=qr)
 
-        for ar in orm.AnswerRevision.objects.all():
+        for ar in orm.AnswerRevision.objects.iterator():
             self.copy_revision(orm=orm, source_revision=ar)
 
 

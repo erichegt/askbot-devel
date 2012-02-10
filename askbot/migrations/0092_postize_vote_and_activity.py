@@ -12,7 +12,7 @@ class Migration(DataMigration):
     def forwards(self, orm):
 
         # TODO: Speed this up by prefetching all votes ?
-        for v in orm.Vote.objects.all():
+        for v in orm.Vote.objects.iterator():
             if (v.content_type.app_label, v.content_type.model) == ('askbot', 'question'):
                 v.voted_post = orm.Post.objects.get(self_question__id=v.object_id)
             elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'answer'):
@@ -31,7 +31,7 @@ class Migration(DataMigration):
 
         abandoned_activities = []
 
-        for a in orm.Activity.objects.all():
+        for a in orm.Activity.objects.iterator():
             # test if content_object for this activity exists - there might be a bunch of "abandoned" activities
             #
             # NOTE  that if activity.content_object is gone then we cannot reliably recover it from activity.question

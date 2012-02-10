@@ -7,7 +7,7 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for fav in orm.FavoriteQuestion.objects.all():
+        for fav in orm.FavoriteQuestion.objects.iterator():
             fav.thread = fav.question.thread
             fav.save()
 

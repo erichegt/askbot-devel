@@ -11,16 +11,19 @@ class Migration(DataMigration):
         # ContentType for Post model should be created no later than in migration 0092
         ct_post = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='post')
 
-        for aw in orm.Award.objects.all():
+        for aw in orm.Award.objects.iterator():
             ct = aw.content_type
             if ct.app_label == 'askbot' and ct.model in ('question', 'answer', 'comment'):
                 aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(**{'self_%s__id' % str(ct.model): aw.object_id}).id
+                try:
+                    aw.object_id = orm.Post.objects.get(**{'self_%s__id' % str(ct.model): aw.object_id}).id
+                except orm.Post.DoesNotExist:
+                    continue
                 aw.save()
 
         ###
 
-        for rp in orm.Repute.objects.all():
+        for rp in orm.Repute.objects.iterator():
             if rp.question:
                 rp.question_post = orm.Post.objects.get(self_question__id=rp.question.id)
                 rp.save()

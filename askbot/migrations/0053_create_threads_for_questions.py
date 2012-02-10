@@ -8,7 +8,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        for question in orm.Question.objects.all():
+        for question in orm.Question.objects.iterator():
             thread = orm.Thread.objects.create(favourite_count=question.favourite_count)
             question.thread = thread
             question.save()

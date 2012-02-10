@@ -7,7 +7,7 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
+        for question in orm.Question.objects.iterator():
             thread = question.thread
             thread.last_activity_at = question.last_activity_at
             thread.last_activity_by = question.last_activity_by
