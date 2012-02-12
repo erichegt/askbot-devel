@@ -36,6 +36,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.url_utils import strip_path
 from askbot.utils import mail
 
 def get_model(model_name):
@@ -2279,7 +2280,7 @@ def format_instant_notification_email(
         'receiving_user_name': to_user.username,
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
-        'post_url': site_url + post.get_absolute_url(),
+        'post_url': strip_path(site_url) + post.get_absolute_url(),
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
     }

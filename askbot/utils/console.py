@@ -94,6 +94,13 @@ class ProgressBar(object):
 
     def next(self):
 
+        try:
+            result = self.iterable.next()
+        except StopIteration:
+            if self.length > 0:
+                sys.stdout.write('\n')
+            raise
+
         sys.stdout.write('\b'*len(self.progress))
 
         if self.length < self.barlen:
@@ -106,8 +113,4 @@ class ProgressBar(object):
         sys.stdout.flush()
 
         self.counter += 1
-        try:
-            return self.iterable.next()
-        except StopIteration:
-            sys.stdout.write('\n')
-            raise
+        return result
