@@ -248,7 +248,7 @@ class ThreadManager(models.Manager):
 
         #print qs.query
 
-        return qs, meta_data
+        return qs.distinct(), meta_data
 
     def precache_view_data_hack(self, threads):
         # TODO: Re-enable this when we have a good test cases to verify that it works properly.
