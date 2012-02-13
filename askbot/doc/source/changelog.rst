@@ -14,6 +14,7 @@ Development version (not released yet)
   amazon S3 for some reason adds weird expiration parameters (Evgeny)
 * Reduced memory usage in data migrations (Evgeny)
 * Added progress bars to slow data migrations (Evgeny)
+* Added management command to rebuild cache summary for threads (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------
