@@ -597,6 +597,7 @@ def user_responses(request, user, context):
             'response_type': memo.activity.get_activity_type_display(),
             'response_id': memo.activity.question.id,
             'nested_responses': [],
+            'response_content': memo.activity.content_object.html,
         }
         response_list.append(response)
 
@@ -617,6 +618,7 @@ def user_responses(request, user, context):
             last_response_index = i
 
     response_list = filtered_response_list
+    
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
     filtered_response_list = list()
 

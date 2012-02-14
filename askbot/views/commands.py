@@ -41,7 +41,7 @@ def manage_inbox(request):
                 post_data = simplejson.loads(request.raw_post_data)
                 if request.user.is_authenticated():
                     activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-                    activity_types += (const.TYPE_ACTIVITY_MENTION, )
+                    activity_types += (const.TYPE_ACTIVITY_MENTION, const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
                     user = request.user
                     memo_set = models.ActivityAuditStatus.objects.filter(
                         id__in = post_data['memo_list'],
@@ -56,6 +56,17 @@ def manage_inbox(request):
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
                     elif action_type == 'mark_seen':
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
+                    elif action_type == 'remove_flag':
+                        for memo in memo_set:
+                            request.user.flag_post(post = memo.activity.content_object, cancel_all = True)
+                    elif action_type == 'close':
+                        for memo in memo_set:
+                            if memo.activity.content_object.post_type == "question":
+                                request.user.close_question(question = memo.activity.content_object, reason = 7)
+                            else:
+                                memo.activity.content_object.deleted = True
+                                memo.activity.content_object.save()
+                            memo.delete()
                     else:
                         raise exceptions.PermissionDenied(
                             _('Oops, apologies - there was some error')
