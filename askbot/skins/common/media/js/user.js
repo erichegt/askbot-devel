@@ -18,7 +18,7 @@ $(document).ready(function(){
     };
 
     var submit = function(id_list, elements, action_type){
-        if (action_type == 'delete' || action_type == 'mark_new' || action_type == 'mark_seen' || action_type == 'remove_flag' || action_type == 'close'){
+        if (action_type == 'delete' || action_type == 'mark_new' || action_type == 'mark_seen' || action_type == 'remove_flag' || action_type == 'close' || action_type == 'delete_post'){
             $.ajax({
                 type: 'POST',
                 cache: false,
@@ -27,7 +27,7 @@ $(document).ready(function(){
                 url: askbot['urls']['manageInbox'],
                 success: function(response_data){
                     if (response_data['success'] === true){
-                        if (action_type == 'delete' || action_type == 'remove_flag' || action_type == 'close'){
+                        if (action_type == 'delete' || action_type == 'remove_flag' || action_type == 'close' || action_type == 'delete_post'){
                             elements.remove();
                         }
                         else if (action_type == 'mark_new'){
@@ -75,6 +75,13 @@ $(document).ready(function(){
                 return;
             }
         }
+        if (action_type == 'delete_post'){
+            msg = ngettext('Delete this entry?',
+                    'Delete these entries?', data['id_list'].length);
+            if (confirm(msg) === false){
+                return;
+            }
+        }
         submit(data['id_list'], data['elements'], action_type);
     };
     setupButtonEventHandlers($('#re_mark_seen'), function(){startAction('mark_seen')});
@@ -82,6 +89,7 @@ $(document).ready(function(){
     setupButtonEventHandlers($('#re_dismiss'), function(){startAction('delete')});
     setupButtonEventHandlers($('#re_remove_flag'), function(){startAction('remove_flag')});
     setupButtonEventHandlers($('#re_close'), function(){startAction('close')});
+    setupButtonEventHandlers($('#re_delete_post'), function(){startAction('delete_post')});
     setupButtonEventHandlers(
                     $('#sel_all'),
                     function(){

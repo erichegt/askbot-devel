@@ -63,9 +63,10 @@ def manage_inbox(request):
                         for memo in memo_set:
                             if memo.activity.content_object.post_type == "question":
                                 request.user.close_question(question = memo.activity.content_object, reason = 7)
-                            else:
-                                memo.activity.content_object.deleted = True
-                                memo.activity.content_object.save()
+                                memo.delete()
+                    elif action_type == 'delete_post':
+                        for memo in memo_set:
+                            request.user.delete_post(post = memo.activity.content_object)
                             memo.delete()
                     else:
                         raise exceptions.PermissionDenied(
