@@ -14,7 +14,7 @@ class Command(NoArgsCommand):
                 act.delete()
                 deleted_count += 1
         if deleted_count:
-            print "%d activity objects deleted"
+            print "%d activity objects deleted" % deleted_count
         else:
             print "None found"
         
