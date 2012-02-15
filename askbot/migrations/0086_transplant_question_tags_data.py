@@ -3,11 +3,14 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.iterator():
+        message = "Linking tag objects with threads"
+        num_questions = orm.Question.objects.count()
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             question.thread.tags.add(*list(question.tags.iterator()))
 
         if orm.Question.objects.annotate(tag_num=models.Count('tags'), thread_tag_num=models.Count('thread__tags')).exclude(tag_num=models.F('thread_tag_num')).exists():

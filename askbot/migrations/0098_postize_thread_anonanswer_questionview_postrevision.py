@@ -3,26 +3,35 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         # TODO: Speed this migration up by prefetching data ?
 
-        for thread in orm.Thread.objects.iterator():
+        message = "Marking accepted answer in threads"
+        num_threads = orm.Thread.objects.count()
+        for thread in ProgressBar(orm.Thread.objects.iterator(), num_threads, message):
             if thread.accepted_answer:
                 thread.accepted_answer_post = orm.Post.objects.get(self_answer__id=thread.accepted_answer.id)
                 thread.save()
 
-        for qv in orm.QuestionView.objects.iterator():
+        message = "Connecting question view objects to posts"
+        num_question_views = orm.QuestionView.objects.count()
+        for qv in ProgressBar(orm.QuestionView.objects.iterator(), num_question_views, message):
             qv.question_post = orm.Post.objects.get(self_question__id=qv.question.id)
             qv.save()
 
-        for aa in orm.AnonymousAnswer.objects.iterator():
+        message = "Connecting anonymous answers to posts"
+        num_anon_answers = orm.AnonymousAnswer.objects.count()
+        for aa in ProgressBar(orm.AnonymousAnswer.objects.iterator(), num_anon_answers, message):
             aa.question_post = orm.Post.objects.get(self_question__id=aa.question.id)
             aa.save()
 
-        for rev in orm.PostRevision.objects.iterator():
+        message = "Connecting post revisions to posts"
+        num_post_revs = orm.PostRevision.objects.count()
+        for rev in ProgressBar(orm.PostRevision.objects.iterator(), num_post_revs, message):
             if rev.question:
                 assert not rev.answer
                 rev.post = orm.Post.objects.get(self_question__id=rev.question.id)

@@ -74,3 +74,43 @@ def print_progress(elapsed, total, nowipe = False):
     in-place"""
     output = '%6.2f%%' % (100 * float(elapsed)/float(total))
     print_action(output, nowipe)
+
+class ProgressBar(object):
+    """A wrapper for an iterator, that prints 
+    a progress bar along the way of iteration
+    """
+    def __init__(self, iterable, length, message = ''):
+        self.iterable = iterable
+        self.length = length
+        self.counter = float(0)
+        self.barlen = 60
+        self.progress = ''
+        if message and length > 0:
+            print message
+ 
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+
+        try:
+            result = self.iterable.next()
+        except StopIteration:
+            if self.length > 0:
+                sys.stdout.write('\n')
+            raise
+
+        sys.stdout.write('\b'*len(self.progress))
+
+        if self.length < self.barlen:
+            sys.stdout.write('-'*(self.barlen/self.length))
+        elif int(self.counter) % (self.length / self.barlen) == 0:
+            sys.stdout.write('-')
+
+        self.progress = ' %.2f%%' % (100 * (self.counter/self.length))
+        sys.stdout.write(self.progress)
+        sys.stdout.flush()
+
+        self.counter += 1
+        return result

@@ -428,7 +428,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     # TODO: Add unit test to catch the bug where precache_comments() is called above (before) reordering the accepted answer to the top
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
-    if thread.accepted_answer: # Put the accepted answer to front
+    if thread.accepted_answer and thread.accepted_answer.deleted == False:
+        #Put the accepted answer to front
+        #the second check is for the case when accepted answer is deleted
         answers.remove(thread.accepted_answer)
         answers.insert(0, thread.accepted_answer)
 
