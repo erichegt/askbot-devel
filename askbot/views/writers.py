@@ -113,12 +113,16 @@ def upload(request):#ajax upload file to a question or answer
         result = ''
         file_url = ''
 
-    data = simplejson.dumps({
-        'result': result,
-        'error': error,
-        'file_url': file_url
-    })
-    return HttpResponse(data, mimetype = 'application/json')
+    #data = simplejson.dumps({
+    #    'result': result,
+    #    'error': error,
+    #    'file_url': file_url
+    #})
+    #return HttpResponse(data, mimetype = 'application/json')
+    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
+    xml = xml_template % (result, error, file_url)
+
+    return HttpResponse(xml, mimetype="application/xml")
 
 def __import_se_data(dump_file):
     """non-view function that imports the SE data

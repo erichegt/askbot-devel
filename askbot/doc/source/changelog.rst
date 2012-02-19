@@ -16,6 +16,7 @@ Development version (not released yet)
 * Added progress bars to slow data migrations (Evgeny)
 * Added a management command to build_thread_summary_cache (Evgeny)
 * Added a management delete_contextless_badge_award_activities (Evgeny)
+* Fixed a file upload issue in FF and IE found by jerry_gzy (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------
