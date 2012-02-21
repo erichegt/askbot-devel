@@ -22,15 +22,15 @@ import traceback
 
 from django.contrib.contenttypes.models import ContentType
 from celery.decorators import task
-from askbot.models import Activity
-from askbot.models import User
+from askbot.models import Activity, Post, Thread, User
 from askbot.models import send_instant_notifications_about_activity_in_post
+from askbot.models.badges import award_badges_signal
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
 #       (i.e. if Celery tasks are not deferred but executed straight away)
 
-@task(ignore_results = True)
+@task(ignore_result = True)
 def record_post_update_celery_task(
         post_id,
         post_content_type_id,
@@ -152,3 +152,32 @@ def record_post_update(
                             post = post,
                             recipients = notification_subscribers,
                         )
+                        
+@task(ignore_result = True)
+def record_question_visit(
+    question_post_id = None,
+    user_id = None,
+    update_view_count = False):
+    """celery task which records question visit by a person
+    updates view counter, if necessary,
+    and awards the badges associated with the 
+    question visit
+    """
+    #1) maybe update the view count
+    question_post = Post.objects.get(id = question_post_id)
+    if update_view_count:
+        question_post.thread.increase_view_count()
+
+    #2) question view count per user and clear response displays
+    user = User.objects.get(id = user_id)
+    if user.is_authenticated():
+        #get response notifications
+        user.visit_question(question_post)
+
+    #3) send award badges signal for any badges
+    #that are awarded for question views
+    award_badges_signal.send(None,
+                    event = 'view_question',
+                    actor = user,
+                    context_object = question_post,
+                )

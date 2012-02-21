@@ -16,6 +16,7 @@
         askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
         askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
         askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
+        askbot['urls']['delete_post'] = '{% url delete_post %}';
         askbot['messages']['addComment'] = '{% trans %}add comment{% endtrans %}';
         {% if settings.SAVE_COMMENT_ON_ENTER %}
             askbot['settings']['saveCommentOnEnter'] = true;

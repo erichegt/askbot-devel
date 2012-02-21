@@ -596,6 +596,28 @@ def upvote_comment(request):
         raise ValueError
     return {'score': comment.score}
 
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def delete_post(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied(_('Please sign in to delete/restore posts'))
+    form = forms.VoteForm(request.POST)
+    if form.is_valid():
+        post_id = form.cleaned_data['post_id']
+        post = get_object_or_404(
+            models.Post,
+            post_type__in = ('question', 'answer'),
+            id = post_id
+        )
+        if form.cleaned_data['cancel_vote']:
+            request.user.restore_post(post)
+        else:
+            request.user.delete_post(post)
+    else:
+        raise ValueError
+    return {'is_deleted': post.deleted}
+
 #askbot-user communication system
 @csrf.csrf_exempt
 def read_message(request):#marks message a read
