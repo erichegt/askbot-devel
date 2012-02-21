@@ -10,6 +10,14 @@ Development version (not released yet)
 * Fixed the url translation bug (Evgeny)
 * Added left sidebar option (Evgeny)
 * Added "help" page and links to in the header and the footer (Evgeny)
+* Removed url parameters and the hash fragment from uploaded files -
+  amazon S3 for some reason adds weird expiration parameters (Evgeny)
+* Reduced memory usage in data migrations (Evgeny)
+* Added progress bars to slow data migrations (Evgeny)
+* Added a management command to build_thread_summary_cache (Evgeny)
+* Added a management delete_contextless_badge_award_activities (Evgeny)
+* Fixed a file upload issue in FF and IE found by jerry_gzy (Evgeny)
+* Added test on maximum length of title working for utf-8 text (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------

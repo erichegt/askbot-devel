@@ -5,6 +5,7 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from django.conf import settings
+from askbot.utils.console import ProgressBar
 
 from askbot.migrations import TERM_RED_BOLD, TERM_GREEN, TERM_RESET
 
@@ -26,7 +27,9 @@ class Migration(DataMigration):
         if 'test' not in sys.argv: # Don't confuse users
             print TERM_GREEN, '[DEBUG] Initial Post.id ==', post_id + 1, TERM_RESET
 
-        for q in orm.Question.objects.all():
+        message = "Converting Questions -> Posts"
+        num_questions = orm.Question.objects.count()
+        for q in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             post_id += 1
             orm.Post.objects.create(
                 id=post_id,
@@ -67,7 +70,9 @@ class Migration(DataMigration):
                 is_anonymous=q.is_anonymous,
             )
 
-        for ans in orm.Answer.objects.all():
+        message = "Answers -> Posts"
+        num_answers = orm.Answer.objects.count()
+        for ans in ProgressBar(orm.Answer.objects.iterator(), num_answers, message):
             post_id += 1
             orm.Post.objects.create(
                 id=post_id,
@@ -108,7 +113,9 @@ class Migration(DataMigration):
                 is_anonymous=ans.is_anonymous,
             )
 
-        for cm in orm.Comment.objects.all():
+        message = "Comments -> Posts"
+        num_comments = orm.Comment.objects.count()
+        for cm in ProgressBar(orm.Comment.objects.iterator(), num_comments, message):
             # Workaround for a strange issue with: http://south.aeracode.org/docs/generics.html
             # No need to investigate that as this is as simple as the "proper" way
             if (cm.content_type.app_label, cm.content_type.model) == ('askbot', 'question'):

@@ -30,7 +30,6 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot import schedules
-from askbot.models.badges import award_badges_signal
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
@@ -428,7 +427,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     # TODO: Add unit test to catch the bug where precache_comments() is called above (before) reordering the accepted answer to the top
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
-    if thread.accepted_answer: # Put the accepted answer to front
+    if thread.accepted_answer and thread.accepted_answer.deleted == False:
+        #Put the accepted answer to front
+        #the second check is for the case when accepted answer is deleted
         answers.remove(thread.accepted_answer)
         answers.insert(0, thread.accepted_answer)
 
@@ -467,11 +468,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         last_seen = request.session['question_view_times'].get(question_post.id, None)
 
-        updated_when, updated_who = thread.get_last_update_info()
-
-        if updated_who != request.user:
+        if thread.last_activity_by != request.user:
             if last_seen:
-                if last_seen < updated_when:
+                if last_seen < thread.last_activity_at:
                     update_view_count = True
             else:
                 update_view_count = True
@@ -479,21 +478,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         request.session['question_view_times'][question_post.id] = \
                                                     datetime.datetime.now()
 
-        if update_view_count:
-            thread.increase_view_count()
-
-        #2) question view count per user and clear response displays
-        if request.user.is_authenticated():
-            #get response notifications
-            request.user.visit_question(question_post)
-
-        #3) send award badges signal for any badges
-        #that are awarded for question views
-        award_badges_signal.send(None,
-                        event = 'view_question',
-                        actor = request.user,
-                        context_object = question_post,
-                    )
+        #2) run the slower jobs in a celery task
+        from askbot import tasks
+        tasks.record_question_visit.delay(
+            question_post_id = question_post.id,
+            user_id = request.user.id,
+            update_view_count = update_view_count
+        )
 
     paginator_data = {
         'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),

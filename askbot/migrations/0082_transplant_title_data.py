@@ -3,11 +3,14 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
+        message = "Adding titles to threads"
+        num_questions = orm.Question.objects.count()
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             question.thread.title = question.title
             question.thread.save()
 

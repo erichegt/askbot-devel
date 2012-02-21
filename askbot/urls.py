@@ -130,6 +130,11 @@ urlpatterns = patterns('',
         name = 'upvote_comment'
     ),
     url(#ajax only
+        r'^post/delete/$',
+        views.commands.delete_post,
+        name = 'delete_post'
+    ),
+    url(#ajax only
         r'^post_comments/$',
         views.writers.post_comments, 
         name='post_comments'

@@ -41,7 +41,7 @@ def manage_inbox(request):
                 post_data = simplejson.loads(request.raw_post_data)
                 if request.user.is_authenticated():
                     activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-                    activity_types += (const.TYPE_ACTIVITY_MENTION, )
+                    activity_types += (const.TYPE_ACTIVITY_MENTION, const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
                     user = request.user
                     memo_set = models.ActivityAuditStatus.objects.filter(
                         id__in = post_data['memo_list'],
@@ -56,6 +56,18 @@ def manage_inbox(request):
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
                     elif action_type == 'mark_seen':
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
+                    elif action_type == 'remove_flag':
+                        for memo in memo_set:
+                            request.user.flag_post(post = memo.activity.content_object, cancel_all = True)
+                    elif action_type == 'close':
+                        for memo in memo_set:
+                            if memo.activity.content_object.post_type == "question":
+                                request.user.close_question(question = memo.activity.content_object, reason = 7)
+                                memo.delete()
+                    elif action_type == 'delete_post':
+                        for memo in memo_set:
+                            request.user.delete_post(post = memo.activity.content_object)
+                            memo.delete()
                     else:
                         raise exceptions.PermissionDenied(
                             _('Oops, apologies - there was some error')
@@ -583,6 +595,28 @@ def upvote_comment(request):
     else:
         raise ValueError
     return {'score': comment.score}
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def delete_post(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied(_('Please sign in to delete/restore posts'))
+    form = forms.VoteForm(request.POST)
+    if form.is_valid():
+        post_id = form.cleaned_data['post_id']
+        post = get_object_or_404(
+            models.Post,
+            post_type__in = ('question', 'answer'),
+            id = post_id
+        )
+        if form.cleaned_data['cancel_vote']:
+            request.user.restore_post(post)
+        else:
+            request.user.delete_post(post)
+    else:
+        raise ValueError
+    return {'is_deleted': post.deleted}
 
 #askbot-user communication system
 @csrf.csrf_exempt

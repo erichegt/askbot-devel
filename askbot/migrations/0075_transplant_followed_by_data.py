@@ -3,13 +3,16 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for question in orm.Question.objects.all():
+        message = "Adding followers to threads"
+        num_questions = orm.Question.objects.count()
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions, message):
             question.thread.followed_by.clear() # just in case someone reversed this migration
-            question.thread.followed_by.add(*list(question.followed_by.all()))
+            question.thread.followed_by.add(*list(question.followed_by.iterator()))
 
             if question.followed_by.count() != question.thread.followed_by.count():
                 raise ValueError("There are Thread instances for which data doesn't match Question!")

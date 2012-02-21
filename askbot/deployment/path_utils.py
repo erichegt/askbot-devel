@@ -154,7 +154,7 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
     """
     assert(isinstance(new_project, bool))
     if new_project:
-        copy_files = ('__init__.py', 'manage.py', 'urls.py')
+        copy_files = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
         blank_files = ('__init__.py', 'manage.py')
         if verbosity >= 1:
             print 'Copying files: '

@@ -3,12 +3,15 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        for question in orm.Question.objects.all():
+        print "Converting question to threads:"
+        num_questions = orm.Question.objects.count()
+        for question in ProgressBar(orm.Question.objects.iterator(), num_questions):
             thread = orm.Thread.objects.create(favourite_count=question.favourite_count)
             question.thread = thread
             question.save()

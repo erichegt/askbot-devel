@@ -4,6 +4,7 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
@@ -11,16 +12,23 @@ class Migration(DataMigration):
         # ContentType for Post model should be created no later than in migration 0092
         ct_post = orm['contenttypes.ContentType'].objects.get(app_label='askbot', model='post')
 
-        for aw in orm.Award.objects.all():
+        message = "Connecting award objects to posts"
+        num_awards = orm.Award.objects.count()
+        for aw in ProgressBar(orm.Award.objects.iterator(), num_awards, message):
             ct = aw.content_type
             if ct.app_label == 'askbot' and ct.model in ('question', 'answer', 'comment'):
                 aw.content_type = ct_post
-                aw.object_id = orm.Post.objects.get(**{'self_%s__id' % str(ct.model): aw.object_id}).id
+                try:
+                    aw.object_id = orm.Post.objects.get(**{'self_%s__id' % str(ct.model): aw.object_id}).id
+                except orm.Post.DoesNotExist:
+                    continue
                 aw.save()
 
         ###
 
-        for rp in orm.Repute.objects.all():
+        message = "Connecting repute objects to posts"
+        num_reputes = orm.Repute.objects.count()
+        for rp in ProgressBar(orm.Repute.objects.iterator(), num_reputes, message):
             if rp.question:
                 rp.question_post = orm.Post.objects.get(self_question__id=rp.question.id)
                 rp.save()

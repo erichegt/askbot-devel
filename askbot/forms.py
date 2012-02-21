@@ -113,6 +113,22 @@ class TitleField(forms.CharField):
                 askbot_settings.MIN_TITLE_LENGTH
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
+        encoded_value = value.encode('utf-8')
+        if len(value) == len(encoded_value):
+            if len(value) > self.max_length:
+                raise forms.ValidationError(
+                    _(
+                        'The title is too long, maximum allowed size is '
+                        '%d characters'
+                    ) % self.max_length
+                )
+        elif encoded_value > self.max_length:
+            raise forms.ValidationError(
+                _(
+                    'The title is too long, maximum allowed size is '
+                    '%d bytes'
+                ) % self.max_length
+            )
 
         return value.strip() # TODO: test me
 

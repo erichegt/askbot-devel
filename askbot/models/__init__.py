@@ -36,6 +36,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.url_utils import strip_path
 from askbot.utils import mail
 
 def get_model(model_name):
@@ -486,6 +487,18 @@ def user_assert_can_edit_comment(self, comment = None):
         'Sorry, but only post owners or moderators can edit comments'
     )
     raise django_exceptions.PermissionDenied(error_message)
+
+
+def user_can_post_comment(self, parent_post = None):
+    """a simplified method to test ability to comment
+    """
+    if self.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
+        return True
+    if self == parent_post.author:
+        return True
+    if self.is_administrator_or_moderator():
+        return True
+    return False
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -2134,6 +2147,7 @@ User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
+User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
@@ -2279,7 +2293,7 @@ def format_instant_notification_email(
         'receiving_user_name': to_user.username,
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
-        'post_url': site_url + post.get_absolute_url(),
+        'post_url': strip_path(site_url) + post.get_absolute_url(),
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
     }

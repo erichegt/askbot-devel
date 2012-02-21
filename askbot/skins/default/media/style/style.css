@@ -3153,3 +3153,13 @@ pre.prettyprint {
 #leading-sidebar {
   float: left;
 }
+
+a.re_expand{
+  color: #616161;
+  text-decoration:none;
+}
+
+a.re_expand .re_content{
+  display:none;
+  margin-left:77px;
+}
