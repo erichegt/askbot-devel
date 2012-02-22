@@ -16,6 +16,12 @@ and some delay in the page load.
 
 Please find documentation about the lesscss format elsewhere.
 
+.. note::
+    Besides the "official" lesscss compiler, there are other 
+    tools that convert .less files into .css: for example a 
+    `less compiler from codekit (mac) <http://incident57.com/less/>`_
+    and a `portable SimpLESS compiler <http://wearekiss.com/simpless>`_.
+
 Compiling lesscss files
 =======================
 

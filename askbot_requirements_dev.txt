@@ -6,7 +6,7 @@ South>=0.7.1
 #-e git+https://github.com/matthiask/south.git#egg=south
 oauth2
 markdown2
-html5lib
+html5lib==0.90
 django-keyedcache
 django-threaded-multihost
 django-robots
