@@ -5,7 +5,7 @@ Coffin>=0.3
 South>=0.7.1
 oauth2
 markdown2
-html5lib
+html5lib==0.90
 django-keyedcache
 django-threaded-multihost
 django-robots

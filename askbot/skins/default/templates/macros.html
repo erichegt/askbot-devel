@@ -317,7 +317,7 @@ for the purposes of the AJAX comment editor #}
             {% endfor %}
         </div>
         <div class="controls">
-            {% set can_post = user|can_post_comment(post) %}
+            {% set can_post = user.is_authenticated() and user.can_post_comment(post) %}
             {% if show_post == post and show_comment %}
                 {% if show_comment_position > max_comments %}
                     {{
