@@ -3,6 +3,22 @@
 /* Variables for Colors*/
 /* Variables for fonts*/
 /* "Trebuchet MS", sans-serif;*/
+/* Buttons */
+.button-style-hover {
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+}
+/* General styles for gradients */
 /* Receive exactly positions for background Sprite  */
 /* CSS3 Elements */
 /* Library of predifined less functions styles */
@@ -427,28 +443,49 @@ body.anon #searchBar .searchInputCancelable {
 #askButton {
   /* check blocks/secondary_header.html and widgets/ask_button.html*/
 
-  background: url(../images/bigbutton.png) repeat-x bottom;
   line-height: 44px;
-  text-align: center;
+  margin-top: 6px;
+  float: right;
+  text-transform: uppercase;
   width: 200px;
   height: 42px;
   font-size: 23px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
   color: #4a757f;
-  margin-top: 7px;
-  float: right;
-  text-transform: uppercase;
-  border-radius: 5px;
-  -ms-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
   -webkit-box-shadow: 1px 1px 2px #636363;
   -moz-box-shadow: 1px 1px 2px #636363;
   box-shadow: 1px 1px 2px #636363;
 }
 #askButton:hover {
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   text-decoration: none;
-  background: url(../images/bigbutton.png) repeat-x top;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -555,15 +592,37 @@ body.anon #searchBar .searchInputCancelable {
 }
 .box .inputs #interestingTagAdd,
 .box .inputs #ignoredTagAdd {
-  background: url(../images/small-button-blue.png) repeat-x top;
   border: 0;
-  color: #4a757f;
   font-weight: bold;
-  font-size: 12px;
+  margin-top: -2px;
   width: 30px;
   height: 27px;
-  margin-top: -2px;
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -572,32 +631,52 @@ body.anon #searchBar .searchInputCancelable {
   text-shadow: 0px 1px 0px #e6f6fa;
   -moz-text-shadow: 0px 1px 0px #e6f6fa;
   -webkit-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-box-shadow: 1px 1px 2px #808080;
-  -moz-box-shadow: 1px 1px 2px #808080;
-  box-shadow: 1px 1px 2px #808080;
 }
 .box .inputs #interestingTagAdd:hover,
 .box .inputs #ignoredTagAdd:hover {
-  background: url(../images/small-button-blue.png) repeat-x bottom;
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
 }
 .box img.gravatar {
   margin: 1px;
 }
 .box a.followed,
 .box a.follow {
-  background: url(../images/medium-button.png) top repeat-x;
-  height: 34px;
   line-height: 34px;
-  text-align: center;
   border: 0;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
-  color: #4a757f;
   font-weight: normal;
-  font-size: 21px;
   margin-top: 3px;
   display: block;
   width: 120px;
+  height: 34px;
+  font-size: 21px;
+  text-align: center;
   text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -611,8 +690,18 @@ body.anon #searchBar .searchInputCancelable {
 }
 .box a.followed:hover,
 .box a.follow:hover {
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   text-decoration: none;
-  background: url(../images/medium-button.png) bottom repeat-x;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -1261,14 +1350,28 @@ ul#related-tags li {
 .ask-page input.submit,
 .edit-question-page input.submit {
   float: left;
-  background: url(../images/medium-button.png) top repeat-x;
-  height: 34px;
-  border: 0;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
-  color: #4a757f;
   font-weight: normal;
-  font-size: 21px;
   margin-top: 3px;
+  width: 160px;
+  height: 34px;
+  font-size: 21px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -1282,8 +1385,18 @@ ul#related-tags li {
 #fmanswer input.submit:hover,
 .ask-page input.submit:hover,
 .edit-question-page input.submit:hover {
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   text-decoration: none;
-  background: url(../images/medium-button.png) bottom repeat-x;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -1301,7 +1414,12 @@ ul#related-tags li {
   border-top: 0;
   padding: 10px;
   margin-bottom: 10px;
-  width: 717px;
+  width: 710px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  #editor {
+    width: 717px;
+  }
 }
 #id_title {
   width: 100%;
@@ -1700,31 +1818,49 @@ ul#related-tags li {
   width: 100px;
 }
 .question-page .comments button {
-  background: url(../images/small-button-blue.png) repeat-x top;
-  border: 0;
-  color: #4a757f;
-  font-family: Arial;
-  font-size: 13px;
-  width: 100px;
-  font-weight: bold;
-  height: 27px;
   line-height: 25px;
   margin-bottom: 5px;
+  width: 100px;
+  height: 27px;
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -khtml-border-radius: 4px;
-  text-shadow: 0px 1px 0px #e6f6fa;
-  -moz-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-box-shadow: 1px 1px 2px #808080;
-  -moz-box-shadow: 1px 1px 2px #808080;
-  box-shadow: 1px 1px 2px #808080;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+  font-family: Arial;
+  font-weight: bold;
 }
 .question-page .comments button:hover {
-  background: url(../images/small-button-blue.png) bottom repeat-x;
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -2070,35 +2206,55 @@ ul#related-tags li {
 .users-page input.submit,
 .user-profile-edit-page input.submit,
 .user-profile-page input.submit {
-  background: url(../images/small-button-blue.png) repeat-x top;
-  border: 0;
-  color: #4a757f;
-  font-weight: bold;
-  font-size: 13px;
-  font-family: Arial;
-  height: 26px;
+  font-weight: normal;
   margin: 5px 0px;
   width: 100px;
+  height: 26px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -khtml-border-radius: 4px;
-  text-shadow: 0px 1px 0px #e6f6fa;
-  -moz-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-box-shadow: 1px 1px 2px #808080;
-  -moz-box-shadow: 1px 1px 2px #808080;
-  box-shadow: 1px 1px 2px #808080;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+  font-family: Arial;
 }
 .openid-signin input.submit:hover,
 .meta input.submit:hover,
 .users-page input.submit:hover,
 .user-profile-edit-page input.submit:hover,
 .user-profile-page input.submit:hover {
-  background: url(../images/small-button-blue.png) repeat-x bottom;
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
 }
 .openid-signin .cancel,
 .meta .cancel,
@@ -2145,34 +2301,55 @@ ul#related-tags li {
 #local_login_buttons .submit-b,
 #password-fs .submit-b,
 #openid-fs .submit-b {
-  background: url(../images/small-button-blue.png) repeat-x top;
-  border: 0;
-  color: #4a757f;
-  font-weight: bold;
-  font-size: 13px;
-  font-family: Arial;
+  width: 100px;
   height: 24px;
-  margin-top: -2px;
-  padding-left: 10px;
-  padding-right: 10px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  color: #4a757f;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -khtml-border-radius: 4px;
-  text-shadow: 0px 1px 0px #e6f6fa;
-  -moz-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-box-shadow: 1px 1px 2px #808080;
-  -moz-box-shadow: 1px 1px 2px #808080;
-  box-shadow: 1px 1px 2px #808080;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+  font-family: Arial;
+  font-weight: bold;
+  padding-right: 10px;
+  border: 0;
 }
 #email-input-fs .submit-b:hover,
 #local_login_buttons .submit-b:hover,
 #password-fs .submit-b:hover,
 #openid-fs .submit-b:hover {
-  background: url(../images/small-button-blue.png) repeat-x bottom;
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
 }
 .openid-input {
   background: url(../images/openid.gif) no-repeat;
@@ -2302,31 +2479,52 @@ a:hover.medal {
 .follow-toggle,
 .submit {
   border: 0 !important;
-  color: #4a757f;
   font-weight: bold;
-  font-size: 12px;
-  height: 26px;
   line-height: 26px;
   margin-top: -2px;
-  font-size: 15px;
+  width: 100px;
+  height: 26px;
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  color: #4a757f;
   font-family: 'Yanone Kaffeesatz', sans-serif;
-  background: url(../images/small-button-blue.png) repeat-x top;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
   border-radius: 4px;
   -ms-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -khtml-border-radius: 4px;
-  text-shadow: 0px 1px 0px #e6f6fa;
-  -moz-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-box-shadow: 1px 1px 2px #808080;
-  -moz-box-shadow: 1px 1px 2px #808080;
-  box-shadow: 1px 1px 2px #808080;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
 }
 .follow-toggle:hover,
 .submit:hover {
-  background: url(../images/small-button-blue.png) repeat-x bottom;
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
   text-decoration: none !important;
 }
 .follow-toggle .follow {
@@ -3245,4 +3443,12 @@ body.anon.lang-es #searchBar .searchInput {
 }
 body.anon.lang-es #searchBar .searchInputCancelable {
   width: 390px;
+}
+a.re_expand {
+  color: #616161;
+  text-decoration: none;
+}
+a.re_expand .re_content {
+  display: none;
+  margin-left: 77px;
 }
