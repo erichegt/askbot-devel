@@ -156,7 +156,8 @@ msgstr "Takip et"
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
-"Bir: %s takipçi\n"
+"Bir: %s takipçi"
+msgstr[1] ""
 "Diğer: %s takipçi"
 
 #: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549

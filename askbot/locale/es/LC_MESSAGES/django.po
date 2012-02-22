@@ -208,7 +208,7 @@ msgstr "No puede cambiar el estado a admin"
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr "Si desea cambiar el estado de %(username), por favor, haga una selección "
+msgstr "Si desea cambiar el estado de %(username)s, por favor, haga una selección "
 "apropiada."
 
 #: forms.py:486
