@@ -1,40 +1,37 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+#   <olloff@gmail.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.7\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-27 01:59-0600\n"
-"PO-Revision-Date: 2011-09-28 08:02-0800\n"
-"Last-Translator: Rosandra Cuello <rosandra.cuello@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: askbot\n"
+"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"POT-Creation-Date: 2011-11-27 01:58-0600\n"
+"PO-Revision-Date: 2012-02-04 11:09+0000\n"
+"Last-Translator: olloff <olloff@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.net/projects/p/askbot/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
-"X-Translated-Using: django-rosetta 0.6.2\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "Вы действительно хотите удалить логин через %s?"
+msgstr "Вы действительно уверены, что хотите удалить вашего пользователя %s?"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr "Пожалуйста, добавьте хотя бы один постоянный метод для авторизации."
+msgstr "Пожалуйста, добавьте один или несколько методов входа."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr ""
-"У Вас сейчас нет постоянного метода авторизации, пожалуйста выберите хотя бы "
-"один, нажав на любую из предложеных ниже кнопок."
+msgstr "Вами не выбран метод входа, пожалуйста, выберите один из них, нажав на одну из иконок ниже."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
@@ -42,30 +39,30 @@ msgstr "пароли не совпадают"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr "Просмотреть, изменить существующие методы авторизации."
+msgstr "Отобразить/изменить текущие методы входа"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:223
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr "Чтобы продолжить, пожалуйста введите %s"
+msgstr "Пожалуйста, введите имя важей учетной записи %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:225
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr "Соедините %(site)s с Вашим аккаунтом от %(provider_name)s"
+msgstr "Подключите вашу учетную запись %(provider_name)s к сайту %(site)s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:319
 #, c-format
 msgid "Change your %s password"
-msgstr "Измените Ваш пароль для %s"
+msgstr "Сменить пароль вашей учетной записи %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:320
 msgid "Change password"
-msgstr "Изменить пароль"
+msgstr "Сменить пароль"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Create a password for %s"
-msgstr "Создать пароль для %s"
+msgstr "Создать пароль для учетной записи %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:324
 msgid "Create password"
@@ -81,16 +78,16 @@ msgstr "загрузка..."
 
 #: skins/common/media/js/post.js:128 skins/common/media/js/post.js.c:859
 msgid "tags cannot be empty"
-msgstr "введите теги"
+msgstr "пожалуйста, введите хотя бы один тэг"
 
 #: skins/common/media/js/post.js:134
 msgid "content cannot be empty"
-msgstr "пожалуйста, добавьте содержание"
+msgstr "содержимое не может быть пустым"
 
 #: skins/common/media/js/post.js:135
 #, c-format
 msgid "%s content minchars"
-msgstr "содержание должно быть более %s символов"
+msgstr "пожалуйста, введите больше %s символов"
 
 #: skins/common/media/js/post.js:138
 msgid "please enter title"
@@ -99,77 +96,76 @@ msgstr "пожалуйста, введите заголовок"
 #: skins/common/media/js/post.js:139 skins/common/media/js/post.js.c:987
 #, c-format
 msgid "%s title minchars"
-msgstr "заголовок должен быть более %s символов"
+msgstr "пожалуйста, введите хотя бы %s символов"
 
 #: skins/common/media/js/post.js:282
 msgid "insufficient privilege"
-msgstr "недостаточно прав"
+msgstr "недостаточно прав доступа"
 
 #: skins/common/media/js/post.js:283
 msgid "cannot pick own answer as best"
-msgstr "Извините, выбрать собственный ответ в качестве лучшего не разрешается"
+msgstr "простите, вы не можете принимать ваш собственный ответ"
 
 #: skins/common/media/js/post.js:288
 msgid "please login"
-msgstr "введите логин"
+msgstr "пожалуйста, войдите на сайт"
 
 #: skins/common/media/js/post.js:290
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "анонимные пользователи не могут отслеживать вопросы"
 
 #: skins/common/media/js/post.js:291
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "анонимные пользователи не могут подписываться на вопросы"
 
 #: skins/common/media/js/post.js:292
 msgid "anonymous users cannot vote"
-msgstr "Извините, но для того чтобы голосовать, "
+msgstr "извините, анонимные пользователи не могут голосовать"
 
 #: skins/common/media/js/post.js:294
 msgid "please confirm offensive"
-msgstr "Вы уверены что это сообщение неуместно?"
+msgstr "вы уверены, что это сообщение оскорбительно, содержит спам, рекламу, и т.д.?"
 
 #: skins/common/media/js/post.js:295
 msgid "anonymous users cannot flag offensive posts"
-msgstr "Извините, но для того чтобы пожаловаться на сообщение, "
+msgstr "анонимные пользователи не могут отметить флагом нарушающие правила сообщения"
 
 #: skins/common/media/js/post.js:296
 msgid "confirm delete"
-msgstr "Удалить?"
+msgstr "вы уверены, что хотите удалить это сообщение?"
 
 #: skins/common/media/js/post.js:297
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
-"неавторизированные пользователи не могут восстанавливать и удалять сообщения "
+msgstr "извините, анонимные пользователи не могут удалить или отменить удаление сообщения"
 
 #: skins/common/media/js/post.js:298
 msgid "post recovered"
-msgstr "восстановить сообщение"
+msgstr "ваше сообщение восстановлено"
 
 #: skins/common/media/js/post.js:299
 msgid "post deleted"
-msgstr "сообщение удалено"
+msgstr "ваше сообщение было удалено"
 
 #: skins/common/media/js/post.js:539 skins/old/media/js/post.js:535
 msgid "Follow"
-msgstr "Добавить закладку"
+msgstr "Отслеживать"
 
 #: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
 #: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] "%s закладка"
-msgstr[1] "%s закладки"
-msgstr[2] "%s закладок"
+msgstr[0] "%s человек следит"
+msgstr[1] "%s человека следит"
+msgstr[2] "%s человек следит"
 
 #: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr "<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
+msgstr "<div>Следите</div><div class=\"unfollow\">Перестать следить</div>"
 
 #: skins/common/media/js/post.js:615
 msgid "undelete"
-msgstr "восстановить"
+msgstr "отменить удаление"
 
 #: skins/common/media/js/post.js:620
 msgid "delete"
@@ -186,20 +182,20 @@ msgstr "сохранить комментарий"
 #: skins/common/media/js/post.js:990
 #, c-format
 msgid "enter %s more characters"
-msgstr "недостаточно символов, пожалуйста, добавьте ещё %s"
+msgstr "пожалуйста, введите как еще минимум %s символов"
 
 #: skins/common/media/js/post.js:995
 #, c-format
 msgid "%s characters left"
-msgstr "осталось место для %s символов"
+msgstr "%s символов осталось"
 
 #: skins/common/media/js/post.js:1066
 msgid "cancel"
-msgstr ""
+msgstr "отмена"
 
 #: skins/common/media/js/post.js:1109
 msgid "confirm abandon comment"
-msgstr ""
+msgstr "Вы действительно уверены, что не хотите добавлять этот комментарий?"
 
 #: skins/common/media/js/post.js:1183
 msgid "delete this comment"
@@ -207,62 +203,60 @@ msgstr "удалить этот комментарий"
 
 #: skins/common/media/js/post.js:1387
 msgid "confirm delete comment"
-msgstr "Удалить комментарий?"
+msgstr "вы действительно хотите удалить этот комментарий?"
 
 #: skins/common/media/js/post.js:1628 skins/old/media/js/post.js:1621
 msgid "Please enter question title (>10 characters)"
-msgstr "Пожалуйста, добавьте заглавие к вопросу (>10 букв)"
+msgstr "Пожалуйста, введите заголовок вопроса (>10 символов)"
 
 #: skins/common/media/js/tag_selector.js:15
 #: skins/old/media/js/tag_selector.js:15
 msgid "Tag \"<span></span>\" matches:"
-msgstr "Тег \"<span></span>\" подходит для:"
+msgstr "Совпадают с тэгом \"<span></span>\":"
 
 #: skins/common/media/js/tag_selector.js:84
 #: skins/old/media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr "и ещё %s, не показано..."
+msgstr "и еще %s, которые не показаны..."
 
 #: skins/common/media/js/user.js:14
 msgid "Please select at least one item"
-msgstr "Пожалуйста, отметьте хотя бы одно извещение"
+msgstr "Пожалуйста, выберите хотя бы один из вариантов"
 
 #: skins/common/media/js/user.js:58
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "Удалить это извещение?"
-msgstr[1] "Удалить эти извещения?"
-msgstr[2] "Удалить эти извещения?"
+msgstr[0] "Удалить это уведомление?"
+msgstr[1] "Удалить эти уведомления?"
+msgstr[2] "Удалить эти уведомления?"
 
 #: skins/common/media/js/user.js:125 skins/old/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
-"Пожалуйста <a href=\"%(signin_url)s\">авторизуйтесь</a> чтобы отметить "
-"профиль %(username)s"
+msgstr "Пожалуйста, <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы начать отслеживать %(username)s"
 
 #: skins/common/media/js/user.js:157 skins/old/media/js/user.js:161
 #, c-format
 msgid "unfollow %s"
-msgstr ""
+msgstr "перестать следить за %s"
 
 #: skins/common/media/js/user.js:160 skins/old/media/js/user.js:164
 #, c-format
 msgid "following %s"
-msgstr ""
+msgstr "отслеживаем за %s"
 
 #: skins/common/media/js/user.js:166 skins/old/media/js/user.js:170
 #, c-format
 msgid "follow %s"
-msgstr ""
+msgstr "отслеживать %s"
 
 #: skins/common/media/js/utils.js:43
 msgid "click to close"
-msgstr ""
+msgstr "нажмите чтобы закрыть"
 
 #: skins/common/media/js/utils.js:214
 msgid "click to edit this comment"
-msgstr "нажмите здесь, чтобы отредактировать этот комментарий"
+msgstr "нажмите чтобы отредактировать этот комментарий"
 
 #: skins/common/media/js/utils.js:215
 msgid "edit"
@@ -271,7 +265,7 @@ msgstr "редактировать"
 #: skins/common/media/js/utils.js:369
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr "смотрите вопросы, помеченные '%s'"
+msgstr "просмотреть все вопросы, которым присвоен тэг '%s'"
 
 #: skins/common/media/js/wmd/wmd.js:30
 msgid "bold"
@@ -291,7 +285,7 @@ msgstr "цитата"
 
 #: skins/common/media/js/wmd/wmd.js:34
 msgid "preformatted text"
-msgstr "форматирование текста"
+msgstr "предформатированный текст"
 
 #: skins/common/media/js/wmd/wmd.js:35
 msgid "image"
@@ -299,11 +293,11 @@ msgstr "изображение"
 
 #: skins/common/media/js/wmd/wmd.js:36
 msgid "attachment"
-msgstr ""
+msgstr "прикрепленный файл"
 
 #: skins/common/media/js/wmd/wmd.js:37
 msgid "numbered list"
-msgstr "пронумерованный список"
+msgstr "нумерованный список"
 
 #: skins/common/media/js/wmd/wmd.js:38
 msgid "bulleted list"
@@ -315,7 +309,7 @@ msgstr "заголовок"
 
 #: skins/common/media/js/wmd/wmd.js:40
 msgid "horizontal bar"
-msgstr "горизонтальная полоса"
+msgstr "горизонтальная линия"
 
 #: skins/common/media/js/wmd/wmd.js:41
 msgid "undo"
@@ -327,31 +321,24 @@ msgstr "повторить"
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr ""
-"введите url изображения, например:<br /> http://www.domain.ru/kartinka.gif"
+msgstr "введите URL-адрес изображения, например http://www.example.com/image.jpg или загрузите файл изображения"
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr "введите url, например:<br />http://www.domain.ru/ </p>"
+msgstr "введите Web-адрес, например http://www.example.com \"заголовок страницы\""
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"
-msgstr "загрузить файл"
+msgstr "Пожалуйста, выберите и загрузите файл:"
 
 #: skins/common/media/js/wmd/wmd.js:1778
 msgid "image description"
-msgstr ""
+msgstr "описание изображения"
 
 #: skins/common/media/js/wmd/wmd.js:1781
 msgid "file name"
-msgstr "название файла"
+msgstr "имя файла"
 
 #: skins/common/media/js/wmd/wmd.js:1785
 msgid "link text"
-msgstr ""
-
-#~ msgid "%(q_num)s question"
-#~ msgid_plural "%(q_num)s questions"
-#~ msgstr[0] "%(q_num)s вопрос"
-#~ msgstr[1] "%(q_num)s вопроса"
-#~ msgstr[2] "%(q_num)s вопросов"
+msgstr "текст ссылки"
