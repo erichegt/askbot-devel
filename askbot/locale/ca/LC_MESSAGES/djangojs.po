@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-27 01:58-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Jordi Bofill <jordi.bofill@upc.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -20,134 +20,134 @@ msgstr ""
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "Vol eliminar l'entrada %s?"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Afegir un o més mètodes d'entrada."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr ""
+msgstr "Actualment no teniu cap mètode d'entrada, afegiu-ne un clicant una de les icones."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "les contrasenyes no coincideixen"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "Mostrar/canviar els mètodes d'entrada actuals"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:223
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "Entrar el vostre %s per continuar"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:225
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "Connectar el compte %(provider_name)s a %(site)s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:319
 #, c-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "Canviar la contrasenya %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:320
 msgid "Change password"
-msgstr ""
+msgstr "Canviar contrasenya"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "Crear una contrasenya per %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:324
 msgid "Create password"
-msgstr ""
+msgstr "Crear contrasenya"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:340
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Crear un compte protegit amb contrasenya"
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "càrrega..."
 
 #: skins/common/media/js/post.js:128 skins/common/media/js/post.js.c:859
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "Les etiquetes no poden estar buides"
 
 #: skins/common/media/js/post.js:134
 msgid "content cannot be empty"
-msgstr ""
+msgstr "el contingut no pot estar buit"
 
 #: skins/common/media/js/post.js:135
 #, c-format
 msgid "%s content minchars"
-msgstr ""
+msgstr "%s contingut mín caràct."
 
 #: skins/common/media/js/post.js:138
 msgid "please enter title"
-msgstr ""
+msgstr "entrar títol"
 
 #: skins/common/media/js/post.js:139 skins/common/media/js/post.js.c:987
 #, c-format
 msgid "%s title minchars"
-msgstr ""
+msgstr "%s títol mín caràct."
 
 #: skins/common/media/js/post.js:282
 msgid "insufficient privilege"
-msgstr ""
+msgstr "permisos insuficients "
 
 #: skins/common/media/js/post.js:283
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "no es pot escollir resp. pròpia com a millor"
 
 #: skins/common/media/js/post.js:288
 msgid "please login"
-msgstr ""
+msgstr "entrar"
 
 #: skins/common/media/js/post.js:290
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "usuaris anònims no poden seguir preguntes"
 
 #: skins/common/media/js/post.js:291
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "usuaris anònims no poden subscriures a preguntes"
 
 #: skins/common/media/js/post.js:292
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "usuaris anònims no poden votar"
 
 #: skins/common/media/js/post.js:294
 msgid "please confirm offensive"
-msgstr ""
+msgstr "confirmar com ofensiu"
 
 #: skins/common/media/js/post.js:295
 msgid "anonymous users cannot flag offensive posts"
-msgstr ""
+msgstr "usuaris anònims no poden senyalar entrades com ofensives"
 
 #: skins/common/media/js/post.js:296
 msgid "confirm delete"
-msgstr ""
+msgstr "confirmar eliminar"
 
 #: skins/common/media/js/post.js:297
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "usuaris anònims no poden eliminar/recuperar"
 
 #: skins/common/media/js/post.js:298
 msgid "post recovered"
-msgstr ""
+msgstr "entrada recuperada"
 
 #: skins/common/media/js/post.js:299
 msgid "post deleted"
-msgstr ""
+msgstr "entrada eliminada"
 
 #: skins/common/media/js/post.js:539 skins/old/media/js/post.js:535
 msgid "Follow"
-msgstr ""
+msgstr "Seguir"
 
 #: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
 #: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
