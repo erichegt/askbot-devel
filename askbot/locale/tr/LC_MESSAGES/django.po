@@ -2,53 +2,50 @@
 # Copyright (C) 2010 Mike Chen and Askbot developers
 # This file is distributed under the same license as the Askbot package.
 # Otkay Yildiz <EMAIL@ADDRESS>, 2010.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 11:24-0600\n"
-"PO-Revision-Date: 2010-09-08 06:14\n"
-"Last-Translator: <cemrekutluay@gmail.com>\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
+"PO-Revision-Date: 2012-02-17 22:35+0200\n"
+"Last-Translator: Hakan <hatalar205linux@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
 "X-Translated-Using: django-rosetta 0.5.6\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: exceptions.py:13
-#, fuzzy
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "üye girişi yapmadan oy kullanamazsınız"
+msgstr "Üzgünüz, anonim ziyaretçiler bu özelliği kullanamazlar"
 
 #: feed.py:26 feed.py:100
 msgid " - "
 msgstr "-"
 
 #: feed.py:26
-#, fuzzy
 msgid "Individual question feed"
-msgstr "Seçtiğim sorular"
+msgstr "Bireysel soru akışı"
 
 #: feed.py:100
 msgid "latest questions"
 msgstr "en son sorulanlar"
 
 #: forms.py:74
-#, fuzzy
 msgid "select country"
-msgstr "Hesabı sil"
+msgstr "ülke seçin"
 
+# 100%
 #: forms.py:83
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #: forms.py:91
-#, fuzzy
 msgid "Country field is required"
-msgstr "bu alanın doldurulması gereklidir"
+msgstr "Ülke alanının doldurulması zorunludur"
 
 #: forms.py:104 skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/answer_edit_tips.html:49
@@ -62,11 +59,10 @@ msgid "please enter a descriptive title for your question"
 msgstr "Sorunuz için açıklayıcı bir başlık girin"
 
 #: forms.py:111
-#, fuzzy, python-format
+#, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
-msgstr[0] "başlık en az 10 karakter olmalı"
-msgstr[1] "başlık en az 10 karakter olmalı"
+msgstr[0] "Başlık en az %d karakter olmalı"
 
 #: forms.py:131
 msgid "content"
@@ -79,7 +75,7 @@ msgid "tags"
 msgstr "etiketler"
 
 #: forms.py:168
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
 "be used."
@@ -87,11 +83,8 @@ msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
 msgstr[0] ""
-"Etiketler kısa anahtar kelimelerdir ve bir soru için en fazla 5 etiket "
-"yazabilirsiniz."
-msgstr[1] ""
-"Etiketler kısa anahtar kelimelerdir ve bir soru için en fazla 5 etiket "
-"yazabilirsiniz."
+"Etiketler içinde boşluk olmayan kısa anahtar kelimelerdir. En fazla "
+"%(max_tags)d etiket kullanılabilir."
 
 #: forms.py:201 skins/default/templates/question_retag.html:58
 msgid "tags are required"
@@ -104,10 +97,11 @@ msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "En fazla %(tag_count)d  etiket kullanabilirsiniz"
 msgstr[1] "En fazla %(tag_count)d  etiket kullanabilirsiniz"
 
+# 100%
 #: forms.py:218
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "Aşağıdaki etiketlerden en az bir tanesi gerekli: %(tags)s"
 
 #: forms.py:227
 #, python-format
@@ -122,7 +116,7 @@ msgstr "bu-yazıları-etiket-olarak-kullan"
 
 #: forms.py:270
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr ""
+msgstr "Topluluk wikisi (karma ödüllendirilmez ve başkaları düzenleyebilir)"
 
 #: forms.py:271
 msgid ""
@@ -146,88 +140,89 @@ msgstr ""
 
 #: forms.py:364
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "Eklenecek ya da çıkartılacak nokta sayısını girin"
 
+# 100%
 #: forms.py:378 const/__init__.py:250
 msgid "approved"
-msgstr ""
+msgstr "onaylanmış"
 
 #: forms.py:379 const/__init__.py:251
 msgid "watched"
-msgstr ""
+msgstr "izlenmiş"
 
 #: forms.py:380 const/__init__.py:252
-#, fuzzy
 msgid "suspended"
-msgstr "güncellendi"
+msgstr "durduruldu"
 
 #: forms.py:381 const/__init__.py:253
 msgid "blocked"
-msgstr ""
+msgstr "engellenmiş"
 
 #: forms.py:383
-#, fuzzy
 msgid "administrator"
-msgstr "Saygılarımızla, <BR> Site yönetimi"
+msgstr "yönetici"
 
 #: forms.py:384 const/__init__.py:249
-#, fuzzy
 msgid "moderator"
-msgstr "yoneticiler/"
+msgstr "yönetici"
 
 #: forms.py:404
-#, fuzzy
 msgid "Change status to"
-msgstr "Etiket değiştir"
+msgstr "Durumu değiştir"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 100%
 #: forms.py:431
+#, fuzzy
 msgid "which one?"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"hangisi?"
 
 #: forms.py:452
-#, fuzzy
 msgid "Cannot change own status"
-msgstr "kendi yazılarınıza oy veremezsiniz"
+msgstr "kendi durumunuzu değiştiremezsiniz"
 
+# 100%
 #: forms.py:458
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "Başka bir kullanıcı moderator yapılamıyor"
 
 #: forms.py:465
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "Başka bir yöneticinin durumu değiştirilemez"
 
 #: forms.py:471
-#, fuzzy
 msgid "Cannot change status to admin"
-msgstr "kendi yazılarınıza oy veremezsiniz"
+msgstr "Durumu yönetici olarak değiştiremezsiniz"
 
+# %90
 #: forms.py:477
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
+"%(username)s kullanıcısının durumunu değiştirmek istiyorsanız lütfen anlamlı "
+"bir seçim yapınız."
 
 #: forms.py:486
-#, fuzzy
 msgid "Subject line"
-msgstr "Tema seç"
+msgstr "Satır seç"
 
 #: forms.py:493
-#, fuzzy
 msgid "Message text"
-msgstr "Mesajınız:"
+msgstr "İleti metni"
 
 #: forms.py:579
-#, fuzzy
 msgid "Your name (optional):"
-msgstr "Adınız:"
+msgstr "Adınız (seçimsel):"
 
 #: forms.py:580
-#, fuzzy
 msgid "Email:"
-msgstr "E-mail"
+msgstr "E-posta"
 
 #: forms.py:582
 msgid "Your message:"
@@ -235,36 +230,41 @@ msgstr "Mesajınız:"
 
 #: forms.py:587
 msgid "I don't want to give my email or receive a response:"
-msgstr ""
+msgstr "E-posta adresimi vermek istemiyorum veya cevap almak istemiyorum:"
 
 #: forms.py:609
 msgid "Please mark \"I dont want to give my mail\" field."
-msgstr ""
+msgstr "Lütfen \"epostal adresimi vermek istemiyorum\" bölümünü işaretleyiniz."
 
 #: forms.py:648
-#, fuzzy
 msgid "ask anonymously"
-msgstr "anonim"
+msgstr "isimsiz olarak sor"
 
 #: forms.py:650
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr ""
+"Bu soruyu sorarken adınızın gizli kalmasını istiyorsanız işaretleyiniz."
 
+# %90
 #: forms.py:810
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr ""
+"Bu soruyu isimsiz olarak sordunuz, eğer adınızın görünmesini istiyorsanız "
+"lütfen bu kutuyu işaretleniz."
 
 #: forms.py:814
 msgid "reveal identity"
-msgstr ""
+msgstr "kimliği göster"
 
 #: forms.py:872
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr ""
+"Maalesef, sadece anonim sorunun sahibi kendi kimliğini açık edebilir, lütfen "
+"onayı kaldırınız."
 
 #: forms.py:885
 msgid ""
@@ -272,27 +272,34 @@ msgid ""
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr ""
+"Üzgünüm, belli ki kurallar değiştirildi - artık isimsiz olarak soramazsınız. "
+"Lütfen \"kimliği göster\" kutusunu kontrol edin veya sayfayı yeniden "
+"yükleyin ve soruyu tekrar düzenleyin."
 
 #: forms.py:923
-#, fuzzy
 msgid "this email will be linked to gravatar"
-msgstr "Bu e-mail gravatar bağlantılı olmak zorunda değildir"
+msgstr "bu e-posta gravatar bağlantılı olacaktır"
 
 #: forms.py:930
 msgid "Real name"
 msgstr "Gerçek isim"
 
 #: forms.py:937
+#, fuzzy
 msgid "Website"
-msgstr "Website"
+msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Website\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"İnternet sitesi"
 
 #: forms.py:944
 msgid "City"
-msgstr ""
+msgstr "Şehir"
 
 #: forms.py:953
 msgid "Show country"
-msgstr ""
+msgstr "Ülkeyi göster"
 
 #: forms.py:958
 msgid "Date of birth"
@@ -387,9 +394,8 @@ msgid "ask/"
 msgstr "sor/"
 
 #: urls.py:87
-#, fuzzy
 msgid "retag/"
-msgstr "etiketler/"
+msgstr "tekraretiketle/"
 
 #: urls.py:92
 msgid "close/"
@@ -409,15 +415,21 @@ msgstr "oy/"
 
 #: urls.py:118
 msgid "widgets/"
-msgstr ""
+msgstr "programciklar/"
 
 #: urls.py:153
 msgid "tags/"
 msgstr "etiketler/"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 78%
 #: urls.py:196
+#, fuzzy
 msgid "subscribe-for-tags/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"etiketleri kullan"
 
 #: urls.py:201 urls.py:207 urls.py:213 urls.py:221
 #: skins/default/templates/main_page/javascript.html:39
@@ -426,9 +438,8 @@ msgid "users/"
 msgstr "kullanicilar/"
 
 #: urls.py:214
-#, fuzzy
 msgid "subscriptions/"
-msgstr "e-mail abonelikleri"
+msgstr "abonelikler/"
 
 #: urls.py:226
 msgid "users/update_has_custom_avatar/"
@@ -467,18 +478,16 @@ msgid "account/"
 msgstr "hesap/"
 
 #: conf/access_control.py:8
-#, fuzzy
 msgid "Access control settings"
-msgstr "Temel Ayarlar"
+msgstr "Denetim ayarlarına erişim"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "Sadece kayıtlı kullanıcıların foruma erişimine izin ver"
 
 #: conf/badges.py:13
-#, fuzzy
 msgid "Badge settings"
-msgstr "Temel Ayarlar"
+msgstr "İşaret ayarları"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -517,14 +526,16 @@ msgid "Great Question: minimum upvotes for the question"
 msgstr ""
 
 #: conf/badges.py:104
-#, fuzzy
 msgid "Popular Question: minimum views"
-msgstr "Popüler Soru"
+msgstr "Popüler Soru: en az görüntüleme"
 
 #: conf/badges.py:113
 #, fuzzy
 msgid "Notable Question: minimum views"
-msgstr "Önemli Soru "
+msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Önemli Soru \n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: conf/badges.py:122
 #, fuzzy
@@ -586,9 +597,8 @@ msgid "Email and email alert settings"
 msgstr "E-posta ve e-posta uyarı ayarları"
 
 #: conf/email.py:24
-#, fuzzy
 msgid "Prefix for the email subject line"
-msgstr "Hoşgeldiniz mesajının konusu"
+msgstr "E-posta konu satırı için ön ek"
 
 #: conf/email.py:26
 msgid ""
@@ -740,6 +750,8 @@ msgid ""
 "Before enabling this setting - please fill out IMAP settings in the settings."
 "py file"
 msgstr ""
+"Bu ayarı aktif etmeden önce - lütfen settings.py dosyasındaki IMAP "
+"ayarlarını doldurunuz."
 
 #: conf/email.py:260
 msgid "Replace space in emailed tags with dash"
@@ -827,7 +839,7 @@ msgstr "Facbook gizli anahtarı"
 
 #: conf/external_keys.py:105
 msgid "Twitter consumer key"
-msgstr ""
+msgstr "Twitter kullanıcı anahtarı"
 
 #: conf/external_keys.py:107
 #, python-format
@@ -875,11 +887,11 @@ msgstr ""
 
 #: conf/external_keys.py:177
 msgid "LDAP service provider name"
-msgstr ""
+msgstr "LDAP servis sağlayıcı ismi"
 
 #: conf/external_keys.py:185
 msgid "URL for the LDAP service"
-msgstr ""
+msgstr "LDAP servisi için URL"
 
 #: conf/external_keys.py:193
 #, fuzzy
@@ -947,17 +959,28 @@ msgstr "topluluk wiki özelliğini aktif ediniz"
 
 #: conf/forum_data_rules.py:42
 msgid "Allow asking questions anonymously"
-msgstr ""
+msgstr "Anonim olarak soru sorulmasına izin ver"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# reputation =? itibar
 #: conf/forum_data_rules.py:44
+#, fuzzy
 msgid ""
 "Users do not accrue reputation for anonymous questions and their identity is "
 "not revealed until they change their mind"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Kullanıcılar anonim olarak itibarını arttıramaz ve kendileri fikirlerini "
+"değiştirinceye kadar kimlikleri açık edilmez."
 
 #: conf/forum_data_rules.py:56
+#, fuzzy
 msgid "Allow posting before logging in"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Giriş yapmadan gönderime izin ver"
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -1877,21 +1900,49 @@ msgstr ""
 msgid "Check to enable sharing of questions on Twitter"
 msgstr "Bu soruyu tekrar aç"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 83%
+# 100%
 #: conf/social_sharing.py:29
+#, fuzzy
 msgid "Check to enable sharing of questions on Facebook"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Bu soruyu tekrar aç"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
+# 100%
 #: conf/social_sharing.py:38
+#, fuzzy
 msgid "Check to enable sharing of questions on LinkedIn"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Bu soruyu tekrar aç"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 83%
+# 100%
 #: conf/social_sharing.py:47
+#, fuzzy
 msgid "Check to enable sharing of questions on Identi.ca"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Bu soruyu tekrar aç"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 87%
+# 100%
 #: conf/social_sharing.py:56
+#, fuzzy
 msgid "Check to enable sharing of questions on Google+"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Bu soruyu tekrar aç"
 
 #: conf/spam_and_moderation.py:10
 msgid "Akismet spam protection"
@@ -2326,13 +2377,26 @@ msgstr "gümüş"
 msgid "bronze"
 msgstr "bronz"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
 #: const/__init__.py:298
+#, fuzzy
 msgid "None"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"bronz"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
+# 100%
 #: const/__init__.py:299
+#, fuzzy
 msgid "Gravatar"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"Gravatar nedir?"
 
 #: const/__init__.py:300
 msgid "Uploaded Avatar"
@@ -2831,11 +2895,13 @@ msgid "Please accept the best answer for these questions:"
 msgstr "eski soruları görmek için tıklayın"
 
 #: management/commands/send_email_alerts.py:411
-#, python-format
+#, fuzzy, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: management/commands/send_email_alerts.py:421
 #, fuzzy, python-format
@@ -2899,11 +2965,13 @@ msgstr ""
 "server.</p>"
 
 #: management/commands/send_unanswered_question_reminders.py:56
-#, python-format
+#, fuzzy, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: middleware/forum_mode.py:53
 #, fuzzy, python-format
@@ -2989,7 +3057,7 @@ msgid "suspended users cannot post"
 msgstr "Dondurulan kullanıcılar ileti yapamaz"
 
 #: models/__init__.py:481
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minute from posting"
@@ -2997,7 +3065,9 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: models/__init__.py:493
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -3049,6 +3119,7 @@ msgid ""
 msgstr ""
 
 #: models/__init__.py:649
+#, fuzzy
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3056,7 +3127,9 @@ msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: models/__init__.py:664
 msgid "Sorry, since your account is blocked you cannot delete posts"
@@ -3147,11 +3220,13 @@ msgid "suspended users cannot remove flags"
 msgstr "Dondurulan kullanıcılar ileti yapamaz"
 
 #: models/__init__.py:809
-#, python-format
+#, fuzzy, python-format
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: models/__init__.py:828
 #, fuzzy
@@ -3229,11 +3304,13 @@ msgstr[0] "%(min)d dakika önce"
 msgstr[1] "%(min)d dakika önce"
 
 #: models/__init__.py:1404
-#, python-format
+#, fuzzy, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: models/__init__.py:1406
 #, python-format
@@ -3284,11 +3361,13 @@ msgid "%(username)s karma is %(reputation)s"
 msgstr "karmanız %(reputation)s"
 
 #: models/__init__.py:1799
-#, python-format
+#, fuzzy, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: models/__init__.py:1806
 #, fuzzy, python-format
@@ -5300,7 +5379,7 @@ msgstr "Neden etiket kullanıyor ve bunu değiştiriyoruz?"
 
 #: skins/default/templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
-msgstr ""
+msgstr "Etiketler içeriğin düzenli ve aranabilir olmasını sağlar"
 
 #: skins/default/templates/question_retag.html:32
 msgid "tag editors receive special awards from the community"
@@ -5646,15 +5725,8 @@ msgid "Be the first one to answer this question!"
 msgstr "Bu soruya ilk cevabı sen yaz!"
 
 #: skins/default/templates/question/new_answer_form.html:30
-#, fuzzy
 msgid "you can answer anonymously and then login"
-msgstr ""
-"<span class='strong big'>Please start posting your answer anonymously</span> "
-"- your answer will be saved within the current session and published after "
-"you log in or create a new account. Please try to give a <strong>substantial "
-"answer</strong>, for discussions, <strong>please use comments</strong> and "
-"<strong>please do remember to vote</strong> (after you log in)!şimdi hemen "
-"cevap yazabilir, yollamak için daha sonra üye girişi yapabilirsiniz."
+msgstr "Anonim olarak soruyu cevaplayıp oturum açabilirsiniz."
 
 #: skins/default/templates/question/new_answer_form.html:34
 #, fuzzy
@@ -5727,11 +5799,13 @@ msgid "Follow"
 msgstr "Tüm sorular"
 
 #: skins/default/templates/question/sidebar.html:21
-#, python-format
+#, fuzzy, python-format
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: skins/default/templates/question/sidebar.html:27
 #, fuzzy
@@ -6065,18 +6139,22 @@ msgid "network"
 msgstr ""
 
 #: skins/default/templates/user_profile/user_network.html:10
-#, python-format
+#, fuzzy, python-format
 msgid "Followed by %(count)s person"
 msgid_plural "Followed by %(count)s people"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: skins/default/templates/user_profile/user_network.html:14
-#, python-format
+#, fuzzy, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: skins/default/templates/user_profile/user_network.html:19
 msgid ""
@@ -6426,7 +6504,7 @@ msgstr[1] "oy/"
 
 #: skins/default/templates/widgets/scope_nav.html:3
 msgid "ALL"
-msgstr ""
+msgstr "TÜMÜ"
 
 #: skins/default/templates/widgets/scope_nav.html:5
 msgid "see unanswered questions"
@@ -6434,7 +6512,7 @@ msgstr "cevapsız sorular gör"
 
 #: skins/default/templates/widgets/scope_nav.html:5
 msgid "UNANSWERED"
-msgstr ""
+msgstr "YANITLANMAMIŞ"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 #, fuzzy
@@ -6443,16 +6521,15 @@ msgstr "beğendiğiniz soruları gör"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "FOLLOWED"
-msgstr ""
+msgstr "TAKİP EDİLEN"
 
 #: skins/default/templates/widgets/scope_nav.html:11
-#, fuzzy
 msgid "Please ask your question here"
-msgstr "Hemen kendi sorunu yolla!"
+msgstr "Siz de sorun!!"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:3
 msgid "karma:"
-msgstr ""
+msgstr "karma:"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:7
 #, fuzzy
@@ -6460,17 +6537,21 @@ msgid "badges:"
 msgstr "rozetler:"
 
 #: skins/default/templates/widgets/user_navigation.html:8
+#, fuzzy
 msgid "logout"
-msgstr "çıkış"
+msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"çıkış\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"oturumu kapat"
 
 #: skins/default/templates/widgets/user_navigation.html:10
 msgid "login"
 msgstr "giriş"
 
 #: skins/default/templates/widgets/user_navigation.html:14
-#, fuzzy
 msgid "settings"
-msgstr "Temel Ayarlar"
+msgstr "Ayarlar"
 
 #: templatetags/extra_filters.py:145 templatetags/extra_filters_jinja.py:264
 msgid "no items in counter"
@@ -6478,16 +6559,15 @@ msgstr "0"
 
 #: utils/decorators.py:90 views/commands.py:113 views/commands.py:133
 msgid "Oops, apologies - there was some error"
-msgstr ""
+msgstr "Ahh, özür dileriz - bir hata meydana geldi"
 
 #: utils/decorators.py:109
-#, fuzzy
 msgid "Please login to post"
-msgstr "Kullanıcı girişi"
+msgstr "Yazmak için lütfen giriş yapınız"
 
 #: utils/decorators.py:205
 msgid "Spam was detected on your post, sorry for if this is a mistake"
-msgstr ""
+msgstr "İletinizde spam içerik tespit edildi, eğer bu bir hataysa özür dileriz"
 
 #: utils/forms.py:33
 msgid "this field is required"
@@ -6527,6 +6607,7 @@ msgstr "kullanıcı adı sadece harf, rakam veya altçizgiden oluşur"
 #: utils/forms.py:75
 msgid "please use at least some alphabetic characters in the user name"
 msgstr ""
+"lütfen kullanıcı isminize en azından bir kaç alfabetik karakter ekleyin"
 
 #: utils/forms.py:138
 msgid "your email address"
@@ -6614,18 +6695,16 @@ msgid "You have %(votes_left)s votes left for today"
 msgstr ""
 
 #: views/commands.py:123
-#, fuzzy
 msgid "Sorry, but anonymous users cannot access the inbox"
-msgstr "üye girişi yapmadan oy kullanamazsınız"
+msgstr "üye girişi yapmadan gelen kutusuna bakamazsınız."
 
 #: views/commands.py:198
 msgid "Sorry, something is not right here..."
 msgstr ""
 
 #: views/commands.py:213
-#, fuzzy
 msgid "Sorry, but anonymous users cannot accept answers"
-msgstr "üye girişi yapmadan oy kullanamazsınız"
+msgstr "üye girişi yapmadan cevap veremezsiniz."
 
 #: views/commands.py:320
 #, python-format
@@ -6651,9 +6730,8 @@ msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "Lütfen, giriş yapın veya askbot'a katılın"
 
 #: views/commands.py:578
-#, fuzzy
 msgid "Please sign in to vote"
-msgstr "Lütfen buradan giriş yapın:"
+msgstr "Lütfen oy vermek için giriş yapın:"
 
 #: views/meta.py:84
 msgid "Q&A forum feedback"
@@ -6770,15 +6848,12 @@ msgstr ""
 "ederiz. %s"
 
 #: views/writers.py:192
-#, fuzzy
 msgid "Please log in to ask questions"
-msgstr ""
-"Asla soru sormaktan çekinmeyin! Sorun ki, sayenizde başkaları da öğrensin!"
+msgstr "Soru sormak için giriş yapınız"
 
 #: views/writers.py:493
-#, fuzzy
 msgid "Please log in to answer questions"
-msgstr "cevapsız sorular gör"
+msgstr "Soruları cevaplandırmak için giriş yapınız"
 
 #: views/writers.py:600
 #, python-format
@@ -6801,7 +6876,7 @@ msgstr ""
 
 #: views/writers.py:679
 msgid "sorry, we seem to have some technical difficulties"
-msgstr ""
+msgstr "Özür dileriz, bazı teknik sorunlar yaşıyoruz"
 
 #~ msgid "question content must be > 10 characters"
 #~ msgstr "soru içeriği en az 10 karakter olmalı"

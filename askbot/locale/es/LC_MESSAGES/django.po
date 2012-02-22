@@ -2,7 +2,6 @@
 # Copyright (C) 2009 Gang Chen 
 # This file is distributed under the same license as the CNPROG package.
 # Adolfo Fitoria, Bruno Sarlo, Francisco Espinosa 2009.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Askbot\n"
@@ -11,18 +10,19 @@ msgstr ""
 "PO-Revision-Date: 2010-03-28 22:15-0600\n"
 "Last-Translator: Francisco Espinoza <pacoesni@gmail.com>\n"
 "Language-Team: Hasked Team <pacoesni@gmail.com>\n"
-"Language: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Spanish\n"
-"X-Poedit-Country: NICARAGUA\n"
+"Plural-Forms: nplurals=2; plural=n!= 1;\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: exceptions.py:13
 #, fuzzy
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "Lo sentimos pero los usuarios anónimos no pueden acceder a esta función"
+msgstr ""
+"Lo sentimos pero los usuarios anónimos no pueden acceder a esta función"
 
 #: feed.py:26 feed.py:100
 msgid " - "
@@ -88,11 +88,11 @@ msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
 msgstr[0] ""
-"Las etiquetas son claves cortas, sin espacios. Puedes usar hasta %(max_tags)d "
-"etiqueta."
+"Las etiquetas son claves cortas, sin espacios. Puedes usar hasta "
+"%(max_tags)d etiqueta."
 msgstr[1] ""
-"Las etiquetas son claves cortas, sin espacios. Puedes usar hasta %(max_tags)d "
-"etiquetas."
+"Las etiquetas son claves cortas, sin espacios. Puedes usar hasta "
+"%(max_tags)d etiquetas."
 
 #: forms.py:201 skins/default/templates/question_retag.html:58
 msgid "tags are required"
@@ -123,15 +123,17 @@ msgstr "usa-estos-caracteres-en-las-etiquetas"
 
 #: forms.py:270
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr "wiki comunitaria (no se premia karma y cualquiera puede editar la publicación wiki)"
+msgstr ""
+"wiki comunitaria (no se premia karma y cualquiera puede editar la "
+"publicación wiki)"
 
 #: forms.py:271
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
-"si marcas la opción Wiki comunitaria,la pregunta y las respuestas no generan puntos y "
-"el nombre del autor no se muestra"
+"si marcas la opción Wiki comunitaria,la pregunta y las respuestas no generan "
+"puntos y el nombre del autor no se muestra"
 
 #: forms.py:287
 msgid "update summary:"
@@ -204,11 +206,16 @@ msgid "Cannot change status to admin"
 msgstr "No puede cambiar el estado a admin"
 
 #: forms.py:477
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr "Si desea cambiar el estado de %(username)s, por favor, haga una selección "
+msgstr ""
+"#-#-#-#-#  django.po (Askbot)  #-#-#-#-#\n"
+"Si desea cambiar el estado de %(username)s, por favor, haga una selección "
+"apropiada.\n"
+"#-#-#-#-#  django.po (Askbot)  #-#-#-#-#\n"
+"Si desea cambiar el estado de %(username), por favor, haga una selección "
 "apropiada."
 
 #: forms.py:486
@@ -253,7 +260,8 @@ msgstr "Compruebe si no desea revelar su nombre cuando realice esta pregunta"
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
-msgstr "Ha solicitado realizar esta pregunta anónimamente, si decide revelar su "
+msgstr ""
+"Ha solicitado realizar esta pregunta anónimamente, si decide revelar su "
 "identidad, por favor marque esta caja."
 
 #: forms.py:814

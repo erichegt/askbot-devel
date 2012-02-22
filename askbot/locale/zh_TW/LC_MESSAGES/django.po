@@ -2,20 +2,20 @@
 # Copyright (C) 2009 Gang Chen
 # This file is distributed under the same license as the CNPROG package.
 # Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 11:25-0600\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
 "PO-Revision-Date: 2010-08-25 19:05+0800\n"
 "Last-Translator: cch <cch@mail>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
 
 #: exceptions.py:13
 #, fuzzy
@@ -4352,6 +4352,7 @@ msgstr "關閉"
 msgid "one of these is required"
 msgstr " 標籤不能為空白。"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # #, python-format
 # msgid ""
 # "must have valid %(email)s to post, \n"
@@ -4360,6 +4361,14 @@ msgstr " 標籤不能為空白。"
 # msgstr "使用正確 %(email)s 張貼, \"
 # "                            參考 %(email_validation_faq_url)s\n"
 # "                            "
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# #, python-format
+# msgid ""
+# "must have valid %(email)s to post, \n"
+# "                            see %(email_validation_faq_url)s\n"
+# "                            "
+# msgstr "使用正確 %(email)s 張貼, \"
+# "                            參考 %(email_validation_faq_url)s\n"
 #: skins/common/templates/widgets/edit_post.html:33
 msgid "(required)"
 msgstr "(必要的)"

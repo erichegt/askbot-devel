@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 #   <olloff@gmail.com>, 2012.
 msgid ""
@@ -11,12 +11,14 @@ msgstr ""
 "POT-Creation-Date: 2011-11-27 01:58-0600\n"
 "PO-Revision-Date: 2012-02-04 11:09+0000\n"
 "Last-Translator: olloff <olloff@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.net/projects/p/askbot/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.net/projects/p/askbot/language/"
+"ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
@@ -31,7 +33,9 @@ msgstr "Пожалуйста, добавьте один или нескольк�
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "Вами не выбран метод входа, пожалуйста, выберите один из них, нажав на одну из иконок ниже."
+msgstr ""
+"Вами не выбран метод входа, пожалуйста, выберите один из них, нажав на одну "
+"из иконок ниже."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
@@ -124,11 +128,13 @@ msgstr "извините, анонимные пользователи не мо�
 
 #: skins/common/media/js/post.js:294
 msgid "please confirm offensive"
-msgstr "вы уверены, что это сообщение оскорбительно, содержит спам, рекламу, и т.д.?"
+msgstr ""
+"вы уверены, что это сообщение оскорбительно, содержит спам, рекламу, и т.д.?"
 
 #: skins/common/media/js/post.js:295
 msgid "anonymous users cannot flag offensive posts"
-msgstr "анонимные пользователи не могут отметить флагом нарушающие правила сообщения"
+msgstr ""
+"анонимные пользователи не могут отметить флагом нарушающие правила сообщения"
 
 #: skins/common/media/js/post.js:296
 msgid "confirm delete"
@@ -136,7 +142,9 @@ msgstr "вы уверены, что хотите удалить это сооб�
 
 #: skins/common/media/js/post.js:297
 msgid "anonymous users cannot delete/undelete"
-msgstr "извините, анонимные пользователи не могут удалить или отменить удаление сообщения"
+msgstr ""
+"извините, анонимные пользователи не могут удалить или отменить удаление "
+"сообщения"
 
 #: skins/common/media/js/post.js:298
 msgid "post recovered"
@@ -233,7 +241,9 @@ msgstr[2] "Удалить эти уведомления?"
 
 #: skins/common/media/js/user.js:125 skins/old/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr "Пожалуйста, <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы начать отслеживать %(username)s"
+msgstr ""
+"Пожалуйста, <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы начать "
+"отслеживать %(username)s"
 
 #: skins/common/media/js/user.js:157 skins/old/media/js/user.js:161
 #, c-format
@@ -321,11 +331,14 @@ msgstr "повторить"
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr "введите URL-адрес изображения, например http://www.example.com/image.jpg или загрузите файл изображения"
+msgstr ""
+"введите URL-адрес изображения, например http://www.example.com/image.jpg или "
+"загрузите файл изображения"
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr "введите Web-адрес, например http://www.example.com \"заголовок страницы\""
+msgstr ""
+"введите Web-адрес, например http://www.example.com \"заголовок страницы\""
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"

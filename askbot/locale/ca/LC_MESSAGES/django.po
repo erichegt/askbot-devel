@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-30 03:39-0600\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
 "PO-Revision-Date: 2011-11-28 19:26+0200\n"
 "Last-Translator: Jordi Bofill <jordi.bofill@upc.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr "Els visitants anònims no tenen accés a aquesta funció"
 
-#: feed.py:28 feed.py:90
+#: feed.py:28 feed.py:90 feed.py:26 feed.py:100
 msgid " - "
 msgstr ""
 
-#: feed.py:28
+#: feed.py:28 feed.py:26
 msgid "Individual question feed"
 msgstr "Canal de pregunta individual"
 
-#: feed.py:90
+#: feed.py:90 feed.py:100
 msgid "latest questions"
 msgstr "preguntes recents"
 
@@ -142,59 +142,59 @@ msgstr ""
 "breu resum de la revisió (p.e. correcció ortogràfica, gramàtica, millora "
 "d'estil, aquest camp és opcional)"
 
-#: forms.py:362
+#: forms.py:362 forms.py:364
 msgid "Enter number of points to add or subtract"
 msgstr "Introduir el nombre de punts a sumar o restar"
 
-#: forms.py:376 const/__init__.py:247
+#: forms.py:376 const/__init__.py:247 forms.py:378 const/__init__.py:250
 msgid "approved"
 msgstr "aprovat"
 
-#: forms.py:377 const/__init__.py:248
+#: forms.py:377 const/__init__.py:248 forms.py:379 const/__init__.py:251
 msgid "watched"
 msgstr "vist"
 
-#: forms.py:378 const/__init__.py:249
+#: forms.py:378 const/__init__.py:249 forms.py:380 const/__init__.py:252
 msgid "suspended"
 msgstr "deshabilitat"
 
-#: forms.py:379 const/__init__.py:250
+#: forms.py:379 const/__init__.py:250 forms.py:381 const/__init__.py:253
 msgid "blocked"
 msgstr "bloquejat"
 
-#: forms.py:381
+#: forms.py:381 forms.py:383
 msgid "administrator"
 msgstr "administrador"
 
-#: forms.py:382 const/__init__.py:246
+#: forms.py:382 const/__init__.py:246 forms.py:384 const/__init__.py:249
 msgid "moderator"
 msgstr "moderador"
 
-#: forms.py:402
+#: forms.py:402 forms.py:404
 msgid "Change status to"
 msgstr "Canviar estat a"
 
-#: forms.py:429
+#: forms.py:429 forms.py:431
 msgid "which one?"
 msgstr "quin?"
 
-#: forms.py:450
+#: forms.py:450 forms.py:452
 msgid "Cannot change own status"
 msgstr "No es pot canviar el pròpi estat"
 
-#: forms.py:456
+#: forms.py:456 forms.py:458
 msgid "Cannot turn other user to moderator"
 msgstr "No es pot canviar l'altre usuari a moderador"
 
-#: forms.py:463
+#: forms.py:463 forms.py:465
 msgid "Cannot change status of another moderator"
 msgstr "No es pot canviar l'estat d'un altre moderador"
 
-#: forms.py:469
+#: forms.py:469 forms.py:471
 msgid "Cannot change status to admin"
 msgstr "No es pot canviar a l'estat d'administrador "
 
-#: forms.py:475
+#: forms.py:475 forms.py:477
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
@@ -202,43 +202,43 @@ msgid ""
 msgstr ""
 "Si es vol canviar l'estat de %(username)s, feu una selecció amb significat"
 
-#: forms.py:484
+#: forms.py:484 forms.py:486
 msgid "Subject line"
 msgstr "Línia d'assumpte"
 
-#: forms.py:491
+#: forms.py:491 forms.py:493
 msgid "Message text"
 msgstr "Text del missatge"
 
-#: forms.py:506
+#: forms.py:506 forms.py:579
 msgid "Your name (optional):"
 msgstr "El vostre nom (opcional):"
 
-#: forms.py:507
+#: forms.py:507 forms.py:580
 msgid "Email:"
 msgstr "Correu electrònic:"
 
-#: forms.py:509
+#: forms.py:509 forms.py:582
 msgid "Your message:"
 msgstr "El vostre missatge:"
 
-#: forms.py:514
+#: forms.py:514 forms.py:587
 msgid "I don't want to give my email or receive a response:"
 msgstr "No donar el meu correu electrònic or rebre respostes:"
 
-#: forms.py:536
+#: forms.py:536 forms.py:609
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr "Marcar l'opció \"No donar el meu correu electrònic\"."
 
-#: forms.py:575
+#: forms.py:575 forms.py:648
 msgid "ask anonymously"
 msgstr "preguntar anònimament"
 
-#: forms.py:577
+#: forms.py:577 forms.py:650
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr "Marcar si no voleu mostrar el vostre nom al fer aquesta pregunta"
 
-#: forms.py:737
+#: forms.py:737 forms.py:810
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
@@ -246,11 +246,11 @@ msgstr ""
 "Heu fet aquesta pregunta anònimament, si voleu mostrar la vostra identitat "
 "marqueu aquesta opció."
 
-#: forms.py:741
+#: forms.py:741 forms.py:814
 msgid "reveal identity"
 msgstr "mostrar identitat"
 
-#: forms.py:799
+#: forms.py:799 forms.py:872
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
@@ -258,7 +258,7 @@ msgstr ""
 "Només l'autor de la pregunta anònima pot mostrar la seva identitat. "
 "Desmarqueu l'opció"
 
-#: forms.py:812
+#: forms.py:812 forms.py:885
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
@@ -268,87 +268,87 @@ msgstr ""
 "Si us plau, marqueu «mostrar identitat» o tornareu a carregar aquesta pàgina "
 "i editeu de nou la pregunta"
 
-#: forms.py:856
+#: forms.py:856 forms.py:930
 msgid "Real name"
 msgstr "Nom real"
 
-#: forms.py:863
+#: forms.py:863 forms.py:937
 msgid "Website"
 msgstr "Lloc web"
 
-#: forms.py:870
+#: forms.py:870 forms.py:944
 msgid "City"
 msgstr "Ciutat"
 
-#: forms.py:879
+#: forms.py:879 forms.py:953
 msgid "Show country"
 msgstr "Mostrar país"
 
-#: forms.py:884
+#: forms.py:884 forms.py:958
 msgid "Date of birth"
 msgstr "Data de naixament"
 
-#: forms.py:885
+#: forms.py:885 forms.py:959
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "no es mostrarà, s'usa per calcular l'edat, format: AAAA-MM-DD"
 
-#: forms.py:891
+#: forms.py:891 forms.py:965
 msgid "Profile"
 msgstr "Perfil"
 
-#: forms.py:900
+#: forms.py:900 forms.py:974
 msgid "Screen name"
 msgstr "Nom a mostrar"
 
-#: forms.py:931 forms.py:932
+#: forms.py:931 forms.py:932 forms.py:1005 forms.py:1006
 msgid "this email has already been registered, please use another one"
 msgstr "aquesta adreça de correu ja està registrada, useu una altra"
 
-#: forms.py:939
+#: forms.py:939 forms.py:1013
 msgid "Choose email tag filter"
 msgstr "Seleccionar etiqueta filtre per el correu electrònic"
 
-#: forms.py:986
+#: forms.py:986 forms.py:1060
 msgid "Asked by me"
 msgstr "Preguntat per mi"
 
-#: forms.py:989
+#: forms.py:989 forms.py:1063
 msgid "Answered by me"
 msgstr "Respost per mi"
 
-#: forms.py:992
+#: forms.py:992 forms.py:1066
 msgid "Individually selected"
 msgstr "Seleccionat individualment"
 
-#: forms.py:995
+#: forms.py:995 forms.py:1069
 msgid "Entire forum (tag filtered)"
 msgstr "Forum senser (filtrar per etiqueta)"
 
-#: forms.py:999
+#: forms.py:999 forms.py:1073
 msgid "Comments and posts mentioning me"
 msgstr "Comentaris i entrades us mencionen"
 
-#: forms.py:1077
+#: forms.py:1077 forms.py:1152
 msgid "okay, let's try!"
 msgstr "d'acord, provem-ho!"
 
-#: forms.py:1078
+#: forms.py:1078 forms.py:1153
 msgid "no community email please, thanks"
 msgstr "no, no rebre correus electrònics de la comunitat"
 
-#: forms.py:1082
+#: forms.py:1082 forms.py:1157
 msgid "please choose one of the options above"
 msgstr "Seleccionar una de les opcions anteriors"
 
-#: urls.py:41
+#: urls.py:41 urls.py:52
 msgid "about/"
 msgstr "sobre/"
 
-#: urls.py:42
+#: urls.py:42 urls.py:53
 msgid "faq/"
 msgstr ""
 
-#: urls.py:43
+#: urls.py:43 urls.py:54
 msgid "privacy/"
 msgstr "privacitat/"
 
@@ -356,15 +356,15 @@ msgstr "privacitat/"
 msgid "help/"
 msgstr ""
 
-#: urls.py:46 urls.py:51
+#: urls.py:46 urls.py:51 urls.py:56 urls.py:61
 msgid "answers/"
 msgstr "respostes/"
 
-#: urls.py:46 urls.py:87 urls.py:207
+#: urls.py:46 urls.py:87 urls.py:207 urls.py:56 urls.py:82
 msgid "edit/"
 msgstr "editar/"
 
-#: urls.py:51 urls.py:117
+#: urls.py:51 urls.py:117 urls.py:61 urls.py:112
 msgid "revisions/"
 msgstr "revisions/"
 
@@ -373,35 +373,37 @@ msgid "questions"
 msgstr "preguntes"
 
 #: urls.py:82 urls.py:87 urls.py:92 urls.py:97 urls.py:102 urls.py:107
-#: urls.py:112 urls.py:117 urls.py:123 urls.py:294
+#: urls.py:112 urls.py:117 urls.py:123 urls.py:294 urls.py:67 urls.py:77
+#: urls.py:118 skins/default/templates/question/javascript.html:16
+#: skins/default/templates/question/javascript.html:19
 msgid "questions/"
 msgstr "preguntes/"
 
-#: urls.py:82
+#: urls.py:82 urls.py:77
 msgid "ask/"
 msgstr "preguntar/"
 
-#: urls.py:92
+#: urls.py:92 urls.py:87
 msgid "retag/"
 msgstr "reetiquetar/"
 
-#: urls.py:97
+#: urls.py:97 urls.py:92
 msgid "close/"
 msgstr "tancar/"
 
-#: urls.py:102
+#: urls.py:102 urls.py:97
 msgid "reopen/"
 msgstr "reobrir/"
 
-#: urls.py:107
+#: urls.py:107 urls.py:102
 msgid "answer/"
 msgstr "resposta/"
 
-#: urls.py:112
+#: urls.py:112 urls.py:107 skins/default/templates/question/javascript.html:16
 msgid "vote/"
 msgstr "vot/"
 
-#: urls.py:123
+#: urls.py:123 urls.py:118
 msgid "widgets/"
 msgstr ""
 
@@ -414,6 +416,8 @@ msgid "subscribe-for-tags/"
 msgstr "subscriure-per-etiquetes/"
 
 #: urls.py:201 urls.py:207 urls.py:213 urls.py:221
+#: skins/default/templates/main_page/javascript.html:39
+#: skins/default/templates/main_page/javascript.html:42
 msgid "users/"
 msgstr "usuaris/"
 
@@ -445,12 +449,16 @@ msgstr "penjar/"
 msgid "feedback/"
 msgstr "comentaris/"
 
-#: urls.py:300
+#: urls.py:300 skins/default/templates/main_page/javascript.html:38
+#: skins/default/templates/main_page/javascript.html:41
+#: skins/default/templates/question/javascript.html:15
+#: skins/default/templates/question/javascript.html:18
 msgid "question/"
 msgstr "pregunta/"
 
 #: urls.py:307 setup_templates/settings.py:210
 #: skins/common/templates/authopenid/providers_javascript.html:7
+#: setup_templates/settings.py:208
 msgid "account/"
 msgstr "compte/"
 
@@ -1143,16 +1151,16 @@ msgid ""
 "XML-RPC"
 msgstr ""
 
-#: conf/login_providers.py:60
+#: conf/login_providers.py:60 conf/login_providers.py:62
 msgid "Upload your icon"
 msgstr ""
 
-#: conf/login_providers.py:90
+#: conf/login_providers.py:90 conf/login_providers.py:92
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr ""
 
-#: conf/login_providers.py:95
+#: conf/login_providers.py:95 conf/login_providers.py:97
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
@@ -1658,21 +1666,21 @@ msgstr ""
 msgid "To change the logo, select new file, then submit this whole form."
 msgstr ""
 
-#: conf/skin_general_settings.py:37
+#: conf/skin_general_settings.py:37 conf/skin_general_settings.py:39
 msgid "Show logo"
 msgstr ""
 
-#: conf/skin_general_settings.py:39
+#: conf/skin_general_settings.py:39 conf/skin_general_settings.py:41
 msgid ""
 "Check if you want to show logo in the forum header or uncheck in the case "
 "you do not want the logo to appear in the default location"
 msgstr ""
 
-#: conf/skin_general_settings.py:51
+#: conf/skin_general_settings.py:51 conf/skin_general_settings.py:53
 msgid "Site favicon"
 msgstr ""
 
-#: conf/skin_general_settings.py:53
+#: conf/skin_general_settings.py:53 conf/skin_general_settings.py:55
 #, python-format
 msgid ""
 "A small 16x16 or 32x32 pixel icon image used to distinguish your site in the "
@@ -1680,40 +1688,40 @@ msgid ""
 "href=\"%(favicon_info_url)s\">this page</a>."
 msgstr ""
 
-#: conf/skin_general_settings.py:69
+#: conf/skin_general_settings.py:69 conf/skin_general_settings.py:73
 msgid "Password login button"
 msgstr ""
 
-#: conf/skin_general_settings.py:71
+#: conf/skin_general_settings.py:71 conf/skin_general_settings.py:75
 msgid ""
 "An 88x38 pixel image that is used on the login screen for the password login "
 "button."
 msgstr ""
 
-#: conf/skin_general_settings.py:84
+#: conf/skin_general_settings.py:84 conf/skin_general_settings.py:90
 msgid "Show all UI functions to all users"
 msgstr ""
 
-#: conf/skin_general_settings.py:86
+#: conf/skin_general_settings.py:86 conf/skin_general_settings.py:92
 msgid ""
 "If checked, all forum functions will be shown to users, regardless of their "
 "reputation. However to use those functions, moderation rules, reputation and "
 "other limits will still apply."
 msgstr ""
 
-#: conf/skin_general_settings.py:101
+#: conf/skin_general_settings.py:101 conf/skin_general_settings.py:107
 msgid "Select skin"
 msgstr ""
 
-#: conf/skin_general_settings.py:112
+#: conf/skin_general_settings.py:112 conf/skin_general_settings.py:118
 msgid "Customize HTML <HEAD>"
 msgstr ""
 
-#: conf/skin_general_settings.py:121
+#: conf/skin_general_settings.py:121 conf/skin_general_settings.py:127
 msgid "Custom portion of the HTML <HEAD>"
 msgstr ""
 
-#: conf/skin_general_settings.py:123
+#: conf/skin_general_settings.py:123 conf/skin_general_settings.py:129
 msgid ""
 "<strong>To use this option</strong>, check \"Customize HTML &lt;HEAD&gt;\" "
 "above. Contents of this box will be inserted into the &lt;HEAD&gt; portion "
@@ -1725,11 +1733,11 @@ msgid ""
 "please test the site with the W3C HTML validator service."
 msgstr ""
 
-#: conf/skin_general_settings.py:145
+#: conf/skin_general_settings.py:145 conf/skin_general_settings.py:151
 msgid "Custom header additions"
 msgstr ""
 
-#: conf/skin_general_settings.py:147
+#: conf/skin_general_settings.py:147 conf/skin_general_settings.py:153
 msgid ""
 "Header is the bar at the top of the content that contains user info and site "
 "links, and is common to all pages. Use this area to enter contents of the "
@@ -1738,21 +1746,21 @@ msgid ""
 "sure that your input is valid and works well in all browsers."
 msgstr ""
 
-#: conf/skin_general_settings.py:162
+#: conf/skin_general_settings.py:162 conf/skin_general_settings.py:168
 msgid "Site footer mode"
 msgstr ""
 
-#: conf/skin_general_settings.py:164
+#: conf/skin_general_settings.py:164 conf/skin_general_settings.py:170
 msgid ""
 "Footer is the bottom portion of the content, which is common to all pages. "
 "You can disable, customize, or use the default footer."
 msgstr ""
 
-#: conf/skin_general_settings.py:181
+#: conf/skin_general_settings.py:181 conf/skin_general_settings.py:187
 msgid "Custom footer (HTML format)"
 msgstr ""
 
-#: conf/skin_general_settings.py:183
+#: conf/skin_general_settings.py:183 conf/skin_general_settings.py:189
 msgid ""
 "<strong>To enable this function</strong>, please select option 'customize' "
 "in the \"Site footer mode\" above. Use this area to enter contents of the "
@@ -1761,21 +1769,21 @@ msgid ""
 "that your input is valid and works well in all browsers."
 msgstr ""
 
-#: conf/skin_general_settings.py:198
+#: conf/skin_general_settings.py:198 conf/skin_general_settings.py:204
 msgid "Apply custom style sheet (CSS)"
 msgstr ""
 
-#: conf/skin_general_settings.py:200
+#: conf/skin_general_settings.py:200 conf/skin_general_settings.py:206
 msgid ""
 "Check if you want to change appearance of your form by adding custom style "
 "sheet rules (please see the next item)"
 msgstr ""
 
-#: conf/skin_general_settings.py:212
+#: conf/skin_general_settings.py:212 conf/skin_general_settings.py:218
 msgid "Custom style sheet (CSS)"
 msgstr ""
 
-#: conf/skin_general_settings.py:214
+#: conf/skin_general_settings.py:214 conf/skin_general_settings.py:220
 msgid ""
 "<strong>To use this function</strong>, check \"Apply custom style sheet\" "
 "option above. The CSS rules added in this window will be applied after the "
@@ -1784,19 +1792,19 @@ msgid ""
 "depends (default is empty string) on the url configuration in your urls.py."
 msgstr ""
 
-#: conf/skin_general_settings.py:230
+#: conf/skin_general_settings.py:230 conf/skin_general_settings.py:236
 msgid "Add custom javascript"
 msgstr ""
 
-#: conf/skin_general_settings.py:233
+#: conf/skin_general_settings.py:233 conf/skin_general_settings.py:239
 msgid "Check to enable javascript that you can enter in the next field"
 msgstr ""
 
-#: conf/skin_general_settings.py:243
+#: conf/skin_general_settings.py:243 conf/skin_general_settings.py:249
 msgid "Custom javascript"
 msgstr ""
 
-#: conf/skin_general_settings.py:245
+#: conf/skin_general_settings.py:245 conf/skin_general_settings.py:251
 msgid ""
 "Type or paste plain javascript that you would like to run on your site. Link "
 "to the script will be inserted at the bottom of the HTML output and will be "
@@ -1807,19 +1815,19 @@ msgid ""
 "above)."
 msgstr ""
 
-#: conf/skin_general_settings.py:263
+#: conf/skin_general_settings.py:263 conf/skin_general_settings.py:269
 msgid "Skin media revision number"
 msgstr ""
 
-#: conf/skin_general_settings.py:265
+#: conf/skin_general_settings.py:265 conf/skin_general_settings.py:271
 msgid "Will be set automatically but you can modify it if necessary."
 msgstr ""
 
-#: conf/skin_general_settings.py:276
+#: conf/skin_general_settings.py:276 conf/skin_general_settings.py:282
 msgid "Hash to update the media revision number automatically."
 msgstr ""
 
-#: conf/skin_general_settings.py:280
+#: conf/skin_general_settings.py:280 conf/skin_general_settings.py:286
 msgid "Will be set automatically, it is not necesary to modify manually."
 msgstr ""
 
@@ -1884,11 +1892,11 @@ msgstr ""
 msgid "Login, Users & Communication"
 msgstr ""
 
-#: conf/user_settings.py:14
+#: conf/user_settings.py:14 conf/user_settings.py:12
 msgid "User settings"
 msgstr "Configuració d'usuari"
 
-#: conf/user_settings.py:23
+#: conf/user_settings.py:23 conf/user_settings.py:21
 msgid "Allow editing user screen name"
 msgstr ""
 
@@ -1896,15 +1904,15 @@ msgstr ""
 msgid "Allow users change own email addresses"
 msgstr "Permetre als usuaris canviar la seva adreça de correu"
 
-#: conf/user_settings.py:41
+#: conf/user_settings.py:41 conf/user_settings.py:30
 msgid "Allow account recovery by email"
 msgstr "Permetre recuperar el compte per correu electrònic"
 
-#: conf/user_settings.py:50
+#: conf/user_settings.py:50 conf/user_settings.py:39
 msgid "Allow adding and removing login methods"
 msgstr ""
 
-#: conf/user_settings.py:60
+#: conf/user_settings.py:60 conf/user_settings.py:49
 msgid "Minimum allowed length for screen name"
 msgstr ""
 
@@ -1931,18 +1939,18 @@ msgid ""
 "html#uploaded-avatars\">this page</a>."
 msgstr ""
 
-#: conf/user_settings.py:97
+#: conf/user_settings.py:97 conf/user_settings.py:59
 msgid "Default Gravatar icon type"
 msgstr ""
 
-#: conf/user_settings.py:99
+#: conf/user_settings.py:99 conf/user_settings.py:61
 msgid ""
 "This option allows you to set the default avatar type for email addresses "
 "without associated gravatar images.  For more information, please visit <a "
 "href=\"http://en.gravatar.com/site/implement/images/\">this page</a>."
 msgstr ""
 
-#: conf/user_settings.py:109
+#: conf/user_settings.py:109 conf/user_settings.py:71
 msgid "Name for the Anonymous user"
 msgstr ""
 
@@ -2106,199 +2114,203 @@ msgstr "llista"
 msgid "cloud"
 msgstr "núvol"
 
-#: const/__init__.py:73
+#: const/__init__.py:73 const/__init__.py:78
 msgid "Question has no answers"
 msgstr "La pregunta no té respostes"
 
-#: const/__init__.py:74
+#: const/__init__.py:74 const/__init__.py:79
 msgid "Question has no accepted answers"
 msgstr "La pregunta no té respostes acceptades"
 
-#: const/__init__.py:119
+#: const/__init__.py:119 const/__init__.py:122
 msgid "asked a question"
 msgstr "ha fet una pregunta"
 
-#: const/__init__.py:120
+#: const/__init__.py:120 const/__init__.py:123
 msgid "answered a question"
 msgstr "ha respost una pregunta"
 
-#: const/__init__.py:121
+#: const/__init__.py:121 const/__init__.py:124
 msgid "commented question"
 msgstr "ha comentat una pregunta"
 
-#: const/__init__.py:122
+#: const/__init__.py:122 const/__init__.py:125
 msgid "commented answer"
 msgstr "ha commentat una resposta"
 
-#: const/__init__.py:123
+#: const/__init__.py:123 const/__init__.py:126
 msgid "edited question"
 msgstr "ha editat una pregunta"
 
-#: const/__init__.py:124
+#: const/__init__.py:124 const/__init__.py:127
 msgid "edited answer"
 msgstr "ha editat una resposta"
 
-#: const/__init__.py:125
+#: const/__init__.py:125 const/__init__.py:128
 msgid "received award"
 msgstr "ha rebut una insígnia"
 
-#: const/__init__.py:126
+#: const/__init__.py:126 const/__init__.py:129
 msgid "marked best answer"
 msgstr "ha marcat la millor resposta"
 
-#: const/__init__.py:127
+#: const/__init__.py:127 const/__init__.py:130
 msgid "upvoted"
 msgstr "votat positivament"
 
-#: const/__init__.py:128
+#: const/__init__.py:128 const/__init__.py:131
 msgid "downvoted"
 msgstr "votat negativament"
 
-#: const/__init__.py:129
+#: const/__init__.py:129 const/__init__.py:132
 msgid "canceled vote"
 msgstr "cancelat el vot"
 
-#: const/__init__.py:130
+#: const/__init__.py:130 const/__init__.py:133
 msgid "deleted question"
 msgstr "pregunta esborrada"
 
-#: const/__init__.py:131
+#: const/__init__.py:131 const/__init__.py:134
 msgid "deleted answer"
 msgstr "resposta esborrada"
 
-#: const/__init__.py:132
+#: const/__init__.py:132 const/__init__.py:135
 msgid "marked offensive"
 msgstr "marcat com ofensiu"
 
-#: const/__init__.py:133
+#: const/__init__.py:133 const/__init__.py:136
 msgid "updated tags"
 msgstr "etiquetes actualitzades"
 
-#: const/__init__.py:134
+#: const/__init__.py:134 const/__init__.py:137
 msgid "selected favorite"
 msgstr "seleccionat com a favorit"
 
-#: const/__init__.py:135
+#: const/__init__.py:135 const/__init__.py:138
 msgid "completed user profile"
 msgstr "completat perfil d'usuari"
 
-#: const/__init__.py:136
+#: const/__init__.py:136 const/__init__.py:139
 msgid "email update sent to user"
 msgstr "enviat missatge d'actualització a l'usuari"
 
-#: const/__init__.py:139
+#: const/__init__.py:139 const/__init__.py:142
 msgid "reminder about unanswered questions sent"
 msgstr "enviat recordatori d'una pregunta sense resposta"
 
-#: const/__init__.py:143
+#: const/__init__.py:143 const/__init__.py:146
 msgid "reminder about accepting the best answer sent"
 msgstr "enviat recordatori sobre acceptar la millor resposta"
 
-#: const/__init__.py:145
+#: const/__init__.py:145 const/__init__.py:148
 msgid "mentioned in the post"
 msgstr "citat en l'entrada"
 
-#: const/__init__.py:196
+#: const/__init__.py:196 const/__init__.py:199
 msgid "question_answered"
 msgstr "pregunta resposta"
 
-#: const/__init__.py:197
+#: const/__init__.py:197 const/__init__.py:200
 msgid "question_commented"
 msgstr "pregunta comentada"
 
-#: const/__init__.py:198
+#: const/__init__.py:198 const/__init__.py:201
 msgid "answer_commented"
 msgstr "resposta comentada"
 
-#: const/__init__.py:199
+#: const/__init__.py:199 const/__init__.py:202
 msgid "answer_accepted"
 msgstr "resposta acceptada"
 
-#: const/__init__.py:203
+#: const/__init__.py:203 const/__init__.py:206
 msgid "[closed]"
 msgstr "[tancat]"
 
-#: const/__init__.py:204
+#: const/__init__.py:204 const/__init__.py:207
 msgid "[deleted]"
 msgstr "[esborrat]"
 
-#: const/__init__.py:205 views/readers.py:553
+#: const/__init__.py:205 views/readers.py:553 const/__init__.py:208
+#: views/readers.py:590
 msgid "initial version"
 msgstr "versió inicial"
 
-#: const/__init__.py:206
+#: const/__init__.py:206 const/__init__.py:209
 msgid "retagged"
 msgstr "reetiquetat"
 
-#: const/__init__.py:214
+#: const/__init__.py:214 const/__init__.py:217
 msgid "off"
 msgstr "no"
 
-#: const/__init__.py:215
+#: const/__init__.py:215 const/__init__.py:218
 msgid "exclude ignored"
 msgstr "ignorades"
 
-#: const/__init__.py:216
+#: const/__init__.py:216 const/__init__.py:219
 msgid "only selected"
 msgstr "seleccionades"
 
-#: const/__init__.py:220
+#: const/__init__.py:220 const/__init__.py:223
 msgid "instantly"
 msgstr "instantàniament"
 
-#: const/__init__.py:221
+#: const/__init__.py:221 const/__init__.py:224
 msgid "daily"
 msgstr "diari"
 
-#: const/__init__.py:222
+#: const/__init__.py:222 const/__init__.py:225
 msgid "weekly"
 msgstr "setmanal"
 
-#: const/__init__.py:223
+#: const/__init__.py:223 const/__init__.py:226
 msgid "no email"
 msgstr "no correu electrònic"
 
-#: const/__init__.py:230
+#: const/__init__.py:230 const/__init__.py:233
 msgid "identicon"
 msgstr ""
 
-#: const/__init__.py:231
+#: const/__init__.py:231 const/__init__.py:234
 msgid "mystery-man"
 msgstr ""
 
-#: const/__init__.py:232
+#: const/__init__.py:232 const/__init__.py:235
 msgid "monsterid"
 msgstr ""
 
-#: const/__init__.py:233
+#: const/__init__.py:233 const/__init__.py:236
 msgid "wavatar"
 msgstr ""
 
-#: const/__init__.py:234
+#: const/__init__.py:234 const/__init__.py:237
 msgid "retro"
 msgstr ""
 
 #: const/__init__.py:281 skins/default/templates/badges.html:37
+#: const/__init__.py:284
 msgid "gold"
 msgstr "or"
 
 #: const/__init__.py:282 skins/default/templates/badges.html:46
+#: const/__init__.py:285
 msgid "silver"
 msgstr "plata"
 
 #: const/__init__.py:283 skins/default/templates/badges.html:53
+#: const/__init__.py:286
 msgid "bronze"
 msgstr "bronze"
 
-#: const/__init__.py:295
+#: const/__init__.py:295 const/__init__.py:298
 msgid "None"
 msgstr "Cap"
 
-#: const/__init__.py:296
+#: const/__init__.py:296 const/__init__.py:299
 msgid "Gravatar"
 msgstr ""
 
-#: const/__init__.py:297
+#: const/__init__.py:297 const/__init__.py:300
 msgid "Uploaded Avatar"
 msgstr "Avatar penjat"
 
@@ -2371,46 +2383,55 @@ msgstr ""
 "electrònic (important) i el nom a mostrar, si ho creieu necessari."
 
 #: deps/django_authopenid/forms.py:110 deps/django_authopenid/views.py:142
+#: deps/django_authopenid/views.py:151
 msgid "i-names are not supported"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "no es permet l'us de i-names"
 #: deps/django_authopenid/forms.py:233
 #, python-format
 msgid "Please enter your %(username_token)s"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Introduïu el vostre %(username_token)s"
 #: deps/django_authopenid/forms.py:259
 msgid "Please, enter your user name"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Introduïu el vostre nom d'usuari"
 #: deps/django_authopenid/forms.py:263
 msgid "Please, enter your password"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Introduïu la vostra contrasenya"
 #: deps/django_authopenid/forms.py:270 deps/django_authopenid/forms.py:274
 msgid "Please, enter your new password"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Introduïu la vostra contrasenya nova"
 #: deps/django_authopenid/forms.py:285
 msgid "Passwords did not match"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Les contrasenyes no coincideixen"
 #: deps/django_authopenid/forms.py:297
 #, python-format
 msgid "Please choose password > %(len)s characters"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Seleccionar una contrasenya de més de %(len)s caràcters"
 #: deps/django_authopenid/forms.py:335
 msgid "Current password"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
 # msgstr "Contrasenya actual"
 #: deps/django_authopenid/forms.py:346
 msgid ""
@@ -2432,6 +2453,7 @@ msgstr "Nom d'usuari incorrecta"
 
 #: deps/django_authopenid/urls.py:9 deps/django_authopenid/urls.py:12
 #: deps/django_authopenid/urls.py:15 setup_templates/settings.py:210
+#: setup_templates/settings.py:208
 msgid "signin/"
 msgstr ""
 
@@ -2553,13 +2575,14 @@ msgstr "Registrar-se amb nom usuari i contrasenya de %(provider)s"
 msgid "Sign in with your %(provider)s account"
 msgstr "Registrar-se amb el vostre compte de %(provider)s"
 
-#: deps/django_authopenid/views.py:149
+#: deps/django_authopenid/views.py:149 deps/django_authopenid/views.py:158
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "OpenID de %(openid_url)s és invalid"
 
 #: deps/django_authopenid/views.py:261 deps/django_authopenid/views.py:412
-#: deps/django_authopenid/views.py:440
+#: deps/django_authopenid/views.py:440 deps/django_authopenid/views.py:270
+#: deps/django_authopenid/views.py:421 deps/django_authopenid/views.py:449
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
@@ -2568,63 +2591,64 @@ msgstr ""
 "hi ha problemes connectant amb %(provider)s,torneu a provar-ho i useu un "
 "altre proveïdor"
 
-#: deps/django_authopenid/views.py:362
+#: deps/django_authopenid/views.py:362 deps/django_authopenid/views.py:371
 msgid "Your new password saved"
 msgstr "S'ha desat la nova contrasenya"
 
-#: deps/django_authopenid/views.py:466
+#: deps/django_authopenid/views.py:466 deps/django_authopenid/views.py:475
 msgid "The login password combination was not correct"
 msgstr "La combinació usuari/contrasenya no és correcte"
 
-#: deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:568 deps/django_authopenid/views.py:577
 msgid "Please click any of the icons below to sign in"
 msgstr "Clicar una de les icones per registrar-se"
 
-#: deps/django_authopenid/views.py:570
+#: deps/django_authopenid/views.py:570 deps/django_authopenid/views.py:579
 msgid "Account recovery email sent"
 msgstr "S'han enviat el missatge de correu per recuperar el compte"
 
-#: deps/django_authopenid/views.py:573
+#: deps/django_authopenid/views.py:573 deps/django_authopenid/views.py:582
 msgid "Please add one or more login methods."
 msgstr "Afegir un o més mètodes de registre."
 
-#: deps/django_authopenid/views.py:575
+#: deps/django_authopenid/views.py:575 deps/django_authopenid/views.py:584
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr "Afegir, treure o revalidar els seus mètodes d'entrada"
 
-#: deps/django_authopenid/views.py:577
+#: deps/django_authopenid/views.py:577 deps/django_authopenid/views.py:586
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr "S'ha recuperat el seu compte, però ..."
 
-#: deps/django_authopenid/views.py:579
+#: deps/django_authopenid/views.py:579 deps/django_authopenid/views.py:588
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr "La clau de recuperació d'aquest compte ha expirat o és invàlida"
 
-#: deps/django_authopenid/views.py:652
+#: deps/django_authopenid/views.py:652 deps/django_authopenid/views.py:661
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr "El mètode de registre %(provider_name)s no existeix"
 
-#: deps/django_authopenid/views.py:658
+#: deps/django_authopenid/views.py:658 deps/django_authopenid/views.py:667
 msgid "Oops, sorry - there was some error - please try again"
 msgstr "S'ha produït un error - torneu-ho a provar"
 
-#: deps/django_authopenid/views.py:749
+#: deps/django_authopenid/views.py:749 deps/django_authopenid/views.py:758
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr "La vostra entrada amb %(provider)s funciona bé"
 
 #: deps/django_authopenid/views.py:1060 deps/django_authopenid/views.py:1066
+#: deps/django_authopenid/views.py:1069 deps/django_authopenid/views.py:1075
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr "s'ha de validar el vostre correu electrònic, consulteu %(details_url)s"
 
-#: deps/django_authopenid/views.py:1087
+#: deps/django_authopenid/views.py:1087 deps/django_authopenid/views.py:1096
 #, python-format
 msgid "Recover your %(site)s account"
 msgstr "Recuperar el vostre compte %(site)s"
 
-#: deps/django_authopenid/views.py:1159
+#: deps/django_authopenid/views.py:1159 deps/django_authopenid/views.py:1166
 msgid "Please check your email and visit the enclosed link."
 msgstr "Comproveu el vostre correu electrònic i visiteu l'enllaç inclòs."
 
@@ -2632,28 +2656,28 @@ msgstr "Comproveu el vostre correu electrònic i visiteu l'enllaç inclòs."
 msgid "Site"
 msgstr "Lloc"
 
-#: deps/livesettings/values.py:69
+#: deps/livesettings/values.py:69 deps/livesettings/values.py:68
 msgid "Main"
 msgstr "Principal"
 
-#: deps/livesettings/values.py:128
+#: deps/livesettings/values.py:128 deps/livesettings/values.py:127
 msgid "Base Settings"
 msgstr "Configuració base"
 
-#: deps/livesettings/values.py:235
+#: deps/livesettings/values.py:235 deps/livesettings/values.py:234
 msgid "Default value: \"\""
 msgstr "Valor per defecte:  \"\""
 
-#: deps/livesettings/values.py:242
+#: deps/livesettings/values.py:242 deps/livesettings/values.py:241
 msgid "Default value: "
 msgstr "Valor per defecte: "
 
-#: deps/livesettings/values.py:245
+#: deps/livesettings/values.py:245 deps/livesettings/values.py:244
 #, python-format
 msgid "Default value: %s"
 msgstr "Valor per defecte:  %s"
 
-#: deps/livesettings/values.py:629
+#: deps/livesettings/values.py:629 deps/livesettings/values.py:622
 #, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "Tipus de fitxers d'imatges admesos %(types)s"
@@ -2787,19 +2811,23 @@ msgstr ""
 "suficients privilegis</p>"
 
 #: management/commands/send_accept_answer_reminders.py:56
+#: management/commands/send_accept_answer_reminders.py:57
 #, python-format
 msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr ""
 
 #: management/commands/send_accept_answer_reminders.py:61
+#: management/commands/send_accept_answer_reminders.py:62
 msgid "Please accept the best answer for this question:"
 msgstr "Acceptar la millor resposta d'aquesta pregunta:"
 
 #: management/commands/send_accept_answer_reminders.py:63
+#: management/commands/send_accept_answer_reminders.py:64
 msgid "Please accept the best answer for these questions:"
 msgstr "Acceptar la millor resposta per aquestes preguntes:"
 
 #: management/commands/send_email_alerts.py:413
+#: management/commands/send_email_alerts.py:411
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
@@ -2807,6 +2835,7 @@ msgstr[0] "%(question_count)d pregunta actualitzada de %(topics)s"
 msgstr[1] "%(question_count)d preguntes actualitzades de %(topics)s"
 
 #: management/commands/send_email_alerts.py:423
+#: management/commands/send_email_alerts.py:421
 #, python-format
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
@@ -2815,10 +2844,12 @@ msgstr[1] ""
 "%(name)s, aquest és un missatge d'actualització de %(num)d preguntes"
 
 #: management/commands/send_email_alerts.py:440
+#: management/commands/send_email_alerts.py:438
 msgid "new question"
 msgstr "pregunta nova"
 
 #: management/commands/send_email_alerts.py:465
+#: management/commands/send_email_alerts.py:490
 #, python-format
 msgid ""
 "go to %(email_settings_link)s to change frequency of email updates or "
@@ -2828,6 +2859,7 @@ msgstr ""
 "%(email_settings_link)s o %(admin_email)s administrador"
 
 #: management/commands/send_unanswered_question_reminders.py:58
+#: management/commands/send_unanswered_question_reminders.py:56
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
@@ -2839,7 +2871,7 @@ msgstr[1] "%(question_count)d preguntes sense contestar de %(topics)s"
 msgid "Please log in to use %s"
 msgstr "Entrar per usar %s"
 
-#: models/__init__.py:316
+#: models/__init__.py:316 models/__init__.py:317
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
@@ -2847,7 +2879,7 @@ msgstr ""
 "No pot acceptar o rebutjar les millors respostes ja que el seu compte està "
 "bloquejat"
 
-#: models/__init__.py:320
+#: models/__init__.py:320 models/__init__.py:321
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
@@ -2855,7 +2887,7 @@ msgstr ""
 "No pot acceptar o rebutjar les millors respostes ja que el seu compte està "
 "deshabilitat"
 
-#: models/__init__.py:333
+#: models/__init__.py:333 models/__init__.py:334
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
@@ -2864,13 +2896,13 @@ msgstr ""
 "S'ha de tenir més de %(points)s per acceptar o rebutjar la pròpia resposta a "
 "la vostre pròpia pregunta"
 
-#: models/__init__.py:355
+#: models/__init__.py:355 models/__init__.py:356
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr "Podrà acceptar aquesta resposta a partir de %(will_be_able_at)s"
 
-#: models/__init__.py:363
+#: models/__init__.py:363 models/__init__.py:364
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
@@ -2879,37 +2911,37 @@ msgstr ""
 "Només els moderadors o l'autor original de la pregunta -%(username)s- poden "
 "acceptar i rebutjar la millor resposta"
 
-#: models/__init__.py:385
+#: models/__init__.py:385 models/__init__.py:392
 msgid "cannot vote for own posts"
 msgstr "no es pot votar una entrada pròpia"
 
-#: models/__init__.py:388
+#: models/__init__.py:388 models/__init__.py:395
 msgid "Sorry your account appears to be blocked "
 msgstr "El seu compte sembla que està bloquejat"
 
-#: models/__init__.py:393
+#: models/__init__.py:393 models/__init__.py:400
 msgid "Sorry your account appears to be suspended "
 msgstr "El seu compte sembla que està deshabilitat"
 
-#: models/__init__.py:403
+#: models/__init__.py:403 models/__init__.py:410
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr "s'han de tenir més de %(points)s per votar positivament"
 
-#: models/__init__.py:409
+#: models/__init__.py:409 models/__init__.py:416
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr "s'han de tenir més de %(points)s per votar negativament"
 
-#: models/__init__.py:424
+#: models/__init__.py:424 models/__init__.py:431
 msgid "Sorry, blocked users cannot upload files"
 msgstr "Els usuaris bloquejats no poden penjar fitxers"
 
-#: models/__init__.py:425
+#: models/__init__.py:425 models/__init__.py:432
 msgid "Sorry, suspended users cannot upload files"
 msgstr "Els usuaris deshabilitats no poden penjar fitxers"
 
-#: models/__init__.py:427
+#: models/__init__.py:427 models/__init__.py:434
 #, python-format
 msgid ""
 "uploading images is limited to users with >%(min_rep)s reputation points"
@@ -2918,14 +2950,16 @@ msgstr ""
 "imatges"
 
 #: models/__init__.py:446 models/__init__.py:513 models/__init__.py:979
+#: models/__init__.py:453 models/__init__.py:520 models/__init__.py:986
 msgid "blocked users cannot post"
 msgstr "els usuaris bloquejats no poden publicar"
 
-#: models/__init__.py:447 models/__init__.py:982
+#: models/__init__.py:447 models/__init__.py:982 models/__init__.py:454
+#: models/__init__.py:989
 msgid "suspended users cannot post"
 msgstr "els usuaris deshabilitats no poden publicar"
 
-#: models/__init__.py:474
+#: models/__init__.py:474 models/__init__.py:481
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -2940,18 +2974,18 @@ msgstr[1] ""
 "Els comentaris (excepte el darrer) es poden editar durant %(minutes)s minuts "
 "des de que es publiquen"
 
-#: models/__init__.py:486
+#: models/__init__.py:486 models/__init__.py:493
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 "Només els propietaris de l'entrada o els moderadors poden editar comentaris"
 
-#: models/__init__.py:499
+#: models/__init__.py:499 models/__init__.py:506
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
 "El seu compte està deshabilitat, només pot comentar les entrades pròpies"
 
-#: models/__init__.py:503
+#: models/__init__.py:503 models/__init__.py:510
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
@@ -2960,7 +2994,7 @@ msgstr ""
 "Per comentar una entrada es cal tenir una reputació de %(min_rep)s puntsSí "
 "podeu comentar les entrades i les respostes a les vostres preguntes"
 
-#: models/__init__.py:531
+#: models/__init__.py:531 models/__init__.py:538
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
@@ -2968,7 +3002,7 @@ msgstr ""
 "Aquesta entrada s'ha esborrat. Només els seus propietaris, l'administrador "
 "del lloc i els moderadors la poden veure."
 
-#: models/__init__.py:548
+#: models/__init__.py:548 models/__init__.py:555
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
@@ -2976,22 +3010,22 @@ msgstr ""
 "Una entrada esborrada només la poden editar els moderadors, els "
 "administradors del lloc o els propietaris de l'entrada."
 
-#: models/__init__.py:563
+#: models/__init__.py:563 models/__init__.py:570
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr "El seu compte està bloquejat, no podeu editar entrades"
 
-#: models/__init__.py:567
+#: models/__init__.py:567 models/__init__.py:574
 msgid "Sorry, since your account is suspended you can edit only your own posts"
 msgstr "El seu compte està deshabilitat, només pot editar entrades pròpies"
 
-#: models/__init__.py:572
+#: models/__init__.py:572 models/__init__.py:579
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
 "Per editar entrades wiki s'ha de tenir una reputació mínima de %(min_rep)s"
 
-#: models/__init__.py:579
+#: models/__init__.py:579 models/__init__.py:586
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
@@ -3000,7 +3034,7 @@ msgstr ""
 "Per editar entrades d'altres persones s'ha de tenir una reputació mínima de "
 "%(min_rep)s"
 
-#: models/__init__.py:642
+#: models/__init__.py:642 models/__init__.py:649
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3014,16 +3048,16 @@ msgstr[1] ""
 "No es pot eliminar la pregunta ja que hi ha respostes d'altres usuaris amb "
 "vots positius"
 
-#: models/__init__.py:657
+#: models/__init__.py:657 models/__init__.py:664
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "El seu compte està bloquejat, no pot eliminar entrades"
 
-#: models/__init__.py:661
+#: models/__init__.py:661 models/__init__.py:668
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr "El seu compte està deshabilitat, només pot eliminar entrades pròpies"
 
-#: models/__init__.py:665
+#: models/__init__.py:665 models/__init__.py:672
 #, python-format
 msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
@@ -3032,15 +3066,15 @@ msgstr ""
 "per eliminar entrades d'altres persones cal una reputació mínima de "
 "%(min_rep)s"
 
-#: models/__init__.py:685
+#: models/__init__.py:685 models/__init__.py:692
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr "El seu compte està bloquejat, no pot tancar preguntes"
 
-#: models/__init__.py:689
+#: models/__init__.py:689 models/__init__.py:696
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "Des de que el seu compte està deshabilitat no pot tancar preguntes"
 
-#: models/__init__.py:693
+#: models/__init__.py:693 models/__init__.py:700
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
@@ -3049,14 +3083,14 @@ msgstr ""
 "Per tancar entrades d'altres persones cal tenir una reputació mínima de "
 "%(min_rep)s"
 
-#: models/__init__.py:702
+#: models/__init__.py:702 models/__init__.py:709
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 "Per tancar una pregunta pròpia cal tenir una reputació mínima de %(min_rep)s"
 
-#: models/__init__.py:726
+#: models/__init__.py:726 models/__init__.py:733
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
@@ -3065,63 +3099,63 @@ msgstr ""
 "Només els moderadors, els administradors del lloc o els propietaris de les "
 "entrades amb reputació mínim de %(min_rep)s poden reobrir preguntes."
 
-#: models/__init__.py:732
+#: models/__init__.py:732 models/__init__.py:739
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 "Per reobrir una pregunta pròpia cal tenir una reputació mínima de %(min_rep)s"
 
-#: models/__init__.py:752
+#: models/__init__.py:752 models/__init__.py:759
 msgid "cannot flag message as offensive twice"
 msgstr "no es pot senyalar un missatge com ofensiu dues vegades"
 
-#: models/__init__.py:757
+#: models/__init__.py:757 models/__init__.py:764
 msgid "blocked users cannot flag posts"
 msgstr "els usuaris bloquejats no poden senyalar entrades"
 
-#: models/__init__.py:759
+#: models/__init__.py:759 models/__init__.py:766
 msgid "suspended users cannot flag posts"
 msgstr "els usuaris deshabilitats no poden senyalar entrades"
 
-#: models/__init__.py:761
+#: models/__init__.py:761 models/__init__.py:768
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
 msgstr "s'han de tenir més de %(min_rep)s punts per senyalar spam"
 
-#: models/__init__.py:780
+#: models/__init__.py:780 models/__init__.py:787
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
 msgstr "excedit %(max_flags_per_day)s"
 
-#: models/__init__.py:791
+#: models/__init__.py:791 models/__init__.py:798
 msgid "cannot remove non-existing flag"
 msgstr ""
 
-#: models/__init__.py:796
+#: models/__init__.py:796 models/__init__.py:803
 msgid "blocked users cannot remove flags"
 msgstr "els usuaris bloquejats no poden treure senyals"
 
-#: models/__init__.py:798
+#: models/__init__.py:798 models/__init__.py:805
 msgid "suspended users cannot remove flags"
 msgstr "els usuaris deshabilitats no poden treure senyals"
 
-#: models/__init__.py:802
+#: models/__init__.py:802 models/__init__.py:809
 #, python-format
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
 msgstr[0] "s'han de tenir més d'%(min_rep)d punt per poder treure senyals"
 msgstr[1] "s'han de tenir més de %(min_rep)d punts per poder treure senyals"
 
-#: models/__init__.py:821
+#: models/__init__.py:821 models/__init__.py:828
 msgid "you don't have the permission to remove all flags"
 msgstr "No té permís per treure totes les senyals"
 
-#: models/__init__.py:822
+#: models/__init__.py:822 models/__init__.py:829
 msgid "no flags for this entry"
 msgstr ""
 
-#: models/__init__.py:846
+#: models/__init__.py:846 models/__init__.py:853
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
@@ -3129,78 +3163,79 @@ msgstr ""
 "Només els propietaris de de la pregunta, els moderadors i els administradors "
 "podenreetiquetar una pregunta esborrada"
 
-#: models/__init__.py:853
+#: models/__init__.py:853 models/__init__.py:860
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr "El seu compte està bloquejat, no pot reetiquetar preguntes"
 
-#: models/__init__.py:857
+#: models/__init__.py:857 models/__init__.py:864
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
 "El seu compte està deshabilitat, només pot reetiquetar les preguntes pròpies"
 
-#: models/__init__.py:861
+#: models/__init__.py:861 models/__init__.py:868
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr ""
 "Per reetiquetar una pregunta ha de tenir una reputació mínima de %(min_rep)s "
 
-#: models/__init__.py:880
+#: models/__init__.py:880 models/__init__.py:887
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr "El seu compte està bloquejat, no pot eliminar un comentari"
 
-#: models/__init__.py:884
+#: models/__init__.py:884 models/__init__.py:891
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
 "El seu compte està deshabilitat, només pot eliminar els comentaris pròpies"
 
-#: models/__init__.py:888
+#: models/__init__.py:888 models/__init__.py:895
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
 "Per eliminar comentaris ha de tenir una reputació mínima de %(min_rep)s"
 
-#: models/__init__.py:911
+#: models/__init__.py:911 models/__init__.py:918
 msgid "cannot revoke old vote"
 msgstr "no es pot revocar un vot antic"
 
-#: models/__init__.py:1386 utils/functions.py:78
+#: models/__init__.py:1386 utils/functions.py:78 models/__init__.py:1395
+#: utils/functions.py:70
 #, python-format
 msgid "on %(date)s"
 msgstr "a %(date)s"
 
-#: models/__init__.py:1388
+#: models/__init__.py:1388 models/__init__.py:1397
 msgid "in two days"
 msgstr "en dos dies"
 
-#: models/__init__.py:1390
+#: models/__init__.py:1390 models/__init__.py:1399
 msgid "tomorrow"
 msgstr "demà"
 
-#: models/__init__.py:1392
+#: models/__init__.py:1392 models/__init__.py:1401
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "en %(hr)d hora"
 msgstr[1] "en %(hr)d hores"
 
-#: models/__init__.py:1394
+#: models/__init__.py:1394 models/__init__.py:1403
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "en %(min)d minut"
 msgstr[1] "en %(min)d minuts"
 
-#: models/__init__.py:1395
+#: models/__init__.py:1395 models/__init__.py:1404
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d dia"
 msgstr[1] "%(days)d dies"
 
-#: models/__init__.py:1397
+#: models/__init__.py:1397 models/__init__.py:1406
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
@@ -3210,79 +3245,80 @@ msgstr ""
 "pregunta. Podeu publicar una resposta %(left)s"
 
 #: models/__init__.py:1564 skins/default/templates/feedback_email.txt:9
+#: models/__init__.py:1572
 msgid "Anonymous"
 msgstr "Anònim"
 
-#: models/__init__.py:1660
+#: models/__init__.py:1660 models/__init__.py:1668 views/users.py:372
 msgid "Site Adminstrator"
 msgstr "Administrador del Lloc"
 
-#: models/__init__.py:1662
+#: models/__init__.py:1662 models/__init__.py:1670 views/users.py:374
 msgid "Forum Moderator"
 msgstr "Moderador del Fòrum"
 
-#: models/__init__.py:1664
+#: models/__init__.py:1664 models/__init__.py:1672 views/users.py:376
 msgid "Suspended User"
 msgstr "Usuari Deshabilitat"
 
-#: models/__init__.py:1666
+#: models/__init__.py:1666 models/__init__.py:1674 views/users.py:378
 msgid "Blocked User"
 msgstr "Usuari Bloquejat"
 
-#: models/__init__.py:1668
+#: models/__init__.py:1668 models/__init__.py:1676 views/users.py:380
 msgid "Registered User"
 msgstr "Usuari Registrat"
 
-#: models/__init__.py:1670
+#: models/__init__.py:1670 models/__init__.py:1678
 msgid "Watched User"
 msgstr "Usuari Observat"
 
-#: models/__init__.py:1672
+#: models/__init__.py:1672 models/__init__.py:1680
 msgid "Approved User"
 msgstr "Usuari Habilitat"
 
-#: models/__init__.py:1781
+#: models/__init__.py:1781 models/__init__.py:1789
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s té una reputació de %(reputation)s"
 
-#: models/__init__.py:1791
+#: models/__init__.py:1791 models/__init__.py:1799
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "una insígnia d'or"
 msgstr[1] "%(count)d insígnies d'or"
 
-#: models/__init__.py:1798
+#: models/__init__.py:1798 models/__init__.py:1806
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "una insígnia de plata"
 msgstr[1] "%(count)d insígnies de plata"
 
-#: models/__init__.py:1805
+#: models/__init__.py:1805 models/__init__.py:1813
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "una insígnia de bronze"
 msgstr[1] "%(count)d insígnies de bronze"
 
-#: models/__init__.py:1816
+#: models/__init__.py:1816 models/__init__.py:1824
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s i %(item2)s"
 
-#: models/__init__.py:1820
+#: models/__init__.py:1820 models/__init__.py:1828
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s té %(badges)s"
 
-#: models/__init__.py:2286
+#: models/__init__.py:2286 models/__init__.py:2305
 #, python-format
 msgid "\"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:2423
+#: models/__init__.py:2423 models/__init__.py:2442
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
@@ -3291,7 +3327,8 @@ msgstr ""
 "Ha rebut una insígnia '%(badge_name)s'. Vegeu la <a href=\"%(user_profile)s"
 "\">perfil d'usuari</a>."
 
-#: models/__init__.py:2625 views/commands.py:433
+#: models/__init__.py:2625 views/commands.py:433 models/__init__.py:2635
+#: views/commands.py:429
 msgid "Your tag subscription was saved, thanks!"
 msgstr "S'ha desat la seva subscripció d'etiquetes"
 
@@ -3316,7 +3353,8 @@ msgstr "Pressio Companys"
 #: models/badges.py:174
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
-msgstr "Reb un mínim de %(votes)s vots positius per una resposta per primera vegada"
+msgstr ""
+"Reb un mínim de %(votes)s vots positius per una resposta per primera vegada"
 
 #: models/badges.py:178
 msgid "Teacher"
@@ -3446,7 +3484,8 @@ msgstr "Resposta acceptada amb  %(num)s o més vots"
 msgid ""
 "Answered a question more than %(days)s days later with at least %(votes)s "
 "votes"
-msgstr "Respon una pregunta feta fa més %(days)s dies amb un mínim de %(votes)s"
+msgstr ""
+"Respon una pregunta feta fa més %(days)s dies amb un mínim de %(votes)s"
 
 #: models/badges.py:525
 msgid "Necromancer"
@@ -3549,30 +3588,30 @@ msgstr "Taxonomista"
 msgid "Created a tag used by %(num)s questions"
 msgstr "Crea un etiqueta usada per %(num)s preguntes"
 
-#: models/badges.py:774
+#: models/badges.py:774 models/badges.py:776
 msgid "Expert"
 msgstr "Expert"
 
-#: models/badges.py:777
+#: models/badges.py:777 models/badges.py:779
 msgid "Very active in one tag"
 msgstr "Molt actiu en una etiqueta"
 
-#: models/post.py:1056
+#: models/post.py:1056 models/content.py:549
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "Aquesta pregunta s'ha esborrat i no es pot accedir"
 
-#: models/post.py:1072
+#: models/post.py:1072 models/content.py:565
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr ""
 "La resposat que cerca ja no es vàlida, ja què s'ha tret la pregunta original "
 
-#: models/post.py:1079
+#: models/post.py:1079 models/content.py:572
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "Aquesta pregunta s'ha tret i no es pot accedir"
 
-#: models/post.py:1095
+#: models/post.py:1095 models/meta.py:116
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
@@ -3580,7 +3619,7 @@ msgstr ""
 "El comentari que cerca ja no es pot accedir ja què s'ha tret la pregunta "
 "original"
 
-#: models/post.py:1102
+#: models/post.py:1102 models/meta.py:123
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
@@ -3588,21 +3627,21 @@ msgstr ""
 "El comentari que cerca ja no es pot accedir ja què s'ha tret la resposta "
 "original"
 
-#: models/question.py:51
+#: models/question.py:51 models/question.py:63
 #, python-format
 msgid "\" and \"%s\""
 msgstr "\" i \"%s\""
 
-#: models/question.py:54
+#: models/question.py:54 models/question.py:66
 msgid "\" and more"
 msgstr "\" i més"
 
-#: models/repute.py:141
+#: models/repute.py:141 models/repute.py:142
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr "<em>Canviar pel moderador. Raó:</em> %(reason)s"
 
-#: models/repute.py:152
+#: models/repute.py:152 models/repute.py:153
 #, python-format
 msgid ""
 "%(points)s points were added for %(username)s's contribution to question "
@@ -3611,7 +3650,7 @@ msgstr ""
 "S'han afegit %(points)s punts a %(username)s per la seva contribució a la "
 "pregunta %(question_title)s"
 
-#: models/repute.py:157
+#: models/repute.py:157 models/repute.py:158
 #, python-format
 msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
@@ -3620,47 +3659,47 @@ msgstr ""
 "S'han tret %(points)s punts a %(username)s per la seva contribució a la "
 "pregunta %(question_title)s"
 
-#: models/tag.py:106
+#: models/tag.py:106 models/tag.py:151
 msgid "interesting"
 msgstr "interessant"
 
-#: models/tag.py:106
+#: models/tag.py:106 models/tag.py:151
 msgid "ignored"
 msgstr "ignorada"
 
-#: models/user.py:266
+#: models/user.py:266 models/user.py:264
 msgid "Entire forum"
 msgstr "Tot el fòrum"
 
-#: models/user.py:267
+#: models/user.py:267 models/user.py:265
 msgid "Questions that I asked"
 msgstr "Preguntes que jo he preguntat"
 
-#: models/user.py:268
+#: models/user.py:268 models/user.py:266
 msgid "Questions that I answered"
 msgstr "Preguntes que jo he respos"
 
-#: models/user.py:269
+#: models/user.py:269 models/user.py:267
 msgid "Individually selected questions"
 msgstr "Preguntes seleccionades individualment"
 
-#: models/user.py:270
+#: models/user.py:270 models/user.py:268
 msgid "Mentions and comment responses"
 msgstr "Cites i comentaris a respostes"
 
-#: models/user.py:273
+#: models/user.py:273 models/user.py:271
 msgid "Instantly"
 msgstr "Instantàniament"
 
-#: models/user.py:274
+#: models/user.py:274 models/user.py:272
 msgid "Daily"
 msgstr "Diàriament"
 
-#: models/user.py:275
+#: models/user.py:275 models/user.py:273
 msgid "Weekly"
 msgstr "Setmanalment"
 
-#: models/user.py:276
+#: models/user.py:276 models/user.py:274
 msgid "No email"
 msgstr "Cap correu electrònic"
 
@@ -3719,6 +3758,7 @@ msgstr "Canviar correu electrònic"
 #: skins/default/templates/reopen.html:27
 #: skins/default/templates/subscribe_for_tags.html:16
 #: skins/default/templates/user_profile/user_edit.html:103
+#: skins/default/templates/user_profile/user_edit.html:96
 msgid "Cancel"
 msgstr "Cancel·lar"
 
@@ -4031,6 +4071,8 @@ msgstr "esborra, si voleu"
 #: skins/common/templates/authopenid/signin.html:166
 #: skins/common/templates/question/answer_controls.html:34
 #: skins/common/templates/question/question_controls.html:38
+#: skins/common/templates/question/answer_controls.html:44
+#: skins/common/templates/question/question_controls.html:49
 msgid "delete"
 msgstr "esborra"
 
@@ -4199,6 +4241,9 @@ msgstr "enllaç permanent"
 #: skins/default/templates/macros.html:313
 #: skins/default/templates/revisions.html:38
 #: skins/default/templates/revisions.html:41
+#: skins/common/templates/question/answer_controls.html:10
+#: skins/default/templates/macros.html:289
+#: skins/default/templates/revisions.html:37
 msgid "edit"
 msgstr "editar"
 
@@ -4206,36 +4251,50 @@ msgstr "editar"
 #: skins/common/templates/question/answer_controls.html:23
 #: skins/common/templates/question/question_controls.html:22
 #: skins/common/templates/question/question_controls.html:30
+#: skins/common/templates/question/answer_controls.html:22
+#: skins/common/templates/question/answer_controls.html:32
+#: skins/common/templates/question/question_controls.html:39
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr "informar com ofensiu (conte spam, publicitat, text maliciós, etc.)"
 
 #: skins/common/templates/question/answer_controls.html:16
 #: skins/common/templates/question/question_controls.html:23
+#: skins/common/templates/question/answer_controls.html:23
+#: skins/common/templates/question/question_controls.html:31
 msgid "flag offensive"
 msgstr "marcat com ofensiu"
 
 #: skins/common/templates/question/answer_controls.html:24
 #: skins/common/templates/question/question_controls.html:31
+#: skins/common/templates/question/answer_controls.html:33
+#: skins/common/templates/question/question_controls.html:40
 msgid "remove flag"
 msgstr "treure senyal"
 
 #: skins/common/templates/question/answer_controls.html:34
 #: skins/common/templates/question/question_controls.html:38
+#: skins/common/templates/question/answer_controls.html:44
+#: skins/common/templates/question/question_controls.html:49
 msgid "undelete"
 msgstr "recuperar"
 
 #: skins/common/templates/question/answer_controls.html:40
+#: skins/common/templates/question/answer_controls.html:50
 msgid "swap with question"
 msgstr "intercanviar amb la pregunta"
 
 #: skins/common/templates/question/answer_vote_buttons.html:9
 #: skins/common/templates/question/answer_vote_buttons.html:10
+#: skins/common/templates/question/answer_vote_buttons.html:13
+#: skins/common/templates/question/answer_vote_buttons.html:14
 msgid "mark this answer as correct (click again to undo)"
 msgstr "marcar aquesta resposta com a correcte (fer clic de nou per desfer)"
 
 #: skins/common/templates/question/answer_vote_buttons.html:12
 #: skins/common/templates/question/answer_vote_buttons.html:13
+#: skins/common/templates/question/answer_vote_buttons.html:23
+#: skins/common/templates/question/answer_vote_buttons.html:24
 #, python-format
 msgid "%(question_author)s has selected this answer as correct"
 msgstr "%(question_author)s ha seleccionat aquesta resposta com a correcta"
@@ -4286,6 +4345,8 @@ msgstr "Commutar el previsualitzador de l'editor Markdown"
 #: skins/default/templates/question_edit.html:76
 #: skins/default/templates/question/javascript.html:84
 #: skins/default/templates/question/javascript.html:87
+#: skins/default/templates/question/javascript.html:89
+#: skins/default/templates/question/javascript.html:92
 msgid "hide preview"
 msgstr "ocultar previsualització"
 
@@ -4300,14 +4361,18 @@ msgstr "Etiquetes seleccionades"
 # posem un signe + per què 'afegir' es talla i queda 'afegi'
 #: skins/common/templates/widgets/tag_selector.html:19
 #: skins/common/templates/widgets/tag_selector.html:36
+#: skins/common/templates/widgets/tag_selector.html:18
+#: skins/common/templates/widgets/tag_selector.html:34
 msgid "add"
 msgstr "+"
 
 #: skins/common/templates/widgets/tag_selector.html:21
+#: skins/common/templates/widgets/tag_selector.html:20
 msgid "Ignored tags"
 msgstr "Etiquetes ignorades"
 
 #: skins/common/templates/widgets/tag_selector.html:38
+#: skins/common/templates/widgets/tag_selector.html:36
 msgid "Display tag filter"
 msgstr "Aplicar el filtre d'etiquetes"
 
@@ -4359,6 +4424,7 @@ msgstr "tornar a la pàgina anterior"
 
 #: skins/default/templates/404.jinja.html:31
 #: skins/default/templates/widgets/scope_nav.html:6
+#: skins/default/templates/widgets/scope_nav.html:3
 msgid "see all questions"
 msgstr "veure totes les preguntes"
 
@@ -4417,6 +4483,7 @@ msgstr "Guardar edició"
 #: skins/default/templates/ask.html:52
 #: skins/default/templates/question_edit.html:76
 #: skins/default/templates/question/javascript.html:87
+#: skins/default/templates/question/javascript.html:92
 msgid "show preview"
 msgstr "mostrar previsualització"
 
@@ -4427,6 +4494,8 @@ msgstr "Feu una pregunta"
 #: skins/default/templates/badge.html:5 skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:19
 #: skins/default/templates/user_profile/user_stats.html:108
+#: skins/default/templates/user_profile/user_recent.html:16
+#: skins/default/templates/user_profile/user_stats.html:110
 #, python-format
 msgid "%(name)s"
 msgstr ""
@@ -4443,6 +4512,8 @@ msgstr "Insígnia \"%(name)s\""
 #: skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:17
 #: skins/default/templates/user_profile/user_stats.html:106
+#: skins/default/templates/user_profile/user_recent.html:16
+#: skins/default/templates/user_profile/user_stats.html:108
 #, python-format
 msgid "%(description)s"
 msgstr ""
@@ -4527,6 +4598,7 @@ msgstr "D'acord amb tancar"
 #: skins/default/templates/faq_static.html:5
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16 views/meta.py:61
+#: skins/default/templates/faq.html:3
 msgid "FAQ"
 msgstr ""
 
@@ -4982,58 +5054,72 @@ msgstr ""
 msgid "<p>Sincerely,<br/>Forum Administrator</p>"
 msgstr "<p>Salutacions,<br/>Administrador del Fòrum</p>"
 
-#: skins/default/templates/macros.html:5
+#: skins/default/templates/macros.html:5 skins/default/templates/macros.html:3
 #, python-format
 msgid "Share this question on %(site)s"
 msgstr "Compartir aquesta pregunta a %(site)s"
 
 #: skins/default/templates/macros.html:16
 #: skins/default/templates/macros.html:440
+#: skins/default/templates/macros.html:14
+#: skins/default/templates/macros.html:471
 #, python-format
 msgid "follow %(alias)s"
 msgstr "seguir a %(alias)s"
 
 #: skins/default/templates/macros.html:19
 #: skins/default/templates/macros.html:443
+#: skins/default/templates/macros.html:17
+#: skins/default/templates/macros.html:474
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr "no seguir a %(alias)s"
 
 #: skins/default/templates/macros.html:20
 #: skins/default/templates/macros.html:444
+#: skins/default/templates/macros.html:18
+#: skins/default/templates/macros.html:475
 #, python-format
 msgid "following %(alias)s"
 msgstr "seguint a %(alias)s"
 
 #: skins/default/templates/macros.html:31
+#: skins/default/templates/macros.html:29
 msgid "i like this question (click again to cancel)"
 msgstr "m'agrada aquesta pregunta (feu clic de nou per cancel·lar)"
 
 #: skins/default/templates/macros.html:33
+#: skins/default/templates/macros.html:31
 msgid "i like this answer (click again to cancel)"
 msgstr "m'agrada aquesta resposta (feu clic de nou per cancel·lar)"
 
 #: skins/default/templates/macros.html:39
+#: skins/default/templates/macros.html:37
 msgid "current number of votes"
 msgstr "nombre actual de vots"
 
 #: skins/default/templates/macros.html:45
+#: skins/default/templates/macros.html:43
 msgid "i dont like this question (click again to cancel)"
 msgstr "no m'agrada aquesta pregunta (feu clic de nou per cancel·lar)"
 
 #: skins/default/templates/macros.html:47
+#: skins/default/templates/macros.html:45
 msgid "i dont like this answer (click again to cancel)"
 msgstr "no m'agrada aquesta resposta (feu clic de nou per cancel·lar)"
 
 #: skins/default/templates/macros.html:54
+#: skins/default/templates/macros.html:52
 msgid "anonymous user"
 msgstr "usuari anònim"
 
 #: skins/default/templates/macros.html:87
+#: skins/default/templates/macros.html:80
 msgid "this post is marked as community wiki"
 msgstr "aquesta entrada està marcaa com a wiki comunitari"
 
 #: skins/default/templates/macros.html:90
+#: skins/default/templates/macros.html:83
 #, python-format
 msgid ""
 "This post is a wiki.\n"
@@ -5043,22 +5129,27 @@ msgstr ""
 "        Qualsevol amb una reputació de més de %(wiki_min_rep)s pot contribuir"
 
 #: skins/default/templates/macros.html:96
+#: skins/default/templates/macros.html:89
 msgid "asked"
 msgstr "preguntat"
 
 #: skins/default/templates/macros.html:98
+#: skins/default/templates/macros.html:91
 msgid "answered"
 msgstr "respost"
 
 #: skins/default/templates/macros.html:100
+#: skins/default/templates/macros.html:93
 msgid "posted"
 msgstr "publicat"
 
 #: skins/default/templates/macros.html:130
+#: skins/default/templates/macros.html:123
 msgid "updated"
 msgstr "actualitzat"
 
 #: skins/default/templates/macros.html:206
+#: skins/default/templates/macros.html:221
 #, python-format
 msgid "see questions tagged '%(tag)s'"
 msgstr "veure preguntes etiquetades '%(tag)s'"
@@ -5066,10 +5157,14 @@ msgstr "veure preguntes etiquetades '%(tag)s'"
 #: skins/default/templates/macros.html:258
 #: skins/default/templates/macros.html:266
 #: skins/default/templates/question/javascript.html:19
+#: skins/default/templates/macros.html:307
+#: skins/default/templates/macros.html:315
+#: skins/default/templates/question/javascript.html:24
 msgid "add comment"
 msgstr "afegir un comentari"
 
 #: skins/default/templates/macros.html:259
+#: skins/default/templates/macros.html:308
 #, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
@@ -5077,6 +5172,7 @@ msgstr[0] "veure més <strong>%(counter)s</strong>"
 msgstr[1] "veure més <strong>%(counter)s</strong>"
 
 #: skins/default/templates/macros.html:261
+#: skins/default/templates/macros.html:310
 #, python-format
 msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
@@ -5086,15 +5182,18 @@ msgstr[0] "veure <strong>%(counter)s</strong> comentar més"
 msgstr[1] "veure <strong>%(counter)s</strong> comentaris més"
 
 #: skins/default/templates/macros.html:305
+#: skins/default/templates/macros.html:278
 msgid "delete this comment"
 msgstr "eliminar aquest comentari"
 
 #: skins/default/templates/macros.html:511 templatetags/extra_tags.py:43
+#: skins/default/templates/macros.html:542
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "imatge gravatar de %(username)s"
 
 #: skins/default/templates/macros.html:520
+#: skins/default/templates/macros.html:551
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr "el lloc web de %(username)s és %(url)s"
@@ -5103,11 +5202,14 @@ msgstr "el lloc web de %(username)s és %(url)s"
 #: skins/default/templates/macros.html:536
 #: skins/default/templates/macros.html:574
 #: skins/default/templates/macros.html:575
+#: skins/default/templates/macros.html:566
+#: skins/default/templates/macros.html:567
 msgid "previous"
 msgstr "anterior"
 
 #: skins/default/templates/macros.html:547
 #: skins/default/templates/macros.html:586
+#: skins/default/templates/macros.html:578
 msgid "current page"
 msgstr "pàgina actual"
 
@@ -5115,21 +5217,26 @@ msgstr "pàgina actual"
 #: skins/default/templates/macros.html:556
 #: skins/default/templates/macros.html:588
 #: skins/default/templates/macros.html:595
+#: skins/default/templates/macros.html:580
+#: skins/default/templates/macros.html:587
 #, python-format
 msgid "page number %(num)s"
 msgstr "número de pàgina %(num)s"
 
 #: skins/default/templates/macros.html:560
 #: skins/default/templates/macros.html:599
+#: skins/default/templates/macros.html:591
 msgid "next page"
 msgstr "pàgina següent"
 
 #: skins/default/templates/macros.html:611
+#: skins/default/templates/macros.html:629
 #, python-format
 msgid "responses for %(username)s"
 msgstr "respostes per a  %(username)s"
 
 #: skins/default/templates/macros.html:614
+#: skins/default/templates/macros.html:632
 #, python-format
 msgid "you have a new response"
 msgid_plural "you have %(response_count)s new responses"
@@ -5137,23 +5244,30 @@ msgstr[0] "teniu una nova resposta"
 msgstr[1] "teniu %(response_count)s noves respostes"
 
 #: skins/default/templates/macros.html:617
+#: skins/default/templates/macros.html:635
 msgid "no new responses yet"
 msgstr "no hi ha respostes"
 
 #: skins/default/templates/macros.html:632
 #: skins/default/templates/macros.html:633
+#: skins/default/templates/macros.html:650
+#: skins/default/templates/macros.html:651
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr "%(new)s entrades senyalades noves i %(seen)s anteriors"
 
 #: skins/default/templates/macros.html:635
 #: skins/default/templates/macros.html:636
+#: skins/default/templates/macros.html:653
+#: skins/default/templates/macros.html:654
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr "%(new)s noves entrades senyalades"
 
 #: skins/default/templates/macros.html:641
 #: skins/default/templates/macros.html:642
+#: skins/default/templates/macros.html:659
+#: skins/default/templates/macros.html:660
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr "%(seen)s entrades senyalades"
@@ -5265,6 +5379,7 @@ msgstr "Etiquetes que coincideixen  \"%(stag)s\""
 
 #: skins/default/templates/tags.html:14 skins/default/templates/users.html:9
 #: skins/default/templates/main_page/tab_bar.html:15
+#: skins/default/templates/main_page/tab_bar.html:14
 msgid "Sort by &raquo;"
 msgstr "Ordenar per &raquo;"
 
@@ -5285,6 +5400,7 @@ msgid "by popularity"
 msgstr "per popularitat"
 
 #: skins/default/templates/tags.html:31 skins/default/templates/tags.html:56
+#: skins/default/templates/tags.html:57
 msgid "Nothing found"
 msgstr "No s'ha trobat"
 
@@ -5331,6 +5447,7 @@ msgid "Nothing found."
 msgstr "No s'ha trobat."
 
 #: skins/default/templates/main_page/headline.html:4 views/readers.py:136
+#: views/readers.py:160
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -5347,10 +5464,12 @@ msgid "Tagged"
 msgstr "Reetiquetat"
 
 #: skins/default/templates/main_page/headline.html:24
+#: skins/default/templates/main_page/headline.html:23
 msgid "Search tips:"
 msgstr "Cerca:"
 
 #: skins/default/templates/main_page/headline.html:27
+#: skins/default/templates/main_page/headline.html:26
 msgid "reset author"
 msgstr "reinicialitzar autor"
 
@@ -5358,27 +5477,35 @@ msgstr "reinicialitzar autor"
 #: skins/default/templates/main_page/headline.html:32
 #: skins/default/templates/main_page/nothing_found.html:18
 #: skins/default/templates/main_page/nothing_found.html:21
+#: skins/default/templates/main_page/headline.html:28
+#: skins/default/templates/main_page/headline.html:31
 msgid " or "
 msgstr "o"
 
 #: skins/default/templates/main_page/headline.html:30
+#: skins/default/templates/main_page/headline.html:29
 msgid "reset tags"
 msgstr "reinicialitzar etiquetes"
 
 #: skins/default/templates/main_page/headline.html:33
 #: skins/default/templates/main_page/headline.html:36
+#: skins/default/templates/main_page/headline.html:32
+#: skins/default/templates/main_page/headline.html:35
 msgid "start over"
 msgstr "començar de nou"
 
 #: skins/default/templates/main_page/headline.html:38
+#: skins/default/templates/main_page/headline.html:37
 msgid " - to expand, or dig in by adding more tags and revising the query."
 msgstr " - o podeu afegir més etiquetes i/o revisar la consulta."
 
 #: skins/default/templates/main_page/headline.html:41
+#: skins/default/templates/main_page/headline.html:40
 msgid "Search tip:"
 msgstr "Cerca:"
 
 #: skins/default/templates/main_page/headline.html:41
+#: skins/default/templates/main_page/headline.html:40
 msgid "add tags and a query to focus your search"
 msgstr "per acotar les preguntes afegiu etiquetes i/o feu una consulta"
 
@@ -5416,18 +5543,22 @@ msgid "Please always feel free to ask your question!"
 msgstr "Feu la vostra pregunta!"
 
 #: skins/default/templates/main_page/questions_loop.html:11
+#: skins/default/templates/main_page/questions_loop.html:12
 msgid "Did not find what you were looking for?"
 msgstr "No has trobat el que buscaves?"
 
 #: skins/default/templates/main_page/questions_loop.html:12
+#: skins/default/templates/main_page/questions_loop.html:13
 msgid "Please, post your question!"
 msgstr "Fes la teva pregunta"
 
 #: skins/default/templates/main_page/tab_bar.html:10
+#: skins/default/templates/main_page/tab_bar.html:9
 msgid "subscribe to the questions feed"
 msgstr "subscriure al feed preguntes"
 
 #: skins/default/templates/main_page/tab_bar.html:11
+#: skins/default/templates/main_page/tab_bar.html:10
 msgid "RSS"
 msgstr ""
 
@@ -5513,38 +5644,48 @@ msgstr "respostes populars"
 
 #: skins/default/templates/question/content.html:40
 #: skins/default/templates/question/new_answer_form.html:48
+#: skins/default/templates/question/content.html:20
+#: skins/default/templates/question/new_answer_form.html:46
 msgid "Answer Your Own Question"
 msgstr "Respon la teva pròpia pregunta"
 
 #: skins/default/templates/question/new_answer_form.html:16
+#: skins/default/templates/question/new_answer_form.html:14
 msgid "Login/Signup to Answer"
 msgstr "Entrar/Registrar-se per Respondre"
 
 #: skins/default/templates/question/new_answer_form.html:24
+#: skins/default/templates/question/new_answer_form.html:22
 msgid "Your answer"
 msgstr "La seva resposta"
 
 #: skins/default/templates/question/new_answer_form.html:26
+#: skins/default/templates/question/new_answer_form.html:24
 msgid "Be the first one to answer this question!"
 msgstr "Sigues el primer en respondre aquesta pregunta!"
 
 #: skins/default/templates/question/new_answer_form.html:32
+#: skins/default/templates/question/new_answer_form.html:30
 msgid "you can answer anonymously and then login"
 msgstr "podeu respondre anònimament i després registrar-vos"
 
 #: skins/default/templates/question/new_answer_form.html:36
+#: skins/default/templates/question/new_answer_form.html:34
 msgid "answer your own question only to give an answer"
 msgstr "respon la seva pròpia pregunta només per donar una resposta"
 
 #: skins/default/templates/question/new_answer_form.html:38
+#: skins/default/templates/question/new_answer_form.html:36
 msgid "please only give an answer, no discussions"
 msgstr "si us plau només proporcionar una resposta, no discutir"
 
 #: skins/default/templates/question/new_answer_form.html:45
+#: skins/default/templates/question/new_answer_form.html:43
 msgid "Login/Signup to Post Your Answer"
 msgstr "Entrar/Registrar-se per publicar la seva resposta"
 
 #: skins/default/templates/question/new_answer_form.html:50
+#: skins/default/templates/question/new_answer_form.html:48
 msgid "Answer the question"
 msgstr "Respon la pregunta"
 
@@ -5702,6 +5843,7 @@ msgstr "(no es pot canviar)"
 
 #: skins/default/templates/user_profile/user_edit.html:102
 #: skins/default/templates/user_profile/user_email_subscriptions.html:21
+#: skins/default/templates/user_profile/user_edit.html:95
 msgid "Update"
 msgstr "Actualitzar"
 
@@ -5945,6 +6087,7 @@ msgstr "activitat"
 
 #: skins/default/templates/user_profile/user_recent.html:24
 #: skins/default/templates/user_profile/user_recent.html:28
+#: skins/default/templates/user_profile/user_recent.html:21
 msgid "source"
 msgstr "font"
 
@@ -6026,6 +6169,7 @@ msgstr[0] "<span class=\"count\">%(counter)s</span> Etiqueta"
 msgstr[1] "<span class=\"count\">%(counter)s</span> Etiquetes"
 
 #: skins/default/templates/user_profile/user_stats.html:97
+#: skins/default/templates/user_profile/user_stats.html:99
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
@@ -6033,6 +6177,7 @@ msgstr[0] "<span class=\"count\">%(counter)s</span> Insígnia"
 msgstr[1] "<span class=\"count\">%(counter)s</span> Insígnies"
 
 #: skins/default/templates/user_profile/user_stats.html:120
+#: skins/default/templates/user_profile/user_stats.html:122
 msgid "Answer to:"
 msgstr "Respon a:"
 
@@ -6041,6 +6186,7 @@ msgid "User profile"
 msgstr "Perfil d'usuari"
 
 #: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:628
+#: views/users.py:786
 msgid "comments and answers to others questions"
 msgstr "comentaris i respostes a altres preguntes"
 
@@ -6065,6 +6211,7 @@ msgid "recent activity"
 msgstr "activitat recent"
 
 #: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:669
+#: views/users.py:861
 msgid "user vote record"
 msgstr "registre de vots de l'usuari"
 
@@ -6073,10 +6220,12 @@ msgid "casted votes"
 msgstr "vots emesos"
 
 #: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:759
+#: views/users.py:974
 msgid "email subscription settings"
 msgstr "configuració de la subscripció de correu electrònic"
 
 #: skins/default/templates/user_profile/user_tabs.html:46 views/users.py:205
+#: views/users.py:211
 msgid "moderate this user"
 msgstr "moderar aquest usuari"
 
@@ -6168,6 +6317,7 @@ msgid "learn more about Markdown"
 msgstr "aprendre més sobre Markdown"
 
 #: skins/default/templates/widgets/ask_button.html:5
+#: skins/default/templates/widgets/ask_button.html:2
 msgid "ask a question"
 msgstr "fes una pregunta"
 
@@ -6213,10 +6363,12 @@ msgid "help"
 msgstr "ajuda"
 
 #: skins/default/templates/widgets/footer.html:42
+#: skins/default/templates/widgets/footer.html:40
 msgid "privacy policy"
 msgstr "avís legal"
 
 #: skins/default/templates/widgets/footer.html:51
+#: skins/default/templates/widgets/footer.html:49
 msgid "give feedback"
 msgstr "dóna la teva opinió"
 
@@ -6268,26 +6420,37 @@ msgstr[0] "vot"
 msgstr[1] "vots"
 
 #: skins/default/templates/widgets/scope_nav.html:6
+#: skins/default/templates/widgets/scope_nav.html:3
 msgid "ALL"
 msgstr "TOTES"
 
 #: skins/default/templates/widgets/scope_nav.html:8
+#: skins/default/templates/widgets/scope_nav.html:5
 msgid "see unanswered questions"
 msgstr "veure preguntes sense respondre"
 
 #: skins/default/templates/widgets/scope_nav.html:8
+#: skins/default/templates/widgets/scope_nav.html:5
+#, fuzzy
 msgid "UNANSWERED"
-msgstr "SENSE RESP."
+msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"SENSE RESP.\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"SENSE RESPONDRE"
 
 #: skins/default/templates/widgets/scope_nav.html:11
+#: skins/default/templates/widgets/scope_nav.html:8
 msgid "see your followed questions"
 msgstr "mostrar les preguntes seguides"
 
 #: skins/default/templates/widgets/scope_nav.html:11
+#: skins/default/templates/widgets/scope_nav.html:8
 msgid "FOLLOWED"
 msgstr "SEQUIDES"
 
 #: skins/default/templates/widgets/scope_nav.html:14
+#: skins/default/templates/widgets/scope_nav.html:11
 msgid "Please ask your question here"
 msgstr "Fes la teva pregunta"
 
@@ -6300,22 +6463,27 @@ msgid "badges:"
 msgstr "insígnies:"
 
 #: skins/default/templates/widgets/user_navigation.html:9
+#: skins/default/templates/widgets/user_navigation.html:8
 msgid "logout"
 msgstr "sortir"
 
 #: skins/default/templates/widgets/user_navigation.html:12
+#: skins/default/templates/widgets/user_navigation.html:10
 msgid "login"
 msgstr "Registrar-se"
 
 #: skins/default/templates/widgets/user_navigation.html:15
+#: skins/default/templates/widgets/user_navigation.html:14
 msgid "settings"
 msgstr "configuració"
 
-#: templatetags/extra_filters_jinja.py:273
+#: templatetags/extra_filters_jinja.py:273 templatetags/extra_filters.py:145
+#: templatetags/extra_filters_jinja.py:264
 msgid "no items in counter"
 msgstr "no"
 
 #: utils/decorators.py:90 views/commands.py:61 views/commands.py:81
+#: views/commands.py:113 views/commands.py:133
 msgid "Oops, apologies - there was some error"
 msgstr "hi ha hagut un error"
 
@@ -6399,22 +6567,22 @@ msgstr "tornar a entrar la contrasenya"
 msgid "sorry, entered passwords did not match, please try again"
 msgstr "les contrasenyes no coincideixen, torneu a provar"
 
-#: utils/functions.py:82
+#: utils/functions.py:82 utils/functions.py:74
 msgid "2 days ago"
 msgstr "fa 2 dies"
 
-#: utils/functions.py:84
+#: utils/functions.py:84 utils/functions.py:76
 msgid "yesterday"
 msgstr "ahir"
 
-#: utils/functions.py:87
+#: utils/functions.py:87 utils/functions.py:79
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/functions.py:93
+#: utils/functions.py:93 utils/functions.py:85
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -6433,52 +6601,52 @@ msgstr ""
 msgid "Successfully deleted the requested avatars."
 msgstr ""
 
-#: views/commands.py:71
+#: views/commands.py:71 views/commands.py:123
 msgid "Sorry, but anonymous users cannot access the inbox"
 msgstr "Els usuaris anònims no tenen accés a la safata d'entrada"
 
-#: views/commands.py:99
+#: views/commands.py:99 views/commands.py:39
 msgid "anonymous users cannot vote"
 msgstr "els usuaris anònims no poden votar"
 
-#: views/commands.py:115
+#: views/commands.py:115 views/commands.py:59
 msgid "Sorry you ran out of votes for today"
 msgstr "se li han acabat el vots per avui"
 
-#: views/commands.py:121
+#: views/commands.py:121 views/commands.py:65
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
 msgstr "Per avui li queden %(votes_left)s restants"
 
-#: views/commands.py:196
+#: views/commands.py:196 views/commands.py:198
 msgid "Sorry, something is not right here..."
 msgstr "alguna cosa no funciona aqui ..."
 
-#: views/commands.py:215
+#: views/commands.py:215 views/commands.py:213
 msgid "Sorry, but anonymous users cannot accept answers"
 msgstr "Els usuaris anònims no poden acceptar respostes"
 
-#: views/commands.py:324
+#: views/commands.py:324 views/commands.py:320
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
 "subscripció desada,  %(email)s s'han de validar, veure  %(details_url)s"
 
-#: views/commands.py:331
+#: views/commands.py:331 views/commands.py:327
 msgid "email update frequency has been set to daily"
 msgstr "freqüencia d'actualització de correus diària"
 
-#: views/commands.py:437
+#: views/commands.py:437 views/commands.py:433
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr ""
 
-#: views/commands.py:446
+#: views/commands.py:446 views/commands.py:442
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr ""
 
-#: views/commands.py:572
+#: views/commands.py:572 views/commands.py:578
 msgid "Please sign in to vote"
 msgstr "Registrar-se per votar"
 
@@ -6487,88 +6655,89 @@ msgstr "Registrar-se per votar"
 msgid "About %(site)s"
 msgstr "Sobre %(site)s"
 
-#: views/meta.py:86
+#: views/meta.py:86 views/meta.py:84
 msgid "Q&A forum feedback"
 msgstr ""
 
-#: views/meta.py:87
+#: views/meta.py:87 views/meta.py:85
 msgid "Thanks for the feedback!"
 msgstr "Gràcies pels comentaris"
 
-#: views/meta.py:96
+#: views/meta.py:96 views/meta.py:94
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: views/meta.py:100
+#: views/meta.py:100 skins/default/templates/privacy.html:3
+#: skins/default/templates/privacy.html:5
 msgid "Privacy policy"
 msgstr "Avís legal"
 
-#: views/readers.py:134
+#: views/readers.py:134 views/readers.py:152
 #, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
 msgstr[0] "%(q_num)s pregunta, etiquetada"
 msgstr[1] "%(q_num)s preguntes, etiquetades"
 
-#: views/readers.py:366
+#: views/readers.py:366 views/readers.py:416
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "el commentari que busca s'ha esborrat i no es pot accedir"
 
-#: views/users.py:206
+#: views/users.py:206 views/users.py:212
 msgid "moderate user"
 msgstr "usuari moderador"
 
-#: views/users.py:373
+#: views/users.py:373 views/users.py:387
 msgid "user profile"
 msgstr "perfil d'usuari"
 
-#: views/users.py:374
+#: views/users.py:374 views/users.py:388
 msgid "user profile overview"
 msgstr "resum perfil usuari"
 
-#: views/users.py:543
+#: views/users.py:543 views/users.py:699
 msgid "recent user activity"
 msgstr "activitat recent de l'usuari"
 
-#: views/users.py:544
+#: views/users.py:544 views/users.py:700
 msgid "profile - recent activity"
 msgstr "perfil - activitat recent"
 
-#: views/users.py:629
+#: views/users.py:629 views/users.py:787
 msgid "profile - responses"
 msgstr "perfil - respostes"
 
-#: views/users.py:670
+#: views/users.py:670 views/users.py:862
 msgid "profile - votes"
 msgstr "peril - vots"
 
-#: views/users.py:691
+#: views/users.py:691 views/users.py:897
 msgid "user reputation in the community"
 msgstr "reputació de l'usuari a la comunitat"
 
-#: views/users.py:692
+#: views/users.py:692 views/users.py:898
 msgid "profile - user reputation"
 msgstr "perfil - reputació de l'usuari"
 
-#: views/users.py:710
+#: views/users.py:710 views/users.py:925
 msgid "users favorite questions"
 msgstr "preguntes preferides dels usuaris"
 
-#: views/users.py:711
+#: views/users.py:711 views/users.py:926
 msgid "profile - favorite questions"
 msgstr "perfil - preguntes preferides"
 
-#: views/users.py:731 views/users.py:735
+#: views/users.py:731 views/users.py:735 views/users.py:946 views/users.py:950
 msgid "changes saved"
 msgstr "canvis desats"
 
-#: views/users.py:741
+#: views/users.py:741 views/users.py:956
 msgid "email updates canceled"
 msgstr "cancel·lat l'acutalització de correu electrònic"
 
-#: views/users.py:760
+#: views/users.py:760 views/users.py:975
 msgid "profile - email subscriptions"
 msgstr "perfil - subscripcions de correu electrònic"
 
@@ -6581,25 +6750,25 @@ msgstr "Els usuaris anònims no poden pujar fitxers"
 msgid "allowed file types are '%(file_types)s'"
 msgstr "els tipus de fitxers permesos són '%(file_types)s'"
 
-#: views/writers.py:89
+#: views/writers.py:89 views/writers.py:92
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr "grandària màxima dels fitxers a penjar és de %(file_size)s"
 
-#: views/writers.py:97
+#: views/writers.py:97 views/writers.py:100
 msgid "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 "Error penjant el fitxer. Contacteu amb l'administrador del lloc. Gràcies."
 
-#: views/writers.py:190
+#: views/writers.py:190 views/writers.py:192
 msgid "Please log in to ask questions"
 msgstr "Entrar per fer preguntes"
 
-#: views/writers.py:455
+#: views/writers.py:455 views/writers.py:493
 msgid "Please log in to answer questions"
 msgstr "Entrar per respondre preguntes"
 
-#: views/writers.py:561
+#: views/writers.py:561 views/writers.py:600
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
@@ -6608,11 +6777,11 @@ msgstr ""
 "Sembla que heu sortit i no podeu posar comentaris. <a href=\"%(sign_in_url)s"
 "\">Entreu</a>."
 
-#: views/writers.py:578
+#: views/writers.py:578 views/writers.py:649
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "Els usuaris anònims no poden editar comentaris"
 
-#: views/writers.py:608
+#: views/writers.py:608 views/writers.py:658
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
@@ -6621,76 +6790,118 @@ msgstr ""
 "Sembla que heu sortit i no podeu eliminar comentaris. <a href="
 "\"%(sign_in_url)s\">Entreu</a>."
 
-#: views/writers.py:628
+#: views/writers.py:628 views/writers.py:679
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "sembla que tenim algunes dificultats tècniques"
 
-#~ msgid "this email will be linked to gravatar"
-#~ msgstr "aquest correu electrònic s'enllaçarà al Gravatar"
+#: forms.py:923
+msgid "this email will be linked to gravatar"
+msgstr "aquest correu electrònic s'enllaçarà al Gravatar"
 
-#~ msgid ""
-#~ "Please visit the askbot and see what's new! Could you spread the word "
-#~ "about it - can somebody you know help answering those questions or "
-#~ "benefit from posting one?"
-#~ msgstr ""
-#~ "Visita el fòrum i mira les noves preguntes i respostes. Potser algú que "
-#~ "coneixes pot ajudar responen alguna de les preguntes o pot estar "
-#~ "interessat en publicar algunapregunta."
+#: management/commands/send_email_alerts.py:455
+msgid ""
+"Please visit the askbot and see what's new! Could you spread the word about "
+"it - can somebody you know help answering those questions or benefit from "
+"posting one?"
+msgstr ""
+"Visita el fòrum i mira les noves preguntes i respostes. Potser algú que "
+"coneixes pot ajudar responen alguna de les preguntes o pot estar interessat "
+"en publicar algunapregunta."
 
-#~ msgid ""
-#~ "Your most frequent subscription setting is 'daily' on selected questions. "
-#~ "If you are receiving more than one email per dayplease tell about this "
-#~ "issue to the askbot administrator."
-#~ msgstr ""
-#~ "La subscripció més freqüent que té és la 'diària' de preguntes "
-#~ "seleccionades. Si rep més d'un missatge al dia, informi aquest fet a "
-#~ "l'administrador del lloc."
+#: management/commands/send_email_alerts.py:465
+msgid ""
+"Your most frequent subscription setting is 'daily' on selected questions. If "
+"you are receiving more than one email per dayplease tell about this issue to "
+"the askbot administrator."
+msgstr ""
+"La subscripció més freqüent que té és la 'diària' de preguntes "
+"seleccionades. Si rep més d'un missatge al dia, informi aquest fet a "
+"l'administrador del lloc."
 
-#~ msgid ""
-#~ "Your most frequent subscription setting is 'weekly' if you are receiving "
-#~ "this email more than once a week please report this issue to the askbot "
-#~ "administrator."
-#~ msgstr ""
-#~ "La subscripció més freqüent que té és 'setmanal'. Si rep aquest missatge "
-#~ "més d'un cop per setmana, informi aquest fet a l'administrador del lloc."
+#: management/commands/send_email_alerts.py:471
+msgid ""
+"Your most frequent subscription setting is 'weekly' if you are receiving "
+"this email more than once a week please report this issue to the askbot "
+"administrator."
+msgstr ""
+"La subscripció més freqüent que té és 'setmanal'. Si rep aquest missatge més "
+"d'un cop per setmana, informi aquest fet a l'administrador del lloc."
 
-#~ msgid ""
-#~ "There is a chance that you may be receiving links seen before - due to a "
-#~ "technicality that will eventually go away. "
-#~ msgstr ""
-#~ "És possible que rebi enllaços ja consultats abans, es tracte d'una "
-#~ "qüestió tècnica que es resoldrà."
+#: management/commands/send_email_alerts.py:477
+msgid ""
+"There is a chance that you may be receiving links seen before - due to a "
+"technicality that will eventually go away. "
+msgstr ""
+"És possible que rebi enllaços ja consultats abans, es tracte d'una qüestió "
+"tècnica que es resoldrà."
 
-#~ msgid "%(author)s modified the question"
-#~ msgstr "%(author)s ha modificat la pregunta"
+#: models/question.py:806
+#, python-format
+msgid "%(author)s modified the question"
+msgstr "%(author)s ha modificat la pregunta"
 
-#~ msgid "%(people)s posted %(new_answer_count)s new answers"
-#~ msgstr "%(people)s han publicat %(new_answer_count)s noves respostes"
+#: models/question.py:810
+#, python-format
+msgid "%(people)s posted %(new_answer_count)s new answers"
+msgstr "%(people)s han publicat %(new_answer_count)s noves respostes"
 
-#~ msgid "%(people)s commented the question"
-#~ msgstr "%(people)s han comentat la pregunta"
+#: models/question.py:815
+#, python-format
+msgid "%(people)s commented the question"
+msgstr "%(people)s han comentat la pregunta"
 
-#~ msgid "%(people)s commented answers"
-#~ msgstr "%(people)s han comentat respostes"
+#: models/question.py:820
+#, python-format
+msgid "%(people)s commented answers"
+msgstr "%(people)s han comentat respostes"
 
-#~ msgid "%(people)s commented an answer"
-#~ msgstr "%(people)s han comentat una resposta"
+#: models/question.py:822
+#, python-format
+msgid "%(people)s commented an answer"
+msgstr "%(people)s han comentat una resposta"
 
-#~ msgid "remove all flags"
-#~ msgstr "treure senyals"
+#: skins/common/templates/question/answer_controls.html:15
+#: skins/common/templates/question/answer_controls.html:16
+#: skins/common/templates/question/question_controls.html:23
+#: skins/common/templates/question/question_controls.html:24
+msgid "remove all flags"
+msgstr "treure senyals"
 
-#~ msgid "posts per page"
-#~ msgstr "entrades per pàgina"
+#: skins/default/templates/macros.html:602
+msgid "posts per page"
+msgstr "entrades per pàgina"
 
-#~ msgid "<span class=\"count\">%(counter)s</span> Answer"
-#~ msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
-#~ msgstr[0] "<span class=\"count\">%(counter)s</span> Resposta"
-#~ msgstr[1] "<span class=\"count\">%(counter)s</span> Respostes"
+#: skins/default/templates/user_profile/user_stats.html:16
+#, python-format
+msgid "<span class=\"count\">%(counter)s</span> Answer"
+msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
+msgstr[0] "<span class=\"count\">%(counter)s</span> Resposta"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Respostes"
 
-#~ msgid "%(badge_count)d %(badge_level)s badge"
-#~ msgid_plural "%(badge_count)d %(badge_level)s badges"
-#~ msgstr[0] "%(badge_count)d %(badge_level)s insígnia"
-#~ msgstr[1] "%(badge_count)d %(badge_level)s insígnies"
+#: views/readers.py:200
+#, python-format
+msgid "%(badge_count)d %(badge_level)s badge"
+msgid_plural "%(badge_count)d %(badge_level)s badges"
+msgstr[0] "%(badge_count)d %(badge_level)s insígnia"
+msgstr[1] "%(badge_count)d %(badge_level)s insígnies"
+
+#: skins/default/templates/about.html:3 skins/default/templates/about.html:5
+#, python-format
+msgid "About %(site_name)s"
+msgstr ""
+
+#: skins/default/templates/question/answer_tab_bar.html:3
+#, python-format
+msgid ""
+"\n"
+"        %(counter)s Answer\n"
+"        "
+msgid_plural ""
+"\n"
+"        %(counter)s Answers\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
 
 #~ msgid "question content must be > 10 characters"
 #~ msgstr "la pregunta ha de tenir més de 10 caràcters"
