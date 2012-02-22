@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
 "X-Generator: Pootle 2.1.6\n"
 "X-Translated-Using: django-rosetta 0.5.6\n"
 
@@ -59,10 +59,11 @@ msgid "please enter a descriptive title for your question"
 msgstr "Sorunuz için açıklayıcı bir başlık girin"
 
 #: forms.py:111
-#, python-format
+#, fuzzy, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
 msgstr[0] "Başlık en az %d karakter olmalı"
+msgstr[1] ""
 
 #: forms.py:131
 msgid "content"
@@ -75,7 +76,7 @@ msgid "tags"
 msgstr "etiketler"
 
 #: forms.py:168
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
 "be used."
@@ -85,6 +86,7 @@ msgid_plural ""
 msgstr[0] ""
 "Etiketler içinde boşluk olmayan kısa anahtar kelimelerdir. En fazla "
 "%(max_tags)d etiket kullanılabilir."
+msgstr[1] ""
 
 #: forms.py:201 skins/default/templates/question_retag.html:58
 msgid "tags are required"
@@ -2899,9 +2901,7 @@ msgstr "eski soruları görmek için tıklayın"
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: management/commands/send_email_alerts.py:421
 #, fuzzy, python-format
@@ -2969,9 +2969,7 @@ msgstr ""
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: middleware/forum_mode.py:53
 #, fuzzy, python-format
@@ -3065,9 +3063,7 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: models/__init__.py:493
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -3127,9 +3123,7 @@ msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: models/__init__.py:664
 msgid "Sorry, since your account is blocked you cannot delete posts"
@@ -3224,9 +3218,7 @@ msgstr "Dondurulan kullanıcılar ileti yapamaz"
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: models/__init__.py:828
 #, fuzzy
@@ -3308,9 +3300,7 @@ msgstr[1] "%(min)d dakika önce"
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: models/__init__.py:1406
 #, python-format
@@ -3365,9 +3355,7 @@ msgstr "karmanız %(reputation)s"
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] ""
 
 #: models/__init__.py:1806
 #, fuzzy, python-format
