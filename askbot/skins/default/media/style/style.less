@@ -523,6 +523,7 @@ body.anon {
         padding-right:10px;
         margin-bottom:10px;
         font-family:@main-font;
+        width:190px;
     }
     h3{
         color:#4a757f;
@@ -1919,6 +1920,10 @@ ul#related-tags li {
         text-align: center;
         padding-top: 2px;
         margin:10px 10px 0px 3px;
+        /* smalls IE fixes */
+        *margin:0; 
+        *height:210px;
+        *width:30px;
     }
 
     .vote-buttons IMG {
