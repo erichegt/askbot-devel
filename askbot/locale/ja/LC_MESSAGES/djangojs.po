@@ -2,7 +2,6 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
@@ -16,6 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
@@ -151,11 +151,13 @@ msgstr ""
 
 #: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
 #: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
-#, c-format
+#, fuzzy, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
 
 #: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"

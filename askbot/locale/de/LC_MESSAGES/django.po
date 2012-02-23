@@ -2,7 +2,6 @@
 # Copyright (C) 2009 Gang Chen, 2010 Askbot
 # This file is distributed under the same license as the Askbot package.
 # Pekka Gaiser <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
@@ -11,11 +10,12 @@ msgstr ""
 "PO-Revision-Date: 2010-05-06 02:23\n"
 "Last-Translator: <who@email.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n!= 1;\n"
+"X-Generator: Virtaal 0.7.0\n"
 "X-Translated-Using: django-rosetta 0.5.3\n"
 
 #: exceptions.py:13
@@ -43,7 +43,7 @@ msgstr "Zugang löschen"
 
 #: forms.py:83
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: forms.py:91
 #, fuzzy
@@ -107,7 +107,7 @@ msgstr[1] "Bitte %(tag_count)d Tags oder weniger benutzen"
 #: forms.py:218
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "Es requereixen com a mínim una de les etiquetes següents:  %(tags)s"
 
 #: forms.py:227
 #, python-format
@@ -123,6 +123,8 @@ msgstr "Diese Buchstaben dürfen in Tags vorkommen"
 #: forms.py:270
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr ""
+"wiki comunitari (no es concedeix reputació; altres usuaris poden editar "
+"l'entrada)"
 
 #: forms.py:271
 msgid ""
@@ -148,15 +150,15 @@ msgstr ""
 
 #: forms.py:364
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "Introduir el nombre de punts a sumar o restar"
 
 #: forms.py:378 const/__init__.py:250
 msgid "approved"
-msgstr ""
+msgstr "aprovat"
 
 #: forms.py:379 const/__init__.py:251
 msgid "watched"
-msgstr ""
+msgstr "vist"
 
 #: forms.py:380 const/__init__.py:252
 #, fuzzy
@@ -165,7 +167,7 @@ msgstr "aktualisiert"
 
 #: forms.py:381 const/__init__.py:253
 msgid "blocked"
-msgstr ""
+msgstr "bloquejat"
 
 #: forms.py:383
 #, fuzzy
@@ -184,7 +186,7 @@ msgstr "Tags ändern"
 
 #: forms.py:431
 msgid "which one?"
-msgstr ""
+msgstr "quin?"
 
 #: forms.py:452
 #, fuzzy
@@ -193,11 +195,11 @@ msgstr "Über selbst verfaßte Beiträge kann nicht abgestimmt werden"
 
 #: forms.py:458
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "No es pot canviar l'altre usuari a moderador"
 
 #: forms.py:465
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "No es pot canviar l'estat d'un altre moderador"
 
 #: forms.py:471
 #, fuzzy
@@ -210,10 +212,11 @@ msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
+"Si es vol canviar l'estat de %(username)s, feu una selecció amb significat"
 
 #: forms.py:486
 msgid "Subject line"
-msgstr ""
+msgstr "Línia d'assumpte"
 
 #: forms.py:493
 #, fuzzy
@@ -236,11 +239,11 @@ msgstr "Ihre Nachricht:"
 
 #: forms.py:587
 msgid "I don't want to give my email or receive a response:"
-msgstr ""
+msgstr "No donar el meu correu electrònic or rebre respostes:"
 
 #: forms.py:609
 msgid "Please mark \"I dont want to give my mail\" field."
-msgstr ""
+msgstr "Marcar l'opció \"No donar el meu correu electrònic\"."
 
 #: forms.py:648
 #, fuzzy
@@ -249,23 +252,27 @@ msgstr "Anonym"
 
 #: forms.py:650
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "Marcar si no voleu mostrar el vostre nom al fer aquesta pregunta"
 
 #: forms.py:810
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr ""
+"Heu fet aquesta pregunta anònimament, si voleu mostrar la vostra identitat "
+"marqueu aquesta opció."
 
 #: forms.py:814
 msgid "reveal identity"
-msgstr ""
+msgstr "mostrar identitat"
 
 #: forms.py:872
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr ""
+"Només l'autor de la pregunta anònima pot mostrar la seva identitat. "
+"Desmarqueu l'opció"
 
 #: forms.py:885
 msgid ""
@@ -273,6 +280,9 @@ msgid ""
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr ""
+"Sembla què les regles han canviat; ara no es poden fer preguntes anònimament."
+"Si us plau, marqueu «mostrar identitat» o tornareu a carregar aquesta pàgina "
+"i editeu de nou la pregunta"
 
 #: forms.py:923
 #, fuzzy
@@ -289,11 +299,11 @@ msgstr "Website"
 
 #: forms.py:944
 msgid "City"
-msgstr ""
+msgstr "Ciutat"
 
 #: forms.py:953
 msgid "Show country"
-msgstr ""
+msgstr "Mostrar país"
 
 #: forms.py:958
 msgid "Date of birth"
@@ -341,7 +351,7 @@ msgstr "Das ganze Forum (Tag-gefiltert)"
 
 #: forms.py:1073
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "Comentaris i entrades us mencionen"
 
 #: forms.py:1152
 msgid "okay, let's try!"
@@ -421,7 +431,7 @@ msgstr "tags/"
 
 #: urls.py:196
 msgid "subscribe-for-tags/"
-msgstr ""
+msgstr "subscriure-per-etiquetes/"
 
 #: urls.py:201 urls.py:207 urls.py:213 urls.py:221
 #: skins/default/templates/main_page/javascript.html:39
@@ -436,7 +446,7 @@ msgstr "E-Mail-Abonnements"
 
 #: urls.py:226
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "usuaris/actualitzacio_te_avatar_personalitzat/"
 
 #: urls.py:231 urls.py:236
 msgid "badges/"
@@ -477,7 +487,7 @@ msgstr "einstellungen"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "Permetre accedir al fòrum únicament als usuaris registrats"
 
 #: conf/badges.py:13
 #, fuzzy
@@ -486,15 +496,15 @@ msgstr "einstellungen"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "Disciplinat: mínim vots positius per entrada esborrada"
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr ""
+msgstr "Pressió Companys: mínim vots negatius per a l'entrada eliminada"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "Mestre: mínim vots positius per la resposta"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
@@ -587,7 +597,7 @@ msgstr ""
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "Configuració del correu electrònic i alertes per correu electrònic"
 
 #: conf/email.py:24
 #, fuzzy
@@ -602,15 +612,17 @@ msgstr ""
 
 #: conf/email.py:38
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "Màxim nombre de missatges en un avís per correu electrònic"
 
 #: conf/email.py:48
 msgid "Default notification frequency all questions"
-msgstr ""
+msgstr "Freqüència predeterminada de notificació per a totes les preguntes"
 
 #: conf/email.py:50
 msgid "Option to define frequency of emailed updates for: all questions."
 msgstr ""
+"Opció per definir la freqüència de les actualitzacions per correu de: totes "
+"les preguntes."
 
 #: conf/email.py:62
 #, fuzzy
@@ -622,6 +634,8 @@ msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
 msgstr ""
+"Opció per definir la freqüència de les actualitzacions per correu de: "
+"Preguntes fetes per l'usuari"
 
 #: conf/email.py:76
 #, fuzzy
@@ -634,6 +648,8 @@ msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
 msgstr ""
+"Opció per definir la freqüència de les actualitzacions per correu de: "
+"Respostes fetes per l'usuari."
 
 #: conf/email.py:90
 msgid ""
@@ -944,7 +960,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:56
 msgid "Allow posting before logging in"
-msgstr ""
+msgstr "Permetre publicar abans de registrar-se"
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -2128,7 +2144,7 @@ msgstr "Tag-Liste"
 
 #: const/__init__.py:65
 msgid "cloud"
-msgstr ""
+msgstr "núvol"
 
 #: const/__init__.py:78
 #, fuzzy
@@ -2226,7 +2242,7 @@ msgstr "als beste Antwort markiert"
 
 #: const/__init__.py:148
 msgid "mentioned in the post"
-msgstr ""
+msgstr "citat en l'entrada"
 
 #: const/__init__.py:199
 msgid "question_answered"
@@ -2262,7 +2278,7 @@ msgstr "Tags verändert"
 
 #: const/__init__.py:217
 msgid "off"
-msgstr ""
+msgstr "no"
 
 #: const/__init__.py:218
 #, fuzzy
@@ -2276,7 +2292,7 @@ msgstr "Individuell ausgewählt"
 
 #: const/__init__.py:223
 msgid "instantly"
-msgstr ""
+msgstr "instantàniament"
 
 #: const/__init__.py:224
 msgid "daily"
@@ -2326,7 +2342,7 @@ msgstr "Bronze"
 
 #: const/__init__.py:298
 msgid "None"
-msgstr ""
+msgstr "Cap"
 
 #: const/__init__.py:299
 msgid "Gravatar"
@@ -2334,7 +2350,7 @@ msgstr ""
 
 #: const/__init__.py:300
 msgid "Uploaded Avatar"
-msgstr ""
+msgstr "Avatar penjat"
 
 #: const/message_keys.py:15
 #, fuzzy
@@ -2410,6 +2426,8 @@ msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
 msgstr ""
+"Us donem la benvinguda. Introduïu en el vostre perfil l'adreça de correu "
+"electrònic (important) i el nom a mostrar, si ho creieu necessari."
 
 #: deps/django_authopenid/forms.py:110 deps/django_authopenid/views.py:151
 msgid "i-names are not supported"
@@ -2457,7 +2475,7 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
-msgstr ""
+msgstr "Aquesta adreça de correu no figura a la base de dades"
 
 #: deps/django_authopenid/forms.py:435
 msgid "Your user name (<i>required</i>)"
@@ -2491,7 +2509,7 @@ msgstr "registrieren/"
 
 #: deps/django_authopenid/urls.py:21
 msgid "signup/"
-msgstr ""
+msgstr "registre/"
 
 #: deps/django_authopenid/urls.py:25
 msgid "logout/"
@@ -2510,7 +2528,7 @@ msgstr "Bitte geben Sie Benutzernamen und Passwort ein."
 #: deps/django_authopenid/util.py:384
 #: skins/common/templates/authopenid/signin.html:108
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Crear un compte amb contrasenya"
 
 #: deps/django_authopenid/util.py:385
 #, fuzzy
@@ -2519,7 +2537,7 @@ msgstr "Passwort ändern"
 
 #: deps/django_authopenid/util.py:473
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "Registrar-se mitjançant Yahoo"
 
 #: deps/django_authopenid/util.py:480
 #, fuzzy
@@ -2543,15 +2561,15 @@ msgstr "Bitte einen Benutzernamen eingeben"
 
 #: deps/django_authopenid/util.py:533
 msgid "WordPress blog name"
-msgstr ""
+msgstr "nom del blog WordPress"
 
 #: deps/django_authopenid/util.py:541
 msgid "Blogger blog name"
-msgstr ""
+msgstr "nom del blog Blogger"
 
 #: deps/django_authopenid/util.py:549
 msgid "LiveJournal blog name"
-msgstr ""
+msgstr "nom del blog LiveJournal"
 
 #: deps/django_authopenid/util.py:557
 #, fuzzy
@@ -2577,11 +2595,13 @@ msgstr "Passwort ändern"
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr ""
+"Clicar per comprovar que funciona el vostre registre %(provider)s per "
+"%(site_name)s"
 
 #: deps/django_authopenid/util.py:621
 #, python-format
 msgid "Create password for %(provider)s"
-msgstr ""
+msgstr "Crear contrasenya per %(provider)s"
 
 #: deps/django_authopenid/util.py:625
 #, fuzzy, python-format
@@ -2596,7 +2616,7 @@ msgstr "Bitte geben Sie Benutzernamen und Passwort ein."
 #: deps/django_authopenid/util.py:641
 #, python-format
 msgid "Sign in with your %(provider)s account"
-msgstr ""
+msgstr "Registrar-se amb el vostre compte de %(provider)s"
 
 #: deps/django_authopenid/views.py:158
 #, python-format
@@ -2610,6 +2630,8 @@ msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr ""
+"hi ha problemes connectant amb %(provider)s,torneu a provar-ho i useu un "
+"altre proveïdor"
 
 #: deps/django_authopenid/views.py:371
 #, fuzzy
@@ -2618,36 +2640,36 @@ msgstr "Ihr Passwort wurde geändert."
 
 #: deps/django_authopenid/views.py:475
 msgid "The login password combination was not correct"
-msgstr ""
+msgstr "La combinació usuari/contrasenya no és correcte"
 
 #: deps/django_authopenid/views.py:577
 msgid "Please click any of the icons below to sign in"
-msgstr ""
+msgstr "Clicar una de les icones per registrar-se"
 
 #: deps/django_authopenid/views.py:579
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "S'han enviat el missatge de correu per recuperar el compte"
 
 #: deps/django_authopenid/views.py:582
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Afegir un o més mètodes de registre."
 
 #: deps/django_authopenid/views.py:584
 msgid "If you wish, please add, remove or re-validate your login methods"
-msgstr ""
+msgstr "Afegir, treure o revalidar els seus mètodes d'entrada"
 
 #: deps/django_authopenid/views.py:586
 msgid "Please wait a second! Your account is recovered, but ..."
-msgstr ""
+msgstr "S'ha recuperat el seu compte, però ..."
 
 #: deps/django_authopenid/views.py:588
 msgid "Sorry, this account recovery key has expired or is invalid"
-msgstr ""
+msgstr "La clau de recuperació d'aquest compte ha expirat o és invàlida"
 
 #: deps/django_authopenid/views.py:661
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
-msgstr ""
+msgstr "El mètode de registre %(provider_name)s no existeix"
 
 #: deps/django_authopenid/views.py:667
 #, fuzzy
@@ -2659,7 +2681,7 @@ msgstr ""
 #: deps/django_authopenid/views.py:758
 #, python-format
 msgid "Your %(provider)s login works fine"
-msgstr ""
+msgstr "La vostra entrada amb %(provider)s funciona bé"
 
 #: deps/django_authopenid/views.py:1069 deps/django_authopenid/views.py:1075
 #, python-format
@@ -2675,7 +2697,7 @@ msgstr "Legen Sie ein neues Passwort für Ihren Zugang fest."
 
 #: deps/django_authopenid/views.py:1166
 msgid "Please check your email and visit the enclosed link."
-msgstr ""
+msgstr "Comproveu el vostre correu electrònic i visiteu l'enllaç inclòs."
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
 #, fuzzy
@@ -2684,7 +2706,7 @@ msgstr "Titel"
 
 #: deps/livesettings/values.py:68
 msgid "Main"
-msgstr ""
+msgstr "Principal"
 
 #: deps/livesettings/values.py:127
 #, fuzzy
@@ -2693,16 +2715,16 @@ msgstr "einstellungen"
 
 #: deps/livesettings/values.py:234
 msgid "Default value: \"\""
-msgstr ""
+msgstr "Valor per defecte:  \"\""
 
 #: deps/livesettings/values.py:241
 msgid "Default value: "
-msgstr ""
+msgstr "Valor per defecte: "
 
 #: deps/livesettings/values.py:244
 #, python-format
 msgid "Default value: %s"
-msgstr ""
+msgstr "Valor per defecte:  %s"
 
 #: deps/livesettings/values.py:622
 #, fuzzy, python-format
@@ -2754,12 +2776,12 @@ msgstr[1] "Bitte folgende Eingaben korrigieren:"
 #: deps/livesettings/templates/livesettings/group_settings.html:28
 #, python-format
 msgid "Settings included in %(name)s."
-msgstr ""
+msgstr "Configuracions incloses a %(name)s."
 
 #: deps/livesettings/templates/livesettings/group_settings.html:62
 #: deps/livesettings/templates/livesettings/site_settings.html:97
 msgid "You don't have permission to edit values."
-msgstr ""
+msgstr "No té permís per editar valors"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
 #, fuzzy
@@ -2768,11 +2790,13 @@ msgstr "Frage bearbeiten"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
-msgstr ""
+msgstr "Livesettings estan deshabilitats per aquest lloc"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:44
 msgid "All configuration options must be edited in the site settings.py file"
 msgstr ""
+"Totes les opcions de configuració s'han d'editar en el fitxer settings.py "
+"del lloc. "
 
 #: deps/livesettings/templates/livesettings/site_settings.html:66
 #, fuzzy, python-format
@@ -2781,7 +2805,7 @@ msgstr "Frage bearbeiten"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
 msgid "Uncollapse all"
-msgstr ""
+msgstr "Desplegar tot"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:141
 msgid "Congratulations, you are now an Administrator"
@@ -2806,6 +2830,15 @@ msgid ""
 "<p>Note that tags may consist of more than one word, and tags\n"
 "may be separated by a semicolon or a comma</p>\n"
 msgstr ""
+"<p>Per preguntar per correu electrònic:</p>\n"
+"<ul>\n"
+"    <li>Escriviu l'assumpte com: [Etiqueta1; Etiqueta12] Títol de la "
+"pregunta</li>\n"
+"    <li>En el cos del missatge escriviu els detalls de la vostre pregunta</"
+"li>\n"
+"</ul>\n"
+"<p>Les etiquetes poden esta formades per més d'una paraula. Les etiquetes "
+"estan separades per una coma o un punt i coma</p>\n"
 
 #: management/commands/post_emailed_questions.py:55
 #, python-format
@@ -2813,6 +2846,8 @@ msgid ""
 "<p>Sorry, there was an error posting your question please contact the "
 "%(site)s administrator</p>"
 msgstr ""
+"<p>S'ha produït un error publicant la vostre pregunta; contacteu amb "
+"l'administrador de %(site)s</p> "
 
 #: management/commands/post_emailed_questions.py:61
 #, python-format
@@ -2820,12 +2855,16 @@ msgid ""
 "<p>Sorry, in order to post questions on %(site)s by email, please <a href="
 "\"%(url)s\">register first</a></p>"
 msgstr ""
+"<p>Cal estar <a href=\"%(url)s\">registrat</a> per publicar preguntes s "
+"%(site)s a través del correu electrònic</p>"
 
 #: management/commands/post_emailed_questions.py:69
 msgid ""
 "<p>Sorry, your question could not be posted due to insufficient privileges "
 "of your user account</p>"
 msgstr ""
+"<p>La seva pregunta no s'ha publicat ja que el vostre compte d'usuari no té "
+"suficients privilegis</p>"
 
 #: management/commands/send_accept_answer_reminders.py:57
 #, python-format
@@ -2846,8 +2885,8 @@ msgstr "Klicken Sie, um die ältesten Fragen zu sehen"
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d pregunta actualitzada de %(topics)s"
+msgstr[1] "%(question_count)d preguntes actualitzades de %(topics)s"
 
 #: management/commands/send_email_alerts.py:421
 #, fuzzy, python-format
@@ -2915,8 +2954,8 @@ msgstr ""
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d pregunta sense contestar de %(topics)s"
+msgstr[1] "%(question_count)d preguntes sense contestar de %(topics)s"
 
 #: middleware/forum_mode.py:53
 #, fuzzy, python-format
@@ -2928,12 +2967,16 @@ msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr ""
+"No pot acceptar o rebutjar les millors respostes ja que el seu compte està "
+"bloquejat"
 
 #: models/__init__.py:321
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr ""
+"No pot acceptar o rebutjar les millors respostes ja que el seu compte està "
+"deshabilitat"
 
 #: models/__init__.py:334
 #, fuzzy, python-format
@@ -2946,7 +2989,7 @@ msgstr "Erste Antwort auf eine eigene Frage akzeptiert"
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
-msgstr ""
+msgstr "Podrà acceptar aquesta resposta a partir de %(will_be_able_at)s"
 
 #: models/__init__.py:364
 #, python-format
@@ -2954,6 +2997,8 @@ msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr ""
+"Només els moderadors o l'autor original de la pregunta -%(username)s- poden "
+"acceptar i rebutjar la millor resposta"
 
 #: models/__init__.py:392
 msgid "cannot vote for own posts"
@@ -2961,11 +3006,11 @@ msgstr "Über selbst verfaßte Beiträge kann nicht abgestimmt werden"
 
 #: models/__init__.py:395
 msgid "Sorry your account appears to be blocked "
-msgstr ""
+msgstr "El seu compte sembla que està bloquejat"
 
 #: models/__init__.py:400
 msgid "Sorry your account appears to be suspended "
-msgstr ""
+msgstr "El seu compte sembla que està deshabilitat"
 
 #: models/__init__.py:410
 #, python-format
@@ -3024,16 +3069,22 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
+"Els comentaris (excepte el darrer) es poden editar durant %(minutes)s minut "
+"des de que es publiquen"
 msgstr[1] ""
+"Els comentaris (excepte el darrer) es poden editar durant %(minutes)s minuts "
+"des de que es publiquen"
 
 #: models/__init__.py:493
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
+"Només els propietaris de l'entrada o els moderadors poden editar comentaris"
 
 #: models/__init__.py:506
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
+"El seu compte està deshabilitat, només pot comentar les entrades pròpies"
 
 #: models/__init__.py:510
 #, python-format
@@ -3041,32 +3092,39 @@ msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr ""
+"Per comentar una entrada es cal tenir una reputació de %(min_rep)s puntsSí "
+"podeu comentar les entrades i les respostes a les vostres preguntes"
 
 #: models/__init__.py:538
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
+"Aquesta entrada s'ha esborrat. Només els seus propietaris, l'administrador "
+"del lloc i els moderadors la poden veure."
 
 #: models/__init__.py:555
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
 msgstr ""
+"Una entrada esborrada només la poden editar els moderadors, els "
+"administradors del lloc o els propietaris de l'entrada."
 
 #: models/__init__.py:570
 msgid "Sorry, since your account is blocked you cannot edit posts"
-msgstr ""
+msgstr "El seu compte està bloquejat, no podeu editar entrades"
 
 #: models/__init__.py:574
 msgid "Sorry, since your account is suspended you can edit only your own posts"
-msgstr ""
+msgstr "El seu compte està deshabilitat, només pot editar entrades pròpies"
 
 #: models/__init__.py:579
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"Per editar entrades wiki s'ha de tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:586
 #, python-format
@@ -3074,6 +3132,8 @@ msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
+"Per editar entrades d'altres persones s'ha de tenir una reputació mínima de "
+"%(min_rep)s"
 
 #: models/__init__.py:649
 msgid ""
@@ -3083,16 +3143,20 @@ msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
 msgstr[0] ""
+"No es pot eliminar la pregunta ja que hi ha una resposta amb vots positius "
+"d'un altre usuari"
 msgstr[1] ""
+"No es pot eliminar la pregunta ja que hi ha respostes d'altres usuaris amb "
+"vots positius"
 
 #: models/__init__.py:664
 msgid "Sorry, since your account is blocked you cannot delete posts"
-msgstr ""
+msgstr "El seu compte està bloquejat, no pot eliminar entrades"
 
 #: models/__init__.py:668
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
-msgstr ""
+msgstr "El seu compte està deshabilitat, només pot eliminar entrades pròpies"
 
 #: models/__init__.py:672
 #, python-format
@@ -3100,14 +3164,16 @@ msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
+"per eliminar entrades d'altres persones cal una reputació mínima de "
+"%(min_rep)s"
 
 #: models/__init__.py:692
 msgid "Sorry, since your account is blocked you cannot close questions"
-msgstr ""
+msgstr "El seu compte està bloquejat, no pot tancar preguntes"
 
 #: models/__init__.py:696
 msgid "Sorry, since your account is suspended you cannot close questions"
-msgstr ""
+msgstr "Des de que el seu compte està deshabilitat no pot tancar preguntes"
 
 #: models/__init__.py:700
 #, python-format
@@ -3115,12 +3181,15 @@ msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
+"Per tancar entrades d'altres persones cal tenir una reputació mínima de "
+"%(min_rep)s"
 
 #: models/__init__.py:709
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"Per tancar una pregunta pròpia cal tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:733
 #, python-format
@@ -3128,16 +3197,19 @@ msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr ""
+"Només els moderadors, els administradors del lloc o els propietaris de les "
+"entrades amb reputació mínim de %(min_rep)s poden reobrir preguntes."
 
 #: models/__init__.py:739
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"Per reobrir una pregunta pròpia cal tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:759
 msgid "cannot flag message as offensive twice"
-msgstr ""
+msgstr "no es pot senyalar un missatge com ofensiu dues vegades"
 
 #: models/__init__.py:764
 #, fuzzy
@@ -3158,12 +3230,12 @@ msgstr ""
 #: models/__init__.py:768
 #, python-format
 msgid "need > %(min_rep)s points to flag spam"
-msgstr ""
+msgstr "s'han de tenir més de %(min_rep)s punts per senyalar spam"
 
 #: models/__init__.py:787
 #, python-format
 msgid "%(max_flags_per_day)s exceeded"
-msgstr ""
+msgstr "excedit %(max_flags_per_day)s"
 
 #: models/__init__.py:798
 msgid "cannot remove non-existing flag"
@@ -3189,12 +3261,12 @@ msgstr ""
 #, python-format
 msgid "need > %(min_rep)d point to remove flag"
 msgid_plural "need > %(min_rep)d points to remove flag"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "s'han de tenir més d'%(min_rep)d punt per poder treure senyals"
+msgstr[1] "s'han de tenir més de %(min_rep)d punts per poder treure senyals"
 
 #: models/__init__.py:828
 msgid "you don't have the permission to remove all flags"
-msgstr ""
+msgstr "No té permís per treure totes les senyals"
 
 #: models/__init__.py:829
 msgid "no flags for this entry"
@@ -3205,35 +3277,41 @@ msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
+"Només els propietaris de de la pregunta, els moderadors i els administradors "
+"podenreetiquetar una pregunta esborrada"
 
 #: models/__init__.py:860
 msgid "Sorry, since your account is blocked you cannot retag questions"
-msgstr ""
+msgstr "El seu compte està bloquejat, no pot reetiquetar preguntes"
 
 #: models/__init__.py:864
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
+"El seu compte està deshabilitat, només pot reetiquetar les preguntes pròpies"
 
 #: models/__init__.py:868
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr ""
+"Per reetiquetar una pregunta ha de tenir una reputació mínima de %(min_rep)s "
 
 #: models/__init__.py:887
 msgid "Sorry, since your account is blocked you cannot delete comment"
-msgstr ""
+msgstr "El seu compte està bloquejat, no pot eliminar un comentari"
 
 #: models/__init__.py:891
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
+"El seu compte està deshabilitat, només pot eliminar els comentaris pròpies"
 
 #: models/__init__.py:895
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
+"Per eliminar comentaris ha de tenir una reputació mínima de %(min_rep)s"
 
 #: models/__init__.py:918
 msgid "cannot revoke old vote"
@@ -3242,15 +3320,15 @@ msgstr "Bewertung kann nicht mehr zurückgenommen werden"
 #: models/__init__.py:1395 utils/functions.py:70
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "a %(date)s"
 
 #: models/__init__.py:1397
 msgid "in two days"
-msgstr ""
+msgstr "en dos dies"
 
 #: models/__init__.py:1399
 msgid "tomorrow"
-msgstr ""
+msgstr "demà"
 
 #: models/__init__.py:1401
 #, fuzzy, python-format
@@ -3270,8 +3348,8 @@ msgstr[1] "vor %(min)d Minuten"
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(days)d dia"
+msgstr[1] "%(days)d dies"
 
 #: models/__init__.py:1406
 #, python-format
@@ -3279,6 +3357,8 @@ msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr ""
+"Els usuaris nous han d'esperar %(days)s per respondre la seva pròpia "
+"pregunta. Podeu publicar una resposta %(left)s"
 
 #: models/__init__.py:1572 skins/default/templates/feedback_email.txt:9
 #, fuzzy
@@ -3292,7 +3372,7 @@ msgstr "Ihr Forumsteam"
 
 #: models/__init__.py:1670 views/users.py:374
 msgid "Forum Moderator"
-msgstr ""
+msgstr "Moderador del Fòrum"
 
 #: models/__init__.py:1672 views/users.py:376
 #, fuzzy
@@ -3301,7 +3381,7 @@ msgstr "Der Absender ist"
 
 #: models/__init__.py:1674 views/users.py:378
 msgid "Blocked User"
-msgstr ""
+msgstr "Usuari Bloquejat"
 
 #: models/__init__.py:1676 views/users.py:380
 #, fuzzy
@@ -3310,11 +3390,11 @@ msgstr "Registrierter Benutzer"
 
 #: models/__init__.py:1678
 msgid "Watched User"
-msgstr ""
+msgstr "Usuari Observat"
 
 #: models/__init__.py:1680
 msgid "Approved User"
-msgstr ""
+msgstr "Usuari Habilitat"
 
 #: models/__init__.py:1789
 #, fuzzy, python-format
@@ -3325,8 +3405,8 @@ msgstr "Punkte-Logbuch von %(user_name)s"
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "una insígnia d'or"
+msgstr[1] "%(count)d insígnies d'or"
 
 #: models/__init__.py:1806
 #, fuzzy, python-format
@@ -3349,12 +3429,12 @@ msgstr[1] "Aktive Forumsteilnehmer werden in Bronze ausgezeichnet."
 #: models/__init__.py:1824
 #, python-format
 msgid "%(item1)s and %(item2)s"
-msgstr ""
+msgstr "%(item1)s i %(item2)s"
 
 #: models/__init__.py:1828
 #, python-format
 msgid "%(user)s has %(badges)s"
-msgstr ""
+msgstr "%(user)s té %(badges)s"
 
 #: models/__init__.py:2305
 #, fuzzy, python-format
@@ -3367,10 +3447,12 @@ msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr ""
+"Ha rebut una insígnia '%(badge_name)s'. Vegeu la <a href=\"%(user_profile)s"
+"\">perfil d'usuari</a>."
 
 #: models/__init__.py:2635 views/commands.py:429
 msgid "Your tag subscription was saved, thanks!"
-msgstr ""
+msgstr "S'ha desat la seva subscripció d'etiquetes"
 
 #: models/badges.py:129
 #, fuzzy, python-format
@@ -3394,6 +3476,7 @@ msgstr "Gruppenzwang"
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
 msgstr ""
+"Reb un mínim de %(votes)s vots positius per una resposta per primera vegada"
 
 #: models/badges.py:178
 msgid "Teacher"
@@ -3577,7 +3660,7 @@ msgstr "Erste Bearbeitung eines Beitrags"
 
 #: models/badges.py:623
 msgid "Associate Editor"
-msgstr ""
+msgstr "Editor Associat"
 
 #: models/badges.py:627
 #, fuzzy, python-format
@@ -3615,12 +3698,12 @@ msgstr "Favoritenfrage"
 
 #: models/badges.py:710
 msgid "Enthusiast"
-msgstr ""
+msgstr "Entusiasta"
 
 #: models/badges.py:714
 #, python-format
 msgid "Visited site every day for %(num)s days in a row"
-msgstr ""
+msgstr "Visita el lloc cada dia durant %(num)s dies seguits"
 
 #: models/badges.py:732
 #, fuzzy
@@ -3659,6 +3742,7 @@ msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr ""
+"La resposat que cerca ja no es vàlida, ja què s'ha tret la pregunta original "
 
 #: models/content.py:572
 #, fuzzy
@@ -3670,17 +3754,21 @@ msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr ""
+"El comentari que cerca ja no es pot accedir ja què s'ha tret la pregunta "
+"original"
 
 #: models/meta.py:123
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr ""
+"El comentari que cerca ja no es pot accedir ja què s'ha tret la resposta "
+"original"
 
 #: models/question.py:63
 #, python-format
 msgid "\" and \"%s\""
-msgstr ""
+msgstr "\" i \"%s\""
 
 #: models/question.py:66
 #, fuzzy
@@ -3715,7 +3803,7 @@ msgstr "%(people)s Benutzer haben Kommentare zu einer Antwort verfaßt"
 #: models/repute.py:142
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
-msgstr ""
+msgstr "<em>Canviar pel moderador. Raó:</em> %(reason)s"
 
 #: models/repute.py:153
 #, python-format
@@ -3723,6 +3811,8 @@ msgid ""
 "%(points)s points were added for %(username)s's contribution to question "
 "%(question_title)s"
 msgstr ""
+"S'han afegit %(points)s punts a %(username)s per la seva contribució a la "
+"pregunta %(question_title)s"
 
 #: models/repute.py:158
 #, python-format
@@ -3730,6 +3820,8 @@ msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
 "question %(question_title)s"
 msgstr ""
+"S'han tret %(points)s punts a %(username)s per la seva contribució a la "
+"pregunta %(question_title)s"
 
 #: models/tag.py:151
 msgid "interesting"
@@ -3757,11 +3849,11 @@ msgstr "Individuell ausgewählte Fragen"
 
 #: models/user.py:268
 msgid "Mentions and comment responses"
-msgstr ""
+msgstr "Cites i comentaris a respostes"
 
 #: models/user.py:271
 msgid "Instantly"
-msgstr ""
+msgstr "Instantàniament"
 
 #: models/user.py:272
 msgid "Daily"
@@ -3780,6 +3872,8 @@ msgstr "Keine E-Mail"
 msgid "Please enter your <span>user name</span>, then sign in"
 msgstr "Bitte geben Sie Benutzernamen und Passwort ein."
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# msgstr "Introduïu el vostre <span>nom d'usuari</span> i inicieu la sessió"
 #: skins/common/templates/authopenid/authopenid_macros.html:54
 #: skins/common/templates/authopenid/signin.html:90
 #, fuzzy
@@ -4070,13 +4164,15 @@ msgstr "Logout"
 
 #: skins/common/templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
-msgstr ""
+msgstr "Ha entrar correctament"
 
 #: skins/common/templates/authopenid/logout.html:7
 msgid ""
 "However, you still may be logged in to your OpenID provider. Please logout "
 "of your provider if you wish to do so."
 msgstr ""
+"Potser encara està registrar amb el seu proveïdor OpenID. Podeu sortir del "
+"proveïdor si voleu."
 
 #: skins/common/templates/authopenid/signin.html:4
 msgid "User login"
@@ -4111,6 +4207,9 @@ msgid ""
 "similar technology. Your external service password always stays confidential "
 "and you don't have to rememeber or create another one."
 msgstr ""
+"Seleccioneu un dels serveis per entrar usant OpenID segur o tecnologies "
+"similars. La contrasenya del servei extern es manté sempre confidencial, no "
+"ha de crear o recordar una contrasenya nova."
 
 #: skins/common/templates/authopenid/signin.html:31
 msgid ""
@@ -4118,30 +4217,40 @@ msgid ""
 "or add a new one. Please click any of the icons below to check/change or add "
 "new login methods."
 msgstr ""
+"Per comprovar, canviar o afegir nous mètodes d'entrada, feu clic en "
+"qualsevol dels icones següents."
 
 #: skins/common/templates/authopenid/signin.html:33
 msgid ""
 "Please add a more permanent login method by clicking one of the icons below, "
 "to avoid logging in via email each time."
 msgstr ""
+"Eviteu entrar cada vegada via correu electrònic. Per afegir un mètode "
+"d'entrada més permanent feu clic en un dels icones següents"
 
 #: skins/common/templates/authopenid/signin.html:37
 msgid ""
 "Click on one of the icons below to add a new login method or re-validate an "
 "existing one."
 msgstr ""
+"Per afegir un nou mètode d'entrada o revalidar un d'existent feu clic en un "
+"dels icones següents"
 
 #: skins/common/templates/authopenid/signin.html:39
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
+"No teniu cap mètode d'entrada, per afegir-ne un o més feu clic en qualsevol "
+"dels icones següents"
 
 #: skins/common/templates/authopenid/signin.html:42
 msgid ""
 "Please check your email and visit the enclosed link to re-connect to your "
 "account"
 msgstr ""
+"Comproveu el vostre correu electrònic i seguiu l'enllaç adjunt per re-"
+"connectar al vostre compte"
 
 #: skins/common/templates/authopenid/signin.html:87
 #, fuzzy
@@ -4150,7 +4259,7 @@ msgstr "Bitte geben Sie Benutzernamen und Passwort ein."
 
 #: skins/common/templates/authopenid/signin.html:93
 msgid "Login failed, please try again"
-msgstr ""
+msgstr "No s'ha pogut entrar, torneu a provar"
 
 #: skins/common/templates/authopenid/signin.html:97
 #, fuzzy
@@ -4167,7 +4276,7 @@ msgstr "Login"
 
 #: skins/common/templates/authopenid/signin.html:113
 msgid "To change your password - please enter the new one twice, then submit"
-msgstr ""
+msgstr "Per canviar la vostre contrasenya, introduïu la nova dues vegades"
 
 #: skins/common/templates/authopenid/signin.html:117
 #, fuzzy
@@ -4181,11 +4290,11 @@ msgstr "Bitte geben Sie Ihr Passwort erneut ein"
 
 #: skins/common/templates/authopenid/signin.html:146
 msgid "Here are your current login methods"
-msgstr ""
+msgstr "Aquests són els seus mètodes d'entrada actuals"
 
 #: skins/common/templates/authopenid/signin.html:150
 msgid "provider"
-msgstr ""
+msgstr "proveïdor"
 
 #: skins/common/templates/authopenid/signin.html:151
 #, fuzzy
@@ -4194,7 +4303,7 @@ msgstr "Zuletzt gesehen"
 
 #: skins/common/templates/authopenid/signin.html:152
 msgid "delete, if you like"
-msgstr ""
+msgstr "esborra, si voleu"
 
 #: skins/common/templates/authopenid/signin.html:166
 #: skins/common/templates/question/answer_controls.html:44
@@ -4214,11 +4323,12 @@ msgstr "Sie haben noch Fragen?"
 
 #: skins/common/templates/authopenid/signin.html:186
 msgid "Please, enter your email address below and obtain a new key"
-msgstr ""
+msgstr "Entreu la vostra adreça de correu electrònic per tenir una nova clau"
 
 #: skins/common/templates/authopenid/signin.html:188
 msgid "Please, enter your email address below to recover your account"
 msgstr ""
+"Per recuperar el vostre compte entrar la vostra adreça de correu electrònic"
 
 #: skins/common/templates/authopenid/signin.html:191
 #, fuzzy
@@ -4227,7 +4337,7 @@ msgstr "Legen Sie ein neues Passwort für Ihren Zugang fest."
 
 #: skins/common/templates/authopenid/signin.html:202
 msgid "Send a new recovery key"
-msgstr ""
+msgstr "Enviar una nova clau de recuperació"
 
 #: skins/common/templates/authopenid/signin.html:204
 #, fuzzy
@@ -4334,11 +4444,11 @@ msgstr "Ihre Zugangsdaten:"
 #: skins/common/templates/avatar/add.html:9
 #: skins/common/templates/avatar/change.html:11
 msgid "You haven't uploaded an avatar yet. Please upload one now."
-msgstr ""
+msgstr "No heu penjat encara un avatar. Podeu penjar-ne un ara."
 
 #: skins/common/templates/avatar/add.html:13
 msgid "Upload New Image"
-msgstr ""
+msgstr "Penjar una Nova Imatge"
 
 #: skins/common/templates/avatar/change.html:4
 #, fuzzy
@@ -4347,7 +4457,7 @@ msgstr "Veränderungen gespeichert"
 
 #: skins/common/templates/avatar/change.html:17
 msgid "Choose new Default"
-msgstr ""
+msgstr "Trieu Defecte nou"
 
 #: skins/common/templates/avatar/change.html:22
 #, fuzzy
@@ -4361,7 +4471,7 @@ msgstr "Antwort gelöscht"
 
 #: skins/common/templates/avatar/confirm_delete.html:4
 msgid "Please select the avatars that you would like to delete."
-msgstr ""
+msgstr "Seleccioneu els avatars que voleu eliminar."
 
 #: skins/common/templates/avatar/confirm_delete.html:6
 #, python-format
@@ -4369,6 +4479,8 @@ msgid ""
 "You have no avatars to delete. Please <a href=\"%(avatar_change_url)s"
 "\">upload one</a> now."
 msgstr ""
+"No teniu cap avatar per eliminar. Podeu <a href=\"%(avatar_change_url)s"
+"\">pujar-ne un</a> ara."
 
 #: skins/common/templates/avatar/confirm_delete.html:12
 #, fuzzy
@@ -4500,6 +4612,8 @@ msgstr "Tags"
 msgid "Interesting tags"
 msgstr "Tags, die mich interessieren"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# posem un signe + per què 'afegir' es talla i queda 'afegi'
 #: skins/common/templates/widgets/tag_selector.html:18
 #: skins/common/templates/widgets/tag_selector.html:34
 #, fuzzy
@@ -4518,7 +4632,7 @@ msgstr "E-Mail-Tag-Filter festlegen"
 #: skins/default/templates/404.jinja.html:3
 #: skins/default/templates/404.jinja.html:10
 msgid "Page not found"
-msgstr ""
+msgstr "Pàgina no trobada"
 
 #: skins/default/templates/404.jinja.html:13
 msgid "Sorry, could not find the page you requested."
@@ -4650,7 +4764,7 @@ msgstr "Auszeichnung"
 #: skins/default/templates/badge.html:7
 #, python-format
 msgid "Badge \"%(name)s\""
-msgstr ""
+msgstr "Insígnia \"%(name)s\""
 
 #: skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:16
@@ -4698,7 +4812,7 @@ msgstr "Auszeichnungs-Stufen"
 
 #: skins/default/templates/badges.html:37
 msgid "gold badge: the highest honor and is very rare"
-msgstr ""
+msgstr "insígnia d'or: l'honor més alt i és molt rara"
 
 #: skins/default/templates/badges.html:40
 msgid "gold badge description"
@@ -4710,6 +4824,8 @@ msgstr ""
 msgid ""
 "silver badge: occasionally awarded for the very high quality contributions"
 msgstr ""
+"insígnia de plata: atorgada ocasionalment per contribucions de molta alta "
+"qualitat"
 
 #: skins/default/templates/badges.html:49
 msgid "silver badge description"
@@ -5017,6 +5133,8 @@ msgstr ""
 #: skins/default/templates/feedback.html:30
 msgid "(to hear from us please enter a valid email or check the box below)"
 msgstr ""
+"(per saber de nosaltres entar un correu electrònic vàlid o clicar la casella "
+"inferior"
 
 #: skins/default/templates/feedback.html:37
 #: skins/default/templates/feedback.html:46
@@ -5025,7 +5143,7 @@ msgstr "(Pflichtfeld)"
 
 #: skins/default/templates/feedback.html:55
 msgid "(Please solve the captcha)"
-msgstr ""
+msgstr "(Entrar el captcha)"
 
 #: skins/default/templates/feedback.html:63
 msgid "Send Feedback"
@@ -5073,7 +5191,7 @@ msgstr ""
 #: skins/default/templates/instant_notification.html:1
 #, python-format
 msgid "<p>Dear %(receiving_user_name)s,</p>"
-msgstr ""
+msgstr "<p>%(receiving_user_name)s,</p>"
 
 #: skins/default/templates/instant_notification.html:3
 #, python-format
@@ -5082,6 +5200,9 @@ msgid ""
 "<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a>:</"
 "p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ha deixat <a href=\"%(post_url)s\">un nou "
+"comentari nou</a>:</p>\n"
 
 #: skins/default/templates/instant_notification.html:8
 #, python-format
@@ -5090,6 +5211,9 @@ msgid ""
 "<p>%(update_author_name)s left a <a href=\"%(post_url)s\">new comment</a></"
 "p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ha deixat <a href=\"%(post_url)s\">un comentari "
+"nou</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:13
 #, python-format
@@ -5098,6 +5222,9 @@ msgid ""
 "<p>%(update_author_name)s answered a question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s a respòs una pregunta \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:19
 #, python-format
@@ -5106,6 +5233,9 @@ msgid ""
 "<p>%(update_author_name)s posted a new question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ha publicat una pregunta nova \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:25
 #, python-format
@@ -5114,6 +5244,9 @@ msgid ""
 "<p>%(update_author_name)s updated an answer to the question\n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ha actualitzat una resposta a la pregunta\n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:31
 #, python-format
@@ -5122,6 +5255,9 @@ msgid ""
 "<p>%(update_author_name)s updated a question \n"
 "<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 msgstr ""
+"\n"
+"<p>%(update_author_name)s ha actualitzat una pregunta \n"
+"<a href=\"%(post_url)s\">%(origin_post_title)s</a></p>\n"
 
 #: skins/default/templates/instant_notification.html:37
 #, python-format
@@ -5133,6 +5269,12 @@ msgid ""
 "how often you receive these notifications or unsubscribe. Thank you for your "
 "interest in our forum!</p>\n"
 msgstr ""
+"\n"
+"<div>%(content_preview)s</div>\n"
+"<p>Tingeu en compte que fàcilment podeu <a href=\"%(user_subscriptions_url)s"
+"\">canviar</a>\n"
+"la freqüència en que rebeu aquestes notificacions o cancel·lar la "
+"subscripció. Gràcies pel seu interès en el fòrum!</p>\n"
 
 #: skins/default/templates/instant_notification.html:42
 #, fuzzy
@@ -5150,19 +5292,19 @@ msgstr "Diese Frage wieder eröffnen"
 #: skins/default/templates/macros.html:471
 #, python-format
 msgid "follow %(alias)s"
-msgstr ""
+msgstr "seguir a %(alias)s"
 
 #: skins/default/templates/macros.html:17
 #: skins/default/templates/macros.html:474
 #, python-format
 msgid "unfollow %(alias)s"
-msgstr ""
+msgstr "no seguir a %(alias)s"
 
 #: skins/default/templates/macros.html:18
 #: skins/default/templates/macros.html:475
 #, python-format
 msgid "following %(alias)s"
-msgstr ""
+msgstr "seguint a %(alias)s"
 
 #: skins/default/templates/macros.html:29
 #, fuzzy
@@ -5194,7 +5336,7 @@ msgstr "Anonym"
 
 #: skins/default/templates/macros.html:80
 msgid "this post is marked as community wiki"
-msgstr ""
+msgstr "aquesta entrada està marcaa com a wiki comunitari"
 
 #: skins/default/templates/macros.html:83
 #, python-format
@@ -5202,6 +5344,8 @@ msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr ""
+"Aquesta entrada és un wiki.\n"
+"        Qualsevol amb una reputació de més de %(wiki_min_rep)s pot contribuir"
 
 #: skins/default/templates/macros.html:89
 msgid "asked"
@@ -5349,6 +5493,8 @@ msgstr "Warum Tags verwenden und bearbeiten?"
 #: skins/default/templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
 msgstr ""
+"Les etiquetes ajuden a mantenir el contingut més organitzat i faciliten la "
+"cerca"
 
 #: skins/default/templates/question_retag.html:32
 msgid "tag editors receive special awards from the community"
@@ -5374,6 +5520,8 @@ msgid ""
 "This question has been closed by \n"
 "    <a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>\n"
 msgstr ""
+"Aquesta pregunta l'ha tancat \n"
+"    <a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>\n"
 
 #: skins/default/templates/reopen.html:16
 #, fuzzy
@@ -5382,7 +5530,7 @@ msgstr "Frage schließen"
 
 #: skins/default/templates/reopen.html:19
 msgid "When:"
-msgstr ""
+msgstr "Quan:"
 
 #: skins/default/templates/reopen.html:22
 #, fuzzy
@@ -5430,7 +5578,7 @@ msgstr "Tag-Liste"
 #: skins/default/templates/tags.html:8
 #, python-format
 msgid "Tags, matching \"%(stag)s\""
-msgstr ""
+msgstr "Etiquetes que coincideixen  \"%(stag)s\""
 
 #: skins/default/templates/tags.html:14 skins/default/templates/users.html:9
 #: skins/default/templates/main_page/tab_bar.html:14
@@ -5464,7 +5612,7 @@ msgstr "Benutzer"
 
 #: skins/default/templates/users.html:14
 msgid "see people with the highest reputation"
-msgstr ""
+msgstr "veure les persones amb la reputació més alta"
 
 #: skins/default/templates/users.html:15
 #: skins/default/templates/user_profile/user_info.html:25
@@ -5473,7 +5621,7 @@ msgstr "Punktestand"
 
 #: skins/default/templates/users.html:20
 msgid "see people who joined most recently"
-msgstr ""
+msgstr "veure les persones que s'han afegit recentment"
 
 #: skins/default/templates/users.html:21
 msgid "recent"
@@ -5481,11 +5629,11 @@ msgstr "neueste"
 
 #: skins/default/templates/users.html:26
 msgid "see people who joined the site first"
-msgstr ""
+msgstr "veure les primeres persones que es van afegir al lloc"
 
 #: skins/default/templates/users.html:32
 msgid "see people sorted by name"
-msgstr ""
+msgstr "veure la gent ordenada per nom"
 
 #: skins/default/templates/users.html:33
 msgid "by username"
@@ -5617,6 +5765,9 @@ msgid ""
 "enable javascript in your browser, <a href=\"%(noscript_url)s\">here is how</"
 "a>"
 msgstr ""
+"Si us plau, tingui en compte que %(app_name)s necessita javascript per "
+"funcionar, habiliti el javascript del seu navegador (<a href="
+"\"%(noscript_url)s\">com?</a>)"
 
 #: skins/default/templates/meta/editor_data.html:5
 #, fuzzy, python-format
@@ -5748,6 +5899,8 @@ msgid ""
 "Know someone who can answer?  Share a <a href=\"%(question_url)s\">link</a> "
 "to this question via"
 msgstr ""
+"Coneix algun que sap la resposta? Compareix l'<a href=\"%(question_url)s"
+"\">enllaç</a> a aquesta pregunta via"
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:8
 #, fuzzy
@@ -5792,8 +5945,8 @@ msgstr "Alle Fragen"
 #, python-format
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s seguidor"
+msgstr[1] "%(count)s seguidors"
 
 #: skins/default/templates/question/sidebar.html:27
 #, fuzzy
@@ -5805,6 +5958,8 @@ msgid ""
 "<strong>Here</strong> (once you log in) you will be able to sign up for the "
 "periodic email updates about this question."
 msgstr ""
+"<strong>Aquí</strong> (un cop connectat) es pot inscriure per rebre "
+"actualitzacions periòdiques sobre aquesta pregunta"
 
 #: skins/default/templates/question/sidebar.html:35
 #, fuzzy
@@ -5818,7 +5973,7 @@ msgstr "Fragen-RSS-Feed abonnieren"
 
 #: skins/default/templates/question/sidebar.html:46
 msgid "Stats"
-msgstr ""
+msgstr "Estadístiques"
 
 #: skins/default/templates/question/sidebar.html:48
 msgid "question asked"
@@ -5896,7 +6051,7 @@ msgstr "Bild ändern"
 #: skins/default/templates/user_profile/user_edit.html:25
 #: skins/default/templates/user_profile/user_info.html:19
 msgid "remove"
-msgstr ""
+msgstr "treure"
 
 #: skins/default/templates/user_profile/user_edit.html:32
 msgid "Registered user"
@@ -5943,7 +6098,7 @@ msgstr "Alle Fragen"
 #: skins/default/templates/user_profile/user_inbox.html:18
 #: skins/default/templates/user_profile/user_tabs.html:12
 msgid "inbox"
-msgstr ""
+msgstr "safata d'entrada"
 
 #: skins/default/templates/user_profile/user_inbox.html:34
 #, fuzzy
@@ -5953,7 +6108,7 @@ msgstr "Fragen"
 #: skins/default/templates/user_profile/user_inbox.html:38
 #, python-format
 msgid "forum responses (%(re_count)s)"
-msgstr ""
+msgstr "respostes en forum (%(re_count)s)"
 
 #: skins/default/templates/user_profile/user_inbox.html:43
 #, fuzzy, python-format
@@ -5992,7 +6147,7 @@ msgstr "als beste Antwort markiert"
 
 #: skins/default/templates/user_profile/user_inbox.html:56
 msgid "dismiss"
-msgstr ""
+msgstr "rebutjar"
 
 #: skins/default/templates/user_profile/user_info.html:36
 msgid "update profile"
@@ -6063,12 +6218,12 @@ msgstr "Überarbeitung speichern"
 #: skins/default/templates/user_profile/user_moderate.html:25
 #, python-format
 msgid "Your current reputation is %(reputation)s points"
-msgstr ""
+msgstr "La seva reputació actual és de %(reputation)s punts"
 
 #: skins/default/templates/user_profile/user_moderate.html:27
 #, python-format
 msgid "User's current reputation is %(reputation)s points"
-msgstr ""
+msgstr "La reputació actual de l'usuari és de %(reputation)s punts"
 
 #: skins/default/templates/user_profile/user_moderate.html:31
 #, fuzzy
@@ -6077,7 +6232,7 @@ msgstr "Punktestand des Benutzers"
 
 #: skins/default/templates/user_profile/user_moderate.html:38
 msgid "Subtract"
-msgstr ""
+msgstr "Restar"
 
 #: skins/default/templates/user_profile/user_moderate.html:39
 msgid "Add"
@@ -6093,6 +6248,8 @@ msgid ""
 "An email will be sent to the user with 'reply-to' field set to your email "
 "address. Please make sure that your address is entered correctly."
 msgstr ""
+"S'enviarà un correu electrònic a l'usuari amb el camp 'respon-a' amb la seva "
+"adreça de correu. Comproveu que heu entrar correctament la vostra adreça."
 
 #: skins/default/templates/user_profile/user_moderate.html:46
 #, fuzzy
@@ -6137,27 +6294,29 @@ msgstr ""
 #: skins/default/templates/user_profile/user_network.html:5
 #: skins/default/templates/user_profile/user_tabs.html:18
 msgid "network"
-msgstr ""
+msgstr "xarxa"
 
 #: skins/default/templates/user_profile/user_network.html:10
 #, python-format
 msgid "Followed by %(count)s person"
 msgid_plural "Followed by %(count)s people"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Seguit per %(count)s person"
+msgstr[1] "Seguit per %(count)s persones"
 
 #: skins/default/templates/user_profile/user_network.html:14
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Seguint %(count)s person"
+msgstr[1] "Seguint %(count)s persones"
 
 #: skins/default/templates/user_profile/user_network.html:19
 msgid ""
 "Your network is empty. Would you like to follow someone? - Just visit their "
 "profiles and click \"follow\""
 msgstr ""
+"La sev xarxa està buida. Voleu seguir algú?Només heu de visitar la seva "
+"pàgina de configuració i clicar \"seguir\""
 
 #: skins/default/templates/user_profile/user_network.html:21
 #, fuzzy, python-format
@@ -6173,11 +6332,11 @@ msgstr "aktiv"
 #: skins/default/templates/user_profile/user_recent.html:21
 #: skins/default/templates/user_profile/user_recent.html:28
 msgid "source"
-msgstr ""
+msgstr "font"
 
 #: skins/default/templates/user_profile/user_reputation.html:4
 msgid "karma"
-msgstr ""
+msgstr "reputació"
 
 #: skins/default/templates/user_profile/user_reputation.html:11
 msgid "Your karma change log."
@@ -6275,7 +6434,7 @@ msgstr "Kommentare und Antworten"
 
 #: skins/default/templates/user_profile/user_tabs.html:16
 msgid "followers and followed users"
-msgstr ""
+msgstr "usuaris seguidors i seguits"
 
 #: skins/default/templates/user_profile/user_tabs.html:21
 msgid "graph of user reputation"
@@ -6352,12 +6511,12 @@ msgstr "Tipps zu Markdown"
 #: skins/default/templates/widgets/answer_edit_tips.html:31
 #: skins/default/templates/widgets/question_edit_tips.html:26
 msgid "*italic*"
-msgstr ""
+msgstr "*itàlica*"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:34
 #: skins/default/templates/widgets/question_edit_tips.html:29
 msgid "**bold**"
-msgstr ""
+msgstr "**negreta**"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:38
 #: skins/default/templates/widgets/question_edit_tips.html:33
@@ -6443,7 +6602,7 @@ msgstr "Beitragende"
 #: skins/default/templates/widgets/footer.html:33
 #, python-format
 msgid "Content on this site is licensed under a %(license)s"
-msgstr ""
+msgstr "El contingut d'aquest lloc està sota una llicència %(license)s"
 
 #: skins/default/templates/widgets/footer.html:38
 msgid "about"
@@ -6464,7 +6623,7 @@ msgstr "Zurück zur Startseite"
 #: skins/default/templates/widgets/logo.html:4
 #, python-format
 msgid "%(site)s logo"
-msgstr ""
+msgstr "logo %(site)s"
 
 #: skins/default/templates/widgets/meta_nav.html:10
 msgid "users"
@@ -6509,7 +6668,7 @@ msgstr[1] "abstimmen/"
 
 #: skins/default/templates/widgets/scope_nav.html:3
 msgid "ALL"
-msgstr ""
+msgstr "TOTES"
 
 #: skins/default/templates/widgets/scope_nav.html:5
 msgid "see unanswered questions"
@@ -6517,7 +6676,7 @@ msgstr "Unbeantwortete Fragen anzeigen"
 
 #: skins/default/templates/widgets/scope_nav.html:5
 msgid "UNANSWERED"
-msgstr ""
+msgstr "SENSE RESPONDRE"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 #, fuzzy
@@ -6526,7 +6685,7 @@ msgstr "Favoritenliste anzeigen"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "FOLLOWED"
-msgstr ""
+msgstr "SEQUIDES"
 
 #: skins/default/templates/widgets/scope_nav.html:11
 #, fuzzy
@@ -6535,7 +6694,7 @@ msgstr "Bitte stellen Sie Ihre Frage!"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:3
 msgid "karma:"
-msgstr ""
+msgstr "reputació:"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:7
 #, fuzzy
@@ -6561,7 +6720,7 @@ msgstr "no"
 
 #: utils/decorators.py:90 views/commands.py:113 views/commands.py:133
 msgid "Oops, apologies - there was some error"
-msgstr ""
+msgstr "hi ha hagut un error"
 
 #: utils/decorators.py:109
 #, fuzzy
@@ -6570,7 +6729,7 @@ msgstr "Bitte einloggen"
 
 #: utils/decorators.py:205
 msgid "Spam was detected on your post, sorry for if this is a mistake"
-msgstr ""
+msgstr "S'ha detectar spam en el seu missatge, ho sentin si això és un error"
 
 #: utils/forms.py:33
 msgid "this field is required"
@@ -6692,12 +6851,12 @@ msgstr "Gastbenutzer können nicht abstimmen"
 
 #: views/commands.py:59
 msgid "Sorry you ran out of votes for today"
-msgstr ""
+msgstr "se li han acabat el vots per avui"
 
 #: views/commands.py:65
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
-msgstr ""
+msgstr "Per avui li queden %(votes_left)s restants"
 
 #: views/commands.py:123
 #, fuzzy
@@ -6706,7 +6865,7 @@ msgstr "Gastbenutzer können nicht abstimmen"
 
 #: views/commands.py:198
 msgid "Sorry, something is not right here..."
-msgstr ""
+msgstr "alguna cosa no funciona aqui ..."
 
 #: views/commands.py:213
 #, fuzzy
@@ -6762,8 +6921,8 @@ msgstr[1] "%(q_num)s Fragen"
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
 msgid_plural "%(badge_count)d %(badge_level)s badges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(badge_count)d %(badge_level)s insígnia"
+msgstr[1] "%(badge_count)d %(badge_level)s insígnies"
 
 #: views/readers.py:416
 #, fuzzy
@@ -6867,6 +7026,8 @@ msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a href="
 "\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
+"Sembla que heu sortit i no podeu posar comentaris. <a href=\"%(sign_in_url)s"
+"\">Entreu</a>."
 
 #: views/writers.py:649
 #, fuzzy
@@ -6879,13 +7040,20 @@ msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
+"Sembla que heu sortit i no podeu eliminar comentaris. <a href="
+"\"%(sign_in_url)s\">Entreu</a>."
 
 #: views/writers.py:679
 msgid "sorry, we seem to have some technical difficulties"
-msgstr ""
+msgstr "sembla que tenim algunes dificultats tècniques"
 
+#, fuzzy
 #~ msgid "question content must be > 10 characters"
-#~ msgstr "Der Fragentext muß länger als 10 Buchstaben sein."
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Der Fragentext muß länger als 10 Buchstaben sein.\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "la pregunta ha de tenir més de 10 caràcters"
 
 #, fuzzy
 #~ msgid ""
@@ -6897,9 +7065,8 @@ msgstr ""
 #~ "zu unternehmen. Bitte ignorieren Sie diese E-Mail einfach - wir "
 #~ "entschuldigen uns für die Unannehmlichkeiten."
 
-#, fuzzy
 #~ msgid "(please enter a valid email)"
-#~ msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+#~ msgstr "(entrar una adreça vàlida de correu electrònic)"
 
 #~ msgid "i like this post (click again to cancel)"
 #~ msgstr ""
@@ -6915,7 +7082,6 @@ msgstr ""
 #~ "Die Frage wurde aus den folgenden Gründen: \"%(close_reason)s\" "
 #~ "geschlossen von"
 
-#, fuzzy
 #~ msgid ""
 #~ "\n"
 #~ "        %(counter)s Answer:\n"
@@ -6926,10 +7092,12 @@ msgstr ""
 #~ "        "
 #~ msgstr[0] ""
 #~ "\n"
-#~ "Eine Antwort:"
+#~ "        %(counter)s Resposta:\n"
+#~ "        "
 #~ msgstr[1] ""
 #~ "\n"
-#~ "%(counter)s Antworten:"
+#~ "        %(counter)s Respostes:\n"
+#~ "        "
 
 #~ msgid "mark this answer as favorite (click again to undo)"
 #~ msgstr "Zur Favoritenliste hinzufügen (zum Abbrechen erneut klicken)"
@@ -6937,11 +7105,21 @@ msgstr ""
 #~ msgid "Question tags"
 #~ msgstr "Tags"
 
+#, fuzzy
 #~ msgid "questions"
-#~ msgstr "Fragen"
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Fragen\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "preguntes"
 
+#, fuzzy
 #~ msgid "search"
-#~ msgstr "Suche"
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Suche\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "cerca"
 
 #, fuzzy
 #~ msgid "Please star (bookmark) some questions or follow some users."
@@ -6955,8 +7133,13 @@ msgstr ""
 #~ msgid "Sort by:"
 #~ msgstr "Sortieren nach:"
 
+#, fuzzy
 #~ msgid "Email (not shared with anyone):"
-#~ msgstr "Ihre E-Mail-Adresse (wird nicht angezeigt):"
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Ihre E-Mail-Adresse (wird nicht angezeigt):\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Correu electrònic (no es comparteix amb ningú)"
 
 #, fuzzy
 #~ msgid "Site modes"
@@ -7010,8 +7193,13 @@ msgstr ""
 #~ msgid "MyOpenid user name"
 #~ msgstr "nach Benutzernamen"
 
+#, fuzzy
 #~ msgid "Email verification subject line"
-#~ msgstr "Bestätigung Ihrer E-Mail-Adresse"
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Bestätigung Ihrer E-Mail-Adresse\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Verification Email from Q&A forum"
 
 #~ msgid "disciplined"
 #~ msgstr "diszipliniert"
@@ -7197,10 +7385,12 @@ msgstr ""
 #~ msgid "how to validate email title"
 #~ msgstr "Wie bestätigt man seine E-Mail-Adresse und warum?"
 
+#, fuzzy
 #~ msgid ""
 #~ "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)"
 #~ "s"
 #~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 #~ "<form style='margin:0;padding:0;' action='%(send_email_key_url)"
 #~ "s'><p><span class=\"bigger strong\">Wie?</span> Falls Sie soeben eine "
 #~ "neue E-Mail-Adresse eingegeben haben oder Ihre bestehende verändert - "
@@ -7216,7 +7406,21 @@ msgstr ""
 #~ "die Fragen abonnieren, die Sie am meisten interessieren. Mit einer E-Mail-"
 #~ "Adresse können Sie über den <a href='%(gravatar_faq_url)"
 #~ "s'><strong>Gravatar</strong></a>-Dienst auch ein persönliches Profilbild "
-#~ "einstellen, das neben Ihrem Namen erscheint.</p>"
+#~ "einstellen, das neben Ihrem Namen erscheint.</p>\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "<form style='margin:0;padding:0;' action='%(send_email_key_url)"
+#~ "s'><p><span class=\"bigger strong\">How?</span> If you have just set or "
+#~ "changed your email address - <strong>check your email and click the "
+#~ "included link</strong>.<br>The link contains a key generated specifically "
+#~ "for you. You can also <button style='display:inline' "
+#~ "type='submit'><strong>get a new key</strong></button> and check your "
+#~ "email again.</p></form><span class=\"bigger strong\">Why?</span> Email "
+#~ "validation is required to make sure that <strong>only you can post "
+#~ "messages</strong> on your behalf and to <strong>minimize spam</strong> "
+#~ "posts.<br>With email you can <strong>subscribe for updates</strong> on "
+#~ "the most interesting questions. Also, when you sign up for the first time "
+#~ "- create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar</"
+#~ "strong></a> personal image.</p>"
 
 #~ msgid "."
 #~ msgstr "."
@@ -7227,14 +7431,21 @@ msgstr ""
 #~ msgid "Message body:"
 #~ msgstr "Nachrichtentext:"
 
+#, fuzzy
 #~ msgid ""
 #~ "As a registered user you can login with your OpenID, log out of the site "
 #~ "or permanently remove your account."
 #~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 #~ "Der Klick auf <strong>Logout</strong> beendet Ihre Sitzung hier im Forum, "
 #~ "aber nicht bei Ihrem OpenID-Anbietet.</p><p> Vergessen Sie nicht, sich "
 #~ "auch bei Ihrem Anbieter auszuloggen, falls Sie sich an diesem Computer "
-#~ "komplett ausloggen möchten."
+#~ "komplett ausloggen möchten.\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Clicking <strong>Logout</strong> will log you out from the forum but will "
+#~ "not sign you off from your OpenID provider.</p><p>If you wish to sign off "
+#~ "completely - please make sure to log out from your OpenID provider as "
+#~ "well."
 
 #~ msgid "Logout now"
 #~ msgstr "Jetzt ausloggen"
@@ -7419,8 +7630,13 @@ msgstr ""
 #~ msgid "views"
 #~ msgstr "Einblendungen"
 
+#, fuzzy
 #~ msgid "reputation points"
-#~ msgstr "Punkte"
+#~ msgstr ""
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "Punkte\n"
+#~ "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+#~ "karma"
 
 #, fuzzy
 #~ msgid "badges: "
@@ -8119,3 +8335,68 @@ msgstr ""
 #~ msgstr[1] ""
 #~ "\n"
 #~ "<div class=\"questions-count\">%(q_num)s</div><p>questions<p>"
+
+#~ msgid "Common left sidebar"
+#~ msgstr "Barra lateral esquerra comuna"
+
+#~ msgid "Enable left sidebar"
+#~ msgstr "Activar barra lateral esquerra"
+
+#~ msgid "Allow users change own email addresses"
+#~ msgstr "Permetre als usuaris canviar la seva adreça de correu"
+
+#~ msgid "Default avatar for users"
+#~ msgstr "Avatar d'usuari per defecte"
+
+#~ msgid "Welcome %(username)s,"
+#~ msgstr "Benvingut-uda %(username)s"
+
+#~ msgid "Welcome,"
+#~ msgstr "Benvingut"
+
+#~ msgid ""
+#~ "\n"
+#~ "            %(counter)s Answer\n"
+#~ "            "
+#~ msgid_plural ""
+#~ "\n"
+#~ "            %(counter)s Answers\n"
+#~ "        "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "        %(counter)s Resposta:\n"
+#~ "        "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "        %(counter)s Respostes:\n"
+#~ "        "
+
+#~ msgid "Sort by »"
+#~ msgstr "Ordenar per »"
+
+#~ msgid "(cannot be changed)"
+#~ msgstr "(no es pot canviar)"
+
+#~ msgid "Answer"
+#~ msgid_plural "Answers"
+#~ msgstr[0] "Resposta"
+#~ msgstr[1] "Respostes"
+
+#~ msgid "help"
+#~ msgstr "ajuda"
+
+#~ msgid "About %(site)s"
+#~ msgstr "Sobre %(site)s"
+
+#~ msgid ""
+#~ "\n"
+#~ "        %(counter)s Answer\n"
+#~ msgid_plural ""
+#~ "\n"
+#~ "        %(counter)s Answers\n"
+#~ msgstr[0] ""
+#~ "\n"
+#~ "        %(counter)s Resposta\n"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "        %(counter)s Respostes\n"

@@ -2,12 +2,11 @@
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the ubuntu-ro package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: ubuntu-ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 11:23-0600\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
 "PO-Revision-Date: 2011-04-10 19:43+0000\n"
 "Last-Translator: Adi Roiban <adi@roiban.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -17,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2011-04-10 19:44+0000\n"
 "X-Generator: Launchpad (build 12757)\n"
+"X-Launchpad-Export-Date: 2011-04-10 19:44+0000\n"
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
@@ -5427,11 +5426,16 @@ msgid "Nothing found."
 msgstr "Nu s-a găsit nimic."
 
 #: skins/default/templates/main_page/headline.html:4 views/readers.py:160
-#, python-format
+#, fuzzy, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] ""
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
 msgstr[1] ""
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+msgstr[2] "#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
 
 #: skins/default/templates/main_page/headline.html:6
 #, python-format
@@ -6626,11 +6630,16 @@ msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr "Suntem interesați de sugestiile voastre!"
 
 #: views/readers.py:152
-#, python-format
+#, fuzzy, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
 msgstr[0] ""
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
 msgstr[1] ""
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
+msgstr[2] "#-#-#-#-#  django.po (ubuntu-ro)  #-#-#-#-#\n"
 
 #: views/readers.py:200
 #, python-format

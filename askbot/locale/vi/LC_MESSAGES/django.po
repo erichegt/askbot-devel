@@ -2,21 +2,21 @@
 # Copyright (C) 2010 Askbot, 2009 Gang Chen
 # This file is distributed under the same license as the Askbot package.
 # Cong It <EMAIL@ADDRESS>, 2010.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-02 11:25-0600\n"
+"POT-Creation-Date: 2012-01-02 11:20-0600\n"
 "PO-Revision-Date: 2010-05-09 07:03\n"
 "Last-Translator: <cong.it@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Translated-Using: django-rosetta 0.5.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
+"X-Translated-Using: django-rosetta 0.5.3\n"
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
@@ -88,11 +88,13 @@ msgid "tags are required"
 msgstr ""
 
 #: forms.py:210
-#, python-format
+#, fuzzy, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: forms.py:218
 #, python-format
@@ -100,11 +102,13 @@ msgid "At least one of the following tags is required : %(tags)s"
 msgstr ""
 
 #: forms.py:227
-#, python-format
+#, fuzzy, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: forms.py:235
 msgid "use-these-chars-in-tags"
@@ -6593,18 +6597,22 @@ msgid "yesterday"
 msgstr ""
 
 #: utils/functions.py:79
-#, python-format
+#, fuzzy, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: utils/functions.py:85
-#, python-format
+#, fuzzy, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
 msgstr[0] ""
-msgstr[1] ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+msgstr[1] "#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
 
 #: views/avatar_views.py:99
 msgid "Successfully uploaded a new avatar."
