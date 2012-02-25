@@ -108,7 +108,9 @@ def process_vote(user = None, vote_direction = None, post = None):
     right now they are kind of cryptic - "status", "count"
     """
     if user.is_anonymous():
-        raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
+        raise exceptions.PermissionDenied(_(
+            'Sorry, anonymous users cannot vote'
+        ))
 
     user.assert_can_vote_for_post(post = post, direction = vote_direction)
     vote = user.get_old_vote_for_post(post)
@@ -333,8 +335,11 @@ def vote(request, id):
                             and user.email_isvalid == False:
 
                             response_data['message'] = \
-                                    _('subscription saved, %(email)s needs validation, see %(details_url)s') \
-                                    % {'email':user.email,'details_url':reverse('faq') + '#validate'}
+                                    _(
+                                        'Your subscription is saved, but email address '
+                                        '%(email)s needs to be validated, please see '
+                                        '<a href="%(details_url)s">more details here</a>'
+                                    ) % {'email':user.email,'details_url':reverse('faq') + '#validate'}
 
                     subscribed = user.subscribe_for_followed_question_alerts()
                     if subscribed:

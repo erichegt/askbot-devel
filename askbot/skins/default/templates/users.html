@@ -12,7 +12,7 @@
             href="{% url users %}?sort=reputation"
             {% if tab_id == 'reputation' %}class="on"{% endif %}
             title="{% trans %}see people with the highest reputation{% endtrans %}"
-        ><span>{% trans %}reputation{% endtrans %}</span></a>
+        ><span>{% trans %}karma{% endtrans %}</span></a>
         <a 
             id="sort_newest"
             href="{% url users %}?sort=newest"

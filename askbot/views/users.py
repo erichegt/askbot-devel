@@ -127,7 +127,7 @@ def user_moderate(request, subject, context):
     """
     moderator = request.user
 
-    if not moderator.can_moderate_user(subject):
+    if moderator.is_authenticated() and not moderator.can_moderate_user(subject):
         raise Http404
 
     user_rep_changed = False
@@ -690,8 +690,8 @@ def user_reputation(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
-        'tab_description': _('user reputation in the community'),
-        'page_title': _('profile - user reputation'),
+        'tab_description': _('user karma'),
+        'page_title': _("Profile - User's Karma"),
         'reputation': reputes,
         'reps': reps
     }

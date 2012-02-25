@@ -11,4 +11,4 @@ no further action is needed. Just ingore this email, we apologize
 for any inconvenience{% endtrans %}
 
 {% trans %}Sincerely,
-Forum Administrator{% endtrans %}
+Q&A Forum Administrator{% endtrans %}

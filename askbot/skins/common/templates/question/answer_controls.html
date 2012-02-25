@@ -4,8 +4,8 @@
 <span class="action-link">
     <a  class="permant-link"
         href="{{ answer.get_absolute_url(question_post=question) }}"
-        title="{% trans %}answer permanent link{% endtrans %}">
-        {% trans %}permanent link{% endtrans %}
+        title="{% trans %}permanent link{% endtrans %}">
+        {% trans %}link{% endtrans %}
     </a>
 </span>
 {% if request.user.is_authenticated() and 

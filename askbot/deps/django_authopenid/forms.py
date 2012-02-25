@@ -447,5 +447,5 @@ class EmailPasswordForm(forms.Form):
                 self.user_cache = User.objects.get(
                         username = self.cleaned_data['username'])
             except:
-                raise forms.ValidationError(_("Incorrect username."))
+                raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']

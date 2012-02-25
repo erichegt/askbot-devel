@@ -1088,19 +1088,25 @@ class EditUserEmailFeedsForm(forms.Form):
                 user.followed_threads.clear()
         return changed
 
-class SimpleEmailSubscribeForm(forms.Form):
-    SIMPLE_SUBSCRIBE_CHOICES = (
-        ('y',_('okay, let\'s try!')),
-        ('n',_('no community email please, thanks'))
-    )
-    subscribe = forms.ChoiceField(
-            widget=forms.widgets.RadioSelect,
-            error_messages={'required':_('please choose one of the options above')},
-            choices=SIMPLE_SUBSCRIBE_CHOICES
+class SubscribeForEmailUpdatesField(forms.ChoiceField):
+    """a simple yes or no field to subscribe for email or not"""
+    def __init__(self, **kwargs):
+        kwargs['widget'] = forms.widgets.RadioSelect
+        kwargs['error_messages'] = {
+            'required':_('please choose one of the options above')
+        }
+        kwargs['choices'] = (
+            ('y',_('okay, let\'s try!')),
+            (
+                'n',
+                _('no %(sitename)s email please, thanks') \
+                    % {'sitename': askbot_settings.APP_SHORT_NAME}
+            )
         )
+        super(SubscribeForEmailUpdatesField, self).__init__(**kwargs)
 
-    def __init__(self, *args, **kwargs):
-        super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
+class SimpleEmailSubscribeForm(forms.Form):
+    subscribe = SubscribeForEmailUpdatesField()
 
     def save(self, user=None):
         EFF = EditUserEmailFeedsForm

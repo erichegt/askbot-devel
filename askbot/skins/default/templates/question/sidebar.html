@@ -43,13 +43,13 @@
     <div class="clearfix"></div>
     <h2>{% trans %}Stats{% endtrans %}</h2>
     <p>
-        {% trans %}question asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
+        {% trans %}Asked{% endtrans %}: <strong title="{{ question.added_at }}">{{question.added_at|diff_date}}</strong>
     </p>
     <p> 
-        {% trans %}question was seen{% endtrans %}: <strong>{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>
+        {% trans %}Seen{% endtrans %}: <strong>{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>
     </p>
     <p>
-        {% trans %}last updated{% endtrans %}: <strong title="{{ thread.last_activity_at }}">{{thread.last_activity_at|diff_date}}</strong>
+        {% trans %}Last updated{% endtrans %}: <strong title="{{ thread.last_activity_at }}">{{thread.last_activity_at|diff_date}}</strong>
     </p>
 </div>
 {% endif %}

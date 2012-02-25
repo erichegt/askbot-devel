@@ -24,17 +24,42 @@ parameters:
     <div id="completetxt" >
         <div class="message">
             {% if login_type=='openid' %}
-                {% trans %}register new {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
+                {% trans %}<p><span class=\"big strong\">You are here for the first time with your 
+%(provider)s login.</span> Please create your <strong>screen name</strong> 
+and save your <strong>email</strong> address. Saved email address will let 
+you <strong>subscribe for the updates</strong> on the most interesting 
+questions and will be used to create and retrieve your unique avatar image - 
+<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
+                register new {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
             {% elif login_type=='legacy' %}
                     {% if external_login_name_is_taken %}
-                        {% trans %}{{username}} already exists, choose another name for 
-                            {{provider}}. Email is required too, see {{gravatar_faq_url}}
+                        {% trans %}<p><span class='strong big'>Oops... looks like screen name %(username)s is 
+already used in another account.</span></p><p>Please choose another screen 
+name to use with your %(provider)s login. Also, a valid email address is 
+required on the <span class='orange'>Q&amp;A</span> forum. Your email is 
+used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar
+</strong></a> image for your account. If you like, you can <strong>receive 
+updates</strong> on the interesting questions or entire forum by email. 
+Email addresses are never shown or otherwise shared with anybody else.</p>
                         {% endtrans %} 
                     {% else %}
-                        {% trans %}register new external {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
+                        {% trans %}
+<p><span class=\"big strong\">You are here for the first time with your 
+%(provider)s login.</span></p><p>You can either keep your <strong>screen 
+name</strong> the same as your %(provider)s login name  or choose some other 
+nickname.</p><p>Also, please save a valid <strong>email</strong> address. 
+With the email you can <strong>subscribe for the updates</strong> on the 
+most interesting questions. Email address is also used to create and 
+retrieve your unique avatar image - <a 
+href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
                     {% endif %}
             {% else %}
-                {% trans %}register new Facebook connect account info, see {{gravatar_faq_url}}{% endtrans %}
+                {% trans %}<p><span class=\"big strong\">You are here for the first time with your 
+Facebook login.</span> Please create your <strong>screen name</strong> and 
+save your <strong>email</strong> address. Saved email address will let you 
+<strong>subscribe for the updates</strong> on the most interesting questions 
+and will be used to create and retrieve your unique avatar image - 
+<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
             {% endif %}
         </div>
         <p style="display:none">{% trans %}This account already exists, please use another.{% endtrans %}</p>
@@ -56,20 +81,28 @@ parameters:
         {% endif %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">
-                <label for="id_username">{% trans %}Screen name label{% endtrans %}</label>
+                {%- trans %}<strong>Screen Name</strong> (<i>will be shown to others</i>){% endtrans %}
                 {% if openid_register_form.username.errors %} 
                     <p class="error">{{ openid_register_form.username.errors|join(", ") }}</p>
                 {% endif %}
                 {{ openid_register_form.username }}
             </div>
             <div class="form-row-vertical margin-bottom">
-                <label for="id_email">{% trans %}Email address label{% endtrans %}</label>
+                <label for="id_email">
+                    {%- trans %}<strong>Email Address</strong> (<i>will <strong>not</strong> be shared with 
+anyone, must be valid</i>)
+                    {% endtrans -%}
+                </label>
                 {% if openid_register_form.email.errors %} 
                     <p class="error">{{ openid_register_form.email.errors|join(", ") }}</p>
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
-            <p>{% trans %}receive updates motivational blurb{% endtrans %}</p>
+            <p>{% trans %}<strong>Receive forum updates by email</strong> - this will help our 
+community grow and become more useful.<br/>By default 
+<span class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest per 
+week</strong>  - only when there is anything new.<br/>If you like, please 
+adjust this now or any time later from your user account.{% endtrans %}</p>
             <div class='simple-subscribe-options'>
             {{email_feeds_form.subscribe}}
             {% if email_feeds_form.errors %}

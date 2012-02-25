@@ -103,7 +103,7 @@
                     </tr>
                 </table>
                 <p id="local_login_buttons">
-                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Login{% endtrans %}" />
+                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Sign in{% endtrans %}" />
                     {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
                     <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
@@ -213,33 +213,7 @@
         {% endif %}
     {% endif %}
 {% endblock %}
-
-{% block sidebar %}
-    {% if have_buttons %}
-        <div class="box">
-            <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
-            <ul>
-                <li>
-                    {% trans %}with openid it is easier{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}reuse openid{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}openid is widely adopted{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}openid is supported open standard{% endtrans %}
-                </li>
-            </ul>
-            <p class="info-box-follow-up-links">
-                <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
-                <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
-            </p>
-        </div>
-    {% endif %}
-{% endblock%}
-{%block endjs%}
-{%include "authopenid/providers_javascript.html" %}
-{%endblock%}
+{% block endjs %}
+{% include "authopenid/providers_javascript.html" %}
+{% endblock %}
 <!-- end signin.html -->

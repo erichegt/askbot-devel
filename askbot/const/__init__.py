@@ -122,7 +122,7 @@ TYPE_ACTIVITY = (
     (TYPE_ACTIVITY_COMMENT_ANSWER, _('commented answer')),
     (TYPE_ACTIVITY_UPDATE_QUESTION, _('edited question')),
     (TYPE_ACTIVITY_UPDATE_ANSWER, _('edited answer')),
-    (TYPE_ACTIVITY_PRIZE, _('received award')),
+    (TYPE_ACTIVITY_PRIZE, _('received badge')),
     (TYPE_ACTIVITY_MARK_ANSWER, _('marked best answer')),
     (TYPE_ACTIVITY_VOTE_UP, _('upvoted')),
     (TYPE_ACTIVITY_VOTE_DOWN, _('downvoted')),
@@ -193,10 +193,10 @@ assert(
 )
 
 TYPE_RESPONSE = {
-    'QUESTION_ANSWERED' : _('question_answered'),
-    'QUESTION_COMMENTED': _('question_commented'),
-    'ANSWER_COMMENTED'  : _('answer_commented'),
-    'ANSWER_ACCEPTED'   : _('answer_accepted'),
+    'QUESTION_ANSWERED' : _('answered question'),
+    'QUESTION_COMMENTED': _('commented question'),
+    'ANSWER_COMMENTED'  : _('commented answer'),
+    'ANSWER_ACCEPTED'   : _('accepted answer'),
 }
 
 POST_STATUS = {

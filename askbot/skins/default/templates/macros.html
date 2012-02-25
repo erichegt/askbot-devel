@@ -255,7 +255,7 @@ for the purposes of the AJAX comment editor #}
         {% set remaining_comments = post.comment_count - max_comments %}
         <a class="button">
         {% if can_post %}
-            {% trans %}add comment{% endtrans %} /
+            {% trans %}post a comment{% endtrans %} /
             {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
         {% else %}
             {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
@@ -263,7 +263,7 @@ for the purposes of the AJAX comment editor #}
         {% endif %}
         </a>
     {% elif can_post %}
-        <a class="button">{% trans %}add comment{% endtrans %}</a>
+        <a class="button">{% trans %}post a comment{% endtrans %}</a>
     {% endif %}
 {%- endmacro -%}
 
@@ -546,14 +546,14 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
           {% if num == p.page and p.pages != 1%}
             <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
           {% else %}
-            <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page number {{num}}{% endtrans %}">{{ num }}</a></span>
+            <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
           {% endif %}
         {% endfor %}
          
         {% if not p.in_trailing_range %}
             ...
             {% for num in p.pages_outside_leading_range|reverse %}
-                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page number {{ num }}{% endtrans %}">{{ num }}</a></span>
+                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
             {% endfor %}
         {% endif %}
         {% if p.has_next %}
@@ -585,14 +585,14 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
                     {% if num == p.page and p.pages != 1%}
                         <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
                     {% else %}
-                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page number {{num}}{% endtrans %}">{{ num }}</a></span>
+                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
                     {% endif %}
                 {% endfor %}
 
                 {% if not p.in_trailing_range %}
                     ...
                     {% for num in p.pages_outside_leading_range|reverse %}
-                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page number {{ num }}{% endtrans %}">{{ num }}</a></span>
+                        <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
                     {% endfor %}
                 {% endif %}
                 {% if p.has_next %}

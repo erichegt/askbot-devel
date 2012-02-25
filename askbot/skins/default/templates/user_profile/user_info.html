@@ -22,7 +22,7 @@
                 {% endif %}
             </div>
             <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
-            <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
+            <p><b style="color:#777;">{% trans %}karma{% endtrans %}</b></p>
             {% if user_follow_feature_on %}
                 {{ macros.follow_user_toggle(visitor = request.user, subject = view_user) }}
             {% endif %}
@@ -55,7 +55,7 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <td>{% trans %}member for{% endtrans %}</td>
+                    <td>{% trans %}member since{% endtrans %}</td>
                     <td><strong>{{ view_user.date_joined|diff_date }}</strong></td>
                 </tr>
                 {% if view_user.last_seen %}
@@ -66,7 +66,7 @@
                 {% endif %}
                 {% if view_user.website %}
                 <tr>
-                    <td>{% trans %}user website{% endtrans %}</td>
+                    <td>{% trans %}website{% endtrans %}</td>
                     <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
                 </tr>
                 {% endif  %}
