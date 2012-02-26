@@ -98,11 +98,7 @@ anyone, must be valid</i>)
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
-            <p>{% trans %}<strong>Receive forum updates by email</strong> - this will help our 
-community grow and become more useful.<br/>By default 
-<span class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest per 
-week</strong>  - only when there is anything new.<br/>If you like, please 
-adjust this now or any time later from your user account.{% endtrans %}</p>
+            <p>{% trans %}<strong>Receive forum updates by email</strong>{% endtrans %}</p>
             <div class='simple-subscribe-options'>
             {{email_feeds_form.subscribe}}
             {% if email_feeds_form.errors %}
@@ -110,7 +106,7 @@ adjust this now or any time later from your user account.{% endtrans %}</p>
             {% endif %}
             </div>
             <p class='space-above'>{% trans %}Tag filter tool will be your right panel, once you log in.{% endtrans %}</p>
-            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}create account{% endtrans %}"/></div>
+            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}Signup{% endtrans %}"/></div>
         </form>
     </div>
 {% endblock %}
