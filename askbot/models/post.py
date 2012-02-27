@@ -466,13 +466,15 @@ class Post(models.Model):
             }
         elif self.is_question():
             url = urlresolvers.reverse('question', args=[self.id])
-            if no_slug is False:
+            if thread:
+                url += django_urlquote(slugify(thread.title))
+            elif no_slug is False:
                 url += django_urlquote(self.slug)
             return url
         elif self.is_comment():
             origin_post = self.get_origin_post()
             return '%(url)s?comment=%(id)d#comment-%(id)d' % \
-                {'url': origin_post.get_absolute_url(), 'id':self.id}
+                {'url': origin_post.get_absolute_url(thread=thread), 'id':self.id}
 
         raise NotImplementedError
 
