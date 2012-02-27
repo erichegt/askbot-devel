@@ -307,6 +307,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
+    before = datetime.datetime.now()
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
     form.full_clean()#always valid
@@ -422,10 +423,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
 
     #load answers
-    answers = thread.get_answers(user = request.user)
-    answers = answers.select_related('thread', 'author', 'last_edited_by')
-    answers = answers.order_by({"latest":"-added_at", "oldest":"added_at", "votes":"-score" }[answer_sort_method])
-    answers = list(answers)
+    answers = thread.get_cached_answer_list(sort_method = answer_sort_method)
 
     # TODO: Add unit test to catch the bug where precache_comments() is called above (before) reordering the accepted answer to the top
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
@@ -531,7 +529,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment_position': show_comment_position,
     }
 
-    return render_into_skin('question.html', data, request)
+    result = render_into_skin('question.html', data, request)
+    print datetime.datetime.now() - before
+    return result
 
 def revisions(request, id, object_name=None):
     if object_name == 'Question':

@@ -18,6 +18,8 @@ CLOSE_REASONS = (
     (9, _('too localized')),
 )
 
+LONG_TIME = 60*60*24*30 #30 days is a lot of time
+
 TYPE_REPUTATION = (
     (1, 'gain_by_upvoted'),
     (2, 'gain_by_answer_accepted'),

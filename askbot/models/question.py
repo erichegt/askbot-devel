@@ -296,6 +296,7 @@ class ThreadManager(models.Manager):
 
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
 
@@ -419,6 +420,25 @@ class Thread(models.Model):
                                 models.Q(deleted = False) | models.Q(author = user) \
                                 | models.Q(deleted_by = user)
                             )
+
+    def get_cached_answer_list(self, sort_method = None):
+        """get all answer posts as a list for the Thread, and a given
+        user. This list is cached."""
+        key = self.ANSWER_LIST_KEY_TPL % self.id
+        answer_list = cache.cache.get(key)
+        if not answer_list:
+            answers = self.get_answers()
+            answers = answers.select_related('thread', 'author', 'last_edited_by')
+            answers = answers.order_by(
+                {
+                    "latest":"-added_at",
+                    "oldest":"added_at",
+                    "votes":"-score"
+                }[sort_method]
+            )
+            answer_list = list(answers)
+            cache.cache.set(key, answer_list)
+        return answer_list
 
 
     def get_similarity(self, other_thread = None):
@@ -659,36 +679,16 @@ class Thread(models.Model):
         # * We probably don't need to pollute the cache with threads older than 30 days
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
-        cache.cache.set(self.SUMMARY_CACHE_KEY_TPL % self.id, html, timeout=60*60*24*30)
+        cache.cache.set(
+            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            html,
+            timeout=const.LONG_TIME
+        )
         return html
 
     def summary_html_cached(self):
         return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
-
-#class Question(content.Content):
-#    post_type = 'question'
-#    thread = models.ForeignKey('Thread', unique=True, related_name='questions')
-#
-#    objects = QuestionManager()
-#
-#    class Meta(content.Content.Meta):
-#        db_table = u'question'
-#
-# TODO: Add sphinx_search() to Post model
-#
-#if getattr(settings, 'USE_SPHINX_SEARCH', False):
-#    from djangosphinx.models import SphinxSearch
-#    Question.add_to_class(
-#        'sphinx_search',
-#        SphinxSearch(
-#            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
-#            mode = 'SPH_MATCH_ALL'
-#        )
-#    )
-
-
-        
 class QuestionView(models.Model):
     question = models.ForeignKey(Post, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')
