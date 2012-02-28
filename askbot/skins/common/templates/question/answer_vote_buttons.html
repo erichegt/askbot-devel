@@ -1,4 +1,4 @@
-{{ macros.post_vote_buttons(post = answer, visitor_vote = user_answer_votes[answer.id]) }}
+{{ macros.post_vote_buttons(post = answer) }}
 <img id="answer-img-accept-{{ answer.id }}" class="answer-img-accept"
         {% if answer.accepted() %}
      src="{{'/images/vote-accepted-on.png'|media}}"

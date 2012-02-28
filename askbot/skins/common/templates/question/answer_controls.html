@@ -8,13 +8,7 @@
         {% trans %}link{% endtrans %}
     </a>
 </span>
-{% if request.user.is_authenticated() and 
-    (
-        request.user == answer.author or 
-        request.user.is_administrator_or_moderator()
-    )
-%}
-<span class="action-link delete-post">
+<span id='delete-answer-{{answer.id}}' class="action-link delete-post">
     <a class="question-delete"
     >{% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
 </span>
@@ -52,7 +46,20 @@
     <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
 </span>
 {% endif %}
-<span class="action-link">
+<span id='edit-answer-{{answer.id}}' class="action-link">
     <a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
 </span>
-{% endif %}
+<script type="text/javascript">
+    (function(){
+        var del_link = document.getElementById(
+            'delete-answer-' + '{{answer.id}}'
+        );
+        var edit_link = document.getElementById(
+            'edit-answer-' + '{{answer.id}}'
+        );
+        if (askbot['data']['userIsAuthenticated'] === false){
+            del_link.parentNode.removeChild(del_link);
+            edit_link.parentNode.removeChild(edit_link); 
+        }
+    })();
+</script>

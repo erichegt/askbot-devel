@@ -9,15 +9,75 @@
     <link rel="canonical" href="{{settings.APP_URL|strip_path}}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
+{% block forejs %}
+    <script type="text/javascript">
+        (function(){
+            var data = askbot['data'];
+            if (data['userIsAuthenticated']){
+                var votes = {};
+                votes['{{question.id}}'] = {{user_question_vote}};
+                {% for answer_id in user_answer_votes %}
+                    votes['{{answer_id}}'] = {{user_answer_votes[answer_id]}};
+                {% endfor %}
+                data['user_votes'] = votes;
+            }
+
+            function render_vote_buttons(post_type, post_id){
+                var upvote_btn = document.getElementById(
+                    post_type + '-img-upvote-' + post_id
+                );
+                var downvote_btn = document.getElementById(
+                    post_type + '-img-downvote-' + post_id
+                );
+                if (data['userIsAuthenticated']){
+                    if (post_id in data['user_votes']){
+                        var vote = data['user_votes'][post_id];
+                        if (vote == -1){
+                            var btn = downvote_btn;
+                        } else if (vote == 1){
+                            var btn = upvote_btn;
+                        } else {
+                            return;
+                        }
+                        btn.className = btn.className + ' on';
+                    }
+                }
+            }
+            askbot['functions'] = askbot['functions'] || {};
+            askbot['functions']['renderPostVoteButtons'] = render_vote_buttons;
+        })();
+    </script>
+{% endblock %}
 {% block content %}
-    {# ==== BEGIN: question/content.html ==== #}
-    {% include "question/content.html" %}
-    {# ==== END: question/content.html ==== #}
+    {% if is_cacheable %}
+        {% cache 1000 "thread" thread.id %}
+            {% include "question/content.html" %}
+        {% endcache %}
+    {% else %}
+        {% include "question/content.html" %}
+    {% endif %}
 {% endblock %}
 {% block sidebar %}
-    {%include "question/sidebar.html" %}
+    {% include "question/sidebar.html" %}
 {% endblock %}
 {% block endjs %}
-    {%include "question/javascript.html" %}
+    {% include "question/javascript.html" %}
+    {#
+    <script type="text/javascript">
+        var messages = askbot['messages'];
+        messages['upvote_question'] = gettext(
+            'I like this question (click again to cancel)'
+        );
+        messages['upvote_answer'] = gettext(
+            'I like this answer (click again to cancel)'
+        );
+        messages['downvote_question'] = gettext(
+            "I don't like this question (click again to cancel)"
+        );
+        messages['downvote_answer'] = gettext(
+            "I don't like this answer (click again to cancel)"
+        );
+    </script>
+    #}
 {% endblock %}
 

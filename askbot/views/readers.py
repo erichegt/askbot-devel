@@ -434,6 +434,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         answers.remove(thread.accepted_answer)
         answers.insert(0, thread.accepted_answer)
 
+    #maybe remove the personalized per-visitor caching?
     Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
     user_answer_votes = {}
@@ -442,6 +443,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         for vote in votes:
             user_answer_votes[vote.voted_post.id] = int(vote)
 
+    #not necessary any more?
     filtered_answers = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
 
     #resolve page number and comment number for permalinks
@@ -499,16 +501,27 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     paginator_context = functions.setup_paginator(paginator_data)
 
+    #todo: maybe consolidate all activity in the thread
+    #for the user into just one query?
     favorited = thread.has_favorite_by_user(request.user)
     user_question_vote = 0
     if request.user.is_authenticated():
+        #todo: narrow scope of the "select related" call here?
+        #todo: maybe consolidate this query with the answer vote query?
         votes = question_post.votes.select_related().filter(user=request.user)
         try:
             user_question_vote = int(votes[0])
         except IndexError:
             user_question_vote = 0
 
+    is_cacheable = True
+    if show_page != 1:
+        is_cacheable = False
+    elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
+        is_cacheable = False
+
     data = {
+        'is_cacheable': is_cacheable,
         'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question_post,
@@ -518,10 +531,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answer' : AnswerForm(question_post, request.user),
         'answers' : page_objects.object_list,
         'user_answer_votes': user_answer_votes,
-        'tags' : thread.tags.all(),
+        'tags' : thread.tags.all(),#todo: do we need actual tags here?
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_threads' : thread.get_similar_threads(),
+        'similar_threads' : thread.get_similar_threads(),#todo: cache this?
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,

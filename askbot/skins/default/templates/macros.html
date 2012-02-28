@@ -23,16 +23,10 @@
     </div>
 {%- endmacro -%}
 
-{%- macro post_vote_buttons(post = None, visitor_vote = None) -%}
-<div
-    id="{{post.post_type}}-img-upvote-{{ post.id }}"
-    class="{{post.post_type}}-img-upvote post-vote{% if visitor_vote == 1 %} on{% endif %}" 
-    {% if post.post_type == 'question' %}
-        title="{% trans %}i like this question (click again to cancel){% endtrans %}"
-    {% else %}
-        title="{% trans %}i like this answer (click again to cancel){% endtrans %}"
-    {% endif %}
-/></div>
+{%- macro post_vote_buttons(post = None) -%}
+<div id="{{post.post_type}}-img-upvote-{{ post.id }}"
+    class="{{post.post_type}}-img-upvote post-vote">
+</div>
 <div 
     id="{{post.post_type}}-vote-number-{{ post.id }}"
     class="vote-number"
@@ -40,13 +34,11 @@
 >{{ post.score }}</div>
 <div
     id="{{post.post_type}}-img-downvote-{{ post.id }}"
-    class="{{post.post_type}}-img-downvote post-vote{% if visitor_vote == -1 %} on{% endif %}" 
-    {% if post.post_type == 'question' %}
-        title="{% trans %}i dont like this question (click again to cancel){% endtrans %}" 
-    {% else %}
-        title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" 
-    {% endif %}
-/></div>
+    class="{{post.post_type}}-img-downvote post-vote">
+</div>
+<script type="text/javascript">
+    askbot['functions']['renderPostVoteButtons']('{{post.post_type}}', '{{post.id}}');
+</script>
 {%- endmacro -%}
 
 {%- macro post_contributor_avatar_and_credentials(post, user) -%}
