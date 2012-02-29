@@ -277,9 +277,9 @@ for the purposes of the AJAX comment editor #}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
             {% if show_post == post and show_comment and show_comment_position > max_comments %}
-                {% set comments = post._cached_comments[:show_comment_position] %}
+                {% set comments = post.get_cached_comments()[:show_comment_position] %}
             {% else %}
-                {% set comments = post._cached_comments[:max_comments] %}
+                {% set comments = post.get_cached_comments()[:max_comments] %}
             {% endif %}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
@@ -287,29 +287,31 @@ for the purposes of the AJAX comment editor #}
                 <div class="comment" id="comment-{{comment.id}}">
                     <div class="comment-votes">
                         {% if comment.score > 0 %}
-                            <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">{{comment.score}}</div>
+                            <div 
+                                id="comment-img-upvote-{{comment.id}}" 
+                                class="upvote"
+                            >{{comment.score}}</div>
+                            <script type="text/javascript">
+                                askbot['functions']['renderPostVoteButtons']('comment', '{{comment.id}}');
+                            </script>
                         {% else %}
                             <div class="upvote"></div>
                         {% endif %}
                     </div>
                     <div class="comment-delete">
-                        {% if user|can_delete_comment(comment) %}
-                            <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
-                        {% endif %}
+                        <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
                         <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
                         <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
-                        {% if user|can_edit_comment(comment) %}
                             &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>
-                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
         <div class="controls">
-            {% set can_post = user.is_authenticated() and user.can_post_comment(post) %}
+            {% set can_post = True %}
             {% if show_post == post and show_comment %}
                 {% if show_comment_position > max_comments %}
                     {{

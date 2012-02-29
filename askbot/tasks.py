@@ -22,6 +22,7 @@ import traceback
 
 from django.contrib.contenttypes.models import ContentType
 from celery.decorators import task
+from askbot.conf import settings as askbot_settings
 from askbot.models import Activity, Post, Thread, User
 from askbot.models import send_instant_notifications_about_activity_in_post
 from askbot.models.badges import award_badges_signal
@@ -133,6 +134,10 @@ def record_post_update(
     for user in (set(recipients) | set(newly_mentioned_users)):
         user.update_response_counts()
 
+    #shortcircuit if the email alerts are disabled
+    if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+        return
+
     #todo: weird thing is that only comments need the recipients
     #todo: debug these calls and then uncomment in the repo
     #argument to this call
@@ -164,9 +169,14 @@ def record_question_visit(
     question visit
     """
     #1) maybe update the view count
-    question_post = Post.objects.get(id = question_post_id)
+    question_post = Post.objects.filter(
+        id = question_post_id
+    ).select_related('thread')[0]
     if update_view_count:
         question_post.thread.increase_view_count()
+
+    if user_id == None:
+        return
 
     #2) question view count per user and clear response displays
     user = User.objects.get(id = user_id)

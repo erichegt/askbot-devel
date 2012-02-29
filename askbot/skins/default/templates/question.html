@@ -15,9 +15,8 @@
             var data = askbot['data'];
             if (data['userIsAuthenticated']){
                 var votes = {};
-                votes['{{question.id}}'] = {{user_question_vote}};
-                {% for answer_id in user_answer_votes %}
-                    votes['{{answer_id}}'] = {{user_answer_votes[answer_id]}};
+                {% for post_id in user_votes %}
+                    votes['{{post_id}}'] = {{user_votes[post_id]}};
                 {% endfor %}
                 data['user_votes'] = votes;
             }
@@ -39,7 +38,11 @@
                         } else {
                             return;
                         }
-                        btn.className = btn.className + ' on';
+                        if (post_type == 'comment'){
+                            btn.className = btn.className + ' upvoted';
+                        } else {
+                            btn.className = btn.className + ' on';
+                        }
                     }
                 }
             }

@@ -13,6 +13,8 @@ DEBUG_THIS_COMMAND = False
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
+        if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+            return
         if askbot_settings.ENABLE_ACCEPT_ANSWER_REMINDERS == False:
             return
         #get questions without answers, excluding closed and deleted

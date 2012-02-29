@@ -423,7 +423,8 @@ class Thread(models.Model):
 
     def get_cached_answer_list(self, sort_method = None):
         """get all answer posts as a list for the Thread, and a given
-        user. This list is cached."""
+        user. This list is cached.
+        """
         key = self.ANSWER_LIST_KEY_TPL % self.id
         answer_list = cache.cache.get(key)
         if not answer_list:
@@ -439,6 +440,75 @@ class Thread(models.Model):
             answer_list = list(answers)
             cache.cache.set(key, answer_list)
         return answer_list
+
+    def get_cached_post_data(self, sort_method = None):
+        """returns cached post data, as calculated by
+        the method get_post_data()"""
+        key = 'thread-data-%s-%s' % (self.id, sort_method)
+        post_data = cache.cache.get(key)
+        if not post_data:
+            post_data = self.get_post_data(sort_method)
+            cache.cache.set(key, post_data)
+        return post_data
+
+    def get_post_data(self, sort_method = None):
+        """returns question, answers as list and a list of post ids
+        for the given thread
+        the returned posts are pre-stuffed with the comments
+        all (both posts and the comments sorted in the correct
+        order)
+        """
+        print "cache miss!!!"
+        thread_posts = self.posts.all().order_by(
+                    {
+                        "latest":"-added_at",
+                        "oldest":"added_at",
+                        "votes":"-score"
+                    }[sort_method]
+                )
+        #1) collect question, answer and comment posts and list of post id's
+        answers = list()
+        post_map = dict()
+        comment_map = dict()
+        post_id_list = list()
+        question_post = None
+        for post in thread_posts:
+            #pass through only deleted question posts
+            if post.deleted and post.post_type != 'question':
+                continue
+
+            post_id_list.append(post.id)
+
+            if post.post_type == 'answer':
+                answers.append(post)
+                post_map[post.id] = post
+            elif post.post_type == 'comment':
+                if post.parent_id not in comment_map:
+                    comment_map[post.parent_id] = list()
+                comment_map[post.parent_id].append(post)
+            elif post.post_type == 'question':
+                assert(question_post == None)
+                post_map[post.id] = post
+                question_post = post
+
+        #2) sort comments in the temporal order
+        for comment_list in comment_map.values():
+            comment_list.sort(key=operator.attrgetter('added_at'))
+
+        #3) attach comments to question and the answers
+        for post_id, comment_list in comment_map.items():
+            try:
+                post_map[post_id].set_cached_comments(comment_list)
+            except KeyError:
+                pass#comment to deleted answer - don't want it
+
+        if self.accepted_answer and self.accepted_answer.deleted == False:
+            #Put the accepted answer to front
+            #the second check is for the case when accepted answer is deleted
+            answers.remove(self.accepted_answer)
+            answers.insert(0, self.accepted_answer)
+
+        return (question_post, answers, post_id_list)
 
 
     def get_similarity(self, other_thread = None):
@@ -462,9 +532,15 @@ class Thread(models.Model):
         """
 
         def get_data():
-            tags_list = self.tags.all()
-            similar_threads = Thread.objects.filter(tags__in=tags_list).\
-                                    exclude(id = self.id).exclude(posts__post_type='question', posts__deleted = True).distinct()[:100]
+            tags_list = self.get_tag_names()
+            similar_threads = Thread.objects.filter(
+                                        tags__name__in=tags_list
+                                    ).exclude(
+                                        id = self.id
+                                    ).exclude(
+                                        posts__post_type='question',
+                                        posts__deleted = True
+                                    ).distinct()[:100]
             similar_threads = list(similar_threads)
 
             for thread in similar_threads:
@@ -475,7 +551,8 @@ class Thread(models.Model):
 
             # Denormalize questions to speed up template rendering
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
-            questions = Post.objects.get_questions().select_related('thread').filter(thread__in=similar_threads)
+            questions = Post.objects.get_questions()
+            questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
                 thread_map[q.thread_id].question_denorm = q
 
@@ -486,10 +563,17 @@ class Thread(models.Model):
                     'title': thread.get_title(thread.question_denorm)
                 } for thread in similar_threads
             ]
-
             return similar_threads
 
-        return LazyList(get_data)
+        def get_cached_data():
+            key = 'similar-threads-%s' % self.id
+            data = cache.cache.get(key)
+            if not data:
+                data = get_data()
+                cache.cache.set(key, data)
+            return data
+
+        return LazyList(get_cached_data)
 
     def remove_author_anonymity(self):
         """removes anonymous flag from the question
@@ -503,6 +587,12 @@ class Thread(models.Model):
         thread_question = self._question_post()
         Post.objects.filter(id=thread_question.id).update(is_anonymous=False)
         thread_question.revisions.all().update(is_anonymous=False)
+
+    def is_followed_by(self, user = None):
+        """True if thread is followed by user"""
+        if user and user.is_authenticated():
+            return self.followed_by.filter(id = user.id).count() > 0
+        return False
 
     def update_tags(self, tagnames = None, user = None, timestamp = None):
         """

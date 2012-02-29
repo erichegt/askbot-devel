@@ -1484,12 +1484,17 @@ def user_visit_question(self, question = None, timestamp = None):
         timestamp = datetime.datetime.now()
 
     try:
-        question_view = QuestionView.objects.get(who=self, question=question)
+        QuestionView.objects.filter(
+            who=self, question=question
+        ).update(
+            when = timestamp
+        )
     except QuestionView.DoesNotExist:
-        question_view = QuestionView(who=self, question=question)
-
-    question_view.when = timestamp
-    question_view.save()
+        QuestionView(
+            who=self,
+            question=question,
+            when = timestamp
+        ).save()
 
     #filter memo objects on response activities directed to the qurrent user
     #that refer to the children of the currently
