@@ -127,7 +127,7 @@ def user_moderate(request, subject, context):
     """
     moderator = request.user
 
-    if not moderator.can_moderate_user(subject):
+    if moderator.is_authenticated() and not moderator.can_moderate_user(subject):
         raise Http404
 
     user_rep_changed = False
@@ -597,6 +597,7 @@ def user_responses(request, user, context):
             'response_type': memo.activity.get_activity_type_display(),
             'response_id': memo.activity.question.id,
             'nested_responses': [],
+            'response_content': memo.activity.content_object.html,
         }
         response_list.append(response)
 
@@ -617,6 +618,7 @@ def user_responses(request, user, context):
             last_response_index = i
 
     response_list = filtered_response_list
+    
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
     filtered_response_list = list()
 
@@ -688,8 +690,8 @@ def user_reputation(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
-        'tab_description': _('user reputation in the community'),
-        'page_title': _('profile - user reputation'),
+        'tab_description': _('user karma'),
+        'page_title': _("Profile - User's Karma"),
         'reputation': reputes,
         'reps': reps
     }

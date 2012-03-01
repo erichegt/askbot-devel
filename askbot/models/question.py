@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
+from django.core.urlresolvers import reverse
 
 import askbot
 import askbot.conf
@@ -17,6 +18,7 @@ from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils import mysql
+from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
 
@@ -337,7 +339,9 @@ class Thread(models.Model):
         return self._question_cache
 
     def get_absolute_url(self):
-        return self._question_post().get_absolute_url()
+        return self._question_post().get_absolute_url(thread = self)
+        #question_id = self._question_post().id
+        #return reverse('question', args = [question_id]) + slugify(self.title)
 
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()

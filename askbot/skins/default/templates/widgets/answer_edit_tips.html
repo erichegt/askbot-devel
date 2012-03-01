@@ -1,15 +1,15 @@
 <!-- template answer_edit_tips.html -->
 <div class="box">
-    <h2>{% trans %}answer tips{% endtrans %}</h2>
+    <h2>{% trans %}Tips{% endtrans %}</h2>
     <div id="tips">
         <ul >
-            <li> <b>{% trans %}please make your answer relevant to this community{% endtrans %}</b>
+            <li> <b>{% trans %}give an answer interesting to this community{% endtrans %}</b>
             </li>
             <li>
                 {% trans  %}try to give an answer, rather than engage into a discussion{% endtrans %}
             </li>
             <li>
-                {% trans %}please try to provide details{% endtrans %}
+                {% trans %}provide enough details{% endtrans %}
             </li>
             <li>
                 {% trans %}be clear and concise{% endtrans %}
@@ -24,7 +24,7 @@
 </div>
 
 <div class="box">
-    <h2>{% trans %}Markdown tips{% endtrans %}</h2>
+    <h2>{% trans %}Markdown basics{% endtrans %}</h2>
     <ul>
         {% if settings.MARKUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
         <li>

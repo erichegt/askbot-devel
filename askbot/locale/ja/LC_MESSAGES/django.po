@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
@@ -165,9 +166,15 @@ msgstr ""
 "--\n"
 "Q&A フォーラム管理"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
 #: forms.py:384 const/__init__.py:249
+#, fuzzy
 msgid "moderator"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"場所"
 
 #: forms.py:404
 #, fuzzy
@@ -343,36 +350,72 @@ msgstr "OSAQコミュニティ電子メール無しで"
 msgid "please choose one of the options above"
 msgstr "上記から一つ選択してください"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 83%
 #: urls.py:52
+#, fuzzy
 msgid "about/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"概要"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
 #: urls.py:53
+#, fuzzy
 msgid "faq/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"よくある質問"
 
 #: urls.py:54
 msgid "privacy/"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
 #: urls.py:56 urls.py:61
+#, fuzzy
 msgid "answers/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"回答"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
 #: urls.py:56 urls.py:82 urls.py:207
+#, fuzzy
 msgid "edit/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"編集する"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
 #: urls.py:61 urls.py:112
+#, fuzzy
 msgid "revisions/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"改訂"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
 #: urls.py:67 urls.py:77 urls.py:82 urls.py:87 urls.py:92 urls.py:97
 #: urls.py:102 urls.py:107 urls.py:112 urls.py:118 urls.py:294
 #: skins/default/templates/question/javascript.html:16
 #: skins/default/templates/question/javascript.html:19
+#, fuzzy
 msgid "questions/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"質問"
 
 #: urls.py:77
 msgid "ask/"
@@ -383,39 +426,77 @@ msgstr ""
 msgid "retag/"
 msgstr "再度タグ付け"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 83%
 #: urls.py:92
+#, fuzzy
 msgid "close/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"閉鎖する"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
 #: urls.py:97
+#, fuzzy
 msgid "reopen/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"再度開く"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
 #: urls.py:102
+#, fuzzy
 msgid "answer/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"回答"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
 #: urls.py:107 skins/default/templates/question/javascript.html:16
+#, fuzzy
 msgid "vote/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"投票"
 
 #: urls.py:118
 msgid "widgets/"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 80%
+# 100%
 #: urls.py:153
+#, fuzzy
 msgid "tags/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"タグ"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 78%
 #: urls.py:196
+#, fuzzy
 msgid "subscribe-for-tags/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"タグを利用する"
 
+# 100%
 #: urls.py:201 urls.py:207 urls.py:213 urls.py:221
 #: skins/default/templates/main_page/javascript.html:39
 #: skins/default/templates/main_page/javascript.html:42
 msgid "users/"
-msgstr ""
+msgstr "ユーザ"
 
 #: urls.py:214
 #, fuzzy
@@ -426,9 +507,15 @@ msgstr "メール登録設定"
 msgid "users/update_has_custom_avatar/"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
 #: urls.py:231 urls.py:236
+#, fuzzy
 msgid "badges/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"バッジ"
 
 #: urls.py:241
 msgid "messages/"
@@ -442,16 +529,28 @@ msgstr ""
 msgid "upload/"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 77%
 #: urls.py:258
+#, fuzzy
 msgid "feedback/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"フィードバック"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 77%
 #: urls.py:300 skins/default/templates/main_page/javascript.html:38
 #: skins/default/templates/main_page/javascript.html:41
 #: skins/default/templates/question/javascript.html:15
 #: skins/default/templates/question/javascript.html:18
+#, fuzzy
 msgid "question/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"質問"
 
 #: urls.py:307 setup_templates/settings.py:208
 #: skins/common/templates/authopenid/providers_javascript.html:7
@@ -1871,17 +1970,38 @@ msgstr "この質問を再開する"
 msgid "Check to enable sharing of questions on Facebook"
 msgstr "<strong>最新の</strong>質問から表示してます。"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
+# 100%
 #: conf/social_sharing.py:38
+#, fuzzy
 msgid "Check to enable sharing of questions on LinkedIn"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"この質問を再開する"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 83%
+# 100%
 #: conf/social_sharing.py:47
+#, fuzzy
 msgid "Check to enable sharing of questions on Identi.ca"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"この質問を再開する"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 87%
+# 100%
 #: conf/social_sharing.py:56
+#, fuzzy
 msgid "Check to enable sharing of questions on Google+"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"この質問を再開する"
 
 #: conf/spam_and_moderation.py:10
 msgid "Akismet spam protection"
@@ -2331,13 +2451,26 @@ msgstr "銀賞"
 msgid "bronze"
 msgstr "銅賞"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
 #: const/__init__.py:298
+#, fuzzy
 msgid "None"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"銅賞"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
+# 100%
 #: const/__init__.py:299
+#, fuzzy
 msgid "Gravatar"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"What is gravatar?"
 
 #: const/__init__.py:300
 msgid "Uploaded Avatar"
@@ -2486,9 +2619,16 @@ msgstr "sorry, there is no such user name"
 msgid "signin/"
 msgstr ""
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 75%
+# 100%
 #: deps/django_authopenid/urls.py:10
+#, fuzzy
 msgid "signout/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"サインアップする"
 
 #: deps/django_authopenid/urls.py:12
 msgid "complete/"
@@ -2507,9 +2647,15 @@ msgstr ""
 msgid "signup/"
 msgstr "サインアップする"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 85%
 #: deps/django_authopenid/urls.py:25
+#, fuzzy
 msgid "logout/"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"ログアウト"
 
 #: deps/django_authopenid/urls.py:30
 #, fuzzy
@@ -6233,9 +6379,15 @@ msgstr ""
 msgid "casted votes"
 msgstr "votes"
 
+# #-#-#-#-#  django.po (0.7)  #-#-#-#-#
+# 96%
 #: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:974
+#, fuzzy
 msgid "email subscription settings"
 msgstr ""
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  django.po (0.7)  #-#-#-#-#\n"
+"メール登録設定"
 
 #: skins/default/templates/user_profile/user_tabs.html:46 views/users.py:211
 #, fuzzy

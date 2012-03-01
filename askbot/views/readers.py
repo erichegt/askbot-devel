@@ -30,7 +30,6 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot import schedules
-from askbot.models.badges import award_badges_signal
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
@@ -316,11 +315,24 @@ def question(request, id):#refactor - long subroutine. display question body, an
     show_page = form.cleaned_data['show_page']
     answer_sort_method = form.cleaned_data['answer_sort_method']
 
+    #load question and maybe refuse showing deleted question
+    #if the question does not exist - try mapping to old questions
+    #and and if it is not found again - then give up
+    try:
+        question_post = models.Post.objects.filter(
+                                post_type = 'question',
+                                id = id
+                            ).select_related('thread')[0]
+    except IndexError:
     # Handle URL mapping - from old Q/A/C/ URLs to the new one
-    if not models.Post.objects.get_questions().filter(id=id).exists() and models.Post.objects.get_questions().filter(old_question_id=id).exists():
-        old_question = models.Post.objects.get_questions().get(old_question_id=id)
+        try:
+            question_post = models.Post.objects.filter(
+                                    post_type='question',
+                                    old_question_id = id
+                                ).select_related('thread')[0]
+        except IndexError:
+            raise Http404
 
-        # If we are supposed to show a specific answer or comment, then just redirect to the new URL...
         if show_answer:
             try:
                 old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
@@ -335,13 +347,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
             except models.Post.DoesNotExist:
                 pass
 
-        # ...otherwise just patch question.id, to make URLs like this one work: /question/123#345
-        # This is because URL fragment (hash) (i.e. #345) is not passed to the server so we can't know which
-        # answer user expects to see. If we made a redirect to the new question.id then that hash would be lost.
-        # And if we just hack the question.id (and in question.html template /or its subtemplate/ we create anchors for both old and new id-s)
-        # then everything should work as expected.
-        id = old_question.id
-
+    try:
+        question_post.assert_is_visible_to(request.user)
+    except exceptions.QuestionHidden, error:
+        request.user.message_set.create(message = unicode(error))
+        return HttpResponseRedirect(reverse('index'))
 
     #resolve comment and answer permalinks
     #they go first because in theory both can be moved to another question
@@ -397,14 +407,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
         except django_exceptions.PermissionDenied, error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
-
-    #load question and maybe refuse showing deleted question
-    try:
-        question_post = get_object_or_404(models.Post, post_type='question', id=id)
-        question_post.assert_is_visible_to(request.user)
-    except exceptions.QuestionHidden, error:
-        request.user.message_set.create(message = unicode(error))
-        return HttpResponseRedirect(reverse('index'))
 
     thread = question_post.thread
 
@@ -469,11 +471,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         last_seen = request.session['question_view_times'].get(question_post.id, None)
 
-        updated_when, updated_who = thread.get_last_update_info()
-
-        if updated_who != request.user:
+        if thread.last_activity_by != request.user:
             if last_seen:
-                if last_seen < updated_when:
+                if last_seen < thread.last_activity_at:
                     update_view_count = True
             else:
                 update_view_count = True
@@ -481,21 +481,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         request.session['question_view_times'][question_post.id] = \
                                                     datetime.datetime.now()
 
-        if update_view_count:
-            thread.increase_view_count()
-
-        #2) question view count per user and clear response displays
-        if request.user.is_authenticated():
-            #get response notifications
-            request.user.visit_question(question_post)
-
-        #3) send award badges signal for any badges
-        #that are awarded for question views
-        award_badges_signal.send(None,
-                        event = 'view_question',
-                        actor = request.user,
-                        context_object = question_post,
-                    )
+        #2) run the slower jobs in a celery task
+        from askbot import tasks
+        tasks.record_question_visit.delay(
+            question_post_id = question_post.id,
+            user_id = request.user.id,
+            update_view_count = update_view_count
+        )
 
     paginator_data = {
         'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),

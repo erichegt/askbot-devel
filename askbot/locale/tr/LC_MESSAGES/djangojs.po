@@ -1,22 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 #   <kayhantolga@letscoding.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-27 01:58-0600\n"
 "PO-Revision-Date: 2011-11-30 11:38+0000\n"
 "Last-Translator: kayhantolga <kayhantolga@letscoding.com>\n"
-"Language-Team: Turkish (http://www.transifex.net/projects/p/askbot/team/tr/)\n"
+"Language-Team: Turkish (http://www.transifex.net/projects/p/askbot/team/"
+"tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
@@ -152,16 +154,23 @@ msgstr "Takip et"
 
 #: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
 #: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
-#, c-format
+#, fuzzy, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
+"#-#-#-#-#  djangojs.po (askbot)  #-#-#-#-#\n"
 "Bir: %s takipçi\n"
+"#-#-#-#-#  djangojs.po (askbot)  #-#-#-#-#\n"
+"Bir: %s takipçi\n"
+"Diğer: %s takipçi"
+msgstr[1] ""
+"#-#-#-#-#  djangojs.po (askbot)  #-#-#-#-#\n"
 "Diğer: %s takipçi"
 
 #: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr "<div> Takip ediyor</div><div class=\"unfollow\"> Takipten vazgeç </div>"
+msgstr ""
+"<div> Takip ediyor</div><div class=\"unfollow\"> Takipten vazgeç </div>"
 
 #: skins/common/media/js/post.js:615
 msgid "undelete"
@@ -323,8 +332,8 @@ msgstr "yeniden"
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
 msgstr ""
-"örnek resmin URLsini girin： <br />http://www.example.com/image.jpg   \"resim"
-" başlığı\""
+"örnek resmin URLsini girin： <br />http://www.example.com/image.jpg   "
+"\"resim başlığı\""
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
@@ -346,5 +355,3 @@ msgstr "dosya adı"
 #: skins/common/media/js/wmd/wmd.js:1785
 msgid "link text"
 msgstr "bağlantı metni"
-
-

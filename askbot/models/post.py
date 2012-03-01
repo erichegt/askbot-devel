@@ -459,20 +459,22 @@ class Post(models.Model):
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
-            return u'%(base)s%(slug)s?answer=%(id)d#answer-container-%(id)d' % {
+            return u'%(base)s%(slug)s?answer=%(id)d#post-id-%(id)d' % {
                 'base': urlresolvers.reverse('question', args=[question_post.id]),
                 'slug': django_urlquote(slugify(self.thread.title)),
                 'id': self.id
             }
         elif self.is_question():
             url = urlresolvers.reverse('question', args=[self.id])
-            if no_slug is False:
+            if thread:
+                url += django_urlquote(slugify(thread.title))
+            elif no_slug is False:
                 url += django_urlquote(self.slug)
             return url
         elif self.is_comment():
             origin_post = self.get_origin_post()
             return '%(url)s?comment=%(id)d#comment-%(id)d' % \
-                {'url': origin_post.get_absolute_url(), 'id':self.id}
+                {'url': origin_post.get_absolute_url(thread=thread), 'id':self.id}
 
         raise NotImplementedError
 

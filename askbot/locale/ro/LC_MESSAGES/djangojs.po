@@ -2,21 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.7\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-27 01:59-0600\n"
+"POT-Creation-Date: 2011-11-27 01:58-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
-"== 0) && (n != 0))) ? 2: 1));\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
@@ -224,11 +224,16 @@ msgid "Please select at least one item"
 msgstr ""
 
 #: skins/common/media/js/user.js:58
+#, fuzzy
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
 msgstr[0] ""
+"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  djangojs.po (PACKAGE VERSION)  #-#-#-#-#\n"
 msgstr[1] ""
-msgstr[2] ""
+"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+"#-#-#-#-#  djangojs.po (PACKAGE VERSION)  #-#-#-#-#\n"
+msgstr[2] "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
 
 #: skins/common/media/js/user.js:125 skins/old/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"

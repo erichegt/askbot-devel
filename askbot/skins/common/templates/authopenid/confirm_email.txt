@@ -9,4 +9,4 @@
 {{signup_url}}
 
 {% trans %}Sincerely,
-Forum Administrator{% endtrans %}
+Q&A Forum Administrator{% endtrans %}

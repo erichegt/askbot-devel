@@ -57,7 +57,7 @@ class UserNameField(StrippedNonEmptyCharField):
         db_field='username',
         must_exist=False,
         skip_clean=False,
-        label=_('choose a username'),
+        label=_('Choose a screen name'),
         **kw
     ):
         self.must_exist = must_exist
@@ -135,7 +135,7 @@ class UserEmailField(forms.EmailField):
     def __init__(self,skip_clean=False,**kw):
         self.skip_clean = skip_clean
         super(UserEmailField,self).__init__(widget=forms.TextInput(attrs=dict(login_form_widget_attrs,
-            maxlength=200)), label=mark_safe(_('your email address')),
+            maxlength=200)), label=mark_safe(_('Your email <i>(never shared)</i>')),
             error_messages={'required':_('email address is required'),
                             'invalid':_('please enter a valid email address'),
                             'taken':_('this email is already used by someone else, please choose another'),
@@ -166,11 +166,11 @@ class UserEmailField(forms.EmailField):
 
 class SetPasswordForm(forms.Form):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=_('choose password'),
+                                label=_('Password'),
                                 error_messages={'required':_('password is required')},
                                 )
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=mark_safe(_('retype password')),
+                                label=mark_safe(_('Password <i>(please retype)</i>')),
                                 error_messages={'required':_('please, retype your password'),
                                                 'nomatch':_('sorry, entered passwords did not match, please try again')},
                                 )

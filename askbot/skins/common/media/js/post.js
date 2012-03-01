@@ -291,7 +291,7 @@ var Vote = function(){
     var postId;
     var questionAuthorId;
     var currentUserId;
-    var answerContainerIdPrefix = 'answer-container-';
+    var answerContainerIdPrefix = 'post-id-';
     var voteContainerId = 'vote-buttons';
     var imgIdPrefixAccept = 'answer-img-accept-';
     var classPrefixFollow= 'button follow';
@@ -349,8 +349,8 @@ var Vote = function(){
         offensiveAnswer:8,
         removeOffensiveAnswer:8.5,
         removeAllOffensiveAnswer:8.6,
-        removeQuestion: 9,
-        removeAnswer:10,
+        removeQuestion: 9,//deprecate
+        removeAnswer:10,//deprecate
         questionSubscribeUpdates:11,
         questionUnsubscribeUpdates:12
     };
@@ -520,9 +520,9 @@ var Vote = function(){
            Vote.remove_all_offensive(this, VoteType.removeAllOffensiveAnswer);
         });
 
-        getremoveQuestionLink().unbind('click').click(function(event){
-            Vote.remove(this, VoteType.removeQuestion);
-        });
+        //getremoveQuestionLink().unbind('click').click(function(event){
+        //    Vote.remove(this, VoteType.removeQuestion);
+        //});
 
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function(event){
             //despeluchar esto
@@ -927,7 +927,7 @@ var Vote = function(){
 
             var do_proceed = false;
             if (postType == 'answer'){
-                postNode = $('#answer-container-' + postId);
+                postNode = $('#post-id-' + postId);
             }
             else if (postType == 'question'){
                 postNode = $('#question-table');
@@ -1125,6 +1125,73 @@ var questionRetagger = function(){
         }
     };
 }();
+
+var DeletePostLink = function(){
+    SimpleControl.call(this);
+    this._post_id = null;
+};
+inherits(DeletePostLink, SimpleControl);
+
+DeletePostLink.prototype.setPostId = function(id){
+    this._post_id = id;
+};
+
+DeletePostLink.prototype.getPostId = function(){
+    return this._post_id;
+};
+
+DeletePostLink.prototype.getPostElement = function(){
+    return $('#post-id-' + this.getPostId());
+};
+
+DeletePostLink.prototype.isPostDeleted = function(){
+    return this._post_deleted;
+};
+
+DeletePostLink.prototype.setPostDeleted = function(is_deleted){
+    var post = this.getPostElement();
+    if (is_deleted === true){
+        post.addClass('deleted');
+        this._post_deleted = true;
+        this.getElement().html(gettext('undelete'));
+    } else if (is_deleted === false){
+        post.removeClass('deleted');
+        this._post_deleted = false;
+        this.getElement().html(gettext('delete'));
+    }
+};
+
+DeletePostLink.prototype.getDeleteHandler = function(){
+    var me = this;
+    var post_id = this.getPostId();
+    return function(){
+        var data = {
+            'post_id': me.getPostId(),
+            //todo rename cancel_vote -> undo 
+            'cancel_vote': me.isPostDeleted() ? true: false
+        };
+        $.ajax({
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            url: askbot['urls']['delete_post'],
+            cache: false,
+            success: function(data){
+                if (data['success'] == true){
+                    me.setPostDeleted(data['is_deleted']);
+                } else {
+                    showMessage(me.getElement(), data['message']);
+                }
+            }
+        });
+    };
+};
+
+DeletePostLink.prototype.decorate = function(element){
+    this._element = element;
+    this._post_deleted = this.getPostElement().hasClass('deleted');
+    this.setHandler(this.getDeleteHandler());
+}
 
 //constructor for the form
 var EditCommentForm = function(){
@@ -1857,6 +1924,13 @@ $(document).ready(function() {
     $('[id^="swap-question-with-answer-"]').each(function(idx, element){
         var swapper = new QASwapper();
         swapper.decorate($(element));
+    });
+    $('[id^="post-id-"]').each(function(idx, element){
+        var deleter = new DeletePostLink();
+        //confusingly .question-delete matches the answers too need rename
+        var post_id = element.id.split('-').pop();
+        deleter.setPostId(post_id);
+        deleter.decorate($(element).find('.question-delete'));
     });
     questionRetagger.init();
     socialSharing.init();

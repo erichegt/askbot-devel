@@ -420,9 +420,17 @@ class Command(NoArgsCommand):
 
                 #todo: send this to special log
                 #print 'have %d updated questions for %s' % (num_q, user.username)
-                text = ungettext('%(name)s, this is an update message header for %(num)d question', 
-                            '%(name)s, this is an update message header for %(num)d questions',num_q) \
-                                % {'num':num_q, 'name':user.username}
+                text = ungettext(
+                    '<p>Dear %(name)s,</p><p>The following question has been updated '
+                    '%(sitename)s</p>',
+                    '<p>Dear %(name)s,</p><p>The following %(num)d questions have been '
+                    'updated on %(sitename)s:</p>',
+                    num_q
+                ) % {
+                    'num':num_q,
+                    'name':user.username,
+                    'sitename': askbot_settings.APP_SHORT_NAME
+                }
 
                 text += '<ul>'
                 items_added = 0
@@ -462,12 +470,15 @@ class Command(NoArgsCommand):
                                     )
 
                 text += _(
-                    'go to %(email_settings_link)s to change '
-                    'frequency of email updates or '
-                    '%(admin_email)s administrator'
+                    '<p>Please remember that you can always <a '
+                    'hrefl"%(email_settings_link)s">adjust</a> frequency of the email updates or '
+                    'turn them off entirely.<br/>If you believe that this message was sent in an '
+                    'error, please email about it the forum administrator at %(admin_email)s.</'
+                    'p><p>Sincerely,</p><p>Your friendly %(sitename)s server.</p>'
                 ) % {
                     'email_settings_link': link,
-                    'admin_email': django_settings.ADMINS[0][1]
+                    'admin_email': django_settings.ADMINS[0][1],
+                    'sitename': askbot_settings.APP_SHORT_NAME
                 }
                 if DEBUG_THIS_COMMAND == True:
                     recipient_email = django_settings.ADMINS[0][1]

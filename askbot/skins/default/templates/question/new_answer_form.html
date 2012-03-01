@@ -29,25 +29,25 @@
                 {% endspaceless %}
             </div>
             {% if request.user.is_anonymous() %}
-                <div class="message">{% trans %}you can answer anonymously and then login{% endtrans %}</div>
+                <div class="message">{% trans %}<span class='strong big'>Please start posting your answer anonymously</span> - your answer will be saved within the current session and published after you log in or create a new account. Please try to give a <strong>substantial answer</strong>, for discussions, <strong>please use comments</strong> and <strong>please do remember to vote</strong> (after you log in)!{% endtrans %}</div>
             {% else %}
                 <p class="message">
                     {% if request.user==question.author  %}
-                        {% trans %}answer your own question only to give an answer{% endtrans %}
+                        {% trans %}<span class='big strong'>You are welcome to answer your own question</span>, but please make sure to give an <strong>answer</strong>. Remember that you can always <strong>revise your original question</strong>. Please <strong>use comments for discussions</strong>  and <strong>please don't forget to vote :)</strong> for the answers that you liked (or perhaps did not like)!{% endtrans %}
                     {% else %}
-                        {% trans %}please only give an answer, no discussions{% endtrans %}
+                        {% trans %}<span class='big strong'>Please try to give a substantial answer</span>. If you wanted to comment on the question or answer, just <strong>use the commenting tool</strong>. Please remember that you can always <strong>revise your answers</strong> - no need to answer the same question twice. Also, please <strong>don't forget to vote</strong> - it really helps to select the best questions and answers!{% endtrans %}
                     {% endif %}
                 </p>
             {% endif %}
             {{ macros.edit_post(answer) }}
             <input type="submit"
                     {% if user.is_anonymous() %}
-                   value="{% trans %}Login/Signup to Post Your Answer{% endtrans %}"
+                   value="{% trans %}Login/Signup to Post{% endtrans %}"
                     {% else %}
                         {% if user == question.author %}
                    value="{% trans %}Answer Your Own Question{% endtrans %}"
                         {% else %}
-                   value="{% trans %}Answer the question{% endtrans %}"
+                   value="{% trans %}Post Your Answer{% endtrans %}"
                         {% endif %}
                     {% endif %}
                    class="submit after-editor" style="float:left"/>

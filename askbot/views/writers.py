@@ -113,12 +113,16 @@ def upload(request):#ajax upload file to a question or answer
         result = ''
         file_url = ''
 
-    data = simplejson.dumps({
-        'result': result,
-        'error': error,
-        'file_url': file_url
-    })
-    return HttpResponse(data, mimetype = 'application/json')
+    #data = simplejson.dumps({
+    #    'result': result,
+    #    'error': error,
+    #    'file_url': file_url
+    #})
+    #return HttpResponse(data, mimetype = 'application/json')
+    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
+    xml = xml_template % (result, error, file_url)
+
+    return HttpResponse(xml, mimetype="application/xml")
 
 def __import_se_data(dump_file):
     """non-view function that imports the SE data
@@ -197,7 +201,13 @@ def import_data(request):
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
-@decorators.check_authorization_to_post(_('Please log in to ask questions'))
+@decorators.check_authorization_to_post(_(
+    "<span class=\"strong big\">You are welcome to start submitting your question "
+    "anonymously</span>. When you submit the post, you will be redirected to the "
+    "login/signup page. Your question will be saved in the current session and "
+    "will be published after you log in. Login/signup process is very simple. "
+    "Login takes about 30 seconds, initial signup takes a minute or less."
+))
 @decorators.check_spam('text')
 def ask(request):#view used to ask a new question
     """a view to ask a new question

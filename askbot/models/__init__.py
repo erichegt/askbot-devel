@@ -19,6 +19,7 @@ from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
 from askbot import const
+from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
@@ -383,7 +384,9 @@ def user_assert_can_vote_for_post(
     :param:post can be instance of question or answer
     """
     if self == post.author:
-        raise django_exceptions.PermissionDenied(_('cannot vote for own posts'))
+        raise django_exceptions.PermissionDenied(
+            _('Sorry, you cannot vote for your own posts')
+        )
 
     blocked_error_message = _(
                 'Sorry your account appears to be blocked ' +
@@ -425,8 +428,7 @@ def user_assert_can_upload_file(request_user):
     blocked_error_message = _('Sorry, blocked users cannot upload files')
     suspended_error_message = _('Sorry, suspended users cannot upload files')
     low_rep_error_message = _(
-                        'uploading images is limited to users '
-                        'with >%(min_rep)s reputation points'
+                        'sorry, file uploading requires karma >%(min_rep)s',
                     ) % {'min_rep': askbot_settings.MIN_REP_TO_UPLOAD_FILES }
 
     _assert_user_can(
@@ -442,10 +444,13 @@ def user_assert_can_post_question(self):
     text that has the reason for the denial
     """
 
+    blocked_message = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
+    suspended_message = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
+
     _assert_user_can(
             user = self,
-            blocked_error_message = _('blocked users cannot post'),
-            suspended_error_message = _('suspended users cannot post'),
+            blocked_error_message = blocked_message,
+            suspended_error_message = suspended_message
     )
 
 
@@ -489,6 +494,18 @@ def user_assert_can_edit_comment(self, comment = None):
     raise django_exceptions.PermissionDenied(error_message)
 
 
+def user_can_post_comment(self, parent_post = None):
+    """a simplified method to test ability to comment
+    """
+    if self.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
+        return True
+    if self == parent_post.author:
+        return True
+    if self.is_administrator_or_moderator():
+        return True
+    return False
+
+
 def user_assert_can_post_comment(self, parent_post = None):
     """raises exceptions.PermissionDenied if
     user cannot post comment
@@ -506,12 +523,14 @@ def user_assert_can_post_comment(self, parent_post = None):
                 'your own posts and answers to your questions'
             ) % {'min_rep': askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
 
+    blocked_message = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
+
     try:
         _assert_user_can(
             user = self,
             post = parent_post,
             owner_can = True,
-            blocked_error_message = _('blocked users cannot post'),
+            blocked_error_message = blocked_message,
             suspended_error_message = suspended_error_message,
             min_rep_setting = askbot_settings.MIN_REP_TO_LEAVE_COMMENTS,
             low_rep_error_message = low_rep_error_message,
@@ -750,16 +769,29 @@ def user_assert_can_flag_offensive(self, post = None):
 
     assert(post is not None)
 
-    double_flagging_error_message = _('cannot flag message as offensive twice')
+    double_flagging_error_message = _(
+        'You have flagged this question before and '
+        'cannot do it more than once'
+    )
 
     if self.get_flags_for_post(post).count() > 0:
         raise askbot_exceptions.DuplicateCommand(double_flagging_error_message)
 
-    blocked_error_message = _('blocked users cannot flag posts')
+    blocked_error_message = _(
+        'Sorry, since your account is blocked '
+        'you cannot flag posts as offensive'
+    )
 
-    suspended_error_message = _('suspended users cannot flag posts')
+    suspended_error_message = _(
+        'Sorry, your account appears to be suspended and you cannot make new posts '
+        'until this issue is resolved. You can, however edit your existing posts. '
+        'Please contact the forum administrator to reach a resolution.'
+    )
 
-    low_rep_error_message = _('need > %(min_rep)s points to flag spam') % \
+    low_rep_error_message = _(
+        'Sorry, to flag posts as offensive a minimum reputation '
+        'of %(min_rep)s is required'
+    ) % \
                         {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
 
@@ -778,11 +810,12 @@ def user_assert_can_flag_offensive(self, post = None):
         flag_count_today = self.get_flag_count_posted_today()
         if flag_count_today >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
             flags_exceeded_error_message = _(
-                                '%(max_flags_per_day)s exceeded'
-                            ) % {
-                                    'max_flags_per_day': \
-                                    askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
-                                }
+                'Sorry, you have exhausted the maximum number of '
+                '%(max_flags_per_day)s offensive flags per day.'
+            ) % {
+                    'max_flags_per_day': \
+                    askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
+                }
             raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
 def user_assert_can_remove_flag_offensive(self, post = None):
@@ -794,14 +827,19 @@ def user_assert_can_remove_flag_offensive(self, post = None):
     if self.get_flags_for_post(post).count() < 1:
         raise django_exceptions.PermissionDenied(non_existing_flagging_error_message)
 
-    blocked_error_message = _('blocked users cannot remove flags')
+    blocked_error_message = _(
+        'Sorry, since your account is blocked you cannot remove flags'
+    )
 
-    suspended_error_message = _('suspended users cannot remove flags')
+    suspended_error_message = _(
+        'Sorry, your account appears to be suspended and you cannot remove flags. '
+        'Please contact the forum administrator to reach a resolution.'
+    )
 
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
     low_rep_error_message = ungettext(
-        'need > %(min_rep)d point to remove flag',
-        'need > %(min_rep)d points to remove flag',
+        'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
+        'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
         min_rep_setting
     ) % {'min_rep': min_rep_setting}
 
@@ -909,7 +947,9 @@ def user_assert_can_revoke_old_vote(self, vote):
     """
     if (datetime.datetime.now().day - vote.voted_at.day) \
         >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
-        raise django_exceptions.PermissionDenied(_('cannot revoke old vote'))
+        raise django_exceptions.PermissionDenied(
+            _('sorry, but older votes cannot be revoked')
+        )
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -977,10 +1017,10 @@ def user_post_anonymous_askbot_content(user, session_key):
         #maybe add pending posts message?
     else:
         if user.is_blocked():
-            msg = _('blocked users cannot post')
+            msg = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
             user.message_set.create(message = msg)
         elif user.is_suspended():
-            msg = _('suspended users cannot post')
+            msg = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
             user.message_set.create(message = msg)
         else:
             for aq in aq_list:
@@ -2135,6 +2175,7 @@ User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
+User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)

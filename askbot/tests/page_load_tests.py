@@ -546,7 +546,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.c.old_comment_id = 301
         self.c.save()
 
-    def test_bare_question(self):
+    def test_show_bare_question(self):
         resp = self.client.get(self.q.get_absolute_url())
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])

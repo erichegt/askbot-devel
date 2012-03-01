@@ -2,7 +2,6 @@
 # Copyright (C) 2009 Gang Chen, 2010 Askbot
 # This file is distributed under the same license as the CNPROG package.
 # Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"

@@ -21,7 +21,7 @@ REQUIREMENTS = {
     'south': 'South>=0.7.1',
     'oauth2': 'oauth2',
     'markdown2': 'markdown2',
-    'html5lib': 'html5lib',
+    'html5lib': 'html5lib==0.90',
     'keyedcache': 'django-keyedcache',
     'threaded_multihost': 'django-threaded-multihost',
     'robots': 'django-robots',
