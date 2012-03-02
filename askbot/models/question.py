@@ -231,8 +231,8 @@ class ThreadManager(models.Manager):
             'activity-asc': 'last_activity_at',
             'answers-desc': '-answer_count',
             'answers-asc': 'answer_count',
-            'votes-desc': '-askbot_post.score',
-            'votes-asc': 'askbot_post.score',
+            'votes-desc': '-score',
+            'votes-asc': 'score',
 
             'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
         }
@@ -324,6 +324,8 @@ class Thread(models.Model):
 
     accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
+
+    score = models.IntegerField(default = 0)
 
     objects = ThreadManager()
     

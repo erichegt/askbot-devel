@@ -1960,6 +1960,12 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
             return None
         else:
             auth.onDownVoted(vote, post, user, timestamp)
+            
+    if post.post_type == 'question':
+        #denormalize the question post score on the thread
+        post.thread.score = post.score
+        post.thread.save()
+        post.thread.update_summary_html()
 
     event = VOTES_TO_EVENTS.get((vote_type, post.post_type), None)
     if event:
