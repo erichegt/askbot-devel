@@ -225,8 +225,8 @@ class ThreadManager(models.Manager):
                 meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
 
         QUESTION_ORDER_BY_MAP = {
-            'age-desc': '-askbot_post.added_at',
-            'age-asc': 'askbot_post.added_at',
+            'age-desc': '-added_at',
+            'age-asc': 'added_at',
             'activity-desc': '-last_activity_at',
             'activity-asc': 'last_activity_at',
             'answers-desc': '-answer_count',
@@ -324,6 +324,7 @@ class Thread(models.Model):
 
     accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
+    added_at = models.DateTimeField(default = datetime.datetime.now)
 
     score = models.IntegerField(default = 0)
 
