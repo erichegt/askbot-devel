@@ -530,7 +530,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
 
     result = render_into_skin('question.html', data, request)
-    print datetime.datetime.now() - before
+    #print datetime.datetime.now() - before
     return result
 
 def revisions(request, id, object_name=None):

@@ -428,8 +428,9 @@ class Thread(models.Model):
         """get all answer posts as a list for the Thread, and a given
         user. This list is cached."""
         key = self.ANSWER_LIST_KEY_TPL % self.id
-        answer_list = cache.cache.get(key)
-        if not answer_list:
+        #disable caching for now b/c there is no invalidation yet
+        #answer_list = cache.cache.get(key)
+        if True:#not answer_list:
             answers = self.get_answers()
             answers = answers.select_related('thread', 'author', 'last_edited_by')
             answers = answers.order_by(
@@ -440,7 +441,7 @@ class Thread(models.Model):
                 }[sort_method]
             )
             answer_list = list(answers)
-            cache.cache.set(key, answer_list)
+            #cache.cache.set(key, answer_list)
         return answer_list
 
 
