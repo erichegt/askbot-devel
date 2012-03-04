@@ -20,6 +20,7 @@ at the forum_ or by email at admin@askbot.org
    Initialize the database tables <initialize-database-tables>
    Deploy on a webserver <deployment>
    Import data (StackExchange & ZenDesk) <import-data>
+   Moderation <moderation>
    Appendix A: Maintenance procedures <management-commands>
    Appendix B: Sending email to askbot <sending-email-to-askbot>
    Appendix C: Optional modules <optional-modules>
