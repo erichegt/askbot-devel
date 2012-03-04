@@ -423,8 +423,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
 
-    #load answers and post id's
-    updated_question_post, answers, post_id_list = thread.get_cached_post_data(
+    #load answers and post id's->athor_id mapping
+    #posts are pre-stuffed with the correctly ordered comments
+    updated_question_post, answers, post_to_author = thread.get_cached_post_data(
                                 sort_method = answer_sort_method,
                             )
     question_post.set_cached_comments(updated_question_post.get_cached_comments())
@@ -433,13 +434,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
     user_votes = {}
+    user_post_id_list = list()
     #todo: cache this query set, but again takes only 3ms!
     if request.user.is_authenticated():
         user_votes = Vote.objects.filter(
                             user=request.user,
-                            voted_post__id__in = post_id_list
+                            voted_post__id__in = post_to_author.keys()
                         ).values_list('voted_post_id', 'vote')
         user_votes = dict(user_votes)
+        #we can avoid making this query by iterating through
+        #already loaded posts
+        user_post_id_list = [
+            id for id in post_to_author if post_to_author[id] == request.user.id
+        ]
         
     #resolve page number and comment number for permalinks
     show_comment_position = None
@@ -479,8 +486,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #2) run the slower jobs in a celery task
         from askbot import tasks
         tasks.record_question_visit.delay(
-            question_post_id = question_post.id,
-            user_id = request.user.id,
+            question_post = question_post,
+            user = request.user,
             update_view_count = update_view_count
         )
 
@@ -513,6 +520,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
         }
     )
 
+    user_can_post_comment = (
+        request.user.is_authenticated() and request.user.can_post_comment()
+    )
+
     data = {
         'is_cacheable': is_cacheable,
         'page_class': 'question-page',
@@ -522,9 +533,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answer' : answer_form,
         'answers' : page_objects.object_list,
         'user_votes': user_votes,
+        'user_post_id_list': user_post_id_list,
+        'user_can_post_comment': user_can_post_comment,#in general
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_threads' : thread.get_similar_threads(),#todo: cache this?
+        'similar_threads' : thread.get_similar_threads(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,

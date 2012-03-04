@@ -458,7 +458,6 @@ class Thread(models.Model):
         all (both posts and the comments sorted in the correct
         order)
         """
-        print "cache miss!!!"
         thread_posts = self.posts.all().order_by(
                     {
                         "latest":"-added_at",
@@ -470,14 +469,14 @@ class Thread(models.Model):
         answers = list()
         post_map = dict()
         comment_map = dict()
-        post_id_list = list()
+        post_to_author = dict()
         question_post = None
         for post in thread_posts:
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
                 continue
 
-            post_id_list.append(post.id)
+            post_to_author[post.id] = post.author_id
 
             if post.post_type == 'answer':
                 answers.append(post)
@@ -508,7 +507,7 @@ class Thread(models.Model):
             answers.remove(self.accepted_answer)
             answers.insert(0, self.accepted_answer)
 
-        return (question_post, answers, post_id_list)
+        return (question_post, answers, post_to_author)
 
 
     def get_similarity(self, other_thread = None):
@@ -568,7 +567,7 @@ class Thread(models.Model):
         def get_cached_data():
             key = 'similar-threads-%s' % self.id
             data = cache.cache.get(key)
-            if not data:
+            if data is None:
                 data = get_data()
                 cache.cache.set(key, data)
             return data

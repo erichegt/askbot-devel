@@ -160,8 +160,8 @@ def record_post_update(
                         
 @task(ignore_result = True)
 def record_question_visit(
-    question_post_id = None,
-    user_id = None,
+    question_post = None,
+    user = None,
     update_view_count = False):
     """celery task which records question visit by a person
     updates view counter, if necessary,
@@ -169,17 +169,17 @@ def record_question_visit(
     question visit
     """
     #1) maybe update the view count
-    question_post = Post.objects.filter(
-        id = question_post_id
-    ).select_related('thread')[0]
+    #question_post = Post.objects.filter(
+    #    id = question_post_id
+    #).select_related('thread')[0]
     if update_view_count:
         question_post.thread.increase_view_count()
 
-    if user_id == None:
+    if user.is_anonymous():
         return
 
     #2) question view count per user and clear response displays
-    user = User.objects.get(id = user_id)
+    #user = User.objects.get(id = user_id)
     if user.is_authenticated():
         #get response notifications
         user.visit_question(question_post)

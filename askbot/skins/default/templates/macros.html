@@ -236,27 +236,22 @@ poor design of the data or methods on data objects #}
 {# Warning! Any changes to the comment markup here must be duplicated in post.js
 for the purposes of the AJAX comment editor #}
 
-{%- macro add_or_show_comments_button(post = None, can_post = None, max_comments = None, widget_id = None) -%}
+{%- macro add_or_show_comments_button(post = None, max_comments = None, widget_id = None) -%}
+    {% if post.comment_count > max_comments %}
+        {% set remaining_comment_count = post.comment_count - max_comments %}
+    {% else %}
+        {% set remaining_comment_count = 0 %}
+    {% endif %}
+    <a id="add-comment-to-post-{{post.id}}" class="button"></a>
     <script type="text/javascript">
         askbot['data']['{{widget_id}}'] = {
-            can_post: {% if can_post %}true{% else %}false{% endif %},
             truncated: {% if post.comment_count > max_comments %}true{% else %}false{% endif %}
         };
+        askbot['functions']['renderAddCommentButton'](
+                                                '{{post.id}}',
+                                                {{remaining_comment_count}}
+                                            );
     </script>
-    {% if post.comment_count > max_comments %}
-        {% set remaining_comments = post.comment_count - max_comments %}
-        <a class="button">
-        {% if can_post %}
-            {% trans %}post a comment{% endtrans %} /
-            {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
-        {% else %}
-            {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
-            {% endtrans %}
-        {% endif %}
-        </a>
-    {% elif can_post %}
-        <a class="button">{% trans %}post a comment{% endtrans %}</a>
-    {% endif %}
 {%- endmacro -%}
 
 {%- macro post_comments_widget(
@@ -298,26 +293,32 @@ for the purposes of the AJAX comment editor #}
                             <div class="upvote"></div>
                         {% endif %}
                     </div>
-                    <div class="comment-delete">
+                    <div 
+                        id="post-{{comment.id}}-delete"
+                        class="comment-delete"
+                    >
                         <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
                         <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
                         <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
-                            &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>
+                            &nbsp;<a 
+                                    id="post-{{comment.id}}-edit"
+                                    class="edit">{% trans %}edit{% endtrans %}</a>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    askbot['functions']['renderPostControls']('{{comment.id}}');
+                </script>
             {% endfor %}
         </div>
         <div class="controls">
-            {% set can_post = True %}
             {% if show_post == post and show_comment %}
                 {% if show_comment_position > max_comments %}
                     {{
                         add_or_show_comments_button(
                                             post = post,
-                                            can_post = can_post,
                                             max_comments = show_comment_position,
                                             widget_id = widget_id
                                         )
@@ -326,7 +327,6 @@ for the purposes of the AJAX comment editor #}
                     {{
                         add_or_show_comments_button(
                                             post = post,
-                                            can_post = can_post,
                                             max_comments = max_comments,
                                             widget_id = widget_id
                                         )
@@ -336,7 +336,6 @@ for the purposes of the AJAX comment editor #}
                 {{
                     add_or_show_comments_button(
                                         post = post,
-                                        can_post = can_post,
                                         max_comments = max_comments,
                                         widget_id = widget_id
                                     )

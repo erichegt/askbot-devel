@@ -9,8 +9,10 @@
                                                 request.user.is_administrator()
                                                 or request.user.is_moderator()
                                             %}true{% else %}false{% endif %};
+        askbot['data']['userReputation'] = {{request.user.reputation}};
     {% else %}
         askbot['data']['userIsAuthenticated'] = false;
+        askbot['data']['userReputation'] = 0;
     {% endif %}
     askbot['urls'] = {};
     askbot['settings'] = {};
