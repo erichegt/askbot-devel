@@ -311,7 +311,6 @@ var Vote = function(){
     var removeAllOffensiveIdPrefixAnswerFlag = 'answer-offensive-remove-all-flag-';
     var offensiveClassFlag = 'offensive-flag';
     var questionControlsId = 'question-controls';
-    var removeQuestionLinkIdPrefix = 'question-delete-link-';
     var removeAnswerLinkIdPrefix = 'answer-delete-link-';
     var questionSubscribeUpdates = 'question-subscribe-updates';
     var questionSubscribeSidebar= 'question-subscribe-sidebar';
@@ -419,11 +418,6 @@ var Vote = function(){
         return $(removeAllOffensiveAnswerFlag);
     };
 
-    var getremoveQuestionLink = function(){
-        var removeQuestionLink = 'div#question-controls a[id^='+ removeQuestionLinkIdPrefix +']';
-        return $(removeQuestionLink);
-    };
-
     var getquestionSubscribeUpdatesCheckbox = function(){
         return $('#' + questionSubscribeUpdates);
     };
@@ -464,7 +458,7 @@ var Vote = function(){
 
     var bindEvents = function(){
         // accept answers
-        var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
+        var acceptedButtons = 'div.'+ voteContainerId +' div[id^='+ imgIdPrefixAccept +']';
         $(acceptedButtons).unbind('click').click(function(event){
            Vote.accept($(event.target));
         });
@@ -520,10 +514,6 @@ var Vote = function(){
            Vote.remove_all_offensive(this, VoteType.removeAllOffensiveAnswer);
         });
 
-        //getremoveQuestionLink().unbind('click').click(function(event){
-        //    Vote.remove(this, VoteType.removeQuestion);
-        //});
-
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function(event){
             //despeluchar esto
             if (this.checked){
@@ -578,19 +568,15 @@ var Vote = function(){
             showMessage(object, acceptOwnAnswerMessage);
         }
         else if(data.status == "1"){
-            object.attr("src", mediaUrl("media/images/vote-accepted.png"));
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
         else if(data.success == "1"){
-            var acceptedButtons = 'div.'+ voteContainerId +' img[id^='+ imgIdPrefixAccept +']';
-            $(acceptedButtons).attr("src", mediaUrl("media/images/vote-accepted.png"));
             var answers = ("div[id^="+answerContainerIdPrefix +"]");
             $(answers).removeClass("accepted-answer");
             var commentLinks = ("div[id^="+answerContainerIdPrefix +"] div[id^="+ commentLinkIdPrefix +"]");
             $(commentLinks).removeClass("comment-link-accepted");
 
-            object.attr("src", mediaUrl("media/images/vote-accepted-on.png"));
             $("#"+answerContainerIdPrefix+postId).addClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).addClass("comment-link-accepted");
         }

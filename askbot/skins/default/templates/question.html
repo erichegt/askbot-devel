@@ -123,7 +123,7 @@
 {% endblock %}
 {% block content %}
     {% if is_cacheable %}
-        {% cache 1000 "thread" thread.id %}
+        {% cache long_time "thread-content-html" thread.id %}
             {% include "question/content.html" %}
         {% endcache %}
     {% else %}

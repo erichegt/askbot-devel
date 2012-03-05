@@ -991,6 +991,7 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
+    parent_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'post_comment',
         actor = self,
@@ -1160,6 +1161,7 @@ def user_delete_comment(
                 ):
     self.assert_can_delete_comment(comment = comment)
     comment.delete()
+    comment.thread.invalidate_cached_data()
 
 @auto_now_timestamp
 def user_delete_answer(
@@ -1260,6 +1262,7 @@ def user_delete_post(
         self.delete_question(question = post, timestamp = timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
+    post.thread.invalidate_cached_data()
 
 def user_restore_post(
                     self,
@@ -1273,6 +1276,7 @@ def user_restore_post(
         post.deleted_by = None
         post.deleted_at = None
         post.save()
+        post.thread.invalidate_cached_data()
         if post.post_type == 'answer':
             post.thread.update_answer_count()
         else:
@@ -1331,10 +1335,13 @@ def user_post_question(
 def user_edit_comment(self, comment_post=None, body_text = None):
     """apply edit to a comment, the method does not
     change the comments timestamp and no signals are sent
+    todo: see how this can be merged with edit_post
+    todo: add timestamp
     """
     self.assert_can_edit_comment(comment_post)
     comment_post.text = body_text
     comment_post.parse_and_save(author = self)
+    comment_post.thread.invalidate_cached_data()
 
 
 @auto_now_timestamp
@@ -1363,6 +1370,7 @@ def user_edit_question(
         wiki = wiki,
         edit_anonymously = edit_anonymously,
     )
+    question.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'edit_question',
         actor = self,
@@ -1389,6 +1397,7 @@ def user_edit_answer(
         comment = revision_comment,
         wiki = wiki,
     )
+    answer.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'edit_answer',
         actor = self,
@@ -1957,15 +1966,18 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     if vote_type == Vote.VOTE_UP:
         if cancel:
             auth.onUpVotedCanceled(vote, post, user, timestamp)
-            return None
         else:
             auth.onUpVoted(vote, post, user, timestamp)
     elif vote_type == Vote.VOTE_DOWN:
         if cancel:
             auth.onDownVotedCanceled(vote, post, user, timestamp)
-            return None
         else:
             auth.onDownVoted(vote, post, user, timestamp)
+
+    post.thread.invalidate_cached_data()
+
+    if cancel:
+        return None
 
     event = VOTES_TO_EVENTS.get((vote_type, post.post_type), None)
     if event:

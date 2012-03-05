@@ -5,9 +5,10 @@ import re
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core.urlresolvers import reverse
+from django.utils.hashcompat import md5_constructor
+from django.utils.translation import ugettext as _
 
 import askbot
 import askbot.conf
@@ -421,34 +422,42 @@ class Thread(models.Model):
                                 | models.Q(deleted_by = user)
                             )
 
-    def get_cached_answer_list(self, sort_method = None):
-        """get all answer posts as a list for the Thread, and a given
-        user. This list is cached.
+    def invalidate_cached_thread_content_fragment(self):
+        """we do not precache the fragment here, as re-generating
+        the the fragment takes a lot of data, so we just
+        invalidate the cached item
+
+        Note: the cache key generation code is copy-pasted
+        from coffin/template/defaulttags.py no way around
+        that unfortunately
         """
-        key = self.ANSWER_LIST_KEY_TPL % self.id
-        answer_list = cache.cache.get(key)
-        if not answer_list:
-            answers = self.get_answers()
-            answers = answers.select_related('thread', 'author', 'last_edited_by')
-            answers = answers.order_by(
-                {
-                    "latest":"-added_at",
-                    "oldest":"added_at",
-                    "votes":"-score"
-                }[sort_method]
-            )
-            answer_list = list(answers)
-            cache.cache.set(key, answer_list)
-        return answer_list
+        args_md5 = md5_constructor(str(self.id))
+        key = 'template.cache.%s.%s' % ('thread-content-html', args_md5.hexdigest())
+        cache.cache.delete(key)
+
+    def get_post_data_cache_key(self, sort_method = None):
+        return 'thread-data-%s-%s' % (self.id, sort_method)
+
+    def invalidate_cached_post_data(self):
+        """needs to be called when anything notable 
+        changes in the post data - on votes, adding,
+        deleting, editing content"""
+        #we can call delete_many() here if using Django > 1.2
+        for sort_method in const.ANSWER_SORT_METHODS:
+            cache.cache.delete(self.get_post_data_cache_key(sort_method))
+
+    def invalidate_cached_data(self):
+        self.invalidate_cached_post_data()
+        self.invalidate_cached_thread_content_fragment()
 
     def get_cached_post_data(self, sort_method = None):
         """returns cached post data, as calculated by
         the method get_post_data()"""
-        key = 'thread-data-%s-%s' % (self.id, sort_method)
+        key = self.get_post_data_cache_key(sort_method)
         post_data = cache.cache.get(key)
         if not post_data:
             post_data = self.get_post_data(sort_method)
-            cache.cache.set(key, post_data)
+            cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
     def get_post_data(self, sort_method = None):
@@ -501,14 +510,17 @@ class Thread(models.Model):
             except KeyError:
                 pass#comment to deleted answer - don't want it
 
-        if self.accepted_answer and self.accepted_answer.deleted == False:
+        if self.has_accepted_answer() and self.accepted_answer.deleted == False:
             #Put the accepted answer to front
             #the second check is for the case when accepted answer is deleted
-            answers.remove(self.accepted_answer)
-            answers.insert(0, self.accepted_answer)
+            accepted_answer = post_map[self.accepted_answer_id]
+            answers.remove(accepted_answer)
+            answers.insert(0, accepted_answer)
 
         return (question_post, answers, post_to_author)
 
+    def has_accepted_answer(self):
+        return self.accepted_answer_id != None
 
     def get_similarity(self, other_thread = None):
         """return number of tags in the other question
@@ -565,6 +577,9 @@ class Thread(models.Model):
             return similar_threads
 
         def get_cached_data():
+            """similar thread data will expire
+            with the default expiration delay
+            """
             key = 'similar-threads-%s' % self.id
             data = cache.cache.get(key)
             if data is None:

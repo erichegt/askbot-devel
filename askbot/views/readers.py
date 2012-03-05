@@ -526,6 +526,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     data = {
         'is_cacheable': is_cacheable,
+        'long_time': const.LONG_TIME,#"forever" caching
         'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question_post,

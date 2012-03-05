@@ -641,6 +641,7 @@ def delete_comment(request):
             #attn: recalc denormalized field
             parent.comment_count = parent.comment_count - 1
             parent.save()
+            parent.thread.invalidate_cached_data()
 
             return __generate_comments_json(parent, request.user)
 

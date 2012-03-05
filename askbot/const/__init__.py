@@ -50,6 +50,10 @@ POST_SORT_METHODS = (
     ('votes-asc', _('least voted')),
     ('relevance-desc', _('relevance')),
 )
+
+ANSWER_SORT_METHODS = (#no translations needed here
+    'latest', 'oldest', 'votes'
+)
 #todo: add assertion here that all sort methods are unique
 #because they are keys to the hash used in implementations
 #of Q.run_advanced_search

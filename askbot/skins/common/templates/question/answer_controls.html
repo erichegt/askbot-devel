@@ -12,16 +12,14 @@
     <a class="question-delete"
     >{% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
 </span>
-<span 
-    id="answer-offensive-flag-{{ answer.id }}"
-    class="action-link offensive-flag"
-    title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}"
->
-    <a class="question-flag">{% trans %}flag offensive{% endtrans %}
-        <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
-    </a>
-</span>
 {% if answer.offensive_flag_count > 0 %}
+<span 
+    id="answer-offensive-remove-flag-{{ answer.id }}"
+    class="action-link offensive-flag"
+    title="{% trans %}remove offensive flag{% endtrans %}"
+>
+    <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
+</span>
 <span 
     id="answer-offensive-flag-{{ answer.id }}"
     class="action-link offensive-flag"
@@ -29,13 +27,6 @@
 >
     <a class="question-flag">{% trans %}flag offensive{% endtrans %} ({{ answer.offensive_flag_count }})</a>
     </a>
-</span>
-<span 
-    id="answer-offensive-flag-remove-{{ answer.id }}"
-    class="action-link offensive-flag"
-    title="{% trans %}remove offensive flag{% endtrans %}"
->
-    <a class="question-flag">{% trans %}remove flag{% endtrans %} ({{ answer.offensive_flag_count }})</a>
 </span>
 {% else %}
 <span 
