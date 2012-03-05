@@ -75,13 +75,14 @@ def format_action_count(string, number, output):
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        try:
+        if askbot_settings.ENABLE_EMAIL_ALERTS:
             try:
-                self.send_email_alerts()
-            except Exception, e:
-                print e
-        finally:
-            connection.close()
+                try:
+                    self.send_email_alerts()
+                except Exception, e:
+                    print e
+            finally:
+                connection.close()
 
     def get_updated_questions_for_user(self,user):
         """

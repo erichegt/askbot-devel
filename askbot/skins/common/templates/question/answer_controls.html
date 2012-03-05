@@ -8,26 +8,18 @@
         {% trans %}link{% endtrans %}
     </a>
 </span>
-{% if request.user.is_authenticated() and 
-    (
-        request.user == answer.author or 
-        request.user.is_administrator_or_moderator()
-    )
-%}
-<span class="action-link delete-post">
+<span id='delete-answer-{{answer.id}}' class="action-link delete-post">
     <a class="question-delete"
     >{% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
 </span>
-<span 
-    id="answer-offensive-flag-{{ answer.id }}"
-    class="action-link offensive-flag"
-    title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}"
->
-    <a class="question-flag">{% trans %}flag offensive{% endtrans %}
-        <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
-    </a>
-</span>
 {% if answer.offensive_flag_count > 0 %}
+<span 
+    id="answer-offensive-remove-flag-{{ answer.id }}"
+    class="action-link offensive-flag"
+    title="{% trans %}remove offensive flag{% endtrans %}"
+>
+    <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
+</span>
 <span 
     id="answer-offensive-flag-{{ answer.id }}"
     class="action-link offensive-flag"
@@ -35,13 +27,6 @@
 >
     <a class="question-flag">{% trans %}flag offensive{% endtrans %} ({{ answer.offensive_flag_count }})</a>
     </a>
-</span>
-<span 
-    id="answer-offensive-flag-remove-{{ answer.id }}"
-    class="action-link offensive-flag"
-    title="{% trans %}remove offensive flag{% endtrans %}"
->
-    <a class="question-flag">{% trans %}remove flag{% endtrans %} ({{ answer.offensive_flag_count }})</a>
 </span>
 {% else %}
 <span 
@@ -52,7 +37,20 @@
     <a class="question-flag">{% trans %}flag offensive{% endtrans %}</a>
 </span>
 {% endif %}
-<span class="action-link">
+<span id='edit-answer-{{answer.id}}' class="action-link">
     <a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
 </span>
-{% endif %}
+<script type="text/javascript">
+    (function(){
+        var del_link = document.getElementById(
+            'delete-answer-' + '{{answer.id}}'
+        );
+        var edit_link = document.getElementById(
+            'edit-answer-' + '{{answer.id}}'
+        );
+        if (askbot['data']['userIsAuthenticated'] === false){
+            del_link.parentNode.removeChild(del_link);
+            edit_link.parentNode.removeChild(edit_link); 
+        }
+    })();
+</script>

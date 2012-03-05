@@ -9,6 +9,7 @@
         {% include "meta/html_head_stylesheets.html" %}
         {% block forestyle %}{% endblock %}
         {% include "meta/html_head_javascript.html" %}
+        {% block forejs %}{% endblock %}
         {% if settings.USE_CUSTOM_HTML_HEAD %}
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}

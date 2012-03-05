@@ -15,17 +15,17 @@
     {% endif %}
     {% if question.offensive_flag_count > 0 %}
         <span 
-            id="question-offensive-flag-{{ question.id }}" class="offensive-flag"
-            title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}"
-        >
-            <a class="question-flag">{% trans %}flag offensive{% endtrans %} {{ question.offensive_flag_count }})</a>
-        </span>
-        <span 
-            id="question-offensive-flag-remove-{{ question.id }}"
+            id="question-offensive-remove-flag-{{ question.id }}"
             class="offensive-flag"
             title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}"
         >
-            <a class="question-flag">{% trans %}remove flag{% endtrans %} ({{ question.offensive_flag_count }})</a>
+            <a class="question-flag">{% trans %}remove flag{% endtrans %}</a>
+        </span>
+        <span 
+            id="question-offensive-flag-{{ question.id }}" class="offensive-flag"
+            title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}"
+        >
+            <a class="question-flag">{% trans %}flag offensive{% endtrans %} ({{ question.offensive_flag_count }})</a>
         </span>
     {% else %}
         <span 

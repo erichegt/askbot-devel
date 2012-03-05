@@ -5,9 +5,10 @@ import re
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core.urlresolvers import reverse
+from django.utils.hashcompat import md5_constructor
+from django.utils.translation import ugettext as _
 
 import askbot
 import askbot.conf
@@ -225,14 +226,14 @@ class ThreadManager(models.Manager):
                 meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
 
         QUESTION_ORDER_BY_MAP = {
-            'age-desc': '-askbot_post.added_at',
-            'age-asc': 'askbot_post.added_at',
+            'age-desc': '-added_at',
+            'age-asc': 'added_at',
             'activity-desc': '-last_activity_at',
             'activity-asc': 'last_activity_at',
             'answers-desc': '-answer_count',
             'answers-asc': 'answer_count',
-            'votes-desc': '-askbot_post.score',
-            'votes-asc': 'askbot_post.score',
+            'votes-desc': '-score',
+            'votes-asc': 'score',
 
             'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
         }
@@ -296,6 +297,7 @@ class ThreadManager(models.Manager):
 
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
 
@@ -323,6 +325,9 @@ class Thread(models.Model):
 
     accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
+    added_at = models.DateTimeField(default = datetime.datetime.now)
+
+    score = models.IntegerField(default = 0)
 
     objects = ThreadManager()
     
@@ -420,6 +425,105 @@ class Thread(models.Model):
                                 | models.Q(deleted_by = user)
                             )
 
+    def invalidate_cached_thread_content_fragment(self):
+        """we do not precache the fragment here, as re-generating
+        the the fragment takes a lot of data, so we just
+        invalidate the cached item
+
+        Note: the cache key generation code is copy-pasted
+        from coffin/template/defaulttags.py no way around
+        that unfortunately
+        """
+        args_md5 = md5_constructor(str(self.id))
+        key = 'template.cache.%s.%s' % ('thread-content-html', args_md5.hexdigest())
+        cache.cache.delete(key)
+
+    def get_post_data_cache_key(self, sort_method = None):
+        return 'thread-data-%s-%s' % (self.id, sort_method)
+
+    def invalidate_cached_post_data(self):
+        """needs to be called when anything notable 
+        changes in the post data - on votes, adding,
+        deleting, editing content"""
+        #we can call delete_many() here if using Django > 1.2
+        for sort_method in const.ANSWER_SORT_METHODS:
+            cache.cache.delete(self.get_post_data_cache_key(sort_method))
+
+    def invalidate_cached_data(self):
+        self.invalidate_cached_post_data()
+        self.invalidate_cached_thread_content_fragment()
+
+    def get_cached_post_data(self, sort_method = None):
+        """returns cached post data, as calculated by
+        the method get_post_data()"""
+        key = self.get_post_data_cache_key(sort_method)
+        post_data = cache.cache.get(key)
+        if not post_data:
+            post_data = self.get_post_data(sort_method)
+            cache.cache.set(key, post_data, const.LONG_TIME)
+        return post_data
+
+    def get_post_data(self, sort_method = None):
+        """returns question, answers as list and a list of post ids
+        for the given thread
+        the returned posts are pre-stuffed with the comments
+        all (both posts and the comments sorted in the correct
+        order)
+        """
+        thread_posts = self.posts.all().order_by(
+                    {
+                        "latest":"-added_at",
+                        "oldest":"added_at",
+                        "votes":"-score"
+                    }[sort_method]
+                )
+        #1) collect question, answer and comment posts and list of post id's
+        answers = list()
+        post_map = dict()
+        comment_map = dict()
+        post_to_author = dict()
+        question_post = None
+        for post in thread_posts:
+            #pass through only deleted question posts
+            if post.deleted and post.post_type != 'question':
+                continue
+
+            post_to_author[post.id] = post.author_id
+
+            if post.post_type == 'answer':
+                answers.append(post)
+                post_map[post.id] = post
+            elif post.post_type == 'comment':
+                if post.parent_id not in comment_map:
+                    comment_map[post.parent_id] = list()
+                comment_map[post.parent_id].append(post)
+            elif post.post_type == 'question':
+                assert(question_post == None)
+                post_map[post.id] = post
+                question_post = post
+
+        #2) sort comments in the temporal order
+        for comment_list in comment_map.values():
+            comment_list.sort(key=operator.attrgetter('added_at'))
+
+        #3) attach comments to question and the answers
+        for post_id, comment_list in comment_map.items():
+            try:
+                post_map[post_id].set_cached_comments(comment_list)
+            except KeyError:
+                pass#comment to deleted answer - don't want it
+
+        if self.has_accepted_answer() and self.accepted_answer.deleted == False:
+            #Put the accepted answer to front
+            #the second check is for the case when accepted answer is deleted
+            accepted_answer = post_map[self.accepted_answer_id]
+            answers.remove(accepted_answer)
+            answers.insert(0, accepted_answer)
+
+        return (question_post, answers, post_to_author)
+
+    def has_accepted_answer(self):
+        return self.accepted_answer_id != None
 
     def get_similarity(self, other_thread = None):
         """return number of tags in the other question
@@ -442,9 +546,15 @@ class Thread(models.Model):
         """
 
         def get_data():
-            tags_list = self.tags.all()
-            similar_threads = Thread.objects.filter(tags__in=tags_list).\
-                                    exclude(id = self.id).exclude(posts__post_type='question', posts__deleted = True).distinct()[:100]
+            tags_list = self.get_tag_names()
+            similar_threads = Thread.objects.filter(
+                                        tags__name__in=tags_list
+                                    ).exclude(
+                                        id = self.id
+                                    ).exclude(
+                                        posts__post_type='question',
+                                        posts__deleted = True
+                                    ).distinct()[:100]
             similar_threads = list(similar_threads)
 
             for thread in similar_threads:
@@ -455,7 +565,8 @@ class Thread(models.Model):
 
             # Denormalize questions to speed up template rendering
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
-            questions = Post.objects.get_questions().select_related('thread').filter(thread__in=similar_threads)
+            questions = Post.objects.get_questions()
+            questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
                 thread_map[q.thread_id].question_denorm = q
 
@@ -466,10 +577,20 @@ class Thread(models.Model):
                     'title': thread.get_title(thread.question_denorm)
                 } for thread in similar_threads
             ]
-
             return similar_threads
 
-        return LazyList(get_data)
+        def get_cached_data():
+            """similar thread data will expire
+            with the default expiration delay
+            """
+            key = 'similar-threads-%s' % self.id
+            data = cache.cache.get(key)
+            if data is None:
+                data = get_data()
+                cache.cache.set(key, data)
+            return data
+
+        return LazyList(get_cached_data)
 
     def remove_author_anonymity(self):
         """removes anonymous flag from the question
@@ -483,6 +604,12 @@ class Thread(models.Model):
         thread_question = self._question_post()
         Post.objects.filter(id=thread_question.id).update(is_anonymous=False)
         thread_question.revisions.all().update(is_anonymous=False)
+
+    def is_followed_by(self, user = None):
+        """True if thread is followed by user"""
+        if user and user.is_authenticated():
+            return self.followed_by.filter(id = user.id).count() > 0
+        return False
 
     def update_tags(self, tagnames = None, user = None, timestamp = None):
         """
@@ -659,36 +786,16 @@ class Thread(models.Model):
         # * We probably don't need to pollute the cache with threads older than 30 days
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
-        cache.cache.set(self.SUMMARY_CACHE_KEY_TPL % self.id, html, timeout=60*60*24*30)
+        cache.cache.set(
+            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            html,
+            timeout=const.LONG_TIME
+        )
         return html
 
     def summary_html_cached(self):
         return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
-
-#class Question(content.Content):
-#    post_type = 'question'
-#    thread = models.ForeignKey('Thread', unique=True, related_name='questions')
-#
-#    objects = QuestionManager()
-#
-#    class Meta(content.Content.Meta):
-#        db_table = u'question'
-#
-# TODO: Add sphinx_search() to Post model
-#
-#if getattr(settings, 'USE_SPHINX_SEARCH', False):
-#    from djangosphinx.models import SphinxSearch
-#    Question.add_to_class(
-#        'sphinx_search',
-#        SphinxSearch(
-#            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
-#            mode = 'SPH_MATCH_ALL'
-#        )
-#    )
-
-
-        
 class QuestionView(models.Model):
     question = models.ForeignKey(Post, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')

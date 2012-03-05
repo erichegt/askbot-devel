@@ -288,10 +288,10 @@ def vote(request, id):
         elif vote_type in ['7.6', '8.6']:
             #flag question or answer
             if vote_type == '7.6':
-                post = get_object_or_404(models.Question, id=id)
+                post = get_object_or_404(models.Post, id=id)
             if vote_type == '8.6':
                 id = request.POST.get('postId')
-                post = get_object_or_404(models.Answer, id=id)
+                post = get_object_or_404(models.Post, id=id)
 
             request.user.flag_post(post, cancel_all = True)
 
@@ -359,6 +359,13 @@ def vote(request, id):
         else:
             response_data['success'] = 0
             response_data['message'] = u'Request mode is not supported. Please try again.'
+
+        if vote_type not in (1, 2, 4, 5, 6, 11, 12):
+            #favorite or subscribe/unsubscribe
+            #upvote or downvote question or answer - those
+            #are handled within user.upvote and user.downvote
+            post = models.Post.objects.get(id = id)
+            post.thread.invalidate_cached_data()
 
         data = simplejson.dumps(response_data)
 

@@ -18,6 +18,8 @@ CLOSE_REASONS = (
     (9, _('too localized')),
 )
 
+LONG_TIME = 60*60*24*30 #30 days is a lot of time
+
 TYPE_REPUTATION = (
     (1, 'gain_by_upvoted'),
     (2, 'gain_by_answer_accepted'),
@@ -47,6 +49,10 @@ POST_SORT_METHODS = (
     ('votes-desc', _('most voted')),
     ('votes-asc', _('least voted')),
     ('relevance-desc', _('relevance')),
+)
+
+ANSWER_SORT_METHODS = (#no translations needed here
+    'latest', 'oldest', 'votes'
 )
 #todo: add assertion here that all sort methods are unique
 #because they are keys to the hash used in implementations

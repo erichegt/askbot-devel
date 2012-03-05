@@ -23,16 +23,10 @@
     </div>
 {%- endmacro -%}
 
-{%- macro post_vote_buttons(post = None, visitor_vote = None) -%}
-<div
-    id="{{post.post_type}}-img-upvote-{{ post.id }}"
-    class="{{post.post_type}}-img-upvote post-vote{% if visitor_vote == 1 %} on{% endif %}" 
-    {% if post.post_type == 'question' %}
-        title="{% trans %}i like this question (click again to cancel){% endtrans %}"
-    {% else %}
-        title="{% trans %}i like this answer (click again to cancel){% endtrans %}"
-    {% endif %}
-/></div>
+{%- macro post_vote_buttons(post = None) -%}
+<div id="{{post.post_type}}-img-upvote-{{ post.id }}"
+    class="{{post.post_type}}-img-upvote post-vote">
+</div>
 <div 
     id="{{post.post_type}}-vote-number-{{ post.id }}"
     class="vote-number"
@@ -40,13 +34,11 @@
 >{{ post.score }}</div>
 <div
     id="{{post.post_type}}-img-downvote-{{ post.id }}"
-    class="{{post.post_type}}-img-downvote post-vote{% if visitor_vote == -1 %} on{% endif %}" 
-    {% if post.post_type == 'question' %}
-        title="{% trans %}i dont like this question (click again to cancel){% endtrans %}" 
-    {% else %}
-        title="{% trans %}i dont like this answer (click again to cancel){% endtrans %}" 
-    {% endif %}
-/></div>
+    class="{{post.post_type}}-img-downvote post-vote">
+</div>
+<script type="text/javascript">
+    askbot['functions']['renderPostVoteButtons']('{{post.post_type}}', '{{post.id}}');
+</script>
 {%- endmacro -%}
 
 {%- macro post_contributor_avatar_and_credentials(post, user) -%}
@@ -244,27 +236,22 @@ poor design of the data or methods on data objects #}
 {# Warning! Any changes to the comment markup here must be duplicated in post.js
 for the purposes of the AJAX comment editor #}
 
-{%- macro add_or_show_comments_button(post = None, can_post = None, max_comments = None, widget_id = None) -%}
+{%- macro add_or_show_comments_button(post = None, max_comments = None, widget_id = None) -%}
+    {% if post.comment_count > max_comments %}
+        {% set remaining_comment_count = post.comment_count - max_comments %}
+    {% else %}
+        {% set remaining_comment_count = 0 %}
+    {% endif %}
+    <a id="add-comment-to-post-{{post.id}}" class="button"></a>
     <script type="text/javascript">
         askbot['data']['{{widget_id}}'] = {
-            can_post: {% if can_post %}true{% else %}false{% endif %},
             truncated: {% if post.comment_count > max_comments %}true{% else %}false{% endif %}
         };
+        askbot['functions']['renderAddCommentButton'](
+                                                '{{post.id}}',
+                                                {{remaining_comment_count}}
+                                            );
     </script>
-    {% if post.comment_count > max_comments %}
-        {% set remaining_comments = post.comment_count - max_comments %}
-        <a class="button">
-        {% if can_post %}
-            {% trans %}post a comment{% endtrans %} /
-            {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more{% pluralize %}see <strong>{{counter}}</strong> more{% endtrans %}
-        {% else %}
-            {% trans counter=remaining_comments %}see <strong>{{counter}}</strong> more comment{% pluralize %}see <strong>{{counter}}</strong> more comments
-            {% endtrans %}
-        {% endif %}
-        </a>
-    {% elif can_post %}
-        <a class="button">{% trans %}post a comment{% endtrans %}</a>
-    {% endif %}
 {%- endmacro -%}
 
 {%- macro post_comments_widget(
@@ -285,9 +272,9 @@ for the purposes of the AJAX comment editor #}
     <div class="comments" id="{{widget_id}}">
         <div class="content">
             {% if show_post == post and show_comment and show_comment_position > max_comments %}
-                {% set comments = post._cached_comments[:show_comment_position] %}
+                {% set comments = post.get_cached_comments()[:show_comment_position] %}
             {% else %}
-                {% set comments = post._cached_comments[:max_comments] %}
+                {% set comments = post.get_cached_comments()[:max_comments] %}
             {% endif %}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
@@ -295,35 +282,42 @@ for the purposes of the AJAX comment editor #}
                 <div class="comment" id="comment-{{comment.id}}">
                     <div class="comment-votes">
                         {% if comment.score > 0 %}
-                            <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">{{comment.score}}</div>
+                            <div 
+                                id="comment-img-upvote-{{comment.id}}" 
+                                class="upvote"
+                            >{{comment.score}}</div>
+                            <script type="text/javascript">
+                                askbot['functions']['renderPostVoteButtons']('comment', '{{comment.id}}');
+                            </script>
                         {% else %}
                             <div class="upvote"></div>
                         {% endif %}
                     </div>
-                    <div class="comment-delete">
-                        {% if user|can_delete_comment(comment) %}
-                            <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
-                        {% endif %}
+                    <div 
+                        id="post-{{comment.id}}-delete"
+                        class="comment-delete"
+                    >
+                        <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
                         <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
                         <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
-                        {% if user|can_edit_comment(comment) %}
-                            &nbsp;<a class="edit">{% trans %}edit{% endtrans %}</a>
-                        {% endif %}
+                        <a id="post-{{comment.id}}-edit"
+                            class="edit">{% trans %}edit{% endtrans %}</a>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    askbot['functions']['renderPostControls']('{{comment.id}}');
+                </script>
             {% endfor %}
         </div>
         <div class="controls">
-            {% set can_post = user.is_authenticated() and user.can_post_comment(post) %}
             {% if show_post == post and show_comment %}
                 {% if show_comment_position > max_comments %}
                     {{
                         add_or_show_comments_button(
                                             post = post,
-                                            can_post = can_post,
                                             max_comments = show_comment_position,
                                             widget_id = widget_id
                                         )
@@ -332,7 +326,6 @@ for the purposes of the AJAX comment editor #}
                     {{
                         add_or_show_comments_button(
                                             post = post,
-                                            can_post = can_post,
                                             max_comments = max_comments,
                                             widget_id = widget_id
                                         )
@@ -342,7 +335,6 @@ for the purposes of the AJAX comment editor #}
                 {{
                     add_or_show_comments_button(
                                         post = post,
-                                        can_post = can_post,
                                         max_comments = max_comments,
                                         widget_id = widget_id
                                     )
