@@ -354,6 +354,16 @@ def question(request, id):#refactor - long subroutine. display question body, an
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
 
+    #redirect if slug in the url is wrong
+    if request.path.split('/')[-1] != question_post.slug:
+        logging.debug('no slug match!')
+        question_url = '?'.join((
+                            question_post.get_absolute_url(),
+                            urllib.urlencode(request.GET)
+                        ))
+        return HttpResponseRedirect(question_url)
+
+
     #resolve comment and answer permalinks
     #they go first because in theory both can be moved to another question
     #this block "returns" show_post and assigns actual comment and answer
@@ -411,48 +421,42 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     thread = question_post.thread
 
-    #redirect if slug in the url is wrong
-    if request.path.split('/')[-1] != question_post.slug:
-        logging.debug('no slug match!')
-        question_url = '?'.join((
-                            question_post.get_absolute_url(),
-                            urllib.urlencode(request.GET)
-                        ))
-        return HttpResponseRedirect(question_url)
-
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
 
-    #load answers
-    answers = thread.get_cached_answer_list(sort_method = answer_sort_method)
+    #load answers and post id's->athor_id mapping
+    #posts are pre-stuffed with the correctly ordered comments
+    updated_question_post, answers, post_to_author = thread.get_cached_post_data(
+                                sort_method = answer_sort_method,
+                            )
+    question_post.set_cached_comments(updated_question_post.get_cached_comments())
 
-    # TODO: Add unit test to catch the bug where precache_comments() is called above (before) reordering the accepted answer to the top
+
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
-    if thread.accepted_answer and thread.accepted_answer.deleted == False:
-        #Put the accepted answer to front
-        #the second check is for the case when accepted answer is deleted
-        answers.remove(thread.accepted_answer)
-        answers.insert(0, thread.accepted_answer)
-
-    Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
-
-    user_answer_votes = {}
+    user_votes = {}
+    user_post_id_list = list()
+    #todo: cache this query set, but again takes only 3ms!
     if request.user.is_authenticated():
-        votes = Vote.objects.filter(user=request.user, voted_post__in=answers)
-        for vote in votes:
-            user_answer_votes[vote.voted_post.id] = int(vote)
-
-    filtered_answers = [answer for answer in answers if ((not answer.deleted) or (answer.deleted and answer.author_id == request.user.id))]
-
+        user_votes = Vote.objects.filter(
+                            user=request.user,
+                            voted_post__id__in = post_to_author.keys()
+                        ).values_list('voted_post_id', 'vote')
+        user_votes = dict(user_votes)
+        #we can avoid making this query by iterating through
+        #already loaded posts
+        user_post_id_list = [
+            id for id in post_to_author if post_to_author[id] == request.user.id
+        ]
+        
     #resolve page number and comment number for permalinks
     show_comment_position = None
     if show_comment:
-        show_page = show_comment.get_page_number(answer_posts=filtered_answers)
+        show_page = show_comment.get_page_number(answer_posts=answers)
         show_comment_position = show_comment.get_order_number()
     elif show_answer:
-        show_page = show_post.get_page_number(answer_posts=filtered_answers)
+        show_page = show_post.get_page_number(answer_posts=answers)
 
-    objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
+    objects_list = Paginator(answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
         return HttpResponseRedirect(question_post.get_absolute_url())
     page_objects = objects_list.page(show_page)
@@ -469,7 +473,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         last_seen = request.session['question_view_times'].get(question_post.id, None)
 
-        if thread.last_activity_by != request.user:
+        if thread.last_activity_by_id != request.user.id:
             if last_seen:
                 if last_seen < thread.last_activity_at:
                     update_view_count = True
@@ -482,8 +486,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #2) run the slower jobs in a celery task
         from askbot import tasks
         tasks.record_question_visit.delay(
-            question_post_id = question_post.id,
-            user_id = request.user.id,
+            question_post = question_post,
+            user = request.user,
             update_view_count = update_view_count
         )
 
@@ -499,26 +503,39 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     paginator_context = functions.setup_paginator(paginator_data)
 
+    #todo: maybe consolidate all activity in the thread
+    #for the user into just one query?
     favorited = thread.has_favorite_by_user(request.user)
-    user_question_vote = 0
-    if request.user.is_authenticated():
-        votes = question_post.votes.select_related().filter(user=request.user)
-        try:
-            user_question_vote = int(votes[0])
-        except IndexError:
-            user_question_vote = 0
+
+    is_cacheable = True
+    if show_page != 1:
+        is_cacheable = False
+    elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
+        is_cacheable = False
+        
+    answer_form = AnswerForm(
+        initial = {
+            'wiki': question_post.wiki and askbot_settings.WIKI_ON,
+            'email_notify': thread.is_followed_by(request.user)
+        }
+    )
+
+    user_can_post_comment = (
+        request.user.is_authenticated() and request.user.can_post_comment()
+    )
 
     data = {
+        'is_cacheable': is_cacheable,
+        'long_time': const.LONG_TIME,#"forever" caching
         'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question_post,
         'thread': thread,
-        'user_question_vote' : user_question_vote,
-        'question_comment_count': question_post.comments.count(),
-        'answer' : AnswerForm(question_post, request.user),
+        'answer' : answer_form,
         'answers' : page_objects.object_list,
-        'user_answer_votes': user_answer_votes,
-        'tags' : thread.tags.all(),
+        'user_votes': user_votes,
+        'user_post_id_list': user_post_id_list,
+        'user_can_post_comment': user_can_post_comment,#in general
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
         'similar_threads' : thread.get_similar_threads(),

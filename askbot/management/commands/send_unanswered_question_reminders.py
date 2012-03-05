@@ -14,6 +14,8 @@ class Command(NoArgsCommand):
     about unanswered questions to all users
     """
     def handle_noargs(self, **options):
+        if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+            return
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
         #get questions without answers, excluding closed and deleted

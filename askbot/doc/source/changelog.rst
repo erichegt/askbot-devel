@@ -18,6 +18,7 @@ Development version (not released yet)
 * Added a management delete_contextless_badge_award_activities (Evgeny)
 * Fixed a file upload issue in FF and IE found by jerry_gzy (Evgeny)
 * Added test on maximum length of title working for utf-8 text (Evgeny)
+* Added caching and invalidation to the question page (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------

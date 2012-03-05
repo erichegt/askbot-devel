@@ -31,6 +31,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'ENABLE_EMAIL_ALERTS',
+        default = True,
+        description = _('Enable email alerts'),
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'MAX_ALERTS_PER_EMAIL',

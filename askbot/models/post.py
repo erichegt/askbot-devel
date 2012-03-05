@@ -210,7 +210,7 @@ class PostManager(BaseQuerySetManager):
         for cm in comments:
             post_map[cm.parent_id].append(cm)
         for post in for_posts:
-            post._cached_comments = post_map[post.id]
+            post.set_cached_comments(post_map[post.id])
 
         # Old Post.get_comment(self, visitor=None) method:
         #        if visitor.is_anonymous():
@@ -539,6 +539,19 @@ class Post(models.Model):
         """returns an abbreviated snippet of the content
         """
         return html_utils.strip_tags(self.html)[:120] + ' ...'
+
+    def set_cached_comments(self, comments):
+        """caches comments in the lifetime of the object
+        does not talk to the actual cache system
+        """
+        self._cached_comments = comments
+    
+    def get_cached_comments(self):
+        try:
+            return self._cached_comments
+        except AttributeError:
+            self._cached_comments = list()
+            return self._cached_comments
 
     def add_comment(self, comment=None, user=None, added_at=None):
         if added_at is None:

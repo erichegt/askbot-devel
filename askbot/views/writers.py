@@ -484,7 +484,7 @@ def answer(request, id):#process a new answer
     """
     question = get_object_or_404(models.Post, post_type='question', id=id)
     if request.method == "POST":
-        form = forms.AnswerForm(question, request.user, request.POST)
+        form = forms.AnswerForm(request.POST)
         if form.is_valid():
             wiki = form.cleaned_data['wiki']
             text = form.cleaned_data['text']
@@ -641,6 +641,7 @@ def delete_comment(request):
             #attn: recalc denormalized field
             parent.comment_count = parent.comment_count - 1
             parent.save()
+            parent.thread.invalidate_cached_data()
 
             return __generate_comments_json(parent, request.user)
 

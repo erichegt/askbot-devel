@@ -685,17 +685,10 @@ class AnswerForm(forms.Form):
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     email  = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    email_notify = EmailNotifyField()
-    def __init__(self, question, user, *args, **kwargs):
+    email_notify = EmailNotifyField(initial = False)
+    def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['email_notify'].widget.attrs['id'] = 'question-subscribe-updates'
-        if question.wiki and askbot_settings.WIKI_ON:
-            self.fields['wiki'].initial = True
-        if user.is_authenticated():
-            if user in question.thread.followed_by.all():
-                self.fields['email_notify'].initial = True
-                return
-        self.fields['email_notify'].initial = False
 
 class VoteForm(forms.Form):
     """form used in ajax vote view (only comment_upvote so far)
