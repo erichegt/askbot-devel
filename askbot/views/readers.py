@@ -533,6 +533,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'thread': thread,
         'answer' : answer_form,
         'answers' : page_objects.object_list,
+        'answer_count': len(answers),
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
