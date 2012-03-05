@@ -20,50 +20,7 @@ parameters:
 {% block head %}{% endblock %}
 {% block title %}{% spaceless %}{% trans %}Registration{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-    <h1>{% trans %}Registration{% endtrans %}</h1>
-    <div id="completetxt" >
-        <div class="message">
-            {% if login_type=='openid' %}
-                {% trans %}<p><span class=\"big strong\">You are here for the first time with your 
-%(provider)s login.</span> Please create your <strong>screen name</strong> 
-and save your <strong>email</strong> address. Saved email address will let 
-you <strong>subscribe for the updates</strong> on the most interesting 
-questions and will be used to create and retrieve your unique avatar image - 
-<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
-                register new {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
-            {% elif login_type=='legacy' %}
-                    {% if external_login_name_is_taken %}
-                        {% trans %}<p><span class='strong big'>Oops... looks like screen name %(username)s is 
-already used in another account.</span></p><p>Please choose another screen 
-name to use with your %(provider)s login. Also, a valid email address is 
-required on the <span class='orange'>Q&amp;A</span> forum. Your email is 
-used to create a unique <a href='%(gravatar_faq_url)s'><strong>gravatar
-</strong></a> image for your account. If you like, you can <strong>receive 
-updates</strong> on the interesting questions or entire forum by email. 
-Email addresses are never shown or otherwise shared with anybody else.</p>
-                        {% endtrans %} 
-                    {% else %}
-                        {% trans %}
-<p><span class=\"big strong\">You are here for the first time with your 
-%(provider)s login.</span></p><p>You can either keep your <strong>screen 
-name</strong> the same as your %(provider)s login name  or choose some other 
-nickname.</p><p>Also, please save a valid <strong>email</strong> address. 
-With the email you can <strong>subscribe for the updates</strong> on the 
-most interesting questions. Email address is also used to create and 
-retrieve your unique avatar image - <a 
-href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
-                    {% endif %}
-            {% else %}
-                {% trans %}<p><span class=\"big strong\">You are here for the first time with your 
-Facebook login.</span> Please create your <strong>screen name</strong> and 
-save your <strong>email</strong> address. Saved email address will let you 
-<strong>subscribe for the updates</strong> on the most interesting questions 
-and will be used to create and retrieve your unique avatar image - 
-<a href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>{% endtrans %}
-            {% endif %}
-        </div>
-        <p style="display:none">{% trans %}This account already exists, please use another.{% endtrans %}</p>
-    </div>
+    <h1>{% trans %}User registration{% endtrans %}</h1>
     {% if openid_register_form.errors %}
         <ul class="errorlist">
         {% for error in openid_register_form.non_field_errors() %}
@@ -81,7 +38,9 @@ and will be used to create and retrieve your unique avatar image -
         {% endif %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">
-                {%- trans %}<strong>Screen Name</strong> (<i>will be shown to others</i>){% endtrans %}
+                <label for="id_username">
+                    {%- trans %}<strong>Screen Name</strong> (<i>will be shown to others</i>){% endtrans %}
+                </label>
                 {% if openid_register_form.username.errors %} 
                     <p class="error">{{ openid_register_form.username.errors|join(", ") }}</p>
                 {% endif %}
@@ -105,7 +64,6 @@ anyone, must be valid</i>)
             <p class="error">{% trans %}please select one of the options above{% endtrans %}</p>
             {% endif %}
             </div>
-            <p class='space-above'>{% trans %}Tag filter tool will be your right panel, once you log in.{% endtrans %}</p>
             <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}Signup{% endtrans %}"/></div>
         </form>
     </div>
