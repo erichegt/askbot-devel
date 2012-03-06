@@ -15,7 +15,6 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        return  # TODO: remove me when the SQL is fixed!
 
         if 'postgresql_psycopg2' in askbot.get_database_engine_name():
             script_path = os.path.join(
