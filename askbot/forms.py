@@ -106,6 +106,8 @@ class TitleField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
+        if value is None:
+            value = ''
         if len(value) < askbot_settings.MIN_TITLE_LENGTH:
             msg = ungettext_lazy(
                 'title must be > %d character',
@@ -149,6 +151,8 @@ class EditorField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
+        if value is None:
+            value = ''
         if len(value) < self.min_length:
             msg = ungettext_lazy(
                 self.length_error_template_singular,
@@ -248,7 +252,9 @@ class TagNamesField(forms.CharField):
             #todo - this needs to come from settings
             tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
             if not tagname_re.search(tag):
-                raise forms.ValidationError(_('use-these-chars-in-tags'))
+                raise forms.ValidationError(_(
+                    'In tags, please use letters, numbers and characters "-+.#"'
+                ))
             #only keep unique tags
             if tag not in entered_tags:
                 entered_tags.append(tag)

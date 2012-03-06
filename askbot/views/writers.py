@@ -216,8 +216,8 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    if request.method == "POST":
-        form = forms.AskForm(request.POST)
+    form = forms.AskForm(request.REQUEST)
+    if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
             title = form.cleaned_data['title']
@@ -257,10 +257,17 @@ def ask(request):#view used to ask a new question
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
-    else:
+
+    if request.method == 'GET':
         form = forms.AskForm()
-        if 'title' in request.GET: # prepopulate title (usually from search query on main page)
-            form.initial['title'] = request.GET['title']
+
+    form.initial = {
+        'title': request.REQUEST.get('title', ''),
+        'text': request.REQUEST.get('text', ''),
+        'tags': request.REQUEST.get('tags', ''),
+        'wiki': request.REQUEST.get('wiki', False),
+        'is_anonymous': request.REQUEST.get('is_anonymous', False),
+    }
 
     data = {
         'active_tab': 'ask',
