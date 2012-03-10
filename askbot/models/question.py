@@ -370,6 +370,7 @@ class Thread(models.Model):
         self.closed_at = closed_at
         self.close_reason = close_reason
         self.save()
+        self.invalidate_cached_data()
 
     def set_accepted_answer(self, answer, timestamp):
         if answer and answer.thread != self:

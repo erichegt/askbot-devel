@@ -9,9 +9,14 @@ class Command(NoArgsCommand):
         deleted_count = 0
         message = "Searching for context-less activity objects:"
         for act in ProgressBar(acts.iterator(), acts.count(), message):
-            if act.object_id != None and act.content_object == None:
+            try:
+                if act.object_id != None and act.content_object == None:
+                    act.delete()
+                    deleted_count += 1
+            except:
+                #this can happen if we have a stale content type
                 act.delete()
-                deleted_count += 1
+
         if deleted_count:
             print "%d activity objects deleted" % deleted_count
         else:

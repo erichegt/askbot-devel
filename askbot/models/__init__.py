@@ -1104,6 +1104,7 @@ def user_retag_question(
         tagnames = tags,
         silent = silent
     )
+    question.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'retag_question',
         actor = self,
@@ -1475,6 +1476,7 @@ def user_post_answer(
         email_notify = follow,
         wiki = wiki
     )
+    answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
