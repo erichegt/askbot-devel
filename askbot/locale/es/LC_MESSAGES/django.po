@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 22:13-0500\n"
+"POT-Creation-Date: 2012-03-11 22:43-0500\n"
 "PO-Revision-Date: 2012-03-09 14:57+0000\n"
 "Last-Translator: Victor Trujillo <>\n"
 "Language-Team: Spanish (Castilian) (http://www.transifex.net/projects/p/"
@@ -814,15 +814,15 @@ msgstr ""
 msgid "Enable recaptcha (keys below are required)"
 msgstr "Habilitar recaptcha (las llaves de abajo son requeridas)"
 
-#: conf/external_keys.py:60
+#: conf/external_keys.py:62
 msgid "Recaptcha public key"
 msgstr "Llave pública de Recaptcha"
 
-#: conf/external_keys.py:68
+#: conf/external_keys.py:70
 msgid "Recaptcha private key"
 msgstr "Llave privada de Recaptcha"
 
-#: conf/external_keys.py:70
+#: conf/external_keys.py:72
 #, python-format
 msgid ""
 "Recaptcha is a tool that helps distinguish real people from annoying spam "
@@ -832,11 +832,11 @@ msgstr ""
 "Recaptcha te permite distinguir a gente real de los robots que envían spam. "
 "Puedes obtener una clave pública aqui: <a href=\"%(url)s\">%(url)s</a>"
 
-#: conf/external_keys.py:82
+#: conf/external_keys.py:84
 msgid "Facebook public API key"
 msgstr "Llave pública para API de Facebook"
 
-#: conf/external_keys.py:84
+#: conf/external_keys.py:86
 #, python-format
 msgid ""
 "Facebook API key and Facebook secret allow to use Facebook Connect login "
@@ -847,15 +847,15 @@ msgstr ""
 "tu sitio. Para obtener las llaves debes <a href=\"%(url)s\">crear aplicación "
 "en Facebook</a> site"
 
-#: conf/external_keys.py:97
+#: conf/external_keys.py:99
 msgid "Facebook secret key"
 msgstr "Llave privada de Facebook"
 
-#: conf/external_keys.py:105
+#: conf/external_keys.py:107
 msgid "Twitter consumer key"
 msgstr "Twitter Key"
 
-#: conf/external_keys.py:107
+#: conf/external_keys.py:109
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications site</"
@@ -864,15 +864,15 @@ msgstr ""
 "Por favor, registra tu foro en <a href=\"%(url)s\">twitter para "
 "aplicaciones</a>"
 
-#: conf/external_keys.py:118
+#: conf/external_keys.py:120
 msgid "Twitter consumer secret"
 msgstr "Twitter Secret"
 
-#: conf/external_keys.py:126
+#: conf/external_keys.py:128
 msgid "LinkedIn consumer key"
 msgstr "LinkedIn Key"
 
-#: conf/external_keys.py:128
+#: conf/external_keys.py:130
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer site</a>"
@@ -880,15 +880,15 @@ msgstr ""
 "Por favor, registra tu foro en <a href=\"%(url)s\">LinkedIn para "
 "Desarrolladores</a>"
 
-#: conf/external_keys.py:139
+#: conf/external_keys.py:141
 msgid "LinkedIn consumer secret"
 msgstr "LinkedIn Secret"
 
-#: conf/external_keys.py:147
+#: conf/external_keys.py:149
 msgid "ident.ca consumer key"
 msgstr "ident.ca key"
 
-#: conf/external_keys.py:149
+#: conf/external_keys.py:151
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
@@ -896,25 +896,9 @@ msgid ""
 msgstr ""
 "Por favor, registra tu foro en <a href=\"%(url)s\">Identi.ca aplicaciones</a>"
 
-#: conf/external_keys.py:160
+#: conf/external_keys.py:162
 msgid "ident.ca consumer secret"
 msgstr "ident.ca secret"
-
-#: conf/external_keys.py:168
-msgid "Use LDAP authentication for the password login"
-msgstr "Utiliza la autenticación LDAP para el password del login"
-
-#: conf/external_keys.py:177
-msgid "LDAP service provider name"
-msgstr "Proveedor de servicio LDAP"
-
-#: conf/external_keys.py:185
-msgid "URL for the LDAP service"
-msgstr "URL del servicio LDAP"
-
-#: conf/external_keys.py:193
-msgid "Explain how to change LDAP password"
-msgstr "Explicar cómo cambiar el password LDAP"
 
 #: conf/flatpages.py:11
 msgid "Flatpages - about, privacy policy, etc."
@@ -1146,6 +1130,40 @@ msgstr "Número máximo de preguntas a listar por defecto"
 #: conf/forum_data_rules.py:286
 msgid "What should \"unanswered question\" mean?"
 msgstr "¿Qué debería significar \"pregunta sin responder\"?"
+
+#: conf/ldap.py:9
+msgid "LDAP login configuration"
+msgstr ""
+
+#: conf/ldap.py:17
+msgid "Use LDAP authentication for the password login"
+msgstr "Utiliza la autenticación LDAP para el password del login"
+
+#: conf/ldap.py:26
+msgid "LDAP URL"
+msgstr ""
+
+#: conf/ldap.py:35
+msgid "LDAP BASE DN"
+msgstr ""
+
+#: conf/ldap.py:43
+msgid "LDAP Search Scope"
+msgstr ""
+
+#: conf/ldap.py:52
+#, fuzzy
+msgid "LDAP Server USERID field name"
+msgstr "Proveedor de servicio LDAP"
+
+#: conf/ldap.py:61
+msgid "LDAP Server \"Common Name\" field name"
+msgstr ""
+
+#: conf/ldap.py:70
+#, fuzzy
+msgid "LDAP Server EMAIL field name"
+msgstr "Proveedor de servicio LDAP"
 
 #: conf/leading_sidebar.py:12
 msgid "Common left sidebar"
@@ -1672,27 +1690,27 @@ msgstr "Descripcion del sitio para los motores de busqueda"
 msgid "Short name for your Q&A forum"
 msgstr "Nombre corto para tu foro"
 
-#: conf/site_settings.py:68
+#: conf/site_settings.py:67
 msgid "Base URL for your Q&A forum, must start with http or https"
 msgstr "Direccion URL base para el sitio, debe comenzar por http o https"
 
-#: conf/site_settings.py:79
+#: conf/site_settings.py:78
 msgid "Check to enable greeting for anonymous user"
 msgstr "Marca para activar el saludo a los usuarios anonimos"
 
-#: conf/site_settings.py:90
+#: conf/site_settings.py:89
 msgid "Text shown in the greeting message shown to the anonymous user"
 msgstr "Texto mostrado en el mensaje de agradecimiento a los usuarios anonimos"
 
-#: conf/site_settings.py:94
+#: conf/site_settings.py:93
 msgid "Use HTML to format the message "
 msgstr "Utiliza HTML para formatear el mensaje"
 
-#: conf/site_settings.py:103
+#: conf/site_settings.py:102
 msgid "Feedback site URL"
 msgstr "Direccion URL de contacto"
 
-#: conf/site_settings.py:105
+#: conf/site_settings.py:104
 msgid "If left empty, a simple internal feedback form will be used instead"
 msgstr "Si lo dejas en blanco, se utilizara un formulario de contacto simple"
 
@@ -2141,11 +2159,11 @@ msgid "Use automatic avatars from gravatar.com"
 msgstr "Utilizar los avatars automaticos de gravatar.com"
 
 #: conf/user_settings.py:85
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Check this option if you want to allow the use of gravatar.com for avatars. "
 "Please, note that this feature might take about 10 minutes to become "
-"100%% effective. You will have to enable uploaded avatars as well. For more "
+"100% effective. You will have to enable uploaded avatars as well. For more "
 "information, please visit <a href=\"http://askbot.org/doc/optional-modules."
 "html#uploaded-avatars\">this page</a>."
 msgstr ""
@@ -2612,7 +2630,7 @@ msgid ""
 "Please contact the forum administrator to reach a resolution."
 msgstr ""
 
-#: deps/django_authopenid/backends.py:88
+#: deps/django_authopenid/backends.py:166
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
@@ -2803,8 +2821,8 @@ msgstr "Regístrate con la cuenta de %(provider)s"
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "OpenID %(openid_url)s incorrecto"
 
-#: deps/django_authopenid/views.py:261 deps/django_authopenid/views.py:412
-#: deps/django_authopenid/views.py:440
+#: deps/django_authopenid/views.py:261 deps/django_authopenid/views.py:408
+#: deps/django_authopenid/views.py:436
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
@@ -2813,67 +2831,67 @@ msgstr ""
 "Lo sentimos, hay problemas de conexion con %(provider)s, por favor intenta "
 "de nuevo o utiliza otro proveedor."
 
-#: deps/django_authopenid/views.py:362
+#: deps/django_authopenid/views.py:358
 msgid "Your new password saved"
 msgstr "Nueva contraseña guardada"
 
-#: deps/django_authopenid/views.py:466
+#: deps/django_authopenid/views.py:462
 msgid "The login password combination was not correct"
 msgstr "La combinación de login y contraseña no es correcta"
 
-#: deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:564
 msgid "Please click any of the icons below to sign in"
 msgstr "Por favor elige cualquiera de los iconos de abajo para registrarte"
 
-#: deps/django_authopenid/views.py:570
+#: deps/django_authopenid/views.py:566
 msgid "Account recovery email sent"
 msgstr "Se envio el correo para recuperación de cuenta"
 
-#: deps/django_authopenid/views.py:573
+#: deps/django_authopenid/views.py:569
 msgid "Please add one or more login methods."
 msgstr "Por favor añade uno o más métodos de login"
 
-#: deps/django_authopenid/views.py:575
+#: deps/django_authopenid/views.py:571
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr "Si quieres, puedes añadir, eliminar o editar tus métodos de login"
 
-#: deps/django_authopenid/views.py:577
+#: deps/django_authopenid/views.py:573
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr "Por favor espera un momento, tu cuenta se ha recuperado, pero..."
 
-#: deps/django_authopenid/views.py:579
+#: deps/django_authopenid/views.py:575
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr ""
 "Lo sentimos, la llave de recuperación de esta cuenta ha expirado o es "
 "inválida"
 
-#: deps/django_authopenid/views.py:652
+#: deps/django_authopenid/views.py:648
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr "El método de login de %(provider_name)s no existe"
 
-#: deps/django_authopenid/views.py:658
+#: deps/django_authopenid/views.py:654
 msgid "Oops, sorry - there was some error - please try again"
 msgstr "Lo siento, se ha producido un error, inténtalo de nuevo."
 
-#: deps/django_authopenid/views.py:749
+#: deps/django_authopenid/views.py:745
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr "Tu login de %(provider)s funciona correctamente"
 
-#: deps/django_authopenid/views.py:1060 deps/django_authopenid/views.py:1066
+#: deps/django_authopenid/views.py:1056 deps/django_authopenid/views.py:1062
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
 "Tu email necesita validación. Encuentra más detalles <a "
 "id='validate_email_alert' href='%(details_url)s'>aqui</a>."
 
-#: deps/django_authopenid/views.py:1087
+#: deps/django_authopenid/views.py:1083
 #, python-format
 msgid "Recover your %(site)s account"
 msgstr "Recupera la cuenta de %(site)s"
 
-#: deps/django_authopenid/views.py:1159
+#: deps/django_authopenid/views.py:1155
 msgid "Please check your email and visit the enclosed link."
 msgstr "Por favor, comprueba tu email y visita el enlace."
 
@@ -2979,21 +2997,6 @@ msgstr "Expandir todo"
 #: importers/stackexchange/management/commands/load_stackexchange.py:141
 msgid "Congratulations, you are now an Administrator"
 msgstr "Enhorabuena, eres Administrador"
-
-#: management/commands/initialize_ldap_logins.py:51
-msgid ""
-"This command may help you migrate to LDAP password authentication by "
-"creating a record for LDAP association with each user account. There is an "
-"assumption that ldap user id's are the same as user names registered at the "
-"site. Before running this command it is necessary to set up LDAP parameters "
-"in the \"External keys\" section of the site settings."
-msgstr ""
-"Este comando puede ayudarte a migrar el sistema de autentificación de "
-"contraseñas LDAP creando un registro de asociación con cada cuenta de "
-"usaurio. Se supone que el user id de LDAP es el mismo que los usuarios "
-"registrados en el sitio. Antes de ejecutar este comando es necesario "
-"configurar los parámetros de LDAP en la sección \"Llaves externas\" de los "
-"ajustes del sitio."
 
 #: management/commands/post_emailed_questions.py:35
 msgid ""
@@ -3886,12 +3889,12 @@ msgstr "\" y \"%s\""
 msgid "\" and more"
 msgstr "\" y más"
 
-#: models/repute.py:141
+#: models/repute.py:143
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr "<em>Cambio del moderador. Motivo:</em> %(reason)s"
 
-#: models/repute.py:152
+#: models/repute.py:154
 #, python-format
 msgid ""
 "%(points)s points were added for %(username)s's contribution to question "
@@ -3900,7 +3903,7 @@ msgstr ""
 "%(points)s puntos se añadieron a tu usuario %(username)s  por la pregunta "
 "%(question_title)s"
 
-#: models/repute.py:157
+#: models/repute.py:159
 #, python-format
 msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
@@ -4019,7 +4022,7 @@ msgstr "Guardar Email"
 #: skins/default/templates/question_retag.html:22
 #: skins/default/templates/reopen.html:27
 #: skins/default/templates/subscribe_for_tags.html:16
-#: skins/default/templates/user_profile/user_edit.html:103
+#: skins/default/templates/user_profile/user_edit.html:102
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -5413,8 +5416,8 @@ msgid "responses for %(username)s"
 msgstr "respuestas a %(username)s"
 
 #: skins/default/templates/macros.html:606
-#, python-format
-msgid "you have a new response"
+#, fuzzy, python-format
+msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
 msgstr[0] "tienes una nueva respuesta"
 msgstr[1] "tienes  %(response_count)s nuevas respuestas"
@@ -6004,11 +6007,11 @@ msgstr "Usuario registrado"
 msgid "Screen Name"
 msgstr "Nombre para mostrar"
 
-#: skins/default/templates/user_profile/user_edit.html:60
+#: skins/default/templates/user_profile/user_edit.html:59
 msgid "(cannot be changed)"
 msgstr "(no puede modificarse)"
 
-#: skins/default/templates/user_profile/user_edit.html:102
+#: skins/default/templates/user_profile/user_edit.html:101
 #: skins/default/templates/user_profile/user_email_subscriptions.html:22
 msgid "Update"
 msgstr "Actualizar"
@@ -6364,7 +6367,7 @@ msgstr "Respuesta a:"
 msgid "User profile"
 msgstr "Pefil de usuario"
 
-#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:630
+#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:638
 msgid "comments and answers to others questions"
 msgstr "comentar y responder otras preguntas"
 
@@ -6381,11 +6384,11 @@ msgstr "grafica de la reputación de este usuario"
 msgid "questions that user is following"
 msgstr "preguntas que el usuario esta siguiendo"
 
-#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:671
+#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:679
 msgid "user vote record"
 msgstr "registro de votos de este usuario"
 
-#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:761
+#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:769
 msgid "email subscription settings"
 msgstr "configuraciones de suscripción por email"
 
@@ -6840,57 +6843,57 @@ msgstr ""
 msgid "moderate user"
 msgstr "moderar usuario"
 
-#: views/users.py:373
+#: views/users.py:381
 msgid "user profile"
 msgstr "perfil de usuario"
 
-#: views/users.py:374
+#: views/users.py:382
 msgid "user profile overview"
 msgstr "vista del perfil de usuario"
 
-#: views/users.py:543
+#: views/users.py:551
 msgid "recent user activity"
 msgstr "actividad reciente del usuario"
 
-#: views/users.py:544
+#: views/users.py:552
 msgid "profile - recent activity"
 msgstr "perfil - actividad reciente"
 
-#: views/users.py:631
+#: views/users.py:639
 msgid "profile - responses"
 msgstr "perfil - respuestas"
 
-#: views/users.py:672
+#: views/users.py:680
 msgid "profile - votes"
 msgstr "pefil - votos"
 
-#: views/users.py:693
+#: views/users.py:701
 #, fuzzy
 msgid "user karma"
 msgstr "karma"
 
-#: views/users.py:694
+#: views/users.py:702
 #, fuzzy
 msgid "Profile - User's Karma"
 msgstr "perfil - reputación del usuario"
 
-#: views/users.py:712
+#: views/users.py:720
 msgid "users favorite questions"
 msgstr "preguntas favoritas del usuario"
 
-#: views/users.py:713
+#: views/users.py:721
 msgid "profile - favorite questions"
 msgstr "pefil - preguntas favoritas"
 
-#: views/users.py:733 views/users.py:737
+#: views/users.py:741 views/users.py:745
 msgid "changes saved"
 msgstr "cambios guardados"
 
-#: views/users.py:743
+#: views/users.py:751
 msgid "email updates canceled"
 msgstr "notificaciones por email cancelada"
 
-#: views/users.py:762
+#: views/users.py:770
 msgid "profile - email subscriptions"
 msgstr "perfil - notificación por email"
 
@@ -6953,6 +6956,26 @@ msgstr ""
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "lo sentimos, tenemos dificultades técnicas"
 
+#~ msgid "URL for the LDAP service"
+#~ msgstr "URL del servicio LDAP"
+
+#~ msgid "Explain how to change LDAP password"
+#~ msgstr "Explicar cómo cambiar el password LDAP"
+
+#~ msgid ""
+#~ "This command may help you migrate to LDAP password authentication by "
+#~ "creating a record for LDAP association with each user account. There is "
+#~ "an assumption that ldap user id's are the same as user names registered "
+#~ "at the site. Before running this command it is necessary to set up LDAP "
+#~ "parameters in the \"External keys\" section of the site settings."
+#~ msgstr ""
+#~ "Este comando puede ayudarte a migrar el sistema de autentificación de "
+#~ "contraseñas LDAP creando un registro de asociación con cada cuenta de "
+#~ "usaurio. Se supone que el user id de LDAP es el mismo que los usuarios "
+#~ "registrados en el sitio. Antes de ejecutar este comando es necesario "
+#~ "configurar los parámetros de LDAP en la sección \"Llaves externas\" de "
+#~ "los ajustes del sitio."
+
 #~ msgid "use-these-chars-in-tags"
 #~ msgstr "usa-estos-caracteres-en-las-etiquetas"
 
@@ -7000,11 +7023,11 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ "go to %(email_settings_link)s to change frequency of email updates or "
 #~ "%(admin_email)s administrator"
 #~ msgstr ""
-#~ "<p>Por favor, recuerda que siempre puedes <a "
-#~ "href='%(email_settings_link)s'>adjustar</a> la frecuencia de las "
-#~ "actualizaciones al email o desactivarlas completamente.<br/>Si piensas "
-#~ "que este mensaje te ha llegado por error, por favor, envíalo al "
-#~ "administrador del sitio a %(admin_email)s.</p><p>Saludos,</p>"
+#~ "<p>Por favor, recuerda que siempre puedes <a href='%(email_settings_link)"
+#~ "s'>adjustar</a> la frecuencia de las actualizaciones al email o "
+#~ "desactivarlas completamente.<br/>Si piensas que este mensaje te ha "
+#~ "llegado por error, por favor, envíalo al administrador del sitio a "
+#~ "%(admin_email)s.</p><p>Saludos,</p>"
 
 #~ msgid ""
 #~ "uploading images is limited to users with >%(min_rep)s reputation points"
@@ -7074,8 +7097,8 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ msgstr ""
 #~ "<span class=\"strong big\">Introduce el nuevo email en la caja de abajo</"
 #~ "span> si quieres utilizar otro email para  <strong>actualizar tus "
-#~ "suscripciones</strong>.<br>Ahora estás usando este email: <strong>"
-#~ "%(email)s</strong>"
+#~ "suscripciones</strong>.<br>Ahora estás usando este email: <strong>%(email)"
+#~ "s</strong>"
 
 #~ msgid "here is why email is required, see %(gravatar_faq_url)s"
 #~ msgstr ""
@@ -7093,19 +7116,19 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 
 #~ msgid "validate %(email)s info or go to %(change_email_url)s"
 #~ msgstr ""
-#~ "<span class=\"strong big\">Hemos enviado un email de validación a "
-#~ "%(email)s.</span> Por favor <strong>comprueba el email enviado</strong> "
-#~ "con tu navegador. Es necesario que validemos tu email para asegurarlos "
-#~ "que realizas un uso correcto de tu cuenta en este sitio. Si quieres "
-#~ "utilizar  <strong>otro email</strong>, por favor<a "
-#~ "href='%(change_email_url)s'><strong>cámbialo desde aquí</strong></a>."
+#~ "<span class=\"strong big\">Hemos enviado un email de validación a %(email)"
+#~ "s.</span> Por favor <strong>comprueba el email enviado</strong> con tu "
+#~ "navegador. Es necesario que validemos tu email para asegurarlos que "
+#~ "realizas un uso correcto de tu cuenta en este sitio. Si quieres utilizar  "
+#~ "<strong>otro email</strong>, por favor<a href='%(change_email_url)"
+#~ "s'><strong>cámbialo desde aquí</strong></a>."
 
 #~ msgid "old %(email)s kept, if you like go to %(change_email_url)s"
 #~ msgstr ""
 #~ "<span class=\"strong big\">Tu email  %(email)s no ha sido modificado.</"
 #~ "span> Si decides cambiarlo más tarde - siempre puedes hacerlo editándolo "
-#~ "en tu perfil o usando el anterior <a "
-#~ "href='%(change_email_url)s'><strong>formulario</strong></a> otra vez."
+#~ "en tu perfil o usando el anterior <a href='%(change_email_url)"
+#~ "s'><strong>formulario</strong></a> otra vez."
 
 #~ msgid "your current %(email)s can be used for this"
 #~ msgstr ""
@@ -7138,8 +7161,8 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ "%(provider)s.</span> Por favor, crea tu <strong>usuario</strong> y guarda "
 #~ "tu <strong>email</strong>. El email te permitirá <strong>suscribirte a "
 #~ "las actualizaciones</strong> de las preguntas más interesantes y será "
-#~ "usada para crear y recuperar tu imagen de <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
+#~ "usada para crear y recuperar tu imagen de <a href='%(gravatar_faq_url)"
+#~ "s'><strong>gravatar</strong></a>.</p>"
 
 #~ msgid ""
 #~ "%(username)s already exists, choose another name for \n"
@@ -7151,11 +7174,11 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ "%(username)s ya ha sido registrado.</span></p><p>Por favor elige otro "
 #~ "nombre de usuario para utilizar en tu cuenta de %(provider)s. Debes "
 #~ "introducir un correo válido para darte de alta en este sitio. Tu email "
-#~ "será utilizado para crear un <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> con imagen en "
-#~ "tu cuenta. Si lo deseas puedes <strong>recibir actualizaciones</strong> "
-#~ "de las preguntas más interesantes por email. Bajo ningún concepto los "
-#~ "emails se mostrarán a terceros ni se compartirán con ningún otro fin.</p>"
+#~ "será utilizado para crear un <a href='%(gravatar_faq_url)"
+#~ "s'><strong>gravatar</strong></a> con imagen en tu cuenta. Si lo deseas "
+#~ "puedes <strong>recibir actualizaciones</strong> de las preguntas más "
+#~ "interesantes por email. Bajo ningún concepto los emails se mostrarán a "
+#~ "terceros ni se compartirán con ningún otro fin.</p>"
 
 #~ msgid ""
 #~ "register new external %(provider)s account info, see %(gravatar_faq_url)s"
@@ -7164,9 +7187,8 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ "span></p><p>Puedes guardar tu <strong>nombre de usuario</strong> y "
 #~ "también tu cuenta de  %(provider)s o elegir otro apodo.</p><p>Debes "
 #~ "introducir un correo válido para darte de alta en este sitio. Tu email "
-#~ "será utilizado para crear un <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> con imagen en "
-#~ "tu cuenta. .</p>"
+#~ "será utilizado para crear un <a href='%(gravatar_faq_url)"
+#~ "s'><strong>gravatar</strong></a> con imagen en tu cuenta. .</p>"
 
 #~ msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
 #~ msgstr ""
