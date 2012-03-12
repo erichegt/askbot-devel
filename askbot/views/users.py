@@ -354,8 +354,16 @@ def user_stats(request, user, context):
     for award in user_awards:
         # Fetch content object
         if award.content_type_id == post_type.id:
-            award.content_object = awarded_posts_map[award.object_id]
-            award.content_object_is_post = True
+            #here we go around a possibility of awards
+            #losing the content objects when the content
+            #objects are deleted for some reason
+            awarded_post = awarded_posts_map.get(award.object_id, None)
+            if awarded_post is not None:
+                #protect from awards that are associated with deleted posts
+                award.content_object = awarded_post
+                award.content_object_is_post = True
+            else:
+                award.content_object_is_post = False
         else:
             award.content_object_is_post = False
 

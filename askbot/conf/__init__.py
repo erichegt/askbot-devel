@@ -9,6 +9,7 @@ import askbot.conf.flatpages
 import askbot.conf.site_settings
 import askbot.conf.license
 import askbot.conf.external_keys
+import askbot.conf.ldap
 import askbot.conf.skin_general_settings
 import askbot.conf.sidebar_main
 import askbot.conf.sidebar_question

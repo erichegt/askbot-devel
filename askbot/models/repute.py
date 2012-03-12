@@ -13,25 +13,27 @@ class BadgeData(models.Model):
     awarded_count = models.PositiveIntegerField(default=0)
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
+    def _get_meta_data(self):
+        """retrieves badge metadata stored 
+        in a file"""
+        from askbot.models import badges
+        return badges.get_badge(self.slug)
+
     @property
     def name(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).name
+        return self._get_meta_data().name
 
     @property
     def description(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).description
+        return self._get_meta_data().description
 
     @property
     def css_class(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).css_class
+        return self._get_meta_data().css_class
 
     def get_type_display(self):
-        from askbot.models import badges
         #todo - rename "type" -> "level" in this model
-        return badges.get_badge(self.slug).get_level_display()
+        return self._get_meta_data().get_level_display()
 
     class Meta:
         app_label = 'askbot'

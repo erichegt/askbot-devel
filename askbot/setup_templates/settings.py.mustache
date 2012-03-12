@@ -222,7 +222,7 @@ djcelery.setup_loader()
 DOMAIN_NAME = '{{domain_name}}'
 
 CSRF_COOKIE_NAME = '{{domain_name}}_csrf'
-CSRF_COOKIE_DOMAIN = DOMAIN_NAME
+CSRF_COOKIE_DOMAIN = DOMAIN_NAME #note that this can be edited
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "static")
 STATICFILES_DIRS = (os.path.join(ASKBOT_ROOT, 'skins'),)
