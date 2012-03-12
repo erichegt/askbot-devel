@@ -13,25 +13,50 @@ class BadgeData(models.Model):
     awarded_count = models.PositiveIntegerField(default=0)
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
+    def _get_meta_data(self):
+        """retrieves badge metadata stored 
+        in a file"""
+        from askbot.models import badges
+        try:
+            return badges.get_badge(self.slug)
+        except KeyError:
+            #return a dummy badge
+            return badges.Badge(level = const.BRONZE_BADGE)
+
+    def is_real_badge(self):
+        """true if badge with a given slug exists
+        todo: may need attention - currently some badge data is defined in a file,
+        and some in the database. Data in the file is considered
+        more up to date. It is possifle that the file is edited,
+        and data is not deleted from the database, this method
+        will find such condition.
+
+        The reason why some data is on disk, is that each 
+        badge has code associated with them, that code is not stored in the database.
+        Therefore maintenance of badge data requires more attention...
+        """
+        from askbot.models import badges
+        try:
+            badges.get_badge(self.slug)
+            return True
+        except KeyError:
+            return False
+
     @property
     def name(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).name
+        return self._get_meta_data().name
 
     @property
     def description(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).description
+        return self._get_meta_data().description
 
     @property
     def css_class(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).css_class
+        return self._get_meta_data().css_class
 
     def get_type_display(self):
-        from askbot.models import badges
         #todo - rename "type" -> "level" in this model
-        return badges.get_badge(self.slug).get_level_display()
+        return self._get_meta_data().get_level_display()
 
     class Meta:
         app_label = 'askbot'

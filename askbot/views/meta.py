@@ -6,7 +6,7 @@ This module contains a collection of views displaying all sorts of secondary and
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, Template
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.views import static
@@ -127,6 +127,13 @@ def badges(request):#user status/reputation system
 def badge(request, id):
     #todo: supplement database data with the stuff from badges.py
     badge = get_object_or_404(BadgeData, id=id)
+    if not badge.is_real_badge():
+        #this is a hack around a non-elegant badge data system
+        #a request can come for a badge that is no longer used
+        #for example from a search engine that knows of past 
+        #url structure
+        raise Http404
+
     badge_recipients = User.objects.filter(
                             award_user__badge = badge
                         ).annotate(
