@@ -23,25 +23,6 @@ class BadgeData(models.Model):
             #return a dummy badge
             return badges.Badge(level = const.BRONZE_BADGE)
 
-    def is_real_badge(self):
-        """true if badge with a given slug exists
-        todo: may need attention - currently some badge data is defined in a file,
-        and some in the database. Data in the file is considered
-        more up to date. It is possifle that the file is edited,
-        and data is not deleted from the database, this method
-        will find such condition.
-
-        The reason why some data is on disk, is that each 
-        badge has code associated with them, that code is not stored in the database.
-        Therefore maintenance of badge data requires more attention...
-        """
-        from askbot.models import badges
-        try:
-            badges.get_badge(self.slug)
-            return True
-        except KeyError:
-            return False
-
     @property
     def name(self):
         return self._get_meta_data().name
