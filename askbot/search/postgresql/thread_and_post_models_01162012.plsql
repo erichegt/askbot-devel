@@ -119,6 +119,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS get_dependent_comments_tsv(object_id integer, tablename text);
 CREATE OR REPLACE FUNCTION get_dependent_comments_tsv(parent_id integer)
 RETURNS tsvector AS
 $$
@@ -136,6 +137,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS get_dependent_answers_tsv(question_id integer);
 CREATE OR REPLACE FUNCTION get_dependent_answers_tsv(thread_id integer)
 RETURNS tsvector AS
 $$
