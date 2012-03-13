@@ -31,6 +31,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.post import Post, PostRevision
+from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute
@@ -2345,6 +2346,9 @@ def format_instant_notification_email(
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
+        'receiving_user_karma': to_user.reputation,
+        'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
+        'can_reply': to_user.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
         'post_url': strip_path(site_url) + post.get_absolute_url(),
@@ -2383,23 +2387,36 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
 
+        if askbot_settings.REPLY_BY_EMAIL:
+            template = get_template('instant_notification_reply_by_email.html')
+      
         subject_line, body_text = format_instant_notification_email(
-                        to_user = user,
-                        from_user = update_activity.user,
-                        post = post,
-                        update_type = update_type,
-                        template = template,
-                    )
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            update_type = update_type,
+                            template = template,
+                        )
+      
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
+        #TODO check user reputation
+        headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+        if askbot_settings.REPLY_BY_EMAIL:
+            reply_address = "noreply"
+            if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
+                reply_address = ReplyAddress.objects.create_new(post, user).address
+            headers.update({'Reply-To': "%s@%s"%(reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)})
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+            headers = headers
         )
+
+
 
 
 #todo: move to utils
@@ -2800,6 +2817,8 @@ __all__ = [
         'EmailFeedSetting',
 
         'User',
+
+        'ReplyAddress',
 
         'get_model'
 ]
