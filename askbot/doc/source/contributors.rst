@@ -21,6 +21,7 @@ Programming and documentation
 * Andrei Mamoutkine
 * `Daniel Mican <http://www.crunchbase.com/person/daniel-mican>`_
 * `Dejan Noveski <http://www.atomidata.com/>`_
+* `Vasil Vangelovski <http://www.atomidata.com/>`_
 * `Ramiro Morales <http://rmorales.com.ar/>`_ (with Machinalis)
 * Vladimir Bokov
 * `NoahY <https://github.com/NoahY>`_
