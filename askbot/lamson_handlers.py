@@ -65,6 +65,7 @@ def PROCESS(message, address = None, host = None):
         else:
             reply_part = parts[0]
             reply_part = '\n'.join(reply_part.splitlines(True)[:-3])
+            #the function below actually posts to the forum
             reply_address.create_reply(reply_part.strip())
     except ReplyAddress.DoesNotExist:
         error = _("You were replying to an email address\

@@ -54,6 +54,7 @@ class ReplyAddress(models.Model):
                 result = self.user.post_comment(self.post, content)
         elif self.post.post_type == 'comment':
             result = self.user.post_comment(self.post.parent, content)
+        result.thread.invalidate_cached_data()
         self.used_at = datetime.now()
         self.save()
         return result
