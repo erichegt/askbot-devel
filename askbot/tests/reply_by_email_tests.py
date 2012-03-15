@@ -15,6 +15,10 @@ class MockMessage(object):
     def body(self):
         return self._body
 
+    def walk(self):
+        """todo: add real file attachment"""
+        return list()
+
 class EmailProcessingTests(AskbotTestCase):
 
     def setUp(self):
