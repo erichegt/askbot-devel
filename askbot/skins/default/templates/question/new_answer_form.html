@@ -40,17 +40,10 @@
                 </p>
             {% endif %}
             {{ macros.edit_post(answer) }}
-            <input type="submit"
-                    {% if user.is_anonymous() %}
-                   value="{% trans %}Login/Signup to Post{% endtrans %}"
-                    {% else %}
-                        {% if user == question.author %}
-                   value="{% trans %}Answer Your Own Question{% endtrans %}"
-                        {% else %}
-                   value="{% trans %}Post Your Answer{% endtrans %}"
-                        {% endif %}
-                    {% endif %}
-                   class="submit after-editor" style="float:left"/>
+            <input id="add-answer-btn" type="submit" class="submit after-editor" style="float:left"/>
+            <script type="text/javascript">
+                askbot['functions']['renderAddAnswerButton']();
+            </script>
             {% if settings.WIKI_ON %}
                 {{ macros.checkbox_in_div(answer.wiki) }}
             {% endif %}
