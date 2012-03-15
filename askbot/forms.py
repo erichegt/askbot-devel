@@ -124,7 +124,7 @@ class TitleField(forms.CharField):
                         '%d characters'
                     ) % self.max_length
                 )
-        elif encoded_value > self.max_length:
+        elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
                 _(
                     'The title is too long, maximum allowed size is '
