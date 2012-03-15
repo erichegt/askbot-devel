@@ -48,7 +48,10 @@ class ReplyAddress(models.Model):
             #and deal with them as with resources of their own value
             for att in attachments:
                 file_storage, file_name, file_url = store_file(att)
-                result += '[%s](%s) ' % (att.name, file_url)
+                chunk = '[%s](%s) ' % (att.name, file_url)
+                if att.name.endswith('png') or att.name.endswith('jpg'):
+                    chunk = '!' + chunk#todo: this is a hack - use content type
+                content += chunk
 
         if self.post.post_type == 'answer':
             result = self.user.post_comment(self.post, content)

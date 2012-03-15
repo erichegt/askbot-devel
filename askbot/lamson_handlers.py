@@ -4,7 +4,7 @@ from lamson.server import Relay
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
 from django.conf import settings
-from StringIO import StringIO
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 #we might end up needing to use something like this
@@ -36,53 +36,50 @@ def _strip_message_qoute(message_text):
     return result
 """
 
-def get_dispositions(part):
+def get_disposition(part):
     """return list of part's content dispositions
     or an empty list
     """
-    disposition_hdr = part.get('Content-Disposition', None)
-    if disposition_hdr:
-        dispositions = disposition_hdr.strip().split(';')
-        return [disp.lower() for disp in dispositions]
+    dispositions = part.content_encoding.get('Content-Disposition', None)
+    if dispositions:
+        return dispositions[0]
     else:
         return list()
+
+def get_attachment_info(part):
+    return part.content_encoding['Content-Disposition'][1]
 
 def is_attachment(part):
     """True if part content disposition is
     attachment"""
-    dispositions = get_dispositions(part)
-    if len(dispositions) == 0:
-        return False
-
-    if dispositions[0] == 'attachment':
-        return True
-        
-    return False
+    return get_disposition(part) == 'attachment'
 
 def process_attachment(part):
-    """takes message part and turns it into StringIO object"""
-    file_data = part.get_payload(decode = True)
-    att = StringIO(file_data)
-    att.content_type = part.get_content_type()
-    att.size = len(file_data)
-    att.name = None#todo figure out file name
-    att.create_date = None
-    att.mod_date = None
-    att.read_date = None
+    """takes message part and turns it into SimpleUploadedFile object"""
+    att_info = get_attachment_info(part) 
+    name = att_info.get('filename', None)
+    content_type = get_content_type(part)
+    return SimpleUploadedFile(name, part.body, content_type)
 
-    dispositions = get_dispositions(part)[:1]
-    for disp in dispositions:
-        name, value = disp.split('=')
-        if name == 'filename':
-            att.name = value
-        elif name == 'create-date':
-            att.create_date = value
-        elif name == 'modification-date':
-            att.modification_date = value
-        elif name == 'read-date':
-            att.read_date = value
+def get_content_type(part):
+    """return content type of the message part"""
+    return part.content_encoding.get('Content-Type', (None,))[0]
 
-    return att
+def is_body(part):
+    """True, if part is plain text and is not attachment"""
+    if get_content_type(part) == 'text/plain':
+        if not is_attachment(part):
+            return True
+    return False
+
+def get_body(message):
+    """returns plain text body of the message"""
+    body = message.body()
+    if body:
+        return body
+    for part in message.walk():
+        if is_body(part):
+            return part.body
 
 def get_attachments(message):
     """returns a list of file attachments
@@ -115,7 +112,7 @@ def PROCESS(message, address = None, host = None):
     try:
         reply_address = ReplyAddress.objects.get_unused(address, message.From)
         separator = _("======= Reply above this line. ====-=-=")
-        parts = message.body().split(separator)
+        parts = get_body(message).split(separator)
         attachments = get_attachments(message)
         if len(parts) != 2 :
             error = _("Your message was malformed. Please make sure to qoute \
@@ -132,6 +129,12 @@ def PROCESS(message, address = None, host = None):
         error = _("You were replying to an email address\
          unknown to the system or you were replying from a different address from the one where you\
          received the notification.")
+    except Exception, e:
+        import sys
+        sys.stderr.write(str(e))
+        import traceback
+        sys.stderr.write(traceback.format_exception())
+
     if error is not None:
         from askbot.utils import mail
         from django.template import Context
@@ -144,6 +147,3 @@ def PROCESS(message, address = None, host = None):
             body_text = body_text,
             recipient_list = [message.From],
         )        
-
-
-
