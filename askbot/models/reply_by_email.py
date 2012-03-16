@@ -1,35 +1,13 @@
 from datetime import datetime
 import random
 import string
-import os
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
-from askbot.utils.file_utils import store_file
 from askbot.conf import settings as askbot_settings
-from django.utils.translation import ugettext_lazy as _
-
-def process_attachments(attachments):
-    """saves file attachments and adds
-    
-    cheap way of dealing with the attachments
-    just insert them inline, however it might
-    be useful to keep track of the uploaded files separately
-    and deal with them as with resources of their own value"""
-    if attachments:
-        content = ''
-        for att in attachments:
-            file_storage, file_name, file_url = store_file(att)
-            chunk = '[%s](%s) ' % (att.name, file_url)
-            file_extension = os.path.splitext(att.name)
-            #todo: this is a hack - use content type
-            if file_extension.lower() in ('png', 'jpg', 'gif'):
-                chunk = '\n\n!' + chunk
-            content += '\n\n' + chunk
-        return content
-    else:
-        return ''
+from askbot.utils import mail
 
 class ReplyAddressManager(BaseQuerySetManager):
 
@@ -86,7 +64,7 @@ class ReplyAddress(models.Model):
         """edits the created post upon repeated response
         to the same address"""
         assert self.was_used == True
-        content += process_attachments(attachments)
+        content += mail.process_attachments(attachments)
         self.user.edit_post(
             post = self.response_post,
             body_text = content,
@@ -99,7 +77,7 @@ class ReplyAddress(models.Model):
         to the user
         """
         result = None
-        content += process_attachments(attachments)
+        content += mail.process_attachments(attachments)
 
         if self.post.post_type == 'answer':
             result = self.user.post_comment(self.post, content)
@@ -116,7 +94,3 @@ class ReplyAddress(models.Model):
         self.used_at = datetime.now()
         self.save()
         return result
-
-
-
-

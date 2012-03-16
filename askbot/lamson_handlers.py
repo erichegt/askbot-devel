@@ -2,9 +2,10 @@ import re
 from lamson.routing import route, stateless
 from lamson.server import Relay
 from django.utils.translation import ugettext as _
-from askbot.models import ReplyAddress
-from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
+from askbot.models import ReplyAddress
+from askbot.utils import mail
 
 
 #we might end up needing to use something like this
@@ -90,9 +91,19 @@ def get_attachments(message):
             attachments.append(process_attachment(part))
     return attachments
 
+@route('ask@(host)')
+@stateless
+def ASK(message, host = None):
+    body = get_body(message)
+    attachments = get_attachments(message)
+    subject = '[test; one; two;] this is a question title'#get_subject(message)
+    from_address = message.From
+    import pdb
+    pdb.set_trace()
+    mail.process_emailed_question(from_address, subject, body, attachments)
 
 
-@route("(address)@(host)", address=".+")
+@route('(address)@(host)', address='.+')
 @stateless
 def PROCESS(message, address = None, host = None):
     """handler to process the emailed message
