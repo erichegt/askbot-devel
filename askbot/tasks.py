@@ -58,10 +58,9 @@ def record_post_update_celery_task(
             diff = diff
         )
     except Exception:
-        if 'test' in sys.argv:
-            # HACK: exceptions from Celery job don;t propagate upwards to Django test runner
-            # so at least le't sprint tracebacks
-            print >>sys.stderr, traceback.format_exc()
+        # HACK: exceptions from Celery job don;t propagate upwards to Django test runner
+        # so at least le't sprint tracebacks
+        print >>sys.stderr, traceback.format_exc()
         raise
 
 def record_post_update(

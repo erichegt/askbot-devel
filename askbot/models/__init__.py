@@ -2435,7 +2435,7 @@ def send_instant_notifications_about_activity_in_post(
             reply_address = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
                 reply_address = ReplyAddress.objects.create_new(post, user).address
-            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOST_NAME)
+            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
             headers.update({'Reply-To': reply_to})
         else:
             reply_to = django_settings.DEFAULT_FROM_EMAIL
