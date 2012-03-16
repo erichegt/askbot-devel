@@ -2442,7 +2442,6 @@ def send_instant_notifications_about_activity_in_post(
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
-            from_email = reply_to,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
