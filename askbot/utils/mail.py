@@ -265,9 +265,9 @@ def process_emailed_question(from_address, subject, body, attachments = None):
         for field_errors in form.errors.values():
             error_list.extend(field_errors)
 
-        if email_address:
+        if from_address:
             bounce_email(
-                email_address,
+                from_address,
                 subject,
                 reason = 'problem_posting',
                 body_text = '\n*'.join(error_list)
