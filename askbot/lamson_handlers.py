@@ -97,7 +97,7 @@ def ASK(message, host = None):
     body = get_body(message)
     attachments = get_attachments(message)
     from_address = message.From
-    subject = message.Subject
+    subject = message['Subject']#why lamson does not give it normally?
     mail.process_emailed_question(from_address, subject, body, attachments)
 
 
