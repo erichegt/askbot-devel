@@ -1268,7 +1268,7 @@ class Post(models.Model):
             comment = None,
             revised_at = None
     ):
-        if None in (author, text, comment):
+        if None in (author, text):
             raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
