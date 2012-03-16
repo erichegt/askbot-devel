@@ -423,7 +423,7 @@ def edit_answer(request, id):
                     # Replace with those from the selected revision
                     rev = revision_form.cleaned_data['revision']
                     selected_revision = models.PostRevision.objects.answer_revisions().get(
-                                                            answer = answer,
+                                                            post = answer,
                                                             revision = rev
                                                         )
                     form = forms.EditAnswerForm(answer, selected_revision)
