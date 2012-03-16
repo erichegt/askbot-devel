@@ -124,7 +124,7 @@ class TitleField(forms.CharField):
                         '%d characters'
                     ) % self.max_length
                 )
-        elif encoded_value > self.max_length:
+        elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
                 _(
                     'The title is too long, maximum allowed size is '
@@ -618,6 +618,10 @@ class AskForm(forms.Form, FormWithHideableFields):
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
 
+ASK_BY_EMAIL_SUBJECT_HELP = _(
+    'Subject line is expected in the format: '
+    '[tag1, tag2, tag3,...] question title'
+)
 
 class AskByEmailForm(forms.Form):
     """:class:`~askbot.forms.AskByEmailForm`
@@ -640,7 +644,12 @@ class AskByEmailForm(forms.Form):
     * ``body_text`` - body of question text - a pass-through, no extra validation
     """
     sender = forms.CharField(max_length = 255)
-    subject = forms.CharField(max_length = 255)
+    subject = forms.CharField(
+        max_length = 255,
+        error_messages = {
+            'required': ASK_BY_EMAIL_SUBJECT_HELP
+        }
+    )
     body_text = QuestionEditorField()
 
     def clean_sender(self):
@@ -682,7 +691,7 @@ class AskByEmailForm(forms.Form):
             title = match.group(2).strip()
             self.cleaned_data['title'] = TitleField().clean(title)
         else:
-            raise forms.ValidationError('could not parse subject line')
+            raise forms.ValidationError(ASK_BY_EMAIL_SUBJECT_HELP)
         return self.cleaned_data['subject']
 
 class AnswerForm(forms.Form):

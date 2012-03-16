@@ -84,6 +84,10 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | Deletes Activity objects of type badge award where the      |
 |                                 | related context object is lost.                             |
 +---------------------------------+-------------------------------------------------------------+
+| `delete_contextless_activities` | Same as above, but works in a broader sense - when the      |
+|                                 | related context object does not exist, but the generic      |
+|                                 | foreign key to that object is still present.                |
++---------------------------------+-------------------------------------------------------------+
 
 .. _email-related-commands:
 

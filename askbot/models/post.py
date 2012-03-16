@@ -486,8 +486,8 @@ class Post(models.Model):
         if self.is_comment():
             #todo: implement a custom delete method on these
             #all this should pack into Activity.responses.filter( somehow ).delete()
-            activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-            activity_types += (const.TYPE_ACTIVITY_MENTION,)
+            #activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+            #activity_types += (const.TYPE_ACTIVITY_MENTION,)
             #todo: not very good import in models of other models
             #todo: potentially a circular import
             from askbot.models.user import Activity
@@ -495,7 +495,7 @@ class Post(models.Model):
             activities = Activity.objects.filter(
                                 content_type = comment_content_type,
                                 object_id = self.id,
-                                activity_type__in = activity_types
+                                #activity_type__in = activity_types
                             )
 
             recipients = set()
@@ -1268,7 +1268,7 @@ class Post(models.Model):
             comment = None,
             revised_at = None
     ):
-        if None in (author, text, comment):
+        if None in (author, text):
             raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):

@@ -1,0 +1,343 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Chandan kumar <chandankumar.093047@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: askbot\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-11 22:22-0500\n"
+"PO-Revision-Date: 2012-02-27 09:25+0000\n"
+"Last-Translator: Chandan kumar <chandankumar.093047@gmail.com>\n"
+"Language-Team: Hindi (http://www.transifex.net/projects/p/askbot/language/"
+"hi/)\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:73
+#, perl-format
+msgid "Are you sure you want to remove your %s login?"
+msgstr "क्या आप सुनिश्चित करें कि आप अपने %s लॉगइन को हटाना चाहते हैं?"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:90
+msgid "Please add one or more login methods."
+msgstr "कृपया एक या एक से अधिक लॉगइन तरीकों को जोड़ें."
+
+#: skins/common/media/jquery-openid/jquery.openid.js:93
+msgid ""
+"You don't have a method to log in right now, please add one or more by "
+"clicking any of the icons below."
+msgstr ""
+"आपके पास ठीक अभी लोगिनइन होने की विधि नहीं है.कृपया एक या अधिक नीचे दिए गए किसी भी "
+"प्रतीक पर क्लिक करके जोड़ा गया."
+
+#: skins/common/media/jquery-openid/jquery.openid.js:135
+msgid "passwords do not match"
+msgstr "कूटशब्द मेल नहीं खाता है"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:161
+msgid "Show/change current login methods"
+msgstr "को दिखाएँ / वर्तमान लॉगिन तरीकों का को परिवर्तन"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:226
+#, perl-format
+msgid "Please enter your %s, then proceed"
+msgstr "कृपया अपना %s दर्ज करें, उसके बाद आगे बढे "
+
+#: skins/common/media/jquery-openid/jquery.openid.js:228
+msgid "Connect your %(provider_name)s account to %(site)s"
+msgstr "%(site)s को %(provider_name)s खाते से कनेक्ट करें"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:322
+#, perl-format
+msgid "Change your %s password"
+msgstr "अपना  %s कूटशब्द बदले "
+
+#: skins/common/media/jquery-openid/jquery.openid.js:323
+msgid "Change password"
+msgstr "कूटशब्द बदले "
+
+#: skins/common/media/jquery-openid/jquery.openid.js:326
+#, perl-format
+msgid "Create a password for %s"
+msgstr "%s के लिए कूटशब्द बनाएँ"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:327
+msgid "Create password"
+msgstr "कूटशब्द बनाएँ"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:343
+msgid "Create a password-protected account"
+msgstr "कूटशब्द रक्षित खाता बनाएँ"
+
+#: skins/common/media/js/post.js:28
+msgid "loading..."
+msgstr "लोड हो रहा है ..."
+
+#: skins/common/media/js/post.js:318
+msgid "insufficient privilege"
+msgstr "अपर्याप्त विशेषाधिकार"
+
+#: skins/common/media/js/post.js:319
+msgid "cannot pick own answer as best"
+msgstr "खेद है, आप अपने स्वयं के जवाब को स्वीकार नहीं कर सकते है "
+
+#: skins/common/media/js/post.js:324
+msgid "please login"
+msgstr "कृपया लॉगिन करें"
+
+#: skins/common/media/js/post.js:326
+msgid "anonymous users cannot follow questions"
+msgstr "अज्ञात उपयोगकर्ताओं प्रश्नों का अनुसरण नहीं कर सकते हैं"
+
+#: skins/common/media/js/post.js:327
+msgid "anonymous users cannot subscribe to questions"
+msgstr "अज्ञात उपयोगकर्ताओं सवालों करने के लिए सदस्यता ले सकता है "
+
+#: skins/common/media/js/post.js:328
+msgid "anonymous users cannot vote"
+msgstr "खेद है,अज्ञात उपयोगकर्ताओं को मतदान नहीं कर सकते है "
+
+#: skins/common/media/js/post.js:330
+msgid "please confirm offensive"
+msgstr ""
+"क्या आप सहमत है की यह पोस्ट स्पैम, विज्ञापन, दुर्भावनापूर्ण टिप्पणी, अपमानजनक आदि  में "
+"शामिल है?"
+
+#: skins/common/media/js/post.js:331
+#, fuzzy
+msgid "please confirm removal of offensive flag"
+msgstr ""
+"क्या आप सहमत है की यह पोस्ट स्पैम, विज्ञापन, दुर्भावनापूर्ण टिप्पणी, अपमानजनक आदि  में "
+"शामिल है?"
+
+#: skins/common/media/js/post.js:332
+msgid "anonymous users cannot flag offensive posts"
+msgstr "अज्ञात उपयोगकर्ताओं को आपत्तिजनक ध्वजांकित प्रविष्टियाँ नहीं कर सकते हैं"
+
+#: skins/common/media/js/post.js:333
+msgid "confirm delete"
+msgstr "आप सुनिश्चित करें कि आप इसे हटाना चाहते हैं?"
+
+#: skins/common/media/js/post.js:334
+msgid "anonymous users cannot delete/undelete"
+msgstr "खेद है, अज्ञात उपयोगकर्ताओं के प्रविष्टियाँ को रद्द या नहीं रद्दकर सकते हैं"
+
+#: skins/common/media/js/post.js:335
+msgid "post recovered"
+msgstr "आपकी  प्रविष्टियाँ अभी पुनर्स्थापित किया जाता है!"
+
+#: skins/common/media/js/post.js:336
+msgid "post deleted"
+msgstr "आपकी प्रविष्टियाँ को मिटा दिया गया है "
+
+#: skins/common/media/js/post.js:1202
+msgid "add comment"
+msgstr "टिप्पणी जोड़ें"
+
+#: skins/common/media/js/post.js:1205
+msgid "save comment"
+msgstr "टिप्पणी सहेजे "
+
+#: skins/common/media/js/post.js:1870
+msgid "Please enter question title (>10 characters)"
+msgstr "प्रश्न के शीर्षक (>10 अक्षर) दर्ज करें"
+
+#: skins/common/media/js/tag_selector.js:15
+msgid "Tag \"<span></span>\" matches:"
+msgstr "लेबल \"<span></span>\"  मेल खा रहा है:"
+
+#: skins/common/media/js/tag_selector.js:84
+#, perl-format
+msgid "and %s more, not shown..."
+msgstr "और %s से अधिक है,नहीं दिखाया गया"
+
+#: skins/common/media/js/user.js:14
+msgid "Please select at least one item"
+msgstr "कृपया कम से कम एक आइटम का चयन करें"
+
+#: skins/common/media/js/user.js:58
+msgid "Delete this notification?"
+msgid_plural "Delete these notifications?"
+msgstr[0] "इस अधिसूचना को हटाएँ?"
+msgstr[1] "इस अधिसूचनाएँ को हटाएँ?"
+
+#: skins/common/media/js/user.js:65
+#, fuzzy
+msgid "Close this entry?"
+msgid_plural "Close these entries?"
+msgstr[0] "इस टिप्पणी को मिटाए "
+msgstr[1] "इस टिप्पणी को मिटाए "
+
+#: skins/common/media/js/user.js:72
+msgid "Remove all flags on this entry?"
+msgid_plural "Remove all flags on these entries?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: skins/common/media/js/user.js:79
+#, fuzzy
+msgid "Delete this entry?"
+msgid_plural "Delete these entries?"
+msgstr[0] "इस टिप्पणी को मिटाए "
+msgstr[1] "इस टिप्पणी को मिटाए "
+
+#: skins/common/media/js/user.js:159
+msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
+msgstr ""
+"कृपया %(username)s का अनुसरण करने के लिए <a href=\"%(signin_url)s\"> सत्यापन करें."
+
+#: skins/common/media/js/user.js:191
+#, perl-format
+msgid "unfollow %s"
+msgstr "%s का अनुसरण न करें"
+
+#: skins/common/media/js/user.js:194
+#, perl-format
+msgid "following %s"
+msgstr "%s का अनुसरण कर रहा है "
+
+#: skins/common/media/js/user.js:200
+#, perl-format
+msgid "follow %s"
+msgstr "%s का अनुसरण करे "
+
+#: skins/common/media/js/utils.js:44
+msgid "click to close"
+msgstr "बंद करने के के लिए क्लिक करें"
+
+#: skins/common/media/js/wmd/wmd.js:26
+msgid "bold"
+msgstr "मोटा"
+
+#: skins/common/media/js/wmd/wmd.js:27
+msgid "italic"
+msgstr "इटालिक"
+
+#: skins/common/media/js/wmd/wmd.js:28
+msgid "link"
+msgstr "लिंक"
+
+#: skins/common/media/js/wmd/wmd.js:29
+msgid "quote"
+msgstr "उद्धरण"
+
+#: skins/common/media/js/wmd/wmd.js:30
+msgid "preformatted text"
+msgstr "पूर्वनिर्धारित स्वरूप वाला पाठ"
+
+#: skins/common/media/js/wmd/wmd.js:31
+msgid "image"
+msgstr "छवि"
+
+#: skins/common/media/js/wmd/wmd.js:32
+msgid "attachment"
+msgstr "अनुलग्नक"
+
+#: skins/common/media/js/wmd/wmd.js:33
+msgid "numbered list"
+msgstr "क्रमांकित सूची"
+
+#: skins/common/media/js/wmd/wmd.js:34
+msgid "bulleted list"
+msgstr "बुलेटेड सूची"
+
+#: skins/common/media/js/wmd/wmd.js:35
+msgid "heading"
+msgstr "शीर्षक"
+
+#: skins/common/media/js/wmd/wmd.js:36
+msgid "horizontal bar"
+msgstr "क्षैतिज पट्टी"
+
+#: skins/common/media/js/wmd/wmd.js:37
+msgid "undo"
+msgstr "पूर्ववत् करें"
+
+#: skins/common/media/js/wmd/wmd.js:38 skins/common/media/js/wmd/wmd.js:1053
+msgid "redo"
+msgstr "फिर से करे "
+
+#: skins/common/media/js/wmd/wmd.js:47
+msgid "enter image url"
+msgstr ""
+"छवि का यूआरएल प्रविष्ट करें, जैसे http://www.example.com/image.jpg या किसी छवि फ़ाइल "
+"को अपलोड करें"
+
+#: skins/common/media/js/wmd/wmd.js:48
+msgid "enter url"
+msgstr "वेब पता प्रविष्ट करें जैसे:http://www.example.com \"page title\""
+
+#: skins/common/media/js/wmd/wmd.js:49
+msgid "upload file attachment"
+msgstr "कृपया चुनें और फ़ाइल को अपलोड करें:"
+
+#~ msgid "tags cannot be empty"
+#~ msgstr "कृपया कम से कम एक लेबल को दर्ज करें"
+
+#~ msgid "content cannot be empty"
+#~ msgstr "सामग्री रिक्त नहीं हो सकता है"
+
+#~ msgid "%s content minchars"
+#~ msgstr "कृपया %s वर्णों से अधिक दर्ज करें "
+
+#~ msgid "please enter title"
+#~ msgstr "कृपया शीर्षक दर्ज करें"
+
+#~ msgid "%s title minchars"
+#~ msgstr "कम से कम %s अक्षर दर्ज करें"
+
+#~ msgid "Follow"
+#~ msgstr "पालन करें"
+
+#~ msgid "%s follower"
+#~ msgid_plural "%s followers"
+#~ msgstr[0] "%s अनुसरणकर्ता"
+#~ msgstr[1] "%s अनुसरणकर्ता"
+
+#~ msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+#~ msgstr "<div>निम्नलिखित</div><div class=\"unfollow\">Unfollow</div>"
+
+#~ msgid "undelete"
+#~ msgstr "न मिटाए "
+
+#~ msgid "delete"
+#~ msgstr "मिटाए "
+
+#~ msgid "enter %s more characters"
+#~ msgstr "कम से कम %s से अधिक अक्षरों की प्रविष्ट करें"
+
+#~ msgid "%s characters left"
+#~ msgstr "%s अक्षरों को छोड़ दिया है."
+
+#~ msgid "cancel"
+#~ msgstr "रद्द करें"
+
+#~ msgid "confirm abandon comment"
+#~ msgstr "क्या आप सुनिश्चित करेंगे कि आप इस टिप्पणी को पोस्ट नहीं करना चाहते हैं?"
+
+#~ msgid "confirm delete comment"
+#~ msgstr "क्या आप सच में इस टिप्पणी को नष्ट करना चाहते हैं?"
+
+#~ msgid "click to edit this comment"
+#~ msgstr "इस टिप्पणी को संपादित करने के लिए क्लिक करें"
+
+#~ msgid "edit"
+#~ msgstr "संपादित करें"
+
+#~ msgid "see questions tagged '%s'"
+#~ msgstr "'%s' प्रश्नों को चिह्नित करे "
+
+#~ msgid "image description"
+#~ msgstr "छवि विवरण"
+
+#~ msgid "file name"
+#~ msgstr "फ़ाइल का नाम"
+
+#~ msgid "link text"
+#~ msgstr "लिंक पाठ"

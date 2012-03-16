@@ -14,3 +14,4 @@ from askbot.tests.templatefilter_tests import *
 from askbot.tests.markup_test import *
 from askbot.tests.misc_tests import *
 from askbot.tests.post_model_tests import *
+from askbot.tests.reply_by_email_tests import *

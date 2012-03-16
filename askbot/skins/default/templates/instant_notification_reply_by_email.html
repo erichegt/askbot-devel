@@ -1,0 +1,14 @@
+
+{% if can_reply %}
+{% trans %}
+{# Don't change the following line in the template. #}
+======= Reply above this line. ====-=-=
+{% endtrans %}
+{% else %}
+{% trans %}
+You can post an answer or a comment by replying to email notifications. To do that
+you need {{reply_by_email_karma_threshold}} karma, you have {{receiving_user_karma}} karma. 
+{% endtrans %}
+{% endif %}
+
+{% include 'instant_notification.html' %}

@@ -13,7 +13,6 @@ import sys
 import tempfile
 import time
 import urlparse
-from django.core.files.storage import get_storage_class
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -31,6 +30,7 @@ from askbot.skins.loaders import render_into_skin
 from askbot.utils import decorators
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
+from askbot.utils.file_utils import store_file
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
@@ -64,6 +64,9 @@ def upload(request):#ajax upload file to a question or answer
 
         # check file type
         f = request.FILES['file-upload']
+        
+        #todo: extension checking should be replaced with mimetype checking
+        #and this must be part of the form validation
         file_extension = os.path.splitext(f.name)[1].lower()
         if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
             file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
@@ -71,17 +74,8 @@ def upload(request):#ajax upload file to a question or answer
                     {'file_types': file_types}
             raise exceptions.PermissionDenied(msg)
 
-        # generate new file name
-        new_file_name = str(
-                            time.time()
-                        ).replace(
-                            '.', 
-                            str(random.randint(0,100000))
-                        ) + file_extension
-
-        file_storage = get_storage_class()()
-        # use default storage to store file
-        file_storage.save(new_file_name, f)
+        # generate new file name and storage object
+        file_storage, new_file_name, file_url = store_file(f)
         # check file size
         # byte
         size = file_storage.size(new_file_name)
@@ -99,16 +93,6 @@ def upload(request):#ajax upload file to a question or answer
 
     if error == '':
         result = 'Good'
-        file_url = file_storage.url(new_file_name)
-        parsed_url = urlparse.urlparse(file_url)
-        file_url = urlparse.urlunparse(
-            urlparse.ParseResult(
-                parsed_url.scheme, 
-                parsed_url.netloc,
-                parsed_url.path,
-                '', '', ''
-            )
-        )
     else:
         result = ''
         file_url = ''

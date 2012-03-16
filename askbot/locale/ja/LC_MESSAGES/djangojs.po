@@ -1,342 +1,340 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Tomoyuki KATO <tomo@dream.daynight.jp>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.7\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-27 01:59-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: askbot\n"
+"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"POT-Creation-Date: 2011-11-27 01:58-0600\n"
+"PO-Revision-Date: 2012-02-02 13:32+0000\n"
+"Last-Translator: Tomoyuki KATO <tomo@dream.daynight.jp>\n"
+"Language-Team: Japanese (http://www.transifex.net/projects/p/askbot/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Translate Toolkit 1.9.0\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "本当に %s のログインを削除したいですか？"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "１つ以上のログイン方法を追加してください。"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr ""
+msgstr "今すぐにログインする方法がありません、以下のアイコンのどれかをクリックして1つ以上を追加してください。"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "パスワードが一致しません"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "現在のログイン方法の表示・変更"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:223
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "%s を入力して、進んでください"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:225
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "%(provider_name)s アカウントを %(site)s に接続します"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:319
 #, c-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "%s のパスワードを変更します"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:320
 msgid "Change password"
-msgstr ""
+msgstr "パスワードを変更します"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "%s のパスワードを作成します"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:324
 msgid "Create password"
-msgstr ""
+msgstr "パスワードを作成します"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:340
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "パスワード保護されたアカウントを作成します"
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "読み込み中..."
 
 #: skins/common/media/js/post.js:128 skins/common/media/js/post.js.c:859
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "最低1つのタグを入力してください"
 
 #: skins/common/media/js/post.js:134
 msgid "content cannot be empty"
-msgstr ""
+msgstr "内容が空白ではいけません"
 
 #: skins/common/media/js/post.js:135
 #, c-format
 msgid "%s content minchars"
-msgstr ""
+msgstr "%s 文字以上を入力してください"
 
 #: skins/common/media/js/post.js:138
 msgid "please enter title"
-msgstr ""
+msgstr "見出しを入力してください"
 
 #: skins/common/media/js/post.js:139 skins/common/media/js/post.js.c:987
 #, c-format
 msgid "%s title minchars"
-msgstr ""
+msgstr "最低 %s 文字を入力してください"
 
 #: skins/common/media/js/post.js:282
 msgid "insufficient privilege"
-msgstr ""
+msgstr "不十分な権限"
 
 #: skins/common/media/js/post.js:283
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "申し訳ありませんが、あなたの回答を受領できません"
 
 #: skins/common/media/js/post.js:288
 msgid "please login"
-msgstr ""
+msgstr "ログインしてください"
 
 #: skins/common/media/js/post.js:290
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "匿名ユーザーは質問をフォローできません"
 
 #: skins/common/media/js/post.js:291
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "匿名ユーザーは質問を購読できません"
 
 #: skins/common/media/js/post.js:292
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "申し訳ありませんが、匿名ユーザーは投票できません "
 
 #: skins/common/media/js/post.js:294
 msgid "please confirm offensive"
-msgstr ""
+msgstr "あなたはこの投稿が攻撃的、スパム、広告、悪意のある意見などであると思いますか？"
 
 #: skins/common/media/js/post.js:295
 msgid "anonymous users cannot flag offensive posts"
-msgstr ""
+msgstr "匿名ユーザーが攻撃的な投稿のフラグをつけられません"
 
 #: skins/common/media/js/post.js:296
 msgid "confirm delete"
-msgstr ""
+msgstr "本当にこれを削除したいですか？"
 
 #: skins/common/media/js/post.js:297
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "申し訳ありませんが、匿名ユーザーは投稿を削除または復旧できません"
 
 #: skins/common/media/js/post.js:298
 msgid "post recovered"
-msgstr ""
+msgstr "これで投稿が復元されました！"
 
 #: skins/common/media/js/post.js:299
 msgid "post deleted"
-msgstr ""
+msgstr "投稿が削除されました"
 
 #: skins/common/media/js/post.js:539 skins/old/media/js/post.js:535
 msgid "Follow"
-msgstr ""
+msgstr "フォロー"
 
 #: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
 #: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] ""
-"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
-"#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
-msgstr[1] "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+msgstr[0] "%s フォロワー"
 
 #: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<div>フォロー中</div><div class=\"unfollow\">フォロー解除</div>"
 
 #: skins/common/media/js/post.js:615
 msgid "undelete"
-msgstr ""
+msgstr "復旧"
 
 #: skins/common/media/js/post.js:620
 msgid "delete"
-msgstr ""
+msgstr "削除"
 
 #: skins/common/media/js/post.js:957
 msgid "add comment"
-msgstr ""
+msgstr "コメントの追加"
 
 #: skins/common/media/js/post.js:960
 msgid "save comment"
-msgstr ""
+msgstr "コメントの保存"
 
 #: skins/common/media/js/post.js:990
 #, c-format
 msgid "enter %s more characters"
-msgstr ""
+msgstr "最低 %s 文字以上を入力してください"
 
 #: skins/common/media/js/post.js:995
 #, c-format
 msgid "%s characters left"
-msgstr ""
+msgstr "残り %s 文字"
 
 #: skins/common/media/js/post.js:1066
 msgid "cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #: skins/common/media/js/post.js:1109
 msgid "confirm abandon comment"
-msgstr ""
+msgstr "本当にこのコメントを投稿したいですか？"
 
 #: skins/common/media/js/post.js:1183
 msgid "delete this comment"
-msgstr ""
+msgstr "このコメントを削除する"
 
 #: skins/common/media/js/post.js:1387
 msgid "confirm delete comment"
-msgstr ""
+msgstr "本当にこのコメントを削除したいですか？"
 
 #: skins/common/media/js/post.js:1628 skins/old/media/js/post.js:1621
 msgid "Please enter question title (>10 characters)"
-msgstr ""
+msgstr "質問の見出しを入力してください（>10文字）"
 
 #: skins/common/media/js/tag_selector.js:15
 #: skins/old/media/js/tag_selector.js:15
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "タグ \"<span></span>\" が一致します:"
 
 #: skins/common/media/js/tag_selector.js:84
 #: skins/old/media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "さらに %s 個、表示されていません..."
 
 #: skins/common/media/js/user.js:14
 msgid "Please select at least one item"
-msgstr ""
+msgstr "最低1つの項目を選択してください"
 
 #: skins/common/media/js/user.js:58
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] ""
+msgstr[0] "この通知を削除しますか？"
 
 #: skins/common/media/js/user.js:125 skins/old/media/js/user.js:129
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "%(username)s をフォローするには<a href=\"%(signin_url)s\">サインイン</a>してください"
 
 #: skins/common/media/js/user.js:157 skins/old/media/js/user.js:161
 #, c-format
 msgid "unfollow %s"
-msgstr ""
+msgstr "%s のフォロー解除"
 
 #: skins/common/media/js/user.js:160 skins/old/media/js/user.js:164
 #, c-format
 msgid "following %s"
-msgstr ""
+msgstr "%s のフォロー中"
 
 #: skins/common/media/js/user.js:166 skins/old/media/js/user.js:170
 #, c-format
 msgid "follow %s"
-msgstr ""
+msgstr "%s のフォロー"
 
 #: skins/common/media/js/utils.js:43
 msgid "click to close"
-msgstr ""
+msgstr "閉じるにはクリックしてください"
 
 #: skins/common/media/js/utils.js:214
 msgid "click to edit this comment"
-msgstr ""
+msgstr "このコメントを編集するにはクリックしてください"
 
 #: skins/common/media/js/utils.js:215
 msgid "edit"
-msgstr ""
+msgstr "編集"
 
 #: skins/common/media/js/utils.js:369
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "'%s' というタグの付いた質問を参照する"
 
 #: skins/common/media/js/wmd/wmd.js:30
 msgid "bold"
-msgstr ""
+msgstr "太字"
 
 #: skins/common/media/js/wmd/wmd.js:31
 msgid "italic"
-msgstr ""
+msgstr "斜体"
 
 #: skins/common/media/js/wmd/wmd.js:32
 msgid "link"
-msgstr ""
+msgstr "リンク"
 
 #: skins/common/media/js/wmd/wmd.js:33
 msgid "quote"
-msgstr ""
+msgstr "引用"
 
 #: skins/common/media/js/wmd/wmd.js:34
 msgid "preformatted text"
-msgstr ""
+msgstr "整形済みテキスト"
 
 #: skins/common/media/js/wmd/wmd.js:35
 msgid "image"
-msgstr ""
+msgstr "画像"
 
 #: skins/common/media/js/wmd/wmd.js:36
 msgid "attachment"
-msgstr ""
+msgstr "添付"
 
 #: skins/common/media/js/wmd/wmd.js:37
 msgid "numbered list"
-msgstr ""
+msgstr "番号付きリスト"
 
 #: skins/common/media/js/wmd/wmd.js:38
 msgid "bulleted list"
-msgstr ""
+msgstr "箇条書きリスト"
 
 #: skins/common/media/js/wmd/wmd.js:39
 msgid "heading"
-msgstr ""
+msgstr "見出し"
 
 #: skins/common/media/js/wmd/wmd.js:40
 msgid "horizontal bar"
-msgstr ""
+msgstr "水平線"
 
 #: skins/common/media/js/wmd/wmd.js:41
 msgid "undo"
-msgstr ""
+msgstr "やり直し"
 
 #: skins/common/media/js/wmd/wmd.js:42 skins/common/media/js/wmd/wmd.js:1116
 msgid "redo"
-msgstr ""
+msgstr "再実行"
 
 #: skins/common/media/js/wmd/wmd.js:53
 msgid "enter image url"
-msgstr ""
+msgstr "画像のURL（例、http://www.example.com/image.jpg）を入力してください、または画像ファイルをアップロードしてください"
 
 #: skins/common/media/js/wmd/wmd.js:54
 msgid "enter url"
-msgstr ""
+msgstr "ウェブアドレス（例、http://www.example.com \"page title\"）を入力してください"
 
 #: skins/common/media/js/wmd/wmd.js:55
 msgid "upload file attachment"
-msgstr ""
+msgstr "ファイルを選択してアップロードしてください:"
 
 #: skins/common/media/js/wmd/wmd.js:1778
 msgid "image description"
-msgstr ""
+msgstr "画像の説明"
 
 #: skins/common/media/js/wmd/wmd.js:1781
 msgid "file name"
-msgstr ""
+msgstr "ファイル名"
 
 #: skins/common/media/js/wmd/wmd.js:1785
 msgid "link text"
-msgstr ""
+msgstr "リンクテキスト"

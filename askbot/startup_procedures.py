@@ -109,7 +109,7 @@ def test_middleware():
     installed in the django settings.py file. If that is not the
     case - raises an AskbotConfigError exception.
     """
-    required_middleware = (
+    required_middleware = [
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -117,37 +117,47 @@ def test_middleware():
         'askbot.middleware.forum_mode.ForumModeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
-        'askbot.middleware.view_log.ViewLogMiddleware',
-    )
+    ]
     if 'debug_toolbar' in django_settings.INSTALLED_APPS:
-        required_middleware += (
+        required_middleware.append(
             'debug_toolbar.middleware.DebugToolbarMiddleware',
         )
-
-    installed_middleware_set = set(django_settings.MIDDLEWARE_CLASSES)
-    missing_middleware_set = set(required_middleware) - installed_middleware_set
-
-    if missing_middleware_set:
-        error_message = """\n\nPlease add the following middleware (listed after this message)
+    required_middleware.extend([
+        'askbot.middleware.view_log.ViewLogMiddleware',
+        'askbot.middleware.spaceless.SpacelessMiddleware',
+    ])
+    found_middleware = [x for x in django_settings.MIDDLEWARE_CLASSES
+                            if x in required_middleware]
+    if found_middleware != required_middleware:
+        # either middleware is out of order or it's missing an item
+        missing_middleware_set = set(required_middleware) - set(found_middleware)
+        middleware_text = ''
+        if missing_middleware_set:
+            error_message = """\n\nPlease add the following middleware (listed after this message)
 to the MIDDLEWARE_CLASSES variable in your site settings.py file.
-The order the middleware records may be important, please take a look at the example in
+The order the middleware records is important, please take a look at the example in
 https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.py:\n\n"""
-        middleware_text = format_as_text_tuple_entries(missing_middleware_set)
+            middleware_text = format_as_text_tuple_entries(missing_middleware_set)
+        else:
+            # middleware is out of order
+            error_message = """\n\nPlease check the order of middleware closely.
+The order the middleware records is important, please take a look at the example in
+https://github.com/ASKBOT/askbot-devel/blob/master/askbot/setup_templates/settings.py
+for the correct order.\n\n"""
         raise AskbotConfigError(error_message + middleware_text)
 
 
     #middleware that was used in the past an now removed
-    canceled_middleware = (
-        'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware',
-    )
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    canceled_middleware = [
+        'askbot.deps.recaptcha_django.middleware.ReCaptchaMiddleware'
+    ]
 
-    remove_middleware_set = set(canceled_middleware) \
-                                & installed_middleware_set
-    if remove_middleware_set:
+    invalid_middleware = [x for x in canceled_middleware
+                            if x in django_settings.MIDDLEWARE_CLASSES]
+    if invalid_middleware:
         error_message = """\n\nPlease remove the following middleware entries from
 the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more:\n\n"""
-        middleware_text = format_as_text_tuple_entries(remove_middleware_set)
+        middleware_text = format_as_text_tuple_entries(invalid_middleware)
         raise AskbotConfigError(error_message + middleware_text)
 
 def try_import(module_name, pypi_package_name):
@@ -356,7 +366,11 @@ def test_staticfiles():
 
     askbot_root = os.path.dirname(askbot.__file__)
     skin_dir = os.path.abspath(os.path.join(askbot_root, 'skins'))
-    if skin_dir not in map(os.path.abspath, django_settings.STATICFILES_DIRS):
+
+    # django_settings.STATICFILES_DIRS can have strings or tuples
+    staticfiles_dirs = [d[1] if isinstance(d, tuple) else d
+                        for d in django_settings.STATICFILES_DIRS]
+    if skin_dir not in map(os.path.abspath, staticfiles_dirs):
         errors.append(
             'Add to STATICFILES_DIRS list of your settings.py file:\n'
             "    '%s'," % skin_dir
@@ -368,7 +382,7 @@ def test_staticfiles():
                 'Directory specified with settning ASKBOT_EXTRA_SKINS_DIR '
                 'must exist and contain your custom skins for askbot.'
             )
-        if extra_skins_dir not in django_settings.STATICFILES_DIRS:
+        if extra_skins_dir not in staticfiles_dirs:
             errors.append(
                 'Add ASKBOT_EXTRA_SKINS_DIR to STATICFILES_DIRS entry in '
                 'your settings.py file.\n'

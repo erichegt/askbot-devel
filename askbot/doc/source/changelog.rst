@@ -19,6 +19,11 @@ Development version (not released yet)
 * Fixed a file upload issue in FF and IE found by jerry_gzy (Evgeny)
 * Added test on maximum length of title working for utf-8 text (Evgeny)
 * Added caching and invalidation to the question page (Evgeny)
+* Added a management command delete_contextless_activities (Evgeny)
+* LDAP login configuration (github user `monkut <https://github.com/monkut>`_)
+* Check order of middleware classes (Daniel Mican)
+* Added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
+* Enabled "ask by email" via Lamson (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------

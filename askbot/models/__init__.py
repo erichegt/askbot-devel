@@ -31,6 +31,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.post import Post, PostRevision
+from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute
@@ -1104,6 +1105,7 @@ def user_retag_question(
         tagnames = tags,
         silent = silent
     )
+    question.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'retag_question',
         actor = self,
@@ -1343,6 +1345,34 @@ def user_edit_comment(self, comment_post=None, body_text = None):
     comment_post.parse_and_save(author = self)
     comment_post.thread.invalidate_cached_data()
 
+def user_edit_post(self,
+                post = None,
+                body_text = None,
+                revision_comment = None,
+                timestamp = None):
+    """a simple method that edits post body
+    todo: unify it in the style of just a generic post
+    this requires refactoring of underlying functions
+    because we cannot bypass the permissions checks set within
+    """
+    if post.post_type == 'comment':
+        self.edit_comment(comment_post = post, body_text = body_text)
+    elif post.post_type == 'answer':
+        self.edit_answer(
+            answer = post,
+            body_text = body_text,
+            timestamp = timestamp,
+            revision_comment = revision_comment
+        )
+    elif post.post_type == 'question':
+        self.edit_question(
+            question = post,
+            body_text = body_text,
+            timestamp = timestamp,
+            revision_comment = revision_comment
+        )
+    else:
+        raise NotImplementedError()
 
 @auto_now_timestamp
 def user_edit_question(
@@ -1475,6 +1505,7 @@ def user_post_answer(
         email_notify = follow,
         wiki = wiki
     )
+    answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
@@ -2169,6 +2200,7 @@ User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
+User.add_to_class('edit_post', user_edit_post)
 User.add_to_class(
     'post_anonymous_askbot_content',
     user_post_anonymous_askbot_content
@@ -2343,6 +2375,9 @@ def format_instant_notification_email(
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
+        'receiving_user_karma': to_user.reputation,
+        'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
+        'can_reply': to_user.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
         'post_url': strip_path(site_url) + post.get_absolute_url(),
@@ -2381,23 +2416,39 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
 
+        if askbot_settings.REPLY_BY_EMAIL:
+            template = get_template('instant_notification_reply_by_email.html')
+      
         subject_line, body_text = format_instant_notification_email(
-                        to_user = user,
-                        from_user = update_activity.user,
-                        post = post,
-                        update_type = update_type,
-                        template = template,
-                    )
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            update_type = update_type,
+                            template = template,
+                        )
+      
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
+        #TODO check user reputation
+        headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+        if askbot_settings.REPLY_BY_EMAIL:
+            reply_address = "noreply"
+            if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
+                reply_address = ReplyAddress.objects.create_new(post, user).address
+            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
+            headers.update({'Reply-To': reply_to})
+        else:
+            reply_to = django_settings.DEFAULT_FROM_EMAIL
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+            headers = headers
         )
+
+
 
 
 #todo: move to utils
@@ -2798,6 +2849,8 @@ __all__ = [
         'EmailFeedSetting',
 
         'User',
+
+        'ReplyAddress',
 
         'get_model'
 ]

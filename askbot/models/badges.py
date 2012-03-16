@@ -878,6 +878,11 @@ def init_badges():
     #from the __init__ function?
     for key in BADGES.keys():
         get_badge(key).get_stored_data()
+    #remove any badges from the database
+    #that are no longer in the BADGES dictionary
+    BadgeData.objects.exclude(
+        slug__in = map(slugify, BADGES.keys())
+    ).delete()
 
 award_badges_signal = Signal(
                         providing_args=[

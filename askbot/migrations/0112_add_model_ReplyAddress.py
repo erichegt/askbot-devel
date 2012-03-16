@@ -1,33 +1,27 @@
-# encoding: utf-8
-import sys
-import askbot
-from askbot.search.postgresql import setup_full_text_search
+# -*- coding: utf-8 -*-
 import datetime
-import os
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
-    """this migration is the same as 22
-    just ran again to update the postgres search setup
-    """
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-
-        if 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            script_path = os.path.join(
-                                askbot.get_install_directory(),
-                                'search',
-                                'postgresql',
-                                'thread_and_post_models_01162012.plsql'
-                            )
-            setup_full_text_search(script_path)
+        # Adding model 'ReplyAddress'
+        db.create_table('askbot_replyaddress', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('address', self.gf('django.db.models.fields.CharField')(unique=True, max_length=25)),
+            ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Post'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('allowed_from_email', self.gf('django.db.models.fields.EmailField')(max_length=150)),
+            ('used_at', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True)),
+        ))
+        db.send_create_signal('askbot', ['ReplyAddress'])
 
     def backwards(self, orm):
-        "Write your backwards methods here."
-        pass
+        # Deleting model 'ReplyAddress'
+        db.delete_table('askbot_replyaddress')
 
     models = {
         'askbot.activity': {
@@ -92,7 +86,7 @@ class Migration(DataMigration):
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'symmetrical': 'False', 'through': "orm['askbot.Award']", 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'})
         },
         'askbot.emailfeedsetting': {
             'Meta': {'object_name': 'EmailFeedSetting'},
@@ -168,6 +162,15 @@ class Migration(DataMigration):
             'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'viewed'", 'to': "orm['askbot.Post']"}),
             'when': ('django.db.models.fields.DateTimeField', [], {}),
             'who': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'question_views'", 'to': "orm['auth.User']"})
+        },
+        'askbot.replyaddress': {
+            'Meta': {'object_name': 'ReplyAddress'},
+            'address': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '25'}),
+            'allowed_from_email': ('django.db.models.fields.EmailField', [], {'max_length': '150'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Post']"}),
+            'used_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'askbot.repute': {
             'Meta': {'object_name': 'Repute', 'db_table': "u'repute'"},

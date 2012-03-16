@@ -56,14 +56,11 @@
                 if (data['userIsAdminOrMod']){
                     return;//all functions on
                 }
-                var edit_btn = document.getElementById(
-                    'post-' + post_id + '-edit'
-                )
                 if (post_id in data['user_posts']){
                     //todo: remove edit button from older comments
                     return;//same here
                 }
-                if (
+                if (//maybe remove "delete" button
                     data['userReputation'] < 
                     {{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}
                 ) {
@@ -72,7 +69,22 @@
                     );
                     delete_btn.parentNode.removeChild(delete_btn);
                 }
-                edit_btn.parentNode.removeChild(edit_btn);
+                if (//maybe remove "edit" button
+                    data['userReputation'] <
+                    {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}
+                ){
+                    var edit_btn = document.getElementById(
+                        'post-' + post_id + '-edit'
+                    )
+                    edit_btn.parentNode.removeChild(edit_btn);
+                }
+                if (//maybe remove retag button
+                    data['userReputation'] <
+                    {{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}
+                ){
+                    var retag_btn = document.getElementById('retag');
+                    retag_btn.parentNode.removeChild(retag_btn);
+                }
             }
             function render_add_comment_button(post_id, extra_comment_count){
                 var can_add = false;
@@ -114,10 +126,32 @@
                     }
                 }
             }
+            function render_add_answer_button(){
+                var add_answer_btn = document.getElementById('add-answer-btn');
+                if (askbot['data']['userIsAuthenticated']){
+                    if (askbot['data']['userId'] == {{question.author_id}}){
+                        add_answer_btn.setAttribute(
+                            'value',
+                            '{% trans %}Answer Your Own Question{% endtrans %}'
+                        )
+                    } else {
+                        add_answer_btn.setAttribute(
+                           'value',
+                            '{% trans %}Post Your Answer{% endtrans %}'
+                        )
+                    }
+                } else {
+                    add_answer_btn.setAttribute(
+                        'value',
+                        '{% trans %}Login/Signup to Post{% endtrans %}'
+                    );
+                }
+            }
             askbot['functions'] = askbot['functions'] || {};
             askbot['functions']['renderPostVoteButtons'] = render_vote_buttons;
             askbot['functions']['renderPostControls'] = render_post_controls;
             askbot['functions']['renderAddCommentButton'] = render_add_comment_button;
+            askbot['functions']['renderAddAnswerButton'] = render_add_answer_button;
         })();
     </script>
 {% endblock %}

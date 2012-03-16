@@ -3,25 +3,25 @@
 # This file is distributed under the same license as the CNPROG package.
 #
 # Translators:
-# Tomoyuki KATO <tomo@dream.daynight.jp>, 2012.
+# Chandan kumar <chandankumar.093047@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-11 22:12-0500\n"
-"PO-Revision-Date: 2012-03-10 09:03+0000\n"
-"Last-Translator: Tomoyuki KATO <tomo@dream.daynight.jp>\n"
-"Language-Team: Japanese (http://www.transifex.net/projects/p/askbot/language/"
-"ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2012-03-11 22:43-0500\n"
+"PO-Revision-Date: 2012-03-02 09:48+0000\n"
+"Last-Translator: Chandan kumar <chandankumar.093047@gmail.com>\n"
+"Language-Team: Hindi (http://www.transifex.net/projects/p/askbot/language/"
+"hi/)\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "申し訳ございませんが、匿名の訪問者はこの機能を利用できません"
+msgstr "क्षमा करें, लेकिन अज्ञात आगंतुकों इस फ़ंक्शन का उपयोग नहीं कर सकते हैं"
 
 #: feed.py:28 feed.py:90
 msgid " - "
@@ -29,40 +29,41 @@ msgstr " - "
 
 #: feed.py:28
 msgid "Individual question feed"
-msgstr ""
+msgstr "व्यक्तिगत प्रश्न फ़ीड"
 
 #: feed.py:90
 msgid "latest questions"
-msgstr "最近の質問"
+msgstr "नवीनतम प्रश्नों"
 
 #: forms.py:74
 msgid "select country"
-msgstr "国を選択してください"
+msgstr "देश का चयन करें"
 
 #: forms.py:83
 msgid "Country"
-msgstr "国"
+msgstr "देश"
 
 #: forms.py:91
 msgid "Country field is required"
-msgstr "国フィールドが必要です"
+msgstr "देश फ़ील्ड की आवश्यकता है"
 
 #: forms.py:104 skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/answer_edit_tips.html:49
 #: skins/default/templates/widgets/question_edit_tips.html:40
 #: skins/default/templates/widgets/question_edit_tips.html:45
 msgid "title"
-msgstr "タイトル"
+msgstr "शीर्षक"
 
 #: forms.py:105
 msgid "please enter a descriptive title for your question"
-msgstr "質問の記述的なタイトルを入力してください"
+msgstr "कृपया अपने प्रश्न के लिए एक विवरणात्मक शीर्षक दर्ज करें"
 
 #: forms.py:113
 #, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
 msgstr[0] ""
+msgstr[1] ""
 
 #: forms.py:123
 #, python-format
@@ -76,13 +77,13 @@ msgstr ""
 
 #: forms.py:149
 msgid "content"
-msgstr "内容"
+msgstr "सामग्री"
 
 #: forms.py:185 skins/common/templates/widgets/edit_post.html:20
 #: skins/common/templates/widgets/edit_post.html:32
 #: skins/default/templates/widgets/meta_nav.html:5
 msgid "tags"
-msgstr "タグ"
+msgstr "लेबल "
 
 #: forms.py:188
 #, python-format
@@ -93,27 +94,30 @@ msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
 msgstr[0] ""
+msgstr[1] ""
 
 #: forms.py:221 skins/default/templates/question_retag.html:58
 msgid "tags are required"
-msgstr "タグが必須です"
+msgstr "लेबल की आवश्यकता"
 
 #: forms.py:230
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] "%(tag_count)d 個未満のタグを使用してください"
+msgstr[0] "कृपया  %(tag_count)d  लेबल या कम का उपयोग करें"
+msgstr[1] "कृपया  %(tag_count)d लेबल या कम का उपयोग करें"
 
 #: forms.py:238
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "कम से कम निम्नलिखित टैग की आवश्यकता है: %(tags)s"
 
 #: forms.py:247
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] "各タグは %(max_chars)d 文字未満でなければいけません"
+msgstr[0] "प्रत्येक लेबल %(max_chars)d अक्षरों से कम होना चाहिए"
+msgstr[1] "प्रत्येक लेबल %(max_chars)d अक्षरों से कम होना चाहिए"
 
 #: forms.py:256
 msgid "In tags, please use letters, numbers and characters \"-+.#\""
@@ -122,78 +126,80 @@ msgstr ""
 #: forms.py:292
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr ""
+"सामुदायिक विकी (कर्मा से नहीं सम्मानित किया जायेगा और  कई अन्य विकि पोस्ट को संपादित "
+"कर सकते हैं)"
 
 #: forms.py:293
 msgid ""
 "if you choose community wiki option, the question and answer do not generate "
 "points and name of author will not be shown"
 msgstr ""
-"コミュニティー wikiオプションを選択した場合、質問と回答はポイントを生成せず、"
-"作者名は表示されない"
+"अगर आप सामुदायिक विकी विकल्प को चुनते हैं,सवाल और जवाब  अंकों को उत्पन्न नहीं करते है  और "
+"लेखक का नाम नहीं दिखाया जाएगा"
 
 #: forms.py:309
 msgid "update summary:"
-msgstr "サマリーを更新："
+msgstr "सारांश अद्यतन:"
 
 #: forms.py:310
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
-"あなたのリビジョンの要約サマリ（たとえば、スペル修正、文法修正、スタイル改善"
-"など。ここオプションです。）を入力してください"
+"अपने पुनरीक्षण का संक्षिप्त सार दर्ज करें(उदाहरण के लिए नियत वर्तनी, व्याकरण, शैली में "
+"सुधार, यह फ़ील्ड वैकल्पिक है)"
 
 #: forms.py:384
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "जोड़ने या घटाना के लिए अंकों की संख्या को दर्ज करे "
 
 #: forms.py:398 const/__init__.py:253
 msgid "approved"
-msgstr ""
+msgstr "स्वीकृत"
 
 #: forms.py:399 const/__init__.py:254
 msgid "watched"
-msgstr ""
+msgstr "देखते रहे "
 
 #: forms.py:400 const/__init__.py:255
 msgid "suspended"
-msgstr ""
+msgstr "निलंबित"
 
 #: forms.py:401 const/__init__.py:256
 msgid "blocked"
-msgstr ""
+msgstr "अवरोधित"
 
 #: forms.py:403
 msgid "administrator"
-msgstr ""
+msgstr "ऐडमिनिस्ट्रेटर"
 
 #: forms.py:404 const/__init__.py:252
 msgid "moderator"
-msgstr ""
+msgstr "मध्यस्थ"
 
 #: forms.py:424
 msgid "Change status to"
-msgstr ""
+msgstr "स्थिति को बदलने के लिए "
 
 #: forms.py:451
 msgid "which one?"
-msgstr ""
+msgstr "एक है जो?"
 
 #: forms.py:472
 msgid "Cannot change own status"
-msgstr ""
+msgstr "अपनी स्थिति को नहीं बदल सकते हैं"
 
 #: forms.py:478
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "अन्य उपयोगकर्ता को मध्यस्थ नहीं बना सकते है"
 
 #: forms.py:485
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "दूसरे मध्यस्थ की स्थिति को परिवर्तित नहीं सकते हैं"
 
 #: forms.py:491
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "एडमिन की स्थिति को परिवर्तित नहीं कर सकते हैं"
 
 #: forms.py:497
 #, python-format
@@ -201,14 +207,15 @@ msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr ""
+"यदि आप %(username)s की स्थिति में परिवर्तन करना चाहते हैं,कृपया एक अर्थपूर्ण चुनाव करें."
 
 #: forms.py:506
 msgid "Subject line"
-msgstr ""
+msgstr "विषय पंक्ति"
 
 #: forms.py:513
 msgid "Message text"
-msgstr "メッセージ文"
+msgstr "संदेश पाठ"
 
 #: forms.py:528
 msgid "Your name (optional):"
@@ -220,7 +227,7 @@ msgstr ""
 
 #: forms.py:531
 msgid "Your message:"
-msgstr "メッセージ："
+msgstr "आपका संदेश:"
 
 #: forms.py:536
 msgid "I don't want to give my email or receive a response:"
@@ -232,27 +239,31 @@ msgstr ""
 
 #: forms.py:597
 msgid "ask anonymously"
-msgstr "匿名で質問する"
+msgstr "गुमनाम रूप से पूछना"
 
 #: forms.py:599
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "जाँच करें यदि आप सवाल पूछते समय अपना नाम प्रकट नहीं करना चाहते है"
 
 #: forms.py:752
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr ""
+"आपने  गुमनाम रूप से इस प्रश्न को पूछा है,यदि आप अपनी पहचान को  उजागर करने का निर्णय लेते "
+"हैं,इस बॉक्स की जाँच करें."
 
 #: forms.py:756
 msgid "reveal identity"
-msgstr ""
+msgstr "पहचान प्रकट करे "
 
 #: forms.py:814
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr ""
+"क्षमा करें, केवल अज्ञात प्रश्न के पूछने वाला ही अपने या उसकी पहचान को  बता सकते हैं,कृपया "
+"बॉक्स को अचयनित करे "
 
 #: forms.py:827
 msgid ""
@@ -260,351 +271,361 @@ msgid ""
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr ""
+"क्षमा करें, जाहिर तौर पर नियमों को बदल दिए गए हैं -गुमनाम रूप से पूछना अब संभव नहीं है. "
+"कृपया \"पहचान प्रकट\" बॉक्स की जाँच करें या इस पृष्ठ को पुनः लोड करे और सवाल को फिर से "
+"संपादन करने की कोशिश करे ."
 
 #: forms.py:871
 msgid "Real name"
-msgstr "実名"
+msgstr "असली नाम"
 
 #: forms.py:878
 msgid "Website"
-msgstr "ウェブサイト"
+msgstr "वेबसाइट"
 
 #: forms.py:885
 msgid "City"
-msgstr "都市"
+msgstr "शहर"
 
 #: forms.py:894
 msgid "Show country"
-msgstr "国の表示"
+msgstr "देश दिखाएँ"
 
 #: forms.py:899
 msgid "Date of birth"
-msgstr "生年月日"
+msgstr "जन्म तिथि"
 
 #: forms.py:900
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr "表示されません、年齢の計算に利用します、型式：YYYY-MM-DD"
+msgstr "नहीं दिखाया जाएगा,उम्र की गणना करने के लिए उपयोग किया,प्रारूप : YYYY-MM-DD"
 
 #: forms.py:906
 msgid "Profile"
-msgstr "プロファイル"
+msgstr "रूपरेखा"
 
 #: forms.py:915
 msgid "Screen name"
-msgstr "スクリーン名"
+msgstr "स्क्रीन नाम"
 
 #: forms.py:946 forms.py:947
 msgid "this email has already been registered, please use another one"
-msgstr "このメールアドレスは登録済みです、ほかのものを使って下さい"
+msgstr "यह ईमेल पहले से ही पंजीकृत किया गया है,कृपया एक दूसरे उपयोग करें"
 
 #: forms.py:954
 msgid "Choose email tag filter"
-msgstr "電子メールタグフィルターを選択してください"
+msgstr "ईमेल टैग फिल्टर चुनें"
 
 #: forms.py:1001
 msgid "Asked by me"
-msgstr "自分からの質問"
+msgstr "मेरे द्वारा पूछा गया"
 
 #: forms.py:1004
 msgid "Answered by me"
-msgstr "自分からの回答"
+msgstr "मेरे द्वारा उत्तर दिया गया "
 
 #: forms.py:1007
 msgid "Individually selected"
-msgstr "個人的に選択された"
+msgstr "व्यक्तिगत रूप से चयनित"
 
 #: forms.py:1010
 msgid "Entire forum (tag filtered)"
-msgstr "フォーラム全体（タグでフィルターされた）"
+msgstr "संपूर्ण फोरम (फ़िल्टर्ड टैग)"
 
 #: forms.py:1014
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "टिप्पणियाँ और प्रविष्टियाँ मुझे उल्लेखित करती है"
 
 #: forms.py:1095
 msgid "please choose one of the options above"
-msgstr "上記から一つ選択してください"
+msgstr "उपरोक्त विकल्पों में से एक का चयन करें"
 
 #: forms.py:1098
 msgid "okay, let's try!"
-msgstr "よし、はじめよう！"
+msgstr "ठीक है,चलो कोशिश करे!"
 
 #: forms.py:1101
-#, python-format
+#, fuzzy, python-format
 msgid "no %(sitename)s email please, thanks"
-msgstr ""
+msgstr "कोई askbot ईमेल नहीं है कृपया, धन्यवाद"
 
 #: urls.py:41
 msgid "about/"
-msgstr ""
+msgstr "about/"
 
 #: urls.py:42
 msgid "faq/"
-msgstr ""
+msgstr "faq/"
 
 #: urls.py:43
 msgid "privacy/"
-msgstr ""
+msgstr "privacy/"
 
 #: urls.py:44
 msgid "help/"
-msgstr ""
+msgstr "help/"
 
 #: urls.py:46 urls.py:51
 msgid "answers/"
-msgstr "回答/"
+msgstr "answers/"
 
 #: urls.py:46 urls.py:87 urls.py:212
 msgid "edit/"
-msgstr "編集/"
+msgstr "edit/"
 
 #: urls.py:51 urls.py:117
 msgid "revisions/"
-msgstr "版数/"
+msgstr "revisions/"
 
 #: urls.py:61
 msgid "questions"
-msgstr ""
+msgstr "प्रश्नों "
 
 #: urls.py:82 urls.py:87 urls.py:92 urls.py:97 urls.py:102 urls.py:107
 #: urls.py:112 urls.py:117 urls.py:123 urls.py:299
 msgid "questions/"
-msgstr "質問/"
+msgstr "questions/"
 
 #: urls.py:82
 msgid "ask/"
-msgstr ""
+msgstr "ask/"
 
 #: urls.py:92
 msgid "retag/"
-msgstr ""
+msgstr "retag/"
 
 #: urls.py:97
 msgid "close/"
-msgstr ""
+msgstr "close/"
 
 #: urls.py:102
 msgid "reopen/"
-msgstr ""
+msgstr "reopen/"
 
 #: urls.py:107
 msgid "answer/"
-msgstr "回答/"
+msgstr "answer/"
 
 #: urls.py:112
 msgid "vote/"
-msgstr "投票/"
+msgstr "vote/"
 
 #: urls.py:123
 msgid "widgets/"
-msgstr ""
+msgstr "widgets/"
 
 #: urls.py:158
 msgid "tags/"
-msgstr "タグ/"
+msgstr "tags/"
 
 #: urls.py:201
 msgid "subscribe-for-tags/"
-msgstr ""
+msgstr "subscribe-for-tags/"
 
 #: urls.py:206 urls.py:212 urls.py:218 urls.py:226
 msgid "users/"
-msgstr "ユーザ"
+msgstr "users/"
 
 #: urls.py:219
 msgid "subscriptions/"
-msgstr ""
+msgstr "subscriptions/"
 
 #: urls.py:231
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:236 urls.py:241
 msgid "badges/"
-msgstr ""
+msgstr "badges/"
 
 #: urls.py:246
 msgid "messages/"
-msgstr "メッセージ/"
+msgstr "messages/"
 
 #: urls.py:246
 msgid "markread/"
-msgstr ""
+msgstr "markread/"
 
 #: urls.py:262
 msgid "upload/"
-msgstr "アップロード/"
+msgstr "upload/"
 
 #: urls.py:263
 msgid "feedback/"
-msgstr "フィードバック/"
+msgstr "feedback/"
 
 #: urls.py:305
 msgid "question/"
-msgstr "質問/"
+msgstr "question/"
 
 #: urls.py:312 setup_templates/settings.py:210
 #: skins/common/templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr "アカウント/"
+msgstr "account/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
-msgstr "ユーザーログイン"
+msgstr "प्रवेश नियंत्रण सेटिंग्स"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "केवल पंजीकृत उपयोगकर्ता फोरम का उपयोग करने की अनुमति दें"
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr ""
+msgstr "बिल्ला सेटिंग"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "अनुशासित: हटाए गए पद हेतु न्यूनतम वोट पक्ष में "
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr ""
+msgstr "सहकर्मी दबाव: हटाए गए पद हेतु न्यूनतम वोट विपक्ष में"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "शिक्षक: जवाब देने के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "सूक्ष्म उत्तर: जवाब देने के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:59
 msgid "Good Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "अच्छा उत्तर: जवाब देने के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:68
 msgid "Great Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "उपयुक्त उत्तर:जवाब देने के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:77
 msgid "Nice Question: minimum upvotes for the question"
-msgstr ""
+msgstr "सूक्ष्म प्रश्न: सवाल के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:86
 msgid "Good Question: minimum upvotes for the question"
-msgstr ""
+msgstr "अच्छा प्रश्न: प्रश्न के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:95
 msgid "Great Question: minimum upvotes for the question"
-msgstr ""
+msgstr "उपयुक्त प्रश्न: प्रश्न के लिए न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:104
 msgid "Popular Question: minimum views"
-msgstr ""
+msgstr "लोकप्रिय प्रश्न: कम से कम बार देखा गया"
 
 #: conf/badges.py:113
 msgid "Notable Question: minimum views"
-msgstr ""
+msgstr "उल्लेखनीय प्रश्न: कम से कम बार देखा गया"
 
 #: conf/badges.py:122
 msgid "Famous Question: minimum views"
-msgstr ""
+msgstr "मशहूर प्रश्न: कम से कम बार देखा गया"
 
 #: conf/badges.py:131
 msgid "Self-Learner: minimum answer upvotes"
-msgstr ""
+msgstr "स्व-शिक्षार्थी: न्यूनतम जवाब देने वाला वोट पक्ष में"
 
 #: conf/badges.py:140
 msgid "Civic Duty: minimum votes"
-msgstr ""
+msgstr "पौर कर्तव्य: कम से कम वोट"
 
 #: conf/badges.py:149
 msgid "Enlightened Duty: minimum upvotes"
-msgstr ""
+msgstr "प्रबुद्ध शुल्क: न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:158
 msgid "Guru: minimum upvotes"
-msgstr ""
+msgstr "गुरु: न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:167
 msgid "Necromancer: minimum upvotes"
-msgstr ""
+msgstr "प्रेत-साधक: न्यूनतम वोट पक्ष में"
 
 #: conf/badges.py:176
 msgid "Necromancer: minimum delay in days"
-msgstr ""
+msgstr "प्रेत-साधक: दिन में न्यूनतम देरी"
 
 #: conf/badges.py:185
 msgid "Associate Editor: minimum number of edits"
-msgstr ""
+msgstr "सहयोगी संपादक: संपादनों की न्यूनतम संख्या"
 
 #: conf/badges.py:194
 msgid "Favorite Question: minimum stars"
-msgstr ""
+msgstr "पसंदीदा प्रश्न: न्यूनतम सितारों"
 
 #: conf/badges.py:203
 msgid "Stellar Question: minimum stars"
-msgstr ""
+msgstr "नक्षत्रीय प्रश्न: न्यूनतम सितारों"
 
 #: conf/badges.py:212
 msgid "Commentator: minimum comments"
-msgstr ""
+msgstr "टिप्पणीकार: न्यूनतम टिप्पणियाँ"
 
 #: conf/badges.py:221
 msgid "Taxonomist: minimum tag use count"
-msgstr ""
+msgstr "वर्गीकरण शास्त्री: कम से कम इस्तेमाल किये गए टैग की गणना"
 
 #: conf/badges.py:230
 msgid "Enthusiast: minimum days"
-msgstr ""
+msgstr "उत्साही: कम दिन"
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "ईमेल और ईमेल चेतावनी सेटिंग"
 
 #: conf/email.py:24
 msgid "Prefix for the email subject line"
-msgstr ""
+msgstr "ईमेल के विषय पंक्ति के लिए उपसर्ग"
 
 #: conf/email.py:26
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
 "value entered here will overridethe default."
 msgstr ""
+"यह EMAIL_SUBJECT_PREFIX django सेटिंग से डिफ़ॉल्ट सेटिंग लेता है.दर्ज किया गया मान से "
+"डिफ़ॉल्ट के ऊपर लिख देगा."
 
 #: conf/email.py:38
+#, fuzzy
 msgid "Enable email alerts"
-msgstr ""
+msgstr "ईमेल और ईमेल चेतावनी सेटिंग"
 
 #: conf/email.py:47
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "ईमेल चेतावनी में समाचार प्रविष्टियों की अधिकतम संख्या"
 
 #: conf/email.py:57
 msgid "Default notification frequency all questions"
-msgstr ""
+msgstr "व्यतिक्रम अधिसूचना सारे प्रश्नों की आवृत्ति करता है"
 
 #: conf/email.py:59
 msgid "Option to define frequency of emailed updates for: all questions."
-msgstr ""
+msgstr "सभी सवालों: के लिए ईमेल की अद्यतन की आवृत्ति को परिभाषित करने का विकल्प होगा."
 
 #: conf/email.py:71
 msgid "Default notification frequency questions asked by the user"
-msgstr ""
+msgstr "उपयोगकर्ता द्वारा पूछे जाने वाले प्रश्नों के व्यतिक्रम अधिसूचना की आवृत्ति"
 
 #: conf/email.py:73
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
 msgstr ""
+"उपयोगकर्ता द्वारा पूछे जाने वाले सभी प्रश्नों : के लिए ईमेल की अद्यतन की आवृत्ति को "
+"परिभाषित करने का विकल्प होगा."
 
 #: conf/email.py:85
 msgid "Default notification frequency questions answered by the user"
-msgstr ""
+msgstr "उपयोगकर्ता द्वारा सवालों के जवाब की व्यतिक्रम अधिसूचना की आवृत्ति"
 
 #: conf/email.py:87
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
 msgstr ""
+"उपयोगकर्ता द्वारा सवालों के जवाब : के लिए ईमेल की अद्यतन की आवृत्ति को परिभाषित करने "
+"का विकल्प होगा."
 
 #: conf/email.py:99
 msgid ""
@@ -631,7 +652,7 @@ msgstr ""
 
 #: conf/email.py:128
 msgid "Send periodic reminders about unanswered questions"
-msgstr ""
+msgstr "अनुत्तरित प्रश्नों के बारे में आवर्ती अनुस्मारकों को भेजें"
 
 #: conf/email.py:130
 msgid ""
@@ -642,17 +663,17 @@ msgstr ""
 
 #: conf/email.py:143
 msgid "Days before starting to send reminders about unanswered questions"
-msgstr ""
+msgstr "पहले दिनों में अनुत्तरित प्रश्नों के बारे में अनुस्मारक भेजना शुरू करे"
 
 #: conf/email.py:154
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
-msgstr ""
+msgstr "अनुत्तरित प्रश्न अनुस्मारकों को कितनी बार भेजे (दिनों के बीच में अनुस्मारकों को भेजे)."
 
 #: conf/email.py:166
 msgid "Max. number of reminders to send about unanswered questions"
-msgstr ""
+msgstr "अनुत्तरित प्रश्नों के बारे में भेजे गए अनुस्मारकों की अधिकतम संख्या"
 
 #: conf/email.py:177
 msgid "Send periodic reminders to accept the best answer"
@@ -681,52 +702,55 @@ msgstr ""
 
 #: conf/email.py:227
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "पास पोस्ट करने के लिए अनुमति देने से पहले ईमेल के सत्यापन की आवश्यकता है"
 
 #: conf/email.py:228
 msgid ""
 "Active email verification is done by sending a verification key in email"
-msgstr ""
+msgstr "सक्रिय ईमेल सत्यापन ईमेल में एक सत्यापन कुंजी भेजकर किया जाता है"
 
 #: conf/email.py:237
 msgid "Allow only one account per email address"
-msgstr ""
+msgstr "ईमेल पते के प्रति केवल एक खाते की अनुमति दें"
 
 #: conf/email.py:246
 msgid "Fake email for anonymous user"
-msgstr ""
+msgstr "अज्ञात उपयोगकर्ता के लिए फर्जी ईमेल"
 
 #: conf/email.py:247
 msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
+"कम ईमेल उपयोगकर्ता के लिए gravatar को नियंत्रित करने के लिए इस सेटिंग का उपयोग करे "
 
 #: conf/email.py:256
 msgid "Allow posting questions by email"
-msgstr ""
+msgstr "ईमेल के द्वारा प्रश्नों के पोस्ट करने की अनुमति"
 
 #: conf/email.py:258
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the settings."
 "py file"
 msgstr ""
+"इस सेटिंग को सक्षम करने से पहले -कृपया settings.py फ़ाइल में IMAP सेटिंग को पहले भरे "
 
 #: conf/email.py:269
 msgid "Replace space in emailed tags with dash"
-msgstr ""
+msgstr "ईमेल टैग्स में स्थान को डैश से बदलें"
 
 #: conf/email.py:271
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr ""
+"यह सेटिंग ईमेल द्वारा अधिसूचित प्रश्नों के विषय पंक्ति में लिखा टैग के लिए लागू होता है "
 
 #: conf/external_keys.py:11
 msgid "Keys for external services"
-msgstr "外部サービスのキー"
+msgstr ""
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
-msgstr ""
+msgstr "गूगल साइट सत्यापन कुंजी"
 
 #: conf/external_keys.py:21
 #, python-format
@@ -734,10 +758,12 @@ msgid ""
 "This key helps google index your site please obtain is at <a href=\"%(url)s?"
 "hl=%(lang)s\">google webmasters tools site</a>"
 msgstr ""
+"यह कुंजी गूगल को आपकी साइट का सूचकांक करने में मदद करता है कृपया <a href=\"%(url)s?hl="
+"%(lang)s\">गुगल वेबमास्टर्स उपकरण साइट</a> से प्राप्त करे "
 
 #: conf/external_keys.py:36
 msgid "Google Analytics key"
-msgstr ""
+msgstr "गूगल विश्लेषिकी कुंजी"
 
 #: conf/external_keys.py:38
 #, python-format
@@ -745,136 +771,139 @@ msgid ""
 "Obtain is at <a href=\"%(url)s\">Google Analytics</a> site, if you wish to "
 "use Google Analytics to monitor your site"
 msgstr ""
+"<a href=\"%(url)s\">गूगल विश्लेषिकी</a> साईट पर प्राप्त करे,अगर आप गूगल विश्लेषिकी का "
+"उपयोग करके अपनी साइट की निगरानी करना चाहते हैं"
 
 #: conf/external_keys.py:51
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
+msgstr " reCAPTCHA (नीचे कुंजी की आवश्यकता है) सक्रिय करें"
 
-#: conf/external_keys.py:60
+#: conf/external_keys.py:62
 msgid "Recaptcha public key"
-msgstr ""
-
-#: conf/external_keys.py:68
-msgid "Recaptcha private key"
-msgstr ""
+msgstr "ReCAPTCHA सार्वजनिक कुंजी"
 
 #: conf/external_keys.py:70
+msgid "Recaptcha private key"
+msgstr "ReCAPTCHA निजी कुंजी"
+
+#: conf/external_keys.py:72
 #, python-format
 msgid ""
 "Recaptcha is a tool that helps distinguish real people from annoying spam "
 "robots. Please get this and a public key at the <a href=\"%(url)s\">%(url)s</"
 "a>"
 msgstr ""
-
-#: conf/external_keys.py:82
-msgid "Facebook public API key"
-msgstr ""
+"ReCAPTCHA एक उपकरण है कि कष्टप्रद स्पैम रोबोटों से वास्तविक लोगों में से  भेद करने में मदद "
+"करता है.कृपया <a href=\"%(url)s\">%(url)s</a> पर एक सार्वजनिक कुंजी और इसे प्राप्त "
+"करे "
 
 #: conf/external_keys.py:84
+msgid "Facebook public API key"
+msgstr "फेसबुक सार्वजनिक एपीआई कुंजी"
+
+#: conf/external_keys.py:86
 #, python-format
 msgid ""
 "Facebook API key and Facebook secret allow to use Facebook Connect login "
 "method at your site. Please obtain these keys at <a href=\"%(url)s"
 "\">facebook create app</a> site"
 msgstr ""
+" फेसबुक एपीआई कुंजी और गुप्त फेसबुक अपनी साइट पर फेसबुक कनेक्ट लॉगिन विधि का उपयोग करने के "
+"लिए अनुमति देते हैं. कृपया <a href=\"%(url)s\">facebook create app</a>साईट पर इन "
+"कुंजी को प्राप्त करें"
 
-#: conf/external_keys.py:97
+#: conf/external_keys.py:99
 msgid "Facebook secret key"
-msgstr "Facebook 秘密鍵"
-
-#: conf/external_keys.py:105
-msgid "Twitter consumer key"
-msgstr "Twitter 消費者キー"
+msgstr "फेसबुक गुप्त कुंजी"
 
 #: conf/external_keys.py:107
+msgid "Twitter consumer key"
+msgstr "ट्विटर उपभोक्ता कुंजी"
+
+#: conf/external_keys.py:109
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications site</"
 "a>"
 msgstr ""
+"कृपया <a href=\"%(url)s\">twitter applications site</a> पर अपने फोरम का "
+"पंजीकरण  करे "
 
-#: conf/external_keys.py:118
+#: conf/external_keys.py:120
 msgid "Twitter consumer secret"
-msgstr "Twitter 消費者シークレット"
-
-#: conf/external_keys.py:126
-msgid "LinkedIn consumer key"
-msgstr "LinkedIn 消費者キー"
+msgstr "ट्विटर उपभोक्ता रहस्य"
 
 #: conf/external_keys.py:128
+msgid "LinkedIn consumer key"
+msgstr "LinkedIn उपभोक्ता कुंजी"
+
+#: conf/external_keys.py:130
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer site</a>"
 msgstr ""
+"कृपया <a href=\"%(url)s\">LinkedIn developer site</a> पर अपने फोरम का पंजीकरण "
+"करे "
 
-#: conf/external_keys.py:139
+#: conf/external_keys.py:141
 msgid "LinkedIn consumer secret"
-msgstr "LinkedIn 消費者シークレット"
-
-#: conf/external_keys.py:147
-msgid "ident.ca consumer key"
-msgstr "ident.ca 消費者キー"
+msgstr "LinkedIn उपभोक्ता रहस्य"
 
 #: conf/external_keys.py:149
+msgid "ident.ca consumer key"
+msgstr "ident.ca उपभोक्ता कुंजी"
+
+#: conf/external_keys.py:151
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
 "site</a>"
 msgstr ""
+"<a href=\"%(url)s\">Identi.ca applications site</a>पर अपने फोरम का पंजीकरण करे "
 
-#: conf/external_keys.py:160
+#: conf/external_keys.py:162
 msgid "ident.ca consumer secret"
-msgstr "ident.ca 消費者シークレット"
-
-#: conf/external_keys.py:168
-msgid "Use LDAP authentication for the password login"
-msgstr "パスワードログインに LDAP 認証を使用する"
-
-#: conf/external_keys.py:177
-msgid "LDAP service provider name"
-msgstr "LDAP サービスのプロバイダー名"
-
-#: conf/external_keys.py:185
-msgid "URL for the LDAP service"
-msgstr "LDAP サービスの URL"
-
-#: conf/external_keys.py:193
-msgid "Explain how to change LDAP password"
-msgstr ""
+msgstr "ident.ca उपभोक्ता रहस्य"
 
 #: conf/flatpages.py:11
 msgid "Flatpages - about, privacy policy, etc."
-msgstr ""
+msgstr "flatpages -बारे में, गोपनीयता नीति, आदि."
 
 #: conf/flatpages.py:19
 msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
+msgstr "Q&A फोरम के बारे में पृष्ठ (HTML स्वरूप) के टेक्स्ट "
 
 #: conf/flatpages.py:22
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"about\" page to check your input."
 msgstr ""
+"सहेजे, \"बारे में\" पृष्ठ पर अपने इनपुट की जाँच करने के लिए<a href=\"http://validator.w3."
+"org/\">HTML Validator का प्रयोग</a > करे ."
 
 #: conf/flatpages.py:32
 msgid "Text of the Q&A forum FAQ page (html format)"
-msgstr ""
+msgstr "Q&A फोरम FAQ पृष्ट (HTML स्वरूप) का टेक्स्ट"
 
 #: conf/flatpages.py:35
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
 msgstr ""
+"सहेजे, \"faq\" पृष्ठ पर अपने इनपुट की जाँच करने के लिए<a href=\"http://validator.w3."
+"org/\">HTML Validator का प्रयोग</a > करे ."
 
 #: conf/flatpages.py:46
 msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr ""
+msgstr "Q&A फोरम गोपनीयता नीति (HTML स्वरूप) का टेक्स्ट "
 
 #: conf/flatpages.py:49
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"privacy\" page to check your input."
 msgstr ""
+"सहेजे, \"गोपनीयता\" पृष्ठ पर अपने इनपुट की जाँच करने के लिए<a href=\"http://validator."
+"w3.org/\">HTML Validator का प्रयोग</a > करे ."
 
 #: conf/forum_data_rules.py:12
 msgid "Data entry and display rules"
@@ -886,24 +915,28 @@ msgid ""
 "Enable embedding videos. <em>Note: please read <a href=\"%(url)s>read this</"
 "a> first.</em>"
 msgstr ""
+" एम्बेड वीडियो को सक्रिय करें.नोट: कृपया पढ़ें <a href=\"%(url)s> इस </ a> के पहले</ "
+"em> पढ़ें."
 
 #: conf/forum_data_rules.py:33
 msgid "Check to enable community wiki feature"
-msgstr ""
+msgstr "सामुदायिक विकी सुविधा को सक्षम करने के लिए जाँच करें"
 
 #: conf/forum_data_rules.py:42
 msgid "Allow asking questions anonymously"
-msgstr ""
+msgstr "गुमनाम प्रश्नों को  पूछने की अनुमति दें"
 
 #: conf/forum_data_rules.py:44
 msgid ""
 "Users do not accrue reputation for anonymous questions and their identity is "
 "not revealed until they change their mind"
 msgstr ""
+"उपयोगकर्ता अज्ञात प्रश्नों के लिए प्रतिष्ठा देय नहीं होंगे और उनकी पहचान नहीं प्रगट होता है "
+"और उनकी पहचान नहीं प्रगट होता है जब तक वे अपने मन बदलते हैं"
 
 #: conf/forum_data_rules.py:56
 msgid "Allow posting before logging in"
-msgstr ""
+msgstr "लॉग इन करने से पहले पोस्टिंग की अनुमति दे"
 
 #: conf/forum_data_rules.py:58
 msgid ""
@@ -912,24 +945,30 @@ msgid ""
 "to check for pending posts every time the user logs in. The builtin Askbot "
 "login system supports this feature."
 msgstr ""
+"जाँच करें यदि आप उपयोगकर्ताओं को अंदर प्रवेश करने से पहले प्रश्नों के या जवाब पोस्टिंग शुरू करने "
+"की अनुमति चाहते हैं.इसे सक्षम करने से उपयोगकर्ता लॉगिन प्रणाली में समायोजन लंबित पदों के "
+"लिए हर समय उपयोगकर्ता में लॉग की जाँच करने की आवश्यकता हो सकती है.Builtin Askbot "
+"लॉगिन प्रणाली इस सुविधा का समर्थन करता है."
 
 #: conf/forum_data_rules.py:73
 msgid "Allow swapping answer with question"
-msgstr "回答を投稿する"
+msgstr "सवाल के साथ जवाब के स्वैपिंग की अनुमति दें"
 
 #: conf/forum_data_rules.py:75
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
 msgstr ""
+"यह सेटिंग zendesk जैसे अन्य फोरम से डेटा को आयात करने में मदद मिलेगी,जब स्वत: डेटा आयात "
+"करने के लिए मौलिक सवाल का सही ढंग से पता लगाने में विफल रहता है."
 
 #: conf/forum_data_rules.py:87
 msgid "Maximum length of tag (number of characters)"
-msgstr ""
+msgstr "टैग की अधिकतम लंबाई (अक्षरों की संख्या)"
 
 #: conf/forum_data_rules.py:96
 msgid "Minimum length of title (number of characters)"
-msgstr ""
+msgstr "शीर्षक की अधिकतम लंबाई (अक्षरों की संख्या)"
 
 #: conf/forum_data_rules.py:106
 msgid "Minimum length of question body (number of characters)"
@@ -941,17 +980,19 @@ msgstr ""
 
 #: conf/forum_data_rules.py:126
 msgid "Mandatory tags"
-msgstr ""
+msgstr "अनिवार्य टैग"
 
 #: conf/forum_data_rules.py:129
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr ""
+"कम से कम इन टैग का कोई नया या नए संपादित सवाल के लिए आवश्यक हो सकती है .अनिवार्य टैग "
+"वाइल्डकार्ड का हो सकता है , अगर वाइल्डकार्ड टैग सक्रिय है."
 
 #: conf/forum_data_rules.py:141
 msgid "Force lowercase the tags"
-msgstr ""
+msgstr "टैग का लोअरकेस में करे "
 
 #: conf/forum_data_rules.py:143
 msgid ""
@@ -959,66 +1000,71 @@ msgid ""
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr ""
+"ध्यान दें: इस जाँच के बाद, कृपया डेटाबेस के बैकअप करे , और एक प्रबंधन कमांड चलाएँ: "
+"<code>python manage.py fix_question_tags</code> टैग को ग्लोबली पुनःनामकरण करे "
 
 #: conf/forum_data_rules.py:157
 msgid "Format of tag list"
-msgstr ""
+msgstr "टैग सूची का प्रारूप"
 
 #: conf/forum_data_rules.py:159
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag cloud"
 msgstr ""
+"प्रारूप का चयन या तो एक साधारण सूची के रूप या एक टैग क्लौड में, करके टैग को  दिखाएं"
 
 #: conf/forum_data_rules.py:171
 msgid "Use wildcard tags"
-msgstr "タグ"
+msgstr "वाइल्डकार्ड टैग का प्रयोग करें"
 
 #: conf/forum_data_rules.py:173
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr ""
+"वाइल्डकार्ड टैग का इस्तेमाल अनुसरण करने या कई टैग की अनदेखी करने के लिए किया जा सकता है,"
+"वैध वाइल्डकार्ड टैग के सबसे अंत में एकल वाइल्डकार्ड होता है."
 
 #: conf/forum_data_rules.py:186
 msgid "Default max number of comments to display under posts"
-msgstr ""
+msgstr "प्रविष्टियाँ के तहत प्रदर्शित करने के लिए टिप्पणी की डिफ़ॉल्ट रूप से अधिकतम संख्या"
 
 #: conf/forum_data_rules.py:197
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
-msgstr ""
+msgstr "अधिकतम टिप्पणी की लंबाई < %(max_len)s हो सकती है."
 
 #: conf/forum_data_rules.py:207
 msgid "Limit time to edit comments"
-msgstr ""
+msgstr "टिप्पणियों के संपादित करने के लिए समय सीमा"
 
 #: conf/forum_data_rules.py:209
 msgid "If unchecked, there will be no time limit to edit the comments"
-msgstr ""
+msgstr "अगर अनियंत्रित हो तो , वहाँ कोई भी समय सीमा से  टिप्पणी संपादित हो सकता है "
 
 #: conf/forum_data_rules.py:220
 msgid "Minutes allowed to edit a comment"
-msgstr ""
+msgstr "कार्यवृत्त तक कोई टिप्पणी संपादित को करने की अनुमति"
 
 #: conf/forum_data_rules.py:221
 msgid "To enable this setting, check the previous one"
-msgstr ""
+msgstr "इस सेटिंग को सक्षम करने के लिए, पिछले जाँच करें"
 
 #: conf/forum_data_rules.py:230
 msgid "Save comment by pressing <Enter> key"
-msgstr ""
+msgstr "<Enter> कुंजी दबाकर टिप्पणी सहेजें"
 
 #: conf/forum_data_rules.py:239
 msgid "Minimum length of search term for Ajax search"
-msgstr ""
+msgstr "Ajax खोज के लिए खोज शब्द का न्यूनतम लंबाई"
 
 #: conf/forum_data_rules.py:240
 msgid "Must match the corresponding database backend setting"
-msgstr ""
+msgstr "संगत डेटाबेस के बैकएंड सेटिंग से मेल खानी चाहिए"
 
 #: conf/forum_data_rules.py:249
 msgid "Do not make text query sticky in search"
-msgstr ""
+msgstr "टेक्स्ट क्वेरी खोज में स्टिकी मत बनाओ"
 
 #: conf/forum_data_rules.py:251
 msgid ""
@@ -1026,18 +1072,55 @@ msgid ""
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr ""
+"सर्च क्वेरी के \"स्तिच्क्य \" व्यवहार को निष्क्रिय करने के लिए जाँच करें.यह उपयोगी हो सकता "
+"है.अगर आप सर्च बार को  डिफ़ॉल्ट स्थिति से दूर ले जाएँ या टेक्स्ट खोज क्वेरी के डिफ़ॉल्ट स्टिकी "
+"व्यवहार को पसंद नहीं करना चाहते हो."
 
 #: conf/forum_data_rules.py:264
 msgid "Maximum number of tags per question"
-msgstr ""
+msgstr "प्रश्न के अनुसार टैग की अधिकतम संख्या"
 
 #: conf/forum_data_rules.py:276
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr " तयशुदा रूप से प्रश्नों के संख्या की सूची"
 
 #: conf/forum_data_rules.py:286
 msgid "What should \"unanswered question\" mean?"
+msgstr "\"अनुत्तरित प्रश्न\" का क्या मतलब होना चाहिए?"
+
+#: conf/ldap.py:9
+msgid "LDAP login configuration"
 msgstr ""
+
+#: conf/ldap.py:17
+msgid "Use LDAP authentication for the password login"
+msgstr "कूटशब्द लॉगिन के लिए LDAP सत्यापन का उपयोग करें"
+
+#: conf/ldap.py:26
+msgid "LDAP URL"
+msgstr ""
+
+#: conf/ldap.py:35
+msgid "LDAP BASE DN"
+msgstr ""
+
+#: conf/ldap.py:43
+msgid "LDAP Search Scope"
+msgstr ""
+
+#: conf/ldap.py:52
+#, fuzzy
+msgid "LDAP Server USERID field name"
+msgstr "LDAP सेवा प्रदाता नाम"
+
+#: conf/ldap.py:61
+msgid "LDAP Server \"Common Name\" field name"
+msgstr ""
+
+#: conf/ldap.py:70
+#, fuzzy
+msgid "LDAP Server EMAIL field name"
+msgstr "LDAP सेवा प्रदाता नाम"
 
 #: conf/leading_sidebar.py:12
 msgid "Common left sidebar"
@@ -1064,83 +1147,88 @@ msgstr ""
 
 #: conf/license.py:21
 msgid "Show license clause in the site footer"
-msgstr ""
+msgstr "साइट पादलेख में लाइसेंस खंड दिखाएँ"
 
 #: conf/license.py:30
 msgid "Short name for the license"
-msgstr ""
+msgstr "लाइसेंस के लिए छोटी नाम"
 
 #: conf/license.py:39
 msgid "Full name of the license"
-msgstr "ライセンスの完全名"
+msgstr "लाइसेंस का पूरा नाम"
 
 #: conf/license.py:40
 msgid "Creative Commons Attribution Share Alike 3.0"
-msgstr ""
+msgstr "क्रिएटिव कॉमन्स एट्रिब्यूशन ShareAlike 3.0"
 
 #: conf/license.py:48
 msgid "Add link to the license page"
-msgstr ""
+msgstr "लाइसेंस पृष्ठ के लिए लिंक जोड़ें"
 
 #: conf/license.py:57
 msgid "License homepage"
-msgstr ""
+msgstr "लाइसेंस मुखपृष्ठ"
 
 #: conf/license.py:59
 msgid "URL of the official page with all the license legal clauses"
-msgstr ""
+msgstr "सभी लाइसेंस कानूनी खंड के साथ आधिकारिक पृष्ठ का यूआरएल"
 
 #: conf/license.py:69
 msgid "Use license logo"
-msgstr ""
+msgstr "लाइसेंस लोगो का प्रयोग करें"
 
 #: conf/license.py:78
 msgid "License logo image"
-msgstr ""
+msgstr "लाइसेंस लोगो छवि"
 
 #: conf/login_providers.py:13
 msgid "Login provider setings"
-msgstr ""
+msgstr "लॉगइन प्रदाता सेटिंग्स"
 
 #: conf/login_providers.py:22
 msgid ""
 "Show alternative login provider buttons on the password \"Sign Up\" page"
-msgstr ""
+msgstr "कूटशब्द \"साइन अप\" पृष्ठ पर वैकल्पिक लॉगिन प्रदाता बटन को दर्शाए "
 
 #: conf/login_providers.py:31
 msgid "Always display local login form and hide \"Askbot\" button."
-msgstr ""
+msgstr "हमेशा स्थानीय प्रवेश फार्म को प्रदर्शित करे और \"Askbot\" बटन छुपाएँ."
 
 #: conf/login_providers.py:40
 msgid "Activate to allow login with self-hosted wordpress site"
-msgstr ""
+msgstr "स्वयं द्वारा होस्ट किए WordPress साइट के साथ लॉगिन की अनुमति के लिए सक्रिय करें"
 
 #: conf/login_providers.py:41
 msgid ""
 "to activate this feature you must fill out the wordpress xml-rpc setting "
 "bellow"
 msgstr ""
+"इस सुविधा को सक्रिय करने के लिए आपको  WordPress XML-RPC bellow सेटिंग में भरना होगा"
 
 #: conf/login_providers.py:50
 msgid ""
 "Fill it with the wordpress url to the xml-rpc, normally http://mysite.com/"
 "xmlrpc.php"
 msgstr ""
+" WordPress यूआरएल के साथ XML-RPC के लिए, http://mysite.com/xmlrpc.php पर  "
+"सामान्य रूप से भरे "
 
 #: conf/login_providers.py:51
 msgid ""
 "To enable, go to Settings->Writing->Remote Publishing and check the box for "
 "XML-RPC"
 msgstr ""
+"सक्षम करने के लिए, Settings->Writing->Remote Publishing पर जाये और XML-RPC के लिए "
+"चेक बॉक्स"
 
 #: conf/login_providers.py:60
 msgid "Upload your icon"
-msgstr "アイコンのアップロード"
+msgstr "अपने आइकन अपलोड करें"
 
 #: conf/login_providers.py:90
 #, python-format
 msgid "Activate %(provider)s login"
-msgstr ""
+msgstr "%(provider)s लॉगिन सक्रिय करें"
 
 #: conf/login_providers.py:95
 #, python-format
@@ -1148,6 +1236,8 @@ msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
 "need to be set in the \"External keys\" section"
 msgstr ""
+"नोट: वास्तव में %(provider)s लॉगिन को सक्षम करने के लिए कुछ अतिरिक्त पैरामीटर \"विदेश "
+"कुंजी\" खंड में सेट करने की आवश्यकता होगी"
 
 #: conf/markup.py:15
 msgid "Markup in posts"
@@ -1155,7 +1245,7 @@ msgstr ""
 
 #: conf/markup.py:41
 msgid "Enable code-friendly Markdown"
-msgstr ""
+msgstr "कोड के अनुकूल markdown सक्रिय करें"
 
 #: conf/markup.py:43
 msgid ""
@@ -1164,10 +1254,14 @@ msgid ""
 "\"MathJax support\" implicitly turns this feature on, because underscores "
 "are heavily used in LaTeX input."
 msgstr ""
+"अगर जाँच की जाये, अंडरस्कोर वर्ण इटैलिक या बोल्ड स्वरूपण को ट्रिगर नहीं करेगा-बोल्ड और "
+"इटैलिक टेक्स्ट अभी भी एस्टेरिस्क से चिह्नित किया जा सकता है.ध्यान दें कि \"MathJax support"
+"\" संकेत पर इस सुविधा को बदल देता  है, क्योंकि लेटेक्स इनपुट के रूप अंडरस्कोर का ज्यादा "
+"इस्तेमाल होता है ."
 
 #: conf/markup.py:58
 msgid "Mathjax support (rendering of LaTeX)"
-msgstr ""
+msgstr "Mathjax समर्थन (लेटेक्स का प्रतिपादन)"
 
 #: conf/markup.py:60
 #, python-format
@@ -1175,10 +1269,12 @@ msgid ""
 "If you enable this feature, <a href=\"%(url)s\">mathjax</a> must be "
 "installed on your server in its own directory."
 msgstr ""
+"यदि आपको इस विशेषता को सक्षम करना चाहते है ,<a href=\"%(url)s\"> mathjax </ a> "
+"अपनी निर्देशिका में आपके सर्वर पर स्थापित होना आवश्यक है."
 
 #: conf/markup.py:74
 msgid "Base url of MathJax deployment"
-msgstr ""
+msgstr "MathJax परिनियोजन के आधार यूआरएल"
 
 #: conf/markup.py:76
 msgid ""
@@ -1186,20 +1282,25 @@ msgid ""
 "deploy it yourself, preferably at a separate domain and enter url pointing "
 "to the \"mathjax\" directory (for example: http://mysite.com/mathjax)"
 msgstr ""
+"नोट - <strong> MathJax askbot के  साथ शामिल नहीं है </ strong> आप इसे अपने आप को "
+"अधिमानतः एक अलग डोमेन पर और यूआरएल \"mathjax\" निर्देशिका (उदाहरण के लिए: http://"
+"mysite.com/mathjax) की ओर इशारा करते हुए दर्ज करके परिनियोजित करनी चाहिए,"
 
 #: conf/markup.py:91
 msgid "Enable autolinking with specific patterns"
-msgstr ""
+msgstr "विशिष्ट नमूनों के लिए औतोलिन्किंग सक्रिय करें"
 
 #: conf/markup.py:93
 msgid ""
 "If you enable this feature, the application  will be able to detect patterns "
 "and auto link to URLs"
 msgstr ""
+"यदि आप इस फ़ीचर को सक्रिय करते है ,अनुप्रयोग   यूआरएल के लिए पैटर्न और स्वत लिंक का पता "
+"लगाने में सक्षम हो जाएगा"
 
 #: conf/markup.py:106
 msgid "Regexes to detect the link patterns"
-msgstr ""
+msgstr "लिंक पैटर्न का पता लगाने के लिए रिजेक्स"
 
 #: conf/markup.py:108
 msgid ""
@@ -1209,10 +1310,14 @@ msgid ""
 "to the link url template. Please look up more information about regular "
 "expressions elsewhere."
 msgstr ""
+"क पैटर्न प्रति पंक्ति के लिए मान्य नियमित अभिव्यक्ति दर्ज करें.उदाहरण के लिए एक बग पैटर्न "
+"का पता लगाने के लिए, # bug123 के समान,निम्नलिखित regex: #bug(\\d+) का उपयोग करे, "
+"कोष्ठकों में पैटर्न द्वारा कब्जा किये गए संख्या को लिंक यूआरएल टेम्पलेट में हस्तांतरित किया "
+"जाएगा.कृपया नियमित अभिव्यक्ति के बारे में अधिक जानकारी के लिए कहीं और देखो."
 
 #: conf/markup.py:127
 msgid "URLs for autolinking"
-msgstr ""
+msgstr "Autolinking के लिए यूआरएल"
 
 #: conf/markup.py:129
 msgid ""
@@ -1223,6 +1328,11 @@ msgid ""
 "shown above and the entry in the post #123 will produce link to the bug 123 "
 "in the redhat bug tracker."
 msgstr ""
+"कृपया यहाँ पिछले सेटिंग में दर्ज किया पैटर्न के अनुसार पंक्ति एक प्रविष्टि का यूआरएल टेम्पलेट्स "
+"दर्ज करें,<strong>सुनिश्चित करें कि इस सेटिंग और पिछले एक में लाइनों की संख्या एक ही हैं</"
+"strong >उदाहरण के लिएऊपर दिखाए गए पैटर्न टेम्पलेट https://bugzilla.redhat.com/"
+"show_bug.cgi?id=\\1 के साथ और  पोस्ट 123 में प्रवेश redhat बग ट्रैकर में बग 123 के लिए "
+"लिंक का उत्पादन होगा."
 
 #: conf/minimum_reputation.py:12
 msgid "Karma thresholds"
@@ -1230,81 +1340,83 @@ msgstr ""
 
 #: conf/minimum_reputation.py:22
 msgid "Upvote"
-msgstr "上げ投票"
+msgstr "वोट पक्ष में "
 
 #: conf/minimum_reputation.py:31
 msgid "Downvote"
-msgstr "下げ投票"
+msgstr "वोट विपक्ष में"
 
 #: conf/minimum_reputation.py:40
 msgid "Answer own question immediately"
-msgstr ""
+msgstr "तुरंत स्वयं के प्रश्न के उत्तर दे "
 
 #: conf/minimum_reputation.py:49
 msgid "Accept own answer"
-msgstr ""
+msgstr "स्वयं का उत्तर स्वीकारें"
 
 #: conf/minimum_reputation.py:58
 msgid "Flag offensive"
-msgstr "攻撃的のフラグを立てる"
+msgstr "ध्वज आपत्तिजनक"
 
 #: conf/minimum_reputation.py:67
 msgid "Leave comments"
-msgstr ""
+msgstr "टिप्पणी छोड़ दे "
 
 #: conf/minimum_reputation.py:76
 msgid "Delete comments posted by others"
-msgstr ""
+msgstr "दूसरों के द्वारा पोस्ट किया गया टिप्पणियों को हटाएँ"
 
 #: conf/minimum_reputation.py:85
 msgid "Delete questions and answers posted by others"
-msgstr ""
+msgstr "दूसरों के द्वारा पोस्ट की गयी प्रश्नों और उत्तरों को हटाएँ"
 
 #: conf/minimum_reputation.py:94
 msgid "Upload files"
-msgstr "ファイルをアップロードする"
+msgstr "फ़ाइलें अपलोड करें"
 
 #: conf/minimum_reputation.py:103
 msgid "Close own questions"
-msgstr "質問を閉じる"
+msgstr "खुद के प्रश्नों को बंद करें"
 
 #: conf/minimum_reputation.py:112
 msgid "Retag questions posted by other people"
-msgstr ""
+msgstr "अन्य लोगों द्वारा पोस्ट सवालों के पुनः टैग करे "
 
 #: conf/minimum_reputation.py:121
 msgid "Reopen own questions"
-msgstr ""
+msgstr "खुद के सवालों को पुनः खोलें "
 
 #: conf/minimum_reputation.py:130
 msgid "Edit community wiki posts"
-msgstr ""
+msgstr "सामुदायिक विकी प्रविष्टियाँ संपादित करें"
 
 #: conf/minimum_reputation.py:139
 msgid "Edit posts authored by other people"
-msgstr ""
+msgstr "अन्य लोगों द्वारा लिखी प्रविष्टियाँ संपादित करें"
 
 #: conf/minimum_reputation.py:148
 msgid "View offensive flags"
-msgstr ""
+msgstr "आपत्तिजनक ध्वजों को देखे"
 
 #: conf/minimum_reputation.py:157
 msgid "Close questions asked by others"
-msgstr ""
+msgstr "दूसरों के द्वारा पूछा प्रश्नों को बंद करे"
 
 #: conf/minimum_reputation.py:166
 msgid "Lock posts"
-msgstr ""
+msgstr "प्रविष्टियाँ लॉक करें"
 
 #: conf/minimum_reputation.py:175
 msgid "Remove rel=nofollow from own homepage"
-msgstr ""
+msgstr "खुद के होमपेज से rel=nofollow हटायें"
 
 #: conf/minimum_reputation.py:177
 msgid ""
 "When a search engine crawler will see a rel=nofollow attribute on a link - "
 "the link will not count towards the rank of the users personal site."
 msgstr ""
+"जब एक खोज इंजन क्रॉलर एक लिंक पर एक rel = nofollow गुण देखेंगे - लिंक उपयोगकर्ताओं को "
+"व्यक्तिगत साइट की रैंक की ओर गिनती नहीं होगी."
 
 #: conf/reputation_changes.py:13
 msgid "Karma loss and gain rules"
@@ -1312,59 +1424,61 @@ msgstr ""
 
 #: conf/reputation_changes.py:23
 msgid "Maximum daily reputation gain per user"
-msgstr ""
+msgstr "प्रति उपयोगकर्ता अधिकतम दैनिक प्रतिष्ठा लाभ"
 
 #: conf/reputation_changes.py:32
 msgid "Gain for receiving an upvote"
-msgstr ""
+msgstr "पक्ष में वोट प्राप्त करने से लाभ"
 
 #: conf/reputation_changes.py:41
 msgid "Gain for the author of accepted answer"
-msgstr ""
+msgstr "स्वीकार किए गए जवाब से लेखक को लाभ"
 
 #: conf/reputation_changes.py:50
 msgid "Gain for accepting best answer"
-msgstr ""
+msgstr "सबसे अच्छा जवाब को स्वीकार करने पर लाभ"
 
 #: conf/reputation_changes.py:59
 msgid "Gain for post owner on canceled downvote"
-msgstr ""
+msgstr "विपक्ष में वोट रद्द होने पर पोस्ट स्वामी के लिए लाभ"
 
 #: conf/reputation_changes.py:68
 msgid "Gain for voter on canceling downvote"
-msgstr ""
+msgstr "विपक्ष में वोट रद्द करने पर मतदाता के लिए लाभ"
 
 #: conf/reputation_changes.py:78
 msgid "Loss for voter for canceling of answer acceptance"
-msgstr ""
+msgstr "मतदाता के जवाब के स्वीकृति की रद्द करने से नुकसान"
 
 #: conf/reputation_changes.py:88
 msgid "Loss for author whose answer was \"un-accepted\""
-msgstr ""
+msgstr "लेखक के लिए घाटा जिसका जवाब को \"अस्वीकार\" किए जाते हैं"
 
 #: conf/reputation_changes.py:98
 msgid "Loss for giving a downvote"
-msgstr ""
+msgstr "विपक्ष में वोट देने के लिए घाटा"
 
 #: conf/reputation_changes.py:108
 msgid "Loss for owner of post that was flagged offensive"
-msgstr ""
+msgstr "पोस्ट के मालिक के लिए नुकसान को आक्रामक दिखाकर ध्वजांकित किया गया था"
 
 #: conf/reputation_changes.py:118
 msgid "Loss for owner of post that was downvoted"
-msgstr ""
+msgstr "पोस्ट के स्वामी को  घाटा विपक्ष में वोट से हुआ"
 
 #: conf/reputation_changes.py:128
 msgid "Loss for owner of post that was flagged 3 times per same revision"
 msgstr ""
+"पोस्ट के मालिक के लिए नुकसान को एक ही संशोधन के अनुसार 3 बार ध्वजांकित किया गया था"
 
 #: conf/reputation_changes.py:138
 msgid "Loss for owner of post that was flagged 5 times per same revision"
 msgstr ""
+"पोस्ट के मालिक के लिए नुकसान को एक ही संशोधन के अनुसार 5 बार ध्वजांकित किया गया था"
 
 #: conf/reputation_changes.py:148
 msgid "Loss for post owner when upvote is canceled"
-msgstr ""
+msgstr "जब पक्ष के वोट को रद्द कर दिया है तो पोस्ट स्वामी को नुकसान"
 
 #: conf/sidebar_main.py:12
 msgid "Main page sidebar"
@@ -1373,7 +1487,7 @@ msgstr ""
 #: conf/sidebar_main.py:20 conf/sidebar_profile.py:20
 #: conf/sidebar_question.py:19
 msgid "Custom sidebar header"
-msgstr ""
+msgstr "कस्टम साइडबार हैडर"
 
 #: conf/sidebar_main.py:23 conf/sidebar_profile.py:23
 #: conf/sidebar_question.py:22
@@ -1383,42 +1497,47 @@ msgid ""
 "validation service to make sure that your input is valid and works well in "
 "all browsers."
 msgstr ""
+"इस क्षेत्र का उपयोग sidebarin HTML स्वरूप के शीर्ष पर कंटेंट दर्ज करने के लिए करें,    जब "
+"इस विकल्प का उपयोग (साइडबार पादलेख के रूप में) करते है , HTML सत्यापन सेवा का उपयोग "
+"करने के लिए सुनिश्चित करें कि कृपया आपके  इनपुट मान्य है और अच्छी तरह से सभी ब्राउज़रों में "
+"काम करता है."
 
 #: conf/sidebar_main.py:36
 msgid "Show avatar block in sidebar"
-msgstr ""
+msgstr "साइडबार में अवतार ब्लॉक दिखाएँ"
 
 #: conf/sidebar_main.py:38
 msgid "Uncheck this if you want to hide the avatar block from the sidebar "
-msgstr ""
+msgstr "अचयनित यदि आप इस साइडबार से अवतार ब्लॉक को छिपाना चाहते हैं  "
 
 #: conf/sidebar_main.py:49
 msgid "Limit how many avatars will be displayed on the sidebar"
-msgstr ""
+msgstr "सीमित करें कि कितने बदलते रूपों को साइडबार पर प्रदर्शित किया जाएगा"
 
 #: conf/sidebar_main.py:59
 msgid "Show tag selector in sidebar"
-msgstr ""
+msgstr "साइडबार में टैग चयनकर्ता दिखाएँ "
 
 #: conf/sidebar_main.py:61
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
 "ignored tags "
 msgstr ""
+"अचयनित करे यदि आप इस रोचक और नजरअंदाज टैग के चयन के लिए विकल्पों को  छिपाना चाहते हैं  "
 
 #: conf/sidebar_main.py:72
 msgid "Show tag list/cloud in sidebar"
-msgstr ""
+msgstr "टैग सूची /क्लाउड को साइडबार में दर्शाए "
 
 #: conf/sidebar_main.py:74
 msgid ""
 "Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
-msgstr ""
+msgstr "अचयनित करे यदि आप टैग क्लाउड या टैग सूची को साइडबार से छुपाना चाहते हैं  "
 
 #: conf/sidebar_main.py:85 conf/sidebar_profile.py:36
 #: conf/sidebar_question.py:75
 msgid "Custom sidebar footer"
-msgstr ""
+msgstr "कस्टम साइडबार पादलेख"
 
 #: conf/sidebar_main.py:88 conf/sidebar_profile.py:39
 #: conf/sidebar_question.py:78
@@ -1435,7 +1554,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:11
 msgid "Question page sidebar"
-msgstr "タグ"
+msgstr ""
 
 #: conf/sidebar_question.py:35
 msgid "Show tag list in sidebar"
@@ -1457,7 +1576,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:62
 msgid "Show related questions in sidebar"
-msgstr ""
+msgstr "साइडबार में संबंधित प्रश्नों को दिखाए "
 
 #: conf/sidebar_question.py:64
 msgid "Uncheck this if you want to hide the list of related questions. "
@@ -1503,27 +1622,27 @@ msgstr ""
 msgid "Short name for your Q&A forum"
 msgstr ""
 
-#: conf/site_settings.py:68
+#: conf/site_settings.py:67
 msgid "Base URL for your Q&A forum, must start with http or https"
 msgstr ""
 
-#: conf/site_settings.py:79
+#: conf/site_settings.py:78
 msgid "Check to enable greeting for anonymous user"
 msgstr ""
 
-#: conf/site_settings.py:90
+#: conf/site_settings.py:89
 msgid "Text shown in the greeting message shown to the anonymous user"
 msgstr ""
 
-#: conf/site_settings.py:94
+#: conf/site_settings.py:93
 msgid "Use HTML to format the message "
 msgstr ""
 
-#: conf/site_settings.py:103
+#: conf/site_settings.py:102
 msgid "Feedback site URL"
-msgstr "フィードバックサイト URL"
+msgstr ""
 
-#: conf/site_settings.py:105
+#: conf/site_settings.py:104
 msgid "If left empty, a simple internal feedback form will be used instead"
 msgstr ""
 
@@ -1537,7 +1656,7 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:29
 msgid "Background color for votes = 0"
-msgstr "投票 = 0 の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:30 conf/skin_counter_settings.py:41
 #: conf/skin_counter_settings.py:52 conf/skin_counter_settings.py:62
@@ -1550,27 +1669,27 @@ msgstr "投票 = 0 の背景色"
 #: conf/skin_counter_settings.py:228 conf/skin_counter_settings.py:239
 #: conf/skin_counter_settings.py:252 conf/skin_counter_settings.py:262
 msgid "HTML color name or hex value"
-msgstr "HTML カラー名または16進値"
+msgstr ""
 
 #: conf/skin_counter_settings.py:40
 msgid "Foreground color for votes = 0"
-msgstr "投票 = 0 の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:51
 msgid "Background color for votes"
-msgstr "投票の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:61
 msgid "Foreground color for votes"
-msgstr "投票の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:71
 msgid "Background color for votes = MAX"
-msgstr "投票 = MAX の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:84
 msgid "Foreground color for votes = MAX"
-msgstr "投票 = MAX の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:95
 msgid "View counter value to give \"full color\""
@@ -1578,27 +1697,27 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:105
 msgid "Background color for views = 0"
-msgstr "表示数 = 0 の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:116
 msgid "Foreground color for views = 0"
-msgstr "表示数 = 0 の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:127
 msgid "Background color for views"
-msgstr "表示数の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:137
 msgid "Foreground color for views"
-msgstr "表示数の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:147
 msgid "Background color for views = MAX"
-msgstr "表示数 = MAX の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:162
 msgid "Foreground color for views = MAX"
-msgstr "表示数 = MAX の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:173
 msgid "Answer counter value to give \"full color\""
@@ -1606,27 +1725,27 @@ msgstr ""
 
 #: conf/skin_counter_settings.py:185
 msgid "Background color for answers = 0"
-msgstr "回答 = 0 の背景色"
+msgstr "उत्तरों के लिए पृष्ठभूमिक रंग = 0"
 
 #: conf/skin_counter_settings.py:195
 msgid "Foreground color for answers = 0"
-msgstr "回答 = 0 の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:205
 msgid "Background color for answers"
-msgstr "回答の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:215
 msgid "Foreground color for answers"
-msgstr "回答の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:227
 msgid "Background color for answers = MAX"
-msgstr "回答 = MAX の背景色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:238
 msgid "Foreground color for answers = MAX"
-msgstr "回答 = MAX の文字色"
+msgstr ""
 
 #: conf/skin_counter_settings.py:251
 msgid "Background color for accepted"
@@ -1642,7 +1761,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:23
 msgid "Q&A site logo"
-msgstr "Q&A サイトロゴ"
+msgstr ""
 
 #: conf/skin_general_settings.py:25
 msgid "To change the logo, select new file, then submit this whole form."
@@ -1660,7 +1779,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:51
 msgid "Site favicon"
-msgstr ""
+msgstr "साइट favicon"
 
 #: conf/skin_general_settings.py:53
 #, python-format
@@ -1876,7 +1995,7 @@ msgstr ""
 
 #: conf/user_settings.py:14
 msgid "User settings"
-msgstr "ユーザーログイン"
+msgstr ""
 
 #: conf/user_settings.py:23
 msgid "Allow editing user screen name"
@@ -2005,15 +2124,15 @@ msgstr ""
 
 #: const/__init__.py:10
 msgid "duplicate question"
-msgstr "重複した質問"
+msgstr ""
 
 #: const/__init__.py:11
 msgid "question is off-topic or not relevant"
-msgstr "質問が場違いもしくは無関係です。"
+msgstr ""
 
 #: const/__init__.py:12
 msgid "too subjective and argumentative"
-msgstr "主観的で論争的すぎます"
+msgstr ""
 
 #: const/__init__.py:13
 msgid "not a real question"
@@ -2021,7 +2140,7 @@ msgstr ""
 
 #: const/__init__.py:14
 msgid "the question is answered, right answer was accepted"
-msgstr "質問は回答され、正当な回答が受け入れられました"
+msgstr ""
 
 #: const/__init__.py:15
 msgid "question is not relevant or outdated"
@@ -2033,7 +2152,7 @@ msgstr ""
 
 #: const/__init__.py:17
 msgid "spam or advertising"
-msgstr "スパムもしくは広告"
+msgstr ""
 
 #: const/__init__.py:18
 msgid "too localized"
@@ -2042,12 +2161,12 @@ msgstr ""
 #: const/__init__.py:43
 #: skins/default/templates/question/answer_tab_bar.html:18
 msgid "newest"
-msgstr "最新"
+msgstr ""
 
 #: const/__init__.py:44 skins/default/templates/users.html:27
 #: skins/default/templates/question/answer_tab_bar.html:15
 msgid "oldest"
-msgstr "登録順"
+msgstr ""
 
 #: const/__init__.py:45
 msgid "active"
@@ -2059,7 +2178,7 @@ msgstr ""
 
 #: const/__init__.py:47
 msgid "hottest"
-msgstr "ホット"
+msgstr ""
 
 #: const/__init__.py:48
 msgid "coldest"
@@ -2068,7 +2187,7 @@ msgstr ""
 #: const/__init__.py:49
 #: skins/default/templates/question/answer_tab_bar.html:21
 msgid "most voted"
-msgstr "注目の質問"
+msgstr ""
 
 #: const/__init__.py:50
 msgid "least voted"
@@ -2076,29 +2195,29 @@ msgstr ""
 
 #: const/__init__.py:51 const/message_keys.py:23
 msgid "relevance"
-msgstr "関連"
+msgstr ""
 
 #: const/__init__.py:63
 #: skins/default/templates/user_profile/user_inbox.html:50
 #: skins/default/templates/user_profile/user_inbox.html:62
 msgid "all"
-msgstr "すべて"
+msgstr ""
 
 #: const/__init__.py:64
 msgid "unanswered"
-msgstr "未回答"
+msgstr ""
 
 #: const/__init__.py:65
 msgid "favorite"
-msgstr "お気に入り"
+msgstr ""
 
 #: const/__init__.py:70
 msgid "list"
-msgstr "タグ"
+msgstr ""
 
 #: const/__init__.py:71
 msgid "cloud"
-msgstr "クラウド"
+msgstr ""
 
 #: const/__init__.py:79
 msgid "Question has no answers"
@@ -2118,68 +2237,67 @@ msgstr ""
 
 #: const/__init__.py:127 const/__init__.py:203
 msgid "commented question"
-msgstr "コメント付き質問"
+msgstr ""
 
 #: const/__init__.py:128 const/__init__.py:204
 msgid "commented answer"
-msgstr "コメント付き回答"
+msgstr ""
 
 #: const/__init__.py:129
 msgid "edited question"
-msgstr "編集された質問"
+msgstr ""
 
 #: const/__init__.py:130
 msgid "edited answer"
-msgstr "編集された回答"
+msgstr ""
 
 #: const/__init__.py:131
-#, fuzzy
 msgid "received badge"
-msgstr "得られたバッジ"
+msgstr ""
 
 #: const/__init__.py:132
 msgid "marked best answer"
-msgstr "ベストアンサー印"
+msgstr ""
 
 #: const/__init__.py:133
 msgid "upvoted"
-msgstr "上げ"
+msgstr ""
 
 #: const/__init__.py:134
 msgid "downvoted"
-msgstr "下げ"
+msgstr ""
 
 #: const/__init__.py:135
 msgid "canceled vote"
-msgstr "キャンセルされた投票"
+msgstr ""
 
 #: const/__init__.py:136
 msgid "deleted question"
-msgstr "削除された質問"
+msgstr ""
 
 #: const/__init__.py:137
 msgid "deleted answer"
-msgstr "削除された回答"
+msgstr ""
 
 #: const/__init__.py:138
 msgid "marked offensive"
-msgstr "不快印"
+msgstr ""
 
 #: const/__init__.py:139
 msgid "updated tags"
-msgstr "更新されたタグ"
+msgstr ""
 
 #: const/__init__.py:140
 msgid "selected favorite"
-msgstr "選択されたお気に入り"
+msgstr ""
 
 #: const/__init__.py:141
 msgid "completed user profile"
-msgstr "完全なユーザプロファイル"
+msgstr ""
 
 #: const/__init__.py:142
 msgid "email update sent to user"
-msgstr "電子メールアップデートをユーザに送信"
+msgstr ""
 
 #: const/__init__.py:145
 msgid "reminder about unanswered questions sent"
@@ -2196,32 +2314,32 @@ msgstr ""
 #: const/__init__.py:202
 #, fuzzy
 msgid "answered question"
-msgstr "Post Your Answer"
+msgstr "नवीनतम प्रश्नों"
 
 #: const/__init__.py:205
 #, fuzzy
 msgid "accepted answer"
-msgstr "編集された回答"
+msgstr "स्वयं का उत्तर स्वीकारें"
 
 #: const/__init__.py:209
 msgid "[closed]"
-msgstr "[閉鎖されました]"
+msgstr ""
 
 #: const/__init__.py:210
 msgid "[deleted]"
-msgstr "[削除されました]"
+msgstr ""
 
 #: const/__init__.py:211 views/readers.py:565
 msgid "initial version"
-msgstr "最初のバージョン"
+msgstr ""
 
 #: const/__init__.py:212
 msgid "retagged"
-msgstr "再度タグ付け"
+msgstr ""
 
 #: const/__init__.py:220
 msgid "off"
-msgstr "オフ"
+msgstr ""
 
 #: const/__init__.py:221
 msgid "exclude ignored"
@@ -2237,15 +2355,15 @@ msgstr ""
 
 #: const/__init__.py:227
 msgid "daily"
-msgstr "デイリー"
+msgstr ""
 
 #: const/__init__.py:228
 msgid "weekly"
-msgstr "ウイークリー"
+msgstr ""
 
 #: const/__init__.py:229
 msgid "no email"
-msgstr "電子メール無し"
+msgstr ""
 
 #: const/__init__.py:236
 msgid "identicon"
@@ -2269,15 +2387,15 @@ msgstr ""
 
 #: const/__init__.py:287 skins/default/templates/badges.html:38
 msgid "gold"
-msgstr "金賞"
+msgstr ""
 
 #: const/__init__.py:288 skins/default/templates/badges.html:48
 msgid "silver"
-msgstr "銀賞"
+msgstr ""
 
 #: const/__init__.py:289 skins/default/templates/badges.html:55
 msgid "bronze"
-msgstr "銅賞"
+msgstr ""
 
 #: const/__init__.py:301
 msgid "None"
@@ -2285,11 +2403,11 @@ msgstr ""
 
 #: const/__init__.py:302
 msgid "Gravatar"
-msgstr "グラバター"
+msgstr ""
 
 #: const/__init__.py:303
 msgid "Uploaded Avatar"
-msgstr "アップロードされたアバター"
+msgstr ""
 
 #: const/message_keys.py:21
 msgid "most relevant questions"
@@ -2304,9 +2422,8 @@ msgid "click to see the oldest questions"
 msgstr ""
 
 #: const/message_keys.py:25
-#, fuzzy
 msgid "date"
-msgstr "更新する"
+msgstr ""
 
 #: const/message_keys.py:26
 msgid "click to see the newest questions"
@@ -2334,7 +2451,7 @@ msgstr ""
 #: const/message_keys.py:31
 #, fuzzy
 msgid "answers"
-msgstr "回答/"
+msgstr "answers/"
 
 #: const/message_keys.py:32
 msgid "click to see the most answered questions"
@@ -2348,7 +2465,7 @@ msgstr ""
 #: skins/default/templates/user_profile/user_tabs.html:36
 #: skins/default/templates/user_profile/user_votes.html:4
 msgid "votes"
-msgstr "投票"
+msgstr ""
 
 #: const/message_keys.py:35
 msgid "click to see most voted questions"
@@ -2368,7 +2485,7 @@ msgid ""
 "Please contact the forum administrator to reach a resolution."
 msgstr ""
 
-#: deps/django_authopenid/backends.py:88
+#: deps/django_authopenid/backends.py:166
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
@@ -2406,13 +2523,13 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:335
 msgid "Current password"
-msgstr "現在のパスワード"
+msgstr ""
 
 #: deps/django_authopenid/forms.py:346
 msgid ""
 "Old password is incorrect.                     Please enter the correct "
 "password."
-msgstr "古いパスワードは誤りです。正しいパスワードを入力してください。"
+msgstr ""
 
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
@@ -2429,15 +2546,15 @@ msgstr ""
 #: deps/django_authopenid/urls.py:9 deps/django_authopenid/urls.py:12
 #: deps/django_authopenid/urls.py:15 setup_templates/settings.py:210
 msgid "signin/"
-msgstr "サインイン/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:10
 msgid "signout/"
-msgstr "サインアウト/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:12
 msgid "complete/"
-msgstr "完了/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:15
 msgid "complete-oauth/"
@@ -2445,15 +2562,15 @@ msgstr ""
 
 #: deps/django_authopenid/urls.py:19
 msgid "register/"
-msgstr "登録/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:21
 msgid "signup/"
-msgstr "サインアップ/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:25
 msgid "logout/"
-msgstr "ログアウト/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:30
 msgid "recover/"
@@ -2471,7 +2588,7 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:385
 msgid "Change your password"
-msgstr "パスワードを変更する"
+msgstr ""
 
 #: deps/django_authopenid/util.py:473
 msgid "Sign in with Yahoo"
@@ -2479,48 +2596,48 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:480
 msgid "AOL screen name"
-msgstr "AOL 画面名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:488
 msgid "OpenID url"
-msgstr "OpenID URL"
+msgstr ""
 
 #: deps/django_authopenid/util.py:517
 msgid "Flickr user name"
-msgstr "Flickr ユーザー名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:525
 msgid "Technorati user name"
-msgstr "Technorati ユーザー名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:533
 msgid "WordPress blog name"
-msgstr "WordPress ブログ名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:541
 msgid "Blogger blog name"
-msgstr "Blogger ブログ名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:549
 msgid "LiveJournal blog name"
-msgstr "LiveJournal ブログ名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:557
 msgid "ClaimID user name"
-msgstr "ClaimID ユーザー名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:565
 msgid "Vidoop user name"
-msgstr "Vidoop ユーザー名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:573
 msgid "Verisign user name"
-msgstr "Verisign ユーザー名"
+msgstr ""
 
 #: deps/django_authopenid/util.py:608
 #, python-format
 msgid "Change your %(provider)s password"
-msgstr "%(provider)s のパスワードを変更する"
+msgstr ""
 
 #: deps/django_authopenid/util.py:612
 #, python-format
@@ -2530,7 +2647,7 @@ msgstr ""
 #: deps/django_authopenid/util.py:621
 #, python-format
 msgid "Create password for %(provider)s"
-msgstr "%(provider)s のパスワードを作成する"
+msgstr ""
 
 #: deps/django_authopenid/util.py:625
 #, python-format
@@ -2550,102 +2667,100 @@ msgstr ""
 #: deps/django_authopenid/views.py:149
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
-msgstr "OpenID %(openid_url)s が無効です"
+msgstr ""
 
-#: deps/django_authopenid/views.py:261 deps/django_authopenid/views.py:412
-#: deps/django_authopenid/views.py:440
+#: deps/django_authopenid/views.py:261 deps/django_authopenid/views.py:408
+#: deps/django_authopenid/views.py:436
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr ""
 
-#: deps/django_authopenid/views.py:362
+#: deps/django_authopenid/views.py:358
 msgid "Your new password saved"
-msgstr "新しいパスワードが保存されました"
+msgstr ""
 
-#: deps/django_authopenid/views.py:466
+#: deps/django_authopenid/views.py:462
 msgid "The login password combination was not correct"
 msgstr ""
 
-#: deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:564
 msgid "Please click any of the icons below to sign in"
 msgstr ""
 
-#: deps/django_authopenid/views.py:570
+#: deps/django_authopenid/views.py:566
 msgid "Account recovery email sent"
 msgstr ""
 
-#: deps/django_authopenid/views.py:573
+#: deps/django_authopenid/views.py:569
 msgid "Please add one or more login methods."
 msgstr ""
 
-#: deps/django_authopenid/views.py:575
+#: deps/django_authopenid/views.py:571
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr ""
 
-#: deps/django_authopenid/views.py:577
+#: deps/django_authopenid/views.py:573
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr ""
 
-#: deps/django_authopenid/views.py:579
+#: deps/django_authopenid/views.py:575
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr ""
 
-#: deps/django_authopenid/views.py:652
+#: deps/django_authopenid/views.py:648
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr ""
 
-#: deps/django_authopenid/views.py:658
+#: deps/django_authopenid/views.py:654
 msgid "Oops, sorry - there was some error - please try again"
 msgstr ""
 
-#: deps/django_authopenid/views.py:749
+#: deps/django_authopenid/views.py:745
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr ""
 
-#: deps/django_authopenid/views.py:1060 deps/django_authopenid/views.py:1066
+#: deps/django_authopenid/views.py:1056 deps/django_authopenid/views.py:1062
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
-"Your email needs to be validated. Please see details <a "
-"id='validate_email_alert' href='%(details_url)s'>here</a>."
 
-#: deps/django_authopenid/views.py:1087
+#: deps/django_authopenid/views.py:1083
 #, python-format
 msgid "Recover your %(site)s account"
 msgstr ""
 
-#: deps/django_authopenid/views.py:1159
+#: deps/django_authopenid/views.py:1155
 msgid "Please check your email and visit the enclosed link."
 msgstr ""
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
 msgid "Site"
-msgstr "サイト"
+msgstr ""
 
 #: deps/livesettings/values.py:69
 msgid "Main"
-msgstr "メイン"
+msgstr ""
 
 #: deps/livesettings/values.py:128
 msgid "Base Settings"
-msgstr "基本設定"
+msgstr ""
 
 #: deps/livesettings/values.py:235
 msgid "Default value: \"\""
-msgstr "初期値: \"\""
+msgstr ""
 
 #: deps/livesettings/values.py:242
 msgid "Default value: "
-msgstr "初期値: "
+msgstr ""
 
 #: deps/livesettings/values.py:245
 #, python-format
 msgid "Default value: %s"
-msgstr "初期値: %s"
+msgstr ""
 
 #: deps/livesettings/values.py:629
 #, python-format
@@ -2654,38 +2769,39 @@ msgstr ""
 
 #: deps/livesettings/templates/livesettings/_admin_site_views.html:4
 msgid "Sites"
-msgstr "サイト"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 msgid "Documentation"
-msgstr "ドキュメント"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/common/templates/authopenid/signin.html:136
 msgid "Change password"
-msgstr "パスワードを変更する"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 msgid "Log out"
-msgstr "ログアウト"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:14
 #: deps/livesettings/templates/livesettings/site_settings.html:26
 msgid "Home"
-msgstr "ホーム"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:15
 msgid "Edit Group Settings"
-msgstr "グループ設定を編集する"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:22
 #: deps/livesettings/templates/livesettings/site_settings.html:50
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] ""
+msgstr[1] ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:28
 #, python-format
@@ -2699,7 +2815,7 @@ msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
 msgid "Edit Site Settings"
-msgstr "サイト設定を編集する"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
@@ -2712,7 +2828,7 @@ msgstr ""
 #: deps/livesettings/templates/livesettings/site_settings.html:66
 #, python-format
 msgid "Group settings: %(name)s"
-msgstr "グループ設定: %(name)s"
+msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
 msgid "Uncollapse all"
@@ -2720,15 +2836,6 @@ msgstr ""
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:141
 msgid "Congratulations, you are now an Administrator"
-msgstr ""
-
-#: management/commands/initialize_ldap_logins.py:51
-msgid ""
-"This command may help you migrate to LDAP password authentication by "
-"creating a record for LDAP association with each user account. There is an "
-"assumption that ldap user id's are the same as user names registered at the "
-"site. Before running this command it is necessary to set up LDAP parameters "
-"in the \"External keys\" section of the site settings."
 msgstr ""
 
 #: management/commands/post_emailed_questions.py:35
@@ -2780,6 +2887,7 @@ msgstr ""
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
 msgstr[0] ""
+msgstr[1] ""
 
 #: management/commands/send_email_alerts.py:425
 #, python-format
@@ -2790,10 +2898,11 @@ msgid_plural ""
 "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
 "%(sitename)s:</p>"
 msgstr[0] ""
+msgstr[1] ""
 
 #: management/commands/send_email_alerts.py:449
 msgid "new question"
-msgstr "あたらしい質問"
+msgstr ""
 
 #: management/commands/send_email_alerts.py:474
 #, python-format
@@ -2810,6 +2919,7 @@ msgstr ""
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
 msgstr[0] ""
+msgstr[1] ""
 
 #: middleware/forum_mode.py:53
 #, python-format
@@ -2892,6 +3002,7 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:493
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -2950,6 +3061,7 @@ msgid_plural ""
 "Sorry, cannot delete your question since it has some upvoted answers posted "
 "by other users"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:678
 msgid "Sorry, since your account is blocked you cannot delete posts"
@@ -3043,6 +3155,7 @@ msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
 "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:861
 msgid "you don't have the permission to remove all flags"
@@ -3109,18 +3222,21 @@ msgstr ""
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1446
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1447
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1449
 #, python-format
@@ -3151,7 +3267,7 @@ msgstr ""
 
 #: models/__init__.py:1726
 msgid "Registered User"
-msgstr "登録ユーザー"
+msgstr ""
 
 #: models/__init__.py:1728
 msgid "Watched User"
@@ -3171,18 +3287,21 @@ msgstr ""
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1856
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1863
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] ""
+msgstr[1] ""
 
 #: models/__init__.py:1874
 #, python-format
@@ -3197,7 +3316,7 @@ msgstr ""
 #: models/__init__.py:2354
 #, python-format
 msgid "\"%(title)s\""
-msgstr "\"%(title)s\""
+msgstr ""
 
 #: models/__init__.py:2491
 #, python-format
@@ -3217,7 +3336,7 @@ msgstr ""
 
 #: models/badges.py:133
 msgid "Disciplined"
-msgstr "規律的"
+msgstr ""
 
 #: models/badges.py:151
 #, python-format
@@ -3226,7 +3345,7 @@ msgstr ""
 
 #: models/badges.py:155
 msgid "Peer Pressure"
-msgstr "同僚からのプレッシャー"
+msgstr ""
 
 #: models/badges.py:174
 #, python-format
@@ -3235,32 +3354,32 @@ msgstr ""
 
 #: models/badges.py:178
 msgid "Teacher"
-msgstr "教師"
+msgstr ""
 
 #: models/badges.py:218
 msgid "Supporter"
-msgstr "サポーター"
+msgstr ""
 
 #: models/badges.py:219
 msgid "First upvote"
-msgstr "最初の上げ投票"
+msgstr ""
 
 #: models/badges.py:227
 msgid "Critic"
-msgstr "批評家"
+msgstr ""
 
 #: models/badges.py:228
 msgid "First downvote"
-msgstr "最初の下げ投票"
+msgstr ""
 
 #: models/badges.py:237
 msgid "Civic Duty"
-msgstr "市民の義務"
+msgstr ""
 
 #: models/badges.py:238
 #, python-format
 msgid "Voted %(num)s times"
-msgstr "%(num)s 回投票しました"
+msgstr ""
 
 #: models/badges.py:252
 #, python-format
@@ -3269,11 +3388,11 @@ msgstr ""
 
 #: models/badges.py:256
 msgid "Self-Learner"
-msgstr "自己学習者"
+msgstr ""
 
 #: models/badges.py:304
 msgid "Nice Answer"
-msgstr "素晴らしい回答"
+msgstr ""
 
 #: models/badges.py:309 models/badges.py:321 models/badges.py:333
 #, python-format
@@ -3282,15 +3401,15 @@ msgstr ""
 
 #: models/badges.py:316
 msgid "Good Answer"
-msgstr "良い回答"
+msgstr ""
 
 #: models/badges.py:328
 msgid "Great Answer"
-msgstr "偉大な回答"
+msgstr ""
 
 #: models/badges.py:340
 msgid "Nice Question"
-msgstr "ナイス質問"
+msgstr ""
 
 #: models/badges.py:345 models/badges.py:357 models/badges.py:369
 #, python-format
@@ -3299,23 +3418,23 @@ msgstr ""
 
 #: models/badges.py:352
 msgid "Good Question"
-msgstr "良い質問"
+msgstr ""
 
 #: models/badges.py:364
 msgid "Great Question"
-msgstr "偉大な質問"
+msgstr ""
 
 #: models/badges.py:376
 msgid "Student"
-msgstr "生徒"
+msgstr ""
 
 #: models/badges.py:381
 msgid "Asked first question with at least one up vote"
-msgstr "質問を最初に尋ねつつ少なくとも一つの上げ投票した"
+msgstr ""
 
 #: models/badges.py:414
 msgid "Popular Question"
-msgstr "人気の質問"
+msgstr ""
 
 #: models/badges.py:418 models/badges.py:429 models/badges.py:441
 #, python-format
@@ -3324,7 +3443,7 @@ msgstr ""
 
 #: models/badges.py:425
 msgid "Notable Question"
-msgstr "卓越した質問"
+msgstr ""
 
 #: models/badges.py:436
 msgid "Famous Question"
@@ -3336,11 +3455,11 @@ msgstr ""
 
 #: models/badges.py:453
 msgid "Scholar"
-msgstr "学者"
+msgstr ""
 
 #: models/badges.py:495
 msgid "Enlightened"
-msgstr "よくわかっていらっしゃる"
+msgstr ""
 
 #: models/badges.py:499
 #, python-format
@@ -3349,7 +3468,7 @@ msgstr ""
 
 #: models/badges.py:507
 msgid "Guru"
-msgstr "導師"
+msgstr ""
 
 #: models/badges.py:510
 #, python-format
@@ -3365,27 +3484,27 @@ msgstr ""
 
 #: models/badges.py:525
 msgid "Necromancer"
-msgstr "ネクロマンサー"
+msgstr ""
 
 #: models/badges.py:548
 msgid "Citizen Patrol"
-msgstr "市民パトロール"
+msgstr ""
 
 #: models/badges.py:551
 msgid "First flagged post"
-msgstr "フラグを最初にポストした"
+msgstr ""
 
 #: models/badges.py:563
 msgid "Cleanup"
-msgstr "クリーンアップ"
+msgstr ""
 
 #: models/badges.py:566
 msgid "First rollback"
-msgstr "初めて巻き戻した"
+msgstr ""
 
 #: models/badges.py:577
 msgid "Pundit"
-msgstr "評論家"
+msgstr ""
 
 #: models/badges.py:580
 msgid "Left 10 comments with score of 10 or more"
@@ -3393,53 +3512,53 @@ msgstr ""
 
 #: models/badges.py:612
 msgid "Editor"
-msgstr "編集者"
+msgstr ""
 
 #: models/badges.py:615
 msgid "First edit"
-msgstr "最初の編集"
+msgstr ""
 
 #: models/badges.py:623
 msgid "Associate Editor"
-msgstr "見習い編集者"
+msgstr ""
 
 #: models/badges.py:627
 #, python-format
 msgid "Edited %(num)s entries"
-msgstr "%(num)s 個の項目を編集しました"
+msgstr ""
 
 #: models/badges.py:634
 msgid "Organizer"
-msgstr "オーガナイザー"
+msgstr ""
 
 #: models/badges.py:637
 msgid "First retag"
-msgstr "最初にタグを付け替えた"
+msgstr ""
 
 #: models/badges.py:644
 msgid "Autobiographer"
-msgstr "自伝作家"
+msgstr ""
 
 #: models/badges.py:647
 msgid "Completed all user profile fields"
-msgstr "ユーザープロファイルをすべて入力した"
+msgstr ""
 
 #: models/badges.py:663
 #, python-format
 msgid "Question favorited by %(num)s users"
-msgstr "%(num)s 人のユーザーにより気に入られている質問"
+msgstr ""
 
 #: models/badges.py:689
 msgid "Stellar Question"
-msgstr "スター質問"
+msgstr ""
 
 #: models/badges.py:698
 msgid "Favorite Question"
-msgstr "お気に入りの質問"
+msgstr ""
 
 #: models/badges.py:710
 msgid "Enthusiast"
-msgstr "熱心な人"
+msgstr ""
 
 #: models/badges.py:714
 #, python-format
@@ -3448,25 +3567,25 @@ msgstr ""
 
 #: models/badges.py:732
 msgid "Commentator"
-msgstr "解説者"
+msgstr ""
 
 #: models/badges.py:736
 #, python-format
 msgid "Posted %(num_comments)s comments"
-msgstr "%(num_comments)s 個のコメントを投稿しました"
+msgstr ""
 
 #: models/badges.py:752
 msgid "Taxonomist"
-msgstr "体系学者"
+msgstr ""
 
 #: models/badges.py:756
 #, python-format
 msgid "Created a tag used by %(num)s questions"
-msgstr "%(num)s 個の質問により使用されているタグを作成しました"
+msgstr ""
 
 #: models/badges.py:774
 msgid "Expert"
-msgstr "熟練者"
+msgstr ""
 
 #: models/badges.py:777
 msgid "Very active in one tag"
@@ -3507,19 +3626,19 @@ msgstr ""
 msgid "\" and more"
 msgstr ""
 
-#: models/repute.py:141
+#: models/repute.py:143
 #, python-format
 msgid "<em>Changed by moderator. Reason:</em> %(reason)s"
 msgstr ""
 
-#: models/repute.py:152
+#: models/repute.py:154
 #, python-format
 msgid ""
 "%(points)s points were added for %(username)s's contribution to question "
 "%(question_title)s"
 msgstr ""
 
-#: models/repute.py:157
+#: models/repute.py:159
 #, python-format
 msgid ""
 "%(points)s points were subtracted for %(username)s's contribution to "
@@ -3528,27 +3647,27 @@ msgstr ""
 
 #: models/tag.py:106
 msgid "interesting"
-msgstr "興味深い"
+msgstr ""
 
 #: models/tag.py:106
 msgid "ignored"
-msgstr "無視"
+msgstr ""
 
 #: models/user.py:266
 msgid "Entire forum"
-msgstr "フォーラムに入る"
+msgstr ""
 
 #: models/user.py:267
 msgid "Questions that I asked"
-msgstr "尋ねた質問"
+msgstr ""
 
 #: models/user.py:268
 msgid "Questions that I answered"
-msgstr "回答した質問"
+msgstr ""
 
 #: models/user.py:269
 msgid "Individually selected questions"
-msgstr "個人的に選択した質問"
+msgstr ""
 
 #: models/user.py:270
 msgid "Mentions and comment responses"
@@ -3556,19 +3675,19 @@ msgstr ""
 
 #: models/user.py:273
 msgid "Instantly"
-msgstr "すぐに"
+msgstr ""
 
 #: models/user.py:274
 msgid "Daily"
-msgstr "デイリー"
+msgstr ""
 
 #: models/user.py:275
 msgid "Weekly"
-msgstr "ウイークリー"
+msgstr ""
 
 #: models/user.py:276
 msgid "No email"
-msgstr "メール無し"
+msgstr ""
 
 #: skins/common/templates/authopenid/authopenid_macros.html:53
 msgid "Please enter your <span>user name</span>, then sign in"
@@ -3582,18 +3701,17 @@ msgstr ""
 #: skins/common/templates/authopenid/authopenid_macros.html:56
 #: skins/common/templates/authopenid/signin.html:106
 msgid "Sign in"
-msgstr "サインイン"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:2
 #: skins/common/templates/authopenid/changeemail.html:8
 #: skins/common/templates/authopenid/changeemail.html:49
-#, fuzzy
 msgid "Change Email"
-msgstr "電子メールを変更する"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:10
 msgid "Save your email address"
-msgstr "電子メールアドレスを保存する"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:15
 #, python-format
@@ -3626,7 +3744,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:49
 msgid "Save Email"
-msgstr "電子メールを保存する"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:51
 #: skins/default/templates/answer_edit.html:25
@@ -3636,13 +3754,13 @@ msgstr "電子メールを保存する"
 #: skins/default/templates/question_retag.html:22
 #: skins/default/templates/reopen.html:27
 #: skins/default/templates/subscribe_for_tags.html:16
-#: skins/default/templates/user_profile/user_edit.html:103
+#: skins/default/templates/user_profile/user_edit.html:102
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:58
 msgid "Validate email"
-msgstr "電子メールを有効にする"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:61
 #, python-format
@@ -3661,7 +3779,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:70
 msgid "Email not changed"
-msgstr "電子メールは変更されませんでした"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:73
 #, python-format
@@ -3675,7 +3793,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:80
 msgid "Email changed"
-msgstr "電子メールは変更されました"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:83
 #, python-format
@@ -3691,7 +3809,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:91
 msgid "Email verified"
-msgstr "電子メールは確証されました"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:94
 msgid ""
@@ -3706,9 +3824,8 @@ msgid ""
 msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:102
-#, fuzzy
 msgid "Validation email not sent"
-msgstr "電子メールを有効にする"
+msgstr ""
 
 #: skins/common/templates/authopenid/changeemail.html:105
 #, python-format
@@ -3721,12 +3838,11 @@ msgstr ""
 
 #: skins/common/templates/authopenid/complete.html:21
 msgid "Registration"
-msgstr "登録"
+msgstr ""
 
 #: skins/common/templates/authopenid/complete.html:23
-#, fuzzy
 msgid "User registration"
-msgstr "登録"
+msgstr ""
 
 #: skins/common/templates/authopenid/complete.html:60
 msgid "<strong>Receive forum updates by email</strong>"
@@ -3735,48 +3851,44 @@ msgstr ""
 #: skins/common/templates/authopenid/complete.html:64
 #: skins/common/templates/authopenid/signup_with_password.html:46
 msgid "please select one of the options above"
-msgstr "上のオプションのどれかを選択してください"
+msgstr ""
 
 #: skins/common/templates/authopenid/complete.html:67
 #: skins/common/templates/authopenid/signup_with_password.html:4
 #: skins/common/templates/authopenid/signup_with_password.html:53
 msgid "Signup"
-msgstr "サインアップする"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:1
 msgid "Thank you for registering at our Q&A forum!"
-msgstr "Q&amp;Aフォーラムに登録いただきありがとうございます！"
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:3
 msgid "Your account details are:"
-msgstr "アカウントの詳細："
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:5
 msgid "Username:"
-msgstr "ユーザ名："
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:6
 msgid "Password:"
-msgstr "パスワード："
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:8
 msgid "Please sign in here:"
-msgstr "ここにサインしてください："
+msgstr ""
 
 #: skins/common/templates/authopenid/confirm_email.txt:11
 #: skins/common/templates/authopenid/email_validation.txt:13
-#, fuzzy
 msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
 msgstr ""
-"よろしくおねがいします。\n"
-"--\n"
-"Q&A フォーラム管理"
 
 #: skins/common/templates/authopenid/email_validation.txt:1
 msgid "Greetings from the Q&A forum"
-msgstr "Q&amp;Aフォーマルからのおしらせです"
+msgstr ""
 
 #: skins/common/templates/authopenid/email_validation.txt:3
 msgid "To make use of the Forum, please follow the link below:"
@@ -3795,7 +3907,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/logout.html:3
 msgid "Logout"
-msgstr "ログアウト"
+msgstr ""
 
 #: skins/common/templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
@@ -3809,7 +3921,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:4
 msgid "User login"
-msgstr "ユーザーログイン"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:14
 #, python-format
@@ -3879,7 +3991,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:101 utils/forms.py:169
 msgid "Password"
-msgstr "パスワード"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:113
 msgid "To change your password - please enter the new one twice, then submit"
@@ -3913,7 +4025,7 @@ msgstr ""
 #: skins/common/templates/question/answer_controls.html:13
 #: skins/common/templates/question/question_controls.html:10
 msgid "delete"
-msgstr "削除する"
+msgstr ""
 
 #: skins/common/templates/authopenid/signin.html:172
 msgid "cannot be deleted"
@@ -3953,7 +4065,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:25
 msgid "Create login name and password"
-msgstr "ログイン名とパスワードを作成する"
+msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:26
 msgid ""
@@ -3976,11 +4088,11 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:55
 msgid "or"
-msgstr "もしくは"
+msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:56
 msgid "return to OpenID login"
-msgstr "OpenID ログインに戻る"
+msgstr ""
 
 #: skins/common/templates/avatar/add.html:3
 msgid "add avatar"
@@ -3988,12 +4100,12 @@ msgstr ""
 
 #: skins/common/templates/avatar/add.html:5
 msgid "Change avatar"
-msgstr "アバターを変更する"
+msgstr ""
 
 #: skins/common/templates/avatar/add.html:6
 #: skins/common/templates/avatar/change.html:7
 msgid "Your current avatar: "
-msgstr "現在のアバター: "
+msgstr ""
 
 #: skins/common/templates/avatar/add.html:9
 #: skins/common/templates/avatar/change.html:11
@@ -4002,7 +4114,7 @@ msgstr ""
 
 #: skins/common/templates/avatar/add.html:13
 msgid "Upload New Image"
-msgstr "新しい画像をアップロードする"
+msgstr ""
 
 #: skins/common/templates/avatar/change.html:4
 msgid "change avatar"
@@ -4014,11 +4126,11 @@ msgstr ""
 
 #: skins/common/templates/avatar/change.html:22
 msgid "Upload"
-msgstr "アップロード"
+msgstr ""
 
 #: skins/common/templates/avatar/confirm_delete.html:2
 msgid "delete avatar"
-msgstr "アバターを削除する"
+msgstr ""
 
 #: skins/common/templates/avatar/confirm_delete.html:4
 msgid "Please select the avatars that you would like to delete."
@@ -4033,7 +4145,7 @@ msgstr ""
 
 #: skins/common/templates/avatar/confirm_delete.html:12
 msgid "Delete These"
-msgstr "これらを削除する"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:2
 msgid "swap with question"
@@ -4041,13 +4153,13 @@ msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:7
 msgid "permanent link"
-msgstr "リンク"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:8
 #: skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/question_edit_tips.html:40
 msgid "link"
-msgstr "リンク"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:13
 #: skins/common/templates/question/question_controls.html:10
@@ -4057,12 +4169,12 @@ msgstr ""
 #: skins/common/templates/question/answer_controls.html:19
 #, fuzzy
 msgid "remove offensive flag"
-msgstr "フラグを削除する"
+msgstr "आपत्तिजनक ध्वजों को देखे"
 
 #: skins/common/templates/question/answer_controls.html:21
 #: skins/common/templates/question/question_controls.html:22
 msgid "remove flag"
-msgstr "フラグを削除する"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:26
 #: skins/common/templates/question/answer_controls.html:35
@@ -4072,15 +4184,13 @@ msgstr "フラグを削除する"
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr ""
-"侮辱的とレポートする （例：SPAMが含まれる、広告的、悪意のあるテキスト、などな"
-"ど）"
 
 #: skins/common/templates/question/answer_controls.html:28
 #: skins/common/templates/question/answer_controls.html:37
 #: skins/common/templates/question/question_controls.html:28
 #: skins/common/templates/question/question_controls.html:35
 msgid "flag offensive"
-msgstr "侮辱的と印を付ける"
+msgstr ""
 
 #: skins/common/templates/question/answer_controls.html:41
 #: skins/common/templates/question/question_controls.html:42
@@ -4088,12 +4198,12 @@ msgstr "侮辱的と印を付ける"
 #: skins/default/templates/revisions.html:38
 #: skins/default/templates/revisions.html:41
 msgid "edit"
-msgstr "編集する"
+msgstr ""
 
 #: skins/common/templates/question/answer_vote_buttons.html:6
 #: skins/default/templates/user_profile/user_stats.html:24
 msgid "this answer has been selected as correct"
-msgstr "この回答が妥当であると選ばれました"
+msgstr ""
 
 #: skins/common/templates/question/answer_vote_buttons.html:8
 msgid "mark this answer as correct (click again to undo)"
@@ -4113,12 +4223,12 @@ msgstr ""
 
 #: skins/common/templates/question/question_controls.html:12
 msgid "reopen"
-msgstr "再度開く"
+msgstr ""
 
 #: skins/common/templates/question/question_controls.html:14
 #: skins/default/templates/user_profile/user_inbox.html:67
 msgid "close"
-msgstr "閉鎖する"
+msgstr ""
 
 #: skins/common/templates/question/question_controls.html:41
 msgid "retag"
@@ -4130,11 +4240,11 @@ msgstr ""
 
 #: skins/common/templates/widgets/edit_post.html:33
 msgid "(required)"
-msgstr "（必須）"
+msgstr ""
 
 #: skins/common/templates/widgets/edit_post.html:56
 msgid "Toggle the real time Markdown editor preview"
-msgstr "リアルタイムMarkdown編集プレビューをトグルする"
+msgstr ""
 
 #: skins/common/templates/widgets/edit_post.html:58
 #: skins/default/templates/answer_edit.html:61
@@ -4145,7 +4255,7 @@ msgstr "リアルタイムMarkdown編集プレビューをトグルする"
 #: skins/default/templates/question/javascript.html:85
 #: skins/default/templates/question/javascript.html:88
 msgid "hide preview"
-msgstr "プレビューを隠す"
+msgstr ""
 
 #: skins/common/templates/widgets/related_tags.html:3
 #: skins/default/templates/tags.html:4
@@ -4154,7 +4264,7 @@ msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
-msgstr "興味あるタグ"
+msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:19
 #: skins/common/templates/widgets/tag_selector.html:36
@@ -4163,7 +4273,7 @@ msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:21
 msgid "Ignored tags"
-msgstr "表示しないタグ"
+msgstr ""
 
 #: skins/common/templates/widgets/tag_selector.html:38
 msgid "Display tag filter"
@@ -4176,52 +4286,52 @@ msgstr ""
 
 #: skins/default/templates/404.jinja.html:13
 msgid "Sorry, could not find the page you requested."
-msgstr "残念ながら、リクエストされたページは見つかりません。"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:15
 msgid "This might have happened for the following reasons:"
-msgstr "これはもしかしたらつぎのような理由でおこったかもしれない："
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:17
 msgid "this question or answer has been deleted;"
-msgstr "この質問もしくは回答は削除されました；"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:18
 msgid "url has error - please check it;"
-msgstr "URLがエラーを含んでいます。。確認して下さい；"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:19
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
-msgstr "開こうとしたページは保護されているか、十分なポイントをもっていません、"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:19
 #: skins/default/templates/widgets/footer.html:39
 msgid "faq"
-msgstr "よくある質問"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:20
 msgid "if you believe this error 404 should not have occured, please"
-msgstr "このエラー404がおこらないとを信じるなら、"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:21
 msgid "report this problem"
-msgstr "この問題をレポートする"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:30
 #: skins/default/templates/500.jinja.html:11
 msgid "back to previous page"
-msgstr "以前のページに戻る"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:31
 #: skins/default/templates/widgets/scope_nav.html:6
 msgid "see all questions"
-msgstr "すべての質問をみる"
+msgstr ""
 
 #: skins/default/templates/404.jinja.html:32
 msgid "see all tags"
-msgstr "すべてのタグをみる"
+msgstr ""
 
 #: skins/default/templates/500.jinja.html:3
 #: skins/default/templates/500.jinja.html:5
@@ -4231,8 +4341,6 @@ msgstr ""
 #: skins/default/templates/500.jinja.html:8
 msgid "system error log is recorded, error will be fixed as soon as possible"
 msgstr ""
-"システムエラーログが記録されました、エラーはできる限り速やかに修正されるで"
-"しょう"
 
 #: skins/default/templates/500.jinja.html:9
 msgid "please report the error to the site administrators if you wish"
@@ -4240,51 +4348,51 @@ msgstr ""
 
 #: skins/default/templates/500.jinja.html:12
 msgid "see latest questions"
-msgstr "最新の質問をみる"
+msgstr ""
 
 #: skins/default/templates/500.jinja.html:13
 msgid "see tags"
-msgstr "タグをみる"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:4
 #: skins/default/templates/answer_edit.html:10
 msgid "Edit answer"
-msgstr "回答を編集する"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:10
 #: skins/default/templates/question_edit.html:9
 #: skins/default/templates/question_retag.html:5
 #: skins/default/templates/revisions.html:7
 msgid "back"
-msgstr "もどる"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:14
 msgid "revision"
-msgstr "改訂"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:17
 #: skins/default/templates/question_edit.html:16
 msgid "select revision"
-msgstr "改訂を選択する"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:24
 #: skins/default/templates/question_edit.html:35
 msgid "Save edit"
-msgstr "編集を保存する"
+msgstr ""
 
 #: skins/default/templates/answer_edit.html:64
 #: skins/default/templates/ask.html:52
 #: skins/default/templates/question_edit.html:76
 #: skins/default/templates/question/javascript.html:88
 msgid "show preview"
-msgstr "プレビューを表示する"
+msgstr ""
 
 #: skins/default/templates/ask.html:4
 #: skins/default/templates/widgets/ask_button.html:5
 #: skins/default/templates/widgets/ask_form.html:43
 #, fuzzy
 msgid "Ask Your Question"
-msgstr "質問を投稿する"
+msgstr "खुद के प्रश्नों को बंद करें"
 
 #: skins/default/templates/badge.html:5 skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:19
@@ -4295,7 +4403,7 @@ msgstr ""
 
 #: skins/default/templates/badge.html:5
 msgid "Badge"
-msgstr "バッジ"
+msgstr ""
 
 #: skins/default/templates/badge.html:7
 #, python-format
@@ -4313,16 +4421,15 @@ msgstr ""
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/badges.html:3 skins/default/templates/badges.html:5
 msgid "Badges"
-msgstr "バッジ"
+msgstr ""
 
 #: skins/default/templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
 msgstr ""
-"質問と回答が高く投票されると、Q&amp;Aコミュニティーへの貢献がさまざまなバッジ"
-"で認定されます。"
 
 #: skins/default/templates/badges.html:8
 #, python-format
@@ -4334,7 +4441,7 @@ msgstr ""
 
 #: skins/default/templates/badges.html:36
 msgid "Community badges"
-msgstr "バッジレベル"
+msgstr ""
 
 #: skins/default/templates/badges.html:38
 msgid "gold badge: the highest honor and is very rare"
@@ -4365,34 +4472,34 @@ msgstr ""
 
 #: skins/default/templates/close.html:3 skins/default/templates/close.html:5
 msgid "Close question"
-msgstr "質問を閉鎖する"
+msgstr ""
 
 #: skins/default/templates/close.html:6
 msgid "Close the question"
-msgstr "質問を閉鎖する"
+msgstr ""
 
 #: skins/default/templates/close.html:11
 msgid "Reasons"
-msgstr "理由"
+msgstr ""
 
 #: skins/default/templates/close.html:15
 msgid "OK to close"
-msgstr "閉鎖を確定する"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:3
 #: skins/default/templates/faq_static.html:5
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16 views/meta.py:61
 msgid "FAQ"
-msgstr "よくある質問（FAQ）"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:5
 msgid "Frequently Asked Questions "
-msgstr "よくある質問"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:6
 msgid "What kinds of questions can I ask here?"
-msgstr "ここでどんな質問をしてよいのか？"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:7
 msgid ""
@@ -4401,18 +4508,14 @@ msgid ""
 msgstr ""
 
 #: skins/default/templates/faq_static.html:8
-#, fuzzy
 msgid ""
 "Before you ask - please make sure to search for a similar question. You can "
 "search questions by their title or tags."
 msgstr ""
-"Before you ask - please make sure to search for a similar question. You can "
-"search questions by their title or tags."
 
 #: skins/default/templates/faq_static.html:10
-#, fuzzy
 msgid "What kinds of questions should be avoided?"
-msgstr "What kinds of questions should be avoided?"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:11
 msgid ""
@@ -4434,7 +4537,7 @@ msgstr ""
 
 #: skins/default/templates/faq_static.html:15
 msgid "Who moderates this community?"
-msgstr "このコミュニティーをだれがモデレートしているのか？"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:16
 msgid "The short answer is: <strong>you</strong>."
@@ -4445,18 +4548,14 @@ msgid "This website is moderated by the users."
 msgstr ""
 
 #: skins/default/templates/faq_static.html:18
-#, fuzzy
 msgid ""
 "Karma system allows users to earn rights to perform a variety of moderation "
 "tasks"
 msgstr ""
-"Karma system allows users to earn rights to perform a variety of moderation "
-"tasks"
 
 #: skins/default/templates/faq_static.html:20
-#, fuzzy
 msgid "How does karma system work?"
-msgstr "How does karma system work?"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:21
 msgid ""
@@ -4486,7 +4585,7 @@ msgstr ""
 
 #: skins/default/templates/faq_static.html:36
 msgid "add comments"
-msgstr "コメントを加える"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:40
 #: skins/default/templates/user_profile/user_votes.html:15
@@ -4507,7 +4606,7 @@ msgstr ""
 
 #: skins/default/templates/faq_static.html:56
 msgid "edit community wiki questions"
-msgstr "コミュニティー wiki 質問を編集する"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:61
 msgid "edit any answer"
@@ -4550,15 +4649,15 @@ msgstr ""
 
 #: skins/default/templates/faq_static.html:73
 msgid "\"Login now!\""
-msgstr "\"いますぐログイン！\""
+msgstr ""
 
 #: skins/default/templates/faq_static.html:75
 msgid "Why other people can edit my questions/answers?"
-msgstr "なぜ他のひとが私の質問や回答を編集できるのですか？"
+msgstr ""
 
 #: skins/default/templates/faq_static.html:76
 msgid "Goal of this site is..."
-msgstr "このサイトのゴールは..."
+msgstr ""
 
 #: skins/default/templates/faq_static.html:76
 msgid ""
@@ -4576,21 +4675,19 @@ msgid "Still have questions?"
 msgstr ""
 
 #: skins/default/templates/faq_static.html:80
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Please <a href='%%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
 msgstr ""
-"Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
-"community better!"
 
 #: skins/default/templates/feedback.html:3
 msgid "Feedback"
-msgstr "フィードバック"
+msgstr ""
 
 #: skins/default/templates/feedback.html:5
 msgid "Give us your feedback!"
-msgstr "あなたのフィードバックをください！"
+msgstr ""
 
 #: skins/default/templates/feedback.html:14
 #, python-format
@@ -4618,7 +4715,7 @@ msgstr ""
 #: skins/default/templates/feedback.html:37
 #: skins/default/templates/feedback.html:46
 msgid "(this field is required)"
-msgstr "（このフィールドは必須）"
+msgstr ""
 
 #: skins/default/templates/feedback.html:55
 msgid "(Please solve the captcha)"
@@ -4626,7 +4723,7 @@ msgstr ""
 
 #: skins/default/templates/feedback.html:63
 msgid "Send Feedback"
-msgstr "フィードバックを送る"
+msgstr ""
 
 #: skins/default/templates/feedback_email.txt:2
 #, python-format
@@ -4637,16 +4734,16 @@ msgstr ""
 
 #: skins/default/templates/help.html:2 skins/default/templates/help.html:4
 msgid "Help"
-msgstr "ヘルプ"
+msgstr ""
 
 #: skins/default/templates/help.html:7
 #, python-format
 msgid "Welcome %(username)s,"
-msgstr "ようこそ %(username)s、"
+msgstr ""
 
 #: skins/default/templates/help.html:9
 msgid "Welcome,"
-msgstr "ようこそ、"
+msgstr ""
 
 #: skins/default/templates/help.html:13
 #, python-format
@@ -4820,7 +4917,7 @@ msgstr ""
 
 #: skins/default/templates/macros.html:33
 msgid "current number of votes"
-msgstr "現在の投票数"
+msgstr ""
 
 #: skins/default/templates/macros.html:46
 msgid "anonymous user"
@@ -4839,19 +4936,19 @@ msgstr ""
 
 #: skins/default/templates/macros.html:88
 msgid "asked"
-msgstr "質問日"
+msgstr ""
 
 #: skins/default/templates/macros.html:90
 msgid "answered"
-msgstr "回答日"
+msgstr ""
 
 #: skins/default/templates/macros.html:92
 msgid "posted"
-msgstr "投稿日"
+msgstr ""
 
 #: skins/default/templates/macros.html:122
 msgid "updated"
-msgstr "更新日"
+msgstr ""
 
 #: skins/default/templates/macros.html:198
 #, python-format
@@ -4860,7 +4957,7 @@ msgstr ""
 
 #: skins/default/templates/macros.html:300
 msgid "delete this comment"
-msgstr "このコメントを削除する"
+msgstr ""
 
 #: skins/default/templates/macros.html:503 templatetags/extra_tags.py:43
 #, python-format
@@ -4870,32 +4967,32 @@ msgstr ""
 #: skins/default/templates/macros.html:512
 #, python-format
 msgid "%(username)s's website is %(url)s"
-msgstr "%(username)s のウェブサイトは %(url)s です"
+msgstr ""
 
 #: skins/default/templates/macros.html:527
 #: skins/default/templates/macros.html:528
 #: skins/default/templates/macros.html:566
 #: skins/default/templates/macros.html:567
 msgid "previous"
-msgstr "以前の"
+msgstr ""
 
 #: skins/default/templates/macros.html:539
 #: skins/default/templates/macros.html:578
 msgid "current page"
-msgstr "現在のページ"
+msgstr ""
 
 #: skins/default/templates/macros.html:541
 #: skins/default/templates/macros.html:548
 #: skins/default/templates/macros.html:580
 #: skins/default/templates/macros.html:587
-#, fuzzy, python-format
+#, python-format
 msgid "page %(num)s"
-msgstr "ページ %(num)s"
+msgstr ""
 
 #: skins/default/templates/macros.html:552
 #: skins/default/templates/macros.html:591
 msgid "next page"
-msgstr "次のページ"
+msgstr ""
 
 #: skins/default/templates/macros.html:603
 #, python-format
@@ -4904,9 +5001,10 @@ msgstr ""
 
 #: skins/default/templates/macros.html:606
 #, python-format
-msgid "you have a new response"
+msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/macros.html:609
 msgid "no new responses yet"
@@ -4932,7 +5030,7 @@ msgstr ""
 
 #: skins/default/templates/main_page.html:11
 msgid "Questions"
-msgstr "質問"
+msgstr ""
 
 #: skins/default/templates/question.html:98
 msgid "post a comment / <strong>some</strong> more"
@@ -4946,18 +5044,18 @@ msgstr ""
 #: skins/default/templates/question/javascript.html:20
 #, fuzzy
 msgid "post a comment"
-msgstr "post a comment"
+msgstr "टिप्पणी छोड़ दे "
 
 #: skins/default/templates/question_edit.html:4
 #: skins/default/templates/question_edit.html:9
 msgid "Edit question"
-msgstr "質問を編集する"
+msgstr ""
 
 #: skins/default/templates/question_retag.html:3
 #: skins/default/templates/question_retag.html:5
 #, fuzzy
 msgid "Retag question"
-msgstr "関係した質問"
+msgstr "नवीनतम प्रश्नों"
 
 #: skins/default/templates/question_retag.html:21
 msgid "Retag"
@@ -4965,7 +5063,7 @@ msgstr ""
 
 #: skins/default/templates/question_retag.html:28
 msgid "Why use and modify tags?"
-msgstr "なぜタグをつかったり、修正するのですか？"
+msgstr ""
 
 #: skins/default/templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
@@ -4977,11 +5075,11 @@ msgstr ""
 
 #: skins/default/templates/question_retag.html:59
 msgid "up to 5 tags, less than 20 characters each"
-msgstr "５タグまで、２０文字未満"
+msgstr ""
 
 #: skins/default/templates/reopen.html:3 skins/default/templates/reopen.html:5
 msgid "Reopen question"
-msgstr "再開された質問"
+msgstr ""
 
 #: skins/default/templates/reopen.html:6
 msgid "Title"
@@ -4996,24 +5094,24 @@ msgstr ""
 
 #: skins/default/templates/reopen.html:16
 msgid "Close reason:"
-msgstr "クローズ理由:"
+msgstr ""
 
 #: skins/default/templates/reopen.html:19
 msgid "When:"
-msgstr "時間:"
+msgstr ""
 
 #: skins/default/templates/reopen.html:22
 msgid "Reopen this question?"
-msgstr "この質問を再び開きますか？"
+msgstr ""
 
 #: skins/default/templates/reopen.html:26
 msgid "Reopen this question"
-msgstr "この質問を再開する"
+msgstr ""
 
 #: skins/default/templates/revisions.html:4
 #: skins/default/templates/revisions.html:7
 msgid "Revision history"
-msgstr "更新履歴"
+msgstr ""
 
 #: skins/default/templates/revisions.html:23
 msgid "click to hide/show revision"
@@ -5022,7 +5120,7 @@ msgstr ""
 #: skins/default/templates/revisions.html:29
 #, python-format
 msgid "revision %(number)s"
-msgstr "版数 %(number)s"
+msgstr ""
 
 #: skins/default/templates/subscribe_for_tags.html:3
 #: skins/default/templates/subscribe_for_tags.html:5
@@ -5044,7 +5142,7 @@ msgstr ""
 
 #: skins/default/templates/tags.html:10
 msgid "Tag list"
-msgstr "タグリスト"
+msgstr ""
 
 #: skins/default/templates/tags.html:14 skins/default/templates/users.html:9
 #: skins/default/templates/main_page/tab_bar.html:15
@@ -5057,7 +5155,7 @@ msgstr ""
 
 #: skins/default/templates/tags.html:20
 msgid "by name"
-msgstr "名前順"
+msgstr ""
 
 #: skins/default/templates/tags.html:25
 msgid "sorted by frequency of tag use"
@@ -5065,15 +5163,15 @@ msgstr ""
 
 #: skins/default/templates/tags.html:26
 msgid "by popularity"
-msgstr "人気順"
+msgstr ""
 
 #: skins/default/templates/tags.html:31 skins/default/templates/tags.html:56
 msgid "Nothing found"
-msgstr "何もみつからない"
+msgstr ""
 
 #: skins/default/templates/users.html:4 skins/default/templates/users.html:6
 msgid "Users"
-msgstr "ユーザー"
+msgstr ""
 
 #: skins/default/templates/users.html:14
 msgid "see people with the highest reputation"
@@ -5084,7 +5182,7 @@ msgstr ""
 #: skins/default/templates/user_profile/user_reputation.html:4
 #: skins/default/templates/user_profile/user_tabs.html:23
 msgid "karma"
-msgstr "カルマ"
+msgstr ""
 
 #: skins/default/templates/users.html:20
 msgid "see people who joined most recently"
@@ -5092,7 +5190,7 @@ msgstr ""
 
 #: skins/default/templates/users.html:21
 msgid "recent"
-msgstr "新規登録順"
+msgstr ""
 
 #: skins/default/templates/users.html:26
 msgid "see people who joined the site first"
@@ -5104,7 +5202,7 @@ msgstr ""
 
 #: skins/default/templates/users.html:33
 msgid "by username"
-msgstr "ユーザー名順"
+msgstr ""
 
 #: skins/default/templates/users.html:39
 #, python-format
@@ -5113,13 +5211,14 @@ msgstr ""
 
 #: skins/default/templates/users.html:42
 msgid "Nothing found."
-msgstr "何も見付かりませんでした"
+msgstr ""
 
 #: skins/default/templates/main_page/headline.html:4 views/readers.py:135
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/main_page/headline.html:6
 #, python-format
@@ -5143,7 +5242,7 @@ msgstr ""
 #: skins/default/templates/main_page/nothing_found.html:18
 #: skins/default/templates/main_page/nothing_found.html:21
 msgid " or "
-msgstr " または "
+msgstr ""
 
 #: skins/default/templates/main_page/headline.html:30
 msgid "reset tags"
@@ -5168,11 +5267,11 @@ msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:4
 msgid "There are no unanswered questions here"
-msgstr "ここに未回答の質問がありません。"
+msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:7
 msgid "No questions here. "
-msgstr "ここに質問がありません。"
+msgstr ""
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."
@@ -5201,19 +5300,19 @@ msgstr ""
 
 #: skins/default/templates/main_page/questions_loop.html:11
 msgid "Did not find what you were looking for?"
-msgstr "探していた物は見付かりませんか？"
+msgstr ""
 
 #: skins/default/templates/main_page/questions_loop.html:12
 msgid "Please, post your question!"
-msgstr "ぜひ、質問を投稿しましょう！"
+msgstr ""
 
 #: skins/default/templates/main_page/tab_bar.html:10
 msgid "subscribe to the questions feed"
-msgstr "質問フィードを購読する"
+msgstr ""
 
 #: skins/default/templates/main_page/tab_bar.html:11
 msgid "RSS"
-msgstr "RSS"
+msgstr ""
 
 #: skins/default/templates/meta/bottom_scripts.html:7
 #, python-format
@@ -5228,12 +5327,14 @@ msgstr ""
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/meta/editor_data.html:7
 #, python-format
 msgid "please use %(tag_count)s tag"
 msgid_plural "please use %(tag_count)s tags or less"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/meta/editor_data.html:8
 #, python-format
@@ -5252,9 +5353,7 @@ msgid_plural ""
 "            %(counter)s Answers\n"
 "        "
 msgstr[0] ""
-"\n"
-"            %(counter)s 個の回答\n"
-"        "
+msgstr[1] ""
 
 #: skins/default/templates/question/answer_tab_bar.html:11
 msgid "Sort by »"
@@ -5262,20 +5361,20 @@ msgstr ""
 
 #: skins/default/templates/question/answer_tab_bar.html:14
 msgid "oldest answers will be shown first"
-msgstr "最古の回答が最初に表示されます"
+msgstr ""
 
 #: skins/default/templates/question/answer_tab_bar.html:17
 msgid "newest answers will be shown first"
-msgstr "最新の回答が最初に表示されます"
+msgstr ""
 
 #: skins/default/templates/question/answer_tab_bar.html:20
 msgid "most voted answers will be shown first"
-msgstr "もっとも投票された回答が最初に表示されます"
+msgstr ""
 
 #: skins/default/templates/question/content.html:40
 #: skins/default/templates/question/new_answer_form.html:48
 msgid "Answer Your Own Question"
-msgstr "あなた自身の質問に回答する"
+msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:16
 msgid "Login/Signup to Answer"
@@ -5287,7 +5386,7 @@ msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:26
 msgid "Be the first one to answer this question!"
-msgstr "この質問の最初の回答になれます！"
+msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:32
 msgid ""
@@ -5320,14 +5419,12 @@ msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:45
 #: skins/default/templates/widgets/ask_form.html:41
-#, fuzzy
 msgid "Login/Signup to Post"
-msgstr "投稿するためにログイン／サインアップする"
+msgstr ""
 
 #: skins/default/templates/question/new_answer_form.html:50
-#, fuzzy
 msgid "Post Your Answer"
-msgstr "良い回答"
+msgstr ""
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:2
 #, python-format
@@ -5342,7 +5439,7 @@ msgstr ""
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:10
 msgid "email"
-msgstr "メールアドレス"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:4
 msgid "Question tools"
@@ -5373,6 +5470,7 @@ msgstr ""
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/question/sidebar.html:27
 msgid "email the updates"
@@ -5399,7 +5497,7 @@ msgstr ""
 #: skins/default/templates/question/sidebar.html:46
 #, fuzzy
 msgid "Asked"
-msgstr "質問日"
+msgstr "मेरे द्वारा पूछा गया"
 
 #: skins/default/templates/question/sidebar.html:49
 msgid "Seen"
@@ -5407,28 +5505,23 @@ msgstr ""
 
 #: skins/default/templates/question/sidebar.html:49
 msgid "times"
-msgstr "回"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:52
-#, fuzzy
 msgid "Last updated"
-msgstr "最終更新日"
+msgstr ""
 
 #: skins/default/templates/question/sidebar.html:60
 msgid "Related questions"
-msgstr "関係した質問"
+msgstr ""
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:5
-#, fuzzy
 msgid "Email me when there are any new answers"
 msgstr ""
-"<strong>Notify me</strong> weekly when there are any new answers or updates"
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:11
 msgid "once you sign in you will be able to subscribe for any updates here"
 msgstr ""
-"<span class='strong'>Here</span> (once you log in) you will be able to sign "
-"up for the periodic email updates about this question."
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:12
 msgid ""
@@ -5443,11 +5536,11 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_edit.html:4
 msgid "Edit user profile"
-msgstr "ユーザープロファイルを編集する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_edit.html:7
 msgid "edit profile"
-msgstr "プロファイルを編集する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_edit.html:21
 #: skins/default/templates/user_profile/user_info.html:15
@@ -5461,20 +5554,20 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_edit.html:32
 msgid "Registered user"
-msgstr "登録ユーザー"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_edit.html:39
 msgid "Screen Name"
-msgstr "スクリーン名"
+msgstr ""
 
-#: skins/default/templates/user_profile/user_edit.html:60
+#: skins/default/templates/user_profile/user_edit.html:59
 msgid "(cannot be changed)"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_edit.html:102
+#: skins/default/templates/user_profile/user_edit.html:101
 #: skins/default/templates/user_profile/user_email_subscriptions.html:22
 msgid "Update"
-msgstr "更新する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:4
 #: skins/default/templates/user_profile/user_tabs.html:42
@@ -5483,7 +5576,7 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:7
 msgid "Email subscription settings"
-msgstr "メール登録設定"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:9
 msgid ""
@@ -5495,10 +5588,8 @@ msgid ""
 msgstr ""
 
 #: skins/default/templates/user_profile/user_email_subscriptions.html:23
-#, fuzzy
 msgid "Stop Email"
 msgstr ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
 
 #: skins/default/templates/user_profile/user_favorites.html:4
 #: skins/default/templates/user_profile/user_tabs.html:27
@@ -5508,7 +5599,7 @@ msgstr ""
 #: skins/default/templates/user_profile/user_inbox.html:18
 #: skins/default/templates/user_profile/user_tabs.html:12
 msgid "inbox"
-msgstr "受信箱"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:34
 msgid "Sections:"
@@ -5532,25 +5623,25 @@ msgstr ""
 #: skins/default/templates/user_profile/user_inbox.html:51
 #: skins/default/templates/user_profile/user_inbox.html:63
 msgid "seen"
-msgstr "既読"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:52
 #: skins/default/templates/user_profile/user_inbox.html:64
 msgid "new"
-msgstr "新規"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:53
 #: skins/default/templates/user_profile/user_inbox.html:65
 msgid "none"
-msgstr "なし"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:54
 msgid "mark as seen"
-msgstr "既読にする"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:55
 msgid "mark as new"
-msgstr "新規にする"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:56
 msgid "dismiss"
@@ -5558,57 +5649,56 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:66
 msgid "remove flags"
-msgstr "フラグを削除する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_inbox.html:68
 msgid "delete post"
-msgstr "コメントを投稿する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:36
 msgid "update profile"
-msgstr "プロファイルを更新する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:40
 msgid "manage login methods"
-msgstr "ログイン方法を管理する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:53
 msgid "real name"
-msgstr "実名"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:58
-#, fuzzy
 msgid "member since"
-msgstr "登録日"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:63
 msgid "last seen"
-msgstr "最終活動"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:69
 #, fuzzy
 msgid "website"
-msgstr "ウェブサイト"
+msgstr "वेबसाइट"
 
 #: skins/default/templates/user_profile/user_info.html:75
 msgid "location"
-msgstr "場所"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:82
 msgid "age"
-msgstr "年齢"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:83
 msgid "age unit"
-msgstr "歳"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:88
 msgid "todays unused votes"
-msgstr "今日の使われてない投票"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_info.html:89
 msgid "votes left"
-msgstr "消え去った投票"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:4
 #: skins/default/templates/user_profile/user_tabs.html:48
@@ -5622,11 +5712,11 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:11
 msgid "User status changed"
-msgstr "ユーザーの状態が変わりました"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:20
 msgid "Save"
-msgstr "保存"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:25
 #, python-format
@@ -5640,7 +5730,7 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:31
 msgid "User reputation changed"
-msgstr "ユーザーの評判を変更しました"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:38
 msgid "Subtract"
@@ -5648,7 +5738,7 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:39
 msgid "Add"
-msgstr "追加する"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:43
 #, python-format
@@ -5663,11 +5753,11 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:46
 msgid "Message sent"
-msgstr "メッセージが送信されました"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:64
 msgid "Send message"
-msgstr "メッセージの送信"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_moderate.html:74
 msgid ""
@@ -5705,12 +5795,14 @@ msgstr ""
 msgid "Followed by %(count)s person"
 msgid_plural "Followed by %(count)s people"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_network.html:14
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_network.html:19
 msgid ""
@@ -5730,28 +5822,30 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_reputation.html:11
 msgid "Your karma change log."
-msgstr "あなたのカルマの変更ログ"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_reputation.html:13
 #, python-format
 msgid "%(user_name)s's karma change log"
-msgstr "%(user_name)s のカルマの変更ログ"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_stats.html:5
 #: skins/default/templates/user_profile/user_tabs.html:7
 msgid "overview"
-msgstr "概略"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_stats.html:11
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Question"
 msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
-msgstr[0] "<span class=\"count\">%(counter)s</span> 個の質問"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:16
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] "回答"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:24
 #, python-format
@@ -5763,16 +5857,18 @@ msgstr ""
 msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:44
 #, python-format
 msgid "<span class=\"count\">%(cnt)s</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
 msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:50
 msgid "thumb up"
-msgstr "イイネ"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_stats.html:51
 msgid "user has voted up this many times"
@@ -5780,7 +5876,7 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_stats.html:54
 msgid "thumb down"
-msgstr "（ ´ _ゝ｀）"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_stats.html:55
 msgid "user voted down this many times"
@@ -5790,13 +5886,15 @@ msgstr ""
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
-msgstr[0] "<span class=\"count\">%(counter)s</span> 個のタグ"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:97
 #, python-format
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
-msgstr[0] "<span class=\"count\">%(counter)s</span> 個のバッジ"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/user_profile/user_stats.html:120
 msgid "Answer to:"
@@ -5804,9 +5902,9 @@ msgstr ""
 
 #: skins/default/templates/user_profile/user_tabs.html:5
 msgid "User profile"
-msgstr "ユーザープロファイル"
+msgstr ""
 
-#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:630
+#: skins/default/templates/user_profile/user_tabs.html:10 views/users.py:638
 msgid "comments and answers to others questions"
 msgstr ""
 
@@ -5815,19 +5913,18 @@ msgid "followers and followed users"
 msgstr ""
 
 #: skins/default/templates/user_profile/user_tabs.html:21
-#, fuzzy
 msgid "Graph of user karma"
-msgstr "Graph of user karma"
+msgstr ""
 
 #: skins/default/templates/user_profile/user_tabs.html:25
 msgid "questions that user is following"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:671
+#: skins/default/templates/user_profile/user_tabs.html:34 views/users.py:679
 msgid "user vote record"
 msgstr ""
 
-#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:761
+#: skins/default/templates/user_profile/user_tabs.html:40 views/users.py:769
 msgid "email subscription settings"
 msgstr ""
 
@@ -5841,91 +5938,83 @@ msgid "Tips"
 msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:6
-#, fuzzy
 msgid "give an answer interesting to this community"
-msgstr "このコミュニティーに即した回答をしてくだあし"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:9
 msgid "try to give an answer, rather than engage into a discussion"
-msgstr "議論にかみ合うよりむしろ、回答をあたえるようにしてみましょう"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:12
 #: skins/default/templates/widgets/question_edit_tips.html:8
-#, fuzzy
 msgid "provide enough details"
-msgstr "必要十分に詳しく質問しましょう。"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:15
 #: skins/default/templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "明確で正確な質問を"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16
 msgid "see frequently asked questions"
-msgstr "良くある質問をみましょう"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:27
 #: skins/default/templates/widgets/question_edit_tips.html:22
-#, fuzzy
 msgid "Markdown basics"
-msgstr "Markdown 記法の基本"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:31
 #: skins/default/templates/widgets/question_edit_tips.html:26
 msgid "*italic*"
-msgstr "*斜体*"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:34
 #: skins/default/templates/widgets/question_edit_tips.html:29
 msgid "**bold**"
-msgstr "**太字**"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:38
 #: skins/default/templates/widgets/question_edit_tips.html:33
 msgid "*italic* or _italic_"
-msgstr "*斜体* または _斜体_"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:41
 #: skins/default/templates/widgets/question_edit_tips.html:36
 msgid "**bold** or __bold__"
-msgstr "**太文字** もしくは __太文字__"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:45
 #: skins/default/templates/widgets/answer_edit_tips.html:49
 #: skins/default/templates/widgets/question_edit_tips.html:40
 #: skins/default/templates/widgets/question_edit_tips.html:45
 msgid "text"
-msgstr "テキスト"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:49
 #: skins/default/templates/widgets/question_edit_tips.html:45
 msgid "image"
-msgstr "画像"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:53
 #: skins/default/templates/widgets/question_edit_tips.html:49
 msgid "numbered list:"
-msgstr "数字付きリスト"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:58
 #: skins/default/templates/widgets/question_edit_tips.html:54
 msgid "basic HTML tags are also supported"
-msgstr "基本HTMLタグもサポートしています"
+msgstr ""
 
 #: skins/default/templates/widgets/answer_edit_tips.html:63
 #: skins/default/templates/widgets/question_edit_tips.html:59
 msgid "learn more about Markdown"
-msgstr "Markdown記法についてさらに学ぶ"
+msgstr ""
 
 #: skins/default/templates/widgets/ask_form.html:6
 msgid "login to post question info"
 msgstr ""
-"<span class=\"strong big\">You are welcome to start submitting your question "
-"anonymously</span>. When you submit the post, you will be redirected to the "
-"login/signup page. Your question will be saved in the current session and "
-"will be published after you log in. Login/signup process is very simple. "
-"Login takes about 30 seconds, initial signup takes a minute or less."
 
 #: skins/default/templates/widgets/ask_form.html:7
 msgid ""
@@ -5949,7 +6038,7 @@ msgstr ""
 
 #: skins/default/templates/widgets/contributors.html:3
 msgid "Contributors"
-msgstr "貢献者"
+msgstr ""
 
 #: skins/default/templates/widgets/footer.html:33
 #, python-format
@@ -5958,61 +6047,63 @@ msgstr ""
 
 #: skins/default/templates/widgets/footer.html:38
 msgid "about"
-msgstr "概要"
+msgstr ""
 
 #: skins/default/templates/widgets/footer.html:40
 #: skins/default/templates/widgets/user_navigation.html:17
 msgid "help"
-msgstr "ヘルプ"
+msgstr ""
 
 #: skins/default/templates/widgets/footer.html:42
 msgid "privacy policy"
-msgstr "プライバシーポリシー"
+msgstr ""
 
 #: skins/default/templates/widgets/footer.html:51
 msgid "give feedback"
-msgstr "フィードバックする"
+msgstr ""
 
 #: skins/default/templates/widgets/logo.html:3
 msgid "back to home page"
-msgstr "ホームに戻る"
+msgstr ""
 
 #: skins/default/templates/widgets/logo.html:4
 #, python-format
 msgid "%(site)s logo"
-msgstr "%(site)s のロゴ"
+msgstr ""
 
 #: skins/default/templates/widgets/meta_nav.html:10
 msgid "users"
-msgstr "ユーザー"
+msgstr ""
 
 #: skins/default/templates/widgets/meta_nav.html:15
 msgid "badges"
-msgstr "バッジ"
+msgstr ""
 
 #: skins/default/templates/widgets/question_edit_tips.html:5
-#, fuzzy
 msgid "ask a question interesting to this community"
-msgstr "このコミュニティーに即した回答をしてくだあし"
+msgstr ""
 
 #: skins/default/templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] "表示"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/widgets/question_summary.html:29
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] "回答"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/widgets/question_summary.html:40
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] "投票"
+msgstr[0] ""
+msgstr[1] ""
 
 #: skins/default/templates/widgets/scope_nav.html:6
 msgid "ALL"
-msgstr "すべて"
+msgstr ""
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "see unanswered questions"
@@ -6036,30 +6127,27 @@ msgstr ""
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:3
 msgid "karma:"
-msgstr "カルマ:"
+msgstr ""
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:7
 msgid "badges:"
-msgstr "バッジ:"
+msgstr ""
 
 #: skins/default/templates/widgets/user_navigation.html:9
-#, fuzzy
 msgid "sign out"
-msgstr "サインアウト/"
+msgstr ""
 
 #: skins/default/templates/widgets/user_navigation.html:12
-#, fuzzy
 msgid "Hi, there! Please sign in"
-msgstr "ここにサインしてください："
+msgstr ""
 
 #: skins/default/templates/widgets/user_navigation.html:15
 msgid "settings"
-msgstr "設定"
+msgstr ""
 
 #: templatetags/extra_filters_jinja.py:279
-#, fuzzy
 msgid "no"
-msgstr "なし"
+msgstr ""
 
 #: utils/decorators.py:90 views/commands.py:73 views/commands.py:93
 msgid "Oops, apologies - there was some error"
@@ -6067,7 +6155,7 @@ msgstr ""
 
 #: utils/decorators.py:109
 msgid "Please login to post"
-msgstr "投稿するにはログインしてください"
+msgstr ""
 
 #: utils/decorators.py:205
 msgid "Spam was detected on your post, sorry for if this is a mistake"
@@ -6075,25 +6163,24 @@ msgstr ""
 
 #: utils/forms.py:33
 msgid "this field is required"
-msgstr "このフィールドは必須です"
+msgstr ""
 
 #: utils/forms.py:60
 #, fuzzy
 msgid "Choose a screen name"
-msgstr "スクリーン名を選択しましょう"
+msgstr "स्क्रीन नाम"
 
 #: utils/forms.py:69
 msgid "user name is required"
-msgstr "ユーザ名は必須です"
+msgstr ""
 
 #: utils/forms.py:70
 msgid "sorry, this name is taken, please choose another"
 msgstr ""
-"申し訳ございません、この名前はすでに取られています。他のをお選びください"
 
 #: utils/forms.py:71
 msgid "sorry, this name is not allowed, please choose another"
-msgstr "申し訳ございません、この名前は許可されていません。他のをお選びください"
+msgstr ""
 
 #: utils/forms.py:72
 msgid "sorry, there is no user with this name"
@@ -6117,19 +6204,19 @@ msgstr ""
 
 #: utils/forms.py:139
 msgid "email address is required"
-msgstr "電子メールアドレスは必須です"
+msgstr ""
 
 #: utils/forms.py:140
 msgid "please enter a valid email address"
-msgstr "有効な電子メールアドレスを入力してください"
+msgstr ""
 
 #: utils/forms.py:141
 msgid "this email is already used by someone else, please choose another"
-msgstr "電子メールはすでに誰か別人につかわれています。他のをお選びください。"
+msgstr ""
 
 #: utils/forms.py:170
 msgid "password is required"
-msgstr "パスワードは必須です"
+msgstr ""
 
 #: utils/forms.py:173
 msgid "Password <i>(please retype)</i>"
@@ -6137,33 +6224,33 @@ msgstr ""
 
 #: utils/forms.py:174
 msgid "please, retype your password"
-msgstr "確認用パスワードを入力してください"
+msgstr ""
 
 #: utils/forms.py:175
 msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
-"申し訳ありませんが、入力したパスワードは一致しませんでした。再度入力してくだ"
-"さい。"
 
 #: utils/functions.py:82
 msgid "2 days ago"
-msgstr "二日前"
+msgstr ""
 
 #: utils/functions.py:84
 msgid "yesterday"
-msgstr "昨日"
+msgstr ""
 
 #: utils/functions.py:87
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
-msgstr[0] "%(hr)d 時間前"
+msgstr[0] ""
+msgstr[1] ""
 
 #: utils/functions.py:93
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
-msgstr[0] "%(min)d 分前"
+msgstr[0] ""
+msgstr[1] ""
 
 #: views/avatar_views.py:99
 msgid "Successfully uploaded a new avatar."
@@ -6184,7 +6271,7 @@ msgstr ""
 #: views/commands.py:112
 #, fuzzy
 msgid "Sorry, anonymous users cannot vote"
-msgstr "申し訳ございませんが、匿名の訪問者はこの機能を利用できません"
+msgstr "क्षमा करें, लेकिन अज्ञात आगंतुकों इस फ़ंक्शन का उपयोग नहीं कर सकते हैं"
 
 #: views/commands.py:129
 msgid "Sorry you ran out of votes for today"
@@ -6204,17 +6291,15 @@ msgid "Sorry, but anonymous users cannot accept answers"
 msgstr ""
 
 #: views/commands.py:339
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href=\"%(details_url)s\">more details here</a>"
 msgstr ""
-"Your subscription is saved, but email address %(email)s needs to be "
-"validated, please see <a href='%(details_url)s'>more details here</a>"
 
 #: views/commands.py:348
 msgid "email update frequency has been set to daily"
-msgstr "メール更新頻度が日刊に設定されました。"
+msgstr ""
 
 #: views/commands.py:461
 #, python-format
@@ -6231,22 +6316,21 @@ msgid "Please sign in to vote"
 msgstr ""
 
 #: views/commands.py:616
-#, fuzzy
 msgid "Please sign in to delete/restore posts"
-msgstr "ここにサインしてください："
+msgstr ""
 
 #: views/meta.py:37
 #, python-format
 msgid "About %(site)s"
-msgstr "%(site)s について"
+msgstr ""
 
 #: views/meta.py:86
 msgid "Q&A forum feedback"
-msgstr "QAフォーラムフィードバック"
+msgstr ""
 
 #: views/meta.py:87
 msgid "Thanks for the feedback!"
-msgstr "ご意見ありがとうございます！"
+msgstr ""
 
 #: views/meta.py:96
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
@@ -6254,13 +6338,14 @@ msgstr ""
 
 #: views/meta.py:100
 msgid "Privacy policy"
-msgstr "プライバシーポリシー"
+msgstr ""
 
 #: views/readers.py:133
 #, python-format
 msgid "%(q_num)s question, tagged"
 msgid_plural "%(q_num)s questions, tagged"
 msgstr[0] ""
+msgstr[1] ""
 
 #: views/readers.py:387
 msgid ""
@@ -6272,59 +6357,57 @@ msgstr ""
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:373
+#: views/users.py:381
 msgid "user profile"
-msgstr "ユーザプロファイル"
+msgstr ""
 
-#: views/users.py:374
+#: views/users.py:382
 msgid "user profile overview"
-msgstr "ユーザプロファイル概略"
+msgstr ""
 
-#: views/users.py:543
+#: views/users.py:551
 msgid "recent user activity"
-msgstr "最近のユーザの活動"
+msgstr ""
 
-#: views/users.py:544
+#: views/users.py:552
 msgid "profile - recent activity"
-msgstr "プロファイル：最近の活動"
+msgstr ""
 
-#: views/users.py:631
+#: views/users.py:639
 msgid "profile - responses"
-msgstr "プロファイル：応答"
+msgstr ""
 
-#: views/users.py:672
+#: views/users.py:680
 msgid "profile - votes"
-msgstr "プロファイル：投票"
+msgstr ""
 
-#: views/users.py:693
-#, fuzzy
+#: views/users.py:701
 msgid "user karma"
-msgstr "カルマ"
+msgstr ""
 
-#: views/users.py:694
-#, fuzzy
+#: views/users.py:702
 msgid "Profile - User's Karma"
-msgstr "プロファイル：徳"
+msgstr ""
 
-#: views/users.py:712
+#: views/users.py:720
 msgid "users favorite questions"
-msgstr "ユーザのお気に入りの質問"
+msgstr ""
 
-#: views/users.py:713
+#: views/users.py:721
 msgid "profile - favorite questions"
-msgstr "プロファイル：お気に入りの質問"
+msgstr ""
 
-#: views/users.py:733 views/users.py:737
+#: views/users.py:741 views/users.py:745
 msgid "changes saved"
-msgstr "変更が保存されました"
+msgstr ""
 
-#: views/users.py:743
+#: views/users.py:751
 msgid "email updates canceled"
-msgstr "メール更新がキャンセルされました"
+msgstr ""
 
-#: views/users.py:762
+#: views/users.py:770
 msgid "profile - email subscriptions"
-msgstr "プロファイル：メール登録など"
+msgstr ""
 
 #: views/writers.py:60
 msgid "Sorry, anonymous users cannot upload files"
@@ -6379,363 +6462,14 @@ msgstr ""
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
-#~ msgid "question_answered"
-#~ msgstr "回答"
+#~ msgid "use-these-chars-in-tags"
+#~ msgstr " टैग-में-इन-अक्षरों-का-उपयोग-करें"
 
-#~ msgid "question_commented"
-#~ msgstr "質問コメント"
+#~ msgid "URL for the LDAP service"
+#~ msgstr "LDAP सेवा के लिए यूआरएल"
 
-#~ msgid "answer_commented"
-#~ msgstr "回答コメント"
-
-#~ msgid "answer_accepted"
-#~ msgstr "納得された回答"
-
-#~ msgid "by date"
-#~ msgstr "日付"
-
-#~ msgid "by activity"
-#~ msgstr "活動"
-
-#~ msgid "by answers"
-#~ msgstr "回答"
-
-#~ msgid "Incorrect username."
-#~ msgstr "sorry, there is no such user name"
-
-#~ msgid "change %(email)s info"
-#~ msgstr ""
-#~ "<span class=\"strong big\">Enter your new email into the box below</span> "
-#~ "if you'd like to use another email for <strong>update subscriptions</"
-#~ "strong>.<br>Currently you are using <strong>%(email)s</strong>"
-
-#~ msgid "here is why email is required, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<span class='strong big'>Please enter your email address in the box below."
-#~ "</span> Valid email address is required on this Q&amp;A forum. If you "
-#~ "like, you can <strong>receive updates</strong> on interesting questions "
-#~ "or entire forum via email. Also, your email is used to create a unique <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your "
-#~ "account. Email addresses are never shown or otherwise shared with anybody "
-#~ "else."
-
-#~ msgid "Your new Email"
-#~ msgstr ""
-#~ "<strong>Your new Email:</strong> (will <strong>not</strong> be shown to "
-#~ "anyone, must be valid)"
-
-#~ msgid "validate %(email)s info or go to %(change_email_url)s"
-#~ msgstr ""
-#~ "<span class=\"strong big\">An email with a validation link has been sent "
-#~ "to %(email)s.</span> Please <strong>follow the emailed link</strong> with "
-#~ "your web browser. Email validation is necessary to help insure the proper "
-#~ "use of email on <span class=\"orange\">Q&amp;A</span>. If you would like "
-#~ "to use <strong>another email</strong>, please <a "
-#~ "href='%(change_email_url)s'><strong>change it again</strong></a>."
-
-#~ msgid "old %(email)s kept, if you like go to %(change_email_url)s"
-#~ msgstr ""
-#~ "<span class=\"strong big\">Your email address %(email)s has not been "
-#~ "changed.</span> If you decide to change it later - you can always do it "
-#~ "by editing it in your user profile or by using the <a "
-#~ "href='%(change_email_url)s'><strong>previous form</strong></a> again."
-
-#~ msgid "your current %(email)s can be used for this"
-#~ msgstr ""
-#~ "<span class='big strong'>Your email address is now set to %(email)s.</"
-#~ "span> Updates on the questions that you like most will be sent to this "
-#~ "address. Email notifications are sent once a day or less frequently - "
-#~ "only when there are any news."
-
-#~ msgid "thanks for verifying email"
-#~ msgstr ""
-#~ "<span class=\"big strong\">Thank you for verifying your email!</span> Now "
-#~ "you can <strong>ask</strong> and <strong>answer</strong> questions. Also "
-#~ "if you find a very interesting question you can <strong>subscribe for the "
-#~ "updates</strong> - then will be notified about changes <strong>once a "
-#~ "day</strong> or less frequently."
-
-#~ msgid "email key not sent"
-#~ msgstr "Validation email not sent"
-
-#~ msgid "email key not sent %(email)s change email here %(change_link)s"
-#~ msgstr ""
-#~ "<span class='big strong'>Your current email address %(email)s has been "
-#~ "validated before</span> so the new key was not sent. You can <a "
-#~ "href='%(change_link)s'>change</a> email used for update subscriptions if "
-#~ "necessary."
-
-#~ msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "%(provider)s login.</span> Please create your <strong>screen name</"
-#~ "strong> and save your <strong>email</strong> address. Saved email address "
-#~ "will let you <strong>subscribe for the updates</strong> on the most "
-#~ "interesting questions and will be used to create and retrieve your unique "
-#~ "avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
-#~ "a>.</p>"
-
-#~ msgid ""
-#~ "%(username)s already exists, choose another name for \n"
-#~ "                            %(provider)s. Email is required too, see "
-#~ "%(gravatar_faq_url)s\n"
-#~ "                        "
-#~ msgstr ""
-#~ "<p><span class='strong big'>Oops... looks like screen name %(username)s "
-#~ "is already used in another account.</span></p><p>Please choose another "
-#~ "screen name to use with your %(provider)s login. Also, a valid email "
-#~ "address is required on the <span class='orange'>Q&amp;A</span> forum. "
-#~ "Your email is used to create a unique <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your "
-#~ "account. If you like, you can <strong>receive updates</strong> on the "
-#~ "interesting questions or entire forum by email. Email addresses are never "
-#~ "shown or otherwise shared with anybody else.</p>"
-
-#~ msgid ""
-#~ "register new external %(provider)s account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "%(provider)s login.</span></p><p>You can either keep your <strong>screen "
-#~ "name</strong> the same as your %(provider)s login name  or choose some "
-#~ "other nickname.</p><p>Also, please save a valid <strong>email</strong> "
-#~ "address. With the email you can <strong>subscribe for the updates</"
-#~ "strong> on the most interesting questions. Email address is also used to "
-#~ "create and retrieve your unique avatar image - <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a>.</p>"
-
-#~ msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<p><span class=\"big strong\">You are here for the first time with your "
-#~ "Facebook login.</span> Please create your <strong>screen name</strong> "
-#~ "and save your <strong>email</strong> address. Saved email address will "
-#~ "let you <strong>subscribe for the updates</strong> on the most "
-#~ "interesting questions and will be used to create and retrieve your unique "
-#~ "avatar image - <a href='%(gravatar_faq_url)s'><strong>gravatar</strong></"
-#~ "a>.</p>"
-
-#~ msgid "This account already exists, please use another."
-#~ msgstr "このアカウントはすでに存在しています。他のを使ってください。"
-
-#~ msgid "Screen name label"
-#~ msgstr "<strong>スクリーン名</strong> (<i>他のひとに表示されます</i>)"
-
-#~ msgid "Email address label"
-#~ msgstr ""
-#~ "<strong>電子メールアドレス</strong> (<i>will <strong>not</strong> be "
-#~ "shared with anyone, must be valid</i>)"
-
-#~ msgid "receive updates motivational blurb"
-#~ msgstr ""
-#~ "<strong>Receive forum updates by email</strong> - this will help our "
-#~ "community grow and become more useful.<br/>By default <span "
-#~ "class='orange'>Q&amp;A</span> forum sends up to <strong>one email digest "
-#~ "per week</strong>  - only when there is anything new.<br/>If you like, "
-#~ "please adjust this now or any time later from your user account."
-
-#~ msgid "create account"
-#~ msgstr "サインアップ"
-
-#~ msgid "Login"
-#~ msgstr "ログイン"
-
-#~ msgid "Why use OpenID?"
-#~ msgstr "なぜOpenIDをつかうのか？"
-
-#~ msgid "with openid it is easier"
-#~ msgstr ""
-#~ "OpenIDをつかうと、あらたにユーザ名とパスワードを作る必要がありません。"
-
-#~ msgid "reuse openid"
-#~ msgstr ""
-#~ "すべてのOpenID対応ウェブサイトでおなじログインを安全に再利用できます。"
-
-#~ msgid "openid is widely adopted"
-#~ msgstr "すでに多数のウェブサイトでOpenIDアカウントが利用されています。"
-
-#~ msgid "openid is supported open standard"
-#~ msgstr ""
-#~ "OpenIDは、多くの組織がサポートしているオープンスタンダードに基づいていま"
-#~ "す。"
-
-#~ msgid "Find out more"
-#~ msgstr "より詳しく知るには"
-
-#~ msgid "Get OpenID"
-#~ msgstr "OpenIDを取得する"
-
-#~ msgid "Traditional signup info"
-#~ msgstr ""
-#~ "<span class='strong big'>If you prefer, create your forum login name and "
-#~ "password here. However</span>, please keep in mind that we also support "
-#~ "<strong>OpenID</strong> login method. With <strong>OpenID</strong> you "
-#~ "can simply reuse your external login (e.g. Gmail or AOL) without ever "
-#~ "sharing your login details with anyone and having to remember yet another "
-#~ "password."
-
-#~ msgid "Create Account"
-#~ msgstr "アカウントを作成する"
-
-#~ msgid "answer permanent link"
-#~ msgstr "回答のリンク"
-
-#~ msgid "Related tags"
-#~ msgstr "タグ"
-
-#~ msgid "Ask a question"
-#~ msgstr "質問する"
-
-#~ msgid "Badges summary"
-#~ msgstr "バッジサマリー"
-
-#~ msgid "gold badge description"
-#~ msgstr ""
-#~ "金バッジはこのコミュニティーの最高の栄誉です。活発な参加にくわえて、深い洞"
-#~ "察と知識、実行力を示したことによってそれは得られます。"
-
-#~ msgid "silver badge description"
-#~ msgstr ""
-#~ "銀バッジを得るには、著しい勤勉さが必要です。得る事ができたなら、それはこの"
-#~ "コミュニティーへの偉大な貢献を意味しています。"
-
-#~ msgid "bronze badge description"
-#~ msgstr ""
-#~ "このコミュニティーの活動的な参加者であるなら、このバッジで認定されます。"
-
-#~ msgid ""
-#~ "is a Q&A site, not a discussion group. Therefore - please avoid having "
-#~ "discussions in your answers, comment facility allows some space for brief "
-#~ "discussions."
-#~ msgstr ""
-#~ "is a <strong>question and answer</strong> site - <strong>it is not a "
-#~ "discussion group</strong>. Please avoid holding debates in your answers "
-#~ "as they tend to dilute the essense of questions and answers. For the "
-#~ "brief discussions please use commenting facility."
-
-#~ msgid "Rep system summary"
-#~ msgstr ""
-#~ "When a question or answer is upvoted, the user who posted them will gain "
-#~ "some points, which are called \"karma points\". These points serve as a "
-#~ "rough measure of the community trust to him/her. Various moderation tasks "
-#~ "are gradually assigned to the users based on those points."
-
-#~ msgid "what is gravatar"
-#~ msgstr "What is gravatar?"
-
-#~ msgid "gravatar faq info"
-#~ msgstr ""
-#~ "<strong>Gravatar</strong> means <strong>g</strong>lobally <strong>r</"
-#~ "strong>ecognized <strong>avatar</strong> - your unique avatar image "
-#~ "associated with your email address. It's simply a picture that shows next "
-#~ "to your posts on the websites that support gravatar protocol. By default "
-#~ "gravar appears as a square filled with a snowflake-like figure. You can "
-#~ "<strong>set your image</strong> at <a href='http://gravatar."
-#~ "com'><strong>gravatar.com</strong></a>"
-
-#~ msgid "Change tags"
-#~ msgstr "タグを変更する"
-
-#~ msgid "reputation"
-#~ msgstr "信用度"
-
-#~ msgid "oldest answers"
-#~ msgstr "回答順"
-
-#~ msgid "newest answers"
-#~ msgstr "最新"
-
-#~ msgid "popular answers"
-#~ msgstr "支持されている順"
-
-#~ msgid "you can answer anonymously and then login"
-#~ msgstr ""
-#~ "<span class='strong big'>Please start posting your answer anonymously</"
-#~ "span> - your answer will be saved within the current session and "
-#~ "published after you log in or create a new account. Please try to give a "
-#~ "<strong>substantial answer</strong>, for discussions, <strong>please use "
-#~ "comments</strong> and <strong>please do remember to vote</strong> (after "
-#~ "you log in)!"
-
-#~ msgid "answer your own question only to give an answer"
-#~ msgstr "<span class='big strong'>ようこそ！</span>"
-
-#~ msgid "please only give an answer, no discussions"
-#~ msgstr ""
-#~ "<span class='big strong'>Please try to give a substantial answer</span>. "
-#~ "If you wanted to comment on the question or answer, just <strong>use the "
-#~ "commenting tool</strong>. Please remember that you can always "
-#~ "<strong>revise your answers</strong> - no need to answer the same "
-#~ "question twice. Also, please <strong>don't forget to vote</strong> - it "
-#~ "really helps to select the best questions and answers!"
-
-#~ msgid "question asked"
-#~ msgstr "質問日"
-
-#~ msgid "question was seen"
-#~ msgstr "閲覧数"
-
-#~ msgid "Notify me once a day when there are any new answers"
-#~ msgstr ""
-#~ "<strong>Notify me</strong> once a day by email when there are any new "
-#~ "answers or updates"
-
-#~ msgid "email subscription settings info"
-#~ msgstr ""
-#~ "<span class='big strong'>Adjust frequency of email updates.</span> "
-#~ "Receive updates on interesting questions by email, <strong><br/>help the "
-#~ "community</strong> by answering questions of your colleagues. If you do "
-#~ "not wish to receive emails - select 'no email' on all items below.<br/"
-#~ ">Updates are only sent when there is any new activity on selected items."
-
-#~ msgid "Stop sending email"
-#~ msgstr "電子メールを停止する"
-
-#~ msgid "user website"
-#~ msgstr "ユーザーのウェブサイト"
-
-#~ msgid "reputation history"
-#~ msgstr "信用度履歴"
-
-#~ msgid "recent activity"
-#~ msgstr "最近の活動"
-
-#~ msgid "casted votes"
-#~ msgstr "votes"
-
-#~ msgid "answer tips"
-#~ msgstr "コツ"
-
-#~ msgid "please try to provide details"
-#~ msgstr "詳細を提供してみましょう"
-
-#~ msgid "ask a question"
-#~ msgstr "質問する"
-
-#~ msgid "question tips"
-#~ msgstr "コツ"
-
-#~ msgid "please ask a relevant question"
-#~ msgstr "CNPROG コミュニティーに適した質問をしましょう。"
-
-#~ msgid "logout"
-#~ msgstr "ログアウト"
-
-#~ msgid "login"
-#~ msgstr "ログイン"
-
-#~ msgid "no items in counter"
-#~ msgstr "いいえ"
-
-#~ msgid "your email address"
-#~ msgstr "電子メール <i>(非公開)</i>"
-
-#~ msgid "choose password"
-#~ msgstr "パスワード"
-
-#~ msgid "retype password"
-#~ msgstr "パスワード <i>(確認用)</i>"
-
-#~ msgid "user reputation in the community"
-#~ msgstr "徳"
+#~ msgid "Explain how to change LDAP password"
+#~ msgstr "व्याख्या कीजिये LDAP कूटशब्द को परिवर्तित कैसे करे "
 
 #~ msgid ""
 #~ "As a registered user you can login with your OpenID, log out of the site "

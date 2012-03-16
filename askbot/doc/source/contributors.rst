@@ -21,6 +21,7 @@ Programming and documentation
 * Andrei Mamoutkine
 * `Daniel Mican <http://www.crunchbase.com/person/daniel-mican>`_
 * `Dejan Noveski <http://www.atomidata.com/>`_
+* `Vasil Vangelovski <http://www.atomidata.com/>`_
 * `Ramiro Morales <http://rmorales.com.ar/>`_ (with Machinalis)
 * Vladimir Bokov
 * `NoahY <https://github.com/NoahY>`_
@@ -35,6 +36,7 @@ Programming and documentation
 * `hjwp <https://github.com/hjwp>`_
 * `Jacob Oscarson <http://www.aspektratio.net>`_
 * `Radim Řehůřek <https://github.com/piskvorky>`_
+* `monkut <https://github.com/monkut>`_
 
 Translations
 ------------
