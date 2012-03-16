@@ -110,7 +110,10 @@ def PROCESS(message, address = None, host = None):
 
     error = None
     try:
-        reply_address = ReplyAddress.objects.get_unused(address, message.From)
+        reply_address = ReplyAddress.objects.get(
+                                        address = address,
+                                        allowed_from_email = message.From
+                                    )
         separator = _("======= Reply above this line. ====-=-=")
         parts = get_body(message).split(separator)
         attachments = get_attachments(message)
@@ -121,10 +124,16 @@ def PROCESS(message, address = None, host = None):
             reply_part = parts[0]
             reply_part = '\n'.join(reply_part.splitlines(True)[:-3])
             #the function below actually posts to the forum
-            reply_address.create_reply(
-                reply_part.strip(),
-                attachments = attachments
-            )
+            if reply_address.was_used:
+                reply_address.edit_post(
+                    reply_part.strip(),
+                    attachments = attachments
+                )
+            else:
+                reply_address.create_reply(
+                    reply_part.strip(),
+                    attachments = attachments
+                )
     except ReplyAddress.DoesNotExist:
         error = _("You were replying to an email address\
          unknown to the system or you were replying from a different address from the one where you\
@@ -133,7 +142,7 @@ def PROCESS(message, address = None, host = None):
         import sys
         sys.stderr.write(str(e))
         import traceback
-        sys.stderr.write(traceback.format_exception())
+        sys.stderr.write(traceback.format_exc())
 
     if error is not None:
         from askbot.utils import mail

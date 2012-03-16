@@ -1345,6 +1345,34 @@ def user_edit_comment(self, comment_post=None, body_text = None):
     comment_post.parse_and_save(author = self)
     comment_post.thread.invalidate_cached_data()
 
+def user_edit_post(self,
+                post = None,
+                body_text = None,
+                revision_comment = None,
+                timestamp = None):
+    """a simple method that edits post body
+    todo: unify it in the style of just a generic post
+    this requires refactoring of underlying functions
+    because we cannot bypass the permissions checks set within
+    """
+    if post.post_type == 'comment':
+        self.edit_comment(comment_post = post, body_text = body_text)
+    elif post.post_type == 'answer':
+        self.edit_answer(
+            answer = post,
+            body_text = body_text,
+            timestamp = timestamp,
+            revision_comment = revision_comment
+        )
+    elif post.post_type == 'question':
+        self.edit_question(
+            question = post,
+            body_text = body_text,
+            timestamp = timestamp,
+            revision_comment = revision_comment
+        )
+    else:
+        raise NotImplementedError()
 
 @auto_now_timestamp
 def user_edit_question(
@@ -2172,6 +2200,7 @@ User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
+User.add_to_class('edit_post', user_edit_post)
 User.add_to_class(
     'post_anonymous_askbot_content',
     user_post_anonymous_askbot_content
@@ -2406,10 +2435,14 @@ def send_instant_notifications_about_activity_in_post(
             reply_address = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
                 reply_address = ReplyAddress.objects.create_new(post, user).address
-            headers.update({'Reply-To': "%s@%s"%(reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)})
+            reply_to = '%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOST_NAME)
+            headers.update({'Reply-To': reply_to})
+        else:
+            reply_to = django_settings.DEFAULT_FROM_EMAIL
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
+            from_email = reply_to,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,

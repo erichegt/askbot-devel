@@ -70,6 +70,7 @@ def thread_headers(post, orig_post, update):
 def send_mail(
             subject_line = None,
             body_text = None,
+            from_email = django_settings.DEFAULT_FROM_EMAIL,
             recipient_list = None,
             activity_type = None,
             related_object = None,
@@ -95,7 +96,7 @@ def send_mail(
         msg = mail.EmailMessage(
                         subject_line, 
                         body_text, 
-                        django_settings.DEFAULT_FROM_EMAIL,
+                        from_email,
                         recipient_list,
                         headers = headers
                     )
