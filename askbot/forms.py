@@ -682,7 +682,12 @@ class AskByEmailForm(forms.Form):
             title = match.group(2).strip()
             self.cleaned_data['title'] = TitleField().clean(title)
         else:
-            raise forms.ValidationError('could not parse subject line')
+            raise forms.ValidationError(
+                _(
+                    'Subject line is expected in the format: '
+                    '[tag1, tag2, tag3,...] question title'
+                )
+            )
         return self.cleaned_data['subject']
 
 class AnswerForm(forms.Form):
