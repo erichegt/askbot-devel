@@ -8,40 +8,12 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding index on 'Post', fields ['post_type']
-        #db.create_index('askbot_post', ['post_type'])
-
-        # Adding index on 'Post', fields ['deleted']
-        #db.create_index('askbot_post', ['deleted'])
-
-        # Adding field 'Thread.added_at'
-        db.add_column('askbot_thread', 'added_at',
-                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now),
-                      keep_default=False)
-
-        # Adding field 'Thread.score'
-        db.add_column('askbot_thread', 'score',
-                      self.gf('django.db.models.fields.IntegerField')(default=0),
-                      keep_default=False)
-
         # Adding field 'ReplyAddress.response_post'
         db.add_column('askbot_replyaddress', 'response_post',
                       self.gf('django.db.models.fields.related.ForeignKey')(related_name='edit_addresses', null=True, to=orm['askbot.Post']),
                       keep_default=False)
 
     def backwards(self, orm):
-        # Removing index on 'Post', fields ['deleted']
-        #db.delete_index('askbot_post', ['deleted'])
-
-        # Removing index on 'Post', fields ['post_type']
-        #db.delete_index('askbot_post', ['post_type'])
-
-        # Deleting field 'Thread.added_at'
-        db.delete_column('askbot_thread', 'added_at')
-
-        # Deleting field 'Thread.score'
-        db.delete_column('askbot_thread', 'score')
-
         # Deleting field 'ReplyAddress.response_post'
         db.delete_column('askbot_replyaddress', 'response_post_id')
 
