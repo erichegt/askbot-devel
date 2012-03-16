@@ -211,7 +211,7 @@ def process_attachments(attachments):
             chunk = '[%s](%s) ' % (att.name, file_url)
             file_extension = os.path.splitext(att.name)[1]
             #todo: this is a hack - use content type
-            if file_extension.lower() in ('png', 'jpg', 'gif'):
+            if file_extension.lower() in ('.png', '.jpg', '.gif'):
                 chunk = '\n\n!' + chunk
             content += '\n\n' + chunk
         return content

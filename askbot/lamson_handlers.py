@@ -101,7 +101,7 @@ def ASK(message, host = None):
     mail.process_emailed_question(from_address, subject, body, attachments)
 
 
-@route('(address)@(host)', address='.+')
+@route('reply-(address)@(host)', address='.+')
 @stateless
 def PROCESS(message, address = None, host = None):
     """handler to process the emailed message
