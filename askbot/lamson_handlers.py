@@ -96,10 +96,8 @@ def get_attachments(message):
 def ASK(message, host = None):
     body = get_body(message)
     attachments = get_attachments(message)
-    subject = '[test; one; two;] this is a question title'#get_subject(message)
     from_address = message.From
-    import pdb
-    pdb.set_trace()
+    subject = message.Subject
     mail.process_emailed_question(from_address, subject, body, attachments)
 
 
