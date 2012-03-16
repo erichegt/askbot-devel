@@ -22,7 +22,8 @@ Development version (not released yet)
 * Added a management command delete_contextless_activities (Evgeny)
 * LDAP login configuration (github user `monkut <https://github.com/monkut>`_)
 * Check order of middleware classes (Daniel Mican)
-* added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
+* Added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
+* Enabled "ask by email" via Lamson (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------
