@@ -1,17 +1,21 @@
 {% import "macros.html" as macros %}
 
-{{ settings.SIDEBAR_MAIN_HEADER }}
+<div class="box">
+    {{ settings.SIDEBAR_MAIN_HEADER }}
+</div>
 
 {% if contributors and settings.SIDEBAR_MAIN_SHOW_AVATARS %}
-   {% include "widgets/contributors.html" %}
+    {% include "widgets/contributors.html" %}
 {% endif %}
 
 {% if request.user.is_authenticated() and settings.SIDEBAR_MAIN_SHOW_TAG_SELECTOR %} 
-   {% include "widgets/tag_selector.html" %}
+    {% include "widgets/tag_selector.html" %}
 {% endif %}
 
 {% if tags and settings.SIDEBAR_MAIN_SHOW_TAGS %}
-   {% include "widgets/related_tags.html" %}
+    {% include "widgets/related_tags.html" %}
 {% endif %}
 
-{{ settings.SIDEBAR_MAIN_FOOTER }}
+<div class="box">
+    {{ settings.SIDEBAR_MAIN_FOOTER }}
+</div>

@@ -1,5 +1,7 @@
 {% import "macros.html" as macros %}
-{{ settings.SIDEBAR_QUESTION_HEADER }}
+<div class="box">
+    {{ settings.SIDEBAR_QUESTION_HEADER }}
+</div>
 <div class="box vote-buttons">
     <h2 >{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}
@@ -69,4 +71,6 @@
     {#% endcache %#}
 {% endif %}
 
-{{ settings.SIDEBAR_QUESTION_FOOTER }}
+<div class="box">
+    {{ settings.SIDEBAR_QUESTION_FOOTER }}
+</div>

@@ -31,10 +31,11 @@
     {% endblock %}
 {% endblock %}
 {% block sidebar %}
-
-{{ settings.SIDEBAR_PROFILE_HEADER }}
-
-{{ settings.SIDEBAR_PROFILE_FOOTER }}
-
+<div class="box">
+    {{ settings.SIDEBAR_PROFILE_HEADER }}
+</div>
+<div class="box">
+    {{ settings.SIDEBAR_PROFILE_FOOTER }}
+</div>
 {% endblock %}
 <!-- end of user.html -->
