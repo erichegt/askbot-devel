@@ -106,7 +106,7 @@ var CPValidator = function(){
         getQuestionFormRules : function(){
             return {
                 tags: {
-                    required: true,
+                    required: askbot['settings']['tagsAreRequired'],
                     maxlength: 105,
                     limit_tag_count: true,
                     limit_tag_length: true
@@ -961,6 +961,10 @@ var questionRetagger = function(){
     };
 
     var drawNewTags = function(new_tags){
+        if (new_tags === ''){
+            tagsDiv.html('');
+            return;
+        }
         new_tags = new_tags.split(/\s+/);
         var tags_html = ''
         $.each(new_tags, function(index, name){
@@ -1032,7 +1036,7 @@ var questionRetagger = function(){
         div.validate({//copy-paste from utils.js
             rules: {
                 tags: {
-                    required: true,
+                    required: askbot['settings']['tagsAreRequired'],
                     maxlength: askbot['settings']['maxTagsPerPost'] * askbot['settings']['maxTagLength'],
                     limit_tag_count: true,
                     limit_tag_length: true

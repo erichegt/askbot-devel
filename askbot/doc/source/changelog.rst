@@ -24,6 +24,7 @@ Development version (not released yet)
 * Check order of middleware classes (Daniel Mican)
 * Added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
 * Enabled "ask by email" via Lamson (Evgeny)
+* Tags can be optional (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------

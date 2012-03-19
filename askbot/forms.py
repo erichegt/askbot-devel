@@ -179,10 +179,10 @@ class AnswerEditorField(EditorField):
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TagNamesField, self).__init__(*args, **kwargs)
-        self.required = True
+        self.required = askbot_settings.TAGS_ARE_REQUIRED
         self.widget = forms.TextInput(attrs={'size' : 50, 'autocomplete' : 'off'})
         self.max_length = 255
-        self.label  = _('tags')
+        self.label = _('tags')
         #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
         self.help_text = ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
@@ -195,7 +195,7 @@ class TagNamesField(forms.CharField):
 
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
-        return len(models.tag.get_mandatory_tags()) > 0
+        return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
         """true if tag string matches the mandatory tag"""
@@ -218,8 +218,10 @@ class TagNamesField(forms.CharField):
         value = super(TagNamesField, self).clean(value)
         data = value.strip()
         if len(data) < 1:
-            raise forms.ValidationError(_('tags are required'))
-
+            if askbot_settings.TAGS_ARE_REQUIRED:
+                    raise forms.ValidationError(_('tags are required'))
+            else:
+                return ''#don't test for required characters when tags is ''
         split_re = re.compile(const.TAG_SPLIT_REGEX)
         tag_strings = split_re.split(data)
         entered_tags = []

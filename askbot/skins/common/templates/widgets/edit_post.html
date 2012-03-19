@@ -15,23 +15,25 @@
 {# need label element for resizable input, b/c form validation won't find span #}
 {% if post_type == 'question' %}
     <div class="form-item">
-        {% if mandatory_tags  %}
-            <label for="id_tags">
-                <strong>{% trans %}tags{% endtrans %},</strong>
-                {% trans %}one of these is required{% endtrans %}
-            </label>
-            {{
-                tag_list_widget(
-                    mandatory_tags,
-                    make_links = False,
-                    css_class = 'clearfix'
-                )
-            }}
-        {% else %}
-            <label for="id_tags">
-                <strong>{% trans %}tags{% endtrans %}:</strong>
+        {% if tags_are_required %}
+            <label for=id_tags">
+            {% if mandatory_tags %}
+                <strong>{% trans %}tags{% endtrans %}</strong>
+                {% trans %}, one of these is required{% endtrans %}
+                {{
+                    tag_list_widget(
+                        mandatory_tags,
+                        make_links = False,
+                        css_class = 'clearfix'
+                    )
+                }}
+            {% else %}
+                <strong>{% trans %}tags:{% endtrans %}</strong> 
                 {% trans %}(required){% endtrans %}
+            {% endif %}
             </label>
+        {% else %}
+            <strong>{% trans %}tags:{% endtrans %}</strong>
         {% endif %}
         <span class="form-error">{{ post_form.tags.errors }}</span><br/>
         {{ post_form.tags }}

@@ -179,7 +179,10 @@ def update_media_revision(skin = None):
         skin = 'default'
         skin_path = get_path_to_skin(askbot_settings.ASKBOT_DEFAULT_SKIN)
 
-    media_dirs = [os.path.join(skin_path, 'media'),]
+    media_dirs = [
+        os.path.join(skin_path, 'media'),
+        os.path.join(get_path_to_skin('common'), 'media')#we always use common
+    ]
 
     if skin != 'default':
         #we have default skin as parent of the custom skin

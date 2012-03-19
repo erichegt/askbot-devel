@@ -336,7 +336,7 @@ def edit_question(request, id):
                     # Replace with those from the selected revision
                     rev_id = revision_form.cleaned_data['revision']
                     selected_revision = models.PostRevision.objects.question_revisions().get(
-                                                        question = question,
+                                                        post = question,
                                                         revision = rev_id
                                                     )
                     form = forms.EditQuestionForm(
