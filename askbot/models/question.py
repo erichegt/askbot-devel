@@ -64,7 +64,15 @@ class ThreadManager(models.Manager):
     def create_new(self, title, author, added_at, wiki, text, tagnames=None, is_anonymous=False):
         # TODO: Some of this code will go to Post.objects.create_new
 
-        thread = super(ThreadManager, self).create(title=title, tagnames=tagnames, last_activity_at=added_at, last_activity_by=author)
+        thread = super(
+            ThreadManager,
+            self
+        ).create(
+            title=title,
+            tagnames=tagnames,
+            last_activity_at=added_at,
+            last_activity_by=author
+        )
 
         question = Post(
             post_type='question',
@@ -389,7 +397,10 @@ class Thread(models.Model):
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
-        return self.tagnames.split(u' ')
+        if self.tagnames.strip() == '':
+            return list()
+        else:
+            return self.tagnames.split(u' ')
 
     def get_title(self, question=None):
         if not question:

@@ -222,6 +222,7 @@ import djcelery
 djcelery.setup_loader()
 
 CSRF_COOKIE_NAME = 'askbot_csrf'
-CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+#enter domain name here - e.g. example.com
+#CSRF_COOKIE_DOMAIN = ''
 
 STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)

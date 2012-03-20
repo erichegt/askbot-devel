@@ -179,10 +179,10 @@ class AnswerEditorField(EditorField):
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TagNamesField, self).__init__(*args, **kwargs)
-        self.required = True
+        self.required = askbot_settings.TAGS_ARE_REQUIRED
         self.widget = forms.TextInput(attrs={'size' : 50, 'autocomplete' : 'off'})
         self.max_length = 255
-        self.label  = _('tags')
+        self.label = _('tags')
         #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
         self.help_text = ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
@@ -195,7 +195,7 @@ class TagNamesField(forms.CharField):
 
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
-        return len(models.tag.get_mandatory_tags()) > 0
+        return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
         """true if tag string matches the mandatory tag"""
@@ -218,8 +218,10 @@ class TagNamesField(forms.CharField):
         value = super(TagNamesField, self).clean(value)
         data = value.strip()
         if len(data) < 1:
-            raise forms.ValidationError(_('tags are required'))
-
+            if askbot_settings.TAGS_ARE_REQUIRED:
+                    raise forms.ValidationError(_('tags are required'))
+            else:
+                return ''#don't test for required characters when tags is ''
         split_re = re.compile(const.TAG_SPLIT_REGEX)
         tag_strings = split_re.split(data)
         entered_tags = []
@@ -671,21 +673,27 @@ class AskByEmailForm(forms.Form):
         ``tagnames`` and ``title``
         """
         raw_subject = self.cleaned_data['subject'].strip()
-        subject_re = re.compile(r'^\[([^]]+)\](.*)$')
+        if askbot_settings.TAGS_ARE_REQUIRED:
+            subject_re = re.compile(r'^\[([^]]+)\](.*)$')
+        else:
+            subject_re = re.compile(r'^(?:\[([^]]+)\])?(.*)$')
         match = subject_re.match(raw_subject)
         if match:
             #make raw tags comma-separated
-            tagnames = match.group(1).replace(';',',')
+            if match.group(1) is None:#no tags
+                self.cleaned_data['tagnames'] = ''
+            else:
+                tagnames = match.group(1).replace(';',',')
 
-            #pre-process tags
-            tag_list = [tag.strip() for tag in tagnames.split(',')]
-            tag_list = [re.sub(r'\s+', ' ', tag) for tag in tag_list]
-            if askbot_settings.REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS:
-                tag_list = [tag.replace(' ', '-') for tag in tag_list]
-            tagnames = ' '.join(tag_list)#todo: use tag separator char here
+                #pre-process tags
+                tag_list = [tag.strip() for tag in tagnames.split(',')]
+                tag_list = [re.sub(r'\s+', ' ', tag) for tag in tag_list]
+                if askbot_settings.REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS:
+                    tag_list = [tag.replace(' ', '-') for tag in tag_list]
+                tagnames = ' '.join(tag_list)#todo: use tag separator char here
 
-            #clean tags - may raise ValidationError
-            self.cleaned_data['tagnames'] = TagNamesField().clean(tagnames)
+                #clean tags - may raise ValidationError
+                self.cleaned_data['tagnames'] = TagNamesField().clean(tagnames)
 
             #clean title - may raise ValidationError
             title = match.group(2).strip()

@@ -120,6 +120,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'TAGS_ARE_REQUIRED',
+        description = _('Are tags required?'),
+        default = False,
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'MANDATORY_TAGS',
