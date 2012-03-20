@@ -30,6 +30,7 @@ from askbot.models.answer import AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
+from askbot.models.user import GroupMembership
 from askbot.models.post import Post, PostRevision
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
@@ -2173,6 +2174,11 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
+def user_add_user_to_group(self, user = None, group = None):
+    """allows one user to add another to a pre-existing group"""
+    GroupMembership.objects.get_or_create(user, group)
+
+
 User.add_to_class(
     'add_missing_askbot_subscriptions',
     user_add_missing_askbot_subscriptions
@@ -2235,6 +2241,7 @@ User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
+User.add_to_class('add_user_to_group', user_add_user_to_group)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
@@ -2847,6 +2854,7 @@ __all__ = [
         'Activity',
         'ActivityAuditStatus',
         'EmailFeedSetting',
+        'GroupMembership',
 
         'User',
 

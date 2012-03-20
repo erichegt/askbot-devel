@@ -82,6 +82,16 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
+    def get_or_create_group_tag(self, group_name = None, user = None):
+        """creates a group tag or finds one, if exists"""
+        #todo: here we might fill out the group profile
+        try:
+            tag = self.get(name = group_name)
+        except self.model.DoesNotExist:
+            tag = self.model(name = group_name, created_by = user)
+            tag.save()
+        return tag
+
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)
     created_by      = models.ForeignKey(User, related_name='created_tags')
@@ -91,6 +101,12 @@ class Tag(models.Model):
     deleted     = models.BooleanField(default=False)
     deleted_at  = models.DateTimeField(null=True, blank=True)
     deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_tags')
+
+    tag_wiki = models.OneToOneField(
+                                'Post',
+                                null=True,
+                                related_name = 'described_tag'
+                            )
 
     objects = TagManager()
 

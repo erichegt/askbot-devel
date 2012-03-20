@@ -1135,3 +1135,7 @@ class SimpleEmailSubscribeForm(forms.Form):
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
         email_settings_form.save(user, save_unbound=True)
+
+class AddUserToGroupForm(forms.Form):
+    user_id = forms.IntegerField()
+    group_name = forms.CharField()

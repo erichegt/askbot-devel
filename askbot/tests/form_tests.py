@@ -47,9 +47,12 @@ class AskByEmailFormTests(AskbotTestCase):
             'subject': '[tag-one] where is titanic?',
             'body_text': 'where is titanic?'
         }
+
     def test_subject_line(self):
         """loops through various forms of the subject line
         and makes sure that tags and title are parsed out"""
+        setting_backup = askbot_settings.TAGS_ARE_REQUIRED
+        askbot_settings.update('TAGS_ARE_REQUIRED', True)
         for test_case in SUBJECT_LINE_CASES:
             self.data['subject'] = test_case[0]
             form = forms.AskByEmailForm(self.data)
@@ -66,6 +69,7 @@ class AskByEmailFormTests(AskbotTestCase):
                     form.cleaned_data['title'],
                     output[1]
                 )
+        askbot_settings.update('TAGS_ARE_REQUIRED', setting_backup)
 
     def test_email(self):
         """loops through variants of the from field 

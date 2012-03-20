@@ -126,6 +126,22 @@ $(document).ready(function(){
                         $(re_content).slideToggle();
                     }
     );
+
+    $('.badge-context-toggle').each(function(idx, elem){
+        var context_list = $(elem).parent().next('ul');
+        if (context_list.children().length > 0){
+            $(elem).addClass('active');
+            var toggle_display = function(){
+                if (context_list.css('display') == 'none'){
+                    $('.badge-context-list').hide();
+                    context_list.show();
+                } else {
+                    context_list.hide();
+                }
+            };
+            $(elem).click(toggle_display);
+        }
+    });
 });
 
 /**
@@ -204,12 +220,143 @@ FollowUser.prototype.toggleState = function(){
     }
 };
 
+GroupsContainer = function(){
+    WrappedElement.call(this);
+};
+inherits(GroupsContainer, WrappedElement);
+
+GroupsContainer.prototype.decorate = function(element){
+    this._element = element;
+};
+
+GroupsContainer.prototype.addGroup = function(group_name){
+    var group = this.makeElement('li');
+    group.html(group_name);
+    this._element.append(group);
+};
+
+GroupAdderWidget = function(){
+    WrappedElement.call(this);
+    this._state = 'display';//display or edit
+};
+inherits(GroupAdderWidget, WrappedElement);
+
+/**
+ * @param {string} state
+ */
+GroupAdderWidget.prototype.setState = function(state){
+    if (state === 'display'){
+        this._element.html(gettext('add group'));
+        this._input.hide();
+        this._button.hide();
+    } else if (state === 'edit'){
+        this._element.html(gettext('cancel'));
+        this._input.show();
+        this._button.show();
+    } else {
+        return;
+    }
+    this._state = state;
+};
+
+GroupAdderWidget.prototype.getValue = function(){
+    return this._input.val();
+};
+
+GroupAdderWidget.prototype.addGroup = function(group){
+    this._groups_container.addGroup(group);
+};
+
+GroupAdderWidget.prototype.getAddGroupHandler = function(){
+    var me = this;
+    return function(){
+        var group_name = me.getValue();
+        var data = {
+            group_name: group_name,
+            user_id: askbot['data']['viewUserId']
+        };
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            cache: false,
+            url: askbot['urls']['add_user_to_group'],
+            success: function(data){
+                if (data['success'] === true){
+                    me.addGroup(group_name);
+                    me.setState('display');
+                } else {
+                    var message = data['message'];
+                    showMessage(me.getElement(), message, 'after');
+                }
+            }
+        });
+    };
+};
+
+GroupAdderWidget.prototype.setGroupsContainer = function(container){
+    this._groups_container = container;
+};
+
+GroupAdderWidget.prototype.toggleState = function(){
+    if (this._state === 'display'){
+        this.setState('edit');
+    } else if (this._state === 'edit'){
+        this.setState('display');
+    }
+};
+
+GroupAdderWidget.prototype.decorate = function(element){
+    this._element = element;
+    var input = this.makeElement('input');
+    this._input = input;
+    var button = this.makeElement('button');
+    button.html(gettext('add'));
+    this._button = button;
+    element.before(input);
+    input.after(button);
+    this.setState('display');
+    setupButtonEventHandlers(button, this.getAddGroupHandler());
+    var me = this;
+    setupButtonEventHandlers(
+        element,
+        function(){ me.toggleState() }
+    );
+};
+
+/**
+ * @constructor
+ * allows editing user groups
+ */
+UserGroupsEditor = function(){
+    WrappedElement.call(this);
+};
+inherits(UserGroupsEditor, WrappedElement);
+
+UserGroupsEditor.prototype.decorate = function(element){
+    this._element = element;
+    var add_link = element.find('#add-group');
+    var adder = new GroupAdderWidget();
+    adder.decorate(add_link);
+
+    var groups_container = new GroupsContainer();
+    groups_container.decorate(element.find('ul'));
+    adder.setGroupsContainer(groups_container);
+    //todo - add group deleters
+};
+
 (function(){
     var fbtn = $('.follow-toggle');
     if (fbtn.length === 1){
         var follow_user = new FollowUser();
         follow_user.decorate(fbtn);
         follow_user.setUserName(askbot['data']['viewUserName']);
+    }
+    if (askbot['data']['userIsAdminOrMod']){
+        var group_editor = new UserGroupsEditor();
+        group_editor.decorate($('#user-groups'));
+    } else {
+        $('#add-group').remove();
     }
 })();
 

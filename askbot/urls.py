@@ -252,6 +252,11 @@ urlpatterns = patterns('',
         views.commands.manage_inbox,
         name='manage_inbox'
     ),
+    url(#ajax only
+        r'^add_user_to_group/$',
+        views.commands.add_user_to_group,
+        name='add_user_to_group'
+    ),
     url(
         r'^feeds/(?P<url>.*)/$', 
         'django.contrib.syndication.views.feed',

@@ -639,3 +639,32 @@ def read_message(request):#marks message a read
             if request.user.is_authenticated():
                 request.user.delete_messages()
     return HttpResponse('')
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def add_user_to_group(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    if not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied(
+            _('Only moderators and administrators can assign users to groups')
+        )
+
+    form = forms.AddUserToGroupForm(request.POST)
+    if form.is_valid():
+        group_name = form.cleaned_data['group_name']
+        user_id = form.cleaned_data['user_id']
+
+        group = models.Tag.get_or_create_group_tag(group_name)
+        try:
+            user = models.User.objects.get(id = user_id)
+        except models.User.DoesNotExist:
+            raise exceptions.PermissionDenied(
+                'user with id %d not found' % user_id
+            )
+
+        request.user.add_user_to_group(user, group)
+    else:
+        raise exceptions.PermissionDenied()

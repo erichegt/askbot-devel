@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from askbot import const
 from askbot.utils import functions
+from askbot.models.tag import Tag
 
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
@@ -330,6 +331,18 @@ class EmailFeedSetting(models.Model):
     def mark_reported_now(self):
         self.reported_at = datetime.datetime.now()
         self.save()
+
+    class Meta:
+        app_label = 'askbot'
+
+
+class GroupMembership(models.Model):
+    """an explicit model to link users and the tags
+    that by being recorded with this relation automatically
+    become group tags
+    """
+    group = models.ForeignKey(Tag)
+    user = models.ForeignKey(User)
 
     class Meta:
         app_label = 'askbot'

@@ -6,6 +6,24 @@
 {% endblock %}
 {% block usercontent %}
     {% include "user_profile/user_info.html" %}
+    {% if settings.GROUPS_ENABLED %}
+    <div id="user-groups">
+        <h2>{% trans 
+                username = view_user.username
+            %}{{username}}'s groups{% endtrans %}
+        </h2>
+        {% if user_groups %}
+        <ul>
+            {% for group in user_groups %}
+            <li>
+                {{ macros.user_group(group) }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <a id="add-group">{% trans %}add group{% endtrans %}</a>
+    </div>
+    {% endif %}
     <a name="questions"></a>
     {% spaceless %}
         <h2>{% trans counter=question_count %}<span class="count">{{counter}}</span> Question{% pluralize %}<span class="count">{{counter}}</span> Questions{% endtrans %}</h2>
@@ -131,27 +149,5 @@
             </tr>
         </table>
     </div>
-{% endblock %}
-{% block endjs %}
-    {{ super() }}
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('.badge-context-toggle').each(function(idx, elem){
-                var context_list = $(elem).parent().next('ul');
-                if (context_list.children().length > 0){
-                    $(elem).addClass('active');
-                    var toggle_display = function(){
-                        if (context_list.css('display') == 'none'){
-                            $('.badge-context-list').hide();{# hide all context lists #}
-                            context_list.show();
-                        } else {
-                            context_list.hide();
-                        }
-                    };
-                    $(elem).click(toggle_display);
-                }
-            });
-        });
-    </script>
 {% endblock %}
 <!-- end user_stats.html -->
