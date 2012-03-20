@@ -12,15 +12,15 @@
                 username = view_user.username
             %}{{username}}'s groups{% endtrans %}
         </h2>
-        {% if user_groups %}
         <ul>
+        {% if user_groups %}
             {% for group in user_groups %}
             <li>
                 {{ macros.user_group(group) }}
             </li>
             {% endfor %}
-        </ul>
         {% endif %}
+        </ul>
         <a id="add-group">{% trans %}add group{% endtrans %}</a>
     </div>
     {% endif %}
