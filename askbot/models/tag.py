@@ -82,15 +82,41 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
-    def get_or_create_group_tag(self, group_name = None, user = None):
+#todo: implement this
+#class GroupTagQuerySet(models.query.QuerySet):
+#    """Custom query set for the group"""
+#    def __init__(self, model):
+
+class GroupTagManager(TagManager):
+    """manager for group tags"""
+
+#    def get_query_set(self):
+#        return GroupTagQuerySet(self.model)
+
+    def get_or_create(self, group_name = None, user = None):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
+
+        #replace spaces with dashes
+        group_name = re.sub('\s+', '-', group_name.strip())
         try:
             tag = self.get(name = group_name)
         except self.model.DoesNotExist:
             tag = self.model(name = group_name, created_by = user)
             tag.save()
         return tag
+
+    #todo: maybe move this to query set
+    def get_for_user(self, user = None):
+        return self.filter(user_memberships__user = user)
+
+    #todo: remove this when the custom query set is done
+    def get_all(self):
+        return self.annotate(
+            member_count = models.Count('user_memberships')
+        ).filter(
+            member_count__gt = 0
+        )
 
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)
@@ -109,6 +135,7 @@ class Tag(models.Model):
                             )
 
     objects = TagManager()
+    group_tags = GroupTagManager()
 
     class Meta:
         app_label = 'askbot'

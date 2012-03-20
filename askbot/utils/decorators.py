@@ -84,6 +84,8 @@ def ajax_only(view_func):
             raise Http404
         try:
             data = view_func(request, *args, **kwargs)
+            if data is None:
+                data = {}
         except Exception, e:
             message = unicode(e)
             if message == '':

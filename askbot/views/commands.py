@@ -436,7 +436,20 @@ def get_tag_list(request):
                         'name', flat = True
                     )
     output = '\n'.join(tag_names)
-    return HttpResponse(output, mimetype = "text/plain")
+    return HttpResponse(output, mimetype = 'text/plain')
+
+@decorators.get_only
+def get_groups_list(request):
+    """returns names of group tags
+    for the autocomplete function"""
+    group_names = models.Tag.group_tags.get_all().filter(
+                                    deleted = False
+                                ).values_list(
+                                    'name', flat = True
+                                )
+    group_names = map(lambda v: v.replace('-', ' '), group_names)
+    output = '\n'.join(group_names)
+    return HttpResponse(output, mimetype = 'text/plain')
 
 @csrf.csrf_protect
 def subscribe_for_tags(request):
@@ -656,8 +669,6 @@ def add_user_to_group(request):
     if form.is_valid():
         group_name = form.cleaned_data['group_name']
         user_id = form.cleaned_data['user_id']
-
-        group = models.Tag.get_or_create_group_tag(group_name)
         try:
             user = models.User.objects.get(id = user_id)
         except models.User.DoesNotExist:
@@ -665,6 +676,8 @@ def add_user_to_group(request):
                 'user with id %d not found' % user_id
             )
 
+        group_params = {'group_name': group_name, 'user': user}
+        group = models.Tag.group_tags.get_or_create(**group_params)
         request.user.add_user_to_group(user, group)
     else:
         raise exceptions.PermissionDenied()

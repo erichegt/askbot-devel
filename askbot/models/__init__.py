@@ -2176,7 +2176,7 @@ def user_update_wildcard_tag_selections(
 
 def user_add_user_to_group(self, user = None, group = None):
     """allows one user to add another to a pre-existing group"""
-    GroupMembership.objects.get_or_create(user, group)
+    GroupMembership.objects.get_or_create(user = user, group = group)
 
 
 User.add_to_class(

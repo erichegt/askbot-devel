@@ -341,8 +341,8 @@ class GroupMembership(models.Model):
     that by being recorded with this relation automatically
     become group tags
     """
-    group = models.ForeignKey(Tag)
-    user = models.ForeignKey(User)
+    group = models.ForeignKey(Tag, related_name = 'user_memberships')
+    user = models.ForeignKey(User, related_name = 'group_memberships')
 
     class Meta:
         app_label = 'askbot'

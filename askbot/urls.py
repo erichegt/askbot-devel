@@ -193,6 +193,11 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
+        r'^get-groups-list/',
+        views.commands.get_groups_list,
+        name = 'get_groups_list'
+    ),
+    url(
         r'^swap-question-with-answer/',
         views.commands.swap_question_with_answer,
         name = 'swap_question_with_answer'

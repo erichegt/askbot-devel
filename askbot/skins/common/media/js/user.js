@@ -26,7 +26,7 @@ $(document).ready(function(){
                 data: JSON.stringify({memo_list: id_list, action_type: action_type}),
                 url: askbot['urls']['manageInbox'],
                 success: function(response_data){
-                    if (response_data['success'] === true){
+                    if (response_data['success'] == true){
                         if (action_type == 'delete' || action_type == 'remove_flag' || action_type == 'close' || action_type == 'delete_post'){
                             elements.remove();
                         }
@@ -220,6 +220,9 @@ FollowUser.prototype.toggleState = function(){
     }
 };
 
+/**
+ * @constructor
+ */
 GroupsContainer = function(){
     WrappedElement.call(this);
 };
@@ -227,9 +230,22 @@ inherits(GroupsContainer, WrappedElement);
 
 GroupsContainer.prototype.decorate = function(element){
     this._element = element;
+    var groups = {};
+    //collect list of groups
+    $.each(element.find('li'), function(idx, li){
+        groups[$(li).html()] = 1;
+        //var str = $(li).html();
+        //var bytes = [];
+        //for (var i = 0; i<str.length; i++){
+        //}
+    });
+    this._groups = groups;
 };
 
 GroupsContainer.prototype.addGroup = function(group_name){
+    if (group_name in this._groups){
+        return;
+    }
     var group = this.makeElement('li');
     group.html(group_name);
     this._element.append(group);
@@ -248,10 +264,12 @@ GroupAdderWidget.prototype.setState = function(state){
     if (state === 'display'){
         this._element.html(gettext('add group'));
         this._input.hide();
+        this._input.val('');
         this._button.hide();
     } else if (state === 'edit'){
         this._element.html(gettext('cancel'));
         this._input.show();
+        this._input.focus();
         this._button.show();
     } else {
         return;
@@ -282,7 +300,7 @@ GroupAdderWidget.prototype.getAddGroupHandler = function(){
             cache: false,
             url: askbot['urls']['add_user_to_group'],
             success: function(data){
-                if (data['success'] === true){
+                if (data['success'] == true){
                     me.addGroup(group_name);
                     me.setState('display');
                 } else {
@@ -310,6 +328,18 @@ GroupAdderWidget.prototype.decorate = function(element){
     this._element = element;
     var input = this.makeElement('input');
     this._input = input;
+
+    var groupsAc = new AutoCompleter({
+        url: askbot['urls']['get_groups_list'],
+        preloadData: true,
+        minChars: 1,
+        useCache: true,
+        matchInside: false,
+        maxCacheLength: 100,
+        delay: 10
+    });
+    groupsAc.decorate(input);
+
     var button = this.makeElement('button');
     button.html(gettext('add'));
     this._button = button;

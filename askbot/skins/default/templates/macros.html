@@ -175,7 +175,7 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro user_group(group) -%}
-    {{ group.name }}
+    {{ group.name|replace('-', ' ') }}
 {%- endmacro -%}
 
 {# todo: remove the extra content argument to make its usage more explicit #}

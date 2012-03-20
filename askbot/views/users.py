@@ -394,7 +394,7 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
-
+        'user_groups': models.Tag.group_tags.get_for_user(user = user),
         'badges': badges,
         'total_badges' : len(badges),
     }
