@@ -656,16 +656,16 @@ def read_message(request):#marks message a read
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
-def add_user_to_group(request):
+def edit_group_membership(request):
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied()
 
     if not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied(
-            _('Only moderators and administrators can assign users to groups')
+            _('Only moderators and administrators can change user groups')
         )
 
-    form = forms.AddUserToGroupForm(request.POST)
+    form = forms.EditGroupMembershipForm(request.POST)
     if form.is_valid():
         group_name = form.cleaned_data['group_name']
         user_id = form.cleaned_data['user_id']
@@ -676,8 +676,18 @@ def add_user_to_group(request):
                 'user with id %d not found' % user_id
             )
 
-        group_params = {'group_name': group_name, 'user': user}
-        group = models.Tag.group_tags.get_or_create(**group_params)
-        request.user.add_user_to_group(user, group)
+        action = form.cleaned_data['action']
+        if action == 'add':
+            group_params = {'group_name': group_name, 'user': user}
+            group = models.Tag.group_tags.get_or_create(**group_params)
+            request.user.edit_group_membership(user, group, 'add')
+        elif action == 'remove':
+            try:
+                group = models.Tag.group_tags.get_by_name(group_name = group_name)
+                request.user.edit_group_membership(user, group, 'remove')
+            except models.Tag.DoesNotExist:
+                raise exceptions.PermissionDenied()
+        else:
+            raise exceptions.PermissionDenied()
     else:
         raise exceptions.PermissionDenied()

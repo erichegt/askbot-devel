@@ -2174,10 +2174,20 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
-def user_add_user_to_group(self, user = None, group = None):
-    """allows one user to add another to a pre-existing group"""
-    GroupMembership.objects.get_or_create(user = user, group = group)
+def user_edit_group_membership(self, user = None, group = None, action = None):
+    """allows one user to add another to a group
+    or remove user from group.
 
+    If when adding, the group does not exist, it will be created
+    the delete function is not symmetric, the group will remain
+    even if it becomes empty
+    """
+    if action == 'add':
+        GroupMembership.objects.get_or_create(user = user, group = group)
+    elif action == 'remove':
+        GroupMembership.objects.get(user = user, group = group).delete()
+    else:
+        raise ValueError('invalid action')
 
 User.add_to_class(
     'add_missing_askbot_subscriptions',
@@ -2241,7 +2251,7 @@ User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
-User.add_to_class('add_user_to_group', user_add_user_to_group)
+User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)

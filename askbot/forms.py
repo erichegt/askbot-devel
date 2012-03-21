@@ -1136,6 +1136,17 @@ class SimpleEmailSubscribeForm(forms.Form):
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
         email_settings_form.save(user, save_unbound=True)
 
-class AddUserToGroupForm(forms.Form):
+class EditGroupMembershipForm(forms.Form):
+    """a form for adding or removing users
+    to and from user groups"""
     user_id = forms.IntegerField()
     group_name = forms.CharField()
+    action = forms.CharField()
+
+    def clean_action(self):
+        """allowed actions are 'add' and 'remove'"""
+        action = self.cleaned_data['action']
+        if action not in ('add', 'remove'):
+            del self.cleaned_data['action']
+            raise forms.ValidationError('invalid action')
+        return action

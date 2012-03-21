@@ -222,36 +222,114 @@ FollowUser.prototype.toggleState = function(){
 
 /**
  * @constructor
+ * @param {string} name
  */
-GroupsContainer = function(){
+var UserGroup = function(name){
+    WrappedElement.call(this);
+    this._name = name;
+};
+inherits(UserGroup, WrappedElement);
+
+UserGroup.prototype.getDeleteHandler = function(){
+    var group_name = this._name;
+    var me = this;
+    var groups_container = me._groups_container;
+    return function(){
+        var data = {
+            user_id: askbot['data']['viewUserId'],
+            group_name: group_name,
+            action: 'remove'
+        };
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            cache: false,
+            url: askbot['urls']['edit_group_membership'],
+            success: function(){
+                groups_container.removeGroup(me);
+            }
+        });
+    };
+};
+
+UserGroup.prototype.getName = function(){
+    return this._name;
+};
+
+UserGroup.prototype.setGroupsContainer = function(container){
+    this._groups_container = container;
+};
+
+UserGroup.prototype.decorate = function(element){
+    this._element = element;
+    this._name = $.trim(element.html());
+    var deleter = new DeleteIcon();
+    deleter.setHandler(this.getDeleteHandler());
+    deleter.setContent('x');
+    this._element.append(deleter.getElement());
+    this._delete_icon = deleter;
+};
+
+UserGroup.prototype.createDom = function(){
+    var element = this.makeElement('li');
+    element.html(this._name + ' ');
+    this._element = element;
+    this.decorate(element);
+};
+
+UserGroup.prototype.dispose = function(){
+    this._delete_icon.dispose();
+    this._element.remove();
+};
+
+/**
+ * @constructor
+ */
+var GroupsContainer = function(){
     WrappedElement.call(this);
 };
 inherits(GroupsContainer, WrappedElement);
 
 GroupsContainer.prototype.decorate = function(element){
     this._element = element;
-    var groups = {};
+    var groups = [];
+    var group_names = [];
+    var me = this;
     //collect list of groups
     $.each(element.find('li'), function(idx, li){
-        groups[$(li).html()] = 1;
-        //var str = $(li).html();
-        //var bytes = [];
-        //for (var i = 0; i<str.length; i++){
-        //}
+        var group = new UserGroup();
+        group.setGroupsContainer(me);
+        group.decorate($(li));
+        groups.push(group);
+        group_names.push(group.getName());
     });
     this._groups = groups;
+    this._group_names = group_names;
 };
 
 GroupsContainer.prototype.addGroup = function(group_name){
-    if (group_name in this._groups){
+    if ($.inArray(group_name, this._group_names) > -1){
         return;
     }
-    var group = this.makeElement('li');
-    group.html(group_name);
-    this._element.append(group);
+    var group = new UserGroup(group_name);
+    group.setGroupsContainer(this);
+    this._groups.push(group);
+    this._group_names.push(group_name);
+    this._element.append(group.getElement());
 };
 
-GroupAdderWidget = function(){
+GroupsContainer.prototype.removeGroup = function(group){
+    var idx = $.inArray(group, this._groups);    
+    if (idx === -1){
+        return;
+    }
+    this._groups.splice(idx, 1);
+    this._group_names.splice(idx, 1);
+    group.dispose();
+};
+
+var GroupAdderWidget = function(){
     WrappedElement.call(this);
     this._state = 'display';//display or edit
 };
@@ -291,14 +369,15 @@ GroupAdderWidget.prototype.getAddGroupHandler = function(){
         var group_name = me.getValue();
         var data = {
             group_name: group_name,
-            user_id: askbot['data']['viewUserId']
+            user_id: askbot['data']['viewUserId'],
+            action: 'add'
         };
         $.ajax({
             type: 'POST',
             dataType: 'json',
             data: data,
             cache: false,
-            url: askbot['urls']['add_user_to_group'],
+            url: askbot['urls']['edit_group_membership'],
             success: function(data){
                 if (data['success'] == true){
                     me.addGroup(group_name);
@@ -358,7 +437,7 @@ GroupAdderWidget.prototype.decorate = function(element){
  * @constructor
  * allows editing user groups
  */
-UserGroupsEditor = function(){
+var UserGroupsEditor = function(){
     WrappedElement.call(this);
 };
 inherits(UserGroupsEditor, WrappedElement);
@@ -389,4 +468,3 @@ UserGroupsEditor.prototype.decorate = function(element){
         $('#add-group').remove();
     }
 })();
-

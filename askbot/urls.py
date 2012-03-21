@@ -258,9 +258,9 @@ urlpatterns = patterns('',
         name='manage_inbox'
     ),
     url(#ajax only
-        r'^add_user_to_group/$',
-        views.commands.add_user_to_group,
-        name='add_user_to_group'
+        r'^edit-group-membership/$',
+        views.commands.edit_group_membership,
+        name='edit_group_membership'
     ),
     url(
         r'^feeds/(?P<url>.*)/$', 

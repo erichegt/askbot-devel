@@ -86,6 +86,11 @@ class TagManager(BaseQuerySetManager):
 #class GroupTagQuerySet(models.query.QuerySet):
 #    """Custom query set for the group"""
 #    def __init__(self, model):
+def clean_group_name(name):
+    """group names allow spaces,
+    tag names do not, so we use this method
+    to replace spaces with dashes"""
+    return re.sub('\s+', '-', name.strip())
 
 class GroupTagManager(TagManager):
     """manager for group tags"""
@@ -98,7 +103,7 @@ class GroupTagManager(TagManager):
         #todo: here we might fill out the group profile
 
         #replace spaces with dashes
-        group_name = re.sub('\s+', '-', group_name.strip())
+        group_name = clean_group_name(group_name)
         try:
             tag = self.get(name = group_name)
         except self.model.DoesNotExist:
@@ -117,6 +122,9 @@ class GroupTagManager(TagManager):
         ).filter(
             member_count__gt = 0
         )
+
+    def get_by_name(self, group_name = None):
+        return self.get(name = clean_group_name(group_name))
 
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)

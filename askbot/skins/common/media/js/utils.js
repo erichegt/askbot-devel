@@ -240,6 +240,9 @@ WrappedElement.prototype.setElement = function(element){
 WrappedElement.prototype.createDom = function(){
     this._element = $('<div></div>');
 };
+WrappedElement.prototype.decorate = function(element){
+    this._element = element;
+};
 WrappedElement.prototype.getElement = function(){
     if (this._element === null){
         this.createDom();
@@ -308,6 +311,7 @@ EditLink.prototype.decorate = function(element){
 var DeleteIcon = function(title){
     SimpleControl.call(this);
     this._title = title;
+    this._content = null;
 };
 inherits(DeleteIcon, SimpleControl);
 
@@ -327,7 +331,19 @@ DeleteIcon.prototype.setHandlerInternal = function(){
 DeleteIcon.prototype.createDom = function(){
     this._element = this.makeElement('span');
     this.decorate(this._element);
+    if (this._content !== null){
+        this.setContent(this._content);
+    }
 };
+
+DeleteIcon.prototype.setContent = function(content){
+    if (this._element === null){
+        this._content = content;
+    } else {
+        this._content = content;
+        this._element.html(content);
+    }
+}
 
 var Tag = function(){
     SimpleControl.call(this);
