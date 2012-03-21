@@ -10,6 +10,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
 
 class ReplyAddressManager(BaseQuerySetManager):
+    """A manager for the :class:`ReplyAddress` model"""
 
     def get_unused(self, address, allowed_from_email):
         return self.get(
@@ -19,6 +20,7 @@ class ReplyAddressManager(BaseQuerySetManager):
         )
     
     def create_new(self, post, user):
+        """creates a new reply address"""
         reply_address = ReplyAddress(
             post = post,
             user = user,
@@ -34,6 +36,8 @@ class ReplyAddressManager(BaseQuerySetManager):
 			
 
 class ReplyAddress(models.Model):
+    """Stores a reply address for the post
+    and the user"""
     address = models.CharField(max_length = 25, unique = True)
     post = models.ForeignKey(
                             Post,
@@ -60,11 +64,11 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
-    def edit_post(self, content, attachments = None):
+    def edit_post(self, parts):
         """edits the created post upon repeated response
         to the same address"""
         assert self.was_used == True
-        content += mail.process_attachments(attachments)
+        content, stored_files = mail.process_parts(parts)
         self.user.edit_post(
             post = self.response_post,
             body_text = content,
@@ -72,12 +76,13 @@ class ReplyAddress(models.Model):
         )
         self.response_post.thread.invalidate_cached_data()
 
-    def create_reply(self, content, attachments = None):
+    def create_reply(self, parts):
         """creates a reply to the post which was emailed
         to the user
         """
         result = None
-        content += mail.process_attachments(attachments)
+        #todo: delete stored files if this function fails
+        content, stored_files = mail.process_parts(parts)
 
         if self.post.post_type == 'answer':
             result = self.user.post_comment(self.post, content)

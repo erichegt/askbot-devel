@@ -55,6 +55,11 @@ def is_attachment(part):
     attachment"""
     return get_disposition(part) == 'attachment'
 
+def is_inline_attachment(part):
+    """True if part content disposition is
+    inline"""
+    return get_disposition(part) == 'inline'
+
 def process_attachment(part):
     """takes message part and turns it into SimpleUploadedFile object"""
     att_info = get_attachment_info(part) 
@@ -72,6 +77,35 @@ def is_body(part):
         if not is_attachment(part):
             return True
     return False
+
+def get_part_type(part):
+    if is_body(part):
+        return 'body'
+    elif is_attachment(part):
+        return 'attachment'
+    elif is_inline_attacment(part):
+        return 'inline'
+
+def get_parts(message):
+    """returns list of tuples (<part_type>, <formatted_part>),
+    where <part-type> is one of 'body', 'attachment', 'inline'
+    and <formatted-part> - will be in the directly usable form:
+    * if it is 'body' - then it will be unicode text
+    * for attachment - it will be django's SimpleUploadedFile instance
+
+    There may be multiple 'body' parts as well as others
+    usually the body is split when there are inline attachments present.
+    """
+
+    parts = list()
+    for part in message.walk():
+        part_type = get_part_type(part)
+        if part_type == 'body':
+            part_content = part.body
+        if part_type in ('attachment', 'inline'):
+            part_content = format_attachment(part)
+        parts.append(part_type, part_content)
+    return parts
 
 def get_body(message):
     """returns plain text body of the message"""
@@ -94,12 +128,10 @@ def get_attachments(message):
 @route('ask@(host)')
 @stateless
 def ASK(message, host = None):
-    body = get_body(message)
-    attachments = get_attachments(message)
+    parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
-    mail.process_emailed_question(from_address, subject, body, attachments)
-
+    mail.process_emailed_question(from_address, subject, parts)
 
 @route('reply-(address)@(host)', address='.+')
 @stateless
@@ -123,26 +155,11 @@ def PROCESS(message, address = None, host = None):
                                         address = address,
                                         allowed_from_email = message.From
                                     )
-        separator = _("======= Reply above this line. ====-=-=")
-        parts = get_body(message).split(separator)
-        attachments = get_attachments(message)
-        if len(parts) != 2 :
-            error = _("Your message was malformed. Please make sure to qoute \
-                the original notification you received at the end of your reply.")
+        parts = get_parts(message)
+        if reply_address.was_used:
+            reply_address.edit_post(parts)
         else:
-            reply_part = parts[0]
-            reply_part = '\n'.join(reply_part.splitlines(True)[:-3])
-            #the function below actually posts to the forum
-            if reply_address.was_used:
-                reply_address.edit_post(
-                    reply_part.strip(),
-                    attachments = attachments
-                )
-            else:
-                reply_address.create_reply(
-                    reply_part.strip(),
-                    attachments = attachments
-                )
+            reply_address.create_reply(parts)
     except ReplyAddress.DoesNotExist:
         error = _("You were replying to an email address\
          unknown to the system or you were replying from a different address from the one where you\
