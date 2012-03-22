@@ -102,8 +102,10 @@ def get_parts(message):
         part_type = get_part_type(part)
         if part_type == 'body':
             part_content = part.body
-        if part_type in ('attachment', 'inline'):
+        elif part_type in ('attachment', 'inline'):
             part_content = format_attachment(part)
+        else:
+            continue
         parts.append((part_type, part_content))
     return parts
 
