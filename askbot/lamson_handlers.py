@@ -98,6 +98,10 @@ def get_parts(message):
     """
 
     parts = list()
+
+    if message.body()
+        parts.append('body', message.body())
+
     for part in message.walk():
         part_type = get_part_type(part)
         if part_type == 'body':
