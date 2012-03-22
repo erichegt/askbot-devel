@@ -218,7 +218,7 @@ def process_attachment(attachment):
     file_extension = os.path.splitext(attachment.name)[1]
     #todo: this is a hack - use content type
     if file_extension.lower() in ('.png', '.jpg', '.jpeg', '.gif'):
-        return '!' + markdown_link
+        markdown_link = '!' + markdown_link
     return markdown_link, file_storage
 
 def process_parts(parts):
