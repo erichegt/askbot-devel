@@ -60,7 +60,7 @@ def is_inline_attachment(part):
     inline"""
     return get_disposition(part) == 'inline'
 
-def process_attachment(part):
+def format_attachment(part):
     """takes message part and turns it into SimpleUploadedFile object"""
     att_info = get_attachment_info(part) 
     name = att_info.get('filename', None)
@@ -106,24 +106,6 @@ def get_parts(message):
             part_content = format_attachment(part)
         parts.append((part_type, part_content))
     return parts
-
-def get_body(message):
-    """returns plain text body of the message"""
-    body = message.body()
-    if body:
-        return body
-    for part in message.walk():
-        if is_body(part):
-            return part.body
-
-def get_attachments(message):
-    """returns a list of file attachments
-    represented by StringIO objects"""
-    attachments = list()
-    for part in message.walk():
-        if is_attachment(part):
-            attachments.append(process_attachment(part))
-    return attachments
 
 @route('ask@(host)')
 @stateless
