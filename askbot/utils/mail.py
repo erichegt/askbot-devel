@@ -198,6 +198,15 @@ def bounce_email(email, subject, reason = None, body_text = None):
         body_text = error_message
     )
 
+def extract_reply(text):
+    """take the part above the separator
+    and discard the last line above the separator"""
+    if const.REPLY_SEPARATOR in text:
+        text = text.split(const.REPLY_SEPARATOR)[0]
+        return '\n'.join(text.splitlines(True)[:-3])
+    else:
+        return text
+
 def process_attachment(attachment):
     """will save a single
     attachment and return
@@ -222,19 +231,24 @@ def process_parts(parts):
     body_markdown = ''
     stored_files = list()
     attachments_markdown = ''
-    for part_type, content in parts:
+    for (part_type, content) in parts:
         if part_type == 'attachment':
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
-            body_markdown += + '\n\n' + content
+            body_markdown += '\n\n' + content
         elif part_type == 'inline':
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             body_markdown += markdown
 
-    return body_markdown + attachments_markdown, stored_files
+    #if the response separator is present - 
+    #split the body with it, and discard the "so and so wrote:" part
+    body_markdown = extract_reply(body_markdown)
+
+    body_markdown += attachments_markdown
+    return body_markdown.strip(), stored_files
 
 
 def process_emailed_question(from_address, subject, parts):

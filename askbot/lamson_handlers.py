@@ -83,7 +83,7 @@ def get_part_type(part):
         return 'body'
     elif is_attachment(part):
         return 'attachment'
-    elif is_inline_attacment(part):
+    elif is_inline_attachment(part):
         return 'inline'
 
 def get_parts(message):
@@ -104,7 +104,7 @@ def get_parts(message):
             part_content = part.body
         if part_type in ('attachment', 'inline'):
             part_content = format_attachment(part)
-        parts.append(part_type, part_content)
+        parts.append((part_type, part_content))
     return parts
 
 def get_body(message):

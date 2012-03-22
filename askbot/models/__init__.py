@@ -2400,6 +2400,7 @@ def format_instant_notification_email(
         'post_url': strip_path(site_url) + post.get_absolute_url(),
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
+        'reply_separator': const.REPLY_SEPARATOR
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
     return subject_line, template.render(Context(update_data))

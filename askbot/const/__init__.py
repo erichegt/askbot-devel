@@ -51,6 +51,8 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 
+REPLY_SEPARATOR = '======= Reply above this line. ====-=-='
+
 ANSWER_SORT_METHODS = (#no translations needed here
     'latest', 'oldest', 'votes'
 )
