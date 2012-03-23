@@ -62,9 +62,13 @@ class EmailProcessingTests(AskbotTestCase):
 
     def test_process_correct_answer_comment(self):
         addr = ReplyAddress.objects.create_new( self.answer, self.u1).address
+        reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
+                                    'user_action': 'john did something',
+                                    'instruction': 'reply above this line'
+                                }
         msg = MockMessage(
             "This is a test reply \n\nOn such and such someone"
-            "wrote something \n\n%s\nlorem ipsum " % (const.REPLY_SEPARATOR),
+            "wrote something \n\n%s\nlorem ipsum " % (reply_separator),
             "user1@domain.com"
         )
         PROCESS(msg, addr, '')

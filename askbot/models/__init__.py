@@ -2381,18 +2381,52 @@ def format_instant_notification_email(
 
     content_preview += post.thread.format_for_email()
 
+    if post.is_comment():
+        if update_type.endswith('update'):
+            user_action = _('%(user)s edited a %(post_link)s.')
+        else:
+            user_action = _('%(user)s posted a %(post_link)s') 
+    elif post.is_answer():
+        if update_type.endswith('update'):
+            user_action = _('%(user)s edited an %(post_link)s.')
+        else:
+            user_action = _('%(user)s posted an %(post_link)s.') 
+    elif post.is_question():
+        if update_type.endswith('update'):
+            user_action = _('%(user)s edited a %(post_link)s.')
+        else:
+            user_action = _('%(user)s posted a %(post_link)s.') 
+    else:
+        raise ValueError('unrecognized post type')
+
+    post_url = strip_path(site_url) + post.get_absolute_url(),
+    user_action = user_action % {
+        'user': from_user.username,
+        'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
+    }
+
+    can_reply = to_user.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+
+    if can_reply:
+        reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
+                        'user_action': user_action,
+                        'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
+                    }
+    else:
+        reply_separator = user_action
+                    
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
         'receiving_user_karma': to_user.reputation,
         'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
-        'can_reply': to_user.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
+        'can_reply': can_reply,
         'content_preview': content_preview,#post.get_snippet()
         'update_type': update_type,
-        'post_url': strip_path(site_url) + post.get_absolute_url(),
+        'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
-        'reply_separator': const.REPLY_SEPARATOR
+        'reply_separator': reply_separator
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
     return subject_line, template.render(Context(update_data))
@@ -2418,11 +2452,6 @@ def send_instant_notifications_about_activity_in_post(
         return
 
     from askbot.skins.loaders import get_template
-    if askbot_settings.REPLY_BY_EMAIL:
-        template = get_template('instant_notification_reply_by_email.html')
-    else:
-        template = get_template('instant_notification.html')
-
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
 
@@ -2434,7 +2463,7 @@ def send_instant_notifications_about_activity_in_post(
                             from_user = update_activity.user,
                             post = post,
                             update_type = update_type,
-                            template = template,
+                            template = get_template('instant_notification.html')
                         )
       
         #todo: this could be packaged as an "action" - a bundle
@@ -2457,9 +2486,6 @@ def send_instant_notifications_about_activity_in_post(
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
             headers = headers
         )
-
-
-
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):

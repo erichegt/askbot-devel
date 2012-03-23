@@ -201,8 +201,8 @@ def bounce_email(email, subject, reason = None, body_text = None):
 def extract_reply(text):
     """take the part above the separator
     and discard the last line above the separator"""
-    if const.REPLY_SEPARATOR in text:
-        text = text.split(const.REPLY_SEPARATOR)[0]
+    if const.REPLY_SEPARATOR_REGEX.search(text):
+        text = const.REPLY_SEPARATOR_REGEX.split(text)[0]
         return '\n'.join(text.splitlines(True)[:-3])
     else:
         return text

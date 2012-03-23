@@ -52,7 +52,8 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 
-REPLY_SEPARATOR = '======= Reply above this line. ====-=-='
+REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
+REPLY_SEPARATOR_REGEX = re.compile('^==== .* -=-==$', re.MULTILINE)
 
 ANSWER_SORT_METHODS = (#no translations needed here
     'latest', 'oldest', 'votes'
