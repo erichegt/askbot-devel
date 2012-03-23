@@ -13,6 +13,7 @@ from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils.http import urlquote as django_urlquote
 from django.core import exceptions as django_exceptions
 from django.core.exceptions import ValidationError
@@ -564,7 +565,7 @@ class Post(models.Model):
         from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
         output = ''
         if self.post_type == 'question':
-            output =+ '<b>%s</b><br/>' % self.thread.title
+            output += '<b>%s</b><br/>' % self.thread.title
             
         output += absolutize_urls_func(self.html)
         if self.post_type == 'question':#add tags to the question
@@ -574,7 +575,47 @@ class Post(models.Model):
             quote_level = quote_level - 1
             output = '<div style="%s">%s</div>' % (quote_style, output)
         return output
-            
+
+    def format_for_email_as_parent_thread_summary(self):
+        """format for email as summary of parent posts
+        all the way to the original question"""
+        quote_level = 0
+        current_post = self
+        output = ''
+        while True:
+            parent_post = current_post.get_parent_post()
+            if parent_post is None:
+                break
+            quote_level += 1
+            output += _(
+                'In reply to %(user)s %(post)s of %(date)s<br/>'
+            ) % {
+                'user': parent_post.author.username,
+                'post': _(parent_post.post_type),
+                'date': parent_post.added_at.strftime('%I:%M %p, %d %b %Y')
+            }
+            output += parent_post.format_for_email(quote_level = quote_level)
+            current_post = parent_post
+        return output
+
+    def format_for_email_as_subthread(self):
+        """outputs question or answer and all it's comments
+        returns empty string for all other post types
+        """
+        if self.post_type in ('question', 'answer'):
+            output = self.format_for_email()
+            comments = self.get_cached_comments()
+            if comments:
+                comments_heading = ungettext(
+                                    '%(count)d comment:',
+                                    '%(count)d comments:',
+                                    len(comments)
+                                ) % {'count': len(comments)}
+                output += '<p>%s</p>' % comments_heading
+                for comment in comments:
+                    output += comment.format_for_email(quote_level = 1)
+        else:
+            return ''
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object

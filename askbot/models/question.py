@@ -9,6 +9,7 @@ from django.core import cache  # import cache, not from cache import cache, to b
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 import askbot
 import askbot.conf
@@ -415,6 +416,20 @@ class Thread(models.Model):
             return u'%s %s' % (self.title, attr)
         else:
             return self.title
+
+    def format_for_email(self):
+        """experimental function: output entire thread for email"""
+        question, answers, junk = self.get_cached_post_data()
+        output = question.format_for_email_as_subthread()
+        if answers:
+            answer_heading = ungettext(
+                                    '%(count)d answer:',
+                                    '%(count)d answers:',
+                                    len(answers)
+                                )
+            output += '<p>%s</p>' % answer_heading
+            for answer in answers:
+                output += answer.format_for_email_as_subthread()
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
