@@ -558,9 +558,15 @@ class Post(models.Model):
         return output
 
     def format_for_email(self, quote_level = 0):
-        """format post for the output in email"""
+        """format post for the output in email,
+        if quote_level > 0, the post will be indented that number of times
+        """
         from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
-        output = absolutize_urls_func(self.html)
+        output = ''
+        if self.post_type == 'question':
+            output =+ '<b>%s</b><br/>' % self.thread.title
+            
+        output += absolutize_urls_func(self.html)
         if self.post_type == 'question':#add tags to the question
             output += self.format_tags_for_email()
         quote_style = 'padding-left:5px; border-left: 2px solid #aaa;'
