@@ -540,6 +540,36 @@ class Post(models.Model):
         """
         return html_utils.strip_tags(self.html)[:120] + ' ...'
 
+    def format_tags_for_email(self):
+        """formats tags of the question post for email"""
+        tag_style = "white-space: nowrap; " \
+                    + "font-size: 11px; color: #333;" \
+                    + "background-color: #EEE;" \
+                    + "border-left: 3px solid #777;" \
+                    + "border-top: 1px solid #EEE;" \
+                    + "border-bottom: 1px solid #CCC;" \
+                    + "border-right: 1px solid #CCC;" \
+                    + "padding: 1px 8px 1px 8px;" \
+                    + "margin-right:3px;"
+        output = '<div>'
+        for tag_name in self.get_tag_names():
+            output += '<span style="%s">%s</span>' % (tag_style, tag_name)
+        output += '</div>'
+        return output
+
+    def format_for_email(self, quote_level = 0):
+        """format post for the output in email"""
+        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
+        output = absolutize_urls_func(self.html)
+        if self.post_type == 'question':#add tags to the question
+            output += self.format_tags_for_email()
+        quote_style = 'padding-left:5px; border-left: 2px solid #aaa;'
+        while quote_level > 0:
+            quote_level = quote_level - 1
+            output = '<div style="%s">%s</div>' % (quote_style, output)
+        return output
+            
+
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object
         does not talk to the actual cache system
@@ -964,6 +994,16 @@ class Post(models.Model):
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
+
+    def get_parent_post(self):
+        """returns parent post or None
+        if there is no parent, as it is in the case of question post"""
+        if self.post_type == 'comment':
+            return self.parent
+        elif self.post_type == 'answer':
+            return self.get_origin_post()
+        else:
+            return None
 
     def get_origin_post(self):
         if self.post_type == 'question':

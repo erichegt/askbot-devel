@@ -2372,22 +2372,18 @@ def format_instant_notification_email(
                         )
         #todo: remove hardcoded style
     else:
-        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
-        content_preview = absolutize_urls_func(post.html)
-        tag_style = "white-space: nowrap; " \
-                    + "font-size: 11px; color: #333;" \
-                    + "background-color: #EEE;" \
-                    + "border-left: 3px solid #777;" \
-                    + "border-top: 1px solid #EEE;" \
-                    + "border-bottom: 1px solid #CCC;" \
-                    + "border-right: 1px solid #CCC;" \
-                    + "padding: 1px 8px 1px 8px;" \
-                    + "margin-right:3px;"
-        if post.post_type == 'question':#add tags to the question
-            content_preview += '<div>'
-            for tag_name in post.get_tag_names():
-                content_preview += '<span style="%s">%s</span>' % (tag_style, tag_name)
-            content_preview += '</div>'
+        content_preview = post.format_for_email()
+
+    #add indented summaries for the parent posts
+    quote_level = 0
+    current_post = post
+    while True:
+        parent_post = current_post.get_parent_post()
+        if parent_post is None:
+            break
+        quote_level += 1
+        content_preview += parent_post.format_for_email(quote_level = quote_level)
+        current_post = parent_post
 
     update_data = {
         'update_author_name': from_user.username,
@@ -2426,16 +2422,16 @@ def send_instant_notifications_about_activity_in_post(
         return
 
     from askbot.skins.loaders import get_template
-    template = get_template('instant_notification.html')
+    if askbot_settings.REPLY_BY_EMAIL:
+        template = get_template('instant_notification_reply_by_email.html')
+    else:
+        template = get_template('instant_notification.html')
 
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
 
     origin_post = post.get_origin_post()
     for user in recipients:
-
-        if askbot_settings.REPLY_BY_EMAIL:
-            template = get_template('instant_notification_reply_by_email.html')
       
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
