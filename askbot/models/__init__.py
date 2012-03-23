@@ -2382,6 +2382,13 @@ def format_instant_notification_email(
         if parent_post is None:
             break
         quote_level += 1
+        content_preview += _(
+            'In reply to %(user)s %(post)s of %(date)s<br/>'
+        ) % {
+            'user': parent_post.author.username,
+            'post': _(parent_post.post_type),
+            'date': parent_post.added_at.strftime('%I:%M %p, %d %b %Y')
+        }
         content_preview += parent_post.format_for_email(quote_level = quote_level)
         current_post = parent_post
 
