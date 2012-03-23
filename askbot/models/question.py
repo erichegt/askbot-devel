@@ -426,10 +426,11 @@ class Thread(models.Model):
                                     '%(count)d answer:',
                                     '%(count)d answers:',
                                     len(answers)
-                                )
+                                ) % {'count': len(answers)}
             output += '<p>%s</p>' % answer_heading
             for answer in answers:
                 output += answer.format_for_email_as_subthread()
+        return output
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
@@ -480,7 +481,7 @@ class Thread(models.Model):
         self.invalidate_cached_post_data()
         self.invalidate_cached_thread_content_fragment()
 
-    def get_cached_post_data(self, sort_method = None):
+    def get_cached_post_data(self, sort_method = 'votes'):
         """returns cached post data, as calculated by
         the method get_post_data()"""
         key = self.get_post_data_cache_key(sort_method)
@@ -490,7 +491,7 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method = None):
+    def get_post_data(self, sort_method = 'votes'):
         """returns question, answers as list and a list of post ids
         for the given thread
         the returned posts are pre-stuffed with the comments
@@ -499,9 +500,9 @@ class Thread(models.Model):
         """
         thread_posts = self.posts.all().order_by(
                     {
-                        "latest":"-added_at",
-                        "oldest":"added_at",
-                        "votes":"-score"
+                        'latest':'-added_at',
+                        'oldest':'added_at',
+                        'votes':'-score'
                     }[sort_method]
                 )
         #1) collect question, answer and comment posts and list of post id's

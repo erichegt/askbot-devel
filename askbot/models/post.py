@@ -614,6 +614,7 @@ class Post(models.Model):
                 output += '<p>%s</p>' % comments_heading
                 for comment in comments:
                     output += comment.format_for_email(quote_level = 1)
+            return output
         else:
             return ''
 
