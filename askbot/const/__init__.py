@@ -19,6 +19,7 @@ CLOSE_REASONS = (
 )
 
 LONG_TIME = 60*60*24*30 #30 days is a lot of time
+DATETIME_FORMAT = '%I:%M %p, %d %b %Y'
 
 TYPE_REPUTATION = (
     (1, 'gain_by_upvoted'),

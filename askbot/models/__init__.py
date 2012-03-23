@@ -2377,7 +2377,7 @@ def format_instant_notification_email(
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
 
-    content_preview += '======= Full thread summary ======='
+    content_preview += '<p>======= Full thread summary =======</p>'
 
     content_preview += post.thread.format_for_email()
 
