@@ -193,6 +193,16 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
+        r'^load-tag-wiki-text/',
+        views.commands.load_tag_wiki_text,
+        name = 'load_tag_wiki_text'
+    ),
+    url(#ajax only
+        r'^save-tag-wiki-text/',
+        views.commands.save_tag_wiki_text,
+        name = 'save_tag_wiki_text'
+    ),
+    url(
         r'^get-groups-list/',
         views.commands.get_groups_list,
         name = 'get_groups_list'
@@ -212,11 +222,17 @@ urlpatterns = patterns('',
         views.users.users, 
         name='users'
     ),
+    url(
+        r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (_('users/'), _('by-group/')),
+        views.users.users, 
+        kwargs = {'by_group': True},
+        name = 'users_by_group'
+    ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
-        name='edit_user'
+        name ='edit_user'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
@@ -231,6 +247,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'
+    ),
+    url(
+        r'^%s$' % _('groups/'),
+        views.users.groups,
+        name='groups'
     ),
     url(
         r'^%s$' % _('users/update_has_custom_avatar/'),

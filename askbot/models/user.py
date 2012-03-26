@@ -346,3 +346,12 @@ class GroupMembership(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+class GroupProfile(models.Model):
+    """stores group profile data"""
+    group_tag = models.OneToOneField(
+                            Tag,
+                            unique = True,
+                            related_name = 'group_profile'
+                        )
+    

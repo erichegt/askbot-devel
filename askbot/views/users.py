@@ -55,7 +55,36 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
-def users(request):
+def users(request, by_group = False, group_id = None, group_slug = None):
+    """Users view, including listing of users by group"""
+    users = models.User.objects.all()
+    group = None
+    if by_group == True:
+        if askbot_settings.GROUPS_ENABLED == False:
+            raise Http404
+        if group_id:
+            if all((group_id, group_slug)) == False:
+                return HttpResponseRedirect('groups')
+            else:
+                try:
+                    group = models.Tag.group_tags.get(id = group_id)
+                except models.Tag.DoesNotExist:
+                    raise Http404
+                if group_slug == slugify(group.name):
+                    users = models.User.objects.filter(
+                        group_memberships__group__id = group_id
+                    )
+                else:
+                    group_page_url = reverse(
+                                        'users_by_group',
+                                        kwargs = {
+                                            'group_id': group.id,
+                                            'group_slug': slugify(group.name)
+                                        }
+                                    )
+                    return HttpResponseRedirect(group_page_url)
+            
+
     is_paginated = True
     sortby = request.GET.get('sort', 'reputation')
     suser = request.REQUEST.get('query',  "")
@@ -76,23 +105,21 @@ def users(request):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            models.User.objects.all().order_by(
-                                                order_by_parameter
-                                            ),
+                            users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?sort=%s&' % sortby
+        base_url = request.path + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
         objects_list = Paginator(
-                            models.User.objects.filter(
-                                                username__icontains = suser
-                                            ).order_by(
-                                                '-reputation'
-                                            ),
+                            users.filter(
+                                username__icontains = suser
+                            ).order_by(
+                                '-reputation'
+                            ),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
+        base_url = request.path + '?name=%s&sort=%s&' % (suser, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -114,6 +141,7 @@ def users(request):
         'active_tab': 'users',
         'page_class': 'users-page',
         'users' : users_page,
+        'group': group,
         'suser' : suser,
         'keywords' : suser,
         'tab_id' : sortby,
@@ -833,3 +861,17 @@ def update_has_custom_avatar(request):
             request.session['avatar_data_updated_at'] = datetime.datetime.now()
             return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
     return HttpResponseForbidden()
+
+def groups(request, id = None, slug = None):
+    """output groups page
+    """
+    if askbot_settings.GROUPS_ENABLED == False:
+        raise Http404
+    groups = models.Tag.group_tags.get_all()
+    can_edit = request.user.is_authenticated() and \
+            request.user.is_administrator_or_moderator()
+    data = {
+        'groups': groups,
+        'can_edit': can_edit
+    }
+    return render_into_skin('groups.html', data, request)

@@ -1,0 +1,22 @@
+{% extends 'one_column_body.html' %}
+{% block title %}{% trans %}Groups{% endtrans %}{% endblock %}
+{% block content %}
+    <h1>{% trans %}Groups{% endtrans %}</h1>
+    {% if can_edit %}
+    <p id="group-add-tip">
+        {% trans %}Tip: to create a new group - please go to some user profile and add the new group there. That user will be the first member of the group{% endtrans %}
+    </p>
+    {% endif %}
+    <ul id="groups-list">
+    {% for group in groups %}
+        <li>
+            <a href="{% url users_by_group group.id, group.name|slugify %}">{{ group.name|escape }}</a>
+            <div id="group-{{group.id}}-description">
+            {% if group.tag_wiki %}
+                {{ group.tag_wiki.html }}
+            {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

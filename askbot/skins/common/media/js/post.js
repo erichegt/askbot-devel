@@ -1906,6 +1906,137 @@ QASwapper.prototype.startSwapping = function(){
     }
 };
 
+/**
+ * @constructor
+ */
+var WMD = function(){
+    WrappedElement.call(this);
+};
+inherits(WMD, WrappedElement);
+
+WMD.prototype.setEscapeHandler = function(handler){
+    this._escape_handler = handler;
+};
+
+WMD.prototype.setSaveHandler = function(handler){
+    this._save_handler = handler;
+};
+
+WMD.prototype.createDom = function(){
+    this._element = this.makeElement();
+
+    var wmd_buttons = this.makeElement('div')
+                        .attr('id', 'wmd-button-bar')
+                        .setClass('wmd-panel');
+    this._element.append(wmd_buttons);
+
+    var editor = this.makeElement('textarea')
+                        .attr('id', 'editor');
+    this._element.append(editor);
+    this._textarea = editor;
+
+    var save_btn = this.makeElement('input')
+                    .attr('type', 'submit')
+                    .attr('value', gettext('Save'));
+    this._save_btn = save_btn;
+    this._element.append(save_btn);
+
+    var previewer = this.makeElement('div')
+                        .attr('id', 'previewer')
+                        .setClass('wmd-preview');
+
+    this._element.append(previewer);
+};
+
+WMD.prototype.start = function(){
+	Attacklab.wmd();
+	Attacklab.wmdBase();
+	Attacklab.Util.startEditor();
+    setupButtonEventHandlers(this._save_btn, this._save_handler);
+    this._textarea.keyup(27, this._escape_handler);
+};
+
+/**
+ * @constructor
+ */
+var TagWikiEditor = function(){
+    WrappedElement.call(this);
+    this._state = 'display';//'edit' or 'display'
+    this._content_backup  = '';
+};
+inherits(TagWikiEditor, WrappedElement);
+
+TagWikiEditor.prototype.backupContent = function(){
+    this._content_backup = this._content_box.contents();
+};
+
+TagWikiEditor.prototype.setContent = function(content){
+    this._content_box.empty();
+    this._content_box.append(content);
+};
+
+TagWikiEditor.prototype.restoreContent = function(){
+    this._content_box.empty();
+    $.each(this._content_backup, function(idx, element){
+        this._content_box.append(element);
+    });
+};
+
+TagWikiEditor.prototype.getTagId = function(){
+    return this._tag_id;
+};
+
+TagWikiEditor.prototype.startActivatingEditor = function(){
+    var editor = this._editor;
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        url: askbot['urls']['load_tag_wiki_text'],
+        data: {tag_id: me.getTagId()},
+        cache: false,
+        success: function(data){
+            me.backupContent();
+            editor.setMarkdown(data);
+            me.setContent(editor.getElement());
+        }
+    });
+};
+
+TagWikiEditor.prototype.saveData = function(markdown){
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: askbot['urls']['save_tag_wiki_text'],
+        data: {tag_id: me.getTagId(), text: markdown},
+        cache: false,
+        success: function(data){
+            if (data['success']){
+                me.setContent(data['html']);
+            } else {
+                showMessage(me.getElement(), data['message']);
+            }
+        }
+    });
+};
+
+TagWikiEditor.prototype.decorate = function(element){
+    //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
+    this._element = element;
+    var edit_link = element.find('.edit');
+    var editor = new WMD();
+    this._edit_link = edit_link;
+    this._content_box = element.find('.content');
+    this._editor = editor;
+    this._tag_id = element.attr('id').split('-').pop();
+
+    var me = this;
+    editor.setEscapeHandler(function(){ me.restoreContent() });
+    editor.setSaveHandler(function(markdown){ me.saveData(markdown) });
+
+    setupButtonEventHandlers(edit_link, function(){ me.startActivatingEditor() });
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();

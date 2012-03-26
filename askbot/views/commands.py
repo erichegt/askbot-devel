@@ -439,6 +439,12 @@ def get_tag_list(request):
     return HttpResponse(output, mimetype = 'text/plain')
 
 @decorators.get_only
+def load_tag_wiki_text(request):
+    """returns text of the tag wiki in markdown format"""
+    tag = get_object_or_404(request.GET['tag_id'])
+    return HttpResponse(tag.tag_wiki.text, mimetype = 'text/plain')
+
+@decorators.get_only
 def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""

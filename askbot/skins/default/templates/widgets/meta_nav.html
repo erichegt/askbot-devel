@@ -8,6 +8,14 @@
   href="{% url users %}"
   {% if active_tab == 'users' %}class="on"{% endif %}
 >{% trans %}users{% endtrans %}</a>
+{% if settings.GROUPS_ENABLED %}
+<a
+  id="navGroups"
+  href="{% url groups %}"
+  {% if active_tab == 'groups' %}class="on"{% endif %}
+>{% trans %}groups{% endtrans %}
+</a>
+{% endif %}
 <a 
   id="navBadges"
   href="{% url badges %}"
