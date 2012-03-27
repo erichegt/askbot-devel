@@ -876,6 +876,10 @@ class EditAnswerForm(forms.Form):
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 
+class EditTagWikiForm(forms.Form):
+    text = forms.CharField()
+    tag_id = forms.IntegerField()
+
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',

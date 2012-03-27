@@ -1911,6 +1911,7 @@ QASwapper.prototype.startSwapping = function(){
  */
 var WMD = function(){
     WrappedElement.call(this);
+    this._markdown = undefined;
 };
 inherits(WMD, WrappedElement);
 
@@ -1923,17 +1924,21 @@ WMD.prototype.setSaveHandler = function(handler){
 };
 
 WMD.prototype.createDom = function(){
-    this._element = this.makeElement();
+    this._element = this.makeElement('div');
 
     var wmd_buttons = this.makeElement('div')
                         .attr('id', 'wmd-button-bar')
-                        .setClass('wmd-panel');
+                        .addClass('wmd-panel');
     this._element.append(wmd_buttons);
 
     var editor = this.makeElement('textarea')
                         .attr('id', 'editor');
     this._element.append(editor);
     this._textarea = editor;
+
+    if (this._markdown){
+        editor.val(this._markdown);
+    }
 
     var save_btn = this.makeElement('input')
                     .attr('type', 'submit')
@@ -1943,17 +1948,51 @@ WMD.prototype.createDom = function(){
 
     var previewer = this.makeElement('div')
                         .attr('id', 'previewer')
-                        .setClass('wmd-preview');
+                        .addClass('wmd-preview');
 
     this._element.append(previewer);
 };
 
+WMD.prototype.setMarkdown = function(text){
+    this._markdown = text;
+    if (this._textarea){
+        this._textarea.val(text);
+    }
+};
+
+WMD.prototype.getMarkdown = function(){
+    return this._textarea.val();
+};
+
 WMD.prototype.start = function(){
-	Attacklab.wmd();
+    Attacklab.loadEnv = function()
+    {
+        var mergeEnv = function(env)
+        {
+            if(!env)
+            {
+                return;
+            }
+        
+            for(var key in env)
+            {
+                Attacklab.wmd_env[key] = env[key];
+            }
+        };
+        
+        mergeEnv(Attacklab.wmd_defaults);
+        mergeEnv(Attacklab.account_options);
+        mergeEnv(top["wmd_options"]);
+        Attacklab.full = true;
+        
+        var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
+        Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
+    };
+    Attacklab.loadEnv();
 	Attacklab.wmdBase();
 	Attacklab.Util.startEditor();
     setupButtonEventHandlers(this._save_btn, this._save_handler);
-    this._textarea.keyup(27, this._escape_handler);
+    this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
 };
 
 /**
@@ -1976,9 +2015,10 @@ TagWikiEditor.prototype.setContent = function(content){
 };
 
 TagWikiEditor.prototype.restoreContent = function(){
-    this._content_box.empty();
+    var content_box = this._content_box;
+    content_box.empty();
     $.each(this._content_backup, function(idx, element){
-        this._content_box.append(element);
+        content_box.append(element);
     });
 };
 
@@ -1998,6 +2038,7 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
             me.backupContent();
             editor.setMarkdown(data);
             me.setContent(editor.getElement());
+            editor.start();
         }
     });
 };
@@ -2024,15 +2065,19 @@ TagWikiEditor.prototype.decorate = function(element){
     //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
     this._element = element;
     var edit_link = element.find('.edit');
-    var editor = new WMD();
     this._edit_link = edit_link;
     this._content_box = element.find('.content');
-    this._editor = editor;
     this._tag_id = element.attr('id').split('-').pop();
 
     var me = this;
+    var editor = new WMD();
     editor.setEscapeHandler(function(){ me.restoreContent() });
-    editor.setSaveHandler(function(markdown){ me.saveData(markdown) });
+    editor.setSaveHandler(
+        function(){ 
+            me.saveData(editor.getMarkdown()) 
+        }
+    );
+    this._editor = editor;
 
     setupButtonEventHandlers(edit_link, function(){ me.startActivatingEditor() });
 };

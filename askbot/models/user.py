@@ -354,4 +354,6 @@ class GroupProfile(models.Model):
                             unique = True,
                             related_name = 'group_profile'
                         )
-    
+
+    class Meta:
+        app_label = 'askbot'

@@ -441,8 +441,31 @@ def get_tag_list(request):
 @decorators.get_only
 def load_tag_wiki_text(request):
     """returns text of the tag wiki in markdown format"""
-    tag = get_object_or_404(request.GET['tag_id'])
-    return HttpResponse(tag.tag_wiki.text, mimetype = 'text/plain')
+    tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
+    tag_wiki_text = getattr(tag.tag_wiki, 'text', '')
+    return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_tag_wiki_text(request):
+    """if tag wiki text does not exist,
+    creates a new record, otherwise edits an existing
+    tag wiki record"""
+    form = forms.EditTagWikiForm(request.POST)
+    if form.is_valid():
+        tag_id = form.cleaned_data['tag_id']
+        text = form.cleaned_data['text']
+        tag = models.Tag.objects.get(id = tag_id)
+        if tag.tag_wiki:
+            request.user.edit_post(tag.tag_wiki, body_text = text)
+            tag_wiki = tag.tag_wiki
+        else:
+            tag_wiki = request.user.post_tag_wiki(tag, body_text = text)
+        return {'html': tag_wiki.html}
+    else:
+        raise ValueError('invalid post data')
+            
 
 @decorators.get_only
 def get_groups_list(request):

@@ -52,6 +52,8 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 
+POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki')
+
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
 REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
 
@@ -121,6 +123,8 @@ TYPE_ACTIVITY_EMAIL_UPDATE_SENT = 18
 TYPE_ACTIVITY_MENTION = 19
 TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT = 20
 TYPE_ACTIVITY_ACCEPT_ANSWER_REMINDER_SENT = 21
+TYPE_ACTIVITY_CREATE_TAG_WIKI = 22
+TYPE_ACTIVITY_UPDATE_TAG_WIKI = 23
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -153,6 +157,14 @@ TYPE_ACTIVITY = (
         _('reminder about accepting the best answer sent'),
     ),
     (TYPE_ACTIVITY_MENTION, _('mentioned in the post')),
+    (
+        TYPE_ACTIVITY_CREATE_TAG_WIKI,
+        _('created tag description'),
+    ),
+    (
+        TYPE_ACTIVITY_UPDATE_TAG_WIKI,
+        _('updated tag description')
+    )
 )
 
 

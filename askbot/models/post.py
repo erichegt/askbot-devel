@@ -149,10 +149,23 @@ class PostManager(BaseQuerySetManager):
     def get_comments(self):
         return self.filter(post_type='comment')
 
-    def create_new_answer(self, thread, author, added_at, text, wiki=False, email_notify=False):
+    def create_new_tag_wiki(self, text = None, author = None):
+        return self.create_new(
+                            None,#this post type is threadless
+                            author,
+                            datetime.datetime.now(),
+                            text,
+                            wiki = True,
+                            post_type = 'tag_wiki'
+        )
+
+    def create_new(self, thread, author, added_at, text, wiki=False, email_notify=False, post_type=None):
         # TODO: Some of this code will go to Post.objects.create_new
-        answer = Post(
-            post_type='answer',
+
+        assert(post_type in const.POST_TYPES)
+
+        post = Post(
+            post_type=post_type,
             thread=thread,
             author=author,
             added_at=added_at,
@@ -160,32 +173,43 @@ class PostManager(BaseQuerySetManager):
             text=text,
             #.html field is denormalized by the save() call
         )
-        if answer.wiki:
-            answer.last_edited_by = answer.author
-            answer.last_edited_at = added_at
-            answer.wikified_at = added_at
+        if post.wiki:
+            post.last_edited_by = post.author
+            post.last_edited_at = added_at
+            post.wikified_at = added_at
 
-        answer.parse_and_save(author=author)
+        post.parse_and_save(author=author)
 
-        answer.add_revision(
+        post.add_revision(
             author=author,
             revised_at=added_at,
             text=text,
             comment = const.POST_STATUS['default_version'],
         )
+        
+        return post
 
-        #update thread data
-        thread.answer_count +=1
-        thread.save()
-        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
-
+    def create_new_answer(self, thread, author, added_at, text, wiki=False, email_notify=False):
+        answer = self.create_new(
+                            thread,
+                            author,
+                            added_at,
+                            text,
+                            wiki = wiki,
+                            post_type = 'answer'
+                        )
         #set notification/delete
         if email_notify:
             thread.followed_by.add(author)
         else:
             thread.followed_by.remove(author)
 
+        #update thread data
+        thread.answer_count +=1
+        thread.save()
+        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
         return answer
+
 
     def precache_comments(self, for_posts, visitor):
         """
@@ -238,7 +262,7 @@ class Post(models.Model):
     old_comment_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
-    thread = models.ForeignKey('Thread', related_name='posts')
+    thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -302,7 +326,7 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        if post.is_answer() or post.is_question():
+        if post.post_type in ('question', 'answer', 'tag_wiki'):
             _urlize = False
             _use_markdown = True
             _escape_html = False #markdow does the escaping
@@ -452,6 +476,9 @@ class Post(models.Model):
 
     def is_comment(self):
         return self.post_type == 'comment'
+
+    def is_tag_wiki(self):
+        return self.post_type == 'tag_wiki'
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -972,6 +999,8 @@ class Post(models.Model):
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
+        elif self.is_tag_wiki():
+            return list()
         raise NotImplementedError
 
     def get_latest_revision(self):
@@ -1065,8 +1094,10 @@ class Post(models.Model):
             return None
 
     def get_origin_post(self):
-        if self.post_type == 'question':
+        if self.is_question():
             return self
+        if self.is_tag_wiki():
+            return None
         else:
             return self.thread._question_post()
 
@@ -1249,14 +1280,18 @@ class Post(models.Model):
                 return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
             elif self.parent.post_type == 'answer':
                 return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
+        elif self.is_tag_wiki():
+            if created:
+                return const.TYPE_ACTIVITY_CREATE_TAG_WIKI, self
+            else:
+                return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI, self
 
         raise NotImplementedError
 
     def get_tag_names(self):
         return self.thread.get_tag_names()
 
-    def _answer__apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
-
+    def __apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
         if text is None:
             text = self.get_latest_revision().text
         if edited_at is None:
@@ -1280,6 +1315,17 @@ class Post(models.Model):
 
         self.parse_and_save(author = edited_by)
 
+    def _answer__apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
+
+        self.__apply_edit(
+            edited_at = edited_at,
+            edited_by = edited_by,
+            text = text,
+            comment = comment,
+            wiki = wiki
+        )
+        if edited_at is None:
+            edited_at = datetime.datetime.now()
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
@@ -1332,14 +1378,16 @@ class Post(models.Model):
 
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
-    def apply_edit(self, *kargs, **kwargs):
+    def apply_edit(self, *args, **kwargs):
         if self.is_answer():
-            return self._answer__apply_edit(*kargs, **kwargs)
+            return self._answer__apply_edit(*args, **kwargs)
         elif self.is_question():
-            return self._question__apply_edit(*kargs, **kwargs)
+            return self._question__apply_edit(*args, **kwargs)
+        elif self.is_tag_wiki():
+            return self.__apply_edit(*args, **kwargs)
         raise NotImplementedError
 
-    def _answer__add_revision(self, author=None, revised_at=None, text=None, comment=None):
+    def __add_revision(self, author=None, revised_at=None, text=None, comment=None):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
             raise Exception('arguments author, revised_at and text are required')
@@ -1390,8 +1438,8 @@ class Post(models.Model):
         )
 
     def add_revision(self, *kargs, **kwargs):
-        if self.is_answer():
-            return self._answer__add_revision(*kargs, **kwargs)
+        if self.post_type in ('answer', 'tag_wiki'):
+            return self.__add_revision(*kargs, **kwargs)
         elif self.is_question():
             return self._question__add_revision(*kargs, **kwargs)
         raise NotImplementedError
@@ -1464,12 +1512,15 @@ class Post(models.Model):
 
 
     def get_response_receivers(self, exclude_list = None):
+        """returns a list of response receiving users"""
         if self.is_answer():
             return self._answer__get_response_receivers(exclude_list)
         elif self.is_question():
             return self._question__get_response_receivers(exclude_list)
         elif self.is_comment():
             return self._comment__get_response_receivers(exclude_list)
+        elif self.is_tag_wiki():
+            return list()#todo: who should get these?
         raise NotImplementedError
 
     def get_question_title(self):

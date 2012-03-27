@@ -30,7 +30,7 @@ from askbot.models.answer import AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
-from askbot.models.user import GroupMembership
+from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
@@ -1002,6 +1002,23 @@ def user_post_comment(
     )
     return comment
 
+def user_post_tag_wiki(
+                    self,
+                    tag = None,
+                    body_text = None,
+                    timestamp = None
+                ):
+    """Creates a tag wiki post and assigns it
+    to the given tag. Returns the newly created post"""
+    tag_wiki_post = Post.objects.create_new_tag_wiki(
+                                            author = self,
+                                            text = body_text
+                                        )
+    tag.tag_wiki = tag_wiki_post
+    tag.save()
+    return tag_wiki_post
+
+
 def user_post_anonymous_askbot_content(user, session_key):
     """posts any posts added just before logging in
     the posts are identified by the session key, thus the second argument
@@ -1371,6 +1388,15 @@ def user_edit_post(self,
             body_text = body_text,
             timestamp = timestamp,
             revision_comment = revision_comment
+        )
+    elif post.post_type == 'tag_wiki':
+        post.apply_edit(
+            edited_at = timestamp,
+            edited_by = self,
+            text = body_text,
+            #todo: summary name clash in question and question revision
+            comment = revision_comment,
+            wiki = True,
         )
     else:
         raise NotImplementedError()
@@ -2224,6 +2250,7 @@ User.add_to_class(
 User.add_to_class('post_comment', user_post_comment)
 User.add_to_class('edit_comment', user_edit_comment)
 User.add_to_class('delete_post', user_delete_post)
+User.add_to_class('post_tag_wiki', user_post_tag_wiki)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
@@ -2885,6 +2912,7 @@ __all__ = [
         'ActivityAuditStatus',
         'EmailFeedSetting',
         'GroupMembership',
+        'GroupProfile',
 
         'User',
 
