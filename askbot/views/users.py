@@ -86,7 +86,11 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             
 
     is_paginated = True
+
     sortby = request.GET.get('sort', 'reputation')
+    if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
+        sortby = 'newest'
+
     suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
@@ -832,6 +836,18 @@ def user(request, id, slug=None, tab_name=None):
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
+    if askbot_settings.KARMA_MODE == 'public':
+        can_show_karma = True
+    else:
+        if request.user.is_administrator_or_moderator() \
+            or request.user == profile_owner:
+            can_show_karma = True
+        else:
+            can_show_karma = False
+
+    if can_show_karma == False and tab_name == 'reputation':
+        raise Http404
+
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
     search_state = SearchState( # Non-default SearchState with user data set
@@ -846,6 +862,7 @@ def user(request, id, slug=None, tab_name=None):
 
     context = {
         'view_user': profile_owner,
+        'can_show_karma': can_show_karma,
         'search_state': search_state,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }

@@ -3,7 +3,11 @@
     <span class="user-info">
     {{ macros.inbox_link(request.user) }}
     {{ macros.moderation_items_link(request.user, moderation_items) }}
-    ({{ macros.user_long_score_and_badge_summary(user) }})
+    ({{ macros.user_long_score_and_badge_summary(
+                                            user,
+                                            badges_mode = settings.BADGES_MODE
+        )
+    }})
     </span>
     {% if settings.USE_ASKBOT_LOGIN_SYSTEM %}
          <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">{% trans %}sign out{% endtrans %}</a>

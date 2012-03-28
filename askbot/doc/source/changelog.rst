@@ -1,6 +1,12 @@
 Changes in Askbot
 =================
 
+Future version
+--------------
+* User groups (Evgeny)
+* Public/Private reputation (Evgeny)
+* Enabling/disabling the badges system (Evgeny)
+
 Development version (not released yet)
 --------------------------------------
 * New data models!!! (`Tomasz Zieliński <http://pyconsultant.eu>`_)

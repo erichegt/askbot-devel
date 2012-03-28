@@ -2596,6 +2596,8 @@ def notify_award_message(instance, created, **kwargs):
     """
     Notify users when they have been awarded badges by using Django message.
     """
+    if askbot_settings.BADGES_MODE != 'public':
+        return
     if created:
         user = instance.user
 

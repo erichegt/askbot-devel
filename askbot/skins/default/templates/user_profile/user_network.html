@@ -8,11 +8,25 @@
     {% if followed_users or followers %}
         {% if followers %}
             <h2>{% trans count=followers|length %}Followed by {{count}} person{% pluralize count %}Followed by {{count}} people{% endtrans %}</h2>
-            {{ macros.user_list(followers, profile_section = 'network') }}
+            {{ 
+                macros.user_list(
+                    followers,
+                    profile_section = 'network',
+                    karma_mode = settings.KARMA_MODE,
+                    badges_mode = settings.BADGES_MODE
+                )
+            }}
         {% endif %}
         {% if followed_users %}
             <h2>{% trans count=followed_users|length %}Following {{count}} person{% pluralize count %}Following {{count}} people{% endtrans %}</h2>
-            {{ macros.user_list(followed_users, profile_section = 'network') }}
+            {{
+                macros.user_list(
+                    followed_users,
+                    profile_section = 'network',
+                    karma_mode = settings.KARMA_MODE,
+                    badges_mode = settings.BADGES_MODE
+                )
+            }}
         {% endif %}
     {% else %}
         {% if request.user == view_user %}

@@ -15,6 +15,7 @@ class Migration(SchemaMigration):
 
         # Changing field 'Post.thread'
         db.alter_column('askbot_post', 'thread_id', self.gf('django.db.models.fields.related.ForeignKey')(default='zhopa', to=orm['askbot.Thread']))
+
     models = {
         'askbot.activity': {
             'Meta': {'object_name': 'Activity', 'db_table': "u'activity'"},
