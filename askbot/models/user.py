@@ -292,6 +292,8 @@ class EmailFeedSetting(models.Model):
     class Meta:
         #added to make account merges work properly
         unique_together = ('subscriber', 'feed_type')
+        app_label = 'askbot'
+
 
     def __str__(self):
         if self.reported_at is None:
@@ -332,9 +334,6 @@ class EmailFeedSetting(models.Model):
         self.reported_at = datetime.datetime.now()
         self.save()
 
-    class Meta:
-        app_label = 'askbot'
-
 
 class GroupMembership(models.Model):
     """an explicit model to link users and the tags
@@ -354,6 +353,7 @@ class GroupProfile(models.Model):
                             unique = True,
                             related_name = 'group_profile'
                         )
+    logo_url = models.URLField(null = True)
 
     class Meta:
         app_label = 'askbot'

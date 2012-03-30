@@ -1140,6 +1140,11 @@ class SimpleEmailSubscribeForm(forms.Form):
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
         email_settings_form.save(user, save_unbound=True)
 
+class GroupLogoURLForm(forms.Form):
+    """form for saving group logo url"""
+    group_id = forms.IntegerField()
+    image_url = forms.CharField()
+
 class EditGroupMembershipForm(forms.Form):
     """a form for adding or removing users
     to and from user groups"""

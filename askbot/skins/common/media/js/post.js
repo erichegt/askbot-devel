@@ -1965,31 +1965,6 @@ WMD.prototype.getMarkdown = function(){
 };
 
 WMD.prototype.start = function(){
-    Attacklab.loadEnv = function()
-    {
-        var mergeEnv = function(env)
-        {
-            if(!env)
-            {
-                return;
-            }
-        
-            for(var key in env)
-            {
-                Attacklab.wmd_env[key] = env[key];
-            }
-        };
-        
-        mergeEnv(Attacklab.wmd_defaults);
-        mergeEnv(Attacklab.account_options);
-        mergeEnv(top["wmd_options"]);
-        Attacklab.full = true;
-        
-        var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
-        Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
-    };
-    Attacklab.loadEnv();
-	Attacklab.wmdBase();
 	Attacklab.Util.startEditor();
     setupButtonEventHandlers(this._save_btn, this._save_handler);
     this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
@@ -2080,6 +2055,94 @@ TagWikiEditor.prototype.decorate = function(element){
     this._editor = editor;
 
     setupButtonEventHandlers(edit_link, function(){ me.startActivatingEditor() });
+};
+
+var ImageChanger = function(){
+    WrappedElement.call(this);
+    this._image_element = undefined;
+};
+inherits(ImageChanger, WrappedElement);
+
+ImageChanger.prototype.setImageElement = function(image_element){
+    this._image_element = image_element;
+};
+
+ImageChanger.prototype.setSaveUrl = function(url){
+    this._save_url = url;
+};
+
+ImageChanger.prototype.setAjaxData = function(data){
+    this._ajax_data = data;
+};
+
+ImageChanger.prototype.showImage = function(image_url){
+    this._image_element.attr('src', image_url);
+};
+
+ImageChanger.prototype.saveImageUrl = function(image_url){
+    var me = this;
+    var data = this._ajax_data;
+    data['image_url'] = image_url;
+    var save_url = this._save_url;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: save_url,
+        data: data,
+        cache: false,
+        success: function(data){
+            if (!data['success']){
+                showMessage(me.getElement(), data['message'], 'after');
+            }
+        }
+    });
+};
+
+ImageChanger.prototype.startDialog = function(){
+    //reusing the wmd's file uploader
+    var me = this;
+    Attacklab.Util.prompt(
+        "<p style='margin-top: 0px'>" + gettext('enter the logo url') + '</p>',
+        'http://',
+        function(image_url){
+            me.saveImageUrl(image_url);
+            me.showImage(image_url);
+        },
+        'image'
+    );
+};
+
+/**
+ * decorates an element that will serve as the image changer button
+ */
+ImageChanger.prototype.decorate = function(element){
+    this._element = element;
+    var me = this;
+    setupButtonEventHandlers(
+        element,
+        function(){
+            me.startDialog();
+        }
+    );
+};
+
+var UserGroupProfileEditor = function(){
+    TagWikiEditor.call(this);
+};
+inherits(UserGroupProfileEditor, TagWikiEditor);
+
+UserGroupProfileEditor.prototype.decorate = function(element){
+    UserGroupProfileEditor.superClass_.decorate.call(this, element);
+    var change_logo_btn = element.find('.change_logo');
+    this._change_logo_btn = change_logo_btn;
+
+    var logo_changer = new ImageChanger();
+    logo_changer.setImageElement(element.find('.group-logo'));
+    logo_changer.setAjaxData({
+        group_id: this.getTagId()
+    });
+    logo_changer.setSaveUrl(askbot['urls']['save_group_logo_url']);
+    logo_changer.decorate(change_logo_btn);
 };
 
 $(document).ready(function() {

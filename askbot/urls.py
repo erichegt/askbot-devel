@@ -202,6 +202,11 @@ urlpatterns = patterns('',
         views.commands.save_tag_wiki_text,
         name = 'save_tag_wiki_text'
     ),
+    url(#ajax only
+        r'^save-group-logo-url/',
+        views.commands.save_group_logo_url,
+        name = 'save_group_logo_url'
+    ),
     url(
         r'^get-groups-list/',
         views.commands.get_groups_list,

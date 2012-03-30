@@ -109,6 +109,9 @@ class GroupTagManager(TagManager):
         except self.model.DoesNotExist:
             tag = self.model(name = group_name, created_by = user)
             tag.save()
+            from askbot.models.user import GroupProfile
+            group_profile = GroupProfile(group_tag = tag)
+            group_profile.save()
         return tag
 
     #todo: maybe move this to query set

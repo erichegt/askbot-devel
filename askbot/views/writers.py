@@ -62,9 +62,13 @@ def upload(request):#ajax upload file to a question or answer
 
         request.user.assert_can_upload_file()
 
+        #todo: build proper form validation
+        file_name_prefix = request.POST.get('file_name_prefix', '')
+        if file_name_prefix not in ('', 'group_logo_'):
+            raise exceptions.PermissionDenied('invalid upload file name prefix')
+        
         # check file type
         f = request.FILES['file-upload']
-        
         #todo: extension checking should be replaced with mimetype checking
         #and this must be part of the form validation
         file_extension = os.path.splitext(f.name)[1].lower()
@@ -75,7 +79,9 @@ def upload(request):#ajax upload file to a question or answer
             raise exceptions.PermissionDenied(msg)
 
         # generate new file name and storage object
-        file_storage, new_file_name, file_url = store_file(f)
+        file_storage, new_file_name, file_url = store_file(
+                                            f, file_name_prefix
+                                        )
         # check file size
         # byte
         size = file_storage.size(new_file_name)

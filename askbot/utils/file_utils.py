@@ -5,7 +5,7 @@ import time
 import urlparse
 from django.core.files.storage import get_storage_class
 
-def store_file(file_object):
+def store_file(file_object, file_name_prefix = ''):
     """Creates an instance of django's file storage
     object based on the file-like object,
     returns the storage object, file name, file url
@@ -16,6 +16,7 @@ def store_file(file_object):
                     '.', 
                     str(random.randint(0,100000))
                 ) + os.path.splitext(file_object.name)[1].lower()
+    file_name = file_name_prefix + file_name
 
     file_storage = get_storage_class()()
     # use default storage to store file
