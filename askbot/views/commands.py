@@ -682,28 +682,6 @@ def read_message(request):#marks message a read
                 request.user.delete_messages()
     return HttpResponse('')
 
-@csrf.csrf_exempt
-@decorators.ajax_only
-@decorators.post_only
-def save_group_logo_url(request):
-    if request.user.is_anonymous():
-        raise exceptions.PermissionDenied()
-
-    if not request.user.is_administrator_or_moderator():
-        raise exceptions.PermissionDenied(
-            _('Only moderators and administrators can change user groups')
-        )
-
-    form = forms.GroupLogoURLForm(request.POST)    
-    if form.is_valid():
-        group_id = form.cleaned_data['group_id']
-        image_url = form.cleaned_data['image_url']
-        group = models.Tag.group_tags.get(id = group_id)
-        group.group_profile.logo_url = image_url
-        group.group_profile.save()
-    else:
-        raise ValueError('invalid data found when saving group logo')
-
 
 @csrf.csrf_exempt
 @decorators.ajax_only
@@ -743,3 +721,27 @@ def edit_group_membership(request):
             raise exceptions.PermissionDenied()
     else:
         raise exceptions.PermissionDenied()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_group_logo_url(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    if not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied(
+            _('Only moderators and administrators can change user groups')
+        )
+
+    form = forms.GroupLogoURLForm(request.POST)    
+    if form.is_valid():
+        group_id = form.cleaned_data['group_id']
+        image_url = form.cleaned_data['image_url']
+        group = models.Tag.group_tags.get(id = group_id)
+        group.group_profile.logo_url = image_url
+        group.group_profile.save()
+    else:
+        raise ValueError('invalid data found when saving group logo')
+

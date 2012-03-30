@@ -2102,11 +2102,13 @@ ImageChanger.prototype.startDialog = function(){
     //reusing the wmd's file uploader
     var me = this;
     Attacklab.Util.prompt(
-        "<p style='margin-top: 0px'>" + gettext('enter the logo url') + '</p>',
+        "<h3>" + gettext('Enter the logo url or upload an image') + '</h3>',
         'http://',
         function(image_url){
-            me.saveImageUrl(image_url);
-            me.showImage(image_url);
+            if (image_url){
+                me.saveImageUrl(image_url);
+                me.showImage(image_url);
+            }
         },
         'image'
     );

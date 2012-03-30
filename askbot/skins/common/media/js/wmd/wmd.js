@@ -346,6 +346,9 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         style.marginLeft = style.marginRight = "auto";
         form.appendChild(input);
 
+        //EF. fucus at the end of the input box
+        //putCursorAtEnd($(input));
+
         // The upload file input
         if(dialogType == 'image' || dialogType == 'file'){
             var upload_container = $('<div></div>');
