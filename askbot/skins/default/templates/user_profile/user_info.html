@@ -58,12 +58,12 @@
                 {% endif %}
                 <tr>
                     <td>{% trans %}member since{% endtrans %}</td>
-                    <td><strong>{{ view_user.date_joined|diff_date }}</strong></td>
+                    <td><strong>{{ macros.timeago(view_user.date_joined) }}</strong></td>
                 </tr>
                 {% if view_user.last_seen %}
                 <tr>
                     <td>{% trans %}last seen{% endtrans %}</td>
-                    <td><strong title="{{ view_user.last_seen }}">{{view_user.last_seen|diff_date}}</strong></td>
+                    <td><strong title="{{ view_user.last_seen }}">{{ macros.timeago(view_user.last_seen) }}</strong></td>
                 </tr>
                 {% endif %}
                 {% if view_user.website %}

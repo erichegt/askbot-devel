@@ -1542,9 +1542,11 @@ Comment.prototype.setContent = function(data){
     this._comment_body.append(this._user_link);
 
     this._comment_body.append(' (');
-    this._comment_age = $('<span class="age"></span>');
-    this._comment_age.html(this._data['comment_age']);
-    this._comment_body.append(this._comment_age);
+    this._comment_added_at = $('<abbr class="timeago"></abbr>');
+    this._comment_added_at.html(this._data['comment_added_at']);
+    this._comment_added_at.attr('title', this._data['comment_added_at']);
+    this._comment_added_at.timeago();
+    this._comment_body.append(this._comment_added_at);
     this._comment_body.append(')');
 
     if (this._editable){
@@ -1567,8 +1569,8 @@ Comment.prototype.dispose = function(){
     if (this._user_link){
         this._user_link.remove();
     }
-    if (this._comment_age){
-        this._comment_age.remove();
+    if (this._comment_added_at){
+        this._comment_added_at.remove();
     }
     if (this._delete_icon){
         this._delete_icon.dispose();

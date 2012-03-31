@@ -85,7 +85,7 @@ poor design of the data or methods on data objects #}
            {% else %}
                 {%- trans %}posted{% endtrans %}
            {% endif %}
-           <strong>{{post.added_at|diff_date}}</strong>
+           <strong>{{ timeago(post.added_at) }}</strong>
         </p>
         <img width="35" height="35"
             src="{{'/images/wiki.png'|media}}"
@@ -105,9 +105,9 @@ poor design of the data or methods on data objects #}
                 {% trans %}posted{% endtrans %}
             {% endif %}
             {% if post.__class__.__name__ == 'PostRevision' %}
-                <strong>{{post.revised_at|diff_date}}</strong>
+                <strong>{{ timeago(post.revised_at) }}</strong>
             {% else %}
-                <strong>{{post.added_at|diff_date}}</strong>
+                <strong>{{ timeago(post.added_at) }}</strong>
             {% endif %}
         </p>
         {{ post_contributor_avatar_and_credentials(
@@ -134,7 +134,7 @@ poor design of the data or methods on data objects #}
         {% else %}
             href="{% url answer_revisions post.id %}"
         {% endif %}
-            >{% trans %}updated{% endtrans %} <strong>{{ last_edited_at|diff_date }}</strong></a>
+            >{% trans %}updated{% endtrans %} <strong>{{ timeago(last_edited_at) }}</strong></a>
         </p>
         {% if original_author != update_author or is_wiki %}
             {{ 
@@ -326,7 +326,7 @@ for the purposes of the AJAX comment editor #}
                     <div class="comment-body">
                         {{comment.html}}
                         <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
-                        <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
+                        <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
                         <a id="post-{{comment.id}}-edit"
                             class="edit">{% trans %}edit{% endtrans %}</a>
                     </div>
@@ -667,4 +667,10 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
         {% endif %}
         </a>
     {% endif %}
+{%- endmacro -%}
+
+{%- macro timeago(datetime_object) -%}
+    <abbr class="timeago" title="{{datetime_object.replace(microsecond=0)}}">
+        {{datetime_object.replace(microsecond=0)}}
+    </abbr>
 {%- endmacro -%}

@@ -1,4 +1,4 @@
-{% from "macros.html" import user_country_flag, tag_list_widget %}
+{% from "macros.html" import user_country_flag, tag_list_widget, timeago %}
 <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
     <div class="counts">
         <div class="views
@@ -42,8 +42,7 @@
         </div>
         <div style="clear:both"></div>
         <div class="userinfo">
-            {# We have to kill microseconds below because InnoDB doesn't support them and all kinds of funny things happen in unit tests #}
-            <span class="relativetime" title="{{thread.last_activity_at.replace(microsecond=0)}}">{{ thread.last_activity_at|diff_date }}</span>
+            {{ timeago(thread.last_activity_at) }}
             {% if question.is_anonymous %}
                 <span class="anonymous">{{ thread.last_activity_by.get_anonymous_name() }}</span>
             {% else %}

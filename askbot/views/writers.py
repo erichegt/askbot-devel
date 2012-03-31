@@ -541,7 +541,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
         comment_owner = comment.author
         comment_data = {'id' : comment.id,
             'object_id': obj.id,
-            'comment_age': diff_date(comment.added_at),
+            'comment_added_at': str(comment.added_at.replace(microsecond = 0)),
             'html': comment.html,
             'user_display_name': comment_owner.username,
             'user_url': comment_owner.get_profile_url(),
@@ -605,7 +605,7 @@ def edit_comment(request):
     return {
         'id' : comment_post.id,
         'object_id': comment_post.parent.id,
-        'comment_age': diff_date(comment_post.added_at),
+        'comment_added_at': str(comment_post.added_at.replace(microsecond = 0)),
         'html': comment_post.html,
         'user_display_name': comment_post.author.username,
         'user_url': comment_post.author.get_profile_url(),
