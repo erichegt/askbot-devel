@@ -21,7 +21,8 @@ settings.register(
         default = 'public',
         choices = (
             ('public', 'show publicly'),
-            ('private', 'show to owners only')
+            ('private', 'show to owners only'),
+            ('hidden', 'hide completely'),
         ),#todo: later implement hidden mode
         description = _("Visibility of karma"),
         clear_cache = True,

@@ -4,7 +4,7 @@ Changes in Askbot
 Future version
 --------------
 * User groups (Evgeny)
-* Public/Private reputation (Evgeny)
+* Public/Private/Hidden reputation (Evgeny)
 * Enabling/disabling the badges system (Evgeny)
 
 Development version (not released yet)

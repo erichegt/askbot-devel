@@ -838,6 +838,8 @@ def user(request, id, slug=None, tab_name=None):
 
     if askbot_settings.KARMA_MODE == 'public':
         can_show_karma = True
+    elif askbot_settings.KARMA_MODE == 'hidden':
+        can_show_karma = False
     else:
         if request.user.is_administrator_or_moderator() \
             or request.user == profile_owner:

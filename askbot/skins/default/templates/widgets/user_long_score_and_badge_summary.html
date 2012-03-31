@@ -1,6 +1,8 @@
+{% if karma_mode != 'hidden' %}
 <a class="user-micro-info" 
        href="{{user.get_absolute_url()}}?sort=reputation"
 >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
+{% endif %}
 {% if badges_mode == 'public' %}
     {%- if user.gold or user.silver or user.bronze %}
     <a class="user-micro-info"
