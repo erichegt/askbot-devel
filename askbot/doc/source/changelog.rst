@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version (not released yet)
---------------------------------------
+0.7.40 (March 29, 2012)
+-----------------------
 * New data models!!! (`Tomasz Zieliński <http://pyconsultant.eu>`_)
 * Made email recovery link work when askbot is deployed on subdirectory (Evgeny)
 * Added tests for the CSRF_COOKIE_DOMAIN setting in the startup_procedures (Evgeny)
@@ -25,6 +25,8 @@ Development version (not released yet)
 * Added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
 * Enabled "ask by email" via Lamson (Evgeny)
 * Tags can be optional (Evgeny)
+* Fixed dependency of Django up to 1.3.1, because settings must be upgraded
+  for Django 1.4 (Evgeny)
 
 0.7.39 (Jan 11, 2012)
 ---------------------

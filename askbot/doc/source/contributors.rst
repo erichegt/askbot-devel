@@ -37,6 +37,7 @@ Programming and documentation
 * `Jacob Oscarson <http://www.aspektratio.net>`_
 * `Radim Řehůřek <https://github.com/piskvorky>`_
 * `monkut <https://github.com/monkut>`_
+* `Jim Tittsler <http://wikieducator.org/User:JimTittsler>`_
 
 Translations
 ------------

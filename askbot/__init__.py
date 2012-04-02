@@ -9,13 +9,13 @@ import smtplib
 import sys
 import logging
 
-VERSION = (0, 7, 39)
+VERSION = (0, 7, 40)
 
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
 REQUIREMENTS = {
     'akismet': 'akismet',
-    'django': 'django>=1.1.2',
+    'django': 'django==1.3.1',
     'jinja2': 'Jinja2',
     'coffin': 'Coffin>=0.3',
     'south': 'South>=0.7.1',

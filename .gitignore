@@ -18,6 +18,7 @@ lint
 env
 /static
 django
+lamson
 django/*
 nbproject
 pip-log.txt
