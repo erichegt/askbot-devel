@@ -12,7 +12,7 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
-                    _('Logos and HTML <head> parts'),
+                    _('Skin, logos and HTML <head> parts'),
                     super_group = CONTENT_AND_UI
                 )
 

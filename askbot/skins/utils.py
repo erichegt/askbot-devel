@@ -73,7 +73,9 @@ def get_path_to_skin(skin):
 def get_skin_choices():
     """returns a tuple for use as a set of 
     choices in the form"""
-    skin_names = list(reversed(get_available_skins().keys()))
+    available_skins = get_available_skins().keys()
+    available_skins.remove('common')
+    skin_names = list(reversed(available_skins))
     return zip(skin_names, skin_names)
 
 def resolve_skin_for_media(media=None, preferred_skin = None):
