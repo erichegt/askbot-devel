@@ -644,7 +644,46 @@ var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator
   }
 
   function inWords(date) {
-    return $t.inWords(distance(date));
+    var distanceMillis = distance(date);
+    var seconds = Math.abs(distanceMillis) / 1000;
+    var minutes = seconds / 60;
+    var hours = minutes / 60;
+    var days = hours / 24;
+    var years = days / 365;
+    //todo: rewrite this in javascript
+    if (days > 2){
+        var month_date = months[date.getMonth()] + ' ' + date.getDate()
+        if (years == 0){
+            //how to do this in js???
+            return month_date;
+        } else {
+            return month_date + ' ' + "'" + date.getYear() % 20;
+        }
+    } else if (days == 2) {
+        return gettext('2 days ago')
+    } else if (days == 1) {
+        return gettext('yesterday')
+    } else if (minutes >= 60) {
+        return interpolate(
+                    ngettext(
+                        '%s hour ago',
+                        '%s hours ago',
+                        hours
+                    ),
+                    [Math.floor(hours),]
+                )
+    } else if (seconds > 90){
+        return interpolate(
+                    ngettext(
+                        '%d min ago',
+                        '%d mins ago',
+                        minutes
+                    ),
+                    [Math.floor(minutes),]
+                )
+    } else {
+        return gettext('just now')
+    }
   }
 
   function distance(date) {
