@@ -650,6 +650,20 @@ var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator
     var hours = minutes / 60;
     var days = hours / 24;
     var years = days / 365;
+    var months = [
+        gettext('Jan'),
+        gettext('Feb'),
+        gettext('Mar'),
+        gettext('Apr'),
+        gettext('May'),
+        gettext('Jun'),
+        gettext('Jul'),
+        gettext('Aug'),
+        gettext('Sep'),
+        gettext('Oct'),
+        gettext('Nov'),
+        gettext('Dec')
+    ];
     //todo: rewrite this in javascript
     if (days > 2){
         var month_date = months[date.getMonth()] + ' ' + date.getDate()
@@ -675,8 +689,8 @@ var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator
     } else if (seconds > 90){
         return interpolate(
                     ngettext(
-                        '%d min ago',
-                        '%d mins ago',
+                        '%s min ago',
+                        '%s mins ago',
                         minutes
                     ),
                     [Math.floor(minutes),]

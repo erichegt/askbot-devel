@@ -551,15 +551,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #print datetime.datetime.now() - before
     return result
 
-def revisions(request, id, object_name=None):
-    if object_name == 'Question':
-        post = get_object_or_404(models.Post, post_type='question', id=id)
-    else:
-        post = get_object_or_404(models.Post, post_type='answer', id=id)
+def revisions(request, id, post_type = None):
+    assert post_type in ('question', 'answer')
+    post = get_object_or_404(models.Post, post_type=post_type, id=id)
     revisions = list(models.PostRevision.objects.filter(post=post))
     revisions.reverse()
     for i, revision in enumerate(revisions):
-        revision.html = revision.as_html()
         if i == 0:
             revision.diff = revisions[i].html
             revision.summary = _('initial version')

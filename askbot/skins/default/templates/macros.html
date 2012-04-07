@@ -23,6 +23,29 @@
     </div>
 {%- endmacro -%}
 
+{%- macro inbox_post_snippet(response, inbox_section) -%}
+<div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
+    <input type="checkbox" />
+    <div class="face">
+    {{ gravatar(response.user, 48) }}
+    </div>
+    <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username }}</a>
+    <a style="text-decoration:none;" href="{{ response.response_url }}">
+         {{ response.response_type }}
+         ({{ timeago(response.timestamp) }}):<br/>
+         {% if inbox_section != 'flags' %}
+             {{ response.response_snippet }}
+         {% endif %}
+    </a>
+    {% if inbox_section == 'flags' %}
+         <a class="re_expand" href="{{ response.response_url }}">
+              <div class="re_snippet">{{ response.response_snippet }}</div>
+              <div class="re_content">{{ response.response_content }}</div>
+         </a>
+    {% endif %}
+</div>
+{%- endmacro -%}
+
 {%- macro post_vote_buttons(post = None) -%}
 <div id="{{post.post_type}}-img-upvote-{{ post.id }}"
     class="{{post.post_type}}-img-upvote post-vote">
@@ -482,7 +505,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- endmacro -%}
 
 {%- macro user_long_score_and_badge_summary(user, badges_mode = None) -%}
-  {% include "widgets/user_long_score_and_badge_summary.html" %}
+  {%- include "widgets/user_long_score_and_badge_summary.html" -%}
 {%- endmacro -%}
 
 {%- macro user_country_flag(user) -%}

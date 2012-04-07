@@ -136,6 +136,9 @@ class Command(NoArgsCommand):
                             ).exclude(
                                 thread__closed=True
                             ).order_by('-thread__last_activity_at')
+
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            base_qs = base_qs.filter(approved = True)
         #todo: for some reason filter on did not work as expected ~Q(viewed__who=user) | 
         #      Q(viewed__who=user,viewed__when__lt=F('thread__last_activity_at'))
         #returns way more questions than you might think it should

@@ -44,7 +44,15 @@ from askbot.utils.url_utils import strip_path
 from askbot.utils import mail
 
 def get_model(model_name):
+    """a shortcut for getting model for an askbot app"""
     return models.get_model('askbot', model_name)
+
+def get_admins_and_moderators():
+    """returns query set of users who are site administrators
+    and moderators"""
+    return User.objects.filter(
+        models.Q(is_superuser=True) | models.Q(status='m')
+    )
 
 User.add_to_class(
             'status',
@@ -314,6 +322,12 @@ def _assert_user_can(
         error_message = general_error_message
     assert(error_message is not None)
     raise django_exceptions.PermissionDenied(error_message)
+
+def user_assert_can_approve_post_revision(self, post_revision = None):
+    _assert_user_can(
+        user = self,
+        admin_or_moderator_required = True
+    )
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
     assert getattr(answer, 'post_type', '') == 'answer'
@@ -2085,6 +2099,27 @@ def downvote(self, post, timestamp=None, cancel=False, force = False):
     )
 
 @auto_now_timestamp
+def user_approve_post_revision(user, post_revision, timestamp = None):
+    """approves the post revision and, if necessary,
+    the parent post and threads"""
+    user.assert_can_approve_post_revision()
+
+    post_revision.approved = True
+    post_revision.approved_by = user
+    post_revision.approved_at = timestamp
+
+    post_revision.save()
+
+    post = post_revision.post
+    post.approved = True
+    post.save()
+    if post_revision.post.post_type == 'question':
+        thread = post.thread
+        thread.approved = True
+        thread.save()
+    post.thread.invalidate_cached_data()
+
+@auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
     if cancel_all:
         # remove all flags
@@ -2307,6 +2342,7 @@ User.add_to_class(
     'update_wildcard_tag_selections',
     user_update_wildcard_tag_selections
 )
+User.add_to_class('approve_post_revision', user_approve_post_revision)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
@@ -2335,9 +2371,13 @@ User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)
 User.add_to_class('assert_can_accept_best_answer', user_assert_can_accept_best_answer)
 User.add_to_class(
-        'assert_can_unaccept_best_answer',
-        user_assert_can_unaccept_best_answer
-    )
+    'assert_can_unaccept_best_answer',
+    user_assert_can_unaccept_best_answer
+)
+User.add_to_class(
+    'assert_can_approve_post_revision',
+    user_assert_can_approve_post_revision
+)
 
 #todo: move this to askbot/utils ??
 def format_instant_notification_email(
@@ -2390,8 +2430,8 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                            revisions[1].as_html(),
-                            revisions[0].as_html(),
+                            revisions[1].html,
+                            revisions[0].html,
                             ins_start = '<b><u style="background-color:#cfc">',
                             ins_end = '</u></b>',
                             del_start = '<del style="color:#600;background-color:#fcc">',
@@ -2470,6 +2510,8 @@ def send_instant_notifications_about_activity_in_post(
     newly mentioned users are carried through to reduce
     database hits
     """
+    if askbot_settings.ENABLE_CONTENT_MODERATION and post.approved == False:
+        return
 
     if recipients is None:
         return
@@ -2535,7 +2577,15 @@ def record_post_update_activity(
     ):
     """called upon signal askbot.models.signals.post_updated
     which is sent at the end of save() method in posts
+
+    this handler will set notifications about the post
     """
+    if post.needs_moderation():
+        #do not give notifications yet
+        #todo: it is possible here to trigger
+        #moderation email alerts
+        return
+
     assert(timestamp != None)
     assert(updated_by != None)
     if newly_mentioned_users is None:
@@ -2725,10 +2775,7 @@ def record_flag_offensive(instance, mark_by, **kwargs):
 #    recipients = instance.get_author_list(
 #                                        exclude_list = [mark_by]
 #                                    )
-    recipients = User.objects.filter(
-                    models.Q(is_superuser=True) | models.Q(status='m')
-                )
-    activity.add_recipients(recipients)
+    activity.add_recipients(get_admins_and_moderators())
 
 def remove_flag_offensive(instance, mark_by, **kwargs):
     "Remove flagging activity"
@@ -2835,7 +2882,6 @@ def set_user_avatar_type_flag(instance, created, **kwargs):
 def update_user_avatar_type_flag(instance, **kwargs):
     instance.user.update_avatar_type()
 
-
 def make_admin_if_first_user(instance, **kwargs):
     """first user automatically becomes an administrator
     the function is run only once in the interpreter session
@@ -2853,9 +2899,22 @@ def make_admin_if_first_user(instance, **kwargs):
         instance.set_admin_status()
     cache.cache.set('admin-created', True)
 
+def place_post_revision_on_moderation_queue(instance, **kwargs):
+    """`instance` is post revision, because we must
+    be able to moderate all the revisions, if necessary,
+    in order to avoid people getting the post past the moderation
+    then make some evil edit.
+    """
+    if instance.needs_moderation():
+        instance.place_on_moderation_queue()
+
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.post_save.connect(
+    place_post_revision_on_moderation_queue,
+    sender=PostRevision
+)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
@@ -2920,5 +2979,6 @@ __all__ = [
 
         'ReplyAddress',
 
-        'get_model'
+        'get_model',
+        'get_admins_and_moderators'
 ]

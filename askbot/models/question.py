@@ -156,7 +156,13 @@ class ThreadManager(models.Manager):
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
         # TODO: add a possibility to see deleted questions
-        qs = self.filter(posts__post_type='question', posts__deleted=False) # (***) brings `askbot_post` into the SQL query, see the ordering section below
+        qs = self.filter(
+                posts__post_type='question', 
+                posts__deleted=False,
+            ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
+
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            qs = qs.filter(approved = True)
 
         meta_data = {}
 
@@ -331,6 +337,11 @@ class Thread(models.Model):
                                             null=True,
                                             blank=True
                                         )
+
+    #denormalized data: the core approval of the posts is made
+    #in the revisions. In the revisions there is more data about
+    #approvals - by whom and when
+    approved = models.BooleanField(default=True, db_index=True)
 
     accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
@@ -514,6 +525,8 @@ class Thread(models.Model):
         for post in thread_posts:
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
+                continue
+            if post.approved == False:#hide posts on the moderation queue
                 continue
 
             post_to_author[post.id] = post.author_id

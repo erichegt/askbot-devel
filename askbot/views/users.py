@@ -307,6 +307,9 @@ def user_stats(request, user, context):
     if request.user != user:
         question_filter['is_anonymous'] = False
 
+    if askbot_settings.ENABLE_CONTENT_MODERATION:
+        question_filter['approved'] = True
+
     #
     # Questions
     #
@@ -595,20 +598,32 @@ def user_responses(request, user, context):
     as well as mentions of the user
 
     user - the profile owner
+
+    the view has two sub-views - "forum" - i.e. responses
+    and "flags" - moderation items for mods only
     """
 
-    section = 'forum'
-    if request.user.is_moderator() or request.user.is_administrator():
-        if 'section' in request.GET and request.GET['section'] == 'flags':
-            section = 'flags'
+    #1) select activity types according to section
+    section = request.GET.get('section', 'forum')
+    if section == 'flags' and not\
+        (request.user.is_moderator() or request.user.is_administrator()):
+        raise Http404
 
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
-    else:
-        assert(section == 'flags')
+    elif section == 'flags':
         activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            activity_types += (
+                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+            )
+    else:
+        raise Http404
 
+    #2) load the activity notifications according to activity types
+    #todo: insert pagination code here
     memo_set = models.ActivityAuditStatus.objects.filter(
                     user = request.user,
                     activity__activity_type__in = activity_types
@@ -622,17 +637,17 @@ def user_responses(request, user, context):
                     '-activity__active_at'
                 )[:const.USER_VIEW_DATA_SIZE]
 
-    #todo: insert pagination code here
-
+    #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
+        #a monster query chain below
         response = {
             'id': memo.id,
             'timestamp': memo.activity.active_at,
             'user': memo.activity.user,
             'is_new': memo.is_new(),
             'response_url': memo.activity.get_absolute_url(),
-            'response_snippet': memo.activity.get_preview(),
+            'response_snippet': memo.activity.get_snippet(),
             'response_title': memo.activity.question.thread.title,
             'response_type': memo.activity.get_activity_type_display(),
             'response_id': memo.activity.question.id,
@@ -641,13 +656,14 @@ def user_responses(request, user, context):
         }
         response_list.append(response)
 
+    #4) sort by response id
     response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
-    last_response_id = None #flag to know if the response id is different
-    last_response_index = None #flag to know if the response index in the list is different
-    filtered_response_list = list()
 
+    #5) group responses by thread (response_id is really the question post id)
+    last_response_id = None #flag to know if the response id is different
+    filtered_response_list = list()
     for i, response in enumerate(response_list):
-        #todo: agrupate users
+        #todo: group responses by the user as well
         if response['response_id'] == last_response_id:
             original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
             original_response['nested_responses'].append(response)
@@ -655,12 +671,9 @@ def user_responses(request, user, context):
         else:
             filtered_response_list.append(response)
             last_response_id = response['response_id']
-            last_response_index = i
 
-    response_list = filtered_response_list
-    
-    response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
-    filtered_response_list = list()
+    #6) sort responses by time
+    filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
     data = {
         'active_tab':'users',
@@ -669,7 +682,7 @@ def user_responses(request, user, context):
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
-        'responses' : response_list,
+        'responses' : filtered_response_list,
     }
     context.update(data)
     return render_into_skin('user_profile/user_inbox.html', context, request)

@@ -35,7 +35,6 @@ from askbot.models.base import BaseQuerySetManager
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mysql
 
-
 class PostQuerySet(models.query.QuerySet):
     """
     Custom query set subclass for :class:`~askbot.models.Post`
@@ -267,6 +266,11 @@ class Post(models.Model):
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
 
+    #denormalized data: the core approval of the posts is made
+    #in the revisions. In the revisions there is more data about
+    #approvals - by whom and when
+    approved = models.BooleanField(default=True, db_index=True)
+
     deleted     = models.BooleanField(default=False, db_index=True)
     deleted_at  = models.DateTimeField(null=True, blank=True)
     deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_posts')
@@ -423,7 +427,7 @@ class Post(models.Model):
 
         #a hack allowing to save denormalized .summary field for questions
         if hasattr(post, 'summary'):
-            post.summary = strip_tags(post.html)[:120]
+            post.summary = post.get_snippet()
 
         #delete removed mentions
         for rm in removed_mentions:
@@ -479,6 +483,9 @@ class Post(models.Model):
 
     def is_tag_wiki(self):
         return self.post_type == 'tag_wiki'
+
+    def needs_moderation(self):
+        return self.approved == False
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -563,10 +570,10 @@ class Post(models.Model):
         return slugify(self.thread.title)
     slug = property(_get_slug)
 
-    def get_snippet(self):
+    def get_snippet(self, max_length = 120):
         """returns an abbreviated snippet of the content
         """
-        return html_utils.strip_tags(self.html)[:120] + ' ...'
+        return html_utils.strip_tags(self.html)[:max_length] + ' ...'
 
     def format_tags_for_email(self):
         """formats tags of the question post for email"""
@@ -1629,6 +1636,10 @@ class PostRevision(models.Model):
     summary    = models.CharField(max_length=300, blank=True)
     text       = models.TextField()
 
+    approved = models.BooleanField(default=False, db_index=True)
+    approved_by = models.ForeignKey(User, null = True, blank = True) 
+    approved_at = models.DateTimeField(null= True, blank = True)
+
     # Question-specific fields
     title      = models.CharField(max_length=300, blank=True, default='')
     tagnames   = models.CharField(max_length=125, blank=True, default='')
@@ -1643,6 +1654,67 @@ class PostRevision(models.Model):
         unique_together = ('post', 'revision')
         ordering = ('-revision',)
         app_label = 'askbot'
+
+    def needs_moderation(self):
+        """``True`` if post needs moderation"""
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            #todo: needs a lot of details
+            if self.author.is_administrator_or_moderator():
+                return False
+            if self.approved:
+                return False
+            return True
+        return False
+
+    def place_on_moderation_queue(self):
+        """If revision is the first one,
+        keeps the post invisible until the revision
+        is aprroved.
+        If the revision is an edit, will autoapprove
+        but will still add it to the moderation queue.
+
+        Eventually we might find a way to moderate every
+        edit as well."""
+        #this is run on "post-save" so for a new post
+        #we'll have just one revision
+        if self.post.revisions.count() == 1:
+            activity_type = const.TYPE_ACTIVITY_MODERATED_NEW_POST
+
+            self.approved = False
+            self.approved_by = None
+            self.approved_at = None
+
+            self.post.approved = False
+            self.post.save()
+
+            if self.post.is_question():
+                self.post.thread.approved = False
+                self.post.thread.save()
+            #above changes will hide post from the public display
+            message = _(
+                'Your post was placed on the moderation queue '
+                'and will be published after the moderator approval.'
+            )
+            self.author.message_set.create(message = message)
+        else:
+            #In this case, for now we just flag the edit
+            #for the moderators.
+            #Ideally we'd need to hide the edit itself,
+            #but the complication is that when we have more
+            #than one edit in a row and then we'll need to deal with
+            #merging multiple edits. We don't have a solution for this yet.
+            activity_type = const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+
+        from askbot.models import Activity, get_admins_and_moderators
+        activity = Activity(
+                        user = self.author,
+                        content_object = self,
+                        activity_type = activity_type,
+                        question = self.get_origin_post()
+                    )
+        activity.save()
+        #todo: make this group-sensitive
+        activity.add_recipients(get_admins_and_moderators())
 
     def revision_type_str(self):
         return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
@@ -1683,15 +1755,20 @@ class PostRevision(models.Model):
     @models.permalink
     def get_absolute_url(self):
         if self.is_question_revision():
-            return 'question_revisions', (self.question.id,), {}
+            return 'question_revisions', (self.post.id,), {}
         elif self.is_answer_revision():
-            return 'answer_revisions', (), {'id':self.answer.id}
+            return 'answer_revisions', (), {'id':self.post.id}
 
     def get_question_title(self):
         #INFO: ack-grepping shows that it's only used for Questions, so there's no code for Answers
         return self.question.thread.title
 
-    def as_html(self, **kwargs):
+    def get_origin_post(self):
+        """same as Post.get_origin_post()"""
+        return self.post.get_origin_post()
+
+    @property
+    def html(self, **kwargs):
         markdowner = markup.get_parser()
         sanitized_html = sanitize_html(markdowner.convert(self.text))
 
@@ -1702,3 +1779,7 @@ class PostRevision(models.Model):
             }
         elif self.is_answer_revision():
             return sanitized_html
+
+    def get_snippet(self, max_length = 120):
+        """same as Post.get_snippet"""
+        return html_utils.strip_tags(self.html)[:max_length] + '...'

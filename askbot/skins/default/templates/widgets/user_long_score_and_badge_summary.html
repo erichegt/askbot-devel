@@ -1,8 +1,8 @@
-{% if karma_mode != 'hidden' %}
+{%- if karma_mode != 'hidden' -%}
 <a class="user-micro-info" 
        href="{{user.get_absolute_url()}}?sort=reputation"
 >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
-{% endif %}
+{%- endif -%}
 {% if badges_mode == 'public' %}
     {%- if user.gold or user.silver or user.bronze %}
     <a class="user-micro-info"
@@ -22,4 +22,4 @@
         {%- endif -%}
     </span></a>
     {%- endif -%}
-{% endif %}
+{%- endif -%}

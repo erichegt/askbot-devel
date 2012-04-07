@@ -41,7 +41,12 @@ def manage_inbox(request):
                 post_data = simplejson.loads(request.raw_post_data)
                 if request.user.is_authenticated():
                     activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-                    activity_types += (const.TYPE_ACTIVITY_MENTION, const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
+                    activity_types += (
+                        const.TYPE_ACTIVITY_MENTION,
+                        const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                        const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+                    )
                     user = request.user
                     memo_set = models.ActivityAuditStatus.objects.filter(
                         id__in = post_data['memo_list'],
@@ -58,20 +63,35 @@ def manage_inbox(request):
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
                     elif action_type == 'remove_flag':
                         for memo in memo_set:
-                            request.user.flag_post(post = memo.activity.content_object, cancel_all = True)
-                    elif action_type == 'close':
-                        for memo in memo_set:
-                            if memo.activity.content_object.post_type == "question":
-                                request.user.close_question(question = memo.activity.content_object, reason = 7)
+                            activity_type = memo.activity.activity_type
+                            if activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
+                                request.user.flag_post(
+                                    post = memo.activity.content_object,
+                                    cancel_all = True
+                                )
+                            elif activity_type in \
+                                (
+                                    const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                                    const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+                                ):
+                                post_revision = memo.activity.content_object
+                                request.user.approve_post_revision(post_revision)
                                 memo.delete()
+
+                    #elif action_type == 'close':
+                    #    for memo in memo_set:
+                    #        if memo.activity.content_object.post_type == "question":
+                    #            request.user.close_question(question = memo.activity.content_object, reason = 7)
+                    #            memo.delete()
                     elif action_type == 'delete_post':
                         for memo in memo_set:
-                            request.user.delete_post(post = memo.activity.content_object)
+                            content_object = memo.activity.content_object
+                            if isinstance(content_object, models.PostRevision):
+                                post = content_object.post
+                            else:
+                                post = content_object
+                            request.user.delete_post(post) 
                             memo.delete()
-                    else:
-                        raise exceptions.PermissionDenied(
-                            _('Oops, apologies - there was some error')
-                        )
 
                     user.update_response_counts()
 

@@ -200,9 +200,9 @@ class Activity(models.Model):
         assert(user_count == 1)
         return user_qs[0]
 
-    def get_preview(self):
-        if  self.summary == '':
-            return strip_tags(self.content_object.html)[:300]
+    def get_snippet(self, max_length = 120):
+        if self.summary == '':
+            return self.content_object.get_snippet(max_length)
         else:
             return self.summary
 
