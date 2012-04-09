@@ -11,7 +11,8 @@ import sys
 import os
 import re
 import askbot
-from django.db import transaction
+import south
+from django.db import transaction, connection
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.utils.loading import load_module
@@ -166,7 +167,7 @@ def try_import(module_name, pypi_package_name):
     try:
         load_module(module_name)
     except ImportError, error:
-        message = 'Error: ' + unicode(error) 
+        message = 'Error: ' + unicode(error)
         message += '\n\nPlease run: >pip install %s' % pypi_package_name
         message += '\n\nTo install all the dependencies at once, type:'
         message += '\npip install -r askbot_requirements.txt\n'
@@ -305,10 +306,10 @@ class SettingsTester(object):
             )
         if len(self.messages) != 0:
             raise AskbotConfigError(
-                '\n\nTime to do some maintenance of your settings.py:\n\n* ' + 
+                '\n\nTime to do some maintenance of your settings.py:\n\n* ' +
                 '\n\n* '.join(self.messages)
             )
-            
+
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
@@ -349,7 +350,7 @@ def test_staticfiles():
     if static_url is None or str(static_url).strip() == '':
         errors.append(
             'Add STATIC_URL setting to your settings.py file. '
-            'The setting must be a url at which static files ' 
+            'The setting must be a url at which static files '
             'are accessible.'
         )
     url = urlparse(static_url).path
@@ -406,7 +407,7 @@ def test_staticfiles():
             '    python manage.py collectstatic\n'
         )
 
-            
+
     print_errors(errors)
     if django_settings.STATICFILES_STORAGE == \
         'django.contrib.staticfiles.storage.StaticFilesStorage':
@@ -466,7 +467,26 @@ def test_settings_for_test_runner():
             'from MIDDLEWARE_CLASSES'
         )
     print_errors(errors)
-    
+
+def test_mysql_south_bug():
+    conflicting_mysql = []
+    conn = connection.connection
+    if hasattr(conn, '_server_version') or\
+            'mysql' in connection.settings_dict['ENGINE']:
+        #checks for conflicting mysql version according to http://south.aeracode.org/ticket/747
+        mysql_version = getattr(conn, '_server_version', (5,0))
+        south_version = south.__version__
+        if mysql_version >= (5,0) and south_version <= '0.7.4':
+            #just warns because some versions works and it's not possible
+            #to detect the full version number from thee connection object
+            message = 'Warning: There is a bug in south with mysql database engine,'
+            message += '\nmigrations might not work, to fix it please install south from their mercurial repository'
+            message += '\nmore information here: http://askbot.org/en/question/6902/error-while-setting-up-askbot?answer=6964#answer-container-6964'
+            askbot_warning(message)
+    else:
+        #not mysql
+        pass
+
 
 def run_startup_tests():
     """function that runs
@@ -483,6 +503,7 @@ def run_startup_tests():
     test_celery()
     #test_csrf_cookie_domain()
     test_staticfiles()
+    test_mysql_south_bug()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
