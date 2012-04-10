@@ -72,7 +72,8 @@ class ReplyAddress(models.Model):
         self.user.edit_post(
             post = self.response_post,
             body_text = content,
-            revision_comment = _('edited by email')
+            revision_comment = _('edited by email'),
+            by_email = True
         )
         self.response_post.thread.invalidate_cached_data()
 
@@ -85,15 +86,31 @@ class ReplyAddress(models.Model):
         content, stored_files = mail.process_parts(parts)
 
         if self.post.post_type == 'answer':
-            result = self.user.post_comment(self.post, content)
+            result = self.user.post_comment(
+                                        self.post,
+                                        content,
+                                        by_email = True
+                                    )
         elif self.post.post_type == 'question':
             wordcount = len(content)/6#this is a simplistic hack
             if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
-                result = self.user.post_answer(self.post, content)
+                result = self.user.post_answer(
+                                            self.post,
+                                            content,
+                                            by_email = True
+                                        )
             else:
-                result = self.user.post_comment(self.post, content)
+                result = self.user.post_comment(
+                                            self.post,
+                                            content,
+                                            by_email = True
+                                        )
         elif self.post.post_type == 'comment':
-            result = self.user.post_comment(self.post.parent, content)
+            result = self.user.post_comment(
+                                    self.post.parent,
+                                    content,
+                                    by_email = True
+                                )
         result.thread.invalidate_cached_data()
         self.response_post = result
         self.used_at = datetime.now()

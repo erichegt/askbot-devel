@@ -278,7 +278,8 @@ def process_emailed_question(from_address, subject, parts):
             user.post_question(
                 title = title,
                 tags = tagnames,
-                body_text = body_text
+                body_text = body_text,
+                by_email = True
             )
         else:
             raise ValidationError()
