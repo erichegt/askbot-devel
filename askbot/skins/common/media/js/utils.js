@@ -701,7 +701,7 @@ var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator
   }
 
   function distance(date) {
-    return (new Date().getTime() - date.getTime());
+    return (new Date() - date);
   }
 
   // fix for IE6 suckage

@@ -34,6 +34,7 @@ REQUIREMENTS = {
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',
     'lamson': 'Lamson',
+    'pytz': 'pytz',
 }
 
 #necessary for interoperability of django and coffin

@@ -693,7 +693,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- endmacro -%}
 
 {%- macro timeago(datetime_object) -%}
-    <abbr class="timeago" title="{{datetime_object.replace(microsecond=0)}}">
-        {{datetime_object.replace(microsecond=0)}}
+    <abbr class="timeago" title="{{datetime_object.replace(microsecond=0)|add_tz_offset}}">
+        {{datetime_object.replace(microsecond=0)|add_tz_offset}}
     </abbr>
 {%- endmacro -%}
