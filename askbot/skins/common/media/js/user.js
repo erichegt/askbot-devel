@@ -69,8 +69,11 @@ $(document).ready(function(){
             }
         }
         if (action_type == 'remove_flag'){
-            msg = ngettext('Remove all flags on this entry?',
-                    'Remove all flags on these entries?', data['id_list'].length);
+            msg = ngettext(
+                    'Remove all flags and approve this entry?',
+                    'Remove all flags and approve these entries?',
+                    data['id_list'].length
+                );
             if (confirm(msg) === false){
                 return;
             }
@@ -117,15 +120,15 @@ $(document).ready(function(){
                     }
     );
 
-    setupButtonEventHandlers($('.re_expand'),
-                    function(e){
-                        e.preventDefault();
-                        var re_snippet = $(this).find(".re_snippet:first")
-                        var re_content = $(this).find(".re_content:first")
-                        $(re_snippet).slideToggle();
-                        $(re_content).slideToggle();
-                    }
-    );
+    //setupButtonEventHandlers($('.re_expand'),
+    //                function(e){
+    //                    e.preventDefault();
+    //                    var re_snippet = $(this).find(".re_snippet:first")
+    //                    var re_content = $(this).find(".re_content:first")
+    //                    $(re_snippet).slideToggle();
+    //                    $(re_content).slideToggle();
+    //                }
+    //);
 
     $('.badge-context-toggle').each(function(idx, elem){
         var context_list = $(elem).parent().next('ul');

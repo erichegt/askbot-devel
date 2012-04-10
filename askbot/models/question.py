@@ -62,7 +62,17 @@ class ThreadManager(models.Manager):
     def create(self, *args, **kwargs):
         raise NotImplementedError
 
-    def create_new(self, title, author, added_at, wiki, text, tagnames=None, is_anonymous=False):
+    def create_new(
+                self,
+                title,
+                author,
+                added_at,
+                wiki,
+                text,
+                tagnames = None,
+                is_anonymous = False,
+                by_email = False
+            ):
         # TODO: Some of this code will go to Post.objects.create_new
 
         thread = super(
@@ -75,6 +85,7 @@ class ThreadManager(models.Manager):
             last_activity_by=author
         )
 
+        #todo: code below looks like ``Post.objects.create_new()``
         question = Post(
             post_type='question',
             thread=thread,
@@ -103,6 +114,7 @@ class ThreadManager(models.Manager):
             text = text,
             comment = const.POST_STATUS['default_version'],
             revised_at = added_at,
+            by_email = by_email
         )
 
         # INFO: Question has to be saved before update_tags() is called

@@ -158,20 +158,33 @@ class PostManager(BaseQuerySetManager):
                             post_type = 'tag_wiki'
         )
 
-    def create_new(self, thread, author, added_at, text, wiki=False, email_notify=False, post_type=None):
+    def create_new(
+                self,
+                thread,
+                author,
+                added_at,
+                text,
+                parent = None,
+                wiki = False,
+                email_notify = False,
+                post_type = None,
+                by_email = False
+            ):
         # TODO: Some of this code will go to Post.objects.create_new
 
         assert(post_type in const.POST_TYPES)
 
         post = Post(
-            post_type=post_type,
-            thread=thread,
-            author=author,
-            added_at=added_at,
-            wiki=wiki,
-            text=text,
+            post_type = post_type,
+            thread = thread,
+            parent = parent,
+            author = author,
+            added_at = added_at,
+            wiki = wiki,
+            text = text,
             #.html field is denormalized by the save() call
         )
+
         if post.wiki:
             post.last_edited_by = post.author
             post.last_edited_at = added_at
@@ -180,22 +193,34 @@ class PostManager(BaseQuerySetManager):
         post.parse_and_save(author=author)
 
         post.add_revision(
-            author=author,
-            revised_at=added_at,
-            text=text,
+            author = author,
+            revised_at = added_at,
+            text = text,
             comment = const.POST_STATUS['default_version'],
+            by_email = by_email
         )
         
         return post
 
-    def create_new_answer(self, thread, author, added_at, text, wiki=False, email_notify=False):
+    #todo: instead of this, have Thread.add_answer()
+    def create_new_answer(
+                        self,
+                        thread,
+                        author,
+                        added_at,
+                        text,
+                        wiki = False,
+                        email_notify = False,
+                        by_email = False
+                    ):
         answer = self.create_new(
                             thread,
                             author,
                             added_at,
                             text,
                             wiki = wiki,
-                            post_type = 'answer'
+                            post_type = 'answer',
+                            by_email = by_email
                         )
         #set notification/delete
         if email_notify:
@@ -204,7 +229,8 @@ class PostManager(BaseQuerySetManager):
             thread.followed_by.remove(author)
 
         #update thread data
-        thread.answer_count +=1
+        #todo: this totally belongs to some `Thread` class method
+        thread.answer_count += 1
         thread.save()
         thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
         return answer
@@ -676,22 +702,27 @@ class Post(models.Model):
             self._cached_comments = list()
             return self._cached_comments
 
-    def add_comment(self, comment=None, user=None, added_at=None):
+    def add_comment(
+                self,
+                comment=None,
+                user=None,
+                added_at=None,
+                by_email = False):
+
         if added_at is None:
             added_at = datetime.datetime.now()
-        if None in (comment ,user):
+        if None in (comment, user):
             raise Exception('arguments comment and user are required')
 
-        from askbot.models import Post
-        comment = Post(
-            post_type='comment',
-            thread=self.thread,
-            parent=self,
-            text=comment,
-            author=user,
-            added_at=added_at
-        )
-        comment.parse_and_save(author = user)
+        comment_post = self.__class__.objects.create_new(
+                                                self.thread,
+                                                user,
+                                                added_at,
+                                                comment,
+                                                parent = self,
+                                                post_type = 'comment',
+                                                by_email = by_email
+                                            )
         self.comment_count = self.comment_count + 1
         self.save()
 
@@ -711,7 +742,7 @@ class Post(models.Model):
         #    origin_post.last_activity_by = user
         #    origin_post.save()
 
-        return comment
+        return comment_post
 
     def get_global_tag_based_subscribers(
             self,
@@ -1298,7 +1329,16 @@ class Post(models.Model):
     def get_tag_names(self):
         return self.thread.get_tag_names()
 
-    def __apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
+    def __apply_edit(
+                    self,
+                    edited_at = None,
+                    edited_by = None,
+                    text = None,
+                    comment = None,
+                    wiki = False,
+                    edit_anonymously = False,
+                    by_email = False
+                ):
         if text is None:
             text = self.get_latest_revision().text
         if edited_at is None:
@@ -1310,26 +1350,40 @@ class Post(models.Model):
         self.last_edited_by = edited_by
         #self.html is denormalized in save()
         self.text = text
-        #todo: bug wiki has no effect here
+        self.is_anonymous = edit_anonymously
+
+        #wiki is an eternal trap whence there is no exit
+        if self.wiki == False and wiki == True:
+            self.wiki = True
 
         #must add revision before saving the answer
         self.add_revision(
             author = edited_by,
             revised_at = edited_at,
             text = text,
-            comment = comment
+            comment = comment,
+            by_email = by_email
         )
 
         self.parse_and_save(author = edited_by)
 
-    def _answer__apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
+    def _answer__apply_edit(
+                        self,
+                        edited_at = None,
+                        edited_by = None,
+                        text = None,
+                        comment = None,
+                        wiki = False,
+                        by_email = False
+                    ):
 
         self.__apply_edit(
             edited_at = edited_at,
             edited_by = edited_by,
             text = text,
             comment = comment,
-            wiki = wiki
+            wiki = wiki,
+            by_email = by_email
         )
         if edited_at is None:
             edited_at = datetime.datetime.now()
@@ -1337,32 +1391,21 @@ class Post(models.Model):
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                               text=None, comment=None, tags=None, wiki=False,\
-                              edit_anonymously = False):
+                              edit_anonymously = False,
+                              by_email = False
+                            ):
 
+        #todo: the thread editing should happen outside of this
+        #method, then we'll be able to unify all the *__apply_edit
+        #methods
         latest_revision = self.get_latest_revision()
         #a hack to allow partial edits - important for SE loader
         if title is None:
             title = self.thread.title
-        if text is None:
-            text = latest_revision.text
         if tags is None:
             tags = latest_revision.tagnames
-
-        if edited_by is None:
-            raise Exception('parameter edited_by is required')
-
         if edited_at is None:
             edited_at = datetime.datetime.now()
-
-        # Update the Question itself
-        self.last_edited_at = edited_at
-        self.last_edited_by = edited_by
-        self.text = text
-        self.is_anonymous = edit_anonymously
-
-        #wiki is an eternal trap whence there is no exit
-        if self.wiki == False and wiki == True:
-            self.wiki = True
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
@@ -1372,29 +1415,39 @@ class Post(models.Model):
         self.thread.tagnames = tags
         self.thread.save()
 
-        # Create a new revision
-        self.add_revision(        # has to be called AFTER updating the thread, otherwise it doesn't see new tags and the new title
-            author = edited_by,
+        self.__apply_edit(
+            edited_at = edited_at,
+            edited_by = edited_by,
             text = text,
-            revised_at = edited_at,
-            is_anonymous = edit_anonymously,
             comment = comment,
+            wiki = wiki,
+            edit_anonymously = edit_anonymously,
+            by_email = by_email
         )
-
-        self.parse_and_save(author = edited_by)
 
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def apply_edit(self, *args, **kwargs):
+        #todo: unify this, here we have unnecessary indirection
+        #the question__apply_edit function is backwards:
+        #the title edit and tag edit should apply to thread
+        #not the question post
         if self.is_answer():
             return self._answer__apply_edit(*args, **kwargs)
         elif self.is_question():
             return self._question__apply_edit(*args, **kwargs)
-        elif self.is_tag_wiki():
+        elif self.is_tag_wiki() or self.is_comment():
             return self.__apply_edit(*args, **kwargs)
         raise NotImplementedError
 
-    def __add_revision(self, author=None, revised_at=None, text=None, comment=None):
+    def __add_revision(
+                    self,
+                    author = None,
+                    revised_at = None,
+                    text = None,
+                    comment = None,
+                    by_email = False
+                ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
             raise Exception('arguments author, revised_at and text are required')
@@ -1406,12 +1459,13 @@ class Post(models.Model):
                 comment = 'No.%s Revision' % rev_no
         from askbot.models.post import PostRevision
         return PostRevision.objects.create_answer_revision(
-            post=self,
-            author=author,
-            revised_at=revised_at,
-            text=text,
-            summary=comment,
-            revision=rev_no
+            post = self,
+            author = author,
+            revised_at = revised_at,
+            text = text,
+            summary = comment,
+            revision = rev_no,
+            by_email = by_email
         )
 
     def _question__add_revision(
@@ -1420,7 +1474,8 @@ class Post(models.Model):
             is_anonymous = False,
             text = None,
             comment = None,
-            revised_at = None
+            revised_at = None,
+            by_email = False
     ):
         if None in (author, text):
             raise Exception('author, text and comment are required arguments')
@@ -1441,11 +1496,13 @@ class Post(models.Model):
             revised_at = revised_at,
             tagnames   = self.thread.tagnames,
             summary    = comment,
-            text       = text
+            text       = text,
+            by_email = by_email
         )
 
     def add_revision(self, *kargs, **kwargs):
-        if self.post_type in ('answer', 'tag_wiki'):
+        #todo: unify these
+        if self.post_type in ('answer', 'comment', 'tag_wiki'):
             return self.__add_revision(*kargs, **kwargs)
         elif self.is_question():
             return self._question__add_revision(*kargs, **kwargs)
@@ -1628,6 +1685,8 @@ class PostRevision(models.Model):
 
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
 
+    #todo: remove this field, as revision type is determined by the
+    #Post.post_type revision_type is a useless field
     revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES) # TODO: remove as we have Post now
 
     revision   = models.PositiveIntegerField()
@@ -1639,6 +1698,8 @@ class PostRevision(models.Model):
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True) 
     approved_at = models.DateTimeField(null= True, blank = True)
+
+    by_email = models.BooleanField(default=False)#true, if edited by email
 
     # Question-specific fields
     title      = models.CharField(max_length=300, blank=True, default='')
@@ -1691,11 +1752,27 @@ class PostRevision(models.Model):
                 self.post.thread.approved = False
                 self.post.thread.save()
             #above changes will hide post from the public display
-            message = _(
-                'Your post was placed on the moderation queue '
-                'and will be published after the moderator approval.'
-            )
-            self.author.message_set.create(message = message)
+            if self.by_email:
+                from askbot.utils.mail import send_mail
+                email_context = {
+                    'site': askbot_settings.APP_SHORT_NAME
+                }
+                body_text = _(
+                    'Thank you for your post to %(site)s. '
+                    'It will be published after the moderators review.'
+                ) % email_context
+                send_mail(
+                    subject_line = _('your post to %(site)s') % email_context,
+                    body_text = body_text,
+                    recipient_list = [self.author.email,],
+                )
+                
+            else:
+                message = _(
+                    'Your post was placed on the moderation queue '
+                    'and will be published after the moderator approval.'
+                )
+                self.author.message_set.create(message = message)
         else:
             #In this case, for now we just flag the edit
             #for the moderators.

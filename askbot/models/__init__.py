@@ -988,6 +988,7 @@ def user_post_comment(
                     parent_post = None,
                     body_text = None,
                     timestamp = None,
+                    by_email = False
                 ):
     """post a comment on behalf of the user
     to parent_post
@@ -1006,9 +1007,11 @@ def user_post_comment(
                     user = self,
                     comment = body_text,
                     added_at = timestamp,
+                    by_email = by_email
                 )
     parent_post.thread.invalidate_cached_data()
-    award_badges_signal.send(None,
+    award_badges_signal.send(
+        None,
         event = 'post_comment',
         actor = self,
         context_object = comment,
@@ -1333,7 +1336,8 @@ def user_post_question(
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
-                    timestamp = None
+                    timestamp = None,
+                    by_email = False
                 ):
     """makes an assertion whether user can post the question
     then posts it and returns the question object"""
@@ -1350,6 +1354,8 @@ def user_post_question(
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
+    #todo: split this into "create thread" + "add queston", if text exists
+    #or maybe just add a blank question post anyway
     thread = Thread.objects.create_new(
                                     author = self,
                                     title = title,
@@ -1358,6 +1364,7 @@ def user_post_question(
                                     added_at = timestamp,
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
+                                    by_email = by_email
                                 )
     question = thread._question_post()
     if question.author != self:
@@ -1366,42 +1373,60 @@ def user_post_question(
                            #       because they set some attributes for that instance and expect them to be changed also for question.author
     return question
 
-def user_edit_comment(self, comment_post=None, body_text = None):
+@auto_now_timestamp
+def user_edit_comment(
+                    self,
+                    comment_post=None,
+                    body_text = None,
+                    timestamp = None,
+                    by_email = False
+                ):
     """apply edit to a comment, the method does not
     change the comments timestamp and no signals are sent
     todo: see how this can be merged with edit_post
     todo: add timestamp
     """
     self.assert_can_edit_comment(comment_post)
-    comment_post.text = body_text
-    comment_post.parse_and_save(author = self)
-    comment_post.thread.invalidate_cached_data()
+    comment_post.apply_edit(
+                        text = body_text,
+                        edited_at = timestamp,
+                        edited_by = self,
+                        by_email = by_email
+                    )
 
 def user_edit_post(self,
                 post = None,
                 body_text = None,
                 revision_comment = None,
-                timestamp = None):
+                timestamp = None,
+                by_email = False
+            ):
     """a simple method that edits post body
     todo: unify it in the style of just a generic post
     this requires refactoring of underlying functions
     because we cannot bypass the permissions checks set within
     """
     if post.post_type == 'comment':
-        self.edit_comment(comment_post = post, body_text = body_text)
+        self.edit_comment(
+                comment_post = post,
+                body_text = body_text,
+                by_email = by_email
+            )
     elif post.post_type == 'answer':
         self.edit_answer(
             answer = post,
             body_text = body_text,
             timestamp = timestamp,
-            revision_comment = revision_comment
+            revision_comment = revision_comment,
+            by_email = by_email
         )
     elif post.post_type == 'question':
         self.edit_question(
             question = post,
             body_text = body_text,
             timestamp = timestamp,
-            revision_comment = revision_comment
+            revision_comment = revision_comment,
+            by_email = by_email
         )
     elif post.post_type == 'tag_wiki':
         post.apply_edit(
@@ -1411,6 +1436,7 @@ def user_edit_post(self,
             #todo: summary name clash in question and question revision
             comment = revision_comment,
             wiki = True,
+            by_email = False
         )
     else:
         raise NotImplementedError()
@@ -1427,9 +1453,11 @@ def user_edit_question(
                     edit_anonymously = False,
                     timestamp = None,
                     force = False,#if True - bypass the assert
+                    by_email = False
                 ):
     if force == False:
         self.assert_can_edit_question(question)
+
     question.apply_edit(
         edited_at = timestamp,
         edited_by = self,
@@ -1440,8 +1468,11 @@ def user_edit_question(
         tags = tags,
         wiki = wiki,
         edit_anonymously = edit_anonymously,
+        by_email = by_email
     )
+
     question.thread.invalidate_cached_data()
+
     award_badges_signal.send(None,
         event = 'edit_question',
         actor = self,
@@ -1457,7 +1488,8 @@ def user_edit_answer(
                     revision_comment = None,
                     wiki = False,
                     timestamp = None,
-                    force = False#if True - bypass the assert
+                    force = False,#if True - bypass the assert
+                    by_email = False
                 ):
     if force == False:
         self.assert_can_edit_answer(answer)
@@ -1467,6 +1499,7 @@ def user_edit_answer(
         text = body_text,
         comment = revision_comment,
         wiki = wiki,
+        by_email = by_email
     )
     answer.thread.invalidate_cached_data()
     award_badges_signal.send(None,
@@ -1482,7 +1515,8 @@ def user_post_answer(
                     body_text = None,
                     follow = False,
                     wiki = False,
-                    timestamp = None
+                    timestamp = None,
+                    by_email = False
                 ):
 
     #todo: move this to assertion - user_assert_can_post_answer
@@ -1494,6 +1528,7 @@ def user_post_answer(
 
         now = datetime.datetime.now()
         asked = question.added_at
+        #todo: this is an assertion, must be moved out
         if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
             diff = asked + delta - now
             days = diff.days
@@ -1544,7 +1579,8 @@ def user_post_answer(
         text = body_text,
         added_at = timestamp,
         email_notify = follow,
-        wiki = wiki
+        wiki = wiki,
+        by_email = by_email
     )
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
