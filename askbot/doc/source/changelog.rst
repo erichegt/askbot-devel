@@ -6,9 +6,10 @@ Future version
 * User groups (Evgeny)
 * Public/Private/Hidden reputation (Evgeny)
 * Enabling/disabling the badges system (Evgeny)
+* Created a basic post moderation feature (Evgeny)
 
-Development version (not released yet)
---------------------------------------
+0.7.40
+------
 * New data models!!! (`Tomasz Zieliński <http://pyconsultant.eu>`_)
 * Made email recovery link work when askbot is deployed on subdirectory (Evgeny)
 * Added tests for the CSRF_COOKIE_DOMAIN setting in the startup_procedures (Evgeny)
