@@ -508,6 +508,10 @@ def run_startup_tests():
             'test_for_absence': True,
             'message': 'Please replace setting ASKBOT_UPLOADED_FILES_URL ',
             'replace_hint': "with MEDIA_URL = '/%s'"
+        },
+        'RECAPTCHA_USE_SSL': {
+            'value': True,
+            'message': 'Please add: RECAPTCHA_USE_SSL = True'
         }
     })
     settings_tester.run()
