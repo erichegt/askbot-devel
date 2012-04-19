@@ -192,7 +192,25 @@ def update_media_revision(skin = None):
     current_hash = hasher.get_hash_of_dirs(media_dirs)
 
     if current_hash != askbot_settings.MEDIA_RESOURCE_REVISION_HASH:
-        askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
-        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
+        try:
+            askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
+            logging.debug('media revision worked for MEDIA_RESOURCE_REVISION')
+        except Exception, e:
+            logging.critical(e.message)
+            safe_settings_update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
+
+        try:
+            askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
+            logging.debug('media revision worked for MEDIA_RESOURCE_REVISION_HASH')
+        except Exception, e:
+            logging.critical(e.message)
+            safe_settings_update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
         logging.debug('MEDIA_RESOURCE_REVISION changed')
-    askbot_settings.MEDIA_RESOURCE_REVISION
+
+
+def safe_settings_update(key, value):
+    '''Fallback when IntegrityError bug raises'''
+    from askbot.deps.livesettings.models import Setting
+    setting = Setting.objects.get(key=key)
+    setting.value = value
+    setting.save()
