@@ -1234,6 +1234,9 @@ class Post(models.Model):
 
     def _question__assert_is_visible_to(self, user):
         """raises QuestionHidden"""
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            if self.approved == False:
+                raise exceptions.QuestionHidden()
         if self.deleted:
             message = _(
                 'Sorry, this question has been '
