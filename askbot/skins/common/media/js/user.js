@@ -78,13 +78,6 @@ $(document).ready(function(){
                 return;
             }
         }
-        if (action_type == 'delete_post'){
-            msg = ngettext('Delete this entry?',
-                    'Delete these entries?', data['id_list'].length);
-            if (confirm(msg) === false){
-                return;
-            }
-        }
         submit(data['id_list'], data['elements'], action_type);
     };
     setupButtonEventHandlers($('#re_mark_seen'), function(){startAction('mark_seen')});
@@ -92,7 +85,16 @@ $(document).ready(function(){
     setupButtonEventHandlers($('#re_dismiss'), function(){startAction('delete')});
     setupButtonEventHandlers($('#re_remove_flag'), function(){startAction('remove_flag')});
     //setupButtonEventHandlers($('#re_close'), function(){startAction('close')});
-    setupButtonEventHandlers($('#re_delete_post'), function(){startAction('delete_post')});
+    setupButtonEventHandlers(
+        $('#re_delete_post'),
+        function(){
+            var data = getSelected();
+            if (data['id_list'].length === 0){
+                return;
+            }
+            $('#rejectEditModal').modal('show');
+        }
+    );
     setupButtonEventHandlers(
                     $('#sel_all'),
                     function(){
@@ -118,6 +120,38 @@ $(document).ready(function(){
                         setCheckBoxesIn('#responses .new', false);
                         setCheckBoxesIn('#responses .seen', false);
                     }
+    );
+    setupButtonEventHandlers(
+        $('.cancel-reject'),
+        function(){
+            $('#rejectEditModal').modal('hide');
+        }
+    )
+    setupButtonEventHandlers(
+        $('#doReject'),
+        function(){
+            $('#rejectEditModal').modal('hide');
+        }
+    );
+    setupButtonEventHandlers(
+        $('#doRejectWithNewReason'),
+        function(){
+            $('#rejectEditModal').modal('hide');
+        }
+    );
+    setupButtonEventHandlers(
+        $('#useOldReason'),
+        function(){
+            $('#old-reason-btns').show();
+            $('#new-reason-btns').hide();
+        }
+    );
+    setupButtonEventHandlers(
+        $('#addReason'),
+        function(){
+            $('#old-reason-btns').hide();
+            $('#new-reason-btns').show();
+        }
     );
 
     //setupButtonEventHandlers($('.re_expand'),

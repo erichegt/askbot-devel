@@ -63,8 +63,6 @@ inbox_section - forum|flags
             <a  
                 class="btn"
                 id="re_delete_post"
-                data-toggle="modal"
-                href="#rejectEditModal"
             >{% trans %}delete post{% endtrans %}</a>
         {% endif %}
         </div>
@@ -72,14 +70,47 @@ inbox_section - forum|flags
     <div class="modal" style="display:none" id="rejectEditModal">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">x</a>
-            <h3 class="modal-header">Reject the post?</h3>
+            <h3>{% trans %}Want to reject the post(s)?{% endtrans %}</h3>
         </div>
         <div class="modal-body">
-            <p>This is the body</p>
+            <div id="old-reason-content">
+                <p id="details"></p>
+            </div>
+            <div id="new-reason-content">
+                <input 
+                    id="id_title"
+                    class="questionTitleInput"
+                    name="title"
+                    autocomplete="off"
+                />
+                {{ macros.edit_post(
+                        
+                    )
+                }}
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn">Close</a>
-            <a href="#" class="btn btn-primary">Save changes</a>
+            <div id="old-reason-btns">
+                <a href="#" class="btn cancel-reject">{% trans %}Do nothing{% endtrans %}</a>
+                <a 
+                    id="addReason"
+                    href="#"
+                    class="btn"
+                >{% trans %}Add new rejection reason{% endtrans %}</a>
+                <a id="doReject" href="#" class="btn btn-primary">{% trans %}Reject post{% endtrans %}</a>
+            </div>
+            <div id="new-reason-btns" style="display:none">
+                <a href="#" class="btn cancel-reject">{% trans %}Do nothing{% endtrans %}</a>
+                <a 
+                    id="useOldReason"
+                    href="#"
+                    class="btn"
+                >{% trans %}Use existing rejection reason{% endtrans %}</a>
+                <a 
+                    id="doRejectWithNewReason"
+                    href="#"
+                    class="btn btn-primary"
+                >{% trans %}Save reason and reject post{% endtrans %}</a>
+            </div>
         </div>
     </div>
     <div id="responses">
@@ -102,6 +133,12 @@ inbox_section - forum|flags
         var askbot = askbot || {};
         askbot['urls'] = askbot['urls'] || {};
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
+        askbot['data']['rejectReasonDetails'] = [];
+        {% for reason in post_reject_reasons %}
+            askbot['data']['rejectReasonDetails'].push(
+                "{{reason.html|escapejs}}"
+            )
+        {% endfor %}
     </script>
     <script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" />
 <!-- end user_responses.html -->

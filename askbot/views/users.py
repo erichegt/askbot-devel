@@ -682,6 +682,7 @@ def user_responses(request, user, context):
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
+        'post_reject_reasons': models.Post.objects.filter(post_type = 'reject_reason'),
         'responses' : filtered_response_list,
     }
     context.update(data)
