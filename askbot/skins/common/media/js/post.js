@@ -39,7 +39,7 @@ function removeLoader() {
 }
 
 function setSubmitButtonDisabled(form, isDisabled) {
-    form.find('input[type="submit"]').attr("disabled", isDisabled ? "true" : "");
+    form.find('input[type="submit"]').attr("disabled", isDisabled);
 }
 
 function enableSubmitButton(form) {
