@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 {% import "macros.html" as macros %}
+{% block forestyle %}
+    <link href="{{'/bootstrap/css/bootstrap.min.css'|media}}" rel="stylesheet" type="text/css" />
+{% endblock %}
 <!-- user_responses.html -->
 {#
 This template accepts a list of response list
@@ -50,14 +53,34 @@ inbox_section - forum|flags
         <a id="sel_seen">{% trans %}seen{% endtrans %}</a> |
         <a id="sel_new">{% trans %}new{% endtrans %}</a> |
         <a id="sel_none">{% trans %}none{% endtrans %}</a><br />
+        <div class="btn-group">
         {% if inbox_section == 'forum' %}
-            <button id="re_mark_seen">{% trans %}mark as seen{% endtrans %}</button>
-            <button id="re_mark_new">{% trans %}mark as new{% endtrans %}</button>
-            <button id="re_dismiss">{% trans %}dismiss{% endtrans %}</button>
+            <a class="btn" id="re_mark_seen">{% trans %}mark as seen{% endtrans %}</a>
+            <a class="btn" id="re_mark_new">{% trans %}mark as new{% endtrans %}</a>
+            <a class="btn" id="re_dismiss">{% trans %}dismiss{% endtrans %}</a>
         {% else %}
-            <button id="re_remove_flag">{% trans %}remove flags/approve{% endtrans %}</button>
-            <button id="re_delete_post">{% trans %}delete post{% endtrans %}</button>
+            <a class="btn" id="re_remove_flag">{% trans %}remove flags/approve{% endtrans %}</a>
+            <a  
+                class="btn"
+                id="re_delete_post"
+                data-toggle="modal"
+                href="#rejectEditModal"
+            >{% trans %}delete post{% endtrans %}</a>
         {% endif %}
+        </div>
+    </div>
+    <div class="modal" style="display:none" id="rejectEditModal">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">x</a>
+            <h3 class="modal-header">Reject the post?</h3>
+        </div>
+        <div class="modal-body">
+            <p>This is the body</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn">Close</a>
+            <a href="#" class="btn btn-primary">Save changes</a>
+        </div>
     </div>
     <div id="responses">
     {% for response in responses %}
@@ -80,5 +103,6 @@ inbox_section - forum|flags
         askbot['urls'] = askbot['urls'] || {};
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
     </script>
+    <script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" />
 <!-- end user_responses.html -->
 {% endblock %}
