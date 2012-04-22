@@ -1921,10 +1921,6 @@ WMD.prototype.setEscapeHandler = function(handler){
     this._escape_handler = handler;
 };
 
-WMD.prototype.setSaveHandler = function(handler){
-    this._save_handler = handler;
-};
-
 WMD.prototype.createDom = function(){
     this._element = this.makeElement('div');
 
@@ -1941,12 +1937,6 @@ WMD.prototype.createDom = function(){
     if (this._markdown){
         editor.val(this._markdown);
     }
-
-    var save_btn = this.makeElement('input')
-                    .attr('type', 'submit')
-                    .attr('value', gettext('Save'));
-    this._save_btn = save_btn;
-    this._element.append(save_btn);
 
     var previewer = this.makeElement('div')
                         .attr('id', 'previewer')
@@ -1968,7 +1958,6 @@ WMD.prototype.getMarkdown = function(){
 
 WMD.prototype.start = function(){
 	Attacklab.Util.startEditor();
-    setupButtonEventHandlers(this._save_btn, this._save_handler);
     this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
 };
 
@@ -1991,6 +1980,20 @@ TagWikiEditor.prototype.setContent = function(content){
     this._content_box.append(content);
 };
 
+TagWikiEditor.prototype.setState = function(state){
+    if (state === 'edit'){
+        this._state = state;
+        this._edit_btn.hide();
+        this._cancel_btn.show();
+        this._save_btn.show();
+    } else if (state === 'display'){
+        this._state = state;
+        this._edit_btn.show();
+        this._cancel_btn.hide();
+        this._save_btn.();
+    }
+};
+
 TagWikiEditor.prototype.restoreContent = function(){
     var content_box = this._content_box;
     content_box.empty();
@@ -2003,6 +2006,10 @@ TagWikiEditor.prototype.getTagId = function(){
     return this._tag_id;
 };
 
+/**
+ * loads initial data for the editor input and activates
+ * the editor
+ */
 TagWikiEditor.prototype.startActivatingEditor = function(){
     var editor = this._editor;
     var me = this;
@@ -2015,6 +2022,7 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
             me.backupContent();
             editor.setMarkdown(data);
             me.setContent(editor.getElement());
+            me.setState('edit');
             editor.start();
         }
     });
@@ -2030,6 +2038,7 @@ TagWikiEditor.prototype.saveData = function(markdown){
         cache: false,
         success: function(data){
             if (data['success']){
+                me.setState('display');
                 me.setContent(data['html']);
             } else {
                 showMessage(me.getElement(), data['message']);
@@ -2038,25 +2047,39 @@ TagWikiEditor.prototype.saveData = function(markdown){
     });
 };
 
+TagWikiEditor.prototype.cancelEdit = function(){
+    me.restoreContent(); 
+    me.setState('display');
+};
+
 TagWikiEditor.prototype.decorate = function(element){
     //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
     this._element = element;
-    var edit_link = element.find('.edit');
-    this._edit_link = edit_link;
+    var edit_btn = element.find('.edit');
+    this._edit_btn = edit_btn;
+
+    var save_btn = this.makeElement('a');
+    save_btn.addClass('btn');
+    save_btn.html(gettext('save'));
+    edit_btn.after(save_btn);
+    save_btn.hide();
+    this._save_btn = save_btn;
+
+    var cancel_btn = this.makeElement('a');
+    cancel_btn.addClass('btn');
+    cancel_btn.html(gettext('cancel'));
+    save_btn.after(cancel_btn);
+    cancel_btn.hide();
+    this._cancel_btn = cancel_btn;
+
     this._content_box = element.find('.content');
     this._tag_id = element.attr('id').split('-').pop();
 
     var me = this;
     var editor = new WMD();
-    editor.setEscapeHandler(function(){ me.restoreContent() });
-    editor.setSaveHandler(
-        function(){ 
-            me.saveData(editor.getMarkdown()) 
-        }
-    );
-    this._editor = editor;
-
-    setupButtonEventHandlers(edit_link, function(){ me.startActivatingEditor() });
+    editor.setEscapeHandler(function(){me.cancelEdit()});
+    setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
+    setupButtonEventHandlers(cancel_btn, function(){me.cancelEdit()});
 };
 
 var ImageChanger = function(){

@@ -64,10 +64,10 @@
         </div>
         <div class="clearfix"></div>
         {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
-        <a class="edit">
+        <a class="edit btn">
             {% trans %}edit group description{% endtrans %}
-        </a> |
-        <a class="change_logo">
+        </a>
+        <a class="change_logo btn">
             {% trans %}change logo{% endtrans %}
         </a>
         {% endif %}
