@@ -8,6 +8,10 @@ Future version
 * Enabling/disabling the badges system (Evgeny)
 * Created a basic post moderation feature (Evgeny)
 
+0.7.41, 0.7.42 (April 21, 2012)
+-------------------------------
+* Bug fixes
+
 0.7.40 (March 29, 2012)
 -----------------------
 * New data models!!! (`Tomasz Zieliński <http://pyconsultant.eu>`_)
