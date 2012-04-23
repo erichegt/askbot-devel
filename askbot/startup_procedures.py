@@ -161,7 +161,7 @@ the list of MIDDLEWARE_CLASSES in your settings.py - these are not used any more
         middleware_text = format_as_text_tuple_entries(invalid_middleware)
         raise AskbotConfigError(error_message + middleware_text)
 
-def try_import(module_name, pypi_package_name):
+def try_import(module_name, pypi_package_name, short_message = False):
     """tries importing a module and advises to install
     A corresponding Python package in the case import fails"""
     try:
@@ -169,9 +169,10 @@ def try_import(module_name, pypi_package_name):
     except ImportError, error:
         message = 'Error: ' + unicode(error)
         message += '\n\nPlease run: >pip install %s' % pypi_package_name
-        message += '\n\nTo install all the dependencies at once, type:'
-        message += '\npip install -r askbot_requirements.txt\n'
-        message += '\nType ^C to quit.'
+        if short_message == False:
+            message += '\n\nTo install all the dependencies at once, type:'
+            message += '\npip install -r askbot_requirements.txt'
+        message += '\n\nType ^C to quit.'
         raise AskbotConfigError(message)
 
 def test_modules():
@@ -468,25 +469,17 @@ def test_settings_for_test_runner():
         )
     print_errors(errors)
 
-def test_mysql_south_bug():
-    conflicting_mysql = []
-    conn = connection.connection
-    if hasattr(conn, '_server_version') or\
-            'mysql' in connection.settings_dict['ENGINE']:
-        #checks for conflicting mysql version according to http://south.aeracode.org/ticket/747
-        mysql_version = getattr(conn, '_server_version', (5,0))
-        south_version = south.__version__
-        if mysql_version >= (5,0) and south_version <= '0.7.4':
-            #just warns because some versions works and it's not possible
-            #to detect the full version number from thee connection object
-            message = 'Warning: There is a bug in south with mysql database engine,'
-            message += '\nmigrations might not work, to fix it please install south from their mercurial repository'
-            message += '\nmore information here: http://askbot.org/en/question/6902/error-while-setting-up-askbot?answer=6964#answer-container-6964'
-            askbot_warning(message)
-    else:
-        #not mysql
-        pass
 
+def test_avatar():
+    """if "avatar" is in the installed apps,
+    checks that the module is actually installed"""
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        try_import('Image', 'PIL', short_message = True)
+        try_import(
+            'avatar',
+            '-e git+git://github.com/ericflo/django-avatar.git#egg=avatar',
+            short_message = True
+        )
 
 def run_startup_tests():
     """function that runs
@@ -503,7 +496,11 @@ def run_startup_tests():
     test_celery()
     #test_csrf_cookie_domain()
     test_staticfiles()
+<<<<<<< HEAD
     test_mysql_south_bug()
+=======
+    test_avatar()
+>>>>>>> 64ab1ac2d8cfe57e524aca3341abc852b861e512
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
